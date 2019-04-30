@@ -1,4 +1,4 @@
-Upgrading from BuddyPress
+#Upgrading from BuddyPress
 ---
 
 __Advertisement :)__

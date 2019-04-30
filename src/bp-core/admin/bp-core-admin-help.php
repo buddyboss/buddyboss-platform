@@ -35,7 +35,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 			$url = add_query_arg( 'article', str_replace( $docs_path, "", $index_file ) );
 
 			// print the title of the section
-			printf( '<h3><a href="%s">%s</a></h3>', $url, fgets( fopen( $index_file, 'r' ) ) );
+			printf( '<h3><a href="%s">%s</a></h3>', $url, bp_core_admin_help_get_file_title( $index_file ) );
 			?>
 
             <div class="inside">
@@ -128,7 +128,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 					$count_html = '';
 				}
 
-				printf( '<a href="%s" class="dir">%s %s</a>%s', $url, fgets( fopen( $dir_index_file, 'r' ) ), $count_html, $action );
+				printf( '<a href="%s" class="dir">%s %s</a>%s', $url, bp_core_admin_help_get_file_title( $dir_index_file ), $count_html, $action );
 				$times ++;
 				if ( ! empty( $show_as_heading ) ) {
 					?>
@@ -137,12 +137,12 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 				}
 				bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide, $show_as_heading );
 			} else {
-				printf( '<a href="%s" class="dir">%s</a>', $url, fgets( fopen( $dir_index_file, 'r' ) ) );
+				printf( '<a href="%s" class="dir">%s</a>', $url, bp_core_admin_help_get_file_title( $dir_index_file ) );
 			}
 		} else {
 			$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
 			// print the title if it's a .md file
-			printf( '<a href="%s" class="file">%s</a>', $url, fgets( fopen( $directory, 'r' ) ) );
+			printf( '<a href="%s" class="file">%s</a>', $url, bp_core_admin_help_get_file_title( $directory ) );
 		}
 		?>
         </li>
@@ -156,6 +156,17 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
         </ul>
 		<?php
 	}
+}
+
+/**
+ * Get the title from the .md file
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_core_admin_help_get_file_title( $file_path ) {
+	return substr( fgets( fopen( $file_path, 'r' ) ) , 1);
 }
 
 /**

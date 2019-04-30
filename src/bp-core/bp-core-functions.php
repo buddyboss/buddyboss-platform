@@ -4146,30 +4146,24 @@ function bp_platform_default_activity_types() {
 	return $activity_type;
 }
 
+
 /**
  * Dynamically add the URL
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $atts
+ * @param $attr
  *
  * @return mixed
  */
-function bp_core_help_miscellaneous_link( $atts ) {
-	$slug = isset( $atts['slug'] ) ? $atts['slug'] : '';
-	$text = isset( $atts['text'] ) ? $atts['text'] : '';
-	if ( is_admin() ) {
-		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/miscellaneous/'.$slug ), 'admin.php' ) );
-	} else {
-		$post_ids = bp_core_get_post_id_by_slug( 'miscellaneous' );
-		$docs_id = current( $post_ids );
-		$url = get_permalink( $docs_id ) . bp_core_get_post_slug_by_index( $slug );
-	}
-
-	return sprintf( '<a href="%s"> %s </a>', $url, $text );
+function bp_core_help_bp_docs_link( $attr ) {
+	$slug = isset( $attr['slug'] ) ? $attr['slug'] : '';
+	$text = isset( $attr['text'] ) ? $attr['text'] : '';
+	$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/'.$slug ), 'admin.php' ) );
+	return apply_filters( 'bp_core_help_bp_docs_link', sprintf( '<a href="%s"> %s </a>', $url, $text ), $attr );
 }
 
-add_shortcode( 'miscellaneous_link', 'bp_core_help_miscellaneous_link' );
+add_shortcode( 'bp_docs_link', 'bp_core_help_bp_docs_link' );
 
 if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 	/**

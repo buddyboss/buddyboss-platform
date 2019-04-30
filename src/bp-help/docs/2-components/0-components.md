@@ -1,9 +1,9 @@
-Components
+#Components
 ---
 Ordered
 
-1. Lorem ipsum dolor sit amet
-2. Consectetur adipiscing elit
+1. This will [bp_docs_link text="link" slug="1-getting-started-sections/1-installation/2-installation-part-2.md"] to a normal file
+2. This will [bp_docs_link text="link" slug="miscellaneous/1-upgrading-from-buddypress.md"] to misc folder file
 3. Integer molestie lorem at massa
 
 
