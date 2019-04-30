@@ -42,6 +42,7 @@ window.bp = window.bp || {};
 			this.is_open = false;
 			this.nextLink = $('.bb-next-media');
 			this.previousLink = $('.bb-prev-media');
+			this.activity_ajax = false;
 
 		},
 
@@ -207,7 +208,12 @@ window.bp = window.bp || {};
 			var self = this;
 			$('.bb-media-info-section .activity-list').addClass('loading').html('<i class="dashicons dashicons-update animate-spin"></i>');
 			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
-				$.ajax({
+
+				if ( self.activity_ajax != false ) {
+					self.activity_ajax.abort();
+				}
+
+				self.activity_ajax = $.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: {
