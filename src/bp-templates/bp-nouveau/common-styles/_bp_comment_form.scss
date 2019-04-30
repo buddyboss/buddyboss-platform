@@ -13,8 +13,6 @@ form.ac-form {
 	}
 
 	.ac-reply-content {
-		color: $light-text;
-		padding-left: $pad-med;
 
 		a {
 			text-decoration: none;
@@ -71,6 +69,21 @@ form.ac-form {
 		}
 	}
 
+}
+
+.bp-ac-form-cotainer {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+}
+
+.ac-reply-content {
+    -webkit-box-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	min-width: 0;
+	color: $light-text;
+	padding-left: $pad-med;
 }
 
 .activity-comments li form.ac-form {

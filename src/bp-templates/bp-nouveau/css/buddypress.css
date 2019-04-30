@@ -2113,11 +2113,6 @@ form.ac-form .ac-reply-avatar img {
   border: 1px solid #eee;
 }
 
-form.ac-form .ac-reply-content {
-  color: #767676;
-  padding-left: 1em;
-}
-
 form.ac-form .ac-reply-content a {
   text-decoration: none;
 }
@@ -2171,6 +2166,21 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 
 form.ac-form .ac-reply-content input {
   margin-top: 10px;
+}
+
+.bp-ac-form-cotainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ac-reply-content {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 0;
+  color: #767676;
+  padding-left: 1em;
 }
 
 .activity-comments li form.ac-form {
@@ -4652,13 +4662,10 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   word-wrap: normal !important;
 }
 
-.clearfix:before, .clearfix:after {
-  content: " ";
-  display: table;
-}
-
 .clearfix:after {
+  content: " ";
   clear: both;
+  display: table;
 }
 
 .center-vert {
@@ -10232,7 +10239,6 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
-  margin: 0 0 20px;
 }
 
 .dropzone .dz-message {

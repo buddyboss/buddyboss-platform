@@ -16,15 +16,11 @@
 
 .clearfix {
 
-	&:before,
 	&:after {
 		content: " ";
+		clear: both;
 		display: table;
 	}
-}
-
-.clearfix:after {
-	clear: both;
 }
 
 // Vertical centering
