@@ -39,7 +39,9 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 				printf( '<h2><a href="%s">%s</a></h2>', $url, bp_core_admin_help_get_file_title( $index_file ) );
 
 				// print the article content
-				echo bp_core_stripe_header_tags( bp_core_admin_help_display_content( $index_file ) );
+                $content = bp_core_admin_help_display_content( $index_file );
+                $content = bp_core_stripe_header_tags( $content );
+				echo wp_trim_words( $content, 30, NULL );
 				?>
             </div>
         </div>
