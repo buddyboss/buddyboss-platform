@@ -40,7 +40,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 
             <div class="inside">
 				<?php
-				echo bp_core_admin_help_display_content( $index_file );
+				echo bp_core_stripe_header_tags( bp_core_admin_help_display_content( $index_file ) );
 				?>
             </div>
 
@@ -166,7 +166,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
  * @return string
  */
 function bp_core_admin_help_get_file_title( $file_path ) {
-	return substr( fgets( fopen( $file_path, 'r' ) ) , 1);
+	return substr( fgets( fopen( $file_path, 'r' ) ), 1 );
 }
 
 /**
@@ -184,7 +184,7 @@ function bp_core_admin_help_display_content( $docs_path ) {
 	$Parsedown = new Parsedown();
 	$text      = file_get_contents( $docs_path );
 
-	return apply_filters( 'the_content', $Parsedown->text( $text ) );
+	return bp_core_rap_the_content_filter( $Parsedown->text( $text ) );
 }
 
 /**
