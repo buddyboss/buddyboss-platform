@@ -1,5 +1,4 @@
 #Miscellaneous - Account Settings
----
 
 __Advertisement :)__
 

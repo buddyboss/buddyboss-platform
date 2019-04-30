@@ -1,5 +1,4 @@
 #Miscellaneous - Upgrading from BuddyPress
----
 
 __Advertisement :)__
 

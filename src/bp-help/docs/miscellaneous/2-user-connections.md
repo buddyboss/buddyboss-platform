@@ -1,5 +1,4 @@
 #Miscellaneous - User Connection
----
 
 __Advertisement :)__
 
