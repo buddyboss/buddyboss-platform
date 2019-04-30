@@ -1,0 +1,3 @@
+#Integrations
+
+While most WordPress plugins coded to proper standards work out of the box with BuddyBoss Platform there are certain complexities that require integration. For example, LearnDash is a learning management system that extends WordPress and created their own groups. This creates a major conflict with BuddyBoss Platform Social Groups. So the option is to use LearnDash Groups or Social Groups. Neither option is ideal so the BuddyBoss team integrated LearnDash which allows groups to sync with one another for a seamless feel across the platform.
