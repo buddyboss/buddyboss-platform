@@ -43,13 +43,6 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 				echo bp_core_admin_help_display_content( $index_file );
 				?>
             </div>
-
-            <div class="bbdocs-doc-link">
-				<?php
-				// print the title of the section
-				printf( '<a href="%s">%s</a>', $url, __( 'View Articles', 'buddyboss' ) );
-				?>
-            </div>
         </div>
 		<?php
 	}
