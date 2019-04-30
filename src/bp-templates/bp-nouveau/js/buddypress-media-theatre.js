@@ -55,6 +55,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-close-media-theatre',   this.closeTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-prev-media',            this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media',            this.next.bind( this ) );
+			$( document ).on( 'bp_activity_ajax_delete_request',    this.activityDeleted.bind( this ) );
 
 		},
 
@@ -230,6 +231,34 @@ window.bp = window.bp || {};
 				});
 			} else {
 				$('.bb-media-info-section').hide();
+			}
+		},
+
+		activityDeleted: function(event,data) {
+			var self = this, i = 0;
+			if (self.is_open && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_media.activity_id == data.id) {
+
+				$(document).find('[data-bp-list="media"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]').closest('li').remove();
+				$(document).find('[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]').closest('.bb-activity-media-elem').remove();
+
+				for (i = 0; i < self.medias.length; i++) {
+					if (self.medias[i].activity_id == data.id) {
+						self.medias.splice(i, 1);
+						break;
+					}
+				}
+
+				if (self.current_index == 0 && self.current_index != (self.medias.length)) {
+					self.current_index = -1;
+					self.next(event);
+				} else if (self.current_index == 0 && self.current_index == (self.medias.length)) {
+					self.closeTheatre(event);
+				} else if (self.current_index == (self.medias.length)) {
+					self.previous(event);
+				} else {
+					self.current_index = -1;
+					self.next(event);
+				}
 			}
 		}
 	};

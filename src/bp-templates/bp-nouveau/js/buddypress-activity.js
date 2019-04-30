@@ -668,6 +668,9 @@ window.bp = window.bp || {};
 							parent.Activity.heartbeat_data.newest        = '';
 							parent.Activity.heartbeat_data.last_recorded  = 0;
 						}
+
+						// Inform other scripts
+						$( document ).trigger( 'bp_activity_ajax_delete_request', $.extend( ajaxData, { response: response } ) );
 					}
 				} );
 			}
