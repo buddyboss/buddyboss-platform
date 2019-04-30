@@ -30,24 +30,16 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 		$index_file = current( $index_file );
 		?>
         <div class="bp-help-card bb-help-menu-wrap">
-			<?php
-
-			$url = add_query_arg( 'article', str_replace( $docs_path, "", $index_file ) );
-
-			// print the title of the section
-			printf( '<h3><a href="%s">%s</a></h3>', $url, bp_core_admin_help_get_file_title( $index_file ) );
-			?>
-
             <div class="inside">
 				<?php
-				echo bp_core_stripe_header_tags( bp_core_admin_help_display_content( $index_file ) );
-				?>
-            </div>
 
-            <div class="bbdocs-doc-link">
-				<?php
+				$url = add_query_arg( 'article', str_replace( $docs_path, "", $index_file ) );
+
 				// print the title of the section
-				printf( '<a href="%s">%s</a>', $url, __( 'View Articles', 'buddyboss' ) );
+				printf( '<h2><a href="%s">%s</a></h2>', $url, bp_core_admin_help_get_file_title( $index_file ) );
+
+				// print the article content
+				echo bp_core_stripe_header_tags( bp_core_admin_help_display_content( $index_file ) );
 				?>
             </div>
         </div>
