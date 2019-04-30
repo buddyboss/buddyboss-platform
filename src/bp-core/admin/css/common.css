@@ -942,21 +942,22 @@ body.post-type-bp-email .categorydiv label {
   width: 32%;
   background-color: #fff;
   border: 1px solid #e5e5e5;
+  border-radius: 6px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
 }
 
-.bp-help-card-grid .bp-help-card h3 {
-  border-bottom: 1px solid #e5e5e5;
-  font-size: 14px;
-  padding: 8px 12px;
-  margin: 0;
-  line-height: 1.4;
+.bp-help-card-grid .bp-help-card .inside {
+  padding: 1.8em 2em;
+  min-height: 60px;
 }
 
-.bp-help-card-grid .bp-help-card .inside {
-  padding: 0 15px;
-  min-height: 60px;
+.bp-help-card-grid .bp-help-card h2 {
+  border-bottom: 1px solid #e5e5e5;
+  font-size: 18px;
+  padding: 0 0 1em;
+  margin: 0;
+  line-height: 1.4;
 }
 
 .bp-help-card-grid .bp-help-card:nth-child(3n) {
@@ -1060,6 +1061,9 @@ body.post-type-bp-email .categorydiv label {
 }
 
 @media screen and (max-width: 781px) {
+  .bp-help-card-grid .bp-help-card {
+    width: 48%;
+  }
   .bb-help-sidebar {
     background: #f9f9f9;
     padding: 2.5em;
@@ -1070,6 +1074,13 @@ body.post-type-bp-email .categorydiv label {
   }
   .bb-help-content {
     padding: 2.5em;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .bp-help-card-grid .bp-help-card {
+    margin-right: 0;
     width: 100%;
   }
 }
