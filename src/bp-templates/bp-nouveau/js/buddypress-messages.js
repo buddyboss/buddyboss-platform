@@ -783,7 +783,7 @@ window.bp = window.bp || {};
 			_.each( model.previousAttributes(), function( value, input ) {
 				if ( 'message_content' === input ) {
 					// tinyMce
-					if ( undefined !== tinyMCE.activeEditor && null !== tinyMCE.activeEditor ) {
+					if ( typeof tinyMCE !== 'undefined' && undefined !== tinyMCE.activeEditor && null !== tinyMCE.activeEditor ) {
 						tinyMCE.activeEditor.setContent( '' );
 					} else if ( undefined !== bp.Nouveau.Messages.quillEditor && false !== bp.Nouveau.Messages.quillEditor ) {
 						bp.Nouveau.Messages.quillEditor.setContents( '' );
@@ -795,8 +795,8 @@ window.bp = window.bp || {};
 				}
 			} );
 
-			if (this.messageAttachments.onClose){
-				this.messageAttachments.onClose();
+			if (this.messagesAttachments !== false){
+				this.messagesAttachments.onClose();
 			}
 
 			// Listen to this to eventually reset your custom inputs.
@@ -896,8 +896,8 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.removeTinyMCE();
 
 				// clear message attachments and toolbar
-				if (this.messageAttachments.onClose){
-					this.messageAttachments.onClose();
+				if (self.messagesAttachments !== false){
+					self.messagesAttachments.onClose();
 				}
 
 				// Remove the form view
@@ -905,8 +905,7 @@ window.bp = window.bp || {};
 				form.get( 'view' ).remove();
 				bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
 
-				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread_id + '/' );
-				window.location.reload();
+				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread_id + '/', { trigger: true } );
 			} ).fail( function( response ) {
 				if ( response.feedback ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
