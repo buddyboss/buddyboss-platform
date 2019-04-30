@@ -962,11 +962,12 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-card-grid {
 	margin-top: 20px;
+	min-width: 255px;
+	max-width: 1050px;
 
 	.bp-help-card {
 		float: left;
-		margin: 0 2% 2% 0;
-		width: 32%;
+		margin-bottom: 2%;
 		background-color: #fff;
 		border: 1px solid #e5e5e5;
 		border-radius: 6px;
@@ -989,14 +990,6 @@ body.post-type-bp-email .categorydiv label {
 		p:first-child {
 			margin-top: 0;
 		}
-	}
-
-	.bp-help-card:nth-child(3n) {
-		margin-right: 0;
-	}
-
-	.bp-help-card:nth-child(3n+1) {
-		clear: both;
 	}
 
 	.bb-help-content-wrap {
@@ -1086,6 +1079,22 @@ body.post-type-bp-email .categorydiv label {
 
 @media screen and (min-width: 782px) {
 
+	.bp-help-card-grid {
+
+		.bp-help-card {
+			margin-right: 2%;
+			width: 32%;
+		}
+
+		.bp-help-card:nth-child(3n) {
+			margin-right: 0;
+		}
+
+		.bp-help-card:nth-child(3n+1) {
+			clear: both;
+		}
+	}
+
 	.bb-help-sidebar {
 		background: #f9f9f9;
 		padding: 2.5em;
@@ -1109,8 +1118,20 @@ body.post-type-bp-email .categorydiv label {
 
 @media screen and (max-width: 781px) {
 
-	.bp-help-card-grid .bp-help-card {
-		width: 48%;
+	.bp-help-card-grid {
+
+		.bp-help-card {
+			margin-right: 2%;
+			width: 49%;
+		}
+
+		.bp-help-card:nth-child(2n) {
+			margin-right: 0;
+		}
+
+		.bp-help-card:nth-child(2n+1) {
+			clear: both;
+		}
 	}
 
 	.bb-help-sidebar {
@@ -1131,7 +1152,6 @@ body.post-type-bp-email .categorydiv label {
 @media screen and (max-width: 550px) {
 
 	.bp-help-card-grid .bp-help-card {
-		margin-right: 0;
 		width: 100%;
 	}
 
