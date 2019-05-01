@@ -29,7 +29,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 		// converting array into string.
 		$index_file = current( $index_file );
 		?>
-        <div class="bp-help-card bb-help-menu-wrap">
+        <div class="bp-help-card bp-help-menu-wrap">
             <div class="inside">
 				<?php
 
@@ -194,7 +194,7 @@ function bp_core_admin_help_main_page() {
 	if ( ! empty( $main_directories ) ) {
 		if ( empty( $_REQUEST['article'] ) ) {
 			?>
-            <div class="bb-help-main-menu-wrap">
+            <div class="bp-help-main-menu-wrap">
 				<?php
 				bp_core_admin_help_main_menu( $main_directories, $docs_path );
 				?>
@@ -213,12 +213,12 @@ function bp_core_admin_help_main_page() {
 			$sidebar = false !== strpos( $_REQUEST['article'], 'miscellaneous' ) ? false : true;
 			?>
 
-            <div class="bb-help-content-wrap">
+            <div class="bp-help-content-wrap">
 
 				<?php
 				if ( $sidebar ) {
 					?>
-                    <div class="bb-help-sidebar">
+                    <div class="bp-help-sidebar">
 						<?php
 						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
 						?>
@@ -227,8 +227,8 @@ function bp_core_admin_help_main_page() {
 				}
 				?>
 
-                <div class="bb-help-content">
-                    <ul class="bb-help-menu">
+                <div class="bp-help-content">
+                    <ul class="bp-help-menu">
 						<?php
 						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
 						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );

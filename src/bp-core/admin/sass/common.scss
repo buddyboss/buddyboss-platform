@@ -952,7 +952,7 @@ body.post-type-bp-email .categorydiv label {
 		background: #fff;
 	}
 
-	.bb-help-content {
+	.bp-help-content {
 
 		li.miscellaneous {
 			display: none;
@@ -992,12 +992,12 @@ body.post-type-bp-email .categorydiv label {
 		}
 	}
 
-	.bb-help-content-wrap {
+	.bp-help-content-wrap {
 		display: flex;
 	}
 }
 
-.bb-help-content-wrap {
+.bp-help-content-wrap {
 	display: flex;
 	flex-flow: row wrap;
 	min-width: 255px;
@@ -1009,7 +1009,7 @@ body.post-type-bp-email .categorydiv label {
 	box-sizing: border-box;
 }
 
-.bb-help-sidebar > ul {
+.bp-help-sidebar > ul {
 	margin: 0;
 
 	> li {
@@ -1042,9 +1042,9 @@ body.post-type-bp-email .categorydiv label {
 
 }
 
-.bb-help-content {
+.bp-help-content {
 
-	ul.bb-help-menu {
+	ul.bp-help-menu {
 		margin: 0 0 2.5em;
 
 		li {
@@ -1095,7 +1095,7 @@ body.post-type-bp-email .categorydiv label {
 		}
 	}
 
-	.bb-help-sidebar {
+	.bp-help-sidebar {
 		background: #f9f9f9;
 		padding: 2.5em;
 		border-right: 1px solid #eaeaea;
@@ -1108,7 +1108,7 @@ body.post-type-bp-email .categorydiv label {
 		min-height: 60vh;
 	}
 
-	.bb-help-content {
+	.bp-help-content {
 		padding: 2.5em 3em;
 		-webkit-box-flex: 1;
 		-ms-flex: 1;
@@ -1134,7 +1134,7 @@ body.post-type-bp-email .categorydiv label {
 		}
 	}
 
-	.bb-help-sidebar {
+	.bp-help-sidebar {
 		background: #f9f9f9;
 		padding: 2.5em;
 		width: 100%;
@@ -1143,7 +1143,7 @@ body.post-type-bp-email .categorydiv label {
 		border-radius: 6px 6px 0 0;
 	}
 
-	.bb-help-content {
+	.bp-help-content {
 		padding: 2.5em;
 		width: 100%;
 	}
