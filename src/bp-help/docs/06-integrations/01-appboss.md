@@ -1,1 +1,3 @@
 #AppBoss
+
+Extend your community into a native mobile app using [AppBoss](https://appboss.com/). AppBoss is a paid service provided by BuddyBoss, which will launch native iOS and Android apps for you, published under your own Apple and Google Play accounts. The apps will be branded to match your site, and can sync community data (profiles, forums, etc.) back and forth with BuddyBoss Platform. If using LearnDash they will also sync course data with your website.
