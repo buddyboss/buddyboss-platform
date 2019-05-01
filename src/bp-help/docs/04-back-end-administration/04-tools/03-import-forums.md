@@ -31,7 +31,7 @@ Information about your previous forums database so that they can be converted. 
 #### Configuring the Importer
 
 *   Select Platform - Select the source platform that you are importing from.
-*   Database Server - Leave as ‘localhost’ unless your hosting provider requires you to use an IP address.
+*   Database Server - Leave as ‘localhost' unless your hosting provider requires you to use an IP address.
 *   Database Port - Use default 3306 if unsure
 *   Database Name - Name of the database with your old forum data
 *   Database User - User for your database connection

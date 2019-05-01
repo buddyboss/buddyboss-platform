@@ -42,7 +42,7 @@ Group Navigation
 
 *   Rearrange group navigation menu items.
 
-https://vimeo.com/320530377
+[embed] https://vimeo.com/320530377 [/embed]
 
 Profile Navigation
 ------------------
@@ -61,4 +61,4 @@ Profile Navigation
 
 *   Rearrange profile navigation menu items.
 
-https://vimeo.com/320530055
+[embed] https://vimeo.com/320530055 [embed]

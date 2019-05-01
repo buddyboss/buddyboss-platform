@@ -11,4 +11,4 @@ Don't want to call your members, "members"? No problem, it's a quick walk-throug
 *   You can either Preview the change or to finalize changes click Update.
 *   That's it. Your members are now your minions!
 
-https://vimeo.com/320529982
+[embed] https://vimeo.com/320529982 [/embed]

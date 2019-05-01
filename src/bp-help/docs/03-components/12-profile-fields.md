@@ -71,7 +71,7 @@ When creating certain profile fields you may want the title of each field differ
 *   Type - Number
 *   Save
 
-https://vimeo.com/320529726
+[embed] https://vimeo.com/320529726 [/embed]
 
 Repeating Field Sets
 --------------------
@@ -96,7 +96,7 @@ Some fields may have entries that need to be repeated. For example, on a school 
         *   Type - Date Selector
         *   Save
 
-https://vimeo.com/320530623
+[embed] https://vimeo.com/320530623 [/embed]
 
 Field Types
 -----------
@@ -131,7 +131,7 @@ Drop Down select boxes are used to let members select one option of a list that 
 
 The gender selection is different from any other option. The gender selection affects the pronoun used in the member activity feed. Selection of male will use the pronoun "his" while female will use "her", any other option will use "their". You can use the default options or add any other non-binary gender.
 
-https://vimeo.com/320530251
+[embed] https://vimeo.com/320530251 [/embed]
 
 ### Multi Select Box
 

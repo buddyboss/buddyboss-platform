@@ -29,7 +29,7 @@ Remove Connection
 
 Remove a connection by clicking on the member's connection status on your Profile My Connections, the other member's profile or Member Directory pages, then click a second time to remove the connection.
 
-https://vimeo.com/320530591
+[embed] https://vimeo.com/320530591 [/embed]
 
 BuddyBoss Settings
 ------------------
