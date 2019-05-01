@@ -630,6 +630,14 @@ window.bp = window.bp || {};
 				}
 			});
 
+			bp.Nouveau.Messages.dropzone.on('error', function(file,response) {
+				if ( file.accepted ) {
+					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+				} else {
+					bp.Nouveau.Messages.dropzone.removeFile(file);
+				}
+			});
+
 			bp.Nouveau.Messages.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {

@@ -267,7 +267,11 @@ window.bp = window.bp || {};
 					});
 
 					self.dropzone_obj.on('error', function(file,response) {
-						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						if ( file.accepted ) {
+							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						} else {
+							self.dropzone_obj.removeFile(file);
+						}
 					});
 
 					self.dropzone_obj.on('success', function(file, response) {
@@ -339,7 +343,11 @@ window.bp = window.bp || {};
 				});
 
 				self.dropzone_obj.on('error', function(file,response) {
-					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					if ( file.accepted ) {
+						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					} else {
+						self.dropzone_obj.removeFile(file);
+					}
 				});
 
 				self.dropzone_obj.on('queuecomplete', function() {

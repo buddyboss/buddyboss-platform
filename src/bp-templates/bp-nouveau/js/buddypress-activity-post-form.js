@@ -262,6 +262,14 @@ window.bp = window.bp || {};
 				}
 			});
 
+			bp.Nouveau.Activity.postForm.dropzone.on('error', function(file,response) {
+				if ( file.accepted ) {
+					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+				} else {
+					bp.Nouveau.Activity.postForm.dropzone.removeFile(file);
+				}
+			});
+
 			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {

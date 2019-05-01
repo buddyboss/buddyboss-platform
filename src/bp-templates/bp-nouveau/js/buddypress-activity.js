@@ -1028,6 +1028,14 @@ window.bp = window.bp || {};
 						}
 					});
 
+					self.dropzone_obj.on('error', function(file,response) {
+						if ( file.accepted ) {
+							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						} else {
+							self.dropzone_obj.removeFile(file);
+						}
+					});
+
 					self.dropzone_obj.on('removedfile', function(file) {
 						if ( self.dropzone_media.length ) {
 							for ( var i in self.dropzone_media ) {
