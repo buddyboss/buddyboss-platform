@@ -2,13 +2,12 @@
 
 So you like BuddyBoss Platform so much you want to upgrade from BuddyPress. That is awesome! Before you begin you should:  
 
-*   [Back up your files](https://www.buddyboss.com/resources/docs/getting-started/backing-up-your-database-and-files/#best-practices-for-file-backups)
-*   [Back up your database](https://www.buddyboss.com/resources/docs/getting-started/backing-up-your-database-and-files/#best-practices-for-database-backups)
+*   [bp_docs_link text="Back up your database and files" slug="05-maintenance/01-backing-up-your-database-and-files.md"]
 
 Verify Server Requirements
 --------------------------
 
-Before installing BuddyBoss Platform, please make sure you meet the [minimum server and WordPress requirements](https://www.buddyboss.com/resources/docs/getting-started/#required-server-software-packages).
+Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="01-getting-started/0-getting-started.md"].
 
 Get BuddyBoss Platform
 ----------------------

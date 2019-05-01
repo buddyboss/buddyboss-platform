@@ -16,6 +16,5 @@ Required Server Software Packages
 Before Installing We Recommend
 ------------------------------
 
-*   [Backing up your files](https://www.buddyboss.com/resources/docs/getting-started/backing-up-your-database-and-files/#best-practices-for-file-backups)
-*   [Backing up your database](https://www.buddyboss.com/resources/docs/getting-started/backing-up-your-database-and-files/#best-practices-for-database-backups)
+*   [bp_docs_link text="Backing up your database and files" slug="05-maintenance/01-backing-up-your-database-and-files.md"]
 *   VPS Hosting or better - BuddyBoss powered websites increase server resource load exponentially with each new member
