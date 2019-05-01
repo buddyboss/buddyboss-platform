@@ -4313,6 +4313,7 @@ function bp_core_get_post_slug_by_index( $dir_index_file ) {
  */
 function bp_core_stripe_header_tags( $content ) {
 	$content = preg_replace( '/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $content );
+
 	return $content;
 }
 

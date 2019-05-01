@@ -22,4 +22,5 @@ Manual Installation
     Click on Plugins -> Installed Plugins.
 *   Activate BuddyBoss Platform.
 
-https://vimeo.com/320530403
+
+[embed width="500" height="500"]https://vimeo.com/223879840 [/embed]
