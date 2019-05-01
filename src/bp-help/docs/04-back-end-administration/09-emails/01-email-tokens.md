@@ -17,11 +17,11 @@ Value of `home_url()`.
 
 `{{site.description}}`
 
-Value of ‘blog description’.
+Value of ‘blog description'.
 
 `{{site.name}}`
 
-Value of ‘blog name’.
+Value of ‘blog name'.
 
 `{{recipient.email}}`
 
@@ -37,7 +37,7 @@ Username (login) of recipient.
 
 `{{{unsubscribe}}}`
 
-Link to the recipient’s email notifications settings screen in his or her user profile.
+Link to the recipient's email notifications settings screen in his or her user profile.
 
 `{{email.subject}}`
 
@@ -155,7 +155,7 @@ Situation: Recipient has registered for an account and site.
 
 `{{{activate-site.url}}}`
 
-Link to the site’s membership and new blog activation page.
+Link to the site's membership and new blog activation page.
 
 `{{{user-site.url}}}`
 
@@ -163,15 +163,15 @@ The link to the new blog created by the user.
 
 `{{title}}`
 
-The new blog’s title.
+The new blog's title.
 
 `{{domain}}`
 
-The new blog’s domain.
+The new blog's domain.
 
 `{{path}}`
 
-The new blog’s path.
+The new blog's path.
 
 `{{key_blog}}`
 
@@ -179,7 +179,7 @@ The activation key created in wpmu\_signup\_blog().
 
 `{{user.email}}`
 
-The new user’s email address. (Dupes recipient.email?)
+The new user's email address. (Dupes recipient.email?)
 
 #### \[{{{site.name}}}\] Activate your account
 
@@ -187,7 +187,7 @@ Situation: Recipient has registered for an account.
 
 `{{{activate.url}}}`
 
-Link to the site’s membership activation page, including the user’s activation key.
+Link to the site's membership activation page, including the user's activation key.
 
 `{{key}}`
 
@@ -195,11 +195,11 @@ Activation key.
 
 `{{user.email}}`
 
-The new user’s email address. (Dupes recipient.email?)
+The new user's email address. (Dupes recipient.email?)
 
 `{{user.id}}`
 
-The new user’s ID.
+The new user's ID.
 
 #### \[{{{site.name}}}\] New friendship request from {{initiator.name}}
 
@@ -207,11 +207,11 @@ Situation: A member has sent a friend request to the recipient.
 
 `{{{friend-requests.url}}}`
 
-Link to the user’s friendship request management screen.
+Link to the user's friendship request management screen.
 
 `{{{initiator.url}}}`
 
-The initiator’s user profile.
+The initiator's user profile.
 
 `{{initiator.name}}`
 
@@ -235,7 +235,7 @@ Situation: Recipient has had a friend request accepted by a member.
 
 `{{{friendship.url}}}`
 
-Link to the request recipient’s user profile.
+Link to the request recipient's user profile.
 
 `{{friend.name}}`
 
@@ -267,11 +267,11 @@ Display name of recipient (Dupes recipient.name?)
 
 `{{old-user.email}}`
 
-The user’s previous email address.
+The user's previous email address.
 
 `{{user.email}}`
 
-The user’s new email address.
+The user's new email address.
 
 Private Message Tokens
 ----------------------
@@ -301,7 +301,7 @@ Group Tokens
 
 #### \[{{{site.name}}}\] Group details updated
 
-Situation: A group’s details were updated.
+Situation: A group's details were updated.
 
 `{{changed_text}}`
 
@@ -329,7 +329,7 @@ Name of the group.
 
 `{{{group-requests.url}}}`
 
-Link to the group’s membership requests management screen.
+Link to the group's membership requests management screen.
 
 `{{requesting-user.name}}`
 
@@ -397,7 +397,7 @@ ID of the user who is requesting membership.
 
 #### \[{{{site.name}}}\] You have been promoted in the group: “{{group.name}}”
 
-Situation: Recipient’s status within a group has changed.
+Situation: Recipient's status within a group has changed.
 
 `{{group.name}}`
 
@@ -409,7 +409,7 @@ Link to the group.
 
 `{{promoted_to}}`
 
-String describing new group responsibilitied. Possible values: ‘an administrator’ or ‘a moderator’.
+String describing new group responsibilitied. Possible values: ‘an administrator' or ‘a moderator'.
 
 `{{group.id}}`
 
@@ -433,7 +433,7 @@ Link to the group.
 
 `{{inviter.name}}`
 
-Inviter’s display name wrapped in a link to that user’s profile.
+Inviter's display name wrapped in a link to that user's profile.
 
 `{{{inviter.url}}}`
 
@@ -441,4 +441,4 @@ Link to the profile of the user who extended the invitation.
 
 `{{{invites.url}}}`
 
-Link to the recipient’s invitation management screen.
+Link to the recipient's invitation management screen.

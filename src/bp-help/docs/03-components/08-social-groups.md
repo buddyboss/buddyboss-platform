@@ -123,7 +123,7 @@ The Manage group menu option is only available to the group organizer and delega
 *   Members - Manage your group members; promote to moderators, co-organizers, or demote or ban.
     *   Organizers - have total control over the contents and settings of a group. That includes all the abilities of moderators, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo, manage group members, and delete the group.
     *   Moderators - has the ability to edit and delete any forum discussion in the group, and delete any activity feed items excluding those posted by organizers.
-    *   Members - default role when members join a group. Members are able to contribute to the group’s discussions and activity feeds, and view other group members, even in hidden groups.
+    *   Members - default role when members join a group. Members are able to contribute to the group's discussions and activity feeds, and view other group members, even in hidden groups.
 *   Discussions - Create a discussion forum to allow members of this group to communicate in a structured, bulletin-board style fashion.
     *   Option to create/delete group discussion forum.
     *   Group Forum Name
