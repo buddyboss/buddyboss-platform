@@ -938,26 +938,16 @@ body.post-type-bp-email .categorydiv label {
  * 6.0 Help
  *----------------------------------------------------------------------------*/
 
-.buddyboss_page_bp-help {
-
-	.wrap .bp-help-doc {
-		position: relative;
-		margin-top: 20px;
-		padding: 2.2em 2.8em 2em;
-		min-width: 255px;
-		max-width: 1050px;
-		border-radius: 6px;
-		border: 1px solid #e5e5e5;
-		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-		background: #fff;
-	}
-
-	.bp-help-content {
-
-		li.miscellaneous {
-			display: none;
-		}
-	}
+.wrap .bp-help-doc {
+	position: relative;
+	margin-top: 20px;
+	padding: 2.2em 2.8em 2em;
+	min-width: 255px;
+	max-width: 1050px;
+	border-radius: 6px;
+	border: 1px solid #e5e5e5;
+	box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+	background: #fff;
 }
 
 .bp-help-card-grid {
@@ -1066,6 +1056,32 @@ body.post-type-bp-email .categorydiv label {
 		}
 	}
 
+	li.miscellaneous {
+		display: none;
+	}
+
+	code {
+		display: block;
+		padding: 10px 15px;
+		border-radius: 5px;
+		background: #f7f8f9;
+	}
+
+	ul,
+	ol {
+		margin-left: 25px;
+		margin-top: 6px;
+		line-height: 1.5;
+	}
+
+	ul li {
+		list-style-type: disc;
+	}
+
+	ol li {
+		list-style-type: decimal;
+	}
+
 	hr {
 		border-top: none;
 		border-bottom: 1px solid #eaeaea;
@@ -1073,7 +1089,10 @@ body.post-type-bp-email .categorydiv label {
 
 	img {
 		max-width: 100%;
-		width: 100%;
+		width: auto;
+		border: 1px solid #ddd;
+		border-radius: 5px;
+		box-shadow: 0 3px 20px -1px rgba(7, 10, 25, 0.1);
 	}
 }
 
