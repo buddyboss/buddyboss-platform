@@ -1,2 +1,0 @@
-#Translating BuddyBoss Platform
-

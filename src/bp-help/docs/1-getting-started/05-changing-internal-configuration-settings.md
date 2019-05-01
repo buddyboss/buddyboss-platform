@@ -1,2 +1,0 @@
-#Changing Internal Configuration Settings
-

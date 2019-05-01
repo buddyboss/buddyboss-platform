@@ -1,0 +1,3 @@
+#Installing BuddyBoss Platform Themes & Plugins
+
+The BuddyBoss platform was designed for compatibility. The BuddyBoss Platform should not conflict with any WordPress theme that follows the proper [theme development standards](https://codex.wordpress.org/Theme_Development). For themes that do not adhere to the proper standards we cannot guarantee that BuddyBoss Platform components will look nice or function properly.
