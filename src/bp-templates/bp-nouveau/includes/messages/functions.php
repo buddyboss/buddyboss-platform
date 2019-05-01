@@ -81,6 +81,8 @@ function bp_nouveau_messages_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-messages' );
 	wp_enqueue_script( 'select2' );
+	wp_enqueue_script( 'bp-quill' );
+	wp_enqueue_style( 'bp-quill' );
 
 	// Add The tiny MCE init specific function.
 	add_filter( 'tiny_mce_before_init', 'bp_nouveau_messages_at_on_tinymce_init', 10, 2 );

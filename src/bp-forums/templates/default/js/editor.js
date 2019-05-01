@@ -12,7 +12,7 @@ jQuery(document).ready( function() {
 					toolbar: toolbarOptions
 				},
 				theme: 'bubble',
-				placeholder: wp.i18n.__('type message', 'buddyboss')
+				placeholder: wp.i18n.__('Description', 'buddyboss')
 			});
 
 			forums_quill_forum_editor.on('text-change', function() {
@@ -25,7 +25,7 @@ jQuery(document).ready( function() {
 					toolbar: toolbarOptions
 				},
 				theme: 'bubble',
-				placeholder: wp.i18n.__('type message', 'buddyboss')
+				placeholder: wp.i18n.__('type your reply here', 'buddyboss')
 			});
 
 			forums_quill_reply_editor.on('text-change', function() {
@@ -38,7 +38,7 @@ jQuery(document).ready( function() {
 					toolbar: toolbarOptions
 				},
 				theme: 'bubble',
-				placeholder: wp.i18n.__('type message', 'buddyboss')
+				placeholder: wp.i18n.__('type your discussion here', 'buddyboss')
 			});
 
 			forums_quill_topic_editor.on('text-change', function() {
