@@ -916,7 +916,7 @@ body.post-type-bp-email .categorydiv label {
 /*------------------------------------------------------------------------------
  * 6.0 Help
  *----------------------------------------------------------------------------*/
-.buddyboss_page_bp-help .wrap .bp-help-doc {
+.wrap .bp-help-doc {
   position: relative;
   margin-top: 20px;
   padding: 2.2em 2.8em 2em;
@@ -926,10 +926,6 @@ body.post-type-bp-email .categorydiv label {
   border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fff;
-}
-
-.buddyboss_page_bp-help .bp-help-content li.miscellaneous {
-  display: none;
 }
 
 .bp-help-card-grid {
@@ -1031,6 +1027,32 @@ body.post-type-bp-email .categorydiv label {
   color: #999;
 }
 
+.bp-help-content li.miscellaneous {
+  display: none;
+}
+
+.bp-help-content code {
+  display: block;
+  padding: 10px 15px;
+  border-radius: 5px;
+  background: #f7f8f9;
+}
+
+.bp-help-content ul,
+.bp-help-content ol {
+  margin-left: 25px;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.bp-help-content ul li {
+  list-style-type: disc;
+}
+
+.bp-help-content ol li {
+  list-style-type: decimal;
+}
+
 .bp-help-content hr {
   border-top: none;
   border-bottom: 1px solid #eaeaea;
@@ -1038,7 +1060,10 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-content img {
   max-width: 100%;
-  width: 100%;
+  width: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 3px 20px -1px rgba(7, 10, 25, 0.1);
 }
 
 @media screen and (min-width: 782px) {
