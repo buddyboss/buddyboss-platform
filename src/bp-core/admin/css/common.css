@@ -1031,6 +1031,11 @@ body.post-type-bp-email .categorydiv label {
   display: none;
 }
 
+.bp-help-content h1 {
+  font-weight: 500;
+  font-size: 25px;
+}
+
 .bp-help-content code {
   display: block;
   padding: 10px 15px;
