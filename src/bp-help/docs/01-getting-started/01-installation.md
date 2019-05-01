@@ -1,6 +1,6 @@
 #Installation
 
-Before installing BuddyBoss Platform, please make sure you meet the [minimum server and WordPress requirements](https://www.buddyboss.com/resources/docs/getting-started/#required-server-software-packages).
+Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="01-getting-started/0-getting-started.md"]
 
 Automated Install (recommended)
 -------------------------------
