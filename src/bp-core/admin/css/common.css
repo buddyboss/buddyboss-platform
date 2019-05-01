@@ -928,7 +928,7 @@ body.post-type-bp-email .categorydiv label {
   background: #fff;
 }
 
-.buddyboss_page_bp-help .bb-help-content li.miscellaneous {
+.buddyboss_page_bp-help .bp-help-content li.miscellaneous {
   display: none;
 }
 
@@ -965,11 +965,11 @@ body.post-type-bp-email .categorydiv label {
   margin-top: 0;
 }
 
-.bp-help-card-grid .bb-help-content-wrap {
+.bp-help-card-grid .bp-help-content-wrap {
   display: flex;
 }
 
-.bb-help-content-wrap {
+.bp-help-content-wrap {
   display: flex;
   flex-flow: row wrap;
   min-width: 255px;
@@ -981,43 +981,43 @@ body.post-type-bp-email .categorydiv label {
   box-sizing: border-box;
 }
 
-.bb-help-sidebar > ul {
+.bp-help-sidebar > ul {
   margin: 0;
 }
 
-.bb-help-sidebar > ul > li > a {
+.bp-help-sidebar > ul > li > a {
   color: #23282d;
   font-size: 16px;
   font-weight: 600;
 }
 
-.bb-help-sidebar > ul > li > ul {
+.bp-help-sidebar > ul > li > ul {
   margin-top: 20px;
 }
 
-.bb-help-sidebar > ul > li > ul li {
+.bp-help-sidebar > ul > li > ul li {
   line-height: 1.6;
   margin: 1.2em 0;
 }
 
-.bb-help-sidebar > ul > li > ul > li.selected a {
+.bp-help-sidebar > ul > li > ul > li.selected a {
   font-weight: 600;
 }
 
-.bb-help-sidebar > ul > li > ul > li > ul > li {
+.bp-help-sidebar > ul > li > ul > li > ul > li {
   margin-left: 1.6em;
   list-style-type: disc;
 }
 
-.bb-help-content ul.bb-help-menu {
+.bp-help-content ul.bp-help-menu {
   margin: 0 0 2.5em;
 }
 
-.bb-help-content ul.bb-help-menu li {
+.bp-help-content ul.bp-help-menu li {
   display: inline;
 }
 
-.bb-help-content ul.bb-help-menu li:not(:last-child):after {
+.bp-help-content ul.bp-help-menu li:not(:last-child):after {
   font-family: dashicons;
   content: "\f345";
   margin: 0 5px;
@@ -1027,16 +1027,16 @@ body.post-type-bp-email .categorydiv label {
   color: #999;
 }
 
-.bb-help-content ul.bb-help-menu li:last-child a {
+.bp-help-content ul.bp-help-menu li:last-child a {
   color: #999;
 }
 
-.bb-help-content hr {
+.bp-help-content hr {
   border-top: none;
   border-bottom: 1px solid #eaeaea;
 }
 
-.bb-help-content img {
+.bp-help-content img {
   max-width: 100%;
   width: 100%;
 }
@@ -1052,7 +1052,7 @@ body.post-type-bp-email .categorydiv label {
   .bp-help-card-grid .bp-help-card:nth-child(3n+1) {
     clear: both;
   }
-  .bb-help-sidebar {
+  .bp-help-sidebar {
     background: #f9f9f9;
     padding: 2.5em;
     border-right: 1px solid #eaeaea;
@@ -1064,7 +1064,7 @@ body.post-type-bp-email .categorydiv label {
     width: 100%;
     min-height: 60vh;
   }
-  .bb-help-content {
+  .bp-help-content {
     padding: 2.5em 3em;
     -webkit-box-flex: 1;
     -ms-flex: 1;
@@ -1083,7 +1083,7 @@ body.post-type-bp-email .categorydiv label {
   .bp-help-card-grid .bp-help-card:nth-child(2n+1) {
     clear: both;
   }
-  .bb-help-sidebar {
+  .bp-help-sidebar {
     background: #f9f9f9;
     padding: 2.5em;
     width: 100%;
@@ -1091,7 +1091,7 @@ body.post-type-bp-email .categorydiv label {
     border-bottom: 1px solid #eaeaea;
     border-radius: 6px 6px 0 0;
   }
-  .bb-help-content {
+  .bp-help-content {
     padding: 2.5em;
     width: 100%;
   }
