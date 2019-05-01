@@ -1037,10 +1037,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-content code {
-  display: block;
-  padding: 10px 15px;
-  border-radius: 5px;
-  background: #f7f8f9;
+  border-radius: 3px;
 }
 
 .bp-help-content ul,
