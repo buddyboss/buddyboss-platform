@@ -45,7 +45,7 @@ This option allows members to post comments an blog post activities on members t
 
 This option will auto load new activity at the top of your site News Feed page. Note: This does not work within profile timelines and depending on site configuration and load could take thirty seconds or longer to appear.
 
-https://vimeo.com/320529804
+[embed] https://vimeo.com/320529804 [/embed]
 
 ### Follow
 

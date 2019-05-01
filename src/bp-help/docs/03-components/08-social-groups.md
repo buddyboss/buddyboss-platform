@@ -94,7 +94,7 @@ The ability for group members to send invites must be enabled by the group organ
 
 ![group invite](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupsendinvite-1024x725.jpg)
 
-https://vimeo.com/320530340
+[embed] https://vimeo.com/320530340 [/embed]
 
 Manage Group
 ------------
@@ -134,7 +134,7 @@ The Manage group menu option is only available to the group organizer and delega
 
 By default any member can create a group. If you want your site to have a set number of groups then you can disable members ability to create a group.
 
-https://vimeo.com/320530305
+[embed] https://vimeo.com/320530305 [/embed]
 
 ### Group Photo Uploads
 

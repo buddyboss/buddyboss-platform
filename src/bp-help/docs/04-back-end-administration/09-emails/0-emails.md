@@ -47,7 +47,7 @@ Customize Header
 *   Recipient color
 *   Recipient text size
 
-https://vimeo.com/320529935
+[embed] https://vimeo.com/320529935 [/embed]
 
 Customize Body
 --------------
@@ -61,7 +61,7 @@ Customize Body
 *   Quote background color - Message from activity
 *   Links and buttons color - Member Name and Reply button
 
-https://vimeo.com/320529855
+[embed] https://vimeo.com/320529855 [/embed]
 
 Customize Footer
 ----------------
@@ -70,7 +70,7 @@ Customize Footer
 *   Footer text color
 *   Footer text size
 
-https://vimeo.com/320529897
+[embed] https://vimeo.com/320529897 [/embed]
 
 Custom Email Template
 ---------------------

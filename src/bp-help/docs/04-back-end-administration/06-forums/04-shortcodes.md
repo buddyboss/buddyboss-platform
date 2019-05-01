@@ -4,7 +4,7 @@ BuddyBoss Platform supports forum shortcodes. To use any of the shortcodes simpl
 
 Some shortcodes requires a forum, discussion, reply or discussion tag ID. View the video below to learn how to find the ID.
 
-https://vimeo.com/324756016
+[embed] https://vimeo.com/324756016 [/embed]
 
 Forums
 ------

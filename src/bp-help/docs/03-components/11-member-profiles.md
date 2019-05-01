@@ -24,19 +24,19 @@ Profile Settings
 
 Chose between First Name, First Name & Last Name or Username displayed for user activity. After the format has been updated, remember to run the [BuddyBoss Tool](https://www.buddyboss.com/resources/docs/back-end-administration-panels/buddyboss-tools/) (Update display name to selected format in profile setting.) to update all the profiles.
 
-https://vimeo.com/320530132
+[embed] https://vimeo.com/320530132 [/embed]
 
 ### Photo Uploads
 
 Allow registered members to upload avatars.
 
-https://vimeo.com/320530521
+[embed] https://vimeo.com/320530521 [/embed]
 
 ### Cover Photo Uploads
 
 Allow registered members to upload cover photos.
 
-https://vimeo.com/320528463
+[embed] https://vimeo.com/320528463 [/embed]
 
 ### Display on Profiles
 
@@ -49,11 +49,11 @@ Profile Types
 
 Enable profile types to give members unique profile fields and permissions.
 
-https://vimeo.com/320530553
+[embed] https://vimeo.com/320530553 [/embed]
 
 Profile Search
 --------------
 
 Enable advanced profile search on the members directory.
 
-https://vimeo.com/331779174
+[embed] https://vimeo.com/331779174 [/embed]
