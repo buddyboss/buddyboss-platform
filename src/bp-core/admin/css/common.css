@@ -942,6 +942,7 @@ body.post-type-bp-email .categorydiv label {
   border-radius: 6px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
+  min-height: 195px;
 }
 
 .bp-help-card-grid .bp-help-card .inside {
@@ -996,13 +997,32 @@ body.post-type-bp-email .categorydiv label {
   margin: 1.2em 0;
 }
 
-.bp-help-sidebar > ul > li > ul > li.selected a {
+.bp-help-sidebar > ul > li ul > li.selected > a {
   font-weight: 600;
 }
 
 .bp-help-sidebar > ul > li > ul > li > ul > li {
   margin-left: 1.6em;
   list-style-type: disc;
+}
+
+.bp-help-sidebar > ul span.open {
+  font-size: 0;
+}
+
+.bp-help-sidebar > ul span.open:after {
+  font-family: dashicons;
+  content: "\f345";
+  margin: 0 5px;
+  display: inline-block;
+  vertical-align: bottom;
+  font-size: 10px;
+  color: #999;
+  cursor: pointer;
+}
+
+.bp-help-sidebar > ul span.open.active:after {
+  transform: rotate(90deg);
 }
 
 .bp-help-content ul.bp-help-menu {

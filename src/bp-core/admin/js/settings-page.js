@@ -255,14 +255,19 @@
 				 */
 				$( '.bp-help-card-grid' ).on( 'click', 'span.open', function () {
 
-					$( this ).closest( '.main' ).find( 'ul:first' ).toggle();
+					$( this ).toggleClass( 'active' );
+                    $( this ).closest( '.main' ).find( 'ul:first' ).toggle();
 				} );
 
 				/**
 				 * show the closest UI
 				 */
-				$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show();
+				$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show().closest( 'li' ).find( '> span.actions .open' ).addClass( 'active' );
 
+				/**
+				 * Show the child sub menu
+				 */
+				$( '.bp-help-card-grid li.selected' ).find( 'ul:first' ).show();
 
 				/**
 				 * Update LI count via JS
