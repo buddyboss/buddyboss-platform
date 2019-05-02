@@ -1140,10 +1140,6 @@ window.bp = window.bp || {};
 					this.$self.removeClass('open');
 					this.$gifPickerEl.removeClass('open');
 				}
-
-				if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
-					this.$emojiPickerEl.data('emojioneArea').hidePicker();
-				}
 			}
 		},
 
@@ -1156,11 +1152,6 @@ window.bp = window.bp || {};
 				this.$gifPickerEl.removeClass('open');
 			}
 
-			if (!_.isUndefined(BP_Nouveau.activity.params.emoji) &&
-				!$targetEl.closest('.post-emoji').length &&
-				!$targetEl.is('.emojioneemoji,.emojibtn')) {
-				this.$emojiPickerEl.data('emojioneArea').hidePicker();
-			}
 		},
 
 		activeButton: function (event) {
@@ -1428,7 +1419,7 @@ window.bp = window.bp || {};
 				$('#whats-new').emojioneArea({
 					standalone: true,
 					hideSource: false,
-					container: '.post-emoji',
+					container: '#whats-new-toolbar > .post-emoji',
 					autocomplete: false,
 					pickerPosition: 'bottom',
 					hidePickerOnBlur: false,
