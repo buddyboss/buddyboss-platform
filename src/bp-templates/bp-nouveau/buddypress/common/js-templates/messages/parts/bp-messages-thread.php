@@ -55,7 +55,7 @@
           <# } #>
         </span>
 
-				{{data.excerpt}}
+				{{{data.excerpt}}}
 			</a>
 		</div>
 	</div>

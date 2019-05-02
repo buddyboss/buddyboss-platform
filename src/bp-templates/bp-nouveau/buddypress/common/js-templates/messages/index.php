@@ -11,7 +11,6 @@
 ?>
 
 <input type="hidden" id="thread-id" value="" />
-
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel">
 		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
@@ -35,6 +34,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
      */
     $template_parts = apply_filters( 'bp_messages_js_template_parts', [
         'parts/bp-messages-feedback',
+        'parts/bp-messages-loading',
         'parts/bp-messages-hook',
         'parts/bp-messages-form',
         'parts/bp-messages-editor',
