@@ -11,7 +11,9 @@
 ?>
 
 <input type="hidden" id="thread-id" value="" />
-
+<script type="text/html" id="tmpl-bp-messages-loading">
+    <i class="dashicons dashicons-update animate-spin"></i>
+</script>
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel">
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div>

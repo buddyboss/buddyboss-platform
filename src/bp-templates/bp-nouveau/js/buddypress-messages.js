@@ -521,6 +521,13 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	// Loading view
+	bp.Views.MessagesLoading = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		className: 'bp-messages bp-user-messages-loading',
+		template  : bp.template( 'bp-messages-loading' ),
+	} );
+
 	// Hook view
 	bp.Views.Hook = bp.Nouveau.Messages.View.extend( {
 		tagName: 'div',
@@ -960,14 +967,8 @@ window.bp = window.bp || {};
 		requestThreads: function() {
 			this.collection.reset();
 
-			this.loadingFeedback = new bp.Views.Feedback( {
-				value: BP_Nouveau.messages.loading,
-				type:  'loading'
-			} );
-
+			this.loadingFeedback = new bp.Views.MessagesLoading();
 			this.views.add(this.loadingFeedback);
-
-			//bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading', '#bp-messages-threads-list' );
 
 			this.collection.fetch( {
 				data    : _.pick( this.options, 'box' ),
@@ -1020,11 +1021,7 @@ window.bp = window.bp || {};
 			) {
 				this.collection.options.page = this.collection.options.page + 1;
 
-				this.loadingFeedback = new bp.Views.Feedback( {
-					value: BP_Nouveau.messages.loading,
-					type:  'loading'
-				} );
-
+				this.loadingFeedback = new bp.Views.MessagesLoading();
 				this.views.add(this.loadingFeedback);
 
 				_.extend( this.collection.options, _.pick( bp.Nouveau.Messages.filters.attributes, ['box', 'search_terms'] ) );
@@ -1439,13 +1436,8 @@ window.bp = window.bp || {};
 
 			// this.collection.reset();
 
-			this.loadingFeedback = new bp.Views.Feedback({
-				value: BP_Nouveau.messages.loading,
-				type: 'loading'
-			});
+			this.loadingFeedback = new bp.Views.MessagesLoading();
 			this.views.add('#bp-message-content',this.loadingFeedback);
-
-			//bp.Nouveau.Messages.displayFeedback( BP_Nouveau.messages.loading, 'loading' );
 
 			if ( _.isUndefined( this.options.thread.attributes ) ) {
 				data.id = this.options.thread.id;
@@ -1471,7 +1463,6 @@ window.bp = window.bp || {};
 			}
 
 			this.loadingFeedback.remove();
-			//bp.Nouveau.Messages.removeFeedback();
 
 			if ( response.feedback_error && response.feedback_error.feedback && response.feedback_error.type ) {
 				bp.Nouveau.Messages.displayFeedback( response.feedback_error.feedback, response.feedback_error.type );
@@ -1520,8 +1511,6 @@ window.bp = window.bp || {};
 				collection.hasMore = false;
 			}
 
-			//bp.Nouveau.Messages.removeFeedback();
-
 			if ( ! response.messages && ! _.isUndefined( this.views.get( '#bp-message-load-more' ) ) ) {
 				loadMore = this.views.get( '#bp-message-load-more' )[0];
 				loadMore.views.view.remove();
@@ -1536,7 +1525,6 @@ window.bp = window.bp || {};
 					type: response.type
 				});
 				this.views.add('#bp-message-content',this.loadingFeedback);
-				//bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			}
 		},
 
