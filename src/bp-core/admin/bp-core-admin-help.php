@@ -188,10 +188,10 @@ function bp_core_admin_help_display_content( $docs_path ) {
  */
 function bp_core_admin_help_main_page() {
 	$base_path   = buddypress()->plugin_dir . 'bp-help';
-	$docs_path   = $base_path . '/docs';
+	$docs_path   = $base_path . '/docs/';
 	$vendor_path = $base_path . '/vendors';
 
-	$main_directories = glob( $docs_path . '/*', GLOB_ONLYDIR );
+	$main_directories = glob( $docs_path . '*', GLOB_ONLYDIR );
 
 	if ( ! empty( $main_directories ) ) {
 		if ( empty( bp_core_admin_help_get_article_value() ) ) {
@@ -207,7 +207,7 @@ function bp_core_admin_help_main_page() {
 			 * Sidebar main dir path
 			 */
 			$article_dir_array = explode( "/", bp_core_admin_help_get_article_value() );
-			$content_main_dir  = $docs_path . '/' . $article_dir_array[1];
+			$content_main_dir  = $docs_path . $article_dir_array[0];
 
 			/**
 			 * Show display sidebar or not
