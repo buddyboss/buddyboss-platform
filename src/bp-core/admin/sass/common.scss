@@ -955,15 +955,21 @@ body.post-type-bp-email .categorydiv label {
 	min-width: 255px;
 	max-width: 1050px;
 
+	.bp-help-main-menu-wrap {
+		display: flex;
+		flex-flow: wrap;
+		margin-left: -10px;
+		margin-right: -10px;
+	}
+
 	.bp-help-card {
-		float: left;
-		margin-bottom: 2%;
+		margin: 0 10px 2%;
 		background-color: #fff;
 		border: 1px solid #e5e5e5;
 		border-radius: 6px;
 		box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
 		box-sizing: border-box;
-		min-height: 195px;
+		flex: 0 0 calc(33.33% - 20px);
 
 		.inside {
 			padding: 1.8em 2em 1em;
@@ -1055,6 +1061,10 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-content {
+	
+	p, ul li {
+		line-height: 2;	
+	}
 
 	ul.bp-help-menu {
 		margin: 0 0 2.5em;
@@ -1099,7 +1109,7 @@ body.post-type-bp-email .categorydiv label {
 	}
 
 	ul li {
-		list-style-type: disc;
+		list-style-type: circle;
 	}
 
 	ol li {
@@ -1124,18 +1134,9 @@ body.post-type-bp-email .categorydiv label {
 
 	.bp-help-card-grid {
 
-		.bp-help-card {
-			margin-right: 2%;
-			width: 32%;
-		}
-
-		.bp-help-card:nth-child(3n) {
-			margin-right: 0;
-		}
-
-		.bp-help-card:nth-child(3n+1) {
-			clear: both;
-		}
+		/*.bp-help-card {
+			flex: 0 0 calc(50% - 20px);
+		}*/
 	}
 
 	.bp-help-sidebar {
@@ -1164,16 +1165,7 @@ body.post-type-bp-email .categorydiv label {
 	.bp-help-card-grid {
 
 		.bp-help-card {
-			margin-right: 2%;
-			width: 49%;
-		}
-
-		.bp-help-card:nth-child(2n) {
-			margin-right: 0;
-		}
-
-		.bp-help-card:nth-child(2n+1) {
-			clear: both;
+			flex: 0 0 calc(50% - 20px);
 		}
 	}
 
@@ -1194,8 +1186,10 @@ body.post-type-bp-email .categorydiv label {
 
 @media screen and (max-width: 550px) {
 
-	.bp-help-card-grid .bp-help-card {
-		width: 100%;
+	.bp-help-card-grid {
+		.bp-help-card {
+			flex: 0 0 calc(100% - 20px);
+		}
 	}
 
 }

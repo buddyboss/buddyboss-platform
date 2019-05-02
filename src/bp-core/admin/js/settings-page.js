@@ -268,6 +268,7 @@
 				 * Show the child sub menu
 				 */
 				$( '.bp-help-card-grid li.selected' ).find( 'ul:first' ).show();
+                $( '.bp-help-card-grid li.selected' ).find( '> span.actions .open' ).addClass( 'active' );
 
 				/**
 				 * Update LI count via JS
