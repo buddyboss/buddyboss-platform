@@ -11,9 +11,6 @@
 ?>
 
 <input type="hidden" id="thread-id" value="" />
-<script type="text/html" id="tmpl-bp-messages-loading">
-    <i class="dashicons dashicons-update animate-spin"></i>
-</script>
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel">
 		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div>
@@ -36,6 +33,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
      */
     $template_parts = apply_filters( 'bp_messages_js_template_parts', [
         'parts/bp-messages-feedback',
+        'parts/bp-messages-loading',
         'parts/bp-messages-hook',
         'parts/bp-messages-form',
         'parts/bp-messages-editor',

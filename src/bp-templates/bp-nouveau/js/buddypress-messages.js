@@ -524,7 +524,7 @@ window.bp = window.bp || {};
 	// Loading view
 	bp.Views.MessagesLoading = bp.Nouveau.Messages.View.extend( {
 		tagName: 'div',
-		className: 'bp-messages bp-user-messages-loading',
+		className: 'bp-messages bp-user-messages-loading loading',
 		template  : bp.template( 'bp-messages-loading' ),
 	} );
 
