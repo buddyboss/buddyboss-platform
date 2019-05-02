@@ -14,7 +14,8 @@
 
 <div class="bp-messages-container">
 	<div class="bp-messages-nav-panel">
-		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div>
+		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
 		<div class="bp-messages-feedback"></div>
 		<div class="bp-messages-threads-list" id="bp-messages-threads-list"></div>
 	</div>

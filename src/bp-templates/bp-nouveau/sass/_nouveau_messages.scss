@@ -14,7 +14,13 @@
 // Visual message threads & preview pane styles
 
 .bp-messages-container {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-box-orient: horizontal;
+	-webkit-box-direction: normal;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
 }
 
 .bp-messages-content {
@@ -60,6 +66,10 @@
 	padding: 0;
 	width: 100%;
 
+	&:empty {
+		display: none;
+	}
+
 	// The primary list elements
 	li {
 		border-bottom: 1px solid $light-grey;
@@ -78,6 +88,9 @@
 
 		//.thread-from,
 		.thread-to {
+			white-space: nowrap;
+			overflow: hidden;
+			text-overflow: ellipsis;
 
 			@include box-item-size(1, 2, 10%);
 
@@ -119,6 +132,7 @@
 
 
 		.thread-content {
+			min-width: 0;
 
 			@include box-item-size(1, 2, 50%);
 
@@ -161,13 +175,12 @@
 		}
 
 		.thread-avatar {
+			margin-right: 15px;
 
 			@include box-item-size(1, 2, 10%);
 
 			img.avatar {
-				float: left;
-				margin: 0 10px 0 0;
-				max-width: 50px;
+				max-width: 60px;
 				width: 100%;
 			}
 		}
@@ -459,4 +472,62 @@ input#send-to-input {
 
 .messages .select2-dropdown {
 	border-color: $med-light-grey;
+}
+
+.messages-wrapper #subnav .subnav {
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	width: 100%;
+}
+
+.bp-messages-nav-panel {
+	display: block;
+	-webkit-box-flex: 0;
+	-ms-flex: 0 0 360px;
+	flex: 0 0 360px;
+	min-width: 0;
+}
+
+.messages-wrapper #subnav #compose-personal-li {
+	margin-left: auto;
+}
+
+#inbox {
+	pointer-events: none;
+}
+
+#compose-personal-li a {
+	font-size: 0;
+
+	&:after {
+		content: "\f465";
+		font-size: 20px;
+		line-height: 1;
+		font-family: dashicons;
+		vertical-align: top;
+		text-align: center;
+		transition: color 0.1s ease-in;
+		-webkit-font-smoothing: antialiased;
+		-moz-osx-font-smoothing: grayscale;
+	}
+}
+
+#message_content {
+	margin-bottom: 10px;
+}
+
+.no-message-wrap {
+	padding: 30px 0 15px;
+	text-align: center;
+}
+
+.no-message-wrap .dashicons {
+	font-size: 30px;
+	width: auto;
+	height: auto;
+	margin-bottom: 5px;
 }

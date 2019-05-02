@@ -50,6 +50,10 @@
 .dz-image {
 	border-radius: 4px;
 	overflow: hidden;
+
+	img {
+		display: block;
+	}
 }
 
 .dropzone .dz-preview.dz-file-preview .dz-image {

@@ -3581,7 +3581,13 @@ body.register .buddypress-wrap .page ul {
 }
 
 .bp-messages-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .bp-messages-content {
@@ -3623,6 +3629,10 @@ body.register .buddypress-wrap .page ul {
   width: 100%;
 }
 
+#message-threads:empty {
+  display: none;
+}
+
 #message-threads li {
   border-bottom: 1px solid #eaeaea;
   display: -webkit-flex;
@@ -3657,6 +3667,9 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-to {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   -webkit-flex: 1 2 10%;
   -moz-flex: 1 2 10%;
   -ms-flex: 1 2 10%;
@@ -3698,6 +3711,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-content {
+  min-width: 0;
   -webkit-flex: 1 2 50%;
   -moz-flex: 1 2 50%;
   -ms-flex: 1 2 50%;
@@ -3752,6 +3766,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-avatar {
+  margin-right: 15px;
   -webkit-flex: 1 2 10%;
   -moz-flex: 1 2 10%;
   -ms-flex: 1 2 10%;
@@ -3760,9 +3775,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-avatar img.avatar {
-  float: left;
-  margin: 0 10px 0 0;
-  max-width: 50px;
+  max-width: 60px;
   width: 100%;
 }
 
@@ -4010,6 +4023,64 @@ input#send-to-input {
 
 .messages .select2-dropdown {
   border-color: #d6d6d6;
+}
+
+.messages-wrapper #subnav .subnav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.bp-messages-nav-panel {
+  display: block;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 360px;
+  flex: 0 0 360px;
+  min-width: 0;
+}
+
+.messages-wrapper #subnav #compose-personal-li {
+  margin-left: auto;
+}
+
+#inbox {
+  pointer-events: none;
+}
+
+#compose-personal-li a {
+  font-size: 0;
+}
+
+#compose-personal-li a:after {
+  content: "\f465";
+  font-size: 20px;
+  line-height: 1;
+  font-family: dashicons;
+  vertical-align: top;
+  text-align: center;
+  transition: color 0.1s ease-in;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#message_content {
+  margin-bottom: 10px;
+}
+
+.no-message-wrap {
+  padding: 30px 0 15px;
+  text-align: center;
+}
+
+.no-message-wrap .dashicons {
+  font-size: 30px;
+  width: auto;
+  height: auto;
+  margin-bottom: 5px;
 }
 
 /**
@@ -10279,6 +10350,10 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .dz-image {
   border-radius: 4px;
   overflow: hidden;
+}
+
+.dz-image img {
+  display: block;
 }
 
 .dropzone .dz-preview.dz-file-preview .dz-image {
