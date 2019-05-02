@@ -353,7 +353,6 @@
 		}
 	}
 
-	#thread-preview .preview-message,
 	#bp-message-thread-list li .message-content {
 
 		ul,
@@ -368,7 +367,6 @@
 		display: none;
 	}
 
-	#thread-preview h2:first-child,
 	#bp-message-thread-header h2:first-child {
 		background-color: $light-grey;
 		color: $bp-text;
@@ -559,7 +557,11 @@ input#send-to-input {
 
 	.bp-messages-user-threads,
 	#bp-message-thread-list {
-		max-height: 60vh;
+		max-height: 66vh;
 		overflow: auto;
+	}
+
+	#bp-message-thread-list {
+		max-height: 50vh;
 	}
 }

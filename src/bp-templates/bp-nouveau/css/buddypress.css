@@ -3919,9 +3919,6 @@ body.register .buddypress-wrap .page ul {
   width: 30px;
 }
 
-.bp-messages-content #thread-preview .preview-message ul,
-.bp-messages-content #thread-preview .preview-message ol,
-.bp-messages-content #thread-preview .preview-message blockquote,
 .bp-messages-content #bp-message-thread-list li .message-content ul,
 .bp-messages-content #bp-message-thread-list li .message-content ol,
 .bp-messages-content #bp-message-thread-list li .message-content blockquote {
@@ -3933,7 +3930,6 @@ body.register .buddypress-wrap .page ul {
   display: none;
 }
 
-.bp-messages-content #thread-preview h2:first-child,
 .bp-messages-content #bp-message-thread-header h2:first-child {
   background-color: #eaeaea;
   color: #555;
@@ -4108,8 +4104,11 @@ input#send-to-input {
 @media screen and (min-width: 46.8em) {
   .bp-messages-user-threads,
   #bp-message-thread-list {
-    max-height: 60vh;
+    max-height: 66vh;
     overflow: auto;
+  }
+  #bp-message-thread-list {
+    max-height: 50vh;
   }
 }
 
