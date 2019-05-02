@@ -2,7 +2,7 @@
 
 So you like BuddyBoss Platform so much you want to upgrade from BuddyPress. That is awesome! Before you begin you should:  
 
-*   [bp_docs_link text="Back up your database and files" slug="05-maintenance/01-backing-up-your-database-and-files.md"]
+*   [bp_docs_link text="Back up your database and files" slug="maintenance/backing-up-your-database-and-files.md"]
 
 Verify Server Requirements
 --------------------------

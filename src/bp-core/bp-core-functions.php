@@ -4246,10 +4246,13 @@ function bp_platform_default_activity_types() {
  * @return mixed
  */
 function bp_core_help_bp_docs_link( $attr ) {
-	$slug = isset( $attr['slug'] ) ? $attr['slug'] : '';
-	$text = isset( $attr['text'] ) ? $attr['text'] : '';
+	$slug    = isset( $attr['slug'] ) ? bp_core_dynamically_add_number_in_path( $attr['slug'] ) : '';
+	$text    = isset( $attr['text'] ) ? $attr['text'] : '';
 	$anchors = isset( $attr['anchors'] ) ? '#' . $attr['anchors'] : '';
-	$url  = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/' . $slug. $anchors ), 'admin.php' ) );
+	$url     = bp_get_admin_url( add_query_arg( array(
+		'page'    => 'bp-help',
+		'article' => $slug . $anchors
+	), 'admin.php' ) );
 
 	return apply_filters( 'bp_core_help_bp_docs_link', sprintf( '<a href="%s"> %s </a>', $url, $text ), $attr );
 }
@@ -4295,7 +4298,8 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
  * @return string
  */
 function bp_core_get_post_slug_by_index( $dir_index_file ) {
-	$index_file = db_core_remove_file_extension_from_slug(  end( explode( '/', $dir_index_file ) ) );
+	$index_file = db_core_remove_file_extension_from_slug( end( explode( '/', $dir_index_file ) ) );
+
 	return db_core_remove_file_number_from_slug( $index_file );
 }
 
@@ -4347,7 +4351,7 @@ function db_core_remove_file_extension_from_slug( $slug, $file_type = '.md' ) {
 function db_core_remove_file_number_from_slug( $index_file ) {
 	$index_file = explode( '-', $index_file );
 
-	if ( count( $index_file ) > 1 ) {
+	if ( ( absint( $index_file[0] ) > 0 || '0' == $index_file[0] ) && count( $index_file ) > 1 ) {
 		unset( $index_file[0] );
 	}
 
@@ -4372,4 +4376,59 @@ function bp_core_strip_number_from_slug( $path ) {
 	}
 
 	return $new_path;
+}
+
+
+/**
+ * Dynamically add the number slug before folder path
+ *
+ * @param $slug
+ *
+ * @return mixed
+ */
+function bp_core_dynamically_add_number_in_path( $slug ) {
+	$new_slug = bp_core_strip_number_from_slug( $slug );
+
+	$base_path = buddypress()->plugin_dir . 'bp-help';
+	$docs_path = $base_path . '/docs/';
+
+	$paths = bp_core_get_all_file_from_dir_and_subdir( $docs_path );
+	if ( ! empty( $paths ) ) {
+		foreach ( $paths as $path ) {
+			$file_path = str_replace( $docs_path, "", $path );
+			$path      = bp_core_strip_number_from_slug( $file_path );
+			if ( $path == $new_slug ) {
+				$new_slug = $file_path;
+				break;
+			}
+
+		}
+	}
+
+
+	return $new_slug;
+}
+
+/**
+ * Get all files and folder from the dir and sub dir
+ *
+ * @param $dir
+ * @param array $results
+ *
+ * @return array
+ */
+function bp_core_get_all_file_from_dir_and_subdir( $dir, &$results = array() ) {
+	$files = scandir( $dir );
+
+	foreach ( $files as $key => $value ) {
+		$path = realpath( $dir . DIRECTORY_SEPARATOR . $value );
+		if ( ! is_dir( $path ) ) {
+			$results[] = $path;
+		} else if ( $value != "." && $value != ".." ) {
+			bp_core_get_all_file_from_dir_and_subdir( $path, $results );
+			$results[] = $path;
+		}
+	}
+
+	return $results;
 }
