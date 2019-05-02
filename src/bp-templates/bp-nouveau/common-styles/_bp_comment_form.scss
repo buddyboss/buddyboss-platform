@@ -22,18 +22,17 @@ form.ac-form {
 			margin-bottom: $marg-med;
 			padding: 0 $pad-sml;
 
-			textarea {
+			.ac-input[contenteditable=true] {
 				background: transparent;
 				box-shadow: none;
 				color: $bp-text;
 				font-family: inherit;
 				font-size: 100%;
-				height: 60px;
 				margin: 0;
 				outline: none;
 				padding: 0.5em;
 				width: 100%;
-
+				border: 1px solid #ccc;
 				&:focus {
 
 					@include box-shadow( 0 0 6px $med-light-grey );

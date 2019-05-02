@@ -501,6 +501,9 @@ window.bp = window.bp || {};
 
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+
+			$( document ).on( 'click', this.closePickersOnClick );
+			document.addEventListener( 'keydown', this.closePickersOnEsc );
 		},
 
                 /**
@@ -1389,7 +1392,35 @@ window.bp = window.bp || {};
 					options.data += '&member_type_id=' + member_type_id;
 				}
 			}
-		}
+		},
+
+		/**
+		 * Close emoji picker whenever clicked outside of emoji container
+		 * @param event
+		 */
+		closePickersOnClick: function( event ) {
+			var $targetEl = $(event.target);
+
+			if (!_.isUndefined(BP_Nouveau.activity.params.emoji) &&
+			    !$targetEl.closest('.post-emoji').length &&
+			    !$targetEl.is('.emojioneemoji,.emojibtn')) {
+				$('.emojionearea-button.active').removeClass('active');
+			}
+		},
+
+		/**
+		 * Close emoji picker on Esc press
+		 * @param event
+		 */
+		closePickersOnEsc: function( event ) {
+			if ( event.key === 'Escape' || event.keyCode === 27 ) {
+				if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
+					$('.emojionearea-button.active').removeClass('active');
+				}
+			}
+		},
+
+
 	};
 
 	// Launch BP Nouveau

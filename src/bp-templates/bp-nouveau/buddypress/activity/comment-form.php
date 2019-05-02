@@ -13,7 +13,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 <form action="<?php bp_activity_comment_form_action(); ?>" method="post" id="ac-form-<?php bp_activity_id(); ?>" class="ac-form"<?php bp_activity_comment_form_nojs_display(); ?>>
 
 	<div class="bp-ac-form-cotainer">
-	
+
 		<div class="ac-reply-avatar"><?php bp_loggedin_user_avatar( array( 'type' => 'thumb' ) ); ?></div>
 
 		<div class="ac-reply-content">
@@ -21,7 +21,7 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 				<label for="ac-input-<?php bp_activity_id(); ?>" class="bp-screen-reader-text">
 					<?php esc_html_e( 'Comment', 'buddyboss' ); ?>
 				</label>
-				<textarea id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>"></textarea>
+				<div contenteditable="true" id="ac-input-<?php bp_activity_id(); ?>" class="ac-input bp-suggestions" name="ac_input_<?php bp_activity_id(); ?>"></div>
 
 				<div id="ac-reply-attachments-<?php bp_activity_id(); ?>" class="ac-reply-attachments">
 
@@ -50,12 +50,15 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 					<?php if ( bp_is_activity_gif_active() ): ?>
 						<div class="post-elements-buttons-item post-gif">
 							<div class="gif-media-search">
-								<a href="#" id="activate-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>"><span class="dashicons dashicons-smiley"></span></a>
+								<a href="#" id="ac-reply-gif-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-gif-button" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>"><span class="dashicons dashicons-smiley"></span></a>
 								<div class="gif-media-search-dropdown"></div>
 							</div>
 						</div>
 					<?php endif; ?>
 
+					<?php if ( bp_is_activity_emoji_active() ): ?>
+						<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip="<?php _e('Insert an emoji', 'buddyboss'); ?>" id="ac-reply-emoji-button-<?php bp_activity_id() ?>"></div>
+					<?php endif; ?>
 				</div>
 			</div>
 			<input type="hidden" name="comment_form_id" value="<?php bp_activity_id(); ?>" />

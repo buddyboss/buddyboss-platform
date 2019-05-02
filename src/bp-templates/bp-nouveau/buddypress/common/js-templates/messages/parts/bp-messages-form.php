@@ -21,8 +21,7 @@
 	<div id="bp-message-content"></div>
 
 	<?php bp_nouveau_messages_hook( 'after', 'compose_content' ); ?>
-
-	<div class="submit">
-		<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
-	</div>
+</script>
+<script type="text/html" id="tmpl-bp-messages-form-submit">
+    <input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
 </script>

@@ -727,6 +727,22 @@ window.bp = window.bp || {};
 		}
 	});
 
+	bp.Views.MessageFormSubmit = bp.Nouveau.Messages.View.extend( {
+		tagName   : 'div',
+		className   : 'submit',
+		id        : 'message-new-submit',
+		template  : bp.template( 'bp-messages-form-submit' ),
+	} );
+
+	bp.Views.MessageFormSubmitWrapper = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		id: 'message-form-submit-wrapper',
+		initialize: function() {
+			this.views.add( new bp.Views.MessagesToolbar( { model: this.model } ) );
+			this.views.add( new bp.Views.MessageFormSubmit( { model: this.model } ) );
+		}
+	});
+
 	bp.Views.messageForm = bp.Nouveau.Messages.View.extend( {
 		tagName   : 'form',
 		id        : 'send_message_form',
@@ -747,7 +763,8 @@ window.bp = window.bp || {};
 			this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
 			this.messagesAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
 			this.views.add( '#bp-message-content', this.messagesAttachments );
-			this.views.add( '#bp-message-content', new bp.Views.MessagesToolbar( { model: this.model } ) );
+
+			this.views.add( '#bp-message-content', new bp.Views.MessageFormSubmitWrapper( { model: this.model } ) );
 
 			this.model.on( 'change', this.resetFields, this );
 
@@ -1016,7 +1033,7 @@ window.bp = window.bp || {};
 		scrolled: function( event ) {
 			var target = $( event.currentTarget );
 
-			if ( ( target[0].scrollHeight - ( target.scrollTop() - 10 ) ) == target.innerHeight() &&
+			if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) == target.innerHeight() &&
 				this.collection.length &&
 				this.collection.options.page < this.collection.options.total_page
 			) {
@@ -1397,8 +1414,25 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	bp.Views.MessageReplyFormSubmit = bp.Nouveau.Messages.View.extend( {
+		tagName   : 'div',
+		className   : 'submit',
+		id        : 'message-reply-new-submit',
+		template  : bp.template( 'bp-messages-reply-form-submit' ),
+	} );
+
+	bp.Views.MessageReplyFormSubmitWrapper = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		id: 'message-reply-form-submit-wrapper',
+		initialize: function() {
+			this.views.add( new bp.Views.MessagesToolbar( { model: this.model } ) );
+			this.views.add( new bp.Views.MessageReplyFormSubmit( { model: this.model } ) );
+		}
+	});
+
 	bp.Views.userMessages = bp.Nouveau.Messages.View.extend( {
 		tagName  : 'div',
+		className  : 'bp-messages-content-wrapper',
 		template : bp.template( 'bp-messages-single' ),
 		messageAttachments : false,
 		firstFetch : true,
@@ -1418,7 +1452,8 @@ window.bp = window.bp || {};
 			this.views.add( '#bp-message-content', new bp.Views.messageEditor() );
 			this.messageAttachments = new bp.Views.MessagesAttachments( { model: this.model } );
 			this.views.add( '#bp-message-content', this.messageAttachments );
-			this.views.add( '#bp-message-content', new bp.Views.MessagesToolbar( { model: this.model } ) );
+
+			this.views.add( '#bp-message-content', new bp.Views.MessageReplyFormSubmitWrapper( { model: this.model } ) );
 
 			this.views.add( '#bp-message-load-more', new bp.Views.userMessagesLoadMore( {
 				collection: this.collection,
