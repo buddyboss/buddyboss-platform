@@ -4248,7 +4248,8 @@ function bp_platform_default_activity_types() {
 function bp_core_help_bp_docs_link( $attr ) {
 	$slug = isset( $attr['slug'] ) ? $attr['slug'] : '';
 	$text = isset( $attr['text'] ) ? $attr['text'] : '';
-	$url  = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/' . $slug ), 'admin.php' ) );
+	$anchors = isset( $attr['anchors'] ) ? '#' . $attr['anchors'] : '';
+	$url  = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help', 'article' => '/' . $slug. $anchors ), 'admin.php' ) );
 
 	return apply_filters( 'bp_core_help_bp_docs_link', sprintf( '<a href="%s"> %s </a>', $url, $text ), $attr );
 }
