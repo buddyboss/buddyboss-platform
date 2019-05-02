@@ -30,7 +30,7 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 			'version'      => bp_get_version(),
 		),
 		'select2' => array(
-			'file'         => 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css',
+			'file'         => buddypress()->plugin_url . 'bp-core/css/select2.min.css',
 			'dependencies' => []
 		)
 	) );
@@ -52,7 +52,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 
 	return array_merge( $scripts, array(
 		'bp-nouveau-select2' => array(
-			'file'         => 'https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js',
+			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/select2.min.js',
 			'footer'       => false,
 		),
 		'bp-nouveau-messages-at' => array(

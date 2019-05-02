@@ -565,7 +565,7 @@ window.bp = window.bp || {};
 						toolbar: toolbarOptions
 					},
 					theme: 'bubble',
-					placeholder: wp.i18n.__('type message here','buddyboss')
+					placeholder: wp.i18n.__('Type message','buddyboss')
 				});
 			} else if ( typeof tinymce !== 'undefined' ) {
 				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
@@ -937,6 +937,7 @@ window.bp = window.bp || {};
 
 	bp.Views.userThreads = bp.Nouveau.Messages.View.extend( {
 		tagName   : 'div',
+		className : 'bp-messages-user-threads',
 		loadingFeedback : false,
 
 		events: {

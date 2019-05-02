@@ -24,7 +24,7 @@
 	<div class="bp-messages-hook before-message-content">{{{data.beforeContent}}}</div>
 	<# } #>
 
-	<div class="message-content">{{{data.content}}}</div>
+	<div class="bp-message-content-wrap">{{{data.content}}}</div>
 
 	<# if ( data.media ) { #>
 	<# for ( i in data.media ) { #>

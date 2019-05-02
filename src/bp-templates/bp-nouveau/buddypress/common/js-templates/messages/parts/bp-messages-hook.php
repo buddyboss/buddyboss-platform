@@ -1,4 +1,3 @@
-
 <?php
 /**
  * This view is used to inject hooks buffer

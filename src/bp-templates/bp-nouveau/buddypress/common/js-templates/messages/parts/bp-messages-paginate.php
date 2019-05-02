@@ -1,4 +1,3 @@
-
 <script type="text/html" id="tmpl-bp-messages-paginate">
 	<# if ( 1 !== data.page ) { #>
 	<button id="bp-messages-prev-page"class="button messages-button">
