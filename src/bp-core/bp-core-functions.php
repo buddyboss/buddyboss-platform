@@ -4295,14 +4295,8 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
  * @return string
  */
 function bp_core_get_post_slug_by_index( $dir_index_file ) {
-	$index_file = str_replace( '.md', '', end( explode( '/', $dir_index_file ) ) );
-	$index_file = explode( '-', $index_file );
-
-	if ( count( $index_file ) > 1 ) {
-		unset( $index_file[0] );
-	}
-
-	return implode( '-', $index_file );
+	$index_file = db_core_remove_file_extension_from_slug(  end( explode( '/', $dir_index_file ) ) );
+	return db_core_remove_file_number_from_slug( $index_file );
 }
 
 /**
@@ -4329,4 +4323,53 @@ function bp_core_stripe_header_tags( $content ) {
  */
 function bp_core_rap_the_content_filter( $content ) {
 	return apply_filters( 'the_content', $content );
+}
+
+/**
+ * Remove file type from slug
+ *
+ * @param $slug
+ * @param string $extention
+ *
+ * @return mixed
+ */
+function db_core_remove_file_extension_from_slug( $slug, $file_type = '.md' ) {
+	return str_replace( $file_type, '', $slug );
+}
+
+/**
+ * Remove file number from slug
+ *
+ * @param $index_file
+ *
+ * @return mixed
+ */
+function db_core_remove_file_number_from_slug( $index_file ) {
+	$index_file = explode( '-', $index_file );
+
+	if ( count( $index_file ) > 1 ) {
+		unset( $index_file[0] );
+	}
+
+	return implode( '-', $index_file );
+}
+
+/**
+ * Remove number from the dir
+ *
+ * @param string $path
+ *
+ * @return string $path
+ */
+function bp_core_strip_number_from_slug( $path ) {
+	$new_path = '';
+
+	foreach ( explode( '/', $path ) as $current_path ) {
+		$current_path = db_core_remove_file_extension_from_slug( $current_path );
+		$current_path = db_core_remove_file_number_from_slug( $current_path );
+
+		$new_path .= empty( $new_path ) ? $current_path : '/' . $current_path;
+	}
+
+	return $new_path;
 }
