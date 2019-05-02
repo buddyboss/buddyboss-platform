@@ -59,7 +59,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
  * @param $docs_path
  */
 function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_hide = 1, $show_as_heading = false ) {
-	$article      = ! empty( $_GET['article'] ) ? $_GET['article'] : '';
+	$article      = bp_core_admin_help_get_article_value();
 	$article_path = $docs_path . $article;
 
 	if ( empty( $show_as_heading ) ) {
@@ -194,7 +194,7 @@ function bp_core_admin_help_main_page() {
 	$main_directories = glob( $docs_path . '/*', GLOB_ONLYDIR );
 
 	if ( ! empty( $main_directories ) ) {
-		if ( empty( $_REQUEST['article'] ) ) {
+		if ( empty( bp_core_admin_help_get_article_value() ) ) {
 			?>
             <div class="bp-help-main-menu-wrap">
 				<?php
@@ -206,13 +206,13 @@ function bp_core_admin_help_main_page() {
 			/**
 			 * Sidebar main dir path
 			 */
-			$article_dir_array = explode( "/", $_REQUEST['article'] );
+			$article_dir_array = explode( "/", bp_core_admin_help_get_article_value() );
 			$content_main_dir  = $docs_path . '/' . $article_dir_array[1];
 
 			/**
 			 * Show display sidebar or not
 			 */
-			$sidebar = false !== strpos( $_REQUEST['article'], 'miscellaneous' ) ? false : true;
+			$sidebar = false !== strpos( bp_core_admin_help_get_article_value(), 'miscellaneous' ) ? false : true;
 			?>
 
             <div class="bp-help-content-wrap">
@@ -234,12 +234,12 @@ function bp_core_admin_help_main_page() {
 						<?php
 						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
 						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
-						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
+						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10 );
 						?>
                     </ul>
 
 					<?php
-					echo bp_core_admin_help_display_content( $docs_path . $_GET['article'] );
+					echo bp_core_admin_help_display_content( $docs_path . bp_core_admin_help_get_article_value() );
 					?>
                 </div>
 
@@ -296,4 +296,13 @@ function bp_core_admin_help_sub_menu_before_callback( $directories, $times, $doc
 		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) );
 		printf( '<li class="main"><a href="%s" class="dir">%s</a></li>', $url, __( 'Help', 'buddyboss' ) );
 	}
+}
+
+/**
+ * Get the article value from GLOBAL variable
+ *
+ * @return string
+ */
+function bp_core_admin_help_get_article_value() {
+	return isset( $_REQUEST['article'] ) ? $_REQUEST['article'] : '';
 }
