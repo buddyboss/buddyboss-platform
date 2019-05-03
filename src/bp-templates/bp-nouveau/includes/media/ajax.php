@@ -266,7 +266,7 @@ function bp_nouveau_ajax_media_save() {
 		}
 
 		$album_privacy = 'public';
-		if ( ! empty( $media['album_id'] ) && empty( $media['group_id'] ) ) {
+		if ( ! empty( $media['album_id'] ) ) {
 			$albums        = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
 			if ( ! empty( $albums['albums'] ) ) {
 				$album         = array_pop( $albums['albums'] );
