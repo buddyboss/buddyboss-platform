@@ -6,7 +6,7 @@
 			</a>
 		</div>
 	<?php endif; ?>
-	<?php if ( bp_is_activity_gif_active() ): ?>
+	<?php if ( bp_is_active( 'media' ) && bp_is_gif_support_enabled() ): ?>
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
 				<a href="#" id="activity-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>"><span class="dashicons dashicons-smiley"></span></a>

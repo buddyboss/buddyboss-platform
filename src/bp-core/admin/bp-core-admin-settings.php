@@ -193,34 +193,6 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 	<?php
 }
 
-/**
- * Allow emoji in activity posts.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_emoji() {
-	?>
-
-	<input id="_bp_enable_activity_emoji" name="_bp_enable_activity_emoji" type="checkbox" value="1" <?php checked( bp_is_activity_emoji_active( false ) ); ?> />
-	<label for="_bp_enable_activity_emoji"><?php _e( 'Display emoji dropdown to choose from when creating activity posts', 'buddyboss' ); ?></label>
-
-	<?php
-}
-
-/**
- * Allow GIFs in activity posts.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_enable_activity_gif() {
-	?>
-
-	<input id="_bp_enable_activity_gif" name="_bp_enable_activity_gif" type="checkbox" value="1" data-run-js-condition="_bp_enable_activity_gif" <?php checked( bp_is_activity_gif_active( false ) ); ?> />
-	<label for="_bp_enable_activity_gif"><?php _e( 'Display a library of animated GIFs to choose from when creating activity posts', 'buddyboss' ); ?></label>
-	<p class="description js-show-on-_bp_enable_activity_gif"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it here:', 'buddyboss') ?> <input type="text" name="_bp_activity_gif_api_key" id="_bp_activity_gif_api_key" value="<?php echo bp_get_activity_gif_api_key() ?>" placeholder="<?php _e( 'GIPHY API key', 'buddyboss' ); ?>" style="width: 300px;" /></p>
-	<?php
-}
-
 
 /**
  * Sanitization for bp-disable-blogforum-comments setting.
