@@ -274,12 +274,11 @@ window.bp = window.bp || {};
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
 						if ( file.id === self.media[i].id ) {
-							self.media.splice( i, 1 );
-							self.model.set( 'media', self.media );
-
 							if ( ! self.media[i].saved ) {
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
 						}
 					}
 				}
@@ -1594,8 +1593,6 @@ window.bp = window.bp || {};
 					}
 					self.model.set('media',medias);
 				}
-
-				console.log(self.model.get('media'));
 
 				// Reset the form
 				self.resetForm();
