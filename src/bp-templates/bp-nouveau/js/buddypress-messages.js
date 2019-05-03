@@ -588,7 +588,7 @@ window.bp = window.bp || {};
 			document.addEventListener( 'messages_media_close', this.destroy.bind(this) );
 		},
 
-		toggle_media_uploader: function() {
+		toggle_media_uploader: function(event) {
 			var self = this;
 			if ( self.$el.find('#messages-post-media-uploader').hasClass('open') ) {
 				self.destroy();
@@ -684,6 +684,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			var event = new Event('messages_media_toggle');
 			document.dispatchEvent(event);
+			$(e.currentTarget).toggleClass('active');
 		},
 
 		closeMediaSelector: function() {
