@@ -3,7 +3,7 @@
 		<span class="dashicons dashicons-email-alt"></span>
 		<div class="no-message-content">
 			<h3><?php _e( 'No new messages yet!', 'buddyboss' ); ?></h3>
-			<p><?php _e( 'Looks like you havent initiated a conversation with any other member.', 'buddyboss' ); ?></p>
+			<p><?php _e( 'Looks like you haven\'t initiated a conversation with any other member.', 'buddyboss' ); ?></p>
 		</div>
 	</div>
 </script>
