@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-05-02 14:22:38+00:00\n"
+"POT-Creation-Date: 2019-05-03 13:16:23+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -517,7 +517,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:1045 bp-forums/replies/template.php:1696
 #: bp-groups/bp-groups-admin.php:928
 #: bp-members/classes/class-bp-members-admin.php:2320
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:67
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:71
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
 #: bp-templates/bp-nouveau/includes/activity/functions.php:191
@@ -1558,7 +1558,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:225
 #: bp-core/admin/bp-core-admin-functions.php:616
-#: bp-core/admin/bp-core-admin-settings.php:422
+#: bp-core/admin/bp-core-admin-settings.php:394
 #: bp-core/classes/class-bp-admin.php:298
 #: bp-core/classes/class-bp-admin.php:400
 #: bp-core/classes/class-bp-admin.php:638
@@ -1659,7 +1659,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:621
-#: bp-core/admin/bp-core-admin-settings.php:447
+#: bp-core/admin/bp-core-admin-settings.php:419
 #: bp-core/classes/class-bp-admin.php:307
 #: bp-core/classes/class-bp-admin.php:409
 msgid "Integrations"
@@ -2111,142 +2111,121 @@ msgid ""
 "the site"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:205
-msgid "Display emoji dropdown to choose from when creating activity posts"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:219
-msgid ""
-"Display a library of animated GIFs to choose from when creating activity "
-"posts"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:220
-msgid ""
-"This feature requires an account at <a "
-"href=\"https://developers.giphy.com/\">GIPHY</a>. Create your account, and "
-"then click \"Create an App\". Once done, copy the API key and paste it here:"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:220
-msgid "GIPHY API key"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:260
+#: bp-core/admin/bp-core-admin-settings.php:232
 msgid "Allow members to upload avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:273
+#: bp-core/admin/bp-core-admin-settings.php:245
 msgid "Allow members to upload cover photos"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:297
+#: bp-core/admin/bp-core-admin-settings.php:269
 msgid "Enable social group creation by all users"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:298
+#: bp-core/admin/bp-core-admin-settings.php:270
 msgid "Administrators can always create groups, regardless of this setting."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:311
+#: bp-core/admin/bp-core-admin-settings.php:283
 msgid "Allow social group organizers to upload an avatar"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:323
+#: bp-core/admin/bp-core-admin-settings.php:295
 msgid "Allow social group organizers to upload cover photos"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:340
+#: bp-core/admin/bp-core-admin-settings.php:312
 msgid "Enable <a href=\"%s\">group types</a> to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:348
+#: bp-core/admin/bp-core-admin-settings.php:320
 msgid "Enable group types to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:362
+#: bp-core/admin/bp-core-admin-settings.php:334
 msgid "Allow groups to have subgroups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:374
+#: bp-core/admin/bp-core-admin-settings.php:346
 msgid "Restrict subgroup invites to members of the parent group"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:375
+#: bp-core/admin/bp-core-admin-settings.php:347
 msgid ""
 "Members must first be a member of the parent group prior to being invited "
 "to a subgroup"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:392
+#: bp-core/admin/bp-core-admin-settings.php:364
 msgid "Allow selected <a href=\"%s\">profile types</a> to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:400
+#: bp-core/admin/bp-core-admin-settings.php:372
 msgid "Allow selected profile types to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:404
+#: bp-core/admin/bp-core-admin-settings.php:376
 msgid ""
 "When a member requests to join a group their membership is automatically "
 "accepted"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:469
+#: bp-core/admin/bp-core-admin-settings.php:441
 #: bp-integrations/appboss/bp-appboss-integration.php:22
 #: bp-integrations/appboss/templates/admin/integration-tab-intro.php:11
 msgid "AppBoss"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:543
+#: bp-core/admin/bp-core-admin-settings.php:515
 msgid "Allow members to customize the email subject"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:555
+#: bp-core/admin/bp-core-admin-settings.php:527
 msgid "Allow members to customize the email body content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:568
+#: bp-core/admin/bp-core-admin-settings.php:540
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:573
+#: bp-core/admin/bp-core-admin-settings.php:545
 msgid ""
 "Customize this setting while editing any of your <a href=\"%s\">Profile "
 "Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:598
+#: bp-core/admin/bp-core-admin-settings.php:570
 msgid ""
 "Select which Custom Post Types (coming from your plugins) should be shown "
 "in the activity feed. For example, if using WooCommerce it could post into "
 "the activity feed every time someone creates a new product."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:610
+#: bp-core/admin/bp-core-admin-settings.php:582
 #: bp-search/bp-search-functions.php:360 bp-search/bp-search-settings.php:559
 msgid "Blog Posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:617
+#: bp-core/admin/bp-core-admin-settings.php:589
 msgid "When users publish new blog posts, show them in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:654
+#: bp-core/admin/bp-core-admin-settings.php:626
 msgid "Allow non-members to register new accounts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:658
+#: bp-core/admin/bp-core-admin-settings.php:630
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:683
+#: bp-core/admin/bp-core-admin-settings.php:655
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:701
+#: bp-core/admin/bp-core-admin-settings.php:673
 msgid ""
 "Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible "
 "always. Enter one URL or URI per line. "
@@ -2485,19 +2464,7 @@ msgstr ""
 msgid "Link Previews"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:98
-msgid "Emoji"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:101
-msgid "GIFs"
-msgstr ""
-
 #: bp-core/admin/settings/bp-admin-setting-activity.php:102
-msgid "GIFs Key"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-activity.php:112
 msgid "Posts in Activity Feeds"
 msgstr ""
 
@@ -2505,16 +2472,16 @@ msgstr ""
 msgid "BuddyBoss Platform"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:156
+#: bp-core/admin/settings/bp-admin-setting-activity.php:146
 msgid "WordPress"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:158
+#: bp-core/admin/settings/bp-admin-setting-activity.php:148
 #: bp-search/bp-search-functions.php:362
 msgid "Post Comments"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-activity.php:167
+#: bp-core/admin/settings/bp-admin-setting-activity.php:157
 msgid "Custom Post Types"
 msgstr ""
 
@@ -9411,7 +9378,7 @@ msgid "Email (will not be published) (required):"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:28
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:43
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:44
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:4
 msgid "Attach a photo"
@@ -12987,57 +12954,92 @@ msgstr ""
 msgid "Photo Settings"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:53
+#: bp-media/bp-media-settings.php:29
+msgid "Multimedia Settings"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:57
 msgid "Profile Photos"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:60
+#: bp-media/bp-media-settings.php:64
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:71
+#: bp-media/bp-media-settings.php:75
 msgid "Group Photos"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:78
+#: bp-media/bp-media-settings.php:82
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:134
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:88
+#: bp-media/bp-media-settings.php:92
 msgid "Forum Photos"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:98
+#: bp-media/bp-media-settings.php:102
 msgid "Message Photos"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:197
+#: bp-media/bp-media-settings.php:112
+msgid "GIFs"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:119
+msgid "Emoji"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:126
+msgid "GIFs Key"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:228
 msgid "When a photo upload is removed, permanently delete the associated media file"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:229
+#: bp-media/bp-media-settings.php:260
 msgid "Allow photo posting in forum discussions"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:261
+#: bp-media/bp-media-settings.php:292
 msgid "Allow photo posting in member's profile and timeline"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:294
+#: bp-media/bp-media-settings.php:325
 msgid "Enable member's profile photo albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:326
+#: bp-media/bp-media-settings.php:357
 msgid "Allow photo posting in social group activity updates and comments"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:360
+#: bp-media/bp-media-settings.php:391
 msgid "Enable social group photo albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:392
+#: bp-media/bp-media-settings.php:423
 msgid "Allow photo posting in messages"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:455
+msgid "Display a library of animated GIFs to choose from when creating posts"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:488
+msgid "Display emoji dropdown to choose from when creating posts"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:490
+msgid ""
+"This feature requires an account at <a "
+"href=\"https://developers.giphy.com/\">GIPHY</a>. Create your account, and "
+"then click \"Create an App\". Once done, copy the API key and paste it here:"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:490
+msgid "GIPHY API key"
 msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:166
@@ -14542,9 +14544,14 @@ msgstr ""
 msgid "Load More"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:53
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:52
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 msgid "Post a GIF"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:59
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:17
+msgid "Insert an emoji"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/post-form.php:17
@@ -14647,10 +14654,6 @@ msgstr ""
 msgid "Search GIFs"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:17
-msgid "Insert an emoji"
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:16
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:22
 msgid "Invite Members"
@@ -14734,7 +14737,7 @@ msgstr ""
 msgid "Reply to Message"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single.php:39
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single.php:48
 msgid "Send Reply"
 msgstr ""
 

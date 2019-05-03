@@ -2103,7 +2103,7 @@ form.ac-form .ac-reply-content .ac-textarea {
   padding: 0 0.7em;
 }
 
-form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable=true] {
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   background: transparent;
   box-shadow: none;
   color: #555;
@@ -2116,7 +2116,7 @@ form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable=true] {
   border: 1px solid #ccc;
 }
 
-form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable=true]:focus {
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"]:focus {
   -webkit-box-shadow: 0 0 6px #d6d6d6;
   -moz-box-shadow: 0 0 6px #d6d6d6;
   box-shadow: 0 0 6px #d6d6d6;
@@ -10497,7 +10497,8 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   top: 38%;
 }
 
-.dz-success-mark svg {
+.dz-success-mark svg,
+.dz-error-mark svg {
   max-width: 20px;
   height: auto;
   margin: -10px 0 0 10px;
@@ -10505,6 +10506,10 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .dz-success-mark svg path {
   fill: #1cd991;
+}
+
+.dz-error-mark svg path {
+  fill: #ef3e46;
 }
 
 .dz-error-mark i {

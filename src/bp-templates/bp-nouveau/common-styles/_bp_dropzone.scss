@@ -171,7 +171,8 @@
 	top: 38%;
 }
 
-.dz-success-mark svg {
+.dz-success-mark svg,
+.dz-error-mark svg {
 	max-width: 20px;
 	height: auto;
 	margin: -10px 0 0 10px;
@@ -179,6 +180,10 @@
 
 .dz-success-mark svg path {
 	fill: #1cd991;
+}
+
+.dz-error-mark svg path {
+	fill: #ef3e46;
 }
 
 .dz-error-mark i {

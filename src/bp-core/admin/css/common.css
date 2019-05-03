@@ -477,10 +477,6 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
 }
 
-.bp-admin-card.section-bp_media_settings_multimedia h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/headphones.svg);
-}
-
 /* Search */
 .bp-admin-card.section-bp_search_settings_community h2:before,
 .bp-admin-card.section-bp_search_settings_post_types h2:before {
