@@ -1643,6 +1643,8 @@ window.bp = window.bp || {};
 			}
 
 			this.collection.add( _.first( reply ) );
+
+			document.getElementById('bp-message-thread-list').scrollTop = $('#bp-message-thread-list>li:last-child').position().top;
 		},
 
 		replyError: function( response ) {
