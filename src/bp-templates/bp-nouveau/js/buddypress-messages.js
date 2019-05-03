@@ -494,6 +494,21 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	bp.Models.GifResults = Backbone.Model.extend( {
+		defaults: {
+			q: '',
+			data: []
+		}
+	});
+
+	bp.Models.GifData = Backbone.Model.extend({});
+
+	// Git results collection returned from giphy api
+	bp.Collections.GifDatas =  Backbone.Collection.extend( {
+		// Reference to this collection's model.
+		model: bp.Models.GifData
+	});
+
 	// Extend wp.Backbone.View with .prepare() and .inject()
 	bp.Nouveau.Messages.View = bp.Backbone.View.extend( {
 		inject: function( selector ) {
@@ -613,6 +628,8 @@ window.bp = window.bp || {};
 
 			document.removeEventListener( 'messages_media_toggle', this.toggle_media_uploader.bind(this) );
 			document.removeEventListener( 'messages_media_close', this.destroy.bind(this) );
+
+			$('#whats-new-messages-attachments').addClass('empty');
 		},
 
 		open_media_uploader: function() {
@@ -665,22 +682,248 @@ window.bp = window.bp || {};
 			});
 
 			self.$el.find('#messages-post-media-uploader').addClass('open').removeClass('closed');
+			$('#whats-new-messages-attachments').addClass('empty');
 		}
 
 	});
+
+	// Activity gif selector
+	bp.Views.MessagesAttachedGifPreview = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		className: 'messages-attached-gif-container',
+		template: bp.template( 'activity-attached-gif' ),
+		events: {
+			'click .gif-image-remove': 'destroy'
+		},
+
+		initialize: function() {
+			this.listenTo( this.model, 'change', this.render );
+			document.addEventListener( 'messages_gif_close', this.destroy.bind(this) );
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+
+			var gifData = this.model.get('gif_data');
+			if ( ! _.isEmpty( gifData ) ) {
+				this.el.style.backgroundImage = 'url(' + gifData.images.fixed_width.url + ')';
+				this.el.style.backgroundSize = 'contain';
+				this.el.style.height = gifData.images.original.height + 'px';
+				this.el.style.width = gifData.images.original.width + 'px';
+				$('#whats-new-messages-attachments').addClass('empty');
+			}
+
+			return this;
+		},
+
+		destroy: function() {
+			this.model.set('gif_data', {} );
+			this.el.style.backgroundImage = '';
+			this.el.style.backgroundSize = '';
+			this.el.style.height = '0px';
+			this.el.style.width = '0px';
+			document.removeEventListener( 'messages_gif_close', this.destroy.bind(this) );
+			$('#whats-new-messages-attachments').addClass('empty');
+		}
+	} );
+
+	// Gif search dropdown
+	bp.Views.MessagesGifMediaSearchDropdown = bp.Nouveau.Messages.View.extend( {
+		tagName: 'div',
+		className: 'messages-attached-gif-container',
+		template: bp.template( 'messages-gif-media-search-dropdown' ),
+		total_count: 0,
+		offset: 0,
+		limit: 20,
+		q: null,
+		requests: [],
+		events: {
+			'keyup .search-query-input': 'search',
+			'click .found-media-item': 'select'
+		},
+
+		initialize: function( options ) {
+			this.options = options || {};
+			this.giphy = new window.Giphy( BP_Nouveau.activity.params.gif_api_key );
+
+			this.gifDataItems = new bp.Collections.GifDatas();
+			this.listenTo( this.gifDataItems, 'add', this.addOne );
+			this.listenTo( this.gifDataItems, 'reset', this.addAll );
+
+			document.addEventListener( 'scroll', _.bind( this.loadMore, this ), true );
+
+		},
+
+		render: function() {
+			this.$el.html( this.template( this.model.toJSON() ) );
+			this.$gifResultItem = this.$el.find( '.gif-search-results-list' );
+			this.loadTrending();
+			return this;
+		},
+
+		search: function( e ) {
+			var self = this;
+
+			if ( this.Timeout != null ) {
+				clearTimeout( this.Timeout );
+			}
+
+			this.Timeout = setTimeout( function() {
+				this.Timeout = null;
+				self.searchGif( e.target.value );
+			}, 1000 );
+		},
+
+		searchGif: function( q ) {
+			var self = this;
+			self.q = q;
+			self.offset = 0;
+
+			self.clearRequests();
+			self.el.classList.add('loading');
+
+			var request = self.giphy.search( {
+					q: q,
+					offset: self.offset,
+					fmt: 'json',
+					limit: this.limit
+				},
+				function( response ) {
+					self.gifDataItems.reset( response.data );
+					self.total_count = response.pagination.total_count;
+					self.el.classList.remove('loading');
+				}
+			);
+
+			self.requests.push( request );
+			self.offset = self.offset + self.limit;
+		},
+
+		select: function( e ) {
+			e.preventDefault();
+			this.$el.parent().removeClass( 'open' );
+			var model = this.gifDataItems.findWhere({id: e.currentTarget.dataset.id});
+			this.model.set( 'gif_data', model.attributes );
+		},
+
+		// Add a single GifDataItem to the list by creating a view for it, and
+		// appending its element to the `<ul>`.
+		addOne: function( data ) {
+			var view = new bp.Views.GifDataItem( { model: data } );
+			this.$gifResultItem.append( view.render().el );
+		},
+
+		// Add all items in the **GifDataItem** collection at once.
+		addAll: function() {
+			this.$gifResultItem.html( '' );
+			this.gifDataItems.each( this.addOne, this );
+		},
+
+		loadTrending: function() {
+			var self = this;
+			self.offset = 0;
+			self.q = null;
+
+			self.clearRequests();
+			self.el.classList.add('loading');
+
+			var request = self.giphy.trending( {
+				offset: self.offset,
+				fmt: 'json',
+				limit: this.limit
+			}, function( response ) {
+				self.gifDataItems.reset( response.data );
+				self.total_count = response.pagination.total_count;
+				self.el.classList.remove('loading');
+			});
+
+			self.requests.push( request );
+			self.offset = self.offset + self.limit;
+		},
+
+		loadMore: function( event ) {
+			if ( event.target.id === 'gif-search-results' ) { // or any other filtering condition
+				var el = event.target;
+				if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! el.classList.contains('loading') ) {
+					if ( this.total_count > 0 && this.offset <= this.total_count ) {
+						var self = this,
+							params = {
+								offset: self.offset,
+								fmt: 'json',
+								limit: self.limit
+							};
+
+						self.el.classList.add('loading');
+						var request = null;
+						if ( _.isNull( self.q ) ) {
+							request = self.giphy.trending( params, _.bind( self.loadMoreResponse, self ) );
+						} else {
+							request = self.giphy.search( _.extend( { q: self.q }, params ), _.bind( self.loadMoreResponse, self ) );
+						}
+
+						self.requests.push( request );
+						this.offset = this.offset + this.limit;
+					}
+				}
+			}
+		},
+
+		clearRequests: function() {
+			this.gifDataItems.reset();
+
+			for ( var i = 0; i < this.requests.length; i++ ) {
+				this.requests[i].abort();
+			}
+
+			this.requests = [];
+		},
+
+		loadMoreResponse: function( response ) {
+			this.el.classList.remove('loading');
+			this.gifDataItems.add( response.data );
+		}
+	} );
+
+	// Gif search dropdown single item
+	bp.Views.MessagesGifDataItem = bp.Nouveau.Messages.View.extend( {
+		tagName: 'li',
+		template: bp.template( 'messages-gif-result-item' ),
+		initialize: function() {
+			this.listenTo( this.model, 'change', this.render );
+			this.listenTo( this.model, 'destroy', this.remove );
+		},
+
+		render: function() {
+			var bgNo = Math.floor( Math.random() * (6 - 1 + 1) ) + 1,
+				images = this.model.get('images');
+
+			this.$el.html( this.template( this.model.toJSON() ) );
+			this.el.classList.add('bg' + bgNo);
+			this.el.style.height = images.fixed_width.height + 'px';
+
+			return this;
+		}
+
+	} );
 
 	bp.Views.MessagesToolbar = bp.Nouveau.Messages.View.extend( {
 		tagName: 'div',
 		id: 'whats-new-messages-toolbar',
 		template: bp.template( 'whats-new-messages-toolbar' ),
 		events: {
-			'click #messages-media-button': 'toggleMediaSelector'
+			'click #messages-media-button': 'toggleMediaSelector',
+			'click #messages-gif-button': 'toggleGifSelector',
 		},
 
-		initialize: function() {},
+		initialize: function() {
+			document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
+			$( document ).on( 'click', _.bind( this.closePickersOnClick, this ) );
+		},
 
 		render: function() {
 			this.$el.html(this.template(this.model.toJSON()));
+			this.$self = this.$el.find('#messages-gif-button');
+			this.$gifPickerEl = this.$el.find('.gif-media-search-dropdown');
 			return this;
 		},
 
@@ -694,7 +937,46 @@ window.bp = window.bp || {};
 		closeMediaSelector: function() {
 			var event = new Event('messsages_media_close');
 			document.dispatchEvent(event);
-		}
+			$('#messages-media-button').removeClass('active');
+		},
+
+		toggleGifSelector: function( e ) {
+			e.preventDefault();
+			this.closeMediaSelector();
+			if ( this.$gifPickerEl.is(':empty') ) {
+				var gifMediaSearchDropdownView = new bp.Views.MessagesGifMediaSearchDropdown({model: this.model});
+				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
+			}
+			this.$self.toggleClass('open');
+			this.$gifPickerEl.toggleClass('open');
+			$(e.currentTarget).toggleClass('active');
+		},
+
+		closeGifSelector: function() {
+			var event = new Event('messages_gif_close');
+			document.dispatchEvent(event);
+			$('#messages-gif-button').removeClass('active');
+		},
+
+		closePickersOnEsc: function( event ) {
+			if ( event.key === 'Escape' || event.keyCode === 27 ) {
+				if (!_.isUndefined(BP_Nouveau.media.params.gif_api_key)) {
+					this.$self.removeClass('open');
+					this.$gifPickerEl.removeClass('open');
+				}
+			}
+		},
+
+		closePickersOnClick: function( event ) {
+			var $targetEl = $(event.target);
+
+			if (!_.isUndefined(BP_Nouveau.media.params.gif_api_key) &&
+				!$targetEl.closest('.post-gif').length) {
+				this.$self.removeClass('open');
+				this.$gifPickerEl.removeClass('open');
+			}
+
+		},
 
 	} );
 
@@ -702,15 +984,22 @@ window.bp = window.bp || {};
 		tagName: 'div',
 		id: 'whats-new-messages-attachments',
 		messagesMedia: null,
+		messagesAttachedGifPreview: null,
 		initialize: function() {
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && BP_Nouveau.media.messages_media ) {
 				this.messagesMedia = new bp.Views.MessagesMedia({model: this.model});
 				this.views.add(this.messagesMedia);
 			}
+
+			this.messagesAttachedGifPreview = new bp.Views.MessagesAttachedGifPreview( { model: this.model } );
+			this.views.add( this.messagesAttachedGifPreview );
 		},
 		onClose: function() {
 			if( ! _.isNull( this.messagesMedia ) ) {
 				this.messagesMedia.destroy();
+			}
+			if( ! _.isNull( this.messagesAttachedGifPreview ) ) {
+				this.messagesAttachedGifPreview.destroy();
 			}
 		}
 	});
