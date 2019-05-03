@@ -74,6 +74,16 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		$params['media']['group_id'] = bp_get_current_group_id();
     }
 
+	if ( bp_is_emoji_support_enabled() ) {
+		$params['media']['emoji'] = true;
+		$params['media']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
+	}
+
+	// Gif api key
+	if ( bp_is_gif_support_enabled() ) {
+		$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
+	}
+
 	return $params;
 }
 

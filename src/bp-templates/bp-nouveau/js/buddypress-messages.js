@@ -173,7 +173,7 @@ window.bp = window.bp || {};
 				}, this );
 			}
 
-			if ( ! threadView ) {
+			if ( ! threadView || ! this.threads.length ) {
 				this.threadsView();
 			}
 
@@ -249,7 +249,11 @@ window.bp = window.bp || {};
 				}, this );
 			}
 
-			if ( ! threadView ) {
+			if ( ! threadView || ! this.threads.length ) {
+
+				// Set has threads expliciltely true if single view is on because obviously.
+				BP_Nouveau.messages.hasThreads = true;
+
 				// Remove all existing views except threads view.
 				this.clearViews();
 
@@ -1376,7 +1380,13 @@ window.bp = window.bp || {};
 				if ( 'delete' === action ) {
 					//bp.Nouveau.Messages.clearViews();
 					// Navigate back to current box
-					bp.Nouveau.Messages.router.navigate( 'inbox/', { trigger: true } );
+					bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
+					if ( bp.Nouveau.Messages.threads.length > 1 ) {
+						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+					} else {
+						BP_Nouveau.messages.hasThreads = false;
+						bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
+					}
 				} else if ( response.messages ) {
 					self.model.set( _.first( response.messages ) );
 				}
