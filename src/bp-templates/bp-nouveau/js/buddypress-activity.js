@@ -790,7 +790,7 @@ window.bp = window.bp || {};
 
 				$( '#ac-form-' + activity_id + ' textarea' ).focus();
 
-				if ( !_.isUndefined( BP_Nouveau.activity.params.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
+				if ( !_.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea( {
 						standalone: true,
 						hideSource: false,
