@@ -529,7 +529,7 @@ window.bp = window.bp || {};
 	bp.Views.MessagesLoading = bp.Nouveau.Messages.View.extend( {
 		tagName: 'div',
 		className: 'bp-messages bp-user-messages-loading loading',
-		template  : bp.template( 'bp-messages-loading' ),
+		template  : bp.template( 'bp-messages-loading' )
 	} );
 
 	// Hook view
@@ -736,7 +736,7 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className   : 'submit',
 		id        : 'message-new-submit',
-		template  : bp.template( 'bp-messages-form-submit' ),
+		template  : bp.template( 'bp-messages-form-submit' )
 	} );
 
 	bp.Views.MessageFormSubmitWrapper = bp.Nouveau.Messages.View.extend( {
@@ -891,7 +891,7 @@ window.bp = window.bp || {};
 						if ( 'message_content' === pair.name && undefined !== tinyMCE.activeEditor ) {
 							pair.value = tinyMCE.activeEditor.getContent();
 						} else if ( 'message_content' === pair.name && undefined !== bp.Nouveau.Messages.quillEditor ) {
-							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", "");
+							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', '');
 						}
 
 						if ( ! pair.value ) {
@@ -906,7 +906,7 @@ window.bp = window.bp || {};
 
 			// quill editor support
 			if ( bp.Nouveau.Messages.quillEditor !== false && typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
-				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", ""), { silent: true } );
+				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', ''), { silent: true } );
 			}
 
 			if ( errors.length ) {
@@ -1430,7 +1430,7 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className   : 'submit',
 		id        : 'message-reply-new-submit',
-		template  : bp.template( 'bp-messages-reply-form-submit' ),
+		template  : bp.template( 'bp-messages-reply-form-submit' )
 	} );
 
 	bp.Views.MessageReplyFormSubmitWrapper = bp.Nouveau.Messages.View.extend( {
@@ -1607,7 +1607,7 @@ window.bp = window.bp || {};
 				content = tinyMCE.activeEditor.getContent();
 				jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
 			} else if ( typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
-				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", "");
+				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', '');
 				jQuery(bp.Nouveau.Messages.quillEditor.container).addClass('loading');
 			}
 

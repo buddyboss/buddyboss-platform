@@ -972,8 +972,7 @@ body.post-type-bp-email .categorydiv label {
 		flex: 0 0 calc(33.33% - 20px);
 
 		.inside {
-			padding: 1.8em 2em 1.8em;
-			min-height: 60px;
+			padding: 1.8em 2em;
 		}
 
 		h2 {
@@ -1052,6 +1051,7 @@ body.post-type-bp-email .categorydiv label {
 		}
 
 		&.active {
+
 			&:after {
 				transform: rotate(90deg);
 			}
@@ -1061,9 +1061,10 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-content {
-	
-	p, ul li {
-		line-height: 2;	
+
+	p,
+	ul li {
+		line-height: 2;
 	}
 
 	ul.bp-help-menu {
@@ -1187,6 +1188,7 @@ body.post-type-bp-email .categorydiv label {
 @media screen and (max-width: 550px) {
 
 	.bp-help-card-grid {
+
 		.bp-help-card {
 			flex: 0 0 calc(100% - 20px);
 		}

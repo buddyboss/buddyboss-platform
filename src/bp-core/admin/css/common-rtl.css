@@ -952,8 +952,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-card-grid .bp-help-card .inside {
-  padding: 1.8em 2em 1.8em;
-  min-height: 60px;
+  padding: 1.8em 2em;
 }
 
 .bp-help-card-grid .bp-help-card h2 {
@@ -1031,7 +1030,8 @@ body.post-type-bp-email .categorydiv label {
   transform: rotate(-90deg);
 }
 
-.bp-help-content p, .bp-help-content ul li {
+.bp-help-content p,
+.bp-help-content ul li {
   line-height: 2;
 }
 
