@@ -96,14 +96,14 @@ Groups
         *   Spectator - Can only read
         *   Blocked - No access
 *   Forum Features
-    *   [Revisions](https://www.buddyboss.com/resources/docs/components/forum-discussions/#revisions) - Allow discussion and reply revision logging
-    *   [Likes](https://www.buddyboss.com/resources/docs/components/forum-discussions/#likes) - Allow users to mark discussions as liked
-    *   [Subscriptions](https://www.buddyboss.com/resources/docs/components/forum-discussions/#subscriptions) - Allow users to subscribe to forums and discussions
-    *   [Discussion Tags](https://www.buddyboss.com/resources/docs/components/forum-discussions/#discussion-tags) - Allow discussions to have tags
-    *   [Search](https://www.buddyboss.com/resources/docs/components/forum-discussions/#search) - Allow forum wide search
-    *   [Post Formatting](https://www.buddyboss.com/resources/docs/components/forum-discussions/#post-formatting) - Add toolbar & buttons to textareas to help with HTML formatting
-    *   [Auto-embed links](https://www.buddyboss.com/resources/docs/components/forum-discussions/#auto-embed-links) - Embed media (YouTube, Twitter, Vimeo, etc...) directly into discussions and replies
-    *   [Reply Threading](https://www.buddyboss.com/resources/docs/components/forum-discussions/#reply-threading) - Enable threaded (nested) replies \[2-10\] levels deep
+    *   [bp_docs_link text="Revisions" slug="components/forum-discussions.md" anchors="revisions"] - Allow discussion and reply revision logging
+    *   [bp_docs_link text="Likes" slug="components/forum-discussions.md" anchors="likes"] - Allow users to mark discussions as liked
+    *   [bp_docs_link text="Subscriptions" slug="components/forum-discussions.md" anchors="subscriptions"] - Allow users to subscribe to forums and discussions
+    *   [bp_docs_link text="Discussion Tags" slug="components/forum-discussions.md" anchors="discussion-tags"] - Allow discussions to have tags
+    *   [bp_docs_link text="Search" slug="components/forum-discussions.md" anchors="search"] - Allow forum wide search
+    *   [bp_docs_link text="Post Formatting" slug="components/forum-discussions.md" anchors="post-formatting"]
+    *   [bp_docs_link text="Auto-embed links" slug="components/forum-discussions.md" anchors="auto-embed-links"] - Embed media (YouTube, Twitter, Vimeo, etc...) directly into discussions and replies    
+    *   [bp_docs_link text="Reply Threading" slug="components/forum-discussions.md" anchors="reply-threading"] - Enable threaded (nested) replies \[2-10\] levels deep    
 *   Discussions and Replies Per Page - How many discussions and replies to show per page
     *   Discussions X per page
     *   Replies X per page
