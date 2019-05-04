@@ -2,21 +2,11 @@
 
 This is the heart of all the features of BuddyBoss Platform. Enable the features required for your community.
 
-*   [General](#general)
-*   [Profiles](#profiles)
-*   [Activity](#activity)
-*   [Invites](#invites)
-*   [Groups](#groups)
-*   [Connections](#connections)
-*   [Forums](#forums)
-*   [Search](#search)
-*   [Credits](#credits)
-
 ### General
 
-*   [Toolbar](#toolbar) \- Show the Toolbar for logged out users
-*   [Account Deletion](#account-deletion) - Allow registered members to delete their own accounts
-*   [Private Network](#private-network) - Block entire website from logged out users (but allow Login and Register)
+*   **Toolbar** - Show the Toolbar for logged out users
+*   **Account Deletion** - Allow registered members to delete their own accounts
+*   **Private Network** - Block entire website from logged out users (but allow Login and Register)
 
 [![buddyboss general settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingsgeneral-1024x370.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingsgeneral.jpg)
 
@@ -39,21 +29,21 @@ Anyone not logged in will be redirected to the login/register page when attempti
 ### Profiles
 
 *   Profile Settings
-    *   [Display Name Format](https://www.buddyboss.com/resources/docs/components/user-profiles/#display-name-format) - After the format has been updated, remember to run [BuddyBoss Repair Tool](https://www.buddyboss.com/resources/wp-admin/post.php?action=edit&post=78#tool) (Update display name to selected format in profile setting) to update all the profiles.
+    *   [bp_docs_link text="Display Name Format" slug="components/member-profiles.md" anchors="display-name-format"] - After the format has been updated, remember to run [bp_docs_link text="Repair Community tools" slug="back-end-administration/tools/repair-community.md" anchors="import-profile-types"] (Update display name to selected format in profile setting) to update all the profiles.
         *   First Name
         *   First Name & Last Name
         *   Nickname
-    *   [Profile Photo Uploads](https://www.buddyboss.com/resources/docs/components/user-profiles/#profile-photo-uploads) - Allow registered members to upload avatars
-    *   [Cover Image Uploads](https://www.buddyboss.com/resources/docs/components/user-profiles/#cover-image-uploads) - Allow registered members to upload cover images
+    *   [bp_docs_link text="Profile Photo Uploads" slug="components/member-profiles.md" anchors="profile-photo-uploads"] - Allow registered members to upload avatars
+    *   [bp_docs_link text="Cover Image Uploads" slug="components/member-profiles.md" anchors="cover-image-uploads"] - Allow registered members to upload cover images
 *   Profile Dashboard
-    *   [Profile Dashboard](https://www.buddyboss.com/resources/docs/components/user-profiles/#profile-dashboard) - Use a WordPress page as each user's personal Profile Dashboard
-    *   [Redirect on Login](https://www.buddyboss.com/resources/docs/components/user-profiles/#redirect-on-login) - Redirect users to their Profile Dashboard on login
+    *   [bp_docs_link text="Profile Dashboard" slug="components/member-profiles.md" anchors="profile-dashboard"] - Use a WordPress page as each user's personal Profile Dashboard
+    *   [bp_docs_link text="Redirect on Login" slug="components/member-profiles.md" anchors="redirect-on-login"] - Redirect users to their Profile Dashboard on login
 *   Profile Search
-    *   [Profile Search](https://www.buddyboss.com/resources/docs/components/user-profiles/#profile-search) - Enable advanced profile search on the members directory
+    *   [bp_docs_link text="Profile Search" slug="components/member-profiles.md" anchors="profile-search"] - Enable advanced profile search on the members directory
 *   Profile Types
-    *   [Profile Types](https://www.buddyboss.com/resources/docs/components/user-profiles/#profile-types) - Enable profile types to give members unique profile fields and permissions
-    *   [Display on Profiles](https://www.buddyboss.com/resources/docs/components/user-profiles/#display-on-profiles) - Display each member's profile type on their profile page
-    *   [Import Profile Types](https://www.buddyboss.com/resources/docs/components/user-profiles/#import-profile-types)
+    *   [bp_docs_link text="Profile Types" slug="components/member-profiles.md" anchors="profile-types"] - Enable profile types to give members unique profile fields and permissions
+    *   [bp_docs_link text="Display on Profiles" slug="components/member-profiles.md" anchors="display-on-profiles"] - Display each member's profile type on their profile page
+    *   [bp_docs_link text="Import Profile Types" slug="components/member-profiles.md" anchors="import-profile-types"]
 
 [![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
 
