@@ -49,20 +49,17 @@ Anyone not logged in will be redirected to the login/register page when attempti
 
 ### Activity
 
-*   [Blog Posts](https://www.buddyboss.com/resources/docs/components/activity-feeds/#blog-posts) – Automatically publish new blog posts into the activity feed  
-    
-*   [Post Comments](https://www.buddyboss.com/resources/docs/components/activity-feeds/#post-comments) – Allow activity stream commenting on posts and comments  
-    
-*   [Activity auto-refresh](https://www.buddyboss.com/resources/docs/components/activity-feeds/#activity-auto-refresh) – Automatically check for new items while viewing the activity stream  
-    
-*   [Follow](http://follow/) – Allow your users to follow the activity of each other in their timeline
+*   [bp_docs_link text="Blog Posts" slug="components/activity-feeds.md" anchors="blog-posts"] – Automatically publish new blog posts into the activity feed  
+*   [bp_docs_link text="Post Comments" slug="components/activity-feeds.md" anchors="post-comments"] – Allow activity stream commenting on posts and comments  
+*   [bp_docs_link text="Activity auto-refresh" slug="components/activity-feeds.md" anchors="activity-auto-refresh"] – Automatically check for new items while viewing the activity stream  
+*   [bp_docs_link text="Follow" slug="components/activity-feeds.md" anchors="follow"] – Allow your users to follow the activity of each other in their timeline
 
 [![activity feeds buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings-1024x930.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings.jpg)
 
 ### Invites
 
-*   [Email Subject](https://www.buddyboss.com/resources/docs/components/user-invites/#buddyboss-settings) - Allow users to customize the invite email subject.
-*   [Email Content](https://www.buddyboss.com/resources/docs/components/user-invites/#buddyboss-settings) - Allow users to customize the invite email body content.
+*   [bp_docs_link text="Email Subject" slug="components/email-invites.md" anchors="buddyboss-settings"] - Allow users to customize the invite email subject.
+*   [bp_docs_link text="Email Content" slug="components/email-invites.md" anchors="buddyboss-settings"] - Allow users to customize the invite email body content.
 
 [![user invites buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userinvitesbuddybosssettings-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userinvitesbuddybosssettings.jpg)
 
