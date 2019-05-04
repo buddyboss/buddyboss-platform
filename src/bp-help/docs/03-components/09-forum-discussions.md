@@ -39,8 +39,8 @@ Forums allow your users to have discussions using Q&A style message boards. Foru
     *   Groups Forums Parent
 *   [Widgets](#widgets)
 *   Forum Tools
-    *   [Import Forums](https://www.buddyboss.com/resources/docs/back-end-administration/tools/import-forums/)
-    *   [Repair Forums](https://www.buddyboss.com/resources/docs/back-end-administration/tools/repair-forums/)
+    *   [bp_docs_link text="Repair Forums" slug="back-end-administration/tools/repair-forums.md"]
+    *   [bp_docs_link text="Import Forums" slug="back-end-administration/tools/import-forums.md"]
 
 Forums Directory
 ----------------

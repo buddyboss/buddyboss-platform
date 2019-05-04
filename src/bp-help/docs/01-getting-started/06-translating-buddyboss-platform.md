@@ -45,7 +45,7 @@ Once you translate all fields you will need to save your work as buddyboss-platf
 
 ![poedit save and compile to MO](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/poeditsavecompile-1024x844.jpg)
 
-Next, open your favorite [FTP program](https://www.buddyboss.com/resources/docs/getting-started/installation/#manual-installation) and upload the MO file to `wp-content/plugins/buddyboss-platform/languages/`.
+Next, open your favorite [bp_docs_link text="FTP program" slug="getting-started/installation.md" anchors="manual-installation"] and upload the MO file to `wp-content/plugins/buddyboss-platform/languages/`.
 
 If you haven't yet changed the WordPress Language Settings:
 

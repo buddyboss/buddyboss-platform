@@ -3,7 +3,7 @@
 Everything in a community website revolves around its members.
 
 *   [Profile Settings](#profile-settings)
-    *   [Display Name Format](#display-name-format) - After the format has been updated, remember to run the [Repair Community](https://www.buddyboss.com/resources/docs/back-end-administration-panels/buddyboss-tools/) tool to update all the users.
+    *   [Display Name Format](#display-name-format) - After the format has been updated, remember to run the [bp_docs_link text="Repair Community" slug="back-end-administration/tools/repair-community.md"] tool to update all the users.
         *   First Name
         *   First Name & Last Name
         *   Nickname

@@ -21,7 +21,7 @@ To enable site registration navigate to Dashboard -> Settings -> General. Once t
 BuddyBoss Settings
 ------------------
 
-You are now ready to configure each component of the BuddyBoss Platform. Please continue reading by navigating to the [component back-end administration](https://www.buddyboss.com/resources/docs/back-end-administration/components/) or select one of the component setting pages listed below.
+You are now ready to configure each component of the BuddyBoss Platform. Please continue reading by navigating to the [bp_docs_link text="component back-end administration" slug="back-end-administration/components.md"] or select one of the component setting pages listed below.
 
 *   [bp_docs_link text="Member Profiles" slug="components/member-profiles.md"] – Everything in a community website revolves around its members. All website users are given member profiles.
 *   [bp_docs_link text="Profile Fields" slug="components/profile-fields.md"] – Customize your community with fully editable profile fields that allow your users to describe themselves.

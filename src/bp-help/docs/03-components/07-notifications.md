@@ -2,7 +2,7 @@
 
 Notify users of relevant activity with a toolbar bubble and/or via email, and allow them to customize their notification settings.
 
-*   [Notification Email Settings](https://www.buddyboss.com/resources/docs/components/account-settings/#email-preferences)
+*   [bp_docs_link text="Notification Email Settings" slug="components/account-settings.md" anchors="email-preferences"]
 
 [![notification](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/notification1-1-1024x449.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/notification1-1.jpg)
 

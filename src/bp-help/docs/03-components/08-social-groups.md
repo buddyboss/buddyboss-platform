@@ -168,4 +168,4 @@ Allow groups to have parent groups and subgroups.
 
 ### Group Restrict Invite
 
-Restrict group invites to members who exist in a parent group. NOTE: Group Hierarchies must be [enabled](https://www.buddyboss.com/resources/docs/back-end-administration-panels/settings/#groups).
+Restrict group invites to members who exist in a parent group. NOTE: Group Hierarchies must be [bp_docs_link text="enabled" slug="back-end-administration/settings.md" anchors="groups"].
