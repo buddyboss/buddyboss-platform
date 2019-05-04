@@ -7,7 +7,7 @@ BuddyBoss Emails
 
 Emails are a WordPress Custom post Type. They are edited and created just like posts and pages.
 
-The biggest difference you will notice is the use of [tokens](https://www.buddyboss.com/resources/docs/emails/email-tokens/). They have the curly braces around them `{{ }}`. Tokens are variable words or phrases that will be dynamically replaced when an email is sent.
+The biggest difference you will notice is the use of [bp_docs_link text="tokens" slug="back-end-administration/emails/email-tokens.md"]. They have the curly braces around them `{{ }}`. Tokens are variable words or phrases that will be dynamically replaced when an email is sent.
 
 [![BuddyBoss Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemails-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemails.jpg)
 
@@ -21,7 +21,7 @@ Just like posts and pages the contents of editing an email are as follows:
 3.  Custom Field (Plain text email content)
 4.  Publish
 5.  Situation - Select which action triggers the sending of an email.
-    *   NOTE: Available [tokens](https://www.buddyboss.com/resources/docs/emails/email-tokens/) are based on the situation.
+    *   NOTE: Available [bp_docs_link text="tokens" slug="back-end-administration/emails/email-tokens.md"] are based on the situation.
 
 [![Edit Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailsedit-1024x823.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailsedit.jpg)
 

@@ -44,12 +44,12 @@ If the front-end profile editing is disallowed then this is the only interface f
 Manage Signups
 --------------
 
-This is the same page as "All Users" but only shows pending user signups (those who have not yet verified their account via email link). You can manually verify user accounts from this page. If your members are having trouble receiving emails from your site [check here](https://www.buddyboss.com/resources/docs/faqs/members-not-receiving-emails/) for a solution.
+This is the same page as "All Users" but only shows pending user signups (those who have not yet verified their account via email link). You can manually verify user accounts from this page. If your members are having trouble receiving emails from your site [bp_docs_link text="check here" slug="troubleshooting/faqs/members-not-receiving-emails.md"] for a solution.
 
 Profile Fields
 --------------
 
-Customize your community with fully editable profile fields that allow your users to describe themselves. [Click to learn more.](https://www.buddyboss.com/resources/docs/components/profile-fields/)
+Customize your community with fully editable profile fields that allow your users to describe themselves. [bp_docs_link text="Click to learn more" slug="components/profile-fields.md"].
 
 Site Notices
 ------------

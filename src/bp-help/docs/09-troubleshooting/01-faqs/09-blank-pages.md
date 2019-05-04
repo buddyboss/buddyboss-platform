@@ -1,6 +1,6 @@
 #Blank Pages
 
-A blank page is a common issue with installation of any WordPress plugin. The best place to figure out what is wrong is to view your error\_log. To find the error log you will either need an [FTP program](https://www.buddyboss.com/resources/docs/getting-started/installation/#manual-installation) or contact your hosting provider for additional details.
+A blank page is a common issue with installation of any WordPress plugin. The best place to figure out what is wrong is to view your error\_log. To find the error log you will either need an [bp_docs_link text="FTP program" slug="getting-started/installation.md" anchors="manual-installation"] or contact your hosting provider for additional details.
 
 Memory Limits are the most likely culprit for blank pages. Here are some things to try:
 
