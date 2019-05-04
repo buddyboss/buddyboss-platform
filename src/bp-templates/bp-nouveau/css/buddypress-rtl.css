@@ -756,7 +756,6 @@ body.buddypress article.page > .entry-header .entry-title {
   .buddypress-wrap .subnav-filters .bp-search,
   .buddypress-wrap .subnav-filters .dir-search,
   .buddypress-wrap .subnav-filters .user-messages-bulk-actions,
-  .buddypress-wrap .subnav-filters .user-messages-search,
   .buddypress-wrap .subnav-filters .group-invites-search,
   .buddypress-wrap .subnav-filters .group-act-search {
     float: right;
@@ -771,9 +770,6 @@ body.buddypress article.page > .entry-header .entry-title {
   .buddypress-wrap .subnav-filters .last select,
   .buddypress-wrap .subnav-filters .component-filters select {
     max-width: 250px;
-  }
-  .buddypress-wrap .subnav-filters .user-messages-search {
-    float: left;
   }
 }
 
@@ -1200,21 +1196,6 @@ a.layout-grid-view {
   cursor: text;
   display: block;
   /* For Firefox */
-}
-
-.activity-update-form #whats-new-textarea [contenteditable="true"] img.emojioneemoji {
-  width: 1.2em;
-  position: relative;
-}
-
-.activity-update-form #whats-new-textarea [contenteditable="true"] img.emojioneemoji:after {
-  content: ">";
-  display: block;
-  width: 1rem;
-  height: 1rem;
-  position: absolute;
-  bottom: 0;
-  left: -1.5rem;
 }
 
 .activity-update-form #activity-form-submit-wrapper {
@@ -2113,11 +2094,6 @@ form.ac-form .ac-reply-avatar img {
   border: 1px solid #eee;
 }
 
-form.ac-form .ac-reply-content {
-  color: #767676;
-  padding-right: 1em;
-}
-
 form.ac-form .ac-reply-content a {
   text-decoration: none;
 }
@@ -2127,20 +2103,20 @@ form.ac-form .ac-reply-content .ac-textarea {
   padding: 0 0.7em;
 }
 
-form.ac-form .ac-reply-content .ac-textarea textarea {
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"] {
   background: transparent;
   box-shadow: none;
   color: #555;
   font-family: inherit;
   font-size: 100%;
-  height: 60px;
   margin: 0;
   outline: none;
   padding: 0.5em;
   width: 100%;
+  border: 1px solid #ccc;
 }
 
-form.ac-form .ac-reply-content .ac-textarea textarea:focus {
+form.ac-form .ac-reply-content .ac-textarea .ac-input[contenteditable="true"]:focus {
   -webkit-box-shadow: 0 0 6px #d6d6d6;
   -moz-box-shadow: 0 0 6px #d6d6d6;
   box-shadow: 0 0 6px #d6d6d6;
@@ -2171,6 +2147,21 @@ form.ac-form .ac-reply-content .ac-textarea .gif-search-content .gif-search-resu
 
 form.ac-form .ac-reply-content input {
   margin-top: 10px;
+}
+
+.bp-ac-form-cotainer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.ac-reply-content {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  min-width: 0;
+  color: #767676;
+  padding-right: 1em;
 }
 
 .activity-comments li form.ac-form {
@@ -2745,6 +2736,7 @@ body.no-js .single-item-header .js-self-profile-button {
 }
 
 #item-header-cover-image #item-header-avatar {
+  margin-top: -70px;
   padding: 0 1em;
   position: relative;
 }
@@ -3570,8 +3562,20 @@ body.register .buddypress-wrap .page ul {
   text-decoration: none;
 }
 
+.bp-messages-container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+}
+
 .bp-messages-content {
-  margin: 15px 0;
+  flex: 1;
+  min-width: 0;
+  padding-right: 20px;
 }
 
 .bp-messages-content .avatar {
@@ -3605,6 +3609,10 @@ body.register .buddypress-wrap .page ul {
   margin: 0;
   padding: 0;
   width: 100%;
+}
+
+#message-threads:empty {
+  display: none;
 }
 
 #message-threads li {
@@ -3641,6 +3649,9 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-to {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   -webkit-flex: 1 2 10%;
   -moz-flex: 1 2 10%;
   -ms-flex: 1 2 10%;
@@ -3682,6 +3693,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-content {
+  min-width: 0;
   -webkit-flex: 1 2 50%;
   -moz-flex: 1 2 50%;
   -ms-flex: 1 2 50%;
@@ -3731,11 +3743,15 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-date {
-  padding-left: 5px;
+  color: #767676;
+  font-size: 13px;
+  padding-right: 5px;
   text-align: left;
 }
 
 #message-threads li .thread-avatar {
+  margin-left: 15px;
+  max-width: 60px;
   -webkit-flex: 1 2 10%;
   -moz-flex: 1 2 10%;
   -ms-flex: 1 2 10%;
@@ -3744,9 +3760,7 @@ body.register .buddypress-wrap .page ul {
 }
 
 #message-threads li .thread-avatar img.avatar {
-  float: right;
-  margin: 0 0 0 10px;
-  max-width: 50px;
+  max-width: 60px;
   width: 100%;
 }
 
@@ -3828,7 +3842,7 @@ body.register .buddypress-wrap .page ul {
   font-size: 16px;
 }
 
-.bp-messages-content #bp-message-thread-list .message-content {
+.bp-messages-content #bp-message-thread-list .bp-message-content-wrap {
   font-size: 14px;
   clear: both;
   overflow: hidden;
@@ -3836,7 +3850,7 @@ body.register .buddypress-wrap .page ul {
   padding-right: 40px;
 }
 
-.bp-messages-content #bp-message-thread-list .message-content p {
+.bp-messages-content #bp-message-thread-list .bp-message-content-wrap p {
   margin-bottom: 8px;
 }
 
@@ -3890,9 +3904,6 @@ body.register .buddypress-wrap .page ul {
   width: 30px;
 }
 
-.bp-messages-content #thread-preview .preview-message ul,
-.bp-messages-content #thread-preview .preview-message ol,
-.bp-messages-content #thread-preview .preview-message blockquote,
 .bp-messages-content #bp-message-thread-list li .message-content ul,
 .bp-messages-content #bp-message-thread-list li .message-content ol,
 .bp-messages-content #bp-message-thread-list li .message-content blockquote {
@@ -3904,7 +3915,6 @@ body.register .buddypress-wrap .page ul {
   display: none;
 }
 
-.bp-messages-content #thread-preview h2:first-child,
 .bp-messages-content #bp-message-thread-header h2:first-child {
   background-color: #eaeaea;
   color: #555;
@@ -3959,16 +3969,6 @@ input#send-to-input {
   color: #333;
 }
 
-.single.messages.view .bp-messages-filters,
-.single.messages.view .bp-messages-threads-list {
-  display: none;
-}
-
-.messages.compose .bp-messages-filters,
-.messages.compose .bp-messages-threads-list {
-  display: none;
-}
-
 #send_message_form .select2-selection--multiple {
   border-color: #d6d6d6;
   padding: 3px 5px;
@@ -4004,6 +4004,97 @@ input#send-to-input {
 
 .messages .select2-dropdown {
   border-color: #d6d6d6;
+}
+
+.messages-wrapper #subnav .subnav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  width: 100%;
+}
+
+.bp-messages-nav-panel {
+  display: block;
+  -webkit-box-flex: 0;
+  -ms-flex: 0 0 360px;
+  flex: 0 0 360px;
+  min-width: 0;
+}
+
+@media screen and (max-width: 46.8em) {
+  .bp-messages-nav-panel {
+    -ms-flex: 0 0 100%;
+    flex: 0 0 100%;
+  }
+}
+
+.messages-wrapper #subnav #compose-personal-li {
+  margin-right: auto;
+}
+
+#inbox {
+  pointer-events: none;
+}
+
+#compose-personal-li a {
+  font-size: 0;
+}
+
+#compose-personal-li a:after {
+  content: "\f465";
+  font-size: 20px;
+  line-height: 1;
+  font-family: dashicons;
+  vertical-align: top;
+  text-align: center;
+  transition: color 0.1s ease-in;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#message_content {
+  margin-bottom: 10px;
+}
+
+.no-message-wrap {
+  padding: 30px 0 15px;
+  text-align: center;
+}
+
+.no-message-content {
+  padding: 20px;
+}
+
+.no-message-wrap .dashicons {
+  font-size: 30px;
+  width: auto;
+  height: auto;
+  margin-bottom: 5px;
+}
+
+.bp-search.messages-search,
+#user_messages_search_form {
+  width: 100%;
+}
+
+.bp-user-messages-loading.loading {
+  border: 0;
+  padding: 15px;
+  text-align: center;
+}
+
+@media screen and (min-width: 46.8em) {
+  .bp-messages-user-threads,
+  #bp-message-thread-list {
+    max-height: 66vh;
+    overflow: auto;
+  }
+  #bp-message-thread-list {
+    max-height: 50vh;
+  }
 }
 
 /**
@@ -4656,13 +4747,10 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   word-wrap: normal !important;
 }
 
-.clearfix:before, .clearfix:after {
-  content: " ";
-  display: table;
-}
-
 .clearfix:after {
+  content: " ";
   clear: both;
+  display: table;
 }
 
 .center-vert {
@@ -4685,6 +4773,21 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
   overflow: visible;
   position: static;
   top: 0;
+}
+
+.emojionearea .emojionearea-wrapper img.emojioneemoji {
+  width: 1.2em;
+  position: relative;
+}
+
+.emojionearea .emojionearea-wrapper img.emojioneemoji:after {
+  content: ">";
+  display: block;
+  width: 1rem;
+  height: 1rem;
+  position: absolute;
+  bottom: 0;
+  left: -1.5rem;
 }
 
 .buddypress .buddypress-wrap button,
@@ -10236,7 +10339,6 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
-  margin: 0 0 20px;
 }
 
 .dropzone .dz-message {
@@ -10277,6 +10379,10 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .dz-image {
   border-radius: 4px;
   overflow: hidden;
+}
+
+.dz-image img {
+  display: block;
 }
 
 .dropzone .dz-preview.dz-file-preview .dz-image {
@@ -10391,7 +10497,8 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   top: 38%;
 }
 
-.dz-success-mark svg {
+.dz-success-mark svg,
+.dz-error-mark svg {
   max-width: 20px;
   height: auto;
   margin: -10px 10px 0 0;
@@ -10399,6 +10506,10 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .dz-success-mark svg path {
   fill: #1cd991;
+}
+
+.dz-error-mark svg path {
+  fill: #ef3e46;
 }
 
 .dz-error-mark i {
