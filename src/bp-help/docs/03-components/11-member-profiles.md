@@ -22,7 +22,7 @@ Profile Settings
 
 ### Display Name Format
 
-Chose between First Name, First Name & Last Name or Username displayed for user activity. After the format has been updated, remember to run the [BuddyBoss Tool](https://www.buddyboss.com/resources/docs/back-end-administration-panels/buddyboss-tools/) (Update display name to selected format in profile setting.) to update all the profiles.
+Chose between First Name, First Name & Last Name or Username displayed for user activity. After the format has been updated, remember to run the [bp_docs_link text="Repair Community tool" slug="back-end-administration/tools/repair-community.md"] (Update display name to selected format in profile setting.) to update all the profiles.
 
 [embed] https://vimeo.com/320530132 [/embed]
 

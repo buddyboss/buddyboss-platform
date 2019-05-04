@@ -54,7 +54,7 @@ If you click on a forum attached to a group you will be taken the the group foru
 Group Forum
 -----------
 
-Each group can create its own discussion forum. Several groups can optionally be attached to the same discussion forum. [Learn more about group forums](https://www.buddyboss.com/resources/docs/components/social-groups/#groupdiscussionforum).
+Each group can create its own discussion forum. Several groups can optionally be attached to the same discussion forum. [bp_docs_link text="Learn more about group forums" slug="components/social-groups.md" anchors="groupdiscussionforum"].
 
 Single Forum
 ------------
