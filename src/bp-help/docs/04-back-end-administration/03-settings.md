@@ -66,20 +66,20 @@ Anyone not logged in will be redirected to the login/register page when attempti
 Groups
 ------
 
-*   [Group Settings](https://www.buddyboss.com/resources/docs/components/social-groups/#buddybosssettings)
-    *   [Group Creation](https://www.buddyboss.com/resources/docs/components/social-groups/#group-creation) - Enable group create for all users
-    *   [Group Photo Uploads](https://www.buddyboss.com/resources/docs/components/social-groups/#group-photo-uploads) - Allow customizable avatars for groups
-    *   [Group Cover Image Uploads](https://www.buddyboss.com/resources/docs/components/social-groups/#group-cover-image-uploads) - Allow customizable cover images for groups
-*   [Group Types](https://www.buddyboss.com/resources/docs/components/social-groups/#group-types) - Enable group types to better organize your groups
-    *   [Group Auto Join](https://www.buddyboss.com/resources/docs/components/social-groups/#group-auto-join) - Allow specific profile types to auto join groups
-*   [Group Hierarchies](https://www.buddyboss.com/resources/docs/components/social-groups/#group-hierarchies) - Allow groups to have parent groups and subgroups
+*   [bp_docs_link text="Group Settings" slug="components/social-groups.md" anchors="buddybosssettings"]
+    *   [bp_docs_link text="Group Creation" slug="components/social-groups.md" anchors="group-creation"] - Enable group create for all users
+    *   [bp_docs_link text="Group Photo Uploads" slug="components/social-groups.md" anchors="group-photo-uploads"] - Allow customizable avatars for groups
+    *   [bp_docs_link text="Group Cover Image Uploads" slug="components/social-groups.md" anchors="group-cover-image-uploads"] - Allow customizable cover images for groups
+*   [bp_docs_link text="Group Types" slug="components/social-groups.md" anchors="group-types"] - Enable group types to better organize your groups
+    *   [bp_docs_link text="Group Auto Join" slug="components/social-groups.md" anchors="group-auto-join"] - Allow specific profile types to auto join groups
+*   [bp_docs_link text="Group Hierarchies" slug="components/social-groups.md" anchors="group-hierarchies"] - Allow groups to have parent groups and subgroups
     *   Group Restrict Invite - Restrict group invites to members who exist in a parent group.
 
 [![group buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupbuddybosssettings-1024x905.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupbuddybosssettings.jpg)
 
 ### Connections
 
-*   [Messaging](https://www.buddyboss.com/resources/docs/components/user-connections/#connection-settings) \- Require users to be connected before they can message each other.
+*   [bp_docs_link text="Messaging" slug="components/member-connections.md" anchors="connection-settings"] \- Require users to be connected before they can message each other.
 
 [![user messages buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userconnectionsbuddybosssettings-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userconnectionsbuddybosssettings.jpg)
 
