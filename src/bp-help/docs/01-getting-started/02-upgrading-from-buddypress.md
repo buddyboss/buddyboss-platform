@@ -7,7 +7,7 @@ So you like BuddyBoss Platform so much you want to upgrade from BuddyPress. That
 Verify Server Requirements
 --------------------------
 
-Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="01-getting-started/0-getting-started.md"].
+Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="getting-started/getting-started.md"].
 
 Get BuddyBoss Platform
 ----------------------

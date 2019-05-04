@@ -1,6 +1,6 @@
 #Installation
 
-Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="01-getting-started/0-getting-started.md"]
+Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="getting-started/getting-started.md"]
 
 Automated Install (recommended)
 -------------------------------
