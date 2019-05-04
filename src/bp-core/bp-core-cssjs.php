@@ -78,7 +78,7 @@ function bp_core_register_common_scripts() {
 		'emojione'        => array( 'file' => "{$url}emojione-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
         'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 
-        'bp-quill'        => array( 'file' => "{$url}vendor/quill{$min}.js", 'dependencies' => array(), 'footer' => true ),
+        'bp-quill'        => array( 'file' => "{$url}vendor/quill{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
 
@@ -691,18 +691,3 @@ function bp_core_add_jquery_mask_inline_js () {
 
     <?php
 }
-
-/**
- * Enqueues Quill on BuddyPress pages.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_core_enqueue_quill_js_css() {
-	if ( ! bp_is_user_messages() || ( is_bbpress() && ! bbp_use_wp_editor() ) ) {
-		return;
-	}
-
-	wp_enqueue_script( 'bp-quill' );
-	wp_enqueue_style( 'bp-quill' );
-}
-//add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_quill_js_css' );

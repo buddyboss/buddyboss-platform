@@ -18,6 +18,23 @@ function messages_screen_inbox() {
 		return;
 	}
 
+	// check if user has threads or not, if yes then redirect to latest thread otherwise to compose screen
+	if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
+		$thread_id = 0;
+		while ( bp_message_threads() ) : bp_message_thread();
+			$thread_id = bp_get_message_thread_id();
+			break;
+		endwhile;
+
+		if ( $thread_id ) {
+			wp_safe_redirect( bp_get_message_thread_view_link( $thread_id ) );
+			exit;
+		}
+	} else {
+		wp_safe_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() . '/compose' ) );
+		exit;
+	}
+
 	/**
 	 * Fires right before the loading of the Messages inbox screen template file.
 	 *

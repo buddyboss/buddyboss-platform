@@ -1792,19 +1792,26 @@ function bbp_the_content( $args = array() ) {
 			add_filter( 'teeny_mce_buttons',  'bbp_get_teeny_mce_buttons'  );
 			add_filter( 'quicktags_settings', 'bbp_get_quicktags_settings' );
 
+			?>
+            <div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>">
+                <?php echo $post_content; ?>
+            </div>
+            <input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo $post_content; ?>" />
+            <?php
+
 			// Output the editor
-			wp_editor( $post_content, 'bbp_' . $r['context'] . '_content', array(
-				'wpautop'           => $r['wpautop'],
-				'media_buttons'     => $r['media_buttons'],
-				'textarea_rows'     => $r['textarea_rows'],
-				'tabindex'          => $r['tabindex'],
-				'tabfocus_elements' => $r['tabfocus_elements'],
-				'editor_class'      => $r['editor_class'],
-				'tinymce'           => $r['tinymce'],
-				'teeny'             => $r['teeny'],
-				'quicktags'         => $r['quicktags'],
-				'dfw'               => $r['dfw'],
-			) );
+//			wp_editor( $post_content, 'bbp_' . $r['context'] . '_content', array(
+//				'wpautop'           => $r['wpautop'],
+//				'media_buttons'     => $r['media_buttons'],
+//				'textarea_rows'     => $r['textarea_rows'],
+//				'tabindex'          => $r['tabindex'],
+//				'tabfocus_elements' => $r['tabfocus_elements'],
+//				'editor_class'      => $r['editor_class'],
+//				'tinymce'           => $r['tinymce'],
+//				'teeny'             => $r['teeny'],
+//				'quicktags'         => $r['quicktags'],
+//				'dfw'               => $r['dfw'],
+//			) );
 
 			// Remove additional TinyMCE plugins after outputting the editor
 			remove_filter( 'tiny_mce_plugins',   'bbp_get_tiny_mce_plugins'   );

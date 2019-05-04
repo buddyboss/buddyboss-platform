@@ -74,6 +74,8 @@
 
 					<?php do_action( 'bbp_theme_after_topic_form_content' ); ?>
 
+					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
+
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
@@ -113,8 +115,6 @@
 						<?php do_action( 'bbp_theme_after_topic_form_forum' ); ?>
 
 					<?php endif; ?>
-
-					<?php bbp_get_template_part( 'form', 'attachments' ); ?>
 
 					<?php if ( current_user_can( 'moderate' ) ) : ?>
 

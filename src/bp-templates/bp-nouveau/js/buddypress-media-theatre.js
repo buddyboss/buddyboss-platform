@@ -42,6 +42,7 @@ window.bp = window.bp || {};
 			this.is_open = false;
 			this.nextLink = $('.bb-next-media');
 			this.previousLink = $('.bb-prev-media');
+			this.activity_ajax = false;
 
 		},
 
@@ -54,6 +55,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-close-media-theatre',   this.closeTheatre.bind( this ) );
 			$( document ).on( 'click', '.bb-prev-media',            this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media',            this.next.bind( this ) );
+			$( document ).on( 'bp_activity_ajax_delete_request',    this.activityDeleted.bind( this ) );
 
 		},
 
@@ -207,7 +209,12 @@ window.bp = window.bp || {};
 			var self = this;
 			$('.bb-media-info-section .activity-list').addClass('loading').html('<i class="dashicons dashicons-update animate-spin"></i>');
 			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
-				$.ajax({
+
+				if ( self.activity_ajax != false ) {
+					self.activity_ajax.abort();
+				}
+
+				self.activity_ajax = $.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					data: {
@@ -224,6 +231,34 @@ window.bp = window.bp || {};
 				});
 			} else {
 				$('.bb-media-info-section').hide();
+			}
+		},
+
+		activityDeleted: function(event,data) {
+			var self = this, i = 0;
+			if (self.is_open && typeof data !== 'undefined' && data.action === 'delete_activity' && self.current_media.activity_id == data.id) {
+
+				$(document).find('[data-bp-list="media"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]').closest('li').remove();
+				$(document).find('[data-bp-list="activity"] .bb-open-media-theatre[data-id="' + self.current_media.id + '"]').closest('.bb-activity-media-elem').remove();
+
+				for (i = 0; i < self.medias.length; i++) {
+					if (self.medias[i].activity_id == data.id) {
+						self.medias.splice(i, 1);
+						break;
+					}
+				}
+
+				if (self.current_index == 0 && self.current_index != (self.medias.length)) {
+					self.current_index = -1;
+					self.next(event);
+				} else if (self.current_index == 0 && self.current_index == (self.medias.length)) {
+					self.closeTheatre(event);
+				} else if (self.current_index == (self.medias.length)) {
+					self.previous(event);
+				} else {
+					self.current_index = -1;
+					self.next(event);
+				}
 			}
 		}
 	};

@@ -262,16 +262,23 @@ window.bp = window.bp || {};
 				}
 			});
 
+			bp.Nouveau.Activity.postForm.dropzone.on('error', function(file,response) {
+				if ( file.accepted ) {
+					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+				} else {
+					bp.Nouveau.Activity.postForm.dropzone.removeFile(file);
+				}
+			});
+
 			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
 						if ( file.id === self.media[i].id ) {
-							self.media.splice( i, 1 );
-							self.model.set( 'media', self.media );
-
 							if ( ! self.media[i].saved ) {
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
 						}
 					}
 				}
@@ -954,6 +961,16 @@ window.bp = window.bp || {};
 
 			select.model.on( 'change', this.attachAutocomplete, this );
 			bp.Nouveau.Activity.postForm.ActivityObjects.on( 'change:selected', this.postIn, this );
+
+			if ( ! _.isUndefined( BP_Nouveau.media ) &&
+				BP_Nouveau.media.profile_media === false
+			) {
+				if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+					bp.Nouveau.Activity.postForm.dropzone.destroy();
+				}
+				$('#activity-post-media-uploader').html('');
+				$('#whats-new-toolbar .post-media').hide();
+			}
 		},
 
 		attachAutocomplete: function( model ) {
@@ -979,22 +996,39 @@ window.bp = window.bp || {};
 				this.model.set( 'object', model.get( 'selected' ) );
 
 				if ( $('#activity-post-media-uploader').length &&
-					! _.isUndefined( BP_Nouveau.media ) &&
-					BP_Nouveau.media.group_media === false
+					! _.isUndefined( BP_Nouveau.media )
 				) {
 					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
 						bp.Nouveau.Activity.postForm.dropzone.destroy();
 					}
 					$('#activity-post-media-uploader').html('');
 					this.model.set( 'media', [] );
-					$('#whats-new-toolbar .post-media').hide();
+					if ( BP_Nouveau.media.group_media === false ) {
+						$('#whats-new-toolbar .post-media').hide();
+					} else {
+						$('#whats-new-toolbar .post-media').show();
+					}
 				}
-
 			} else {
 				this.model.set( { object: 'user', item_id: 0 } );
 
 				if ( $('#whats-new-toolbar .post-media').length ) {
 					$('#whats-new-toolbar .post-media').show();
+				}
+
+				if ( $('#activity-post-media-uploader').length &&
+					! _.isUndefined( BP_Nouveau.media )
+				) {
+					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+						bp.Nouveau.Activity.postForm.dropzone.destroy();
+					}
+					$('#activity-post-media-uploader').html('');
+					this.model.set( 'media', [] );
+					if ( BP_Nouveau.media.profile_media === false ) {
+						$('#whats-new-toolbar .post-media').hide();
+					} else {
+						$('#whats-new-toolbar .post-media').show();
+					}
 				}
 			}
 
@@ -1101,13 +1135,9 @@ window.bp = window.bp || {};
 
 		closePickersOnEsc: function( event ) {
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
-				if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key)) {
+				if (!_.isUndefined(BP_Nouveau.media.gif_api_key)) {
 					this.$self.removeClass('open');
 					this.$gifPickerEl.removeClass('open');
-				}
-
-				if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
-					this.$emojiPickerEl.data('emojioneArea').hidePicker();
 				}
 			}
 		},
@@ -1115,17 +1145,12 @@ window.bp = window.bp || {};
 		closePickersOnClick: function( event ) {
 			var $targetEl = $(event.target);
 
-			if (!_.isUndefined(BP_Nouveau.activity.params.gif_api_key) &&
+			if (!_.isUndefined(BP_Nouveau.media.gif_api_key) &&
 				!$targetEl.closest('.post-gif').length) {
 				this.$self.removeClass('open');
 				this.$gifPickerEl.removeClass('open');
 			}
 
-			if (!_.isUndefined(BP_Nouveau.activity.params.emoji) &&
-				!$targetEl.closest('.post-emoji').length &&
-				!$targetEl.is('.emojioneemoji,.emojibtn')) {
-				this.$emojiPickerEl.data('emojioneArea').hidePicker();
-			}
 		},
 
 		activeButton: function (event) {
@@ -1142,7 +1167,7 @@ window.bp = window.bp || {};
 		activityMedia: null,
 		className : 'empty',
 		initialize: function() {
-			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) && ( BP_Nouveau.activity.params.object === 'user' || ( BP_Nouveau.activity.params.object === 'group' && BP_Nouveau.media.group_media ) ) ) {
+			if ( !_.isUndefined( window.Dropzone ) ) {
 				this.activityMedia = new bp.Views.ActivityMedia({model: this.model});
 				this.views.add(this.activityMedia);
 			}
@@ -1389,11 +1414,11 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			if (!_.isUndefined(BP_Nouveau.activity.params.emoji)) {
+			if (!_.isUndefined(BP_Nouveau.media.emoji)) {
 				$('#whats-new').emojioneArea({
 					standalone: true,
 					hideSource: false,
-					container: '.post-emoji',
+					container: '#whats-new-toolbar > .post-emoji',
 					autocomplete: false,
 					pickerPosition: 'bottom',
 					hidePickerOnBlur: false,
@@ -1471,7 +1496,7 @@ window.bp = window.bp || {};
 
 			// Transform emoji image into emoji unicode
 			$whatsNew.find('img.emojioneemoji').replaceWith(function () {
-				return this.alt;
+				return this.dataset.char;
 			});
 
 			// Add valid line breaks
@@ -1568,8 +1593,6 @@ window.bp = window.bp || {};
 					}
 					self.model.set('media',medias);
 				}
-
-				console.log(self.model.get('media'));
 
 				// Reset the form
 				self.resetForm();

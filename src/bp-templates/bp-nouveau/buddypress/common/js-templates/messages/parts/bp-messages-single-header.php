@@ -1,5 +1,3 @@
-
-
 <script type="text/html" id="tmpl-bp-messages-single-header">
 	<#
 	var other_recipients = _.reject(data.recipients, function(item) {

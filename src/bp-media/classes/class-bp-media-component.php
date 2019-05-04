@@ -211,65 +211,72 @@ class BP_Media_Component extends BP_Component {
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
-		// Determine user to use.
-		if ( bp_displayed_user_domain() ) {
-			$user_domain = bp_displayed_user_domain();
-		} elseif ( bp_loggedin_user_domain() ) {
-			$user_domain = bp_loggedin_user_domain();
-		} else {
-			return;
-		}
+		if ( bp_is_profile_media_support_enabled() ) {
 
-		$slug       = bp_get_media_slug();
-		$media_link = trailingslashit( $user_domain . $slug );
+			// Determine user to use.
+			if ( bp_displayed_user_domain() ) {
+				$user_domain = bp_displayed_user_domain();
+			} elseif ( bp_loggedin_user_domain() ) {
+				$user_domain = bp_loggedin_user_domain();
+			} else {
+				return;
+			}
 
-		// Only grab count if we're on a user page and current user has access.
-		if ( bp_is_user() && bp_user_has_access() ) {
-			$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
-			$class    = ( 0 === $count ) ? 'no-count' : 'count';
-			$nav_name = sprintf(
-			/* translators: %s: total media count for the current user */
-				__( 'Photos %s', 'buddyboss' ),
-				sprintf(
-					'<span class="%s">%s</span>',
-					esc_attr( $class ),
-					bp_core_number_format( $count )
-				)
+			$slug       = bp_get_media_slug();
+			$media_link = trailingslashit( $user_domain . $slug );
+
+			// Only grab count if we're on a user page and current user has access.
+			if ( bp_is_user() && bp_user_has_access() ) {
+				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
+				$class    = ( 0 === $count ) ? 'no-count' : 'count';
+				$nav_name = sprintf(
+				/* translators: %s: total media count for the current user */
+					__( 'Photos %s', 'buddyboss' ),
+					sprintf(
+						'<span class="%s">%s</span>',
+						esc_attr( $class ),
+						bp_core_number_format( $count )
+					)
+				);
+			} else {
+				$nav_name = __( 'Photos', 'buddyboss' );
+			}
+
+			// Add 'Photos' to the main navigation.
+			$main_nav = array(
+				'name'                => $nav_name,
+				'slug'                => $slug,
+				'position'            => 80,
+				'screen_function'     => 'media_screen',
+				'default_subnav_slug' => 'my-media',
+				'item_css_id'         => $this->id
 			);
-		} else {
-			$nav_name = __( 'Photos', 'buddyboss' );
+
+			// Add the subnav items to the profile.
+			$sub_nav[] = array(
+				'name'            => $nav_name,
+				'slug'            => 'my-media',
+				'parent_url'      => $media_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'media_screen',
+				'position'        => 10,
+				'item_css_id'     => 'media-my-media'
+			);
+
+			if ( bp_is_profile_albums_support_enabled() ) {
+
+				// Add the subnav items to the profile.
+				$sub_nav[] = array(
+					'name'            => __( 'Albums', 'buddyboss' ),
+					'slug'            => 'albums',
+					'parent_url'      => $media_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'media_screen',
+					'position'        => 10,
+				);
+			}
+
 		}
-
-		// Add 'Photos' to the main navigation.
-		$main_nav = array(
-			'name'                => $nav_name,
-			'slug'                => $slug,
-			'position'            => 80,
-			'screen_function'     => 'media_screen',
-			'default_subnav_slug' => 'my-media',
-			'item_css_id'         => $this->id
-		);
-
-		// Add the subnav items to the profile.
-		$sub_nav[] = array(
-			'name'            => $nav_name,
-			'slug'            => 'my-media',
-			'parent_url'      => $media_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'media_screen',
-			'position'        => 10,
-			'item_css_id'     => 'media-my-media'
-		);
-
-		// Add the subnav items to the profile.
-		$sub_nav[] = array(
-			'name'            => __( 'Albums', 'buddyboss' ),
-			'slug'            => 'albums',
-			'parent_url'      => $media_link,
-			'parent_slug'     => $slug,
-			'screen_function' => 'media_screen',
-			'position'        => 10,
-		);
 
 		parent::setup_nav( $main_nav, $sub_nav );
 
@@ -287,7 +294,7 @@ class BP_Media_Component extends BP_Component {
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 		// Menus for logged in user.
-		if ( is_user_logged_in() ) {
+		if ( is_user_logged_in() && bp_is_profile_media_support_enabled() ) {
 
 			// Setup the logged in user variables.
 			$media_link = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() );
@@ -309,14 +316,16 @@ class BP_Media_Component extends BP_Component {
 				'position' => 10
 			);
 
-			// Albums.
-			$wp_admin_nav[] = array(
-				'parent'   => 'my-account-' . $this->id,
-				'id'       => 'my-account-' . $this->id . '-albums',
-				'title'    => __( 'My Albums', 'buddyboss' ),
-				'href'     => trailingslashit( $media_link . 'albums' ),
-				'position' => 20
-			);
+			if ( bp_is_profile_albums_support_enabled() ) {
+				// Albums.
+				$wp_admin_nav[] = array(
+					'parent'   => 'my-account-' . $this->id,
+					'id'       => 'my-account-' . $this->id . '-albums',
+					'title'    => __( 'My Albums', 'buddyboss' ),
+					'href'     => trailingslashit( $media_link . 'albums' ),
+					'position' => 20
+				);
+			}
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );

@@ -712,7 +712,7 @@ class BP_Groups_Component extends BP_Component {
 					'no_access_url'       => $group_link,
 				);
 
-				if ( bp_is_group_album_support_enabled() ) {
+				if ( bp_is_group_albums_support_enabled() ) {
 					$sub_nav[] = array(
 						'name'                => __( 'Albums', 'buddyboss' ),
 						'slug'                => 'albums',

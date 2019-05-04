@@ -9,12 +9,17 @@
  * @version 3.1.0
  */
 ?>
-<div class="subnav-filters filters user-subnav bp-messages-filters" id="subsubnav"></div>
 
 <input type="hidden" id="thread-id" value="" />
-<div class="bp-messages-feedback"></div>
-<div class="bp-messages-threads-list"></div>
-<div class="bp-messages-content"></div>
+<div class="bp-messages-container">
+	<div class="bp-messages-nav-panel">
+		<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+		<div class="subnav-filters filters user-subnav bp-messages-filters push-right" id="subsubnav"></div><!--This is required for filters-->
+		<div class="bp-messages-feedback"></div>
+		<div class="bp-messages-threads-list" id="bp-messages-threads-list"></div>
+	</div>
+	<div class="bp-messages-content"></div>
+</div>
 
 <?php
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
@@ -29,6 +34,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
      */
     $template_parts = apply_filters( 'bp_messages_js_template_parts', [
         'parts/bp-messages-feedback',
+        'parts/bp-messages-loading',
         'parts/bp-messages-hook',
         'parts/bp-messages-form',
         'parts/bp-messages-editor',
@@ -41,6 +47,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
         'parts/bp-messages-single',
         'parts/bp-messages-editor-toolbar',
         'parts/bp-messages-media',
+        'parts/bp-messages-no-threads',
     ] );
 
     foreach ( $template_parts as $template_part ) {

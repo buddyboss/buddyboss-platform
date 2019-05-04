@@ -59,8 +59,10 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size(),
+		'profile_media'   => bp_is_profile_media_support_enabled(),
+		'profile_album'   => bp_is_profile_albums_support_enabled(),
 		'group_media'     => bp_is_group_media_support_enabled(),
-		'group_album'     => bp_is_group_album_support_enabled(),
+		'group_album'     => bp_is_group_albums_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
 	);
 
@@ -71,6 +73,16 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$params['media']['group_id'] = bp_get_current_group_id();
     }
+
+	if ( bp_is_emoji_support_enabled() ) {
+		$params['media']['emoji'] = true;
+		$params['media']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
+	}
+
+	// Gif api key
+	if ( bp_is_gif_support_enabled() ) {
+		$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
+	}
 
 	return $params;
 }

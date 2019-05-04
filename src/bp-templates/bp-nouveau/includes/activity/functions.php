@@ -107,16 +107,6 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		$activity_params['link_preview'] = true;
 	}
 
-	if ( bp_is_activity_emoji_active() ) {
-		$activity_params['emoji'] = true;
-		$activity_params['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
-	}
-
-	// Gif api key
-	if ( bp_is_activity_gif_active() ) {
-		$activity_params['gif_api_key'] = bp_get_activity_gif_api_key();
-	}
-
 	/**
 	 * Filters the included, specific, Action buttons.
 	 *

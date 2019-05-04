@@ -1,4 +1,3 @@
-
 <script type="text/html" id="tmpl-bp-messages-single">
 	<?php bp_nouveau_messages_hook( 'before', 'thread_content' ); ?>
 
@@ -27,7 +26,7 @@
 
 			</div><!-- .message-metadata -->
 
-			<div class="message-content">
+			<div class="bp-message-content-wrap">
 
 				<?php bp_nouveau_messages_hook( 'before', 'reply_box' ); ?>
 
@@ -35,10 +34,6 @@
 				<div id="bp-message-content"></div>
 
 				<?php bp_nouveau_messages_hook( 'after', 'reply_box' ); ?>
-
-				<div class="submit">
-					<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button"/>
-				</div>
 
 			</div><!-- .message-content -->
 
@@ -48,4 +43,7 @@
 	<?php bp_nouveau_messages_hook( 'after', 'thread_reply' ); ?>
 
 	<?php bp_nouveau_messages_hook( 'after', 'thread_content' ); ?>
+</script>
+<script type="text/html" id="tmpl-bp-messages-reply-form-submit">
+    <input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button" class="small" />
 </script>

@@ -16,15 +16,11 @@
 
 .clearfix {
 
-	&:before,
 	&:after {
 		content: " ";
+		clear: both;
 		display: table;
 	}
-}
-
-.clearfix:after {
-	clear: both;
 }
 
 // Vertical centering
@@ -52,4 +48,25 @@
 .bp-show {
 
 	@include show();
+}
+
+.emojionearea {
+
+	.emojionearea-wrapper {
+
+		img.emojioneemoji {
+			width: 1.2em;
+			position: relative;
+
+			&:after {
+				content: ">";
+				display: block;
+				width: 1rem;
+				height: 1rem;
+				position: absolute;
+				bottom: 0;
+				right: -1.5rem;
+			}
+		}
+	}
 }

@@ -72,6 +72,7 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-uploader-close', this.closeUploader.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-media', this.deleteMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
+			$( '#buddypress [data-bp-list="media"]' ).on('bp_ajax_request',this.bp_ajax_media_request);
 
 			// albums
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
@@ -101,6 +102,12 @@ window.bp = window.bp || {};
 
 		},
 
+		bp_ajax_media_request: function(event,data) {
+			if ( ! _.isUndefined( data ) && ! _.isUndefined( data.response.scopes.personal ) && data.response.scopes.personal === 0 ) {
+				$('.bb-photos-actions').hide();
+			}
+		},
+
 		addSelectedClassToWrapper: function(event) {
 			var target = event.currentTarget;
 			if ( $(target).is(':checked') ) {
@@ -109,6 +116,10 @@ window.bp = window.bp || {};
 			} else {
 				$(target).closest('.bb-photo-thumb').removeClass('selected');
 				$(target).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',wp.i18n.__('Select','buddyboss'));
+
+				if ( $( '.bp-nouveau #bb-select-deselect-all-media' ).hasClass('selected') ) {
+					$( '.bp-nouveau #bb-select-deselect-all-media' ).removeClass('selected');
+				}
 			}
 		},
 
@@ -148,6 +159,15 @@ window.bp = window.bp || {};
 						$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]:checked').each(function(){
 							$(this).closest('li').remove();
 						});
+
+						if ( $('#buddypress').find('.media-list:not(.existing-media-list)').find('li:not(.load-more)').length == 0 ) {
+							$('.bb-photos-actions').hide();
+							var feedback = '<aside class="bp-feedback bp-messages info">\n' +
+								'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
+								'\t<p>'+wp.i18n.__('Sorry, no photos were found.','buddyboss')+'</p>\n' +
+								'\t</aside>';
+							$('#buddypress [data-bp-list="media"]').html(feedback);
+						}
 					} else {
 						$('#buddypress .media-list').prepend(response.data.feedback);
 					}
@@ -247,7 +267,11 @@ window.bp = window.bp || {};
 					});
 
 					self.dropzone_obj.on('error', function(file,response) {
-						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						if ( file.accepted ) {
+							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						} else {
+							self.dropzone_obj.removeFile(file);
+						}
 					});
 
 					self.dropzone_obj.on('success', function(file, response) {
@@ -319,7 +343,11 @@ window.bp = window.bp || {};
 				});
 
 				self.dropzone_obj.on('error', function(file,response) {
-					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					if ( file.accepted ) {
+						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					} else {
+						self.dropzone_obj.removeFile(file);
+					}
 				});
 
 				self.dropzone_obj.on('queuecomplete', function() {
@@ -438,6 +466,7 @@ window.bp = window.bp || {};
 							// It's the very first media, let's make sure the container can welcome it!
 							if (!$('#media-stream ul.media-list').length) {
 								$('#media-stream').html($('<ul></ul>').addClass('media-list item-list bp-list bb-photo-list grid'));
+								$('.bb-photos-actions').show();
 							}
 
 							// Prepend the activity.
@@ -479,6 +508,7 @@ window.bp = window.bp || {};
 							// It's the very first media, let's make sure the container can welcome it!
 							if (!$('#media-stream ul.media-list').length) {
 								$('#media-stream').html($('<ul></ul>').addClass('media-list item-list bp-list bb-photo-list grid'));
+								$('.bb-photos-actions').show();
 							}
 
 							// Prepend the activity.
@@ -505,7 +535,7 @@ window.bp = window.bp || {};
 		},
 
 		saveAlbum: function(event) {
-			var target = $( event.currentTarget ), self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy'), i = 0;
+			var target = $( event.currentTarget ), self = this, title = $('#bb-album-title'), privacy = $('#bb-album-privacy');
 			event.preventDefault();
 
 			if( $.trim(title.val()) === '' ) {

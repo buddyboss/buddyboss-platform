@@ -915,6 +915,10 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		    // make an activity for the media
 		    if ( bp_is_active( 'activity' ) && ! empty( $main_activity_id ) ) {
 			    $activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+
+			    if ( ! empty( $activity_id ) ) {
+				    bp_activity_update_meta( $activity_id, 'bp_media_activity', true );
+			    }
 		    }
 
 		    $title         = ! empty( $media['name'] ) ? $media['name'] : '';

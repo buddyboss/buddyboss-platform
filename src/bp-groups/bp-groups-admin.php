@@ -1075,7 +1075,7 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
         </div>
 	<?php endif; ?>
 
-    <?php if ( bp_is_active( 'media' ) && bp_is_group_album_support_enabled() ) : ?>
+    <?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
         <div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
             <fieldset>
                 <legend><?php _e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
