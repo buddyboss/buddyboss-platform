@@ -8,7 +8,7 @@ Neatly formatted emails are completely customizable.
 
 [![user activity email](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeed2.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeed2.jpg)
 
-BuddyBoss Settings<a name="BuddyBoss-Settings"></a>
+BuddyBoss Settings<a name="buddyboss-settings"></a>
 ------------------
 
 *   Activity Settings
@@ -53,28 +53,28 @@ Your Members are not required to create connections with other members to follow
 
 [![follow member](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/follow-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/follow.jpg)
 
-Likes<a name="Likes"></a>
+Likes<a name="likes"></a>
 -----
 
 This option adds a small thumb up icon and the ability to like/unlike activity. Members will be shown who has liked the activity, when too many members like the activity it will be truncated. Simply hover over the text of who liked your activity to display an overlay of who else liked the activity.
 
 [![likes](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/likes-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/likes.jpg)
 
-Link Previews<a name="Link-Previews"></a>
+Link Previews<a name="link-previews"></a>
 -------------
 
 This option will automatically format web content from over 35 platforms with a preview image, if available, and content excerpt. For a complete list please visit [WordPress Codex Embeds](https://codex.wordpress.org/Embeds#Okay.2C_So_What_Sites_Can_I_Embed_From.3F).
 
 [![link preview](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/linkpreview-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/linkpreview.jpg)
 
-Emoji<a name="Emoji"></a>
+Emoji<a name="emoji"></a>
 -----
 
 This option will allow members to communicate using a growing library of over 2,000 emoji built into WordPress. Emoji can be posted by themselves or within other content. Compatible with most mobile devices.
 
 [![emoji](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/emoji-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/emoji.jpg)
 
-GIFs<a name="GIFs"></a>
+GIFs<a name="gifs"></a>
 ----
 
 This option allows members to search and post GIFs from the popular GIF site GIPHY.

@@ -2,7 +2,7 @@
 
 BuddyBoss Platform provides admin dashboard panels to help you manage the forums created in your site, including group forums.
 
-Sections<a name="Sections"></a>
+Sections<a name="sections"></a>
 --------
 
 *   [Forum Administration](#forum-administration)
@@ -16,7 +16,7 @@ Sections<a name="Sections"></a>
     *   [Import Forums](#import-forums)
     *   [Reset Forums](#reset-forums)
 
-Forum Administration<a name="Forum-Administration"></a>
+Forum Administration<a name="forum-administration"></a>
 --------------------
 
 This screen displays the individual forums on your site.
@@ -43,7 +43,7 @@ This screen displays the individual forums on your site.
 
 [![forums dashboard](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/forumsdashboard-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/forumsdashboard.jpg)
 
-Discussions<a name="Discussions"></a>
+Discussions<a name="discussions"></a>
 -----------
 
 This screen displays the individual discussions on your site.
@@ -76,7 +76,7 @@ This screen displays the individual discussions on your site.
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussions-1024x520.jpg)
 
-Discussion Tags<a name="Discussion-Tags"></a>
+Discussion Tags<a name="discussion-tags"></a>
 ---------------
 
 This screen display the discussion tags on your site.
@@ -96,7 +96,7 @@ This screen display the discussion tags on your site.
 
 [![discussion tags](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussiontags-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussiontags.jpg)
 
-Replies<a name="Replies"></a>
+Replies<a name="replies"></a>
 -------
 
 This screen provides access to all of your discussion replies.
@@ -120,7 +120,7 @@ This screen provides access to all of your discussion replies.
 
 [![forum replies](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/replies-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/replies.jpg)
 
-Widgets<a name="Widgets"></a>
+Widgets<a name="widgets"></a>
 -------
 
 Widgets are configured through Dashboard -> Appearance -> Widgets

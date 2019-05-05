@@ -2,7 +2,7 @@
 
 Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="getting-started/getting-started.md"]
 
-Automated Install (recommended)<a name="Automated-Install-(recommended)"></a>
+Automated Install (recommended)<a name="automated-install"></a>
 -------------------------------
 
 *   [Download](https://wordpress.org/download/) and [install](https://wordpress.org/support/article/how-to-install-wordpress/) WordPress.
@@ -11,7 +11,7 @@ Automated Install (recommended)<a name="Automated-Install-(recommended)"></a>
 *   Search for "BuddyBoss Platform" and click Download.
 *   After the quick download click Activate.
 
-Manual Installation<a name="Manual-Installation"></a>
+Manual Installation<a name="manual-installation"></a>
 -------------------
 
 *   [Download](https://wordpress.org/download/) and [install](https://codex.wordpress.org/Installing_WordPress) WordPress.

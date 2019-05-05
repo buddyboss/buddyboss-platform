@@ -17,7 +17,7 @@ Everything in a community website revolves around its members.
 
 [![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
 
-Profile Settings<a name="Profile-Settings"></a>
+Profile Settings<a name="profile-settings"></a>
 ----------------
 
 ### Display Name Format<a name="display-name-format"></a>
@@ -44,14 +44,14 @@ Display each member's profile type on their profile page.
 
 [![display on profiles](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/displayonprofiles-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/displayonprofiles.jpg)
 
-Profile Types<a name="Profile-Types"></a>
+Profile Types<a name="profile-types"></a>
 -------------
 
 Enable profile types to give members unique profile fields and permissions.
 
 [embed] https://vimeo.com/320530553 [/embed]
 
-Profile Search<a name="Profile-Search"></a>
+Profile Search<a name="profile-search"></a>
 --------------
 
 Enable advanced profile search on the members directory.

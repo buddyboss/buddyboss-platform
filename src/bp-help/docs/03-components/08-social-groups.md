@@ -20,7 +20,7 @@ Social groups allows users to organize themselves into specific public, private 
     *   [Group Hierarchies](#group-hierarchies)
     *   [Group Restrict Invite](#group-restrict-invite)
 
-Groups Directory<a name="Groups-Directory"></a>
+Groups Directory<a name="groups-directory"></a>
 ----------------
 
 1.  Create a Group button/link shown beside the groups tab if site admin allows members to create groups
@@ -33,7 +33,7 @@ Groups Directory<a name="Groups-Directory"></a>
 
 [![groups](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Groups-–-BuddyBoss-Platform-1-1-1024x607.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Groups-–-BuddyBoss-Platform-1-1.jpg)
 
-Single Group<a name="Single-Group"></a>
+Single Group<a name="single-group"></a>
 ------------
 
 1.  Group cover image
@@ -54,7 +54,7 @@ Single Group<a name="Single-Group"></a>
 
 [![single group](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/singlegroup-1024x752.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/singlegroup.jpg)
 
-Group Members<a name="Group-Members"></a>
+Group Members<a name="group-members"></a>
 -------------
 
 1.  Search for a group member - includes organizers and moderators
@@ -67,7 +67,7 @@ Group Members<a name="Group-Members"></a>
 
 [![group directory](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdirectory-964x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdirectory.jpg)
 
-Group Discussion Forum<a name="Group-Discussion-Forum"></a>
+Group Discussion Forum<a name="group-discussion-forum"></a>
 ----------------------
 
 Each group can create its own discussion forum. Several groups can optionally be attached to the same discussion forum.
@@ -82,7 +82,7 @@ Each group can create its own discussion forum. Several groups can optionally be
 
 [![group discussion forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdiscussions-1024x667.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdiscussions.jpg)
 
-Group Invites<a name="Group-Invites"></a>
+Group Invites<a name="group-invites"></a>
 -------------
 
 The ability for group members to send invites must be enabled by the group organizer.
@@ -95,7 +95,7 @@ The ability for group members to send invites must be enabled by the group organ
 
 [embed] https://vimeo.com/320530340 [/embed]
 
-Manage Group<a name="Manage-Group"></a>
+Manage Group<a name="manage-group"></a>
 ------------
 
 The Manage group menu option is only available to the group organizer and delegated group members.

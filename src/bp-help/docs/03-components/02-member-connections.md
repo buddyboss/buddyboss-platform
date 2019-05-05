@@ -6,7 +6,7 @@ Let your users make connections with each other and focus on the people they car
 *   [View Connections](#view-connections)
 *   [Remove Connection](#remove-connection)
 
-Connect<a name="Connect"></a>
+Connect<a name="connect"></a>
 -------
 
 Connect via the member directory.
@@ -17,21 +17,21 @@ Or connect via the member's profile page.
 
 [![connect via member profile](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/connect2-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/connect2.jpg)
 
-View Connections<a name="View-Connections"></a>
+View Connections<a name="view-connections"></a>
 ----------------
 
 View connections via the Member Profile -> Connections
 
 ![profile page connections](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/profileconnections-1-1024x846.jpg)
 
-Remove Connection<a name="Remove-Connection"></a>
+Remove Connection<a name="remove-connection"></a>
 -----------------
 
 Remove a connection by clicking on the member's connection status on your Profile My Connections, the other member's profile or Member Directory pages, then click a second time to remove the connection.
 
 [embed] https://vimeo.com/320530591 [/embed]
 
-BuddyBoss Settings<a name="BuddyBoss-Settings"></a>
+BuddyBoss Settings<a name="buddyboss-settings"></a>
 ------------------
 
 Site administrators can manage features of Connections.

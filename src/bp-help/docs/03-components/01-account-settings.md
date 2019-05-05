@@ -8,14 +8,14 @@ Allow your users to modify their account and notification settings directly from
 *   [Group Invites](#group-invites)
 *   [Export Data](#export-data)
 
-Login Information<a name="Login-Information"></a>
+Login Information<a name="login-information"></a>
 -----------------
 
 Change member account email and password.
 
 [![login information](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/logininformation-1024x723.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/logininformation.jpg)
 
-Email Preferences<a name="Email-Preferences"></a>
+Email Preferences<a name="email-preferences"></a>
 -----------------
 
 Choose what type of emails to receive.
@@ -37,7 +37,7 @@ Choose what type of emails to receive.
 
 [![email preferences](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/emailpreferences-1024x981.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/emailpreferences.jpg)
 
-Privacy<a name="Privacy"></a>
+Privacy<a name="privacy"></a>
 -------
 
 Select who may see profile details.
@@ -49,14 +49,14 @@ Select who may see profile details.
 
 [![profile visibility settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privacy-1-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privacy-1.jpg)
 
-Group Invites<a name="Group-Invites"></a>
+Group Invites<a name="group-invites"></a>
 -------------
 
 Option to restrict group invites to member connections only.
 
 [![group invites](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupinvites-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupinvites.jpg)
 
-Export Data<a name="Export-Data"></a>
+Export Data<a name="export-data"></a>
 -----------
 
 Download a copy of all data a member has shared on the platform. An email will be sent to the member to verify the request. Then a site admin will review the request and if approved, an export file will be generated and emailed to the member.

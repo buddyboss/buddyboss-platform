@@ -4,7 +4,7 @@ BuddyBoss Platform has fully integrated LearnDash functions and features to crea
 
 The solution is to sync groups between the two.
 
-BuddyBoss to LearnDash Sync<a name="BuddyBoss-to-LearnDash-Sync"></a>
+BuddyBoss to LearnDash Sync<a name="buddyboss-to-learndash-sync"></a>
 ---------------------------
 
 Sync BuddyBoss social group members to LearnDash groups.
@@ -19,7 +19,7 @@ Sync BuddyBoss social group members to LearnDash groups.
 *   Sync Moderators
 *   Sync Users
 
-LearnDash to BuddyBoss Sync<a name="LearnDash-to-BuddyBoss-Sync"></a>
+LearnDash to BuddyBoss Sync<a name="learndash-to-buddyboss-sync"></a>
 ---------------------------
 
 Sync LearnDash group users to BuddyBoss groups.
@@ -32,7 +32,7 @@ Sync LearnDash group users to BuddyBoss groups.
 *   Sync Leaders
 *   Sync Users
 
-Group Reports Settings<a name="Group-Reports-Settings"></a>
+Group Reports Settings<a name="group-reports-settings"></a>
 ----------------------
 
 Control the settings for social group's reports. Just like the reports for LearnDash we have included reporting for social groups.

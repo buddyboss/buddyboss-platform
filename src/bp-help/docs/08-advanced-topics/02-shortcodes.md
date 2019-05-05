@@ -7,7 +7,7 @@ Shortcodes are small pieces of WordPress-specifc code, enclosed by brackets `[ ]
 *   [Developer shortcode API](https://codex.wordpress.org/Shortcode_API)
 *   [Shortcode Generator](https://generatewp.com/shortcodes/)
 
-BuddyBoss Platform Available Shortcodes<a name="BuddyBoss-Platform-Available-Shortcodes"></a>
+BuddyBoss Platform Available Shortcodes<a name="buddyboss-platform-available-shortcodes"></a>
 ---------------------------------------
 
 

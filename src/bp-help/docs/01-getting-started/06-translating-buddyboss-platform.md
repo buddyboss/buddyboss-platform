@@ -4,12 +4,12 @@ The ability to easily change embedded text, labels and messages is essential to 
 
 If this information or instruction is overly technical check out [WordPress translation recommendations](https://developer.wordpress.org/plugins/internationalization/localization/#translate-po-file).
 
-Localization (l10n)<a name="Localization-(l10n)"></a>
+Localization (l10n)<a name="localization"></a>
 -------------------
 
 Localization, sometimes abbreviated as l10n, describes the process of translating an internationalized plugin. Files associated with l10n are called POT (Portable Object Template). The BuddyBoss Platform is adding new languages all the time.
 
-Changing Languages<a name="Changing-Languages"></a>
+Changing Languages<a name="changing-languages"></a>
 ------------------
 
 Navigate to Dashboard -> Settings -> General -> Site Language to select your language.
@@ -18,7 +18,7 @@ Navigate to Dashboard -> Settings -> General -> Site Language to select your lan
 
 If BuddyBoss Platform components have not been translated into your language you will need to follow the instructions in the remainder of this page to complete the translation.
 
-Translating Interface<a name="Translating-Interface"></a>
+Translating Interface<a name="translating-interface"></a>
 ---------------------
 
 Every translator program requires a POT file to read labels and messages that can be translated. This program will export/create a PO (Portable Object) file. Each PO file will build/create an MO (Machine Object) file. Admins can read PO files while computers/servers read MO files.

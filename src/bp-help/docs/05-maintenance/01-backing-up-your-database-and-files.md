@@ -4,7 +4,7 @@ What if the unthinkable happened in the form of a hacker, virus or accident, cou
 
 [Check out the WordPress manual database backup tutorial](https://codex.wordpress.org/Backing_Up_Your_Database)
 
-Best Practices for File Backups<a name="Best-Practices-for-File-Backups"></a>
+Best Practices for File Backups<a name="best-practices-for-file-backups"></a>
 -------------------------------
 
 *   Start from a baseline - As soon as you have your website live and initially configured you should run a full and complete backup. This will establish a baseline in case anything happens you have somewhere to start instead of doing it all over again.
@@ -18,7 +18,7 @@ Best Practices for File Backups<a name="Best-Practices-for-File-Backups"></a>
 *   Don't be afraid to ask for help - If you made a mistake or if your website was compromised get help from a knowledgeable friend or your helpful hosting provider support representative.
 *   Automate your backups - If your hosting provider offers a backup service consider asking for it. It may not seems like a worthwhile investment at first but when your site needs to be restored from a backup you will be grateful.
 
-Best Practices for Database Backups<a name="Best-Practices-for-Database-Backups"></a>
+Best Practices for Database Backups<a name="best-practices-for-database-backups"></a>
 -----------------------------------
 
 Now for the tricky part. Databases can be difficult to navigate for admins not familiar with command line interfaces or linux. Don't let that scare you away, many hosting companies are trying to make database backups easy for admins.

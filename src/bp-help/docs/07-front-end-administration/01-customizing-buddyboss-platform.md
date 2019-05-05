@@ -21,7 +21,7 @@ Some features that affect the layout, design and view of your website is organiz
     *   Body
     *   Footer
 
-Group Navigation<a name="Group-Navigation"></a>
+Group Navigation<a name="group-navigation"></a>
 ----------------
 
 *   Display the group navigation vertically.
@@ -44,7 +44,7 @@ Group Navigation<a name="Group-Navigation"></a>
 
 [embed] https://vimeo.com/320530377 [/embed]
 
-Profile Navigation<a name="Profile-Navigation"></a>
+Profile Navigation<a name="profile-navigation"></a>
 ------------------
 
 *   Display the profile navigation vertically.

@@ -16,7 +16,7 @@ To Revoke Invite select the status under the invite you wish to revoke. NOTE: In
 
 [![view/revoke invite](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/viewsentinvitesrevoke-1-1024x841.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/viewsentinvitesrevoke-1.jpg)
 
-BuddyBoss Settings<a name="BuddyBoss-Settings"></a>
+BuddyBoss Settings<a name="buddyboss-settings"></a>
 ------------------
 
 *   Email Subject - Allow users to customize the invite email subject.

@@ -2,7 +2,7 @@
 
 BuddyBoss Platform features a customizable email API. To access this feature navigate to Dashboard -> Emails.
 
-BuddyBoss Emails<a name="BuddyBoss-Emails"></a>
+BuddyBoss Emails<a name="buddyboss-emails"></a>
 ----------------
 
 Emails are a WordPress Custom post Type. They are edited and created just like posts and pages.
@@ -11,7 +11,7 @@ The biggest difference you will notice is the use of [bp_docs_link text="tokens"
 
 [![BuddyBoss Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemails-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemails.jpg)
 
-Edit Emails<a name="Edit-Emails"></a>
+Edit Emails<a name="edit-emails"></a>
 -----------
 
 Just like posts and pages the contents of editing an email are as follows:
@@ -25,7 +25,7 @@ Just like posts and pages the contents of editing an email are as follows:
 
 [![Edit Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailsedit-1024x823.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailsedit.jpg)
 
-Customize Emails<a name="Customize-Emails"></a>
+Customize Emails<a name="customize-emails"></a>
 ----------------
 
 Customize BuddyBoss Emails using the Customizer tool. The default color scheme is a light and airy neutral gray with blue call-to-action.
@@ -38,7 +38,7 @@ NOTE: The customizer will only display the Send Message template but you are aff
 
 [![Customize BuddyBoss Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailscustomize-1024x562.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailscustomize.jpg)
 
-Customize Header<a name="Customize-Header"></a>
+Customize Header<a name="customize-header"></a>
 ----------------
 
 *   Logo Upload - The logo size is currently restricted due to email formatting restrictions. Try a 1:4 height to width aspect ratio for best results.
@@ -49,7 +49,7 @@ Customize Header<a name="Customize-Header"></a>
 
 [embed] https://vimeo.com/320529935 [/embed]
 
-Customize Body<a name="Customize-Body"></a>
+Customize Body<a name="customize-body"></a>
 --------------
 
 *   Email background color
@@ -63,7 +63,7 @@ Customize Body<a name="Customize-Body"></a>
 
 [embed] https://vimeo.com/320529855 [/embed]
 
-Customize Footer<a name="Customize-Footer"></a>
+Customize Footer<a name="customize-footer"></a>
 ----------------
 
 *   Footer text
@@ -72,7 +72,7 @@ Customize Footer<a name="Customize-Footer"></a>
 
 [embed] https://vimeo.com/320529897 [/embed]
 
-Custom Email Template<a name="Custom-Email-Template"></a>
+Custom Email Template<a name="custom-email-template"></a>
 ---------------------
 
 If the provided options are not enough you can custom code your own template. To do that you will need to copy the default email template
@@ -83,7 +83,7 @@ and place a copy in your theme folder here
 
 `/wp-content/themes/{{Your Theme}}/buddypress/assests/emails/single-bp-email.php`
 
-Disable BuddyBoss Platform Emails<a name="Disable-BuddyBoss-Platform-Emails"></a>
+Disable BuddyBoss Platform Emails<a name="disable-buddyboss-platform-emails"></a>
 ---------------------------------
 
 Add the following code to `wp-content/plugins/bp-custom.php`:
