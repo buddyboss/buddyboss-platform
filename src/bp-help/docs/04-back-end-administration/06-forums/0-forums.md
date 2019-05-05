@@ -2,7 +2,7 @@
 
 BuddyBoss Platform provides admin dashboard panels to help you manage the forums created in your site, including group forums.
 
-Sections
+Sections<a name="Sections"></a>
 --------
 
 *   [Forum Administration](#forum-administration)
@@ -16,7 +16,7 @@ Sections
     *   [Import Forums](#import-forums)
     *   [Reset Forums](#reset-forums)
 
-Forum Administration
+Forum Administration<a name="Forum-Administration"></a>
 --------------------
 
 This screen displays the individual forums on your site.
@@ -43,7 +43,7 @@ This screen displays the individual forums on your site.
 
 [![forums dashboard](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/forumsdashboard-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/forumsdashboard.jpg)
 
-Discussions
+Discussions<a name="Discussions"></a>
 -----------
 
 This screen displays the individual discussions on your site.
@@ -76,7 +76,7 @@ This screen displays the individual discussions on your site.
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussions-1024x520.jpg)
 
-Discussion Tags
+Discussion Tags<a name="Discussion-Tags"></a>
 ---------------
 
 This screen display the discussion tags on your site.
@@ -96,7 +96,7 @@ This screen display the discussion tags on your site.
 
 [![discussion tags](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussiontags-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussiontags.jpg)
 
-Replies
+Replies<a name="Replies"></a>
 -------
 
 This screen provides access to all of your discussion replies.
@@ -120,7 +120,7 @@ This screen provides access to all of your discussion replies.
 
 [![forum replies](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/replies-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/replies.jpg)
 
-Widgets
+Widgets<a name="Widgets"></a>
 -------
 
 Widgets are configured through Dashboard -> Appearance -> Widgets

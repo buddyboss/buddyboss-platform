@@ -2,8 +2,8 @@
 
 Some features that affect the layout, design and view of your website is organized under the customize button on the WordPress admin toolbar or Dashboard > Appearance > Customize. These changes are best viewed while previewing them on your website. Note, that viewing each option does not change on your live website until you publish the changes. These changes can also be saved as a draft for further review or scheduled for publishing at a specified date and time.
 
-### Sections
 
+### Sections<a name="sections"></a>
 *   [](#general)[Group Navigation](#group-navigation)
     *   Display the group navigation vertically
     *   Use tab styling for primary navigation
@@ -21,7 +21,7 @@ Some features that affect the layout, design and view of your website is organiz
     *   Body
     *   Footer
 
-Group Navigation
+Group Navigation<a name="Group-Navigation"></a>
 ----------------
 
 *   Display the group navigation vertically.
@@ -44,7 +44,7 @@ Group Navigation
 
 [embed] https://vimeo.com/320530377 [/embed]
 
-Profile Navigation
+Profile Navigation<a name="Profile-Navigation"></a>
 ------------------
 
 *   Display the profile navigation vertically.

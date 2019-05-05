@@ -3,7 +3,7 @@
 Everything in a community website revolves around its members.
 
 *   [Profile Settings](#profile-settings)
-    *   [Display Name Format](#display-name-format) - After the format has been updated, remember to run the [bp_docs_link text="Repair Community" slug="back-end-administration/tools/repair-community.md"] tool to update all the users.
+    *   [Display Name Format](#display-name-format) - After the format has been updated, remember to run the [Repair Community](https://www.buddyboss.com/resources/docs/back-end-administration-panels/buddyboss-tools/) tool to update all the users.
         *   First Name
         *   First Name & Last Name
         *   Nickname
@@ -17,41 +17,41 @@ Everything in a community website revolves around its members.
 
 [![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
 
-Profile Settings
+Profile Settings<a name="Profile-Settings"></a>
 ----------------
 
-### Display Name Format
+### Display Name Format<a name="display-name-format"></a>
 
 Chose between First Name, First Name & Last Name or Username displayed for user activity. After the format has been updated, remember to run the [bp_docs_link text="Repair Community tool" slug="back-end-administration/tools/repair-community.md"] (Update display name to selected format in profile setting.) to update all the profiles.
 
 [embed] https://vimeo.com/320530132 [/embed]
 
-### Photo Uploads
+### Photo Uploads<a name="photo-uploads"></a>
 
 Allow registered members to upload avatars.
 
 [embed] https://vimeo.com/320530521 [/embed]
 
-### Cover Photo Uploads
+### Cover Photo Uploads<a name="cover-photo-uploads"></a>
 
 Allow registered members to upload cover photos.
 
 [embed] https://vimeo.com/320528463 [/embed]
 
-### Display on Profiles
+### Display on Profiles<a name="display-on-profiles"></a>
 
 Display each member's profile type on their profile page.
 
 [![display on profiles](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/displayonprofiles-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/displayonprofiles.jpg)
 
-Profile Types
+Profile Types<a name="Profile-Types"></a>
 -------------
 
 Enable profile types to give members unique profile fields and permissions.
 
 [embed] https://vimeo.com/320530553 [/embed]
 
-Profile Search
+Profile Search<a name="Profile-Search"></a>
 --------------
 
 Enable advanced profile search on the members directory.

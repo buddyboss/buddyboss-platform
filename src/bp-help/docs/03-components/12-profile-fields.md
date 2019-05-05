@@ -10,7 +10,7 @@ Customize your community with fully editable profile fields that allow your user
     *   [Gender](#gender)
     *   [Phone Number](#phone-number)
 
-Add New Field
+Add New Field<a name="Add-New-Field"></a>
 -------------
 
 To add a new field navigate to Dashboard -> Users -> Profile Fields
@@ -46,7 +46,7 @@ To add a new field navigate to Dashboard -> Users -> Profile Fields
 
 [![Add New Profile Field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/profilefieldsaddnew-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/profilefieldsaddnew.jpg)
 
-Add New Field Set
+Add New Field Set<a name="Add-New-Field-Set"></a>
 -----------------
 
 To add a new field set navigate to Dashboard -> Users -> Profile Fields
@@ -58,7 +58,7 @@ To add a new field set navigate to Dashboard -> Users -> Profile Fields
 
 [![Add new field set](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewfieldset-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewfieldset.jpg)
 
-Alternate Title
+Alternate Title<a name="Alternate-Title"></a>
 ---------------
 
 When creating certain profile fields you may want the title of each field differ on the registration page versus the profile page. For example, you may want to ask registering members "What is your age?" but show simply "Age" on a members' profile. The same text appears when users edit their profile information.
@@ -73,7 +73,7 @@ When creating certain profile fields you may want the title of each field differ
 
 [embed] https://vimeo.com/320529726 [/embed]
 
-Repeating Field Sets
+Repeating Field Sets<a name="Repeating-Field-Sets"></a>
 --------------------
 
 Some fields may have entries that need to be repeated. For example, on a school network you may want to have School and Graduation Date together in one Field Set. Making this set repeat the member could click "Add Another" and would see the same field set repeated.
@@ -98,7 +98,7 @@ Some fields may have entries that need to be repeated. For example, on a school 
 
 [embed] https://vimeo.com/320530623 [/embed]
 
-Field Types
+Field Types<a name="Field-Types"></a>
 -----------
 
 *   Multi Fields
@@ -115,68 +115,68 @@ Field Types
     *   Text Box
     *   URL
 
-### Checkboxes
+### Checkboxes<a name="checkboxes"></a>
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/checkboxes.gif)
 
 Checkboxes are used to let a member select one or more options of a limited number of choices.
 
-### Drop Down Select Box
+### Drop Down Select Box<a name="drop-down-select-box"></a>
 
 Drop Down select boxes are used to let members select one option of a list that rolls up into itself.
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Untitled-1-1024x240.gif)
 
-### Gender
+### Gender<a name="gender"></a>
 
 The gender selection is different from any other option. The gender selection affects the pronoun used in the member activity feed. Selection of male will use the pronoun "his" while female will use "her", any other option will use "their". You can use the default options or add any other non-binary gender.
 
 [embed] https://vimeo.com/320530251 [/embed]
 
-### Multi Select Box
+### Multi Select Box<a name="multi-select-box"></a>
 
 Multi Select Boxes are used to allow members to select multiple options  
 from a scrollable list using the keyboard shift/ctrl key and mouse click.
 
 [![multi select box](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/multiselectboxes.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/multiselectboxes.jpg)
 
-### Radio Buttons
+### Radio Buttons<a name="radio-buttons"></a>
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Untitled-8.gif)
 
 Radio buttons are used to allow members to select one option from a list.
 
-### Date Selector
+### Date Selector<a name="date-selector"></a>
 
 Allows users to select a date and displayed in one of several formats defined by the admin.
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/dateselector.gif)
 
-### Multi-line Text Area
+### Multi-line Text Area<a name="multi-line-text-area"></a>
 
 A free form text area with custom user formatting available.
 
 ![multi-line text area](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/multilinetextarea.jpg)
 
-### Number
+### Number<a name="number"></a>
 
 Just the numbers 0-9, period, e, negative and positive symbols.
 
 ![number form field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/number.jpg)
 
-### Phone Number
+### Phone Number<a name="phone-number"></a>
 
 Allows members to enter their phone number. Options are for US format (###) ###-#### or international.
 
 ![phone number field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/phonenumberfield.jpg)
 
-### Text Box
+### Text Box<a name="text-box"></a>
 
 A text box members can enter any keyboard character in to.
 
 ![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/textboxfield.jpg)
 
-### URL
+### URL<a name="url"></a>
 
 Any properly formatted URL that will be shown as a link in member profiles.
 

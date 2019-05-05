@@ -2,14 +2,14 @@
 
 There are many internal configurations settings that can be changed by adding a definition line to your custom.php file or using a [filter](https://developer.wordpress.org/reference/functions/add_filter/).
 
-Advanced Configurations
+Advanced Configurations<a name="Advanced-Configurations"></a>
 -----------------------
 
 Enable support for LDAP usernames that include dots:
 
     define( 'BP_ENABLE_USERNAME_COMPATIBILITY_MODE', true );
 
-Database Settings
+Database Settings<a name="Database-Settings"></a>
 -----------------
 
 Set a custom user database table for BuddyPress (and WordPress to use):

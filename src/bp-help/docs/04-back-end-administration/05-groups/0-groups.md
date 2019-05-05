@@ -2,7 +2,7 @@
 
 BuddyBoss Platform provides admin dashboard panels to help you manage the Groups created in your site, including membership and settings.
 
-Sections
+Sections<a name="Sections"></a>
 --------
 
 1.  Group View - All, Public, Private, Hidden
@@ -27,7 +27,7 @@ Sections
 
 [![group admin panel](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupadminpanel-1024x567.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupadminpanel.jpg)
 
-Single Group Management Panel
+Single Group Management Panel<a name="Single-Group-Management-Panel"></a>
 -----------------------------
 
 BuddyBoss Platform provides admin dashboard panels to help you manage individual Groups created in your site. This screen has many of the same options as a group organizer would have on the front-end.

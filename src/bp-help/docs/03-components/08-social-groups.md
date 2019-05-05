@@ -2,8 +2,7 @@
 
 Social groups allows users to organize themselves into specific public, private or hidden social areas with separate activity feeds and member listings. Social group organizers can approve requests to join the group, invite other users to join the group, change the group photo/cover image, promote group members, remove group members and enable separate group discussion forum.
 
-### Sections
-
+### Sections<a name="sections"></a>
 *   [Groups Directory](#groupsdirectory)
 *   [Single Group](#singlegroup)
     *   [Group Members](#groupmembers)
@@ -21,7 +20,7 @@ Social groups allows users to organize themselves into specific public, private 
     *   [Group Hierarchies](#group-hierarchies)
     *   [Group Restrict Invite](#group-restrict-invite)
 
-Groups Directory
+Groups Directory<a name="Groups-Directory"></a>
 ----------------
 
 1.  Create a Group button/link shown beside the groups tab if site admin allows members to create groups
@@ -34,7 +33,7 @@ Groups Directory
 
 [![groups](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Groups-–-BuddyBoss-Platform-1-1-1024x607.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Groups-–-BuddyBoss-Platform-1-1.jpg)
 
-Single Group
+Single Group<a name="Single-Group"></a>
 ------------
 
 1.  Group cover image
@@ -55,7 +54,7 @@ Single Group
 
 [![single group](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/singlegroup-1024x752.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/singlegroup.jpg)
 
-Group Members
+Group Members<a name="Group-Members"></a>
 -------------
 
 1.  Search for a group member - includes organizers and moderators
@@ -68,7 +67,7 @@ Group Members
 
 [![group directory](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdirectory-964x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdirectory.jpg)
 
-Group Discussion Forum
+Group Discussion Forum<a name="Group-Discussion-Forum"></a>
 ----------------------
 
 Each group can create its own discussion forum. Several groups can optionally be attached to the same discussion forum.
@@ -83,7 +82,7 @@ Each group can create its own discussion forum. Several groups can optionally be
 
 [![group discussion forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdiscussions-1024x667.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdiscussions.jpg)
 
-Group Invites
+Group Invites<a name="Group-Invites"></a>
 -------------
 
 The ability for group members to send invites must be enabled by the group organizer.
@@ -96,7 +95,7 @@ The ability for group members to send invites must be enabled by the group organ
 
 [embed] https://vimeo.com/320530340 [/embed]
 
-Manage Group
+Manage Group<a name="Manage-Group"></a>
 ------------
 
 The Manage group menu option is only available to the group organizer and delegated group members.
@@ -130,42 +129,42 @@ The Manage group menu option is only available to the group organizer and delega
         *   Site administrators can reconfigure which forum belongs to this group.
 *   Delete - WARNING: Deleting a group will completely remove ALL content associated with it. There is no way back. Please be careful with this option.
 
-### Group Creation
+### Group Creation<a name="group-creation"></a>
 
 By default any member can create a group. If you want your site to have a set number of groups then you can disable members ability to create a group.
 
 [embed] https://vimeo.com/320530305 [/embed]
 
-### Group Photo Uploads
+### Group Photo Uploads<a name="group-photo-uploads"></a>
 
 If you don't want members to use group avatars then disable this default option. To add/change the group photo simply click Manage > Photo > Select your file.
 
 [![group photo upload](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupphoto-1024x715.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupphoto.jpg)
 
-### Group Cover Image Uploads
+### Group Cover Image Uploads<a name="group-cover-image-uploads"></a>
 
 If you don't want members to use group cover images then disable this default option. To add/change the group cover photo click Manage > Cover Photo > Select your file.
 
 [![Group Cover Image Uploads](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupcoverimage-1024x705.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupcoverimage.jpg)
 
-### Group Types
+### Group Types<a name="group-types"></a>
 
 If this option is ENABLED then members can associate their group with a specific group type. Only the site admin can create group types.
 
 [![group type](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouptype-749x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouptype.jpg)
 
-### Group Auto-join
+### Group Auto-join<a name="group-auto-join"></a>
 
 Allow specific profile types to auto join groups. NOTE: For this to function you must first enable Profile Types from the Dashboard BuddyBoss Profiles Settings.
 
 [![group auto join](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupautojoin-875x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupautojoin.jpg)
 
-### Group Hierarchies
+### Group Hierarchies<a name="group-hierarchies"></a>
 
 Allow groups to have parent groups and subgroups.
 
 [![Group Hierarchies](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouphierarchies-687x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouphierarchies.jpg)
 
-### Group Restrict Invite
+### Group Restrict Invite<a name="group-restrict-invite"></a>
 
-Restrict group invites to members who exist in a parent group. NOTE: Group Hierarchies must be [bp_docs_link text="enabled" slug="back-end-administration/settings.md" anchors="groups"].
+Restrict group invites to members who exist in a parent group. NOTE: Group Hierarchies must be [enabled](https://www.buddyboss.com/resources/docs/back-end-administration-panels/settings/#groups).

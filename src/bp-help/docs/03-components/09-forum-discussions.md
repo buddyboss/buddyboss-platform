@@ -2,8 +2,7 @@
 
 Forums allow your users to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.
 
-### Sections
-
+### Sections<a name="sections"></a>
 *   [Forums Directory](#forums-directory)
 *   [Group Forums](#group-forums)
 *   [Singe Forum](#single-forum)
@@ -42,7 +41,7 @@ Forums allow your users to have discussions using Q&A style message boards. Foru
     *   [bp_docs_link text="Repair Forums" slug="back-end-administration/tools/repair-forums.md"]
     *   [bp_docs_link text="Import Forums" slug="back-end-administration/tools/import-forums.md"]
 
-Forums Directory
+Forums Directory<a name="Forums-Directory"></a>
 ----------------
 
 The forum directory page lists all public group forums and standalone forums. Listing of private and hidden forums are based on member permissions and memberships.
@@ -51,100 +50,100 @@ The forum directory page lists all public group forums and standalone forums. Li
 
 If you click on a forum attached to a group you will be taken the the group forum discussion page. If you click on a standalone forum then you will be taken to the single forum page.
 
-Group Forum
+Group Forum<a name="Group-Forum"></a>
 -----------
 
 Each group can create its own discussion forum. Several groups can optionally be attached to the same discussion forum. [bp_docs_link text="Learn more about group forums" slug="components/social-groups.md" anchors="groupdiscussionforum"].
 
-Single Forum
+Single Forum<a name="Single-Forum"></a>
 ------------
 
 Once you enter a forum you can view all discussions. Click on the discussion title to see the entire discussion. You may also create a new discussion based on member permissions.
 
 [![single forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/standaloneforum-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/standaloneforum.jpg)
 
-Settings
+Settings<a name="Settings"></a>
 --------
 
 The following settings help admins moderate forums. Customize these settings required for your community.
 
 [![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsettings-434x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsettings.jpg)
 
-### Disallow Editing
+### Disallow Editing<a name="disallow-editing"></a>
 
 Choose to disallow editing discussions after a set amount of time. Once the limit has been reached the forum post will no longer be editable by the member. Administrators can can always edit discussions.
 
-### Throttle Posting
+### Throttle Posting<a name="throttle-posting"></a>
 
 Throttle posting to prevent spam and other attempts to interrupt your community.
 
-### Anonymous Posting
+### Anonymous Posting<a name="anonymous-posting"></a>
 
 Allow visitors to post without logging into your site. They will still be required to provide a name and email to post but will not be required to create an account.
 
-Features
+Features<a name="Features"></a>
 --------
 
-### Revisions
+### Revisions<a name="revisions"></a>
 
 Give users and admins the ability to track revisions to forum discussions.
 
 [![forum revisions](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumrevision.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumrevision.jpg)
 
-### Likes
+### Likes<a name="likes"></a>
 
 Allow members to like discussions and replies. This will be posted on the members profile for all members to see.
 
 [![forum likes](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumlike.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumlike.jpg)
 
-### Subscriptions
+### Subscriptions<a name="subscriptions"></a>
 
 Allow members to subscribe to discussions and receive emails when a new reply is posted. This will be posted on the members profile only the member can see.
 
 [![subscribe to forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsubscribe-1024x230.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsubscribe.jpg)
 
-### Discussion Tags
+### Discussion Tags<a name="discussion-tags"></a>
 
 Discussion tags are used to order, sort and search for discussions. These are hidden on the front-end and is mostly used for administration and creating special pages for tagged discussions.
 
-### Search
+### Search<a name="search"></a>
 
 This form will search forums, topics and replies within your forums.
 
 [![forum search](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumssearch.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumssearch.jpg)
 
-### Post Formatting
+### Post Formatting<a name="post-formatting"></a>
 
 Add a toolbar and buttons to the textarea to help members neatly format discussions and replies.
 
 [![forum post formatting](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumpostformatting.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumpostformatting.jpg)
 
-### Auto-embed Links
+### Auto-embed Links<a name="auto-embed-links"></a>
 
 Enable members to embed link from media hosting sites like YouTube, FaceBook, Twitter and more simply by pasting the link into a topic or reply.
 
 [![forum embed media links](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumembed-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumembed.jpg)
 
-### Reply Threading
+### Reply Threading<a name="reply-threading"></a>
 
 Allow members to reply to discussions, providing context in a threaded view.
 
 [![forum reply threading](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumthreaded-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumthreaded.jpg)
 
-Discussions and Replies Per Page
+Discussions and Replies Per Page<a name="Discussions-and-Replies-Per-Page"></a>
 --------------------------------
 
 *   Forums - How many forums to show per page
 *   Discussions - How many forum discussions to show per page
 *   Replies - How many discussion replies to show per page
 
-Discussions and Replies Per RSS Page
+Discussions and Replies Per RSS Page<a name="Discussions-and-Replies-Per-RSS-Page"></a>
 ------------------------------------
 
 *   Discussions - How many forum discussions to show per RSS page
 *   Replies - How many discussion replies to show per RSS page
 
-Forum Directory
+Forum Directory<a name="Forum-Directory"></a>
 ---------------
 
 *   Forums Prefix - Prefix all forum content with the forums page slug (Recommended)
@@ -152,18 +151,18 @@ Forum Directory
     *   Forum Index (default)
     *   Discussions by Last Post
 
-Single Forum Slugs
+Single Forum Slugs<a name="Single-Forum-Slugs"></a>
 ------------------
 
 Custom slugs for single forums, discussions, discussion tags, discussion view, replies and search.
 
-Group Forums
+Group Forums<a name="Group-Forums"></a>
 ------------
 
 *   Enable Group Forums
 *   Group Forums Parent - Select a single forum to act at the parent for all group forums. This settings is not affected by the group hierarchy setting.
 
-Widgets
+Widgets<a name="Widgets"></a>
 -------
 
 (Forums) Discussion Views List - A list of registered optional discussion views.

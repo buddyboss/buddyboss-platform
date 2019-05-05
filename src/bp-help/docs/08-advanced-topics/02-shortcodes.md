@@ -7,11 +7,11 @@ Shortcodes are small pieces of WordPress-specifc code, enclosed by brackets `[ ]
 *   [Developer shortcode API](https://codex.wordpress.org/Shortcode_API)
 *   [Shortcode Generator](https://generatewp.com/shortcodes/)
 
-BuddyBoss Platform Available Shortcodes
+BuddyBoss Platform Available Shortcodes<a name="BuddyBoss-Platform-Available-Shortcodes"></a>
 ---------------------------------------
 
-### Forums
 
+### Forums<a name="forums"></a>
 *   `[bbp-forum-index]` displays your entire forum index.
 *   `[bbp-forum-form]` displays the ‘New Forum' form.
 *   `[bbp-single-forum id=$forum\_id]` displays a single forums topics. eg. `[bbp-single-forum id=32]`
@@ -31,10 +31,10 @@ BuddyBoss Platform Available Shortcodes
 *   `[bbp-lost-pass]` – Display the lost password screen.
 *   `[bbp-stats]` – Display the forum statistics.
 
-### Member Types
 
+### Member Types<a name="member-types"></a>
 *   `[member type=teacher]` - Display all members with set profile type
 
-### Group Types
 
+### Group Types<a name="group-types"></a>
 *   `[group type=band]` - Display all groups with set group type.

@@ -2,8 +2,7 @@
 
 BuddyBoss Platform allows people to create fully featured social networking sites that are totally customizable. Out of the box, it comes with a set of features resembling Facebook and Twitter.
 
-### Core features
-
+### Core features<a name="core-features"></a>
 *   **Members can create and update profiles**, including the use of profile and cover photos. Site administrators can easily set up the parameters of the member profiles.
 *   **Members can connect with one another. **The site administrator can decide what special abilities connections have with regard to one another.
 *   **Members can send private messages.** BuddyBoss Platform comes with a robust private messaging system, similar to that found on Facebook. Members can choose whether or not to receive an email notification when someone sends them a message.

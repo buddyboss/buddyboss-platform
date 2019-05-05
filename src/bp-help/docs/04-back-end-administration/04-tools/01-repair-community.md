@@ -2,7 +2,7 @@
 
 BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. The following tools manually recalculate these relationships.
 
-Repair Tools
+Repair Tools<a name="Repair-Tools"></a>
 ------------
 
 Dashboard -> BuddyBoss -> Tools

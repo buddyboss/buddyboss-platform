@@ -4,7 +4,7 @@ Site admins can easily edit the content of email notifications by using tokens w
 
 Some tokens can be used in any message while others are restricted due to context of each type of message. Tokes can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Token wrapped in three curly braces are not escaped on merging which is important for including something like links.
 
-Global Tokens
+Global Tokens<a name="Global-Tokens"></a>
 -------------
 
 `{{site.admin-email}}`
@@ -43,7 +43,7 @@ Link to the recipient's email notifications settings screen in his or her user p
 
 The subject line of the email.
 
-Activity Tokens
+Activity Tokens<a name="Activity-Tokens"></a>
 ---------------
 
 #### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
@@ -146,7 +146,7 @@ The ID of the user who wrote the immediate parent comment.
 
 The ID of the user who posted the comment.
 
-Members Tokens
+Members Tokens<a name="Members-Tokens"></a>
 --------------
 
 #### \[{{{site.name}}}\] Activate {{{user-site.url}}}
@@ -273,7 +273,7 @@ The user's previous email address.
 
 The user's new email address.
 
-Private Message Tokens
+Private Message Tokens<a name="Private-Message-Tokens"></a>
 ----------------------
 
 #### {{{site.name}}}\] New message from {{sender.name}}
@@ -296,7 +296,7 @@ Link to the message thread.
 
 Display name of the message sender.
 
-Group Tokens
+Group Tokens<a name="Group-Tokens"></a>
 ------------
 
 #### \[{{{site.name}}}\] Group details updated

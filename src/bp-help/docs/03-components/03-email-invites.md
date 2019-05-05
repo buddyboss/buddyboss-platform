@@ -4,11 +4,11 @@ Allow your users to send email invites to non-members requesting to join the net
 
 [![send invites](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/sendinvites-789x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/sendinvites.jpg)
 
-### Default email
+### Default email<a name="default-email"></a>
 
 [![invitation email](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/invitationgmail-1024x531.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/invitationgmail.jpg)
 
-### View Sent Invites/Revoke Invite
+### View Sent Invites/Revoke Invite<a name="view-sent-invites/revoke-invite"></a>
 
 To view invites you have sent select the Sent Invites menu option.
 
@@ -16,7 +16,7 @@ To Revoke Invite select the status under the invite you wish to revoke. NOTE: In
 
 [![view/revoke invite](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/viewsentinvitesrevoke-1-1024x841.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/viewsentinvitesrevoke-1.jpg)
 
-BuddyBoss Settings
+BuddyBoss Settings<a name="BuddyBoss-Settings"></a>
 ------------------
 
 *   Email Subject - Allow users to customize the invite email subject.

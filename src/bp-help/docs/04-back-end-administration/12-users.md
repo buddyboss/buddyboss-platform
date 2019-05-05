@@ -7,7 +7,7 @@
 *   [Profile Fields](#profile-fields)
 *   [Site Notices](#site-notices)
 
-All Users
+All Users<a name="All-Users"></a>
 ---------
 
 1.  User Role
@@ -18,7 +18,7 @@ All Users
 
 [![all users](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/allusers-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/allusers.jpg)
 
-Add New
+Add New<a name="Add-New"></a>
 -------
 
 This is the WordPress default add user page. See the [WordPress Codex](https://codex.wordpress.org/Roles_and_Capabilities#Roles) for more information about roles and privileges.
@@ -34,24 +34,24 @@ This is the WordPress default add user page. See the [WordPress Codex](https://c
 
 [![add new user](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewuser-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewuser.jpg)
 
-Your Profile
+Your Profile<a name="Your-Profile"></a>
 ------------
 
 If the front-end profile editing is disallowed then this is the only interface for users to edit their profile. The first tab "Profile" is the default from WordPress. The Extended Profile is extended from BuddyBoss Platform and contains all admin defined field sets.
 
 [![your profile](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/yourprofile-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/yourprofile.jpg)
 
-Manage Signups
+Manage Signups<a name="Manage-Signups"></a>
 --------------
 
-This is the same page as "All Users" but only shows pending user signups (those who have not yet verified their account via email link). You can manually verify user accounts from this page. If your members are having trouble receiving emails from your site [bp_docs_link text="check here" slug="troubleshooting/faqs/members-not-receiving-emails.md"] for a solution.
+This is the same page as "All Users" but only shows pending user signups (those who have not yet verified their account via email link). You can manually verify user accounts from this page. If your members are having trouble receiving emails from your site [check here](https://www.buddyboss.com/resources/docs/faqs/members-not-receiving-emails/) for a solution.
 
-Profile Fields
+Profile Fields<a name="Profile-Fields"></a>
 --------------
 
-Customize your community with fully editable profile fields that allow your users to describe themselves. [bp_docs_link text="Click to learn more" slug="components/profile-fields.md"].
+Customize your community with fully editable profile fields that allow your users to describe themselves. [Click to learn more.](https://www.buddyboss.com/resources/docs/components/profile-fields/)
 
-Site Notices
+Site Notices<a name="Site-Notices"></a>
 ------------
 
 Admins have the option to have all users shown a site-wide notice.
