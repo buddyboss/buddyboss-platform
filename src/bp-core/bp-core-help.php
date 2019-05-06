@@ -27,7 +27,7 @@ function bp_core_help_bp_docs_link( $attr ) {
 		'article' => $slug . $anchors
 	), 'admin.php' ) );
 
-	return apply_filters( 'bp_core_help_bp_docs_link', sprintf( '<a href="%s"> %s </a>', $url, $text ), $attr );
+	return apply_filters( 'bp_core_help_bp_docs_link', sprintf( '<a href="%s">%s</a>', $url, $text ), $attr );
 }
 
 add_shortcode( 'bp_docs_link', 'bp_core_help_bp_docs_link' );
