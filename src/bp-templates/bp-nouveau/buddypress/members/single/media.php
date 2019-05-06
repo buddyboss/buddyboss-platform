@@ -9,8 +9,6 @@
 <div class="bb-media-container member-media">
 	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
-	<?php bp_get_template_part( 'media/theatre' ); ?>
-
 	<?php
 	switch ( bp_current_action() ) :
 

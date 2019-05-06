@@ -32,8 +32,6 @@
 
 		<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
 
-		<?php bp_get_template_part( 'media/theatre' ); ?>
-
 		<div id="media-stream" class="media" data-bp-list="media">
 
 				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-loading' ); ?></div>
