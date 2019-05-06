@@ -103,7 +103,7 @@ window.bp = window.bp || {};
 		},
 
 		bp_ajax_media_request: function(event,data) {
-			if ( ! _.isUndefined( data ) && ! _.isUndefined( data.response.scopes.personal ) && data.response.scopes.personal === 0 ) {
+			if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0 ) {
 				$('.bb-photos-actions').hide();
 			}
 		},
