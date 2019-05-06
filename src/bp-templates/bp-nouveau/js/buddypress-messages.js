@@ -963,7 +963,7 @@ window.bp = window.bp || {};
 		loadingFeedback : false,
 
 		events: {
-			'click .subject' : 'changePreview',
+			'click .bp-message-link' : 'changePreview',
 			'scroll' : 'scrolled'
 		},
 
@@ -1094,7 +1094,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			bp.Nouveau.Messages.removeFeedback();
 
-			this.setActiveThread( target.closest( '.thread-content' ).data( 'thread-id' ) );
+			this.setActiveThread( target.data( 'thread-id' ) );
 			var selected = this.collection.findWhere( { active: true } );
 
 			// selected.updateReadState();
@@ -1103,22 +1103,22 @@ window.bp = window.bp || {};
 					selected.set( 'unread', false );
 
 					bp.Nouveau.Messages.router.navigate(
-						'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+						'view/' + target.data( 'thread-id' ) + '/',
 						{ trigger: true }
 					);
 				} );
 			} else {
 				bp.Nouveau.Messages.router.navigate(
-					'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+					'view/' + target.data( 'thread-id' ) + '/',
 					{ trigger: true }
 				);
 			}
 
 			$.each( $( '.thread-content' ), function() {
-				$(this).closest('.thread-item').removeClass('current');
+				$(this).removeClass('current');
 			} );
 
-			target.closest( '.thread-item' ).addClass('current');
+			target.addClass('current');
 		}
 	} );
 
