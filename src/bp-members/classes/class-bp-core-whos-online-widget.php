@@ -75,11 +75,10 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		if ( function_exists( 'bp_get_total_online_member_count' ) ){
 			$total_online  = bp_get_total_online_member_count();
 		}
-        $count_online_users =  '<span class="widget-num-count" id="boss_whos_online_widget_total_heartbeat">' . $total_online . '</span>';
 
         $refresh_online_users =  '<a href="" class="bs-widget-reload bs-heartbeat-reload hide" title="reload"><i class="bb-icon-spin6"></i></a>';
 
-        echo $args['before_widget'] . $args['before_title'] . $title . $count_online_users . $refresh_online_users . $args['after_title'];
+        echo $args['before_widget'] . $args['before_title'] . $title . $refresh_online_users . $args['after_title'];
 
 		// Back up global.
 		$old_members_template = $members_template;
@@ -88,13 +87,28 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 
 		?>
 		<div class="item-options" id="who-online-members-list-options">
-		<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat"><?php esc_html_e( 'Online', 'buddyboss' ); ?></a>
+			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat">
+				<?php esc_html_e( 'Online', 'buddyboss' ); ?>
+				<span class="count"><?php esc_html_e( $total_online, 'buddyboss'); ?></span>
+			</a>
+			<?php
+			if ( bp_is_active( 'friends' ) ) :
 
-		<?php if ( bp_is_active( 'friends' ) ) : ?>
-			<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-			<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections"><?php esc_html_e( 'Connections', 'buddyboss' ); ?></a>
+				$count = 0;
+				if ( bp_is_active( 'friends' ) ) {
 
-		<?php endif; ?>
+					$personal_friend_comma_separated_string = bp_get_friend_ids( bp_loggedin_user_id() );
+					$friend_array                           = explode( ',', $personal_friend_comma_separated_string );
+
+					$count = is_array( $friend_array ) ? count( $friend_array ) : 0;
+				}
+				?>
+				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
+				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections">
+					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
+					<span class="count"><?php esc_html_e( $count, 'buddyboss'); ?></span>
+				</a> <?php
+			endif; ?>
 
 		</div>
         <div class="widget-content" id="boss_whos_online_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
