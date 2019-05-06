@@ -81,7 +81,7 @@ class BP_Nouveau_Media {
 		add_action( 'bp_activity_after_delete',                         'bp_nouveau_media_delete_activity_media'                    );
 
 		// Forums
-		add_action( 'wp_footer',                                        'bp_nouveau_media_add_theatre_template'                     );
+		add_action( 'bbp_template_after_single_topic',                  'bp_nouveau_media_add_theatre_template'                     );
 
 		// Messages
 		add_action( 'messages_message_sent',                            'bp_nouveau_media_attach_media_to_message'                  );

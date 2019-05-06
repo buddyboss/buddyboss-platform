@@ -22,6 +22,9 @@
 </div>
 
 <?php
+if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+	bp_get_template_part( 'media/theatre' );
+}
 
     /**
      * Split each js template to its own file. Easier for child theme to
