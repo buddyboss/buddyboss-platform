@@ -4087,14 +4087,45 @@ input#send-to-input {
   flex: 1;
 }
 
+.bp-single-message-content .bb-activity-media-elem {
+  min-width: 20%;
+}
+
+.bp-messages-content-wrapper {
+  position: relative;
+}
+
+.bp-messages-content-wrapper #messages-post-media-uploader.open {
+  position: absolute;
+  top: 0;
+  background: rgba(255, 255, 255, 0.92);
+  height: calc(100% - 245px);
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-line-pack: center;
+  align-content: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  left: 0;
+  border-radius: 4px;
+  padding: 20px;
+  overflow: auto;
+}
+
 @media screen and (min-width: 46.8em) {
-  .bp-messages-user-threads,
-  #bp-message-thread-list {
-    max-height: 66vh;
+  .bp-messages-user-threads {
+    max-height: 80vh;
     overflow: auto;
   }
   #bp-message-thread-list {
     max-height: 50vh;
+    overflow: auto;
   }
 }
 
