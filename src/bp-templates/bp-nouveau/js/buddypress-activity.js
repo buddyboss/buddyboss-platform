@@ -1037,7 +1037,7 @@ window.bp = window.bp || {};
 						if ( response.data.id ) {
 							file.id = response.id;
 							response.data.uuid = file.upload.uuid;
-							response.data.menu_order = self.dropzone_media.length;
+							response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 							response.data.album_id = self.album_id;
 							response.data.group_id = self.group_id;
 							response.data.saved    = false;
