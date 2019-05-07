@@ -150,7 +150,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	// Get the message by pretending we're in the message loop.
-	global $thread_template;
+	global $thread_template, $media_template;
 
 	$bp           = buddypress();
 	$reset_action = $bp->current_action;
@@ -212,7 +212,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'id'        => bp_get_media_id(),
 					'title'     => bp_get_media_title(),
 					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-					'full'      => bp_get_media_attachment_image()
+					'full'      => bp_get_media_attachment_image(),
+					'meta'      => $media_template->media->attachment_data->meta,
 				);
 			}
 		}

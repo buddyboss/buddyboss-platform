@@ -653,12 +653,11 @@ window.bp = window.bp || {};
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
 						if ( file.id === self.media[i].id ) {
-							self.media.splice( i, 1 );
-							self.model.set( 'media', self.media );
-
 							if ( ! self.media[i].saved ) {
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
 						}
 					}
 				}
@@ -1637,6 +1636,14 @@ window.bp = window.bp || {};
 
 			this.model.set( 'sending', false );
 
+			//media modal images remove or save option if saved
+			var medias = this.model.get('media');
+			if ( typeof medias !== 'undefined' && medias.length ) {
+				for( var k = 0; k < medias.length; k++ ) {
+					medias[k].saved = true;
+				}
+				this.model.set('media',medias);
+			}
 
 			if (this.messageAttachments.onClose){
 				this.messageAttachments.onClose();
@@ -1648,6 +1655,7 @@ window.bp = window.bp || {};
 		},
 
 		replyError: function( response ) {
+			this.model.set( 'sending', false );
 			if ( response.feedback && response.type ) {
 				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			}
