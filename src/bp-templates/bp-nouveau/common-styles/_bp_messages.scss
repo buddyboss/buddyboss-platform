@@ -402,23 +402,38 @@ input#send-to-input {
 	}
 }
 
+#bp-message-load-more:not(.loading),
+#bp-messages-next-page,
+#bp-messages-prev-page {
+	display: none !important;
+}
+
 #bp-message-load-more {
-	margin: 15px 0;
+	background: rgba(255, 255, 255, 0.7);
+	position: absolute;
+	top: 60px;
+	text-align: center;
+	width: 100%;
+	left: 0;
+	padding: 20px 0;
+	margin: 6px 0 0;
 
 	.button {
-		background: #fafafa;
-		border: 1px solid #eee;
-		display: block;
-		font-size: 110%;
-		margin: 15px 0;
-		padding: 10px 0;
-		text-align: center;
-		width: 100%;
-	}
+		font-size: 0;
+		padding: 0;
+		margin: auto;
+		width: auto;
+		color: inherit;
+		background-color: transparent;
+		border: 0;
 
-	.button:hover {
-		background: #fff;
-		color: #333;
+		&:hover,
+		&:focus {
+			outline: none;
+			text-decoration: none;
+			color: inherit;
+			box-shadow: none;
+		}
 	}
 }
 
@@ -514,7 +529,7 @@ input#send-to-input {
 }
 
 .no-message-wrap {
-	padding: 30px 0 15px;
+	padding: 70px 0 20px;
 	text-align: center;
 }
 
