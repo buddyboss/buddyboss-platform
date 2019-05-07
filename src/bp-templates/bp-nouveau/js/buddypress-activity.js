@@ -1047,7 +1047,9 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on('error', function(file,response) {
 						if ( file.accepted ) {
-							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							}
 						} else {
 							self.dropzone_obj.removeFile(file);
 						}

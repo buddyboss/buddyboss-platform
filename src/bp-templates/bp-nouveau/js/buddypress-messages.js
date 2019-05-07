@@ -643,7 +643,9 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.dropzone.on('error', function(file,response) {
 				if ( file.accepted ) {
-					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					}
 				} else {
 					bp.Nouveau.Messages.dropzone.removeFile(file);
 				}
