@@ -203,7 +203,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 		$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
-		if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 			$reply['media'] = array();
 			while ( bp_media() ) {
 				bp_the_media();
@@ -575,7 +575,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
-			if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+			if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 				$thread->messages[ $i ]['media'] = array();
 				while ( bp_media() ) {
 					bp_the_media();

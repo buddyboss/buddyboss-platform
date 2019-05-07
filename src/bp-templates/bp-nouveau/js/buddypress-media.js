@@ -292,7 +292,7 @@ window.bp = window.bp || {};
 							for ( var i in self.dropzone_media ) {
 								if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
 
-									if ( ! self.dropzone_media[i].saved ) {
+									if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 										self.removeAttachment(self.dropzone_media[i].id);
 									}
 
@@ -379,7 +379,7 @@ window.bp = window.bp || {};
 						for ( var i in self.dropzone_media ) {
 							if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
 
-								if ( ! self.dropzone_media[i].saved ) {
+								if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 									self.removeAttachment(self.dropzone_media[i].id);
 								}
 

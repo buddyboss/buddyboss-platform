@@ -653,7 +653,7 @@ window.bp = window.bp || {};
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
 						if ( file.id === self.media[i].id ) {
-							if ( ! self.media[i].saved ) {
+							if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
 							self.media.splice( i, 1 );
