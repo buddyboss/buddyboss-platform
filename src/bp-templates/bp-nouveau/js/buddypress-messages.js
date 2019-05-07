@@ -1651,6 +1651,8 @@ window.bp = window.bp || {};
 
 			this.collection.add( _.first( reply ) );
 
+			bp.Nouveau.Messages.removeFeedback();
+
 			document.getElementById('bp-message-thread-list').scrollTop = $('#bp-message-thread-list>li:last-child').position().top;
 		},
 
