@@ -100,7 +100,7 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
-			$(document).on('click', '.gif-image-container', this.playVideo);
+
 			//forums
 			$( '#buddypress .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			$( '#buddypress .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
@@ -108,12 +108,6 @@ window.bp = window.bp || {};
 			// Activity autoload
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
-			}
-
-			// Gifs autoplay
-			if ( !_.isUndefined( BP_Nouveau.activity.params.gif_api_key ) ) {
-				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
-				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
 			}
 		},
 
@@ -1084,30 +1078,6 @@ window.bp = window.bp || {};
 				}
 
 			}
-		},
-
-		/**
-		 * When the GIF comes into your screen it should auto play
-		 */
-		autoPlayGifVideos: function () {
-			$( '.gif-player' ).each( function () {
-				var video = $( this ).find( 'video' ).get( 0 ),
-					$button = $( this ).find( '.gif-play-button' );
-
-				if ( $( this ).is( ':in-viewport' ) ) {
-					// Play the video
-					video.play();
-
-					// Update the button text to 'Pause'
-					$button.hide();
-				} else {
-					// Pause the video
-					video.pause();
-
-					// Update the button text to 'Play'
-					$button.show();
-				}
-			} );
 		},
 
 		openGifPicker: function ( event ) {

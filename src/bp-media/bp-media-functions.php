@@ -890,106 +890,115 @@ function bp_media_delete_orphaned_attachments() {
     }
 }
 
-
-//********************** Forums ***************************//
-
 /**
- * Save media when new topic or reply is saved
+ * Download an image from the specified URL and attach it to a post.
  *
  * @since BuddyBoss 1.0.0
- * @param $post_id
+ *
+ * @param string $file The URL of the image to download
+ *
+ * @return int|void
  */
-function bp_media_forums_new_post_media_save( $post_id ) {
+function bp_media_sideload_attachment( $file ) {
+	if ( empty( $file ) ) {
+		return;
+	}
 
-    if ( ! empty( $_POST['bbp_media'] ) ) {
+	// Set variables for storage, fix file filename for query strings.
+	preg_match( '/[^\?]+\.(jpe?g|jpe|gif|png|svg|bmp|mp4)\b/i', $file, $matches );
+	$file_array = array();
 
-        // save activity id if it is saved in forums and enabled in platform settings
-	    $main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+	if ( empty( $matches ) ) {
+		return;
+	}
 
-	    // save media
-	    $medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
-	    $media_ids = array();
-	    foreach ( $medias as $media ) {
+	$file_array['name'] = basename( $matches[0] );
 
-		    $activity_id = false;
-		    // make an activity for the media
-		    if ( bp_is_active( 'activity' ) && ! empty( $main_activity_id ) ) {
-			    $activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+	// Download file to temp location.
+	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+	$file_array['tmp_name'] = download_url( $file );
 
-			    if ( ! empty( $activity_id ) ) {
-				    bp_activity_update_meta( $activity_id, 'bp_media_activity', true );
-			    }
-		    }
+	// If error storing temporarily, return the error.
+	if ( is_wp_error( $file_array['tmp_name'] ) ) {
+		return;
+	}
 
-		    $title         = ! empty( $media['name'] ) ? $media['name'] : '';
-		    $attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
-		    $album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+	// Do the validation and storage stuff.
+	$id = bp_media_handle_sideload( $file_array );
 
-		    $media_id = bp_media_add( array(
-			    'attachment_id' => $attachment_id,
-			    'title'         => $title,
-			    'activity_id'   => $activity_id,
-			    'album_id'      => $album_id,
-			    'error_type'    => 'wp_error'
-		    ) );
+	// If error storing permanently, unlink.
+	if ( is_wp_error( $id ) ) {
+		return;
+	}
 
-		    if ( ! is_wp_error( $media_id ) ) {
-			    $media_ids[] = $media_id;
-
-			    //save media is saved in attachment
-			    update_post_meta( $attachment_id, 'bp_media_saved', true );
-            }
-	    }
-
-	    $media_ids = implode( ',', $media_ids );
-
-	    //save media meta for activity
-	    if ( ! empty( $main_activity_id ) ) {
-		    bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
-	    }
-
-	    //Save all attachment ids in forums post meta
-	    update_post_meta( $post_id, 'bp_media_ids', $media_ids );
-    }
+	return $id;
 }
 
-add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save', 999 );
-add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save', 999 );
-add_action( 'edit_post',     'bp_media_forums_new_post_media_save', 999 );
-
-add_filter( 'bbp_get_reply_content', 'bp_media_forums_embed_attachments', 999, 2 );
-add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_attachments', 999, 2 );
-
 /**
- * Embed topic or reply attachments in a post
+ * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
  *
  * @since BuddyBoss 1.0.0
- * @param $content
- * @param $id
  *
- * @return string
+ * @param array $file_array Array similar to a {@link $_FILES} upload array
+ * @param array $post_data  allows you to overwrite some of the attachment
+ *
+ * @return int|object The ID of the attachment or a WP_Error on failure
  */
-function bp_media_forums_embed_attachments( $content, $id ) {
-	global $media_template;
+function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 
-	// Do not embed attachment in wp-admin area
-	if ( is_admin() ) {
-		return $content;
+	$overrides = array( 'test_form' => false );
+
+	$time = current_time( 'mysql' );
+	if ( $post = get_post() ) {
+		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
+			$time = $post->post_date;
+		}
 	}
 
-	$media_ids = get_post_meta( $id, 'bp_media_ids', true );
-
-	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
-	    ob_start();
-	    ?>
-        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
-		while ( bp_media() ) {
-			bp_the_media();
-			bp_get_template_part( 'media/activity-entry' );
-		} ?>
-        </div><?php
-        $content .= ob_get_clean();
+	$file = wp_handle_sideload( $file_array, $overrides, $time );
+	if ( isset( $file['error'] ) ) {
+		return new WP_Error( 'upload_error', $file['error'] );
 	}
 
-	return $content;
+	$url     = $file['url'];
+	$type    = $file['type'];
+	$file    = $file['file'];
+	$title   = preg_replace( '/\.[^.]+$/', '', basename( $file ) );
+	$content = '';
+
+	// Use image exif/iptc data for title and caption defaults if possible.
+	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
+			$title = $image_meta['title'];
+		}
+		if ( trim( $image_meta['caption'] ) ) {
+			$content = $image_meta['caption'];
+		}
+	}
+
+	if ( isset( $desc ) ) {
+		$title = $desc;
+	}
+
+	// Construct the attachment array.
+	$attachment = array_merge( array(
+		'post_mime_type' => $type,
+		'guid'           => $url,
+		'post_title'     => $title,
+		'post_content'   => $content,
+	), $post_data );
+
+	// This should never be set as it would then overwrite an existing attachment.
+	if ( isset( $attachment['ID'] ) ) {
+		unset( $attachment['ID'] );
+	}
+
+	// Save the attachment metadata
+	$id = wp_insert_attachment( $attachment, $file );
+
+	if ( ! is_wp_error( $id ) ) {
+		wp_update_attachment_metadata( $id, wp_generate_attachment_metadata( $id, $file ) );
+	}
+
+	return $id;
 }

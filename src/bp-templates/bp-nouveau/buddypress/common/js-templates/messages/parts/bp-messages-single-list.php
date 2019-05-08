@@ -48,6 +48,22 @@
 			</div>
 			<# } #>
 
+            <# if ( data.gif ) { #>
+            <div class="activity-attached-gif-container">
+                <div class="gif-image-container">
+                    <div class="gif-player">
+                        <video preload="auto" playsinline poster="{{data.gif.preview_url}}" loop muted playsinline>
+                            <source src="{{data.gif.video_url}}" type="video/mp4">
+                        </video>
+                        <a href="#" class="gif-play-button">
+                            <span class="dashicons dashicons-video-alt3"></span>
+                        </a>
+                        <span class="gif-icon"></span>
+                    </div>
+                </div>
+            </div>
+            <# } #>
+
 			<# if ( data.afterContent ) { #>
 			<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>
 			<# } #>

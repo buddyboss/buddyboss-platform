@@ -219,6 +219,19 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
+	if ( bp_is_active( 'media' ) && bp_is_gif_support_enabled() ) {
+		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
+
+		if ( ! empty( $gif_data ) ) {
+			$preview_url = wp_get_attachment_url( $gif_data['still'] );
+			$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+			$reply['gif'] = array(
+				'preview_url' => $preview_url,
+				'video_url' => $video_url,
+			);
+		}
+	}
+
 	$extra_content = bp_nouveau_messages_catch_hook_content( array(
 		'beforeMeta'    => 'bp_before_message_meta',
 		'afterMeta'     => 'bp_after_message_meta',
@@ -588,6 +601,19 @@ function bp_nouveau_ajax_get_thread_messages() {
 						'meta'      => $media_template->media->attachment_data->meta,
 					);
 				}
+			}
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_gif_support_enabled() ) {
+			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
+
+			if ( ! empty( $gif_data ) ) {
+				$preview_url = wp_get_attachment_url( $gif_data['still'] );
+				$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+				$thread->messages[ $i ]['gif'] = array(
+					'preview_url' => $preview_url,
+					'video_url' => $video_url,
+				);
 			}
 		}
 

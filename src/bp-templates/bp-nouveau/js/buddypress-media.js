@@ -100,6 +100,13 @@ window.bp = window.bp || {};
 			//forums
 			$( '.bbpress,.buddypress' ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
 
+			$(document).on('click', '.gif-image-container', this.playVideo);
+			// Gifs autoplay
+			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
+				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
+				window.addEventListener( 'resize', this.autoPlayGifVideos, false );
+			}
+
 		},
 
 		bp_ajax_media_request: function(event,data) {
@@ -787,7 +794,31 @@ window.bp = window.bp || {};
 				}
 				add_more_button.hide();
 			}
-		}
+		},
+
+		/**
+		 * When the GIF comes into your screen it should auto play
+		 */
+		autoPlayGifVideos: function () {
+			$( '.gif-player' ).each( function () {
+				var video = $( this ).find( 'video' ).get( 0 ),
+					$button = $( this ).find( '.gif-play-button' );
+
+				if ( $( this ).is( ':in-viewport' ) ) {
+					// Play the video
+					video.play();
+
+					// Update the button text to 'Pause'
+					$button.hide();
+				} else {
+					// Pause the video
+					video.pause();
+
+					// Update the button text to 'Play'
+					$button.show();
+				}
+			} );
+		},
 	};
 
 	// Launch BP Nouveau Media

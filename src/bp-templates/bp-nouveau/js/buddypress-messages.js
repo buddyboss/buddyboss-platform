@@ -692,12 +692,13 @@ window.bp = window.bp || {};
 	bp.Views.MessagesAttachedGifPreview = bp.Nouveau.Messages.View.extend( {
 		tagName: 'div',
 		className: 'messages-attached-gif-container',
-		template: bp.template( 'activity-attached-gif' ),
+		template: bp.template( 'messages-attached-gif' ),
 		events: {
 			'click .gif-image-remove': 'destroy'
 		},
 
 		initialize: function() {
+			this.model.set( 'gif_data', {} );
 			this.listenTo( this.model, 'change', this.render );
 			document.addEventListener( 'messages_gif_close', this.destroy.bind(this) );
 		},
@@ -745,7 +746,7 @@ window.bp = window.bp || {};
 
 		initialize: function( options ) {
 			this.options = options || {};
-			this.giphy = new window.Giphy( BP_Nouveau.activity.params.gif_api_key );
+			this.giphy = new window.Giphy( BP_Nouveau.media.gif_api_key );
 
 			this.gifDataItems = new bp.Collections.GifDatas();
 			this.listenTo( this.gifDataItems, 'add', this.addOne );
@@ -810,7 +811,7 @@ window.bp = window.bp || {};
 		// Add a single GifDataItem to the list by creating a view for it, and
 		// appending its element to the `<ul>`.
 		addOne: function( data ) {
-			var view = new bp.Views.GifDataItem( { model: data } );
+			var view = new bp.Views.MessagesGifDataItem( { model: data } );
 			this.$gifResultItem.append( view.render().el );
 		},
 
@@ -930,13 +931,14 @@ window.bp = window.bp || {};
 
 		toggleMediaSelector: function( e ) {
 			e.preventDefault();
+			this.closeGifSelector();
 			var event = new Event('messages_media_toggle');
 			document.dispatchEvent(event);
 			$(e.currentTarget).toggleClass('active');
 		},
 
 		closeMediaSelector: function() {
-			var event = new Event('messsages_media_close');
+			var event = new Event('messages_media_close');
 			document.dispatchEvent(event);
 			$('#messages-media-button').removeClass('active');
 		},
@@ -961,7 +963,7 @@ window.bp = window.bp || {};
 
 		closePickersOnEsc: function( event ) {
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
-				if (!_.isUndefined(BP_Nouveau.media.params.gif_api_key)) {
+				if (!_.isUndefined(BP_Nouveau.media.gif_api_key)) {
 					this.$self.removeClass('open');
 					this.$gifPickerEl.removeClass('open');
 				}
@@ -971,7 +973,7 @@ window.bp = window.bp || {};
 		closePickersOnClick: function( event ) {
 			var $targetEl = $(event.target);
 
-			if (!_.isUndefined(BP_Nouveau.media.params.gif_api_key) &&
+			if (!_.isUndefined(BP_Nouveau.media.gif_api_key) &&
 				!$targetEl.closest('.post-gif').length) {
 				this.$self.removeClass('open');
 				this.$gifPickerEl.removeClass('open');
@@ -1061,7 +1063,7 @@ window.bp = window.bp || {};
 
 			this.views.add( '#bp-message-content', new bp.Views.MessageFormSubmitWrapper( { model: this.model } ) );
 
-			this.model.on( 'change', this.resetFields, this );
+			//this.model.on( 'change', this.resetFields, this );
 
 			// Activate bp_mentions
 			this.on( 'ready', this.addSelect2, this );
@@ -1122,9 +1124,9 @@ window.bp = window.bp || {};
 				}
 			} );
 
-			if (this.messagesAttachments !== false){
-				this.messagesAttachments.onClose();
-			}
+			// if (this.messagesAttachments !== false){
+			// 	this.messagesAttachments.onClose();
+			// }
 
 			// Listen to this to eventually reset your custom inputs.
 			$( this.el ).trigger( 'message:reset', _.pick( model.previousAttributes(), 'meta' ) );
@@ -1809,7 +1811,13 @@ window.bp = window.bp || {};
 			}
 
 			if ( this.firstFetch ) {
-				document.getElementById('bp-message-thread-list').scrollTop = $('#bp-message-thread-list>li:last-child').position().top;
+				var scroll_top = 0;
+				if ( $('#bp-message-thread-list>li:last-child').length ) {
+					scroll_top = $('#bp-message-thread-list>li:last-child').position().top;
+				} else {
+					scroll_top = $('#bp-message-thread-list').position().top;
+				}
+				document.getElementById('bp-message-thread-list').scrollTop = scroll_top
 				this.firstFetch = false;
 			} else {
 				document.getElementById('bp-message-thread-list').scrollTop = this.firstLi.position().top - this.firstLi.outerHeight();
