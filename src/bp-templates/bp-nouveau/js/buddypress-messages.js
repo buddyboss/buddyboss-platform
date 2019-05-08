@@ -1824,16 +1824,10 @@ window.bp = window.bp || {};
 			}
 
 			if ( this.firstFetch ) {
-				var scroll_top = 0;
-				if ( $('#bp-message-thread-list>li:last-child').length ) {
-					scroll_top = $('#bp-message-thread-list>li:last-child').position().top;
-				} else {
-					scroll_top = $('#bp-message-thread-list').position().top;
-				}
-				document.getElementById('bp-message-thread-list').scrollTop = scroll_top
+				$("#bp-message-thread-list").animate({ scrollTop: $('#bp-message-thread-list').prop("scrollHeight")}, 100);
 				this.firstFetch = false;
 			} else {
-				document.getElementById('bp-message-thread-list').scrollTop = this.firstLi.position().top - this.firstLi.outerHeight();
+				$("#bp-message-thread-list").animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
 			}
 
 			$('#bp-message-load-more').removeClass('loading');
@@ -1965,7 +1959,7 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.removeFeedback();
 
-			document.getElementById('bp-message-thread-list').scrollTop = $('#bp-message-thread-list>li:last-child').position().top;
+			$("#bp-message-thread-list").animate({ scrollTop: $('#bp-message-thread-list').prop("scrollHeight")}, 0);
 		},
 
 		replyError: function( response ) {
