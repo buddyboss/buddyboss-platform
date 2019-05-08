@@ -28,68 +28,6 @@ window.wp = window.wp || {};
 			} );
 		}
 
-		// Show hide "Use tab styling for primary nav" & "Use tab styling for secondary nav" based on the "Display the profile navigation vertically" option.
-		wp.customize.control('user_nav_display', function (control) {
-			/**
-			 * Run function on setting change of control.
-			 */
-			control.setting.bind(function (value) {
-				switch (value) {
-					/**
-					 * The select was switched to the hide option.
-					 */
-					case false:
-						/**
-						 * Deactivate the conditional control.
-						 */
-						wp.customize.control('user_subnav_tabs').deactivate();
-						wp.customize.control('user_nav_tabs').activate();
-						break;
-					/**
-					 * The select was switched to »show«.
-					 */
-					case true:
-						/**
-						 * Activate the conditional control.
-						 */
-						wp.customize.control('user_nav_tabs').deactivate();
-						wp.customize.control('user_subnav_tabs').activate();
-						break;
-				}
-			});
-		});
-
-		// Show hide "Use tab styling for primary navigation" & "Use tab styling for secondary navigation" based on the "Display the group navigation vertically" option.
-		wp.customize.control('group_nav_display', function (control) {
-			/**
-			 * Run function on setting change of control.
-			 */
-			control.setting.bind(function (value) {
-				switch (value) {
-					/**
-					 * The select was switched to the hide option.
-					 */
-					case false:
-						/**
-						 * Deactivate the conditional control.
-						 */
-						wp.customize.control('group_subnav_tabs').deactivate();
-						wp.customize.control('group_nav_tabs').activate();
-						break;
-					/**
-					 * The select was switched to »show«.
-					 */
-					case true:
-						/**
-						 * Activate the conditional control.
-						 */
-						wp.customize.control('group_nav_tabs').deactivate();
-						wp.customize.control('group_subnav_tabs').activate();
-						break;
-				}
-			});
-		});
-
 		$( 'ul#customize-control-group_nav_order, ul#customize-control-user_nav_order' ).sortable( {
 			cursor    : 'move',
 			axis      : 'y',
