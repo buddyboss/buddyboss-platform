@@ -1498,7 +1498,7 @@ window.bp = window.bp || {};
 
 			// Transform emoji image into emoji unicode
 			$whatsNew.find('img.emojioneemoji').replaceWith(function () {
-				return this.dataset.char;
+				return this.dataset.emojiChar;
 			});
 
 			// Add valid line breaks
