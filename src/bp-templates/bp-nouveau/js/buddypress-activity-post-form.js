@@ -427,7 +427,7 @@ window.bp = window.bp || {};
 
 		initialize: function( options ) {
 			this.options = options || {};
-			this.giphy = new window.Giphy( BP_Nouveau.activity.params.gif_api_key );
+			this.giphy = new window.Giphy( BP_Nouveau.media.gif_api_key );
 
 			this.gifDataItems = new bp.Collections.GifDatas();
 			this.listenTo( this.gifDataItems, 'add', this.addOne );
