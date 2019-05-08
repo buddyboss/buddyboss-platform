@@ -7,6 +7,7 @@
 ?>
 
 <div class="bb-media-container group-media">
+	<?php bp_get_template_part( 'media/theatre' ); ?>
 <?php
 
 switch ( bp_current_action() ) :

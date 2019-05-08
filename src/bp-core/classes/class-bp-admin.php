@@ -123,6 +123,7 @@ class BP_Admin {
 		require( $this->admin_dir . 'bp-core-admin-pages.php'      );
 		require( $this->admin_dir . 'bp-core-admin-slugs.php'      );
 		require( $this->admin_dir . 'bp-core-admin-tools.php'      );
+		require( $this->admin_dir . 'bp-core-admin-help.php'       );
 	}
 
 	/**
@@ -458,6 +459,15 @@ class BP_Admin {
 			$this->capability,
 			'bp-tools',
 			'bp_core_admin_tools'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Help', 'buddyboss' ),
+			__( 'Help', 'buddyboss' ),
+			$this->capability,
+			'bp-help',
+			'bp_core_admin_help'
 		);
 
 		$hooks[] = add_submenu_page(

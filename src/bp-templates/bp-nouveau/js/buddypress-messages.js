@@ -544,7 +544,7 @@ window.bp = window.bp || {};
 	bp.Views.MessagesLoading = bp.Nouveau.Messages.View.extend( {
 		tagName: 'div',
 		className: 'bp-messages bp-user-messages-loading loading',
-		template  : bp.template( 'bp-messages-loading' ),
+		template  : bp.template( 'bp-messages-loading' )
 	} );
 
 	// Hook view
@@ -651,7 +651,7 @@ window.bp = window.bp || {};
 				if ( response.data.id ) {
 					file.id = response.data.id;
 					response.data.uuid = file.upload.uuid;
-					response.data.menu_order = self.media.length;
+					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					response.data.saved = false;
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
@@ -660,7 +660,9 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.dropzone.on('error', function(file,response) {
 				if ( file.accepted ) {
-					$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					}
 				} else {
 					bp.Nouveau.Messages.dropzone.removeFile(file);
 				}
@@ -670,12 +672,11 @@ window.bp = window.bp || {};
 				if ( self.media.length ) {
 					for ( var i in self.media ) {
 						if ( file.id === self.media[i].id ) {
-							self.media.splice( i, 1 );
-							self.model.set( 'media', self.media );
-
-							if ( ! self.media[i].saved ) {
+							if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
 						}
 					}
 				}
@@ -1025,7 +1026,7 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className   : 'submit',
 		id        : 'message-new-submit',
-		template  : bp.template( 'bp-messages-form-submit' ),
+		template  : bp.template( 'bp-messages-form-submit' )
 	} );
 
 	bp.Views.MessageFormSubmitWrapper = bp.Nouveau.Messages.View.extend( {
@@ -1180,7 +1181,7 @@ window.bp = window.bp || {};
 						if ( 'message_content' === pair.name && undefined !== tinyMCE.activeEditor ) {
 							pair.value = tinyMCE.activeEditor.getContent();
 						} else if ( 'message_content' === pair.name && undefined !== bp.Nouveau.Messages.quillEditor ) {
-							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", "");
+							pair.value = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', '');
 						}
 
 						if ( ! pair.value ) {
@@ -1195,7 +1196,7 @@ window.bp = window.bp || {};
 
 			// quill editor support
 			if ( bp.Nouveau.Messages.quillEditor !== false && typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
-				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", ""), { silent: true } );
+				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', ''), { silent: true } );
 			}
 
 			if ( errors.length ) {
@@ -1252,7 +1253,7 @@ window.bp = window.bp || {};
 		loadingFeedback : false,
 
 		events: {
-			'click .subject' : 'changePreview',
+			'click .bp-message-link' : 'changePreview',
 			'scroll' : 'scrolled'
 		},
 
@@ -1383,7 +1384,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			bp.Nouveau.Messages.removeFeedback();
 
-			this.setActiveThread( target.closest( '.thread-content' ).data( 'thread-id' ) );
+			this.setActiveThread( target.data( 'thread-id' ) );
 			var selected = this.collection.findWhere( { active: true } );
 
 			// selected.updateReadState();
@@ -1392,22 +1393,22 @@ window.bp = window.bp || {};
 					selected.set( 'unread', false );
 
 					bp.Nouveau.Messages.router.navigate(
-						'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+						'view/' + target.data( 'thread-id' ) + '/',
 						{ trigger: true }
 					);
 				} );
 			} else {
 				bp.Nouveau.Messages.router.navigate(
-					'view/' + target.closest( '.thread-content' ).data( 'thread-id' ) + '/',
+					'view/' + target.data( 'thread-id' ) + '/',
 					{ trigger: true }
 				);
 			}
 
 			$.each( $( '.thread-content' ), function() {
-				$(this).closest('.thread-item').removeClass('current');
+				$(this).removeClass('current');
 			} );
 
-			target.closest( '.thread-item' ).addClass('current');
+			target.addClass('current');
 		}
 	} );
 
@@ -1719,7 +1720,7 @@ window.bp = window.bp || {};
 		tagName   : 'div',
 		className   : 'submit',
 		id        : 'message-reply-new-submit',
-		template  : bp.template( 'bp-messages-reply-form-submit' ),
+		template  : bp.template( 'bp-messages-reply-form-submit' )
 	} );
 
 	bp.Views.MessageReplyFormSubmitWrapper = bp.Nouveau.Messages.View.extend( {
@@ -1896,7 +1897,7 @@ window.bp = window.bp || {};
 				content = tinyMCE.activeEditor.getContent();
 				jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
 			} else if ( typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
-				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace("<p><br></p>", "");
+				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', '');
 				jQuery(bp.Nouveau.Messages.quillEditor.container).addClass('loading');
 			}
 
@@ -1926,15 +1927,28 @@ window.bp = window.bp || {};
 
 			this.model.set( 'sending', false );
 
+			//media modal images remove or save option if saved
+			var medias = this.model.get('media');
+			if ( typeof medias !== 'undefined' && medias.length ) {
+				for( var k = 0; k < medias.length; k++ ) {
+					medias[k].saved = true;
+				}
+				this.model.set('media',medias);
+			}
 
 			if (this.messageAttachments.onClose){
 				this.messageAttachments.onClose();
 			}
 
 			this.collection.add( _.first( reply ) );
+
+			bp.Nouveau.Messages.removeFeedback();
+
+			document.getElementById('bp-message-thread-list').scrollTop = $('#bp-message-thread-list>li:last-child').position().top;
 		},
 
 		replyError: function( response ) {
+			this.model.set( 'sending', false );
 			if ( response.feedback && response.type ) {
 				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			}

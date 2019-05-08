@@ -1418,7 +1418,7 @@ window.bp = window.bp || {};
 					$('.emojionearea-button.active').removeClass('active');
 				}
 			}
-		},
+		}
 	};
 
 	// Launch BP Nouveau

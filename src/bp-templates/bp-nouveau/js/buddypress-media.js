@@ -103,7 +103,7 @@ window.bp = window.bp || {};
 		},
 
 		bp_ajax_media_request: function(event,data) {
-			if ( ! _.isUndefined( data ) && ! _.isUndefined( data.response.scopes.personal ) && data.response.scopes.personal === 0 ) {
+			if ( typeof data !== 'undefined' && typeof data.response.scopes.personal !== 'undefined' && data.response.scopes.personal === 0 ) {
 				$('.bb-photos-actions').hide();
 			}
 		},
@@ -268,7 +268,9 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on('error', function(file,response) {
 						if ( file.accepted ) {
-							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							}
 						} else {
 							self.dropzone_obj.removeFile(file);
 						}
@@ -292,7 +294,7 @@ window.bp = window.bp || {};
 							for ( var i in self.dropzone_media ) {
 								if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
 
-									if ( ! self.dropzone_media[i].saved ) {
+									if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 										self.removeAttachment(self.dropzone_media[i].id);
 									}
 
@@ -344,7 +346,9 @@ window.bp = window.bp || {};
 
 				self.dropzone_obj.on('error', function(file,response) {
 					if ( file.accepted ) {
-						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						}
 					} else {
 						self.dropzone_obj.removeFile(file);
 					}
@@ -379,7 +383,7 @@ window.bp = window.bp || {};
 						for ( var i in self.dropzone_media ) {
 							if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
 
-								if ( ! self.dropzone_media[i].saved ) {
+								if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 									self.removeAttachment(self.dropzone_media[i].id);
 								}
 

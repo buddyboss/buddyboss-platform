@@ -102,8 +102,8 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.commentFormAction );
 			$(document).on('click', '.gif-image-container', this.playVideo);
 			//forums
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+			$( '#buddypress .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Activity autoload
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
@@ -1037,7 +1037,7 @@ window.bp = window.bp || {};
 						if ( response.data.id ) {
 							file.id = response.id;
 							response.data.uuid = file.upload.uuid;
-							response.data.menu_order = self.dropzone_media.length;
+							response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 							response.data.album_id = self.album_id;
 							response.data.group_id = self.group_id;
 							response.data.saved    = false;
@@ -1047,7 +1047,9 @@ window.bp = window.bp || {};
 
 					self.dropzone_obj.on('error', function(file,response) {
 						if ( file.accepted ) {
-							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							}
 						} else {
 							self.dropzone_obj.removeFile(file);
 						}
@@ -1058,7 +1060,7 @@ window.bp = window.bp || {};
 							for ( var i in self.dropzone_media ) {
 								if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
 
-									if ( ! self.dropzone_media[i].saved ) {
+									if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 										bp.Nouveau.Media.removeAttachment(self.dropzone_media[i].id);
 									}
 

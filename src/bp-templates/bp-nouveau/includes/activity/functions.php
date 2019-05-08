@@ -43,7 +43,13 @@ function bp_nouveau_activity_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_activity_enqueue_scripts() {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) { // media popup overlay needs activity scripts
+	if ( ! bp_is_activity_component() &&
+	     ! bp_is_group_activity() &&
+	     ! bp_is_media_component() &&
+	     ! bp_is_media_directory() &&
+	     ! bp_is_group_media() &&
+	     ! bp_is_group_albums()
+	) { // media popup overlay needs activity scripts
 		return;
 	}
 

@@ -986,14 +986,14 @@
 }
 
 .ql-bubble .ql-tooltip {
-	background-color: #444;
-	border-radius: 25px;
+	background-color: #122b46;
+	border-radius: 4px;
 	color: #fff;
 	margin-top: 10px;
 }
 
 .ql-bubble .ql-tooltip-arrow {
-	border-bottom: 6px solid #444;
+	border-bottom: 6px solid #122b46;
 	border-right: 6px solid transparent;
 	border-left: 6px solid transparent;
 	content: " ";

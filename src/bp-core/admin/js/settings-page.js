@@ -204,6 +204,29 @@
 			} );
 		}
 
+		// Set Help selected on Help/Documentation Page.
+		if ( $( 'body.buddyboss_page_bp-help' ).length ) {
+
+			// Show sub menu when user click on main menu
+			$( '.bp-help-card-grid' ).on( 'click', 'span.open', function () {
+
+				$( this ).toggleClass( 'active' );
+                $( this ).closest( '.main' ).find( 'ul:first' ).toggle();
+			} );
+
+			// show the closest UI
+			$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show().closest( 'li' ).find( '> span.actions .open' ).addClass( 'active' );
+
+			// Show the child sub menu
+			$( '.bp-help-card-grid li.selected' ).find( 'ul:first' ).show();
+            $( '.bp-help-card-grid li.selected' ).find( '> span.actions .open' ).addClass( 'active' );
+
+			// Update LI count via JS
+			$( '.bp-help-card-grid .sub-menu-count' ).each( function () {
+				$( this ).text( '(' + $( this ).closest( 'li' ).find( 'ul:first li' ).size() + ')' );
+			} );
+		}
+
 		// As soon as an admin selects the option "Hierarchies - Allow groups to have subgroups" they
 		// should instantly see the option to "Restrict Invitations".
 		// We should also make it so deselect "hierarchies" will automatically deselect "restrict invitations" to
@@ -246,6 +269,3 @@
 	});
 
 }());
-
-
-

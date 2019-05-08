@@ -22,7 +22,7 @@ form.ac-form {
 			margin-bottom: $marg-med;
 			padding: 0 $pad-sml;
 
-			.ac-input[contenteditable=true] {
+			.ac-input[contenteditable="true"] {
 				background: transparent;
 				box-shadow: none;
 				color: $bp-text;
@@ -33,6 +33,7 @@ form.ac-form {
 				padding: 0.5em;
 				width: 100%;
 				border: 1px solid #ccc;
+
 				&:focus {
 
 					@include box-shadow( 0 0 6px $med-light-grey );

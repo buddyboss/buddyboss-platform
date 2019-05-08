@@ -150,7 +150,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	// Get the message by pretending we're in the message loop.
-	global $thread_template;
+	global $thread_template, $media_template;
 
 	$bp           = buddypress();
 	$reset_action = $bp->current_action;
@@ -203,7 +203,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 		$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
-		if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 			$reply['media'] = array();
 			while ( bp_media() ) {
 				bp_the_media();
@@ -212,7 +212,8 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'id'        => bp_get_media_id(),
 					'title'     => bp_get_media_title(),
 					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-					'full'      => bp_get_media_attachment_image()
+					'full'      => bp_get_media_attachment_image(),
+					'meta'      => $media_template->media->attachment_data->meta,
 				);
 			}
 		}
@@ -436,7 +437,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
-	global $thread_template;
+	global $thread_template, $media_template;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
@@ -574,7 +575,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
 			$media_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_media_ids', true );
 
-			if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids ) ) ) {
+			if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 				$thread->messages[ $i ]['media'] = array();
 				while ( bp_media() ) {
 					bp_the_media();
@@ -583,7 +584,8 @@ function bp_nouveau_ajax_get_thread_messages() {
 						'id'        => bp_get_media_id(),
 						'title'     => bp_get_media_title(),
 						'thumbnail' => bp_get_media_attachment_image_thumbnail(),
-						'full'      => bp_get_media_attachment_image()
+						'full'      => bp_get_media_attachment_image(),
+						'meta'      => $media_template->media->attachment_data->meta,
 					);
 				}
 			}
