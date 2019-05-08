@@ -25,7 +25,7 @@ jQuery(document).ready( function() {
 					toolbar: toolbarOptions
 				},
 				theme: 'bubble',
-				placeholder: wp.i18n.__('type your reply here', 'buddyboss')
+				placeholder: wp.i18n.__('Type your reply here', 'buddyboss')
 			});
 
 			forums_quill_reply_editor.on('text-change', function() {

@@ -824,20 +824,6 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 				'settings' => 'bp_nouveau_appearance[group_nav_display]',
 				'type'     => 'checkbox',
 			),
-			'group_nav_tabs'     => array(
-				'label'           => __( 'Use tab styling for primary navigation.', 'buddyboss' ),
-				'section'         => 'bp_nouveau_group_primary_nav',
-				'settings'        => 'bp_nouveau_appearance[group_nav_tabs]',
-				'type'            => 'checkbox',
-				'active_callback' => 'bp_nouveau_appearance_group_hide_show_primary_nav',
-			),
-			'group_subnav_tabs'  => array(
-				'label'           => __( 'Use tab styling for secondary navigation.', 'buddyboss' ),
-				'section'         => 'bp_nouveau_group_primary_nav',
-				'settings'        => 'bp_nouveau_appearance[group_subnav_tabs]',
-				'type'            => 'checkbox',
-				'active_callback' => 'bp_nouveau_appearance_group_hide_show_secondary_nav',
-			),
 			'groups_create_tabs' => array(
 				'label'    => __( 'Use tab styling for the group creation process.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
@@ -860,43 +846,6 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 				'type'     => 'group',
 			),
 		) );
-}
-
-/**
- * Show/hide Use tab styling for primary navigation based on the Display the group navigation vertically.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return bool
- */
-function bp_nouveau_appearance_group_hide_show_primary_nav() {
-
-	$customizer_option = 'group_nav_display';
-
-	$layout_prefs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-
-	if ( 0 === $layout_prefs ) {
-		return true;
-	}
-	return false;
-}
-
-/**
- * Show/hide Use tab styling for secondary navigation based on the Display the group navigation vertically.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return bool
- */
-function bp_nouveau_appearance_group_hide_show_secondary_nav() {
-	$customizer_option = 'group_nav_display';
-
-	$layout_prefs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-
-	if ( 1 === $layout_prefs ) {
-		return true;
-	}
-	return false;
 }
 
 /**

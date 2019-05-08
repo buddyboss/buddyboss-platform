@@ -900,7 +900,7 @@ document = window.document || {};
 		self.shortnames = options.shortnames;
 		self.saveEmojisAs = options.saveEmojisAs;
 		self.standalone = options.standalone;
-		self.emojiTemplate = '<img alt="{alt}" class="emojione' + (self.sprite ? '-{uni}" src="' + blankImg + '"/>' : 'emoji" src="{img}" data-char="{char}" />');
+		self.emojiTemplate = '<img alt="{alt}" class="emojione' + (self.sprite ? '-{uni}" src="' + blankImg + '"/>' : 'emoji" src="{img}" data-emoji-char="{char}" />');
 		self.emojiTemplateAlt = self.sprite ? '<i class="emojione-{uni}"/>' : '<img class="emojioneemoji" src="{img}" alt="{alt}"/>';
 		self.emojiBtnTemplate = '<i class="emojibtn" role="button" data-name="{name}" title="{friendlyName}">' + self.emojiTemplateAlt + '</i>';
 		self.recentEmojis = options.recentEmojis && supportsLocalStorage();

@@ -620,7 +620,7 @@ window.bp = window.bp || {};
 			document.addEventListener( 'messages_media_close', this.destroy.bind(this) );
 		},
 
-		toggle_media_uploader: function(event) {
+		toggle_media_uploader: function() {
 			var self = this;
 			if ( self.$el.find('#messages-post-media-uploader').hasClass('open') ) {
 				self.destroy();
