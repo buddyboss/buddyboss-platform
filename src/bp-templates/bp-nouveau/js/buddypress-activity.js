@@ -832,7 +832,7 @@ window.bp = window.bp || {};
 				comment_content = $( form ).find( '.ac-input' ).first();
 
 				comment_content.find('img.emojioneemoji').replaceWith(function () {
-					return this.dataset.char;
+					return this.dataset.emojiChar;
 				});
 
 				target.addClass( 'loading' ).prop( 'disabled', true );
