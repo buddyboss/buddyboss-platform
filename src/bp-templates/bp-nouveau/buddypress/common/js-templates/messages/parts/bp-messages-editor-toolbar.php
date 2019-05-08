@@ -20,5 +20,9 @@
             </div>
 		<?php endif; ?>
 
+	    <?php if ( bp_is_emoji_support_enabled() ): ?>
+         <div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip="<?php _e('Insert an emoji', 'buddyboss'); ?>"></div>
+		<?php endif; ?>
+
 	<?php endif; ?>
 </script>

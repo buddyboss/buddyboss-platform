@@ -997,7 +997,7 @@ document = window.document || {};
 					"data-filter": filter,
 					title: params.title
 				})
-					.wrapInner( '<img class="emojioneemoji" src="' + BP_Nouveau.activity.params.emoji_filter_url + filter + '.svg" alt="' + params.title + '" />' )
+					.wrapInner( '<img class="emojioneemoji" src="' + BP_Nouveau.media.emoji_filter_url + filter + '.svg" alt="' + params.title + '" />' )
 					.appendTo(filters);
 			} else if (options.tones) {
 				skin = 5;

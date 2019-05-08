@@ -586,6 +586,19 @@ window.bp = window.bp || {};
 					theme: 'bubble',
 					placeholder: wp.i18n.__('Type message','buddyboss')
 				});
+
+				if (!_.isUndefined(BP_Nouveau.media.emoji)) {
+					$('#message_content .ql-editor').emojioneArea({
+						standalone: true,
+						hideSource: false,
+						container: '#whats-new-messages-toolbar > .post-emoji',
+						autocomplete: false,
+						pickerPosition: 'bottom',
+						hidePickerOnBlur: false,
+						useInternalCDN: false
+					});
+				}
+
 			} else if ( typeof tinymce !== 'undefined' ) {
 				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
 			}

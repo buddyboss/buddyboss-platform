@@ -46,6 +46,8 @@ function bp_nouveau_media_enqueue_scripts() {
 	wp_enqueue_script( 'bp-nouveau-media' );
 	wp_enqueue_script( 'bp-nouveau-media-theatre' );
 	wp_enqueue_script( 'giphy' );
+	wp_enqueue_script( 'emojionearea' );
+	wp_enqueue_style( 'emojionearea' );
 	wp_enqueue_script( 'isInViewport' );
 }
 

@@ -449,11 +449,13 @@ function bp_media_settings_callback_gif_support() {
            id="bp_media_gif_support"
            type="checkbox"
            value="1"
+           data-run-js-condition="bp_media_emoji_support"
 		<?php checked( bp_is_gif_support_enabled() ); ?>
     />
     <label for="bp_media_gif_support">
 		<?php esc_html_e( 'Display a library of animated GIFs to choose from when creating posts', 'buddyboss' ) ?>
     </label>
+    <p class="description js-show-on-bp_media_emoji_support"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it here:', 'buddyboss') ?> <input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API key', 'buddyboss' ); ?>" style="width: 300px;" /></p>
 	<?php
 }
 
@@ -481,13 +483,11 @@ function bp_media_settings_callback_emoji_support() {
            id="bp_media_emoji_support"
            type="checkbox"
            value="1"
-           data-run-js-condition="bp_media_emoji_support"
 		<?php checked( bp_is_emoji_support_enabled() ); ?>
     />
     <label for="bp_media_emoji_support">
 		<?php esc_html_e( 'Display emoji dropdown to choose from when creating posts', 'buddyboss' ) ?>
     </label>
-    <p class="description js-show-on-bp_media_emoji_support"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it here:', 'buddyboss') ?> <input type="text" name="bp_media_gif_api_key" id="bp_media_gif_api_key" value="<?php echo bp_media_get_gif_api_key(); ?>" placeholder="<?php _e( 'GIPHY API key', 'buddyboss' ); ?>" style="width: 300px;" /></p>
 	<?php
 }
 

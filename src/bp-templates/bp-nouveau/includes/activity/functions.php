@@ -54,8 +54,6 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
-	wp_enqueue_script( 'emojionearea' );
-	wp_enqueue_style( 'emojionearea' );
 }
 
 /**
