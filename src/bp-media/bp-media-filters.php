@@ -15,19 +15,22 @@ add_action( 'bp_groups_posted_update',                          'bp_media_groups
 add_action( 'bp_activity_comment_posted',                       'bp_media_comments_update_media_meta',      10, 3   );
 add_action( 'bp_activity_comment_posted_notification_skipped',  'bp_media_comments_update_media_meta',      10, 3   );
 add_action( 'bp_activity_after_delete',                         'bp_media_delete_activity_media'                    );
+add_filter( 'bp_get_activity_content_body',                     'bp_media_activity_embed_gif',              20, 2   );
+add_action( 'bp_activity_after_comment_content',                'bp_media_comment_embed_gif',               20, 1   );
+add_action( 'bp_activity_after_save',                           'bp_media_activity_save_gif_data',           2, 1   );
 
 // Forums
 add_action( 'bbp_template_after_single_topic',                  'bp_media_add_theatre_template'                     );
-add_action( 'bbp_new_reply',                                    'bp_media_forums_new_post_media_save', 999 );
-add_action( 'bbp_new_topic',                                    'bp_media_forums_new_post_media_save', 999 );
-add_action( 'edit_post',                                        'bp_media_forums_new_post_media_save', 999 );
+add_action( 'bbp_new_reply',                                    'bp_media_forums_new_post_media_save',     999      );
+add_action( 'bbp_new_topic',                                    'bp_media_forums_new_post_media_save',     999      );
+add_action( 'edit_post',                                        'bp_media_forums_new_post_media_save',     999      );
 
-add_filter( 'bbp_get_reply_content',                            'bp_media_forums_embed_attachments', 999, 2 );
-add_filter( 'bbp_get_topic_content',                            'bp_media_forums_embed_attachments', 999, 2 );
+add_filter( 'bbp_get_reply_content',                            'bp_media_forums_embed_attachments',       999, 2   );
+add_filter( 'bbp_get_topic_content',                            'bp_media_forums_embed_attachments',       999, 2   );
 
 // Messages
 add_action( 'messages_message_sent',                            'bp_media_attach_media_to_message'                  );
-add_action( 'messages_message_sent',                            'bp_media_save_gif_data' );
+add_action( 'messages_message_sent',                            'bp_media_messages_save_gif_data'                   );
 
 /**
  * Add media theatre template for activity pages
@@ -369,7 +372,7 @@ function bp_media_attach_media_to_message( &$message ) {
  *
  * @param $message
  */
-function bp_media_save_gif_data( &$message ) {
+function bp_media_messages_save_gif_data( &$message ) {
 
 	if ( ! bp_is_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
 		return;
@@ -386,4 +389,111 @@ function bp_media_save_gif_data( &$message ) {
 	] );
 
 	bp_messages_update_meta( $message->id, '_gif_raw_data', $gif_data );
+}
+
+/**
+ * Return activity gif embed HTML
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity_id
+ *
+ * @return false|string|void
+ */
+function bp_media_activity_embed_gif_content( $activity_id ) {
+
+	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
+
+	if ( empty( $gif_data ) ) {
+		return;
+	}
+
+	$preview_url = wp_get_attachment_url( $gif_data['still'] );
+	$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
+	ob_start();
+	?>
+    <div class="activity-attached-gif-container">
+        <div class="gif-image-container">
+            <div class="gif-player">
+                <video preload="auto" playsinline poster="<?php echo $preview_url ?>" loop muted playsinline>
+                    <source src="<?php echo $video_url ?>" type="video/mp4">
+                </video>
+                <a href="#" class="gif-play-button">
+                    <span class="dashicons dashicons-video-alt3"></span>
+                </a>
+                <span class="gif-icon"></span>
+            </div>
+        </div>
+    </div>
+	<?php
+	$content = ob_get_clean();
+
+	return $content;
+}
+
+/**
+ * Embed gif in activity content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_media_activity_embed_gif( $content, $activity ) {
+
+	$gif_content = bp_media_activity_embed_gif_content(  $activity->id );
+
+	if ( ! empty( $gif_content ) ) {
+		$content .= $gif_content;
+	}
+
+	return $content;
+}
+
+/**
+ * Embed gif in activity comment content
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_media_comment_embed_gif( $activity_id ) {
+
+	$gif_content = bp_media_activity_embed_gif_content(  $activity_id );
+
+	if ( ! empty( $gif_content ) ) {
+		echo $gif_content;
+	}
+}
+
+/**
+ * Save gif data into activity meta key "_gif_attachment_id"
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $activity
+ */
+function bp_media_activity_save_gif_data( $activity ) {
+
+	if ( empty( $_POST['gif_data'] ) ) {
+		return;
+	}
+
+	$gif_data =  $_POST['gif_data'];
+
+	$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
+	$mp4 = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+
+	bp_activity_update_meta( $activity->id, '_gif_data', [
+		'still' => $still,
+		'mp4'   => $mp4,
+	] );
+
+	bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
 }
