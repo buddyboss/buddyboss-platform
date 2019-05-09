@@ -375,10 +375,8 @@ class Group extends BuddypressCommand {
 			'show_hidden' => true,
 			'orderby'     => $assoc_args['orderby'],
 			'order'       => $assoc_args['order'],
+			'per_page'    => $assoc_args['count'],
 		) );
-
-		// Groups to list.
-		$r['per_page'] = $r['count'];
 
 		if ( isset( $assoc_args['user-id'] ) ) {
 			$user = $this->get_user_id_from_identifier( $assoc_args['user-id'] );

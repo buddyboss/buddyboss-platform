@@ -71,7 +71,7 @@ class Email extends BuddypressCommand {
 				restore_current_blog();
 			}
 
-			WP_CLI::error( "Email type '{$assoc_args['type']}' already exists." );
+			WP_CLI::error( sprintf( 'Email type %s already exists.', $assoc_args['type'] ) );
 		}
 
 		if ( ! empty( $args[0] ) ) {
@@ -89,8 +89,6 @@ class Email extends BuddypressCommand {
 			}
 		}
 
-		$id = $assoc_args['type'];
-
 		$defaults = array(
 			'post_status' => 'publish',
 			'post_type'   => bp_get_email_post_type(),
@@ -101,6 +99,8 @@ class Email extends BuddypressCommand {
 			'post_content' => $assoc_args['content'],
 			'post_excerpt' => ! empty( $assoc_args['plain-text-content'] ) ? $assoc_args['plain-text-content'] : '',
 		);
+
+		$id = $assoc_args['type'];
 
 		// Email post content.
 		$post_id = wp_insert_post( bp_parse_args( $email, $defaults, 'install_email_' . $id ), true );
@@ -121,7 +121,7 @@ class Email extends BuddypressCommand {
 				restore_current_blog();
 			}
 
-			WP_CLI::success( "Email post created for type '{$assoc_args['type']}'." );
+			WP_CLI::success( sprintf( 'Email post created for type %s.', $assoc_args['type'] ) );
 		} else {
 			if ( true === $switched ) {
 				restore_current_blog();
@@ -168,7 +168,7 @@ class Email extends BuddypressCommand {
 		$email = bp_get_email( $args[0] );
 
 		if ( is_wp_error( $email ) ) {
-			WP_CLI::error( "Email post for type '{$args[0]}' does not exist." );
+			WP_CLI::error( sprintf( 'Email post for type %s does not exist.', $args[0] ) );
 		}
 
 		$post_arr = get_object_vars( $email->get_post_object() );
@@ -219,7 +219,7 @@ class Email extends BuddypressCommand {
 	 */
 	protected function _edit( $content, $title ) {
 		$content = apply_filters( 'the_editor_content', $content );
-		$output = \WP_CLI\Utils\launch_editor_for_input( $content, $title );
+		$output  = \WP_CLI\Utils\launch_editor_for_input( $content, $title );
 
 		return ( is_string( $output ) ) ?
 			apply_filters( 'content_save_pre', $output )

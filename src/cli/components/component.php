@@ -134,7 +134,7 @@ class Components extends BuddypressCommand {
 	 * ## OPTIONS
 	 *
 	 * [--type=<type>]
-	 * : Type of the component (all, optional, required).
+	 * : Type of the component (all, optional, retired, required).
 	 * ---
 	 * default: all
 	 * ---
@@ -197,7 +197,7 @@ class Components extends BuddypressCommand {
 		// Inactive components.
 		$inactive_components = array_diff( array_keys( $components ), array_keys( $active_components ) );
 
-		$current_components  = array();
+		$current_components = array();
 		switch ( $status ) {
 			case 'all':
 				$index = 0;
@@ -219,6 +219,7 @@ class Components extends BuddypressCommand {
 					$index++;
 
 					$info = $components[ $component ];
+
 					$current_components[] = array(
 						'number'      => $index,
 						'id'          => $component,
@@ -235,6 +236,7 @@ class Components extends BuddypressCommand {
 					$index++;
 
 					$info = $components[ $component ];
+
 					$current_components[] = array(
 						'number'      => $index,
 						'id'          => $component,
@@ -298,7 +300,7 @@ class Components extends BuddypressCommand {
 	 * @return array An array of valid component types.
 	 */
 	protected function component_types() {
-		return array( 'all', 'optional', 'required' );
+		return array( 'all', 'optional', 'retired', 'required' );
 	}
 
 	/**

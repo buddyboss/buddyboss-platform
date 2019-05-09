@@ -251,7 +251,7 @@ class Message extends BuddypressCommand {
 		$formatter = $this->get_formatter( $assoc_args );
 
 		$r = wp_parse_args( $assoc_args, array(
-			'box'    => 'inbox',
+			'box'    => 'sentbox',
 			'type'   => 'all',
 			'search' => '',
 			'count'  => 10,
@@ -259,7 +259,7 @@ class Message extends BuddypressCommand {
 
 		$user = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 		$type = ( ! in_array( $r['type'], $this->message_types(), true ) ) ? 'all' : $r['type'];
-		$box  = ( ! in_array( $r['box'], $this->message_boxes(), true ) ) ? 'inbox' : $r['box'];
+		$box  = ( ! in_array( $r['box'], $this->message_boxes(), true ) ) ? 'sentbox' : $r['box'];
 
 		$inbox = new \BP_Messages_Box_Template( array(
 			'user_id'      => $user->ID,
@@ -547,6 +547,6 @@ class Message extends BuddypressCommand {
 	 * @return array An array of message boxes.
 	 */
 	protected function message_boxes() {
-		return array( 'notices', 'inbox' );
+		return array( 'notices', 'sentbox', 'inbox' );
 	}
 }
