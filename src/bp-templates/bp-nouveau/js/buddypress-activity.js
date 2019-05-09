@@ -967,26 +967,6 @@ window.bp = window.bp || {};
 			}
 		},
 
-		// play gif
-		playVideo: function(event) {
-			event.preventDefault();
-			var video = $(this).find('video').get(0),
-				$button = $(this).find('.gif-play-button');
-			if (video.paused == true) {
-				// Play the video
-				video.play();
-
-				// Update the button text to 'Pause'
-				$button.hide();
-			} else {
-				// Pause the video
-				video.pause();
-
-				// Update the button text to 'Play'
-				$button.show();
-			}
-		},
-
 		// activity autoload
 		loadMoreActivities: function () {
 
