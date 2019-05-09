@@ -589,7 +589,6 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'group_front_description' => 0,
 			'group_nav_display'       => 0,       // O is default (horizontally). 1 is vertically.
 			'group_nav_order'         => array(),
-			'groups_create_tabs'      => 1,
 			'groups_layout'           => 4,
 			'members_group_layout'    => 4,
 			'groups_dir_layout'       => 0,
