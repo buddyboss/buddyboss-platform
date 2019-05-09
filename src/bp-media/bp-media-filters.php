@@ -203,7 +203,10 @@ function bp_media_delete_activity_media( $activities ) {
 				}
 			}
 		}
-		add_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
+
+		if ( ! function_exists( 'bp_nouveau_media_delete_activity_media' ) ) {
+		    add_action( 'bp_activity_after_delete', 'bp_nouveau_media_delete_activity_media' );
+        }
 	}
 }
 
