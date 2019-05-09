@@ -747,13 +747,6 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[groups_create_tabs]' => array(
-			'index'             => 'groups_create_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[group_nav_order]' => array(
 			'index'             => 'group_nav_order',
 			'capability'        => 'bp_moderate',
@@ -808,12 +801,6 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 				'label'    => __( 'Display the group navigation vertically.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
 				'settings' => 'bp_nouveau_appearance[group_nav_display]',
-				'type'     => 'checkbox',
-			),
-			'groups_create_tabs' => array(
-				'label'    => __( 'Use tab styling for the group creation process.', 'buddyboss' ),
-				'section'  => 'bp_nouveau_group_primary_nav',
-				'settings' => 'bp_nouveau_appearance[groups_create_tabs]',
 				'type'     => 'checkbox',
 			),
 			'group_default_tab'  => array(

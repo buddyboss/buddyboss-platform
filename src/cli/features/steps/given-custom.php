@@ -21,7 +21,7 @@ $steps->Given( '/^a BP install$/',
 			$world->copy_dir( $bp_src_dir, $dest_dir );
 			$world->proc( 'wp plugin activate buddypress' )->run_check();
 
-			$components = array( 'friends', 'groups', 'xprofile', 'activity', 'messages' );
+			$components = array( 'friends', 'groups', 'xprofile', 'activity', 'messages', 'notifications' );
 			foreach ( $components as $component ) {
 				$world->proc( "wp bp component activate $component" )->run_check();
 			}

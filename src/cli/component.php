@@ -109,4 +109,18 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 	protected function sanitize_string( $type ) {
 		return strtolower( str_replace( '-', '_', $type ) );
 	}
+
+	/**
+	 * Pull up a random active component.
+	 *
+	 * @since 1.1
+	 *
+	 * @return string
+	 */
+	protected function get_random_component() {
+		$c  = buddypress()->active_components;
+		$ca = $this->get_components_and_actions();
+
+		return array_rand( array_flip( array_intersect( array_keys( $c ), array_keys( $ca ) ) ) );
+	}
 }

@@ -670,22 +670,6 @@ class Activity extends BuddypressCommand {
 	}
 
 	/**
-	 * Pull up a random active component for use in activity items.
-	 *
-	 * @since BuddyPress 1.1
-	 *
-	 * @return string
-	 */
-	protected function get_random_component() {
-		$c = buddypress()->active_components;
-
-		// Core components that accept activity items.
-		$ca = $this->get_components_and_actions();
-
-		return array_rand( array_flip( array_intersect( array_keys( $c ), array_keys( $ca ) ) ) );
-	}
-
-	/**
 	 * Get a random type from a component.
 	 *
 	 * @since BuddyPress 1.1

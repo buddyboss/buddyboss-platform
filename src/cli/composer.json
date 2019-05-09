@@ -21,7 +21,7 @@
         "files": [ "wp-cli-bp.php" ]
     },
     "require": {
-        "php": ">=5.3",
+        "php": ">=5.4",
         "wp-cli/wp-cli": ">=0.23.0"
     },
     "require-dev": {
