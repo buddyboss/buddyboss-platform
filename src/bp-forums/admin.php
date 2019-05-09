@@ -246,7 +246,7 @@ function bp_core_get_forums_admin_tabs( $active_tab = '') {
  *
  */
 function bp_forums_admin_forums_listing_add_tab() {
-	global $pagenow,$current_screen;
+	global $pagenow, $current_screen;
 
 	if ( ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'edit.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post-new.php' ) || ( $current_screen->post_type == bbp_get_forum_post_type() && $pagenow == 'post.php' ) ) {
 		?>
@@ -266,9 +266,9 @@ add_action('admin_notices','bp_forums_admin_forums_listing_add_tab');
  *
  */
 function bp_discussions_admin_discussions_listing_add_tab() {
-	global $pagenow ,$post;
+	global $pagenow, $current_screen;
 
-	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_topic_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Discussions', 'buddyboss' ) ); ?></h2>
@@ -286,9 +286,9 @@ add_action('admin_notices','bp_discussions_admin_discussions_listing_add_tab');
  *
  */
 function bp_replies_admin_replies_listing_add_tab() {
-	global $pagenow ,$post;
+	global $pagenow, $current_screen;
 
-	if ( ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_reply_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_reply_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bbp_get_reply_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_forums_tabs( __( 'Replies', 'buddyboss' ) ); ?></h2>
