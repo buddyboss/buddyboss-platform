@@ -1630,17 +1630,6 @@ function bp_nouveau_single_item_subnav_classes() {
 			$classes[] = 'bp-invites-nav';
 		}
 
-		$customizer_option = ( bp_is_user() )? 'user_subnav_tabs' : 'group_subnav_tabs';
-		$nav_tabs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-
-		if ( bp_is_user() && 1 === $nav_tabs ) {
-			$classes[] = 'tabbed-links';
-		}
-
-		if ( bp_is_group() && 1 === $nav_tabs ) {
-			$classes[] = 'tabbed-links';
-		}
-
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
