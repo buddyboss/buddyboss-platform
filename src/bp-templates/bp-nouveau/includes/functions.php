@@ -253,16 +253,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	* Check the component to find a default container_class to add
 	*/
 	$current_component_class = bp_current_component() . '-meta';
-
-	if ( bp_is_group_activity() ) {
-		$generic_class = ' activity-meta ';
-	} else {
-		$generic_class = '';
-	}
-
-	if( bp_current_component() == 'photos' || bp_current_component() == 'media' ) {
-		$generic_class = ' activity-meta ';
-	}
+	$generic_class = 'bp-generic-meta';
 
 	$r = wp_parse_args( $args, array(
 		'container'         => 'div',
