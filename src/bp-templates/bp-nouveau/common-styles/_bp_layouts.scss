@@ -441,29 +441,29 @@
 				margin: $marg-sml 0;
 
 				a {
-						border-right: 1px solid $bp-border-dark;
-						padding: 0 $pad-sml;
+					border-right: 1px solid $bp-border-dark;
+					padding: 0 $pad-sml;
 				}
 
 				a:focus,
 				a:hover {
-						background: none;
+					background: none;
 				}
 			}
 
 			li.current {
 
-					a {
-							background: none;
-							color: $black;
-					}
+				a {
+					background: none;
+					color: $black;
+				}
 			}
 
 			li:last-child {
 
-					a {
-							border: none;
-					}
+				a {
+					border: none;
+				}
 			}
 
 		} // close #subnav

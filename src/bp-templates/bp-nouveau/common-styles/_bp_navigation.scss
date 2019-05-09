@@ -151,7 +151,7 @@
 
 		&.bp-dir-hori-nav:not(.bp-vertical-navs) {
 
-			nav:not(.tabbed-links) {
+			nav {
 				border-bottom: 1px solid $bp-border-color;
 				border-top: 1px solid $bp-border-color;
 
@@ -209,7 +209,7 @@
 
 	.bp-subnavs,
 	ul.subnav {
-		width: 100%;
+		// width: 100%;
 	}
 
 	.bp-subnavs {
@@ -237,7 +237,7 @@
 	}
 
 	ul.subnav {
-		width: auto;
+		// width: auto;
 	}
 
 	.bp-navs.bp-invites-nav#subnav,
@@ -401,11 +401,11 @@
 		}
 
 		.subnav {
-			float: left;
+			// float: left;
 		}
 
 		ul.subnav {
-			width: auto;
+			// width: auto;
 		}
 
 		// user screen last filter
