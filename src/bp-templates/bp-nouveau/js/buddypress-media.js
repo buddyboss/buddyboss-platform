@@ -327,7 +327,9 @@ window.bp = window.bp || {};
 
 			if ( typeof window.Dropzone !== 'undefined' && $('div#media-uploader').length ) {
 
-				$('#bp-media-uploader').show();
+				if ( $( event.currentTarget ).attr('id') !== 'bb-create-album' ) {
+					$('#bp-media-uploader').show();
+				}
 
 				self.dropzone_obj = new Dropzone('div#media-uploader', self.options );
 

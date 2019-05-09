@@ -59,8 +59,6 @@ $album_id = (int) bp_action_variable( 0 );
 	                    <?php endif; ?>
                     </div>
 
-	            <?php bp_get_template_part( 'media/uploader' ); ?>
-
 	            <?php endif; ?>
 
                 <?php bp_get_template_part( 'media/actions' ); ?>

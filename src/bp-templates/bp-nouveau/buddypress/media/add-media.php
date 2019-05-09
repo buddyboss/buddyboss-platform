@@ -15,6 +15,4 @@
         </div>
     </div>
 
-<?php bp_get_template_part( 'media/uploader' ); ?>
-
 <?php endif; ?>
