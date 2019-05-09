@@ -747,20 +747,6 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_nav_tabs]' => array(
-			'index'             => 'group_nav_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_subnav_tabs]' => array(
-			'index'             => 'group_subnav_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[groups_create_tabs]' => array(
 			'index'             => 'groups_create_tabs',
 			'capability'        => 'bp_moderate',

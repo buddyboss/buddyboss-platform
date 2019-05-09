@@ -574,8 +574,6 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 function bp_nouveau_get_appearance_settings( $option = '' ) {
 	$default_args = array(
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
-		'user_nav_tabs'      => 0,
-		'user_subnav_tabs'   => 0,
 		'user_nav_order'     => array(),
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
@@ -600,8 +598,6 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'group_front_description' => 0,
 			'group_nav_display'       => 0,       // O is default (horizontally). 1 is vertically.
 			'group_nav_order'         => array(),
-			'group_nav_tabs'          => 0,
-			'group_subnav_tabs'       => 0,
 			'groups_create_tabs'      => 1,
 			'groups_layout'           => 4,
 			'members_group_layout'    => 4,
