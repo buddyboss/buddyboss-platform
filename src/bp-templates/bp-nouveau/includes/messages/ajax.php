@@ -944,7 +944,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
-	if ( ! $user_query['exclude'] ) {
+	if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
 		$user_query['exclude'] = [];
 	}
 
