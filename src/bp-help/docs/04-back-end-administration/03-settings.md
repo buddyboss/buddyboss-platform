@@ -43,16 +43,21 @@ Anyone not logged in will be redirected to the login/register page when attempti
 *   Profile Types
     *   [bp_docs_link text="Profile Types" slug="components/member-profiles.md" anchors="profile-types"] - Enable profile types to give members unique profile fields and permissions
     *   [bp_docs_link text="Display on Profiles" slug="components/member-profiles.md" anchors="display-on-profiles"] - Display each member's profile type on their profile page
-    *   [bp_docs_link text="Import Profile Types" slug="components/member-profiles.md" anchors="import-profile-types"]
+    *   [bp_docs_link text="Import Profile Types" slug="back-end-administration/tools/import-profile-types.md"] - Import previously created profile types AKA member types
 
 [![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
 
 ### Activity
-
-*   [bp_docs_link text="Blog Posts" slug="components/activity-feeds.md" anchors="blog-posts"] – Automatically publish new blog posts into the activity feed  
-*   [bp_docs_link text="Post Comments" slug="components/activity-feeds.md" anchors="post-comments"] – Allow activity stream commenting on posts and comments  
-*   [bp_docs_link text="Activity auto-refresh" slug="components/activity-feeds.md" anchors="activity-auto-refresh"] – Automatically check for new items while viewing the activity stream  
-*   [bp_docs_link text="Follow" slug="components/activity-feeds.md" anchors="follow"] – Allow your users to follow the activity of each other in their timeline
+*	Activity Settings
+	*   [bp_docs_link text="Activity auto-refresh" slug="components/activity-feeds.md" anchors="activity-auto-refresh"] – Automatically check for new activity posts 
+	*	[bp_docs_link text="Activity auto-load" slug="components/activity-feeds.md" anchors="activity-auto-load"] – Automatically load more activity posts when scrolling to the bottom of the page 
+	*   [bp_docs_link text="Follow" slug="components/activity-feeds.md" anchors="follow"] – Allow your users to follow the activity of each other in their timeline
+	*   [bp_docs_link text="Likes" slug="components/activity-feeds.md" anchors="follow"] – Allow your users to "Like" each other's activity posts
+	*   [bp_docs_link text="Link Previews" slug="components/activity-feeds.md" anchors="follow"] – When links are used in activity posts, display an image and excerpt from the site
+*	Posts in Activity Feeds
+	*	BuddyBoss Platform - These options are self explanitory
+	*   [bp_docs_link text="Blog Posts" slug="components/activity-feeds.md" anchors="blog-posts"] – When users publish new blog posts, show them in the activity feed  
+	*   [bp_docs_link text="Post Comments" slug="components/activity-feeds.md" anchors="post-comments"] – Allow activity stream commenting on blog posts, forum discussions and topics  
 
 [![activity feeds buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings-1024x930.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings.jpg)
 

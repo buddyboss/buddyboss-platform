@@ -12,7 +12,7 @@ Everything in a community website revolves around its members.
 *   [Profile Types](#profile-types)
     *   [Profile Types](#profile-types) - Enable profile types to give members unique profile fields and permissions
     *   [Display on Profiles](#display-on-profiles) - Display each member's profile type on their profile page
-    *   [Import Profile Types](#import-profile-types)
+    *   [bp_docs_link text="Import Profile Types" slug="back-end-administration/tools/import-profile-types.md"] - Import previously created profile types AKA member types
 *   [Profile Search](#profile-search) - Enable advanced profile search on the members directory
 
 [![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
