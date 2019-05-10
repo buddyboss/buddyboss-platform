@@ -50,13 +50,31 @@ defined( 'ABSPATH' ) || exit;
 		<hr>
 		-->
 
-		<h2><?php esc_html_e( 'Feature', 'buddyboss' ); ?></h2>
-		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
+		<h2><?php esc_html_e( 'Welcome to BuddyBoss Platform', 'buddyboss' ); ?></h2>
+		<p><?php _e( 'BuddyBoss Platform is a fork of <a href="https://buddypress.org/" target="_blank">BuddyPress</a>, and is designed to be backwards compatible with BuddyPress data and most BuddyPress plugins. If you have been using BuddyPress in the past, you should remove it as this is a full replacement. We have improved almost every aspect of BuddyPress and added many new features. Below are some highlights, but as you explore you will find improvements all over the place. Have fun!', 'buddyboss' ); ?></p>
 
-		<h2><?php esc_html_e( "Feature", 'buddyboss' ); ?></h2>
-		<p><?php esc_html_e( 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.', 'buddyboss' ); ?></p>
+		<h2><?php esc_html_e( '1. New "BuddyBoss Theme"', 'buddyboss' ); ?></h2>
+		<p><?php _e( 'BuddyBoss Platform is meant to be theme independent, meaning any generic WordPress theme can use it, and then a custom theme just makes everything extra nice. We have create an all new premium BuddyBoss Theme that styles everything to look absolutely gorgeous. Because we now control the core plugin framework, we are able to do much more advanced layouts in our theme than before, and we think you will love the result. If you were previously using <a href="https://www.buddyboss.com/product/boss-theme/" target="_blank">Boss</a> theme or <a href="https://www.buddyboss.com/product/onesocial-theme/" target="_blank">OneSocial</a> theme you should switch to our new theme, as those legacy themes won\'t support all of our new layouts.', 'buddyboss' ); ?></p>
 
-		<p><?php esc_html_e( 'Thank you for using BuddyBoss!', 'buddyboss' ); ?></p>
+		<h2><?php esc_html_e( "2. Forum Discussions", 'buddyboss' ); ?></h2>
+		<p><?php _e( 'We have added a native forum discussions component. Your members can now communicate with each other in Q&A style conversations. If you were previously using <a href="https://bbpress.org/" target="_blank">bbPress</a> plugin, you should remove it as those features have been merged into BuddyBoss Platform and greatly improved. Your data will continue to work as normal.', 'buddyboss' ); ?></p>
+
+		<h2><?php esc_html_e( "3. Media Uploading", 'buddyboss' ); ?></h2>
+		<p><?php _e( 'We have added a native media management component. Your members can now upload photos, emoji, and animated GIFs into profiles, groups, private messages and forum discussions. They can then organize those photos into albums. If you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/" target="_blank">BuddyBoss Media</a> plugin with BuddyPress, you should remove it as those features have been merged into BuddyBoss Platform and greatly improved.', 'buddyboss' ); ?></p>
+
+		<h2><?php esc_html_e( "4. Profile and Group Types", 'buddyboss' ); ?></h2>
+		<p><?php _e( 'We have added native Profile and Group type management, along with group heirarchies. If you were previously using <a href="https://www.buddyboss.com/product/buddypress-member-types/" target="_blank">BuddyPress Member Types</a> plugin with BuddyPress, you should remove it as those features have been merged into BuddyBoss Platform and greatly improved.', 'buddyboss' ); ?></p>
+
+		<h2><?php esc_html_e( "5. Network Search", 'buddyboss' ); ?></h2>
+		<p><?php _e( 'We have added a native search component. Your members can now search content across the entire network, including members, groups, forums, custom post types and more. If you were previously using <a href="https://wordpress.org/plugins/buddypress-global-search/" target="_blank">BuddyPress Global Search</a> plugin with BuddyPress, you should remove it as those features have been merged into BuddyBoss Platform and greatly improved.', 'buddyboss' ); ?></p>
+
+		<h2><?php esc_html_e( "6. Email Invites", 'buddyboss' ); ?></h2>
+		<p><?php _e( 'We have added a native email invitation component. Your members can now invite outside users to your community. The recipients will receive an email with a link to join the site.', 'buddyboss' ); ?></p>
+
+		<h2><?php esc_html_e( "7. Private Network", 'buddyboss' ); ?></h2>
+		<p><?php _e( 'We have added a native private network option for your community. With a single checkbox you can restrict access to all of your content, but still allow users to register accounts, and allow access to other URLs of your choice.', 'buddyboss' ); ?></p>
+
+		<p><?php _e( '<strong>Thank you for using BuddyBoss!</strong>', 'buddyboss' ); ?></p>
 
 		<br /><br />
 	</div>
