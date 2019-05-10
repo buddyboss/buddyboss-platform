@@ -254,6 +254,7 @@
 		$('#bp_media_profile_media_support').change(function () {
 			if (!this.checked) {
 				$('#bp_media_profile_albums_support').prop('disabled', true);
+				$('#bp_media_profile_albums_support').attr('checked', false);
 			} else {
 				$('#bp_media_profile_albums_support').prop('disabled', false);
 			}
@@ -261,6 +262,7 @@
 		$('#bp_media_group_media_support').change(function () {
 			if (!this.checked) {
 				$('#bp_media_group_albums_support').prop('disabled', true);
+				$('#bp_media_group_albums_support').attr('checked', false);
 			} else {
 				$('#bp_media_group_albums_support').prop('disabled', false);
 			}

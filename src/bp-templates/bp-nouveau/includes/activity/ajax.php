@@ -488,7 +488,7 @@ function bp_nouveau_ajax_post_update() {
 			$toolbar_option = true;
 		} else if ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
 			$toolbar_option = true;
-		} else if ( bp_is_active( 'media' ) && bp_is_gif_support_enabled() && ! empty( $_POST['gif_data'] ) ) {
+		} else if ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
 			$toolbar_option = true;
 		}
 

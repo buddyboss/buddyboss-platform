@@ -964,15 +964,7 @@ window.bp = window.bp || {};
 			select.model.on( 'change', this.attachAutocomplete, this );
 			bp.Nouveau.Activity.postForm.ActivityObjects.on( 'change:selected', this.postIn, this );
 
-			if ( ! _.isUndefined( BP_Nouveau.media ) &&
-				BP_Nouveau.media.profile_media === false
-			) {
-				if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
-					bp.Nouveau.Activity.postForm.dropzone.destroy();
-				}
-				$('#activity-post-media-uploader').html('');
-				$('#whats-new-toolbar .post-media').hide();
-			}
+			this.toggleMultiMediaOptions();
 		},
 
 		attachAutocomplete: function( model ) {
@@ -996,45 +988,12 @@ window.bp = window.bp || {};
 
 				// Set the object type
 				this.model.set( 'object', model.get( 'selected' ) );
-
-				if ( $('#activity-post-media-uploader').length &&
-					! _.isUndefined( BP_Nouveau.media )
-				) {
-					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
-						bp.Nouveau.Activity.postForm.dropzone.destroy();
-					}
-					$('#activity-post-media-uploader').html('');
-					this.model.set( 'media', [] );
-					if ( BP_Nouveau.media.group_media === false ) {
-						$('#whats-new-toolbar .post-media').hide();
-					} else {
-						$('#whats-new-toolbar .post-media').show();
-					}
-				}
 			} else {
 				this.model.set( { object: 'user', item_id: 0 } );
-
-				if ( $('#whats-new-toolbar .post-media').length ) {
-					$('#whats-new-toolbar .post-media').show();
-				}
-
-				if ( $('#activity-post-media-uploader').length &&
-					! _.isUndefined( BP_Nouveau.media )
-				) {
-					if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
-						bp.Nouveau.Activity.postForm.dropzone.destroy();
-					}
-					$('#activity-post-media-uploader').html('');
-					this.model.set( 'media', [] );
-					if ( BP_Nouveau.media.profile_media === false ) {
-						$('#whats-new-toolbar .post-media').hide();
-					} else {
-						$('#whats-new-toolbar .post-media').show();
-					}
-				}
 			}
 
 			this.updateDisplay();
+			this.toggleMultiMediaOptions();
 		},
 
 		postIn: function( model ) {
@@ -1059,6 +1018,67 @@ window.bp = window.bp || {};
 				this.$el.removeClass( );
 			} else if ( ! this.$el.hasClass( 'in-profile' ) ) {
 				this.$el.addClass( 'in-profile' );
+			}
+		},
+
+		toggleMultiMediaOptions: function() {
+			if (!_.isUndefined(BP_Nouveau.media)) {
+
+				if ('user' !== this.model.get('object')) {
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.group_media === false) {
+						$('#whats-new-toolbar .post-media').hide();
+						var event = new Event('activity_media_close');
+						document.dispatchEvent(event);
+					} else {
+						$('#whats-new-toolbar .post-media').show();
+					}
+
+					// check gif is enable in groups or not
+					if (BP_Nouveau.media.gif.groups === false) {
+						$('#whats-new-toolbar .post-gif').hide();
+						var event = new Event('activity_gif_close');
+						document.dispatchEvent(event);
+					} else {
+						$('#whats-new-toolbar .post-gif').show();
+					}
+
+					// check emoji is enable in groups or not
+					if (BP_Nouveau.media.emoji.groups === false) {
+						$('#whats-new-textarea').find('img.emojioneemoji').remove();
+						$('#whats-new-toolbar .post-emoji').hide();
+					} else {
+						$('#whats-new-toolbar .post-emoji').show();
+					}
+				} else {
+
+					// check media is enable in profile or not
+					if (BP_Nouveau.media.profile_media === false) {
+						$('#whats-new-toolbar .post-media').hide();
+						var event = new Event('activity_media_close');
+						document.dispatchEvent(event);
+					} else {
+						$('#whats-new-toolbar .post-media').show();
+					}
+
+					// check gif is enable in profile or not
+					if (BP_Nouveau.media.gif.profile === false) {
+						$('#whats-new-toolbar .post-gif').hide();
+						var event = new Event('activity_gif_close');
+						document.dispatchEvent(event);
+					} else {
+						$('#whats-new-toolbar .post-gif').show();
+					}
+
+					// check emoji is enable in profile or not
+					if (BP_Nouveau.media.emoji.profile === false) {
+						$('#whats-new-toolbar .post-emoji').hide();
+						$('#whats-new-textarea').find('img.emojioneemoji').remove();
+					} else {
+						$('#whats-new-toolbar .post-emoji').show();
+					}
+				}
 			}
 		}
 	} );

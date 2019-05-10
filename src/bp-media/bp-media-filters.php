@@ -374,7 +374,7 @@ function bp_media_attach_media_to_message( &$message ) {
  */
 function bp_media_messages_save_gif_data( &$message ) {
 
-	if ( ! bp_is_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
+	if ( ! bp_is_messages_gif_support_enabled() || empty( $_POST['gif_data'] ) ) {
 		return;
 	}
 

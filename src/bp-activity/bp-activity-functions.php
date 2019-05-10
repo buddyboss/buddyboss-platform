@@ -1189,17 +1189,20 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 	$current_user_id = get_current_user_id();
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-	$like_text       = bp_activity_get_favorite_users_string( $activity_id );
-	$favorited_users = array_reduce( $favorited_users, function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
-		if ( $user_id != $current_user_id ) {
-			$user_data = get_userdata( $user_id );
-			if ( strpos( $like_text, $user_data->display_name ) === false ) {
-				$carry .= $user_data->display_name . '&#10;';
-			}
-		}
 
-		return $carry;
-	} );
+	if ( ! empty( $favorited_users ) ) {
+		$like_text       = bp_activity_get_favorite_users_string( $activity_id );
+		$favorited_users = array_reduce( $favorited_users, function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
+			if ( $user_id != $current_user_id ) {
+				$user_data = get_userdata( $user_id );
+				if ( strpos( $like_text, $user_data->display_name ) === false ) {
+					$carry .= $user_data->display_name . '&#10;';
+				}
+			}
+
+			return $carry;
+		} );
+	}
 
 	return $favorited_users;
 }

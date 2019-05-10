@@ -750,6 +750,8 @@ window.bp = window.bp || {};
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
+				this.toggleMultiMediaOptions(form,target);
+
 				// ?? hide and display none..
 				//form.css( 'display', 'none' );
 				form.removeClass( 'root' );
@@ -1080,6 +1082,57 @@ window.bp = window.bp || {};
 			}
 
 			$gifPickerEl.toggleClass('open');
+		},
+
+		toggleMultiMediaOptions: function(form,target) {
+			if (!_.isUndefined(BP_Nouveau.media)) {
+
+				if (target.closest( 'li' ).hasClass('groups')) {
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.group_media === false) {
+						form.find('.ac-reply-toolbar .post-media').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-media').show();
+					}
+
+					// check gif is enable in groups or not
+					if (BP_Nouveau.media.gif.groups === false) {
+						form.find('.ac-reply-toolbar .post-gif').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-gif').show();
+					}
+
+					// check emoji is enable in groups or not
+					if (BP_Nouveau.media.emoji.groups === false) {
+						form.find('.ac-reply-toolbar .post-emoji').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-emoji').show();
+					}
+				} else {
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.profile_media === false) {
+						form.find('.ac-reply-toolbar .post-media').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-media').show();
+					}
+
+					// check gif is enable in groups or not
+					if (BP_Nouveau.media.gif.profile === false) {
+						form.find('.ac-reply-toolbar .post-gif').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-gif').show();
+					}
+
+					// check emoji is enable in groups or not
+					if (BP_Nouveau.media.emoji.profile === false) {
+						form.find('.ac-reply-toolbar .post-emoji').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-emoji').show();
+					}
+				}
+			}
 		}
 	};
 
