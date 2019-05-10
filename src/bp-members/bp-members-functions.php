@@ -513,9 +513,13 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		return false;
 	}
 
+
 	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id());
 	if ( empty( $list_fields ) ) {
 		$full_name = get_the_author_meta( 'display_name', $user_id );
+		if ( empty( $full_name ) ) {
+		    $full_name = get_the_author_meta( 'nickname', $user_id );
+        }
 	} else {
 		$last_name_field_id = bp_xprofile_lastname_field_id();
 		if ( in_array( $last_name_field_id, $list_fields ) ) {
