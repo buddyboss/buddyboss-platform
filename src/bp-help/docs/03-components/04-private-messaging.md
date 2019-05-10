@@ -11,16 +11,16 @@ Allow your users to talk to each other directly and in private. Not just limited
 4.  Selected message content
 5.  Reply to current message
 
-[![](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/messages-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/messages.jpg)
+![](https://www.dropbox.com/s/z6whdoioumm48m9/messages.jpg?raw=1)
 
 Send a new message to one or more members.
 
-[![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatemessage3-1-1024x610.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatemessage3-1.jpg)
+![](https://www.dropbox.com/s/e3djied5mlx6xil/privatemessage3-1.jpg?raw=1)
 
 Message via the member directory
 
-[![message via member directory](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatemessage1-1024x563.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatemessage1.jpg)
+![message via member directory](https://www.dropbox.com/s/3sdkddsptlr0foj/privatemessage1.jpg?raw=1)
 
 Message via the member's profile page
 
-[![message via member's profile](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatemessage2-1024x697.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatemessage2.jpg)
+![message via member's profile](https://www.dropbox.com/s/wknronb4kd08eky/privatemessage2.jpg?raw=1)

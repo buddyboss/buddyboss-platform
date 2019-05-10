@@ -7,7 +7,7 @@ BuddyBoss -> Components<a name="buddyBoss-components"></a>
 
 Required components include member profiles and profile fields because what is a social network without it's members. Default components include account settings, notifications and activity feed which are the basic foundation of a social network. You can selectively enable or disable any of the components at any time. Any content created by each component will be hidden upon disabling of the component, once enabled the content will display again.
 
-[![buddyboss components](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosscomponents-1024x713.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosscomponents.jpg)
+![buddyboss components](https://www.dropbox.com/s/up7nelhsp3tpzwm/buddybosscomponents.jpg?raw=1)
 
 BuddyBoss -> Pages<a name="buddyBoss-pages"></a>
 ------------------
@@ -16,7 +16,7 @@ Required pages are automatically generated for the BuddyBoss components you enab
 
 To enable site registration navigate to Dashboard -> Settings -> General. Once this setting is enabled the register and activation pages will automatically be generated.
 
-[![buddyboss pages](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosspages-1024x830.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosspages.jpg)
+![buddyboss pages](https://www.dropbox.com/s/339spmktem2mfdg/buddybosspages.jpg?raw=1)
 
 BuddyBoss Settings<a name="buddyboss-settings"></a>
 ------------------

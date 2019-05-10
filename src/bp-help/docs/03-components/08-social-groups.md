@@ -31,7 +31,7 @@ Groups Directory<a name="groups-directory"></a>
 6.  Membership status (Join Group, Request Membership, You're a Member/Leave Group).
 7.  Membership status listed on every group. Click "You're a member" to display the Leave group option. Click "Leave Group" to remove membership.
 
-[![groups](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Groups-–-BuddyBoss-Platform-1-1-1024x607.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Groups-–-BuddyBoss-Platform-1-1.jpg)
+![groups](https://www.dropbox.com/s/rhku3v1dvuwjyk4/Groups-%E2%80%93-BuddyBoss-Platform-1-1.jpg?raw=1)
 
 Single Group<a name="single-group"></a>
 ------------
@@ -52,7 +52,7 @@ Single Group<a name="single-group"></a>
 9.  Search group activity
 10.  All group activity including likes and comments
 
-[![single group](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/singlegroup-1024x752.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/singlegroup.jpg)
+![single group](https://www.dropbox.com/s/ebe9jct9ij63ee9/singlegroup.jpg?raw=1)
 
 Group Members<a name="group-members"></a>
 -------------
@@ -65,7 +65,7 @@ Group Members<a name="group-members"></a>
 6.  List of Group Moderators
 7.  List of Group Members
 
-[![group directory](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdirectory-964x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdirectory.jpg)
+![group directory](https://www.dropbox.com/s/8rl9biizf3jj41f/groupdirectory.jpg?raw=1)
 
 Group Discussion Forum<a name="group-discussion-forum"></a>
 ----------------------
@@ -80,7 +80,7 @@ Each group can create its own discussion forum. Several groups can optionally be
 6.  Topic last update
 7.  Discussion parent forum - groups can be associated with more than one forum
 
-[![group discussion forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdiscussions-1024x667.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupdiscussions.jpg)
+![group discussion forum](https://www.dropbox.com/s/2yy34z04s5t7e4s/groupdiscussions.jpg?raw=1)
 
 Group Invites<a name="group-invites"></a>
 -------------
@@ -91,7 +91,7 @@ The ability for group members to send invites must be enabled by the group organ
 2.  Search for members.
 3.  Select member(s) to send invitation.
 
-![group invite](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupsendinvite-1024x725.jpg)
+![group invite](https://www.dropbox.com/s/4avl8hcg9aznx4u/groupsendinvite-1024x725.jpg?raw=1)
 
 [embed] https://vimeo.com/320530340 [/embed]
 
@@ -139,31 +139,31 @@ By default any member can create a group. If you want your site to have a set nu
 
 If you don't want members to use group avatars then disable this default option. To add/change the group photo simply click Manage > Photo > Select your file.
 
-[![group photo upload](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupphoto-1024x715.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupphoto.jpg)
+![group photo upload](https://www.dropbox.com/s/f5g7gpklwppuqlr/groupphoto.jpg?raw=1)
 
 ### Group Cover Image Uploads<a name="group-cover-image-uploads"></a>
 
 If you don't want members to use group cover images then disable this default option. To add/change the group cover photo click Manage > Cover Photo > Select your file.
 
-[![Group Cover Image Uploads](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupcoverimage-1024x705.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupcoverimage.jpg)
+![Group Cover Image Uploads](https://www.dropbox.com/s/ei6qa1jyy20u7q9/groupcoverimage.jpg?raw=1)
 
 ### Group Types<a name="group-types"></a>
 
 If this option is ENABLED then members can associate their group with a specific group type. Only the site admin can create group types.
 
-[![group type](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouptype-749x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouptype.jpg)
+![group type](https://www.dropbox.com/s/wbodd39aw0lusn4/grouptype-749x1024.jpg?raw=1)
 
 ### Group Auto-join<a name="group-auto-join"></a>
 
 Allow specific profile types to auto join groups. NOTE: For this to function you must first enable Profile Types from the Dashboard BuddyBoss Profiles Settings.
 
-[![group auto join](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupautojoin-875x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupautojoin.jpg)
+![group auto join](https://www.dropbox.com/s/4hiem7mo04ibldx/groupautojoin.jpg?raw=1)
 
 ### Group Hierarchies<a name="group-hierarchies"></a>
 
 Allow groups to have parent groups and subgroups.
 
-[![Group Hierarchies](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouphierarchies-687x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/grouphierarchies.jpg)
+![Group Hierarchies](https://www.dropbox.com/s/aisthhij6nprckf/grouphierarchies.jpg?raw=1)
 
 ### Group Restrict Invite<a name="group-restrict-invite"></a>
 

@@ -46,7 +46,7 @@ Forums Directory<a name="forums-directory"></a>
 
 The forum directory page lists all public group forums and standalone forums. Listing of private and hidden forums are based on member permissions and memberships.
 
-[![forums directory](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsdirectory-1024x496.png)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsdirectory.png)
+![forums directory](https://www.dropbox.com/s/7077bn2crgc523f/forumsdirectory.png?raw=1)
 
 If you click on a forum attached to a group you will be taken the the group forum discussion page. If you click on a standalone forum then you will be taken to the single forum page.
 
@@ -60,14 +60,14 @@ Single Forum<a name="single-forum"></a>
 
 Once you enter a forum you can view all discussions. Click on the discussion title to see the entire discussion. You may also create a new discussion based on member permissions.
 
-[![single forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/standaloneforum-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/standaloneforum.jpg)
+![single forum](https://www.dropbox.com/s/epl7vswagy4a6lv/standaloneforum.jpg?raw=1)
 
 Settings<a name="settings"></a>
 --------
 
 The following settings help admins moderate forums. Customize these settings required for your community.
 
-[![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsettings-434x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsettings.jpg)
+![](https://www.dropbox.com/s/6n2p5krm8unr4a5/forumsettings.jpg?raw=1)
 
 ### Disallow Editing<a name="disallow-editing"></a>
 
@@ -88,19 +88,19 @@ Features<a name="features"></a>
 
 Give users and admins the ability to track revisions to forum discussions.
 
-[![forum revisions](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumrevision.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumrevision.jpg)
+![forum revisions](https://www.dropbox.com/s/f0ozdx3ictygrzi/forumrevision.jpg?raw=1)
 
 ### Likes<a name="likes"></a>
 
 Allow members to like discussions and replies. This will be posted on the members profile for all members to see.
 
-[![forum likes](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumlike.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumlike.jpg)
+![forum likes](https://www.dropbox.com/s/alzer655jh1fo2f/forumlike.jpg?raw=1)
 
 ### Subscriptions<a name="subscriptions"></a>
 
 Allow members to subscribe to discussions and receive emails when a new reply is posted. This will be posted on the members profile only the member can see.
 
-[![subscribe to forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsubscribe-1024x230.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsubscribe.jpg)
+![subscribe to forum](https://www.dropbox.com/s/sd0xq0kwhw062cl/forumsubscribe.jpg?raw=1)
 
 ### Discussion Tags<a name="discussion-tags"></a>
 
@@ -110,25 +110,25 @@ Discussion tags are used to order, sort and search for discussions. These are hi
 
 This form will search forums, topics and replies within your forums.
 
-[![forum search](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumssearch.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumssearch.jpg)
+![forum search](https://www.dropbox.com/s/qcc8onu0iy1z9ha/forumssearch.jpg?raw=1)
 
 ### Post Formatting<a name="post-formatting"></a>
 
 Add a toolbar and buttons to the textarea to help members neatly format discussions and replies.
 
-[![forum post formatting](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumpostformatting.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumpostformatting.jpg)
+![forum post formatting](https://www.dropbox.com/s/ii4p1hz88isrki2/forumpostformatting.jpg?raw=1)
 
 ### Auto-embed Links<a name="auto-embed-links"></a>
 
 Enable members to embed link from media hosting sites like YouTube, FaceBook, Twitter and more simply by pasting the link into a topic or reply.
 
-[![forum embed media links](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumembed-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumembed.jpg)
+![forum embed media links](https://www.dropbox.com/s/iea5yrhdhcfqjf8/forumembed.jpg?raw=1)
 
 ### Reply Threading<a name="reply-threading"></a>
 
 Allow members to reply to discussions, providing context in a threaded view.
 
-[![forum reply threading](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumthreaded-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumthreaded.jpg)
+![forum reply threading](https://www.dropbox.com/s/1lasg3jn8o6muv7/forumthreaded-1024x469.jpg?raw=1)
 
 Discussions and Replies Per Page<a name="discussions-and-replies-per-page"></a>
 --------------------------------
@@ -167,24 +167,24 @@ Widgets<a name="widgets"></a>
 
 (Forums) Discussion Views List - A list of registered optional discussion views.
 
-![forum discussion views list widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetdiscussionview.jpg)
+![forum discussion views list widget](https://www.dropbox.com/s/7neqylbn8q3afdk/forumwidgetdiscussionview.jpg?raw=1)
 
 (Forums) Forum Search Form - The Forums forum search form.
 
-![search forums widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetsearch.jpg)
+![search forums widget](https://www.dropbox.com/s/3n1sv9qdonn7961/forumwidgetsearch.jpg?raw=1)
 
 (Forums) Forums List - A list of forums with an option to set the parent.
 
-![forums list widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetforumslist.jpg)
+![forums list widget](https://www.dropbox.com/s/psjpjzqm71553h6/forumwidgetforumslist.jpg?raw=1)
 
 (Forums) Recent Replies - A list of the most recent replies.
 
-![forum recent replies widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetrecentreplies.jpg)
+![forum recent replies widget](https://www.dropbox.com/s/174slqfe7kp2l95/forumwidgetrecentreplies.jpg?raw=1)
 
 (Forums) Recent Discussions - A list of recent discussions, sorted by popularity or freshness.
 
-![forum recent discussions widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetrecentdiscussions.jpg)
+![forum recent discussions widget](https://www.dropbox.com/s/zxumlnw8cty0v54/forumwidgetrecentdiscussions.jpg?raw=1)
 
 (Forums) Statistics - Some statistics from your forum.
 
-![forum statistics widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetforumstatistics.jpg)
+![forum statistics widget](https://www.dropbox.com/s/xsdt05dp1w6acki/forumwidgetforumstatistics.jpg?raw=1)
