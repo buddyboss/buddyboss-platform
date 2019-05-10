@@ -344,19 +344,21 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
-				$threads->threads[ $i ]['recipients'][] = array(
-					'avatar' => esc_url( bp_core_fetch_avatar( array(
-						'item_id' => $recipient->user_id,
-						'object'  => 'user',
-						'type'    => 'thumb',
-						'width'   => BP_AVATAR_THUMB_WIDTH,
-						'height'  => BP_AVATAR_THUMB_HEIGHT,
-						'html'    => false,
-					) ) ),
-					'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_you' => $recipient->user_id == bp_loggedin_user_id()
-				);
+				if ( empty( $recipient->is_deleted ) ) {
+					$threads->threads[ $i ]['recipients'][] = array(
+						'avatar' => esc_url( bp_core_fetch_avatar( array(
+							'item_id' => $recipient->user_id,
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'width'   => BP_AVATAR_THUMB_WIDTH,
+							'height'  => BP_AVATAR_THUMB_HEIGHT,
+							'html'    => false,
+						) ) ),
+						'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_you' => $recipient->user_id == bp_loggedin_user_id()
+					);
+				}
 			}
 		}
 
@@ -534,19 +536,21 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
 			foreach ( $thread_template->thread->recipients as $recipient ) {
-				$thread->thread['recipients'][] = array(
-					'avatar' => esc_url( bp_core_fetch_avatar( array(
-						'item_id' => $recipient->user_id,
-						'object'  => 'user',
-						'type'    => 'thumb',
-						'width'   => BP_AVATAR_THUMB_WIDTH,
-						'height'  => BP_AVATAR_THUMB_HEIGHT,
-						'html'    => false,
-					) ) ),
-					'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
-					'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
-					'is_you' => $recipient->user_id == bp_loggedin_user_id()
-				);
+				if ( empty( $recipient->is_deleted ) ) {
+					$thread->thread['recipients'][] = array(
+						'avatar' => esc_url( bp_core_fetch_avatar( array(
+							'item_id' => $recipient->user_id,
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'width'   => BP_AVATAR_THUMB_WIDTH,
+							'height'  => BP_AVATAR_THUMB_HEIGHT,
+							'html'    => false,
+						) ) ),
+						'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
+						'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
+						'is_you' => $recipient->user_id == bp_loggedin_user_id()
+					);
+				}
 			}
 		}
 	}
