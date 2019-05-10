@@ -9,7 +9,7 @@
             </div>
 		<?php endif; ?>
 
-		<?php if ( bp_is_gif_support_enabled() ): ?>
+		<?php if ( bp_is_messages_gif_support_enabled() ): ?>
             <div class="post-elements-buttons-item post-gif">
                 <div class="gif-media-search">
                     <a href="#" id="messages-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>">
@@ -20,7 +20,7 @@
             </div>
 		<?php endif; ?>
 
-	    <?php if ( bp_is_emoji_support_enabled() ): ?>
+	    <?php if ( bp_is_messages_emoji_support_enabled() ): ?>
          <div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip="<?php _e('Insert an emoji', 'buddyboss'); ?>"></div>
 		<?php endif; ?>
 

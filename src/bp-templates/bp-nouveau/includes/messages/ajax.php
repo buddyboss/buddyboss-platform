@@ -219,7 +219,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && bp_is_gif_support_enabled() ) {
+	if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
 		$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 		if ( ! empty( $gif_data ) ) {
@@ -604,7 +604,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			}
 		}
 
-		if ( bp_is_active( 'media' ) && bp_is_gif_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
 			$gif_data = bp_messages_get_meta( bp_get_the_thread_message_id(), '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
