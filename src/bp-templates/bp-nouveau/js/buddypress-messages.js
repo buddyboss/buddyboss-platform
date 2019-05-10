@@ -1232,10 +1232,19 @@ window.bp = window.bp || {};
 				// Reset the model
 				self.model.set( self.resetModel );
 
-				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+				//bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 
 				// Remove tinyMCE
 				bp.Nouveau.Messages.removeTinyMCE();
+
+				//media modal images remove or save option if saved
+				var medias = self.model.get('media');
+				if ( typeof medias !== 'undefined' && medias.length ) {
+					for( var k = 0; k < medias.length; k++ ) {
+						medias[k].saved = true;
+					}
+					self.model.set('media',medias);
+				}
 
 				// clear message attachments and toolbar
 				if (self.messagesAttachments !== false){
