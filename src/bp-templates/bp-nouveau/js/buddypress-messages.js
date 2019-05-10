@@ -1690,6 +1690,10 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Messages.threads.doAction( action, this.model.get( 'id' ), options ).done( function( response ) {
+
+				// Remove previous feedback.
+				bp.Nouveau.Messages.removeFeedback();
+
 				// Remove all views
 				if ( 'delete' === action ) {
 					//bp.Nouveau.Messages.clearViews();
@@ -1703,13 +1707,11 @@ window.bp = window.bp || {};
 					}
 				} else if ( response.messages ) {
 					self.model.set( _.first( response.messages ) );
+
+					// Display the feedback
+					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
 
-				// Remove previous feedback.
-				bp.Nouveau.Messages.removeFeedback();
-
-				// Display the feedback
-				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			} ).fail( function( response ) {
 				// Remove previous feedback.
 				bp.Nouveau.Messages.removeFeedback();
