@@ -25,7 +25,7 @@ Every translator program requires a POT file to read labels and messages that ca
 
 The most popular translating program is [Poedit](https://poedit.net/download). This program is open source for all major operating systems. Poedit is simple and easy to use. After installation open the program.
 
-[![poedit](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/image-1024x846.png)](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/image.png)
+![poedit](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/image-1024x846.png)
 
 Click on the option to Create new translation.
 
@@ -39,7 +39,7 @@ Select your translation language.
 
 At this point you are ready to start translating each text by entering text into the translation field on the bottom of the program screen.
 
-[![poedit loaded pot file](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/image-4-1024x846.png)](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/image-4.png)
+![](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/image-4-1024x846.png)
 
 Once you translate all fields you will need to save your work as buddyboss-platform-{locale}.po where {locale} is your language locale. Then compile to MO. For example, the locale for German is `de_DE`. From the code example above the German MO and PO files should be named `buddyboss-platform-de_DE.mo` and `buddyboss-platform-de_DE.po`.
 
