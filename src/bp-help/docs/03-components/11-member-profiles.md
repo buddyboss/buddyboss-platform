@@ -15,7 +15,7 @@ Everything in a community website revolves around its members.
     *   [bp_docs_link text="Import Profile Types" slug="back-end-administration/tools/import-profile-types.md"] - Import previously created profile types AKA member types
 *   [Profile Search](#profile-search) - Enable advanced profile search on the members directory
 
-[![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
+![user profile buddyboss settings](https://www.dropbox.com/s/clgbjilp99i5ur8/userprofilesbuddybosssettings.jpg?raw=1)
 
 Profile Settings<a name="profile-settings"></a>
 ----------------
@@ -42,7 +42,7 @@ Allow registered members to upload cover photos.
 
 Display each member's profile type on their profile page.
 
-[![display on profiles](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/displayonprofiles-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/displayonprofiles.jpg)
+![display on profiles](https://www.dropbox.com/s/a0ar4t54m2mt7rf/displayonprofiles.jpg?raw=1)
 
 Profile Types<a name="profile-types"></a>
 -------------

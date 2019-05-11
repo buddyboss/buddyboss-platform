@@ -43,5 +43,3 @@ Control the settings for social group's reports. Just like the reports for Learn
     *   Moderators
     *   Members
 *   Report Results Per Page
-
-[https://trello.com/c/FPjWE30z/93-learndash-two-way-sync](https://trello.com/c/FPjWE30z/93-learndash-two-way-sync)
