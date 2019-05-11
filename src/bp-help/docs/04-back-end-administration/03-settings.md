@@ -8,23 +8,23 @@ This is the heart of all the features of BuddyBoss Platform. Enable the features
 *   **Account Deletion** - Allow registered members to delete their own accounts
 *   **Private Network** - Block entire website from logged out users (but allow Login and Register)
 
-[![buddyboss general settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingsgeneral-1024x370.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingsgeneral.jpg)
+![buddyboss general settings](https://www.dropbox.com/s/6lmb0du9717ova6/buddybosssettingsgeneral.jpg?raw=1)
 
 ### Toolbar
 
-[![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/toolbar-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/toolbar.jpg)
+![](https://www.dropbox.com/s/k6hv9849az5mzpg/toolbar.jpg?raw=1)
 
 ### Account Deletion
 
 Admins always have access to delete member accounts.
 
-[![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/accountdeletion-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/accountdeletion.jpg)
+![](https://www.dropbox.com/s/ob2n7i31g4mcesm/accountdeletion.jpg?raw=1)
 
 ### Private Network
 
 Anyone not logged in will be redirected to the login/register page when attempting to access any page on your website.
 
-[![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatenetwork-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privatenetwork.jpg)
+![](https://www.dropbox.com/s/ya5cw7fl99d2nqy/privatenetwork.jpg?raw=1)
 
 ### Profiles
 
@@ -45,7 +45,7 @@ Anyone not logged in will be redirected to the login/register page when attempti
     *   [bp_docs_link text="Display on Profiles" slug="components/member-profiles.md" anchors="display-on-profiles"] - Display each member's profile type on their profile page
     *   [bp_docs_link text="Import Profile Types" slug="back-end-administration/tools/import-profile-types.md"] - Import previously created profile types AKA member types
 
-[![user profile buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings-1024x675.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userprofilesbuddybosssettings.jpg)
+![user profile buddyboss settings](https://www.dropbox.com/s/clgbjilp99i5ur8/userprofilesbuddybosssettings.jpg?raw=1)
 
 ### Activity
 *	Activity Settings
@@ -59,14 +59,14 @@ Anyone not logged in will be redirected to the login/register page when attempti
 	*   [bp_docs_link text="Blog Posts" slug="components/activity-feeds.md" anchors="blog-posts"] – When users publish new blog posts, show them in the activity feed  
 	*   [bp_docs_link text="Post Comments" slug="components/activity-feeds.md" anchors="post-comments"] – Allow activity stream commenting on blog posts, forum discussions and topics  
 
-[![activity feeds buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings-1024x930.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings.jpg)
+![activity feeds buddyboss settings](https://www.dropbox.com/s/muk2a4tpuxqc6de/activityfeedsbuddybosssettings.jpg?raw=1)
 
 ### Invites
 
 *   [bp_docs_link text="Email Subject" slug="components/email-invites.md" anchors="buddyboss-settings"] - Allow users to customize the invite email subject.
 *   [bp_docs_link text="Email Content" slug="components/email-invites.md" anchors="buddyboss-settings"] - Allow users to customize the invite email body content.
 
-[![user invites buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userinvitesbuddybosssettings-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userinvitesbuddybosssettings.jpg)
+![user invites buddyboss settings](https://www.dropbox.com/s/ti3m2pf0ncse5x3/userinvitesbuddybosssettings.jpg?raw=1)
 
 Groups
 ------
@@ -80,13 +80,13 @@ Groups
 *   [bp_docs_link text="Group Hierarchies" slug="components/social-groups.md" anchors="group-hierarchies"] - Allow groups to have parent groups and subgroups
     *   Group Restrict Invite - Restrict group invites to members who exist in a parent group.
 
-[![group buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupbuddybosssettings-1024x905.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupbuddybosssettings.jpg)
+![group buddyboss settings](https://www.dropbox.com/s/n6z30zsp33ixhv9/groupbuddybosssettings-1024x905.jpg?raw=1)
 
 ### Connections
 
 *   [bp_docs_link text="Messaging" slug="components/member-connections.md" anchors="connection-settings"] \- Require users to be connected before they can message each other.
 
-[![user messages buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userconnectionsbuddybosssettings-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/userconnectionsbuddybosssettings.jpg)
+![user messages buddyboss settings](https://www.dropbox.com/s/h9zoija4g3pu0ip/userconnectionsbuddybosssettings.jpg?raw=1)
 
 ### Forums
 
@@ -129,7 +129,7 @@ Groups
     *   Enable Group Forums - Allow Social Groups to have their own forums
     *   Group Forums Parent - Select a forum as the parent for all group forums or use the Forums Directory as the parent.
 
-[![buddyboss forum settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsettings-1-596x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumsettings-1.jpg)
+![buddyboss forum settings](https://www.dropbox.com/s/y3mwpfx52wh6qbc/forumsettings-1.jpg?raw=1)
 
 ### Network Search
 
@@ -163,7 +163,7 @@ BuddyBoss Platform allows you to unify the searching of all content within your 
 *   Enable Autocomplete - Enable autocomplete drop-down when typing into search inputs
 *   Number of Results - Limit the number of results
 
-[![buddyboss search settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingssearch-588x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingssearch.jpg)
+![buddyboss search settings](https://www.dropbox.com/s/87hwk7an0xivg88/buddybosssettingssearch.jpg?raw=1)
 
 ### Credits
 
@@ -171,4 +171,4 @@ BuddyBoss Platform allows you to unify the searching of all content within your 
 *   Special thanks to the BuddyPress contributors
 *   Special thanks to open source projects
 
-![buddyboss settings credits](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosssettingscredits.jpg)
+![buddyboss settings credits](https://www.dropbox.com/s/99n9e1xobqtamcm/buddybosssettingscredits.jpg?raw=1)

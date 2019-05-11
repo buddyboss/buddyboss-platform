@@ -41,7 +41,7 @@ This screen displays the individual forums on your site.
     *   Date and time forum was created
     *   Time since last post within forum
 
-[![forums dashboard](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/forumsdashboard-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/forumsdashboard.jpg)
+![forums dashboard](https://www.dropbox.com/s/fc4e270xfuncvwa/forumsdashboard.jpg?raw=1)
 
 Discussions<a name="discussions"></a>
 -----------
@@ -74,7 +74,7 @@ This screen displays the individual discussions on your site.
     *   Created
     *   Last Post
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussions-1024x520.jpg)
+![](https://www.dropbox.com/s/m5x2m8coixsatwn/discussions-1024x520.jpg?raw=1)
 
 Discussion Tags<a name="discussion-tags"></a>
 ---------------
@@ -94,7 +94,7 @@ This screen display the discussion tags on your site.
     *   Slug - URL-friendly name
     *   Count - Number of discussion with this tag
 
-[![discussion tags](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussiontags-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/discussiontags.jpg)
+![discussion tags](https://www.dropbox.com/s/fiemywodqigaf0v/discussiontags.jpg?raw=1)
 
 Replies<a name="replies"></a>
 -------
@@ -118,7 +118,7 @@ This screen provides access to all of your discussion replies.
     *   Author
     *   Created
 
-[![forum replies](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/replies-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/replies.jpg)
+![forum replies](https://www.dropbox.com/s/d0ufzypkamc24cq/replies.jpg?raw=1)
 
 Widgets<a name="widgets"></a>
 -------
@@ -127,24 +127,24 @@ Widgets are configured through Dashboard -> Appearance -> Widgets
 
 (Forums) Discussion Views List - A list of registered optional discussion views.
 
-![forum discussion views list widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetdiscussionview.jpg)
+![forum discussion views list widget](https://www.dropbox.com/s/7neqylbn8q3afdk/forumwidgetdiscussionview.jpg?raw=1)
 
 (Forums) Forum Search Form - The Forums forum search form.
 
-![search forums widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetsearch.jpg)
+![search forums widget](https://www.dropbox.com/s/3n1sv9qdonn7961/forumwidgetsearch.jpg?raw=1)
 
 (Forums) Forums List - A list of forums with an option to set the parent.
 
-![forums list widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetforumslist.jpg)
+![forums list widget](https://www.dropbox.com/s/psjpjzqm71553h6/forumwidgetforumslist.jpg?raw=1)
 
 (Forums) Recent Replies - A list of the most recent replies.
 
-![forum recent replies widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetrecentreplies.jpg)
+![forum recent replies widget](https://www.dropbox.com/s/174slqfe7kp2l95/forumwidgetrecentreplies.jpg?raw=1)
 
 (Forums) Recent Discussions - A list of recent discussions, sorted by popularity or freshness.
 
-![forum recent discussions widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetrecentdiscussions.jpg)
+![forum recent discussions widget](https://www.dropbox.com/s/zxumlnw8cty0v54/forumwidgetrecentdiscussions.jpg?raw=1)
 
 (Forums) Statistics - Some statistics from your forum.
 
-![forum statistics widget](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/forumwidgetforumstatistics.jpg)
+![forum statistics widget](https://www.dropbox.com/s/xsdt05dp1w6acki/forumwidgetforumstatistics.jpg?raw=1)

@@ -14,4 +14,4 @@ BuddyBoss Platform provides admin dashboard panels to help you edit existing for
 5.  Publish - Same settings as any other type of WordPress post
 6.  Featured Image - Select an image to represent the forum
 
-[![new forum](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newforum-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newforum.jpg)
+![new forum](https://www.dropbox.com/s/sf3a68dspaqu99k/newforum.jpg?raw=1)

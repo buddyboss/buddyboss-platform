@@ -26,4 +26,4 @@ NOTE: Some of these tools create substantial database resources. Avoid running m
 *   Remap existing users to default forum roles
 *   Remove and restore Wordpress default role capabilities
 
-[![repair forums](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/repairforums-1024x692.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/repairforums.jpg)
+![repair forums](https://www.dropbox.com/s/otmmfuqh9d0om1g/repairforums.jpg?raw=1)

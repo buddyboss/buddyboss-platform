@@ -14,4 +14,4 @@ BuddyBoss Platform provides admin dashboard panels to help you edit existing gro
 10.  Publish
 11.  Post Attributes
 
-[![add/edit group type](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newgrouptype-1024x1008.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newgrouptype.jpg)
+![add/edit group type](https://www.dropbox.com/s/4qckzzpz7ndbj78/newgrouptype.jpg?raw=1)

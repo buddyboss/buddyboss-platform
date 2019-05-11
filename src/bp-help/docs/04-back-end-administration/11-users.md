@@ -16,7 +16,7 @@ All Users<a name="all-users"></a>
 4.  Pagination (if more than one page)
 5.  User List
 
-[![all users](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/allusers-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/allusers.jpg)
+![all users](https://www.dropbox.com/s/dmdyjh5dmbez8t6/allusers.jpg?raw=1)
 
 Add New<a name="add-new"></a>
 -------
@@ -32,14 +32,14 @@ This is the WordPress default add user page. See the [WordPress Codex](https://c
 *   Send User Notification - Send the new user an email about their account.
 *   [Role](https://codex.wordpress.org/Roles_and_Capabilities#Roles) - Subscriber, Contributor, Author, Editor, Administrator
 
-[![add new user](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewuser-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewuser.jpg)
+![add new user](https://www.dropbox.com/s/zf1x6d4grvbxnem/addnewuser.jpg?raw=1)
 
 Your Profile<a name="your-profile"></a>
 ------------
 
 If the front-end profile editing is disallowed then this is the only interface for users to edit their profile. The first tab "Profile" is the default from WordPress. The Extended Profile is extended from BuddyBoss Platform and contains all admin defined field sets.
 
-[![your profile](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/yourprofile-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/yourprofile.jpg)
+![your profile](https://www.dropbox.com/s/210j7yjerpb51f3/yourprofile.jpg?raw=1)
 
 Manage Signups<a name="manage-signups"></a>
 --------------
@@ -59,6 +59,6 @@ Admins have the option to have all users shown a site-wide notice.
 *   Add New Notice - Enter Subject and Content then click Publish Notice
 *   Notice List - A list of previous notices with option to Deactivate Notice or Delete Notice.
 
-[![site notice backend](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/sitenoticebackend-1024x562.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/sitenoticebackend.jpg)
+![site notice backend](https://www.dropbox.com/s/4dq2f0ncxgzv1kf/sitenoticebackend.jpg?raw=1)
 
-[![site notice frontend](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/sitenoticefrontend-1024x499.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/sitenoticefrontend.jpg)
+![site notice frontend](https://www.dropbox.com/s/q1ipcerxbas9cc1/sitenoticefrontend.jpg?raw=1)

@@ -25,7 +25,7 @@ Sections<a name="sections"></a>
         
     *   Group Type (if enabled)
 
-[![group admin panel](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupadminpanel-1024x567.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupadminpanel.jpg)
+![group admin panel](https://www.dropbox.com/s/w5woosa68z1o9w8/groupadminpanel.jpg?raw=1)
 
 Single Group Management Panel<a name="single-group-management-panel"></a>
 -----------------------------
@@ -53,4 +53,4 @@ BuddyBoss Platform provides admin dashboard panels to help you manage individual
     *   Group Forum Options
     *   Manually select connected Group Forum. Several groups can be connected to the same Group Forum.
 
-[![Edit Group Admin Panel](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupadminpaneledit-1024x1012.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupadminpaneledit.jpg)
+![Edit Group Admin Panel](https://www.dropbox.com/s/alj337nsbb2z45i/groupadminpaneledit.jpg?raw=1)

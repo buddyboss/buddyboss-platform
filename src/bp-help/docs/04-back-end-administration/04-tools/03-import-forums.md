@@ -48,4 +48,4 @@ Information about your previous forums database so that they can be converted. 
 
 NOTE: After importing forums you will need to use the [Repair Tools](#repair-forums) to correct stats.
 
-[![import forums](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/importforums-1024x804.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/importforums.jpg)
+![import forums](https://www.dropbox.com/s/vlw897fb048flhp/importforums.jpg?raw=1)
