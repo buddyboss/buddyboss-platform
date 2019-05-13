@@ -11,10 +11,12 @@
 		multiple="multiple"
 		style="width: 100%"
 	>
-		<?php if ( ! empty( $_GET['r'] ) ): ?>
-			<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected>
-				<?php echo bp_core_get_user_displayname( get_user_by( 'login', $_GET['r'] )->ID ); ?>
-			</option>
+		<?php if ( ! empty( $_GET['r'] ) ):
+
+			$user = bp_get_user_by_nickname( $_GET['r'] );
+			$name = bp_core_get_user_displayname( $user->ID );
+			?>
+			<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo get_user_by( 'login', $_GET['r'] )->ID; ?>"><?php echo esc_html( $name ); ?></option>
 		<?php endif; ?>
 	</select>
 
