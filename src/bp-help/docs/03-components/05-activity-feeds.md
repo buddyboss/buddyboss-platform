@@ -2,11 +2,11 @@
 
 Global, personal, and group activity feeds with threaded commenting, direct posting, like activity and @mentions, all with email notification support.
 
-[![user activity feed](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeed1-1024x818.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeed1.jpg)
+![user activity feed](https://www.dropbox.com/s/qrsej579wcqrsq4/activityfeed1-1024x818.jpg?raw=1)
 
 Neatly formatted emails are completely customizable.
 
-[![user activity email](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeed2.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeed2.jpg)
+![user activity email](https://www.dropbox.com/s/qwa7usunbwr49ao/activityfeed2.jpg?raw=1)
 
 BuddyBoss Settings<a name="buddyboss-settings"></a>
 ------------------
@@ -33,13 +33,13 @@ BuddyBoss Settings<a name="buddyboss-settings"></a>
     *   [Blog Posts](https://www.buddyboss.com/resources/wp-admin/post.php?post=74&action=edit#blog-posts) - Automatically publish new blog posts into the activity feed
 *   Custom Post Types - These are post types created by third-party plugins or through custom code.
 
-[![activity feeds buddyboss settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings-1024x930.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/activityfeedsbuddybosssettings.jpg)
+![activity feeds buddyboss settings](https://www.dropbox.com/s/muk2a4tpuxqc6de/activityfeedsbuddybosssettings.jpg?raw=1)
 
 ### Post Comments<a name="post-comments"></a>
 
 This option allows members to post comments an blog post activities on members timelines.
 
-[![blog post comment activity](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/blogpostcommentactivity-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/blogpostcommentactivity.jpg)
+![blog post comment activity](https://www.dropbox.com/s/s5rp0o6awyl8pof/blogpostcommentactivity.jpg?raw=1)
 
 ### Activity auto-refresh<a name="activity-auto-refresh"></a>
 
@@ -51,38 +51,38 @@ This option will auto load new activity at the top of your site News Feed page. 
 
 Your Members are not required to create connections with other members to follow their activity. Either in conjunction with connections or standalone you can activate following members which does not require any permissions by the member being followed.
 
-[![follow member](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/follow-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/follow.jpg)
+![follow member](https://www.dropbox.com/s/cy2sqvjf9bccfyo/follow.jpg?raw=1)
 
 Likes<a name="likes"></a>
 -----
 
 This option adds a small thumb up icon and the ability to like/unlike activity. Members will be shown who has liked the activity, when too many members like the activity it will be truncated. Simply hover over the text of who liked your activity to display an overlay of who else liked the activity.
 
-[![likes](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/likes-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/likes.jpg)
+![likes](https://www.dropbox.com/s/5rl17p06dqff1j6/likes.jpg?raw=1)
 
 Link Previews<a name="link-previews"></a>
 -------------
 
 This option will automatically format web content from over 35 platforms with a preview image, if available, and content excerpt. For a complete list please visit [WordPress Codex Embeds](https://codex.wordpress.org/Embeds#Okay.2C_So_What_Sites_Can_I_Embed_From.3F).
 
-[![link preview](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/linkpreview-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/linkpreview.jpg)
+![link preview](https://www.dropbox.com/s/55hal08eeyfigcn/linkpreview.jpg?raw=1)
 
 Emoji<a name="emoji"></a>
 -----
 
 This option will allow members to communicate using a growing library of over 2,000 emoji built into WordPress. Emoji can be posted by themselves or within other content. Compatible with most mobile devices.
 
-[![emoji](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/emoji-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/emoji.jpg)
+![emoji](https://www.dropbox.com/s/hmj0sir1kra5d4k/emoji.jpg?raw=1)
 
 GIFs<a name="gifs"></a>
 ----
 
 This option allows members to search and post GIFs from the popular GIF site GIPHY.
 
-[![gifs](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/image-1-1024x556.jpeg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/04/image-1.jpeg)
+![gifs](https://www.dropbox.com/s/jwe5u56i5raye35/image-1.jpeg?raw=1)
 
 ### Blog Posts<a name="blog-posts"></a>
 
 When this option is selected any new blog posted by a member will be posted to their timeline. Notice that there is no option to comment on the activity. Members must open the blog post to comment.
 
-[![blog post timeline](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/blogpost-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/blogpost.jpg)
+![blog post timeline](https://www.dropbox.com/s/r2foo10pw62hda1/blogpost.jpg?raw=1)

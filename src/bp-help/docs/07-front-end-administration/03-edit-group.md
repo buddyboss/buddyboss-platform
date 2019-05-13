@@ -10,4 +10,4 @@ Admins have access to quickly edit any group setting.
 *   Edit Group Requests
 *   Delete Group - Deleting a group will delete all of the content it has created. It will be completely unrecoverable.
 
-[![admin toolbar edit group](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/admintoolbareditgroup-1024x562.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/admintoolbareditgroup.jpg)
+![admin toolbar edit group](https://www.dropbox.com/s/f07tijowbyh9pmf/admintoolbareditgroup.jpg?raw=1)

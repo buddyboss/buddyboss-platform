@@ -22,4 +22,4 @@ BuddyBoss Platform provides admin dashboard panels to help you edit existing for
 7.  Discussion Tags -
     *   Choose from the most used tags - Show tag cloud
 
-[![new/edit discussion](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newdiscussion-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newdiscussion.jpg)
+![new/edit discussion](https://www.dropbox.com/s/ogjd7gtyb8tgapu/newdiscussion.jpg?raw=1)

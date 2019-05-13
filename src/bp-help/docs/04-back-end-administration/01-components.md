@@ -15,4 +15,4 @@ You may enable or disable each component within BuddyBoss Platform with the exce
 *   [bp_docs_link text="Email Invites" slug="components/email-invites.md" anchors="buddyboss-settings"] - Allow your users to send email invites to non-members to join the network.
 *   [bp_docs_link text="Network Search" slug="components/network-search.md"] - Allow your users to search the entire network, along with custom post types of your choice, all in one unified search bar.
 
-[![buddyboss components](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosscomponents-1024x713.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosscomponents.jpg)
+![buddyboss components](https://www.dropbox.com/s/up7nelhsp3tpzwm/buddybosscomponents.jpg?raw=1)

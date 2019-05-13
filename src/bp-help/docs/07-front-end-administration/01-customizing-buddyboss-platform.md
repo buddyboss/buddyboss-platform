@@ -26,19 +26,19 @@ Group Navigation<a name="group-navigation"></a>
 
 *   Display the group navigation vertically.
 
-[![vertical group navigation menu](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/customizergroupnav-719x1024.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/customizergroupnav.jpg)
+![vertical group navigation menu](https://www.dropbox.com/s/igm5y0fjwog8271/customizergroupnav.jpg?raw=1)
 
 *   Use tab styling for primary navigation. NOTE: Not compatible with vertical navigation. This is a fairly subtle change you really have to look and watch the menu change styling.
 
-[![tab styling for primary group navigation](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/customizergrouptabnav-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/customizergrouptabnav.jpg)
+![tab styling for primary group navigation](https://www.dropbox.com/s/64p62t2zbcrs29i/customizergrouptabnav.jpg?raw=1)
 
 *   Use tab styling for secondary navigation.
 
-[![tab styling for secondary group navigation](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/customizergrouptabsecnav-1024x496.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/customizergrouptabsecnav.jpg)
+![tab styling for secondary group navigation](https://www.dropbox.com/s/ulbfigey00ud10s/customizergrouptabsecnav.jpg?raw=1)
 
 *   Use tab styling for the group creation process.
 
-[![tab navigation create group](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizercreategrouptabnav-1024x469.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizercreategrouptabnav.jpg)
+![tab navigation create group](https://www.dropbox.com/s/w8xhmwec0xyf4mp/customizercreategrouptabnav.jpg?raw=1)
 
 *   Rearrange group navigation menu items.
 
@@ -49,16 +49,16 @@ Profile Navigation<a name="profile-navigation"></a>
 
 *   Display the profile navigation vertically.
 
-[![member vertical navigation](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizermembervertnav-1024x758.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizermembervertnav.jpg)
+![member vertical navigation](https://www.dropbox.com/s/v91e96ijarhex64/customizermembervertnav.jpg?raw=1)
 
 *   Use tab styling for primary navigation.
 
-[![member tab primary navigation](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizermembermaintabnav-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizermembermaintabnav.jpg)
+![member tab primary navigation](https://www.dropbox.com/s/yzfohw0xiss4ogs/customizermembermaintabnav.jpg?raw=1)
 
 *   Use tab styling for secondary navigation.
 
-[![member tab secondary navigation](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizermembersectabnav-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/02/customizermembersectabnav.jpg)
+![member tab secondary navigation](https://www.dropbox.com/s/9e1z82lpjfvypmq/customizermembersectabnav.jpg?raw=1)
 
 *   Rearrange profile navigation menu items.
 
-[embed] https://vimeo.com/320530055 [embed]
+[embed] https://vimeo.com/320530055 [/embed]

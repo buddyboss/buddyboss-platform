@@ -56,4 +56,4 @@ Sections<a name="sections"></a>
         *   View original activity
         *   Comment bubble with number of related activities.
 
-[![Activity Dashboard](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/activitydashboard-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/activitydashboard.jpg)
+![Activity Dashboard](https://www.dropbox.com/s/bezmmnfrnx1ef49/activitydashboard.jpg?raw=1)

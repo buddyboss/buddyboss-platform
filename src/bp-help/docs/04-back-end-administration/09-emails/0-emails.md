@@ -9,7 +9,7 @@ Emails are a WordPress Custom post Type. They are edited and created just like p
 
 The biggest difference you will notice is the use of [bp_docs_link text="tokens" slug="back-end-administration/emails/email-tokens.md"]. They have the curly braces around them `{{ }}`. Tokens are variable words or phrases that will be dynamically replaced when an email is sent.
 
-[![BuddyBoss Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemails-1024x527.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemails.jpg)
+![BuddyBoss Emails](https://www.dropbox.com/s/b212urk17ratmar/buddybossemails.jpg?raw=1)
 
 Edit Emails<a name="edit-emails"></a>
 -----------
@@ -23,20 +23,20 @@ Just like posts and pages the contents of editing an email are as follows:
 5.  Situation - Select which action triggers the sending of an email.
     *   NOTE: Available [bp_docs_link text="tokens" slug="back-end-administration/emails/email-tokens.md"] are based on the situation.
 
-[![Edit Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailsedit-1024x823.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailsedit.jpg)
+![Edit Emails](https://www.dropbox.com/s/fuf2hmcyzwop72o/buddybossemailsedit.jpg?raw=1)
 
 Customize Emails<a name="customize-emails"></a>
 ----------------
 
 Customize BuddyBoss Emails using the Customizer tool. The default color scheme is a light and airy neutral gray with blue call-to-action.
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailscustomizemenu.jpg)
+![](https://www.dropbox.com/s/flj1o5g7zqcd7jc/buddybossemailscustomizemenu.jpg?raw=1)
 
 There are three sections that can be edited: Header, Body and Footer. Click on each section to access the editing tools.
 
 NOTE: The customizer will only display the Send Message template but you are affecting all email templates.
 
-[![Customize BuddyBoss Emails](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailscustomize-1024x562.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybossemailscustomize.jpg)
+![Customize BuddyBoss Emails](https://www.dropbox.com/s/7jtlx5k6eeibyn4/buddybossemailscustomize.jpg?raw=1)
 
 Customize Header<a name="customize-header"></a>
 ----------------

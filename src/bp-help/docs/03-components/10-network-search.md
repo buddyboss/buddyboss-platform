@@ -4,11 +4,11 @@ Allow your users to search all site content including members, blog posts, activ
 
 The search bar is typically located at the top of the website in the menu bar or is always displayed on certain pages.
 
-[![network search](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/networksearch-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/networksearch.jpg)
+![network search](https://www.dropbox.com/s/z6whdoioumm48m9/messages.jpg?raw=1)
 
 Suggestions will begin to auto populate as soon as you start typing two or more characters.
 
-[![network search suggestions](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/networksearchsuggestions-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/networksearchsuggestions.jpg)
+![network search suggestions](https://www.dropbox.com/s/ovbkk0gbshbhcrt/networksearchsuggestions.jpg?raw=1)
 
 Clicking on the magnifying glass or pressing the return/enter key will open the search result page. Results will be ordered and able to be filtered by activity type:
 
@@ -24,4 +24,4 @@ Clicking on the magnifying glass or pressing the return/enter key will open the 
 *   Activity
 *   Messages
 
-[![network search results](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/networksearchresults-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/networksearchresults.jpg)
+![network search results](https://www.dropbox.com/s/czhqpbyaeiwn0k7/networksearchresults.jpg?raw=1)

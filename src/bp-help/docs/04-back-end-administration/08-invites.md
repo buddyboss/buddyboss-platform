@@ -9,4 +9,4 @@ Site administrators can manage and view all invites sent by users. Navigate to D
 5.  Each invite shows who initiated the invite, who was invited, the invitee email, date and status.
 6.  Admins have the ability to revoke any invite.
 
-![invites](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/invites-1024x562.jpg)
+![invites](https://www.dropbox.com/s/qiohgrcu7qdhw9o/invites-1024x562.jpg?raw=1)

@@ -11,4 +11,4 @@ BuddyBoss Platform provides admin dashboard panels to help you edit existing dis
     *   Reply To - Enter reply ID
 5.  Publish - Same settings as any other type of WordPress post
 
-[![new/edit reply](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newreply-1024x486.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/03/newreply.jpg)
+![new/edit reply](https://www.dropbox.com/s/t7tu7eq6ucre8x6/newreply.jpg?raw=1)

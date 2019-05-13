@@ -22,7 +22,7 @@ function bp_media_get_settings_sections() {
 	$settings = array(
 		'bp_media_settings_photos' => array(
 			'page'  => 'media',
-			'title' => __( 'Photos', 'buddyboss' ),
+			'title' => __( 'Photo Uploading', 'buddyboss' ),
 		),
         'bp_media_settings_emoji' => array(
 			'page'  => 'media',
@@ -30,7 +30,7 @@ function bp_media_get_settings_sections() {
 		),
 		'bp_media_settings_gifs' => array(
 			'page'  => 'media',
-			'title' => __( 'GIFs', 'buddyboss' ),
+			'title' => __( 'Animated GIFs', 'buddyboss' ),
 		),
 	);
 
@@ -142,7 +142,7 @@ function bp_media_get_settings_fields() {
 	$fields['bp_media_settings_gifs'] = [
 
 		'bp_media_gif_api_key' => [
-			'title'             => __( 'GIFs Key', 'buddyboss' ),
+			'title'             => __( 'GIPHY API Key', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_gif_key',
 			'sanitize_callback' => 'string',
 			'args'              => []
@@ -270,7 +270,7 @@ function bp_media_settings_callback_profile_media_support() {
 		<?php checked( bp_is_profile_media_support_enabled() ); ?>
     />
     <label for="bp_media_profile_media_support">
-		<?php esc_html_e( 'Enable Photo Uploading', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
     </label>
     <br/>
     <input name="bp_media_profile_albums_support"
@@ -281,7 +281,7 @@ function bp_media_settings_callback_profile_media_support() {
 		<?php checked( bp_is_profile_albums_support_enabled() ); ?>
     />
     <label for="bp_media_profile_albums_support">
-		<?php esc_html_e( 'Enable Photo Albums', 'buddyboss' ) ?>
+		<?php _e( 'Enable Albums', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -326,7 +326,7 @@ function bp_media_settings_callback_group_media_support() {
 		<?php checked( bp_is_group_media_support_enabled() ); ?>
     />
     <label for="bp_media_group_media_support">
-		<?php esc_html_e( 'Enable Photo Uploading', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>group activity posts</strong>', 'buddyboss' ) ?>
     </label>
     <br/>
     <input name="bp_media_group_albums_support"
@@ -337,7 +337,7 @@ function bp_media_settings_callback_group_media_support() {
 		<?php checked( bp_is_group_albums_support_enabled() ); ?>
     />
     <label for="bp_media_group_albums_support">
-		<?php esc_html_e( 'Enable Photo Albums', 'buddyboss' ) ?>
+		<?php _e( 'Enable Albums', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -382,7 +382,7 @@ function bp_media_settings_callback_messages_media_support() {
 		<?php checked( bp_is_messages_media_support_enabled() ); ?>
     />
     <label for="bp_media_messages_media_support">
-		<?php esc_html_e( 'Enable Photo Uploading', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>private messages</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -414,7 +414,7 @@ function bp_media_settings_callback_forums_media_support() {
 		<?php checked( bp_is_forums_media_support_enabled() ); ?>
     />
     <label for="bp_media_forums_media_support">
-		<?php esc_html_e( 'Enable Photo Uploading', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>forum discussions</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -446,7 +446,7 @@ function bp_media_settings_callback_profiles_emoji_support() {
 		<?php checked( bp_is_profiles_emoji_support_enabled() ); ?>
     />
     <label for="bp_media_profiles_emoji_support">
-		<?php esc_html_e( 'Enable on Profiles', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use emoji in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -465,7 +465,7 @@ function bp_media_settings_callback_groups_emoji_support() {
 		<?php checked( bp_is_groups_emoji_support_enabled() ); ?>
     />
     <label for="bp_media_groups_emoji_support">
-		<?php esc_html_e( 'Enable on Groups', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use emoji in <strong>group activity posts</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -484,7 +484,7 @@ function bp_media_settings_callback_messages_emoji_support() {
 		<?php checked( bp_is_messages_emoji_support_enabled() ); ?>
     />
     <label for="bp_media_messages_emoji_support">
-		<?php esc_html_e( 'Enable on Messages', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use emoji in <strong>private messages</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -503,7 +503,7 @@ function bp_media_settings_callback_forums_emoji_support() {
 		<?php checked( bp_is_forums_emoji_support_enabled() ); ?>
     />
     <label for="bp_media_forums_emoji_support">
-		<?php esc_html_e( 'Enable on Forums', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use emoji in <strong>forum discussions</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -574,7 +574,7 @@ function bp_media_settings_callback_gif_key() {
            placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>"
            style="width: 300px;"
     />
-    <p class="description"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it here:', 'buddyboss') ?></p>
+    <p class="description"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it above.', 'buddyboss') ?></p>
 	<?php
 }
 
@@ -613,7 +613,7 @@ function bp_media_settings_callback_profiles_gif_support() {
 		<?php checked( bp_is_profiles_gif_support_enabled() ); ?>
     />
     <label for="bp_media_profiles_gif_support">
-		<?php esc_html_e( 'Enable on Profiles', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -632,7 +632,7 @@ function bp_media_settings_callback_groups_gif_support() {
 		<?php checked( bp_is_groups_gif_support_enabled() ); ?>
     />
     <label for="bp_media_groups_gif_support">
-		<?php esc_html_e( 'Enable on Groups', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>group activity posts</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -651,7 +651,7 @@ function bp_media_settings_callback_messages_gif_support() {
 		<?php checked( bp_is_messages_gif_support_enabled() ); ?>
     />
     <label for="bp_media_messages_gif_support">
-		<?php esc_html_e( 'Enable on Messages', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -670,7 +670,7 @@ function bp_media_settings_callback_forums_gif_support() {
 		<?php checked( bp_is_forums_gif_support_enabled() ); ?>
     />
     <label for="bp_media_forums_gif_support">
-		<?php esc_html_e( 'Enable on Forums', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong>', 'buddyboss' ) ?>
     </label>
 	<?php
 }

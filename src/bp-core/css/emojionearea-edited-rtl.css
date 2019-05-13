@@ -306,11 +306,10 @@
 	filter: inherit;
 	padding: 0;
 	cursor: pointer;
-	-webkit-filter: grayscale(1);
-	filter: grayscale(1);
+	opacity: 0.45;
 	display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
+        display: -ms-flexbox;
+        display: flex;
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
@@ -324,8 +323,7 @@
 }
 
 .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter.active, .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter:hover {
-	-webkit-filter: grayscale(0);
-	filter: grayscale(0);
+	opacity: 1;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter > i {
@@ -335,7 +333,8 @@
 }
 
 .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter > img {
-
+        width: auto;
+        height: auto;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-search-panel {
@@ -350,7 +349,7 @@
 
 .emojionearea .emojionearea-picker .emojionearea-search-panel .emojionearea-tones {
 	float: left;
-	margin-top: -1px;
+	margin-top: 4px;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-tones-panel .emojionearea-tones {
@@ -369,14 +368,16 @@
 .emojionearea .emojionearea-picker .emojionearea-search > input {
 	outline: none;
 	width: 100%;
-    min-width: 100%;
-    height: 30px;
+        min-width: 100%;
+        height: 30px;
+        margin: 0;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-tones {
 	padding: 0;
 	width: 120px;
 	height: 20px;
+	line-height: 20px;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-tones > .btn-tone {
@@ -561,6 +562,7 @@
 	display: block;
 	width: 24px;
 	height: 24px;
+        margin: 0;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojibtn img.lazy-emoji {
@@ -718,6 +720,14 @@
 
 .emojionearea.emojionearea-standalone .emojionearea-editor.has-placeholder .emojioneemoji {
 	opacity: 0.4;
+}
+
+img.emoji,
+img.emojioneemoji {
+        display: inline-block;
+        margin: 3px;
+        width: 24px;
+        height: 24px;
 }
 
 .emojionearea.emojionearea-standalone .emojionearea-button {

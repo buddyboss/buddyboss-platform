@@ -13,7 +13,7 @@ Login Information<a name="login-information"></a>
 
 Change member account email and password.
 
-[![login information](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/logininformation-1024x723.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/logininformation.jpg)
+![login information](https://www.dropbox.com/s/g8t2iie9mcz1xcd/logininformation.jpg?raw=1)
 
 Email Preferences<a name="email-preferences"></a>
 -----------------
@@ -35,7 +35,7 @@ Choose what type of emails to receive.
     *   A member invites you to connect
     *   A member accepts your connection request
 
-[![email preferences](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/emailpreferences-1024x981.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/emailpreferences.jpg)
+![email preferences](https://www.dropbox.com/s/jwfzblo8s985t60/emailpreferences.jpg?raw=1)
 
 Privacy<a name="privacy"></a>
 -------
@@ -47,18 +47,18 @@ Select who may see profile details.
 *   All members
 *   My connections
 
-[![profile visibility settings](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privacy-1-1024x556.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/privacy-1.jpg)
+![profile visibility settings](https://www.dropbox.com/s/p3aolr19k4enb63/privacy-1.jpg?raw=1)
 
 Group Invites<a name="group-invites"></a>
 -------------
 
 Option to restrict group invites to member connections only.
 
-[![group invites](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupinvites-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/groupinvites.jpg)
+![group invites](https://www.dropbox.com/s/1173mzp994ru2yu/groupinvites.jpg?raw=1)
 
 Export Data<a name="export-data"></a>
 -----------
 
 Download a copy of all data a member has shared on the platform. An email will be sent to the member to verify the request. Then a site admin will review the request and if approved, an export file will be generated and emailed to the member.
 
-[![export data](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/exportdata-1024x520.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/exportdata.jpg)
+![export data](https://www.dropbox.com/s/52nvzfrtdk7k67q/exportdata.jpg?raw=1)

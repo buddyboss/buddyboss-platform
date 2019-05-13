@@ -44,7 +44,7 @@ To add a new field navigate to Dashboard -> Users -> Profile Fields
         *   My Connections
     *   Allow Members to Override visibility or Force admin selected visibility
 
-[![Add New Profile Field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/profilefieldsaddnew-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/profilefieldsaddnew.jpg)
+![Add New Profile Field](https://www.dropbox.com/s/77g38o64jc3y1dt/profilefieldsaddnew.jpg?raw=1)
 
 Add New Field Set<a name="add-new-field-set"></a>
 -----------------
@@ -56,7 +56,7 @@ To add a new field set navigate to Dashboard -> Users -> Profile Fields
 3.  Submit - Save or Cancel
 4.  Repeater Set - Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.
 
-[![Add new field set](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewfieldset-1024x512.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/addnewfieldset.jpg)
+![Add new field set](https://www.dropbox.com/s/vex6ss3jvk3j5oj/addnewfieldset.jpg?raw=1)
 
 Alternate Title<a name="alternate-title"></a>
 ---------------
@@ -117,7 +117,7 @@ Field Types<a name="field-types"></a>
 
 ### Checkboxes<a name="checkboxes"></a>
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/checkboxes.gif)
+![](https://www.dropbox.com/s/1opnb2fe0biow8e/checkboxes.gif?raw=1)
 
 Checkboxes are used to let a member select one or more options of a limited number of choices.
 
@@ -125,7 +125,7 @@ Checkboxes are used to let a member select one or more options of a limited numb
 
 Drop Down select boxes are used to let members select one option of a list that rolls up into itself.
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Untitled-1-1024x240.gif)
+![](https://www.dropbox.com/s/d63k6ypvwwpodt3/Untitled-1-1024x240.gif?raw=1)
 
 ### Gender<a name="gender"></a>
 
@@ -138,11 +138,11 @@ The gender selection is different from any other option. The gender selection af
 Multi Select Boxes are used to allow members to select multiple options  
 from a scrollable list using the keyboard shift/ctrl key and mouse click.
 
-[![multi select box](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/multiselectboxes.jpg)](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/multiselectboxes.jpg)
+![multi select box](https://www.dropbox.com/s/wvjat7ebwsp6xsf/multiselectboxes.jpg?raw=1)
 
 ### Radio Buttons<a name="radio-buttons"></a>
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/Untitled-8.gif)
+![](https://www.dropbox.com/s/ic7uirzjz0ry8p2/radio.gif?raw=1)
 
 Radio buttons are used to allow members to select one option from a list.
 
@@ -150,34 +150,34 @@ Radio buttons are used to allow members to select one option from a list.
 
 Allows users to select a date and displayed in one of several formats defined by the admin.
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/dateselector.gif)
+![](https://www.dropbox.com/s/ar32q4ad9ecnicv/dateselector.gif?raw=1)
 
 ### Multi-line Text Area<a name="multi-line-text-area"></a>
 
 A free form text area with custom user formatting available.
 
-![multi-line text area](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/multilinetextarea.jpg)
+![multi-line text area](https://www.dropbox.com/s/vbev8h1sovacaei/multilinetextarea.jpg?raw=1)
 
 ### Number<a name="number"></a>
 
 Just the numbers 0-9, period, e, negative and positive symbols.
 
-![number form field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/number.jpg)
+![number form field](https://www.dropbox.com/s/vbev8h1sovacaei/multilinetextarea.jpg?raw=1)
 
 ### Phone Number<a name="phone-number"></a>
 
 Allows members to enter their phone number. Options are for US format (###) ###-#### or international.
 
-![phone number field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/phonenumberfield.jpg)
+![phone number field](https://www.dropbox.com/s/j8ys4rzoajhpq40/phonenumberfield.jpg?raw=1)
 
 ### Text Box<a name="text-box"></a>
 
 A text box members can enter any keyboard character in to.
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/textboxfield.jpg)
+![](https://www.dropbox.com/s/q7jjg8uu3rgputv/textboxfield.jpg?raw=1)
 
 ### URL<a name="url"></a>
 
 Any properly formatted URL that will be shown as a link in member profiles.
 
-![url field](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/urlfield.jpg)
+![url field](https://www.dropbox.com/s/anrnat4peyf9bm3/urlfield.jpg?raw=1)

@@ -31,6 +31,7 @@ add_filter( 'bbp_get_topic_content',                            'bp_media_forums
 // Messages
 add_action( 'messages_message_sent',                            'bp_media_attach_media_to_message'                  );
 add_action( 'messages_message_sent',                            'bp_media_messages_save_gif_data'                   );
+add_action( 'bp_messages_thread_after_delete',                  'bp_media_messages_delete_attached_media',  10,  2  );
 
 /**
  * Add media theatre template for activity pages
@@ -47,7 +48,7 @@ function bp_media_activity_entry() {
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
@@ -64,7 +65,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
@@ -314,7 +315,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 		ob_start();
 		?>
-        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
@@ -363,6 +364,31 @@ function bp_media_attach_media_to_message( &$message ) {
 		//save media meta for message
 		bp_messages_update_meta( $message->id, 'bp_media_ids', $media_ids );
 	}
+}
+
+/**
+ * Delete media attached to messages
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $thread_id
+ * @param $message_ids
+ */
+function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
+
+    if ( ! empty( $message_ids ) ) {
+        foreach( $message_ids as $message_id ) {
+
+            // get media ids attached to message
+	        $media_ids = bp_messages_get_meta( $message_id, 'bp_media_ids', true );
+
+	        if ( ! empty( $media_ids ) ) {
+		        $media_ids = explode( ',', $media_ids );
+                foreach( $media_ids as $media_id ) {
+                    bp_media_delete( $media_id );
+                }
+            }
+        }
+    }
 }
 
 /**

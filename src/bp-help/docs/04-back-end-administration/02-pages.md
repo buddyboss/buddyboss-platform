@@ -12,4 +12,4 @@
     *   Privacy Policy
     *   Activate Account
 
-![](https://www.buddyboss.com/resources/wp-content/uploads/2019/01/buddybosspages-1024x830.jpg)
+![](https://www.dropbox.com/s/dko0mng9d1pd1h6/buddybosspages-1024x830.jpg?raw=1)
