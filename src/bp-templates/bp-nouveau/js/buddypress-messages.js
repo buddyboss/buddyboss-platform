@@ -1156,6 +1156,9 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Messages.removeFeedback();
 
+			// reset receipients field before send
+			this.model.set( 'send_to', [], { silent: true } );
+
 			// Set the content and meta
 			_.each( this.$el.serializeArray(), function( pair ) {
 				pair.name = pair.name.replace( '[]', '' );
@@ -1217,6 +1220,16 @@ window.bp = window.bp || {};
 			// quill editor support
 			if ( bp.Nouveau.Messages.quillEditor !== false && typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
 				this.model.set( 'message_content', bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', ''), { silent: true } );
+			}
+
+			// check recipients empty
+			if ( ! this.model.get( 'send_to' ).length ) {
+				errors.push( 'send_to' );
+			}
+
+			//check message content empty
+			if ( this.model.get( 'message_content' ) === '' ) {
+				errors.push( 'message_content' );
 			}
 
 			if ( errors.length ) {

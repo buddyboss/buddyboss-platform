@@ -66,7 +66,12 @@ function bp_nouveau_activity_enqueue_scripts() {
  * @return array The same array with specific strings for the Activity Post form UI if needed.
  */
 function bp_nouveau_activity_localize_scripts( $params = array() ) {
-	if ( ! bp_is_activity_component() && ! bp_is_group_activity() && ! bp_is_media_component() && ! bp_is_media_directory() ) { // media popup overlay needs activity scripts
+	if ( ! bp_is_activity_component() &&
+	     ! bp_is_group_activity() &&
+	     ! bp_is_media_component() &&
+	     ! bp_is_media_directory() &&
+	     ! bp_is_group_media() &&
+	     ! bp_is_group_albums() ) { // media popup overlay needs activity scripts
 		return $params;
 	}
 
