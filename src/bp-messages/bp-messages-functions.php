@@ -698,6 +698,8 @@ function messages_notification_new_message( $raw_args = array() ) {
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
 
+
+
 /**
  * Delete user from DB callback
  *
@@ -718,27 +720,6 @@ function bp_messages_thread_delete_completely() {
  * @param int $user_id The ID of the deleted user.
  */
 function bp_messages_remove_data( $user_id ) {
-
-	$threads = BP_Messages_Thread::get_current_threads_for_user( array(
-		'user_id' => $user_id,
-	) );
-
-
-	if ( ! empty( $threads['threads'] ) ) {
-		$thread_ids = array();
-		foreach ( $threads['threads'] as $thread ) {
-			if ( $thread->thread_id ) {
-				$thread_ids[] = $thread->thread_id;
-			}
-		}
-
-		if ( ! empty( $thread_ids ) ) {
-			add_filter( 'bp_messages_thread_delete_from_database', 'bp_messages_thread_delete_completely' );
-			messages_delete_thread( $thread_ids, $user_id );
-			remove_filter( 'bp_messages_thread_delete_from_database', 'bp_messages_thread_delete_completely' );
-		}
-	}
-
 	// Delete all the messages and there meta
 	BP_Messages_Message::delete_user_message( $user_id );
 }

@@ -600,10 +600,6 @@ class BP_Messages_Thread {
 		 */
 		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, $user_id );
 
-		if ( apply_filters( 'bp_messages_thread_delete_from_database', false, $thread_id, $user_id, $message_ids ) ) {
-			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d AND user_id = %d", $thread_id, $user_id ) );
-		}
-
 		return true;
 	}
 
