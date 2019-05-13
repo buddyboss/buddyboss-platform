@@ -588,14 +588,19 @@ window.bp = window.bp || {};
 				});
 
 				if (!_.isUndefined(BP_Nouveau.media.emoji)) {
-					$('#message_content .ql-editor').emojioneArea({
+					$('#message_content>.ql-editor').emojioneArea({
 						standalone: true,
 						hideSource: false,
-						container: '#whats-new-messages-toolbar > .post-emoji',
+						container: $('#whats-new-messages-toolbar > .post-emoji'),
 						autocomplete: false,
 						pickerPosition: 'bottom',
 						hidePickerOnBlur: false,
-						useInternalCDN: false
+						useInternalCDN: false,
+						events: {
+							ready: function (editor, event) {
+								$('#whats-new-messages-toolbar > .post-emoji > div').removeClass('ql-editor').removeClass('ql-blank');
+							},
+						}
 					});
 				}
 
