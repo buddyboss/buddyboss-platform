@@ -48,7 +48,7 @@ function bp_media_activity_entry() {
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
@@ -65,7 +65,7 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
@@ -315,7 +315,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 		ob_start();
 		?>
-        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? 'bb-media-length-more' : ''; ?>"><?php
+        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );

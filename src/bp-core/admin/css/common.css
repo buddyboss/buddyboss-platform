@@ -475,16 +475,8 @@ tr.bp-search-parent-field label {
 }
 
 /* Media */
-.bp-admin-card.section-bp_media_settings_photos h2:before {
+.bp-admin-card.section-bp_media_settings_general h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_emoji h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/grin.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_gifs h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
 }
 
 /* Search */

@@ -68,103 +68,107 @@
 		}
 	}
 
-	#whats-new-toolbar {
-		position: relative;
-		display: -webkit-box;
-		display: -ms-flexbox;
-		display: flex;
-		-webkit-box-align: center;
-		-ms-flex-align: center;
-		align-items: center;
-		padding: 10px;
-
-		.post-elements-buttons-item {
-			margin-right: 15px;
-			position: relative;
-		}
-	}
-
-	// these ID's need replacing with this!
-	//.textarea-wrap { // #whats-new-textarea
-
-	#whats-new-textarea {
-
-		[contenteditable="true"] {
-
-			&:empty:before {
-				content: attr(placeholder);
-				color: #bbb;
-				cursor: text;
-				display: block; /* For Firefox */
-			}
-		}
-	}
-
-	#activity-form-submit-wrapper {
-		border-top: 1px solid #ddd;
-		display: flex;
-		justify-content: space-between;
-		flex-flow: row wrap;
-		align-items: center;
-		padding: 0 10px;
-	}
-
-	#whats-new-post-in-box {
-		margin: $marg-sml 0;
-
-		#whats-new-post-in-box-items {
-			list-style: none;
-			margin: $marg-sml 0;
-
-			li {
-				margin-bottom: $marg-sml;
-			}
-
-			#activity-autocomplete {
-				padding: 0.3em;
-			}
-
-			.bp-activity-object {
-
-				@include center-vert();
-				padding: 0.2em;
-
-				.avatar {
-					width: 30px;
-				}
-
-				span {
-					padding-left: $marg-sml;
-					vertical-align: middle;
-				}
-
-				&:focus,
-				&:hover {
-					background: $light-grey;
-					cursor: pointer;
-				}
-
-				&.selected {
-					border: 1px solid $med-light-grey;
-				}
-			}
-		}
-
-	}
-
-	#whats-new-submit {
-		margin: $marg-sml 0;
-		display: flex;
-		flex-flow: row-reverse;
-
-		input {
-
-			@include font-size(14);
-			line-height: 1;
-		}
-	}
-
 	// close @media
+}
+
+#whats-new-toolbar {
+	padding: 10px;
+}
+
+#whats-new-toolbar,
+#whats-new-messages-toolbar {
+	position: relative;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+
+	.post-elements-buttons-item {
+		margin-right: 10px;
+		position: relative;
+	}
+}
+
+// these ID's need replacing with this!
+//.textarea-wrap { // #whats-new-textarea
+
+#whats-new-textarea {
+
+	[contenteditable="true"] {
+
+		&:empty:before {
+			content: attr(placeholder);
+			color: #bbb;
+			cursor: text;
+			display: block; /* For Firefox */
+		}
+	}
+}
+
+#activity-form-submit-wrapper {
+	border-top: 1px solid #ddd;
+	display: flex;
+	justify-content: space-between;
+	flex-flow: row wrap;
+	align-items: center;
+	padding: 0 10px;
+}
+
+#whats-new-post-in-box {
+	margin: $marg-sml 0;
+
+	#whats-new-post-in-box-items {
+		list-style: none;
+		margin: $marg-sml 0;
+
+		li {
+			margin-bottom: $marg-sml;
+		}
+
+		#activity-autocomplete {
+			padding: 0.3em;
+		}
+
+		.bp-activity-object {
+
+			@include center-vert();
+			padding: 0.2em;
+
+			.avatar {
+				width: 30px;
+			}
+
+			span {
+				padding-left: $marg-sml;
+				vertical-align: middle;
+			}
+
+			&:focus,
+			&:hover {
+				background: $light-grey;
+				cursor: pointer;
+			}
+
+			&.selected {
+				border: 1px solid $med-light-grey;
+			}
+		}
+	}
+
+}
+
+#whats-new-submit {
+	margin: $marg-sml 0;
+	display: flex;
+	flex-flow: row-reverse;
+
+	input {
+
+		@include font-size(14);
+		line-height: 1;
+	}
 }
 
 // GIF styles
@@ -173,11 +177,13 @@
 	max-width: 400px;
 }
 
-.activity-attached-gif-container {
+.activity-attached-gif-container,
+.messages-attached-gif-container {
 	position: relative;
 
 	.gif-image-remove {
 		border-radius: 10px;
+		cursor: pointer;
 		height: 19px;
 		right: 2px;
 		top: 4px;
@@ -188,6 +194,48 @@
 		color: #fff;
 		margin-top: 0;
 		position: absolute;
+	}
+
+	.gif-player {
+		position: relative;
+		max-width: 480px;
+
+		video {
+			margin: 0;
+			max-width: 100%;
+		}
+	}
+
+	.gif-play-button {
+		height: 80px;
+		width: 80px;
+		position: absolute;
+		left: 50%;
+		margin-left: -40px;
+		top: 50%;
+		margin-top: -40px;
+
+		span.dashicons {
+			font-size: 80px;
+			width: 80px;
+			height: 80px;
+			margin: 0;
+			padding: 0;
+			line-height: 0;
+		}
+	}
+
+	.gif-icon {
+		background: url(../images/gif-symbol.png) bottom left no-repeat;
+		position: absolute;
+		width: 100%;
+		height: 100%;
+		display: block;
+		bottom: 30px;
+		left: 10px;
+		background-size: 40px 30px;
+		max-width: 40px;
+		max-height: 30px;
 	}
 }
 

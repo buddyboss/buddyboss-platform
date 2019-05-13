@@ -40,15 +40,16 @@ form.ac-form {
 				}
 			}
 
-			.ac-reply-attachments {
-				padding: 10px 0;
+			.dropzone.open {
+				margin-top: 20px;
 			}
 
 			.ac-reply-toolbar {
 				display: flex;
+				margin-top: 10px;
 
 				.post-elements-buttons-item {
-					margin-right: 15px;
+					margin-right: 10px;
 					position: relative;
 				}
 			}
