@@ -686,7 +686,7 @@ class BP_Email_Tokens {
 		$settings = bp_email_get_appearance_settings();
 
 		$media_ids = false;
-		if ( ! empty( $tokens['message_id'] ) ) {
+		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $tokens['message_id'] ) ) {
 			$media_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_media_ids', true );
         }
 
@@ -748,19 +748,20 @@ class BP_Email_Tokens {
 													<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
 														<?php echo nl2br( $tokens['usermessage'] ); ?>
 													</div>
-                                                    <?php if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) ?>
-                                                    <div class="bb-activity-media-wrap">
-                                                        <?php while ( bp_media() ) {
-	                                                        bp_the_media();
-	                                                        ?>
-                                                            <div class="bb-activity-media-elem">
-                                                                <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-                                                                    <img src="<?php echo esc_attr( bp_get_media_attachment_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
-                                                                </a>
-                                                            </div>
-                                                            <?php
-                                                        } ?>
-                                                    </div>
+                                                    <?php if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) : ?>
+                                                        <div class="bb-activity-media-wrap">
+                                                            <?php while ( bp_media() ) {
+                                                                bp_the_media();
+                                                                ?>
+                                                                <div class="bb-activity-media-elem">
+                                                                    <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+                                                                        <img src="<?php echo esc_attr( bp_get_media_attachment_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+                                                                    </a>
+                                                                </div>
+                                                                <?php
+                                                            } ?>
+                                                        </div>
+                                                    <?php endif; ?>
 												</td>
 											</tr>
 										</tbody>
