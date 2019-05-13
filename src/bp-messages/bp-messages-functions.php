@@ -696,3 +696,53 @@ function messages_notification_new_message( $raw_args = array() ) {
 	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
 }
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
+
+/**
+ * Delete user from DB callback
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_messages_thread_delete_completely() {
+	return true;
+}
+
+/**
+ * When a user is deleted, we need to clean up the database and remove all the
+ * message data from each table.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id The ID of the deleted user.
+ */
+function bp_messages_remove_data( $user_id ) {
+
+	$threads = BP_Messages_Thread::get_current_threads_for_user( array(
+		'user_id' => $user_id,
+	) );
+
+
+	if ( ! empty( $threads['threads'] ) ) {
+		$thread_ids = array();
+		foreach ( $threads['threads'] as $thread ) {
+			if ( $thread->thread_id ) {
+				$thread_ids[] = $thread->thread_id;
+			}
+		}
+
+		if ( ! empty( $thread_ids ) ) {
+			add_filter( 'bp_messages_thread_delete_from_database', 'bp_messages_thread_delete_completely' );
+			messages_delete_thread( $thread_ids, $user_id );
+			remove_filter( 'bp_messages_thread_delete_from_database', 'bp_messages_thread_delete_completely' );
+		}
+	}
+
+	// Delete all the messages and there meta
+	BP_Messages_Message::delete_user_message( $user_id );
+}
+
+add_action( 'wpmu_delete_user', 'bp_messages_remove_data' );
+add_action( 'delete_user', 'bp_messages_remove_data' );
+add_action( 'bp_make_spam_user', 'bp_messages_remove_data' );
