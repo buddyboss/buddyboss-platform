@@ -294,13 +294,15 @@ class BP_Messages_Message {
 
 		// Get the message ids in order to delete their metas.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
 			bp_messages_delete_meta( $message_id );
 		}
 
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		// delete all the meta recipients from user table.
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}
 
 	/**
