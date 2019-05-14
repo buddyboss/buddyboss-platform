@@ -1573,7 +1573,7 @@ input.search-query-input {
   display: inline-block;
 }
 
-.activity-list .activity-item .activity-meta.action {
+.activity-list .activity-item .bp-generic-meta.action {
   border: 1px solid transparent;
   background: #fafafa;
   padding: 2px;
@@ -1581,66 +1581,66 @@ input.search-query-input {
   text-align: left;
 }
 
-.activity-list .activity-item .activity-meta.action div.generic-button {
+.activity-list .activity-item .bp-generic-meta.action div.generic-button {
   margin: 0;
 }
 
-.activity-list .activity-item .activity-meta.action .button {
+.activity-list .activity-item .bp-generic-meta.action .button {
   background: transparent;
 }
 
-.activity-list .activity-item .activity-meta.action a {
+.activity-list .activity-item .bp-generic-meta.action a {
   padding: 4px 8px;
 }
 
-.activity-list .activity-item .activity-meta.action .button:focus,
-.activity-list .activity-item .activity-meta.action .button:hover {
+.activity-list .activity-item .bp-generic-meta.action .button:focus,
+.activity-list .activity-item .bp-generic-meta.action .button:hover {
   background: none;
 }
 
-.activity-list .activity-item .activity-meta.action .button:before,
-.activity-list .activity-item .activity-meta.action .icons:before {
+.activity-list .activity-item .bp-generic-meta.action .button:before,
+.activity-list .activity-item .bp-generic-meta.action .icons:before {
   font-family: dashicons;
   font-size: 18px;
   vertical-align: middle;
 }
 
-.activity-list .activity-item .activity-meta.action .acomment-reply.button:before {
+.activity-list .activity-item .bp-generic-meta.action .acomment-reply.button:before {
   content: "\f101";
 }
 
-.activity-list .activity-item .activity-meta.action .view:before {
+.activity-list .activity-item .bp-generic-meta.action .view:before {
   content: "\f125";
 }
 
-.activity-list .activity-item .activity-meta.action .fav:before {
+.activity-list .activity-item .bp-generic-meta.action .fav:before {
   content: "\f529";
 }
 
-.activity-list .activity-item .activity-meta.action .unfav:before {
+.activity-list .activity-item .bp-generic-meta.action .unfav:before {
   content: "\f529";
   color: #0061ac;
 }
 
-.activity-list .activity-item .activity-meta.action .delete-activity:before {
+.activity-list .activity-item .bp-generic-meta.action .delete-activity:before {
   content: "\f153";
 }
 
-.activity-list .activity-item .activity-meta.action .delete-activity:hover {
+.activity-list .activity-item .bp-generic-meta.action .delete-activity:hover {
   color: #800;
 }
 
-.activity-list .activity-item .activity-meta.action .button {
+.activity-list .activity-item .bp-generic-meta.action .button {
   border: 0;
   box-shadow: none;
 }
 
-.activity-list .activity-item .activity-meta.action .button span {
+.activity-list .activity-item .bp-generic-meta.action .button span {
   background: none;
   font-weight: 600;
 }
 
-.activity-list .activity-item .activity-meta.action .unfav .like-count {
+.activity-list .activity-item .bp-generic-meta.action .unfav .like-count {
   color: #0061ac;
 }
 
@@ -1943,12 +1943,12 @@ input.search-query-input {
   color: inherit;
 }
 
-.buddypress-wrap .activity-comments .activity-meta.action {
+.buddypress-wrap .activity-comments .bp-generic-meta.action {
   background: none;
   margin-top: 10px;
 }
 
-.buddypress-wrap .activity-comments .activity-meta.action button {
+.buddypress-wrap .activity-comments .bp-generic-meta.action button {
   font-size: 14px;
   font-weight: 400;
   text-transform: none;
@@ -9936,7 +9936,6 @@ ul.bb-albums-list a {
   padding-top: 100%;
   display: block;
   background: #809ab4;
-  text-align: center;
 }
 
 ul.bb-albums-list img {
@@ -10000,7 +9999,7 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-album-cover-wrap h4 {
-  font-size: 24px;
+  font-size: 20px;
   color: inherit;
   letter-spacing: -0.24px;
   line-height: 1;
