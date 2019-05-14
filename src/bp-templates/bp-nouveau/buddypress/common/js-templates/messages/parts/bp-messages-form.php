@@ -1,7 +1,11 @@
 <script type="text/html" id="tmpl-bp-messages-form">
 	<?php bp_nouveau_messages_hook( 'before', 'compose_content' ); ?>
 
-	<label for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
+	<div class="bp-messages-form-header">
+		<label for="send-to-input"><?php esc_html_e( 'New Message', 'buddyboss' ); ?></label>
+		<a href="#" class="bp-close-compose-form"><span class="dashicons dashicons-no-alt"></span></a>
+	</div>
+
 	<select
 		name="send_to[]"
 		class="send-to-input"

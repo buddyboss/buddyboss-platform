@@ -83,7 +83,7 @@ window.bp = window.bp || {};
 				// The compose view is specific (toggle behavior)
 				if ( 'compose' === view_id ) {
 					self.router.navigate( 'compose/', { trigger: true } );
-
+                                        $( event.target ).parents('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 				// Other views are classic.
 				} else {
 
@@ -1067,7 +1067,8 @@ window.bp = window.bp || {};
 
 		events: {
 			'click #bp-messages-send'  : 'sendMessage',
-			'click #bp-messages-reset' : 'resetForm'
+			'click #bp-messages-reset' : 'resetForm',
+			'click .bp-close-compose-form' : 'closeComposeForm'
 		},
 
 		initialize: function() {
@@ -1085,6 +1086,15 @@ window.bp = window.bp || {};
 
 			// Activate bp_mentions
 			this.on( 'ready', this.addSelect2, this );
+		},
+
+		closeComposeForm: function( event ) {
+			event.preventDefault();
+                        var form = bp.Nouveau.Messages.views.get( 'compose' );
+                        form.get( 'view' ).remove();
+                        bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
+                        bp.Nouveau.Messages.router.navigate( '/' );
+                        $('.bp-messages-container').removeClass('bp-compose-message');
 		},
 
 		addMentions: function() {
@@ -1451,6 +1461,7 @@ window.bp = window.bp || {};
 			} );
 
 			target.addClass('current');
+			target.parents('.bp-messages-container').removeClass('bp-compose-message').addClass('bp-view-message');
 		}
 	} );
 
@@ -1664,8 +1675,15 @@ window.bp = window.bp || {};
 
 		events: {
 			'click .actions a' : 'doAction',
-			'click .actions button' : 'doAction'
+			'click .actions button' : 'doAction',
+			'click .bp-back-to-thread-list' : 'navigateToList'
 		},
+
+                navigateToList: function( event ) {
+                        event.preventDefault();
+                        bp.Nouveau.Messages.router.navigate( '/' );
+                        $('.bp-messages-container').removeClass('bp-view-message');
+                },
 
 		doAction: function( event ) {
 			var action = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},

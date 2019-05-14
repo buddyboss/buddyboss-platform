@@ -16,6 +16,7 @@
 	#>
 
 	<header class="single-message-thread-header">
+		<a href="#" class="bp-back-to-thread-list"><span class="dashicons dashicons-arrow-left-alt2"></span></a>
 		<# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
