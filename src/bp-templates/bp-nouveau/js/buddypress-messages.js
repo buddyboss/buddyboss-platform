@@ -604,6 +604,14 @@ window.bp = window.bp || {};
 					});
 				}
 
+				// check for mentions in the url, if set any then focus to editor
+				var mention = bp.Nouveau.getLinkParams( null, 'r' ) || null;
+
+				// Check for mention
+				if ( ! _.isNull( mention ) ) {
+					bp.Nouveau.Messages.quillEditor.focus();
+				}
+
 			} else if ( typeof tinymce !== 'undefined' ) {
 				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
 			}
