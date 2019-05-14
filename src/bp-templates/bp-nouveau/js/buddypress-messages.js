@@ -1228,7 +1228,7 @@ window.bp = window.bp || {};
 			}
 
 			//check message content empty
-			if ( this.model.get( 'message_content' ) === '' ) {
+			if ( this.model.get( 'message_content' ) === '' && ! this.model.get('media').length && ! Object.keys(this.model.get('gif_data')).length ) {
 				errors.push( 'message_content' );
 			}
 
@@ -1240,6 +1240,10 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.displayFeedback( feedback, 'error' );
 				return;
+			}
+
+			if ( this.model.get( 'message_content' ) === '' && ( this.model.get('media').length || Object.keys(this.model.get('gif_data')).length ) ) {
+				this.model.set( 'message_content', '&nbsp;', { silent: true } );
 			}
 
 			// Set meta
@@ -1930,6 +1934,7 @@ window.bp = window.bp || {};
 		},
 
 		sendReply: function( event ) {
+			var errors = [];
 			event.preventDefault();
 
 			if ( true === this.model.get( 'sending' ) ) {
@@ -1943,6 +1948,25 @@ window.bp = window.bp || {};
 			} else if ( typeof bp.Nouveau.Messages.quillEditor !== 'undefined' ) {
 				content = bp.Nouveau.Messages.quillEditor.container.firstChild.innerHTML.replace('<p><br></p>', '');
 				jQuery(bp.Nouveau.Messages.quillEditor.container).addClass('loading');
+			}
+
+			//check message content empty
+			if ( content === '' && ( ! this.model.get('media').length && ! Object.keys(this.model.get('gif_data')).length ) ) {
+				errors.push( 'message_content' );
+			}
+
+			if ( errors.length ) {
+				var feedback = '';
+				_.each( errors, function( e ) {
+					feedback += BP_Nouveau.messages.errors[ e ] + '<br/>';
+				} );
+
+				bp.Nouveau.Messages.displayFeedback( feedback, 'error' );
+				return;
+			}
+
+			if ( content === '' && ( this.model.get('media').length || Object.keys(this.model.get('gif_data')).length ) ) {
+				content = '&nbsp;';
 			}
 
 			this.model.set ( {
