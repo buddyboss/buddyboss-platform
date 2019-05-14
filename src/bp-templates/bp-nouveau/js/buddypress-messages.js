@@ -1257,6 +1257,8 @@ window.bp = window.bp || {};
 			// Set meta
 			this.model.set( 'meta', meta, { silent: true } );
 
+			$('#bp-messages-send').prop('disabled',true).addClass('loading');
+
 			// Send the message.
 			this.model.sendMessage().done( function( response ) {
 				// Reset the model
@@ -1291,6 +1293,7 @@ window.bp = window.bp || {};
 				if ( response.feedback ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 				}
+				$('#bp-messages-send').prop('disabled',false).removeClass('loading');
 			} );
 		},
 
@@ -1983,6 +1986,8 @@ window.bp = window.bp || {};
 				sending   : true
 			} );
 
+			$('#send_reply_button').prop('disabled',true).addClass('loading');
+
 			this.collection.sync( 'create', this.model.attributes, {
 				success : _.bind( this.replySent, this ),
 				error   : _.bind( this.replyError, this )
@@ -2019,6 +2024,7 @@ window.bp = window.bp || {};
 			this.collection.add( _.first( reply ) );
 
 			bp.Nouveau.Messages.removeFeedback();
+			$('#send_reply_button').prop('disabled',false).removeClass('loading');
 
 			$("#bp-message-thread-list").animate({ scrollTop: $('#bp-message-thread-list').prop("scrollHeight")}, 0);
 		},
@@ -2028,6 +2034,7 @@ window.bp = window.bp || {};
 			if ( response.feedback && response.type ) {
 				bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
 			}
+			$('#send_reply_button').prop('disabled',false).removeClass('loading');
 		}
 	} );
 
