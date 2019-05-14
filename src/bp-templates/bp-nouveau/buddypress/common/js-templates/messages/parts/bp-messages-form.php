@@ -13,10 +13,10 @@
 	>
 		<?php if ( ! empty( $_GET['r'] ) ):
 
-			$user = bp_get_user_by_nickname( $_GET['r'] );
-			$name = bp_core_get_user_displayname( $user->ID );
+			$user_id = bp_core_get_userid( $_GET['r'] );
+			$name = bp_core_get_user_displayname( $user_id );
 			?>
-			<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo get_user_by( 'login', $_GET['r'] )->ID; ?>"><?php echo esc_html( $name ); ?></option>
+			<option value="@<?php echo esc_attr( $_GET['r'] ); ?>" selected data-action="<?php echo $user_id; ?>"><?php echo esc_html( $name ); ?></option>
 		<?php endif; ?>
 	</select>
 
