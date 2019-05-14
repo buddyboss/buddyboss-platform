@@ -404,8 +404,14 @@ class BP_Groups_Group {
 			return false;
 		}
 
+		// delete group avatars
 		$upload_path = bp_core_avatar_upload_path();
-		@rmdir( $upload_path . '/group-avatars/'. $this->id );
+		system("rm -rf ".escapeshellarg( $upload_path . '/group-avatars/'. $this->id ));
+
+		// delete group avatars
+		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
+		$type_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
+		system("rm -rf ".escapeshellarg( $type_dir . 'groups/'. $this->id ) );
 
 		return true;
 	}
