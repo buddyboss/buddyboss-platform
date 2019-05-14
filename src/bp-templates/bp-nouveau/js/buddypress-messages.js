@@ -597,9 +597,9 @@ window.bp = window.bp || {};
 						hidePickerOnBlur: false,
 						useInternalCDN: false,
 						events: {
-							ready: function (editor, event) {
+							ready: function () {
 								$('#whats-new-messages-toolbar > .post-emoji > div').removeClass('ql-editor').removeClass('ql-blank');
-							},
+							}
 						}
 					});
 				}
@@ -940,7 +940,7 @@ window.bp = window.bp || {};
 		template: bp.template( 'whats-new-messages-toolbar' ),
 		events: {
 			'click #messages-media-button': 'toggleMediaSelector',
-			'click #messages-gif-button': 'toggleGifSelector',
+			'click #messages-gif-button': 'toggleGifSelector'
 		},
 
 		initialize: function() {
@@ -1005,7 +1005,7 @@ window.bp = window.bp || {};
 				this.$gifPickerEl.removeClass('open');
 			}
 
-		},
+		}
 
 	} );
 
@@ -1868,10 +1868,10 @@ window.bp = window.bp || {};
 			}
 
 			if ( this.firstFetch ) {
-				$("#bp-message-thread-list").animate({ scrollTop: $('#bp-message-thread-list').prop("scrollHeight")}, 100);
+				$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 100);
 				this.firstFetch = false;
 			} else {
-				$("#bp-message-thread-list").animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
+				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
 			}
 
 			$('#bp-message-load-more').removeClass('loading');
@@ -2026,7 +2026,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Messages.removeFeedback();
 			$('#send_reply_button').prop('disabled',false).removeClass('loading');
 
-			$("#bp-message-thread-list").animate({ scrollTop: $('#bp-message-thread-list').prop("scrollHeight")}, 0);
+			$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 0);
 		},
 
 		replyError: function( response ) {

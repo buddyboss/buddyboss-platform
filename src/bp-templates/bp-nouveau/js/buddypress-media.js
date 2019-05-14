@@ -838,7 +838,7 @@ window.bp = window.bp || {};
 					$button.show();
 				}
 			} );
-		},
+		}
 	};
 
 	// Launch BP Nouveau Media
