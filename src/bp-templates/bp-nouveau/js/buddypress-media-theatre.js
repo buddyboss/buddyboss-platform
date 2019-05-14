@@ -133,9 +133,14 @@ window.bp = window.bp || {};
 				self.medias = [];
 				for( i = 0; i < media_elements.length; i++ ) {
 					var media_element = $(media_elements[i]);
-					self.medias.push({ id : media_element.data( 'id' ), attachment : media_element.data( 'attachment-full' ), activity_id : media_element.data( 'activity-id' ) });
+					if ( ! media_element.closest('#bp-existing-media-content').length ) {
+						self.medias.push({
+							id: media_element.data('id'),
+							attachment: media_element.data('attachment-full'),
+							activity_id: media_element.data('activity-id')
+						});
+					}
 				}
-
 			}
 		},
 
