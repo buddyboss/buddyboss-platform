@@ -400,8 +400,12 @@ class BP_Groups_Group {
 		$bp = buddypress();
 
 		// Finally remove the group entry from the DB.
-		if ( !$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) )
+		if ( !$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) ) {
 			return false;
+		}
+
+		$upload_path = bp_core_avatar_upload_path();
+		@rmdir( $upload_path . '/group-avatars/'. $this->id );
 
 		return true;
 	}
