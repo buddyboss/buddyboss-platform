@@ -86,7 +86,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
     				<?php while ( bp_members() ) : bp_the_member(); ?>
     
     					<div class="item-avatar">
-    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
     					</div>
     
     				<?php endwhile; ?>
@@ -212,7 +212,7 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 			<?php while ( bp_members() ) : bp_the_member(); ?>
 
                 <div class="item-avatar">
-                    <a href="<?php bp_member_permalink(); ?>" title="<?php bp_member_name(); ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+                    <a href="<?php bp_member_permalink(); ?>" title="<?php bp_member_name(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
                 </div>
 
 			<?php endwhile; ?>

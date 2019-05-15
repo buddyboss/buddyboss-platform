@@ -15,7 +15,7 @@
 			<ul class="group-inviters">
 				<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
 				<# for ( i in data.invited_by ) { #>
-				<li><a href="{{data.invited_by[i].user_link}}" class="bp-tooltip" data-bp-tooltip="{{data.invited_by[i].user_name}}"><img src="{{data.invited_by[i].avatar}}" width="30px" class="avatar mini" alt="{{data.invited_by[i].user_name}}"></a></li>
+				<li><a href="{{data.invited_by[i].user_link}}" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="{{data.invited_by[i].user_name}}"><img src="{{data.invited_by[i].avatar}}" width="30px" class="avatar mini" alt="{{data.invited_by[i].user_name}}"></a></li>
 				<# } #>
 			</ul>
 			<# } #>
@@ -34,7 +34,7 @@
 
 	<div class="action">
 		<# if ( undefined === data.is_sent || ( false === data.is_sent && true === data.can_edit ) ) { #>
-		<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<# if ( data.selected ) { #> selected<# } #>" data-bp-tooltip="<# if ( data.selected ) { #><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><# } else { #><?php esc_attr_e( 'Invite', 'buddyboss' ); ?><# } #>">
+		<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<# if ( data.selected ) { #> selected<# } #>" data-bp-tooltip-pos="up" data-bp-tooltip="<# if ( data.selected ) { #><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><# } else { #><?php esc_attr_e( 'Invite', 'buddyboss' ); ?><# } #>">
 			<span class="icons" aria-hidden="true"></span>
 			<span class="bp-screen-reader-text">
 					<# if ( data.selected ) { #>
@@ -47,7 +47,7 @@
 		<# } #>
 
 		<# if ( undefined !== data.can_edit && true === data.can_edit ) { #>
-		<button type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+		<button type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
 			<span class=" icons" aria-hidden="true"></span>
 			<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
 		</button>

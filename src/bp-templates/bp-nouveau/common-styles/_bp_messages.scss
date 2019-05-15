@@ -607,20 +607,20 @@ input#send-to-input {
 }
 
 .bp-messages-form-header {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-pack: justify;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-pack: justify;
 	-ms-flex-pack: justify;
 	justify-content: space-between;
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
-    margin-bottom: 10px;
+	margin-bottom: 10px;
 }
 
 .bp-back-to-thread-list {
-    margin-right: 10px;
+	margin-right: 10px;
 }
 
 @include medium-up() {
@@ -637,6 +637,7 @@ input#send-to-input {
 }
 
 @media screen and (min-width: 1080px) {
+
 	.bp-back-to-thread-list,
 	.bp-close-compose-form {
 		display: none;
@@ -644,7 +645,8 @@ input#send-to-input {
 }
 
 @media screen and (max-width: 1080px) {
-    .bp-messages-nav-panel {
+
+	.bp-messages-nav-panel {
 		flex: 0 0 100%;
 		border-right: 0;
 	}
@@ -655,6 +657,7 @@ input#send-to-input {
 
 	.bp-view-message,
 	.bp-compose-message {
+
 		.bp-messages-nav-panel {
 			display: none;
 		}

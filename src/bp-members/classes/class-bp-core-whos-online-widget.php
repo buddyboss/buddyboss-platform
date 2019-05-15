@@ -120,7 +120,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
     				<?php while ( bp_members() ) : bp_the_member(); ?>
     
     					<div class="item-avatar">
-    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
     					</div>
     
     				<?php endwhile; ?>
@@ -145,7 +145,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				<div class="avatar-block">
 					<?php while ( bp_members() ) : bp_the_member(); ?>
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><?php
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><?php
 								$current_time = current_time( 'mysql', 1 );
 								$diff =  strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
 								if ( $diff < 300 ) { // 5 minutes  =  5 * 60 ?>
@@ -310,7 +310,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 			<?php while ( bp_members() ) : bp_the_member(); ?>
 
                 <div class="item-avatar">
-                    <a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" title="<?php bp_member_name(); ?>" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+                    <a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" title="<?php bp_member_name(); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
                 </div>
 
 			<?php endwhile; ?>
