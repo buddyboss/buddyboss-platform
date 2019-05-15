@@ -1298,7 +1298,11 @@ window.bp = window.bp || {};
 				form.get( 'view' ).remove();
 				bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
 
-				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread_id + '/', { trigger: true } );
+				bp.Nouveau.Messages.router.navigate( 'view/' + response.thread.id + '/', { trigger: true } );
+
+				var threads = bp.Nouveau.Messages.threads.parse( { threads : [ response.thread ] } );
+				bp.Nouveau.Messages.threads.unshift( _.first( threads ) );
+
 			} ).fail( function( response ) {
 				if ( response.feedback ) {
 					bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
@@ -1428,7 +1432,7 @@ window.bp = window.bp || {};
 				thread.set( 'active', true );
 			}
 
-			this.views.add( '#message-threads', new bp.Views.userThread( { model: thread } ) );
+			this.views.add( '#message-threads', new bp.Views.userThread( { model: thread } ), { at: this.collection.indexOf(thread) } );
 		},
 
 		setActiveThread: function( active ) {

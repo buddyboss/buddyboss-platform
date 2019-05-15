@@ -69,6 +69,7 @@ function bp_has_message_threads( $args = array() ) {
 		'max'          => false,
 		'type'         => 'all',
 		'search_terms' => $search_terms,
+		'include'      => false,
 		'page_arg'     => 'mpage', // See https://buddypress.trac.wordpress.org/ticket/3679.
 		'meta_query'   => array()
 	), 'has_message_threads' );
