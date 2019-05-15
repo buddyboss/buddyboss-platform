@@ -1081,9 +1081,15 @@ window.bp = window.bp || {};
 					dropzone_container.html('');
 					dropzone_container.addClass('closed').removeClass('open');
 				}
+			}
 
-				var c_id = $(event.currentTarget).data('ac-id');
-				$( '#ac-reply-gif-button-' + c_id ).closest('.post-gif').find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			var c_id = $(event.currentTarget).data('ac-id');
+			$( '#ac-reply-gif-button-' + c_id ).closest('.post-gif').find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			// add gif data if enabled or uploaded
+			if ( ! _.isUndefined( this.models[c_id] ) ) {
+				model = this.models[c_id];
+				model.set( 'gif_data', {} );
+				$( '#ac-reply-post-gif-' + c_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 			}
 		},
 
