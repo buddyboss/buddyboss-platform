@@ -9,6 +9,7 @@
 
 #cover-image-container {
 	flex: 0 0 100%;
+	min-width: 0;
 	position: relative;
 }
 
@@ -51,6 +52,7 @@
 .users-header #item-header-cover-image #item-header-content {
 	flex: 1;
 	margin-top: -50px;
+	min-width: 0;
 }
 
 /*

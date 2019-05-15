@@ -1728,6 +1728,7 @@ input.search-query-input {
 
 .activity-link-preview-image-wrap {
   flex: 0 0 auto;
+  min-width: 0;
   width: 180px;
   min-height: 200px;
   position: relative;
@@ -1764,6 +1765,7 @@ input.search-query-input {
 
 .activity-link-preview-content {
   flex: 1;
+  min-width: 0;
   padding: 40px 20px;
   font-size: 13px;
   color: #939597;
@@ -2250,17 +2252,20 @@ form.ac-form .ac-reply-content input {
   }
   .members-directory-wrapper .bp-profile-search-widget {
     flex: 0 0 220px;
+    min-width: 0;
     margin-right: 30px;
   }
 }
 
 .members-directory-wrapper .members-directory-container {
   flex: 1;
+  min-width: 0;
 }
 
 @media screen and (max-width: 46.8em) {
   .members-directory-wrapper .bp-profile-search-widget {
     flex: 0 0 100%;
+    min-width: 0;
   }
 }
 
@@ -2367,9 +2372,11 @@ form.ac-form .ac-reply-content input {
   }
   .buddypress-wrap .register-page .layout-wrap .default-profile {
     flex: 1 100%;
+    min-width: 0;
   }
   .buddypress-wrap .register-page .layout-wrap .blog-details {
     flex: 1 100%;
+    min-width: 0;
   }
   .buddypress-wrap .register-page .submit {
     clear: both;
@@ -2379,12 +2386,15 @@ form.ac-form .ac-reply-content input {
 @media screen and (min-width: 46.8em) {
   .buddypress-wrap.extended-default-reg .register-page .default-profile {
     flex: 1 100%;
+    min-width: 0;
   }
   .buddypress-wrap.extended-default-reg .register-page .extended-profile {
     flex: 1 100%;
+    min-width: 0;
   }
   .buddypress-wrap.extended-default-reg .register-page .blog-details {
     flex: 1 100%;
+    min-width: 0;
   }
 }
 
@@ -2617,6 +2627,7 @@ body.no-js .single-item-header .js-self-profile-button {
 */
 #cover-image-container {
   flex: 0 0 100%;
+  min-width: 0;
   position: relative;
 }
 
@@ -2659,6 +2670,7 @@ body.no-js .single-item-header .js-self-profile-button {
 .users-header #item-header-cover-image #item-header-content {
   flex: 1;
   margin-top: -50px;
+  min-width: 0;
 }
 
 /*
@@ -2776,6 +2788,7 @@ body.no-js .single-item-header .js-self-profile-button {
 @media screen and (min-width: 783px) {
   .groups-header #item-header-content {
     flex: 1;
+    min-width: 0;
   }
   .groups-header #item-header-cover-image #item-actions,
   .groups-header #item-header-cover-image #item-header-content {
@@ -3256,6 +3269,7 @@ body.buddypress.bp-user #page #primary .entry-header {
 
 .buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_title {
   flex: 1;
+  min-width: 0;
 }
 
 .buddypress-wrap .profile.edit .repeater_group_outer .repeater_set_edit {
@@ -3884,6 +3898,7 @@ input#send-to-input {
 
 #send_message_form .select2-search.select2-search--inline {
   flex: 1;
+  min-width: 0;
 }
 
 #send_message_form .select2-selection__rendered li {
@@ -3929,6 +3944,7 @@ input#send-to-input {
   .bp-messages-nav-panel {
     -ms-flex: 0 0 100%;
     flex: 0 0 100%;
+    min-width: 0;
   }
 }
 
@@ -3998,6 +4014,7 @@ input#send-to-input {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  min-width: 0;
   max-width: 40px;
   margin-left: 10px;
 }
@@ -4006,6 +4023,7 @@ input#send-to-input {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
+  min-width: 0;
 }
 
 .bp-single-message-content .bb-activity-media-elem {
@@ -4078,6 +4096,7 @@ input#send-to-input {
   .bp-messages-nav-panel {
     flex: 0 0 100%;
     border-left: 0;
+    min-width: 0;
   }
   .bp-messages-content {
     display: none;
@@ -5436,6 +5455,7 @@ button[data-bp-close]:hover {
 
 .buddypress.widget .activity-update .update-item cite {
   flex: 0 0 50px;
+  min-width: 0;
   margin-left: 10px;
 }
 
@@ -6773,6 +6793,7 @@ button[data-bp-tooltip] {
   .grid.two > li, .grid.three > li, .grid.four > li {
     flex: 0 0 50%;
     max-width: 50%;
+    min-width: 0;
   }
   .grid.two > li .item, .grid.three > li .item, .grid.four > li .item {
     margin: 1rem auto 0;
@@ -6789,6 +6810,7 @@ button[data-bp-tooltip] {
     padding-top: 0;
     flex: 0 0 33.333333%;
     max-width: 33.333333%;
+    min-width: 0;
   }
 }
 
@@ -6797,6 +6819,7 @@ button[data-bp-tooltip] {
   .grid.four > li {
     flex: 0 0 25%;
     max-width: 25%;
+    min-width: 0;
   }
 }
 
@@ -6902,6 +6925,7 @@ button[data-bp-tooltip] {
 .buddypress-wrap #members-list.grid.bp-list.members-group-list li.item-entry-header {
   max-width: 100%;
   flex: 100%;
+  min-width: 0;
 }
 
 .buddypress-wrap .blogs-list.grid.two > li .blogs-title {
@@ -6958,6 +6982,7 @@ button[data-bp-tooltip] {
     -webkit-box-flex: 1;
     -ms-flex: 1;
     flex: 1;
+    min-width: 0;
     padding-right: 20px;
   }
   .bp-single-vert-nav #subnav {
@@ -8331,6 +8356,7 @@ AJAX SEARCH
 
 .bp-search-ajax-item .item {
   flex: 1;
+  min-width: 0;
   overflow: hidden;
   line-height: 1.3;
   align-self: center;
@@ -8512,6 +8538,7 @@ SEARCH RESULTS PAGE
 
 .bp-search-results-wrap .results-group-title {
   flex: 1;
+  min-width: 0;
 }
 
 .bp-search-results-wrap .results-group-footer {
@@ -8673,6 +8700,7 @@ div.search_results .groups-list li .last-activity {
 .bp-search-results-list .bp-search-item .item {
   display: block;
   flex: 1;
+  min-width: 0;
   align-self: center;
 }
 
@@ -9288,16 +9316,19 @@ body.login .login-popup .mfp-close:hover {
 .act-grid-1-1 {
   flex: 0 0 100%;
   max-width: 100%;
+  min-width: 0;
 }
 
 .bb-media-length-2 .act-grid-1-1 {
   flex: 0 0 50%;
   max-width: 50%;
+  min-width: 0;
 }
 
 .act-grid-1-2 {
   flex: 0 0 50%;
   max-width: 50%;
+  min-width: 0;
 }
 
 .bb-activity-media-elem {
@@ -9367,6 +9398,7 @@ body.login .login-popup .mfp-close:hover {
 .bb-media-length-4 .act-grid-1-2 {
   flex: 0 0 33.33%;
   max-width: 33.33%;
+  min-width: 0;
 }
 
 .bb-media-length-4 .bb-activity-media-elem.act-grid-1-2 .entry-img {
@@ -9380,16 +9412,19 @@ body.login .login-popup .mfp-close:hover {
 .bb-media-length-5 .act-grid-1-1 {
   flex: 0 0 50%;
   max-width: 50%;
+  min-width: 0;
 }
 
 .bb-media-length-5 .act-grid-1-1 + .act-grid-1-2 {
   flex: 0 0 50%;
   max-width: 50%;
+  min-width: 0;
 }
 
 .bb-media-length-5 .act-grid-1-2 {
   flex: 0 0 33.33%;
   max-width: 33.33%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-2 .entry-img {
@@ -9399,11 +9434,13 @@ body.login .login-popup .mfp-close:hover {
 .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout {
   flex: 0 0 64%;
   max-width: 64%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem {
   flex: 0 0 36%;
   max-width: 36%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem .entry-img {
@@ -9424,11 +9461,13 @@ body.login .login-popup .mfp-close:hover {
 .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout {
   flex: 0 0 64%;
   max-width: 64%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem {
   flex: 0 0 36%;
   max-width: 36%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-4 .act-grid-1-1.bb-vertical-layout ~ .bb-activity-media-elem .entry-img {
@@ -9460,16 +9499,19 @@ body.login .login-popup .mfp-close:hover {
 .bb-activity-media-wrap.bb-media-length-more .act-grid-1-1 {
   flex: 0 0 50%;
   max-width: 50%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-more .act-grid-1-1 + .act-grid-1-2 {
   flex: 0 0 50%;
   max-width: 50%;
+  min-width: 0;
 }
 
 .bb-activity-media-wrap.bb-media-length-more .act-grid-1-2 {
   flex: 0 0 33.33%;
   max-width: 33.33%;
+  min-width: 0;
 }
 
 .modal-mask {
@@ -9679,6 +9721,7 @@ body.login .login-popup .mfp-close:hover {
 
 .buddypress-wrap .bp-list.bb-photo-list li {
   flex: 0 0 20%;
+  min-width: 0;
   margin: 0;
   padding: 5px;
 }
@@ -9848,6 +9891,7 @@ a.bb-close-model {
 
 .bb-media-info-section {
   flex: 0 0 100%;
+  min-width: 0;
 }
 
 .bb-media-info-section .item-title {
@@ -10110,6 +10154,7 @@ ul.bb-albums-list li {
   -ms-flex: 0 0 25%;
   flex: 0 0 25%;
   max-width: 25%;
+  min-width: 0;
   padding: 5px;
 }
 
@@ -10217,9 +10262,11 @@ ul.bb-albums-list .bb-more-photos strong {
   }
   .bb-media-section {
     flex: 1;
+    min-width: 0;
   }
   .bb-media-info-section {
     flex: 0 0 376px;
+    min-width: 0;
   }
 }
 
@@ -10252,6 +10299,7 @@ ul.bb-albums-list .bb-more-photos strong {
     -ms-flex: 0 0 50%;
     flex: 0 0 50%;
     max-width: 50%;
+    min-width: 0;
   }
   .bb-album-list-item .bs-cover-wrap {
     padding-top: 95.52%;
@@ -10431,6 +10479,7 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 
 .dz-default.dz-message {
   flex: 0 0 100%;
+  min-width: 0;
 }
 
 .dropzone.dz-drag-hover .dz-message {

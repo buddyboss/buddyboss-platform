@@ -452,6 +452,7 @@ input#send-to-input {
 
 	.select2-search.select2-search--inline {
 		flex: 1;
+		min-width: 0;
 	}
 
 	.select2-selection__rendered li {
@@ -496,6 +497,7 @@ input#send-to-input {
 	@include medium-max() {
 		-ms-flex: 0 0 100%;
 		flex: 0 0 100%;
+		min-width: 0;
 	}
 }
 
@@ -565,6 +567,7 @@ input#send-to-input {
 	-webkit-box-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
+	min-width: 0;
 	max-width: 40px;
 	margin-right: 10px;
 }
@@ -573,6 +576,7 @@ input#send-to-input {
 	-webkit-box-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
+	min-width: 0;
 
 	.bb-activity-media-elem {
 		min-width: 20%;
@@ -649,6 +653,7 @@ input#send-to-input {
 	.bp-messages-nav-panel {
 		flex: 0 0 100%;
 		border-right: 0;
+		min-width: 0;
 	}
 
 	.bp-messages-content {

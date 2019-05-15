@@ -443,6 +443,7 @@
 
 .activity-link-preview-image-wrap {
 	flex: 0 0 auto;
+	min-width: 0;
 	width: 180px;
 	min-height: 200px;
 	position: relative;
@@ -477,6 +478,7 @@
 
 .activity-link-preview-content {
 	flex: 1;
+	min-width: 0;
 	padding: 40px 20px;
 	font-size: 13px;
 	color: #939597;
