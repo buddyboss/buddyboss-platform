@@ -128,7 +128,7 @@ function bp_nouveau_ajax_albums_loader() {
 			if ( bp_album_has_more_items() ) : ?>
 
                 <li class="load-more">
-                    <a href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+                    <a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
                 </li>
 
 			<?php endif;

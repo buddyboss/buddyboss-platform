@@ -1047,6 +1047,10 @@ ul.bb-albums-list {
 	ul.bb-albums-list .bb-more-photos strong {
 		font-size: 20px;
 	}
+
+	.buddypress-wrap .bp-list.bb-photo-list li {
+		flex: 0 0 25%;
+	}
 }
 
 @media (max-width: 580px) {
@@ -1061,6 +1065,10 @@ ul.bb-albums-list {
 
 	.bb-album-list-item .bs-cover-wrap {
 		padding-top: 95.52%;
+	}
+
+	.buddypress-wrap .bp-list.bb-photo-list li {
+		flex: 0 0 50%;
 	}
 }
 
