@@ -94,6 +94,96 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
+    if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
+
+        // check if topic edit
+	    if ( bbp_is_topic_edit() ) {
+		    $params['media']['bbp_is_topic_edit'] = true;
+
+		    $media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
+		    if ( ! empty( $media_ids ) && bp_has_media(
+				    array(
+					    'include'  => $media_ids,
+					    'order_by' => 'menu_order',
+					    'sort'     => 'ASC'
+				    ) ) ) {
+			    $params['media']['topic_edit_media'] = array();
+			    $index                               = 0;
+			    while ( bp_media() ) {
+				    bp_the_media();
+
+				    $params['media']['topic_edit_media'][] = array(
+					    'id'            => bp_get_media_id(),
+					    'attachment_id' => bp_get_media_attachment_id(),
+					    'name'          => bp_get_media_title(),
+					    'thumb'         => bp_get_media_attachment_image_thumbnail(),
+					    'url'           => bp_get_media_attachment_image(),
+					    'menu_order'    => $index,
+				    );
+				    $index ++;
+			    }
+		    }
+	    }
+
+        // check if reply edit
+        if ( bbp_is_reply_edit() ) {
+	        $params['media']['bbp_is_reply_edit'] = true;
+
+	        $media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
+	        if ( ! empty( $media_ids ) && bp_has_media(
+			        array(
+				        'include'  => $media_ids,
+				        'order_by' => 'menu_order',
+				        'sort'     => 'ASC'
+			        ) ) ) {
+		        $params['media']['reply_edit_media'] = array();
+		        $index                               = 0;
+		        while ( bp_media() ) {
+			        bp_the_media();
+
+			        $params['media']['reply_edit_media'][] = array(
+				        'id'            => bp_get_media_id(),
+				        'attachment_id' => bp_get_media_attachment_id(),
+				        'name'          => bp_get_media_title(),
+				        'thumb'         => bp_get_media_attachment_image_thumbnail(),
+				        'url'           => bp_get_media_attachment_image(),
+				        'menu_order'    => $index,
+			        );
+			        $index ++;
+		        }
+	        }
+        }
+
+        // check if forum edit
+	    if ( bbp_is_forum_edit() ) {
+		    $params['media']['bbp_is_forum_edit'] = true;
+
+		    $media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+		    if ( ! empty( $media_ids ) && bp_has_media(
+				    array(
+					    'include'  => $media_ids,
+					    'order_by' => 'menu_order',
+					    'sort'     => 'ASC'
+				    ) ) ) {
+			    $params['media']['forum_edit_media'] = array();
+			    $index                               = 0;
+			    while ( bp_media() ) {
+				    bp_the_media();
+
+				    $params['media']['forum_edit_media'][] = array(
+					    'id'            => bp_get_media_id(),
+					    'attachment_id' => bp_get_media_attachment_id(),
+					    'name'          => bp_get_media_title(),
+					    'thumb'         => bp_get_media_attachment_image_thumbnail(),
+					    'url'           => bp_get_media_attachment_image(),
+					    'menu_order'    => $index,
+				    );
+				    $index ++;
+			    }
+		    }
+        }
+    }
+
 	return $params;
 }
 

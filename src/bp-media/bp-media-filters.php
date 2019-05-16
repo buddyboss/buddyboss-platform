@@ -246,8 +246,44 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 		// save media
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
+
+		//fetch currently uploaded media ids
+		$existing_media                = [];
+		$existing_media_ids            = get_post_meta( $post_id, 'bp_media_ids', true );
+		$existing_media_attachment_ids = array();
+		if ( ! empty( $existing_media_ids ) ) {
+			$existing_media_ids = explode( ',', $existing_media_ids );
+
+			foreach ( $existing_media_ids as $existing_media_id ) {
+				$existing_media[ $existing_media_id ] = new BP_Media( $existing_media_id );
+
+				if ( ! empty( $existing_media[ $existing_media_id ]->attachment_id ) ) {
+					$existing_media_attachment_ids[] = $existing_media[ $existing_media_id ]->attachment_id;
+				}
+			}
+		}
+
 		$media_ids = array();
 		foreach ( $medias as $media ) {
+
+			$title             = ! empty( $media['name'] ) ? $media['name'] : '';
+			$attachment_id     = ! empty( $media['id'] ) ? $media['id'] : 0;
+			$attached_media_id = ! empty( $media['media_id'] ) ? $media['media_id'] : 0;
+			$album_id          = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+			$menu_order        = ! empty( $media['menu_order'] ) ? $media['menu_order'] : 0;
+
+			if ( ! empty( $existing_media_attachment_ids ) ) {
+				$index = array_search( $attachment_id, $existing_media_attachment_ids );
+				if ( ! empty( $attachment_id ) && $index !== false && ! empty( $existing_media[ $attached_media_id ] ) ) {
+
+					$existing_media[ $attached_media_id ]->menu_order = $menu_order;
+					$existing_media[ $attached_media_id ]->save();
+
+					unset( $existing_media_ids[ $index ] );
+					$media_ids[] = $attached_media_id;
+					continue;
+				}
+			}
 
 			$activity_id = false;
 			// make an activity for the media
@@ -258,10 +294,6 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 					bp_activity_update_meta( $activity_id, 'bp_media_activity', true );
 				}
 			}
-
-			$title         = ! empty( $media['name'] ) ? $media['name'] : '';
-			$attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
-			$album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
 
 			$media_id = bp_media_add( array(
 				'attachment_id' => $attachment_id,
@@ -288,6 +320,13 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 		//Save all attachment ids in forums post meta
 		update_post_meta( $post_id, 'bp_media_ids', $media_ids );
+
+		// delete medias which were not saved or removed from form
+		if ( ! empty( $existing_media_ids ) ) {
+            foreach ( $existing_media_ids as $media_id ) {
+                bp_media_delete( $media_id );
+            }
+		}
 	}
 }
 
