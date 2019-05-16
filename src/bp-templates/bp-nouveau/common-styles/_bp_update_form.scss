@@ -252,7 +252,7 @@
 
 	&.open {
 		display: block;
-		width: 400px;
+		width: 300px;
 	}
 
 	&:before {
@@ -272,6 +272,13 @@
 		box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
 		transition: all linear 0.2s;
 		z-index: 101;
+	}
+}
+
+@media screen and (min-width: 768px) {
+
+	.gif-media-search-dropdown.open {
+		width: 360px;
 	}
 }
 
@@ -330,7 +337,8 @@
 .found-media-item img {
 	width: 100%;
 	height: 100%;
-	min-width: 180px;
+	min-width: 100%;
+	// min-width: 180px;
 }
 
 input.search-query-input {

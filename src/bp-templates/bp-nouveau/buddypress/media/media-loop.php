@@ -23,7 +23,7 @@ bp_nouveau_before_loop(); ?>
 	<?php if ( bp_media_has_more_items() ) : ?>
 
         <li class="load-more">
-            <a href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+            <a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
         </li>
 
 	<?php endif; ?>
