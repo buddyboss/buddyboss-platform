@@ -168,7 +168,7 @@ class BP_Core extends BP_Component {
 		 * @param array $value Array of included and optional integrations.
 		 */
 		$bp->available_integrations = apply_filters('bp_integrations', array(
-			'memberships', 'appboss', 'learndash',
+			'appboss', 'learndash',
 		));
 
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
