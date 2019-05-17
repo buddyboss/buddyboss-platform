@@ -673,7 +673,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 		bp_send_email( 'messages-unread', $ud, array(
 			'tokens' => array(
 				'message_id'  => $id,
-				'usermessage' => wp_strip_all_tags( stripslashes( $message ) ),
+				'usermessage' => stripslashes( $message ),
 				'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
 				'sender.name' => $sender_name,
 				'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
