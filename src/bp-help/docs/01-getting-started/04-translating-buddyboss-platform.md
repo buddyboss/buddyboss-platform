@@ -1,0 +1,70 @@
+#Translating Text and Labels
+
+You might want to change the text, labels and messages seen throughout BuddyBoss Platform, for example if your site is in another language. This page explains how to use a language translation file to customize all text instances found in BuddyBoss Platform. You **do not** want to modify the text in the code of the actual plugin, as it will all be removed as soon as you update the plugin. You need to modify text using the included language translation files. This is the same method used in all WordPress plugins.
+
+This is an advanced tutorial and requires some technical knowledge. If this information is overly technical check out [WordPress translation recommendations](https://developer.wordpress.org/plugins/internationalization/localization/#translate-po-file).
+
+Automatic Translation (Loco Translate)
+-------------------
+
+The easiest method to translate text is to use the plugin [Loco Translate](https://wordpress.org/plugins/loco-translate/).
+
+---
+
+Manual Translation (Language Files)
+
+Localization (l10n)
+-------------------
+
+Localization, sometimes abbreviated as l10n, describes the process of translating an internationalized plugin. Files associated with l10n are called POT (Portable Object Template). The BuddyBoss Platform is adding new languages all the time.
+
+Changing Languages
+------------------
+
+Navigate to Dashboard -> Settings -> General -> Site Language to select your language.
+
+![site language](https://www.dropbox.com/s/yc0mdbkmrrpkb7l/sitelanguage.jpg?raw=1)
+
+If BuddyBoss Platform components have not been translated into your language you will need to follow the instructions in the remainder of this page to complete the translation.
+
+Translating Interface
+---------------------
+
+Every translator program requires a POT file to read labels and messages that can be translated. This program will export/create a PO (Portable Object) file. Each PO file will build/create an MO (Machine Object) file. Admins can read PO files while computers/servers read MO files.
+
+The most popular translating program is [Poedit](https://poedit.net/download). This program is open source for all major operating systems. Poedit is simple and easy to use. After installation open the program.
+
+![poedit](https://www.dropbox.com/s/jfah1sgkfqbazjj/poedit.png?raw=1)
+
+Click on the option to Create new translation.
+
+If you have not yet extracted the contents of the BuddyBoss Platform zip file, please do that now. Navigate to the location of BuddyBoss Platform on your computer at `buddyboss-platform/languages/buddyboss-platform.pot`.
+
+![buddyboss platform pot file](https://www.dropbox.com/s/7teyx1ucc7ojdoq/filepath.png?raw=1)
+
+Select your translation language.
+
+![translation language](https://www.dropbox.com/s/fatdhf8x5c0y015/language.png?raw=1)
+
+At this point you are ready to start translating each text by entering text into the translation field on the bottom of the program screen.
+
+![](https://www.dropbox.com/s/7cwtm6ks6ms1hob/image-4-1024x846.png?raw=1)
+
+Once you translate all fields you will need to save your work as buddyboss-platform-{locale}.po where {locale} is your language locale. Then compile to MO. For example, the locale for German is `de_DE`. From the code example above the German MO and PO files should be named `buddyboss-platform-de_DE.mo` and `buddyboss-platform-de_DE.po`.
+
+![poedit save and compile to MO](https://www.dropbox.com/s/fyvtgsag2ionivf/poeditsavecompile-1024x844.jpg?raw=1)
+
+Next, open your favorite [bp_docs_link text="FTP program" slug="getting-started/installation.md" anchors="manual-installation"] and upload the MO file to `wp-content/languages/`. If that folder does not yet exist you can create it and then upload the file.
+
+If you haven't yet changed the WordPress Language Settings:
+
+*   Go to `wp-admin/options-general.php` or Settings -> General
+*   Select your language under Site Language
+*   Go to `wp-admin/update-core.php` or Dashboard -> Updates
+
+![dashboard updates](https://www.dropbox.com/s/46r0sqyeii7wwfd/dashboardupdates.jpg?raw=1)
+
+*   Click Update translations, if available
+*   Core translations files are downloaded, if available
+
+At this point your site should be translated. If not, please try deleting your browser cache and refresh the browser window.
