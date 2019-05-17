@@ -749,14 +749,14 @@ class BP_Email_Tokens {
 														<?php echo nl2br( $tokens['usermessage'] ); ?>
 													</div>
                                                     <?php if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) : ?>
-                                                        <div class="bb-activity-media-wrap">
+														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
                                                             <?php while ( bp_media() ) {
                                                                 bp_the_media();
                                                                 ?>
-                                                                <div class="bb-activity-media-elem">
-                                                                    <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
-                                                                        <img src="<?php echo esc_attr( bp_get_media_attachment_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
-                                                                    </a>
+                                                                <div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																		<img src="<?php echo esc_attr( bp_get_media_attachment_image_thumbnail() ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+																	</a>
                                                                 </div>
                                                                 <?php
                                                             } ?>
