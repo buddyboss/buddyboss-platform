@@ -64,6 +64,8 @@ class BP_Memberpress_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'MemberPress' //Callback arguments
 			);
 
+
+
 		}
 
 	}
