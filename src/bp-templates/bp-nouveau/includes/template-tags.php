@@ -2472,6 +2472,16 @@ function bp_nouveau_signup_terms_privacy() {
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
 	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
 
+	// Do not show the page if page is not published.
+	if ( false !== $terms && 'publish' !== get_post_status( $terms ) ) {
+		$terms = false;
+	}
+
+	// Do not show the page if page is not published.
+	if ( false !== $privacy && 'publish' !== get_post_status( $privacy ) ) {
+		$privacy = false;
+	}
+
 	if ( ! $terms && ! $privacy ) {
 	    return false;
     }
