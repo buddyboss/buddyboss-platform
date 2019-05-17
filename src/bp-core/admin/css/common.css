@@ -475,16 +475,8 @@ tr.bp-search-parent-field label {
 }
 
 /* Media */
-.bp-admin-card.section-bp_media_settings_photos h2:before {
+.bp-admin-card.section-bp_media_settings_general h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_emoji h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/grin.svg);
-}
-
-.bp-admin-card.section-bp_media_settings_gifs h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
 }
 
 /* Search */
@@ -960,13 +952,12 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-card-grid .bp-help-card .inside {
-  padding: 1.8em 2em;
+  padding: 1.8em 2em 5em;
 }
 
 .bp-help-card-grid .bp-help-card h2 {
-  border-bottom: 1px solid #eaeaea;
   font-size: 18px;
-  padding: 0 0 1em;
+  padding: 0;
   margin: 0 0 1em;
   line-height: 1.4;
 }
