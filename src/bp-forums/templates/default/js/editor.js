@@ -1,48 +1,46 @@
 jQuery(document).ready( function() {
 
-	if ( typeof window.Quill !== 'undefined' ) {
-		var toolbarOptions = [
-			['bold', 'italic'],        // toggled buttons
-			[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-			['blockquote','link']
-		];
+	if ( typeof window.MediumEditor !== 'undefined' ) {
+		var toolbarOptions = {
+			buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+		};
 		if ( jQuery( '#bbp_editor_forum_content' ).length ) {
-			var forums_quill_forum_editor = new window.Quill('#bbp_editor_forum_content', {
-				modules: {
-					toolbar: toolbarOptions
+			var forums_medium_forum_editor = new MediumEditor('#bbp_editor_forum_content',{
+				placeholder: {
+					text: wp.i18n.__('Description', 'buddyboss'),
+					hideOnClick: true
 				},
-				theme: 'bubble',
-				placeholder: wp.i18n.__('Description', 'buddyboss')
+				toolbar: toolbarOptions
 			});
 
-			forums_quill_forum_editor.on('text-change', function() {
-				jQuery('#bbp_forum_content').val(forums_quill_forum_editor.container.firstChild.innerHTML);
+			forums_medium_forum_editor.subscribe('editableInput', function (event, editorElement) {
+				jQuery('#bbp_forum_content').val(forums_medium_forum_editor.getContent());
 			});
 		}
 		if ( jQuery( '#bbp_editor_reply_content' ).length ) {
-			var forums_quill_reply_editor = new window.Quill('#bbp_editor_reply_content', {
-				modules: {
-					toolbar: toolbarOptions
+			var forums_medium_reply_editor = new MediumEditor('#bbp_editor_reply_content',{
+				placeholder: {
+					text: wp.i18n.__('Type your reply here', 'buddyboss'),
+					hideOnClick: true
 				},
-				theme: 'bubble',
-				placeholder: wp.i18n.__('Type your reply here', 'buddyboss')
+				toolbar: toolbarOptions
 			});
 
-			forums_quill_reply_editor.on('text-change', function() {
-				jQuery('#bbp_reply_content').val(forums_quill_reply_editor.container.firstChild.innerHTML);
+			forums_medium_reply_editor.subscribe('editableInput', function (event, editorElement) {
+				jQuery('#bbp_reply_content').val(forums_medium_reply_editor.getContent());
 			});
 		}
 		if ( jQuery( '#bbp_editor_topic_content' ).length ) {
-			var forums_quill_topic_editor = new window.Quill('#bbp_editor_topic_content', {
-				modules: {
-					toolbar: toolbarOptions
+			var forums_medium_topic_editor = new MediumEditor('#bbp_editor_topic_content',{
+				placeholder: {
+					text: wp.i18n.__('Type your discussion here', 'buddyboss'),
+					hideOnClick: true
 				},
-				theme: 'bubble',
-				placeholder: wp.i18n.__('type your discussion here', 'buddyboss')
+				toolbar: toolbarOptions
 			});
 
-			forums_quill_topic_editor.on('text-change', function() {
-				jQuery('#bbp_topic_content').val(forums_quill_topic_editor.container.firstChild.innerHTML);
+			forums_medium_topic_editor.subscribe('editableInput', function (event, editorElement) {
+				jQuery('#bbp_topic_content').val(forums_medium_topic_editor.getContent());
 			});
 		}
 	}
