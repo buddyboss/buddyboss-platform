@@ -323,11 +323,11 @@ function bp_ps_anyfield_setup ($fields)
 	return $fields;
 }
 
-// Hook for registering a LearnDash course field in frontend and backend.
+// Hook for registering a LearnDash course field in frontend and backend in advance search.
 add_filter ('bp_ps_add_fields', 'bp_ps_learndash_course_setup');
 
 /**
- * Registers a LearnDash course field in frontend and backend.
+ * Registers a LearnDash course field in frontend and backend in advance search.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -375,7 +375,94 @@ function bp_ps_learndash_course_setup ($fields) {
 }
 
 /**
- * Fetchs all the users from a selected course.
+ * Registers a Gender field in frontend and backend in advance search.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $fields
+ *
+ * @return array
+ */
+function bp_ps_gender_setup ($fields) {
+
+	global $wpdb;
+
+	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+
+	if ( $exists_gender[0]->count > 0 ) {
+
+		$field = new BP_XProfile_Field ( $exists_gender[0]->id );
+		if (empty ($field->id))  return $fields;
+
+		$options = array ();
+		$rows = $field->get_children ();
+		if ( is_array ($rows) ) {
+			foreach ( $rows as $row ) {
+				if ( '1' === $row->option_order ) {
+					$option_value = 'his_' . $row->name;
+				} elseif ( '2' === $row->option_order ) {
+					$option_value = 'her_' . $row->name;
+				} else {
+					$option_value = 'their_' . $row->name;
+				}
+				$options[ stripslashes( trim( $option_value ) ) ] = stripslashes( trim( $row->name ) );
+			}
+
+			$f              = new stdClass;
+			$f->group       = __( 'Gender', 'buddyboss' );
+			$f->id          = 'xprofile_gender';
+			$f->code        = 'field_xprofile_gender';
+			$f->name        = __( 'Gender', 'buddyboss' );
+			$f->description = __( 'Gender', 'buddyboss' );
+			$f->type        = 'selectbox';
+			$f->format      = bp_ps_xprofile_format( 'selectbox', 'xprofile_gender' );
+			$f->options     = $options;
+			$f->search      = 'bp_ps_xprofile_gender_users_search';
+
+			$fields[] = $f;
+
+		}
+
+	}
+
+	return $fields;
+}
+
+// Hook for registering a Gender field in frontend and backend in advance search.
+add_filter ('bp_ps_add_fields', 'bp_ps_gender_setup');
+
+/**
+ * Fetch the users based on selected value in advance search.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $f
+ *
+ * @return array
+ */
+function bp_ps_xprofile_gender_users_search( $f ) {
+
+	global $wpdb;
+
+	$gender = $f->value;
+	if ( isset( $gender ) && ! empty( $gender ) ) {
+
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+
+		$custom_ids = $wpdb->get_col("SELECT user_id FROM {$wpdb->prefix}bp_xprofile_data WHERE field_id = {$exists_gender[0]->id} AND value = '{$gender}'");
+
+		if ( isset( $custom_ids ) && ! empty( $custom_ids ) ) {
+			return $custom_ids;
+		} else {
+			return array();
+		}
+	} else {
+		return array();
+	}
+}
+
+/**
+ * Fetch all the users from a selected course.
  *
  * @since BuddyBoss 1.0.0
  *
