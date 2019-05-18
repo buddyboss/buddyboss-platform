@@ -17,3 +17,7 @@ BuddyBoss Theme
 *   Click Upload, and attach the zip file `buddyboss-theme-child.zip`
 *   Once it finishes uploading click Activate.
 *   Watch the above video tutorial for more information.
+
+---
+
+For more tutorials on configuring BuddyBoss Theme, [bp_docs_link text="click here" slug="buddyboss-theme/overview.md"].
