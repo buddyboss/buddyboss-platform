@@ -4,13 +4,12 @@
 (To be embedded once we upload it to Youtube...)
 
 ---
-
-Before installing BuddyBoss Theme, please make sure you have installed [bp_docs_link text="BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"].
+Before installing BuddyBoss Theme, please make sure you have [bp_docs_link text="installed BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"] and [bp_docs_link text="purchased BuddyBoss Theme" slug="buddyboss-theme/purchasing.md"].
 
 BuddyBoss Theme
 -------------------------------
 
-*   Purchase the BuddyBoss Theme at [BuddyBoss.com](https://www.buddyboss.com/)
+*   [bp_docs_link text="Purchase" slug="buddyboss-theme/purchasing.md"] the BuddyBoss Theme and download the ZIP files.
 *   Log in to your WordPress website and access the admin Dashboard.
 *   Click on Themes -> Add New.
 *   Click Upload, and attach the zip file `buddyboss-theme.zip`
