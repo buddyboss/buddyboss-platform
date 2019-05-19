@@ -836,7 +836,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		// Set warning messages.
 		$strings['cover_image_warnings'] = apply_filters( 'bp_attachments_cover_image_ui_warnings', array(
 			'dimensions'  => sprintf(
-					__( 'For best results, upload an image that is %1$spx x %2$spx or larger.', 'buddyboss' ),
+					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 					(int) $cover_dimensions['width'],
 					(int) $cover_dimensions['height']
 				),
