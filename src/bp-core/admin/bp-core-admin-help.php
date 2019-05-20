@@ -130,7 +130,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 					$count_html = '';
 				}
 
-				if ( empty( $hide_parent ) ) {
+				if ( empty( $hide_parent ) && ! empty( $dir_index_file ) ) {
 					printf( '<a href="%s" class="dir">%s %s</a>%s', $url, bp_core_admin_help_get_file_title( $dir_index_file ), $count_html, $action );
 				}
 				if ( ! empty( $show_as_heading ) ) {
