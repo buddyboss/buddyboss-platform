@@ -928,7 +928,7 @@ body.post-type-bp-email .categorydiv label {
   margin: 0 10px 2%;
   background-color: #fff;
   border: 1px solid #e5e5e5;
-  border-radius: 6px;
+  border-radius: 5px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
   flex: 0 0 calc(33.33% - 20px);
@@ -1080,6 +1080,14 @@ body.post-type-bp-email .categorydiv label {
   border: 1px solid #ddd;
   border-radius: 5px;
   box-shadow: 0 3px 20px -1px rgba(7, 10, 25, 0.1);
+}
+
+.bp-help-content .article-child > ul > li {
+  list-style-type: none;
+}
+
+.bp-help-content .article-child .actions, .bp-help-content .article-child .sub-menu-count {
+  display: none;
 }
 
 @media screen and (min-width: 782px) {
