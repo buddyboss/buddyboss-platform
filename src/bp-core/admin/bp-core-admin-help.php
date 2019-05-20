@@ -62,7 +62,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
  * @param $times
  * @param $docs_path
  */
-function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_hide = 1, $show_as_heading = false ) {
+function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_hide = 1, $show_as_heading = false, $hide_parent = false ) {
 	$article      = bp_core_admin_help_get_article_value();
 	$article_path = $docs_path . $article;
 
@@ -75,7 +75,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 	}
 
 
-	do_action( 'bp_core_admin_help_sub_menu_before', $directories, $times, $docs_path, $level_hide, $show_as_heading );
+	do_action( 'bp_core_admin_help_sub_menu_before', $directories, $times, $docs_path, $level_hide, $show_as_heading, $hide_parent );
 
 	// For showing the menu title
 	foreach ( $directories as $directory ) {
@@ -121,23 +121,25 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 				$count_html = sprintf( '<span class="sub-menu-count">(%s)</span>', 0 );
 
 				$action = '<span class="actions"><span class="open">+</span></span>';
+
 				if ( ( $article && 1 == $times ) || ! empty( $show_as_heading ) ) {
 					$action     = '';
 					$count_html = '';
 				}
 
-				printf( '<a href="%s" class="dir">%s %s</a>%s', $url, bp_core_admin_help_get_file_title( $dir_index_file ), $count_html, $action );
-				$times ++;
+				if ( empty( $hide_parent ) ) {
+					printf( '<a href="%s" class="dir">%s %s</a>%s', $url, bp_core_admin_help_get_file_title( $dir_index_file ), $count_html, $action );
+				}
 				if ( ! empty( $show_as_heading ) ) {
 					?>
                     </li>
 					<?php
 				}
-				bp_core_admin_help_sub_menu( $loop_dir, $times, $docs_path, $level_hide, $show_as_heading );
-			} else {
+				bp_core_admin_help_sub_menu( $loop_dir, $times + 1, $docs_path, $level_hide, $show_as_heading );
+			} else if ( empty( $hide_parent ) ) {
 				printf( '<a href="%s" class="dir">%s</a>', $url, bp_core_admin_help_get_file_title( $dir_index_file ) );
 			}
-		} else {
+		} elseif ( empty( $hide_parent ) ) {
 			$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
 			// print the title if it's a .md file
 			printf( '<a href="%s" class="file">%s</a>', $url, bp_core_admin_help_get_file_title( $directory ) );
@@ -147,7 +149,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 		<?php
 	}
 
-	do_action( 'bp_core_admin_help_sub_menu_after', $directories, $times, $docs_path, $level_hide, $show_as_heading );
+	do_action( 'bp_core_admin_help_sub_menu_after', $directories, $times, $docs_path, $level_hide, $show_as_heading, $hide_parent );
 
 	if ( empty( $show_as_heading ) ) {
 		?>
@@ -197,8 +199,10 @@ function bp_core_admin_help_main_page() {
 
 	$main_directories = glob( $docs_path . '*', GLOB_ONLYDIR );
 
+	$article_value = bp_core_admin_help_get_article_value();
+
 	if ( ! empty( $main_directories ) ) {
-		if ( empty( bp_core_admin_help_get_article_value() ) ) {
+		if ( empty( $article_value ) ) {
 			?>
             <div class="bp-help-main-menu-wrap">
 				<?php
@@ -210,13 +214,13 @@ function bp_core_admin_help_main_page() {
 			/**
 			 * Sidebar main dir path
 			 */
-			$article_dir_array = explode( "/", bp_core_admin_help_get_article_value() );
+			$article_dir_array = explode( "/", $article_value );
 			$content_main_dir  = $docs_path . $article_dir_array[0];
 
 			/**
 			 * Show display sidebar or not
 			 */
-			$sidebar = false !== strpos( bp_core_admin_help_get_article_value(), 'miscellaneous' ) ? false : true;
+			$sidebar = false !== strpos( $article_value, 'miscellaneous' ) ? false : true;
 			?>
 
             <div class="bp-help-content-wrap">
@@ -242,8 +246,27 @@ function bp_core_admin_help_main_page() {
 						?>
                     </ul>
 
+
 					<?php
-					echo bp_core_admin_help_display_content( $docs_path . bp_core_admin_help_get_article_value() );
+
+					// print file content
+					echo bp_core_admin_help_display_content( $docs_path . $article_value );
+
+
+					// print submenu
+					if ( bp_core_admin_help_had_more_directory( $docs_path . $article_value ) ) {
+						unset( $article_dir_array[ ( count( $article_dir_array ) - 1 ) ] );
+						$article_dir_array  = implode( '/', $article_dir_array );
+						$current_doc_path[] = $docs_path . $article_dir_array;
+						?>
+                        <div class="article-child well">
+							<?php
+							printf( '<h3>%s</h3>', __( 'Articles', 'buddyboss' ) );
+							bp_core_admin_help_sub_menu( $current_doc_path, '1', $docs_path, 3, false, true );
+							?>
+                        </div>
+						<?php
+					}
 					?>
                 </div>
 
@@ -254,15 +277,32 @@ function bp_core_admin_help_main_page() {
 }
 
 /**
+ * Check if the given path has more directory. True if has more directory else false
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $path
+ *
+ * @return bool $more_dir True if has more directory else false
+ */
+function bp_core_admin_help_had_more_directory( $path ) {
+	$more_dir   = false;
+	$path_array = explode( '/', $path );
+	$file_name  = end( $path_array );
+
+	if ( strpos( $file_name, '0-overview.md' ) !== false ) {
+		$more_dir = true;
+	}
+
+	return $more_dir;
+}
+
+/**
  * Render the BuddyBoss Help page.
  *
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_help() {
-	$base_path   = buddypress()->plugin_dir . 'bp-help';
-	$docs_path   = $base_path . '/docs';
-	$vendor_path = $base_path . '/vendors';
-
 	?>
     <div class="wrap">
         <h2 class="nav-tab-wrapper">
