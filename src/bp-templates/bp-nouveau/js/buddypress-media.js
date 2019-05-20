@@ -358,17 +358,7 @@ window.bp = window.bp || {};
 
 								self.dropzone_obj.files.push(mockFile);
 								self.dropzone_obj.emit('addedfile', mockFile);
-								self.dropzone_obj.createThumbnailFromUrl(
-									mockFile,
-									self.dropzone_obj.options.thumbnailWidth,
-									self.dropzone_obj.options.thumbnailHeight,
-									self.dropzone_obj.options.thumbnailMethod,
-									true,
-									function(thumbnail) {
-										self.dropzone_obj.emit('thumbnail', mockFile, thumbnail);
-										self.dropzone_obj.emit('complete', mockFile);
-									}
-								);
+								self.createThumbnailFromUrl(mockFile);
 							}
 							self.addMediaIdsToForumsForm();
 						}
@@ -388,6 +378,21 @@ window.bp = window.bp || {};
 
 			}
 
+		},
+
+		createThumbnailFromUrl: function(mockFile) {
+			var self = this;
+			self.dropzone_obj.createThumbnailFromUrl(
+				mockFile,
+				self.dropzone_obj.options.thumbnailWidth,
+				self.dropzone_obj.options.thumbnailHeight,
+				self.dropzone_obj.options.thumbnailMethod,
+				true,
+				function(thumbnail) {
+					self.dropzone_obj.emit('thumbnail', mockFile, thumbnail);
+					self.dropzone_obj.emit('complete', mockFile);
+				}
+			);
 		},
 
 		openUploader: function(event) {

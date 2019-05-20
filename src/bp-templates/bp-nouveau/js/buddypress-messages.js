@@ -575,7 +575,7 @@ window.bp = window.bp || {};
 		activateTinyMce: function() {
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-				bp.Nouveau.Messages.mediumEditor = new MediumEditor('#message_content',{
+				bp.Nouveau.Messages.mediumEditor = new window.MediumEditor('#message_content',{
 					placeholder: {
 						text: wp.i18n.__('Type message','buddyboss'),
 						hideOnClick: true

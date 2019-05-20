@@ -6,7 +6,7 @@ jQuery(document).ready( function() {
 			buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
 		};
 		if ( jQuery( '#bbp_editor_forum_content' ).length ) {
-			window.forums_medium_forum_editor = new MediumEditor('#bbp_editor_forum_content',{
+			window.forums_medium_forum_editor = new window.MediumEditor('#bbp_editor_forum_content',{
 				placeholder: {
 					text: wp.i18n.__('Description', 'buddyboss'),
 					hideOnClick: true
@@ -14,12 +14,12 @@ jQuery(document).ready( function() {
 				toolbar: toolbarOptions
 			});
 
-			window.forums_medium_forum_editor.subscribe('editableInput', function (event, editorElement) {
+			window.forums_medium_forum_editor.subscribe('editableInput', function () {
 				jQuery('#bbp_forum_content').val(window.forums_medium_forum_editor.getContent());
 			});
 		}
 		if ( jQuery( '#bbp_editor_reply_content' ).length ) {
-			window.forums_medium_reply_editor = new MediumEditor('#bbp_editor_reply_content',{
+			window.forums_medium_reply_editor = new window.MediumEditor('#bbp_editor_reply_content',{
 				placeholder: {
 					text: wp.i18n.__('Type your reply here', 'buddyboss'),
 					hideOnClick: true
@@ -27,12 +27,12 @@ jQuery(document).ready( function() {
 				toolbar: toolbarOptions
 			});
 
-			forums_medium_reply_editor.subscribe('editableInput', function (event, editorElement) {
+			window.forums_medium_reply_editor.subscribe('editableInput', function () {
 				jQuery('#bbp_reply_content').val(window.forums_medium_reply_editor.getContent());
 			});
 		}
 		if ( jQuery( '#bbp_editor_topic_content' ).length ) {
-			window.forums_medium_topic_editor = new MediumEditor('#bbp_editor_topic_content',{
+			window.forums_medium_topic_editor = new window.MediumEditor('#bbp_editor_topic_content',{
 				placeholder: {
 					text: wp.i18n.__('Type your discussion here', 'buddyboss'),
 					hideOnClick: true
@@ -40,7 +40,7 @@ jQuery(document).ready( function() {
 				toolbar: toolbarOptions
 			});
 
-			window.forums_medium_topic_editor.subscribe('editableInput', function (event, editorElement) {
+			window.forums_medium_topic_editor.subscribe('editableInput', function () {
 				jQuery('#bbp_topic_content').val(window.forums_medium_topic_editor.getContent());
 			});
 		}
