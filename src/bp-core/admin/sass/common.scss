@@ -1058,6 +1058,11 @@ body.post-type-bp-email .categorydiv label {
 			display: inline;
 		}
 
+
+		li.miscellaneous {
+			display: none !important;
+		}
+
 		li:not(:last-child):after {
 			font-family: dashicons;
 			content: "\f345";
@@ -1071,10 +1076,6 @@ body.post-type-bp-email .categorydiv label {
 		li:last-child a {
 			color: #999;
 		}
-	}
-
-	li.miscellaneous {
-		display: none;
 	}
 
 	h1 {

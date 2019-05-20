@@ -1027,6 +1027,10 @@ body.post-type-bp-email .categorydiv label {
   display: inline;
 }
 
+.bp-help-content ul.bp-help-menu li.miscellaneous {
+  display: none !important;
+}
+
 .bp-help-content ul.bp-help-menu li:not(:last-child):after {
   font-family: dashicons;
   content: "\f345";
@@ -1039,10 +1043,6 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-content ul.bp-help-menu li:last-child a {
   color: #999;
-}
-
-.bp-help-content li.miscellaneous {
-  display: none;
 }
 
 .bp-help-content h1 {
