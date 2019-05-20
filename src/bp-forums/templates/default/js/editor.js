@@ -46,7 +46,7 @@ jQuery(document).ready( function() {
 		}
 	}
 
-	if (!_.isUndefined(BP_Nouveau.media.emoji)) {
+	if (typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.emoji !== 'undefined' ) {
 		var bbp_editor_content_elem = false;
 		if ( jQuery( '#bbp_editor_topic_content' ).length ) {
 			bbp_editor_content_elem = '#bbp_editor_topic_content';
