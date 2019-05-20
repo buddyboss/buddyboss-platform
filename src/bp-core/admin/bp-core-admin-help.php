@@ -143,7 +143,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 		<?php
 	}
 
-	add_action( 'bp_core_admin_help_sub_menu_after', $directories, $times, $docs_path, $level_hide, $show_as_heading );
+	do_action( 'bp_core_admin_help_sub_menu_after', $directories, $times, $docs_path, $level_hide, $show_as_heading );
 
 	if ( empty( $show_as_heading ) ) {
 		?>

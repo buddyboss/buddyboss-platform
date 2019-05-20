@@ -71,7 +71,8 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
  * @return string
  */
 function bp_core_get_post_slug_by_index( $dir_index_file ) {
-	$index_file = db_core_remove_file_extension_from_slug( end( explode( '/', $dir_index_file ) ) );
+	$dir_file_array = explode( '/', $dir_index_file );
+	$index_file = db_core_remove_file_extension_from_slug( end( $dir_file_array ) );
 
 	return db_core_remove_file_number_from_slug( $index_file );
 }
