@@ -398,6 +398,18 @@ function bp_do_activation_redirect() {
 		delete_transient( '_bp_is_new_install' );
 	}
 
+	// In Appearance > Menus, make "BuddyBoss" available by default
+	$get_existing_option = get_user_option( 'metaboxhidden_nav-menus', bp_loggedin_user_id() );
+	if ( '' === $get_existing_option || false === $get_existing_option ) {
+		$hidden_metaboxes = array();
+		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $hidden_metaboxes ); // update the user metaboxes
+	} else {
+		if ( ( $key = array_search( 'add-buddypress-nav-menu', $get_existing_option)) !== false ) {
+			unset($get_existing_option[$key]);
+		}
+		update_user_option( bp_loggedin_user_id(), 'metaboxhidden_nav-menus', $get_existing_option ); // update the user metaboxes
+	}
+
 	// Redirect to dashboard and trigger the Hello screen.
 	wp_safe_redirect( add_query_arg( $query_args, bp_get_admin_url( '?hello=buddyboss' ) ) );
 }
@@ -615,6 +627,11 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-tools',
 		),
 		'5' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
+			'name'  => __( 'Help', 'buddyboss' ),
+			'class' => 'bp-help',
+		),
+		'6' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
@@ -763,8 +780,18 @@ function bp_core_get_admin_integrations_tabs( $active_tab = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_get_admin_integration_active_tab() {
-	$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-appboss' );
-	return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+
+	if (!is_plugin_active('appboss/appboss.php')) {
+		
+		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-appboss' );
+		return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+
+	} else {
+
+		$default_tab = apply_filters( 'bp_core_admin_default_active_tab', 'bp-learndash' );
+		return isset($_GET['tab'])? $_GET['tab'] : $default_tab;
+
+	}
 }
 
 /**
@@ -2324,9 +2351,9 @@ function bp_remove_avatar_settings_from_options_discussion_page() {
  *
  */
 function bp_emails_admin_email_listing_add_tab() {
-	global $pagenow, $post;
+	global $pagenow, $current_screen;
 
-	if ( ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
 		?>
 		<div class="wrap">
 			<h2 class="nav-tab-wrapper"><?php bp_core_admin_emails_tabs( __( 'Emails', 'buddyboss' ) ); ?></h2>
@@ -2346,9 +2373,9 @@ add_filter( 'parent_file', 'bp_set_emails_platform_tab_submenu_active' );
  * @return string $parent_file The filename of the parent menu.
  */
 function bp_set_emails_platform_tab_submenu_active( $parent_file ) {
-	global $pagenow, $current_screen, $post;
+	global $pagenow, $current_screen;
 
-	if ( ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
+	if ( ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'edit.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post-new.php' ) || ( isset( $current_screen->post_type ) && $current_screen->post_type == bp_get_email_post_type() && $pagenow == 'post.php' ) ) {
 		$parent_file = 'buddyboss-platform';
 	}
 	return $parent_file;

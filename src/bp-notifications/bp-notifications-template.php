@@ -646,7 +646,7 @@ function bp_the_notification_mark_unread_link( $user_id = 0 ) {
 		// Set default user ID to use.
 		$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-		$retval = sprintf( '<a href="%1$s" class="mark-unread primary bp-tooltip">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss' ) );
+		$retval = sprintf( '<a href="%1$s" class="mark-unread primary">%2$s</a>', esc_url( bp_get_the_notification_mark_unread_url( $user_id ) ), __( 'Unread', 'buddyboss' ) );
 
 		/**
 		 * Filters the link used for marking a single notification as unread.
@@ -780,7 +780,7 @@ function bp_the_notification_delete_link( $user_id = 0 ) {
 		// Set default user ID to use.
 		$user_id = 0 === $user_id ? bp_displayed_user_id() : $user_id;
 
-		$retval = sprintf( '<a href="%1$s" class="delete secondary confirm bp-tooltip">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss' ) );
+		$retval = sprintf( '<a href="%1$s" class="delete secondary confirm">%2$s</a>', esc_url( bp_get_the_notification_delete_url( $user_id ) ), __( 'Delete', 'buddyboss' ) );
 
 		/**
 		 * Filters the delete link for the current notification.

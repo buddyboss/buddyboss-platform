@@ -183,6 +183,7 @@ AJAX SEARCH
 
 	.item {
 		flex: 1;
+		min-width: 0;
 		overflow: hidden;
 		line-height: 1.3;
 		align-self: center;
@@ -377,6 +378,7 @@ SEARCH RESULTS PAGE
 
 	.results-group-title {
 		flex: 1;
+		min-width: 0;
 	}
 
 	.results-group-footer {
@@ -432,7 +434,7 @@ div.search_results .groups-list li .last-activity {
 	justify-content: center;
 }
 
-.bp-search-ac .loading-msg span {
+.bp-search-ac .loading-msg .bb_global_search_spinner {
 	background: url(../images/spinner.png) no-repeat center;
 	background-size: 100% 100%;
 	width: 19px;
@@ -548,6 +550,7 @@ div.search_results .groups-list li .last-activity {
 	.item {
 		display: block;
 		flex: 1;
+		min-width: 0;
 		align-self: center;
 	}
 

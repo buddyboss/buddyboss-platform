@@ -5,12 +5,16 @@
  * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
+?>
 
-bp_get_template_part( 'groups/single/parts/admin-subnav' ); ?>
+<div class="bp-manage-group-container">
 
-<form action="<?php bp_group_admin_form_action(); ?>" name="group-settings-form" id="group-settings-form" class="standard-form" method="post" enctype="multipart/form-data">
+	<?php bp_get_template_part( 'groups/single/parts/admin-subnav' ); ?>
 
-	<?php bp_nouveau_group_manage_screen(); ?>
+	<form action="<?php bp_group_admin_form_action(); ?>" name="group-settings-form" id="group-settings-form" class="standard-form" method="post" enctype="multipart/form-data">
 
-</form><!-- #group-settings-form -->
+		<?php bp_nouveau_group_manage_screen(); ?>
 
+	</form><!-- #group-settings-form -->
+
+</div>

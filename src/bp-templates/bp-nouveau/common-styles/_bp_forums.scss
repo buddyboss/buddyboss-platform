@@ -291,8 +291,8 @@ div.bbp-reply-header {
 	visibility: hidden;
 }
 
-#bbpress-forums div.bbp-topic-content a,
-#bbpress-forums div.bbp-reply-content a {
+#bbpress-forums div.bbp-topic-content a:not(.entry-img),
+#bbpress-forums div.bbp-reply-content a:not(.entry-img) {
 	background: none;
 	border: none;
 	display: inline;

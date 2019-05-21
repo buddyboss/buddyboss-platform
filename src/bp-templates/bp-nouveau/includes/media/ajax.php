@@ -18,6 +18,12 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
+			'media_albums_loader' => array(
+				'function' => 'bp_nouveau_ajax_albums_loader',
+				'nopriv'   => true,
+			),
+		),
+		array(
 			'media_upload' => array(
 				'function' => 'bp_nouveau_ajax_media_upload',
 				'nopriv'   => true,
@@ -79,16 +85,16 @@ add_action( 'admin_init', function() {
 }, 12 );
 
 /**
- * Upload a media via a POST request.
+ * Load the template loop for the albums object.
  *
  * @since BuddyBoss 1.0.0
  *
- * @return string HTML
+ * @return string Template loop for the albums object
  */
-function bp_nouveau_ajax_media_upload() {
+function bp_nouveau_ajax_albums_loader() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -111,16 +117,67 @@ function bp_nouveau_ajax_media_upload() {
 		wp_send_json_error( $response );
 	}
 
+	$page = ! empty( $_POST['page'] ) ? (int) $_POST['page'] : 1;
+
+	ob_start();
+	if ( bp_has_albums( array( 'page' => $page ) ) ) {
+		while ( bp_album() ) {
+			bp_the_album();
+			bp_get_template_part( 'media/album-entry' );
+
+			if ( bp_album_has_more_items() ) : ?>
+
+                <li class="load-more">
+                    <a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+                </li>
+
+			<?php endif;
+		}
+	}
+	$albums = ob_get_contents();
+	ob_end_clean();
+
+	wp_send_json_success( array(
+		'albums' => $albums,
+	) );
+}
+
+/**
+ * Upload a media via a POST request.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string HTML
+ */
+function bp_nouveau_ajax_media_upload() {
+	$response = array(
+		'feedback' => __( 'There was a problem when trying to upload this file.', 'buddyboss' )
+    );
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response, 500 );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response, 500 );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response, 500 );
+	}
+
 	// Upload file
 	$result = bp_media_upload();
 
 	if ( is_wp_error( $result ) ) {
-		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'There was a problem when trying to upload this file.', 'buddyboss' )
-		);
-
-		wp_send_json_error( $response );
+		$response['feedback'] = $result->get_error_message();
+		wp_send_json_error( $response, $result->get_error_code() );
 	}
 
 	wp_send_json_success( $result );
@@ -136,7 +193,7 @@ function bp_nouveau_ajax_media_upload() {
 function bp_nouveau_ajax_media_save() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -161,7 +218,7 @@ function bp_nouveau_ajax_media_save() {
 
 	if ( empty( $_POST['medias'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please upload media before saving.', 'buddyboss' )
 		);
 
@@ -202,13 +259,19 @@ function bp_nouveau_ajax_media_save() {
 		// make an activity for the media
 		if ( bp_is_active( 'activity' ) ) {
 			$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+			if ( $activity_id ) {
+				// update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+			}
 		}
 
 		$album_privacy = 'public';
-		$albums = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
-		if ( ! empty( $albums['albums'] ) ) {
-			$album = array_pop( $albums['albums'] );
-			$album_privacy = $album->privacy;
+		if ( ! empty( $media['album_id'] ) ) {
+			$albums        = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
+			if ( ! empty( $albums['albums'] ) ) {
+				$album         = array_pop( $albums['albums'] );
+				$album_privacy = $album->privacy;
+			}
 		}
 
 		$media_id = bp_media_add( array(
@@ -216,17 +279,27 @@ function bp_nouveau_ajax_media_save() {
 			'title'         => $media['name'],
 			'activity_id'   => $activity_id,
 			'album_id'      => $media['album_id'],
+			'group_id'      => $media['group_id'],
 			'privacy'       => $album_privacy,
 			'error_type'    => 'wp_error'
 		) );
 
 		if ( is_wp_error( $media_id ) ) {
 			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error">%s</div>',
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
 			);
 
 			wp_send_json_error( $response );
+		}
+
+		//save media is saved in attahchment
+        update_post_meta( $media['id'], 'bp_media_saved', true );
+
+		//save media meta for activity
+		if ( ! empty( $main_activity_id ) ) {
+			update_post_meta( $media['id'], 'bp_media_parent_activity_id', $main_activity_id );
+			update_post_meta( $media['id'], 'bp_media_activity_id', $activity_id );
 		}
 
 		$media_ids[] = $media_id;
@@ -267,7 +340,7 @@ function bp_nouveau_ajax_media_save() {
 function bp_nouveau_ajax_media_delete() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -292,7 +365,7 @@ function bp_nouveau_ajax_media_delete() {
 
 	if ( empty( $_POST['media'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please select media to delete.', 'buddyboss' )
 		);
 
@@ -305,16 +378,16 @@ function bp_nouveau_ajax_media_delete() {
 	foreach( $media as $media_id ) {
 
 		// delete media
-		$media_id = bp_media_delete( $media_id );
+		$m_id = bp_media_delete( $media_id );
 
-		if ( ! $media_id ) {
-			$media_ids[] = $media_id;
+		if ( $media_id ) {
+			$media_ids[] = $m_id;
 		}
 	}
 
-	if ( sizeof( $media_ids ) != sizeof( $media ) ) {
+	if ( count( $media_ids ) != count( $media ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem deleting media.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
@@ -335,7 +408,7 @@ function bp_nouveau_ajax_media_delete() {
 function bp_nouveau_ajax_media_move_to_album() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -390,11 +463,12 @@ function bp_nouveau_ajax_media_move_to_album() {
 
 		$media_obj           = new BP_Media( $media_id );
 		$media_obj->album_id = (int) $_POST['album_id'];
-		$media_obj->privacy  = $album_privacy;
+		$media_obj->group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+		$media_obj->privacy  = $media_obj->group_id ? 'grouponly' : $album_privacy;
 
 		if ( ! $media_obj->save() ) {
 			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error">%s</div>',
+				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 				esc_html__( 'There was a problem when trying to move the media.', 'buddyboss' )
 			);
 
@@ -432,7 +506,7 @@ function bp_nouveau_ajax_media_move_to_album() {
 function bp_nouveau_ajax_media_album_save() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -457,7 +531,7 @@ function bp_nouveau_ajax_media_album_save() {
 
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please enter title of album.', 'buddyboss' )
 		);
 
@@ -465,15 +539,16 @@ function bp_nouveau_ajax_media_album_save() {
 	}
 
 	// save media
-	$id          = ! empty( $_POST['album_id'] ) ? $_POST['album_id'] : false;
-	$title       = $_POST['title'];
-	$privacy     = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$id       = ! empty( $_POST['album_id'] ) ? $_POST['album_id'] : false;
+	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
+	$title    = $_POST['title'];
+	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
-	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy ) );
+	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
@@ -488,6 +563,11 @@ function bp_nouveau_ajax_media_album_save() {
 			// make an activity for the media
 			if ( bp_is_active( 'activity' ) ) {
 				$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+
+				if ( $activity_id ) {
+					// update activity meta
+					bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+				}
 			}
 
 			$media_id = bp_media_add( array(
@@ -495,22 +575,33 @@ function bp_nouveau_ajax_media_album_save() {
 				'title'         => $media['name'],
 				'activity_id'   => $activity_id,
 				'album_id'      => $album_id,
+				'group_id'      => $group_id,
 				'privacy'       => $privacy,
 				'error_type'    => 'wp_error'
 			) );
 
 			if ( is_wp_error( $media_id ) ) {
 				$response['feedback'] = sprintf(
-					'<div class="bp-feedback error">%s</div>',
+					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 					esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
 				);
 				wp_send_json_error( $response );
 			}
+
+			//save media is saved in attachment
+			update_post_meta( $media['id'], 'bp_media_saved', true );
 		}
 	}
 
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+		$redirect_url = trailingslashit( $group_link . '/albums/' . $album_id );
+	} else {
+		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id );
+	}
+
 	wp_send_json_success( array(
-		'redirect_url'     => trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id ),
+		'redirect_url'     => $redirect_url,
 	) );
 }
 
@@ -522,7 +613,7 @@ function bp_nouveau_ajax_media_album_save() {
 function bp_nouveau_ajax_media_album_delete() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback error bp-ajax-message"><p>%s</p></div>',
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
 		),
 	);
@@ -547,8 +638,8 @@ function bp_nouveau_ajax_media_album_delete() {
 
 	if ( empty( $_POST['album_id'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
-			esc_html__( 'Please ID of album to delete.', 'buddyboss' )
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide ID of album to delete.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -561,8 +652,17 @@ function bp_nouveau_ajax_media_album_delete() {
 		wp_send_json_error( $response );
 	}
 
+	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		$group_link = bp_get_group_permalink( groups_get_group( $_POST['group_id'] ) );
+		$redirect_url = trailingslashit( $group_link . '/albums/' );
+	} else {
+		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
+	}
+
 	wp_send_json_success( array(
-		'redirect_url'     => trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() ) . 'albums',
+		'redirect_url'     => $redirect_url,
 	) );
 }
 
@@ -576,7 +676,7 @@ function bp_nouveau_ajax_media_album_delete() {
 function bp_nouveau_ajax_media_get_activity() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback bp-messages error">%s</div>',
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
@@ -613,7 +713,7 @@ function bp_nouveau_ajax_media_get_activity() {
 function bp_nouveau_ajax_media_delete_attachment() {
 	$response = array(
 		'feedback' => sprintf(
-			'<div class="bp-feedback bp-messages error">%s</div>',
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
 		),
 	);
@@ -625,7 +725,7 @@ function bp_nouveau_ajax_media_delete_attachment() {
 
 	if ( empty( $_POST['id'] ) ) {
 		$response['feedback'] = sprintf(
-			'<div class="bp-feedback error">%s</div>',
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Please provide attachment id to delete.', 'buddyboss' )
 		);
 
@@ -685,7 +785,7 @@ function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
 }
 
 /**
- * Object template results members personal scope.
+ * Object template results media personal scope.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -702,6 +802,13 @@ function bp_nouveau_object_template_results_media_personal_scope( $querystring )
 
 add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_existing_media_query', 20 );
 
+/**
+ * Change the querystring based on caller of the albums media query
+ *
+ * @param $querystring
+ *
+ * @return string
+ */
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 

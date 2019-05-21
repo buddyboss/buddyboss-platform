@@ -142,7 +142,7 @@ function messages_new_message( $args = '' ) {
 			if ( bp_is_username_compatibility_mode() ) {
 				$recipient_id = bp_core_get_userid( urldecode( $recipient ) );
 			} else {
-				$recipient_id = bp_core_get_userid_from_nickname( $recipient );
+				$recipient_id = bp_core_get_userid_from_nicename( $recipient );
 			}
 
 			// Check against user ID column if no match and if passed recipient is numeric.
@@ -672,7 +672,8 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 		bp_send_email( 'messages-unread', $ud, array(
 			'tokens' => array(
-				'usermessage' => wp_strip_all_tags( stripslashes( $message ) ),
+				'message_id'  => $id,
+				'usermessage' => stripslashes( $message ),
 				'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
 				'sender.name' => $sender_name,
 				'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
@@ -696,3 +697,34 @@ function messages_notification_new_message( $raw_args = array() ) {
 	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
 }
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
+
+
+
+/**
+ * Delete user from DB callback
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_messages_thread_delete_completely() {
+	return true;
+}
+
+/**
+ * When a user is deleted, we need to clean up the database and remove all the
+ * message data from each table.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id The ID of the deleted user.
+ */
+function bp_messages_remove_data( $user_id ) {
+	// Delete all the messages and there meta
+	BP_Messages_Message::delete_user_message( $user_id );
+}
+
+add_action( 'wpmu_delete_user', 'bp_messages_remove_data' );
+add_action( 'delete_user', 'bp_messages_remove_data' );
+add_action( 'bp_make_spam_user', 'bp_messages_remove_data' );

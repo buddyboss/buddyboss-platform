@@ -8,7 +8,7 @@
 			var tag= $(this).prop('tagName');
 
 			$(this).on('change.run-condition', function() {
-				if (tag == 'SELECT' && $(this).is(':visible')) {
+				if ( 'SELECT' === tag && $(this).is(':visible') ) {
 					var selector = id + '-' + $(this).val();
 					$('[class*="js-show-on-' + id + '-"]:not(.js-show-on-' + selector + ')').hide();
 					$('.js-show-on-' + selector).show().find('[data-run-js-condition]').trigger('change.run-condition');
@@ -63,11 +63,6 @@
 	});
 
 	$( document ).ready(function() {
-		// Set active class on Integration tab while /wp-admin/admin.php?page=bp-appboss page.
-		if ( $('body.buddypress.buddyboss_page_bp-appboss').length ) {
-			$('body.buddypress.buddyboss_page_bp-appboss #wpwrap #wpcontent #wpbody #wpbody-content .wrap .nav-tab-wrapper .bp-integrations').addClass('nav-tab-active');
-		}
-
 		var menuOpen = $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu #toplevel_page_buddyboss-platform ul.wp-submenu li');
 
 		// Set Groups selected on Group Type post types.
@@ -190,10 +185,11 @@
 		}
 
 		if ( $('.buddyboss_page_bp-activity').length ) {
-			$(document).on('click', '.activity-attached-gif-container', function () {
+			$(document).on('click', '.activity-attached-gif-container', function ( e ) {
+				e.preventDefault();
 				var video = $(this).find('video').get(0),
 					$button = $(this).find('.gif-play-button');
-				if (video.paused == true) {
+				if ( true === video.paused ) {
 					// Play the video
 					video.play();
 
@@ -209,10 +205,70 @@
 			} );
 		}
 
+		// Set Help selected on Help/Documentation Page.
+		if ( $( 'body.buddyboss_page_bp-help' ).length ) {
+
+			// Show sub menu when user click on main menu
+			$( '.bp-help-card-grid' ).on( 'click', 'span.open', function () {
+
+				$( this ).toggleClass( 'active' );
+                $( this ).closest( '.main' ).find( 'ul:first' ).toggle();
+			} );
+
+			// show the closest UI
+			$( '.bp-help-card-grid li.selected' ).closest( 'ul' ).show().closest( 'li' ).find( '> span.actions .open' ).addClass( 'active' );
+
+			// Show the child sub menu
+			$( '.bp-help-card-grid li.selected' ).find( 'ul:first' ).show();
+            $( '.bp-help-card-grid li.selected' ).find( '> span.actions .open' ).addClass( 'active' );
+
+			// Update LI count via JS
+			$( '.bp-help-card-grid .sub-menu-count' ).each( function () {
+				$( this ).text( '(' + $( this ).closest( 'li' ).find( 'ul:first li' ).size() + ')' );
+			} );
+		}
+
+		// As soon as an admin selects the option "Hierarchies - Allow groups to have subgroups" they
+		// should instantly see the option to "Restrict Invitations".
+		// We should also make it so deselect "hierarchies" will automatically deselect "restrict invitations" to
+		// prevent any unwanted errors.
+		if ( $('.buddyboss_page_bp-settings .section-bp_groups_hierarchies').length ) {
+
+			var checkbox = document.getElementById('bp-enable-group-hierarchies');
+
+			if(checkbox.checked) {
+				$('.bp-enable-group-restrict-invites').show();
+			} else {
+				$('.bp-enable-group-restrict-invites').hide();
+			}
+
+			$(document).on('click', '#bp-enable-group-hierarchies', function () {
+				if( true === this.checked ) {
+					$('.bp-enable-group-restrict-invites').show();
+				} else {
+					$('.bp-enable-group-restrict-invites').hide();
+					$('#bp-enable-group-restrict-invites').prop('checked', false);
+				}
+			} );
+		}
+
+		$('#bp_media_profile_media_support').change(function () {
+			if (!this.checked) {
+				$('#bp_media_profile_albums_support').prop('disabled', true);
+				$('#bp_media_profile_albums_support').attr('checked', false);
+			} else {
+				$('#bp_media_profile_albums_support').prop('disabled', false);
+			}
+		});
+		$('#bp_media_group_media_support').change(function () {
+			if (!this.checked) {
+				$('#bp_media_group_albums_support').prop('disabled', true);
+				$('#bp_media_group_albums_support').attr('checked', false);
+			} else {
+				$('#bp_media_group_albums_support').prop('disabled', false);
+			}
+		});
+
 	});
 
-
 }());
-
-
-

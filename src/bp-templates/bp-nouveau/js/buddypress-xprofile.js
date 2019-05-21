@@ -115,14 +115,14 @@ window.bp = window.bp || {};
             
             // Disable the delete button if it's the only set remaining
             if ( $( '#profile-edit-form .repeater_group_outer' ).length === 1 ) {
-                $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
+                //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
             }
         }
     });
     
     // Disable the delete button if it's the only set
     if ( repeater_set_count === 1 ) {
-        $( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
+        //$( '#profile-edit-form .repeater_group_outer .repeater_set_delete' ).addClass( 'disabled' );
     }
     
     // Add repeater set button, on edit profile screens

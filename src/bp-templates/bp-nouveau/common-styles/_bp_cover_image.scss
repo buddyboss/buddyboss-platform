@@ -9,6 +9,7 @@
 
 #cover-image-container {
 	flex: 0 0 100%;
+	min-width: 0;
 	position: relative;
 }
 
@@ -34,7 +35,7 @@
 	z-index: 2;
 
 	#item-header-avatar {
-		margin-top: -80px;
+		margin-top: -70px;
 		padding: 0 1em;
 		position: relative;
 	}
@@ -51,6 +52,7 @@
 .users-header #item-header-cover-image #item-header-content {
 	flex: 1;
 	margin-top: -50px;
+	min-width: 0;
 }
 
 /*

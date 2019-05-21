@@ -1,6 +1,6 @@
 <?php
 /**
- * BuddyBoss - Members Media Single Album
+ * BuddyBoss - Media Single Album
  *
  * @since BuddyBoss 1.0.0
  */
@@ -23,9 +23,8 @@ $album_id = (int) bp_action_variable( 0 );
 
                 <div class="bb-single-album-header text-center">
                     <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
-                    <?php if ( bp_is_my_profile() ) : ?>
+                    <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
                         <input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php _e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-                        <input type="hidden" value="<?php bp_album_description(); ?>" id="bb-album-description" style="display: none;" />
                         <a href="#" id="bp-edit-album-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
                         <a href="#" id="bp-save-album-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
                         <a href="#" id="bp-cancel-edit-album-title" style="display: none;" ><?php _e( 'cancel', 'buddyboss' ); ?></a>
@@ -35,7 +34,7 @@ $album_id = (int) bp_action_variable( 0 );
                     </p>
                 </div>
 
-	            <?php if ( bp_is_my_profile() ) : ?>
+	            <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
 
                     <div class="bb-album-actions">
                         <a class="bb-delete button small outline error" id="bb-delete-album" href="#">
@@ -46,18 +45,25 @@ $album_id = (int) bp_action_variable( 0 );
                             <?php _e( 'Add Photos', 'buddyboss' ); ?>
                         </a>
 
-                        <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+	                    <?php if ( bp_is_my_profile() && ! bp_is_group() ) : ?>
 
-                        <select id="bb-album-privacy">
-                            <?php foreach ( $privacy_options as $k => $option ) { ?>
-                                <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
-                            <?php } ?>
-                        </select>
+                            <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+
+                            <select id="bb-album-privacy">
+                                <?php foreach ( $privacy_options as $k => $option ) { ?>
+                                    <?php $selected = ''; if ( $k == bp_get_album_privacy() ) $selected = 'selected="selectred"' ; ?>
+                                    <option <?php echo $selected; ?> value="<?php echo $k; ?>"><?php echo $option; ?></option>
+                                <?php } ?>
+                            </select>
+
+	                    <?php endif; ?>
                     </div>
 
 	            <?php bp_get_template_part( 'media/uploader' ); ?>
 
 	            <?php endif; ?>
+
+                <?php bp_get_template_part( 'media/actions' ); ?>
 
                 <div id="media-stream" class="media" data-bp-list="media">
 

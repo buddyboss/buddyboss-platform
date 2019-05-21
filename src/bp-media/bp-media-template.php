@@ -108,8 +108,10 @@ function bp_get_media_root_slug() {
  *     @type int|array|bool    $album_id         The ID(s) of album(s) whose media should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a single album page, 'album_id' defaults to
  *                                               the ID of the displayed album. Otherwise the default is false.
- *     @type int               $offset           Return only media items with an ID greater than or equal to this one.
- *                                               Note that providing an offset will disable pagination. Default: false.
+ *     @type int|array|bool    $group_id         The ID(s) of group(s) whose media should be fetched. Pass a single ID or
+ *                                               an array of IDs. When viewing a single group page, 'group_id' defaults to
+ *                                               the ID of the displayed group. Otherwise the default is false.
+ *     @type array             $privacy          Limit results by privacy. Default: public | grouponly.
  * }
  * @return bool Returns true when media found, otherwise false.
  */
@@ -138,7 +140,7 @@ function bp_has_media( $args = '' ) {
 		$album_id = $args['album_id'];
 	}
 
-	$privacy = array( 'public' );
+	$privacy  = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
@@ -147,6 +149,17 @@ function bp_has_media( $args = '' ) {
 				$privacy[] = 'friends';
 			}
 		}
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+		}
+	}
+
+	$group_id = false;
+	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
+		$privacy = array( 'grouponly' );
+		$group_id  = bp_get_current_group_id();
+		$user_id   = false;
 	}
 
 	/*
@@ -156,36 +169,30 @@ function bp_has_media( $args = '' ) {
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args( $args, array(
-		'include'           => false,        // Pass an media_id or string of IDs comma-separated.
-		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
-		'sort'              => 'DESC',       // Sort DESC or ASC.
-		'page'              => 1,            // Which page to load.
-		'per_page'          => 20,           // Number of items per page.
-		'page_arg'          => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
-		'max'               => false,        // Max number to return.
+		'include'           => false,           // Pass an media_id or string of IDs comma-separated.
+		'exclude'           => false,           // Pass an activity_id or string of IDs comma-separated.
+		'sort'              => 'DESC',          // Sort DESC or ASC.
+		'order_by'          => false,           // Order by. Default: date_created
+		'page'              => 1,               // Which page to load.
+		'per_page'          => 20,              // Number of items per page.
+		'page_arg'          => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
+		'max'               => false,           // Max number to return.
 		'fields'            => 'all',
 		'count_total'       => false,
 
 		// Filtering
-		'user_id'           => $user_id,     // user_id to filter on.
-		'album_id'          => $album_id,    // album_id to filter on.
-		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-		'offset'            => false,        // Return only items >= this ID.
-		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
+		'user_id'           => $user_id,        // user_id to filter on.
+		'album_id'          => $album_id,       // album_id to filter on.
+		'group_id'          => $group_id,       // group_id to filter on.
+		'privacy'           => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
 		'search_terms'      => $search_terms_default,
-		'update_meta_cache' => true,
 	), 'has_media' );
 
 	/*
 	 * Smart Overrides.
 	 */
-
-	// Ignore pagination if an offset is passed.
-	if ( ! empty( $r['offset'] ) ) {
-		$r['page'] = 0;
-	}
 
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
@@ -861,8 +868,10 @@ function bp_get_media_directory_permalink() {
  *     @type int|array|bool    $user_id          The ID(s) of user(s) whose media should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a user profile page, 'user_id' defaults to
  *                                               the ID of the displayed user. Otherwise the default is false.
- *     @type int               $offset           Return only media items with an ID greater than or equal to this one.
- *                                               Note that providing an offset will disable pagination. Default: false.
+ *     @type int|array|bool    $group_id         The ID(s) of group(s) whose media should be fetched. Pass a single ID or
+ *                                               an array of IDs. When viewing a group page, 'group_id' defaults to
+ *                                               the ID of the displayed group. Otherwise the default is false.
+ *     @type array             $privacy          Limit results by a privacy. Default: public | grouponly.
  * }
  * @return bool Returns true when media found, otherwise false.
  */
@@ -884,6 +893,28 @@ function bp_has_albums( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
+	$privacy  = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		if ( bp_is_active( 'friends' ) ) {
+			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
+			if( $is_friend ) {
+				$privacy[] = 'friends';
+			}
+		}
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+		}
+	}
+
+	$group_id = false;
+	if ( bp_is_group() ) {
+		$group_id = bp_get_current_group_id();
+		$user_id  = false;
+		$privacy = array( 'grouponly' );
+	}
+
 	/*
 	 * Parse Args.
 	 */
@@ -891,7 +922,7 @@ function bp_has_albums( $args = '' ) {
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
 	$r = bp_parse_args( $args, array(
-		'include'           => false,     // Pass an album_id or string of IDs comma-separated.
+		'include'           => false,        // Pass an album_id or string of IDs comma-separated.
 		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
 		'sort'              => 'DESC',       // Sort DESC or ASC.
 		'page'              => 1,            // Which page to load.
@@ -903,22 +934,16 @@ function bp_has_albums( $args = '' ) {
 
 		// Filtering
 		'user_id'           => $user_id,     // user_id to filter on.
-		'offset'            => false,        // Return only items >= this ID.
-		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
+		'group_id'          => $group_id,    // group_id to filter on.
+		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
 
 		// Searching.
 		'search_terms'      => $search_terms_default,
-		'update_meta_cache' => true,
-	), 'has_album' );
+	), 'has_albums' );
 
 	/*
 	 * Smart Overrides.
 	 */
-
-	// Ignore pagination if an offset is passed.
-	if ( ! empty( $r['offset'] ) ) {
-		$r['page'] = 0;
-	}
 
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
@@ -1205,7 +1230,7 @@ function bp_get_album_id() {
 }
 
 /**
- * Output the media album ID.
+ * Output the media album title.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1237,13 +1262,35 @@ function bp_get_album_title() {
 }
 
 /**
+ * Return the album privacy.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_album_template {@link BP_Media_Album_Template}
+ *
+ * @return string The media album privacy.
+ */
+function bp_get_album_privacy() {
+	global $media_album_template;
+
+	/**
+	 * Filters the album privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The media album privacy.
+	 */
+	return apply_filters( 'bp_get_album_privacy', $media_album_template->album->privacy );
+}
+
+/**
  * Output the media album ID.
  *
  * @since BuddyBoss 1.0.0
  *
  */
-function bp_album_description() {
-	echo bp_get_album_description();
+function bp_album_link() {
+	echo bp_get_album_link();
 }
 
 /**
@@ -1255,8 +1302,15 @@ function bp_album_description() {
  *
  * @return string The media album description.
  */
-function bp_get_album_description() {
+function bp_get_album_link() {
 	global $media_album_template;
+
+	if ( bp_is_group() && ! empty( $media_album_template->album->group_id ) ) {
+		$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
+		$url = trailingslashit( $group_link . '/albums/' . bp_get_album_id() );
+	} else {
+		$url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' . bp_get_album_id() );
+	}
 
 	/**
 	 * Filters the album description being displayed.
@@ -1265,5 +1319,5 @@ function bp_get_album_description() {
 	 *
 	 * @param int $id The media album description.
 	 */
-	return apply_filters( 'bp_get_album_description', $media_album_template->album->description );
+	return apply_filters( 'bp_get_album_link', $url );
 }

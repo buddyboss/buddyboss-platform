@@ -977,70 +977,6 @@ function bp_is_activity_link_preview_active( $default = false ) {
 }
 
 /**
- * Check whether Activity Emoji is enabled.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return bool True if Emoji is enabled, otherwise false.
- */
-function bp_is_activity_emoji_active( $default = false ) {
-
-	/**
-	 * Filters whether or not Activity Emoji is enabled.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param bool $value Whether or not Activity Emoji is enabled.
-	 */
-	return (bool) apply_filters( 'bp_is_activity_emoji_active', (bool) bp_get_option( '_bp_enable_activity_emoji', $default ) );
-}
-
-/**
- * Check whether Activity GIFs is enabled.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return bool True if Link Preview is enabled, otherwise false.
- */
-function bp_is_activity_gif_active( $default = false ) {
-
-	/**
-	 * Filters whether or not Activity GIFs is enabled.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param bool $value Whether or not Activity GIFs is enabled.
-	 */
-	return (bool) apply_filters( 'bp_is_activity_gif_active', (bool) bp_get_option( '_bp_enable_activity_gif', $default ) );
-}
-
-
-/**
- * Return GIFs .
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $default Optional. Fallback value if not found in the database.
- *                      Default: true.
- * @return GIF Api Key if, empty string.
- */
-function bp_get_activity_gif_api_key( $default = '' ) {
-
-	/**
-	 * Filters whether GIF key.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param GIF Api Key if, empty sting.
-	 */
-	return apply_filters( 'bp_get_activity_gif_api_key', bp_get_option( '_bp_activity_gif_api_key', $default ) );
-}
-
-/**
  * Get the current theme package ID.
  *
  * @since BuddyPress 1.7.0
@@ -1303,4 +1239,26 @@ function bp_enable_private_network_public_content( $default = '' ) {
 	 * @param bool $value Whether site owner uses private network.
 	 */
 	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
+}
+
+/**
+ * Is the Toolbar hidden for logged in users?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if the admin bar should be hidden for logged in users,
+ *              otherwise false.
+ */
+function bp_show_login_adminbar( $default = true ) {
+
+	/**
+	 * Filters whether or not the toolbar is hidden for logged in users.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not the toolbar is hidden.
+	 */
+	return (bool) apply_filters( 'bp_show_login_adminbar', (bool) bp_get_option( 'show-login-adminbar', $default ) );
 }

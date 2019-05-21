@@ -747,27 +747,6 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_nav_tabs]' => array(
-			'index'             => 'group_nav_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_subnav_tabs]' => array(
-			'index'             => 'group_subnav_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[groups_create_tabs]' => array(
-			'index'             => 'groups_create_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[group_nav_order]' => array(
 			'index'             => 'group_nav_order',
 			'capability'        => 'bp_moderate',
@@ -816,47 +795,30 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 			) );
 	}
 
-	return array_merge( $controls, array(
-		'group_nav_display' => array(
-			'label'      => __( 'Display the group navigation vertically.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[group_nav_display]',
-			'type'       => 'checkbox',
-		),
-		'group_nav_tabs' => array(
-			'label'      => __( 'Use tab styling for primary navigation.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[group_nav_tabs]',
-			'type'       => 'checkbox',
-		),
-		'group_subnav_tabs' => array(
-			'label'      => __( 'Use tab styling for secondary navigation.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[group_subnav_tabs]',
-			'type'       => 'checkbox',
-		),
-		'groups_create_tabs' => array(
-			'label'      => __( 'Use tab styling for the group creation process.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[groups_create_tabs]',
-			'type'       => 'checkbox',
-		),
-		'group_default_tab' => array(
-			'label'      => __( 'Group navigation order', 'buddyboss' ),
-			'description' => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[group_default_tab]',
-			'type'       => 'select',
-			'choices'    => $options
-		),
-		'group_nav_order' => array(
-			'class'       => 'BP_Nouveau_Nav_Customize_Control',
-			'label'      => __( 'Reorder the primary navigation for a group.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_group_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[group_nav_order]',
-			'type'       => 'group',
-		),
-	) );
+	return array_merge( $controls,
+		array(
+			'group_nav_display'  => array(
+				'label'    => __( 'Display the group navigation vertically.', 'buddyboss' ),
+				'section'  => 'bp_nouveau_group_primary_nav',
+				'settings' => 'bp_nouveau_appearance[group_nav_display]',
+				'type'     => 'checkbox',
+			),
+			'group_default_tab'  => array(
+				'label'       => __( 'Group navigation order', 'buddyboss' ),
+				'description' => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
+				'section'     => 'bp_nouveau_group_primary_nav',
+				'settings'    => 'bp_nouveau_appearance[group_default_tab]',
+				'type'        => 'select',
+				'choices'     => $options,
+			),
+			'group_nav_order'    => array(
+				'class'    => 'BP_Nouveau_Nav_Customize_Control',
+				'label'    => __( 'Reorder the primary navigation for a group.', 'buddyboss' ),
+				'section'  => 'bp_nouveau_group_primary_nav',
+				'settings' => 'bp_nouveau_appearance[group_nav_order]',
+				'type'     => 'group',
+			),
+		) );
 }
 
 /**

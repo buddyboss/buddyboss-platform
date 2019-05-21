@@ -29,9 +29,9 @@ class XProfile extends BuddypressCommand {
 	 */
 	private function command_to_array( $command ) {
 		$dump = array(
-			'name' => $command->get_name(),
+			'name'        => $command->get_name(),
 			'description' => $command->get_shortdesc(),
-			'longdesc' => $command->get_longdesc(),
+			'longdesc'    => $command->get_longdesc(),
 		);
 
 		foreach ( $command->get_subcommands() as $subcommand ) {

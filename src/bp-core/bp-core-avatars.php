@@ -477,6 +477,8 @@ function bp_core_fetch_avatar( $args = '' ) {
 	// Check for directory.
 	if ( file_exists( $avatar_folder_dir ) ) {
 
+		$avatar_url = '';
+
 		// Open directory.
 		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
 
@@ -521,6 +523,16 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 		// Close the avatar directory.
 		closedir( $av_dir );
+
+		/**
+		 * Filters a locally uploaded avatar URL.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param string $avatar_url URL for a locally uploaded avatar.
+		 * @param array  $params     Array of parameters for the request.
+		 */
+		$avatar_url = apply_filters( 'bp_core_fetch_avatar_url_check', $avatar_url, $params );
 
 		// If we found a locally uploaded avatar.
 		if ( isset( $avatar_url ) ) {
@@ -932,7 +944,7 @@ function bp_core_avatar_handle_upload( $file, $upload_dir_filter ) {
 
 	// If the uploaded image is smaller than the "full" dimensions, throw a warning.
 	if ( $avatar_attachment->is_too_small( $bp->avatar_admin->image->file ) ) {
-		bp_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx x %2$spx or larger.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
+		bp_core_add_message( sprintf( __( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ), bp_core_avatar_full_width(), bp_core_avatar_full_height() ), 'error' );
 	}
 
 	// Set the url value for the image.

@@ -337,6 +337,23 @@ function bp_has_activities( $args = '' ) {
 		$r['spam'] = 'all';
 	}
 
+	// meta query for media activities, we need to explicitly do the meta checking to not include separate media activities
+	if ( empty( $r['meta_query'] ) ) {
+		$r['meta_query'] = array(
+			array(
+				'relation' => 'OR',
+				'key'      => 'bp_media_activity',
+				'compare'  => 'NOT EXISTS',
+			)
+		);
+	} else if ( ! empty( $r['meta_query'] ) ) {
+		$r['meta_query'][] = array(
+			'relation' => 'OR',
+			'key'      => 'bp_media_activity',
+			'compare'  => 'NOT EXISTS',
+		);
+	}
+
 	/*
 	 * Query
 	 */
@@ -1486,10 +1503,9 @@ function bp_insert_activity_meta( $content = '' ) {
 
 		// Setup variables for activity meta.
 		$activity_permalink = bp_activity_get_permalink( $activities_template->activity->id, $activities_template->activity );
-		$activity_meta      = sprintf( '%1$s <a href="%2$s" class="view activity-time-since bp-tooltip" data-bp-tooltip="%3$s">%4$s</a>',
+		$activity_meta      = sprintf( '%1$s <a href="%2$s" class="view activity-time-since">%3$s</a>',
 			$new_content,
 			$activity_permalink,
-			esc_attr__( 'View Discussion', 'buddyboss' ),
 			$time_since
 		);
 
@@ -2109,6 +2125,11 @@ function bp_activity_comment_content() {
 	 */
 	function bp_get_activity_comment_content() {
 		global $activities_template;
+
+		// scrape off activity content if it contain empty characters only
+		if ( in_array( $activities_template->activity->current_comment->content , [ '&nbsp;', '&#8203;' ] ) ) {
+			$activities_template->activity->current_comment->content = '';
+		}
 
 		/** This filter is documented in bp-activity/bp-activity-template.php */
 		$content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );

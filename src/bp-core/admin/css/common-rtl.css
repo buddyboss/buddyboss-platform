@@ -23,13 +23,15 @@ TABLE OF CONTENTS:
 	3.1 Users List
 	3.2 Activity List
 	3.3 Groups List & Types
-	3.4 Site Notices
-	3.5 Post Types
+	3.4 Forums
+	3.5 Site Notices
+	3.6 Post Types
 4.0 Emails - Edit page
-5.0 Tools - BuddyBoss
-6.0 Plugins page
-7.0 AppBoss page
-8.0 Miscellaneous
+5.0 Tools
+6.0 Help
+7.0 Plugins page
+8.0 AppBoss page
+9.0 Miscellaneous
 ------------------------------------------------------------------------------*/
 /*------------------------------------------------------------------------------
  * 1.0 Welcome Screen
@@ -64,44 +66,36 @@ TABLE OF CONTENTS:
   margin-top: 25px;
 }
 
-.bp-about-wrap .card {
-  background: #fff;
-  min-width: 255px;
-  max-width: 100%;
-  border-radius: 6px;
-  border: 1px solid #e5e5e5;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
-  margin: 0 0 20px;
-  padding: 2.2em 2.8em 2em;
+.bp-about-wrap .bp-admin-card {
+  margin: 20px 0 0;
 }
 
-.bp-about-wrap img {
+.bp-about-wrap .bp-admin-card h2 {
+  font-weight: 600;
+}
+
+.bp-about-wrap .bp-admin-card h2:before {
+  content: none;
+}
+
+.bp-about-wrap .bp-admin-card img {
   margin: 0;
   max-width: 100%;
   height: auto;
   vertical-align: middle;
 }
 
-.bp-about-wrap ul {
+.bp-about-wrap .bp-admin-card ul {
   margin: 0;
 }
 
-.bp-about-wrap p {
+.bp-about-wrap .bp-admin-card p {
   line-height: 1.5;
   font-size: 14px;
   margin: 0;
 }
 
-.bp-about-wrap h2 {
-  margin: 0 0 1.5em;
-  padding-bottom: 1.3em;
-  font-size: 22px;
-  font-weight: 600;
-  color: #333;
-  border-bottom: 1px solid #eaeaea;
-}
-
-.bp-about-wrap .wp-person {
+.bp-about-wrap .bp-admin-card .wp-person {
   display: inline-block;
   vertical-align: top;
   margin: 0 0 0 10px;
@@ -109,7 +103,7 @@ TABLE OF CONTENTS:
   width: 280px;
 }
 
-.bp-about-wrap .wp-person .gravatar {
+.bp-about-wrap .bp-admin-card .wp-person .gravatar {
   float: right;
   margin: 0 0 10px 10px;
   border-radius: 100%;
@@ -117,7 +111,7 @@ TABLE OF CONTENTS:
   height: 60px;
 }
 
-.bp-about-wrap .wp-person .web {
+.bp-about-wrap .bp-admin-card .wp-person .web {
   margin: 6px 0 2px;
   font-size: 16px;
   font-weight: 400;
@@ -125,12 +119,12 @@ TABLE OF CONTENTS:
   text-decoration: none;
 }
 
-.bp-about-wrap .wp-person .title {
+.bp-about-wrap .bp-admin-card .wp-person .title {
   display: block;
   font-weight: 300;
 }
 
-.bp-about-wrap p.wp-credits-list a {
+.bp-about-wrap .bp-admin-card p.wp-credits-list a {
   white-space: nowrap;
 }
 
@@ -248,77 +242,6 @@ TABLE OF CONTENTS:
 }
 
 /*
- * 2.4 Tooltips
- */
-.bp-tooltip {
-  position: relative;
-}
-
-.bp-tooltip:after {
-  background: #fff;
-  border: 1px solid #aaa;
-  border-collapse: separate;
-  border-radius: 1px;
-  box-shadow: -1px 1px 0 1px rgba(132, 132, 132, 0.3);
-  color: #000;
-  content: attr(data-bp-tooltip);
-  display: none;
-  font-family: sans-serif;
-  font-size: 11px;
-  font-weight: 400;
-  letter-spacing: normal;
-  line-height: 1.5;
-  margin-top: 10px;
-  max-width: 240px;
-  opacity: 0;
-  padding: 3px 6px;
-  position: absolute;
-  left: 50%;
-  text-align: center;
-  text-decoration: none;
-  text-shadow: none;
-  text-transform: none;
-  top: 100%;
-  -webkit-transform: translateX(-50%);
-  -ms-transform: translateX(-50%);
-  transform: translateX(-50%);
-  -webkit-transition: opacity 2s ease-out;
-  -ms-transition: opacity 2s ease-out;
-  transition: opacity 2s ease-out;
-  white-space: pre;
-  word-wrap: break-word;
-  z-index: 998;
-}
-
-.bp-hello-close .bp-tooltip:after {
-  left: 0;
-  text-align: left;
-  -webkit-transform: translateX(0);
-  -ms-transform: translateX(0);
-  transform: translateX(0);
-}
-
-.bp-hello-social .bp-tooltip:after {
-  bottom: 120%;
-  margin-bottom: 20px;
-  margin-top: 0;
-  top: auto;
-  -webkit-transform: translateX(-15%);
-  -ms-transform: translateX(-15%);
-  transform: translateX(-15%);
-}
-
-.bp-tooltip:hover:after,
-.bp-tooltip:active:after,
-.bp-tooltip:focus:after {
-  display: inline-block;
-  opacity: 1;
-  overflow: visible;
-  text-decoration: none;
-  z-index: 999;
-}
-
-/*
  * 2.5 Settings - Tabs
  */
 tr.bp-search-child-field,
@@ -362,7 +285,7 @@ tr.bp-search-parent-field label {
 .bp-admin-card {
   position: relative;
   margin-top: 20px;
-  padding: 2.2em 2.8em 2em;
+  padding: 2.2em 2.8em;
   min-width: 255px;
   max-width: 1050px;
   border-radius: 6px;
@@ -381,7 +304,7 @@ tr.bp-search-parent-field label {
   margin: 0 0 1em;
   padding-bottom: 1.2em;
   font-size: 22px;
-  font-weight: 600;
+  font-weight: 700;
   color: #333;
   border-bottom: 1px solid #eaeaea;
 }
@@ -481,8 +404,16 @@ tr.bp-search-parent-field label {
 }
 
 /* Media */
-.bp-admin-card.section-bp_media_settings_general h2:before {
+.bp-admin-card.section-bp_media_settings_photos h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
+}
+
+.bp-admin-card.section-bp_media_settings_emoji h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/smile.svg);
+}
+
+.bp-admin-card.section-bp_media_settings_gifs h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/image.svg);
 }
 
 /* Search */
@@ -608,15 +539,176 @@ body.users_page_bp-signups td.count_sent {
   margin: 0.6em 0;
 }
 
+.activity-attached-gif-container {
+  cursor: pointer;
+  max-width: 480px;
+}
+
+.activity-attached-gif-container .gif-player {
+  position: relative;
+  max-width: 480px;
+}
+
+.activity-attached-gif-container .gif-player video {
+  margin: 0;
+}
+
+.activity-attached-gif-container .gif-play-button {
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  right: 29%;
+  margin-right: -32px;
+  top: 69%;
+  margin-top: -44px;
+}
+
+.activity-attached-gif-container .gif-play-button span.dashicons {
+  font-size: 80px;
+  width: 80px;
+  height: 80px;
+  margin: 0;
+  padding: 0;
+  line-height: 0;
+}
+
+.activity-attached-gif-container .gif-icon {
+  background: url(../../images/gif-symbol.png) bottom left no-repeat;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: block;
+  bottom: 0;
+  right: 10px;
+  background-size: 40px 30px;
+  max-width: 40px;
+  max-height: 30px;
+}
+
 /*
- * 3.3 Groups List
+ * 3.3 Groups List & Types
  */
 form#bp-groups-form .fixed .column-comment {
   width: 20%;
 }
 
 /*
- * 3.4 Site Notices
+ * 3.4 Forums
+ */
+@media only screen and (min-width: 700px) {
+  #poststuff #bbp_reply_attributes select {
+    min-width: 70%;
+  }
+}
+
+body.post-type-reply #edit-slug-box {
+  padding-right: 0;
+  margin-top: 0;
+}
+
+#bbpress_group_admin_ui_meta_box fieldset {
+  min-width: 230px;
+}
+
+#bbp-dashboard-right-now p.sub,
+#bbp-dashboard-right-now .table,
+#bbp-dashboard-right-now .versions {
+  margin: -12px;
+}
+
+#bbp-dashboard-right-now .inside {
+  font-size: 12px;
+  padding-top: 20px;
+  margin-bottom: 0;
+}
+
+#bbp-dashboard-right-now p.sub {
+  padding: 5px 0 15px;
+  color: #8f8f8f;
+  font-size: 14px;
+  position: absolute;
+  top: -17px;
+  right: 15px;
+  left: 0;
+}
+
+#bbp-dashboard-right-now .table {
+  margin: 0;
+  padding: 0;
+  position: relative;
+}
+
+#bbp-dashboard-right-now .table_content {
+  float: right;
+  border-top: #ececec 1px solid;
+  width: 45%;
+}
+
+#bbp-dashboard-right-now .table_discussion {
+  float: left;
+  border-top: #ececec 1px solid;
+  width: 45%;
+}
+
+#bbp-dashboard-right-now table td {
+  padding: 3px 0;
+  white-space: nowrap;
+}
+
+#bbp-dashboard-right-now table tr.first td {
+  border-top: none;
+}
+
+#bbp-dashboard-right-now td.b {
+  padding-left: 6px;
+  padding-right: 0;
+  text-align: left;
+  font-family: Georgia, "Times New Roman", "Bitstream Charter", Times, serif;
+  font-size: 14px;
+  width: 1%;
+}
+
+#bbp-dashboard-right-now td.b a {
+  font-size: 18px;
+}
+
+#bbp-dashboard-right-now td.b a:hover {
+  color: #d54e21;
+}
+
+#bbp-dashboard-right-now .t {
+  font-size: 12px;
+  padding-left: 12px;
+  padding-right: 0;
+  padding-top: 6px;
+  color: #777;
+}
+
+#bbp-dashboard-right-now .t a {
+  white-space: nowrap;
+}
+
+#bbp-dashboard-right-now .spam {
+  color: #f00;
+}
+
+#bbp-dashboard-right-now .waiting {
+  color: #e66f00;
+}
+
+#bbp-dashboard-right-now .approved {
+  color: #0f0;
+}
+
+#bbp-dashboard-right-now a.button {
+  float: left;
+  clear: left;
+  position: relative;
+  top: -5px;
+}
+
+/*
+ * 3.5 Site Notices
  */
 .bp-new-notice-panel {
   background: #fff;
@@ -697,7 +789,7 @@ form#bp-groups-form .fixed .column-comment {
 }
 
 /*
- * 3.5 Post Types
+ * 3.6 Post Types
  */
 body.post-type-bp-member-type .postbox .inside,
 body.post-type-bp-group-type .postbox .inside {
@@ -754,7 +846,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 5.0 Tools - BuddyBoss
+ * 5.0 Tools
  *----------------------------------------------------------------------------*/
 .buddyboss_page_bp-tools .wrap,
 .buddyboss_page_bbp-repair .wrap {
@@ -805,7 +897,241 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 6.0 Plugins page
+ * 6.0 Help
+ *----------------------------------------------------------------------------*/
+.wrap .bp-help-doc {
+  position: relative;
+  margin-top: 20px;
+  padding: 2.2em 2.8em 2em;
+  min-width: 255px;
+  max-width: 1050px;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  background: #fff;
+}
+
+.bp-help-card-grid {
+  margin-top: 20px;
+  min-width: 255px;
+  max-width: 1050px;
+}
+
+.bp-help-card-grid .bp-help-main-menu-wrap {
+  display: flex;
+  flex-flow: wrap;
+  margin-right: -10px;
+  margin-left: -10px;
+}
+
+.bp-help-card-grid .bp-help-card {
+  margin: 0 10px 2%;
+  background-color: #fff;
+  border: 1px solid #e5e5e5;
+  border-radius: 6px;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+  flex: 0 0 calc(33.33% - 20px);
+  min-width: 0;
+}
+
+.bp-help-card-grid .bp-help-card .inside {
+  padding: 1.8em 2em;
+}
+
+.bp-help-card-grid .bp-help-card h2 {
+  border-bottom: 1px solid #eaeaea;
+  font-size: 18px;
+  padding: 0 0 1em;
+  margin: 0 0 1em;
+  line-height: 1.4;
+}
+
+.bp-help-card-grid .bp-help-card p:first-child {
+  margin-top: 0;
+}
+
+.bp-help-card-grid .bp-help-content-wrap {
+  display: flex;
+}
+
+.bp-help-content-wrap {
+  display: flex;
+  flex-flow: row wrap;
+  min-width: 255px;
+  max-width: 1050px;
+  background-color: #fff;
+  border-radius: 6px;
+  border: 1px solid #e5e5e5;
+  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
+  box-sizing: border-box;
+}
+
+.bp-help-sidebar > ul {
+  margin: 0;
+}
+
+.bp-help-sidebar > ul > li > a {
+  color: #23282d;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.bp-help-sidebar > ul > li > ul {
+  margin-top: 20px;
+}
+
+.bp-help-sidebar > ul > li > ul li {
+  line-height: 1.6;
+  margin: 1.2em 0;
+}
+
+.bp-help-sidebar > ul > li ul > li.selected > a {
+  font-weight: 600;
+}
+
+.bp-help-sidebar > ul > li > ul > li > ul > li {
+  margin-right: 1.6em;
+  list-style-type: disc;
+}
+
+.bp-help-sidebar > ul span.open {
+  font-size: 0;
+}
+
+.bp-help-sidebar > ul span.open:after {
+  font-family: dashicons;
+  content: "\f345";
+  margin: 0 5px;
+  display: inline-block;
+  vertical-align: bottom;
+  font-size: 10px;
+  color: #999;
+  cursor: pointer;
+}
+
+.bp-help-sidebar > ul span.open.active:after {
+  transform: rotate(-90deg);
+}
+
+.bp-help-content p,
+.bp-help-content ul li {
+  line-height: 2;
+}
+
+.bp-help-content ul.bp-help-menu {
+  margin: 0 0 2.5em;
+}
+
+.bp-help-content ul.bp-help-menu li {
+  display: inline;
+}
+
+.bp-help-content ul.bp-help-menu li:not(:last-child):after {
+  font-family: dashicons;
+  content: "\f345";
+  margin: 0 5px;
+  display: inline-block;
+  vertical-align: middle;
+  font-size: 10px;
+  color: #999;
+}
+
+.bp-help-content ul.bp-help-menu li:last-child a {
+  color: #999;
+}
+
+.bp-help-content li.miscellaneous {
+  display: none;
+}
+
+.bp-help-content h1 {
+  font-weight: 500;
+  font-size: 25px;
+}
+
+.bp-help-content code {
+  border-radius: 3px;
+}
+
+.bp-help-content ul,
+.bp-help-content ol {
+  margin-right: 25px;
+  margin-top: 6px;
+  line-height: 1.5;
+}
+
+.bp-help-content ul li {
+  list-style-type: circle;
+}
+
+.bp-help-content ol li {
+  list-style-type: decimal;
+}
+
+.bp-help-content hr {
+  border-top: none;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.bp-help-content img {
+  max-width: 100%;
+  width: auto;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-shadow: 0 3px 20px -1px rgba(7, 10, 25, 0.1);
+}
+
+@media screen and (min-width: 782px) {
+  .bp-help-sidebar {
+    background: #f9f9f9;
+    padding: 2.5em;
+    border-left: 1px solid #eaeaea;
+    border-radius: 0 6px 6px 0;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 200px;
+    flex: 0 0 200px;
+    min-width: 0;
+    overflow: initial;
+    width: 100%;
+    min-height: 60vh;
+  }
+  .bp-help-content {
+    padding: 2.5em 3em;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    min-width: 0;
+  }
+}
+
+@media screen and (max-width: 781px) {
+  .bp-help-card-grid .bp-help-card {
+    flex: 0 0 calc(50% - 20px);
+    min-width: 0;
+  }
+  .bp-help-sidebar {
+    background: #f9f9f9;
+    padding: 2.5em;
+    width: 100%;
+    min-height: auto;
+    border-bottom: 1px solid #eaeaea;
+    border-radius: 6px 6px 0 0;
+  }
+  .bp-help-content {
+    padding: 2.5em;
+    width: 100%;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .bp-help-card-grid .bp-help-card {
+    flex: 0 0 calc(100% - 20px);
+  }
+}
+
+/*------------------------------------------------------------------------------
+ * 7.0 Plugins page
  *----------------------------------------------------------------------------*/
 #buddypress-update.not-shiny .update-message {
   border-right: 0;
@@ -817,7 +1143,7 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 7.0 AppBoss page
+ * 8.0 AppBoss page
  *----------------------------------------------------------------------------*/
 .bp_appboss_wrap {
   min-width: 255px;
@@ -1021,6 +1347,7 @@ body.post-type-bp-email .categorydiv label {
 .bp_appboss_wrap .appboss-column {
   -webkit-box-flex: 1;
   flex: 1;
+  min-width: 0;
   width: 50%;
   padding-left: 20px;
 }
@@ -1061,6 +1388,7 @@ body.post-type-bp-email .categorydiv label {
   display: flex;
   -webkit-box-flex: 1;
   flex: 1 1 100px;
+  min-width: 0;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   flex-direction: column;
@@ -1105,15 +1433,10 @@ body.post-type-bp-email .categorydiv label {
 }
 
 /*------------------------------------------------------------------------------
- * 8.0 Miscellaneous
+ * 9.0 Miscellaneous
  *----------------------------------------------------------------------------*/
 body.post-type-bp_ps_form .page-title-action {
   display: none;
-}
-
-/* Discussion Forum */
-#bbpress_group_admin_ui_meta_box fieldset {
-  min-width: 230px;
 }
 
 /* Notices */

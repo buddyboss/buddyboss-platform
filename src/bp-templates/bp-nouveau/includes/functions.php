@@ -253,16 +253,7 @@ function bp_nouveau_wrapper( $args = array() ) {
 	* Check the component to find a default container_class to add
 	*/
 	$current_component_class = bp_current_component() . '-meta';
-
-	if ( bp_is_group_activity() ) {
-		$generic_class = ' activity-meta ';
-	} else {
-		$generic_class = '';
-	}
-
-	if( bp_current_component() == 'media' ) {
-		$generic_class = ' activity-meta ';
-	}
+	$generic_class = 'bp-generic-meta';
 
 	$r = wp_parse_args( $args, array(
 		'container'         => 'div',
@@ -574,8 +565,6 @@ function bp_nouveau_get_temporary_setting( $option = '', $retval = false ) {
 function bp_nouveau_get_appearance_settings( $option = '' ) {
 	$default_args = array(
 		'user_nav_display'   => 0, // O is default (horizontally). 1 is vertically.
-		'user_nav_tabs'      => 0,
-		'user_subnav_tabs'   => 0,
 		'user_nav_order'     => array(),
 		'members_layout'     => 4,
 		'members_dir_tabs'   => 0,
@@ -600,9 +589,6 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 			'group_front_description' => 0,
 			'group_nav_display'       => 0,       // O is default (horizontally). 1 is vertically.
 			'group_nav_order'         => array(),
-			'group_nav_tabs'          => 0,
-			'group_subnav_tabs'       => 0,
-			'groups_create_tabs'      => 1,
 			'groups_layout'           => 4,
 			'members_group_layout'    => 4,
 			'groups_dir_layout'       => 0,
@@ -872,6 +858,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Requesting the group leaders. Please wait.', 'buddyboss' ),
 		),
+		'group-media-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Requesting the group photos. Please wait.', 'buddyboss' ),
+		),
 		'group-members-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no group members were found.', 'buddyboss' ),
@@ -974,27 +964,27 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 		),
 		'member-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media for the member. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading member\'s photos. Please wait.', 'buddyboss' ),
 		),
 		'media-loop-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
 		'member-media-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no media was found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
 		'media-album-none' => array(
 			'type'    => 'info',
-			'message' => __( 'Sorry, no album was found.', 'buddyboss' ),
+			'message' => __( 'Sorry, no albums were found.', 'buddyboss' ),
 		),
 		'album-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media from the album. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading photos from the album. Please wait.', 'buddyboss' ),
 		),
 		'directory-media-loading' => array(
 			'type'    => 'loading',
-			'message' => __( 'Loading media from the community. Please wait.', 'buddyboss' ),
+			'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss' ),
 		),
 	) );
 

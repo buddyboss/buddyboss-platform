@@ -27,7 +27,12 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ) );
 		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval' );
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
-		$this->add_field( 'hide-loggedout-adminbar', __( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_admin_bar', 'intval' );
+		$args = array();
+		$args['class'] = 'child-no-padding-first';
+		$this->add_field( 'show-login-adminbar', __( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_login_admin_bar', 'intval', $args );
+		$args = array();
+		$args['class'] = 'child-no-padding';
+		$this->add_field( 'hide-loggedout-adminbar', __( '', 'buddyboss' ), 'bp_admin_setting_callback_admin_bar', 'intval', $args );
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );
 		$this->add_field( 'bp-enable-private-network', __( 'Private Network', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
 

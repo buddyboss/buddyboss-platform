@@ -151,7 +151,7 @@
 
 		&.bp-dir-hori-nav:not(.bp-vertical-navs) {
 
-			nav:not(.tabbed-links) {
+			nav {
 				border-bottom: 1px solid $bp-border-color;
 				border-top: 1px solid $bp-border-color;
 
@@ -209,7 +209,7 @@
 
 	.bp-subnavs,
 	ul.subnav {
-		width: 100%;
+		// width: 100%;
 	}
 
 	.bp-subnavs {
@@ -237,7 +237,7 @@
 	}
 
 	ul.subnav {
-		width: auto;
+		// width: auto;
 	}
 
 	.bp-navs.bp-invites-nav#subnav,
@@ -401,11 +401,11 @@
 		}
 
 		.subnav {
-			float: left;
+			// float: left;
 		}
 
 		ul.subnav {
-			width: auto;
+			// width: auto;
 		}
 
 		// user screen last filter
@@ -463,66 +463,4 @@
 			}
 		}
 	}
-}
-
-// Tabbed links
-
-// Our tabbed links are pulled in via a mixin
-// UL parent element must have 'tabbed-links' added and the ul 'button-tabs'
-// medium screens up
-
-.buddypress-wrap {
-
-	@include medium-up {
-
-		// Profile group labels links
-		// Button navigation as tabbed effect for wide screen
-
-		@include tabbed-links();
-
-		.bp-navs.tabbed-links {
-			background: none;
-			margin-top: 2px;
-
-			&.main-navs {
-
-			}
-
-			// For tabbed nav we remove any default button nav styles.
-			ul {
-
-				li {
-
-					a {
-						border-right: 0;
-						font-size: inherit;
-					}
-				}
-
-				li.last {
-					float: right;
-					margin: 0;
-
-					a {
-						margin-top: -0.5em;
-					}
-				}
-
-				li,
-				li.current {
-
-					a,
-					a:focus,
-					a:hover {
-						background: none;
-						border: 0;
-					}
-
-					a:active {
-						outline: none;
-					}
-				}
-			}
-		} // close .bp-navs.tabbed-links
-	} // @media
 }

@@ -269,7 +269,7 @@
 			}
 		}
 
-		.activity-meta.action {
+		.bp-generic-meta.action {
 			border: 1px solid transparent;
 			background: $off-white;
 			padding: 2px;
@@ -443,6 +443,7 @@
 
 .activity-link-preview-image-wrap {
 	flex: 0 0 auto;
+	min-width: 0;
 	width: 180px;
 	min-height: 200px;
 	position: relative;
@@ -477,6 +478,7 @@
 
 .activity-link-preview-content {
 	flex: 1;
+	min-width: 0;
 	padding: 40px 20px;
 	font-size: 13px;
 	color: #939597;
@@ -546,65 +548,23 @@
 	right: 8px;
 	top: 0;
 	text-decoration: none;
+
+	@include medium-small-max() {
+		color: rgba(0, 0, 0, 1);
+	}
 }
 
 #activity-link-preview-close-image {
 	border: 0;
 	color: #fff;
 	font-size: 16px;
-	right: 3px;
+	left: 3px;
 	position: absolute;
-	top: 0;
+	top: 3px;
 	text-decoration: none;
 }
 
 #activity-close-link-suggestion:focus,
 #activity-link-preview-close-image:focus {
 	outline: 0;
-}
-
-.activity-attached-gif-container {
-	cursor: pointer;
-
-	.gif-player {
-		position: relative;
-		max-width: 480px;
-
-		video {
-			margin: 0;
-			max-width: 100%;
-		}
-	}
-
-	.gif-play-button {
-		height: 80px;
-		width: 80px;
-		position: absolute;
-		left: 50%;
-		margin-left: -40px;
-		top: 50%;
-		margin-top: -40px;
-
-		span.dashicons {
-			font-size: 80px;
-			width: 80px;
-			height: 80px;
-			margin: 0;
-			padding: 0;
-			line-height: 0;
-		}
-	}
-
-	.gif-icon {
-		background: url(../images/gif-symbol.png) bottom left no-repeat;
-		position: absolute;
-		width: 100%;
-		height: 100%;
-		display: block;
-		bottom: 30px;
-		left: 10px;
-		background-size: 40px 30px;
-		max-width: 40px;
-		max-height: 30px;
-	}
 }

@@ -133,6 +133,7 @@ class BP_Messages_Box_Template {
 			'user_id'      => bp_loggedin_user_id(),
 			'max'          => false,
 			'search_terms' => '',
+			'include'      => false,
 			'meta_query'   => array(),
 		) );
 
@@ -143,6 +144,7 @@ class BP_Messages_Box_Template {
 		$this->box          = $r['box'];
 		$this->type         = $r['type'];
 		$this->search_terms = $r['search_terms'];
+		$this->include      = $r['include'];
 
 		if ( 'notices' === $this->box ) {
 			$this->threads = BP_Messages_Notice::get_notices( array(
@@ -157,6 +159,7 @@ class BP_Messages_Box_Template {
 				'limit'        => $this->pag_num,
 				'page'         => $this->pag_page,
 				'search_terms' => $this->search_terms,
+				'include'      => $this->include,
 				'meta_query'   => $r['meta_query'],
 			) );
 

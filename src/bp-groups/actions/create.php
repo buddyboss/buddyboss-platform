@@ -135,10 +135,39 @@ function groups_action_create_group() {
 			 *                     Possible values are 'members,
 			 *                     'mods', and 'admins'.
 			 */
-			$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
+			$allowed_activity_feed_status  = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
 			$activity_feed_status	       = !empty( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
 
 			groups_update_groupmeta( $bp->groups->new_group_id, 'activity_feed_status', $activity_feed_status );
+
+			/**
+			 * Filters the allowed media statuses.
+			 *
+			 * @since BuddyBoss 1.0.0
+			 *
+			 * @param array $value Array of statuses allowed.
+			 *                     Possible values are 'members,
+			 *                     'mods', and 'admins'.
+			 */
+			$allowed_media_status  = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
+			$media_status	       = !empty( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+
+			groups_update_groupmeta( $bp->groups->new_group_id, 'media_status', $media_status );
+
+			/**
+			 * Filters the allowed album statuses.
+			 *
+			 * @since BuddyBoss 1.0.0
+			 *
+			 * @param array $value Array of statuses allowed.
+			 *                     Possible values are 'members,
+			 *                     'mods', and 'admins'.
+			 */
+			$allowed_album_status  = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
+			$album_status	       = !empty( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+
+			groups_update_groupmeta( $bp->groups->new_group_id, 'album_status', $album_status );
+
 		}
 
 		if ( 'group-invites' === bp_get_groups_current_create_step() ) {

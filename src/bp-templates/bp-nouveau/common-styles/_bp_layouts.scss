@@ -159,6 +159,7 @@
 			> li {
 				flex: 0 0 50%;
 				max-width: 50%;
+				min-width: 0;
 
 				.item {
 					margin: 1rem auto 0;
@@ -186,6 +187,7 @@
 				padding-top: 0;
 				flex: 0 0 33.333333%;
 				max-width: 33.333333%;
+				min-width: 0;
 			} // close >li
 		}
 	} // .grid
@@ -203,6 +205,7 @@
 			> li {
 				flex: 0 0 25%;
 				max-width: 25%;
+				min-width: 0;
 			} // close > li
 		}
 	} // .grid
@@ -330,6 +333,7 @@
 			&.item-entry-header {
 				max-width: 100%;
 				flex: 100%;
+				min-width: 0;
 			}
 		}
 	}
@@ -378,15 +382,21 @@
 
 	.bp-single-vert-nav { // described for the #buddypress element
 
+		.bp-wrap {
+			display: -webkit-box;
+			display: -ms-flexbox;
+			display: flex;
+		}
+
 		.bp-navs.vertical {
+			border-right: 1px solid $med-light-grey;
+			border-bottom: 0;
+			float: left;
+			width: 25%;
 			overflow: visible;
 
 			ul {
-				border-right: 1px solid $med-light-grey;
-				border-bottom: 0;
-				float: left;
-				margin-right: -1px;
-				width: 25%;
+				margin: 0;
 			}
 
 			li {
@@ -414,84 +424,53 @@
 					border-color: $light-grey;
 				}
 			} // li
-
 		}
 
-		.bp-navs.vertical.tabbed-links {
+		.item-body {
+			-webkit-box-flex: 1;
+			-ms-flex: 1;
+			flex: 1;
+			min-width: 0;
+			padding-left: 20px;
+		}
 
-			li.selected {
+		#subnav {
+			background: $light-grey;
+			margin: 0;
+			width: auto;
+
+			li {
+
+				@include font-size(16);
+				margin: $marg-sml 0;
 
 				a {
-					padding-left: 0;
+					border-right: 1px solid $bp-border-dark;
+					padding: 0 $pad-sml;
+				}
+
+				a:focus,
+				a:hover {
+					background: none;
 				}
 			}
-		}
 
-		// re-factor the related elements like the #item-body so it sits
-		// to the side(floated)
-		.bp-wrap {
-			margin-bottom: $marg-med;
+			li.current {
 
-			.user-nav-tabs.users-nav,
-			.group-nav-tabs.groups-nav {
-
-				ul {
-
-					li {
-						left: 1px;
-						position: relative;
-					}
+				a {
+					background: none;
+					color: $black;
 				}
 			}
-		}
 
-		.item-body:not(#group-create-body) {
-			background: #fff;
-			border-left: 1px solid $med-light-grey;
-			float: right;
-			margin: 0;
-			min-height: 400px;
-			padding: 0 0 0 $pad-med;
-			width: calc(75% + 1px);
+			li:last-child {
 
-			#subnav:not(.tabbed-links) {
-				background: $light-grey;
-				margin: 0;
-				width: auto;
-
-				li {
-
-					@include font-size(16);
-					margin: $marg-sml 0;
-
-					a {
-						border-right: 1px solid $bp-border-dark;
-						padding: 0 $pad-sml;
-					}
-
-					a:focus,
-					a:hover {
-						background: none;
-					}
+				a {
+					border: none;
 				}
+			}
 
-				li.current {
-
-					a {
-						background: none;
-						color: $black;
-					}
-				}
-
-				li:last-child {
-
-					a {
-						border: none;
-					}
-				}
-
-			} // close #subnav
-		}
+		} // close #subnav
 	}
 
 	// Set the directory screens main navs as vertical aligned
@@ -552,28 +531,6 @@
 
 			.subnav-filters {
 				margin-top: 0;
-			}
-		}
-	}
-
-	// Style main navs as visual tabs effect
-	// if user selects options in the Customizer
-	// and classes are set.
-	// N.B This is in addition to the  standalone visual tab style classes/mixin
-	// provided so any elements may be styled to represent tabs.
-
-	.buddypress-wrap {
-
-		&.bp-vertical-navs {
-
-			.dir-navs.activity-nav-tabs,
-			.dir-navs.sites-nav-tabs,
-			.dir-navs.groups-nav-tabs,
-			.dir-navs.members-nav-tabs,
-			.main-navs.user-nav-tabs,
-			.main-navs.group-nav-tabs {
-
-				@include primary-navs-vert-tabs();
 			}
 		}
 	}

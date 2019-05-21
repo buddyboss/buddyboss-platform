@@ -17,7 +17,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 	<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 		<div id="item-header-avatar">
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip="<?php _e('Change Group Photo', 'buddyboss'); ?>">
+				<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Group Photo', 'buddyboss'); ?>">
 					<span class="dashicons dashicons-edit"></span>
 				</a>
 			<?php } ?>
@@ -27,7 +27,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 
 	<div id="item-header-content">
 
-		<p class="highlight group-status bp-tooltip" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
+		<p class="highlight group-status bp-tooltip" data-bp-tooltip-length="large" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo esc_html( bp_get_group_status_description() ); ?>"><strong><?php echo wp_kses( bp_nouveau_group_meta()->status, array( 'span' => array( 'class' => array() ) ) ); ?></strong></p>
 
 		<p class="activity">
 			<a href="<?php echo esc_url( bp_get_group_permalink() . 'members' ); ?>"><?php echo esc_html( bp_get_group_member_count() ); ?></a>

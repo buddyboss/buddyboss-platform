@@ -20,9 +20,17 @@ if ( ! defined( 'ABSPATH' ) ) {
 function bp_media_get_settings_sections() {
 
 	$settings = array(
-		'bp_media_settings_general' => array(
+		'bp_media_settings_photos' => array(
 			'page'  => 'media',
-			'title' => __( 'Media Settings', 'buddyboss' ),
+			'title' => __( 'Photo Uploading', 'buddyboss' ),
+		),
+        'bp_media_settings_emoji' => array(
+			'page'  => 'media',
+			'title' => __( 'Emoji', 'buddyboss' ),
+		),
+		'bp_media_settings_gifs' => array(
+			'page'  => 'media',
+			'title' => __( 'Animated GIFs', 'buddyboss' ),
 		),
 	);
 
@@ -39,30 +47,51 @@ function bp_media_get_settings_fields() {
 
 	$fields = [];
 
-	/** General Section ******************************************************/
-	$fields['bp_media_settings_general'] = [
+	/** Photos Section ******************************************************/
+	$fields['bp_media_settings_photos'] = [
 
-		'bp_media_delete_media_permanently' => [
-			'title'             => __( 'Media Management', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_delete_media_permanently',
+        'bp_media_profile_media_support' => [
+			'title'             => __( 'Profiles', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_profile_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		],
+
+        'bp_media_profile_albums_support' => [
+	        'title'             => __( 'Profile Albums', 'buddyboss' ),
+	        'callback'          => '__return_true',
+	        'sanitize_callback' => 'absint',
+	        'args'              => [
+		        'class' => 'hidden'
+	        ]
+        ],
 
 	];
 
 	if ( bp_is_active( 'groups' ) ) {
 
-		$fields['bp_media_settings_general']['bp_media_group_media_support'] = [
-			'title'             => __( 'Group Media', 'buddyboss' ),
+		$fields['bp_media_settings_photos']['bp_media_group_media_support'] = [
+			'title'             => __( 'Groups', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_group_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		];
 
-		$fields['bp_media_settings_general']['bp_media_group_albums'] = [
+		$fields['bp_media_settings_photos']['bp_media_group_albums'] = [
 			'title'             => __( 'Group Albums', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_group_albums',
+			'callback'          => '__return_true',
+			'sanitize_callback' => 'absint',
+			'args'              => [
+				'class' => 'hidden'
+			]
+		];
+	}
+
+	if ( bp_is_active( 'messages' ) ) {
+
+		$fields['bp_media_settings_photos']['bp_media_messages_media_support'] = [
+			'title'             => __( 'Messages', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		];
@@ -70,13 +99,84 @@ function bp_media_get_settings_fields() {
 
 	if ( bp_is_active( 'forums' ) ) {
 
-		$fields['bp_media_settings_general']['bp_media_forums_media_support'] = [
-			'title'             => __( 'Forums Media', 'buddyboss' ),
+		$fields['bp_media_settings_photos']['bp_media_forums_media_support'] = [
+			'title'             => __( 'Forums', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_forums_media_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		];
 	}
+
+	$fields['bp_media_settings_emoji'] = [
+
+		'bp_media_profiles_emoji_support' => [
+			'title'             => __( 'Profiles', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_profiles_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+		'bp_media_groups_emoji_support' => [
+			'title'             => __( 'Groups', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_groups_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+		'bp_media_messages_emoji_support' => [
+			'title'             => __( 'Messages', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+		'bp_media_forums_emoji_support' => [
+			'title'             => __( 'Forums', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_forums_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+	];
+
+	$fields['bp_media_settings_gifs'] = [
+
+		'bp_media_gif_api_key' => [
+			'title'             => __( 'GIPHY API Key', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_gif_key',
+			'sanitize_callback' => 'string',
+			'args'              => []
+		],
+
+		'bp_media_profiles_gif_support' => [
+			'title'             => __( 'Profiles', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_profiles_gif_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+		'bp_media_groups_gif_support' => [
+			'title'             => __( 'Groups', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_groups_gif_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+		'bp_media_messages_gif_support' => [
+			'title'             => __( 'Messages', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_gif_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+		'bp_media_forums_gif_support' => [
+			'title'             => __( 'Forums', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_forums_gif_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		],
+
+	];
 
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );
 }
@@ -157,67 +257,59 @@ function bp_media_get_form_option( $option, $default = '', $slug = false ) {
 }
 
 /**
- * Setting > Media > Delete Media Permanently
+ * Setting > Media > Profile support
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_media_settings_callback_delete_media_permanently() {
+function bp_media_settings_callback_profile_media_support() {
 	?>
-    <input name="bp_media_delete_media_permanently"
-           id="bp_media_delete_media_permanently"
+    <input name="bp_media_profile_media_support"
+           id="bp_media_profile_media_support"
            type="checkbox"
            value="1"
-		<?php checked( bp_is_media_delete_enabled() ); ?>
+		<?php checked( bp_is_profile_media_support_enabled() ); ?>
     />
-    <label for="bp_media_delete_media_permanently">
-		<?php esc_html_e( 'When a photo upload is removed, permanently delete the associated media file', 'buddyboss' ) ?>
+    <label for="bp_media_profile_media_support">
+		<?php _e( 'Allow members to upload photos in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
+    </label>
+    <br/>
+    <input name="bp_media_profile_albums_support"
+           id="bp_media_profile_albums_support"
+           type="checkbox"
+           value="1"
+		<?php echo ! bp_is_profile_media_support_enabled() ? 'disabled="disabled"' : ''; ?>
+		<?php checked( bp_is_profile_albums_support_enabled() ); ?>
+    />
+    <label for="bp_media_profile_albums_support">
+		<?php _e( 'Enable Albums', 'buddyboss' ) ?>
     </label>
 	<?php
 }
 
 /**
- * Checks if media delete is enabled.
+ * Checks if media profile media support is enabled.
  *
  * @since BuddyBoss 1.0.0
  *
  * @param $default integer
  *
- * @return bool Is media delete enabled or not
+ * @return bool Is media profile media support enabled or not
  */
-function bp_is_media_delete_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_media_delete_enabled', (bool) get_option( 'bp_media_delete_media_permanently', $default ) );
+function bp_is_profile_media_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_profile_media_support_enabled', (bool) get_option( 'bp_media_profile_media_support', $default ) );
 }
 
 /**
- * Setting > Media > Forums support
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_settings_callback_forums_media_support() {
-	?>
-    <input name="bp_media_forums_media_support"
-           id="bp_media_forums_media_support"
-           type="checkbox"
-           value="1"
-		<?php checked( bp_is_forums_media_support_enabled() ); ?>
-    />
-    <label for="bp_media_forums_media_support">
-		<?php esc_html_e( 'Allow photo posting in forum discussions', 'buddyboss' ) ?>
-    </label>
-	<?php
-}
-
-/**
- * Checks if media forums media support is enabled.
+ * Checks if media profile albums support is enabled.
  *
  * @since BuddyBoss 1.0.0
  *
  * @param $default integer
  *
- * @return bool Is media forums media support enabled or not
+ * @return bool Is media profile albums support enabled or not
  */
-function bp_is_forums_media_support_enabled( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
+function bp_is_profile_albums_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_profile_albums_support_enabled', (bool) get_option( 'bp_media_profile_albums_support', $default ) );
 }
 
 /**
@@ -234,7 +326,18 @@ function bp_media_settings_callback_group_media_support() {
 		<?php checked( bp_is_group_media_support_enabled() ); ?>
     />
     <label for="bp_media_group_media_support">
-		<?php esc_html_e( 'Allow photo posting in social group activity updates and comments', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>group activity posts</strong>', 'buddyboss' ) ?>
+    </label>
+    <br/>
+    <input name="bp_media_group_albums_support"
+           id="bp_media_group_albums_support"
+           type="checkbox"
+           value="1"
+		<?php echo ! bp_is_group_media_support_enabled() ? 'disabled="disabled"' : ''; ?>
+		<?php checked( bp_is_group_albums_support_enabled() ); ?>
+    />
+    <label for="bp_media_group_albums_support">
+		<?php _e( 'Enable Albums', 'buddyboss' ) ?>
     </label>
 	<?php
 }
@@ -252,26 +355,6 @@ function bp_is_group_media_support_enabled( $default = 1 ) {
 	return (bool) apply_filters( 'bp_is_group_media_support_enabled', (bool) get_option( 'bp_media_group_media_support', $default ) );
 }
 
-
-/**
- * Setting > Media > Group Albums support
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_settings_callback_group_albums() {
-	?>
-    <input name="bp_media_group_albums"
-           id="bp_media_group_albums"
-           type="checkbox"
-           value="1"
-		<?php checked( bp_is_group_album_support_enabled() ); ?>
-    />
-    <label for="bp_media_group_albums">
-		<?php esc_html_e( 'Enable social group photo albums', 'buddyboss' ) ?>
-    </label>
-	<?php
-}
-
 /**
  * Checks if media group album support is enabled.
  *
@@ -281,6 +364,365 @@ function bp_media_settings_callback_group_albums() {
  *
  * @return bool Is media group album support enabled or not
  */
-function bp_is_group_album_support_enabled( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_group_album_support_enabled', (bool) get_option( 'bp_media_group_albums', $default ) );
+function bp_is_group_albums_support_enabled( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_group_albums_support_enabled', (bool) get_option( 'bp_media_group_albums_support', $default ) );
+}
+
+/**
+ * Setting > Media > Messages support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_messages_media_support() {
+	?>
+    <input name="bp_media_messages_media_support"
+           id="bp_media_messages_media_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_messages_media_support_enabled() ); ?>
+    />
+    <label for="bp_media_messages_media_support">
+		<?php _e( 'Allow members to upload photos in <strong>private messages</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media messages media support is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media messages media support enabled or not
+ */
+function bp_is_messages_media_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_messages_media_support_enabled', (bool) get_option( 'bp_media_messages_media_support', $default ) );
+}
+
+/**
+ * Setting > Media > Forums support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_forums_media_support() {
+	?>
+    <input name="bp_media_forums_media_support"
+           id="bp_media_forums_media_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_forums_media_support_enabled() ); ?>
+    />
+    <label for="bp_media_forums_media_support">
+		<?php _e( 'Allow members to upload photos in <strong>forum discussions</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media forums media support is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media forums media support enabled or not
+ */
+function bp_is_forums_media_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
+}
+
+/**
+ * Setting > Media > Profiles Emojis support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_profiles_emoji_support() {
+	?>
+    <input name="bp_media_profiles_emoji_support"
+           id="bp_media_profiles_emoji_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_profiles_emoji_support_enabled() ); ?>
+    />
+    <label for="bp_media_profiles_emoji_support">
+		<?php _e( 'Allow members to use emoji in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Setting > Media > Groups Emojis support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_groups_emoji_support() {
+	?>
+    <input name="bp_media_groups_emoji_support"
+           id="bp_media_groups_emoji_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_groups_emoji_support_enabled() ); ?>
+    />
+    <label for="bp_media_groups_emoji_support">
+		<?php _e( 'Allow members to use emoji in <strong>group activity posts</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Setting > Media > Messages Emojis support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_messages_emoji_support() {
+	?>
+    <input name="bp_media_messages_emoji_support"
+           id="bp_media_messages_emoji_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_messages_emoji_support_enabled() ); ?>
+    />
+    <label for="bp_media_messages_emoji_support">
+		<?php _e( 'Allow members to use emoji in <strong>private messages</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Setting > Media > Forums Emojis support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_forums_emoji_support() {
+	?>
+    <input name="bp_media_forums_emoji_support"
+           id="bp_media_forums_emoji_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_forums_emoji_support_enabled() ); ?>
+    />
+    <label for="bp_media_forums_emoji_support">
+		<?php _e( 'Allow members to use emoji in <strong>forum discussions</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media emoji support is enabled in profiles.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media emoji support enabled or not in profiles
+ */
+function bp_is_profiles_emoji_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_profiles_emoji_support_enabled', (bool) get_option( 'bp_media_profiles_emoji_support', $default ) );
+}
+
+/**
+ * Checks if media emoji support is enabled in groups.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media emoji support enabled or not in groups
+ */
+function bp_is_groups_emoji_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_groups_emoji_support_enabled', (bool) get_option( 'bp_media_groups_emoji_support', $default ) );
+}
+
+/**
+ * Checks if media emoji support is enabled in messages.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media emoji support enabled or not in messages
+ */
+function bp_is_messages_emoji_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_messages_emoji_support_enabled', (bool) get_option( 'bp_media_messages_emoji_support', $default ) );
+}
+
+/**
+ * Checks if media emoji support is enabled in forums.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media emoji support enabled or not in forums
+ */
+function bp_is_forums_emoji_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_forums_emoji_support_enabled', (bool) get_option( 'bp_media_forums_emoji_support', $default ) );
+}
+
+/**
+ * Setting > Media > GIFs support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_gif_key() {
+	?>
+    <input type="text"
+           name="bp_media_gif_api_key"
+           id="bp_media_gif_api_key"
+           value="<?php echo bp_media_get_gif_api_key(); ?>"
+           placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>"
+           style="width: 300px;"
+    />
+    <p class="description"><?php _e('This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it above.', 'buddyboss') ?></p>
+	<?php
+}
+
+/**
+ * Return GIFs API Key
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return GIF Api Key if, empty string.
+ */
+function bp_media_get_gif_api_key( $default = '' ) {
+
+	/**
+	 * Filters whether GIF key.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param GIF Api Key if, empty sting.
+	 */
+	return apply_filters( 'bp_media_get_gif_api_key', bp_get_option( 'bp_media_gif_api_key', $default ) );
+}
+
+/**
+ * Setting > Media > Profiles GIFs support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_profiles_gif_support() {
+	?>
+    <input name="bp_media_profiles_gif_support"
+           id="bp_media_profiles_gif_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_profiles_gif_support_enabled() ); ?>
+    />
+    <label for="bp_media_profiles_gif_support">
+		<?php _e( 'Allow members to use animated GIFs in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Setting > Media > Groups GIFs support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_groups_gif_support() {
+	?>
+    <input name="bp_media_groups_gif_support"
+           id="bp_media_groups_gif_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_groups_gif_support_enabled() ); ?>
+    />
+    <label for="bp_media_groups_gif_support">
+		<?php _e( 'Allow members to use animated GIFs in <strong>group activity posts</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Setting > Media > Messages GIFs support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_messages_gif_support() {
+	?>
+    <input name="bp_media_messages_gif_support"
+           id="bp_media_messages_gif_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_messages_gif_support_enabled() ); ?>
+    />
+    <label for="bp_media_messages_gif_support">
+		<?php _e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Setting > Media > Forums GIFs support
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_settings_callback_forums_gif_support() {
+	?>
+    <input name="bp_media_forums_gif_support"
+           id="bp_media_forums_gif_support"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_forums_gif_support_enabled() ); ?>
+    />
+    <label for="bp_media_forums_gif_support">
+		<?php _e( 'Allow members to use animated GIFs in <strong>forum discussions</strong>', 'buddyboss' ) ?>
+    </label>
+	<?php
+}
+
+/**
+ * Checks if media gif support is enabled in profiles.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media gif support enabled or not in profiles
+ */
+function bp_is_profiles_gif_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_profiles_gif_support_enabled', (bool) get_option( 'bp_media_profiles_gif_support', $default ) );
+}
+
+/**
+ * Checks if media gif support is enabled in groups.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media gif support enabled or not in groups
+ */
+function bp_is_groups_gif_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_groups_gif_support_enabled', (bool) get_option( 'bp_media_groups_gif_support', $default ) );
+}
+
+/**
+ * Checks if media gif support is enabled in messages.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media gif support enabled or not in messages
+ */
+function bp_is_messages_gif_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_messages_gif_support_enabled', (bool) get_option( 'bp_media_messages_gif_support', $default ) );
+}
+
+/**
+ * Checks if media gif support is enabled in forums.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return bool Is media gif support enabled or not in forums
+ */
+function bp_is_forums_gif_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', (bool) get_option( 'bp_media_forums_gif_support', $default ) );
 }

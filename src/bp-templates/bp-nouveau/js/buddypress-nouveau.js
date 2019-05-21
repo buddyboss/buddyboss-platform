@@ -52,6 +52,9 @@ window.bp = window.bp || {};
 			// Privacy Policy Popup on Login page and Lost Password page
 			this.loginPopUp();
 
+			$.ajaxPrefilter( this.memberPreFilter );
+			$.ajaxPrefilter( this.groupPreFilter );
+
 		},
 
 		/**
@@ -327,6 +330,10 @@ window.bp = window.bp || {};
 					return;
 				}
 
+				if ( $('body.group-members.members.buddypress').length ) {
+					$('body.group-members.members.buddypress ul li#members-groups-li').find( 'span' ).text(response.data.count);
+				}
+
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text('');
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text(response.data.count);
@@ -494,6 +501,9 @@ window.bp = window.bp || {};
 
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
+
+			$( document ).on( 'click', this.closePickersOnClick );
+			document.addEventListener( 'keydown', this.closePickersOnEsc );
 		},
 
                 /**
@@ -1365,6 +1375,50 @@ window.bp = window.bp || {};
 					e.preventDefault();
 					$.magnificPopup.close();
 				});
+			}
+		},
+		groupPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=groups_filter') ) {
+				var	group_type = $('#group-type-order-by').find(':selected').val();
+				if (typeof group_type !== 'undefined') {
+					options.data += '&group_type=' + group_type;
+				}
+			}
+		},
+		memberPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
+				var	member_type_id = $('#member-type-order-by').find(':selected').val();
+				if (typeof member_type_id !== 'undefined') {
+					options.data += '&member_type_id=' + member_type_id;
+				}
+			}
+		},
+
+		/**
+		 * Close emoji picker whenever clicked outside of emoji container
+		 * @param event
+		 */
+		closePickersOnClick: function( event ) {
+			var $targetEl = $(event.target);
+
+			if (!_.isUndefined(BP_Nouveau.media) &&
+				!_.isUndefined(BP_Nouveau.media.emoji) &&
+			    !$targetEl.closest('.post-emoji').length &&
+			    !$targetEl.is('.emojioneemoji,.emojibtn')) {
+				$('.emojionearea-button.active').removeClass('active');
+			}
+		},
+
+		/**
+		 * Close emoji picker on Esc press
+		 * @param event
+		 */
+		closePickersOnEsc: function( event ) {
+			if ( event.key === 'Escape' || event.keyCode === 27 ) {
+				if (!_.isUndefined(BP_Nouveau.media) &&
+					!_.isUndefined(BP_Nouveau.media.emoji)) {
+					$('.emojionearea-button.active').removeClass('active');
+				}
 			}
 		}
 	};

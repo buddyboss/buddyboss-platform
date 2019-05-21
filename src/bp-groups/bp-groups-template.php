@@ -1718,7 +1718,7 @@ function bp_group_list_admins( $group = false ) {
 		<ul id="group-admins">
 			<?php foreach( (array) $group->admins as $admin ) { ?>
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $admin->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'email' => $admin->user_email, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?></a>
+					<a href="<?php echo bp_core_get_user_domain( $admin->user_id, $admin->user_nicename, $admin->user_login ) ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $admin->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $admin->user_id, 'email' => $admin->user_email, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $admin->user_id ) ) ) ) ?></a>
 				</li>
 			<?php } ?>
 		</ul>
@@ -1754,7 +1754,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip"
+						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip" data-bp-tooltip-pos="up" 
 						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ) ?>"><?php echo bp_core_fetch_avatar( array(
 								'item_id' => $parent_group->id,
 								'object'  => 'group',
@@ -1790,7 +1790,7 @@ function bp_group_list_mods( $group = false ) {
 			<?php foreach( (array) $group->mods as $mod ) { ?>
 
 				<li>
-					<a href="<?php echo bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ) ?>" class="bp-tooltip" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $mod->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'email' => $mod->user_email, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?></a>
+					<a href="<?php echo bp_core_get_user_domain( $mod->user_id, $mod->user_nicename, $mod->user_login ) ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php printf( ('%s'),  bp_core_get_user_displayname( $mod->user_id ) ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $mod->user_id, 'email' => $mod->user_email, 'alt' => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $mod->user_id ) ) ) ) ?></a>
 				</li>
 
 			<?php } ?>
@@ -2392,6 +2392,145 @@ function bp_group_get_activity_feed_status( $group_id = false ) {
 	return apply_filters( 'bp_group_get_activity_feed_status', $activity_feed_status, $group_id );
 }
 
+/**
+ * Output the 'checked' value, if needed, for a given album_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_albums_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$album_status = bp_group_get_album_status( $group_id );
+
+	if ( $setting == $album_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
+ * Get the album status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_album_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( !$group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$album_status = groups_get_groupmeta( $group_id, 'album_status' );
+
+	// Backward compatibility. When 'album_status' is not set, fall back to a default value.
+	if ( !$album_status ) {
+		$album_status = apply_filters( 'bp_group_album_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $album_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_album_status', $album_status, $group_id );
+}
+
+/**
+ * Output the 'checked' value, if needed, for a given media_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string      $setting The setting you want to check against ('members',
+ *                             'mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_media_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$media_status = bp_group_get_media_status( $group_id );
+
+	if ( $setting == $media_status ) {
+		echo ' checked="checked"';
+	}
+}
+
+/**
+ * Get the media status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group album status, from among 'members',
+ *                     'mods', and 'admins'.
+ */
+function bp_group_get_media_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( !$group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$media_status = groups_get_groupmeta( $group_id, 'media_status' );
+
+	// Backward compatibility. When 'media_status' is not set, fall back to a default value.
+	if ( !$media_status ) {
+		$media_status = apply_filters( 'bp_group_media_status_fallback', 'members' );
+	}
+
+	/**
+	 * Filters the album status of a group.
+	 *
+	 * Invite status in this case means who from the group can send invites.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $media_status Membership level needed to manage albums.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_media_status', $media_status, $group_id );
+}
 
 /**
  * Get the parent group ID for a specific group.

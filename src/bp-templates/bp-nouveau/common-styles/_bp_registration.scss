@@ -82,11 +82,13 @@
 
 				.default-profile {
 					flex: 1 100%;
+					min-width: 0;
 					//padding-right: $pad-lrg;
 				}
 
 				.blog-details {
 					flex: 1 100%;
+					min-width: 0;
 					//padding-left: $pad-lrg;
 				}
 			}
@@ -110,16 +112,19 @@
 
 			.default-profile {
 				flex: 1 100%;
+				min-width: 0;
 				//padding-right: $pad-med;
 			}
 
 			.extended-profile {
 				flex: 1 100%;
+				min-width: 0;
 				//padding-left: $pad-med;
 			}
 
 			.blog-details {
 				flex: 1 100%;
+				min-width: 0;
 			}
 		}
 	}

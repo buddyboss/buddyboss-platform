@@ -36,7 +36,7 @@ $settings = bp_email_get_appearance_settings();
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
 <head>
     <meta charset="<?php echo esc_attr( get_bloginfo( 'charset' ) ); ?>">
-    <meta name="viewport" content="width=device-width"> <!-- Forcing initial-scale shouldn't be necessary -->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"> <!-- Use the latest (edge) version of IE rendering engine -->
     <meta name="x-apple-disable-message-reformatting">  <!-- Disable auto-scale in iOS 10 Mail entirely -->
     <title></title> <!-- The title tag shows in email notifications, like Android 4.4. -->
@@ -169,12 +169,52 @@ $settings = bp_email_get_appearance_settings();
             .mobile-text-left {
                 text-align: left !important;
             }
+
+			.repsonsive-padding {
+				padding: 0 20px !important;
+			}
+
+			.responsive-set-height {
+				font-size: 0 !important;
+				line-height: 0 !important;
+				height: 0 !important;
+			}
+
+			.mobile-block-full {
+				display: block !important;
+				width: 100% !important;
+			}
+
+			.mobile-block-padding-full {
+				display: block !important;
+				padding: 0 20px !important;
+				width: 100% !important;
+				box-sizing: border-box;
+			}
+
+			.avatar-wrap.mobile-center {
+				margin: 20px auto 10px !important;
+			}
+
+			.group-avatar-wrap.mobile-center {
+				margin: 10px auto 20px !important;
+			}
+
+			.mobile-padding-bottom {
+				padding-bottom: 10px !important;
+			}
+
+			.mobile-button-center {
+				margin: 5px auto 0 !important;
+				width: 160px !important;
+			}
         }
     </style>
-
 </head>
+
 <body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
-<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg"><tr><td valign="top">
+	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+		<tr><td valign="top">
             <center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
 
                 <div style="max-width: 600px; margin: auto; padding: 10px;" class="email-container">
@@ -250,7 +290,7 @@ $settings = bp_email_get_appearance_settings();
                             <td>
                                 <table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
                                     <tr>
-                                        <td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size">
+                                        <td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size repsonsive-padding">
 											<?php echo $email_content; ?>
                                         </td>
                                     </tr>
@@ -266,7 +306,7 @@ $settings = bp_email_get_appearance_settings();
                     <br>
                     <table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" width="100%" style="max-width: 600px; border-radius: 5px;">
                         <tr>
-                            <td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size">
+                            <td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
 								<?php
 								/**
 								 * Fires before the display of the email template footer.
@@ -301,8 +341,7 @@ $settings = bp_email_get_appearance_settings();
                     <![endif]-->
                 </div>
             </center>
-        </td></tr></table>
+        </td></tr>
+	</table>
 </body>
 </html>
-
-

@@ -12,12 +12,13 @@
                 <div class="modal-container">
 
                     <header class="bb-model-header bg-white">
-                        <a href="#" class="bp-media-upload-tab" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
-                        <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
+                        <a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
 
                         <?php if ( bp_is_single_album() ) : ?>
-                            <a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php _e( 'Select Media', 'buddyboss' ); ?></a>
+                            <a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php _e( 'Select Photos', 'buddyboss' ); ?></a>
                         <?php endif; ?>
+
+                        <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 
                         <a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
 							<span class="dashicons dashicons-no-alt"></span>
@@ -25,9 +26,9 @@
                     </header>
 
                     <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-                        <?php if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() ) : ?>
+                        <?php if ( ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
                         <div class="media-uploader-post-content">
-                            <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about media.', 'buddyboss' ); ?>"></textarea>
+                            <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about your photos.', 'buddyboss' ); ?>"></textarea>
                         </div>
                         <?php endif; ?>
                         <div class="media-uploader-wrapper">
@@ -38,7 +39,7 @@
 	                <?php if ( bp_is_single_album() ) : ?>
                         <div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
 
-                            <?php if ( bp_has_media( array( 'album_id' => 0 ) ) ) : ?>
+                            <?php if ( bp_has_media( array( 'album_id' => 'existing-media' ) ) ) : ?>
 
                                 <ul class="media-list item-list bp-list bb-photo-list grid existing-media-list">
 
@@ -52,7 +53,7 @@
                                     <?php if ( bp_media_has_more_items() ) : ?>
 
                                         <li class="load-more">
-                                            <a href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+                                            <a class="button outline" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
                                         </li>
 
                                     <?php endif; ?>

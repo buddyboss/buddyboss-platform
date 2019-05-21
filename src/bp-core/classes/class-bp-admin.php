@@ -123,6 +123,7 @@ class BP_Admin {
 		require( $this->admin_dir . 'bp-core-admin-pages.php'      );
 		require( $this->admin_dir . 'bp-core-admin-slugs.php'      );
 		require( $this->admin_dir . 'bp-core-admin-tools.php'      );
+		require( $this->admin_dir . 'bp-core-admin-help.php'       );
 	}
 
 	/**
@@ -160,9 +161,6 @@ class BP_Admin {
 		// Add integrations
 		add_action( 'bp_register_admin_integrations', array( $this, 'register_admin_integrations' ), 5 );
 
-		// Add a link to BuddyPress Hello in the admin bar.
-		add_action( 'admin_bar_menu', array( $this, 'admin_bar_about_link' ), 100 );
-
 		// Add a description of new BuddyPress tools in the available tools page.
 		add_action( 'tool_box',            'bp_core_admin_available_tools_intro' );
 		add_action( 'bp_network_tool_box', 'bp_core_admin_available_tools_intro' );
@@ -174,8 +172,9 @@ class BP_Admin {
 		add_filter( 'manage_' . bp_get_email_post_type() . '_posts_columns',       array( $this, 'emails_register_situation_column' ) );
 		add_action( 'manage_' . bp_get_email_post_type() . '_posts_custom_column', array( $this, 'emails_display_situation_column_data' ), 10, 2 );
 
-		// BuddyPress Hello.
-		add_action( 'admin_footer', array( $this, 'about_screen' ) );
+		// Hello BuddyBoss/AppBoss.
+		add_action( 'admin_footer', array( $this, 'about_buddyboss_screen' ) );
+		add_action( 'admin_footer', array( $this, 'about_appboss_screen' ) );
 
 		/* Filters ***********************************************************/
 
@@ -321,17 +320,6 @@ class BP_Admin {
 			'bp-credits',
 			array( $this, 'bp_credits_screen' )
 		);
-
-		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Mobile App', 'buddyboss' ),
-				__( 'Mobile App', 'buddyboss' ),
-				$this->capability,
-				'bp-appboss',
-				'bp_core_admin_appboss'
-			);
-		}
 	}
 
 	/**
@@ -435,17 +423,6 @@ class BP_Admin {
 			array( $this, 'bp_credits_screen' )
 		);
 
-		if ( ! is_plugin_active( 'appboss/appboss.php' ) ) {
-			$hooks[] = add_submenu_page(
-				$this->settings_page,
-				__( 'Mobile App', 'buddyboss' ),
-				__( 'Mobile App', 'buddyboss' ),
-				$this->capability,
-				'bp-appboss',
-				'bp_core_admin_appboss'
-			);
-		}
-
 
 
 		// For consistency with non-Multisite, we add a Tools menu in
@@ -482,6 +459,15 @@ class BP_Admin {
 			$this->capability,
 			'bp-tools',
 			'bp_core_admin_tools'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Help', 'buddyboss' ),
+			__( 'Help', 'buddyboss' ),
+			$this->capability,
+			'bp-help',
+			'bp_core_admin_help'
 		);
 
 		$hooks[] = add_submenu_page(
@@ -543,19 +529,9 @@ class BP_Admin {
 			return;
 		}
 
-		// make sure app integration is last
-		$app_menu = '';
-		foreach ( $submenu[ 'buddyboss-platform' ] as $index => $pmenu ) {
-			if ( $pmenu[2] == 'bp-appboss' ) {
-				$app_menu = $pmenu;
-				unset( $submenu[ 'buddyboss-platform' ][ $index ] );
-				break;
-			}
-		}
-
 		$submenu[ 'buddyboss-platform' ] = array_values( $submenu[ 'buddyboss-platform' ] );
 
-		if ( $app_menu ) {
+		if ( isset( $app_menu ) ) {
 			$submenu[ 'buddyboss-platform' ][] = $app_menu;
 		}
 
@@ -651,30 +627,6 @@ class BP_Admin {
 	}
 
 	/**
-	 * Add a link to BuddyPress Hello to the admin bar.
-	 *
-	 * @since BuddyPress 1.9.0
-	 * @since BuddyPress 3.0.0 Hooked at priority 100 (was 15).
-	 *
-	 * @param WP_Admin_Bar $wp_admin_bar
-	 */
-	public function admin_bar_about_link( $wp_admin_bar ) {
-		if ( ! is_user_logged_in() ) {
-			return;
-		}
-
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'wp-logo',
-			'id'     => 'bp-about',
-			'title'  => esc_html__( 'Hello, BuddyBoss!', 'buddyboss' ),
-			'href'   => bp_get_admin_url( '?hello=buddyboss' ),
-			'meta'   => array(
-				'class' => 'say-hello-buddypress',
-			),
-		) );
-	}
-
-	/**
 	 * Add Settings link to plugins area.
 	 *
 	 * @since BuddyPress 1.6.0
@@ -708,15 +660,10 @@ class BP_Admin {
 		// Settings pages.
 		remove_submenu_page( $this->settings_page, $this->settings_page );
 
-		// remove_submenu_page( $this->settings_page, 'bp-page-settings' );
-		// remove_submenu_page( $this->settings_page, 'bp-settings'      );
-		// remove_submenu_page( $this->settings_page, 'bp-credits'       );
-
 		// Network Admin Tools.
 		remove_submenu_page( 'network-tools', 'network-tools' );
 
-		// About and Credits pages.
-		remove_submenu_page( 'index.php', 'bp-about'   );
+		// Credits page.
 		remove_submenu_page( 'index.php', 'bp-credits' );
 	}
 
@@ -724,43 +671,51 @@ class BP_Admin {
 	 * Add some general styling to the admin area.
 	 *
 	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.0.0 Added support for Hello AppBoss
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_style( 'bp-admin-common-css' );
 
-		// BuddyPress Hello
+		// Hello BuddyBoss
 		if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'buddyboss' ) {
+			wp_enqueue_style( 'bp-hello-css' );
+			wp_enqueue_script( 'bp-hello-js' );
+		}
+
+		// Hello AppBoss
+		if ( 0 === strpos( get_current_screen()->id, 'dashboard' ) && ! empty( $_GET['hello'] ) && $_GET['hello'] === 'appboss' ) {
 			wp_enqueue_style( 'bp-hello-css' );
 			wp_enqueue_script( 'bp-hello-js' );
 		}
 	}
 
-	/** About *****************************************************************/
+	/** About BuddyBoss and AppBoss ********************************************/
 
 	/**
-	 * Output the BuddyPress Hello template.
+	 * Output the Hello BuddyBoss template.
 	 *
 	 * @since BuddyPress 1.7.0 Screen content.
-	 * @since BuddyPress 3.0.0 Now outputs BuddyPress Hello template.
+	 * @since BuddyBoss 1.0.0 Now outputs Hello BuddyBoss template.
 	 */
-	public function about_screen() {
+	public function about_buddyboss_screen() {
 		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'buddyboss' ) {
 			return;
 		}
 
-		include $this->admin_dir . 'templates/about-screen.php';
+		include $this->admin_dir . 'templates/about-buddyboss.php';
 	}
 
 	/**
-	 * Output the credits screen.
+	 * Output the Hello AppBoss template.
 	 *
-	 * Hardcoding this in here is pretty janky. It's fine for now, but we'll
-	 * want to leverage api.wordpress.org eventually.
-	 *
-	 * @since BuddyPress 1.7.0
+	 * @since BuddyBoss 1.0.0 Output the Hello AppBoss template.
 	 */
-	public function credits_screen() {
-		include $this->admin_dir . 'templates/about-screen.php';
+	public function about_appboss_screen() {
+		if ( 0 !== strpos( get_current_screen()->id, 'dashboard' ) || empty( $_GET['hello'] ) || $_GET['hello'] !== 'appboss' ) {
+			return;
+		}
+
+		include $this->admin_dir . 'templates/about-appboss.php';
 	}
 
 	/** Emails ****************************************************************/

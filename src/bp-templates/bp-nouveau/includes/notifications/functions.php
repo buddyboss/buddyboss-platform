@@ -183,7 +183,7 @@ function bp_nouveau_notifications_dashiconified_link( $link = '', $bp_tooltip = 
 		$link = str_replace(
 			'>' . $match[1] . '<',
 			sprintf(
-				' class="bp-tooltip" data-bp-tooltip="%1$s"><span class="dashicons %2$s" aria-hidden="true"></span><span class="bp-screen-reader-text">%3$s</span><',
+				' class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s"><span class="dashicons %2$s" aria-hidden="true"></span><span class="bp-screen-reader-text">%3$s</span><',
 				esc_attr( $bp_tooltip ),
 				sanitize_html_class( $dashicon ),
 				$match[1]

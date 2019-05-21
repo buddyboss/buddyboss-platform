@@ -1,5 +1,5 @@
 /* jshint browser: true */
-/* global bp, BP_Nouveau */
+/* global bp, BP_Nouveau, Dropzone */
 /* @version 3.1.0 */
 window.bp = window.bp || {};
 
@@ -11,6 +11,13 @@ window.bp = window.bp || {};
 	}
 
 	bp.Nouveau = bp.Nouveau || {};
+	bp.Models      = bp.Models || {};
+
+	bp.Models.ACReply = Backbone.Model.extend( {
+		defaults: {
+			gif_data: {}
+		}
+	} );
 
 	/**
 	 * [Activity description]
@@ -51,6 +58,24 @@ window.bp = window.bp || {};
 				first_recorded : 0,
 				document_title : $( document ).prop( 'title' )
 			};
+
+			// set up dropzones auto discover to false so it does not automatically set dropzones
+			window.Dropzone.autoDiscover = false;
+
+			this.dropzone_options = {
+				url: BP_Nouveau.ajaxurl,
+				timeout: 3 * 60 * 60 * 1000,
+				acceptedFiles: 'image/*',
+				autoProcessQueue: true,
+				addRemoveLinks: true,
+				uploadMultiple: false,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+			};
+
+			this.dropzone_obj = null;
+			this.dropzone_media = [];
+
+			this.models = [];
 		},
 
 		/**
@@ -72,15 +97,18 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.show-all', this.showComments );
 
 			// Activity actions
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
+			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
-			$(document).on('click', '.gif-image-container', this.playVideo);
+
+			//forums
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Activity autoload
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
 			}
-
 		},
 
 		/**
@@ -444,7 +472,7 @@ window.bp = window.bp || {};
 				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
-				item_id, form;
+				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
@@ -634,6 +662,9 @@ window.bp = window.bp || {};
 							parent.Activity.heartbeat_data.newest        = '';
 							parent.Activity.heartbeat_data.last_recorded  = 0;
 						}
+
+						// Inform other scripts
+						$( document ).trigger( 'bp_activity_ajax_delete_request', $.extend( ajaxData, { response: response } ) );
 					}
 				} );
 			}
@@ -719,6 +750,8 @@ window.bp = window.bp || {};
 					item_id = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
+				this.toggleMultiMediaOptions(form,target);
+
 				// ?? hide and display none..
 				//form.css( 'display', 'none' );
 				form.removeClass( 'root' );
@@ -752,6 +785,18 @@ window.bp = window.bp || {};
 				} );
 
 				$( '#ac-form-' + activity_id + ' textarea' ).focus();
+
+				if ( !_.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
+					$( '#ac-input-' + activity_id ).emojioneArea( {
+						standalone: true,
+						hideSource: false,
+						container: '#ac-reply-emoji-button-' + activity_id,
+						autocomplete: false,
+						pickerPosition: 'bottom',
+						hidePickerOnBlur: false,
+						useInternalCDN: false
+					} );
+				}
 			}
 
 			// Removing the form
@@ -761,6 +806,8 @@ window.bp = window.bp || {};
 
 				// Change the aria state back to false on comment cancel
 				$( '.acomment-reply').attr( 'aria-expanded', 'false' );
+
+				self.destroyCommentMediaUploader(activity_id);
 
 				// Stop event propagation
 				event.preventDefault();
@@ -780,22 +827,46 @@ window.bp = window.bp || {};
 					item_id    = target.closest( 'li' ).data( 'bp-activity-comment-id' );
 				}
 
-				comment_content = $( form ).find( 'textarea' ).first();
+				comment_content = $( form ).find( '.ac-input' ).first();
+
+				comment_content.find('img.emojioneemoji').replaceWith(function () {
+					return this.dataset.emojiChar;
+				});
 
 				target.addClass( 'loading' ).prop( 'disabled', true );
 				comment_content.addClass( 'loading' ).prop( 'disabled', true );
+				var comment_value = comment_content[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'');
 
 				comment_data = {
 					action                        : 'new_activity_comment',
 					_wpnonce_new_activity_comment : $( '#_wpnonce_new_activity_comment' ).val(),
 					comment_id                    : item_id,
 					form_id                       : activity_id,
-					content                       : comment_content.val()
+					content                       : comment_value
 				};
 
 				// Add the Akismet nonce if it exists
 				if ( $( '#_bp_as_nonce_' + activity_id ).val() ) {
 					comment_data['_bp_as_nonce_' + activity_id] = $( '#_bp_as_nonce_' + activity_id ).val();
+				}
+
+				// add media data if enabled or uploaded
+				if ( this.dropzone_media.length ) {
+					comment_data.media = this.dropzone_media;
+
+					if ( _.isEmpty( comment_data.content ) ) {
+						comment_data.content = '&#8203;';
+					}
+				}
+
+				// add gif data if enabled or uploaded
+				if ( ! _.isUndefined( this.models[activity_id] ) ) {
+					model = this.models[activity_id];
+					comment_data.gif_data = this.models[activity_id].get('gif_data');
+
+					if ( _.isEmpty( comment_data.content ) ) {
+						comment_data.content = '&#8203;';
+					}
 				}
 
 				parent.ajax( comment_data, 'activity' ).done( function( response ) {
@@ -819,7 +890,7 @@ window.bp = window.bp || {};
 							}
 
 							activity_comments.children( 'ul' ).append( $( the_comment ).hide().fadeIn( 200 ) );
-							$( form ).find( 'textarea' ).first().val( '' );
+							$( form ).find( '.ac-input' ).first().html( '' );
 
 							activity_comments.parent().addClass( 'has-comments' );
 							activity_comments.parent().addClass( 'comments-loaded' );
@@ -847,7 +918,22 @@ window.bp = window.bp || {};
 						if ( show_all_a ) {
 							show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
 						}
+
+						// keep the dropzone media saved so it wont remove its attachment when destroyed
+						if ( self.dropzone_media.length ) {
+							for( var l = 0; l < self.dropzone_media.length; l++ ) {
+								self.dropzone_media[l].saved = true;
+							}
+						}
+
 					}
+
+					if ( !_.isUndefined( model ) ) {
+						model.set( 'gif_data', {} );
+						$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
+					}
+
+					self.destroyCommentMediaUploader(activity_id);
 
 					target.prop( 'disabled', false );
 					comment_content.prop( 'disabled', false );
@@ -895,31 +981,15 @@ window.bp = window.bp || {};
 			}
 		},
 
-		// play gif
-		playVideo: function(event) {
-			event.preventDefault();
-			var video = $(this).find('video').get(0),
-				$button = $(this).find('.gif-play-button');
-			if (video.paused == true) {
-				// Play the video
-				video.play();
-
-				// Update the button text to 'Pause'
-				$button.hide();
-			} else {
-				// Pause the video
-				video.pause();
-
-				// Update the button text to 'Play'
-				$button.show();
-			}
-		},
-
 		// activity autoload
 		loadMoreActivities: function () {
 
 			var $load_more_btn = $( '.load-more:visible' ).last(),
 				$window = $(window);
+
+			if ( ! $load_more_btn.closest('.activity-list').length ) {
+				return;
+			}
 
 			if ( ! $load_more_btn.get( 0 ) || $load_more_btn.data( 'bp-autoloaded' ) ) {
 				return;
@@ -932,6 +1002,168 @@ window.bp = window.bp || {};
 				$load_more_btn.data( 'bp-autoloaded', 1 );
 				$load_more_btn.find( 'a' ).text(BP_Nouveau.activity.strings.loadingMore);
 				$load_more_btn.find( 'a' ).trigger( 'click' );
+			}
+		},
+
+		destroyCommentMediaUploader: function(comment_id) {
+			var self = this;
+
+			if ( ! _.isNull( self.dropzone_obj ) ) {
+				self.dropzone_obj.destroy();
+				$('#ac-reply-post-media-uploader-'+comment_id).html('');
+			}
+			self.dropzone_media = [];
+			$('#ac-reply-post-media-uploader-'+comment_id).removeClass('open').addClass('closed');
+		},
+
+		openCommentsMediaUploader: function(event) {
+			var self = this, dropzone_container = $(event.currentTarget).closest('.ac-reply-content').find('.dropzone');
+			event.preventDefault();
+
+			if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
+
+				if ( dropzone_container.hasClass('closed') ) {
+
+					// init dropzone
+					self.dropzone_obj = new Dropzone('#ac-reply-post-media-uploader-'+$(event.currentTarget).data('ac-id'), self.dropzone_options);
+
+					self.dropzone_obj.on('sending', function(file, xhr, formData) {
+						formData.append('action', 'media_upload');
+						formData.append('_wpnonce', BP_Nouveau.nonces.media);
+					});
+
+					self.dropzone_obj.on('success', function(file, response) {
+						if ( response.data.id ) {
+							file.id = response.id;
+							response.data.uuid = file.upload.uuid;
+							response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
+							response.data.album_id = self.album_id;
+							response.data.group_id = self.group_id;
+							response.data.saved    = false;
+							self.dropzone_media.push( response.data );
+						}
+					});
+
+					self.dropzone_obj.on('error', function(file,response) {
+						if ( file.accepted ) {
+							if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+								$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+							}
+						} else {
+							self.dropzone_obj.removeFile(file);
+						}
+					});
+
+					self.dropzone_obj.on('removedfile', function(file) {
+						if ( self.dropzone_media.length ) {
+							for ( var i in self.dropzone_media ) {
+								if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
+
+									if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+										bp.Nouveau.Media.removeAttachment(self.dropzone_media[i].id);
+									}
+
+									self.dropzone_media.splice( i, 1 );
+									break;
+								}
+							}
+						}
+					});
+
+					// container class to open close
+					dropzone_container.removeClass('closed').addClass('open');
+
+				} else {
+					if ( self.dropzone_obj ) {
+						self.dropzone_obj.destroy();
+					}
+					self.dropzone_media = [];
+					dropzone_container.html('');
+					dropzone_container.addClass('closed').removeClass('open');
+				}
+			}
+
+			var c_id = $(event.currentTarget).data('ac-id');
+			$( '#ac-reply-gif-button-' + c_id ).closest('.post-gif').find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			// add gif data if enabled or uploaded
+			if ( ! _.isUndefined( this.models[c_id] ) ) {
+				var model = this.models[c_id];
+				model.set( 'gif_data', {} );
+				$( '#ac-reply-post-gif-' + c_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
+			}
+		},
+
+		openGifPicker: function ( event ) {
+			event.preventDefault();
+
+			var currentTarget = event.currentTarget,
+				$gifPickerEl = $( currentTarget ).next(),
+				activityID = currentTarget.id.match( /\d+$/ )[0],
+				$gifAttachmentEl = $( '#ac-reply-post-gif-' + activityID );
+
+			if ( $gifPickerEl.is( ':empty' ) ) {
+				var model = new bp.Models.ACReply(),
+					gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown( {model: model} ),
+					activityAttachedGifPreview = new bp.Views.ActivityAttachedGifPreview( {model: model} );
+
+				$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
+				$gifAttachmentEl.html( activityAttachedGifPreview.render().el );
+
+				this.models[activityID] = model;
+			}
+
+			$gifPickerEl.toggleClass('open');
+			this.destroyCommentMediaUploader(activityID);
+		},
+
+		toggleMultiMediaOptions: function(form,target) {
+			if (!_.isUndefined(BP_Nouveau.media)) {
+
+				if (target.closest( 'li' ).hasClass('groups')) {
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.group_media === false) {
+						form.find('.ac-reply-toolbar .post-media').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-media').show();
+					}
+
+					// check gif is enable in groups or not
+					if (BP_Nouveau.media.gif.groups === false) {
+						form.find('.ac-reply-toolbar .post-gif').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-gif').show();
+					}
+
+					// check emoji is enable in groups or not
+					if (BP_Nouveau.media.emoji.groups === false) {
+						form.find('.ac-reply-toolbar .post-emoji').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-emoji').show();
+					}
+				} else {
+
+					// check media is enable in groups or not
+					if (BP_Nouveau.media.profile_media === false) {
+						form.find('.ac-reply-toolbar .post-media').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-media').show();
+					}
+
+					// check gif is enable in groups or not
+					if (BP_Nouveau.media.gif.profile === false) {
+						form.find('.ac-reply-toolbar .post-gif').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-gif').show();
+					}
+
+					// check emoji is enable in groups or not
+					if (BP_Nouveau.media.emoji.profile === false) {
+						form.find('.ac-reply-toolbar .post-emoji').hide();
+					} else {
+						form.find('.ac-reply-toolbar .post-emoji').show();
+					}
+				}
 			}
 		}
 	};

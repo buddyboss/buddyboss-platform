@@ -6,41 +6,46 @@
  */
 ?>
 
-<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
+<div class="bb-media-container member-media">
+	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
-<?php
+	<?php bp_get_template_part( 'media/theatre' ); ?>
 
-switch ( bp_current_action() ) :
+	<?php
+	switch ( bp_current_action() ) :
 
-	// Home/Media
-	case 'my-media':
+		// Home/Media
+		case 'my-media':
 
-		bp_get_template_part( 'media/add-media' );
+			bp_get_template_part( 'media/add-media' );
 
-		bp_nouveau_member_hook( 'before', 'media_content' );
+			bp_nouveau_member_hook( 'before', 'media_content' );
 
-		?>
-		<div id="media-stream" class="media" data-bp-list="media">
+			bp_get_template_part( 'media/actions' );
 
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-media-loading' ); ?></div>
+			?>
 
-		</div><!-- .media -->
-		<?php
+			<div id="media-stream" class="media" data-bp-list="media">
+				<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-media-loading' ); ?></div>
+			</div><!-- .media -->
 
-		bp_nouveau_member_hook( 'after', 'media_content' );
+			<?php
+			bp_nouveau_member_hook( 'after', 'media_content' );
 
-		break;
+			break;
 
-	// Home/Media/Albums
-	case 'albums':
-		if ( ! bp_is_single_album() )
-			bp_get_template_part( 'media/albums' );
-		else
-			bp_get_template_part( 'media/single-album' );
-		break;
+		// Home/Media/Albums
+		case 'albums':
+			if ( ! bp_is_single_album() )
+				bp_get_template_part( 'media/albums' );
+			else
+				bp_get_template_part( 'media/single-album' );
+			break;
 
-	// Any other
-	default:
-		bp_get_template_part( 'members/single/plugins' );
-		break;
-endswitch;
+		// Any other
+		default:
+			bp_get_template_part( 'members/single/plugins' );
+			break;
+	endswitch;
+	?>
+</div>

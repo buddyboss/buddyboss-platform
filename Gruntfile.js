@@ -25,7 +25,9 @@ module.exports = function( grunt ) {
 		BP_SCSS_CSS_FILES = [
 			// '!bp-templates/bp-legacy/css/twenty*.css',
 			'!bp-templates/bp-nouveau/css/buddypress.css',
-			'!bp-core/admin/css/hello.css'
+			'!bp-core/admin/css/hello.css',
+			'!bp-core/css/medium-editor-beagle.css',
+			'!bp-core/css/medium-editor.css'
 		],
 
 		stylelintConfigCss  = require('stylelint-config-wordpress/index.js'),
@@ -324,7 +326,11 @@ module.exports = function( grunt ) {
 			},
 			src: {
 				files: {
-					src: [SOURCE_DIR + '/**/*.js'].concat( BP_EXCLUDED_MISC )
+					src: [
+						SOURCE_DIR + '/**/*.js',
+						'!**/emojione-edited.js',
+						'!**/emojionearea-edited.js'
+					].concat( BP_EXCLUDED_MISC )
 				}
 			}
 		},

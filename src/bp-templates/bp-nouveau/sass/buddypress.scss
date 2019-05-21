@@ -301,11 +301,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 
 // Import Group Invites screens
 
-//@import "../common-styles/_bp_groups_invites";
-
-// Import Nouveau style Group Invites screens
-
-@import "_nouveau_invites";
+@import "../common-styles/_bp_groups_invites";
 
 /*
 *-----------------------------------------
@@ -352,14 +348,7 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 */
 
 // Import Messages module
-// Nouveau is using custom markup and only needs to load
-// it's own partial file for styles.
-
-// @import "../common-styles/_bp_messages";
-
-// Import Nouveau specific Messages module styles
-
-@import "_nouveau_messages";
+@import "../common-styles/_bp_messages";
 
 /**
 *------------------------------------------

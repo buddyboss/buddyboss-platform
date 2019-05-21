@@ -1,7 +1,6 @@
 <?php
-/**
- * @ignore Utility functions used by Behat steps
- */
+
+// Utility functions used by Behat steps
 
 function assertEquals( $expected, $actual ) {
 	if ( $expected != $actual ) {

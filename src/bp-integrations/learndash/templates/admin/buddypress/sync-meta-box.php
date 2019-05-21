@@ -7,7 +7,7 @@
         name="bp-ld-sync-enable"
         value="1"
         autocomplete="off"
-        <?php checked($hasLdGroup, true); var_dump($hasLdGroup); ?>
+        <?php checked($hasLdGroup, true);?>
     />
     <?php _e('Yes. I want this group to have a LearnDash group.', 'buddyboss'); ?>
 </label>

@@ -26,6 +26,7 @@ WP_CLI::add_hook( 'before_wp_load', function() {
 	require_once( __DIR__ . '/components/xprofile-data.php' );
 	require_once( __DIR__ . '/components/tool.php' );
 	require_once( __DIR__ . '/components/message.php' );
+	require_once( __DIR__ . '/components/notification.php' );
 	require_once( __DIR__ . '/components/email.php' );
 
 	WP_CLI::add_command( 'bp', __NAMESPACE__ . '\\Command\\Buddypress', array(
@@ -40,6 +41,18 @@ WP_CLI::add_hook( 'before_wp_load', function() {
 		'before_invoke' => function() {
 			if ( ! class_exists( 'Buddypress' ) ) {
 				WP_CLI::error( 'The BuddyPress plugin is not active.' );
+			}
+		},
+	) );
+
+	WP_CLI::add_command( 'bp notification', __NAMESPACE__ . '\\Command\\Notification', array(
+		'before_invoke' => function() {
+			if ( ! class_exists( 'Buddypress' ) ) {
+				WP_CLI::error( 'The BuddyPress plugin is not active.' );
+			}
+
+			if ( ! bp_is_active( 'notifications' ) ) {
+				WP_CLI::error( 'The Notification component is not active.' );
 			}
 		},
 	) );

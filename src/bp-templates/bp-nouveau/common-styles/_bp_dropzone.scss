@@ -7,10 +7,9 @@
 	border: 0;
 	padding: 0;
 	display: -webkit-box;
-    display: -ms-flexbox;
+	display: -ms-flexbox;
 	display: flex;
 	flex-flow: row wrap;
-	margin: 0 0 20px;
 
 	.dz-message {
 		margin-top: 0;
@@ -37,6 +36,7 @@
 
 .dz-default.dz-message {
 	flex: 0 0 100%;
+	min-width: 0;
 }
 
 .dropzone.dz-drag-hover .dz-message {
@@ -51,6 +51,10 @@
 .dz-image {
 	border-radius: 4px;
 	overflow: hidden;
+
+	img {
+		display: block;
+	}
 }
 
 .dropzone .dz-preview.dz-file-preview .dz-image {
@@ -168,7 +172,8 @@
 	top: 38%;
 }
 
-.dz-success-mark svg {
+.dz-success-mark svg,
+.dz-error-mark svg {
 	max-width: 20px;
 	height: auto;
 	margin: -10px 0 0 10px;
@@ -176,6 +181,10 @@
 
 .dz-success-mark svg path {
 	fill: #1cd991;
+}
+
+.dz-error-mark svg path {
+	fill: #ef3e46;
 }
 
 .dz-error-mark i {

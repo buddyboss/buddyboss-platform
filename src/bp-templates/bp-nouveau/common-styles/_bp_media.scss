@@ -9,16 +9,19 @@
 .act-grid-1-1 {
 	flex: 0 0 100%;
 	max-width: 100%;
+	min-width: 0;
 
 	.bb-media-length-2 & {
 		flex: 0 0 50%;
 		max-width: 50%;
+		min-width: 0;
 	}
 }
 
 .act-grid-1-2 {
 	flex: 0 0 50%;
 	max-width: 50%;
+	min-width: 0;
 }
 
 .bb-activity-media-elem {
@@ -94,6 +97,7 @@
 	.act-grid-1-2 {
 		flex: 0 0 33.33%;
 		max-width: 33.33%;
+		min-width: 0;
 	}
 
 	.bb-activity-media-elem.act-grid-1-2 .entry-img {
@@ -110,16 +114,19 @@
 	.act-grid-1-1 {
 		flex: 0 0 50%;
 		max-width: 50%;
+		min-width: 0;
 
 		+ .act-grid-1-2 {
 			flex: 0 0 50%;
 			max-width: 50%;
+			min-width: 0;
 		}
 	}
 
 	.act-grid-1-2 {
 		flex: 0 0 33.33%;
 		max-width: 33.33%;
+		min-width: 0;
 	}
 }
 
@@ -132,10 +139,12 @@
 	.act-grid-1-1.bb-vertical-layout {
 		flex: 0 0 64%;
 		max-width: 64%;
+		min-width: 0;
 
 		~ .bb-activity-media-elem {
 			flex: 0 0 36%;
 			max-width: 36%;
+			min-width: 0;
 
 			.entry-img {
 				padding-top: 105.6%;
@@ -160,10 +169,12 @@
 	.act-grid-1-1.bb-vertical-layout {
 		flex: 0 0 64%;
 		max-width: 64%;
+		min-width: 0;
 
 		~ .bb-activity-media-elem {
 			flex: 0 0 36%;
 			max-width: 36%;
+			min-width: 0;
 
 			.entry-img {
 				padding-top: 69.1%;
@@ -199,16 +210,19 @@
 	.act-grid-1-1 {
 		flex: 0 0 50%;
 		max-width: 50%;
+		min-width: 0;
 
 		+ .act-grid-1-2 {
 			flex: 0 0 50%;
 			max-width: 50%;
+			min-width: 0;
 		}
 	}
 
 	.act-grid-1-2 {
 		flex: 0 0 33.33%;
 		max-width: 33.33%;
+		min-width: 0;
 	}
 }
 
@@ -373,15 +387,48 @@
 .bb-member-photos-header {
 	display: -webkit-box;
 	display: -ms-flexbox;
-    display: flex;
+	display: flex;
 }
 
 .bb-photos-meta {
-    margin-left: auto;
-	margin-top: -40px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	margin-left: auto;
+	margin-bottom: 10px;
 
-	.album-single-view & {
-		margin-top: 0;
+	a {
+		margin-left: 10px;
+	}
+
+	.bb-delete i {
+		font-size: 21px;
+	}
+
+	.bb-select i {
+		border: 1px solid;
+		display: -webkit-box;
+		display: -ms-flexbox;
+		display: flex;
+		-webkit-box-align: center;
+		-ms-flex-align: center;
+		align-items: center;
+		-webkit-box-pack: center;
+		-ms-flex-pack: center;
+		justify-content: center;
+		font-size: 15px;
+		border-radius: 50%;
+		width: 19px;
+		height: 19px;
+	}
+
+	.bb-select.selected i {
+		background: #000;
+		color: #fff;
+		border-color: #000;
 	}
 }
 
@@ -395,14 +442,13 @@
 	flex-flow: row wrap;
 	list-style: none;
 	padding: 0;
-	margin: 0 -3px;
+	margin: 0 -5px;
 
 	li {
 		flex: 0 0 20%;
-		padding-left: 3px;
-		padding-right: 3px;
-		margin-bottom: 3px;
-		margin-top: 3px;
+		min-width: 0;
+		margin: 0;
+		padding: 5px;
 	}
 }
 
@@ -423,7 +469,6 @@
 		min-height: 100%;
 		width: auto;
 		min-width: 100%;
-		border-radius: 3px;
 		object-fit: cover;
 	}
 
@@ -578,6 +623,7 @@ a.bb-close-model {
 
 .bb-media-info-section {
 	flex: 0 0 100%;
+	min-width: 0;
 
 	.item-title {
 		margin-bottom: 2px;
@@ -849,6 +895,7 @@ ul.bb-albums-list {
 		-ms-flex: 0 0 25%;
 		flex: 0 0 25%;
 		max-width: 25%;
+		min-width: 0;
 		padding: 5px;
 	}
 
@@ -858,7 +905,6 @@ ul.bb-albums-list {
 		padding-top: 100%;
 		display: block;
 		background: #809ab4;
-		text-align: center;
 	}
 
 	img {
@@ -925,7 +971,7 @@ ul.bb-albums-list {
 	position: relative;
 
 	h4 {
-		font-size: 24px;
+		font-size: 20px;
 		color: inherit;
 		letter-spacing: -0.24px;
 		line-height: 1;
@@ -966,10 +1012,12 @@ ul.bb-albums-list {
 
 	.bb-media-section {
 		flex: 1;
+		min-width: 0;
 	}
 
 	.bb-media-info-section {
 		flex: 0 0 376px;
+		min-width: 0;
 	}
 }
 
@@ -999,6 +1047,10 @@ ul.bb-albums-list {
 	ul.bb-albums-list .bb-more-photos strong {
 		font-size: 20px;
 	}
+
+	.buddypress-wrap .bp-list.bb-photo-list li {
+		flex: 0 0 25%;
+	}
 }
 
 @media (max-width: 580px) {
@@ -1008,10 +1060,15 @@ ul.bb-albums-list {
 		-ms-flex: 0 0 50%;
 		flex: 0 0 50%;
 		max-width: 50%;
+		min-width: 0;
 	}
 
 	.bb-album-list-item .bs-cover-wrap {
 		padding-top: 95.52%;
+	}
+
+	.buddypress-wrap .bp-list.bb-photo-list li {
+		flex: 0 0 50%;
 	}
 }
 
@@ -1083,8 +1140,17 @@ ul.bb-albums-list {
 }
 
 .bb-media-actions-wrap {
+	display: -webkit-box;
+	display: -ms-flexbox;
 	display: flex;
+	-webkit-box-pack: justify;
+	-ms-flex-pack: justify;
+	justify-content: space-between;
 	margin: 15px 0;
+
+	h2 {
+		margin: 0;
+	}
 }
 
 .bb-add-media {
@@ -1127,18 +1193,24 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 .modal-container .bp-existing-media-wrap {
 	margin-bottom: 20px;
 	max-height: 68vh;
-    overflow: auto;
+	overflow: auto;
 }
 
 .bb-model-close-button .dashicons {
-    font-size: 22px;
+	font-size: 22px;
 }
 
 .bb-field-wrap,
 .bb-dropdown-wrap {
-    margin-bottom: 20px;
+	margin-bottom: 20px;
 }
 
 .bp-media-upload-tab {
-    margin-right: 15px;
+	margin-right: 15px;
+}
+
+#buddypress ul.bp-list.loading {
+	background: #fff;
+	padding: 20px;
+	text-align: center;
 }

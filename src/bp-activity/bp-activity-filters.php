@@ -110,7 +110,6 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
-add_filter( 'bp_get_activity_content_body', 'bp_activity_embed_gif', 20, 2 );
 
 /* Actions *******************************************************************/
 
@@ -123,7 +122,6 @@ add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1
 
 // Activity link preview
 add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
-add_action( 'bp_activity_after_save', 'bp_activity_save_gif_data', 2, 1 );
 
 // Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
@@ -234,32 +232,6 @@ function bp_activity_save_link_data( $activity ) {
 	}
 
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
-}
-
-/**
- * Save gif data into activity meta key "_gif_attachment_id"
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $activity
- */
-function bp_activity_save_gif_data( $activity ) {
-
-	if ( empty( $_POST['gif_data'] ) ) {
-		return;
-	}
-
-	$gif_data =  $_POST['gif_data'];
-
-	$still = bp_activity_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
-	$mp4 = bp_activity_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
-
-	bp_activity_update_meta( $activity->id, '_gif_data', [
-		'still' => $still,
-		'mp4'   => $mp4,
-	] );
-
-	bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
 }
 
 /**
@@ -564,49 +536,6 @@ function bp_activity_link_preview( $content, $activity ) {
 	$content .= '<div class="activity-link-preview-body">' . $description . '</div>';
 	$content .= '</div>';
 	$content .= '</div>';
-
-	return $content;
-}
-
-/**
- * Embed gif in activity content
- *
- * @param $content
- * @param $activity
- *
- * @since BuddyBoss 1.0.0
- *
- * @return string
- */
-function bp_activity_embed_gif( $content, $activity ) {
-	$activity_id = $activity->id;
-
-	$gif_data = bp_activity_get_meta( $activity_id, '_gif_data', true );
-
-	if ( empty( $gif_data ) ) {
-		return $content;
-	}
-
-	$preview_url = wp_get_attachment_url( $gif_data['still'] );
-	$video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-	ob_start();
-	?>
-	<div class="activity-attached-gif-container">
-		<div class="gif-image-container">
-			<div class="gif-player">
-				<video preload="auto" playsinline poster="<?php echo $preview_url ?>" loop muted playsinline>
-					<source src="<?php echo $video_url ?>" type="video/mp4">
-				</video>
-				<a href="#" class="gif-play-button">
-					<span class="dashicons dashicons-video-alt3"></span>
-				</a>
-				<span class="gif-icon"></span>
-			</div>
-		</div>
-	</div>
-	<?php
-	$content .= ob_get_clean();
 
 	return $content;
 }

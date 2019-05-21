@@ -39,6 +39,14 @@ function xprofile_screen_edit_profile() {
 		// Check the nonce.
 		check_admin_referer( 'bp_xprofile_edit' );
 
+		// First, clear the data for deleted fields, if any
+		if ( isset( $_POST['deleted_field_ids'] ) && !empty( $_POST['deleted_field_ids'] ) ) {
+			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
+			foreach ( $deleted_field_ids as $deleted_field_id ) {
+				xprofile_delete_field_data( $deleted_field_id, bp_displayed_user_id() );
+			}
+		}
+
 		// Check we have field ID's.
 		if ( empty( $_POST['field_ids'] ) ) {
 			bp_core_redirect( trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . bp_action_variable( 1 ) ) );

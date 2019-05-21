@@ -2739,6 +2739,11 @@ function bp_is_media_directory() {
  * @return bool True if the current page is a single album item permalink.
  */
 function bp_is_single_album() {
+
+    if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_albums() && is_numeric( bp_action_variable( 0 ) ) ) {
+        return true;
+    }
+
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
@@ -3007,6 +3012,40 @@ function bp_is_blogs_directory() {
 	}
 
 	return false;
+}
+
+/**
+ * Is the current page a group's activity page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's activity page.
+ */
+function bp_is_group_media() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'photos' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's activity page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's activity page.
+ */
+function bp_is_group_albums() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
 }
 
 /** Messages ******************************************************************/

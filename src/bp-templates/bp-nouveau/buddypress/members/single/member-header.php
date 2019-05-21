@@ -11,7 +11,7 @@
 
 	<div id="item-header-avatar">
 		<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
-			<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip="<?php _e('Change Profile Photo', 'buddyboss'); ?>">
+			<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Profile Photo', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-edit"></span>
 			</a>
 		<?php } ?>

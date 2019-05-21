@@ -16,6 +16,11 @@ defined( 'ABSPATH' ) || exit;
  *
  */
 function bp_core_admin_components_settings() {
+
+	// Flush the rewrite rule to work forum on newly assigned the page.
+	if ( isset( $_GET['added'] ) && 'true' === $_GET['added'] ) {
+		flush_rewrite_rules( true );
+	}
 ?>
 
 	<div class="wrap">
@@ -369,7 +374,7 @@ function bp_core_admin_components_settings_handler() {
 	}
 
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'added' => 'true' ), 'admin.php' ) );
 
 	// Redirect.
 	wp_redirect( $base_url );
@@ -438,13 +443,36 @@ function bp_core_admin_components_activation_handler() {
 		bp_core_uninstall( $uninstalled_components );
 	}
 
+	if ( array_key_exists( 'forums', $bp->active_components ) ) {
+		$option = bp_get_option('_bbp_root_slug_custom_slug', '' );
+		if ( '' === $option ) {
+			$default_title = bp_core_get_directory_page_default_titles();
+			$title         = ( isset( $default_title[ 'new_forums_page' ] ) ) ? $default_title[ 'new_forums_page' ] : '';
+
+			$new_page = array(
+				'post_title'     => $title,
+				'post_status'    => 'publish',
+				'post_author'    => bp_loggedin_user_id(),
+				'post_type'      => 'page',
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+			);
+
+			$page_id                    = wp_insert_post( $new_page );
+
+			bp_update_option('_bbp_root_slug_custom_slug', $page_id );
+			$slug = get_post_field( 'post_name', $page_id );
+			bp_update_option('_bbp_root_slug', $slug);
+		}
+	}
+
 	$current_action = 'all';
 	if ( isset( $_GET['action'] ) && in_array( $_GET['action'], array( 'active', 'inactive' ) ) ) {
 		$current_action = $_GET['action'];
 	}
 
 	// Where are we redirecting to?
-	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true' ), 'admin.php' ) );
+	$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components', 'action' => $current_action, 'updated' => 'true', 'added' => 'true' ), 'admin.php' ) );
 
 	// Redirect.
 	wp_redirect( $base_url );

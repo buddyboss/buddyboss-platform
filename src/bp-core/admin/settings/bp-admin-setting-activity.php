@@ -79,9 +79,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 //			'input_text' => __( 'Automatically publish new blog posts into the activity feed', 'buddyboss' )
 //		] );
 
-		// Activity commenting on post and comments.
-		$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
-
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
@@ -96,16 +93,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Allow link preview.
 		$this->add_field( '_bp_enable_activity_link_preview', __( 'Link Previews', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_link_preview', 'intval' );
-
-		// Allow emoji
-		$this->add_field( '_bp_enable_activity_emoji', __( 'Emoji', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_emoji', 'intval' );
-
-		// Allow gif.
-		$this->add_field( '_bp_enable_activity_gif', __( 'GIFs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_gif', 'intval' );
-		$this->add_field( '_bp_activity_gif_api_key', __( 'GIFs Key', 'buddyboss' ), '__return_true', [], [
-			'class' => 'hidden'
-		] );
-
 
 		// Allow subscriptions setting.
 		if ( is_plugin_active( 'akismet/akismet.php' ) && defined( 'AKISMET_VERSION' ) ) {
@@ -142,7 +129,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		}
 
 		// flag for adding conditional CSS class.
-		$count = 0;
+		$count       = 0;
+		$description = 0;
 
 		foreach ( $bp_excluded_cpt as $key => $post_type ) {
 
@@ -153,15 +141,16 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 					'description' => false,
 			];
 
-			// set the description flag for adding text below the last CPT
-			if( $key == ( count( $bp_excluded_cpt ) - 1 ) ) {
-				$fields['args']['description'] = true;
-			}
-
 			if ( 'post' === $post_type ) {
 				// create field for each of custom post type.
 				$this->add_field( "bp-feed-custom-post-type-$post_type", __( 'WordPress', 'buddyboss' ), 'bp_feed_settings_callback_post_type', 'intval', $fields['args'] );
+				// Activity commenting on post and comments.
+				$this->add_field( 'bp-disable-blogforum-comments', __( 'Post Comments', 'buddyboss' ), 'bp_admin_setting_callback_blogforum_comments', 'bp_admin_sanitize_callback_blogforum_comments' );
 			} else {
+				if ( 0 === $description ) {
+					$fields['args']['description'] = true;
+					$description =1;
+				}
 				if ( 0 === $count ) {
 					$fields['args']['class'] = 'child-no-padding-first';
 					// create field for each of custom post type.

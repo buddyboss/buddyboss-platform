@@ -513,6 +513,27 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 		return false;
 	}
 
+
+	$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id());
+	if ( empty( $list_fields ) ) {
+		$full_name = get_the_author_meta( 'display_name', $user_id );
+		if ( empty( $full_name ) ) {
+		    $full_name = get_the_author_meta( 'nickname', $user_id );
+        }
+	} else {
+		$last_name_field_id = bp_xprofile_lastname_field_id();
+		if ( in_array( $last_name_field_id, $list_fields ) ) {
+			$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+			$full_name = str_replace( ' ' . $last_name, '', get_the_author_meta( 'display_name', $user_id ) );
+		} else {
+			$full_name = get_the_author_meta( 'display_name', $user_id );
+		}
+	}
+
+	if ( empty( $full_name ) && empty( get_userdata( $user_id ) ) ) {
+		$full_name = __( 'Deleted User', 'buddyboss' );
+    }
+
 	/**
 	 * Filters the display name for the passed in user.
 	 *
@@ -521,13 +542,13 @@ function bp_core_get_user_displayname( $user_id_or_username ) {
 	 * @param string $fullname Display name for the user.
 	 * @param int    $user_id  ID of the user to check.
 	 */
-	return apply_filters( 'bp_core_get_user_displayname', get_the_author_meta( 'display_name', $user_id ), $user_id );
+	return apply_filters( 'bp_core_get_user_displayname', trim( $full_name ), $user_id );
 }
 add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes'  );
 add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
-add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
+//add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2852,7 +2873,7 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 			break;
 	}
 
-	return $display_name;
+	return trim( $display_name );
 }
 
 /**

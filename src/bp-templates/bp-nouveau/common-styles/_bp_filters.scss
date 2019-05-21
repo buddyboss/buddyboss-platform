@@ -64,6 +64,7 @@
 
 			button#user_messages_search_submit {
 				padding: 7px 0.8em;
+				width: auto;
 			}
 		}
 
@@ -160,7 +161,6 @@
 			.bp-search,
 			.dir-search,
 			.user-messages-bulk-actions,
-			.user-messages-search,
 			.group-invites-search,
 			.group-act-search {
 				float: left;
@@ -176,10 +176,6 @@
 				select {
 					max-width: 250px;
 				}
-			}
-
-			.user-messages-search {
-				float: right;
 			}
 
 		} // @media

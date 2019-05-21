@@ -30,7 +30,7 @@ function bp_search_get_settings_sections() {
 		'bp_search_settings_general'    => array(
 			'page'  => 'search',
 			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
-			'callback' => 'bp_search_settings_callback_general_section',
+			'callback' => '',
 		),
 	) );
 }
@@ -598,7 +598,7 @@ function bp_search_settings_callback_post_type_meta( $args ) {
 		<?php checked( bp_is_search_post_type_meta_enable( $post_type ) ) ?>
 	/>
 	<label for="<?php echo $option_name ?>">
-		<?php printf( esc_html__( '%s Meta Data', 'buddyboss' ), $post_type_obj->labels->name ) ?>
+		<?php printf( esc_html__( 'Meta Data', 'buddyboss' ) ) ?>
 	</label>
 	<?php
 }
@@ -744,7 +744,7 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
 		<?php checked( bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) ) ?>
 	/>
 	<label for="<?php echo $option_name ?>">
-		<?php printf( esc_html__( '%s %s', 'buddyboss' ), $post_type_obj->labels->name, $taxonomy_obj->labels->singular_name ) ?>
+		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->singular_name ) ?>
 	</label>
 	<?php
 }

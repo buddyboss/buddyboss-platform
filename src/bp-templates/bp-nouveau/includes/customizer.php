@@ -70,20 +70,6 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[user_nav_tabs]' => array(
-			'index'             => 'user_nav_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[user_subnav_tabs]' => array(
-			'index'             => 'user_subnav_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
 		'bp_nouveau_appearance[user_default_tab]' => array(
 			'index'             => 'user_default_tab',
 			'capability'        => 'bp_moderate',
@@ -187,46 +173,34 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 		$options['forums'] = __( 'Forums', 'buddyboss' );
 	}
 	if ( bp_is_active( 'media' ) ) {
-		$options['media'] = __( 'Media', 'buddyboss' );
+		$options['media'] = __( 'Photos', 'buddyboss' );
 	}
 
 	$controls = array(
 		'user_nav_display' => array(
-			'label'      => __( 'Display the profile navigation vertically.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_nav_display]',
-			'type'       => 'checkbox',
-		),
-		'user_nav_tabs' => array(
-			'label'      => __( 'Use tab styling for primary nav.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_nav_tabs]',
-			'type'       => 'checkbox',
-		),
-		'user_subnav_tabs' => array(
-			'label'      => __( 'Use tab styling for secondary nav.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_subnav_tabs]',
-			'type'       => 'checkbox',
+			'label'    => __( 'Display the profile navigation vertically.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_primary_nav',
+			'settings' => 'bp_nouveau_appearance[user_nav_display]',
+			'type'     => 'checkbox',
 		),
 		'user_default_tab' => array(
-			'label'      => __( 'Profile navigation order', 'buddyboss' ),
+			'label'       => __( 'Profile navigation order', 'buddyboss' ),
 			'description' => __( 'Set the default navigation tab when viewing a member profile. The dropdown only shows tabs that are available to all members.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_default_tab]',
-			'type'       => 'select',
-			'choices'    => apply_filters( 'user_default_tab_options_list', $options),
+			'section'     => 'bp_nouveau_user_primary_nav',
+			'settings'    => 'bp_nouveau_appearance[user_default_tab]',
+			'type'        => 'select',
+			'choices'     => apply_filters( 'user_default_tab_options_list', $options ),
 		),
-		'user_nav_order' => array(
-			'class'      => 'BP_Nouveau_Nav_Customize_Control',
-			'label'      => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
-			'section'    => 'bp_nouveau_user_primary_nav',
-			'settings'   => 'bp_nouveau_appearance[user_nav_order]',
-			'type'       => 'user',
+		'user_nav_order'   => array(
+			'class'    => 'BP_Nouveau_Nav_Customize_Control',
+			'label'    => __( 'Reorder the primary navigation for a member.', 'buddyboss' ),
+			'section'  => 'bp_nouveau_user_primary_nav',
+			'settings' => 'bp_nouveau_appearance[user_nav_order]',
+			'type'     => 'user',
 		),
-		'mail_layout' => array(
-			'section'    => 'bp_nouveau_mail',
-			'settings'   => 'bp_nouveau_appearance[bp_emails]',
+		'mail_layout'      => array(
+			'section'  => 'bp_nouveau_mail',
+			'settings' => 'bp_nouveau_appearance[bp_emails]',
 		),
 	);
 

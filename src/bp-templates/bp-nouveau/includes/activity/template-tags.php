@@ -388,6 +388,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'class'           => 'button view bp-secondary-action bp-tooltip',
 					'data-bp-tooltip' => __( 'View Conversation', 'buddyboss' ),
+					'data-bp-tooltip-pos' => 'up',
 					),
 				'link_text' => sprintf(
 					'<span class="bp-screen-reader-text">%1$s</span>',
@@ -532,6 +533,7 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 					'class'           => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 					'id'              => 'activity_make_spam_' . $activity_id,
 					'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
+					'data-bp-tooltip-pos' => 'up',
 					),
 				'link_text'  => sprintf(
 					/** @todo: use a specific css rule for this *************************************************************/

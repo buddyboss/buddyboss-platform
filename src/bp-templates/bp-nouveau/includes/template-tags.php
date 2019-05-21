@@ -759,6 +759,8 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
+		} else if ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
+			$parent_slug .= '_media';
 		} else if ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
 			$parent_slug .= '_members';
 
@@ -1557,23 +1559,6 @@ function bp_nouveau_single_item_nav_classes() {
 		$component  = bp_current_component();
 		$bp_nouveau = bp_nouveau();
 
-		// @todo wasn't able to get $customizer_option to pass a string to get_settings
-		// this is a temp workaround but differs from earlier dir approach- bad!
-		if ( bp_is_group() ) {
-			$nav_tabs = (int) bp_nouveau_get_temporary_setting( 'group_nav_tabs', bp_nouveau_get_appearance_settings( 'group_nav_tabs' ) );
-
-		} elseif ( bp_is_user() ) {
-			$nav_tabs = (int) bp_nouveau_get_temporary_setting( 'user_nav_tabs', bp_nouveau_get_appearance_settings( 'user_nav_tabs' ) );
-		}
-
-		if ( bp_is_group() && 1 === $nav_tabs) {
-			$classes[] = 'group-nav-tabs';
-			$classes[] = 'tabbed-links';
-		} elseif ( bp_is_user() && 1 === $nav_tabs ) {
-			$classes[] = 'user-nav-tabs';
-			$classes[] = 'tabbed-links';
-		}
-
 		if ( bp_is_user() ) {
 			$component = 'members';
 			$menu_type = 'users-nav';
@@ -1645,17 +1630,6 @@ function bp_nouveau_single_item_subnav_classes() {
 			$classes[] = 'bp-invites-nav';
 		}
 
-		$customizer_option = ( bp_is_user() )? 'user_subnav_tabs' : 'group_subnav_tabs';
-		$nav_tabs = (int) bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
-
-		if ( bp_is_user() && 1 === $nav_tabs ) {
-			$classes[] = 'tabbed-links';
-		}
-
-		if ( bp_is_group() && 1 === $nav_tabs ) {
-			$classes[] = 'tabbed-links';
-		}
-
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
@@ -1691,11 +1665,7 @@ function bp_nouveau_groups_create_steps_classes() {
 	 */
 	function bp_nouveau_get_group_create_steps_classes() {
 		$classes  = array( 'bp-navs', 'group-create-links', 'no-ajax' );
-		$nav_tabs = (int) bp_nouveau_get_temporary_setting( 'groups_create_tabs', bp_nouveau_get_appearance_settings( 'groups_create_tabs' ) );
 
-		if ( 1 === $nav_tabs ) {
-			$classes[] = 'tabbed-links';
-		}
 
 		$class = array_map( 'sanitize_html_class', $classes );
 
@@ -2381,7 +2351,8 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				 * and deal with the Blog section in Javascript.
 				 */
 				if ( $section !== 'blog_details' ) {
-					$existing_attributes['required'] = 'required';
+					// Removed because we don't have to display the browser error message.
+					//$existing_attributes['required'] = 'required';
 				}
 			}
 
@@ -2500,6 +2471,16 @@ function bp_nouveau_signup_terms_privacy() {
 
 	$terms   = isset( $page_ids['terms'] ) ? $page_ids['terms'] : false;
 	$privacy = isset( $page_ids['privacy'] ) ? $page_ids['privacy'] : false;
+
+	// Do not show the page if page is not published.
+	if ( false !== $terms && 'publish' !== get_post_status( $terms ) ) {
+		$terms = false;
+	}
+
+	// Do not show the page if page is not published.
+	if ( false !== $privacy && 'publish' !== get_post_status( $privacy ) ) {
+		$privacy = false;
+	}
 
 	if ( ! $terms && ! $privacy ) {
 	    return false;

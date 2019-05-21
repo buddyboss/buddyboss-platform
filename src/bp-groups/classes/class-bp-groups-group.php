@@ -400,8 +400,18 @@ class BP_Groups_Group {
 		$bp = buddypress();
 
 		// Finally remove the group entry from the DB.
-		if ( !$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) )
+		if ( !$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->groups->table_name} WHERE id = %d", $this->id ) ) ) {
 			return false;
+		}
+
+		// delete group avatars
+		$upload_path = bp_core_avatar_upload_path();
+		system("rm -rf ".escapeshellarg( $upload_path . '/group-avatars/'. $this->id ));
+
+		// delete group avatars
+		$bp_attachments_uploads_dir = bp_attachments_uploads_dir_get();
+		$type_dir = trailingslashit( $bp_attachments_uploads_dir['basedir'] );
+		system("rm -rf ".escapeshellarg( $type_dir . 'groups/'. $this->id ) );
 
 		return true;
 	}

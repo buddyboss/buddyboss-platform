@@ -31,7 +31,7 @@
 				$( '#pass-strength-result' ).addClass( 'show mismatch' ).html( pwsL10n.mismatch );
 				break;
 			default:
-				$( '#pass-strength-result' ).addClass( 'show short' ).html( pwsL10n['short'] );
+				$( '#pass-strength-result' ).addClass( 'show short' ).html( pwsL10n.short );
 				break;
 		}
 	}
