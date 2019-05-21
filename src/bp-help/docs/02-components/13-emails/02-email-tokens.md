@@ -4,7 +4,7 @@ Site admins can easily edit the content of email notifications by using tokens w
 
 Some tokens can be used in any message while others are restricted due to context of each type of message. Tokes can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Token wrapped in three curly braces are not escaped on merging which is important for including something like links.
 
-Global Tokens
+Global Tokens<a name="global-tokens"></a>
 -------------
 
 |Token|Description|
