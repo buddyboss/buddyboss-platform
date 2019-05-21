@@ -71,6 +71,9 @@ Situation: A group's details were updated.
 |`{{{group.url}}}`|Link to the group.|
 |`{{group.name}}`|Name of the group.|
 |`{{group.id}}`|ID of the group.|
+|`{{{group.description}}}`|Description of the group.|
+|`{{{group.small_card}}}`|Group Card showing group photo and other details about the group.|
+
 
 ### \[{{{site.name}}}\] Membership request for group: {{group.name}}
 
@@ -98,6 +101,7 @@ Situation: Recipient had requested to join a group, which was accepted.
 |`{{{group.url}}}`|Link to the group.|
 |`{{group.id}}`|ID of the group.|
 |`{{requesting-user.id}}`|ID of the user who is requesting membership.|
+|`{{{group.small_card}}}`|Group Card showing group photo and other details about the group.|
 
 ### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” rejected
 
@@ -109,6 +113,7 @@ Situation: Recipient had requested to join a group, which was rejected.
 |`{{{group.url}}}`|Link to the group.|
 |`{{group.id}}`|ID of the group.|
 |`{{requesting-user.id}}`|ID of the user who is requesting membership.|
+|`{{{group.small_card}}}`|Group Card showing group photo and other details about the group.|
 
 ### \[{{{site.name}}}\] You have been promoted in the group: “{{group.name}}”
 
@@ -121,6 +126,7 @@ Situation: Recipient's status within a group has changed.
 |`{{promoted_to}}`|String describing new group responsibilitied. Possible values: 'an administrator' or 'a moderator'.|
 |`{{group.id}}`|ID of the group.|
 |`{{user.id}}`|ID of the promoted user.|
+|`{{{group.small_card}}}`|Group Card showing group photo and other details about the group.|
 
 ### \[{{{site.name}}}\] You have an invitation to the group: “{{group.name}}”
 
@@ -133,6 +139,8 @@ Situation: A member has sent a group invitation to the recipient.
 |`{{inviter.name}}`|Inviter's display name wrapped in a link to that user's profile.|
 |`{{{inviter.url}}}`|Link to the profile of the user who extended the invitation.|
 |`{{{invites.url}}}`|Link to the recipient's invitation management screen.|
+|`{{{group.invite_message}}}`|Content of the group invitation message.|
+|`{{{group.small_card}}}`|Group Card showing group photo and other details about the group.|
 
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a group update
 
