@@ -4,7 +4,74 @@ Site admins can easily edit the content of email notifications by using tokens w
 
 Some tokens can be used in any message while others are restricted due to context of each type of message. Tokes can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Token wrapped in three curly braces are not escaped on merging which is important for including something like links.
 
-Global Tokens<a name="global-tokens"></a>
+Registration Tokens<a name="members-tokens"></a>
+--------------
+
+### \[{{{site.name}}}\] Activate your account
+
+Situation: Recipient has registered for an account.
+
+|Token|Description|
+|---|---|
+|`{{{activate.url}}}`|Link to the site's membership activation page, including the user's activation key.|
+|`{{key}}`|Activation key.|
+|`{{user.email}}`|The new user's email address.|
+|`{{user.id}}`|The new user's ID.|
+
+### \[{{{site.name}}}\] Activate {{{user-site.url}}}
+
+Situation: Recipient has registered for an account and site (multisite only).
+
+|Token|Description|
+|---|---|
+|`{{{activate-site.url}}}`|Link to the site's membership and new blog activation page.|
+|`{{{user-site.url}}}`|The link to the new blog created by the user.|
+|`{{title}}`|The new blog's title.|
+|`{{domain}}`|The new blog's domain.|
+|`{{path}}`|The new blog's path.|
+|`{{key_blog}}`|The activation key created in wpmu\_signup\_blog().|
+|`{{user.email}}`|The new user's email address.|
+
+### \[{{{site.name}}}\] Verify your new email address
+
+Situation: Recipient has changed their email address.
+
+|Token|Description|
+|---|---|
+|`{{{verify.url}}}`|Link used to verify the new email address.|
+|`{{displayname}}`|Display name of recipient.|
+|`{{old-user.email}}`|The user's previous email address.|
+|`{{user.email}}`|The user's new email address.|
+
+Connection Tokens<a name="connection-tokens"></a>
+--------------
+
+### \[{{{site.name}}}\] New request to connect from {{initiator.name}}
+
+Situation: A member has sent a friend request to the recipient.
+
+|Token|Description|
+|---|---|
+|`{{{friend-requests.url}}}`|Link to the user's friendship request management screen.|
+|`{{{initiator.url}}}`|The initiator's user profile.|
+|`{{initiator.name}}`|Display name of the initiator.|
+|`{{friendship.id}}`|ID of the friendship object.|
+|`{{friend.id}}`|ID of the request recipient.|
+|`{{initiator.id}}`|ID of the user who initiated the request.
+
+### \[{{{site.name}}}\] {{friend.name}} accepted your request to connect
+
+Situation: Recipient has had a friend request accepted by a member.
+
+|Token|Description|
+|---|---|
+|`{{{friendship.url}}}`|Link to the request recipient's user profile.|
+|`{{friend.name}}`|Display name of the request recipient.|
+|`{{friendship.id}}`|ID of the friendship object.|
+|`{{friend.id}}`|ID of the request recipient.|
+|`{{initiator.id}}`|ID of the user who initiated the request.|
+
+Activity Tokens<a name="activity-tokens"></a>
 -------------
 
 |Token|Description|
@@ -19,9 +86,6 @@ Global Tokens<a name="global-tokens"></a>
 |`{{{unsubscribe}}}`|Link to the recipient's email notifications settings screen in his or her user profile.|
 |`{{email.subject}}`|The subject line of the email.|
 
-Activity Tokens<a name="activity-tokens"></a>
----------------
-
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
 
 Situation: Recipient was mentioned in an activity update.
@@ -31,18 +95,6 @@ Situation: Recipient was mentioned in an activity update.
 |`{{usermessage}}`|The content of the activity update.|
 |`{{{mentioned.url}}}`|Permalink to the activity item.|
 |`{{poster.name}}`|Display name of activity item author.|
-|`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
-
-### \[{{{site.name}}}\] {{poster.name}} mentioned you in an update
-
-Situation: Recipient was mentioned in a **group** activity update.
-
-|Token|Description|
-|---|---|
-|`{{usermessage}}`|The content of the activity update.|
-|`{{{mentioned.url}}}`|Permalink to the activity item.|
-|`{{poster.name}}`|Display name of activity item author.|
-|`{{group.name}}`|Name of the group housing the activity update. Empty if not in a group.|
 |`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
 
 ### \[{{{site.name}}}\] {{poster.name}} replied to one of your updates
@@ -70,70 +122,6 @@ Situation: A member has replied to a comment on an activity update that the reci
 |`{{comment.id}}`|The comment ID.|
 |`{{parent-comment-user.id}}`|The ID of the user who wrote the immediate parent comment.|
 |`{{commenter.id}}`|The ID of the user who posted the comment.|
-
-Members Tokens<a name="members-tokens"></a>
---------------
-
-### \[{{{site.name}}}\] Activate {{{user-site.url}}}
-
-Situation: Recipient has registered for an account and site.
-
-|Token|Description|
-|---|---|
-|`{{{activate-site.url}}}`|Link to the site's membership and new blog activation page.|
-|`{{{user-site.url}}}`|The link to the new blog created by the user.|
-|`{{title}}`|The new blog's title.|
-|`{{domain}}`|The new blog's domain.|
-|`{{path}}`|The new blog's path.|
-|`{{key_blog}}`|The activation key created in wpmu\_signup\_blog().|
-|`{{user.email}}`|The new user's email address.|
-
-### \[{{{site.name}}}\] Activate your account
-
-Situation: Recipient has registered for an account.
-
-|Token|Description|
-|---|---|
-|`{{{activate.url}}}`|Link to the site's membership activation page, including the user's activation key.|
-|`{{key}}`|Activation key.|
-|`{{user.email}}`|The new user's email address.|
-|`{{user.id}}`|The new user's ID.|
-
-### \[{{{site.name}}}\] New friendship request from {{initiator.name}}
-
-Situation: A member has sent a friend request to the recipient.
-
-|Token|Description|
-|---|---|
-|`{{{friend-requests.url}}}`|Link to the user's friendship request management screen.|
-|`{{{initiator.url}}}`|The initiator's user profile.|
-|`{{initiator.name}}`|Display name of the initiator.|
-|`{{friendship.id}}`|ID of the friendship object.|
-|`{{friend.id}}`|ID of the request recipient.|
-|`{{initiator.id}}`|ID of the user who initiated the request.
-
-### \[{{{site.name}}}\] {{friend.name}} accepted your friendship request
-
-Situation: Recipient has had a friend request accepted by a member.
-
-|Token|Description|
-|---|---|
-|`{{{friendship.url}}}`|Link to the request recipient's user profile.|
-|`{{friend.name}}`|Display name of the request recipient.|
-|`{{friendship.id}}`|ID of the friendship object.|
-|`{{friend.id}}`|ID of the request recipient.|
-|`{{initiator.id}}`|ID of the user who initiated the request.|
-
-### \[{{{site.name}}}\] Verify your new email address
-
-Situation: Recipient has changed their email address.
-
-|Token|Description|
-|---|---|
-|`{{{verify.url}}}`|Link used to verify the new email address.|
-|`{{displayname}}`|Display name of recipient.|
-|`{{old-user.email}}`|The user's previous email address.|
-|`{{user.email}}`|The user's new email address.|
 
 Private Message Tokens<a name="private-message-tokens"></a>
 ----------------------
@@ -223,3 +211,15 @@ Situation: A member has sent a group invitation to the recipient.
 |`{{inviter.name}}`|Inviter's display name wrapped in a link to that user's profile.|
 |`{{{inviter.url}}}`|Link to the profile of the user who extended the invitation.|
 |`{{{invites.url}}}`|Link to the recipient's invitation management screen.|
+
+### \[{{{site.name}}}\] {{poster.name}} mentioned you in a group update
+
+Situation: Recipient was mentioned in a **group** activity update.
+
+|Token|Description|
+|---|---|
+|`{{usermessage}}`|The content of the activity update.|
+|`{{{mentioned.url}}}`|Permalink to the activity item.|
+|`{{poster.name}}`|Display name of activity item author.|
+|`{{group.name}}`|Name of the group housing the activity update. Empty if not in a group.|
+|`{{receiver-user.id}}`|The ID of the user who is receiving the update.|

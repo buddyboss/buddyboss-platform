@@ -3418,7 +3418,7 @@ function bp_email_get_schema() {
 		),
 		'groups-at-message' => array(
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in an update', 'buddyboss' ),
+			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_content' => __( "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group \"<a href=\"{{{group.url}}}\">{{group.name}}</a>\":\n\n{{{status_update}}}", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
