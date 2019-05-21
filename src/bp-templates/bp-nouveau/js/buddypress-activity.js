@@ -472,7 +472,7 @@ window.bp = window.bp || {};
 				activity_state = activity_item.find( '.activity-state' ),
 				comments_text = activity_item.find( '.comments-count' ),
 				likes_text = activity_item.find( '.like-text' ),
-				item_id, form, model;
+				item_id, form, model, self = this;
 
 			// In case the target is set to a span inside the link.
 			if ( $( target ).is( 'span' ) ) {
@@ -807,6 +807,8 @@ window.bp = window.bp || {};
 				// Change the aria state back to false on comment cancel
 				$( '.acomment-reply').attr( 'aria-expanded', 'false' );
 
+				self.destroyCommentMediaUploader(activity_id);
+
 				// Stop event propagation
 				event.preventDefault();
 			}
@@ -916,12 +918,22 @@ window.bp = window.bp || {};
 						if ( show_all_a ) {
 							show_all_a.html( BP_Nouveau.show_x_comments.replace( '%d', comment_count ) );
 						}
+
+						// keep the dropzone media saved so it wont remove its attachment when destroyed
+						if ( self.dropzone_media.length ) {
+							for( var l = 0; l < self.dropzone_media.length; l++ ) {
+								self.dropzone_media[l].saved = true;
+							}
+						}
+
 					}
 
 					if ( !_.isUndefined( model ) ) {
 						model.set( 'gif_data', {} );
 						$( '#ac-reply-post-gif-' + activity_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 					}
+
+					self.destroyCommentMediaUploader(activity_id);
 
 					target.prop( 'disabled', false );
 					comment_content.prop( 'disabled', false );
@@ -993,6 +1005,17 @@ window.bp = window.bp || {};
 			}
 		},
 
+		destroyCommentMediaUploader: function(comment_id) {
+			var self = this;
+
+			if ( ! _.isNull( self.dropzone_obj ) ) {
+				self.dropzone_obj.destroy();
+				$('#ac-reply-post-media-uploader-'+comment_id).html('');
+			}
+			self.dropzone_media = [];
+			$('#ac-reply-post-media-uploader-'+comment_id).removeClass('open').addClass('closed');
+		},
+
 		openCommentsMediaUploader: function(event) {
 			var self = this, dropzone_container = $(event.currentTarget).closest('.ac-reply-content').find('.dropzone');
 			event.preventDefault();
@@ -1058,7 +1081,15 @@ window.bp = window.bp || {};
 					dropzone_container.html('');
 					dropzone_container.addClass('closed').removeClass('open');
 				}
+			}
 
+			var c_id = $(event.currentTarget).data('ac-id');
+			$( '#ac-reply-gif-button-' + c_id ).closest('.post-gif').find( '.gif-media-search-dropdown' ).removeClass( 'open' );
+			// add gif data if enabled or uploaded
+			if ( ! _.isUndefined( this.models[c_id] ) ) {
+				var model = this.models[c_id];
+				model.set( 'gif_data', {} );
+				$( '#ac-reply-post-gif-' + c_id ).find( '.activity-attached-gif-container' ).removeAttr( 'style' );
 			}
 		},
 
@@ -1082,6 +1113,7 @@ window.bp = window.bp || {};
 			}
 
 			$gifPickerEl.toggleClass('open');
+			this.destroyCommentMediaUploader(activityID);
 		},
 
 		toggleMultiMediaOptions: function(form,target) {

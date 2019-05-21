@@ -99,18 +99,21 @@ body:not(.logged-in) {
 
 		.bp-profile-search-widget {
 			flex: 0 0 220px;
+			min-width: 0;
 			margin-left: $marg-xlrg;
 		}
 	}
 
 	.members-directory-container {
 		flex: 1;
+		min-width: 0;
 	}
 
 	@include medium-max() {
 
 		.bp-profile-search-widget {
 			flex: 0 0 100%;
+			min-width: 0;
 		}
 	}
 

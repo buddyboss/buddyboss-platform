@@ -185,7 +185,8 @@
 		}
 
 		if ( $('.buddyboss_page_bp-activity').length ) {
-			$(document).on('click', '.activity-attached-gif-container', function () {
+			$(document).on('click', '.activity-attached-gif-container', function ( e ) {
+				e.preventDefault();
 				var video = $(this).find('video').get(0),
 					$button = $(this).find('.gif-play-button');
 				if ( true === video.paused ) {

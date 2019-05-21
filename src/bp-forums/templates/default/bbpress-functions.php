@@ -135,8 +135,9 @@ class BBP_Default extends BBP_Theme_Compat {
 				'file'         => 'js/editor.js',
 				'dependencies' => array( 'jquery' )
 			);
-			wp_enqueue_script( 'bp-quill' );
-			wp_enqueue_style( 'bp-quill' );
+			wp_enqueue_script( 'bp-medium-editor' );
+			wp_enqueue_style( 'bp-medium-editor' );
+			wp_enqueue_style( 'bp-medium-editor-beagle' );
 		}
 
 		// Forum-specific scripts

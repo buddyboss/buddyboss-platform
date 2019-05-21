@@ -650,6 +650,7 @@ class BP_Messages_Thread {
 			'limit'        => null,
 			'page'         => null,
 			'search_terms' => '',
+			'include'      => false,
 			'meta_query'   => array()
 		) );
 
@@ -667,12 +668,16 @@ class BP_Messages_Thread {
 		$r['user_id'] = (int) $r['user_id'];
 		$where_sql = '1 = 1';
 
-		$user_threads_query = $wpdb->prepare( "
+		if ( ! empty( $r['include'] ) ) {
+			$user_threads_query = $r['include'];
+		} else {
+			$user_threads_query = $wpdb->prepare( "
 			SELECT DISTINCT(thread_id)
 			FROM {$bp->messages->table_name_recipients}
 			WHERE user_id = %d
 			AND is_deleted = 0
 		", $r['user_id'] );
+		}
 
 		if ( ! empty( $r['search_terms'] ) ) {
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';

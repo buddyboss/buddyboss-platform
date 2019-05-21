@@ -69,6 +69,7 @@ function bp_has_message_threads( $args = array() ) {
 		'max'          => false,
 		'type'         => 'all',
 		'search_terms' => $search_terms,
+		'include'      => false,
 		'page_arg'     => 'mpage', // See https://buddypress.trac.wordpress.org/ticket/3679.
 		'meta_query'   => array()
 	), 'has_message_threads' );
@@ -1331,7 +1332,7 @@ function bp_message_get_notices() {
 				<p>
 					<strong><?php echo stripslashes( wp_filter_kses( $notice->subject ) ) ?></strong><br />
 					<?php echo stripslashes( wp_filter_kses( $notice->message) ) ?>
-					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss' ) ?>"><span class="bp-screen-reader-text"><?php _e( 'Dismiss this notice', 'buddyboss' ) ?></span> <span aria-hidden="true">&Chi;</span></button>
+					<button type="button" id="close-notice" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Dismiss this notice', 'buddyboss' ) ?>"><span class="bp-screen-reader-text"><?php _e( 'Dismiss this notice', 'buddyboss' ) ?></span> <span aria-hidden="true">&Chi;</span></button>
 					<?php wp_nonce_field( 'bp_messages_close_notice', 'close-notice-nonce' ); ?>
 				</p>
 			</div>
@@ -1364,7 +1365,7 @@ function bp_send_private_message_link() {
 		 *
 		 * @param string $value URL for the Private Message link in member profile headers.
 		 */
-		return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_activity_get_user_mentionname( bp_displayed_user_id() ) ) );
+		return apply_filters( 'bp_get_send_private_message_link', wp_nonce_url( bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_core_get_username( bp_displayed_user_id() ) ) );
 	}
 
 /**

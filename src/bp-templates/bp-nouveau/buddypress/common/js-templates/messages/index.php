@@ -19,7 +19,10 @@
 		<div class="bp-messages-threads-list" id="bp-messages-threads-list"></div>
 	</div>
 	<div class="bp-messages-content"></div>
+
 </div>
+
+
 
 <?php
 if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {

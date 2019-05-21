@@ -1401,7 +1401,8 @@ window.bp = window.bp || {};
 		closePickersOnClick: function( event ) {
 			var $targetEl = $(event.target);
 
-			if (!_.isUndefined(BP_Nouveau.media.emoji) &&
+			if (!_.isUndefined(BP_Nouveau.media) &&
+				!_.isUndefined(BP_Nouveau.media.emoji) &&
 			    !$targetEl.closest('.post-emoji').length &&
 			    !$targetEl.is('.emojioneemoji,.emojibtn')) {
 				$('.emojionearea-button.active').removeClass('active');
@@ -1414,7 +1415,8 @@ window.bp = window.bp || {};
 		 */
 		closePickersOnEsc: function( event ) {
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
-				if (!_.isUndefined(BP_Nouveau.media.emoji)) {
+				if (!_.isUndefined(BP_Nouveau.media) &&
+					!_.isUndefined(BP_Nouveau.media.emoji)) {
 					$('.emojionearea-button.active').removeClass('active');
 				}
 			}

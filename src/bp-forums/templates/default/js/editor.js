@@ -1,48 +1,99 @@
 jQuery(document).ready( function() {
 
-	if ( typeof window.Quill !== 'undefined' ) {
-		var toolbarOptions = [
-			['bold', 'italic'],        // toggled buttons
-			[{ 'list': 'ordered'}, { 'list': 'bullet' }],
-			['blockquote','link']
-		];
+	if ( typeof window.MediumEditor !== 'undefined' ) {
+
+		var toolbarOptions = {
+			buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+		};
 		if ( jQuery( '#bbp_editor_forum_content' ).length ) {
-			var forums_quill_forum_editor = new window.Quill('#bbp_editor_forum_content', {
-				modules: {
-					toolbar: toolbarOptions
+			window.forums_medium_forum_editor = new window.MediumEditor('#bbp_editor_forum_content',{
+				placeholder: {
+					text: wp.i18n.__('Description', 'buddyboss'),
+					hideOnClick: true
 				},
-				theme: 'bubble',
-				placeholder: wp.i18n.__('Description', 'buddyboss')
+				toolbar: toolbarOptions
 			});
 
-			forums_quill_forum_editor.on('text-change', function() {
-				jQuery('#bbp_forum_content').val(forums_quill_forum_editor.container.firstChild.innerHTML);
+			window.forums_medium_forum_editor.subscribe('editableInput', function () {
+				jQuery('#bbp_forum_content').val(window.forums_medium_forum_editor.getContent());
 			});
 		}
 		if ( jQuery( '#bbp_editor_reply_content' ).length ) {
-			var forums_quill_reply_editor = new window.Quill('#bbp_editor_reply_content', {
-				modules: {
-					toolbar: toolbarOptions
+			window.forums_medium_reply_editor = new window.MediumEditor('#bbp_editor_reply_content',{
+				placeholder: {
+					text: wp.i18n.__('Type your reply here', 'buddyboss'),
+					hideOnClick: true
 				},
-				theme: 'bubble',
-				placeholder: wp.i18n.__('Type your reply here', 'buddyboss')
+				toolbar: toolbarOptions
 			});
 
-			forums_quill_reply_editor.on('text-change', function() {
-				jQuery('#bbp_reply_content').val(forums_quill_reply_editor.container.firstChild.innerHTML);
+			window.forums_medium_reply_editor.subscribe('editableInput', function () {
+				jQuery('#bbp_reply_content').val(window.forums_medium_reply_editor.getContent());
 			});
 		}
 		if ( jQuery( '#bbp_editor_topic_content' ).length ) {
-			var forums_quill_topic_editor = new window.Quill('#bbp_editor_topic_content', {
-				modules: {
-					toolbar: toolbarOptions
+			window.forums_medium_topic_editor = new window.MediumEditor('#bbp_editor_topic_content',{
+				placeholder: {
+					text: wp.i18n.__('Type your discussion here', 'buddyboss'),
+					hideOnClick: true
 				},
-				theme: 'bubble',
-				placeholder: wp.i18n.__('type your discussion here', 'buddyboss')
+				toolbar: toolbarOptions
 			});
 
-			forums_quill_topic_editor.on('text-change', function() {
-				jQuery('#bbp_topic_content').val(forums_quill_topic_editor.container.firstChild.innerHTML);
+			window.forums_medium_topic_editor.subscribe('editableInput', function () {
+				jQuery('#bbp_topic_content').val(window.forums_medium_topic_editor.getContent());
+			});
+		}
+	}
+
+	if (typeof BP_Nouveau !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.emoji !== 'undefined' ) {
+		var bbp_editor_content_elem = false;
+		if ( jQuery( '#bbp_editor_topic_content' ).length ) {
+			bbp_editor_content_elem = '#bbp_editor_topic_content';
+		} else if ( jQuery( '#bbp_editor_reply_content' ).length ) {
+			bbp_editor_content_elem = '#bbp_editor_reply_content';
+		} else if ( jQuery( '#bbp_editor_forum_content' ).length ) {
+			bbp_editor_content_elem = '#bbp_editor_forum_content';
+		} else if ( jQuery( '#bbp_topic_content' ).length ) {
+			bbp_editor_content_elem = '#bbp_topic_content';
+		} else if ( jQuery( '#bbp_reply_content' ).length ) {
+			bbp_editor_content_elem = '#bbp_reply_content';
+		} else if ( jQuery( '#bbp_forum_content' ).length ) {
+			bbp_editor_content_elem = '#bbp_forum_content';
+		}
+		if (jQuery(bbp_editor_content_elem).length) {
+			jQuery(bbp_editor_content_elem).emojioneArea({
+				standalone: true,
+				hideSource: false,
+				container: jQuery('#whats-new-toolbar > .post-emoji'),
+				autocomplete: false,
+				pickerPosition: 'bottom',
+				hidePickerOnBlur: true,
+				useInternalCDN: false,
+				events: {
+					ready: function () {
+						if (typeof window.forums_medium_topic_editor !== 'undefined') {
+							window.forums_medium_topic_editor.setContent(jQuery('#bbp_topic_content').val());
+						}
+						if (typeof window.forums_medium_reply_editor !== 'undefined') {
+							window.forums_medium_reply_editor.setContent(jQuery('#bbp_reply_content').val());
+						}
+						if (typeof window.forums_medium_forum_editor !== 'undefined') {
+							window.forums_medium_forum_editor.setContent(jQuery('#bbp_forum_content').val());
+						}
+					},
+					emojibtn_click: function () {
+						if (typeof window.forums_medium_topic_editor !== 'undefined') {
+							window.forums_medium_topic_editor.checkContentChanged();
+						}
+						if (typeof window.forums_medium_reply_editor !== 'undefined') {
+							window.forums_medium_reply_editor.checkContentChanged();
+						}
+						if (typeof window.forums_medium_forum_editor !== 'undefined') {
+							window.forums_medium_forum_editor.checkContentChanged();
+						}
+					},
+				}
 			});
 		}
 	}

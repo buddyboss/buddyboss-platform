@@ -505,16 +505,16 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			if ( isset( $_POST[ 'noconfirmation' ] ) && is_super_admin() ) {
 				return false;
 
-			// WordPress will manage the signup process.
+				// WordPress will manage the signup process.
 			} else {
 				return $user;
 			}
 
-		/*
-		 * There can be a case where the user was created without the skip confirmation
-		 * And the super admin goes in pending accounts to resend it. In this case, as the
-		 * meta['password'] is not set, the activation url must be WordPress one.
-		 */
+			/*
+			 * There can be a case where the user was created without the skip confirmation
+			 * And the super admin goes in pending accounts to resend it. In this case, as the
+			 * meta['password'] is not set, the activation url must be WordPress one.
+			 */
 		} elseif ( buddypress()->members->admin->signups_page == get_current_screen()->id ) {
 			$is_hashpass_in_meta = maybe_unserialize( $meta );
 
@@ -737,7 +737,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 	if ( empty( $menu_item->url ) ) {
 		$menu_item->_invalid = true;
 
-	// Highlight the current page.
+		// Highlight the current page.
 	} else {
 		$current = bp_get_requested_url();
 		if ( strpos( $current, $menu_item->url ) !== false ) {
@@ -1156,6 +1156,29 @@ function bp_core_render_email_template( $template ) {
 }
 add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
 
+// Filter for setting the spoofing of BuddyPress.
+add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10 , 2 );
+
+/**
+ * Filter for setting the spoofing of BuddyPress.
+ *
+ * @param $value
+ * @param $option
+ *
+ * @since BuddyBoss 1.0.0
+ * @return mixed
+ */
+function bp_core_set_bbpress_buddypress_active( $value, $option ) {
+
+	// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
+	if ( strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
+		return $value;
+	} else {
+		array_push($value, 'bbpress/bbpress.php');
+		array_push($value, 'buddypress/bp-loader.php');
+	}
+	return $value;
+}
 
 
 /**

@@ -78,7 +78,7 @@ function bp_core_register_common_scripts() {
 		'emojione'        => array( 'file' => "{$url}emojione-edited{$min}.js", 'dependencies' => array(), 'footer' => true ),
         'emojionearea'        => array( 'file' => "{$url}emojionearea-edited{$min}.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 
-        'bp-quill'        => array( 'file' => "{$url}vendor/quill{$min}.js", 'dependencies' => array(), 'footer' => false ),
+        'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
 
@@ -152,8 +152,12 @@ function bp_core_register_common_styles() {
 			'file'         => "{$url}emojionearea-edited{$min}.css",
 			'dependencies' => array()
 		),
-        'bp-quill' => array(
-			'file'         => "{$url}quill.css",
+		'bp-medium-editor' => array(
+			'file'         => "{$url}medium-editor{$min}.css",
+			'dependencies' => array()
+		),
+		'bp-medium-editor-beagle' => array(
+			'file'         => "{$url}medium-editor-beagle{$min}.css",
 			'dependencies' => array()
 		),
 	) );

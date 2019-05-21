@@ -129,9 +129,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink() ?>"
-							   class="bp-tooltip"
-							   data-bp-tooltip="<?php bp_member_name(); ?>">
+							<a href="<?php bp_member_permalink() ?>">
 								<?php bp_member_avatar(); ?>
 								<?php
 								$current_time = current_time( 'mysql', 1 );

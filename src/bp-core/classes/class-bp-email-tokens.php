@@ -684,6 +684,24 @@ class BP_Email_Tokens {
 		    return $output;
 
 		$settings = bp_email_get_appearance_settings();
+
+		$media_ids       = false;
+		$total_media_ids = 0;
+		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+			$media_ids = bp_messages_get_meta( $tokens['message_id'], 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids       = explode( ',', $media_ids );
+				$total_media_ids = count( $media_ids );
+				$media_ids       = implode( ',', array_slice( $media_ids, 0, 5 ) );
+			}
+		}
+
+		$gif_data = false;
+		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() && ! empty( $tokens['message_id'] ) ) {
+			$gif_data = bp_messages_get_meta( $tokens['message_id'], '_gif_data', true );
+		}
+
 		ob_start();
 		?>
         <table cellspacing="0" cellpadding="0" border="0" width="100%">
@@ -742,6 +760,38 @@ class BP_Email_Tokens {
 													<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; letter-spacing: -0.24px; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.625 ) . 'px' ) ?>;">
 														<?php echo nl2br( $tokens['usermessage'] ); ?>
 													</div>
+                                                    <?php if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) : ?>
+														<div class="bb-activity-media-wrap" style="padding: 10px 0;">
+                                                            <?php while ( bp_media() ) {
+                                                                bp_the_media();
+                                                                ?>
+                                                                <div class="bb-activity-media-elem"  style="display: inline-block; max-width: 120px; vertical-align: top; max-height: 120px; overflow: hidden; padding: 4px 0;">
+																	<a href="<?php echo esc_attr( $tokens['message.url'] ); ?>">
+																		<img src="<?php echo esc_attr( wp_get_attachment_image_url( bp_get_media_attachment_id() ) ); ?>" alt="<?php echo esc_attr( bp_get_media_title() ); ?>"/>
+																	</a>
+                                                                </div>
+                                                                <?php
+                                                            } ?>
+                                                            <?php if ( $total_media_ids > 5 ) : ?>
+                                                                <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>"><?php sprintf( __( 'and %d more', 'buddyboss' ), $total_media_ids - 5 ); ?></a>
+                                                            <?php endif; ?>
+                                                        </div>
+                                                    <?php endif; ?>
+                                                    <?php if ( ! empty( $gif_data ) ) : ?>
+                                                        <div class="activity-attached-gif-container">
+                                                            <div class="gif-image-container">
+                                                                <div class="gif-player">
+                                                                    <video preload="auto" playsinline poster="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" loop muted playsinline>
+                                                                        <source src="<?php echo esc_url( wp_get_attachment_url( $gif_data['mp4'] ) ); ?>" type="video/mp4">
+                                                                    </video>
+                                                                    <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
+                                                                        <span class="dashicons dashicons-video-alt3"></span>
+                                                                    </a>
+                                                                    <span class="gif-icon"></span>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    <?php endif; ?>
 												</td>
 											</tr>
 										</tbody>

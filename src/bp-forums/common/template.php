@@ -1796,7 +1796,7 @@ function bbp_the_content( $args = array() ) {
             <div id="bbp_editor_<?php echo esc_attr( $r['context'] ); ?>_content" class="<?php echo esc_attr( $r['editor_class'] ); ?>" tabindex="<?php echo esc_attr( $r['tabindex'] ); ?>">
                 <?php echo $post_content; ?>
             </div>
-            <input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo $post_content; ?>" />
+            <input type="hidden" id="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" name="bbp_<?php echo esc_attr( $r['context'] ); ?>_content" value="<?php echo esc_attr( $post_content ); ?>" />
             <?php
 
 			// Output the editor

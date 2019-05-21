@@ -42,6 +42,8 @@ add_action( 'admin_init', function() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_messages_send_message() {
+	global $thread_template, $messages_template;
+
 	$response = array(
 		'feedback' => __( 'Your message could not be sent. Please try again.', 'buddyboss' ),
 		'type'     => 'error',
@@ -89,10 +91,102 @@ function bp_nouveau_ajax_messages_send_message() {
 
 	// Send the message.
 	if ( true === is_int( $send ) ) {
+		$response = array();
+
+		if ( bp_has_message_threads( array( 'include' => $send ) ) ) {
+
+			while ( bp_message_threads() ) {
+				bp_message_thread();
+				$last_message_id = (int) $messages_template->thread->last_message_id;
+
+				$response = array(
+					'id'            => bp_get_message_thread_id(),
+					'message_id'    => (int) $last_message_id,
+					'subject'       => strip_tags( bp_get_message_thread_subject() ),
+					'excerpt'       => strip_tags( bp_get_message_thread_excerpt() ),
+					'content'       => do_shortcode( bp_get_message_thread_content() ),
+					'unread'        => bp_message_thread_has_unread(),
+					'sender_name'   => bp_core_get_user_displayname( $messages_template->thread->last_sender_id ),
+					'sender_is_you' => $messages_template->thread->last_sender_id == bp_loggedin_user_id(),
+					'sender_link'   => bp_core_get_userlink( $messages_template->thread->last_sender_id, false, true ),
+					'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
+						'item_id' => $messages_template->thread->last_sender_id,
+						'object'  => 'user',
+						'type'    => 'thumb',
+						'width'   => BP_AVATAR_THUMB_WIDTH,
+						'height'  => BP_AVATAR_THUMB_HEIGHT,
+						'html'    => false,
+					) ) ),
+					'count'         => bp_get_message_thread_total_count(),
+					'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
+					'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+					'started_date'  => date(
+						get_option( 'date_format' ),
+						strtotime( $messages_template->thread->first_message_date )
+					)
+				);
+
+				if ( is_array( $messages_template->thread->recipients ) ) {
+					foreach ( $messages_template->thread->recipients as $recipient ) {
+						if ( empty( $recipient->is_deleted ) ) {
+							$response['recipients'][] = array(
+								'avatar'    => esc_url( bp_core_fetch_avatar( array(
+									'item_id' => $recipient->user_id,
+									'object'  => 'user',
+									'type'    => 'thumb',
+									'width'   => BP_AVATAR_THUMB_WIDTH,
+									'height'  => BP_AVATAR_THUMB_HEIGHT,
+									'html'    => false,
+								) ) ),
+								'user_link' => bp_core_get_userlink( $recipient->user_id, false, true ),
+								'user_name' => bp_core_get_user_displayname( $recipient->user_id ),
+								'is_you'    => $recipient->user_id == bp_loggedin_user_id()
+							);
+						}
+					}
+				}
+
+				if ( bp_is_active( 'messages', 'star' ) ) {
+					$star_link = bp_get_the_message_star_action_link( array(
+						'thread_id' => bp_get_message_thread_id(),
+						'url_only'  => true,
+					) );
+
+					$response['star_link'] = $star_link;
+
+					$star_link_data         = explode( '/', $star_link );
+					$response['is_starred'] = array_search( 'unstar', $star_link_data );
+
+					// Defaults to last
+					$sm_id = $last_message_id;
+
+					if ( $response['is_starred'] ) {
+						$sm_id = (int) $star_link_data[ $response['is_starred'] + 1 ];
+					}
+
+					$response['star_nonce'] = wp_create_nonce( 'bp-messages-star-' . $sm_id );
+					$response['starred_id'] = $sm_id;
+				}
+
+				$thread_extra_content = bp_nouveau_messages_catch_hook_content( array(
+					'inboxListItem' => 'bp_messages_inbox_list_item',
+					'threadOptions' => 'bp_messages_thread_options',
+				) );
+
+				if ( array_filter( $thread_extra_content ) ) {
+					$response = array_merge( $response, $thread_extra_content );
+				}
+			}
+		}
+
+		if ( empty( $response ) ) {
+			$response = array( 'id' => $send );
+		}
+
 		wp_send_json_success( array(
-			'feedback' => __( 'Message successfully sent.', 'buddyboss' ),
-			'type'     => 'success',
-			'thread_id' => $send
+			'feedback'  => __( 'Message successfully sent.', 'buddyboss' ),
+			'type'      => 'success',
+			'thread'    => $response,
 		) );
 
 	// Message could not be sent.

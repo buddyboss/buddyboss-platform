@@ -98,8 +98,9 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				if ( bp_is_active( 'friends' ) ) {
 
 					$personal_friend_comma_separated_string = bp_get_friend_ids( bp_loggedin_user_id() );
-					$friend_array                           = explode( ',', $personal_friend_comma_separated_string );
-
+					if ( false !== $personal_friend_comma_separated_string ) {
+						$friend_array = explode( ',', $personal_friend_comma_separated_string );
+					}
 					$count = is_array( $friend_array ) ? count( $friend_array ) : 0;
 				}
 				?>
@@ -119,7 +120,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
     				<?php while ( bp_members() ) : bp_the_member(); ?>
     
     					<div class="item-avatar">
-    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
     					</div>
     
     				<?php endwhile; ?>
@@ -139,23 +140,19 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
     		<?php endif; ?>
         </div>
 		<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">
-			<?php if ( bp_has_members( 'user_id=' . bp_loggedin_user_id().'&per_page='.$settings['max_members'].'&max='.$settings['max_members'].'&search_terms='.false.'&populate_extras='.true ) ) : ?>
+			<?php if ( is_user_logged_in() && bp_has_members( 'user_id=' . bp_loggedin_user_id().'&per_page='.$settings['max_members'].'&max='.$settings['max_members'].'&search_terms='.false.'&populate_extras='.true ) ) : ?>
 
 				<div class="avatar-block">
-
 					<?php while ( bp_members() ) : bp_the_member(); ?>
-
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><?php
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><?php
 								$current_time = current_time( 'mysql', 1 );
 								$diff =  strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
 								if ( $diff < 300 ) { // 5 minutes  =  5 * 60 ?>
 									<span class="member-status online"></span>
 								<?php } ?></a>
 						</div>
-
 					<?php endwhile; ?>
-
 				</div>
 
 				<?php if (  $members_template->total_member_count > (int)$settings['max_members'] ){ ?>
@@ -313,7 +310,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
 			<?php while ( bp_members() ) : bp_the_member(); ?>
 
                 <div class="item-avatar">
-                    <a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" title="<?php bp_member_name(); ?>" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
+                    <a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" title="<?php bp_member_name(); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
                 </div>
 
 			<?php endwhile; ?>

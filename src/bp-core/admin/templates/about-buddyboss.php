@@ -17,7 +17,7 @@ defined( 'ABSPATH' ) || exit;
 <div id="bp-hello-container" class="bp-hello-buddyboss" role="dialog" aria-labelledby="bp-hello-title" style="display: none;">
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
-			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
+			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
 				<span class="screen-reader-text"><?php esc_html_e( 'Close pop-up', 'buddyboss' ); ?></span>
 			</button>
 		</div>
@@ -96,7 +96,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="youtube bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="youtube bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on YouTube', 'buddyboss' ),
 						esc_url( 'https://www.youtube.com/c/BuddybossWP' ),
 						esc_html( 'Follow BuddyBoss on YouTube', 'buddyboss' )
@@ -107,7 +107,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="twitter bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="twitter bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Twitter', 'buddyboss' ),
 						esc_url( 'https://twitter.com/BuddyBossWP' ),
 						esc_html( 'Follow BuddyBoss on Twitter', 'buddyboss' )
@@ -118,7 +118,7 @@ defined( 'ABSPATH' ) || exit;
 				<li>
 					<?php
 					printf(
-						'<a class="facebook bp-tooltip" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
+						'<a class="facebook bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="%1$s" href="%2$s"><span class="screen-reader-text">%3$s</span></a>',
 						esc_attr( 'Follow BuddyBoss on Facebook', 'buddyboss' ),
 						esc_url( 'https://facebook.com/BuddyBossWP/' ),
 						esc_html( 'Follow BuddyBoss on Facebook', 'buddyboss' )

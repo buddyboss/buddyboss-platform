@@ -3,167 +3,459 @@
 
 @import "vendors/hint/hint";
 
-.hint--multiline:after {
-	white-space: pre;
+//
+// Mixins
+// -----------------------------------------
+
+@mixin svg-arrow ($color, $position: up) {
+
+	$degrees: 0;
+	$height:  6px;
+	$width:   18px;
+
+	@if ($position == down) {
+		$degrees: 180 18 6;
+	} @else if ($position == left) {
+		$degrees: -90 18 18;
+		$width: 6px;
+		$height: 18px;
+	} @else if ($position == right) {
+		$degrees: 90 6 6;
+		$width: 6px;
+		$height: 18px;
+	}
+
+	background: no-repeat url("data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http://www.w3.org/2000/svg%22%20width%3D%22#{$width * 2}%22%20height%3D%22#{$height * 2}%22%3E%3Cpath%20fill%3D%22#{$color}%22%20transform%3D%22rotate(#{$degrees})%22%20d%3D%22M2.658,0.000%20C-13.615,0.000%2050.938,0.000%2034.662,0.000%20C28.662,0.000%2023.035,12.002%2018.660,12.002%20C14.285,12.002%208.594,0.000%202.658,0.000%20Z%22/%3E%3C/svg%3E");
+	background-size: 100% auto;
+	width: $width;
+	height: $height;
+}
+
+@mixin transition ($args...) {
+	transition: $args;
+}
+
+@mixin transform ($val) {
+	transform: $val;
+}
+
+@mixin transform-origin ($val) {
+	transform-origin: $val;
+}
+
+@mixin opacity ($trans) {
+	opacity: $trans;
+}
+
+@mixin base-effects () {
+	pointer-events: none;
+
+	@include opacity(0);
+	@include transition(all 0.18s ease-out 0.18s);
+}
+
+@mixin no-effects () {
+
+	@include transition(none);
+}
+
+@mixin normalized-text() {
+	font-weight: 500;
+	font-size: 13px;
+	letter-spacing: -0.24px;
+}
+
+//
+// Styles
+// -----------------------------------------
+
+// IE 11 button bugfix
+button[data-bp-tooltip] {
+	overflow: visible;
 }
 
 [data-bp-tooltip] {
+	position: relative; // alt. absolute or fixed
+
+	// Fixing iOS Safari event issue. More info at: https://goo.gl/w8JF4W
 	cursor: pointer;
-	position: relative;
 
-	// Removed :before
 	&:after {
-		background-color: $tooltip-background;
-		display: none;
-		opacity: 0;
-		position: absolute;
-		-webkit-transform: translate3d(0, 0, 0);
-		-ms-transform: translate3d(0, 0, 0);
-		transform: translate3d(0, 0, 0);
-		visibility: hidden;
-	}
 
-	// BP Tooltip body and text
-	&:after {
-		border: 1px solid $tooltip-border;
-		border-radius: $tooltip-border-radius;
-		box-shadow: $tooltip-box-shadow;
-		color: $tooltip-text-color;
+		@include base-effects();
+		@include normalized-text();
+
+		background: $tooltip-background;
+		border-radius: 4px;
+		box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.22);
+		color: $white;
 		content: attr(data-bp-tooltip);
-		font-family: $tooltip-font-family;
-		font-size: $tooltip-font-size;
-		font-weight: $tooltip-font-weight;
-		letter-spacing: normal;
-		line-height: 1.25;
-		padding: $tooltip-padding-vert $tooltip-padding-hor;
-		pointer-events: none;
-		text-shadow: none;
-		text-transform: none;
-		-webkit-transition: all 1.5s ease;
-		-ms-transition: all 1.5s ease;
-		transition: all 1.5s ease;
+		line-height: 1.3;
+		padding: 7px 15px;
+		position: absolute;
 		white-space: nowrap;
-		word-wrap: break-word;
-		z-index: $tooltip-z-index;
+		z-index: 10;
 	}
 
-	// BP Tooltip arrow tip - removed :before
+	&:before {
+
+		@include svg-arrow($tooltip-background);
+		@include base-effects();
+
+		content: "";
+		position: absolute;
+		z-index: 10;
+	}
 
 	&:hover,
-	&:active,
-	&:focus {
+	&[data-bp-tooltip-visible] {
 
-		// Removed :before
+		&:before,
 		&:after {
 
-			display: block;
-			opacity: 1;
-			overflow: visible;
-			visibility: visible;
+			@include opacity(1);
+
+			pointer-events: auto;
 		}
 	}
-}
 
-[data-bp-tooltip=""] {
-	display: none;
-	opacity: 0;
-	visibility: hidden;
-}
-
-// Bottom Centered Tooltip - Default
-
-.bp-tooltip {
-
-	@include bp-tooltip-bottom-left;
-}
-
-// Bottom Left Tooltip for mobile and Bottom Right Tooltip for tablet/desktop
-
-.user-list .bp-tooltip {
-
-	@include bp-tooltip-bottom-left;
-
-	@include medium-up() {
-
-		@include bp-tooltip-bottom-right;
+	&.font-awesome:after {
+		font-family: FontAwesome;
 	}
-}
 
-// Bottom Left Tooltip
+	&[data-bp-tooltip-break] {
 
-.activity-list .bp-tooltip,
-.activity-meta-action .bp-tooltip,
-.notification-actions .bp-tooltip,
-.participants-list .bp-tooltip {
-
-	@include bp-tooltip-bottom-left;
-}
-
-// Bottom Right Tooltip
-
-.bp-invites-content .bp-tooltip,
-.message-metadata .actions .bp-tooltip,
-.single-message-thread-header .actions .bp-tooltip {
-
-	@include bp-tooltip-bottom-right;
-}
-
-.bp-invites-content #send-invites-editor .bp-tooltip {
-
-	// override .bp-invites-content .bp-tooltip
-	&:after {
-		left: 0;
-		right: auto;
+		&:after {
+			white-space: pre;
+		}
 	}
-}
 
-[data-tooltip-length="small"] {
+	&[data-bp-tooltip-blunt] {
 
-	&:after {
-		white-space: normal;
-		width: $tooltip-small-width;
+		&:before,
+		&:after {
+
+			@include no-effects();
+		}
 	}
-}
 
-[data-tooltip-length="medium"] {
+	&[data-bp-tooltip-pos="up"] {
 
-	&:after {
-		white-space: normal;
-		width: $tooltip-medium-width;
+		&:after {
+			bottom: 100%;
+			left: 50%;
+			margin-bottom: 5px + $tooltip-arrow-height;
+
+			@include transform(translate(-50%, 10px));
+			@include transform-origin(top);
+		}
+
+		&:before {
+			bottom: 100%;
+			left: 50%;
+			margin-bottom: 5px;
+
+			@include transform(translate(-50%, 10px));
+			@include transform-origin(top);
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(-50%, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(-50%, 0));
+			}
+		}
 	}
-}
 
-[data-tooltip-length="large"] {
+	&[data-bp-tooltip-pos="up-left"] {
 
-	&:after {
-		font-size: 14px;
-		line-height: 1.4;
-		padding: 10px;
-		white-space: normal;
-		width: $tooltip-large-width;
+		&:after {
+			bottom: 100%;
+			left: 0;
+			margin-bottom: 5px + $tooltip-arrow-height;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:before {
+			bottom: 100%;
+			left: 5px;
+			margin-bottom: 5px;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
 	}
-}
 
-[data-tooltip-length="xlarge"] {
+	&[data-bp-tooltip-pos="up-right"] {
 
-	&:after {
-		font-size: 14px;
-		line-height: 1.4;
-		padding: 12px;
-		white-space: normal;
-		width: $tooltip-xlarge-width;
+		&:after {
+			bottom: 100%;
+			right: 0;
+			margin-bottom: 5px + $tooltip-arrow-height;
 
-		@media screen and (max-width: 768px) {
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:before {
+			bottom: 100%;
+			right: 5px;
+			margin-bottom: 5px;
+
+			@include transform(translate(0, 10px));
+			@include transform-origin(top);
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="down"] {
+
+		&:after {
+			left: 50%;
+			margin-top: 5px + $tooltip-arrow-height;
+			top: 100%;
+
+			@include transform(translate(-50%, -10px));
+		}
+
+		&:before {
+			left: 50%;
+			margin-top: 5px;
+			top: 100%;
+
+			@include svg-arrow($tooltip-background, "down");
+			@include transform(translate(-50%, -10px));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(-50%, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(-50%, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="down-left"] {
+
+		&:after {
+			left: 0;
+			margin-top: 5px + $tooltip-arrow-height;
+			top: 100%;
+
+			@include transform(translate(0, -10px));
+		}
+
+		&:before {
+			left: 5px;
+			margin-top: 5px;
+			top: 100%;
+
+			@include svg-arrow($tooltip-background, "down");
+			@include transform(translate(0, -10px));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="down-right"] {
+
+		&:after {
+			right: 0;
+			margin-top: 5px + $tooltip-arrow-height;
+			top: 100%;
+
+			@include transform(translate(0, -10px));
+		}
+
+		&:before {
+			right: 5px;
+			margin-top: 5px;
+			top: 100%;
+
+			@include svg-arrow($tooltip-background, "down");
+			@include transform(translate(0, -10px));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, 0));
+			}
+
+			&:before {
+
+				@include transform(translate(0, 0));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="left"] {
+
+		&:after {
+			margin-right: 5px + $tooltip-arrow-height;
+			right: 100%;
+			top: 50%;
+
+			@include transform(translate(10px, -50%));
+		}
+
+		&:before {
+			margin-right: 5px;
+			right: 100%;
+			top: 50%;
+
+			@include svg-arrow($tooltip-background, "left");
+			@include transform(translate(10px, -50%));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, -50%));
+			}
+
+			&:before {
+
+				@include transform(translate(0, -50%));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-pos="right"] {
+
+		&:after {
+			left: 100%;
+			margin-left: 5px + $tooltip-arrow-height;
+			top: 50%;
+
+			@include transform(translate(-10px, -50%));
+		}
+
+		&:before {
+			left: 100%;
+			margin-left: 5px;
+			top: 50%;
+
+			@include svg-arrow($tooltip-background, "right");
+			@include transform(translate(-10px, -50%));
+		}
+
+		&:hover,
+		&[data-bp-tooltip-visible] {
+
+			&:after {
+
+				@include transform(translate(0, -50%));
+			}
+
+			&:before {
+
+				@include transform(translate(0, -50%));
+			}
+		}
+	}
+
+	&[data-bp-tooltip-length="small"] {
+
+		&:after {
 			white-space: normal;
-			width: 90vw;
+			width: 80px;
 		}
 	}
-}
 
-[data-tooltip-length="fit"] {
+	&[data-bp-tooltip-length="medium"] {
 
-	&:after {
-		white-space: normal;
-		width: $tooltip-fit-width;
+		&:after {
+			white-space: normal;
+			width: 150px;
+		}
+	}
+
+	&[data-bp-tooltip-length="large"] {
+
+		&:after {
+			white-space: normal;
+			width: 260px;
+		}
+	}
+
+	&[data-bp-tooltip-length="xlarge"] {
+
+		&:after {
+			white-space: normal;
+			width: 380px;
+
+			@media screen and (max-width: 768px) {
+				white-space: normal;
+				width: 90vw;
+			}
+		}
+	}
+
+	&[data-bp-tooltip-length="fit"] {
+
+		&:after {
+			white-space: normal;
+			width: 100%;
+		}
 	}
 }

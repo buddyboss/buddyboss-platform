@@ -11215,7 +11215,7 @@ msgid "%d connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:376
-msgid "Cancel Connect Request"
+msgid "Cancel connection request"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:393
