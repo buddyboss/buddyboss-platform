@@ -2605,7 +2605,7 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 	$tabs = array(
 		'0' => array(
 			'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-tools', 'tab' => 'bp-tools'  ), 'admin.php' ) ),
-			'name' => __( 'Repair Community', 'buddyboss' ),
+			'name' => __( 'Default Data', 'buddyboss' ),
 			'slug' => 'bp-tools'
 		)
 	);

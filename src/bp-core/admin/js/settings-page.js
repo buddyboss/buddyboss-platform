@@ -268,6 +268,48 @@
 			}
 		});
 
+
+		/**
+		 * Admin Tools Default data setting Page
+		 */
+		if ( $( '.buddyboss_page_bp-tools .section-default_data' ).length ) {
+			jQuery( '.bp-admin-form .checkbox' ).click( function () {
+
+				if ( jQuery( this ).attr( 'id' ) === 'import-f-replies' ) {
+					jQuery( '#import-f-topics' ).prop( 'checked', true );
+				}
+
+				if ( jQuery( this ).attr( 'id' ) === 'import-f-topics' ) {
+					jQuery( '#import-f-replies' ).prop( 'checked', false );
+				}
+
+				if ( jQuery( this ).attr( 'checked' ) === 'checked' && ! jQuery( this ).closest( 'li.main' ).find( '.main-header' ).attr( 'disabled' ) ) {
+					jQuery( this ).closest( 'li.main' ).find( '.main-header' ).prop( 'checked', true );
+				}
+			} );
+
+			jQuery( '.bp-admin-form #import-groups, .bp-admin-form #import-users, .bp-admin-form #import-forums' ).click( function () {
+				if ( jQuery( this ).attr( 'checked' ) !== 'checked' ) {
+					jQuery( this ).closest( 'li' ).find( "ul .checkbox" ).prop( 'checked', false );
+				}
+			} );
+
+			jQuery( ".bp-admin-form #bb-admin-submit" ).click( function () {
+				if ( confirm( BP_ADMIN.tools.default_data.submit_button_message ) ) {
+					return true;
+				}
+
+				return false;
+			} );
+
+			jQuery( ".bp-admin-form #bb-admin-clear" ).click( function () {
+				if ( confirm( BP_ADMIN.tools.default_data.clear_button_message ) ) {
+					return true;
+				}
+				return false;
+			} );
+		}
+
 	});
 
 }());

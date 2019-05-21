@@ -16,54 +16,185 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_core_admin_tools() {
 	?>
-	<div class="wrap">
-	    <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
-		<div class="nav-settings-subsubsub">
-			<ul class="subsubsub">
+    <div class="wrap">
+        <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+        <div class="nav-settings-subsubsub">
+            <ul class="subsubsub">
 				<?php bp_core_tools_settings_admin_tabs(); ?>
-			</ul>
-		</div>
-	</div>
-	<div class="wrap">
-		<div class="bp-admin-card section-repair_community">
+            </ul>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="bp-admin-card section-default_data">
 
-			<h2><?php esc_html_e( 'Repair Community', 'buddyboss' ) ?></h2>
+            <h2><?php esc_html_e( 'Default Data', 'buddyboss' ) ?></h2>
 
-			<p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-			</p>
+            <p><?php esc_html_e( 'Please do not import users and their data while also importing groups on a slow server (or shared hosting). Importing is a rather heavy process, so please finish with members first and then work with groups.', 'buddyboss' ); ?></p>
+            <form action="" method="post" id="bp-admin-form" class="bp-admin-form">
+                <fieldset>
+                    <legend><?php _e( 'What do you want to import?', 'buddyboss' ); ?></legend>
+                    <ul class="items">
+                        <li class="users main">
+                            <label for="import-users">
+                                <input type="checkbox" class="main-header" name="bb[import-users]" id="import-users"
+                                       value="1" <?php bp_dd_imported_disabled( 'users', 'users' ) ?>/>
+                                <strong><?php _e( 'Members', 'buddyboss' ); ?></strong>
+                            </label>
+                            <ul>
 
-			<form class="settings" method="post" action="">
-				<fieldset>
-					<legend><?php esc_html_e( 'Data to Repair:', 'buddyboss' ) ?></legend>
+								<?php if ( bp_is_active( 'xprofile' ) ) : ?>
+                                    <li>
+                                        <label for="import-profile">
+                                            <input type="checkbox" class="checkbox" name="bb[import-profile]"
+                                                   id="import-profile"
+                                                   value="1" <?php bp_dd_imported_disabled( 'users', 'xprofile' ) ?>/>
+											<?php _e( 'Profile fields (with data)', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+								<?php endif; ?>
 
-					<div class="checkbox">
-					<?php foreach ( bp_admin_repair_list() as $item ) : ?>
-						<label for="<?php echo esc_attr( str_replace( '_', '-', $item[0] ) ); ?>">
-							<input
-								type="checkbox"
-								class="checkbox"
-								name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
-								value="1"
-								<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) {echo 'checked';} ?>
-							/> <?php echo esc_html( $item[1] ); ?></label>
-					<?php endforeach; ?>
-					</div>
+								<?php if ( bp_is_active( 'friends' ) ) : ?>
+                                    <li>
+                                        <label for="import-friends">
+                                            <input type="checkbox" class="checkbox" name="bb[import-friends]"
+                                                   id="import-friends"
+                                                   value="1" <?php bp_dd_imported_disabled( 'users', 'friends' ) ?>/>
+											<?php _e( 'Connections', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+								<?php endif; ?>
 
-					<p class="submit">
-						<input class="button-primary" type="submit" name="bp-tools-submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
-						<?php wp_nonce_field( 'bp-do-counts' ); ?>
-					</p>
+								<?php if ( bp_is_active( 'activity' ) ) : ?>
+                                    <li>
+                                        <label for="import-activity">
+                                            <input type="checkbox" class="checkbox" name="bb[import-activity]"
+                                                   id="import-activity"
+                                                   value="1" <?php bp_dd_imported_disabled( 'users', 'activity' ) ?>/>
+											<?php _e( 'Activity posts', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+								<?php endif; ?>
 
-				</fieldset>
-			</form>
+								<?php if ( bp_is_active( 'messages' ) ) : ?>
+                                    <li>
+                                        <label for="import-messages">
+                                            <input type="checkbox" class="checkbox" name="bb[import-messages]"
+                                                   id="import-messages"
+                                                   value="1" <?php bp_dd_imported_disabled( 'users', 'messages' ) ?>/>
+											<?php _e( 'Private messages', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+								<?php endif; ?>
 
-			<p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
+                            </ul>
+                        </li>
 
-		</div>
-	</div>
+						<?php if ( bp_is_active( 'groups' ) ) : ?>
+                            <li class="groups main">
+                                <label for="import-groups">
+                                    <input type="checkbox" class="main-header" name="bb[import-groups]"
+                                           id="import-groups"
+                                           value="1" <?php bp_dd_imported_disabled( 'groups', 'groups' ) ?>/>
+                                    <strong><?php _e( 'Groups', 'buddyboss' ); ?></strong>
+                                </label>
+                                <ul>
 
+                                    <li>
+                                        <label for="import-g-members">
+                                            <input type="checkbox" class="checkbox" name="bb[import-g-members]"
+                                                   id="import-g-members"
+                                                   value="1" <?php bp_dd_imported_disabled( 'groups', 'members' ) ?>/>
+											<?php _e( 'Members', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+
+									<?php if ( bp_is_active( 'activity' ) ) :
+										?>
+                                        <li>
+                                            <label for="import-g-activity">
+
+                                                <input type="checkbox" class="checkbox" name="bb[import-g-activity]"
+                                                       id="import-g-activity"
+                                                       value="1" <?php bp_dd_imported_disabled( 'groups', 'activity' ) ?>/>
+												<?php _e( 'Activity posts', 'buddyboss' ); ?>
+                                            </label>
+                                        </li>
+									<?php endif; ?>
+
+									<?php if ( bp_is_active( 'forums' ) ) {
+										?>
+                                        <li>
+                                            <label for="import-g-forums">
+
+                                                <input type="checkbox" class="checkbox" name="bb[import-g-forums]"
+                                                       id="import-g-forums"
+                                                       value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ) ?>/>
+												<?php _e( 'Forums in Groups', 'buddyboss' ); ?>
+                                            </label>
+                                        </li>
+										<?php
+									} ?>
+
+                                </ul>
+                            </li>
+						<?php endif; ?>
+
+						<?php
+						if ( bp_is_active( 'forums' ) ) {
+							?>
+                            <li class="forums main">
+                                <label for="import-forums">
+                                    <input type="checkbox" class="main-header" name="bb[import-forums]"
+                                           id="import-forums"
+                                           value="1" <?php bp_dd_imported_disabled( 'forums', 'forums' ) ?>/>
+                                    <strong><?php _e( 'Forums', 'buddyboss' ); ?></strong>
+                                </label>
+                                <ul>
+                                    <li>
+                                        <label for="import-f-topics">
+
+                                            <input type="checkbox" class="checkbox" name="bb[import-f-topics]"
+                                                   id="import-f-topics"
+                                                   value="1" <?php bp_dd_imported_disabled( 'forums', 'topics' ) ?>/>
+											<?php _e( 'Discussions', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+                                    <li>
+                                        <label for="import-f-replies">
+
+                                            <input type="checkbox" class="checkbox" name="bb[import-f-replies]"
+                                                   id="import-f-replies"
+                                                   value="1" <?php bp_dd_imported_disabled( 'forums', 'replies' ) ?>/>
+											<?php _e( 'Replies', 'buddyboss' ); ?>
+                                        </label>
+                                    </li>
+                                </ul>
+                            </li>
+							<?php
+						}
+						?>
+
+                    </ul>
+                    <!-- .items -->
+
+                    <p class="submit">
+                        <input class="button-primary" type="submit" name="bb-admin-submit" id="bb-admin-submit"
+                               value="<?php esc_attr_e( 'Import Selected Data', 'buddyboss' ); ?>"/>
+                        <input class="button" type="submit" name="bb-admin-clear" id="bb-admin-clear"
+                               value="<?php esc_attr_e( 'Clear Default Data', 'buddyboss' ); ?>"/>
+                    </p>
+                </fieldset>
+
+				<?php wp_nonce_field( 'bb-admin' ); ?>
+            </form>
+
+            <p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
+
+        </div>
+    </div>
 	<?php
 }
+
 
 /**
  * Handle the processing and feedback of the admin tools page.
@@ -87,7 +218,7 @@ function bp_admin_repair_handler() {
 	$messages = array();
 
 	foreach ( (array) bp_admin_repair_list() as $item ) {
-		if ( isset( $item[2] ) && isset( $_POST[$item[0]] ) && 1 === absint( $_POST[$item[0]] ) && is_callable( $item[2] ) ) {
+		if ( isset( $item[2] ) && isset( $_POST[ $item[0] ] ) && 1 === absint( $_POST[ $item[0] ] ) && is_callable( $item[2] ) ) {
 			$messages[] = call_user_func( $item[2] );
 		}
 	}
@@ -98,6 +229,7 @@ function bp_admin_repair_handler() {
 		}
 	}
 }
+
 add_action( bp_core_admin_hook(), 'bp_admin_repair_handler' );
 
 /**
@@ -189,9 +321,9 @@ function bp_admin_repair_list() {
 
 	// Check whether member type is enabled.
 	if ( true === bp_member_type_enable_disable() ) {
-		$member_types = bp_get_active_member_types();
+		$member_types      = bp_get_active_member_types();
 		$existing_selected = bp_member_type_default_on_registration();
-		if ( isset( $member_types ) && !empty( $member_types ) && '' !== $existing_selected ) {
+		if ( isset( $member_types ) && ! empty( $member_types ) && '' !== $existing_selected ) {
 			// - Assign default member type.
 			$repair_list[101] = array(
 				'bp-assign-member-type',
@@ -243,7 +375,7 @@ function bp_admin_repair_friend_count() {
 	$updated = array();
 	if ( $total_users > 0 ) {
 		$per_query = 500;
-		$offset = 0;
+		$offset    = 0;
 		while ( $offset < $total_users ) {
 			// Only bother updating counts for users who actually have friendships.
 			$friendships = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id FROM {$bp->friends->table_name} WHERE is_confirmed = 1 AND ( ( initiator_user_id > %d AND initiator_user_id <= %d ) OR ( friend_user_id > %d AND friend_user_id <= %d ) )", $offset, $offset + $per_query, $offset, $offset + $per_query ) );
@@ -300,7 +432,7 @@ function bp_admin_repair_group_count() {
 
 	if ( $total_users > 0 ) {
 		$per_query = 500;
-		$offset = 0;
+		$offset    = 0;
 		while ( $offset < $total_users ) {
 			// But only bother to update counts for users that have groups.
 			$users = $wpdb->get_col( $wpdb->prepare( "SELECT user_id FROM {$bp->groups->table_name_members} WHERE is_confirmed = 1 AND is_banned = 0 AND user_id > %d AND user_id <= %d", $offset, $offset + $per_query ) );
@@ -331,10 +463,10 @@ function bp_admin_repair_blog_records() {
 	$statement = __( 'Repopulating Blogs records&hellip; %s', 'buddyboss' );
 
 	// Default to failure text.
-	$result    = __( 'Failed!',   'buddyboss' );
+	$result = __( 'Failed!', 'buddyboss' );
 
 	// Default to unrepaired.
-	$repair    = false;
+	$repair = false;
 
 	// Run function if blogs component is active.
 	if ( bp_is_active( 'blogs' ) ) {
@@ -359,6 +491,7 @@ function bp_admin_repair_count_members() {
 	$statement = __( 'Counting the number of active members on the site&hellip; %s', 'buddyboss' );
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
+
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -372,6 +505,7 @@ function bp_admin_repair_count_members() {
 function bp_admin_repair_last_activity() {
 	$statement = __( 'Determining last activity dates for each user&hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
+
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -395,6 +529,7 @@ function repair_default_profiles_fields() {
 	}
 
 	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
+
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -406,11 +541,12 @@ function repair_default_profiles_fields() {
 function resync_xprofile_wordpress_fields() {
 	$users = get_users( [
 		'fields' => [ 'ID' ]
-	]);
+	] );
 
 	array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
 
 	$statement = __( 'Re-sync user profile data to WordPress; %s', 'buddyboss' );
+
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -422,16 +558,16 @@ function resync_xprofile_wordpress_fields() {
 function resync_wordpress_xprofile_fields() {
 	$users = get_users( [
 		'fields' => [ 'ID', 'user_nicename' ]
-	]);
+	] );
 
 	foreach ( $users as $user ) {
 		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
 
 		// make sure nickname is valid
 		$nickname = get_user_meta( $user->ID, 'nickname', true );
 		$nickname = sanitize_title( $nickname );
-		$invalid = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+		$invalid  = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
 
 		// or use the user_nicename
 		if ( ! $nickname || $invalid ) {
@@ -439,10 +575,11 @@ function resync_wordpress_xprofile_fields() {
 		}
 
 		bp_update_user_meta( $user->ID, 'nickname', $nickname );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $nickname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
 	}
 
 	$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields; %s', 'buddyboss' );
+
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -454,18 +591,19 @@ function resync_wordpress_xprofile_fields() {
 function xprofile_update_display_names() {
 	$users = get_users( [
 		'fields' => [ 'ID', 'display_name' ]
-	]);
+	] );
 
 	foreach ( $users as $user ) {
 		$display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
 
 		wp_update_user( $args = [
-			'ID' => $user->ID,
+			'ID'           => $user->ID,
 			'display_name' => $display_name
 		] );
 	}
 
 	$statement = __( 'Update WordPress user display names; %s', 'buddyboss' );
+
 	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
@@ -474,15 +612,15 @@ function xprofile_update_display_names() {
  *
  * @since BuddyPress 2.0.0
  *
- * @param string      $message Feedback message.
- * @param string|bool $class   Unused.
+ * @param string $message Feedback message.
+ * @param string|bool $class Unused.
  *
  * @return false|Closure
  */
 function bp_admin_tools_feedback( $message, $class = false ) {
 	if ( is_string( $message ) ) {
 		$message = '<p>' . $message . '</p>';
-		$class = $class ? $class : 'updated';
+		$class   = $class ? $class : 'updated';
 	} elseif ( is_wp_error( $message ) ) {
 		$errors = $message->get_error_messages();
 
@@ -506,7 +644,9 @@ function bp_admin_tools_feedback( $message, $class = false ) {
 
 	$message = '<div id="message" class="' . esc_attr( $class ) . '">' . $message . '</div>';
 	$message = str_replace( "'", "\'", $message );
-	$lambda  = function() use ( $message ) { echo $message; };
+	$lambda  = function () use ( $message ) {
+		echo $message;
+	};
 
 	add_action( bp_core_do_network_admin() ? 'network_admin_notices' : 'admin_notices', $lambda );
 
@@ -523,8 +663,8 @@ function bp_admin_tools_feedback( $message, $class = false ) {
  */
 function bp_core_admin_available_tools_page() {
 	?>
-	<div class="wrap">
-		<h1><?php esc_attr_e( 'Tools', 'buddyboss' ) ?></h1>
+    <div class="wrap">
+        <h1><?php esc_attr_e( 'Tools', 'buddyboss' ) ?></h1>
 
 		<?php
 
@@ -535,7 +675,7 @@ function bp_core_admin_available_tools_page() {
 		 */
 		do_action( 'bp_network_tool_box' ); ?>
 
-	</div>
+    </div>
 	<?php
 }
 
@@ -549,16 +689,16 @@ function bp_core_admin_available_tools_intro() {
 		'page' => 'bp-tools'
 	);
 
-	$page = bp_core_do_network_admin() ? 'admin.php' : 'admin.php' ;
+	$page = bp_core_do_network_admin() ? 'admin.php' : 'admin.php';
 	$url  = add_query_arg( $query_arg, bp_get_admin_url( $page ) );
 	?>
-	<div class="card tool-box">
-		<h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ) ?></h2>
-		<p>
+    <div class="card tool-box">
+        <h2><?php esc_html_e( 'BuddyBoss Tools', 'buddyboss' ) ?></h2>
+        <p>
 			<?php esc_html_e( 'BuddyBoss keeps track of various relationships between users, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration.', 'buddyboss' ); ?>
 			<?php printf( esc_html__( 'Use the %s to repair these relationships.', 'buddyboss' ), '<a href="' . esc_url( $url ) . '">' . esc_html__( 'BuddyBoss Tools', 'buddyboss' ) . '</a>' ); ?>
-		</p>
-	</div>
+        </p>
+    </div>
 	<?php
 }
 
@@ -636,6 +776,7 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 
 	echo '<div class="error"><p>' . __( 'It looks like you have more sites to record. Resume recording by checking the "Repopulate site tracking records" option.', 'buddyboss' ) . '</p></div>';
 }
+
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );
 
 function bp_admin_assign_member_type() {
@@ -643,7 +784,7 @@ function bp_admin_assign_member_type() {
 
 	$users = get_users( [
 		'fields' => [ 'ID' ]
-	]);
+	] );
 
 	foreach ( $users as $user ) {
 
@@ -654,7 +795,7 @@ function bp_admin_assign_member_type() {
 			// Get the user object.
 			$user1 = get_userdata( $user->ID );
 
-			if ( !in_array( 'administrator', $user1->roles, true ) ) {
+			if ( ! in_array( 'administrator', $user1->roles, true ) ) {
 
 				$existing_selected = bp_member_type_default_on_registration();
 				// Assign the default member type to user.
