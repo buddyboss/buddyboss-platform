@@ -1,3 +1,0 @@
-#Member Profiles
-
-[VIDEO OVERVIEW]
