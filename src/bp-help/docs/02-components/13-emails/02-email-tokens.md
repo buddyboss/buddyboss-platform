@@ -4,6 +4,21 @@ Site admins can easily edit the content of email notifications by using tokens w
 
 Some tokens can be used in any message while others are restricted due to context of each type of message. Tokes can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Token wrapped in three curly braces are not escaped on merging which is important for including something like links.
 
+Global Tokens<a name="global-tokens"></a>
+--------------
+
+|Token|Description|
+|---|---|
+|`{{site.admin-email}}`|Email address of the site administrator.|
+|`{{{site.url}}}`| Value of `home_url()`.|
+|`{{site.description}}`|Value of 'blog description'.|
+|`{{site.name}}`|Value of 'blog name'.|
+|`{{recipient.email}}`|Email address of recipient.|
+|`{{recipient.name}}`|Display name of recipient.|
+|`{{recipient.username}}`|Username (login) of recipient.|
+|`{{{unsubscribe}}}`|Link to the recipient's email notifications settings screen in his or her user profile.|
+|`{{email.subject}}`|The subject line of the email.|
+
 Registration Tokens<a name="members-tokens"></a>
 --------------
 
@@ -73,18 +88,6 @@ Situation: Recipient has had a friend request accepted by a member.
 
 Activity Tokens<a name="activity-tokens"></a>
 -------------
-
-|Token|Description|
-|---|---|
-|`{{site.admin-email}}`|Email address of the site administrator.|
-|`{{{site.url}}}`| Value of `home_url()`.|
-|`{{site.description}}`|Value of ‘blog description'.|
-|`{{site.name}}`|Value of ‘blog name'.|
-|`{{recipient.email}}`|Email address of recipient.|
-|`{{recipient.name}}`|Display name of recipient.|
-|`{{recipient.username}}`|Username (login) of recipient.|
-|`{{{unsubscribe}}}`|Link to the recipient's email notifications settings screen in his or her user profile.|
-|`{{email.subject}}`|The subject line of the email.|
 
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
 
@@ -196,7 +199,7 @@ Situation: Recipient's status within a group has changed.
 |---|---|
 |`{{group.name}}`|Name of the group.|
 |`{{{group.url}}}`|Link to the group.|
-|`{{promoted_to}}`|String describing new group responsibilitied. Possible values: ‘an administrator' or ‘a moderator'.|
+|`{{promoted_to}}`|String describing new group responsibilitied. Possible values: 'an administrator' or 'a moderator'.|
 |`{{group.id}}`|ID of the group.|
 |`{{user.id}}`|ID of the promoted user.|
 
@@ -223,3 +226,45 @@ Situation: Recipient was mentioned in a **group** activity update.
 |`{{poster.name}}`|Display name of activity item author.|
 |`{{group.name}}`|Name of the group housing the activity update. Empty if not in a group.|
 |`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
+
+Forum Tokens<a name="forum-tokens"></a>
+------------
+
+###\[{{{site.name}}}\] New discussion: {{discussion.title}}
+
+Situation: A member has created a new forum discussion.
+
+|Token|Description|
+|---|---|
+|`{{poster.name}}`|Name of the member who created the discussion, wrapped in a link to that user's profile.|
+|`{{forum.url}}`|Link to the forum containing the discussion.|
+|`{{forum.title}}`|Name of the forum containig the discussion.|
+|`{{discussion.url}}`|Link to the newly created discussion.|
+|`{{discussion.title}}`|Name of the newly created discussion.|
+|`{{{discussion.content}}}`|Content of the newly created discussion.|
+
+
+###\[{{{site.name}}}\] {{poster.name}} replied to one of your forum discussions
+
+Situation: A member has replied to a forum discussion that the participant is following.
+
+|Token|Description|
+|---|---|
+|`{{poster.name}}`|Name of the member who replied to the discussion, wrapped in a link to that user's profile.|
+|`{{forum.url}}`|Link to the forum containing the discussion and reply.|
+|`{{forum.title}}`|Name of the forum containig the discussion and reply.|
+|`{{discussion.url}}`|Link to the discussion containing the reply.|
+|`{{discussion.title}}`|Name of the discussion containing the reply.|
+|`{{{reply.content}}}`|Content of the discussion reply.|
+
+Email Invite Tokens<a name="invite-tokens"></a>
+------------
+
+###An invitation from {{inviter.name}} to join \[{{{site.name}}}\]
+
+Situation: Recipient has been invited by a member to join the website.
+
+|Token|Description|
+|---|---|
+|`{{inviter.name}}`|Inviter's display name.|
+|`{{{site.url}}}`| Value of `home_url()`.| |
