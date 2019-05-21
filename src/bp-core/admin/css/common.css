@@ -256,6 +256,21 @@ TABLE OF CONTENTS:
   margin-left: 25px;
 }
 
+.buddyboss_page_bp-repair-community .section-default_data ul li.main {
+  border-bottom: 1px solid #EEEEEE;
+  margin: 0 0 10px;
+  padding: 5px 0;
+}
+
+.buddyboss_page_bp-repair-community .section-default_data ul li.main ul {
+  margin: 5px 0 0 20px;
+}
+
+.buddyboss_page_bp-repair-community .section-default_data #message ul.results li {
+  list-style: disc;
+  margin-left: 25px;
+}
+
 /*
  * 2.5 Settings - Tabs
  */
@@ -863,22 +878,22 @@ body.post-type-bp-email .categorydiv label {
 /*------------------------------------------------------------------------------
  * 5.0 Tools
  *----------------------------------------------------------------------------*/
-.buddyboss_page_bp-tools .wrap,
+.buddyboss_page_bp-repair-community .wrap,
 .buddyboss_page_bbp-repair .wrap {
   max-width: 950px;
 }
 
-.buddyboss_page_bp-tools p,
+.buddyboss_page_bp-repair-community p,
 .buddyboss_page_bbp-repair p {
   line-height: 2;
 }
 
-.buddyboss_page_bp-tools fieldset,
+.buddyboss_page_bp-repair-community fieldset,
 .buddyboss_page_bbp-repair fieldset {
   margin: 2em 0 0;
 }
 
-.buddyboss_page_bp-tools legend,
+.buddyboss_page_bp-repair-community legend,
 .buddyboss_page_bbp-repair legend {
   color: #23282d;
   font-size: 1.3em;
@@ -886,7 +901,7 @@ body.post-type-bp-email .categorydiv label {
   margin: 1em 0;
 }
 
-.buddyboss_page_bp-tools label,
+.buddyboss_page_bp-repair-community label,
 .buddyboss_page_bbp-repair label {
   clear: left;
   display: block;
@@ -895,17 +910,17 @@ body.post-type-bp-email .categorydiv label {
 }
 
 @media screen and (max-width: 782px) {
-  .buddyboss_page_bp-tools p,
+  .buddyboss_page_bp-repair-community p,
   .buddyboss_page_bbp-repair p {
     line-height: 1.5;
   }
-  .buddyboss_page_bp-tools label,
+  .buddyboss_page_bp-repair-community label,
   .buddyboss_page_bbp-repair label {
     margin-bottom: 1em;
     padding-right: 25px;
     text-indent: -33px;
   }
-  .buddyboss_page_bp-tools .checkbox,
+  .buddyboss_page_bp-repair-community .checkbox,
   .buddyboss_page_bbp-repair .checkbox {
     padding: 0 0 0 30px;
   }

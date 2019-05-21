@@ -2120,6 +2120,16 @@ add_action('admin_menu', 'bp_register_member_type_import_submenu_page');
  *
  */
 function bp_register_member_type_import_submenu_page() {
+
+	add_submenu_page(
+		null,   //or 'options.php'
+		__( 'Repair Community', 'buddyboss' ),
+		__( 'Repair Community', 'buddyboss' ),
+		'manage_options',
+		'bp-repair-community',
+		'bp_repair_community_submenu_page'
+	);
+
 	add_submenu_page(
 		null,   //or 'options.php'
 		'Import Member Types',
@@ -2624,6 +2634,12 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-repair-community', 'tab' => 'bp-repair-community' ), 'admin.php' ) ),
+		'name' => __( 'Repair Community', 'buddyboss' ),
+		'slug' => 'bp-repair-community'
+	);
+
+	$tabs[] = array(
 		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-member-type-import', 'tab' => 'bp-member-type-import' ), 'admin.php' ) ),
 		'name' => __( 'Import Profile Types', 'buddyboss' ),
 		'slug' => 'bp-member-type-import'
@@ -2631,7 +2647,7 @@ function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	return $tabs;
 }
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 20, 1 );
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 1, 1 );
 
 /**
  * Add the 'Site Notices' admin menu item.
@@ -2639,6 +2655,15 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_p
  * @since BuddyPress 3.0.0
  */
 function bp_import_profile_types_admin_menu() {
+
+	add_submenu_page(
+		'buddyboss-platform',
+		__( 'Repair Community', 'buddyboss' ),
+		__( 'Repair Community', 'buddyboss' ),
+		'manage_options',
+		'bp-repair-community',
+		'bp_repair_community_submenu_page'
+	);
 
 	add_submenu_page(
 		'buddyboss-platform',

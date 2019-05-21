@@ -136,7 +136,7 @@
 		}
 
 		// Set Tools selected on Import Profile Types Page.
-		if ( $('body.buddypress.buddyboss_page_bp-member-type-import').length ) {
+		if ( $('body.buddypress.buddyboss_page_bp-member-type-import').length || $('body.buddypress.buddyboss_page_bp-repair-community').length ) {
 			var selectorProfileImport= $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-tools"]');
 			$(menuOpen).removeClass('current');
 			$(selectorProfileImport).addClass('current');
