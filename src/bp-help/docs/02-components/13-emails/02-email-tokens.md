@@ -19,7 +19,7 @@ Global Tokens<a name="global-tokens"></a>
 |`{{{unsubscribe}}}`|Link to the recipient's email notifications settings screen in his or her user profile.|
 |`{{email.subject}}`|The subject line of the email.|
 
-Registration Tokens<a name="members-tokens"></a>
+Registration Tokens<a name="registration-tokens"></a>
 --------------
 
 ### \[{{{site.name}}}\] Activate your account
@@ -224,7 +224,7 @@ Situation: A member has replied to a comment on an activity update that the reci
 |`{{parent-comment-user.id}}`|The ID of the user who wrote the immediate parent comment.|
 |`{{commenter.id}}`|The ID of the user who posted the comment.|
 
-Private Message Tokens<a name="private-message-tokens"></a>
+Private Message Tokens<a name="message-tokens"></a>
 ----------------------
 
 ### {{{site.name}}}\] New message from {{sender.name}}
