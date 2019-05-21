@@ -96,8 +96,8 @@ function bp_admin_tools_default_data_save() {
 		}
 		?>
 
-		<div id="message" class="updated fade">
-			<p>
+        <div id="message" class="updated fade">
+            <p>
 				<?php
 				_e( 'Data was successfully imported', 'buddyboss' );
 				if ( count( $imported ) > 0 ) {
@@ -105,8 +105,8 @@ function bp_admin_tools_default_data_save() {
 					echo implode( '</li><li>', $imported );
 					echo '</li></ul>';
 				} ?>
-			</p>
-		</div>
+            </p>
+        </div>
 
 		<?php
 	}
@@ -130,6 +130,10 @@ function bp_admin_tools_default_data_save() {
 
 /**
  * Get plugin admin area root page: settings.php for WPMS and tool.php for WP.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ *
  * @return string
  */
 function bp_dd_get_root_admin_page() {
@@ -138,6 +142,8 @@ function bp_dd_get_root_admin_page() {
 
 /**
  * Delete all imported information.
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_clear_db() {
 
@@ -160,6 +166,8 @@ function bp_dd_clear_db() {
 
 /**
  * Delete all the members related data
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_members_related_data() {
 	// delete all the dummy members
@@ -171,6 +179,8 @@ function bp_dd_delete_dummy_members_related_data() {
 
 /**
  * Delete all the dummy members
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_members() {
 	/*
@@ -188,6 +198,8 @@ function bp_dd_delete_dummy_members() {
 
 /**
  * Delete all the forum dummy reply
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_reply() {
 	/**
@@ -203,6 +215,8 @@ function bp_dd_delete_dummy_reply() {
 
 /**
  * Delete all the forum dummy topic
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_topic() {
 	/**
@@ -219,6 +233,8 @@ function bp_dd_delete_dummy_topic() {
 
 /**
  * Delete all the forum dummy forum
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_forum() {
 
@@ -236,6 +252,8 @@ function bp_dd_delete_dummy_forum() {
 
 /**
  * Delete all the forum dummy groups
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_groups() {
 
@@ -252,6 +270,8 @@ function bp_dd_delete_dummy_groups() {
 
 /**
  * Delete all the BB dummy xprofile fields
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_dummy_xprofile() {
 	/*
@@ -265,6 +285,8 @@ function bp_dd_delete_dummy_xprofile() {
 
 /**
  * Fix the date issue, when all joined_group events took place at the same time.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param array $args Arguments that are passed to bp_activity_add().
  *
@@ -284,6 +306,8 @@ function bp_dd_groups_join_group_date_fix( $args ) {
 /**
  * Fix the date issue, when all member connections are done at the same time.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param string $current_time Default BuddyBoss current timestamp.
  *
  * @return string
@@ -294,6 +318,8 @@ function bp_dd_friends_add_friend_date_fix( $current_time ) {
 
 /**
  * Get the array (or a string) of group IDs.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param int $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
@@ -344,6 +370,8 @@ function bp_dd_get_random_groups_ids( $count = 1, $output = 'array' ) {
 /**
  * Get the array (or a string) of forums group IDs.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param int $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
@@ -382,6 +410,8 @@ function bp_dd_get_forums_enable_groups_ids( $count, $output = 'array' ) {
 
 /**
  * Get the array (or a string) of forum IDs.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param int $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
@@ -422,6 +452,8 @@ function bp_dd_get_random_forums_ids( $count = 1, $output = 'array' ) {
 /**
  * Get the array (or a string) of topics IDs.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param int $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
@@ -460,6 +492,8 @@ function bp_dd_get_random_topics_ids( $count = 1, $output = 'array' ) {
 
 /**
  * Get the array (or a string) of user IDs.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param int $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
@@ -506,6 +540,8 @@ function bp_dd_get_random_users_ids( $count = 1, $output = 'array' ) {
  * Get a random date between some days in history.
  * If [30;5] is specified - that means a random date between 30 and 5 days from now.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param int $days_from
  * @param int $days_to
  *
@@ -526,6 +562,8 @@ function bp_dd_get_random_date( $days_from = 30, $days_to = 0 ) {
 /**
  * Get the current timestamp, using current blog time settings.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @return int
  */
 function bp_dd_get_time() {
@@ -535,6 +573,8 @@ function bp_dd_get_time() {
 
 /**
  * Check whether something was imported or not.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param string $group Possible values: users, groups
  * @param string $import What exactly was imported
@@ -555,6 +595,8 @@ function bp_dd_is_imported( $group, $import ) {
 /**
  * Display a disabled attribute for inputs of the particular value was already imported.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param string $group
  * @param string $import
  */
@@ -571,6 +613,8 @@ function bp_dd_imported_disabled( $group, $import ) {
 
 /**
  * Save when the importing was done.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param string $group
  * @param string $import
@@ -593,6 +637,8 @@ function bp_dd_update_import( $group, $import ) {
 
 /**
  * Remove all imported ids and the indication, that importing was done.
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_import_records() {
 	bp_delete_option( 'bp_dd_import_users' );
@@ -613,6 +659,8 @@ function bp_dd_delete_import_records() {
 
 /**
  *  Importer engine - USERS
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_import_users() {
 	$users = array();
@@ -669,6 +717,8 @@ function bp_dd_import_users() {
 
 /**
  * Import extended profile fields.
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @return int
  */
@@ -772,6 +822,8 @@ function bp_dd_import_users_profile() {
 /**
  * Import private messages between users.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @return array
  */
 function bp_dd_import_users_messages() {
@@ -836,6 +888,8 @@ function bp_dd_import_users_messages() {
 /**
  * Import Activity - aka "status updates".
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @return int Number of activity records that were inserted into the database.
  */
 function bp_dd_import_users_activity() {
@@ -873,6 +927,8 @@ function bp_dd_import_users_activity() {
 /**
  * Get random users from the DB and generate member connections.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @return int
  */
 function bp_dd_import_users_friends() {
@@ -904,6 +960,8 @@ function bp_dd_import_users_friends() {
 /**
  *  Importer engine - GROUPS
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param bool|array $users Users list we want to work with. Get random if empty.
  *
  * @return array
@@ -926,7 +984,7 @@ function bp_dd_import_groups( $users = false ) {
 	$cover_image_url   = $image_url . 'cover/';
 	$avatars_image_url = $image_url . 'avatars/';
 
-	require( BP_DEFAULT_DATA_DIR. '/data/groups.php' );
+	require( BP_DEFAULT_DATA_DIR . '/data/groups.php' );
 
 	foreach ( $groups as $group ) {
 		$creator_id = is_object( $users[ array_rand( $users ) ] ) ? $users[ array_rand( $users ) ]->ID : $users[ array_rand( $users ) ];
@@ -969,6 +1027,8 @@ function bp_dd_import_groups( $users = false ) {
 
 /**
  * Import groups activity - aka "status updates".
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @return int
  */
@@ -1014,6 +1074,8 @@ function bp_dd_import_groups_activity() {
 /**
  * Import groups members.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param bool $groups We can import random groups or work with a predefined list.
  *
  * @return array
@@ -1049,6 +1111,8 @@ function bp_dd_import_groups_members( $groups = false ) {
 /**
  * Create forums
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param $forum
  * @param array $users
  *
@@ -1079,6 +1143,8 @@ function bp_dd_create_forums( $forum, $users = array() ) {
 
 /**
  *  Importer engine - FORMS
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param bool|array $users Users list we want to work with. Get random if empty.
  *
@@ -1119,6 +1185,8 @@ function bp_dd_import_forums( $users = false ) {
 /**
  * Function to create topic inside forums
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param $topic_data
  * @param $forum_id
  * @param array $users
@@ -1151,6 +1219,8 @@ function bp_dd_create_forums_topics( $topic_data, $forum_id, $users = array() ) 
 /**
  * Import topics in to forums.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param bool $forums We can import random groups or work with a predefined list.
  *
  * @return array
@@ -1169,7 +1239,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require( BP_DEFAULT_DATA_DIR. 'data/forums_topics.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/forums_topics.php' );
 	foreach ( $forums as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
 		foreach ( $topic as $topic_key ) {
@@ -1194,6 +1264,8 @@ function bp_dd_import_forums_topics( $forums = false ) {
 
 /**
  * Return Reply ID
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param $reply_data
  * @param $topic_id
@@ -1232,6 +1304,8 @@ function bp_dd_create_forums_topics_replies( $reply_data, $topic_id, $users = ar
 /**
  * Import replies in to forums.
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param bool $forums We can import random groups or work with a predefined list.
  *
  * @return array
@@ -1250,7 +1324,7 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require( BP_DEFAULT_DATA_DIR. 'data/forums_replies.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/forums_replies.php' );
 
 	foreach ( $topics as $topic_id ) {
 
@@ -1277,6 +1351,8 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 
 /**
  * Import Forums in Groups
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_import_forums_in_groups() {
 	$topics     = array();
@@ -1321,7 +1397,7 @@ function bp_dd_import_forums_in_groups() {
 		bp_update_option( 'bp_dd_imported_forum_ids', array_merge( $forum_ids, bp_get_option( 'bp_dd_imported_forum_ids', array() ) ) );
 	}
 
-	require( BP_DEFAULT_DATA_DIR. 'data/forums_topics.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/forums_topics.php' );
 
 	foreach ( $forum_ids as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );

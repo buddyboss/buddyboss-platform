@@ -1184,6 +1184,8 @@ function bp_core_set_bbpress_buddypress_active( $value, $option ) {
 /**
  * Filter to update group cover images
  *
+ * @since BuddyBoss 1.0.0
+ *
  * @param array $attachment_data
  * @param array $param
  *
@@ -1219,6 +1221,8 @@ add_filter( 'bp_attachments_pre_get_attachment', 'bp_dd_update_group_cover_image
 
 /**
  * Delete the group cover photo attachment
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_group_cover_images_url( $group_id ) {
 	if ( ! empty( $group_id ) ) {
@@ -1231,6 +1235,8 @@ add_action( 'groups_cover_image_uploaded', 'bp_dd_delete_group_cover_images_url'
 
 /**
  * Delete the user cover photo attachment
+ *
+ * @since BuddyBoss 1.0.0
  */
 function bp_dd_delete_xprofile_cover_images_url( $user_id ) {
 	if ( ! empty( $user_id ) ) {
@@ -1244,6 +1250,8 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
 
 /**
  * Create dummy path for Group and User
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param string $avatar_folder_dir
  * @param int $group_id
@@ -1277,6 +1285,8 @@ add_filter( 'bp_core_avatar_folder_dir', 'bp_dd_check_avatar_folder_dir', 0, 4 )
 
 /**
  * Get dummy URL from DB for Group and User
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param string $avatar_url
  * @param array $params
@@ -1312,6 +1322,8 @@ add_filter( 'bp_core_fetch_avatar_url_check', 'bp_dd_fetch_dummy_avatar_url', 10
 
 /**
  * Delete avatar of group and user
+ *
+ * @since BuddyBoss 1.0.0
  *
  * @param $args
  */
