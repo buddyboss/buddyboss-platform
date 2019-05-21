@@ -86,6 +86,7 @@ Situation: A member has requested permission to join a group.
 |`{{group.id}}`|ID of the group.|
 |`{{membership.id}}`|ID of the membership object.|
 |`{{requesting-user.id}}`|ID of the user who is requesting membership.|
+|`{{{member.card}}}`|Profile Card showing profile photo and other details about the user who is requesting membership.|
 
 ### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” accepted
 
@@ -244,6 +245,7 @@ Situation: A member has sent a friend request to the recipient.
 |`{{friendship.id}}`|ID of the friendship object.|
 |`{{friend.id}}`|ID of the request recipient.|
 |`{{initiator.id}}`|ID of the user who initiated the request.
+|`{{{member.card}}}`|Profile Card showing profile photo and other details about the user who initiated the request.|
 
 ### \[{{{site.name}}}\] {{friend.name}} accepted your request to connect
 
@@ -256,6 +258,8 @@ Situation: Recipient has had a friend request accepted by a member.
 |`{{friendship.id}}`|ID of the friendship object.|
 |`{{friend.id}}`|ID of the request recipient.|
 |`{{initiator.id}}`|ID of the user who initiated the request.|
+|`{{{member.card}}}`|Profile Card showing profile photo and other details about the request recipient.|
+
 
 Email Invite Tokens<a name="invite-tokens"></a>
 ------------
