@@ -22,7 +22,7 @@ Global Tokens
 Activity Tokens<a name="activity-tokens"></a>
 ---------------
 
-#### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
+### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
 
 Situation: Recipient was mentioned in an activity update.
 
@@ -33,7 +33,7 @@ Situation: Recipient was mentioned in an activity update.
 |`{{poster.name}}`|Display name of activity item author.|
 |`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
 
-#### \[{{{site.name}}}\] {{poster.name}} mentioned you in an update
+### \[{{{site.name}}}\] {{poster.name}} mentioned you in an update
 
 Situation: Recipient was mentioned in a **group** activity update.
 
@@ -45,7 +45,7 @@ Situation: Recipient was mentioned in a **group** activity update.
 |`{{group.name}}`|Name of the group housing the activity update. Empty if not in a group.|
 |`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
 
-#### \[{{{site.name}}}\] {{poster.name}} replied to one of your updates
+### \[{{{site.name}}}\] {{poster.name}} replied to one of your updates
 
 Situation: A member has replied to an activity update that the recipient posted.
 
@@ -58,7 +58,7 @@ Situation: A member has replied to an activity update that the recipient posted.
 |`{{commenter.id}}`|The ID of the user who posted the comment.|
 |`{{original_activity.user_id}}`|The ID of the user who wrote the original activity update.
 
-#### \[{{{site.name}}}\] {{poster.name}} replied to one of your comments
+### \[{{{site.name}}}\] {{poster.name}} replied to one of your comments
 
 Situation: A member has replied to a comment on an activity update that the recipient posted.
 
@@ -74,7 +74,7 @@ Situation: A member has replied to a comment on an activity update that the reci
 Members Tokens<a name="members-tokens"></a>
 --------------
 
-#### \[{{{site.name}}}\] Activate {{{user-site.url}}}
+### \[{{{site.name}}}\] Activate {{{user-site.url}}}
 
 Situation: Recipient has registered for an account and site.
 
@@ -88,7 +88,7 @@ Situation: Recipient has registered for an account and site.
 |`{{key_blog}}`|The activation key created in wpmu\_signup\_blog().|
 |`{{user.email}}`|The new user's email address.|
 
-#### \[{{{site.name}}}\] Activate your account
+### \[{{{site.name}}}\] Activate your account
 
 Situation: Recipient has registered for an account.
 
@@ -99,7 +99,7 @@ Situation: Recipient has registered for an account.
 |`{{user.email}}`|The new user's email address.|
 |`{{user.id}}`|The new user's ID.|
 
-#### \[{{{site.name}}}\] New friendship request from {{initiator.name}}
+### \[{{{site.name}}}\] New friendship request from {{initiator.name}}
 
 Situation: A member has sent a friend request to the recipient.
 
@@ -112,7 +112,7 @@ Situation: A member has sent a friend request to the recipient.
 |`{{friend.id}}`|ID of the request recipient.|
 |`{{initiator.id}}`|ID of the user who initiated the request.
 
-#### \[{{{site.name}}}\] {{friend.name}} accepted your friendship request
+### \[{{{site.name}}}\] {{friend.name}} accepted your friendship request
 
 Situation: Recipient has had a friend request accepted by a member.
 
@@ -124,7 +124,7 @@ Situation: Recipient has had a friend request accepted by a member.
 |`{{friend.id}}`|ID of the request recipient.|
 |`{{initiator.id}}`|ID of the user who initiated the request.|
 
-#### \[{{{site.name}}}\] Verify your new email address
+### \[{{{site.name}}}\] Verify your new email address
 
 Situation: Recipient has changed their email address.
 
@@ -138,7 +138,7 @@ Situation: Recipient has changed their email address.
 Private Message Tokens<a name="private-message-tokens"></a>
 ----------------------
 
-#### {{{site.name}}}\] New message from {{sender.name}}
+### {{{site.name}}}\] New message from {{sender.name}}
 
 Situation: Recipient has received a private message.
 
@@ -152,7 +152,7 @@ Situation: Recipient has received a private message.
 Group Tokens<a name="group-tokens"></a>
 ------------
 
-#### \[{{{site.name}}}\] Group details updated
+### \[{{{site.name}}}\] Group details updated
 
 Situation: A group's details were updated.
 
@@ -163,7 +163,7 @@ Situation: A group's details were updated.
 |`{{group.name}}`|Name of the group.|
 |`{{group.id}}`|ID of the group.|
 
-#### \[{{{site.name}}}\] Membership request for group: {{group.name}}
+### \[{{{site.name}}}\] Membership request for group: {{group.name}}
 
 Situation: A member has requested permission to join a group.
 
@@ -178,7 +178,7 @@ Situation: A member has requested permission to join a group.
 |`{{membership.id}}`|ID of the membership object.|
 |`{{requesting-user.id}}`|ID of the user who is requesting membership.|
 
-#### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” accepted
+### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” accepted
 
 Situation: Recipient had requested to join a group, which was accepted.
 
@@ -189,7 +189,7 @@ Situation: Recipient had requested to join a group, which was accepted.
 |`{{group.id}}`|ID of the group.|
 |`{{requesting-user.id}}`|ID of the user who is requesting membership.|
 
-#### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” rejected
+### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” rejected
 
 Situation: Recipient had requested to join a group, which was rejected.
 
@@ -200,7 +200,7 @@ Situation: Recipient had requested to join a group, which was rejected.
 |`{{group.id}}`|ID of the group.|
 |`{{requesting-user.id}}`|ID of the user who is requesting membership.|
 
-#### \[{{{site.name}}}\] You have been promoted in the group: “{{group.name}}”
+### \[{{{site.name}}}\] You have been promoted in the group: “{{group.name}}”
 
 Situation: Recipient's status within a group has changed.
 
@@ -212,7 +212,7 @@ Situation: Recipient's status within a group has changed.
 |`{{group.id}}`|ID of the group.|
 |`{{user.id}}`|ID of the promoted user.|
 
-#### \[{{{site.name}}}\] You have an invitation to the group: “{{group.name}}”
+### \[{{{site.name}}}\] You have an invitation to the group: “{{group.name}}”
 
 Situation: A member has sent a group invitation to the recipient.
 

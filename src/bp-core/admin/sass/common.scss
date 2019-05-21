@@ -1122,7 +1122,15 @@ body.post-type-bp-email .categorydiv label {
 
 	h1 {
 		font-weight: 500;
-		font-size: 25px;
+		font-size: 2em;
+	}
+
+	h2 {
+		font-size: 1.5em;
+	}
+
+	h3 {
+		font-size: 1.2em;
 	}
 
 	code {
@@ -1151,6 +1159,20 @@ body.post-type-bp-email .categorydiv label {
 
 	table {
 		border: 1px solid #eaeaea;
+		border-collapse: collapse;
+		width: 100%;
+		margin-bottom: 4em;
+	}
+
+	th {
+		background: #f9f9f9;
+		font-weight: 500;
+		border-bottom: 1px solid #eaeaea;
+	}
+
+	th,
+	td {
+		padding: 10px 12px;
 	}
 
 	img {

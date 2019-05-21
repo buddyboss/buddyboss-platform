@@ -1076,7 +1076,15 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-content h1 {
   font-weight: 500;
-  font-size: 25px;
+  font-size: 2em;
+}
+
+.bp-help-content h2 {
+  font-size: 1.5em;
+}
+
+.bp-help-content h3 {
+  font-size: 1.2em;
 }
 
 .bp-help-content code {
@@ -1105,6 +1113,20 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-content table {
   border: 1px solid #eaeaea;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 4em;
+}
+
+.bp-help-content th {
+  background: #f9f9f9;
+  font-weight: 500;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.bp-help-content th,
+.bp-help-content td {
+  padding: 10px 12px;
 }
 
 .bp-help-content img {
