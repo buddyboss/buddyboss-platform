@@ -224,7 +224,7 @@ Situation: A member has replied to a comment on an activity update that the reci
 |`{{parent-comment-user.id}}`|The ID of the user who wrote the immediate parent comment.|
 |`{{commenter.id}}`|The ID of the user who posted the comment.|
 
-Private Message Tokens<a name="message-tokens"></a>
+Private Messaging Tokens<a name="message-tokens"></a>
 ----------------------
 
 ### {{{site.name}}}\] New message from {{sender.name}}
@@ -269,7 +269,7 @@ Situation: Recipient has had a friend request accepted by a member.
 |`{{{member.card}}}`|Profile Card showing profile photo and other details about the request recipient.|
 
 
-Email Invite Tokens<a name="invite-tokens"></a>
+Invites Tokens<a name="invites-tokens"></a>
 ------------
 
 ###An invitation from {{inviter.name}} to join \[{{{site.name}}}\]
