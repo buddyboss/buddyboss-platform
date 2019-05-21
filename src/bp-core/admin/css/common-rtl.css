@@ -479,6 +479,7 @@ tr.bp-search-parent-field label {
 }
 
 /* Tools */
+.bp-admin-card.section-default_data h2:before,
 .bp-admin-card.section-repair_community h2:before,
 .bp-admin-card.section-repair_forums h2:before,
 body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
@@ -1115,7 +1116,7 @@ body.post-type-bp-email .categorydiv label {
   border: 1px solid #eaeaea;
   border-collapse: collapse;
   width: 100%;
-  margin-bottom: 4em;
+  margin-bottom: 3em;
 }
 
 .bp-help-content th {
