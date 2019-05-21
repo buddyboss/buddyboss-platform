@@ -247,40 +247,44 @@ TABLE OF CONTENTS:
 }
 
 .buddyboss_page_bp-tools {
+
 	.section-default_data {
+
 		ul li.main {
-			border-bottom: 1px solid #EEEEEE;
+			border-bottom: 1px solid #eee;
 			margin: 0 0 10px;
-			padding: 5px 0
+			padding: 5px 0;
 		}
 
 		ul li.main ul {
-			margin: 5px 0 0 20px
+			margin: 5px 0 0 20px;
 		}
 
 		#message ul.results li {
 			list-style: disc;
-			margin-left: 25px
+			margin-left: 25px;
 		}
 	}
 }
 
 
 .buddyboss_page_bp-repair-community {
+
 	.section-default_data {
+
 		ul li.main {
-			border-bottom: 1px solid #EEEEEE;
+			border-bottom: 1px solid #eee;
 			margin: 0 0 10px;
-			padding: 5px 0
+			padding: 5px 0;
 		}
 
 		ul li.main ul {
-			margin: 5px 0 0 20px
+			margin: 5px 0 0 20px;
 		}
 
 		#message ul.results li {
 			list-style: disc;
-			margin-left: 25px
+			margin-left: 25px;
 		}
 	}
 }
@@ -1000,7 +1004,7 @@ body.post-type-bp-email .categorydiv label {
 
 		h2 {
 			font-size: 18px;
-			padding: 0 ;
+			padding: 0;
 			margin: 0 0 1em;
 			line-height: 1.4;
 		}
@@ -1145,6 +1149,10 @@ body.post-type-bp-email .categorydiv label {
 		border-bottom: 1px solid #eaeaea;
 	}
 
+	table {
+		border: 1px solid #eaeaea;
+	}
+
 	img {
 		max-width: 100%;
 		width: auto;
@@ -1153,12 +1161,14 @@ body.post-type-bp-email .categorydiv label {
 		box-shadow: 0 3px 20px -1px rgba(7, 10, 25, 0.1);
 	}
 
-	.article-child  {
-		> ul > li{
+	.article-child {
+
+		> ul > li {
 			list-style-type: none;
 		}
 
-		.actions, .sub-menu-count {
+		.actions,
+		.sub-menu-count {
 			display: none;
 		}
 	}

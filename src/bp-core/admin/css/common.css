@@ -242,7 +242,7 @@ TABLE OF CONTENTS:
 }
 
 .buddyboss_page_bp-tools .section-default_data ul li.main {
-  border-bottom: 1px solid #EEEEEE;
+  border-bottom: 1px solid #eee;
   margin: 0 0 10px;
   padding: 5px 0;
 }
@@ -257,7 +257,7 @@ TABLE OF CONTENTS:
 }
 
 .buddyboss_page_bp-repair-community .section-default_data ul li.main {
-  border-bottom: 1px solid #EEEEEE;
+  border-bottom: 1px solid #eee;
   margin: 0 0 10px;
   padding: 5px 0;
 }
@@ -1103,6 +1103,10 @@ body.post-type-bp-email .categorydiv label {
   border-bottom: 1px solid #eaeaea;
 }
 
+.bp-help-content table {
+  border: 1px solid #eaeaea;
+}
+
 .bp-help-content img {
   max-width: 100%;
   width: auto;
@@ -1115,7 +1119,8 @@ body.post-type-bp-email .categorydiv label {
   list-style-type: none;
 }
 
-.bp-help-content .article-child .actions, .bp-help-content .article-child .sub-menu-count {
+.bp-help-content .article-child .actions,
+.bp-help-content .article-child .sub-menu-count {
   display: none;
 }
 
