@@ -1,20 +1,26 @@
 <?php
 
+/**
+ * Save dummy data value when dummy data add button is pressed
+ *
+ * @BuddyBoss 1.0.0
+ */
 function bp_admin_tools_default_data_save() {
-	if ( ! empty( $_POST['bpdd-admin-clear'] ) ) {
+
+	if ( ! empty( $_POST['bp-admin-clear'] ) ) {
 		bp_dd_clear_db();
 		echo '<div id="message" class="updated fade"><p>' . __( 'Everything was deleted.', 'buddyboss' ) . '</p></div>';
 	}
 
-	if ( isset( $_POST['bpdd-admin-submit'] ) ) {
+	if ( isset( $_POST['bp-admin-submit'] ) ) {
 		// Cound what we have just imported.
 		$imported = array();
 
 		// Check nonce before we do anything.
-		check_admin_referer( 'bpdd-admin' );
+		check_admin_referer( 'bp-admin-tools-default-data' );
 
 		// Import users
-		if ( isset( $_POST['bpdd']['import-users'] ) && ! bp_dd_is_imported( 'users', 'users' ) ) {
+		if ( isset( $_POST['bp']['import-users'] ) && ! bp_dd_is_imported( 'users', 'users' ) ) {
 			bp_dd_delete_dummy_members_related_data();
 			bp_delete_option( 'bp_dd_import_users' );
 			$users             = bp_dd_import_users();
@@ -22,67 +28,67 @@ function bp_admin_tools_default_data_save() {
 			bp_dd_update_import( 'users', 'users' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-profile'] ) && ! bp_dd_is_imported( 'users', 'xprofile' ) ) {
+		if ( isset( $_POST['bp']['import-profile'] ) && ! bp_dd_is_imported( 'users', 'xprofile' ) ) {
 			$profile             = bp_dd_import_users_profile();
 			$imported['profile'] = sprintf( __( '%s profile entries', 'buddyboss' ), number_format_i18n( $profile ) );
 			bp_dd_update_import( 'users', 'xprofile' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-friends'] ) && ! bp_dd_is_imported( 'users', 'friends' ) ) {
+		if ( isset( $_POST['bp']['import-friends'] ) && ! bp_dd_is_imported( 'users', 'friends' ) ) {
 			$friends             = bp_dd_import_users_friends();
 			$imported['friends'] = sprintf( __( '%s member connections', 'buddyboss' ), number_format_i18n( $friends ) );
 			bp_dd_update_import( 'users', 'friends' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-messages'] ) && ! bp_dd_is_imported( 'users', 'messages' ) ) {
+		if ( isset( $_POST['bp']['import-messages'] ) && ! bp_dd_is_imported( 'users', 'messages' ) ) {
 			$messages             = bp_dd_import_users_messages();
 			$imported['messages'] = sprintf( __( '%s private messages', 'buddyboss' ), number_format_i18n( count( $messages ) ) );
 			bp_dd_update_import( 'users', 'messages' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-activity'] ) && ! bp_dd_is_imported( 'users', 'activity' ) ) {
+		if ( isset( $_POST['bp']['import-activity'] ) && ! bp_dd_is_imported( 'users', 'activity' ) ) {
 			$activity             = bp_dd_import_users_activity();
 			$imported['activity'] = sprintf( __( '%s personal activity items', 'buddyboss' ), number_format_i18n( $activity ) );
 			bp_dd_update_import( 'users', 'activity' );
 		}
 
 		// Import groups
-		if ( isset( $_POST['bpdd']['import-groups'] ) && ! bp_dd_is_imported( 'groups', 'groups' ) ) {
+		if ( isset( $_POST['bp']['import-groups'] ) && ! bp_dd_is_imported( 'groups', 'groups' ) ) {
 			$groups             = bp_dd_import_groups();
 			$imported['groups'] = sprintf( __( '%s new social groups', 'buddyboss' ), number_format_i18n( count( $groups ) ) );
 			bp_dd_update_import( 'groups', 'groups' );
 		}
-		if ( isset( $_POST['bpdd']['import-g-members'] ) && ! bp_dd_is_imported( 'groups', 'members' ) ) {
+		if ( isset( $_POST['bp']['import-g-members'] ) && ! bp_dd_is_imported( 'groups', 'members' ) ) {
 			$g_members             = bp_dd_import_groups_members();
 			$imported['g_members'] = sprintf( __( '%s group members (1 user can be in several groups)', 'buddyboss' ), number_format_i18n( count( $g_members ) ) );
 			bp_dd_update_import( 'groups', 'members' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-g-activity'] ) && ! bp_dd_is_imported( 'groups', 'activity' ) ) {
+		if ( isset( $_POST['bp']['import-g-activity'] ) && ! bp_dd_is_imported( 'groups', 'activity' ) ) {
 			$g_activity             = bp_dd_import_groups_activity();
 			$imported['g_activity'] = sprintf( __( '%s group activity items', 'buddyboss' ), number_format_i18n( $g_activity ) );
 			bp_dd_update_import( 'groups', 'activity' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-forums'] ) && ! bp_dd_is_imported( 'forums', 'forums' ) ) {
+		if ( isset( $_POST['bp']['import-forums'] ) && ! bp_dd_is_imported( 'forums', 'forums' ) ) {
 			$forums             = bp_dd_import_forums();
 			$imported['forums'] = sprintf( __( '%s forums activity items', 'buddyboss' ), count( $forums ) );
 			bp_dd_update_import( 'forums', 'forums' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-f-topics'] ) && ! bp_dd_is_imported( 'forums', 'topics' ) ) {
+		if ( isset( $_POST['bp']['import-f-topics'] ) && ! bp_dd_is_imported( 'forums', 'topics' ) ) {
 			$topics               = bp_dd_import_forums_topics();
 			$imported['g_topics'] = sprintf( __( '%s discussion activity items', 'buddyboss' ), count( $topics ) );
 			bp_dd_update_import( 'forums', 'topics' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-f-replies'] ) && ! bp_dd_is_imported( 'forums', 'replies' ) ) {
+		if ( isset( $_POST['bp']['import-f-replies'] ) && ! bp_dd_is_imported( 'forums', 'replies' ) ) {
 			$topics                = bp_dd_import_forums_topics_replies();
 			$imported['g_replies'] = sprintf( __( '%s reply activity items', 'buddyboss' ), count( $topics ) );
 			bp_dd_update_import( 'forums', 'replies' );
 		}
 
-		if ( isset( $_POST['bpdd']['import-g-forums'] ) && ! bp_dd_is_imported( 'groups', 'forums' ) ) {
+		if ( isset( $_POST['bp']['import-g-forums'] ) && ! bp_dd_is_imported( 'groups', 'forums' ) ) {
 			$groupsforums         = bp_dd_import_forums_in_groups();
 			$imported['g_forums'] = sprintf( __( 'In %s group forums, discussions and replies were added', 'buddyboss' ), count( $groupsforums ) );
 			bp_dd_update_import( 'groups', 'forums' );
@@ -120,168 +126,7 @@ function bp_admin_tools_default_data_save() {
 			bbp_update_topic_reply_count( $topic_id );
 		}
 	}
-
-	if ( ! empty( $_POST['bpdd-admin-submit'] ) ) {
-		?>
-		<script type="text/javascript">
-			location.reload();
-		</script>
-		<?php
-	}
 }
-
-add_action( bp_core_admin_hook(), 'bp_admin_tools_default_data_save' );
-
-/**
- * Filter to update group cover images
- *
- * @param array $attachment_data
- * @param array $param
- *
- * @return array
- */
-function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
-
-	$group_id = ! empty( $param['item_id'] ) ? absint( $param['item_id'] ) : 0;
-
-	if ( ! empty( $group_id ) && isset( $param['type'] ) && 'cover-image' == $param['type'] ) {
-
-		// check in group
-		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] ) {
-			$cover_image = trim( groups_get_groupmeta( $group_id, 'cover-image' ) );
-			if ( ! empty( $cover_image ) ) {
-				$attachment_data = $cover_image;
-			}
-		}
-
-		// check for user
-		if ( isset( $param['object_dir'] ) && 'members' == $param['object_dir'] ) {
-			$cover_image = trim( bp_get_user_meta( $group_id, 'cover-image', true ) );
-			if ( ! empty( $cover_image ) ) {
-				$attachment_data = $cover_image;
-			}
-		}
-	}
-
-	return $attachment_data;
-}
-
-add_filter( 'bp_attachments_pre_get_attachment', 'bp_dd_update_group_cover_images_url', 0, 2 );
-
-/**
- * Delete the group cover photo attachment
- */
-function bp_dd_delete_group_cover_images_url( $group_id ) {
-	if ( ! empty( $group_id ) ) {
-		groups_delete_groupmeta( $group_id, 'cover-image' );
-	}
-}
-
-add_action( 'groups_cover_image_deleted', 'bp_dd_delete_group_cover_images_url', 10, 1 );
-add_action( 'groups_cover_image_uploaded', 'bp_dd_delete_group_cover_images_url', 10, 1 );
-
-/**
- * Delete the user cover photo attachment
- */
-function bp_dd_delete_xprofile_cover_images_url( $user_id ) {
-	if ( ! empty( $user_id ) ) {
-		bp_delete_user_meta( $user_id, 'cover-image' );
-	}
-}
-
-add_action( 'xprofile_cover_image_deleted', 'bp_dd_delete_xprofile_cover_images_url', 10, 1 );
-add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images_url', 10, 1 );
-
-
-/**
- * Create dummy path for Group and User
- *
- * @param string $avatar_folder_dir
- * @param int $group_id
- * @param array $object
- * @param string $avatar_dir
- *
- * @return string $avatar_url
- */
-function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
-
-	if ( ! empty( $group_id ) ) {
-		if ( 'group-avatars' == $avatar_dir ) {
-			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
-			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
-				wp_mkdir_p( $avatar_folder_dir );
-			}
-		}
-
-		if ( 'avatars' == $avatar_dir ) {
-			$avatars = trim( bp_get_user_meta( $group_id, 'avatars', true ) );
-			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
-				wp_mkdir_p( $avatar_folder_dir );
-			}
-		}
-	}
-
-	return $avatar_folder_dir;
-}
-
-add_filter( 'bp_core_avatar_folder_dir', 'bp_dd_check_avatar_folder_dir', 0, 4 );
-
-/**
- * Get dummy URL from DB for Group and User
- *
- * @param string $avatar_url
- * @param array $params
- *
- * @return string $avatar_url
- */
-function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
-	$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
-	if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
-
-		// check for groups avatar
-		if ( 'group-avatars' == $params['avatar_dir'] ) {
-			$cover_image = trim( groups_get_groupmeta( $item_id, 'avatars' ) );
-			if ( ! empty( $cover_image ) ) {
-				$avatar_url = $cover_image;
-			}
-		}
-
-		// check for user avatar
-		if ( 'avatars' == $params['avatar_dir'] ) {
-			$cover_image = trim( bp_get_user_meta( $item_id, 'avatars', true ) );
-			if ( ! empty( $cover_image ) ) {
-				$avatar_url = $cover_image;
-			}
-		}
-	}
-
-	return $avatar_url;
-}
-
-add_filter( 'bp_core_fetch_avatar_url_check', 'bp_dd_fetch_dummy_avatar_url', 0, 2 );
-
-/**
- * Delete avatar of group and user
- *
- * @param $args
- */
-function bp_dd_delete_avatar( $args ) {
-	$item_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
-	if ( ! empty( $item_id ) ) {
-
-		// check for user avatars getting deleted
-		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
-			bp_delete_user_meta( $item_id, 'avatars' );
-		}
-
-		// check for group avatars getting deleted
-		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
-			groups_delete_groupmeta( $item_id, 'avatars' );
-		}
-	}
-}
-
-add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
 
 /**
  * Get plugin admin area root page: settings.php for WPMS and tool.php for WP.
@@ -772,9 +617,9 @@ function bp_dd_delete_import_records() {
 function bp_dd_import_users() {
 	$users = array();
 
-	$users_data = require_once( dirname( __FILE__ ) . '/data/users.php' );
+	$users_data = require_once( BP_DEFAULT_DATA_DIR . 'data/users.php' );
 
-	$image_url         = BP_DD_PLUGIN_URL . 'data/images/members/';
+	$image_url         = BP_DEFAULT_DATA_URL . 'data/images/members/';
 	$cover_image_url   = $image_url . 'cover/';
 	$avatars_image_url = $image_url . 'avatars/';
 
@@ -836,7 +681,7 @@ function bp_dd_import_users_profile() {
 
 	$data = array();
 
-	$xprofile_structure = require_once( dirname( __FILE__ ) . '/data/xprofile_structure.php' );
+	$xprofile_structure = require_once( BP_DEFAULT_DATA_DIR . 'data/xprofile_structure.php' );
 
 	// Firstly, import profile groups.
 	foreach ( $xprofile_structure as $group_type => $group_data ) {
@@ -887,7 +732,7 @@ function bp_dd_import_users_profile() {
 		}
 	}
 
-	$xprofile_data = require_once( dirname( __FILE__ ) . '/data/xprofile_data.php' );
+	$xprofile_data = require_once( BP_DEFAULT_DATA_DIR . 'data/xprofile_data.php' );
 	$users         = bp_dd_get_random_users_ids( 0 );
 
 	// Now import profile fields data for all fields for each user.
@@ -938,7 +783,7 @@ function bp_dd_import_users_messages() {
 
 	/** @var $messages_subjects array */
 	/** @var $messages_content array */
-	require( dirname( __FILE__ ) . '/data/messages.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/messages.php' );
 
 
 	// first level messages
@@ -1003,7 +848,7 @@ function bp_dd_import_users_activity() {
 	$users = bp_dd_get_random_users_ids( 0 );
 
 	/** @var $activity array */
-	require( dirname( __FILE__ ) . '/data/activity.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/activity.php' );
 
 	for ( $i = 0; $i < 75; $i ++ ) {
 		$user    = $users[ array_rand( $users ) ];
@@ -1077,11 +922,11 @@ function bp_dd_import_groups( $users = false ) {
 		$users = get_users();
 	}
 
-	$image_url         = BP_DD_PLUGIN_URL . 'data/images/groups/';
+	$image_url         = BP_DEFAULT_DATA_URL . 'data/images/groups/';
 	$cover_image_url   = $image_url . 'cover/';
 	$avatars_image_url = $image_url . 'avatars/';
 
-	require( dirname( __FILE__ ) . '/data/groups.php' );
+	require( BP_DEFAULT_DATA_DIR. '/data/groups.php' );
 
 	foreach ( $groups as $group ) {
 		$creator_id = is_object( $users[ array_rand( $users ) ] ) ? $users[ array_rand( $users ) ]->ID : $users[ array_rand( $users ) ];
@@ -1138,7 +983,7 @@ function bp_dd_import_groups_activity() {
 	$groups = bp_dd_get_random_groups_ids( 0 );
 
 	/** @var $activity array */
-	require( dirname( __FILE__ ) . '/data/activity.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/activity.php' );
 
 	for ( $i = 0; $i < 150; $i ++ ) {
 		$user_id  = $users[ array_rand( $users ) ];
@@ -1252,7 +1097,7 @@ function bp_dd_import_forums( $users = false ) {
 		$users = bp_dd_get_random_users_ids( 0 );
 	}
 
-	require( dirname( __FILE__ ) . '/data/forums.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/forums.php' );
 
 	foreach ( $forums as $forum ) {
 
@@ -1324,7 +1169,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require( dirname( __FILE__ ) . '/data/forums_topics.php' );
+	require( BP_DEFAULT_DATA_DIR. 'data/forums_topics.php' );
 	foreach ( $forums as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
 		foreach ( $topic as $topic_key ) {
@@ -1405,7 +1250,7 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require( dirname( __FILE__ ) . '/data/forums_replies.php' );
+	require( BP_DEFAULT_DATA_DIR. 'data/forums_replies.php' );
 
 	foreach ( $topics as $topic_id ) {
 
@@ -1476,7 +1321,7 @@ function bp_dd_import_forums_in_groups() {
 		bp_update_option( 'bp_dd_imported_forum_ids', array_merge( $forum_ids, bp_get_option( 'bp_dd_imported_forum_ids', array() ) ) );
 	}
 
-	require( dirname( __FILE__ ) . '/data/forums_topics.php' );
+	require( BP_DEFAULT_DATA_DIR. 'data/forums_topics.php' );
 
 	foreach ( $forum_ids as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
@@ -1494,7 +1339,7 @@ function bp_dd_import_forums_in_groups() {
 
 	bp_update_option( 'bp_dd_imported_topic_ids', array_merge( $topics_ids, bp_get_option( 'bp_dd_imported_topic_ids', array() ) ) );
 
-	require( dirname( __FILE__ ) . '/data/forums_replies.php' );
+	require( BP_DEFAULT_DATA_DIR . 'data/forums_replies.php' );
 
 	foreach ( $topics_ids as $topic_id ) {
 		$reply = (array) array_rand( $replies, absint( rand( 1, 7 ) ) );
