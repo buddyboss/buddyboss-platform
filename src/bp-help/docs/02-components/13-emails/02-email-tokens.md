@@ -58,88 +58,6 @@ Situation: Recipient has changed their email address.
 |`{{old-user.email}}`|The user's previous email address.|
 |`{{user.email}}`|The user's new email address.|
 
-Connection Tokens<a name="connection-tokens"></a>
---------------
-
-### \[{{{site.name}}}\] New request to connect from {{initiator.name}}
-
-Situation: A member has sent a friend request to the recipient.
-
-|Token|Description|
-|---|---|
-|`{{{friend-requests.url}}}`|Link to the user's friendship request management screen.|
-|`{{{initiator.url}}}`|The initiator's user profile.|
-|`{{initiator.name}}`|Display name of the initiator.|
-|`{{friendship.id}}`|ID of the friendship object.|
-|`{{friend.id}}`|ID of the request recipient.|
-|`{{initiator.id}}`|ID of the user who initiated the request.
-
-### \[{{{site.name}}}\] {{friend.name}} accepted your request to connect
-
-Situation: Recipient has had a friend request accepted by a member.
-
-|Token|Description|
-|---|---|
-|`{{{friendship.url}}}`|Link to the request recipient's user profile.|
-|`{{friend.name}}`|Display name of the request recipient.|
-|`{{friendship.id}}`|ID of the friendship object.|
-|`{{friend.id}}`|ID of the request recipient.|
-|`{{initiator.id}}`|ID of the user who initiated the request.|
-
-Activity Tokens<a name="activity-tokens"></a>
--------------
-
-### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
-
-Situation: Recipient was mentioned in an activity update.
-
-|Token|Description|
-|---|---|
-|`{{usermessage}}`|The content of the activity update.|
-|`{{{mentioned.url}}}`|Permalink to the activity item.|
-|`{{poster.name}}`|Display name of activity item author.|
-|`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
-
-### \[{{{site.name}}}\] {{poster.name}} replied to one of your updates
-
-Situation: A member has replied to an activity update that the recipient posted.
-
-|Token|Description|
-|---|---|
-|`{{usermessage}}`|The content of the comment.|
-|`{{poster.name}}`|Display name of comment author.|
-|`{{{thread.url}}}`|Permalink to the original activity item thread.|
-|`{{comment.id}}`|The comment ID.|
-|`{{commenter.id}}`|The ID of the user who posted the comment.|
-|`{{original_activity.user_id}}`|The ID of the user who wrote the original activity update.
-
-### \[{{{site.name}}}\] {{poster.name}} replied to one of your comments
-
-Situation: A member has replied to a comment on an activity update that the recipient posted.
-
-|Token|Description|
-|---|---|
-|`{{usermessage}}`|The content of the comment.|
-|`{{poster.name}}`|Display name of comment author.|
-|`{{{thread.url}}}`|Permalink to the original activity item thread.|
-|`{{comment.id}}`|The comment ID.|
-|`{{parent-comment-user.id}}`|The ID of the user who wrote the immediate parent comment.|
-|`{{commenter.id}}`|The ID of the user who posted the comment.|
-
-Private Message Tokens<a name="private-message-tokens"></a>
-----------------------
-
-### {{{site.name}}}\] New message from {{sender.name}}
-
-Situation: Recipient has received a private message.
-
-|Token|Description|
-|---|---|
-|`{{usersubject}}`|The subject of the message.|
-|`{{usermessage}}`|The content of the message.|
-|`{{{message.url}}}`|Link to the message thread.|
-|`{{sender.name}}`|Display name of the message sender.|
-
 Group Tokens<a name="group-tokens"></a>
 ------------
 
@@ -256,6 +174,88 @@ Situation: A member has replied to a forum discussion that the participant is fo
 |`{{discussion.url}}`|Link to the discussion containing the reply.|
 |`{{discussion.title}}`|Name of the discussion containing the reply.|
 |`{{{reply.content}}}`|Content of the discussion reply.|
+
+Activity Tokens<a name="activity-tokens"></a>
+-------------
+
+### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
+
+Situation: Recipient was mentioned in an activity update.
+
+|Token|Description|
+|---|---|
+|`{{usermessage}}`|The content of the activity update.|
+|`{{{mentioned.url}}}`|Permalink to the activity item.|
+|`{{poster.name}}`|Display name of activity item author.|
+|`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
+
+### \[{{{site.name}}}\] {{poster.name}} replied to one of your updates
+
+Situation: A member has replied to an activity update that the recipient posted.
+
+|Token|Description|
+|---|---|
+|`{{usermessage}}`|The content of the comment.|
+|`{{poster.name}}`|Display name of comment author.|
+|`{{{thread.url}}}`|Permalink to the original activity item thread.|
+|`{{comment.id}}`|The comment ID.|
+|`{{commenter.id}}`|The ID of the user who posted the comment.|
+|`{{original_activity.user_id}}`|The ID of the user who wrote the original activity update.
+
+### \[{{{site.name}}}\] {{poster.name}} replied to one of your comments
+
+Situation: A member has replied to a comment on an activity update that the recipient posted.
+
+|Token|Description|
+|---|---|
+|`{{usermessage}}`|The content of the comment.|
+|`{{poster.name}}`|Display name of comment author.|
+|`{{{thread.url}}}`|Permalink to the original activity item thread.|
+|`{{comment.id}}`|The comment ID.|
+|`{{parent-comment-user.id}}`|The ID of the user who wrote the immediate parent comment.|
+|`{{commenter.id}}`|The ID of the user who posted the comment.|
+
+Private Message Tokens<a name="private-message-tokens"></a>
+----------------------
+
+### {{{site.name}}}\] New message from {{sender.name}}
+
+Situation: Recipient has received a private message.
+
+|Token|Description|
+|---|---|
+|`{{usersubject}}`|The subject of the message.|
+|`{{usermessage}}`|The content of the message.|
+|`{{{message.url}}}`|Link to the message thread.|
+|`{{sender.name}}`|Display name of the message sender.|
+
+Connection Tokens<a name="connection-tokens"></a>
+--------------
+
+### \[{{{site.name}}}\] New request to connect from {{initiator.name}}
+
+Situation: A member has sent a friend request to the recipient.
+
+|Token|Description|
+|---|---|
+|`{{{friend-requests.url}}}`|Link to the user's friendship request management screen.|
+|`{{{initiator.url}}}`|The initiator's user profile.|
+|`{{initiator.name}}`|Display name of the initiator.|
+|`{{friendship.id}}`|ID of the friendship object.|
+|`{{friend.id}}`|ID of the request recipient.|
+|`{{initiator.id}}`|ID of the user who initiated the request.
+
+### \[{{{site.name}}}\] {{friend.name}} accepted your request to connect
+
+Situation: Recipient has had a friend request accepted by a member.
+
+|Token|Description|
+|---|---|
+|`{{{friendship.url}}}`|Link to the request recipient's user profile.|
+|`{{friend.name}}`|Display name of the request recipient.|
+|`{{friendship.id}}`|ID of the friendship object.|
+|`{{friend.id}}`|ID of the request recipient.|
+|`{{initiator.id}}`|ID of the user who initiated the request.|
 
 Email Invite Tokens<a name="invite-tokens"></a>
 ------------
