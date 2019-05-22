@@ -11,8 +11,6 @@ return array(
 		'first_name'   => 'Alyssa',
 		'last_name'    => 'Sophia',
 		'email'        => 'alyssa@demos.buddyboss.com',
-		'avatars'      => 'alyssa.png',
-		'cover-image'  => 'alyssa.png',
 	),
 	array(
 		'login'        => 'bb-arianna',
@@ -20,8 +18,6 @@ return array(
 		'first_name'   => 'Arianna',
 		'last_name'    => 'Julie',
 		'email'        => 'arianna@demos.buddyboss.com',
-		'avatars'      => 'arianna.png',
-		'cover-image'  => 'alyssa.png',
 	),
 	array(
 		'login'        => 'bb-charles',
@@ -29,7 +25,6 @@ return array(
 		'first_name'   => 'Charles',
 		'last_name'    => 'Brayden',
 		'email'        => 'charles@demos.buddyboss.com',
-		'avatars'      => 'charles.png',
 	),
 	array(
 		'login'        => 'bb-emily',
@@ -37,7 +32,6 @@ return array(
 		'first_name'   => 'Emily',
 		'last_name'    => 'Olivia',
 		'email'        => 'emily@demos.buddyboss.com',
-		'cover-image'  => 'emily.png',
 	),
 	array(
 		'login'        => 'bb-jennifer',
@@ -45,7 +39,6 @@ return array(
 		'first_name'   => 'Jennifer',
 		'last_name'    => 'Barbara',
 		'email'        => 'jennifer@demos.buddyboss.com',
-		'cover-image'  => 'jennifer.png',
 	),
 	array(
 		'login'        => 'bb-jessica',
