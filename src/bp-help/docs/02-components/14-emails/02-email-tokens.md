@@ -21,7 +21,8 @@ Global Tokens<a name="global-tokens"></a>
 |`{{{unsubscribe}}}`|Link to the recipient's email notifications settings screen in his or her user profile.|
 |`{{email.subject}}`|The subject line of the email.|
 
-Registration Tokens<a name="registration-tokens"></a>
+<a name="registration-tokens"></a>
+[bp_docs_link text="Registration Tokens" slug="components/registration/registration-emails.md"]
 --------------
 
 ### \[{{{site.name}}}\] Activate your account
@@ -60,8 +61,10 @@ Registration Tokens<a name="registration-tokens"></a>
 |`{{old-user.email}}`|The user's previous email address.|
 |`{{user.email}}`|The user's new email address.|
 
-Group Tokens<a name="group-tokens"></a>
-------------
+
+<a name="group-tokens"></a>
+[bp_docs_link text="Group Tokens" slug="components/groups/group-emails.md"]
+--------------
 
 ### \[{{{site.name}}}\] Group details updated
 
@@ -156,8 +159,9 @@ Group Tokens<a name="group-tokens"></a>
 |`{{group.name}}`|Name of the group housing the activity update. Empty if not in a group.|
 |`{{receiver-user.id}}`|The ID of the user who is receiving the update.|
 
-Forum Tokens<a name="forum-tokens"></a>
-------------
+<a name="forum-tokens"></a>
+[bp_docs_link text="Forum Tokens" slug="components/forums/forum-emails.md"]
+--------------
 
 ###\[{{{site.name}}}\] New discussion: {{discussion.title}}
 
@@ -186,8 +190,9 @@ Forum Tokens<a name="forum-tokens"></a>
 |`{{discussion.title}}`|Name of the discussion containing the reply.|
 |`{{{reply.content}}}`|Content of the discussion reply.|
 
-Activity Tokens<a name="activity-tokens"></a>
--------------
+<a name="activity-tokens"></a>
+[bp_docs_link text="Activity Tokens" slug="components/activity/activity-emails.md"]
+--------------
 
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
 
@@ -226,8 +231,9 @@ Activity Tokens<a name="activity-tokens"></a>
 |`{{parent-comment-user.id}}`|The ID of the user who wrote the immediate parent comment.|
 |`{{commenter.id}}`|The ID of the user who posted the comment.|
 
-Private Messaging Tokens<a name="message-tokens"></a>
-----------------------
+<a name="messaging-tokens"></a>
+[bp_docs_link text="Private Messaging Tokens" slug="components/messaging/messaging-emails.md"]
+--------------
 
 ### {{{site.name}}}\] New message from {{sender.name}}
 
@@ -239,7 +245,8 @@ Private Messaging Tokens<a name="message-tokens"></a>
 |`{{{message}}}`|The content of the message.|
 |`{{{message.url}}}`|Link to the message thread.|
 
-Connection Tokens<a name="connection-tokens"></a>
+<a name="connection-tokens"></a>
+[bp_docs_link text="Connection Tokens" slug="components/connections/connection-emails.md"]
 --------------
 
 ### \[{{{site.name}}}\] New request to connect from {{initiator.name}}
@@ -269,9 +276,9 @@ Connection Tokens<a name="connection-tokens"></a>
 |`{{initiator.id}}`|ID of the user who initiated the request.|
 |`{{{member.card}}}`|Profile Card showing profile photo and other details about the request recipient.|
 
-
-Invites Tokens<a name="invites-tokens"></a>
-------------
+<a name="invites-tokens"></a>
+[bp_docs_link text="Invites Tokens" slug="components/invites/invites-emails.md"]
+--------------
 
 ###An invitation from {{inviter.name}} to join \[{{{site.name}}}\]
 
