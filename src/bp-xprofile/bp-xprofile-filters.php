@@ -175,10 +175,11 @@ function xprofile_filter_kses( $content, $data_obj = null ) {
  *
  * @since BuddyPress 1.2.6
  *
- * @param string      $field_value Field value being santized.
- * @param int         $field_id    Field ID being sanitized.
- * @param bool        $reserialize Whether to reserialize arrays before returning. Defaults to true.
- * @param object|null $data_obj    The BP_XProfile_ProfileData object.
+ * @param string $field_value Field value being santized.
+ * @param int $field_id Field ID being sanitized.
+ * @param bool $reserialize Whether to reserialize arrays before returning. Defaults to true.
+ * @param object|null $data_obj The BP_XProfile_ProfileData object.
+ *
  * @return string
  */
 function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, $reserialize = true, $data_obj = null ) {
@@ -188,11 +189,13 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 		return $field_value;
 	}
 
-	$fields = xprofile_get_field( $data_obj->field_id, null, false );
+	if ( ! empty( $data_obj->field_id ) ) {
+		$fields = xprofile_get_field( $data_obj->field_id, null, false );
 
-	// Allows storing the 'facebook', 'twitter' and so on as array keys in the data.
-	if ( 'socialnetworks' === $fields->type ) {
-		return $field_value;
+		// Allows storing the 'facebook', 'twitter' and so on as array keys in the data.
+		if ( 'socialnetworks' === $fields->type ) {
+			return $field_value;
+		}
 	}
 
 	// Force reserialization if serialized (avoids mutation, retains integrity)
@@ -213,13 +216,13 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 		 *
 		 * @since BuddyPress 1.5.0
 		 *
-		 * @param string                  $filtered_field_value The filtered value.
-		 * @param string                  $field_value          The original value before filtering.
-		 * @param BP_XProfile_ProfileData $data_obj             The BP_XProfile_ProfileData object.
+		 * @param string $filtered_field_value The filtered value.
+		 * @param string $field_value The original value before filtering.
+		 * @param BP_XProfile_ProfileData $data_obj The BP_XProfile_ProfileData object.
 		 */
 		$filtered_field_value = apply_filters( 'xprofile_filtered_data_value_before_save', $filtered_field_value, $field_value, $data_obj );
 
-	// Sanitize multiple individual option values.
+		// Sanitize multiple individual option values.
 	} else {
 		$filtered_values = array();
 		foreach ( (array) $field_value as $value ) {
@@ -230,7 +233,7 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 			$filtered_values[] = apply_filters( 'xprofile_filtered_data_value_before_save', $filtered_value, $value, $data_obj );
 		}
 
-		if ( !empty( $reserialize ) ) {
+		if ( ! empty( $reserialize ) ) {
 			$filtered_field_value = serialize( $filtered_values );
 		} else {
 			$filtered_field_value = $filtered_values;
