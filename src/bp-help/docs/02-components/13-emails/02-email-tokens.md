@@ -4,6 +4,8 @@ Site admins can easily edit the content of email notifications by using tokens w
 
 Some tokens can be used in any message while others are restricted due to context of each type of message. Tokens can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Tokens wrapped in three curly braces are not escaped on merging which is important for including certain content such as links.
 
+---
+
 Global Tokens<a name="global-tokens"></a>
 --------------
 
@@ -24,7 +26,7 @@ Registration Tokens<a name="registration-tokens"></a>
 
 ### \[{{{site.name}}}\] Activate your account
 
-Situation: Recipient has registered for an account.
+**Situation:** Recipient has registered for an account.
 
 |Token|Description|
 |---|---|
@@ -35,7 +37,7 @@ Situation: Recipient has registered for an account.
 
 ### \[{{{site.name}}}\] Activate {{{user-site.url}}}
 
-Situation: Recipient has registered for an account and site (multisite only).
+**Situation:** Recipient has registered for an account and site (multisite only).
 
 |Token|Description|
 |---|---|
@@ -49,7 +51,7 @@ Situation: Recipient has registered for an account and site (multisite only).
 
 ### \[{{{site.name}}}\] Verify your new email address
 
-Situation: Recipient has changed their email address.
+**Situation:** Recipient has changed their email address.
 
 |Token|Description|
 |---|---|
@@ -63,7 +65,7 @@ Group Tokens<a name="group-tokens"></a>
 
 ### \[{{{site.name}}}\] Group details updated
 
-Situation: A group's details were updated.
+**Situation:** A group's details were updated.
 
 |Token|Description|
 |---|---|
@@ -77,7 +79,7 @@ Situation: A group's details were updated.
 
 ### \[{{{site.name}}}\] Membership request for group: {{group.name}}
 
-Situation: A member has requested permission to join a group.
+**Situation:** A member has requested permission to join a group.
 
 |Token|Description|
 |---|---|
@@ -93,7 +95,7 @@ Situation: A member has requested permission to join a group.
 
 ### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” accepted
 
-Situation: Recipient had requested to join a group, which was accepted.
+**Situation:** Recipient had requested to join a group, which was accepted.
 
 |Token|Description|
 |---|---|
@@ -105,7 +107,7 @@ Situation: Recipient had requested to join a group, which was accepted.
 
 ### Title: \[{{{site.name}}}\] Membership request for group “{{group.name}}” rejected
 
-Situation: Recipient had requested to join a group, which was rejected.
+**Situation:** Recipient had requested to join a group, which was rejected.
 
 |Token|Description|
 |---|---|
@@ -117,7 +119,7 @@ Situation: Recipient had requested to join a group, which was rejected.
 
 ### \[{{{site.name}}}\] You have been promoted in the group: “{{group.name}}”
 
-Situation: Recipient's status within a group has changed.
+**Situation:** Recipient's status within a group has changed.
 
 |Token|Description|
 |---|---|
@@ -130,7 +132,7 @@ Situation: Recipient's status within a group has changed.
 
 ### \[{{{site.name}}}\] You have an invitation to the group: “{{group.name}}”
 
-Situation: A member has sent a group invitation to the recipient.
+**Situation:** A member has sent a group invitation to the recipient.
 
 |Token|Description|
 |---|---|
@@ -144,7 +146,7 @@ Situation: A member has sent a group invitation to the recipient.
 
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a group update
 
-Situation: Recipient was mentioned in a group activity update.
+**Situation:** Recipient was mentioned in a group activity update.
 
 |Token|Description|
 |---|---|
@@ -159,7 +161,7 @@ Forum Tokens<a name="forum-tokens"></a>
 
 ###\[{{{site.name}}}\] New discussion: {{discussion.title}}
 
-Situation: A member has created a new forum discussion.
+**Situation:** A member has created a new forum discussion.
 
 |Token|Description|
 |---|---|
@@ -173,7 +175,7 @@ Situation: A member has created a new forum discussion.
 
 ###\[{{{site.name}}}\] {{poster.name}} replied to one of your forum discussions
 
-Situation: A member has replied to a forum discussion that the participant is following.
+**Situation:** A member has replied to a forum discussion that the participant is following.
 
 |Token|Description|
 |---|---|
@@ -189,7 +191,7 @@ Activity Tokens<a name="activity-tokens"></a>
 
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a status update
 
-Situation: Recipient was mentioned in an activity update.
+**Situation:** Recipient was mentioned in an activity update.
 
 |Token|Description|
 |---|---|
@@ -200,7 +202,7 @@ Situation: Recipient was mentioned in an activity update.
 
 ### \[{{{site.name}}}\] {{poster.name}} replied to one of your updates
 
-Situation: A member has replied to an activity update that the recipient posted.
+**Situation:** A member has replied to an activity update that the recipient posted.
 
 |Token|Description|
 |---|---|
@@ -213,7 +215,7 @@ Situation: A member has replied to an activity update that the recipient posted.
 
 ### \[{{{site.name}}}\] {{poster.name}} replied to one of your comments
 
-Situation: A member has replied to a comment on an activity update that the recipient posted.
+**Situation:** A member has replied to a comment on an activity update that the recipient posted.
 
 |Token|Description|
 |---|---|
@@ -229,7 +231,7 @@ Private Messaging Tokens<a name="message-tokens"></a>
 
 ### {{{site.name}}}\] New message from {{sender.name}}
 
-Situation: Recipient has received a private message.
+**Situation:** Recipient has received a private message.
 
 |Token|Description|
 |---|---|
@@ -243,7 +245,7 @@ Connection Tokens<a name="connection-tokens"></a>
 
 ### \[{{{site.name}}}\] New request to connect from {{initiator.name}}
 
-Situation: A member has sent a friend request to the recipient.
+**Situation:** A member has sent a friend request to the recipient.
 
 |Token|Description|
 |---|---|
@@ -257,7 +259,7 @@ Situation: A member has sent a friend request to the recipient.
 
 ### \[{{{site.name}}}\] {{friend.name}} accepted your request to connect
 
-Situation: Recipient has had a friend request accepted by a member.
+**Situation:** Recipient has had a friend request accepted by a member.
 
 |Token|Description|
 |---|---|
@@ -274,7 +276,7 @@ Invites Tokens<a name="invites-tokens"></a>
 
 ###An invitation from {{inviter.name}} to join \[{{{site.name}}}\]
 
-Situation: Recipient has been invited by a member to join the website.
+**Situation:** Recipient has been invited by a member to join the website.
 
 |Token|Description|
 |---|---|
