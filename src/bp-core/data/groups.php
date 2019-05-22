@@ -34,10 +34,11 @@ $groups = array(
 		'description' => 'I really love to ride my motorcycle. When I want to just get away and be by myself and clear my head, that\'s what I do.',
 		'status'      => 'public',
 		'forums'      => 0,
+	),
 	array(
 		'name'        => 'Graphic Design',
 		'description' => 'Graphic design is the paradise of individuality, eccentricity, creativity, abnormality, hobbies and humors.',
 		'status'      => 'public',
 		'forums'      => 0,
-	),
+	)
 );
