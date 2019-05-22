@@ -135,6 +135,15 @@
 			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
 		}
 
+		// Set Tools selected on Import Media Page.
+		if ( $('body.buddypress.buddyboss_page_bp-media-import').length ) {
+			var selectorMediaImport= $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-tools"]');
+			$(menuOpen).removeClass('current');
+			$(selectorMediaImport).addClass('current');
+			$(selectorMediaImport).attr('aria-current','page');
+			$('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li').find('a[href*="bp-tools"]').parent().addClass('current');
+		}
+
 		// Set Tools selected on Import Profile Types Page.
 		if ( $('body.buddypress.buddyboss_page_bp-member-type-import').length || $('body.buddypress.buddyboss_page_bp-repair-community').length ) {
 			var selectorProfileImport= $('#wpwrap #adminmenumain #adminmenuwrap #adminmenu .toplevel_page_buddyboss-platform ul.wp-submenu-wrap li a[href*="bp-tools"]');
