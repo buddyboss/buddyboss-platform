@@ -15,7 +15,7 @@
 
 	<?php bp_nouveau_group_hook( 'before', 'members_list' ); ?>
 
-	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?> chet">
+	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
 
 		<?php
 		while ( bp_group_members() ) :
