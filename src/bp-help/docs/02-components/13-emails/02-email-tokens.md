@@ -144,7 +144,7 @@ Situation: A member has sent a group invitation to the recipient.
 
 ### \[{{{site.name}}}\] {{poster.name}} mentioned you in a group update
 
-Situation: Recipient was mentioned in a **group** activity update.
+Situation: Recipient was mentioned in a group activity update.
 
 |Token|Description|
 |---|---|
