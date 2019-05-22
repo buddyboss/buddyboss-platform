@@ -228,7 +228,6 @@ function bp_repair_community_submenu_page() {
             <h2><?php esc_html_e( 'Repair Community', 'buddyboss' ) ?></h2>
 
             <p><?php esc_html_e( 'BuddyBoss keeps track of various relationships between members, groups, and activity items. Occasionally these relationships become out of sync, most often after an import, update, or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
-            </p>
 
             <form class="settings" method="post" action="">
                 <fieldset>
