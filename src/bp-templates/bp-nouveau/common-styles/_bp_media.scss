@@ -555,6 +555,7 @@
 	box-shadow: none;
 	margin: 0;
 	max-height: 90vh;
+	min-height: 90vh;
 	overflow: auto;
 }
 
@@ -1157,27 +1158,6 @@ ul.bb-albums-list {
 	display: inline-block;
 }
 
-div.emojionearea .emojionearea-button > div.emojionearea-button-open {
-	opacity: 0;
-}
-
-div.emojionearea.emojionearea-standalone .emojionearea-button > div {
-	top: 0;
-}
-
-.post-emoji .emojionearea .emojionearea-button {
-	opacity: 1;
-	position: static;
-}
-
-.emojionearea .emojionearea-button:before {
-	content: "\263A";
-	font-size: 24px;
-	position: absolute;
-	top: 0;
-	line-height: 1;
-}
-
 .emojionearea.emojionearea-standalone {
 	vertical-align: top;
 }
@@ -1213,4 +1193,24 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
 	background: #fff;
 	padding: 20px;
 	text-align: center;
+}
+
+.bb-media-model-inner {
+
+	.gif-media-search-dropdown.open {
+		width: 300px;
+		left: -60px;
+	}
+
+	.gif-media-search-dropdown:before {
+		left: 80px;
+	}
+
+	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+		left: -100px;
+	}
+
+	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+		left: 102px;
+	}
 }

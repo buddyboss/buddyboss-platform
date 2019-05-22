@@ -14,8 +14,13 @@
 	background: transparent;
 	clear: both;
 	margin-bottom: $marg-lrg;
-	overflow: hidden;
 	font-size: 12px;
+
+	&:after {
+		content: " ";
+		display: table;
+		clear: both;
+	}
 }
 
 #bbpress-forums div.even,
@@ -398,6 +403,18 @@ div.bbp-reply-header {
 
 #bbpress-forums div#bbp-cancel-reply-to {
 	text-align: right;
+}
+
+#bbp_editor_topic_content {
+	border: 1px solid $form-border-color;
+	border-radius: 3px;
+	min-height: 80px;
+	padding: 0.7em;
+
+	&:focus {
+		color: #222;
+		border-color: #333;
+	}
 }
 
 /* =Breadcrumb and Tags

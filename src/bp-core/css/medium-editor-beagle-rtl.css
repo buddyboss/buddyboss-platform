@@ -16,7 +16,7 @@
     color: #ccc;
     height: 40px;
     min-width: 40px;
-    padding: 5px 12px;
+    padding: 5px;
     -webkit-transition: background-color .2s ease-in, color .2s ease-in;
             transition: background-color .2s ease-in, color .2s ease-in; }
     .medium-editor-toolbar li button:hover {

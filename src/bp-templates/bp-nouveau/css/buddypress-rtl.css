@@ -7077,8 +7077,13 @@ button[data-bp-tooltip] {
   background: transparent;
   clear: both;
   margin-bottom: 20px;
-  overflow: hidden;
   font-size: 12px;
+}
+
+#bbpress-forums:after {
+  content: " ";
+  display: table;
+  clear: both;
 }
 
 #bbpress-forums div.even,
@@ -7459,6 +7464,18 @@ div.bbp-reply-header {
 
 #bbpress-forums div#bbp-cancel-reply-to {
   text-align: left;
+}
+
+#bbp_editor_topic_content {
+  border: 1px solid #d6d6d6;
+  border-radius: 3px;
+  min-height: 80px;
+  padding: 0.7em;
+}
+
+#bbp_editor_topic_content:focus {
+  color: #222;
+  border-color: #333;
 }
 
 /* =Breadcrumb and Tags
@@ -9829,6 +9846,7 @@ body.login .login-popup .mfp-close:hover {
   box-shadow: none;
   margin: 0;
   max-height: 90vh;
+  min-height: 90vh;
   overflow: auto;
 }
 
@@ -10390,27 +10408,6 @@ ul.bb-albums-list .bb-more-photos strong {
   display: inline-block;
 }
 
-div.emojionearea .emojionearea-button > div.emojionearea-button-open {
-  opacity: 0;
-}
-
-div.emojionearea.emojionearea-standalone .emojionearea-button > div {
-  top: 0;
-}
-
-.post-emoji .emojionearea .emojionearea-button {
-  opacity: 1;
-  position: static;
-}
-
-.emojionearea .emojionearea-button:before {
-  content: "\263A";
-  font-size: 24px;
-  position: absolute;
-  top: 0;
-  line-height: 1;
-}
-
 .emojionearea.emojionearea-standalone {
   vertical-align: top;
 }
@@ -10446,6 +10443,23 @@ div.emojionearea.emojionearea-standalone .emojionearea-button > div {
   background: #fff;
   padding: 20px;
   text-align: center;
+}
+
+.bb-media-model-inner .gif-media-search-dropdown.open {
+  width: 300px;
+  right: -60px;
+}
+
+.bb-media-model-inner .gif-media-search-dropdown:before {
+  right: 80px;
+}
+
+.bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -100px;
+}
+
+.bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 102px;
 }
 
 /**
