@@ -241,6 +241,36 @@ TABLE OF CONTENTS:
   content: "";
 }
 
+.buddyboss_page_bp-tools .section-default_data ul li.main {
+  border-bottom: 1px solid #eee;
+  margin: 0 0 10px;
+  padding: 5px 0;
+}
+
+.buddyboss_page_bp-tools .section-default_data ul li.main ul {
+  margin: 5px 0 0 20px;
+}
+
+.buddyboss_page_bp-tools .section-default_data #message ul.results li {
+  list-style: disc;
+  margin-left: 25px;
+}
+
+.buddyboss_page_bp-repair-community .section-default_data ul li.main {
+  border-bottom: 1px solid #eee;
+  margin: 0 0 10px;
+  padding: 5px 0;
+}
+
+.buddyboss_page_bp-repair-community .section-default_data ul li.main ul {
+  margin: 5px 0 0 20px;
+}
+
+.buddyboss_page_bp-repair-community .section-default_data #message ul.results li {
+  list-style: disc;
+  margin-left: 25px;
+}
+
 /*
  * 2.5 Settings - Tabs
  */
@@ -449,6 +479,7 @@ tr.bp-search-parent-field label {
 }
 
 /* Tools */
+.bp-admin-card.section-default_data h2:before,
 .bp-admin-card.section-repair_community h2:before,
 .bp-admin-card.section-repair_forums h2:before,
 body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
@@ -848,22 +879,22 @@ body.post-type-bp-email .categorydiv label {
 /*------------------------------------------------------------------------------
  * 5.0 Tools
  *----------------------------------------------------------------------------*/
-.buddyboss_page_bp-tools .wrap,
+.buddyboss_page_bp-repair-community .wrap,
 .buddyboss_page_bbp-repair .wrap {
   max-width: 950px;
 }
 
-.buddyboss_page_bp-tools p,
+.buddyboss_page_bp-repair-community p,
 .buddyboss_page_bbp-repair p {
   line-height: 2;
 }
 
-.buddyboss_page_bp-tools fieldset,
+.buddyboss_page_bp-repair-community fieldset,
 .buddyboss_page_bbp-repair fieldset {
   margin: 2em 0 0;
 }
 
-.buddyboss_page_bp-tools legend,
+.buddyboss_page_bp-repair-community legend,
 .buddyboss_page_bbp-repair legend {
   color: #23282d;
   font-size: 1.3em;
@@ -871,7 +902,7 @@ body.post-type-bp-email .categorydiv label {
   margin: 1em 0;
 }
 
-.buddyboss_page_bp-tools label,
+.buddyboss_page_bp-repair-community label,
 .buddyboss_page_bbp-repair label {
   clear: left;
   display: block;
@@ -880,17 +911,17 @@ body.post-type-bp-email .categorydiv label {
 }
 
 @media screen and (max-width: 782px) {
-  .buddyboss_page_bp-tools p,
+  .buddyboss_page_bp-repair-community p,
   .buddyboss_page_bbp-repair p {
     line-height: 1.5;
   }
-  .buddyboss_page_bp-tools label,
+  .buddyboss_page_bp-repair-community label,
   .buddyboss_page_bbp-repair label {
     margin-bottom: 1em;
     padding-right: 25px;
     text-indent: -33px;
   }
-  .buddyboss_page_bp-tools .checkbox,
+  .buddyboss_page_bp-repair-community .checkbox,
   .buddyboss_page_bbp-repair .checkbox {
     padding: 0 0 0 30px;
   }
@@ -936,13 +967,12 @@ body.post-type-bp-email .categorydiv label {
 }
 
 .bp-help-card-grid .bp-help-card .inside {
-  padding: 1.8em 2em;
+  padding: 1.8em 2em 5em;
 }
 
 .bp-help-card-grid .bp-help-card h2 {
-  border-bottom: 1px solid #eaeaea;
   font-size: 18px;
-  padding: 0 0 1em;
+  padding: 0;
   margin: 0 0 1em;
   line-height: 1.4;
 }
@@ -1047,7 +1077,15 @@ body.post-type-bp-email .categorydiv label {
 
 .bp-help-content h1 {
   font-weight: 500;
-  font-size: 25px;
+  font-size: 2em;
+}
+
+.bp-help-content h2 {
+  font-size: 1.5em;
+}
+
+.bp-help-content h3 {
+  font-size: 1.2em;
 }
 
 .bp-help-content code {
@@ -1072,6 +1110,24 @@ body.post-type-bp-email .categorydiv label {
 .bp-help-content hr {
   border-top: none;
   border-bottom: 1px solid #eaeaea;
+}
+
+.bp-help-content table {
+  border: 1px solid #eaeaea;
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 3em;
+}
+
+.bp-help-content th {
+  background: #f9f9f9;
+  font-weight: 500;
+  border-bottom: 1px solid #eaeaea;
+}
+
+.bp-help-content th,
+.bp-help-content td {
+  padding: 10px 12px;
 }
 
 .bp-help-content img {

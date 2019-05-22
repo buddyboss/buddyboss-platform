@@ -528,6 +528,25 @@ function bp_add_permastructs() {
 }
 
 /**
+ * Fire the 'bp_init_background_updater' action, where BP updates data.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_init_background_updater() {
+	global $background_updater;
+
+	include_once buddypress()->plugin_dir . 'bp-core/classes/class-bp-background-updater.php';
+	$background_updater = new BP_Background_Updater();
+
+	/**
+	 * Fires inside the 'bp_init_background_updater' function, where BP updates data.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_init_background_updater' );
+}
+
+/**
  * Fire the 'bp_setup_theme' action.
  *
  * The main purpose of 'bp_setup_theme' is give themes a place to load their

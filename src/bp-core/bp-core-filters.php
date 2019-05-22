@@ -505,16 +505,16 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			if ( isset( $_POST[ 'noconfirmation' ] ) && is_super_admin() ) {
 				return false;
 
-			// WordPress will manage the signup process.
+				// WordPress will manage the signup process.
 			} else {
 				return $user;
 			}
 
-		/*
-		 * There can be a case where the user was created without the skip confirmation
-		 * And the super admin goes in pending accounts to resend it. In this case, as the
-		 * meta['password'] is not set, the activation url must be WordPress one.
-		 */
+			/*
+			 * There can be a case where the user was created without the skip confirmation
+			 * And the super admin goes in pending accounts to resend it. In this case, as the
+			 * meta['password'] is not set, the activation url must be WordPress one.
+			 */
 		} elseif ( buddypress()->members->admin->signups_page == get_current_screen()->id ) {
 			$is_hashpass_in_meta = maybe_unserialize( $meta );
 
@@ -737,7 +737,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 	if ( empty( $menu_item->url ) ) {
 		$menu_item->_invalid = true;
 
-	// Highlight the current page.
+		// Highlight the current page.
 	} else {
 		$current = bp_get_requested_url();
 		if ( strpos( $current, $menu_item->url ) !== false ) {
@@ -1179,3 +1179,168 @@ function bp_core_set_bbpress_buddypress_active( $value, $option ) {
 	}
 	return $value;
 }
+
+
+/**
+ * Filter to update group cover images
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array $attachment_data
+ * @param array $param
+ *
+ * @return array
+ */
+function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
+
+	$group_id = ! empty( $param['item_id'] ) ? absint( $param['item_id'] ) : 0;
+
+	if ( ! empty( $group_id ) && isset( $param['type'] ) && 'cover-image' == $param['type'] ) {
+
+		// check in group
+		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] ) {
+			$cover_image = trim( groups_get_groupmeta( $group_id, 'cover-image' ) );
+			if ( ! empty( $cover_image ) ) {
+				$attachment_data = $cover_image;
+			}
+		}
+
+		// check for user
+		if ( isset( $param['object_dir'] ) && 'members' == $param['object_dir'] ) {
+			$cover_image = trim( bp_get_user_meta( $group_id, 'cover-image', true ) );
+			if ( ! empty( $cover_image ) ) {
+				$attachment_data = $cover_image;
+			}
+		}
+	}
+
+	return $attachment_data;
+}
+
+add_filter( 'bp_attachments_pre_get_attachment', 'bp_dd_update_group_cover_images_url', 0, 2 );
+
+/**
+ * Delete the group cover photo attachment
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_dd_delete_group_cover_images_url( $group_id ) {
+	if ( ! empty( $group_id ) ) {
+		groups_delete_groupmeta( $group_id, 'cover-image' );
+	}
+}
+
+add_action( 'groups_cover_image_deleted', 'bp_dd_delete_group_cover_images_url', 10, 1 );
+add_action( 'groups_cover_image_uploaded', 'bp_dd_delete_group_cover_images_url', 10, 1 );
+
+/**
+ * Delete the user cover photo attachment
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_dd_delete_xprofile_cover_images_url( $user_id ) {
+	if ( ! empty( $user_id ) ) {
+		bp_delete_user_meta( $user_id, 'cover-image' );
+	}
+}
+
+add_action( 'xprofile_cover_image_deleted', 'bp_dd_delete_xprofile_cover_images_url', 10, 1 );
+add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images_url', 10, 1 );
+
+
+/**
+ * Create dummy path for Group and User
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $avatar_folder_dir
+ * @param int $group_id
+ * @param array $object
+ * @param string $avatar_dir
+ *
+ * @return string $avatar_url
+ */
+function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
+
+	if ( ! empty( $group_id ) ) {
+		if ( 'group-avatars' == $avatar_dir ) {
+			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
+			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
+				wp_mkdir_p( $avatar_folder_dir );
+			}
+		}
+
+		if ( 'avatars' == $avatar_dir ) {
+			$avatars = trim( bp_get_user_meta( $group_id, 'avatars', true ) );
+			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
+				wp_mkdir_p( $avatar_folder_dir );
+			}
+		}
+	}
+
+	return $avatar_folder_dir;
+}
+
+add_filter( 'bp_core_avatar_folder_dir', 'bp_dd_check_avatar_folder_dir', 0, 4 );
+
+/**
+ * Get dummy URL from DB for Group and User
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $avatar_url
+ * @param array $params
+ *
+ * @return string $avatar_url
+ */
+function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
+
+	$item_id = ! empty( $params['item_id'] ) ? absint( $params['item_id'] ) : 0;
+	if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
+
+		// check for groups avatar
+		if ( 'group-avatars' == $params['avatar_dir'] ) {
+			$cover_image = trim( groups_get_groupmeta( $item_id, 'avatars' ) );
+			if ( ! empty( $cover_image ) ) {
+				$avatar_url = $cover_image;
+			}
+		}
+
+		// check for user avatar
+		if ( 'avatars' == $params['avatar_dir'] ) {
+			$cover_image = trim( bp_get_user_meta( $item_id, 'avatars', true ) );
+			if ( ! empty( $cover_image ) ) {
+				$avatar_url = $cover_image;
+			}
+		}
+	}
+
+	return $avatar_url;
+}
+
+add_filter( 'bp_core_fetch_avatar_url_check', 'bp_dd_fetch_dummy_avatar_url', 1000, 2 );
+
+/**
+ * Delete avatar of group and user
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $args
+ */
+function bp_dd_delete_avatar( $args ) {
+	$item_id = ! empty( $args['item_id'] ) ? absint( $args['item_id'] ) : 0;
+	if ( ! empty( $item_id ) ) {
+
+		// check for user avatars getting deleted
+		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
+			bp_delete_user_meta( $item_id, 'avatars' );
+		}
+
+		// check for group avatars getting deleted
+		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
+			groups_delete_groupmeta( $item_id, 'avatars' );
+		}
+	}
+}
+
+add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );

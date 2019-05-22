@@ -1,7 +1,7 @@
 {
 	"description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
-		"grunt": "^1.0.3",
+		"grunt": "^1.0.4",
 		"grunt-check-dependencies": "~1.0.0",
 		"grunt-checktextdomain": "~1.0.1",
 		"grunt-contrib-clean": "~1.1.0",
@@ -15,10 +15,11 @@
 		"grunt-jsvalidate": "~0.2.2",
 		"grunt-legacy-util": "^1.1.1",
 		"grunt-patch-wordpress": "^1.0.0",
+		"grunt-potomo": "^3.5.0",
 		"grunt-rtlcss": "~2.0.1",
 		"grunt-sass": "~2.0.0",
 		"grunt-stylelint": "^0.8.0",
-		"grunt-wp-i18n": "^1.0.2",
+		"grunt-wp-i18n": "^1.0.3",
 		"matchdep": "~1.0.1",
 		"postcss-scss": "^1.0.5",
 		"stylelint": "~7.10.1",

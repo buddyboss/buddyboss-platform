@@ -9,7 +9,7 @@
 	"quotmark": "single",
 	"undef": true,
 	"unused": true,
-	"esversion": 6,
+	"esversion": 5,
 
 	"browser": true,
 	"devel": true,

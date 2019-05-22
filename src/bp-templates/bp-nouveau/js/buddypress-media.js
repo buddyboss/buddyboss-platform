@@ -332,7 +332,9 @@ window.bp = window.bp || {};
 						}
 
 						if ( edit_medias.length ) {
+							var mock_file = false;
 							for( var i = 0; i < edit_medias.length; i++ ) {
+								mock_file = false;
 								self.dropzone_media.push({
 									'id': edit_medias[i].attachment_id,
 									'media_id': edit_medias[i].id,
@@ -344,7 +346,7 @@ window.bp = window.bp || {};
 									'saved': true
 								});
 
-								let mockFile = {
+								mock_file = {
 									name: edit_medias[i].title,
 									accepted: true,
 									kind: 'image',
@@ -356,9 +358,9 @@ window.bp = window.bp || {};
 									id: edit_medias[i].id
 								};
 
-								self.dropzone_obj.files.push(mockFile);
-								self.dropzone_obj.emit('addedfile', mockFile);
-								self.createThumbnailFromUrl(mockFile);
+								self.dropzone_obj.files.push(mock_file);
+								self.dropzone_obj.emit('addedfile', mock_file);
+								self.createThumbnailFromUrl(mock_file);
 							}
 							self.addMediaIdsToForumsForm();
 						}
@@ -380,17 +382,17 @@ window.bp = window.bp || {};
 
 		},
 
-		createThumbnailFromUrl: function(mockFile) {
+		createThumbnailFromUrl: function(mock_file) {
 			var self = this;
 			self.dropzone_obj.createThumbnailFromUrl(
-				mockFile,
+				mock_file,
 				self.dropzone_obj.options.thumbnailWidth,
 				self.dropzone_obj.options.thumbnailHeight,
 				self.dropzone_obj.options.thumbnailMethod,
 				true,
 				function(thumbnail) {
-					self.dropzone_obj.emit('thumbnail', mockFile, thumbnail);
-					self.dropzone_obj.emit('complete', mockFile);
+					self.dropzone_obj.emit('thumbnail', mock_file, thumbnail);
+					self.dropzone_obj.emit('complete', mock_file);
 				}
 			);
 		},

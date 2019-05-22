@@ -316,7 +316,7 @@ function bp_core_admin_help() {
     <h1>
 		<?php _e( 'Documentation', 'buddyboss' ); ?>
         <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"
-           target="_blank"><?php _e( 'Online Docs', 'buddyboss' ); ?></a>
+           target="_blank"><?php _e( 'Online Resources', 'buddyboss' ); ?></a>
     </h1>
 
     <div class="wp-list-table widefat bp-help-card-grid">
@@ -341,7 +341,7 @@ function bp_core_admin_help() {
 function bp_core_admin_help_sub_menu_before_callback( $directories, $times, $docs_path, $level_hide, $show_as_heading ) {
 	if ( 1 == $times ) {
 		$url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) );
-		printf( '<li class="main"><a href="%s" class="dir">%s</a></li>', $url, __( 'Help', 'buddyboss' ) );
+		printf( '<li class="main"><a href="%s" class="dir">%s</a></li>', $url, __( 'Docs', 'buddyboss' ) );
 	}
 }
 

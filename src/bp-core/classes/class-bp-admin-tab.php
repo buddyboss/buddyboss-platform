@@ -98,18 +98,23 @@ abstract class BP_Admin_Tab {
 		add_action('admin_head', [$this, 'register_admin_script']);
 	}
 
-	public function register_admin_script()
-	{
-		wp_enqueue_script('bp-admin',
+	public function register_admin_script() {
+		wp_enqueue_script( 'bp-admin',
 			buddypress()->plugin_url . 'bp-core/admin/js/settings-page.js',
-			['jquery'],
+			[ 'jquery' ],
 			buddypress()->version,
 			true
 		);
 
-		wp_localize_script('bp-admin', 'BP_ADMIN', [
-			'ajax_url'      => admin_url('admin-ajax.php'),
-		]);
+		wp_localize_script( 'bp-admin', 'BP_ADMIN', [
+			'ajax_url' => admin_url( 'admin-ajax.php' ),
+			'tools'    => array(
+				'default_data' => array(
+					'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
+					'clear_button_message'  => esc_js( __( "Are you sure you want to delete all 'Default Data' content? Content that was created by you and others, and not by this default data installer, will not be deleted.", 'buddyboss' ) ),
+				)
+			),
+		] );
 	}
 
 	/**

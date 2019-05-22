@@ -1,3 +1,0 @@
-#Front-end Administration
-
-Not all features of the BuddyBoss Platform can be changed from the back-end WordPress Dashboard. Some features are changed within the WordPress Customizer. Changes made within the customizer allow a live look how to change will affect the look and feel of your website without actually changing anything for any other users until those changes are saved and published. Select an article to learn more about each feature.
