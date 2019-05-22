@@ -1002,3 +1002,168 @@ function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 
 	return $id;
 }
+
+/**
+ * Update import status for media plugin import
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_update_import_status() {
+	update_option( 'bp_media_import_status', 'done' );
+	update_option( 'bp_media_import_status_timestamp', bp_core_current_time() );
+}
+
+function bp_media_import_buddyboss_media_tables() {
+	global $wpdb;
+
+	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
+	$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
+
+	$albums = $wpdb->get_results( "SELECT * FROM {$buddyboss_media_albums_table}" );
+
+	$album_ids = array();
+
+	if ( ! empty( $albums ) ) {
+
+		foreach ( $albums as $album ) {
+
+			$user_id      = ! empty( $album->user_id ) ? $album->user_id : false;
+			$group_id     = ! empty( $album->group_id ) ? $album->group_id : false;
+			$title        = ! empty( $album->title ) ? $album->title : '';
+			$date_created = ! empty( $album->date_created ) ? $album->date_created : bp_core_current_time();
+
+			$album_args = array(
+				'user_id'      => $user_id,
+				'title'        => $title,
+				'group_id'     => $group_id,
+				'date_created' => $date_created,
+			);
+
+			if ( ! empty( $album->privacy ) ) {
+				if ( 'private' == $album->privacy ) {
+					$privacy = 'onlyme';
+				} else if ( 'members' == $album->privacy ) {
+					$privacy = 'loggedin';
+				} else {
+					$privacy = $album->privacy;
+				}
+			} else {
+				$privacy = 'public';
+			}
+
+			$album_args['privacy'] = $privacy;
+
+			$album_id = bp_album_add( $album_args );
+
+			if ( ! empty( $album_id ) ) {
+				$album_ids[ $album_id ] = $album->id;
+			}
+		}
+	}
+
+	$medias = $wpdb->get_results( "SELECT * FROM {$buddyboss_media_table}" );
+
+	if ( ! empty( $medias ) ) {
+
+		$activity_ids = array();
+
+		foreach ( $medias as $media ) {
+
+			$attachment_id = ! empty( $media->media_id ) ? $media->media_id : false;
+			$user_id       = ! empty( $media->media_author ) ? $media->media_author : false;
+			$title         = ! empty( $media->media_title ) ? $media->media_title : '';
+			$activity_id   = ! empty( $media->activity_id ) ? $media->activity_id : false;
+
+			$media_args = array(
+				'attachment_id' => $attachment_id,
+				'user_id'       => $user_id,
+				'title'         => $title,
+			);
+
+			if ( ! empty( $media->album_id ) && ! empty( $album_ids ) ) {
+				$album_id_key = array_search( $media->album_id, $album_ids );
+
+				if ( ! empty( $album_id_key ) ) {
+					$album_id = $album_id_key;
+
+					$media_args['album_id'] = $album_id;
+				}
+			}
+
+			if ( ! empty( $media->upload_date ) ) {
+				$date_created = $media->upload_date;
+			} else if ( ! empty( $media->upload_date ) && '0000-00-00 00:00:00' == $media->upload_date && ! empty( $attachment_id ) ) {
+				$date_created = get_the_date( $attachment_id );
+			} else {
+				$date_created = bp_core_current_time();
+			}
+
+			$media_args['date_created'] = $date_created;
+
+			if ( ! empty( $media->privacy ) ) {
+				if ( 'private' == $media->privacy ) {
+					$privacy = 'onlyme';
+				} else if ( 'members' == $media->privacy ) {
+					$privacy = 'loggedin';
+				} else {
+					$privacy = $media->privacy;
+				}
+			} else {
+				$privacy = 'public';
+			}
+
+			$media_args['privacy'] = $privacy;
+
+			if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
+
+				$activity = new BP_Activity_Activity( $activity_id );
+
+				if ( ! empty( $activity->id ) ) {
+
+					$activity_ids[$activity->id] = array();
+
+					$activity_args = array(
+						'user_id'       => $user_id,
+						'recorded_time' => $activity->date_recorded,
+						'hide_sitewide' => true
+					);
+
+					if ( 'groups' == $activity->component ) {
+						$media_args['group_id'] = $activity->item_id;
+
+						$activity_args['component'] = buddypress()->groups->id;
+						$activity_args['item_id']   = $activity->item_id;
+					}
+
+					// make an activity for the media
+					$activity_id = bp_activity_add( $activity_args );
+					if ( $activity_id ) {
+						// update activity meta
+						bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+
+						$media_args['activity_id'] = $activity_id;
+					}
+				}
+			}
+
+			$media_id = bp_media_add( $media_args );
+
+			if ( ! empty( $media_id ) ) {
+				update_post_meta( $attachment_id, 'bp_media_activity_id', $activity_id );
+
+				if ( ! empty( $activity_ids[$activity_id] ) ) {
+					$activity_ids[ $activity_id ][] = $media_id;
+				}
+			}
+		}
+
+		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
+			foreach( $activity_ids as $id => $activity_media ) {
+				if ( ! empty( $activity_media ) ) {
+					$media_ids = implode( ',', $activity_media );
+					bp_activity_update_meta( $id, 'bp_media_ids', $media_ids );
+				}
+			}
+		}
+	}
+}

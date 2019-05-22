@@ -367,6 +367,8 @@ function bp_core_activation_notice() {
 
 		bp_core_add_admin_notice( $notice );
 	}
+
+	do_action( 'bp_core_activation_notice' );
 }
 
 /**

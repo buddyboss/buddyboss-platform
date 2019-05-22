@@ -33,6 +33,10 @@ add_action( 'messages_message_sent',                            'bp_media_attach
 add_action( 'messages_message_sent',                            'bp_media_messages_save_gif_data'                   );
 add_action( 'bp_messages_thread_after_delete',                  'bp_media_messages_delete_attached_media',  10,  2  );
 
+// Core tools
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
+add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
+
 /**
  * Add media theatre template for activity pages
  */
@@ -561,4 +565,141 @@ function bp_media_activity_save_gif_data( $activity ) {
 	] );
 
 	bp_activity_update_meta( $activity->id, '_gif_raw_data', $gif_data );
+}
+
+function bp_media_get_tools_media_settings_admin_tabs( $tabs ) {
+
+	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-media-import', 'tab' => 'bp-media-import' ), 'admin.php' ) ),
+		'name' => __( 'Import Media', 'buddyboss' ),
+		'slug' => 'bp-media-import'
+	);
+
+	return $tabs;
+}
+
+/**
+ * Add Import Media admin menu in tools
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_media_import_admin_menu() {
+
+	add_submenu_page(
+		'buddyboss-platform',
+		__( 'Import Media', 'buddyboss' ),
+		__( 'Import Media', 'buddyboss' ),
+		'manage_options',
+		'bp-media-import',
+		'bp_media_import_submenu_page'
+	);
+
+}
+add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
+
+/**
+ * Import Media menu page
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_media_import_submenu_page() {
+    global $background_updater;
+
+	$bp_media_import_status = get_option( 'bp_media_import_status' );
+
+	if ( isset( $_POST['bp-media-import-submit'] ) && ! empty( $background_updater ) ) {
+		$update_queued          = false;
+
+		if ( 'done' != $bp_media_import_status ) {
+			foreach ( bp_media_get_import_callbacks() as $update_callback ) {
+				error_log( sprintf( 'Queuing %s', $update_callback ) );
+				$background_updater->push_to_queue( $update_callback );
+				$update_queued = true;
+			}
+		}
+
+		if ( $update_queued ) {
+			$background_updater->save()->dispatch();
+		}
+	}
+
+	?>
+    <div class="wrap">
+        <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
+        <div class="nav-settings-subsubsub">
+            <ul class="subsubsub">
+				<?php bp_core_tools_settings_admin_tabs(); ?>
+            </ul>
+        </div>
+    </div>
+    <div class="wrap">
+        <div class="bp-admin-card section-bp-member-type-import">
+            <div class="boss-import-area">
+                <form id="bp-member-type-import-form" method="post" action="">
+                    <div class="import-panel-content">
+                        <h2><?php _e( 'Import Media', 'buddyboss' ); ?></h2>
+                        <?php if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
+                            ?>
+                            <p>
+                                <?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
+                            </p>
+                            <?php
+                        } else if ( 'done' == $bp_media_import_status ) {
+	                        ?>
+                            <p><?php _e( 'BuddyBoss Media data update complete. Thank you for updating!', 'buddyboss' ); ?></p>
+	                        <?php
+                        } else { ?>
+                            <p><?php _e( 'Import your existing media. Click "Run Migration" below and all media uploaded to the BuddyBoss Media plugin will be imported. Then you can remove the old code or plugin.', 'buddyboss' ); ?></p><br />
+                            <input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary">
+                        <?php } ?>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <br />
+
+	<?php
+}
+
+/**
+ *
+ *
+ * @since BuddyBoss 1.0.0
+ * @return array
+ */
+function bp_media_get_import_callbacks() {
+	return array(
+		'bp_media_import_buddyboss_media_tables',
+	    'bp_media_update_import_status',
+	);
+}
+
+/**
+ * Hook to display admin notices when media component is active
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_activation_notice() {
+
+    if ( function_exists( 'buddyboss_media' ) ) {
+
+	    $bp_media_import_status = get_option( 'bp_media_import_status' );
+
+	    if ( 'done' != $bp_media_import_status ) {
+
+		    $admin_url = bp_get_admin_url( add_query_arg( array(
+			    'page' => 'bp-media-import',
+			    'tab'  => 'bp-media-import'
+		    ), 'admin.php' ) );
+		    $notice    = sprintf( '%1$s <a href="%2$s">%3$s</a>',
+			    __( 'You already have <strong>BuddyBoss Media</strong></strong> plugin active. You can import all media from the old plugin here: ', 'buddyboss' ),
+			    esc_url( $admin_url ),
+			    __( 'Import', 'buddyboss' ) );
+
+		    bp_core_add_admin_notice( $notice );
+	    }
+    }
+
 }
