@@ -665,7 +665,7 @@ function bp_dd_delete_import_records() {
 function bp_dd_import_users() {
 	$users = array();
 
-	$users_data = require_once( BP_DEFAULT_DATA_DIR . 'data/users.php' );
+	$users_data = require( BP_DEFAULT_DATA_DIR . 'data/users.php' );
 
 	$image_url         = BP_DEFAULT_DATA_URL . 'data/images/members/';
 	$cover_image_url   = $image_url . 'cover/';
@@ -827,7 +827,8 @@ function bp_dd_import_users_profile() {
  * @return array
  */
 function bp_dd_import_users_messages() {
-	$messages = array();
+	$messages            = array();
+	$random_thread_reply = array();
 
 	if ( ! bp_is_active( 'messages' ) ) {
 		return $messages;
@@ -837,45 +838,44 @@ function bp_dd_import_users_messages() {
 	/** @var $messages_content array */
 	require( BP_DEFAULT_DATA_DIR . 'data/messages.php' );
 
+	$users_data = require( BP_DEFAULT_DATA_DIR . 'data/users.php' );
+	$users_data = wp_list_pluck( $users_data, 'login', 'refer_id' );
+	foreach ( $messages as $message ) {
+		$user_object = get_user_by( 'login', $users_data[ $message['sender_refer_id'] ] );
 
-	// first level messages
-	for ( $i = 0; $i < 33; $i ++ ) {
-		$messages[] = messages_new_message( array(
-			'sender_id'  => bp_dd_get_random_users_ids( 1, 'string' ),
-			'recipients' => bp_dd_get_random_users_ids( 1, 'array' ),
-			'subject'    => $messages_subjects[ array_rand( $messages_subjects ) ],
-			'content'    => $messages_content[ array_rand( $messages_content ) ],
-			'date_sent'  => bp_dd_get_random_date( 15, 5 ),
+		$user_id            = empty( $user_object->ID ) ? bp_dd_get_random_users_ids( 1, 'string' ) : $user_object->ID;
+		$recipients_numbers = empty( $message['recipients'] ) ? 1 : $message['recipients'];
+		$recipients         = bp_dd_get_random_users_ids( absint( $recipients_numbers ), 'array' );
+
+		$thread_reply = empty( $message['thread_reply'] ) ? 1 : $message['thread_reply'];
+
+		$message_id = messages_new_message( array(
+			'sender_id'  => $user_id,
+			'recipients' => $recipients,
+			'subject'    => $message['subject'],
+			'content'    => $message['content'],
+			'date_sent'  => bp_dd_get_random_date( 29, 16 ),
 		) );
-	}
 
-	for ( $i = 0; $i < 33; $i ++ ) {
-		$messages[] = messages_new_message( array(
-			'sender_id'  => bp_dd_get_random_users_ids( 1, 'string' ),
-			'recipients' => bp_dd_get_random_users_ids( 2, 'array' ),
-			'subject'    => $messages_subjects[ array_rand( $messages_subjects ) ],
-			'content'    => $messages_content[ array_rand( $messages_content ) ],
-			'date_sent'  => bp_dd_get_random_date( 13, 3 ),
-		) );
-	}
+		$messages[] = $message_id;
 
-	for ( $i = 0; $i < 33; $i ++ ) {
-		$messages[] = messages_new_message( array(
-			'sender_id'  => bp_dd_get_random_users_ids( 1, 'string' ),
-			'recipients' => bp_dd_get_random_users_ids( 3, 'array' ),
-			'subject'    => $messages_subjects[ array_rand( $messages_subjects ) ],
-			'content'    => $messages_content[ array_rand( $messages_content ) ],
-			'date_sent'  => bp_dd_get_random_date( 10 ),
-		) );
-	}
+		$all_recipients = array_merge( $recipients, (array) $user_id );
 
-	$messages[] = messages_new_message( array(
-		'sender_id'  => bp_dd_get_random_users_ids( 1, 'string' ),
-		'recipients' => bp_dd_get_random_users_ids( 5, 'array' ),
-		'subject'    => $messages_subjects[ array_rand( $messages_subjects ) ],
-		'content'    => $messages_content[ array_rand( $messages_content ) ],
-		'date_sent'  => bp_dd_get_random_date( 5 ),
-	) );
+		// first level messages
+		for ( $i = 0; $i <= $thread_reply; $i ++ ) {
+			$replying_sender_id     = $all_recipients[ array_rand( $all_recipients ) ];
+			$replying_recipients_id = array_diff( $all_recipients, (array) $replying_sender_id );
+
+			$messages[] = messages_new_message( array(
+				'sender_id'  => $replying_sender_id,
+				'recipients' => $replying_recipients_id,
+				'thread_id'  => $message_id,
+				'subject'    => __( 'Re: ', 'buddyboss' ) . $message['subject'],
+				'content'    => $random_thread_reply[ array_rand( $random_thread_reply ) ],
+				'date_sent'  => bp_dd_get_random_date( 15, 1 ),
+			) );
+		}
+	}
 
 	if ( ! empty( $messages ) ) {
 		/** @noinspection PhpParamsInspection */

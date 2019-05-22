@@ -27,6 +27,8 @@ function bp_core_admin_tools() {
 	require_once BP_DEFAULT_DATA_DIR . 'bp-core-tools-default-data.php';
 
 	bp_admin_tools_default_data_save();
+
+	$users_data = require_once( BP_DEFAULT_DATA_DIR . 'data/users.php' );
 	?>
     <div class="wrap">
         <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>

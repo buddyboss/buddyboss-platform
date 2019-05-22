@@ -6,6 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 return array(
 	array(
+		'refer_id'     => 1,
 		'login'        => 'bb-alyssa',
 		'display_name' => 'Alyssa',
 		'first_name'   => 'Alyssa',
@@ -13,6 +14,7 @@ return array(
 		'email'        => 'alyssa@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 2,
 		'login'        => 'bb-arianna',
 		'display_name' => 'Arianna',
 		'first_name'   => 'Arianna',
@@ -20,6 +22,7 @@ return array(
 		'email'        => 'arianna@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 3,
 		'login'        => 'bb-charles',
 		'display_name' => 'Charles',
 		'first_name'   => 'Charles',
@@ -27,6 +30,7 @@ return array(
 		'email'        => 'charles@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 4,
 		'login'        => 'bb-emily',
 		'display_name' => 'Emily',
 		'first_name'   => 'Emily',
@@ -34,6 +38,7 @@ return array(
 		'email'        => 'emily@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 5,
 		'login'        => 'bb-jennifer',
 		'display_name' => 'Jennifer',
 		'first_name'   => 'Jennifer',
@@ -41,6 +46,7 @@ return array(
 		'email'        => 'jennifer@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 6,
 		'login'        => 'bb-jessica',
 		'display_name' => 'Jessica',
 		'first_name'   => 'Jessica',
@@ -48,6 +54,7 @@ return array(
 		'email'        => 'jessica@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 7,
 		'login'        => 'bb-john',
 		'display_name' => 'John',
 		'first_name'   => 'John',
@@ -55,6 +62,7 @@ return array(
 		'email'        => 'john@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 8,
 		'login'        => 'bb-joseph',
 		'display_name' => 'Joseph',
 		'first_name'   => 'Joseph',
@@ -62,6 +70,7 @@ return array(
 		'email'        => 'joseph@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 9,
 		'login'        => 'bb-luna',
 		'display_name' => 'Luna',
 		'first_name'   => 'Luna',
@@ -69,6 +78,7 @@ return array(
 		'email'        => 'luna@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 10,
 		'login'        => 'bb-madelyn',
 		'display_name' => 'Madelyn',
 		'first_name'   => 'Madelyn',
@@ -76,6 +86,7 @@ return array(
 		'email'        => 'madelyn@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 11,
 		'login'        => 'bb-margaret',
 		'display_name' => 'Margaret',
 		'first_name'   => 'Margaret',
@@ -83,6 +94,7 @@ return array(
 		'email'        => 'margaret@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 12,
 		'login'        => 'bb-maria',
 		'display_name' => 'Maria',
 		'first_name'   => 'Maria',
@@ -90,6 +102,7 @@ return array(
 		'email'        => 'maria@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 13,
 		'login'        => 'bb-mateo',
 		'display_name' => 'Mateo',
 		'first_name'   => 'Mateo',
@@ -97,6 +110,7 @@ return array(
 		'email'        => 'mateo@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 14,
 		'login'        => 'bb-maverick',
 		'display_name' => 'Maverick',
 		'first_name'   => 'Maverick',
@@ -104,6 +118,7 @@ return array(
 		'email'        => 'maverick@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 15,
 		'login'        => 'bb-michael',
 		'display_name' => 'Michael',
 		'first_name'   => 'Michael',
@@ -111,6 +126,7 @@ return array(
 		'email'        => 'michael@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 16,
 		'login'        => 'bb-neville',
 		'display_name' => 'Neville',
 		'first_name'   => 'Neville',
@@ -118,6 +134,7 @@ return array(
 		'email'        => 'neville@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 17,
 		'login'        => 'bb-nicolina',
 		'display_name' => 'Nicolina',
 		'first_name'   => 'Nicolina',
@@ -125,6 +142,7 @@ return array(
 		'email'        => 'nicolina@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 18,
 		'login'        => 'bb-robert',
 		'display_name' => 'Robert',
 		'first_name'   => 'Robert',
@@ -132,6 +150,7 @@ return array(
 		'email'        => 'robert@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 19,
 		'login'        => 'bb-steve',
 		'display_name' => 'Steve',
 		'first_name'   => 'Steve',
@@ -139,6 +158,7 @@ return array(
 		'email'        => 'steve@demos.buddyboss.com',
 	),
 	array(
+		'refer_id'     => 20,
 		'login'        => 'bb-trent',
 		'display_name' => 'Trent',
 		'first_name'   => 'Trent',

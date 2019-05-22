@@ -4,20 +4,60 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-$messages_subjects = array(
-	'Aliquam quis lectus',
-	'Proin eros',
-	'Vivamus sagittis tellus luctus felis',
-	'Pellentesque egestas',
-	'Aliquam erat volutpat',
-	'Donec gravida',
-	'Curabitur nec tellus. In semper',
-	'Proin tempus porta dui',
-	'Nam gravida tempus nibh',
-	'Duis ultricess',
+
+$messages = array(
+	array(
+		'subject'         => 'Aliquam quis lectus',
+		'content'         => 'Phasellus facilisis, massa sed egestas condimentum, felis neque condimentum leo, ut ornare libero dolor non enim. Etiam auctor lacus gravida lacus.',
+		'sender_refer_id' => 3,
+		'recipients'      => 2,
+		'thread_reply'    => 5,
+	),
+	array(
+		'subject'         => 'Proin eros',
+		'content'         => 'Vivamus tempor. Proin pretium ante vel dolor. Sed mauris lorem, lobortis quis, vulputate sit amet, iaculis in, enim. Phasellus quis risus. Donec sagittis. Sed eget risus. Praesent egestas nunc non tellus. Sed nisi mi, tincidunt quis, pretium eget, tincidunt in, est. ',
+		'sender_refer_id' => 8,
+		'recipients'      => 4,
+		'thread_reply'    => 13,
+	),
+	array(
+		'subject'         => 'Pellentesque egestas',
+		'content'         => 'Duis ultrices pretium augue. Donec iaculis erat et dui. Pellentesque vel odio. Etiam bibendum, enim ut auctor molestie, metus ante feugiat tortor, at molestie enim nisi id ligula. Aenean in lectus. Sed in turpis. Mauris suscipit dui sed urna. Sed gravida, tellus id suscipit consectetur, ipsum enim tempus lectus, vitae facilisis libero pede id sapien',
+		'sender_refer_id' => 5,
+		'recipients'      => 10,
+		'thread_reply'    => 12,
+	),
+	array(
+		'subject'         => 'Message 4',
+		'content'         => 'Message 4',
+		'sender_refer_id' => 9,
+		'recipients'      => 1,
+		'thread_reply'    => 4,
+	),
+	array(
+		'subject'         => 'Message 5',
+		'content'         => 'Message 5',
+		'sender_refer_id' => 3,
+		'recipients'      => 7,
+		'thread_reply'    => 7,
+	),
+	array(
+		'subject'         => 'Message 6',
+		'content'         => 'Message 6',
+		'sender_refer_id' => 1,
+		'recipients'      => 10,
+		'thread_reply'    => 3,
+	),
+	array(
+		'subject'         => 'Message 7',
+		'content'         => 'Message 7',
+		'sender_refer_id' => 19,
+		'recipients'      => 3,
+		'thread_reply'    => 10,
+	),
 );
 
-$messages_content = array(
+$random_thread_reply = array(
 	'Phasellus facilisis, massa sed egestas condimentum, felis neque condimentum leo, ut ornare libero dolor non enim. Etiam auctor lacus gravida lacus. ',
 	'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras vitae ante sit amet massa facilisis facilisis.',
 	'Nulla a nulla ac leo interdum mollis. Praesent molestie felis in nunc. Morbi mauris. Suspendisse potenti. In consectetur quam sit amet metus. Cras et dui a felis placerat auctor. Donec bibendum turpis nec dui. Aliquam dolor dui, suscipit ac, placerat volutpat, bibendum et, arcu. Nulla ultricies rhoncus tellus. Mauris et neque sit amet turpis faucibus fringilla. Maecenas ac leo. Nullam ac quam. Etiam a nisi. Mauris rutrum tincidunt pede. Donec nisl nulla, tempus et, molestie id, adipiscing tristique, quam. ',
@@ -26,7 +66,7 @@ $messages_content = array(
 	'Quisque sagittis neque. Vestibulum laoreet. Nullam cursus, odio in fringilla lacinia, urna nisi feugiat arcu, nec aliquet leo mi a justo. Sed ipsum massa, elementum nec, hendrerit ut, malesuada sit amet, ante. Nulla nunc odio, viverra at, tincidunt vel, mattis quis, odio.',
 	'Aliquam et tellus. Nullam sed nisl. Nullam lobortis dui at odio. Nulla facilisi. Praesent elementum eleifend lectus. Phasellus cursus, diam non consectetur tempus, orci eros tristique sem, at pretium diam enim sed lectus. Mauris in tellus sed dolor pulvinar iaculis. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Nunc nec augue. ',
 	'Duis ultrices pretium augue. Donec iaculis erat et dui. Pellentesque vel odio. Etiam bibendum, enim ut auctor molestie, metus ante feugiat tortor, at molestie enim nisi id ligula. Aenean in lectus. Sed in turpis. Mauris suscipit dui sed urna. Sed gravida, tellus id suscipit consectetur, ipsum enim tempus lectus, vitae facilisis libero pede id sapien. ',
-	' ',
+	'Donec iaculis erat et dui. Pellentesque vel ',
 	'Ut consequat. Curabitur molestie, erat eget aliquam porttitor, orci sem commodo risus, eget rhoncus orci purus et massa. Praesent facilisis mi nec nisl semper eleifend. Donec vel magna id nunc adipiscing laoreet. In hac habitasse platea dictumst. Fusce quis odio. Duis vehicula est sit amet tellus. Proin hendrerit. Suspendisse cursus, risus eget malesuada rutrum, risus quam lobortis libero, eget posuere metus urna non nisl. ',
 	'Nunc posuere, sem a tempor tristique, velit augue congue tortor, non pellentesque velit eros nec mauris. In sapien nunc, bibendum quis, commodo in, feugiat ac, nulla. Donec nec velit eu sapien ultricies porttitor. Quisque pulvinar, eros vel consectetur facilisis, nisi ante egestas libero, sed euismod turpis libero sed turpis. Aenean a libero.',
 	'Vestibulum vulputate nunc faucibus mauris. Nulla vel tortor. Donec quis turpis. Fusce gravida. Maecenas mollis facilisis urna. Morbi feugiat, velit a porta sodales, massa lacus ultricies velit, et pretium nunc ante vitae leo. Pellentesque dolor nibh, sagittis a, commodo vitae, luctus nec, purus. Vivamus vestibulum pede sit amet ligula. Fusce ut nisi. Morbi fringilla. Aenean sapien. Vestibulum eros. Integer auctor lacinia lorem.',
