@@ -235,10 +235,9 @@ Private Messaging Tokens<a name="message-tokens"></a>
 
 |Token|Description|
 |---|---|
-|`{{usersubject}}`|The subject of the message.|
-|`{{usermessage}}`|The content of the message.|
-|`{{{message.url}}}`|Link to the message thread.|
 |`{{sender.name}}`|Display name of the message sender.|
+|`{{{message}}}`|The content of the message.|
+|`{{{message.url}}}`|Link to the message thread.|
 
 Connection Tokens<a name="connection-tokens"></a>
 --------------
