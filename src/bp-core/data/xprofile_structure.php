@@ -33,22 +33,22 @@ return array(
 				'allow-custom-visibility' => 'disabled',
 				'options'                 => array(
 					array(
-						'name'              => 'Option 1',
+						'name'              => 'Checkbox 1',
 						'is_default_option' => 1,
 						'option_order'      => '1'
 					),
 					array(
-						'name'              => 'Option 2',
+						'name'              => 'Checkbox 2',
 						'is_default_option' => 1,
 						'option_order'      => '2'
 					),
 					array(
-						'name'              => 'Option 3',
+						'name'              => 'Checkbox 3',
 						'is_default_option' => false,
 						'option_order'      => '3'
 					),
 					array(
-						'name'              => 'Option 4',
+						'name'              => 'Checkbox 4',
 						'is_default_option' => false,
 						'option_order'      => '4'
 					)
@@ -86,17 +86,17 @@ return array(
 				'allow-custom-visibility' => 'allowed',
 				'options'                 => array(
 					array(
-						'name'              => 'Option 1',
+						'name'              => 'Radio 1',
 						'is_default_option' => true,
 						'option_order'      => '1'
 					),
 					array(
-						'name'              => 'Option 2',
+						'name'              => 'Radio 2',
 						'is_default_option' => false,
 						'option_order'      => '2'
 					),
 					array(
-						'name'              => 'Option 3',
+						'name'              => 'Radio 3',
 						'is_default_option' => false,
 						'option_order'      => '3'
 					)
