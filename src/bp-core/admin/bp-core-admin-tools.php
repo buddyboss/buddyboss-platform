@@ -43,7 +43,6 @@ function bp_core_admin_tools() {
 
             <h2><?php esc_html_e( 'Default Data', 'buddyboss' ) ?></h2>
 
-            <p><?php esc_html_e( 'Please do not import users and their data while also importing groups and forums on a slow server (or shared hosting). Importing is a rather heavy process, so please import one component at a time.', 'buddyboss' ); ?></p>
             <form action="" method="post" id="bp-admin-form" class="bp-admin-form">
                 <fieldset>
                     <legend><?php _e( 'What do you want to import?', 'buddyboss' ); ?></legend>
@@ -202,7 +201,7 @@ function bp_core_admin_tools() {
 				<?php wp_nonce_field( 'bp-admin-tools-default-data' ); ?>
             </form>
 
-            <p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 import job at a time.', 'buddyboss' ); ?></p>
 
         </div>
     </div>
@@ -256,7 +255,7 @@ function bp_repair_community_submenu_page() {
                 </fieldset>
             </form>
 
-            <p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than one repair job at a time.', 'buddyboss' ); ?></p>
+            <p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
 
         </div>
     </div>
