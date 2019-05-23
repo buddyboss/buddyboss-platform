@@ -24,13 +24,13 @@ function bp_admin_tools_default_data_save() {
 			bp_dd_delete_dummy_members_related_data();
 			bp_delete_option( 'bp_dd_import_users' );
 			$users             = bp_dd_import_users();
-			$imported['users'] = sprintf( __( '%s new users', 'buddyboss' ), number_format_i18n( count( $users ) ) );
+			$imported['users'] = sprintf( __( '%s new members', 'buddyboss' ), number_format_i18n( count( $users ) ) );
 			bp_dd_update_import( 'users', 'users' );
 		}
 
 		if ( isset( $_POST['bp']['import-profile'] ) && ! bp_dd_is_imported( 'users', 'xprofile' ) ) {
 			$profile             = bp_dd_import_users_profile();
-			$imported['profile'] = sprintf( __( '%s profile entries', 'buddyboss' ), number_format_i18n( $profile ) );
+			$imported['profile'] = sprintf( __( '%s profile field entries', 'buddyboss' ), number_format_i18n( $profile ) );
 			bp_dd_update_import( 'users', 'xprofile' );
 		}
 

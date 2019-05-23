@@ -9,16 +9,8 @@ return array(
 		'name'   => 'Default Data',
 		'desc'   => 'Sample fields with default data.',
 		'fields' => array(
-			'datebox'  => array(
-				'name'                    => 'DateBox',
-				'desc'                    => 'Any kind of date',
-				'required'                => '0',
-				'default-visibility'      => 'public',
-				'allow-custom-visibility' => 'allowed',
-				'options'                 => array()
-			),
 			'textarea' => array(
-				'name'                    => 'Textarea',
+				'name'                    => 'Multi-line Text Area',
 				'desc'                    => 'Long text in textarea',
 				'required'                => '1',
 				'default-visibility'      => 'adminsonly',
@@ -33,22 +25,6 @@ return array(
 				'allow-custom-visibility' => 'allowed',
 				'options'                 => array()
 			),
-			'textbox'  => array(
-				'name'                    => 'Textbox',
-				'desc'                    => 'Rather short one-line text',
-				'required'                => '1',
-				'default-visibility'      => 'friends',
-				'allow-custom-visibility' => 'disabled',
-				'options'                 => array()
-			),
-			'url'      => array(
-				'name'                    => 'URL',
-				'desc'                    => 'Link to any web-page or site',
-				'required'                => '0',
-				'default-visibility'      => 'public',
-				'allow-custom-visibility' => 'allowed',
-				'options'                 => array()
-			),
 			'checkbox'       => array(
 				'name'                    => 'Checkboxes',
 				'desc'                    => 'Several checkboxes to select',
@@ -57,94 +33,70 @@ return array(
 				'allow-custom-visibility' => 'disabled',
 				'options'                 => array(
 					array(
-						'name'              => 'checkbox 1',
+						'name'              => 'Option 1',
 						'is_default_option' => 1,
 						'option_order'      => '1'
 					),
 					array(
-						'name'              => 'checkbox 2',
+						'name'              => 'Option 2',
 						'is_default_option' => 1,
 						'option_order'      => '2'
 					),
 					array(
-						'name'              => 'checkbox 3',
+						'name'              => 'Option 3',
 						'is_default_option' => false,
 						'option_order'      => '3'
 					),
 					array(
-						'name'              => 'checkbox 4',
+						'name'              => 'Option 4',
 						'is_default_option' => false,
 						'option_order'      => '4'
 					)
 				)
 			),
 			'selectbox'      => array(
-				'name'                    => 'Selectbox',
+				'name'                    => 'Drop Down Select Box',
 				'desc'                    => 'One selected value in selectbox',
 				'required'                => '0',
 				'default-visibility'      => 'loggedin',
 				'allow-custom-visibility' => 'allowed',
 				'options'                 => array(
 					array(
-						'name'              => 'selectbox 1',
+						'name'              => 'Option 1',
 						'is_default_option' => false,
 						'option_order'      => '1'
 					),
 					array(
-						'name'              => 'selectbox 2',
+						'name'              => 'Option 2',
 						'is_default_option' => true,
 						'option_order'      => '2'
 					),
 					array(
-						'name'              => 'selectbox 3',
+						'name'              => 'Option 3',
 						'is_default_option' => false,
-						'option_order'      => '3'
-					)
-				)
-			),
-			'multiselectbox' => array(
-				'name'                    => 'Multiselectbox',
-				'desc'                    => 'Several selected values in selectbox',
-				'required'                => '1',
-				'default-visibility'      => 'friends',
-				'allow-custom-visibility' => 'disabled',
-				'options'                 => array(
-					array(
-						'name'              => 'multiselectbox 1',
-						'is_default_option' => true,
-						'option_order'      => '1'
-					),
-					array(
-						'name'              => 'multiselectbox 2',
-						'is_default_option' => false,
-						'option_order'      => '2'
-					),
-					array(
-						'name'              => 'multiselectbox 3',
-						'is_default_option' => true,
 						'option_order'      => '3'
 					)
 				)
 			),
 			'radio'          => array(
-				'name'                    => 'Radios',
+				'name'                    => 'Radio Buttons',
 				'desc'                    => 'One radio button to select',
 				'required'                => '0',
 				'default-visibility'      => 'public',
 				'allow-custom-visibility' => 'allowed',
 				'options'                 => array(
 					array(
-						'name'              => 'radio 1',
+						'name'              => 'Option 1',
 						'is_default_option' => true,
 						'option_order'      => '1'
 					),
 					array(
-						'name'              => 'radio 2',
+						'name'              => 'Option 2',
 						'is_default_option' => false,
 						'option_order'      => '2'
 					),
 					array(
-						'name'              => 'radio 3',
+						'name'              => 'Option 3',
 						'is_default_option' => false,
 						'option_order'      => '3'
 					)
