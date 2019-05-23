@@ -259,11 +259,7 @@ function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
 		'name' => __( 'Repair Forums', 'buddyboss' ),
 		'slug' => 'bbp-repair'
 	);
-	$tabs[] = array(
-		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-converter', 'tab' => 'bbp-converter' ), 'admin.php' ) ),
-		'name' => __( 'Import Forums', 'buddyboss' ),
-		'slug' => 'bbp-converter'
-	);
+
 //	$tabs[] = array(
 //		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-reset', 'tab' => 'bbp-reset' ), 'admin.php' ) ),
 //		'name' => __( 'Reset Forums', 'buddyboss' ),
@@ -272,4 +268,17 @@ function bbp_core_get_tools_settings_admin_tabs( $tabs ) {
 
 	return $tabs;
 }
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_tools_settings_admin_tabs', 15, 1 );
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_tools_settings_admin_tabs', 11, 1 );
+
+function bbp_core_get_import_forum_tools_settings_admin_tabs( $tabs ) {
+
+
+	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bbp-converter', 'tab' => 'bbp-converter' ), 'admin.php' ) ),
+		'name' => __( 'Import Forums', 'buddyboss' ),
+		'slug' => 'bbp-converter'
+	);
+
+	return $tabs;
+}
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bbp_core_get_import_forum_tools_settings_admin_tabs', 16, 1 );
