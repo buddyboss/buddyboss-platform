@@ -34,8 +34,10 @@ if ( ! file_exists( $bp_loader ) || defined( 'BP_LOAD_SOURCE' ) ) {
 	$subdir = 'build';
 }
 
-// Set source subdirectory
-define( 'BP_SOURCE_SUBDIRECTORY', $subdir );
+if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
+	// Set source subdirectory
+	define( 'BP_SOURCE_SUBDIRECTORY', $subdir );
+}
 
 // Define overrides - only applicable to those running trunk
 if ( ! defined( 'BP_PLUGIN_DIR' ) ) {
