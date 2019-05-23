@@ -7,51 +7,44 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 $messages = array(
 	array(
-		'subject'         => 'Aliquam quis lectus',
 		'content'         => 'Phasellus facilisis, massa sed egestas condimentum, felis neque condimentum leo, ut ornare libero dolor non enim. Etiam auctor lacus gravida lacus.',
 		'sender_refer_id' => 3,
 		'recipients'      => 2,
 		'thread_reply'    => 5,
 	),
 	array(
-		'subject'         => 'Proin eros',
 		'content'         => 'Vivamus tempor. Proin pretium ante vel dolor. Sed mauris lorem, lobortis quis, vulputate sit amet, iaculis in, enim. Phasellus quis risus. Donec sagittis. Sed eget risus. Praesent egestas nunc non tellus. Sed nisi mi, tincidunt quis, pretium eget, tincidunt in, est. ',
 		'sender_refer_id' => 8,
 		'recipients'      => 4,
 		'thread_reply'    => 13,
 	),
 	array(
-		'subject'         => 'Pellentesque egestas',
 		'content'         => 'Duis ultrices pretium augue. Donec iaculis erat et dui. Pellentesque vel odio. Etiam bibendum, enim ut auctor molestie, metus ante feugiat tortor, at molestie enim nisi id ligula. Aenean in lectus. Sed in turpis. Mauris suscipit dui sed urna. Sed gravida, tellus id suscipit consectetur, ipsum enim tempus lectus, vitae facilisis libero pede id sapien',
 		'sender_refer_id' => 5,
 		'recipients'      => 10,
 		'thread_reply'    => 12,
 	),
 	array(
-		'subject'         => 'Message 4',
 		'content'         => 'Message 4',
 		'sender_refer_id' => 9,
 		'recipients'      => 1,
 		'thread_reply'    => 4,
 	),
 	array(
-		'subject'         => 'Message 5',
 		'content'         => 'Message 5',
 		'sender_refer_id' => 3,
 		'recipients'      => 7,
 		'thread_reply'    => 7,
 	),
 	array(
-		'subject'         => 'Message 6',
 		'content'         => 'Message 6',
 		'sender_refer_id' => 1,
 		'recipients'      => 10,
 		'thread_reply'    => 3,
 	),
 	array(
-		'subject'         => 'Message 7',
 		'content'         => 'Message 7',
-		'sender_refer_id' => 19,
+		'sender_refer_id' => 10,
 		'recipients'      => 3,
 		'thread_reply'    => 10,
 	),

@@ -852,7 +852,7 @@ function bp_dd_import_users_messages() {
 		$message_id = messages_new_message( array(
 			'sender_id'  => $user_id,
 			'recipients' => $recipients,
-			'subject'    => $message['subject'],
+			'subject'    => $message['content'],
 			'content'    => $message['content'],
 			'date_sent'  => bp_dd_get_random_date( 29, 16 ),
 		) );
@@ -870,7 +870,7 @@ function bp_dd_import_users_messages() {
 				'sender_id'  => $replying_sender_id,
 				'recipients' => $replying_recipients_id,
 				'thread_id'  => $message_id,
-				'subject'    => __( 'Re: ', 'buddyboss' ) . $message['subject'],
+				'subject'    => $message['content'],
 				'content'    => $random_thread_reply[ array_rand( $random_thread_reply ) ],
 				'date_sent'  => bp_dd_get_random_date( 15, 1 ),
 			) );
