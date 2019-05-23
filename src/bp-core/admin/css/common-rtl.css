@@ -916,19 +916,16 @@ body.post-type-bp-email .categorydiv label {
 }
 
 @media screen and (max-width: 782px) {
-  .buddyboss_page_bp-tools p,
   .buddyboss_page_bp-repair-community p,
   .buddyboss_page_bbp-repair p {
     line-height: 1.5;
   }
-
   .buddyboss_page_bp-repair-community label,
   .buddyboss_page_bbp-repair label {
     margin-bottom: 1em;
     padding-left: 25px;
     text-indent: -33px;
   }
-
   .buddyboss_page_bp-repair-community .checkbox,
   .buddyboss_page_bbp-repair .checkbox {
     padding: 0 30px 0 0;

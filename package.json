@@ -21,6 +21,7 @@
 		"grunt-stylelint": "^0.8.0",
 		"grunt-wp-i18n": "^1.0.3",
 		"matchdep": "~1.0.1",
+		"node-sass": "^4.12.0",
 		"postcss-scss": "^1.0.5",
 		"stylelint": "~7.10.1",
 		"stylelint-config-wordpress": "~11.0.0"
@@ -30,7 +31,5 @@
 	},
 	"license": "GPL-2.0-or-later",
 	"version": "3.1.0",
-	"dependencies": {
-		"node-sass": "^4.10.0"
-	}
+	"dependencies": {}
 }
