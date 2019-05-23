@@ -2636,12 +2636,6 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-repair-community', 'tab' => 'bp-repair-community' ), 'admin.php' ) ),
-		'name' => __( 'Repair Community', 'buddyboss' ),
-		'slug' => 'bp-repair-community'
-	);
-
-	$tabs[] = array(
 		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-member-type-import', 'tab' => 'bp-member-type-import' ), 'admin.php' ) ),
 		'name' => __( 'Import Profile Types', 'buddyboss' ),
 		'slug' => 'bp-member-type-import'
@@ -2649,7 +2643,19 @@ function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	return $tabs;
 }
-add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 1, 1 );
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_profile_settings_admin_tabs', 15, 1 );
+
+function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
+
+	$tabs[] = array(
+		'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-repair-community', 'tab' => 'bp-repair-community' ), 'admin.php' ) ),
+		'name' => __( 'Repair Community', 'buddyboss' ),
+		'slug' => 'bp-repair-community'
+	);
+
+	return $tabs;
+}
+add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_repair_community_settings_admin_tabs', 1, 1 );
 
 /**
  * Add the 'Site Notices' admin menu item.
