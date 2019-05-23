@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-05-23 06:52:33+00:00\n"
+"POT-Creation-Date: 2019-05-23 12:50:41+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -9570,13 +9570,13 @@ msgstr[1] ""
 msgid "Search Results for '%s'"
 msgstr ""
 
-#: bp-forums/search/template.php:400
+#: bp-forums/search/template.php:405
 msgid "Viewing %1$s result"
 msgid_plural "Viewing %1$s results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/search/template.php:404
+#: bp-forums/search/template.php:409
 msgid "Viewing %2$s of %4$s results"
 msgid_plural "Viewing %2$s - %3$s of %4$s results"
 msgstr[0] ""
@@ -12644,6 +12644,18 @@ msgstr ""
 msgid "Oops! That page can’t be found."
 msgstr ""
 
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:6
+msgid "%s Lessons"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:6
+msgid "%s Lesson"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-loop.php:118
+msgid "0 Lessons"
+msgstr ""
+
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-nav.php:16
 msgid "Group courses menu"
 msgstr ""
@@ -14433,7 +14445,7 @@ msgstr[1] ""
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:771
+#: bp-search/classes/class-bp-search.php:775
 msgid "All Results"
 msgstr ""
 

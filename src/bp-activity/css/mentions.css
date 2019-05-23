@@ -88,13 +88,6 @@
 		width: 30px;
 	}
 
-	.atwho-view {
-		border-radius: 0;
-		height: 100%;
-		left: 0 !important;
-		width: 100%;
-	}
-
 	.atwho-view ul li .username {
 		display: inline-block;
 		margin: -10px 0 0 0;
