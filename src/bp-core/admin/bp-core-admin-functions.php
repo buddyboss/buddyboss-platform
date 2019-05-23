@@ -1239,8 +1239,8 @@ function bp_admin_email_add_codex_notice() {
 
 	bp_core_add_admin_notice(
 		sprintf(
-			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about tokens at BuddyBoss Resources</a>.', 'buddyboss' ),
-			bp_core_help_docs_link( '02-components/14-emails/02-email-tokens.md' )
+			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
+			bp_core_help_docs_link( 'components/emails/email-tokens.md' )
 		),
 		'error'
 	);
