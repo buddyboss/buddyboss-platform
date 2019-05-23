@@ -25,7 +25,7 @@ class BP_XProfile_Field_Type_Textbox extends BP_XProfile_Field_Type {
 		parent::__construct();
 
 		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Textbox', 'buddyboss' );
+		$this->name     = __( 'Single Line Text', 'buddyboss' );
 
 		$this->set_format( '/^.*$/', 'replace' );
 
@@ -103,7 +103,7 @@ class BP_XProfile_Field_Type_Textbox extends BP_XProfile_Field_Type {
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			esc_html_e( 'Textbox', 'buddyboss' );
+			esc_html_e( 'Single Line Text', 'buddyboss' );
 		?></label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 

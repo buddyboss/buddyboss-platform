@@ -25,7 +25,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		parent::__construct();
 
 		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Date Selector', 'buddyboss' );
+		$this->name     = __( 'Date', 'buddyboss' );
 
 		$this->set_format( '/^\d{4}-\d{1,2}-\d{1,2} 00:00:00$/', 'replace' ); // "Y-m-d 00:00:00"
 
@@ -494,7 +494,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 						<label for="date-format-custom-value" class="screen-reader-text"><?php esc_html_e( 'Enter custom time format', 'buddyboss' ); ?></label>
 						<input type="text" name="field-settings[date_format_custom]" id="date-format-custom-value" class="date-format-custom-value" value="<?php echo esc_attr( $settings['date_format_custom'] ); ?>" aria-describedby="date-format-custom-example" /> <span class="screen-reader-text"><?php esc_html_e( 'Example:', 'buddyboss' ); ?></span><span class="date-format-custom-example" id="date-format-custom-sample"><?php if ( $settings['date_format_custom'] ) : ?><?php echo esc_html( date_i18n( $settings['date_format_custom'] ) ); endif; ?></span><span class="spinner" id="date-format-custom-spinner" aria-hidden="true"></span>
 
-						<p><a href="https://codex.wordpress.org/Formatting_Date_and_Time"><?php esc_html_e( 'Documentation on date and time formatting', 'buddyboss' ); ?></a></p>
+						<p><a href="https://wordpress.org/support/article/formatting-date-and-time/"><?php esc_html_e( 'Documentation on date and time formatting', 'buddyboss' ); ?></a></p>
 					</div>
 
 				</fieldset>

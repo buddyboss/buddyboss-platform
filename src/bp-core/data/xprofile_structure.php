@@ -10,7 +10,7 @@ return array(
 		'desc'   => 'Sample fields with default data.',
 		'fields' => array(
 			'textarea' => array(
-				'name'                    => 'Multi-line Text Area',
+				'name'                    => 'Paragraph Text',
 				'desc'                    => 'Long text in textarea',
 				'required'                => '1',
 				'default-visibility'      => 'adminsonly',
@@ -55,7 +55,7 @@ return array(
 				)
 			),
 			'selectbox'      => array(
-				'name'                    => 'Drop Down Select Box',
+				'name'                    => 'Drop Down',
 				'desc'                    => 'One selected value in selectbox',
 				'required'                => '0',
 				'default-visibility'      => 'loggedin',

@@ -16857,7 +16857,7 @@ msgid "Single Fields"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:28
-msgid "Date Selector"
+msgid "Date"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:112
@@ -16998,7 +16998,7 @@ msgid "Add Another Option"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:28
-msgid "Multi Select Box"
+msgid "Multi Select"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-number.php:28
@@ -17015,7 +17015,7 @@ msgid "Radio Buttons"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:28
-msgid "Drop Down Select Box"
+msgid "Drop Down"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:28
@@ -17031,7 +17031,7 @@ msgstr ""
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:28
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:123
 #. translators: accessibility text
-msgid "Phone Number"
+msgid "Phone"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-telephone.php:157
@@ -17043,13 +17043,13 @@ msgid "International"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-textarea.php:28
-msgid "Multi-line Text Area"
+msgid "Paragraph Text"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-textbox.php:28
 #: bp-xprofile/classes/class-bp-xprofile-field-type-textbox.php:106
 #. translators: accessibility text
-msgid "Textbox"
+msgid "Single Line Text"
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-field-type-url.php:28

@@ -25,7 +25,7 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 		parent::__construct();
 
 		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Multi-line Text Area', 'buddyboss' );
+		$this->name     = __( 'Paragraph Text', 'buddyboss' );
 		$this->supports_richtext = true;
 
 		$this->set_format( '/^.*$/m', 'replace' );

@@ -25,7 +25,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		parent::__construct();
 
 		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Phone Number', 'buddyboss' );
+		$this->name     = __( 'Phone', 'buddyboss' );
 
 		$this->set_format( '/^.*$/', 'replace' );
         
@@ -120,7 +120,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
 			/* translators: accessibility text */
-			esc_html_e( 'Phone Number', 'buddyboss' );
+			esc_html_e( 'Phone', 'buddyboss' );
 		?></label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 
