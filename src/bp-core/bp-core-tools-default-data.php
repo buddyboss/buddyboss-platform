@@ -313,7 +313,7 @@ function bp_dd_groups_join_group_date_fix( $args ) {
  * @return string
  */
 function bp_dd_friends_add_friend_date_fix( $current_time ) {
-	return bp_dd_get_random_date( 43 );
+	return strtotime( bp_dd_get_random_date( 43 ) );
 }
 
 /**
