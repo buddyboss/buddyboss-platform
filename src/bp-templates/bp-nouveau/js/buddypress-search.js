@@ -183,6 +183,14 @@ jQuery(document).ready(function($) {
 					                 .data('ui-autocomplete')._renderItem = function(ul, item) {
 						ul.addClass('bp-search-ac');
 
+						if ( $('body.forum-archive').length ) {
+							ul.addClass('bp-forum-search-ac-header');
+						}
+
+						if ( $('body.bbp-search.forum-search').length ) {
+							ul.addClass('bp-forum-search-ac-header');
+						}
+
 						if (item.type_label != '') {
 							$(ul).data('current_cat', item.type);
 							return $('<li>').attr('class', 'bbls-' + item.type + '-type bbls-category').append('<span class="bb-cat-title">' + item.value + '</span>').appendTo(ul);
