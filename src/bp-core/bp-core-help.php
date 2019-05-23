@@ -27,10 +27,52 @@ function bp_core_help_bp_docs_link( $attr ) {
 		'article' => $slug . $anchors
 	), 'admin.php' ) );
 
-	return apply_filters( 'bp_core_help_bp_docs_link', sprintf( '<a href="%s">%s</a>', $url, $text ), $attr );
+	$return = apply_filters( 'bp_core_help_bp_docs_link', $url, $attr );
+
+	if ( ! empty( $text ) ) {
+		$return = sprintf( '<a href="%s">%s</a>', $url, $text );
+	}
+
+	return $return;
 }
 
 add_shortcode( 'bp_docs_link', 'bp_core_help_bp_docs_link' );
+
+/**
+ * Anchor tag help doc link
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $slug
+ * @param string $text
+ * @param string $anchors
+ *
+ * @return mixed
+ */
+function bp_core_help_docs_link( $slug = '', $text = '', $anchors = '' ) {
+	$attr = array(
+		'slug'    => $slug,
+		'text'    => $text,
+		'anchors' => $anchors,
+	);
+
+	return bp_core_help_bp_docs_link( $attr );
+}
+
+/**
+ * Print Docs Link
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $slug
+ * @param string $text
+ * @param string $anchors
+ *
+ * @return mixed
+ */
+function bp_core_help_get_docs_link( $slug = '', $text = '', $anchors = '' ) {
+	echo bp_core_help_docs_link( $slug, $text, $anchors );
+}
 
 if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
 	/**
@@ -72,7 +114,7 @@ if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
  */
 function bp_core_get_post_slug_by_index( $dir_index_file ) {
 	$dir_file_array = explode( '/', $dir_index_file );
-	$index_file = db_core_remove_file_extension_from_slug( end( $dir_file_array ) );
+	$index_file     = db_core_remove_file_extension_from_slug( end( $dir_file_array ) );
 
 	return db_core_remove_file_number_from_slug( $index_file );
 }
