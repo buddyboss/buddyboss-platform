@@ -43,7 +43,7 @@ function bp_core_admin_tools() {
 
             <h2><?php esc_html_e( 'Default Data', 'buddyboss' ) ?></h2>
 
-            <p><?php esc_html_e( 'Please do not import users and their data while also importing groups on a slow server (or shared hosting). Importing is a rather heavy process, so please finish with members first and then work with groups.', 'buddyboss' ); ?></p>
+            <p><?php esc_html_e( 'Please do not import users and their data while also importing groups and forums on a slow server (or shared hosting). Importing is a rather heavy process, so please import one component at a time.', 'buddyboss' ); ?></p>
             <form action="" method="post" id="bp-admin-form" class="bp-admin-form">
                 <fieldset>
                     <legend><?php _e( 'What do you want to import?', 'buddyboss' ); ?></legend>
