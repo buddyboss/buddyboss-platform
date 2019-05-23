@@ -1368,14 +1368,14 @@ function bp_dd_import_forums_in_groups() {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	$groups_ids = bp_dd_get_forums_enable_groups_ids( 3 );
+	$groups_ids = bp_dd_get_forums_enable_groups_ids( 8 );
 
 	foreach ( $groups_ids as $groups_id ) {
 		// Get the group
 		$group = groups_get_group( $groups_id );
 		if ( ! empty( $group ) ) {
 			$forum['name']        = $group->name;
-			$forum['description'] = sprintf( __( 'Dummy Forum for %s Group', 'buddyboss' ), $group->name );
+			$forum['description'] = sprintf( __( 'Default Forum for %s Group', 'buddyboss' ), $group->name );
 			$forum['visibility']  = 'publish';
 			$forum['status']      = 'open';
 
