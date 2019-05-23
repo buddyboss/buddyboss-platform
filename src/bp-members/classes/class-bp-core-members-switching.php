@@ -791,7 +791,7 @@ class BP_Core_Members_Switching {
 				return $user_caps;
 			}
 
-			$user_caps['switch_to_user'] = ( user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );
+			$user_caps['switch_to_user'] = ( isset( $args[2] ) && user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );
 		} elseif ( 'switch_off' === $args[0] ) {
 			if ( array_key_exists( 'switch_users', $user_caps ) ) {
 				$user_caps['switch_off'] = $user_caps['switch_users'];
@@ -827,7 +827,7 @@ class BP_Core_Members_Switching {
 	 * @return string[] Required capabilities for the requested action.
 	 */
 	public function filter_map_meta_cap( array $required_caps, $cap, $user_id, array $args ) {
-		if ( ( 'switch_to_user' === $cap ) && ( $args[0] === $user_id ) ) {
+		if ( isset( $args[0] ) && ( 'switch_to_user' === $cap ) && ( $args[0] === $user_id ) ) {
 			$required_caps[] = 'do_not_allow';
 		}
 
