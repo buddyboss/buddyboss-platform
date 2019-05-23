@@ -278,7 +278,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				$this->search_results['all']['items'] = $new_items;
 
 				/* _______________________________ */
-				$url      = $this->search_page_search_url();
+				$url      = $this->search_page_search_url( false );
 				$url      = esc_url( add_query_arg( array( 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
 				$type_mem = "";
 				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
@@ -741,11 +741,15 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 		/**
 		 * function to return full search url, added with search terms and other filters
 		 */
-		private function search_page_search_url() {
+		private function search_page_search_url( $default = true ) {
 
 			if ( true == $this->search_args['forum_search'] ) {
 				//Full search url for bbpress forum search
-				$base_url = bbp_get_search_url();
+				if ( true === $default ) {
+					$base_url = bbp_get_search_url( false );
+				} else {
+					$base_url = bbp_get_search_url( false ) . $this->search_args['search_term'];
+				}
 				$full_url = esc_url( add_query_arg( 'bbp_search', urlencode( $this->search_args['search_term'] ), $base_url ) );
 			} else {
 				$base_url = $this->search_page_url();

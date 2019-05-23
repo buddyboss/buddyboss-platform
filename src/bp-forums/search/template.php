@@ -253,7 +253,7 @@ function bbp_search_url() {
 	 * @uses add_query_arg() To help make unpretty permalinks
 	 * @return string Search url
 	 */
-	function bbp_get_search_url() {
+	function bbp_get_search_url( $default = true ) {
 		global $wp_rewrite;
 
 		// Pretty permalinks
@@ -266,7 +266,12 @@ function bbp_search_url() {
 			$url = add_query_arg( array( bbp_get_search_rewrite_id() => '' ), home_url( '/' ) );
 		}
 
-		return apply_filters( 'bbp_get_search_url', add_query_arg( 'bp_search', 1, $url ) );
+		if ( true === $default ) {
+			return apply_filters( 'bbp_get_search_url', add_query_arg( 'bp_search', 1, $url ) );
+		} else {
+			return apply_filters( 'bbp_get_search_url', $url );
+		}
+
 	}
 
 /**
