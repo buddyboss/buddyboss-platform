@@ -6,8 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 return array(
 	'single' => array(
-		'name'   => 'Single Fields',
-		'desc'   => 'All fields with a single value possible',
+		'name'   => 'Default Data',
+		'desc'   => 'Sample fields with default data.',
 		'fields' => array(
 			'datebox'  => array(
 				'name'                    => 'DateBox',
@@ -48,13 +48,7 @@ return array(
 				'default-visibility'      => 'public',
 				'allow-custom-visibility' => 'allowed',
 				'options'                 => array()
-			)
-		)
-	),
-	'multi'  => array(
-		'name'   => 'Multi Fields',
-		'desc'   => 'All fields with several possible values',
-		'fields' => array(
+			),
 			'checkbox'       => array(
 				'name'                    => 'Checkboxes',
 				'desc'                    => 'Several checkboxes to select',
@@ -157,23 +151,5 @@ return array(
 				)
 			)
 		)
-	),
+	)
 );
-
-/**
- * <select style="width: 30%" onchange="show_options(this.value)" id="fieldtype" name="fieldtype">
- *  <optgroup label="Multi Fields">
- *      <option value="checkbox">Checkboxes</option>
- *      <option value="selectbox">Drop Down Select Box</option>
- *      <option value="multiselectbox">Multi Select Box</option>
- *      <option value="radio">Radio Buttons</option>
- *  </optgroup>
- *  <optgroup label="Single Fields">
- *      <option value="datebox">Date Selector</option>
- *      <option value="textarea">Multi-line Text Area</option>
- *      <option value="number">Number</option>
- *      <option selected="selected" value="textbox">Text Box</option>
- *      <option value="url">URL</option>
- *  </optgroup>
- * </select>
- */
