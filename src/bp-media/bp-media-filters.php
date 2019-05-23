@@ -647,10 +647,10 @@ function bp_media_import_submenu_page() {
                             <?php
                         } else if ( 'done' == $bp_media_import_status ) {
 	                        ?>
-                            <p><?php _e( 'BuddyBoss Media data update complete. Thank you for updating!', 'buddyboss' ); ?></p>
+                            <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
 	                        <?php
                         } else { ?>
-                            <p><?php _e( 'Import your existing media. Click "Run Migration" below and all media uploaded to the BuddyBoss Media plugin will be imported. Then you can remove the old code or plugin.', 'buddyboss' ); ?></p><br />
+                            <p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
                             <input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary">
                         <?php } ?>
                     </div>
