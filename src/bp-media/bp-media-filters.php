@@ -604,7 +604,7 @@ add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
  *
  */
 function bp_media_import_submenu_page() {
-    global $background_updater;
+    global $wpdb, $background_updater;
 
 	$bp_media_import_status = get_option( 'bp_media_import_status' );
 
@@ -624,6 +624,12 @@ function bp_media_import_submenu_page() {
 		}
 	}
 
+	$check = true;
+	if ( 'done' != $bp_media_import_status ) {
+		$buddyboss_media_table = $wpdb->prefix . 'buddyboss_media';
+		$check                 = $wpdb->get_var("SELECT 1 from {$buddyboss_media_table} LIMIT 1");
+    }
+
 	?>
     <div class="wrap">
         <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
@@ -639,7 +645,11 @@ function bp_media_import_submenu_page() {
                 <form id="bp-member-type-import-form" method="post" action="">
                     <div class="import-panel-content">
                         <h2><?php _e( 'Import Media', 'buddyboss' ); ?></h2>
-                        <?php if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
+                        <?php if ( ! $check ) {
+	                        ?>
+                            <p><?php _e( 'BuddyBoss Media plugin database tables doesn\'t exists.', 'buddyboss' ); ?></p>
+	                        <?php
+                        } else if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
                             ?>
                             <p>
                                 <?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
