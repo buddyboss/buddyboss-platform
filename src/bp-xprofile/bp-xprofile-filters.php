@@ -189,11 +189,11 @@ function xprofile_sanitize_data_value_before_save( $field_value, $field_id = 0, 
 		return $field_value;
 	}
 
-	if ( ! empty( $data_obj->field_id ) ) {
+	if ( isset( $data_obj->field_id ) && ! empty( $data_obj->field_id ) ) {
 		$fields = xprofile_get_field( $data_obj->field_id, null, false );
 
 		// Allows storing the 'facebook', 'twitter' and so on as array keys in the data.
-		if ( 'socialnetworks' === $fields->type ) {
+		if ( isset( $fields->type ) && 'socialnetworks' === $fields->type ) {
 			return $field_value;
 		}
 	}
