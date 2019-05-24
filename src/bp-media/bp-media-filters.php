@@ -645,7 +645,7 @@ function bp_media_import_submenu_page() {
                 <form id="bp-member-type-import-form" method="post" action="">
                     <div class="import-panel-content">
                         <h2><?php _e( 'Import Media', 'buddyboss' ); ?></h2>
-                        <?php if ( ! $check ) {
+                        <?php if ( empty( $check ) ) {
 	                        ?>
                             <p><?php _e( 'BuddyBoss Media plugin database tables doesn\'t exists.', 'buddyboss' ); ?></p>
 	                        <?php
