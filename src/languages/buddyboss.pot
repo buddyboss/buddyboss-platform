@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-05-24 08:24:00+00:00\n"
+"POT-Creation-Date: 2019-05-24 17:10:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -395,7 +395,7 @@ msgstr ""
 #: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1911
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
 #: bp-groups/classes/class-bp-groups-list-table.php:526
-#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:818
+#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:816
 #: bp-xprofile/bp-xprofile-repeaters.php:744
 #: bp-xprofile/bp-xprofile-repeaters.php:746
 #: bp-xprofile/bp-xprofile-repeaters.php:770
@@ -882,7 +882,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:838
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
-#: bp-xprofile/bp-xprofile-admin.php:823
+#: bp-xprofile/bp-xprofile-admin.php:821
 #: bp-xprofile/bp-xprofile-repeaters.php:750
 #: bp-xprofile/bp-xprofile-repeaters.php:752
 #: bp-xprofile/bp-xprofile-repeaters.php:776
@@ -1666,7 +1666,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:457
 #: bp-core/classes/class-bp-admin.php:458 bp-forums/admin/settings.php:1344
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1207
-#: bp-media/bp-media-filters.php:629
+#: bp-media/bp-media-filters.php:635
 msgid "Tools"
 msgstr ""
 
@@ -1959,7 +1959,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2174
-#: bp-media/bp-media-filters.php:654
+#: bp-media/bp-media-filters.php:664
 msgid "Run Migration"
 msgstr ""
 
@@ -2777,7 +2777,7 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
 #: bp-members/bp-members-functions.php:3012
 #: bp-members/bp-members-functions.php:3015
-#: bp-xprofile/bp-xprofile-admin.php:989 bp-xprofile/bp-xprofile-admin.php:1041
+#: bp-xprofile/bp-xprofile-admin.php:987 bp-xprofile/bp-xprofile-admin.php:1039
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1553
 msgid "Profile Types"
 msgstr ""
@@ -2795,7 +2795,7 @@ msgstr ""
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
-#: bp-xprofile/bp-xprofile-admin.php:997
+#: bp-xprofile/bp-xprofile-admin.php:995
 msgid "Profile Search"
 msgstr ""
 
@@ -3499,7 +3499,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2457 bp-xprofile/bp-xprofile-admin.php:156
 #: bp-xprofile/bp-xprofile-admin.php:163 bp-xprofile/bp-xprofile-admin.php:172
-#: bp-xprofile/bp-xprofile-admin.php:982
+#: bp-xprofile/bp-xprofile-admin.php:980
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1285
 #: bp-xprofile/classes/class-bp-xprofile-group.php:816
@@ -6310,7 +6310,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:313
 #: bp-core/profile-search/bps-xprofile.php:601
-#: bp-xprofile/bp-xprofile-admin.php:869
+#: bp-xprofile/bp-xprofile-admin.php:867
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:332
 msgid "Other"
 msgstr ""
@@ -12922,21 +12922,25 @@ msgid "Please update your server or deactivate BuddyBoss Platform."
 msgstr ""
 
 #: bp-media/bp-media-filters.php:574 bp-media/bp-media-filters.php:590
-#: bp-media/bp-media-filters.php:591 bp-media/bp-media-filters.php:641
+#: bp-media/bp-media-filters.php:591 bp-media/bp-media-filters.php:647
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:645
+#: bp-media/bp-media-filters.php:650
+msgid "BuddyBoss Media plugin database tables doesn't exists."
+msgstr ""
+
+#: bp-media/bp-media-filters.php:655
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:650
+#: bp-media/bp-media-filters.php:660
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:653
+#: bp-media/bp-media-filters.php:663
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -12944,13 +12948,13 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:697
+#: bp-media/bp-media-filters.php:707
 msgid ""
 "You already have <strong>BuddyBoss Media</strong></strong> plugin active. "
 "You can import all media from the old plugin here: "
 msgstr ""
 
-#: bp-media/bp-media-filters.php:699
+#: bp-media/bp-media-filters.php:709
 msgid "Import"
 msgstr ""
 
@@ -15795,7 +15799,7 @@ msgid "Customize the appearance of the BuddyBoss Platform."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:40
-#: bp-xprofile/bp-xprofile-admin.php:1006
+#: bp-xprofile/bp-xprofile-admin.php:1004
 msgid "Profile Navigation"
 msgstr ""
 
@@ -16670,13 +16674,13 @@ msgid "%s updated %s profile"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:165 bp-xprofile/bp-xprofile-admin.php:173
-#: bp-xprofile/bp-xprofile-admin.php:332
+#: bp-xprofile/bp-xprofile-admin.php:330
 #: bp-xprofile/classes/class-bp-xprofile-group.php:793
 msgid "New Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:791
-#: bp-xprofile/bp-xprofile-admin.php:793
+#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:789
+#: bp-xprofile/bp-xprofile-admin.php:791
 msgid "(Signup)"
 msgstr ""
 
@@ -16695,75 +16699,75 @@ msgstr ""
 msgid "Delete Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:289
+#: bp-xprofile/bp-xprofile-admin.php:287
 #. translators: accessibility text
 msgid "Fields for \"%s\" Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:315
+#: bp-xprofile/bp-xprofile-admin.php:313
 msgid "There are no fields in this field set."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:323
+#: bp-xprofile/bp-xprofile-admin.php:321
 msgid ""
 "* These fields appear on the signup page. The (Signup) fields cannot be "
 "deleted or moved, as they are needed for the signup process."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:331
+#: bp-xprofile/bp-xprofile-admin.php:329
 msgid "You have no field sets."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:377
+#: bp-xprofile/bp-xprofile-admin.php:375
 msgid "There was an error saving the field set. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:382
+#: bp-xprofile/bp-xprofile-admin.php:380
 msgid "The field set was saved successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:425
+#: bp-xprofile/bp-xprofile-admin.php:423
 msgid "There was an error deleting the field set. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:428
+#: bp-xprofile/bp-xprofile-admin.php:426
 msgid "The field set was deleted successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:491
+#: bp-xprofile/bp-xprofile-admin.php:489
 msgid "You can only have one instance of the \"Social Network\" profile field."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:532
+#: bp-xprofile/bp-xprofile-admin.php:530
 msgid "There was an error saving the field. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:535
+#: bp-xprofile/bp-xprofile-admin.php:533
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1311
 msgid "The field was saved successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:626
+#: bp-xprofile/bp-xprofile-admin.php:624
 msgid "field"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:626
+#: bp-xprofile/bp-xprofile-admin.php:624
 msgid "option"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:630
+#: bp-xprofile/bp-xprofile-admin.php:628
 msgid "There was an error deleting the %s. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:633
+#: bp-xprofile/bp-xprofile-admin.php:631
 msgid "The %s was deleted successfully!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:706
+#: bp-xprofile/bp-xprofile-admin.php:704
 msgid "You can only have one instance of the \"Gender\" profile field."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:1082
+#: bp-xprofile/bp-xprofile-admin.php:1080
 msgid ""
 "You can only have one instance of the \"Social Networks\" profile field on "
 "the website."
