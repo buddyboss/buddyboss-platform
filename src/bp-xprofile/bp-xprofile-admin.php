@@ -273,16 +273,14 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 							</div>
 						</div>
 
-						<?php if ( ! empty( $group->description ) ) : ?>
-
-							<p><?php
-							/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
-							echo esc_html( apply_filters( 'bp_get_the_profile_group_description', $group->description ) );
-							?></p>
-
-						<?php endif; ?>
-
 						<fieldset id="<?php echo esc_attr( $group->id ); ?>" class="connectedSortable field-group" aria-live="polite" aria-atomic="true" aria-relevant="all">
+							<?php if ( ! empty( $group->description ) ) : ?>
+								<p class="bp-profile-group-description"><?php
+								/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
+								echo esc_html( apply_filters( 'bp_get_the_profile_group_description', $group->description ) );
+								?></p>
+							<?php endif; ?>
+
 							<legend class="screen-reader-text"><?php
 							/** This filter is documented in bp-xprofile/bp-xprofile-template.php */
 							/* translators: accessibility text */
