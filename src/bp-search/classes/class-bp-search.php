@@ -279,7 +279,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 
 				/* _______________________________ */
 				$url      = $this->search_page_search_url( false );
-				$url      = esc_url( add_query_arg( array( 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
+
+				if ( true === $this->search_args['forum_search'] ) {
+					$url      = $url;
+				} else {
+					$url      = esc_url( add_query_arg( array( 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
+				}
+
 				$type_mem = "";
 				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
 					$new_row               = array( 'value' => $item['html'] );
@@ -750,7 +756,13 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				} else {
 					$base_url = bbp_get_search_url( false ) . $this->search_args['search_term'];
 				}
-				$full_url = esc_url( add_query_arg( 'bbp_search', urlencode( $this->search_args['search_term'] ), $base_url ) );
+
+				if ( true === $this->search_args['forum_search'] ) {
+					$full_url = esc_url( $base_url );
+				} else {
+					$full_url = esc_url( add_query_arg( 'bbp_search', urlencode( $this->search_args['search_term'] ), $base_url ) );
+				}
+
 			} else {
 				$base_url = $this->search_page_url();
 				$full_url = esc_url( add_query_arg( 's', urlencode( stripslashes( $this->search_args['search_term'] ) ), $base_url ) );
