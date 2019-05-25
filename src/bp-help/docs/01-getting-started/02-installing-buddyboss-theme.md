@@ -4,7 +4,7 @@
 (To be embedded once we upload it to Youtube...)
 
 ---
-Before installing BuddyBoss Theme, please make sure you have [bp_docs_link text="installed BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"] and [bp_docs_link text="purchased BuddyBoss Theme" slug="buddyboss-theme/purchasing.md"].
+Before installing BuddyBoss Theme, please make sure you have [bp_docs_link text="installed BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"] and [bp_docs_link text="purchased BuddyBoss Theme" slug="buddyboss-theme/purchasing.md"]. [Click here](https://demos.buddyboss.com/platform-community/) for a demo of BuddyBoss Platform with BuddyBoss Theme.
 
 BuddyBoss Theme
 -------------------------------
