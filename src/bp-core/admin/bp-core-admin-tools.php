@@ -142,7 +142,7 @@ function bp_core_admin_tools() {
                                                 <input type="checkbox" class="checkbox" name="bp[import-g-forums]"
                                                        id="import-g-forums"
                                                        value="1" <?php bp_dd_imported_disabled( 'groups', 'forums' ) ?>/>
-												<?php _e( 'Forums in Groups', 'buddyboss' ); ?>
+												<?php _e( 'Forums in Groups (with data)', 'buddyboss' ); ?>
                                             </label>
                                         </li>
 										<?php
