@@ -1,1 +1,1 @@
-#Settings
+#Activity Settings
