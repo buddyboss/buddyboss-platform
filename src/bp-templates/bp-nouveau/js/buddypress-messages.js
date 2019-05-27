@@ -595,9 +595,9 @@ window.bp = window.bp || {};
 						hidePickerOnBlur: false,
 						useInternalCDN: false,
 						events: {
-							ready: function () {
-								$('#whats-new-messages-toolbar > .post-emoji > div').removeClass('ql-editor').removeClass('ql-blank');
-							}
+							emojibtn_click: function () {
+								$('#message_content')[0].emojioneArea.hidePicker();
+							},
 						}
 					});
 				}
@@ -1235,6 +1235,9 @@ window.bp = window.bp || {};
 
 			// quill editor support
 			if ( bp.Nouveau.Messages.mediumEditor !== false && typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
+				$('#message_content').find('img.emojioneemoji').replaceWith(function () {
+					return this.dataset.emojiChar;
+				});
 				this.model.set( 'message_content', bp.Nouveau.Messages.mediumEditor.getContent(), { silent: true } );
 			}
 
@@ -1977,6 +1980,9 @@ window.bp = window.bp || {};
 				content = tinyMCE.activeEditor.getContent();
 				jQuery(tinyMCE.activeEditor.formElement).addClass('loading');
 			} else if ( typeof bp.Nouveau.Messages.mediumEditor !== 'undefined' ) {
+				$('#message_content').find('img.emojioneemoji').replaceWith(function () {
+					return this.dataset.emojiChar;
+				});
 				content = bp.Nouveau.Messages.mediumEditor.getContent();
 				jQuery('#message_content').addClass('loading');
 			}

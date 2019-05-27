@@ -478,6 +478,25 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$threads->threads[ $i ]['starred_id'] = $sm_id;
 		}
 
+		if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
+			$media_ids = bp_messages_get_meta( $last_message_id, 'bp_media_ids', true );
+
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				if ( sizeof( $media_ids ) < 2 ) {
+					$threads->threads[ $i ]['excerpt'] = __( 'sent a photo', 'buddyboss' );
+				} else {
+					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
+				}
+			}
+		} else if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+			$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
+
+			if ( ! empty( $gif_data ) ) {
+				$threads->threads[ $i ]['excerpt'] = __( 'sent a gif', 'buddyboss' );
+			}
+		}
+
 		$thread_extra_content = bp_nouveau_messages_catch_hook_content( array(
 			'inboxListItem' => 'bp_messages_inbox_list_item',
 			'threadOptions' => 'bp_messages_thread_options',
