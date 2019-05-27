@@ -61,6 +61,11 @@ function bp_search_get_settings_fields() {
 			'sanitize_callback' => 'intval',
 			'args'              => []
 		],
+
+		'bp_search_tutorial' => [
+			'title'             => __( '&#65279', 'buddyboss' ),
+			'callback'          => 'bp_search_settings_tutorial',
+		],
 	];
 
 	$fields['bp_search_settings_community'] = [
@@ -364,6 +369,22 @@ function bp_search_settings_callback_number_of_results() {
 	<input name="bp_search_number_of_results" id="bp_search_number_of_results" type="number" min="1" step="1"
 	       value="<?php bp_search_form_option( 'bp_search_number_of_results', '5' ); ?>" class="small-text"/>
 	<label for="bp_search_number_of_results"><?php esc_html_e( 'results', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Link to Search tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_search_settings_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/network-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
 
 	<?php
 }
