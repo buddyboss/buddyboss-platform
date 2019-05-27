@@ -296,7 +296,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 				<p class="clear-from-wrap">
 					<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);"><?php _e( 'Reset',
 							'buddyboss' ); ?></a></p>
-				<input type="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
+				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
 			</div>
 
 			<?php
