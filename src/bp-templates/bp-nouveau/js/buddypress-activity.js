@@ -105,8 +105,8 @@ window.bp = window.bp || {};
 			$( document ).keydown( this.commentFormAction );
 
 			//forums
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"]' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
 			// Activity autoload
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
