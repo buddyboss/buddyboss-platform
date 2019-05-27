@@ -33,6 +33,9 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 		if ( bp_is_active( 'messages' ) ) {
 			$this->add_field( 'bp-force-friendship-to-message', __( 'Messaging', 'buddyboss' ), [$this, 'bp_admin_setting_callback_force_friendship_to_message'], [$this, 'bp_admin_sanitize_callback_force_friendship_to_message'] );
 		}
+
+		// Connection Settings tutorial
+		$this->add_field( 'bp-connection-settings-tutorial', __( '', 'buddyboss' ), [$this, 'bp_connection_settings_tutorial'] );
 	}
 
 	/**
@@ -61,6 +64,22 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 	 */
 	public function bp_admin_sanitize_callback_force_friendship_to_message( $value = false ) {
 		return $value ? 1 : 0;
+	}
+
+	/**
+	 * Link to Connection Settings tutorial
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	function bp_connection_settings_tutorial() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/connections/connection-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 }
 
