@@ -592,7 +592,7 @@ window.bp = window.bp || {};
 						container: $('#whats-new-messages-toolbar > .post-emoji'),
 						autocomplete: false,
 						pickerPosition: 'bottom',
-						hidePickerOnBlur: false,
+						hidePickerOnBlur: true,
 						useInternalCDN: false,
 						events: {
 							emojibtn_click: function () {
