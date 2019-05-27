@@ -184,9 +184,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			'<p class="description">%s</p>',
 			sprintf(
 				__( 'After the format has been updated, remember to run <a href="%s">Repair Community</a> tools to update all the users.', 'buddyboss' ),
-				add_query_arg([
+				add_query_arg( [
 					'page' => 'bp-repair-community',
-					'tool' => 'bp-repair-community'
+					'tab'  => 'bp-repair-community',
+					'tool' => 'bp-wordpress-update-display-name'
 				], admin_url( 'admin.php' ) )
 			)
 		);
