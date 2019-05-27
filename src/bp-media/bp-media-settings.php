@@ -103,7 +103,7 @@ function bp_media_get_settings_fields() {
 			'args'              => []
 		];
 
-		$fields['bp_media_settings_photos']['bp_media_group_albums'] = [
+		$fields['bp_media_settings_photos']['bp_media_group_albums_support'] = [
 			'title'             => __( 'Group Albums', 'buddyboss' ),
 			'callback'          => '__return_true',
 			'sanitize_callback' => 'absint',
