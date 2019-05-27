@@ -1194,7 +1194,7 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 
 	if ( ! bp_is_activity_like_active() ) {
-		return '';
+		return false;
 	}
 
 	$current_user_id = get_current_user_id();
