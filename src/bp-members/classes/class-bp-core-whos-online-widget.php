@@ -89,7 +89,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		<div class="item-options" id="who-online-members-list-options">
 			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat">
 				<?php esc_html_e( 'Online', 'buddyboss' ); ?>
-				<span class="count"><?php esc_html_e( $total_online, 'buddyboss'); ?></span>
+				<span class="widget-num-count"><?php esc_html_e( $total_online, 'buddyboss'); ?></span>
 			</a>
 			<?php
 			if ( bp_is_active( 'friends' ) ) :
@@ -107,7 +107,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections">
 					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
-					<span class="count"><?php esc_html_e( $count, 'buddyboss'); ?></span>
+					<span class="widget-num-count"><?php esc_html_e( $count, 'buddyboss'); ?></span>
 				</a> <?php
 			endif; ?>
 
