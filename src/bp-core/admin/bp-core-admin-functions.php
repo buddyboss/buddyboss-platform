@@ -1720,7 +1720,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		}
 	}
 
-	if ( true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() && bp_is_active( 'invites' ) ) {
+	if ( bp_is_active( 'groups' ) && true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() && bp_is_active( 'invites' ) ) {
 
 		$get_all_registered_group_types = bp_get_active_group_types();
 
