@@ -1031,8 +1031,8 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 			$email_text .= '<p>' . __( 'User: ###USER_EMAIL###', 'buddyboss' ) . '</p>';
 			$email_text .= '<p>' . __( 'Request: ###DESCRIPTION###', 'buddyboss' ) . '</p>';
 			$email_text .= '<p>' . __( 'You can view and manage these data privacy requests here:', 'buddyboss' ) . '</p>';
-			$email_text .= '<p>' . __( '###MANAGE_URL###', 'buddyboss' ) . '</p>';
-			$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+			$email_text .= '<p><a href="###MANAGE_URL###">' . __( '###MANAGE_URL###', 'buddyboss' ) . '</a></p>';
+			$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss' ) . '</p>';
 
 		} else {
 			if ( empty( $email_data['privacy_policy_url'] ) ) {
@@ -1040,14 +1040,14 @@ if ( ! function_exists( 'bp_email_wp_user_confirmed_action_email_content' ) ) {
 				$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 				$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss' ) . '</p>';
 				$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss' ) . '</p>';
-				$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss' ) . '</p>';
 			} else {
 				/* translators: Do not translate SITENAME, SITEURL, PRIVACY_POLICY_URL; those are placeholders. */
 				$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 				$email_text .= '<p>' . __( 'Your request to erase your personal data on ###SITENAME### has been completed.', 'buddyboss' ) . '</p>';
 				$email_text .= '<p>' . __( 'If you have any follow-up questions or concerns, please contact the site administrator.', 'buddyboss' ) . '</p>';
 				$email_text .= '<p>' . __( 'For more information, you can also read our privacy policy: ###PRIVACY_POLICY_URL###', 'buddyboss' ) . '</p>';
-				$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+				$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss' ) . '</p>';
 			}
 
 			$email = $email_data['user_email'];
@@ -1093,9 +1093,9 @@ if ( ! function_exists( 'bp_email_wp_user_request_action_email_content' ) ) {
 		/* translators: Do not translate DESCRIPTION, CONFIRM_URL, SITENAME, SITEURL: those are placeholders. */
 		$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'A request has been made to perform the following action on your account: <br />###DESCRIPTION###', 'buddyboss' ) . '</p>';
-		$email_text .= '<p>' . __( 'To confirm this, please click on the following link: <br />###CONFIRM_URL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'To confirm this, please click on the following link: <br /><a href="###CONFIRM_URL###">###CONFIRM_URL###</a>', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'You can safely ignore and delete this email if you do not want to take this action.', 'buddyboss' ) . '</p>';
-		$email_text .= '<p>' . __( 'Regards, <br />All at ###SITENAME### <br />###SITEURL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p>' . __( 'Regards, <br />All at <a href="###SITEURL###">###SITENAME###</a> <br /><a href="###SITEURL###">###SITEURL###</a>', 'buddyboss' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
@@ -1501,8 +1501,8 @@ if ( ! function_exists( 'bp_email_wp_privacy_personal_data_email_content' ) ) {
 
 		$email_text = '<p>' . __( 'Howdy,', 'buddyboss' ) . '</p>';
 		$email_text .= '<p>' . __( 'Your request for an export of personal data has been completed. You may download your personal data by clicking on the link below. For privacy and security, we will automatically delete the file on ###EXPIRATION###, so please download it before then.', 'buddyboss' ) . '</p>';
-		$email_text .= '<p>' . __( '###LINK###', 'buddyboss' ) . '</p>';
-		$email_text .= '<p>' . __( 'Regards, <br /> All at ###SITENAME### <br /> ###SITEURL###', 'buddyboss' ) . '</p>';
+		$email_text .= '<p><a href="###LINK###">' . __( '###LINK###', 'buddyboss' ) . '</a></p>';
+		$email_text .= '<p>' . __( 'Regards, <br /> All at <a href="###SITEURL###">###SITENAME###</a> <br /> <a href="###SITEURL###">###SITEURL###</a>', 'buddyboss' ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); //add this to support html in email
 
