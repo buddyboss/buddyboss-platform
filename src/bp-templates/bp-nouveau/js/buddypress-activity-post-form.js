@@ -1444,7 +1444,12 @@ window.bp = window.bp || {};
 					autocomplete: false,
 					pickerPosition: 'bottom',
 					hidePickerOnBlur: false,
-					useInternalCDN: false
+					useInternalCDN: false,
+					events: {
+						emojibtn_click: function () {
+							$('#whats-new')[0].emojioneArea.hidePicker();
+						},
+					}
 				});
 			}
 

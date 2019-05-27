@@ -92,6 +92,7 @@ jQuery(document).ready( function() {
 						if (typeof window.forums_medium_forum_editor !== 'undefined') {
 							window.forums_medium_forum_editor.checkContentChanged();
 						}
+						jQuery(bbp_editor_content_elem)[0].emojioneArea.hidePicker();
 					},
 				}
 			});
