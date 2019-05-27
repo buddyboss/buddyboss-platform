@@ -80,6 +80,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
+		// Tutorial
+		$this->add_field( 'bp-profile-setting-tutorial', __( '', 'buddyboss' ), 'bp_profile_setting_tutorial', 'intval' );
+
 		// @todo will use this later on
 		// Section for profile dashboard.
 		//$this->add_section( 'bp_profile_dashboard_settings', __( 'Profile Dashboard', 'buddyboss' ) );

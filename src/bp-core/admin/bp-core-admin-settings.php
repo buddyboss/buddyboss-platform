@@ -293,6 +293,22 @@ function bp_admin_setting_callback_cover_image_uploads() {
 <?php
 }
 
+/**
+ * Link to Profile Settings tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_profile_setting_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
 /** Groups Section ************************************************************/
 
 /**
