@@ -270,7 +270,7 @@ function bp_media_settings_callback_profile_media_support() {
 		<?php checked( bp_is_profile_media_support_enabled() ); ?>
     />
     <label for="bp_media_profile_media_support">
-		<?php _e( 'Allow members to upload photos in <strong>profile activity posts</strong>', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>profiles</strong>', 'buddyboss' ) ?>
     </label>
     <br/>
     <input name="bp_media_profile_albums_support"
@@ -326,7 +326,7 @@ function bp_media_settings_callback_group_media_support() {
 		<?php checked( bp_is_group_media_support_enabled() ); ?>
     />
     <label for="bp_media_group_media_support">
-		<?php _e( 'Allow members to upload photos in <strong>group activity posts</strong>', 'buddyboss' ) ?>
+		<?php _e( 'Allow members to upload photos in <strong>groups</strong>', 'buddyboss' ) ?>
     </label>
     <br/>
     <input name="bp_media_group_albums_support"
