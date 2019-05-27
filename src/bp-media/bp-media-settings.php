@@ -187,6 +187,11 @@ function bp_media_get_settings_fields() {
 
 	];
 
+	$fields['bp_media_settings_gifs']['bp_animated_gifs_tutorial'] = [
+		'title'             => __( '&#160;', 'buddyboss' ),
+		'callback'          => 'bp_animated_gifs_tutorial',
+	];
+
 	return (array) apply_filters( 'bp_media_get_settings_fields', $fields );
 }
 
@@ -766,4 +771,20 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_forums_gif_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', (bool) get_option( 'bp_media_forums_gif_support', $default ) );
+}
+
+/**
+ * Link to Animated GIFs tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_animated_gifs_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/media/animated-gifs.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
 }
