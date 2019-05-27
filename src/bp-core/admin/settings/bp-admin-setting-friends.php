@@ -35,7 +35,7 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 		}
 
 		// Connection Settings tutorial
-		$this->add_field( 'bp-connection-settings-tutorial', __( '', 'buddyboss' ), [$this, 'bp_connection_settings_tutorial'] );
+		$this->add_field( 'bp-connection-settings-tutorial','', [$this, 'bp_connection_settings_tutorial'] );
 	}
 
 	/**

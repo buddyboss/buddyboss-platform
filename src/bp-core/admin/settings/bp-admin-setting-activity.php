@@ -165,7 +165,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		}
 
 		// Posts in Activity Tutorial
-		$this->add_field( 'bp-posts-in-activity-tutorial', __( '', 'buddyboss' ), 'bp_posts_in_activity_tutorial' );
+		$this->add_field( 'bp-posts-in-activity-tutorial','', 'bp_posts_in_activity_tutorial' );
 	}
 
 }

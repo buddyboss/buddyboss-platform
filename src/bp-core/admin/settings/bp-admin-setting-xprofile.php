@@ -81,7 +81,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		// Profile Settings Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial', __( '', 'buddyboss' ), 'bp_profile_setting_tutorial' );
+		$this->add_field( 'bp-profile-setting-tutorial','', 'bp_profile_setting_tutorial' );
 
 		// @todo will use this later on
 		// Section for profile dashboard.
@@ -112,7 +112,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		// Profile Types Tutorial
-		$this->add_field( 'bp-profile-types-tutorial', __( '', 'buddyboss' ), [$this, 'bp_profile_types_tutorial'] );
+		$this->add_field( 'bp-profile-types-tutorial','', [$this, 'bp_profile_types_tutorial'] );
 
 		// Section for profile search.
 		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
@@ -121,7 +121,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
 
 		// Profile Search Tutorial
-		$this->add_field( 'bp-profile-search-tutorial', __( '', 'buddyboss' ), [$this, 'bp_profile_search_tutorial'] );
+		$this->add_field( 'bp-profile-search-tutorial','', [$this, 'bp_profile_search_tutorial'] );
 
 	}
 
