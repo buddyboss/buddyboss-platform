@@ -1824,8 +1824,6 @@ window.bp = window.bp || {};
 		loadingFeedback: false,
 
 		initialize: function() {
-			this.collection.reset();
-
 			// Load Messages
 			this.requestMessages();
 
@@ -1856,7 +1854,7 @@ window.bp = window.bp || {};
 			var data = {};
 			this.options.collection.before = null;
 
-			// this.collection.reset();
+			this.collection.reset();
 
 			this.loadingFeedback = new bp.Views.MessagesLoading();
 			this.views.add('#bp-message-content',this.loadingFeedback);
