@@ -170,6 +170,22 @@ function bp_admin_setting_callback_blogforum_comments() {
 }
 
 /**
+ * Link to Posts in Activity Feed tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_posts_in_activity_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/activity/posts-in-activity-feeds.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
  * Allow Heartbeat to refresh activity stream.
  *
  * @since BuddyPress 2.0.0
