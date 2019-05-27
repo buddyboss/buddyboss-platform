@@ -67,50 +67,6 @@ function bp_media_get_settings_fields() {
         ],
 	];
 
-	if ( bp_is_active( 'groups' ) ) {
-
-		$fields['bp_media_settings_photos']['bp_media_group_media_support'] = [
-			'title'             => __( 'Groups', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_group_media_support',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		];
-
-		$fields['bp_media_settings_photos']['bp_media_group_albums'] = [
-			'title'             => __( 'Group Albums', 'buddyboss' ),
-			'callback'          => '__return_true',
-			'sanitize_callback' => 'absint',
-			'args'              => [
-				'class' => 'hidden'
-			]
-		];
-	}
-
-	if ( bp_is_active( 'messages' ) ) {
-
-		$fields['bp_media_settings_photos']['bp_media_messages_media_support'] = [
-			'title'             => __( 'Messages', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_messages_media_support',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		];
-	}
-
-	if ( bp_is_active( 'forums' ) ) {
-
-		$fields['bp_media_settings_photos']['bp_media_forums_media_support'] = [
-			'title'             => __( 'Forums', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_forums_media_support',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		];
-	}
-
-	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = [
-		'title'             => __( '&#160;', 'buddyboss' ),
-		'callback'          => 'bp_photo_uploading_tutorial',
-	];
-
 	$fields['bp_media_settings_emoji'] = [
 
 		'bp_media_profiles_emoji_support' => [
@@ -119,33 +75,6 @@ function bp_media_get_settings_fields() {
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		],
-
-		'bp_media_groups_emoji_support' => [
-			'title'             => __( 'Groups', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_groups_emoji_support',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-		'bp_media_messages_emoji_support' => [
-			'title'             => __( 'Messages', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_messages_emoji_support',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-		'bp_media_forums_emoji_support' => [
-			'title'             => __( 'Forums', 'buddyboss' ),
-			'callback'          => 'bp_media_settings_callback_forums_emoji_support',
-			'sanitize_callback' => 'absint',
-			'args'              => []
-		],
-
-	];
-
-	$fields['bp_media_settings_emoji']['bp_emoji_tutorial'] = [
-		'title'             => __( '&#160;', 'buddyboss' ),
-		'callback'          => 'bp_emoji_tutorial',
 	];
 
 	$fields['bp_media_settings_gifs'] = [
@@ -163,28 +92,97 @@ function bp_media_get_settings_fields() {
 			'sanitize_callback' => 'absint',
 			'args'              => []
 		],
+	];
 
-		'bp_media_groups_gif_support' => [
+	if ( bp_is_active( 'groups' ) ) {
+
+		$fields['bp_media_settings_photos']['bp_media_group_media_support'] = [
+			'title'             => __( 'Groups', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_group_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+
+		$fields['bp_media_settings_photos']['bp_media_group_albums'] = [
+			'title'             => __( 'Group Albums', 'buddyboss' ),
+			'callback'          => '__return_true',
+			'sanitize_callback' => 'absint',
+			'args'              => [
+				'class' => 'hidden'
+			]
+		];
+
+		$fields['bp_media_settings_emoji']['bp_media_groups_emoji_support'] = [
+			'title'             => __( 'Groups', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_groups_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+
+		$fields['bp_media_settings_gifs']['bp_media_groups_gif_support'] = [
 			'title'             => __( 'Groups', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_groups_gif_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
-		],
+		];
+	}
 
-		'bp_media_messages_gif_support' => [
+	if ( bp_is_active( 'messages' ) ) {
+
+		$fields['bp_media_settings_photos']['bp_media_messages_media_support'] = [
+			'title'             => __( 'Messages', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+
+		$fields['bp_media_settings_emoji']['bp_media_messages_emoji_support'] = [
+			'title'             => __( 'Messages', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+
+		$fields['bp_media_settings_gifs']['bp_media_messages_gif_support'] = [
 			'title'             => __( 'Messages', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_messages_gif_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
-		],
+		];
+	}
 
-		'bp_media_forums_gif_support' => [
+	if ( bp_is_active( 'forums' ) ) {
+
+		$fields['bp_media_settings_photos']['bp_media_forums_media_support'] = [
+			'title'             => __( 'Forums', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_forums_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+
+		$fields['bp_media_settings_emoji']['bp_media_forums_emoji_support'] = [
+			'title'             => __( 'Forums', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_forums_emoji_support',
+			'sanitize_callback' => 'absint',
+			'args'              => []
+		];
+
+		$fields['bp_media_settings_gifs']['bp_media_forums_gif_support'] = [
 			'title'             => __( 'Forums', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_forums_gif_support',
 			'sanitize_callback' => 'absint',
 			'args'              => []
-		],
+		];
+	}
 
+	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = [
+		'title'             => __( '&#160;', 'buddyboss' ),
+		'callback'          => 'bp_photo_uploading_tutorial',
+	];
+
+	$fields['bp_media_settings_emoji']['bp_emoji_tutorial'] = [
+		'title'             => __( '&#160;', 'buddyboss' ),
+		'callback'          => 'bp_emoji_tutorial',
 	];
 
 	$fields['bp_media_settings_gifs']['bp_animated_gifs_tutorial'] = [
