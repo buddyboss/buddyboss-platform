@@ -184,7 +184,7 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
             "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = '_clone_number' AND meta_value = {$field_set_number} "
             . " AND object_id IN (". implode( ',', $posted_field_ids ) .") and object_type = 'field' " 
         );
-        
+
         if ( !empty( $fields_of_current_set ) && !is_wp_error( $fields_of_current_set ) ) {
             foreach ( $fields_of_current_set as $field_of_current_set ) {
                 $cloned_from = $wpdb->get_var( "SELECT meta_value FROM {$bp->profile->table_name_meta} WHERE object_id = {$field_of_current_set} AND meta_key = '_cloned_from' " );
@@ -193,12 +193,17 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
                     . " WHERE m1.object_type = 'field' AND m1.meta_key = '_cloned_from' AND m1.meta_value = {$cloned_from} "
                     . " AND m2.meta_key = '_clone_number' AND m2.meta_value = {$counter} ";
                 $corresponding_field_id = $wpdb->get_var( $sql );
-                
                 if ( !empty( $corresponding_field_id ) ) {
                     $new_data = isset( $new_values[ $field_of_current_set ][ 'value' ] ) ? $new_values[ $field_of_current_set ][ 'value' ] : '';
                     $new_visibility_level = isset( $new_values[ $field_of_current_set ][ 'visibility' ] ) ? $new_values[ $field_of_current_set ][ 'visibility' ] : '';
                     xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
-                    xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
+
+	                $type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$wpdb->prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+
+	                if ( 'datebox' === $type ) {
+		                $new_data = $new_data.' 00:00:00';
+	                }
+	                xprofile_set_field_data( $corresponding_field_id, $user_id, $new_data );
                     
                     if ( !isset( $main_field_data[ $cloned_from ] ) ) {
                         $main_field_data[ $cloned_from ] = array();
