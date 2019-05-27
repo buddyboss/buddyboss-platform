@@ -610,7 +610,7 @@ class BP_Core_Members_Switching {
 
 		if ( $old_user && ( $old_user->ID === $user->ID || bp_is_my_profile() ) ) {
 			return self::switch_back_url( $old_user );
-		} elseif ( current_user_can( 'switch_to_user', $user->ID ) || user_can( $old_user, 'switch_to_user' ) ) {
+		} elseif ( current_user_can( 'switch_to_user', $user->ID ) || user_can( $old_user, 'switch_to_user', $user->ID ) ) {
 			return self::switch_to_url( $user );
 		} else {
 			return false;
@@ -791,7 +791,7 @@ class BP_Core_Members_Switching {
 				return $user_caps;
 			}
 
-			$user_caps['switch_to_user'] = ( isset( $args[2] ) && user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );
+			$user_caps['switch_to_user'] = ( user_can( $user->ID, 'edit_user', $args[2] ) && ( $args[2] !== $user->ID ) );
 		} elseif ( 'switch_off' === $args[0] ) {
 			if ( array_key_exists( 'switch_users', $user_caps ) ) {
 				$user_caps['switch_off'] = $user_caps['switch_users'];
