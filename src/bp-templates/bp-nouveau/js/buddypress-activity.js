@@ -59,18 +59,21 @@ window.bp = window.bp || {};
 				document_title : $( document ).prop( 'title' )
 			};
 
-			// set up dropzones auto discover to false so it does not automatically set dropzones
-			window.Dropzone.autoDiscover = false;
+			if ( typeof window.Dropzone !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' ) {
 
-			this.dropzone_options = {
-				url: BP_Nouveau.ajaxurl,
-				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: 'image/*',
-				autoProcessQueue: true,
-				addRemoveLinks: true,
-				uploadMultiple: false,
-				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
-			};
+				// set up dropzones auto discover to false so it does not automatically set dropzones
+				window.Dropzone.autoDiscover = false;
+
+				this.dropzone_options = {
+					url: BP_Nouveau.ajaxurl,
+					timeout: 3 * 60 * 60 * 1000,
+					acceptedFiles: 'image/*',
+					autoProcessQueue: true,
+					addRemoveLinks: true,
+					uploadMultiple: false,
+					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+				};
+			}
 
 			this.dropzone_obj = null;
 			this.dropzone_media = [];
@@ -786,7 +789,7 @@ window.bp = window.bp || {};
 
 				$( '#ac-form-' + activity_id + ' textarea' ).focus();
 
-				if ( !_.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
+				if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea( {
 						standalone: true,
 						hideSource: false,

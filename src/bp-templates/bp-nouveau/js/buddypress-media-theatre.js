@@ -213,7 +213,7 @@ window.bp = window.bp || {};
 		getActivity: function() {
 			var self = this;
 			$('.bb-media-info-section .activity-list').addClass('loading').html('<i class="dashicons dashicons-update animate-spin"></i>');
-			if ( self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
+			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
 
 				if ( self.activity_ajax != false ) {
 					self.activity_ajax.abort();

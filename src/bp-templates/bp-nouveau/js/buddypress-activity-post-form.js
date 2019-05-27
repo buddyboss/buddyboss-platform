@@ -1157,7 +1157,7 @@ window.bp = window.bp || {};
 
 		closePickersOnEsc: function( event ) {
 			if ( event.key === 'Escape' || event.keyCode === 27 ) {
-				if (!_.isUndefined(BP_Nouveau.media.gif_api_key)) {
+				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.gif_api_key)) {
 					this.$self.removeClass('open');
 					this.$gifPickerEl.removeClass('open');
 				}
@@ -1167,7 +1167,7 @@ window.bp = window.bp || {};
 		closePickersOnClick: function( event ) {
 			var $targetEl = $(event.target);
 
-			if (!_.isUndefined(BP_Nouveau.media.gif_api_key) &&
+			if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.gif_api_key) &&
 				!$targetEl.closest('.post-gif').length) {
 				this.$self.removeClass('open');
 				this.$gifPickerEl.removeClass('open');
@@ -1436,7 +1436,7 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			if (!_.isUndefined(BP_Nouveau.media.emoji)) {
+			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
 				$('#whats-new').emojioneArea({
 					standalone: true,
 					hideSource: false,
