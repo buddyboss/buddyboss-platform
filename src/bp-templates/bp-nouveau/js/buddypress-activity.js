@@ -796,8 +796,13 @@ window.bp = window.bp || {};
 						container: '#ac-reply-emoji-button-' + activity_id,
 						autocomplete: false,
 						pickerPosition: 'bottom',
-						hidePickerOnBlur: false,
-						useInternalCDN: false
+						hidePickerOnBlur: true,
+						useInternalCDN: false,
+						events: {
+							emojibtn_click: function () {
+								$( '#ac-input-' + activity_id )[0].emojioneArea.hidePicker();
+							},
+						}
 					} );
 				}
 			}
