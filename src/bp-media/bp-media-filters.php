@@ -245,9 +245,6 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 	if ( ! empty( $_POST['bbp_media'] ) ) {
 
-		// save activity id if it is saved in forums and enabled in platform settings
-		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
-
 		// save media
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
 
@@ -274,6 +271,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 			$attachment_id     = ! empty( $media['id'] ) ? $media['id'] : 0;
 			$attached_media_id = ! empty( $media['media_id'] ) ? $media['media_id'] : 0;
 			$album_id          = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+			$group_id          = ! empty( $media['group_id'] ) ? $media['group_id'] : 0;
 			$menu_order        = ! empty( $media['menu_order'] ) ? $media['menu_order'] : 0;
 
 			if ( ! empty( $existing_media_attachment_ids ) ) {
@@ -289,21 +287,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 				}
 			}
 
-			$activity_id = false;
-			// make an activity for the media
-			if ( bp_is_active( 'activity' ) && ! empty( $main_activity_id ) ) {
-				$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
-
-				if ( ! empty( $activity_id ) ) {
-					bp_activity_update_meta( $activity_id, 'bp_media_activity', true );
-				}
-			}
-
 			$media_id = bp_media_add( array(
 				'attachment_id' => $attachment_id,
 				'title'         => $title,
-				'activity_id'   => $activity_id,
 				'album_id'      => $album_id,
+				'group_id'      => $group_id,
 				'error_type'    => 'wp_error'
 			) );
 
@@ -316,11 +304,6 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		}
 
 		$media_ids = implode( ',', $media_ids );
-
-		//save media meta for activity
-		if ( ! empty( $main_activity_id ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
-		}
 
 		//Save all attachment ids in forums post meta
 		update_post_meta( $post_id, 'bp_media_ids', $media_ids );
@@ -358,7 +341,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
 		ob_start();
 		?>
-        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
+        <div class="bb-activity-media-wrap forums-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );

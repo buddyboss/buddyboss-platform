@@ -134,11 +134,19 @@ window.bp = window.bp || {};
 				for( i = 0; i < media_elements.length; i++ ) {
 					var media_element = $(media_elements[i]);
 					if ( ! media_element.closest('#bp-existing-media-content').length ) {
-						self.medias.push({
+
+						var m = {
 							id: media_element.data('id'),
 							attachment: media_element.data('attachment-full'),
-							activity_id: media_element.data('activity-id')
-						});
+							activity_id: media_element.data('activity-id'),
+							is_forum: false
+						};
+
+						if ( media_element.closest('.forums-media-wrap').length ) {
+							m.is_forum = true;
+						}
+
+						self.medias.push(m);
 					}
 				}
 			}
@@ -212,8 +220,15 @@ window.bp = window.bp || {};
 
 		getActivity: function() {
 			var self = this;
+
 			$('.bb-media-info-section .activity-list').addClass('loading').html('<i class="dashicons dashicons-update animate-spin"></i>');
-			if ( typeof BP_Nouveau.activity !== 'undefined' && self.current_media && typeof self.current_media.activity_id !== 'undefined' ) {
+
+			if ( typeof BP_Nouveau.activity !== 'undefined' &&
+				self.current_media &&
+				typeof self.current_media.activity_id !== 'undefined' &&
+				self.current_media.activity_id != 0 &&
+				! self.current_media.is_forum
+			) {
 
 				if ( self.activity_ajax != false ) {
 					self.activity_ajax.abort();
