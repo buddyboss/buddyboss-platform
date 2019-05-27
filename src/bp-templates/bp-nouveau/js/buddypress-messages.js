@@ -1824,6 +1824,8 @@ window.bp = window.bp || {};
 		loadingFeedback: false,
 
 		initialize: function() {
+			this.collection.reset();
+
 			// Load Messages
 			this.requestMessages();
 
