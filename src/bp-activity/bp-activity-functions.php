@@ -1076,6 +1076,11 @@ function bp_activity_remove_user_favorite( $activity_id, $user_id = 0 ) {
  * @return int|string
  */
 function bp_activity_get_favorite_users_string( $activity_id ) {
+
+	if ( ! bp_is_activity_like_active() ) {
+		return 0;
+	}
+
 	$like_count      = bp_activity_get_meta( $activity_id, 'favorite_count', true );
 	$like_count      = ( isset( $like_count ) && ! empty( $like_count ) ) ? $like_count : 0;
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
@@ -1187,6 +1192,11 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
  * @return string
  */
 function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
+
+	if ( ! bp_is_activity_like_active() ) {
+		return false;
+	}
+
 	$current_user_id = get_current_user_id();
 	$favorited_users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
 
