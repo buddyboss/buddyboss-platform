@@ -66,6 +66,12 @@ function bp_media_get_settings_fields() {
 	        ]
         ],
 
+/*
+        'bp_photo_uploading_tutorial' => [
+			'title'             => __( 'Tutorial', 'buddyboss' ),
+			'callback'          => 'bp_photo_uploading_tutorial',
+		],
+*/
 	];
 
 	if ( bp_is_active( 'groups' ) ) {
@@ -106,6 +112,11 @@ function bp_media_get_settings_fields() {
 			'args'              => []
 		];
 	}
+
+	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = [
+		'title'             => __( '&#160;', 'buddyboss' ),
+		'callback'          => 'bp_photo_uploading_tutorial',
+	];
 
 	$fields['bp_media_settings_emoji'] = [
 
@@ -430,6 +441,22 @@ function bp_media_settings_callback_forums_media_support() {
  */
 function bp_is_forums_media_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_media_support_enabled', (bool) get_option( 'bp_media_forums_media_support', $default ) );
+}
+
+/**
+ * Link to Photo Uploading tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_photo_uploading_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/media/photo-uploading.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
 }
 
 /**
