@@ -1630,7 +1630,7 @@ function bp_member_type_permissions_metabox( $post ) {
 	</table>
 
 	<?php
-	if ( false === bp_restrict_group_creation() ) {
+	if ( bp_is_active( 'groups' ) && false === bp_restrict_group_creation() ) {
 		$get_all_registered_group_types = bp_get_active_group_types();
 		// Add meta box if group types is entered.
 		if ( true === bp_disable_group_type_creation() && isset( $get_all_registered_group_types ) && ! empty( $get_all_registered_group_types ) ) {

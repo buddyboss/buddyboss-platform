@@ -183,9 +183,11 @@ class BBP_BuddyPress_Activity {
 		bp_activity_set_action( $this->component, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), [ $this, 'topic_activity_action_callback' ] );
 		bp_activity_set_action( $this->component, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), [ $this, 'reply_activity_action_callback' ] );
 
-		// Group activity stream items
-		bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), [ $this, 'group_forum_topic_activity_action_callback' ] );
-		bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), [ $this, 'group_forum_reply_activity_action_callback' ] );
+		if ( bp_is_active( 'groups') ) {
+			// Group activity stream items
+			bp_activity_set_action( buddypress()->groups->id, $this->topic_create, esc_html__( 'New forum discussion', 'buddyboss' ), [ $this, 'group_forum_topic_activity_action_callback' ] );
+			bp_activity_set_action( buddypress()->groups->id, $this->reply_create, esc_html__( 'New forum reply', 'buddyboss' ), [ $this, 'group_forum_reply_activity_action_callback' ] );
+		}
 	}
 
 	/**
