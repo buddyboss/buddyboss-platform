@@ -80,8 +80,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Cover Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
 
-		// Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial', __( '', 'buddyboss' ), 'bp_profile_setting_tutorial', 'intval' );
+		// Profile Settings Tutorial
+		$this->add_field( 'bp-profile-setting-tutorial', __( '', 'buddyboss' ), 'bp_profile_setting_tutorial' );
 
 		// @todo will use this later on
 		// Section for profile dashboard.
@@ -111,11 +111,17 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-member-type-default-on-registration',__( 'Default Profile Type', 'buddyboss' ),[ $this, 'bp_admin_setting_callback_member_type_default_on_registration' ] );
 		}
 
+		// Profile Types Tutorial
+		$this->add_field( 'bp-profile-types-tutorial', __( '', 'buddyboss' ), [$this, 'bp_profile_types_tutorial'] );
+
 		// Section for profile search.
 		$this->add_section( 'bp_profile_search_settings', __( 'Profile Search', 'buddyboss' ) );
 
         // Enable/Disable profile search.
 		$this->add_field( 'bp-enable-profile-search', __( 'Profile Search', 'buddyboss' ), [$this, 'bp_admin_setting_callback_profile_search'], 'intval' );
+
+		// Profile Search Tutorial
+		$this->add_field( 'bp-profile-search-tutorial', __( '', 'buddyboss' ), [$this, 'bp_profile_search_tutorial'] );
 
 	}
 
@@ -184,33 +190,6 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				], admin_url( 'admin.php' ) )
 			)
 		);
-	}
-
-	/**
-	 * Enable member profile search.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 */
-	public function bp_admin_setting_callback_profile_search() {
-		?>
-			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
-			<?php
-			if ( false === bp_disable_advanced_profile_search() ) {
-				printf(
-					'<label for="bp-enable-profile-search">%s</label>',
-					sprintf(
-						__( 'Enable <a href="%s">advanced profile search</a> on the members directory.', 'buddyboss' ),
-						add_query_arg([
-							'post_type' => 'bp_ps_form',
-						], admin_url( 'edit.php' ) )
-					)
-				);
-			} else {
-				?>
-				<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
-				<?php
-			}
 	}
 
 	/**
@@ -298,6 +277,65 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 					],
 						admin_url( 'admin.php' ) ) ) );
 		}
+	}
+
+	/**
+	 * Link to Profile Types tutorial
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	function bp_profile_types_tutorial() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-types.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
+	}
+
+	/**
+	 * Enable member profile search.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function bp_admin_setting_callback_profile_search() {
+		?>
+			<input id="bp-enable-profile-search" name="bp-enable-profile-search" type="checkbox" value="1" <?php checked( ! bp_disable_advanced_profile_search() ); ?> />
+			<?php
+			if ( false === bp_disable_advanced_profile_search() ) {
+				printf(
+					'<label for="bp-enable-profile-search">%s</label>',
+					sprintf(
+						__( 'Enable <a href="%s">advanced profile search</a> on the members directory.', 'buddyboss' ),
+						add_query_arg([
+							'post_type' => 'bp_ps_form',
+						], admin_url( 'edit.php' ) )
+					)
+				);
+			} else {
+				?>
+				<label for="bp-enable-profile-search"><?php _e( 'Enable advanced profile search on the members directory', 'buddyboss' ); ?></label>
+				<?php
+			}
+	}
+
+	/**
+	 * Link to Profile Search tutorial
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	function bp_profile_search_tutorial() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 }
 
