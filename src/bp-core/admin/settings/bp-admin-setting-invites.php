@@ -65,6 +65,9 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 
 			}
 		}
+
+		// Email Invites tutorial
+		$this->add_field( 'bp-email-invites-tutorial', __( '', 'buddyboss' ), 'bp_email_invites_tutorial' );
 	}
 }
 

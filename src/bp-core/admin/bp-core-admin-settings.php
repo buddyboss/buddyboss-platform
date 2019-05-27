@@ -739,3 +739,19 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 	<?php
 
 }
+
+/**
+ * Link to Email Invites tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_email_invites_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/invites/invites-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
