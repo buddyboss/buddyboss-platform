@@ -647,7 +647,7 @@ function bp_media_import_submenu_page() {
                         <h2><?php _e( 'Import Media', 'buddyboss' ); ?></h2>
                         <?php if ( empty( $check ) ) {
 	                        ?>
-                            <p><?php _e( 'BuddyBoss Media plugin database tables doesn\'t exists.', 'buddyboss' ); ?></p>
+                            <p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
 	                        <?php
                         } else if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
                             ?>
