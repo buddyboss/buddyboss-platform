@@ -34,7 +34,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$args['class'] = 'child-no-padding';
 		$this->add_field( 'hide-loggedout-adminbar', __( '', 'buddyboss' ), 'bp_admin_setting_callback_admin_bar', 'intval', $args );
 		$args = array();
-		$this->add_field( 'admin-setting-tutorial', __( '', 'buddyboss' ), 'bp_admin_setting_tutorial', 'intval', $args );
+		$this->add_field( 'bp-admin-setting-tutorial', __( '', 'buddyboss' ), 'bp_admin_setting_tutorial', 'intval', $args );
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );
 		$this->add_field( 'bp-enable-private-network', __( 'Private Network', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
 		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
