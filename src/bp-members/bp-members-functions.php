@@ -4460,6 +4460,8 @@ function bp_allow_user_to_send_invites() {
 					return true;
 				} elseif ( in_array( $member_type, $disallowed_member_type, true) ) {
 					return false;
+				} elseif ( in_array( $member_type, $allowed_member_type, true) ) {
+					return true;
 				}
 			} else {
 				return true;
