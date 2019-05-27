@@ -388,6 +388,7 @@
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
+	margin-top: 20px;
 }
 
 .bb-photos-meta {
@@ -550,7 +551,8 @@
 	}
 }
 
-#buddypress .bb-media-model-container .activity-list .activity-item {
+#buddypress .bb-media-model-container .activity-list .activity-item,
+#bbpress-forums .bb-media-model-container .activity-list .activity-item {
 	border: 0;
 	box-shadow: none;
 	margin: 0;
@@ -1189,7 +1191,8 @@ ul.bb-albums-list {
 	margin-right: 15px;
 }
 
-#buddypress ul.bp-list.loading {
+#buddypress ul.bp-list.loading,
+#bbpress-forums ul.bp-list.loading {
 	background: #fff;
 	padding: 20px;
 	text-align: center;
