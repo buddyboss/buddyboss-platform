@@ -32,6 +32,22 @@ function bp_admin_setting_callback_admin_bar() {
 }
 
 /**
+ * Allow members to delete their accounts setting field.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_account_deletion() {
+?>
+
+	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( !bp_disable_account_deletion( false ) ); ?> />
+	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
+
+<?php
+}
+
+
+/**
  * Admin bar for logged in users setting field.
  *
  * @since BuddyBoss 1.0.0
@@ -47,18 +63,19 @@ function bp_admin_setting_callback_login_admin_bar() {
 }
 
 /**
- * Allow members to delete their accounts setting field.
+ * Link to Admin Settings tutorial
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.0.0
  *
  */
-function bp_admin_setting_callback_account_deletion() {
-?>
+function bp_admin_setting_tutorial() {
+	?>
 
-	<input id="bp-disable-account-deletion" name="bp-disable-account-deletion" type="checkbox" value="1" <?php checked( !bp_disable_account_deletion( false ) ); ?> />
-	<label for="bp-disable-account-deletion"><?php _e( 'Allow members to delete their profiles', 'buddyboss' ); ?></label>
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/network-settings/general-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
 
-<?php
+	<?php
 }
 
 /**
@@ -82,6 +99,36 @@ function bp_admin_setting_callback_private_network() {
 				], admin_url( 'admin.php' ) )
 			)
 	);
+}
+
+/**
+ * Allow admin to make the site private network.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_admin_setting_callback_private_network_public_content() {
+	?>
+
+	<label for="bp-enable-private-network-public-content"><?php _e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
+	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
+	<?php
+}
+
+/**
+ * Link to Privacy tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_privacy_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/network-settings/private-network.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
 }
 
 /** Activity *******************************************************************/
@@ -659,18 +706,4 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 	<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['member_type_name'], 'buddyboss' ); ?></label>
 	<?php
 
-}
-
-/**
- * Allow admin to make the site private network.
- *
- * @since BuddyBoss 1.0.0
- *
- */
-function bp_admin_setting_callback_private_network_public_content() {
-	?>
-
-	<label for="bp-enable-private-network-public-content"><?php _e( 'Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible always. Enter one URL or URI per line. ', 'buddyboss' ); ?></label>
-	<textarea rows="10" cols="100" id="bp-enable-private-network-public-content" name="bp-enable-private-network-public-content" style="margin-top: 10px;"><?php echo esc_textarea( bp_enable_private_network_public_content() ); ?></textarea>
-	<?php
 }
