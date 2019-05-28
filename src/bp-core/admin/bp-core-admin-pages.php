@@ -119,7 +119,7 @@ function bp_core_admin_register_page_fields() {
 	$existing_pages = bp_core_get_directory_page_ids();
 	$directory_pages = bp_core_admin_get_directory_pages();
 	$description = '';
-	add_settings_section( 'bp_pages', __( 'Components', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
+	add_settings_section( 'bp_pages', __( 'Component Pages', 'buddyboss' ), 'bp_core_admin_directory_pages_description', 'bp-pages' );
 	foreach ($directory_pages as $name => $label) {
 
 		if ( 'members' === $name ) {
@@ -146,7 +146,7 @@ add_action( 'admin_init', 'bp_core_admin_register_page_fields' );
  */
 function bp_core_admin_register_registration_page_fields() {
 
-	add_settings_section( 'bp_registration_pages', __( 'Registration', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
+	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
 
 	$existing_pages = bp_core_get_directory_page_ids();
 	$static_pages = bp_core_admin_get_static_pages();
