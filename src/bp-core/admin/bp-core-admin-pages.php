@@ -153,6 +153,7 @@ function bp_core_admin_register_registration_page_fields() {
 	$description = '';
 
 	foreach ($static_pages as $name => $label) {
+	    $title = $label;
 		if ( 'register' === $name ) {
 			$description = 'New users fill out this form to register their accounts.';
 		} elseif ( 'terms' === $name ) {
@@ -162,7 +163,12 @@ function bp_core_admin_register_registration_page_fields() {
 		} elseif ( 'activate' === $name ) {
 			$description = 'After registering, users are sent to this page to activate their accounts.';
 		}
-		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
+
+		if ( 'button' === $name ) {
+			$title = '';
+        }
+
+		add_settings_field( $name, $title, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
 }
@@ -214,18 +220,25 @@ function bp_core_admin_registration_pages_description() {
  * Pages dropdowns callback
  *
  * @since BuddyBoss 1.0.0
+ *
  * @param $args
  */
-function bp_admin_setting_callback_page_directory_dropdown($args) {
-	extract($args);
+function bp_admin_setting_callback_page_directory_dropdown( $args ) {
+	extract( $args );
 
-	if ( ! bp_is_root_blog() ) switch_to_blog( bp_get_root_blog_id() );
+	if ( ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
+	}
 
-	// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
-	if ( 'new_forums_page' === $name ) {
+	// For the button
+	if ( 'button' === $name ) {
+
+	    printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );
+		// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
+	} elseif ( 'new_forums_page' === $name ) {
 
 		// Get the page id from the options.
-		$id = (int) bp_get_option( '_bbp_root_slug_custom_slug');
+		$id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
 
 		// Check the status of current set value.
 		$status = get_post_status( $id );
@@ -237,42 +250,43 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 			'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
 			'echo'             => false,
 			'show_option_none' => __( '- Select a page -', 'buddyboss' ),
-			'selected'         => !empty( $id ) ? $id : false
+			'selected'         => ! empty( $id ) ? $id : false
 		) );
 
-		if ( !empty( $id ) ) {
+		if ( ! empty( $id ) ) {
 			printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
 				get_permalink( $id ),
 				__( 'View', 'buddyboss' ) );
 		} else {
 			printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
-				'javascript:void(0);',esc_attr( $name ),
+				'javascript:void(0);', esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' ) );
 		}
 
-		if ( '' !== $description )
+		if ( '' !== $description ) {
 			printf(
 				'<p class="description">%s</p>',
 				$description
 			);
+		}
 
-	// For the normal directory pages.
+		// For the normal directory pages.
 	} else {
 
 		echo wp_dropdown_pages( array(
 			'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
 			'echo'             => false,
 			'show_option_none' => __( '- Select a page -', 'buddyboss' ),
-			'selected'         => !empty( $existing_pages[$name] ) ? $existing_pages[$name] : false
+			'selected'         => ! empty( $existing_pages[ $name ] ) ? $existing_pages[ $name ] : false
 		) );
 
-		if ( !empty( $existing_pages[$name] ) ) {
+		if ( ! empty( $existing_pages[ $name ] ) ) {
 			printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
 				get_permalink( $existing_pages[ $name ] ),
 				__( 'View', 'buddyboss' ) );
 		} else {
 			printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
-				'javascript:void(0);',esc_attr( $name ),
+				'javascript:void(0);', esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' ) );
 		}
 
@@ -282,7 +296,9 @@ function bp_admin_setting_callback_page_directory_dropdown($args) {
 
 	}
 
-	if ( ! bp_is_root_blog() ) restore_current_blog();
+	if ( ! bp_is_root_blog() ) {
+		restore_current_blog();
+	}
 }
 
 /**
