@@ -93,13 +93,14 @@ class Reports
 			true
 		);
 
+		$per_page = bp_ld_sync('settings')->get('reports.per_page', 20);
 		wp_localize_script('bp-ld-reports', 'BP_LD_REPORTS_DATA', [
 			'current_group' => groups_get_current_group()->id,
 			'nonce'         => wp_create_nonce('bp_ld_report'),
 			'ajax_url'      => admin_url('admin-ajax.php'),
 			'table_columns' => $this->getCurrentTableColumns(),
 			'config' => [
-				'perpage' => bp_ld_sync('settings')->get('reports.per_page', 20)
+				'perpage' => ( '' === $per_page ) ? 20 : $per_page
 			],
 			'text' => [
 				'processing'     => __('Loading&hellip;', 'buddyboss'),
