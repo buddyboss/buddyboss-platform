@@ -188,7 +188,7 @@ module.exports = function( grunt ) {
                     },
 					type: 'wp-plugin',
                     updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
-                    updatePoFiles: true // Whether to update PO files in the same directory as the POT file.
+                    updatePoFiles: false // Whether to update PO files in the same directory as the POT file.
                 }
 			},
 			build: {
@@ -209,43 +209,6 @@ module.exports = function( grunt ) {
                     updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
                     updatePoFiles: true // Whether to update PO files in the same directory as the POT file.
                 }
-			}
-		},
-		/*
-         * .Po to .Mo
-         * Grunt plug-in to compile .po files into binary .mo files with msgfmt.
-         * Ref. https://github.com/axisthemes/grunt-potomo
-         */
-		potomo: {
-			src: {
-				options: {
-					poDel: false
-				},
-				files: [
-					{
-						expand: true,
-						cwd: SOURCE_DIR + '/languages',
-						src: ['*.po'],
-						dest: SOURCE_DIR + '/languages',
-						ext: '.mo',
-						nonull: true
-					}
-				]
-			},
-			build: {
-				options: {
-					poDel: false
-				},
-				files: [
-					{
-						expand: true,
-						cwd: BUILD_DIR + '/languages',
-						src: ['*.po'],
-						dest: BUILD_DIR + '/languages',
-						ext: '.mo',
-						nonull: true
-					}
-				]
 			}
 		},
 		imagemin: {
@@ -387,9 +350,9 @@ module.exports = function( grunt ) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate:src', 'jshint', 'stylelint', 'sass', 'makepot:src', 'potomo:src', 'rtlcss'] );
+	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate:src', 'jshint', 'stylelint', 'sass', 'makepot:src', 'rtlcss'] );
 	grunt.registerTask( 'commit',  ['src', 'checktextdomain', 'imagemin'] );
-	grunt.registerTask( 'build',   ['commit', 'clean:all', 'copy:files', 'uglify', 'jsvalidate:build', 'cssmin', 'makepot:build', 'potomo:build'/*, 'exec:bpdefault','exec:cli' */] );
+	grunt.registerTask( 'build',   ['commit', 'clean:all', 'copy:files', 'uglify', 'jsvalidate:build', 'cssmin', 'makepot:build', /*, 'exec:bpdefault','exec:cli' */] );
 	grunt.registerTask( 'release', ['build'] );
 
 	// Testing tasks.
