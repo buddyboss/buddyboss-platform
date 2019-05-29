@@ -39,6 +39,37 @@ function bp_core_help_bp_docs_link( $attr ) {
 add_shortcode( 'bp_docs_link', 'bp_core_help_bp_docs_link' );
 
 /**
+ * Dynamically Embed the Video
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $attr
+ *
+ * @return mixed
+ */
+function bp_core_help_embed_video( $attr, $content_url = '' ) {
+	$width  = isset( $attr['width'] ) ? $attr['width'] : 500;
+	$height = isset( $attr['height'] ) ? $attr['height'] : 500;
+	$url    = isset( $attr['url'] ) ? $attr['url'] : isset( $content_url ) ? $content_url : '';
+
+	if ( $url ) {
+		$url  = new SimpleXMLElement( $url );
+		$args = array(
+			'width'    => $width,
+			'height'   => $height,
+			'discover' => true,
+		);
+
+		return wp_oembed_get( $url['href'], $args );
+	} else {
+		return __( 'Video URL required', 'buddyboss' );
+	}
+
+}
+
+add_shortcode( 'bp_embed', 'bp_core_help_embed_video' );
+
+/**
  * Anchor tag help doc link
  *
  * @since BuddyBoss 1.0.0
