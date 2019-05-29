@@ -123,6 +123,19 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 				    $index ++;
 			    }
 		    }
+
+		    $gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
+
+		    if ( ! empty( $gif_data ) ) {
+			    $preview_url = wp_get_attachment_url( $gif_data['still'] );
+			    $video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
+			    $params['media']['topic_edit_gif_data'] = array(
+				    'preview_url' => $preview_url,
+				    'video_url' => $video_url,
+				    'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
+			    );
+		    }
 	    }
 
         // check if reply edit
@@ -152,6 +165,19 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 			        $index ++;
 		        }
 	        }
+
+	        $gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
+
+	        if ( ! empty( $gif_data ) ) {
+		        $preview_url = wp_get_attachment_url( $gif_data['still'] );
+		        $video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
+		        $params['media']['reply_edit_gif_data'] = array(
+		        	'preview_url' => $preview_url,
+		        	'video_url' => $video_url,
+			        'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
+		        );
+	        }
         }
 
         // check if forum edit
@@ -180,6 +206,19 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 				    );
 				    $index ++;
 			    }
+		    }
+
+		    $gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
+
+		    if ( ! empty( $gif_data ) ) {
+			    $preview_url = wp_get_attachment_url( $gif_data['still'] );
+			    $video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
+			    $params['media']['forum_edit_gif_data'] = array(
+				    'preview_url' => $preview_url,
+				    'video_url' => $video_url,
+				    'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
+			    );
 		    }
         }
     }

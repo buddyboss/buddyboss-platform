@@ -17,6 +17,18 @@
         <input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 	<?php endif; ?>
 
+	<?php if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ) : ?>
+        <div class="forums-attached-gif-container closed">
+            <div class="gif-image-container">
+                <img src="" alt="">
+            </div>
+            <div class="gif-image-remove gif-image-overlay">
+                <span class="dashicons dashicons-no"></span>
+            </div>
+        </div>
+        <input name="bbp_media_gif" id="bbp_media_gif" type="hidden" value=""/>
+	<?php endif; ?>
+
 </div>
 
 <div id="whats-new-toolbar">
@@ -29,6 +41,30 @@
             </a>
         </div>
 
+	<?php endif; ?>
+
+	<?php if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ): ?>
+        <div class="post-elements-buttons-item post-gif">
+            <div class="gif-media-search">
+                <a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>">
+                    <span class="dashicons dashicons-smiley"></span>
+                </a>
+                <div class="gif-media-search-dropdown">
+                    <div class="forums-attached-gif-container">
+                        <div class="gif-search-content">
+                            <div class="gif-search-query">
+                                <input type="search" placeholder="<?php _e('Search GIFs', 'buddyboss'); ?>" class="search-query-input" />
+                                <span class="search-icon"></span>
+                            </div>
+                            <div class="gif-search-results" id="gif-search-results">
+                                <ul class="gif-search-results-list" >
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_emoji_support_enabled() ): ?>

@@ -916,6 +916,12 @@ function bp_media_sideload_attachment( $file ) {
 
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+
+	if ( ! function_exists( 'download_url' ) ) {
+		require_once( ABSPATH . 'wp-admin' . '/includes/image.php' );
+		require_once( ABSPATH . 'wp-admin' . '/includes/file.php' );
+		require_once( ABSPATH . 'wp-admin' . '/includes/media.php' );
+	}
 	$file_array['tmp_name'] = download_url( $file );
 
 	// If error storing temporarily, return the error.

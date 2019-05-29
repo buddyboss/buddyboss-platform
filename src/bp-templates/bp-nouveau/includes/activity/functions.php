@@ -48,8 +48,7 @@ function bp_nouveau_activity_enqueue_scripts() {
 	     ! bp_is_media_component() &&
 	     ! bp_is_media_directory() &&
 	     ! bp_is_group_media() &&
-	     ! bp_is_group_albums() &&
-	     ( function_exists( 'bbp_is_single_topic' ) && ! bbp_is_single_topic() )
+	     ! bp_is_group_albums()
 	) { // media popup overlay needs activity scripts
 		return;
 	}
@@ -72,8 +71,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 	     ! bp_is_media_component() &&
 	     ! bp_is_media_directory() &&
 	     ! bp_is_group_media() &&
-	     ! bp_is_group_albums() &&
-	     ( function_exists( 'bbp_is_single_topic' ) && ! bbp_is_single_topic() )
+	     ! bp_is_group_albums()
 	) { // media popup overlay needs activity scripts
 		return $params;
 	}

@@ -24,9 +24,14 @@ add_action( 'bbp_template_after_single_topic',                  'bp_media_add_th
 add_action( 'bbp_new_reply',                                    'bp_media_forums_new_post_media_save',     999      );
 add_action( 'bbp_new_topic',                                    'bp_media_forums_new_post_media_save',     999      );
 add_action( 'edit_post',                                        'bp_media_forums_new_post_media_save',     999      );
+add_action( 'bbp_new_reply',                                    'bp_media_forums_save_gif_data',     999      );
+add_action( 'bbp_new_topic',                                    'bp_media_forums_save_gif_data',     999      );
+add_action( 'edit_post',                                        'bp_media_forums_save_gif_data',     999      );
 
 add_filter( 'bbp_get_reply_content',                            'bp_media_forums_embed_attachments',       999, 2   );
 add_filter( 'bbp_get_topic_content',                            'bp_media_forums_embed_attachments',       999, 2   );
+add_filter( 'bbp_get_reply_content',                            'bp_media_forums_embed_gif',       999, 2   );
+add_filter( 'bbp_get_topic_content',                            'bp_media_forums_embed_gif',       999, 2   );
 
 // Messages
 add_action( 'messages_message_sent',                            'bp_media_attach_media_to_message'                  );
@@ -245,6 +250,9 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 
 	if ( ! empty( $_POST['bbp_media'] ) ) {
 
+		// save activity id if it is saved in forums and enabled in platform settings
+		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+
 		// save media
 		$medias = json_decode( stripslashes( $_POST['bbp_media'] ), true );
 
@@ -308,6 +316,11 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		//Save all attachment ids in forums post meta
 		update_post_meta( $post_id, 'bp_media_ids', $media_ids );
 
+		//save media meta for activity
+		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+		}
+
 		// delete medias which were not saved or removed from form
 		if ( ! empty( $existing_media_ids ) ) {
             foreach ( $existing_media_ids as $media_id ) {
@@ -316,8 +329,6 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		}
 	}
 }
-
-
 
 /**
  * Embed topic or reply attachments in a post
@@ -351,6 +362,78 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	}
 
 	return $content;
+}
+
+/**
+ * Embed topic or reply attachments in a post
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $content
+ * @param $id
+ *
+ * @return string
+ */
+function bp_media_forums_embed_gif( $content, $id ) {
+	$gif_data = get_post_meta( $id, '_gif_data', true );
+
+	if ( empty( $gif_data ) ) {
+		return $content;
+	}
+
+	$preview_url = wp_get_attachment_url( $gif_data['still'] );
+	$video_url = wp_get_attachment_url( $gif_data['mp4'] );
+
+	ob_start();
+	?>
+    <div class="activity-attached-gif-container">
+        <div class="gif-image-container">
+            <div class="gif-player">
+                <video preload="auto" playsinline poster="<?php echo $preview_url ?>" loop muted playsinline>
+                    <source src="<?php echo $video_url ?>" type="video/mp4">
+                </video>
+                <a href="#" class="gif-play-button">
+                    <span class="dashicons dashicons-video-alt3"></span>
+                </a>
+                <span class="gif-icon"></span>
+            </div>
+        </div>
+    </div>
+	<?php
+	$content .= ob_get_clean();
+
+	return $content;
+}
+
+function bp_media_forums_save_gif_data( $post_id ) {
+
+	if ( ! bp_is_forums_gif_support_enabled() ) {
+		return;
+	}
+
+	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+
+	    // save gif data
+		$gif_data = json_decode( stripslashes( $_POST['bbp_media_gif'] ), true );
+
+		if ( ! empty( $gif_data['saved'] ) && $gif_data['saved'] ) {
+			return;
+		}
+
+		$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
+		$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
+
+		update_post_meta( $post_id, '_gif_data', [
+			'still' => $still,
+			'mp4'   => $mp4,
+		] );
+
+		$gif_data['saved'] = true;
+
+		update_post_meta( $post_id, '_gif_raw_data', $gif_data );
+	} else {
+	    delete_post_meta( $post_id, '_gif_data' );
+	    delete_post_meta( $post_id, '_gif_raw_data' );
+	}
 }
 
 /**
