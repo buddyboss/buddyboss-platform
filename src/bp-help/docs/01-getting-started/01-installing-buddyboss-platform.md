@@ -1,13 +1,8 @@
 #Installing BuddyBoss Platform
 
-[bp_embed] https://youtu.be/SVNXcZkZlp8 [/bp_embed]
-
-[**DROPBOX VIDEO**](https://www.dropbox.com/s/yv4ks864rbw0z7n/installing-plaform.mp4?raw=1)
-(To be embedded once we upload it to Youtube...)
-
----
-
 Before installing BuddyBoss Platform, please make sure you meet the [bp_docs_link text="minimum server and WordPress requirements" slug="getting-started/server-requirements.md"].
+
+[bp_embed] https://youtu.be/SVNXcZkZlp8 [/bp_embed]
 
 BuddyBoss Platform
 -------------------------------
