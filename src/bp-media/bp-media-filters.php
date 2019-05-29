@@ -365,7 +365,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 }
 
 /**
- * Embed topic or reply attachments in a post
+ * Embed topic or reply gif in a post
  *
  * @since BuddyBoss 1.0.0
  * @param $content
@@ -404,6 +404,12 @@ function bp_media_forums_embed_gif( $content, $id ) {
 	return $content;
 }
 
+/**
+ * save gif data for forum, topic, reply
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $post_id
+ */
 function bp_media_forums_save_gif_data( $post_id ) {
 
 	if ( ! bp_is_forums_gif_support_enabled() ) {
@@ -411,6 +417,9 @@ function bp_media_forums_save_gif_data( $post_id ) {
 	}
 
 	if ( ! empty( $_POST['bbp_media_gif'] ) ) {
+
+		// save activity id if it is saved in forums and enabled in platform settings
+		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
 
 	    // save gif data
 		$gif_data = json_decode( stripslashes( $_POST['bbp_media_gif'] ), true );
@@ -422,14 +431,23 @@ function bp_media_forums_save_gif_data( $post_id ) {
 		$still = bp_media_sideload_attachment( $gif_data['images']['480w_still']['url'] );
 		$mp4   = bp_media_sideload_attachment( $gif_data['images']['original_mp4']['mp4'] );
 
-		update_post_meta( $post_id, '_gif_data', [
+		$gdata = array(
 			'still' => $still,
 			'mp4'   => $mp4,
-		] );
+        );
+
+		update_post_meta( $post_id, '_gif_data', $gdata );
 
 		$gif_data['saved'] = true;
 
 		update_post_meta( $post_id, '_gif_raw_data', $gif_data );
+
+		//save media meta for forum
+		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+			bp_activity_update_meta( $main_activity_id, '_gif_data', $gdata );
+			bp_activity_update_meta( $main_activity_id, '_gif_raw_data', $gif_data );
+		}
+
 	} else {
 	    delete_post_meta( $post_id, '_gif_data' );
 	    delete_post_meta( $post_id, '_gif_raw_data' );
