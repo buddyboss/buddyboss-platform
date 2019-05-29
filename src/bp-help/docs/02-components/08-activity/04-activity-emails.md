@@ -1,5 +1,7 @@
 #Activity Emails
 
+[bp-embed] https://youtu.be/Zwk6bZOnedU [/bp-embed]
+
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/h5pcw6d989n2d04/buddyboss-platform-activity-emails.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)
 

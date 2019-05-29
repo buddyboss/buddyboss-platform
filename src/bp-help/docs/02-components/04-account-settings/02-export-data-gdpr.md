@@ -1,5 +1,7 @@
 #Export Data (GDPR)
 
+[bp-embed] https://youtu.be/veASueooWhg [/bp-embed]
+
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/r6mgiyo3wwfhyc9/buddyboss-platform-export-data-gdpr.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)
 
