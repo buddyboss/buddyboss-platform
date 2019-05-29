@@ -1,6 +1,6 @@
 #Child Theme Development
 
-[bp-embed] https://youtu.be/sTrLt04uu20 [/bp-embed]
+[bp_embed] https://youtu.be/sTrLt04uu20 [/bp_embed]
 
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/afogmym0eaqj9ip/buddyboss-theme-child-theme-development.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)

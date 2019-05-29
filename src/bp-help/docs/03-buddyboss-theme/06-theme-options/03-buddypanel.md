@@ -1,6 +1,6 @@
 #BuddyPanel
 
-[bp-embed] https://youtu.be/_3dA6XhTghU [/bp-embed]
+[bp_embed] https://youtu.be/_3dA6XhTghU [/bp_embed]
 
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/tzkc5doflvkt8n6/buddyboss-theme-options-buddypanel.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)

@@ -1,6 +1,6 @@
 #Installing BuddyBoss Theme
 
-[bp-embed] https://youtu.be/Zeo1YMaHdys [/bp-embed]
+[bp_embed] https://youtu.be/Zeo1YMaHdys [/bp_embed]
 
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/f6i45fmodnj1aja/installing-buddyboss-theme.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)

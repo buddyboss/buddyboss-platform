@@ -1,6 +1,6 @@
 #Installing BuddyBoss Platform
 
-[bp-embed] https://youtu.be/SVNXcZkZlp8 [/bp-embed]
+[bp_embed] https://youtu.be/SVNXcZkZlp8 [/bp_embed]
 
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/yv4ks864rbw0z7n/installing-plaform.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)
