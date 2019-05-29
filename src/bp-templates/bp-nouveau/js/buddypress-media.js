@@ -387,9 +387,15 @@ window.bp = window.bp || {};
 
 		removeSelectedGif: function(e) {
 			e.preventDefault();
+			this.resetForumsGifComponent();
+		},
 
+		resetForumsGifComponent: function() {
+			$('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
+			$('#whats-new-toolbar #forums-gif-button').removeClass('active');
 			$('#whats-new-attachments .forums-attached-gif-container').addClass('closed');
 			$('#whats-new-attachments .forums-attached-gif-container').find('.gif-image-container img').attr('src','');
+			$('#whats-new-attachments .forums-attached-gif-container')[0].style = '';
 			if( $('#bbp_media_gif').length ) {
 				$('#bbp_media_gif').val('');
 			}
@@ -512,7 +518,11 @@ window.bp = window.bp || {};
 
 			gif_search_dropdown.toggleClass('open');
 			target.toggleClass('active');
+			self.resetForumsMediaComponent();
+		},
 
+		resetForumsMediaComponent: function() {
+			var self = this;
 			if ( self.dropzone_obj ) {
 				self.dropzone_obj.destroy();
 			}
@@ -625,21 +635,11 @@ window.bp = window.bp || {};
 					// container class to open close
 					dropzone_container.removeClass('closed').addClass('open');
 
-					$('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
-					$('#whats-new-toolbar #forums-gif-button').removeClass('active');
-					$('#whats-new-attachments .forums-attached-gif-container').addClass('closed');
-					$('#whats-new-attachments .forums-attached-gif-container').find('.gif-image-container img').attr('src','');
-					if( $('#bbp_media_gif').length ) {
-						$('#bbp_media_gif').val('');
-					}
+					// reset gif component
+					self.resetForumsGifComponent();
 
 				} else {
-					if ( self.dropzone_obj ) {
-						self.dropzone_obj.destroy();
-					}
-					self.dropzone_media = [];
-					dropzone_container.html('');
-					dropzone_container.addClass('closed').removeClass('open');
+					self.resetForumsMediaComponent();
 				}
 
 			}
