@@ -1,6 +1,6 @@
 #Change Component Name
 
-[embed] https://vimeo.com/320529982 [/embed]
+[bp_embed] https://vimeo.com/320529982 [/bp_embed]
 
 Don't want to call your members, "members"? No problem, it's a quick walk-through changing members to "Minions".
 
