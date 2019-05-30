@@ -337,7 +337,7 @@ window.bp = window.bp || {};
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text('');
 
-				if ( !_.isUndefined( response.data.count ) ) {
+				if (response.data.count) {
 					$(self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]').find('span').text(response.data.count);
 				}
 
