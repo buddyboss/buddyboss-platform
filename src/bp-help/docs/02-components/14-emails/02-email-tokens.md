@@ -1,8 +1,6 @@
 #Email Tokens
 
-Site admins can easily edit the content of email notifications by using tokens which are placeholders for dynamic content.
-
-Some tokens can be used in any message while others are restricted due to context of each type of message. Tokens can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Tokens wrapped in three curly braces are not escaped on merging which is important for including certain content such as links.
+Site admins can easily edit the content of email notifications by using tokens which are placeholders for dynamic content. Some tokens can be used in any message while others are restricted due to context of each type of message. Tokens can we wrapped in two `{{ }}` or three `{{{ }}}` curly braces. Tokens wrapped in three curly braces are not escaped on merging which is important for including certain content such as links.
 
 ---
 
