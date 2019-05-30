@@ -450,7 +450,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 					 * This also means that all such classes must have a common set of methods.
 					 */
 					$obj                   = $this->search_helpers[ $search_type ];
-					$limit                 = ! wp_doing_ajax() ? " LIMIT " . ( $args['number'] ) : '';
+					$limit                 = isset( $_REQUEST['view'] ) ? " LIMIT " . ( $args['number'] ) : '';
 					$sql_queries[]         = "( " . $obj->union_sql( $args['search_term'] ) . " $limit ) ";
 					$total[ $search_type ] = $obj->get_total_match_count( $args['search_term'] );
 				}
