@@ -229,7 +229,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		'li_class'  => array( 'dynamic' ),
 		'link'      => bp_get_activity_directory_permalink(),
 		'text'      => __( 'All Updates', 'buddyboss' ),
-		'count'     => '',
+		'count'     => false,
 		'position'  => 5,
 	);
 
