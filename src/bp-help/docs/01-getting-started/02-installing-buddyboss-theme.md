@@ -1,10 +1,8 @@
 #Installing BuddyBoss Theme
 
-[**DROPBOX VIDEO**](https://www.dropbox.com/s/f6i45fmodnj1aja/installing-buddyboss-theme.mp4?raw=1)
-(To be embedded once we upload it to Youtube...)
-
----
 Before installing BuddyBoss Theme, please make sure you have [bp_docs_link text="installed BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"] and [bp_docs_link text="purchased BuddyBoss Theme" slug="buddyboss-theme/purchasing.md"]. [Click here](https://demos.buddyboss.com/platform-community/) for a demo of BuddyBoss Platform with BuddyBoss Theme.
+
+[bp_embed] https://youtu.be/Zeo1YMaHdys [/bp_embed]
 
 BuddyBoss Theme
 -------------------------------
