@@ -106,6 +106,14 @@ class BP_Messages_Thread {
 	 */
 	public $messages_order;
 
+	/**
+	 * Last delete message of thread
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var object
+	 */
+	public static $last_deleted_message = null;
+
 	public static $noCache = false;
 
 	/**
@@ -164,6 +172,9 @@ class BP_Messages_Thread {
 		$this->messages_perpage = $r['per_page'];
 		$this->messages_before  = $r['before'];
 		$this->thread_id        = (int) $thread_id;
+
+		// get the last message deleted for the thread
+		static::get_user_last_deleted_message( $this->thread_id );
 
 		// Get messages for thread.
 		$this->messages       = self::get_messages( $this->thread_id, $this->messages_before, $this->messages_perpage, $this->messages_order );
@@ -384,9 +395,8 @@ class BP_Messages_Thread {
 
 			global $wpdb;
 			$bp = buddypress();
-			$last_deleted_message = static::get_user_last_deleted_message( $thread_id );
-			$last_deleted_id = $last_deleted_message? $last_deleted_message->id : 0;
-			$last_deleted_timestamp = $last_deleted_message? $last_deleted_message->date_sent : '0000-00-00 00:00:00';
+			$last_deleted_id = static::$last_deleted_message ? static::$last_deleted_message->id : 0;
+			$last_deleted_timestamp = static::$last_deleted_message? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 			if ( ! $before ) {
 				$before = bp_core_current_time();
@@ -434,8 +444,7 @@ class BP_Messages_Thread {
 			return 0;
 		}
 
-		$last_deleted_message = static::get_user_last_deleted_message( $thread_id );
-		$last_deleted_timestamp = $last_deleted_message? $last_deleted_message->date_sent : '0000-00-00 00:00:00';
+		$last_deleted_timestamp = static::$last_deleted_message? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 		$results = $wpdb->get_col( $sql = $wpdb->prepare(
 			"SELECT COUNT(*) FROM {$bp->messages->table_name_messages}
@@ -460,8 +469,7 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 		$thread_id = (int) $thread_id;
 
-		$last_deleted_message = static::get_user_last_deleted_message( $thread_id );
-		$last_deleted_timestamp = $last_deleted_message? $last_deleted_message->date_sent : '0000-00-00 00:00:00';
+		$last_deleted_timestamp = static::$last_deleted_message? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 		$results = $wpdb->get_col( $sql = $wpdb->prepare(
 			"SELECT date_sent FROM {$bp->messages->table_name_messages}
@@ -496,7 +504,11 @@ class BP_Messages_Thread {
 			LIMIT 1
 		", $thread_id, bp_loggedin_user_id() ) );
 
-		return $results? (object) $results[0] : null;
+		if ( ! empty( $results ) ) {
+			static::$last_deleted_message = (object) $results[0];
+		}
+
+		return static::$last_deleted_message;
 	}
 
 	/**
