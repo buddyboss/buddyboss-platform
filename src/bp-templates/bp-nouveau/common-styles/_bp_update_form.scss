@@ -177,8 +177,7 @@
 	max-width: 400px;
 }
 
-.activity-attached-gif-container,
-.messages-attached-gif-container {
+div[class*="attached-gif-container"] {
 	position: relative;
 
 	.gif-image-remove {
@@ -290,7 +289,7 @@
 	margin: 0;
 }
 
-#buddypress .gif-search-content .gif-search-results {
+.gif-search-content .gif-search-results {
 	padding: 0 10px;
 	overflow: auto;
 	min-height: 280px;
@@ -343,4 +342,8 @@
 
 input.search-query-input {
 	width: 100%;
+}
+
+#content .toolbar-button {
+	box-shadow: none;
 }

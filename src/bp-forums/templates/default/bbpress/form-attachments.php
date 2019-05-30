@@ -46,7 +46,7 @@
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ): ?>
         <div class="post-elements-buttons-item post-gif">
             <div class="gif-media-search">
-                <a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>">
+                <a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e('Post a GIF', 'buddyboss'); ?>">
                     <span class="dashicons dashicons-smiley"></span>
                 </a>
                 <div class="gif-media-search-dropdown">
