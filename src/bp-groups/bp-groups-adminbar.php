@@ -42,7 +42,7 @@ function bp_groups_group_admin_menu() {
 	$wp_admin_bar->add_menu( array(
 		'id'    => $bp->group_admin_menu_id,
 		'title' => __( 'Edit Group', 'buddyboss' ),
-		'href'  => bp_get_group_permalink( $bp->groups->current_group )
+		'href'  => bp_get_group_permalink( $bp->groups->current_group ) . 'admin/edit-details/'
 	) );
 
 	// Index of the Manage tabs parent slug.

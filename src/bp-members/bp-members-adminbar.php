@@ -96,7 +96,7 @@ function bp_members_admin_bar_user_admin_menu() {
 		'id'    => $bp->user_admin_menu_id,
 		'title' => __( 'Edit Member', 'buddyboss' ),
 		'href'  => add_query_arg( [
-			'redirect_to' => urlencode( bp_displayed_user_domain() ),
+			'redirect_to' => urlencode( bp_get_members_component_link( 'profile', 'edit' ) ),
 		], $link )
 	) );
 
