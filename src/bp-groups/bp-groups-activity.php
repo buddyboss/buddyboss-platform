@@ -351,6 +351,7 @@ function groups_record_activity( $args = '' ) {
 		'secondary_item_id' => false,
 		'recorded_time'     => bp_core_current_time(),
 		'hide_sitewide'     => $hide_sitewide,
+		'privacy'           => 'public',
 		'error_type'        => 'bool'
 	), 'groups_record_activity' );
 

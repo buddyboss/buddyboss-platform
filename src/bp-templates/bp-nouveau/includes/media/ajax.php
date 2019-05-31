@@ -250,22 +250,23 @@ function bp_nouveau_ajax_media_save() {
 		$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
 	}
 
+	$album_privacy = 'public';
+	$medias        = $_POST['medias'];
+	$media_ids     = array();
+
 	// save media
-	$medias = $_POST['medias'];
-	$media_ids = array();
 	foreach( $medias as $media ) {
 
 		$activity_id = false;
 		// make an activity for the media
 		if ( bp_is_active( 'activity' ) ) {
-			$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+			$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
 			if ( $activity_id ) {
 				// update activity meta
 				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
 			}
 		}
 
-		$album_privacy = 'public';
 		if ( ! empty( $media['album_id'] ) ) {
 			$albums        = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
 			if ( ! empty( $albums['albums'] ) ) {
@@ -312,6 +313,12 @@ function bp_nouveau_ajax_media_save() {
 		//save media meta for activity
 		if ( ! empty( $main_activity_id ) ) {
 			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+
+			$main_activity = new BP_Activity_Activity( $main_activity_id );
+			if ( ! empty( $main_activity ) ) {
+				$main_activity->privacy = $album_privacy;
+				$main_activity->save();
+			}
 		}
 
 		ob_start();
@@ -562,7 +569,7 @@ function bp_nouveau_ajax_media_album_save() {
 			$activity_id = false;
 			// make an activity for the media
 			if ( bp_is_active( 'activity' ) ) {
-				$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+				$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
 
 				if ( $activity_id ) {
 					// update activity meta

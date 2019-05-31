@@ -207,6 +207,23 @@ function bp_has_activities( $args = '' ) {
 		? bp_displayed_user_id()
 		: false;
 
+	$privacy  = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		if ( bp_is_active( 'friends' ) && ! bp_is_group() && ! bp_is_activity_directory() ) {
+			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
+			if( $is_friend ) {
+				$privacy[] = 'friends';
+			}
+		} else if ( bp_is_active( 'friends' ) && bp_is_activity_directory() ) {
+			$privacy[] = 'friends';
+        }
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+		}
+	}
+
 	// Group filtering.
 	if ( bp_is_group() ) {
 		$object      = $bp->groups->id;
@@ -266,6 +283,7 @@ function bp_has_activities( $args = '' ) {
 		'secondary_id'      => false,        // Secondary object ID to filter on e.g. a post_id.
 		'offset'            => false,        // Return only items >= this ID.
 		'since'             => false,        // Return only items recorded since this Y-m-d H:i:s date.
+		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, media.
 
 		'meta_query'        => false,        // Filter on activity meta. See WP_Meta_Query for format.
 		'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
@@ -335,23 +353,6 @@ function bp_has_activities( $args = '' ) {
 	// argument. This prevents backpat errors with AJAX.
 	if ( ! empty( $r['include'] ) && ( 'ham_only' === $r['spam'] ) ) {
 		$r['spam'] = 'all';
-	}
-
-	// meta query for media activities, we need to explicitly do the meta checking to not include separate media activities
-	if ( empty( $r['meta_query'] ) ) {
-		$r['meta_query'] = array(
-			array(
-				'relation' => 'OR',
-				'key'      => 'bp_media_activity',
-				'compare'  => 'NOT EXISTS',
-			)
-		);
-	} else if ( ! empty( $r['meta_query'] ) ) {
-		$r['meta_query'][] = array(
-			'relation' => 'OR',
-			'key'      => 'bp_media_activity',
-			'compare'  => 'NOT EXISTS',
-		);
 	}
 
 	/*

@@ -165,6 +165,7 @@ function bp_core_install_activity_streams() {
 				mptt_left int(11) NOT NULL DEFAULT 0,
 				mptt_right int(11) NOT NULL DEFAULT 0,
 				is_spam tinyint(1) NOT NULL DEFAULT 0,
+				privacy varchar(75) NOT NULL DEFAULT 'public',
 				KEY date_recorded (date_recorded),
 				KEY user_id (user_id),
 				KEY item_id (item_id),

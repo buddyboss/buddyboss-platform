@@ -1920,6 +1920,7 @@ function bp_activity_get( $args = '' ) {
 		'sort'              => 'DESC',       // sort ASC or DESC
 		'display_comments'  => false,        // False for no comments. 'stream' for within stream display, 'threaded' for below each activity item.
 
+		'privacy'           => false,        // Privacy of activity
 		'search_terms'      => false,        // Pass search terms as a string
 		'meta_query'        => false,        // Filter by activity meta. See WP_Meta_Query for format
 		'date_query'        => false,        // Filter by date. See first parameter of WP_Date_Query for format.
@@ -1951,6 +1952,7 @@ function bp_activity_get( $args = '' ) {
 		'per_page'          => $r['per_page'],
 		'max'               => $r['max'],
 		'sort'              => $r['sort'],
+		'privacy'           => $r['privacy'],
 		'search_terms'      => $r['search_terms'],
 		'meta_query'        => $r['meta_query'],
 		'date_query'        => $r['date_query'],
@@ -2067,6 +2069,7 @@ function bp_activity_get_specific( $args = '' ) {
  *     @type bool     $hide_sitewide     Should the item be hidden on sitewide streams?
  *                                       Default: false.
  *     @type bool     $is_spam           Should the item be marked as spam? Default: false.
+ *     @type string   $privacy           Privacy of the activity Default: public.
  *     @type string   $error_type        Optional. Error type. Either 'bool' or 'wp_error'. Default: 'bool'.
  * }
  * @return WP_Error|bool|int The ID of the activity on success. False on error.
@@ -2086,6 +2089,7 @@ function bp_activity_add( $args = '' ) {
 		'recorded_time'     => bp_core_current_time(), // The GMT time that this activity was recorded.
 		'hide_sitewide'     => false,                  // Should this be hidden on the sitewide activity feed?
 		'is_spam'           => false,                  // Is this activity item to be marked as spam?
+		'privacy'           => 'public',               // privacy of the activity
 		'error_type'        => 'bool'
 	), 'activity_add' );
 
@@ -2110,6 +2114,7 @@ function bp_activity_add( $args = '' ) {
 	$activity->date_recorded     = $r['recorded_time'];
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
+	$activity->privacy           = $r['privacy'];
 	$activity->error_type        = $r['error_type'];
 	$activity->action            = ! empty( $r['action'] )
 						? $r['action']
@@ -2166,6 +2171,7 @@ function bp_activity_post_update( $args = '' ) {
 		'user_id'       => bp_loggedin_user_id(),
 		'hide_sitewide' => false,
 		'type'          => 'activity_update',
+		'privacy'       => 'public',
 		'error_type'    => 'bool',
 	) );
 
@@ -2207,6 +2213,7 @@ function bp_activity_post_update( $args = '' ) {
 		'component'     => buddypress()->activity->id,
 		'type'          => $r['type'],
 		'hide_sitewide' => $r['hide_sitewide'],
+		'privacy'       => $r['privacy'],
 		'error_type'    => $r['error_type']
 	) );
 

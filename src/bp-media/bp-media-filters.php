@@ -227,16 +227,35 @@ function bp_media_update_media_privacy( &$album ) {
 
 	if ( ! empty( $album->id ) ) {
 
-		$privacy   = $album->privacy;
-		$media_ids = BP_Media::get_album_media_ids( $album->id );
+		$privacy      = $album->privacy;
+		$media_ids    = BP_Media::get_album_media_ids( $album->id );
+		$activity_ids = array();
 
 		if ( ! empty( $media_ids ) ) {
 			foreach( $media_ids as $media ) {
 				$media_obj          = new BP_Media( $media );
 				$media_obj->privacy = $privacy;
 				$media_obj->save();
+
+				$attachment_id = $media_obj->attachment_id;
+				$main_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
+
+				if ( ! empty( $main_activity_id ) ) {
+					$activity_ids[] = $main_activity_id;
+				}
 			}
 		}
+
+		if ( ! empty( $activity_ids ) ) {
+		    foreach ( $activity_ids as $activity_id ) {
+		        $activity = new BP_Activity_Activity( $activity_id );
+
+		        if ( ! empty( $activity ) ) {
+			        $activity->privacy = $privacy;
+			        $activity->save();
+		        }
+            }
+        }
 	}
 }
 

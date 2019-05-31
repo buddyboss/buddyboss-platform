@@ -270,7 +270,7 @@ function bp_version_updater() {
 		}
 
 		// Version 3.1.1
-		if ( $raw_db_version < 13721 ) {
+		if ( $raw_db_version < 13731 ) {
 			bp_update_to_3_1_1();
 		}
 	}
@@ -556,11 +556,13 @@ function bp_update_to_2_7() {
  */
 function bp_update_to_3_1_1() {
 
+	bp_core_install_activity_streams();
 	bp_core_install_follow();
 	bp_core_install_default_profiles_fields();
 	bp_core_install_bbp_emails();
 	bp_core_install_invites_email();
 	bp_core_update_activity_favorites();
+	bp_core_fix_media_activities();
 	bp_core_install_media();
 	bp_core_install_network_search();
 }
@@ -826,5 +828,16 @@ function bp_uninstall() {
 function bp_core_update_activity_favorites() {
 	if ( bp_is_active( 'activity' ) ) {
 		bp_activity_favorites_upgrade_data();
+	}
+}
+
+/**
+ * Fix media activities
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_core_fix_media_activities() {
+	if ( bp_is_active( 'activity' ) ) {
+		bp_activity_media_fix_data();
 	}
 }
