@@ -780,15 +780,11 @@ class BP_Email_Tokens {
                                                     <?php if ( ! empty( $gif_data ) ) : ?>
                                                         <div class="activity-attached-gif-container">
                                                             <div class="gif-image-container">
-                                                                <div class="gif-player">
-                                                                    <video preload="auto" playsinline poster="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" loop muted playsinline>
-                                                                        <source src="<?php echo esc_url( wp_get_attachment_url( $gif_data['mp4'] ) ); ?>" type="video/mp4">
-                                                                    </video>
-                                                                    <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
-                                                                        <span class="dashicons dashicons-video-alt3"></span>
-                                                                    </a>
-                                                                    <span class="gif-icon"></span>
-                                                                </div>
+                                                                <a href="<?php echo esc_attr( $tokens['message.url'] ); ?>" class="gif-play-button">
+                                                                    <span class="dashicons dashicons-video-alt3"></span>
+                                                                    <img src="<?php echo esc_url( wp_get_attachment_url( $gif_data['still'] ) ); ?>" />
+                                                                </a>
+                                                                <span class="gif-icon"></span>
                                                             </div>
                                                         </div>
                                                     <?php endif; ?>
