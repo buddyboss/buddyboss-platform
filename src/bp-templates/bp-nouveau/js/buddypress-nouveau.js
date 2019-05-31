@@ -341,7 +341,7 @@ window.bp = window.bp || {};
 					$(self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]').find('span').text(response.data.count);
 				}
 
-				if (response.data.scopes) {
+				if (! _.isUndefined(response.data) && ! _.isUndefined(response.data.scopes)) {
 					for (var i in response.data.scopes) {
 						$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text(response.data.scopes[i]);
 					}
