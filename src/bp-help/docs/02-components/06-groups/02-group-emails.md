@@ -1,7 +1,6 @@
 #Group Emails
 
-[**DROPBOX VIDEO**](https://www.dropbox.com/s/zae44zfh46w0f30/buddyboss-platform-groups-emails.mp4?raw=1)
-(To be embedded once we upload it to Youtube...)
+[bp_embed] https://youtu.be/ODAHVqFaoAM [/bp_embed]
 
 ##Related Articles
 
