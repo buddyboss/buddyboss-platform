@@ -788,9 +788,9 @@ function bp_media_activation_notice() {
 			    'tab'  => 'bp-media-import'
 		    ), 'admin.php' ) );
 		    $notice    = sprintf( '%1$s <a href="%2$s">%3$s</a>',
-			    __( 'You already have <strong>BuddyBoss Media</strong></strong> plugin active. You can import all media from the old plugin here: ', 'buddyboss' ),
+			    __( 'You have <strong>BuddyBoss Media</strong></strong> plugin activated, which should not be used with BuddyBoss Platform as it has its own media component. You should first import the media into BuddyBoss Platform, and then disable BuddyBoss Media. ', 'buddyboss' ),
 			    esc_url( $admin_url ),
-			    __( 'Import', 'buddyboss' ) );
+			    __( 'Import Media', 'buddyboss' ) );
 
 		    bp_core_add_admin_notice( $notice );
 	    }
