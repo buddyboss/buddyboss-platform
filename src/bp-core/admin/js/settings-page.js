@@ -319,6 +319,13 @@
 				return false;
 			} );
 		}
+        
+        var doFitVids = function() {
+            setTimeout(function () {
+                $( 'iframe[src*="youtube"], iframe[src*="vimeo"]' ).parent().fitVids();
+            }, 300);
+        };
+        doFitVids();
 
 	});
 

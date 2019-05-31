@@ -687,6 +687,8 @@ class BP_Admin {
 			wp_enqueue_style( 'bp-hello-css' );
 			wp_enqueue_script( 'bp-hello-js' );
 		}
+        
+        wp_enqueue_script( 'bp-fitvids-js' );
 	}
 
 	/** About BuddyBoss and AppBoss ********************************************/
@@ -914,6 +916,13 @@ class BP_Admin {
 			// 3.0
 			'bp-hello-js' => array(
 				'file'         => "{$url}hello{$min}.js",
+				'dependencies' => array(),
+				'footer'       => true,
+			),
+            
+            // 1.1
+			'bp-fitvids-js' => array(
+				'file'         => "{$url}fitvids{$min}.js",
 				'dependencies' => array(),
 				'footer'       => true,
 			),
