@@ -326,7 +326,6 @@ window.bp = window.bp || {};
 			}, data );
 
 			return this.ajax( postdata, data.object ).done( function( response ) {
-				console.log(response);
 				if ( false === response.success ) {
 					return;
 				}
