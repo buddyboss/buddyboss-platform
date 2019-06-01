@@ -326,11 +326,12 @@ window.bp = window.bp || {};
 			}, data );
 
 			return this.ajax( postdata, data.object ).done( function( response ) {
-				if ( false === response.success || _.isUndefined(response.data) ) {
+				console.log(response);
+				if ( false === response.success ) {
 					return;
 				}
 
-				if ( $('body.group-members.members.buddypress').length ) {
+				if ( $('body.group-members.members.buddypress').length && ! _.isUndefined(response.data) && ! _.isUndefined(response.data.count) ) {
 					$('body.group-members.members.buddypress ul li#members-groups-li').find( 'span' ).text(response.data.count);
 				}
 
