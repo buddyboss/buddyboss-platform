@@ -42,11 +42,13 @@ if (!class_exists('Bp_Search_bbPress_Replies')):
 					) );
 			}
 
-			$in = '0';
+			$group_query = '';
 			if ( ! empty( $group_memberships ) ) {
 				$in = array_reduce( array_keys( $group_memberships ), function ( $carry, $group_id ) {
 					return $carry . ',\'' . maybe_serialize( [$group_id] ) . '\'';
 				} );
+
+				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) OR ';
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -62,8 +64,7 @@ if (!class_exists('Bp_Search_bbPress_Replies')):
 			$where[] = "(post_title LIKE %s OR {$bp_prefix}bp_strip_tags(post_content) LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
-			$where[] = '(
-			pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in, ',' ) . ') ) OR
+			$where[] = '(' . $group_query . '
 			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join( ',', $post_status ) . ') )
 			)';
 
