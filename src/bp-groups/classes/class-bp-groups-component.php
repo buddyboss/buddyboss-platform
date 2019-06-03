@@ -606,7 +606,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Add the "Members" subnav item, as this will always be present.
 			$sub_nav[] = array(
-				'name'            => sprintf( __( 'Members %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
+				'name'            => sprintf( apply_filters('group_single_members_label', __( 'Members', 'buddyboss' ) ). __( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
 				'slug'            => 'members',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
