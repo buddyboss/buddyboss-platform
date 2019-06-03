@@ -56,7 +56,7 @@ if ( is_multisite() ) {
 	}
 }
 
-if ( ! $is_bp_active ) {
+if ( ! $is_bp_active || ! $is_bb_active ) {
 	// get activated plugins
 	$plugins = get_option( 'active_plugins' );
 
