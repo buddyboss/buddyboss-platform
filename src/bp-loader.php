@@ -9,7 +9,7 @@
  */
 
 /**
- * Plugin Name: BuddyBoss Platform Testing
+ * Plugin Name: BuddyBoss Platform
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
@@ -29,24 +29,27 @@
 defined( 'ABSPATH' ) || exit;
 
 global $is_bp_active;
+global $bp_plugin_file;
+global $is_bb_active;
+global $bb_plugin_file;
+global $sitewide_plugins;
+global $plugins;
 $is_bp_active   = false;
 $bp_plugin_file = 'buddypress/bp-loader.php';
 
-global $is_bb_active;
-$is_bb_active   = false;
-$bb_plugin_file = 'bbpress/bbpress.php';
-$plugins        = array();
+$is_bb_active     = false;
+$bb_plugin_file   = 'bbpress/bbpress.php';
+$sitewide_plugins = array();
 
 if ( is_multisite() ) {
 	// get network-activated plugins
-	$sitewide_plugins = get_site_option( 'active_sitewide_plugins' );
-	foreach ( $sitewide_plugins as $key => $value ) {
-		$plugins[] = $key;
+	foreach ( get_site_option( 'active_sitewide_plugins', array() ) as $key => $value ) {
+		$sitewide_plugins[] = $key;
 	}
 
 }
 
-$plugins = array_merge( $plugins, get_option( 'active_plugins' ) );
+$plugins   = array_merge( $sitewide_plugins, get_option( 'active_plugins' ) );
 $plugins[] = isset( $_GET['plugin'] ) ? $_GET['plugin'] : array();
 
 //check if BuddyPress is activated
@@ -223,15 +226,24 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 	 * @return void
 	 */
 	function bp_duplicate_notice() {
+
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			return;
 		}
 
+
+		global $bp_plugin_file;
+		global $bb_plugin_file;
+		global $sitewide_plugins;
 		global $is_bp_active;
 		global $is_bb_active;
+		global $plugins;
 
 		// Disable BuddyPress message
 		if ( $is_bp_active ) {
+			if ( is_multisite() && (is_network_admin() && ! in_array( $bp_plugin_file, $sitewide_plugins ) || in_array( $bp_plugin_file, $plugins ) ) ) {
+				return;
+			}
 			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
@@ -247,6 +259,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 		// Disable bbPress message
 		if ( $is_bb_active ) {
 
+			if ( is_multisite() && (is_network_admin() && ! in_array( $bb_plugin_file, $sitewide_plugins ) || in_array( $bb_plugin_file, $plugins ) ) ) {
+				return;
+			}
 			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
