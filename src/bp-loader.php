@@ -9,7 +9,7 @@
  */
 
 /**
- * Plugin Name: BuddyBoss Platform
+ * Plugin Name: BuddyBoss Platform Testing
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
@@ -28,239 +28,35 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-/**
- * Make sure BuddyPress and bbPress are not activated.
- *
- * We're not using 'is_plugin_active' functions because you need to include the
- * /wp-admin/includes/plugin.php file in order to use that function.
- *
- * @since BuddyBoss 1.0.0
- */
-
+global $is_bp_active;
 $is_bp_active   = false;
 $bp_plugin_file = 'buddypress/bp-loader.php';
 
+global $is_bb_active;
 $is_bb_active   = false;
 $bb_plugin_file = 'bbpress/bbpress.php';
+$plugins        = array();
 
 if ( is_multisite() ) {
 	// get network-activated plugins
-	$plugins = get_site_option( 'active_sitewide_plugins' );
-
-	if ( isset( $plugins[ $bp_plugin_file ] ) ) {
-		$is_bp_active = true;
-	}
-
-	if ( isset( $plugins[ $bb_plugin_file ] ) ) {
-		$is_bb_active = true;
-	}
-} elseif ( ! $is_bp_active || ! $is_bb_active ) {
-	// get activated plugins
-	$plugins = get_option( 'active_plugins' );
-
-	if ( in_array( $bp_plugin_file, $plugins ) ) {
-		$is_bp_active = true;
-	}
-
-	if ( in_array( $bb_plugin_file, $plugins ) ) {
-		$is_bb_active = true;
-	}
-}
-
-if ( $is_bp_active ) {
-	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	deactivate_plugins( plugin_basename( 'buddyboss-platform/bp-loader.php' ) );
-	$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-	$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
-	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'BuddyBoss Platform dependency check', array( 'back_link' => true ) );
-
-	return;
-}
-
-if ( $is_bp_active ) {
-
-	/**
-	 * Displays an admin notice when BuddyPress plugin is active.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @return void
-	 */
-	function bp_duplicate_buddypress_notice() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
-			return;
-		}
-
-		$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-		$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
-		?>
-
-        <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
-            <p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
-        </div>
-
-		<?php
-	}
-
-	/**
-	 * You can't have BuddyPress and BuddyBoss Platform both active at the same time!
-	 */
-	add_action( 'admin_notices', 'bp_duplicate_buddypress_notice' );
-	add_action( 'network_admin_notices', 'bp_duplicate_buddypress_notice' );
-
-}
-
-if ( $is_bb_active ) {
-	require_once( ABSPATH . 'wp-admin/includes/plugin.php' );
-	deactivate_plugins( plugin_basename( 'buddyboss-platform/bp-loader.php' ) );
-	$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-	$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
-	wp_die( sprintf( esc_html__( 'BuddyBoss Platform is disabled. The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ), 'BuddyBoss Platform dependency check', array( 'back_link' => true ) );
-
-	return;
-}
-
-if ( $is_bb_active ) {
-
-	/**
-	 * Displays an admin notice when bbPress plugin is active.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @return void
-	 */
-	function bp_duplicate_bbpress_notice() {
-		if ( ! current_user_can( 'activate_plugins' ) ) {
-			return;
-		}
-
-		$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-		$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
-		?>
-
-        <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
-            <p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
-        </div>
-
-		<?php
-	}
-
-	/**
-	 * You can't have bbPress and BuddyBoss Platform both active at the same time!
-	 */
-	add_action( 'admin_notices', 'bp_duplicate_bbpress_notice' );
-	add_action( 'network_admin_notices', 'bp_duplicate_bbpress_notice' );
-
-}
-
-/**
- * BuddyBoss Platform's code is already loaded when BuddyPress is being activated and BuddyPress doesn't have function
- * checks to avoid duplicate function declarations. This leads to a fatal error.
- * To avoid that, we prevent BuddyPress from activating and we show a nice notice, instead of the dirty fatal error.
- */
-if ( ! function_exists( 'bp_prevent_activating_buddypress' ) ) {
-
-	add_action( 'admin_init', 'bp_prevent_activating_buddypress' );
-
-	/**
-	 * Check if the current request is to activate BuddyPress plugins and redirect accordingly.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @global string $pagenow
-	 */
-	function bp_prevent_activating_buddypress() {
-		global $pagenow;
-
-		if ( $pagenow == 'plugins.php' ) {
-
-			if ( isset( $_GET['action'] ) && $_GET['action'] == 'activate' && isset( $_GET['plugin'] ) ) {
-
-				if ( $_GET['plugin'] == 'buddypress/bp-loader.php' ) {
-					wp_redirect( self_admin_url( 'plugins.php?bp_prevent_activating_buddypress=1' ), 301 );
-					exit;
-				}
-
-			}
-
-			if ( isset( $_GET['bp_prevent_activating_buddypress'] ) ) {
-				add_action( 'admin_notices', 'bp_prevented_activating_buddypress_notice' );
-				add_action( 'network_admin_notices', 'bp_prevented_activating_buddypress_notice' );
-			}
-		}
-	}
-
-	/**
-	 * Show a notice that an attempt to activate BuddyPress plugin was blocked.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	function bp_prevented_activating_buddypress_notice() {
-		?>
-
-        <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BuddyPress can\'t be activated.', 'buddyboss' ); ?></strong></p>
-            <p><?php _e( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please deactivate BuddyBoss Platform first, if you wish to activate BuddyPress.', 'buddyboss' ); ?></p>
-        </div>
-
-		<?php
+	$sitewide_plugins = get_site_option( 'active_sitewide_plugins' );
+	foreach ( $sitewide_plugins as $key => $value ) {
+		$plugins[] = $key;
 	}
 
 }
 
-/**
- * BuddyBoss Platform's code is already loaded when BBPress is being activated and BBPress doesn't have function
- * checks to avoid duplicate function declarations. This leads to a fatal error.
- * To avoid that, we prevent BBPress from activating and we show a nice notice, instead of the dirty fatal error.
- */
-if ( ! function_exists( 'bp_prevent_activating_bbpress' ) ) {
+$plugins = array_merge( $plugins, get_option( 'active_plugins' ) );
+$plugins[] = isset( $_GET['plugin'] ) ? $_GET['plugin'] : array();
 
-	add_action( 'admin_init', 'bp_prevent_activating_bbpress' );
+//check if BuddyPress is activated
+if ( in_array( $bp_plugin_file, $plugins ) ) {
+	$is_bp_active = true;
+}
 
-	/**
-	 * Check if the current request is to activate BBPress plugins and redirect accordingly.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @global string $pagenow
-	 */
-	function bp_prevent_activating_bbpress() {
-		global $pagenow;
-
-		if ( $pagenow == 'plugins.php' ) {
-
-			if ( isset( $_GET['action'] ) && $_GET['action'] == 'activate' && isset( $_GET['plugin'] ) ) {
-
-				if ( $_GET['plugin'] == 'bbpress/bbpress.php' ) {
-					wp_redirect( self_admin_url( 'plugins.php?bp_prevent_activating_bbpress=1' ), 301 );
-					exit;
-				}
-
-			}
-
-			if ( isset( $_GET['bp_prevent_activating_bbpress'] ) ) {
-				add_action( 'admin_notices', 'bp_prevented_activating_bbpress_notice' );
-				add_action( 'network_admin_notices', 'bp_prevented_activating_bbpress_notice' );
-			}
-		}
-	}
-
-	/**
-	 * Show a notice that an attempt to activate BBPress plugin was blocked.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	function bp_prevented_activating_bbpress_notice() {
-		?>
-
-        <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'BBPress can\'t be activated.', 'buddyboss' ); ?></strong></p>
-            <p><?php _e( 'The BuddyBoss Platform can\'t work while BBPress plugin is active. Please deactivate BuddyBoss Platform first, if you wish to activate BBPress.', 'buddyboss' ); ?></p>
-        </div>
-
-		<?php
-	}
-
+//check if bbPress is activated
+if ( in_array( $bb_plugin_file, $plugins ) ) {
+	$is_bb_active = true;
 }
 
 /**
@@ -334,7 +130,7 @@ if ( ! function_exists( 'bp_incompatible_plugins_deactivate_notice' ) ) {
 	}
 }
 
-if ( ! $is_bp_active && ! $is_bb_active ) {
+if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 
 
 	// Required PHP version.
@@ -419,4 +215,54 @@ if ( ! $is_bp_active && ! $is_bb_active ) {
 		}
 	}
 
+} else {
+	/**
+	 * Displays an admin notice when BuddyPress plugin is active.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @return void
+	 */
+	function bp_duplicate_notice() {
+		if ( ! current_user_can( 'activate_plugins' ) ) {
+			return;
+		}
+
+		global $is_bp_active;
+		global $is_bb_active;
+
+		// Disable BuddyPress message
+		if ( $is_bp_active ) {
+			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
+			$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
+			?>
+
+            <div id="message" class="error notice">
+                <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+                <p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while BuddyPress plugin is active. Please %s BuddyPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+            </div>
+
+			<?php
+		}
+
+		// Disable bbPress message
+		if ( $is_bb_active ) {
+
+			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
+			$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
+			?>
+
+            <div id="message" class="error notice">
+                <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+                <p><?php printf( esc_html__( 'The BuddyBoss Platform can\'t work while bbPress plugin is active. Please %s bbPress to re-enable BuddyBoss Platform.', 'buddyboss' ), $link_plugins ); ?></p>
+            </div>
+
+			<?php
+		}
+	}
+
+	/**
+	 * You can't have bbPress and BuddyBoss Platform both active at the same time!
+	 */
+	add_action( 'admin_notices', 'bp_duplicate_notice' );
+	add_action( 'network_admin_notices', 'bp_duplicate_notice' );
 }
