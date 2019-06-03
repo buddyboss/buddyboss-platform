@@ -54,9 +54,7 @@ if ( is_multisite() ) {
 	if ( isset( $plugins[ $bb_plugin_file ] ) ) {
 		$is_bb_active = true;
 	}
-}
-
-if ( ! $is_bp_active || ! $is_bb_active ) {
+} elseif ( ! $is_bp_active || ! $is_bb_active ) {
 	// get activated plugins
 	$plugins = get_option( 'active_plugins' );
 
