@@ -366,7 +366,7 @@ function bp_search_items() {
 	//forums?
 
 	$items['forum'] = __( 'Forums', 'buddyboss' );
-	$items['topic'] = __( 'Forums Topics', 'buddyboss' );
+	$items['topic'] = __( 'Forums Discussions', 'buddyboss' );
 	$items['reply'] = __( 'Forums Replies', 'buddyboss' );
 
 
