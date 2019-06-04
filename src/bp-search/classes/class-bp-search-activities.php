@@ -105,6 +105,8 @@ if (!class_exists('Bp_Search_Activities')):
 
 			$post_ids = implode( ',', $post_ids_arr );
 
+			do_action( 'bp_before_search_activity_html' );
+
 			if( bp_has_activities( array( 'include'=>$post_ids, 'per_page'=>count($post_ids_arr) ) ) ){
 				while ( bp_activities() ){
 					bp_the_activity();
@@ -119,6 +121,8 @@ if (!class_exists('Bp_Search_Activities')):
 					$this->search_results['items'][bp_get_activity_id()] = $result;
 				}
 			}
+
+			do_action( 'bp_after_search_activity_html' );
 		}
 
 	}

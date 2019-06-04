@@ -17,4 +17,4 @@
 ##Related Articles
 
 - Before installing BuddyBoss Theme, please make sure you have installed [bp_docs_link text="BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"].
-- For information on how to do custom theme development, view our [bp_docs_link text="Child Theme Development" slug="theme-development/child-theme-development.md"] tutorial.
+- For information on how to do custom theme development, view our [bp_docs_link text="Child Theme Development" slug="development/theme-development/child-theme-development.md"] tutorial.

@@ -1866,12 +1866,14 @@ function bp_member_type_wprole_metabox( $post ) {
 				type='radio'
 				name='bp-member-type[wp_roles][]'
 				id="bp-member-type-roles-none"
-				value='' <?php echo empty( $selected_roles[0] ) ? 'checked' : '';
-			?> />
+				value='' />
 			<?php _e( '(None)', 'buddyboss' ) ?>
-		</label>
+		</labe>
 	</p>
 	<?php
+
+	empty( $selected_roles[0] ) ? $selected_roles = array('subscriber') : '' ;
+			
 	if( isset($all_roles) && !empty($all_roles) ){
 		foreach($all_roles as $key => $val){
 			?>

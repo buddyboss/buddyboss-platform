@@ -326,22 +326,22 @@ window.bp = window.bp || {};
 			}, data );
 
 			return this.ajax( postdata, data.object ).done( function( response ) {
-				if ( false === response.success ) {
+				if ( false === response.success || _.isUndefined(response.data) ) {
 					return;
 				}
 
-				if ( $('body.group-members.members.buddypress').length ) {
+				if ( $('body.group-members.members.buddypress').length && ! _.isUndefined(response.data) && ! _.isUndefined(response.data.count) ) {
 					$('body.group-members.members.buddypress ul li#members-groups-li').find( 'span' ).text(response.data.count);
 				}
 
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).removeClass( 'loading' );
 				$( self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).find( 'span' ).text('');
 
-				if (response.data.count) {
+				if (! _.isUndefined(response.data) && ! _.isUndefined(response.data.count)) {
 					$(self.objectNavParent + ' [data-bp-scope="' + data.scope + '"]').find('span').text(response.data.count);
 				}
 
-				if (response.data.scopes) {
+				if (! _.isUndefined(response.data) && ! _.isUndefined(response.data.scopes)) {
 					for (var i in response.data.scopes) {
 						$( self.objectNavParent + ' [data-bp-scope="' + i + '"]' ).find( 'span' ).text(response.data.scopes[i]);
 					}
