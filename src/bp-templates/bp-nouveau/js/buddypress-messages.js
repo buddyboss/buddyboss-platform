@@ -1113,7 +1113,7 @@ window.bp = window.bp || {};
 
 		addSelect2: function() {
 			var $input = $( this.el ).find( '#send-to-input' );
-
+			var ArrayData = [];
 			if ( $input.prop('tagName') != 'SELECT' ) {
 				this.addMentions();
 				return;
@@ -1132,13 +1132,41 @@ window.bp = window.bp || {};
 							action: 'messages_search_recipients'
 						});
 					},
+					cache: true,
 					processResults: function( data ) {
+
+						// Removed the element from results if already selected.
+						if ( false === jQuery.isEmptyObject( ArrayData ) ) {
+							$.each( ArrayData, function( index, value ) {
+								for(var i=0;i<data.data.results.length;i++){
+									if(data.data.results[i].id === value){
+										data.data.results.splice(i,1);
+									}
+								}
+							});
+						}
+
 						return {
 							results: data && data.success? data.data.results : []
 						};
 					}
 				}
 			});
+
+			// Add element into the Arrdata array.
+			$input.on("select2:select", function(e) {
+				var data = e.params.data;
+				ArrayData.push(data.id);
+			});
+
+			// Remove element into the Arrdata array.
+			$input.on("select2:unselect", function(e) {
+				var data = e.params.data;
+				ArrayData = jQuery.grep(ArrayData, function(value) {
+					return value != data.id;
+				});
+			});
+
 		},
 
 		resetFields: function( model ) {
