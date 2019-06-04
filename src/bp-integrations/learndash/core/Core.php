@@ -340,7 +340,7 @@ class Core
 						$post_type        = $last_know_post_object->post_type; // getting post_type of last page.
 						$label            = get_post_type_object( $post_type ); // getting Labels of the post type.
 						$title            = $last_know_post_object->post_title;
-						$resume_link_text = __( 'RESUME', 'buddyboss-theme' );
+						$resume_link_text = __( 'RESUME', 'buddyboss' );
 
 						if ( function_exists( 'learndash_get_step_permalink' ) ) {
 							$permalink = learndash_get_step_permalink( $step_id, $step_course_id );
