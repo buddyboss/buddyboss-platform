@@ -475,6 +475,10 @@ input#send-to-input {
 
 .messages .select2-dropdown {
 	border-color: $med-light-grey;
+
+	.select2-results__option[aria-selected=true] {
+		display: none;
+	}
 }
 
 .messages-wrapper #subnav .subnav {
