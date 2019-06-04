@@ -1083,14 +1083,17 @@ body.post-type-bp-email .categorydiv label {
 .bp-help-content h1 {
   font-weight: 500;
   font-size: 2em;
+  margin-bottom: 1em;
 }
 
 .bp-help-content h2 {
   font-size: 1.5em;
+  margin-bottom: 1em;
 }
 
 .bp-help-content h3 {
   font-size: 1.2em;
+  margin-bottom: 1em;
 }
 
 .bp-help-content code {
