@@ -3924,6 +3924,10 @@ input#send-to-input {
   border-color: #d6d6d6;
 }
 
+.messages .select2-dropdown .select2-results__option[aria-selected=true] {
+  display: none;
+}
+
 .messages-wrapper #subnav .subnav {
   display: -webkit-box;
   display: -ms-flexbox;
