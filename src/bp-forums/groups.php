@@ -740,7 +740,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		// Assume forum query
 		bbp_set_query_name( 'bbp_single_forum' ); ?>
 
-		<div id="bbpress-forums">
+		<!--<div id="bbpress-forums"> // *** Removed Due to duplicate id *** //-->
 
 			<?php switch ( $forum_action ) :
 
@@ -792,7 +792,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 					// If no topic, 404
 					if ( ! bbp_topics() ) {
 						bp_do_404( bbp_get_forum_permalink( $forum_id ) ); ?>
-						<h3><?php bbp_forum_title(); ?></h3>
+						<h3 class="bbp-forum-title"><?php bbp_forum_title(); ?></h3>
 						<?php bbp_get_template_part( 'feedback', 'no-topics' );
 						return;
 					}
@@ -800,7 +800,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 					// Setup the topic
 					bbp_the_topic(); ?>
 
-					<h3><?php bbp_topic_title(); ?></h3>
+					<h3 class="bbp-topic-title"><?php bbp_topic_title(); ?></h3>
 
 					<?php
 
@@ -890,7 +890,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 			// Reset the query
 			wp_reset_query(); ?>
 
-		</div>
+		<!--</div>-->
 
 		<?php
 
