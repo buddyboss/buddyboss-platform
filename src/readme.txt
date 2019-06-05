@@ -9,37 +9,12 @@ License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
 BuddyBoss Platform helps site builders & developers add community features to their websites, with user profiles, activity feeds, and more!
 
-== Description ==
+= Documentation =
 
-Are you looking for modern, robust, and sophisticated social network software? BuddyBoss Platform is a suite of components that are common to a typical social network, and allows for great add-on features through WordPress's extensive plugin system.
+- [Tutorials](https://www.buddyboss.com/resources/docs/)
+- [Developer Reference](https://www.buddyboss.com/resources/reference/)
 
-Aimed at site builders & developers, BuddyBoss Platform is focused on ease of integration, ease of use, and extensibility. It is deliberately powerful yet unbelievably simple social network software, built by contributors to WordPress.
-
-https://wordpress.tv/2015/08/23/rocio-valdivia-buddypress-much-more-than-a-plugin/
-
-Members can register on your site to create user profiles, have private conversations, make social connections, create and interact in groups, and much more. Truly a social network in a box, BuddyBoss Platform helps you build a home for your company, school, sports team, or other niche community.
-
-= Built with developers in mind =
-
-BuddyBoss Platform helps site builders & developers add community features to their websites. It comes with a robust theme compatibility API that does its best to make every BuddyBoss Platform content page look and feel right with just about any WordPress theme. You will likely need to adjust some styling on your own to make everything look pristine.
-
-BuddyBoss Platform themes are just WordPress themes with additional templates, and with a little work, you could easily create your own, too! A handful of BuddyBoss Platform-specific themes are readily available for download from WordPress.org, and lots more are available from third-party theme authors.
-
-BuddyBoss Platform also comes with built-in support for Akismet and [bbPress](https://wordpress.org/plugins/bbpress/), two very popular and very powerful WordPress plugins. If you're using either, visit their settings pages and ensure everything is configured to your liking.
-
-= The BuddyBoss Platform ecosystem =
-
-WordPress.org is home to some amazing extensions for BuddyBoss Platform, including:
-
-- [rtMedia for WordPress, BuddyBoss Platform and bbPress](https://wordpress.org/plugins/buddypress-media/)
-- [BuddyBoss Platform Docs](https://wordpress.org/plugins/buddypress-docs/)
-- [BuddyBoss Activity Plus](https://wordpress.org/plugins/buddypress-activity-plus/)
-
-Search WordPress.org for "BuddyBoss Platform" to find them all!
-
-== Installation ==
-
-= Requirements =
+== Requirements ==
 
 To run BuddyBoss Platform, we recommend your host supports:
 
@@ -47,23 +22,25 @@ To run BuddyBoss Platform, we recommend your host supports:
 * MySQL version 5.6 or greater, or, MariaDB version 10.0 or greater.
 * HTTPS support.
 
-= Automatic installation =
+== Installation ==
 
-Automatic installation is the easiest option as WordPress handles everything itself. To do an automatic install of BuddyBoss Platform, log in to your WordPress dashboard, navigate to the Plugins menu and click Add New.
+1. Visit 'Plugins > Add New'
+2. Click 'Upload Plugin'
+3. Upload the file 'buddyboss-platform.zip'
+4. Activate 'BuddyBoss Platform' from your Plugins page.
 
-In the search field type "BuddyBoss Platform" and click Search Plugins. Once you've found it, you can view details about the latest release, such as community reviews, ratings, and description. Install BuddyBoss Platform by simply pressing "Install Now".
+== Setup ==
 
-Once activated:
-
-1. Visit 'Settings > BuddyBoss Platform > Components' and adjust the active components to match your community. (You can always toggle these later.)
-2. Visit 'Settings > BuddyBoss Platform > Pages' and setup your directories and special pages. We create a few automatically, but suggest you customize these to fit the flow and verbiage of your site.
-3. Visit 'Settings > BuddyBoss Platform > Settings' and take a moment to match BuddyBoss Platform's settings to your expectations. We pick the most common configuration by default, but every community is different.
+1. Visit 'BuddyBoss > Components' and adjust the active components to match your community. (You can always toggle these later.)
+2. Visit 'BuddyBoss > Pages' and setup your directories and registration pages. We create a few automatically, but suggest you customize these to fit the flow and verbiage of your site.
+3. Visit 'BuddyBoss > Settings' and take a moment to match BuddyBoss Platform's settings to your expectations. We pick the most common configuration by default, but every community is different.
+4. Visit 'BuddyBoss > Help' for tutorials on further configuration.
 
 == Frequently Asked Questions ==
 
 = Can I use my existing WordPress theme? =
 
-Yes! BuddyBoss Platform works out-of-the-box with nearly every WordPress theme.
+Yes! BuddyBoss Platform works out-of-the-box with most generic WordPress themes.
 
 = Will this work on WordPress multisite? =
 
@@ -76,34 +53,31 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Enable multiblog mode to allow your BuddyBoss Platform content to be displayed on any site in your WordPress Multisite network, using the same central data.
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
-= Who builds BuddyBoss Platform? =
-
-BuddyBoss Platform is free software, built by an international community of volunteers. Some contributors to BuddyBoss Platform are employed by companies that use BuddyBoss Platform, while others are consultants who offer BuddyBoss Platform-related services for hire. No one is paid by the BuddyBoss Platform project for his or her contributions.
-
-If you would like to provide monetary support to BuddyBoss Platform, please consider a donation to the <a href="https://wordpressfoundation.org">WordPress Foundation</a>, or ask your favorite contributor how they prefer to have their efforts rewarded.
-
-= Discussion Forums =
-
-Try <a href="https://wordpress.org/plugins/bbpress/">bbPress</a>. It integrates with BuddyBoss Groups, Profiles, and Notifications. Each group on your site can choose to have its own forum, and each user's topics, replies, favorites, and subscriptions appear in their profiles.
-
-== Screenshots ==
-
-1. **Activity Feeds** - Global, personal, and group activity feeds with threaded commenting, direct posting, favoriting and @mentions. All with full RSS feeds and email notification support.
-2. **Profile Fields** - Fully editable profile fields allow you to define the fields users can fill in to describe themselves. Tailor profile fields to suit your audience.
-3. **User Settings** - Give your users complete control over profile and notification settings. Settings are fully integrated into your theme, and can be disabled by the administrator.
-4. **Extensible Groups** - Powerful public, private or hidden groups allow your users to break the discussion down into specific topics. Extend groups with your own custom features using the group extension API.
-5. **Connections** - Let your users make connections so they can follow the activity of others, or filter to show only those users they care about the most.
-6. **Private Messaging** - Private messaging will allow your users to talk to each other directly and in private. Not just limited to one-on-one discussions, your users can send messages to multiple recipients.
-7. **Site Tracking** - Track posts and comments in the activity feed, and allow your users to add their own blogs using WordPress' Multisite feature.
-8. **Notifications** - Keep your members up-to-date with relevant activity via toolbar and email notifications.
-
-== Upgrade Notice ==
-
-= 3.1.0 =
-See: https://codex.buddypress.org/releases/version-3-1-0/
-
 == Changelog ==
 
-= 3.1.0 =
+= 1.0.0 =
+* Initial Release -- fork of BuddyPress
+* Forum Discussions -- merged in bbPress and re-factored as a native forum component
+* Media Uploading -- Photos, Albums, Emoji, Animated GIFs
+* Email Inivites -- members can invite outside users to your community
+* Network Search -- search content across the entire network
+* Private Network -- restrict access to all of your content with a single click
+* Profiles -- new 'Repeater Fields' options
+* Profiles -- new 'Profile Types' manager
+* Profiles -- new 'View As' button to toggle between members
+* Profiles -- new profile fields for 'Gender' and 'Social Networks'
+* Profiles -- new option to set display name as First, First & Last, or Nickname
+* Groups -- new Group Types manager
+* Groups -- new Group Heirarchies manager
+* Messages -- combined all messages into single threads, like Facebook and LinkedIn
+* Messages -- significantly enhanced messaging interface
+* Activity -- combined all activity into single feed, like Facebook and LinkedIn
+* Activity -- new 'Likes' option
+* Activity -- new 'Follow' option
+* Activity -- new option to add any custom post types into activity feed
+* Default Data -- new tool to easily install default data
+* LearnDash -- ability to connect one or more courses with social groups
+* LearnDash -- ability to run group reports on course progress
+* Many more features and improvements!
 
-See: https://codex.buddypress.org/releases/version-3-1-0/
+
