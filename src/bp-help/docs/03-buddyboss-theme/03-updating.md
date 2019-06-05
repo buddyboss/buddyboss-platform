@@ -4,7 +4,7 @@
 
 Activating your license key(s) on your site will give you direct access to new BuddyBoss Theme updates, via the WordPress updates page. You will also need to keep an active license to have access to support from our team. Note that free BuddyBoss products, including BuddyBoss Platform, do not require a license.
 
-[**DROPBOX VIDEO**](https://www.dropbox.com/s/9i548822hrbqmny/buddyboss-theme-updating.mp4?raw=1)
+[**DROPBOX VIDEO**](https://www.dropbox.com/s/b7mj5awkm55i8aq/buddyboss-theme-updating.mp4?raw=1)
 (To be embedded once we upload it to Youtube...
 
 ###There are 2 ways of activating license keys:
