@@ -124,15 +124,15 @@ function bp_nouveau_ajax_albums_loader() {
 		while ( bp_album() ) {
 			bp_the_album();
 			bp_get_template_part( 'media/album-entry' );
-
-			if ( bp_album_has_more_items() ) : ?>
-
-                <li class="load-more">
-                    <a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-                </li>
-
-			<?php endif;
 		}
+
+		if ( bp_album_has_more_items() ) : ?>
+
+            <li class="load-more">
+                <a class="button outline" href="<?php bp_album_has_more_items(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+            </li>
+
+		<?php endif;
 	}
 	$albums = ob_get_contents();
 	ob_end_clean();
