@@ -9,9 +9,9 @@ Activating your license key(s) on your site will give you direct access to new B
 
 ###There are 2 ways of activating license keys:
 
-1. **Auto Connect (Recommended):** Click on the button that says 'Connect to BuddyBoss'. You'll be taken to buddyboss.com. Login with your BuddyBoss account and 'Allow' when asked for permission. Then, all your license information will automatically be filled-in and your products will be activated.
+1. **Auto Connect (Recommended):** Go to BuddyBoss -> License Keys. Then click on the button that says 'Connect to BuddyBoss'. You'll be taken to buddyboss.com. Login with your BuddyBoss account and 'Allow' when asked for permission. Then, all your license information will automatically be filled-in and your products will be activated.
 
-2. **Manual Connect:** You can also enter your license information manually by logging into buddyboss.com and finding the license key and account email.
+2. **Manual Connect:** You can also enter your license information manually by logging into buddyboss.com and finding the license key and account email. Then go to BuddyBoss -> License Keys and enter the license and email.
 
 ---
 
