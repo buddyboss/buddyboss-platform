@@ -1657,9 +1657,14 @@ function bbp_reply_to_link( $args = array() ) {
 			$onclick  = '';
 		}
 
+		$modal = '';
+		if ( '' !== $onclick ) {
+			$modal = 'data-modal-id-inline="new-reply-'.$reply->post_parent.'"';
+		}
+
 		// Add $uri to the array, to be passed through the filter
 		$r['uri'] = $uri;
-		$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link"' . $onclick . '>' . esc_html( $r['reply_text'] ) . '</a>' . $r['link_after'];
+		$retval   = $r['link_before'] . '<a href="' . esc_url( $r['uri'] ) . '" class="bbp-reply-to-link"' . $modal . $onclick . '>' . esc_html( $r['reply_text'] ) . '</a>' . $r['link_after'];
 
 		return apply_filters( 'bbp_get_reply_to_link', $retval, $r, $args );
 	}
