@@ -11,6 +11,10 @@ We recommend using [Loco Translate](https://wordpress.org/plugins/loco-translate
 [**DROPBOX VIDEO**](https://www.dropbox.com/s/77k89sdy7c1jn4c/buddyboss-theme-language-translations.mp4?raw=1)
 (To be embedded once we upload it to Youtube...)
 
+###Troubleshooting
+
+After translating the theme, when you go back to translate it again you might find that your translation file is no longer listed for the theme. If this happens, in Loco Translate click on the theme link and then click on the "Setup" tab. Click the "Reset Config" button. Now everything should work again.
+
 ##Related Articles
 
 - See our [bp_docs_link text="Translating BuddyBoss Platform" slug="getting-started/translating-buddyboss-platform.md"] tutorial for how to translate the plugin text.
