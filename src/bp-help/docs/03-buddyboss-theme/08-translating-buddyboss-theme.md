@@ -5,3 +5,7 @@ You might want to change the text, labels and messages seen throughout BuddyBoss
 ###Automatic Translation via Loco Translate
 
 We recommend using [Loco Translate](https://wordpress.org/plugins/loco-translate/) plugin to translate all text found in the BuddyBoss Theme language files.
+
+
+[**DROPBOX VIDEO**](https://www.dropbox.com/s/77k89sdy7c1jn4c/buddyboss-theme-language-translations.mp4?raw=1)
+(To be embedded once we upload it to Youtube...)
