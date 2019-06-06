@@ -707,7 +707,7 @@ add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
  *
  */
 function bp_media_import_submenu_page() {
-	global $wpdb;
+	global $wpdb, $background_updater;
 
 	$bp_media_import_status = get_option( 'bp_media_import_status' );
 
