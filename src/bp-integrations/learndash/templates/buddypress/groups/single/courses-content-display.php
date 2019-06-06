@@ -89,13 +89,7 @@ $template_args = array(
 
 $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?>
 
-<h1 class="entry-title"><?php echo get_the_title( $course_id ); ?></h1>
 
-<?php if ( has_excerpt( $course_id ) ) { ?>
-	<div class="bb-course-excerpt">
-		<?php echo get_the_excerpt( $course_id ); ?>
-	</div>
-<?php } ?>
 
 <div class="<?php echo esc_attr( learndash_the_wrapper_class() ); ?>">
 
@@ -150,6 +144,15 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	<div class="bb-grid">
 
 		<div class="bb-learndash-content-wrap">
+
+
+			<h1 class="entry-title"><?php echo get_the_title( $course_id ); ?></h1>
+
+			<?php if ( has_excerpt( $course_id ) ) { ?>
+				<div class="bb-course-excerpt">
+					<?php echo get_the_excerpt( $course_id ); ?>
+				</div>
+			<?php } ?>
 
 			<?php
 			/**
