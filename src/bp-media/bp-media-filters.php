@@ -111,7 +111,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 			remove_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
 
 			// make an activity for the media
-			$a_id = bp_activity_post_update( array( 'hide_sitewide' => true ) );
+			$a_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
 
 			if ( $a_id ) {
 				// update activity meta
