@@ -753,6 +753,12 @@ function bp_media_import_submenu_page() {
 							?>
                             <p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
 							<?php
+						} else if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
+							?>
+                            <p>
+								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
+                            </p>
+							<?php
 						} else if ( 'done' == $bp_media_import_status ) {
 							?>
                             <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
