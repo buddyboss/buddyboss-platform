@@ -57,6 +57,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// enable or disable group automatically approve memberships.
 		$this->add_field( 'bp-enable-group-auto-join', __( 'Auto Membership Approval', 'buddyboss' ), 'bp_admin_setting_callback_group_auto_join', 'intval' );
 
+		// Group Types Tutorial
+		$this->add_field( 'bp-group-types-tutorial','', 'bp_group_types_tutorial' );
+
 		// Register Group Hierarchies sections.
 		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ) );
 

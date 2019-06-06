@@ -488,6 +488,22 @@ function bp_admin_setting_callback_group_auto_join() {
 	<?php
 }
 
+/**
+ * Link to Group Types tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_group_types_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-types.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
 /** Settings Page *************************************************************/
 
 /**
