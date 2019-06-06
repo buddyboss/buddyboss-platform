@@ -4450,11 +4450,17 @@ function bp_allow_user_to_send_invites() {
 						$disallowed_member_type[] = $type_name;
 					}
 				}
+
+				if ( empty( $allowed_member_type) ) {
+					return true;
+				}
 				// Get the member type of current logged in user.
 				$member_type = bp_get_member_type( bp_loggedin_user_id() );
 				if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
 					return true;
-				} elseif ( false === $member_type ) {
+				} elseif ( false === $member_type && ! current_user_can( 'manage_options' ) ) {
+					return false;
+				} elseif ( false === $member_type && current_user_can( 'manage_options' ) ) {
 					return true;
 				} elseif ( empty( $allowed_member_type ) || count( $allowed_member_type ) === count( $member_types ) ) {
 					return true;
