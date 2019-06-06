@@ -304,7 +304,7 @@
 				}
 			} );
 
-			jQuery( '.bp-admin-form #bb-admin-submit' ).click( function () {
+			jQuery( '.bp-admin-form #bp-admin-submit' ).click( function () {
 				if ( confirm( BP_ADMIN.tools.default_data.submit_button_message ) ) {
 					return true;
 				}
@@ -312,7 +312,7 @@
 				return false;
 			} );
 
-			jQuery( '.bp-admin-form #bb-admin-clear' ).click( function () {
+			jQuery( '.bp-admin-form #bp-admin-clear' ).click( function () {
 				if ( confirm( BP_ADMIN.tools.default_data.clear_button_message ) ) {
 					return true;
 				}

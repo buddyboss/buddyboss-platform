@@ -111,7 +111,7 @@ abstract class BP_Admin_Tab {
 			'tools'    => array(
 				'default_data' => array(
 					'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
-					'clear_button_message'  => esc_js( __( "Are you sure you want to delete all 'Default Data' content? Content that was created by you and others, and not by this default data installer, will not be deleted.", 'buddyboss' ) ),
+					'clear_button_message'  => esc_js( __( "Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.", 'buddyboss' ) ),
 				)
 			),
 		] );
