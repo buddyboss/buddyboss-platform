@@ -308,7 +308,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 ?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( !bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload profile avatars', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -321,7 +321,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 function bp_admin_setting_callback_cover_image_uploads() {
 ?>
 	<input id="bp-disable-cover-image-uploads" name="bp-disable-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_cover_image_uploads() ); ?> />
-	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow members to upload cover photos', 'buddyboss' ); ?></label>
+	<label for="bp-disable-cover-image-uploads"><?php _e( 'Allow members to upload cover images', 'buddyboss' ); ?></label>
 <?php
 }
 
@@ -375,7 +375,7 @@ function bp_admin_setting_callback_group_creation() {
 function bp_admin_setting_callback_group_avatar_uploads() {
 ?>
 	<input id="bp-disable-group-avatar-uploads" name="bp-disable-group-avatar-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_avatar_uploads() ); ?> />
-	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow social group organizers to upload an avatar', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-avatar-uploads"><?php _e( 'Allow group organizers to upload an avatar', 'buddyboss' ); ?></label>
 <?php
 }
 
@@ -387,7 +387,7 @@ function bp_admin_setting_callback_group_avatar_uploads() {
 function bp_admin_setting_callback_group_cover_image_uploads() {
 ?>
 	<input id="bp-disable-group-cover-image-uploads" name="bp-disable-group-cover-image-uploads" type="checkbox" value="1" <?php checked( ! bp_disable_group_cover_image_uploads() ); ?> />
-	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow social group organizers to upload cover photos', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-cover-image-uploads"><?php _e( 'Allow group organizers to upload cover photos', 'buddyboss' ); ?></label>
 <?php
 }
 
