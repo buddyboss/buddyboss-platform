@@ -2264,7 +2264,10 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 		$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
 		$key = $key.$unique;
 	}
-	update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
+
+	$get_existing = get_post_meta( $post_id, '_bp_group_type_key', true );
+	( '' === $get_existing ) ? update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) ) : '';
+
 	update_post_meta( $post_id, '_bp_group_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_group_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_group_type_enable_filter', $enable_filter );
