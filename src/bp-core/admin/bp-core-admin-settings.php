@@ -460,6 +460,22 @@ function bp_admin_setting_callback_group_restrict_invites() {
 }
 
 /**
+ * Link to Group Hierarchies tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_group_hierarchies_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-hierarchies.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
  * Enable auto group membership approval field markup.
  *
  * @since BuddyBoss 1.0.0

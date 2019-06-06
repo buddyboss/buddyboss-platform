@@ -72,6 +72,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$type = array();
 		$type['class'] = 'bp-enable-group-restrict-invites';
 		$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval', $type );
+
+		// Group Hierarchies Tutorial
+		$this->add_field( 'bp-group-hierarchies-tutorial','', 'bp_group_hierarchies_tutorial' );
 	}
 }
 
