@@ -210,7 +210,7 @@ class BP_Admin {
 
 		global $pagenow, $current_screen;
 
-		if ( is_plugin_active( 'wp-job-manager/wp-job-manager.php' ) && isset( $_GET['page'] ) && 'bp-profile-setup' === $_GET['page'] &&  'admin.php' === $pagenow && 'buddyboss_page_bp-profile-setup' === $current_screen->id ) {
+		if ( is_plugin_active( 'wp-job-manager/wp-job-manager.php' ) && isset( $_GET['page'] ) && 'bp-profile-setup' === $_GET['page'] &&  'admin.php' === $pagenow && isset( $current_screen->id ) && 'buddyboss_page_bp-profile-setup' === $current_screen->id ) {
 
 			wp_dequeue_style('jquery-ui-style');
 			wp_deregister_style('jquery-ui-style');
