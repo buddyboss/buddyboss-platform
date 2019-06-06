@@ -99,6 +99,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			// $this->add_field( '_bp_enable_akismet', __( 'Akismet', 'buddyboss' ), 'bp_admin_setting_callback_activity_akismet', 'intval' );
 		}
 
+		// Activity Settings Tutorial
+		$this->add_field( 'bp-activity-settings-tutorial','', 'bp_activity_settings_tutorial' );
+
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
 		// create field for default Platform activity feed.

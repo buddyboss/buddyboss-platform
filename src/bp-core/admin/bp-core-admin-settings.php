@@ -256,6 +256,22 @@ function bp_admin_setting_callback_enable_activity_link_preview() {
 	<?php
 }
 
+/**
+ * Link to Activity Settings tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_activity_settings_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/activity/activity-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
 
 /**
  * Sanitization for bp-disable-blogforum-comments setting.
