@@ -818,7 +818,7 @@ function bp_media_activation_notice() {
 				'tab'  => 'bp-media-import'
 			), 'admin.php' ) );
 			$notice    = sprintf( '%1$s <a href="%2$s">%3$s</a>',
-				__( 'You have <strong>BuddyBoss Media</strong></strong> plugin activated, which should not be used with BuddyBoss Platform as it has its own media component. You should first import the media into BuddyBoss Platform, and then disable BuddyBoss Media. ', 'buddyboss' ),
+				__( 'We have found some media uploaded from the <strong>BuddyBoss Media</strong></strong> plugin, which is not compatible with BuddyBoss Platform as it has its own media component. You should  import the media into BuddyBoss Platform, and then remove the BuddyBoss Media plugin if you are still using it.', 'buddyboss' ),
 				esc_url( $admin_url ),
 				__( 'Import Media', 'buddyboss' ) );
 
