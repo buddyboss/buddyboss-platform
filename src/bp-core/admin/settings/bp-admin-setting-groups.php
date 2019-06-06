@@ -45,6 +45,9 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-disable-group-cover-image-uploads', __( 'Cover Photo Uploads', 'buddyboss' ), 'bp_admin_setting_callback_group_cover_image_uploads', 'intval' );
 		}
 
+		// Group Settings Tutorial
+		$this->add_field( 'bp-group-setting-tutorial','', 'bp_group_setting_tutorial' );
+
 		// Register Group Types sections.
 		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ) );
 
