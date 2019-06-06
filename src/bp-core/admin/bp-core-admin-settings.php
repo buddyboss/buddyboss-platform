@@ -341,7 +341,7 @@ function bp_profile_setting_tutorial() {
 	<?php
 }
 
-/** Groups Section ************************************************************/
+/** Group Settings ************************************************************/
 
 /**
  * Groups settings section description for the settings page.
@@ -407,6 +407,8 @@ function bp_group_setting_tutorial() {
 	<?php
 }
 
+/** Group Types ************************************************************/
+
 /**
  * 'Enable group types' field markup.
  *
@@ -432,47 +434,6 @@ function bp_admin_setting_callback_group_type_creation() {
 		<?php
 	}
 
-}
-
-/**
- * 'Enable group hierarchies' field markup.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_group_hierarchies() {
-	?>
-	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
-	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have subgroups', 'buddyboss' ); ?></label>
-	<?php
-}
-
-/**
- * Enable group restrict invites field markup.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_admin_setting_callback_group_restrict_invites() {
-	?>
-	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
-	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ); ?></label>
-    <p class="description"><?php _e( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ); ?></p>
-	<?php
-}
-
-/**
- * Link to Group Hierarchies tutorial
- *
- * @since BuddyBoss 1.0.0
- *
- */
-function bp_group_hierarchies_tutorial() {
-	?>
-
-	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-hierarchies.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
-	</p>
-
-	<?php
 }
 
 /**
@@ -515,6 +476,49 @@ function bp_group_types_tutorial() {
 
 	<p>
 		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-types.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/** Group Hierarchies ************************************************************/
+
+/**
+ * 'Enable group hierarchies' field markup.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_group_hierarchies() {
+	?>
+	<input id="bp-enable-group-hierarchies" name="bp-enable-group-hierarchies" type="checkbox" value="1" <?php checked( bp_enable_group_hierarchies() ); ?> />
+	<label for="bp-enable-group-hierarchies"><?php _e( 'Allow groups to have subgroups', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
+ * Enable group restrict invites field markup.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_group_restrict_invites() {
+	?>
+	<input id="bp-enable-group-restrict-invites" name="bp-enable-group-restrict-invites" type="checkbox" value="1" <?php checked( bp_enable_group_restrict_invites() ); ?> />
+	<label for="bp-enable-group-restrict-invites"><?php _e( 'Restrict subgroup invites to members of the parent group', 'buddyboss' ); ?></label>
+    <p class="description"><?php _e( 'Members must first be a member of the parent group prior to being invited to a subgroup', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Link to Group Hierarchies tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
+function bp_group_hierarchies_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-hierarchies.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
