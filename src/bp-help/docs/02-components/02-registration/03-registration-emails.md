@@ -1,5 +1,7 @@
 #Registration Emails
 
+In this tutorial, we teach you how to configure all the emails that are used during the registration process.  
+
 [bp_embed] https://youtu.be/Te_uAn7ELKs [/bp_embed]
 
 ##Related Articles

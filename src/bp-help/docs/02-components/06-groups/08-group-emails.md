@@ -1,5 +1,7 @@
 #Group Emails
 
+In this tutorial, we teach you how to configure all the emails that are sent out from social groups.
+
 [bp_embed] https://youtu.be/ODAHVqFaoAM [/bp_embed]
 
 ##Related Articles

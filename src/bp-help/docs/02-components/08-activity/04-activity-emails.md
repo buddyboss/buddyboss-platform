@@ -1,5 +1,7 @@
 #Activity Emails
 
+In this tutorial, we teach you how to configure all the emails that are sent out from Activity Feeds.
+
 [bp_embed] https://youtu.be/Zwk6bZOnedU [/bp_embed]
 
 ##Related Articles

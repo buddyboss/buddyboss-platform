@@ -1,5 +1,7 @@
 #Invites Emails
 
+In this tutorial, we teach you how to configure all the emails that are sent out when members invite each other into the community.
+
 [bp_embed] https://youtu.be/tLE8flHXIJk [/bp_embed]
 
 ##Related Articles
