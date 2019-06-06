@@ -8,10 +8,11 @@ You might want to change the text, labels and notices seen throughout BuddyBoss 
 
 We recommend using [Loco Translate](https://wordpress.org/plugins/loco-translate/) plugin to translate all text found in the BuddyBoss Platform language files.
 
-[**DROPBOX VIDEO**](https://www.dropbox.com/s/25aamvtcbo60kxg/buddyboss-platform-language-translations.mp4?raw=1)
-(To be embedded once we upload it to Youtube...)
+[bp_embed] https://youtu.be/NtOvg75CVQ4 [/bp_embed]
 
-###Troubleshooting
+##Troubleshooting
+
+###I am unable to re-translate my plugin
 
 After translating the plugin, when you go back to translate it again you might find that your translation file is no longer listed for the plugin. If this happens, in Loco Translate click on the plugin link and then click on the "Setup" tab. Click the "Reset Config" button. Now everything should work again.
 
