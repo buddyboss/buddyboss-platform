@@ -580,6 +580,7 @@ window.bp = window.bp || {};
 									}
 
 									self.dropzone_media.splice( i, 1 );
+									self.addMediaIdsToForumsForm();
 									break;
 								}
 							}
