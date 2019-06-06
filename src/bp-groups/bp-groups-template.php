@@ -809,11 +809,11 @@ function bp_group_status_description( $group = false ) {
         }
 
         if ( 'public' == $group->status ) {
-            $description = __( 'This group’s content, including its members and activity, are visible to any site member.', 'buddyboss' );
+            $description = __( 'This group\'s content, including its members and activity, are visible to any site member.', 'buddyboss' );
         } elseif ( 'hidden' == $group->status ) {
             $description = __( 'Only group members can view its content, including its members and activity.', 'buddyboss' );
         } elseif ( 'private' == $group->status ) {
-            $description = __( 'This group’s activity feed is only visible to members of the group.', 'buddyboss' );
+            $description = __( 'This group\'s content is only visible to members of the group.', 'buddyboss' );
         } else {
             $description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
         }
