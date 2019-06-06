@@ -623,6 +623,7 @@ function bp_core_install_network_search() {
 	global $wpdb;
 	$bp_prefix = bp_core_get_table_prefix();
 
+	$wpdb->query("DROP FUNCTION IF EXISTS `{$bp_prefix}bp_strip_tags`;");
 	$wpdb->query( "
 	CREATE FUNCTION `{$bp_prefix}bp_strip_tags`(str text) RETURNS text CHARSET utf8
 BEGIN
