@@ -194,6 +194,29 @@ class BP_Admin {
 
 		// Add the separator above the plugins in admin.
 		add_filter( 'menu_order', array( $this, 'buddyboss_plugins_menu_order' ) );
+
+		// DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
+		add_action('admin_enqueue_scripts', array( $this, 'deregister_wp_job_manager_shared_assets' ) , 21 );
+
+	}
+
+	/**
+	 * DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	public function deregister_wp_job_manager_shared_assets() {
+
+		global $pagenow, $current_screen;
+
+		if ( is_plugin_active( 'wp-job-manager/wp-job-manager.php' ) && isset( $_GET['page'] ) && 'bp-profile-setup' === $_GET['page'] &&  'admin.php' === $pagenow && 'buddyboss_page_bp-profile-setup' === $current_screen->id ) {
+
+			wp_dequeue_style('jquery-ui-style');
+			wp_deregister_style('jquery-ui-style');
+
+		}
+
 	}
 
 	/**
