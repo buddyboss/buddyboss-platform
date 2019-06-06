@@ -707,7 +707,7 @@ add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
  *
  */
 function bp_media_import_submenu_page() {
-    global $wpdb, $background_updater;
+	global $wpdb;
 
 	$bp_media_import_status = get_option( 'bp_media_import_status' );
 
@@ -727,11 +727,12 @@ function bp_media_import_submenu_page() {
 		}
 	}
 
-	$check = true;
-	if ( 'done' != $bp_media_import_status ) {
-		$buddyboss_media_table = $wpdb->prefix . 'buddyboss_media';
-		$check                 = $wpdb->get_var("SELECT 1 from {$buddyboss_media_table} LIMIT 1");
-    }
+	$check                        = true;
+	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
+	$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
+	if ( 'done' != $bp_media_import_status && ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) && ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
+		$check = false;
+	}
 
 	?>
     <div class="wrap">
@@ -748,24 +749,20 @@ function bp_media_import_submenu_page() {
                 <form id="bp-member-type-import-form" method="post" action="">
                     <div class="import-panel-content">
                         <h2><?php _e( 'Import Media', 'buddyboss' ); ?></h2>
-                        <?php if ( empty( $check ) ) {
-	                        ?>
+						<?php if ( $check ) {
+							?>
                             <p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
-	                        <?php
-                        } else if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
-                            ?>
-                            <p>
-                                <?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
-                            </p>
-                            <?php
-                        } else if ( 'done' == $bp_media_import_status ) {
-	                        ?>
+							<?php
+						} else if ( 'done' == $bp_media_import_status ) {
+							?>
                             <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
-	                        <?php
-                        } else { ?>
+							<?php
+						} else { ?>
                             <p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-                            <input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary">
-                        <?php } ?>
+                            <input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
+                            <input type="hidden" value="0" id="bp_media_import_page" />
+							<?php wp_nonce_field( 'bp_media_import', 'bp_media_import_wpnonce' ); ?>
+						<?php } ?>
                     </div>
                 </form>
             </div>
@@ -785,7 +782,7 @@ function bp_media_import_submenu_page() {
 function bp_media_get_import_callbacks() {
 	return array(
 		'bp_media_import_buddyboss_media_tables',
-	    'bp_media_update_import_status',
+		'bp_media_update_import_status',
 	);
 }
 
@@ -795,24 +792,31 @@ function bp_media_get_import_callbacks() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_activation_notice() {
+	global $wpdb;
 
-    if ( function_exists( 'buddyboss_media' ) ) {
+	if ( ! empty( $_GET['page'] ) && 'bp-media-import' == $_GET['page'] ) {
+		return;
+	}
 
-	    $bp_media_import_status = get_option( 'bp_media_import_status' );
+	$bp_media_import_status = get_option( 'bp_media_import_status' );
 
-	    if ( 'done' != $bp_media_import_status ) {
+	if ( 'done' != $bp_media_import_status ) {
 
-		    $admin_url = bp_get_admin_url( add_query_arg( array(
-			    'page' => 'bp-media-import',
-			    'tab'  => 'bp-media-import'
-		    ), 'admin.php' ) );
-		    $notice    = sprintf( '%1$s <a href="%2$s">%3$s</a>',
-			    __( 'You have <strong>BuddyBoss Media</strong></strong> plugin activated, which should not be used with BuddyBoss Platform as it has its own media component. You should first import the media into BuddyBoss Platform, and then disable BuddyBoss Media. ', 'buddyboss' ),
-			    esc_url( $admin_url ),
-			    __( 'Import Media', 'buddyboss' ) );
+		$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
+		$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
 
-		    bp_core_add_admin_notice( $notice );
-	    }
-    }
+		if ( ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) && ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
 
+			$admin_url = bp_get_admin_url( add_query_arg( array(
+				'page' => 'bp-media-import',
+				'tab'  => 'bp-media-import'
+			), 'admin.php' ) );
+			$notice    = sprintf( '%1$s <a href="%2$s">%3$s</a>',
+				__( 'You have <strong>BuddyBoss Media</strong></strong> plugin activated, which should not be used with BuddyBoss Platform as it has its own media component. You should first import the media into BuddyBoss Platform, and then disable BuddyBoss Media. ', 'buddyboss' ),
+				esc_url( $admin_url ),
+				__( 'Import Media', 'buddyboss' ) );
+
+			bp_core_add_admin_notice( $notice );
+		}
+	}
 }
