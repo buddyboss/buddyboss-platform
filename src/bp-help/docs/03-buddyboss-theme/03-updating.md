@@ -2,7 +2,7 @@
 
 ##Managing your License Keys
 
-Activating your license key(s) on your site will give you direct access to new BuddyBoss Theme updates, via the WordPress updates page. You will also need to keep an active license to have access to support from our team. Note that free BuddyBoss products, including BuddyBoss Platform, do not require a license.
+Activating your license key(s) on your site will give you direct access to new BuddyBoss Theme updates, via the WordPress updates page. You will also need to keep an active license to have access to support from our team. Note that free BuddyBoss products, including BuddyBoss Platform, do not require a license. Learn more on how to manage license keys by watching this video.
 
 [bp_embed] https://youtu.be/1yqNtGCkXVE [/bp_embed]
 

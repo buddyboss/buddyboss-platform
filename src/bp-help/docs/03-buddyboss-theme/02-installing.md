@@ -1,8 +1,8 @@
 #Installing
 
-[bp_embed] https://youtu.be/Zeo1YMaHdys [/bp_embed]
+In this tutorial, we'll show you how to properly install the BuddyBoss Theme to make everything look beautiful. [Click here](https://demos.buddyboss.com/online-communities/) for a demo of BuddyBoss Platform with BuddyBoss Theme.
 
-[Click here](https://demos.buddyboss.com/online-communities/) for a demo of BuddyBoss Theme.
+[bp_embed] https://youtu.be/Zeo1YMaHdys [/bp_embed]
 
 ##Installation Instructions
 

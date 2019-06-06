@@ -4,7 +4,7 @@ This is it. You've set up WordPress and you're only a few clicks away from publi
 
 [bp_embed] https://youtu.be/SVNXcZkZlp8 [/bp_embed]
 
-##Installation
+##Installation Instructions
 
 *   [Download](https://wordpress.org/download/) and [install](https://wordpress.org/support/article/how-to-install-wordpress/) WordPress.
 *   [Download](https://www.buddyboss.com/) the BuddyBoss Platform.
