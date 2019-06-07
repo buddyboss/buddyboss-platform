@@ -1,6 +1,6 @@
 #LearnDash Setup
 
-In this tutorial you will learn how to install and configure [LearnDash LMS](https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4) for BuddyBoss Theme. We have taken extra care to make sure LearnDash looks beautiful with our theme, and we've added custom integrations to make learning social by connecting [bp_docs_link text="courses with social groups" slug="integrations/learndash/courses-with-social-groups.md"].
+In this tutorial you will learn how to install and configure [LearnDash LMS](https://learndash.idevaffiliate.com/111.html) for BuddyBoss Theme. We have taken extra care to make sure LearnDash looks beautiful with our theme, and we've added custom integrations to make learning social by connecting [bp_docs_link text="courses with social groups" slug="integrations/learndash/courses-with-social-groups.md"].
 
 [bp_embed] https://youtu.be/muuBXIClDJM [/bp_embed]
 
@@ -10,7 +10,7 @@ Our [bp_docs_link text="BuddyBoss Theme" slug="buddyboss-theme/overview.md"] is 
 
 ##Installation Instructions
 
-1. Purchase [LearnDash LMS](https://getdpd.com/cart/hoplink/14394?referrer=56whuq1wlakosg0k4)
+1. Purchase [LearnDash LMS](https://learndash.idevaffiliate.com/111.html)
 2. Download the ZIP file provided by LearnDash
 3. Click on Plugins -> Add New
 4. Click Upload, and attach the zip file
