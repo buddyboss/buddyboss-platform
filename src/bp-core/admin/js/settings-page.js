@@ -327,6 +327,49 @@
         };
         doFitVids();
 
+		var bp_media_import_send_status_requests = function() {
+			var import_status_interval = setInterval(function() {
+
+				$.ajax({
+					'url' : BP_ADMIN.ajax_url,
+					'method' : 'POST',
+					'data' : {
+						'action' : 'bp_media_import_status_request',
+					},
+					'success' : function( response ) {
+						if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
+							var total_media = response.data.total_media;
+							var total_albums = response.data.total_albums;
+							var albums_done = response.data.albums_done;
+							var media_done = response.data.media_done;
+							var import_status = response.data.import_status;
+
+							$('#bp-media-import-albums-total').text(total_albums);
+							$('#bp-media-import-media-total').text(total_media);
+							$('#bp-media-import-albums-done').text(albums_done);
+							$('#bp-media-import-media-done').text(media_done);
+
+							if ( import_status == 'done' ) {
+								clearInterval(import_status_interval);
+								$('#bp-media-import-msg').text(response.data.success_msg);
+							}
+						} else {
+							clearInterval(import_status_interval);
+							$('#bp-media-import-msg').text(response.data.error_msg);
+						}
+					},
+					'error' : function() {
+						clearInterval(import_status_interval);
+					}
+				});
+
+			}, 2000);
+		};
+
+		if ( $('#bp-media-import-updating').length ) {
+			bp_media_import_send_status_requests();
+		}
+
 	});
 
 }());

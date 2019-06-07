@@ -1019,11 +1019,22 @@ function bp_media_update_import_status() {
 	update_option( 'bp_media_import_status_timestamp', bp_core_current_time() );
 }
 
+/**
+ * Import BuddyBoss Media plugin db tables into Media Component
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_media_import_buddyboss_media_tables() {
 	global $wpdb;
 
 	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
 	$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
+
+	$total_media  = $wpdb->get_var( "SELECT COUNT(*) FROM {$buddyboss_media_table}" );
+	$total_albums = $wpdb->get_var( "SELECT COUNT(*) FROM {$buddyboss_media_albums_table}" );
+
+	update_option( 'bp_media_import_total_media', $total_media );
+	update_option( 'bp_media_import_total_albums', $total_albums );
 
 	$albums = $wpdb->get_results( "SELECT * FROM {$buddyboss_media_albums_table}" );
 
@@ -1031,6 +1042,7 @@ function bp_media_import_buddyboss_media_tables() {
 
 	if ( ! empty( $albums ) ) {
 
+		$albums_count = 0;
 		foreach ( $albums as $album ) {
 
 			$user_id      = ! empty( $album->user_id ) ? $album->user_id : false;
@@ -1064,6 +1076,10 @@ function bp_media_import_buddyboss_media_tables() {
 			if ( ! empty( $album_id ) ) {
 				$album_ids[ $album_id ] = $album->id;
 			}
+
+			$albums_count++;
+
+			update_option( 'bp_media_import_albums_done', $albums_count );
 		}
 	}
 
@@ -1072,6 +1088,7 @@ function bp_media_import_buddyboss_media_tables() {
 	if ( ! empty( $medias ) ) {
 
 		$activity_ids = array();
+		$media_done = 0;
 
 		foreach ( $medias as $media ) {
 
@@ -1161,6 +1178,10 @@ function bp_media_import_buddyboss_media_tables() {
 					$activity_ids[ $activity_id ][] = $media_id;
 				}
 			}
+
+			$media_done++;
+
+			update_option( 'bp_media_import_media_done', $media_done );
 		}
 
 		if ( ! empty( $activity_ids ) && bp_is_active( 'activity' ) ) {
