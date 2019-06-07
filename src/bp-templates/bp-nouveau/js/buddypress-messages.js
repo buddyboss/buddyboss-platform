@@ -1154,13 +1154,13 @@ window.bp = window.bp || {};
 			});
 
 			// Add element into the Arrdata array.
-			$input.on("select2:select", function(e) {
+			$input.on('select2:select', function(e) {
 				var data = e.params.data;
 				ArrayData.push(data.id);
 			});
 
 			// Remove element into the Arrdata array.
-			$input.on("select2:unselect", function(e) {
+			$input.on('select2:unselect', function(e) {
 				var data = e.params.data;
 				ArrayData = jQuery.grep(ArrayData, function(value) {
 					return value != data.id;
