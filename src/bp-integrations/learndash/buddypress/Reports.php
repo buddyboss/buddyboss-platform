@@ -55,6 +55,7 @@ class Reports
 		add_action('bp_ld_sync/reports', [$this, 'showReportExport'], 40);
 
 		add_filter('bp_ld_sync/reports_generator_params', [$this, 'forceOwnReportResults'], 99);
+		add_filter('bp_ld_sync/reports_generator_params', [$this, 'courseReportResults'], 99);
 
 		add_filter('bp_ld_sync/report_filters', [$this, 'removeCourseFilterIfOnlyOne']);
 		add_filter('bp_ld_sync/report_filters', [$this, 'removeUserFilterIfStudent']);
@@ -191,6 +192,18 @@ class Reports
 	}
 
 	/**
+	 * Filter to sort the report by Course
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function courseReportResults( $params ) {
+		if ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) ) {
+			$params['course_ids'] = absint( $_REQUEST['course'] );
+		}
+		return $params;
+	}
+
+	/**
 	 * Only allow non admin/mod to view his own reports
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -204,7 +217,7 @@ class Reports
 		$userId = bp_loggedin_user_id();
 		$groupId = $currentGroup->id;
 
-		if (groups_is_user_admin($userId, $groupId) || groups_is_user_mod($userId, $groupId) ) {
+		if (groups_is_user_admin($userId, $groupId) || groups_is_user_mod($userId, $groupId) || is_user_admin() ) {
 			return $params;
 		}
 
