@@ -153,7 +153,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Auto Create LearnDash Group', 'buddyboss'),
 			[
 				'input_text' => __('Automatically create and associate a LearnDash group upon creation', 'buddyboss'),
-				'input_description' => __('(Required if you want an associated LearnDash group and course tab is disabled during creation)', 'buddyboss'),
+				'input_description' => __('Required if you want an associated LearnDash group, and course tab is disabled during creation', 'buddyboss'),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -163,7 +163,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Auto Delete LearnDash Group', 'buddyboss'),
 			[
 				'input_text' => __('Automatically delete the associated LearnDash group when the social group is deleted', 'buddyboss'),
-				'input_description' => __('(Uncheck this to delete the group manually)', 'buddyboss'),
+				'input_description' => __('Uncheck this to delete the group manually', 'buddyboss'),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -178,7 +178,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none' => __('None', 'buddyboss'),
 				],
 				'input_default' => 'admin',
-				'input_description' => __('Select the group organizer\'s assigned role in LearnDash', 'buddyboss'),
+				'input_description' => __('Social group "Organizers" will be assigned to the above role in LearnDash groups', 'buddyboss'),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -193,21 +193,21 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none' => __('None', 'buddyboss'),
 				],
 				'input_default' => 'admin',
-				'input_description' => __('Select the group moderator\'s assigned role in LearnDash', 'buddyboss'),
+				'input_description' => __('Social group "Moderators" will be assigned to the above role in LearnDash groups', 'buddyboss'),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
 
 		$this->add_select_field(
 			'default_user_sync_to',
-			__('Sync Users', 'buddyboss'),
+			__('Sync Members', 'buddyboss'),
 			[
 				'input_options' => [
 					'user' => __('Group User', 'buddyboss'),
 					'none' => __('None', 'buddyboss'),
 				],
 				'input_default' => 'user',
-				'input_description' => __('Select the group member\'s assigned role in LearnDash', 'buddyboss'),
+				'input_description' => __('Social group "Members" will be assigned to the above role in LearnDash groups', 'buddyboss'),
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
@@ -280,7 +280,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'hidden' => __('Hidden', 'buddyboss'),
 				],
 				'input_default' => 'private',
-				'input_description' => __('Select the created Social Group privacy setting', 'buddyboss'),
+				'input_description' => __('Select the default social group Privacy setting upon creation', 'buddyboss'),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
@@ -295,7 +295,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'admins' => __('Group organizers only', 'buddyboss'),
 				],
 				'input_default' => 'mods',
-				'input_description' => __('Select which group participants can invite others to join the group', 'buddyboss'),
+				'input_description' => __('Select which group members can invite others to join the group', 'buddyboss'),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
@@ -320,7 +320,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none' => __('None', 'buddyboss'),
 				],
 				'input_default' => 'admin',
-				'input_description' => __('Select the LearnDash Leaders\'s assigned role in Social Groups', 'buddyboss'),
+				'input_description' => __('LearnDash "Group Leaders" will be assigned to the above role in social groups', 'buddyboss'),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
@@ -336,7 +336,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 					'none' => __('None', 'buddyboss'),
 				],
 				'input_default' => 'user',
-				'input_description' => __('Select the LearnDash User\'s assigned role in Social Groups', 'buddyboss'),
+				'input_description' => __('LearnDash "Group Users" will be assigned to the above role in social groups', 'buddyboss'),
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
