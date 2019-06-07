@@ -15,4 +15,4 @@ Our BuddyBoss Theme is designed to make LearnDash look beautiful, and it require
 - [bp_docs_link text="Course Lessons & Topics" slug="integrations/learndash/courses-lesson-topics.md"]
 - [bp_docs_link text="Courses with Social Groups" slug="integrations/learndash/courses-with-social-groups.md"]
 - [bp_docs_link text="Course Group Reports" slug="integrations/learndash/course-group-reports.md"]
-- [bp_docs_link text="My Courses Page" slug="integrations/learndash/my-courses-page.md"]
+- [bp_docs_link text="My Courses Shortcode" slug="integrations/learndash/my-courses-shortcode.md"]
