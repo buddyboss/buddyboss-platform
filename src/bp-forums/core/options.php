@@ -38,7 +38,7 @@ function bbp_get_default_options() {
 		'_bbp_allow_topic_tags'       => 1,                          // Allow topic tagging
 		'_bbp_allow_threaded_replies' => 1,                          // Allow threaded replies
 		'_bbp_allow_search'           => 1,                          // Allow forum-wide search
-		'_bbp_thread_replies_depth'   => 2,                          // Thread replies depth
+		'_bbp_thread_replies_depth'   => 6,                          // Thread replies depth
 		'_bbp_use_wp_editor'          => 1,                          // Use the WordPress editor if available
 		'_bbp_use_autoembed'          => 0,                          // Allow oEmbed in topics and replies
 		'_bbp_theme_package_id'       => 'default',                  // The ID for the current theme package
@@ -275,7 +275,7 @@ function bbp_allow_threaded_replies( $default = 1 ) {
  * @uses get_option() To get the thread replies depth
  * @return int Thread replies depth
  */
-function bbp_thread_replies_depth( $default = 2 ) {
+function bbp_thread_replies_depth( $default = 6 ) {
 	return (int) apply_filters( 'bbp_thread_replies_depth', (int) get_option( '_bbp_thread_replies_depth', $default ) );
 }
 
