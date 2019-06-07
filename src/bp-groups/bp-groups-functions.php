@@ -3450,7 +3450,9 @@ function bp_get_group_type_post_id( $group_type = '' ) {
 
 	$posts = $group_type_query->posts;
 
-	return $posts[0]->ID;
+	$id = ( is_array( $posts ) && isset( $posts[0]->ID ) ) ? $posts[0]->ID : 0;
+
+	return $id;
 }
 
 /**
