@@ -6,7 +6,7 @@ In this tutorial, we'll show you how to properly install the BuddyBoss Theme to 
 
 ##BuddyBoss Theme
 
-*   [bp_docs_link text="Purchase" slug="buddyboss-theme/purchasing.md"] the BuddyBoss Theme and download the ZIP files.
+*   Purchase the BuddyBoss Theme and download the ZIP files.
 *   Log in to your WordPress website and access the admin Dashboard.
 *   Click on Themes -> Add New.
 *   Click Upload, and attach the zip file `buddyboss-theme.zip`
@@ -16,5 +16,5 @@ In this tutorial, we'll show you how to properly install the BuddyBoss Theme to 
 
 ##Related Articles
 
-- Before installing BuddyBoss Theme, please make sure you have [bp_docs_link text="installed BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"] and [bp_docs_link text="purchased BuddyBoss Theme" slug="buddyboss-theme/purchasing.md"].
+- Before installing BuddyBoss Theme, please make sure you have [bp_docs_link text="installed BuddyBoss Platform" slug="getting-started/installing-buddyboss-platform.md"] and purchased BuddyBoss Theme.
 - For more tutorials on configuring BuddyBoss Theme, [bp_docs_link text="click here" slug="buddyboss-theme/overview.md"].

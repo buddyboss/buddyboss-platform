@@ -6,5 +6,5 @@ As beautiful as our BuddyBoss Theme already is, many of you will still want to p
 
 ##Related Articles
 
-- Before viewing this tutorial, please make sure you have [bp_docs_link text="purchased" slug="buddyboss-theme/purchasing.md"] and [bp_docs_link text="installed" slug="buddyboss-theme/installing.md"] BuddyBoss Theme.
+- Before viewing this tutorial, please make sure you have purchased and [bp_docs_link text="installed" slug="buddyboss-theme/installing.md"] BuddyBoss Theme.
 - For basic styling options, see our [bp_docs_link text="Theme Styling" slug="buddyboss-theme/theme-options/styling.md"] tutorial.
