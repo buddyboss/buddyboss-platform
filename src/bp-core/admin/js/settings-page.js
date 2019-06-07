@@ -349,7 +349,7 @@
 							$('#bp-media-import-albums-done').text(albums_done);
 							$('#bp-media-import-media-done').text(media_done);
 
-							if ( import_status == 'done' ) {
+							if ( import_status == 'done' && total_albums == albums_done && total_media == media_done ) {
 								clearInterval(import_status_interval);
 								$('#bp-media-import-msg').text(response.data.success_msg);
 							}

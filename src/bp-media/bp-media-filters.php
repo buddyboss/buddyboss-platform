@@ -851,11 +851,11 @@ function bp_media_activation_notice() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_import_status_request() {
+	$import_status = get_option( 'bp_media_import_status' );
 	$total_media   = get_option( 'bp_media_import_total_media', 0 );
 	$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
 	$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
 	$media_done    = get_option( 'bp_media_import_media_done', 0 );
-	$import_status = get_option( 'bp_media_import_status' );
 
 	wp_send_json_success( array(
 		'total_media'   => $total_media,
