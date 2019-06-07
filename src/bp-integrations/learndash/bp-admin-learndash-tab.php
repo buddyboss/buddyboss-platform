@@ -212,6 +212,24 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'class' => 'js-show-on-buddypress_enabled',
 			]
 		);
+
+		// Register View Tutorial button.
+		$this->add_field( 'bp-privacy-tutorial-bb-to-ld-sync','', [$this, 'bp_privacy_tutorial_bb_to_ld_sync' ] );
+	}
+
+	/**
+	 * Register View Tutorial button.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function bp_privacy_tutorial_bb_to_ld_sync() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/courses-with-social-groups.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 
 	/**
@@ -324,6 +342,24 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'class' => 'js-show-on-learndash_enabled',
 			]
 		);
+
+		// Register View Tutorial button.
+		$this->add_field( 'bp-privacy-tutorial-ld-to-bb-sync','', [$this, 'bp_privacy_tutorial_ld_to_bb_sync' ] );
+	}
+
+	/**
+	 * Register View Tutorial button.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function bp_privacy_tutorial_ld_to_bb_sync() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/courses-with-social-groups.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 
 	/**
