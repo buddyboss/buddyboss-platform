@@ -1360,7 +1360,9 @@ function bp_send_private_message_link() {
 
 		if ( bp_displayed_user_id() > 0 ) {
 			$user_id = bp_displayed_user_id();
-		} else {
+		} else if ( ! empty( $_GET['user'] ) && is_string( $_GET['user'] ) ){
+			$user_id = absint( $_GET['user'] );
+        }else {
 			$user_id = $GLOBALS["members_template"]->member->ID;
 		}
 

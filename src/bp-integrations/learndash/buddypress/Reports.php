@@ -204,7 +204,7 @@ class Reports
 		$userId = bp_loggedin_user_id();
 		$groupId = $currentGroup->id;
 
-		if (groups_is_user_admin($userId, $groupId) || groups_is_user_mod($userId, $groupId)) {
+		if (groups_is_user_admin($userId, $groupId) || groups_is_user_mod($userId, $groupId) ) {
 			return $params;
 		}
 
