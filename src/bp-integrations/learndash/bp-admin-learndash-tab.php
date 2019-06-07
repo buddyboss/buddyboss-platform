@@ -93,7 +93,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-buddypress',
-			__('Social groups <span>&rarr; LearnDash groups</span>', 'buddyboss'),
+			__('Social groups <span>&rarr; LearnDash groups</span>', 'buddyboss')
 		);
 
 		$this->add_checkbox_field(
@@ -241,7 +241,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-learndash',
-			__('LearnDash groups <span>&rarr; Social groups</span>', 'buddyboss'),
+			__('LearnDash groups <span>&rarr; Social groups</span>', 'buddyboss')
 		);
 
 		$this->add_checkbox_field(
