@@ -377,9 +377,9 @@ class BBP_Walker_Reply extends Walker {
 
 		// Style for div or list element
 		if ( !empty( $args['style'] ) && ( 'div' === $args['style'] ) ) {
-			echo "<div>\n";
+			echo "<div class='depth-$depth' data-depth='$depth'>\n";
 		} else {
-			echo "<li>\n";
+			echo "<li class='depth-$depth' data-depth='$depth'>\n";
 		}
 
 		bbp_get_template_part( 'loop', 'single-reply' );

@@ -299,6 +299,9 @@ function bbp_is_topic_edit() {
 	if ( !empty( $wp_query->bbp_is_topic_edit ) && ( $wp_query->bbp_is_topic_edit === true ) )
 		$retval = true;
 
+	elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_topic_slug', 'discussions' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() )
+        $retval = true;
+
 	// Editing in admin
 	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_topic_post_type() ) && ( !empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) )
 		$retval = true;
@@ -469,6 +472,9 @@ function bbp_is_reply_edit() {
 
 	// Check query
 	if ( !empty( $wp_query->bbp_is_reply_edit ) && ( true === $wp_query->bbp_is_reply_edit ) )
+		$retval = true;
+
+    elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_reply_slug', 'reply' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() )
 		$retval = true;
 
 	// Editing in admin
