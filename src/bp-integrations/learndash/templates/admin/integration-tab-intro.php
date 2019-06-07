@@ -4,7 +4,7 @@
 		<h2><?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
 		<p><?php
 			printf(
-				__('BuddyBoss Platform has integration settings for %s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to generate course reports within social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.', 'buddyboss'),
+				__('BuddyBoss Platform has integration settings for %s. If using LearnDash we add the ability to sync LearnDash groups with social groups, to connect LearnDash courses to social groups, and more. If using our BuddyBoss Theme we also include styling for LearnDash.', 'buddyboss'),
 				sprintf(
 					'<a href="%s">%s</a>',
 					'https://learndash.idevaffiliate.com/111.html',
@@ -14,13 +14,7 @@
 		?></p>
 		<br />
 		<div class="bp-admin-card-bottom">
-			<?php
-				printf(
-					'<a href="%s" class="button-secondary">%s</a>',
-					'https://learndash.idevaffiliate.com/111.html',
-					__('Get LearnDash', 'buddyboss')
-				);
-			?>
+			<a class="button-secondary" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/overview.md' ); ?>"><?php _e( 'View Tutorials', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 
