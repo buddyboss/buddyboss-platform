@@ -334,11 +334,14 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	public function registerReportsSettings() {
 		$this->current_section = 'reports';
 
-		$this->add_section(
-			'bp_ld_sync-reports',
-			__('Group Reports Settings', 'buddyboss'),
-			[$this, 'learndash_groups_report_description']
-		);
+		/**
+		 * Hide the report section from platform
+		 */
+//		$this->add_section(
+//			'bp_ld_sync-reports',
+//			__('Group Reports Settings', 'buddyboss'),
+//			[$this, 'learndash_groups_report_description']
+//		);
 
 		$this->add_checkbox_field(
 			'enabled',
