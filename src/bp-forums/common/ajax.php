@@ -108,7 +108,5 @@ function bbp_ajax_response( $success = false, $content = '', $status = -1, $extr
 	}
 
 	// Send back the JSON
-	@header( 'Content-type: application/json' );
-	echo json_encode( $response );
-	die();
+	wp_send_json( $response, $status );
 }
