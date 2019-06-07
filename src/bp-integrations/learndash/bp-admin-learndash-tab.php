@@ -93,8 +93,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-buddypress',
-			__('BuddyBoss to LearnDash Sync', 'buddyboss'),
-			[$this, 'buddypress_groups_sync_description']
+			__('Social groups <span>&rarr; LearnDash groups</span>', 'buddyboss'),
 		);
 
 		$this->add_checkbox_field(
@@ -242,8 +241,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_section(
 			'bp_ld_sync-learndash',
-			__('LearnDash to BuddyBoss Sync', 'buddyboss'),
-			[$this, 'learndash_groups_sync_description']
+			__('LearnDash groups <span>&rarr; Social groups</span>', 'buddyboss'),
 		);
 
 		$this->add_checkbox_field(
@@ -406,28 +404,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'input_description' => __('Number of report results displayed per page', 'buddyboss'),
 				'class' => 'js-show-on-reports_enabled',
 			]
-		);
-	}
-
-	/**
-	 * Description for Buddypress setting section
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function buddypress_groups_sync_description() {
-		echo wpautop(
-			__('Sync BuddyBoss group members to LearnDash groups.', 'buddyboss')
-		);
-	}
-
-	/**
-	 * Description for LearnDash setting section
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function learndash_groups_sync_description() {
-		echo wpautop(
-			__('Sync LearnDash group users to BuddyBoss groups.', 'buddyboss')
 		);
 	}
 
