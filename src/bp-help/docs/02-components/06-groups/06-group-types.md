@@ -1,6 +1,5 @@
 #Group Types
 
-In this tutorial, you will learn how to segregate your social groups by groups type.
+Group Types organize your groups better. If you want to segregate your groups into types such as schools, courses and other types depending on your community, you can easily set up group types in BuddyBoss Platform. Learn more of what you can configure with group types by watching this video.
 
-[**DROPBOX VIDEO**](https://www.dropbox.com/s/se5bne29n5tcjjs/buddyboss-platform-group-types.mp4?raw=1)
-(To be embedded once we upload it to Youtube...)
+[bp_embed] https://www.youtube.com/watch?v=ufSoFyxiLUw [/bp_embed]
