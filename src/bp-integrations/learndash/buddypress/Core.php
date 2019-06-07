@@ -82,7 +82,7 @@ class Core
 			return;
 		}
 
-		if (bp_ld_sync('settings')->get('buddypress.enabled')) {
+		if (bp_ld_sync('settings')->get('learndash.enabled')) {
 			require_once bp_ld_sync()->path('/buddypress/components/BpGroupCourses.php');
 			$extension = new BpGroupCourses;
 			add_action('bp_actions', [$extension, '_register'], 8);
