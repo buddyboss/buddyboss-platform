@@ -92,7 +92,7 @@
 	width: 14px;
 	border-radius: 50%;
 	color: #c3c6c9;
-	z-index: 1001;
+	z-index: 101;
 	overflow: hidden;
 }
 
@@ -219,7 +219,7 @@
 
 .dropzone .dz-preview .dz-progress {
 	opacity: 1;
-	z-index: 1000;
+	z-index: 100;
 	pointer-events: none;
 	position: absolute;
 	height: 2px;
@@ -261,7 +261,7 @@
 
 .dropzone .dz-preview .dz-error-message {
 	pointer-events: none;
-	z-index: 1000;
+	z-index: 100;
 	position: absolute;
 	display: block;
 	display: none;
