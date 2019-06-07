@@ -850,7 +850,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;
@@ -868,7 +868,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;
@@ -886,7 +886,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;
@@ -904,7 +904,7 @@ function bp_core_add_contextual_help( $screen = '' ) {
 			// Help panel - sidebar links.
 			$screen->set_help_sidebar(
 				'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-				'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
+				'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 			);
 
 			break;

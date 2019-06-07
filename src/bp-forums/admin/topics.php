@@ -174,7 +174,7 @@ class BBP_Topics_Admin {
 		// Help Sidebar
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://www.buddyboss.com">BuddyBoss</a>',     'buddyboss' ) . '</p>'
+			'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>',     'buddyboss' ) . '</p>'
 		);
 	}
 
@@ -229,7 +229,7 @@ class BBP_Topics_Admin {
 
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://www.buddyboss.com">BuddyBoss</a>',     'buddyboss' ) . '</p>'
+			'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>',     'buddyboss' ) . '</p>'
 		);
 	}
 

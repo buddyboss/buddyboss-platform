@@ -148,7 +148,7 @@ function bp_groups_admin_load() {
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
+			'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 		);
 
 		// Register metaboxes for the edit screen.
@@ -221,7 +221,7 @@ function bp_groups_admin_load() {
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
 			'<p><strong>' . __( 'For more information:', 'buddyboss' ) . '</strong></p>' .
-			'<p>' . __( '<a href="https://www.buddyboss.com/">BuddyBoss</a>', 'buddyboss' ) . '</p>'
+			'<p>' . __( '<a href="https://www.buddyboss.com/resources/">Documentation</a>', 'buddyboss' ) . '</p>'
 		);
 
 		// Add accessible hidden heading and text for Groups screen pagination.
