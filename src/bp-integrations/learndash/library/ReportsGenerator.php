@@ -117,10 +117,30 @@ class ReportsGenerator
 	 */
 	public function fetch()
 	{
-		$this->activityQuery = learndash_reports_get_activity($this->params, $this->args['user']);
+		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
+		$this->activityQuery = learndash_reports_get_activity($this->params);
+		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
 		// print_r($this->activityQuery);die();
 		$this->results = $this->activityQuery['results'];
 		$this->pager = $this->activityQuery['pager'];
+	}
+
+	/**
+	 * Remove post ids param from sql query
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $query_args
+	 *
+	 * @return array $query_args
+	 */
+	public function remove_post_ids_param( $query_args ) {
+		if ( isset( $query_args['post_ids'] ) ) {
+			unset( $query_args['post_ids'] );
+		}
+
+		return $query_args;
+
 	}
 
 	/**
