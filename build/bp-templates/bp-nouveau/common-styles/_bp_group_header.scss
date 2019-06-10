@@ -1,0 +1,150 @@
+// BP Single Group Header Styles.
+// @version 3.0.0
+
+.groups-header {
+
+	.bp-group-type-list {
+		margin: 0;
+	}
+
+	.bp-feedback {
+		clear: both;
+	}
+
+	.action .button {
+		margin-right: 10px;
+	}
+
+	// The admin & mod list display for a group.
+	// 'moderators-lists' is used to refer to
+	// generic members with elevated access.
+	.moderators-lists {
+		margin-top: 0;
+		display: table-cell;
+
+		.moderators-title {
+
+			@include font-size(14);
+		}
+
+		.user-list {
+			margin: 0 0 $marg-xsml;
+
+			ul:after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
+			li {
+				display: inline-block;
+				float: none;
+				margin: 4px 0 0 4px;
+			}
+		}
+
+		img.avatar {
+
+			@include box-shadow-none();
+			float: none;
+			height: 30px;
+			margin: 0;
+			max-width: 100%;
+			width: 30px;
+		}
+	} // close moderators-lists
+
+	.parent-list {
+		padding: 0 1em 0 0;
+		display: table-cell;
+
+		.parent-title {
+
+			@include font-size(14);
+		}
+
+		.group-list {
+			margin: 0 0 $marg-xsml;
+
+			ul:after {
+				clear: both;
+				content: "";
+				display: table;
+			}
+
+			li {
+				display: inline-block;
+				float: none;
+				margin: 4px 0 0 4px;
+			}
+		}
+
+		img.avatar {
+
+			@include box-shadow-none();
+			float: none;
+			height: 30px;
+			margin: 0;
+			max-width: 100%;
+			width: 30px;
+		}
+	}
+
+	.desc-wrap {
+		background: $light-grey;
+		border: 1px solid $med-light-grey;
+		margin: 0 0 $marg-med;
+		padding: $pad-med;
+		text-align: center;
+
+		.group-description {
+			background: $off-white;
+			padding: $pad-med;
+			text-align: left;
+		}
+
+		.group-description p:last-child {
+			margin-bottom: 0;
+		}
+	}
+
+	@media screen and (min-width: 783px) {
+
+		#item-header-content {
+			flex: 1;
+			min-width: 0;
+		}
+
+		#item-header-cover-image {
+
+			#item-actions,
+			#item-header-content {
+				padding-top: $marg-med;
+				padding-bottom: $marg-med;
+			}
+		}
+
+		.group-item-actions {
+			margin-left: 15px;
+			text-align: right;
+			max-width: 25%;
+			display: table;
+		}
+
+		.groups-meta {
+			clear: both;
+		}
+	}
+
+	@media screen and (max-width: 782px) {
+
+		#item-header-cover-image {
+
+			#item-actions,
+			#item-header-content {
+				padding-bottom: $marg-med;
+			}
+		}
+	}
+
+} // close groups-header
