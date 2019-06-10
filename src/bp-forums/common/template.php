@@ -150,7 +150,7 @@ function bbp_is_forum_archive() {
 	$retval = false;
 
 	// In forum archive
-	if ( is_post_type_archive( bbp_get_forum_post_type() ) || bbp_is_query_name( 'bbp_forum_archive' ) || !empty( $wp_query->bbp_show_topics_on_root ) )
+	if ( is_post_type_archive( bbp_get_forum_post_type() ) || bbp_is_query_name( 'bbp_forum_archive' ) || !empty( $wp_query->bbp_show_topics_on_root ) || absint( $wp_query->get( 'page_id' ) ) === (int) bp_get_option('_bbp_root_slug_custom_slug') )
 		$retval = true;
 
 	return (bool) apply_filters( 'bbp_is_forum_archive', $retval );
