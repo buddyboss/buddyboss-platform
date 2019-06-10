@@ -21,6 +21,3 @@ vendor
 
 node_modules
 npm-debug.log
-
-# The build directory.
-build
