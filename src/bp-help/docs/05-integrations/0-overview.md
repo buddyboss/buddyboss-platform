@@ -1,3 +1,3 @@
 #Plugin Integrations
 
-LearnDash, WooCommerce, Memberships, Events, Jobs. Learn how to integrate BuddyBoss with your favorite plugins.
+LearnDash, WooCommerce, Events, Jobs, and even mobile apps! Learn how BuddyBoss integrates with your favorite plugins.
