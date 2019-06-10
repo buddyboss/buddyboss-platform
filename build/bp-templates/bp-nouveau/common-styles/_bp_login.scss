@@ -1,0 +1,26 @@
+// Login and Lost Password Screen
+// Styles the registration index.php form and elements.
+// @version 3.0.0
+
+body.login {
+
+	.login-popup {
+		background: #fff;
+		padding: 30px;
+		text-align: left;
+		min-height: 400px;
+		max-width: 650px;
+		margin: 40px auto;
+		position: relative;
+	}
+
+	.login-popup .mfp-close {
+		color: #000;
+	}
+
+	.login-popup .mfp-close:focus,
+	.login-popup .mfp-close:hover {
+		background: transparent;
+	}
+
+}

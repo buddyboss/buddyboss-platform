@@ -1,0 +1,1 @@
+!function(i){i(document).ready(function(){i(".bp-is-dismissible .notice-dismiss").click(function(){var n=i(this).closest(".notice"),s=n.data("noticeid");i.post({url:ajaxurl,data:{action:"bp_dismiss_notice",nonce:i("#bp-dismissible-nonce-"+s).val(),notice_id:n.data("noticeid")}})})})}(jQuery);

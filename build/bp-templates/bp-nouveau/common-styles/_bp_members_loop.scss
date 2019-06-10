@@ -1,0 +1,154 @@
+// BP Members loop.
+// @version 3.0.0
+
+.buddypress-wrap {
+
+	.members-list { // ul
+
+		li {
+
+			.member-name {
+				margin-bottom: $marg-sml;
+			}
+
+			.user-update {
+				border: 1px solid $light-grey;
+
+				@include border-radius(10px);
+				color: $meta-text;
+
+				font-style: italic;
+
+				@include responsive-font(16);
+				margin: $marg-med auto;
+				padding: $pad-med;
+
+				.activity-read-more {
+
+					display: block;
+
+					@include font-size(12);
+					font-style: normal;
+					margin-top: $marg-sml;
+					padding-left: 2px;
+				}
+			}
+
+			@include medium-up() {
+
+				.last-activity {
+					clear: left;
+					margin-top: -10px;
+				}
+			}
+
+		} // close li
+
+	} // close .members-list
+
+	// Members group specific list
+	.members-group-list {
+
+		li {
+
+			@include medium-up() {
+
+				.joined {
+					clear: left;
+					float: none;
+					margin-top: 0;
+				}
+
+				.role {
+					clear: left;
+					float: none;
+					font-size: 14px;
+					margin: 0;
+				}
+			}
+		}
+	}
+} // close .buddypress-wrap
+
+// If logged out or if the loop item is
+// current user we don't display action buttons
+// so lets remove the update width making room
+// for the buttons - max out the user-update width.
+
+body:not(.logged-in) {
+
+	@include medium-small-up() {
+
+		.members-list {
+
+			.user-update {
+				width: 96%;
+			}
+		}
+	}
+}
+
+// Members Directory with profile search form.
+.members-directory-wrapper {
+	display: flex;
+	flex-flow: row wrap;
+
+	@include medium-up() {
+
+		flex-flow: row-reverse;
+
+		.bp-profile-search-widget {
+			flex: 0 0 220px;
+			min-width: 0;
+			margin-left: $marg-xlrg;
+		}
+	}
+
+	.members-directory-container {
+		flex: 1;
+		min-width: 0;
+	}
+
+	@include medium-max() {
+
+		.bp-profile-search-widget {
+			flex: 0 0 100%;
+			min-width: 0;
+		}
+	}
+
+	.bp-field-wrap {
+		margin-bottom: $marg-lrg;
+	}
+
+	.bps-description {
+		font-size: 13px;
+		margin: $marg-xsml 0;
+		color: #767676;
+	}
+}
+
+.bp-profile-search-widget {
+
+	.bp-field-wrap {
+		margin-bottom: $marg-lrg;
+	}
+
+	.bps-form-title {
+		font-size: 13px;
+		font-weight: 400;
+		color: $light-text;
+		line-height: 1;
+		margin-top: 0;
+		margin-bottom: 20px;
+	}
+
+	label {
+		font-weight: 600;
+		font-size: 15px;
+	}
+
+	select {
+		width: 100%;
+	}
+}

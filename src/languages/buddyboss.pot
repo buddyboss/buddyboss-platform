@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.0.0\n"
+"Project-Id-Version: BuddyBoss Platform 1.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-07 19:36:49+00:00\n"
+"POT-Creation-Date: 2019-06-10 19:40:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -14727,11 +14727,11 @@ msgstr ""
 msgid "unsubscribe"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:10
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:11
 msgid "Grid View"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:11
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:16
 msgid "List View"
 msgstr ""
 

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<bundle>
+  <domain name="buddyboss">
+    <project>
+      <target>
+        <directory>languages</directory>
+      </target>
+      <template>
+        <file>languages/buddyboss.pot</file>
+      </template>
+    </project>
+  </domain>
+</bundle>
