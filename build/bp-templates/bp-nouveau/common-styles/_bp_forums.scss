@@ -64,6 +64,7 @@ body.reply-edit .reply {
 }
 
 #bbpress-forums ul.bbp-threaded-replies {
+	list-style: none;
 	margin-left: 50px;
 }
 
@@ -77,6 +78,7 @@ body.reply-edit .reply {
 	border: 1px solid $bp-border-color;
 	margin-bottom: $marg-lrg;
 	clear: both;
+	list-style: none;
 }
 
 #bbpress-forums li.bbp-header,
