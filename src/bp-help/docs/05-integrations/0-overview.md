@@ -1,3 +1,3 @@
 #Plugin Integrations
 
-Learn how to install and configure LearnDash LMS for BuddyBoss Theme.
+LearnDash, WooCommerce, Events, Jobs and more. Learn how BuddyBoss integrates with your favorite plugins.
