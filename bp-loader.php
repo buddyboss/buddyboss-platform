@@ -1,20 +1,11 @@
 <?php
-
-/**
- * The BuddyBoss Platform
- *
- * BuddyBoss Platform adds community features to WordPress.
- *
- * @package BuddyBoss\Main
- */
-
 /**
  * Plugin Name: BuddyBoss Platform
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.0.1
+ * Version:     1.0.2
  * Text Domain: buddyboss
  * Domain Path: /bp-languages/
  * License:     GPLv2 or later (license.txt)

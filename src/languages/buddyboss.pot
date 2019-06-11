@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-11 09:02:44+00:00\n"
+"POT-Creation-Date: 2019-06-11 20:37:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1088,7 +1088,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:633
-#: bp-core/bp-core-cssjs.php:190
+#: bp-core/bp-core-cssjs.php:191
 #: bp-templates/bp-nouveau/buddypress-functions.php:545
 msgid "Are you sure?"
 msgstr ""
@@ -10180,56 +10180,56 @@ msgstr ""
 msgid "This user has not created any discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:212
-#: bp-forums/templates/default/bbpress-functions.php:221
+#: bp-forums/templates/default/bbpress-functions.php:222
+#: bp-forums/templates/default/bbpress-functions.php:231
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:249
-#: bp-forums/templates/default/bbpress-functions.php:385
+#: bp-forums/templates/default/bbpress-functions.php:259
+#: bp-forums/templates/default/bbpress-functions.php:395
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:254
+#: bp-forums/templates/default/bbpress-functions.php:264
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:263
-#: bp-forums/templates/default/bbpress-functions.php:331
-#: bp-forums/templates/default/bbpress-functions.php:399
+#: bp-forums/templates/default/bbpress-functions.php:273
+#: bp-forums/templates/default/bbpress-functions.php:341
+#: bp-forums/templates/default/bbpress-functions.php:409
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:271
+#: bp-forums/templates/default/bbpress-functions.php:281
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:276
-#: bp-forums/templates/default/bbpress-functions.php:344
-#: bp-forums/templates/default/bbpress-functions.php:412
+#: bp-forums/templates/default/bbpress-functions.php:286
+#: bp-forums/templates/default/bbpress-functions.php:354
+#: bp-forums/templates/default/bbpress-functions.php:422
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:284
-#: bp-forums/templates/default/bbpress-functions.php:352
-#: bp-forums/templates/default/bbpress-functions.php:420
+#: bp-forums/templates/default/bbpress-functions.php:294
+#: bp-forums/templates/default/bbpress-functions.php:362
+#: bp-forums/templates/default/bbpress-functions.php:430
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:317
+#: bp-forums/templates/default/bbpress-functions.php:327
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:322
+#: bp-forums/templates/default/bbpress-functions.php:332
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:339
-#: bp-forums/templates/default/bbpress-functions.php:407
+#: bp-forums/templates/default/bbpress-functions.php:349
+#: bp-forums/templates/default/bbpress-functions.php:417
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:390
+#: bp-forums/templates/default/bbpress-functions.php:400
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -14727,11 +14727,11 @@ msgstr ""
 msgid "unsubscribe"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:10
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:11
 msgid "Grid View"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:11
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:16
 msgid "List View"
 msgstr ""
 

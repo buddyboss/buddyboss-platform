@@ -607,7 +607,7 @@ window.bp = window.bp || {};
 
 				// Check for mention
 				if ( ! _.isNull( mention ) ) {
-					bp.Nouveau.Messages.mediumEditor.focus();
+					$('#message_content').focus();
 				}
 
 			} else if ( typeof tinymce !== 'undefined' ) {

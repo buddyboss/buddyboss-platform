@@ -283,7 +283,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				if ( true === $this->search_args['forum_search'] ) {
 					$url      = $url;
 				} else {
-					$url      = esc_url( add_query_arg( array( 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
+					$url      = esc_url( add_query_arg( array( 'view' => 'content', 'no_frame' => '1', 'bp_search' => 1 ), $url ) );
 				}
 
 				$type_mem = "";

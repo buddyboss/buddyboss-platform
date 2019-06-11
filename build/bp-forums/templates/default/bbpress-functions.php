@@ -129,6 +129,11 @@ class BBP_Default extends BBP_Theme_Compat {
 		// Setup scripts array
 		$scripts = array();
 
+		// Tag Input
+		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+			wp_enqueue_script( 'bp-tagify' );
+		}
+
 		// Always pull in jQuery for TinyMCE shortcode usage
 		if ( bbp_use_wp_editor() ) {
 			$scripts['bbpress-editor'] = array(
@@ -173,6 +178,11 @@ class BBP_Default extends BBP_Theme_Compat {
 				'dependencies' => array( 'user-query' )
 			);
 		}
+
+		$scripts['bbpress-common'] = array(
+			'file'         => 'js/common.js',
+			'dependencies' => array( 'jquery' )
+		);
 
 		// Filter the scripts
 		$scripts = apply_filters( 'bbp_default_scripts', $scripts );

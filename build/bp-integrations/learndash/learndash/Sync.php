@@ -82,10 +82,10 @@ class Sync
 			return false;
 		}
 
-		// created programatically
-		if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
-			return false;
-		}
+		// created programmatically
+		//if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
+			//return false;
+		//}
 
 		$newGroup  = bp_ld_sync()->getRequest( 'bp-ld-sync-id', null );
 		$generator = $this->generator( null, $groupId );
