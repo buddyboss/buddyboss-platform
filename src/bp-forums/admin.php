@@ -19,13 +19,19 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_forums_add_admin_menu() {
 
+	if ( is_network_admin() && bp_is_network_activated() ) {
+		$forum_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bbp_get_forum_post_type() );
+	} else {
+		$forum_url = 'edit.php?post_type=' . bbp_get_forum_post_type();
+	}
+
 	// Add our screen.
 	add_submenu_page(
 		'buddyboss-platform',
 		'Forums',
 		'Forums',
 		'bbp_forums_admin',
-		'edit.php?post_type=' . bbp_get_forum_post_type()
+		$forum_url
 	);
 }
 add_action( bp_core_admin_hook(), 'bp_forums_add_admin_menu', 61 );
