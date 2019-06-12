@@ -28,7 +28,7 @@ function bp_forums_add_admin_menu() {
 		'edit.php?post_type=' . bbp_get_forum_post_type()
 	);
 }
-add_action( bp_core_admin_hook(), 'bp_forums_add_admin_menu', 61 );
+add_action( 'admin_menu' , 'bp_forums_add_admin_menu', 61 );
 
 /**
  * Add forums component to custom menus array.

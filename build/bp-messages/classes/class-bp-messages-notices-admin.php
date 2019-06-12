@@ -81,7 +81,7 @@ class BP_Messages_Notices_Admin {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
-		add_action( bp_core_admin_hook(), array( $this, 'admin_menu' ), 70 );
+		add_action( 'admin_menu' , array( $this, 'admin_menu' ), 70 );
 	}
 
 	/**

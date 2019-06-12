@@ -56,7 +56,7 @@ function bp_groups_add_admin_menu() {
 		add_action( "load-$hook", 'bp_groups_admin_load' );
 	}
 }
-add_action( bp_core_admin_hook(), 'bp_groups_add_admin_menu', 60 );
+add_action( 'admin_menu' , 'bp_groups_add_admin_menu', 60 );
 
 /**
  * Add groups component to custom menus array.

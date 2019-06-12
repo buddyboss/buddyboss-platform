@@ -39,7 +39,7 @@ function bp_activity_add_admin_menu() {
 	// Hook into early actions to load custom CSS and our init handler.
 	add_action( "load-$hook", 'bp_activity_admin_load' );
 }
-add_action( bp_core_admin_hook(), 'bp_activity_add_admin_menu', 65 );
+add_action( 'admin_menu', 'bp_activity_add_admin_menu', 65 );
 
 /**
  * Add activity component to custom menus array.
