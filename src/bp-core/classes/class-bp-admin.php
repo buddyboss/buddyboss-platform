@@ -140,7 +140,7 @@ class BP_Admin {
 		add_action( 'bp_admin_head',            array( $this, 'admin_head'  ), 999 );
 
 		// Add menu item to settings menu.
-		add_action( 'admin_menu',               array( $this, 'site_admin_menus' ), 68 );
+		add_action( bp_core_admin_hook(),               array( $this, 'site_admin_menus' ), 68 );
 		add_action( bp_core_admin_hook(),       array( $this, 'admin_menus' ), 5 );
 		//add_action( bp_core_admin_hook(),       array( $this, 'admin_menus_components' ), 75 );
 		add_action( bp_core_admin_hook(),       array( $this, 'adjust_buddyboss_menus' ), 100 );
