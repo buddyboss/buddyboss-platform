@@ -6,7 +6,7 @@ jQuery(document).ready( function() {
             var tagify = new window.Tagify(input);
 
             // "remove all tags" button event listener
-            jQuery('.js-modal-close').on('click', tagify.removeAllTags.bind(tagify));
+            jQuery( 'body' ).on('click', '.js-modal-close', tagify.removeAllTags.bind(tagify));
         }
     }
 });
