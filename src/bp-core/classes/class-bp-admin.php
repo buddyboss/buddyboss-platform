@@ -518,7 +518,7 @@ class BP_Admin {
 			);
 
 			// Hack: change the link to point to the root site's admin, not the network admin.
-			$GLOBALS['menu'][26][2] = esc_url_raw( $email_url );
+			//$GLOBALS['menu'][26][2] = esc_url_raw( $email_url );
 		}
 
 		// foreach( $hooks as $hook ) {
