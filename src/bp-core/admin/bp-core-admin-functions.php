@@ -2457,8 +2457,14 @@ function bp_core_get_groups_admin_tabs( $active_tab = '') {
 
 	if ( true === bp_disable_group_type_creation() ) {
 
+		if ( is_network_admin() && bp_is_network_activated() ) {
+			$group_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=bp-group-type' );
+		} else {
+			$group_url = bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-group-type' ), 'edit.php' ) );
+		}
+
 		$tabs[] = array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-group-type' ), 'edit.php' ) ),
+			'href'  => $group_url,
 			'name'  => __( 'Group Types', 'buddyboss' ),
 			'class' => 'bp-group-types',
 		);
