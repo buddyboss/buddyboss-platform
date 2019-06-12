@@ -34,7 +34,7 @@ function xprofile_add_admin_menu() {
 	);
 
 }
-add_action( 'admin_menu', 'xprofile_add_admin_menu' );
+add_action( bp_core_admin_hook(), 'xprofile_add_admin_menu' );
 
 /**
  * Handles all actions for the admin area for creating, editing and deleting

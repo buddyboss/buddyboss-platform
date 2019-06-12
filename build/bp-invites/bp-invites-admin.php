@@ -417,4 +417,4 @@ function bp_invites_add_admin_menu() {
 	);
 
 }
-add_action( 'admin_menu' , 'bp_invites_add_admin_menu', 65 );
+add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
