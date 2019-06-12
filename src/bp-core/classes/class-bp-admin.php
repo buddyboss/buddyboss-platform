@@ -595,12 +595,18 @@ class BP_Admin {
 			'bp_email_redirect_to_customizer'
 		);
 
+		if ( is_network_admin() && bp_is_network_activated() ) {
+			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() );
+		} else {
+			$email_url = 'edit.php?post_type=' . bp_get_email_post_type();
+		}
+
 		$hooks[] = add_submenu_page(
 			'buddyboss-platform',
 			__( 'Emails', 'buddyboss' ),
 			__( 'Emails', 'buddyboss' ),
 			'bp_moderate',
-			'edit.php?post_type=' . bp_get_email_post_type(),
+			$email_url,
 			''
 		);
 
