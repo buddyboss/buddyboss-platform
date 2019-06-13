@@ -205,6 +205,7 @@ function bp_core_menu_highlight_parent_page( $retval, $page ) {
 		if ( isset( $page->ID ) && $page->ID === $page_id ) {
 			$retval[] = 'current_page_item';
 		} elseif ( isset( $page->ID ) && $_bp_page && $page->ID === $_bp_page->post_parent ) {
+			$retval[] = 'current-menu-item';
 			$retval[] = 'current_page_parent';
 		}
 	}

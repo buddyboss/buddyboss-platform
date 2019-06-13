@@ -982,8 +982,15 @@ function bp_core_get_users_admin_tabs( $active_tab = '') {
 	);
 
 	if ( true === $is_member_type_enabled ) {
+
+		if ( is_network_admin() && bp_is_network_activated() ) {
+			$profile_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=bp-member-type' );
+		} else {
+			$profile_url = bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-member-type' ), 'edit.php' ) );
+		}
+
 		$tabs[] = array(
-			'href'  => bp_get_admin_url( add_query_arg( array( 'post_type' => 'bp-member-type' ), 'edit.php' ) ),
+			'href'  => $profile_url,
 			'name'  => __( 'Profile Types', 'buddyboss' ),
 			'class' => 'bp-profile-types',
 		);
