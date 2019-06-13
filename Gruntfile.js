@@ -5,7 +5,8 @@ module.exports = function( grunt ) {
 
 		BP_CSS = [
 			'**/*.css',
-			'!**/*.min.css'
+			'!**/*.min.css',
+			'!**/vendor/*.css'
 		],
 
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss
@@ -17,7 +18,8 @@ module.exports = function( grunt ) {
 		BP_JS = [
 			'**/*.js',
 			'!**/*.min.js',
-			'!bp-forums/**/*.js'
+			'!bp-forums/**/*.js',
+			'!**/vendor/*.js'
 		],
 
 		BP_EXCLUDED_MISC = [
