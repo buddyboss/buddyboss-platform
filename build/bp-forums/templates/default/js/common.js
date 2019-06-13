@@ -1,12 +1,26 @@
 jQuery(document).ready( function() {
     if ( typeof window.Tagify !== 'undefined' ) {
-        var input = document.querySelector('input[name=bbp_topic_tags]');
+        var input = document.querySelector('input[name=bbp_topic_tags_tagify]');
 
         if ( input != null ) {
-            var tagify = new window.Tagify(input);
+            window.bbp_tagify = new window.Tagify(input);
+
+            window.bbp_tagify.on('add', function () {
+                var bbp_topic_tags = '';
+                for( var i = 0 ; i < window.bbp_tagify.value.length; i++ ) {
+                    bbp_topic_tags += window.bbp_tagify.value[i].value + ',';
+                }
+                jQuery('#bbp_topic_tags').val(bbp_topic_tags);
+            }).on('remove', function () {
+                var bbp_topic_tags = '';
+                for( var i = 0 ; i < window.bbp_tagify.value.length; i++ ) {
+                    bbp_topic_tags += window.bbp_tagify.value[i].value + ',';
+                }
+                jQuery('#bbp_topic_tags').val(bbp_topic_tags);
+            });
 
             // "remove all tags" button event listener
-            jQuery( 'body' ).on('click', '.js-modal-close', tagify.removeAllTags.bind(tagify));
+            jQuery( 'body' ).on('click', '.js-modal-close', window.bbp_tagify.removeAllTags.bind(window.bbp_tagify));
         }
     }
 
