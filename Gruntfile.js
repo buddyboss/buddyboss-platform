@@ -2,6 +2,7 @@
 /* global module */
 module.exports = function( grunt ) {
 	var SOURCE_DIR = 'src/',
+		BUILD_DIR = 'buddyboss-platform/',
 
 		BP_CSS = [
 			'**/*.css',
@@ -196,7 +197,26 @@ module.exports = function( grunt ) {
 			}
 		},
 		clean: {
-			all: [ SOURCE_DIR ]
+			all: [ BUILD_DIR ]
+		},
+		copy: {
+			files: {
+				files: [
+					{
+						cwd: SOURCE_DIR,
+						dest: BUILD_DIR,
+						dot: true,
+						expand: true,
+						src: ['**', '!**/.{svn,git}/**'].concat( BP_EXCLUDED_MISC )
+					},
+					{
+						dest: BUILD_DIR,
+						dot: true,
+						expand: true,
+						src: ['composer.json']
+					}
+				]
+			}
 		},
 		uglify: {
 			core: {
@@ -280,7 +300,18 @@ module.exports = function( grunt ) {
 					].concat( BP_EXCLUDED_MISC )
 				}
 			}
-		}
+		},
+		compress: {
+			main: {
+				options: {
+					archive: 'buddyboss-platform.zip'
+				},
+				files: [{
+					src: BUILD_DIR + '**',
+					dest: '.'
+				}]
+			}
+		},
 	});
 
 
@@ -288,6 +319,8 @@ module.exports = function( grunt ) {
 	 * Register tasks.
 	 */
 	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', 'imagemin', 'uglify', 'cssmin', 'makepot:src'] );
+	grunt.registerTask( 'build',   ['clean:all', 'copy:files', 'compress', 'clean:all'] );
+	grunt.registerTask( 'release', ['src', 'build'] );
 
 	// Testing tasks.
 	grunt.registerMultiTask( 'phpunit', 'Runs PHPUnit tests, including the ajax and multisite tests.', function() {
