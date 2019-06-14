@@ -280,7 +280,7 @@ module.exports = function( grunt ) {
 		},
 		exec: {
 			cli: {
-				command: 'svn export --force https://github.com/buddypress/wp-cli-buddypress.git/trunk@595 cli',
+				command: 'git commit -am "grunt release build"',
 				cwd: SOURCE_DIR,
 				stdout: false
 			}
@@ -319,7 +319,7 @@ module.exports = function( grunt ) {
 	 * Register tasks.
 	 */
 	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', 'imagemin', 'uglify', 'cssmin', 'makepot:src'] );
-	grunt.registerTask( 'build',   ['clean:all', 'copy:files', 'compress', 'clean:all'] );
+	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
 	grunt.registerTask( 'release', ['src', 'build'] );
 
 	// Testing tasks.
