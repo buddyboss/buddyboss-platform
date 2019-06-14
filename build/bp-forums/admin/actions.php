@@ -65,6 +65,7 @@ add_action( 'bbp_admin_menu', 'bbp_admin_separator' );
 // Activation
 add_action( 'bbp_activation', 'bbp_delete_rewrite_rules'        );
 add_action( 'bbp_activation', 'bbp_make_current_user_keymaster' );
+add_action( 'bbp_activation', 'bbp_map_previous_bbpress_topics_slugs');
 
 // Deactivation
 add_action( 'bbp_deactivation', 'bbp_remove_caps'          );
@@ -83,6 +84,43 @@ add_action( 'load-tools_page_bbp-reset',  'bbp_admin_reset_handler'  );
 
 // Add sample permalink filter
 add_filter( 'post_type_link', 'bbp_filter_sample_permalink', 10, 4 );
+
+
+/**
+ * Map the Topics & Topic Tags slugs of previous BBPress.
+ *
+ * @since BuddyBoss 1.0.4
+ */
+function bbp_map_previous_bbpress_topics_slugs() {
+
+	// Check in Current DB having a below 2 options are saved for the BBPress Topic & Topic Reply previously.
+	$topic_slug         = get_option( '_bbp_topic_slug' );
+	$topic_tag_slug     = get_option( '_bbp_topic_tag_slug' );
+	$topic_archive_slug = get_option( '_bbp_topic_archive_slug' );
+
+	if ( empty( $topic_slug ) ) {
+
+		// Check if there is any topics their in DB.
+		$topics = get_posts( array( 'post_type' => 'topic', 'numberposts' => 1 ) );
+
+		// If found the topics then go ahead.
+		if ( !empty( $topics ) ) {
+			// Topics found so set the _bbp_topic_slug to "topic" instead of "discussion" otherwise it will create the issue who used previously BBPress.
+			update_option( '_bbp_topic_slug', 'topic');
+		}
+
+		if ( empty( $topic_archive_slug ) ) {
+			update_option( '_bbp_topic_archive_slug', 'topics');
+		}
+
+		if ( empty( $topic_tag_slug ) ) {
+			// Tags found so set the _bbp_topic_tag_slug to "topic-reply" instead of "discussion-reply" otherwise it will create the issue who used previously BBPress.
+			update_option( '_bbp_topic_tag_slug', 'topic-tag');
+
+		}
+
+	}
+}
 
 /**
  * When a new site is created in a multisite installation, run the activation

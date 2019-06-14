@@ -1868,7 +1868,7 @@ function bp_member_type_wprole_metabox( $post ) {
 				id="bp-member-type-roles-none"
 				value='' />
 			<?php _e( '(None)', 'buddyboss' ) ?>
-		</labe>
+		</label>
 	</p>
 	<?php
 

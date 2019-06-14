@@ -70,9 +70,9 @@ function bbp_get_default_options() {
 		/** Single Slugs ******************************************************/
 
 		'_bbp_forum_slug'           => 'forum',     // Forum slug
-		'_bbp_topic_slug'           => 'topic',     // Topic slug
+		'_bbp_topic_slug'           => 'discussion',     // Topic slug
 		'_bbp_reply_slug'           => 'reply',     // Reply slug
-		'_bbp_topic_tag_slug'       => 'topic-tag', // Topic tag slug
+		'_bbp_topic_tag_slug'       => 'discussion-tag', // Topic tag slug
 
 		/** Other Slugs *******************************************************/
 
