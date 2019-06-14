@@ -229,6 +229,11 @@ jQuery(document).ready(function($) {
 				name: 'bp_search',
 				value: '1'
 			} ).appendTo( $form );
+			$( '<input>' ).attr( {
+				type: 'hidden',
+				name: 'view',
+				value: 'content'
+			} ).appendTo( $form );
 		}
 	});
 	/* ajax load */
