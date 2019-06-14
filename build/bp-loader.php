@@ -175,13 +175,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 	} else {
 		require dirname( __FILE__ ) . '/class-buddypress.php';
 
-		// A lot of actions in bbpress require before component init,
-		// hence we grab the pure db value and load the class
-		// so all the hook prior to bp_init can be hook in
-		if ( $bp_forum_active = array_key_exists( 'forums', get_option( 'bp-active-components', [] ) ) ) {
-			require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
-		}
-
 		// load the member switch class so all the hook prior to bp_init can be hook in
 		require dirname( __FILE__ ) . '/bp-members/classes/class-bp-core-members-switching.php';
 
@@ -195,7 +188,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 		if ( defined( 'BUDDYPRESS_LATE_LOAD' ) ) {
 			add_action( 'plugins_loaded', 'buddypress', (int) BUDDYPRESS_LATE_LOAD );
 
+			$bp_forum_active = array_key_exists( 'forums', bp_get_option( 'bp-active-components', [] ) );
+
+			// A lot of actions in bbpress require before component init,
+			// hence we grab the pure db value and load the class
+			// so all the hook prior to bp_init can be hook in
 			if ( $bp_forum_active ) {
+				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
 				add_action( 'plugins_loaded', 'bbpress', (int) BUDDYPRESS_LATE_LOAD );
 			}
 
@@ -203,7 +202,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 		} else {
 			$GLOBALS['bp'] = buddypress();
 
+			$bp_forum_active = array_key_exists( 'forums', bp_get_option( 'bp-active-components', [] ) );
 			if ( $bp_forum_active ) {
+				require dirname( __FILE__ ) . '/bp-forums/classes/class-bbpress.php';
 				$GLOBALS['bbp'] = bbpress();
 			}
 		}
