@@ -281,7 +281,7 @@ module.exports = function( grunt ) {
 		exec: {
 			cli: {
 				command: 'git commit -am "grunt release build"',
-				cwd: SOURCE_DIR,
+				cwd: '.',
 				stdout: false
 			}
 		},
