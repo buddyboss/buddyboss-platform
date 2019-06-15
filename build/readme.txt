@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.1
 Requires PHP: 5.6.20
-Stable tag: 1.0.3
+Stable tag: 1.0.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -12,7 +12,7 @@ BuddyBoss Platform helps site builders & developers add community features to th
 = Documentation =
 
 - [Tutorials](https://www.buddyboss.com/resources/docs/)
-- [Developer Reference](https://www.buddyboss.com/resources/reference/)
+- [Code Reference](https://www.buddyboss.com/resources/reference/)
 
 == Requirements ==
 

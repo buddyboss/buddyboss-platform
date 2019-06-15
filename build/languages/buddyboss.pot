@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-15 05:13:48+00:00\n"
+"POT-Creation-Date: 2019-06-15 09:05:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12982,7 +12982,7 @@ msgstr ""
 
 #: bp-media/bp-media-filters.php:678 bp-media/bp-media-filters.php:694
 #: bp-media/bp-media-filters.php:695 bp-media/bp-media-filters.php:752
-#: bp-media/bp-media-filters.php:841
+#: bp-media/bp-media-filters.php:844
 msgid "Import Media"
 msgstr ""
 
@@ -13000,7 +13000,7 @@ msgstr ""
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:784 bp-media/bp-media-filters.php:866
+#: bp-media/bp-media-filters.php:784 bp-media/bp-media-filters.php:869
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
@@ -13014,7 +13014,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:839
+#: bp-media/bp-media-filters.php:842
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -13023,7 +13023,7 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:867
+#: bp-media/bp-media-filters.php:870
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
