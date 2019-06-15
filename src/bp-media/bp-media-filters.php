@@ -806,6 +806,9 @@ function bp_media_import_submenu_page() {
 function bp_media_get_import_callbacks() {
 	return array(
 		'bp_media_import_buddyboss_media_tables',
+		'bp_media_import_buddyboss_forum_media',
+		'bp_media_import_buddyboss_topic_media',
+		'bp_media_import_buddyboss_reply_media',
 		'bp_media_update_import_status',
 	);
 }
