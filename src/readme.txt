@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.0.4 =
 * Multisite -- Fixed various issues
 * Photos -- show photos count when viewing other member's profile
-* Compatibility -- improved support for plugins that "Require BuddyPress"
+* Compatibility -- improved support for plugins that "Require bbPress"
 
 = 1.0.3 =
 * Multisite -- Fixed various issues
