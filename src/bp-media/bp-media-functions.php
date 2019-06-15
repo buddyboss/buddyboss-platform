@@ -1148,7 +1148,8 @@ function bp_media_import_buddyboss_media_tables() {
 					$activity_args = array(
 						'user_id'       => $user_id,
 						'recorded_time' => $activity->date_recorded,
-						'hide_sitewide' => true
+						'hide_sitewide' => true,
+						'privacy'       => 'media',
 					);
 
 					if ( 'groups' == $activity->component ) {
