@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.0.3\n"
+"Project-Id-Version: BuddyBoss Platform 1.0.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-13 21:05:51+00:00\n"
+"POT-Creation-Date: 2019-06-15 05:13:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12960,21 +12960,21 @@ msgstr ""
 msgid "Please update your server or deactivate BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:239 bp-loader.php:257
+#: bp-loader.php:240 bp-loader.php:258
 msgid "deactivate"
 msgstr ""
 
-#: bp-loader.php:243 bp-loader.php:261
+#: bp-loader.php:244 bp-loader.php:262
 msgid "BuddyBoss Platform is disabled."
 msgstr ""
 
-#: bp-loader.php:244
+#: bp-loader.php:245
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress plugin is active. Please "
 "%s BuddyPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:262
+#: bp-loader.php:263
 msgid ""
 "The BuddyBoss Platform can't work while bbPress plugin is active. Please %s "
 "bbPress to re-enable BuddyBoss Platform."

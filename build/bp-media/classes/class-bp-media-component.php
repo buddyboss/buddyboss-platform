@@ -226,7 +226,7 @@ class BP_Media_Component extends BP_Component {
 			$media_link = trailingslashit( $user_domain . $slug );
 
 			// Only grab count if we're on a user page and current user has access.
-			if ( bp_is_user() && bp_user_has_access() ) {
+			if ( bp_is_user() ) {
 				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
 				$class    = ( 0 === $count ) ? 'no-count' : 'count';
 				$nav_name = sprintf(
