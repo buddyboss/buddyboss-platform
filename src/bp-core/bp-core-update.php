@@ -202,6 +202,37 @@ function bp_version_updater() {
 		$switched_to_root_blog = true;
 	}
 
+
+	// Check in Current DB having a below 2 options are saved for the BBPress Topic & Topic Reply previously.
+	$topic_slug         = get_option( '_bbp_topic_slug' );
+	$topic_tag_slug     = get_option( '_bbp_topic_tag_slug' );
+	$topic_archive_slug = get_option( '_bbp_topic_archive_slug' );
+
+	if ( empty( $topic_slug ) ) {
+
+		// Check if there is any topics their in DB.
+		$topics = get_posts( array( 'post_type' => 'topic', 'numberposts' => 1 ) );
+
+		// If found the topics then go ahead.
+		if ( !empty( $topics ) ) {
+			// Topics found so set the _bbp_topic_slug to "topic" instead of "discussion" otherwise it will create the issue who used previously BBPress.
+			update_option( '_bbp_topic_slug', 'topic');
+
+			$default_components[] = 'forums';
+		}
+
+		if ( empty( $topic_archive_slug ) ) {
+			update_option( '_bbp_topic_archive_slug', 'topics');
+		}
+
+		if ( empty( $topic_tag_slug ) ) {
+			// Tags found so set the _bbp_topic_tag_slug to "topic-reply" instead of "discussion-reply" otherwise it will create the issue who used previously BBPress.
+			update_option( '_bbp_topic_tag_slug', 'topic-tag');
+
+		}
+
+	}
+
 	// Install BP schema and activate only Activity and XProfile.
 	if ( bp_is_install() ) {
 
