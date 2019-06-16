@@ -190,6 +190,11 @@ function bp_version_updater() {
 		'notifications' => 1,
 	) );
 
+	$get_default_forum = bp_get_option( 'bbp_set_forum_to_default', '');
+	if ( 'yes' === $get_default_forum ) {
+		$default_components['forums'] = 1;
+	}
+
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 	$switched_to_root_blog = false;
@@ -200,37 +205,6 @@ function bp_version_updater() {
 		bp_register_taxonomies();
 
 		$switched_to_root_blog = true;
-	}
-
-
-	// Check in Current DB having a below 2 options are saved for the BBPress Topic & Topic Reply previously.
-	$topic_slug         = get_option( '_bbp_topic_slug' );
-	$topic_tag_slug     = get_option( '_bbp_topic_tag_slug' );
-	$topic_archive_slug = get_option( '_bbp_topic_archive_slug' );
-
-	if ( empty( $topic_slug ) ) {
-
-		// Check if there is any topics their in DB.
-		$topics = get_posts( array( 'post_type' => 'topic', 'numberposts' => 1 ) );
-
-		// If found the topics then go ahead.
-		if ( !empty( $topics ) ) {
-			// Topics found so set the _bbp_topic_slug to "topic" instead of "discussion" otherwise it will create the issue who used previously BBPress.
-			update_option( '_bbp_topic_slug', 'topic');
-
-			$default_components[] = 'forums';
-		}
-
-		if ( empty( $topic_archive_slug ) ) {
-			update_option( '_bbp_topic_archive_slug', 'topics');
-		}
-
-		if ( empty( $topic_tag_slug ) ) {
-			// Tags found so set the _bbp_topic_tag_slug to "topic-reply" instead of "discussion-reply" otherwise it will create the issue who used previously BBPress.
-			update_option( '_bbp_topic_tag_slug', 'topic-tag');
-
-		}
-
 	}
 
 	// Install BP schema and activate only Activity and XProfile.
@@ -712,6 +686,82 @@ function bp_add_activation_redirect() {
 	// welcome message.
 	if ( bp_is_install() ) {
 		set_transient( '_bp_is_new_install', true, 30 );
+	}
+
+	// Check in Current DB having a below 2 options are saved for the BBPress Topic & Topic Reply previously.
+	$topic_slug         = get_option( '_bbp_topic_slug' );
+	$topic_tag_slug     = get_option( '_bbp_topic_tag_slug' );
+	$topic_archive_slug = get_option( '_bbp_topic_archive_slug' );
+
+	if ( empty( $topic_slug ) ) {
+
+		// Check if there is any topics their in DB.
+		$topics = get_posts( array( 'post_type' => 'topic', 'numberposts' => 1 ) );
+
+		// If found the topics then go ahead.
+		if ( !empty( $topics ) ) {
+
+			// Topics found so set the _bbp_topic_slug to "topic" instead of "discussion" otherwise it will create the issue who used previously BBPress.
+			update_option( '_bbp_topic_slug', 'topic');
+
+			// Set Flag to enable Forums default.
+			update_option( 'bbp_set_forum_to_default', 'yes');
+
+			// Get current active component.
+			$bp_active_components = get_option( 'bp-active-components', array() );
+
+			if ( ! in_array( 'forums', $bp_active_components) ) {
+
+				// Add Forums to current components.
+				$bp_active_components['forums'] = 1;
+
+				// Set the forums to in DB.
+				bp_update_option( 'bp-active-components', $bp_active_components );
+
+			}
+
+			// If Forums page is not set.
+			$option = bp_get_option( '_bbp_root_slug_custom_slug', '' );
+			if ( '' === $option ) {
+
+				$default_title = bp_core_get_directory_page_default_titles();
+				$title         = ( isset( $default_title['new_forums_page'] ) ) ? $default_title['new_forums_page'] : '';
+
+				$new_page = array(
+					'post_title'     => $title,
+					'post_status'    => 'publish',
+					'post_author'    => bp_loggedin_user_id(),
+					'post_type'      => 'page',
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+				);
+
+				// Create Forums Page.
+				$page_id = wp_insert_post( $new_page );
+
+				bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
+				$slug = get_post_field( 'post_name', $page_id );
+
+				// Set BBPress root Slug
+				bp_update_option( '_bbp_root_slug', $slug );
+
+			}
+
+			// Reset the permalink.
+			bp_update_option( 'rewrite_rules', '' );
+
+		}
+
+		if ( empty( $topic_archive_slug ) ) {
+			update_option( '_bbp_topic_archive_slug', 'topics');
+		}
+
+		if ( empty( $topic_tag_slug ) ) {
+			// Tags found so set the _bbp_topic_tag_slug to "topic-reply" instead of "discussion-reply" otherwise it will create the issue who used previously BBPress.
+			update_option( '_bbp_topic_tag_slug', 'topic-tag');
+
+		}
+
 	}
 
 	// Add the transient to redirect.
