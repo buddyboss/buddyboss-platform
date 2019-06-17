@@ -35,13 +35,13 @@ class BP_Embed extends WP_Embed {
 		$this->handlers = $wp_embed->handlers;
 
 		if ( bp_use_embed_in_activity() ) {
-			add_filter( 'bp_get_activity_content_body', array( &$this, 'autoembed' ), 8 );
-			add_filter( 'bp_get_activity_content_body', array( &$this, 'run_shortcode' ), 7 );
+			add_filter( 'bp_get_activity_content_body', array( &$this, 'autoembed' ), 8, 2 );
+			add_filter( 'bp_get_activity_content_body', array( &$this, 'run_shortcode' ), 7, 2 );
 		}
 
 		if ( bp_use_embed_in_activity_replies() ) {
-			add_filter( 'bp_get_activity_content', array( &$this, 'autoembed' ), 8 );
-			add_filter( 'bp_get_activity_content', array( &$this, 'run_shortcode' ), 7 );
+			add_filter( 'bp_get_activity_content', array( &$this, 'autoembed' ), 8, 2 );
+			add_filter( 'bp_get_activity_content', array( &$this, 'run_shortcode' ), 7, 2 );
 		}
 
 		if ( bp_use_embed_in_private_messages() ) {
@@ -250,7 +250,41 @@ class BP_Embed extends WP_Embed {
 	 * @param string $content The content to be searched.
 	 * @return string Potentially modified $content.
 	 */
-	public function autoembed( $content ) {
+	public function autoembed( $content, $type = '' ) {
+
+		if ( isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type ) ) {
+			// Check if WordPress already embed the link then return the original content.
+			if (strpos($content,'<iframe') !== false) {
+				return $content;
+			} else {
+				// Find all the URLs from the content.
+				preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match);
+				// Check if URL found.
+				if( isset( $match[0] ) ) {
+					$html = '';
+					// Remove duplicate from array and run the loop
+					foreach ( array_unique( $match[0] ) as $url ) {
+						// Fetch the oembed code for URL.
+						$embed_code = wp_oembed_get( $url );
+						// If oembed found then store into the $html
+						if (strpos($embed_code,'<iframe') !== false) {
+							$html .= '<p>'.$embed_code.'</p>';
+						}
+					}
+					// If $html blank return original content
+					if ( '' === $html ) {
+						return $content;
+						// Return the new content by adding oembed after the content.
+					} else {
+						return $content.$html;
+					}
+					// Else return original content.
+				} else {
+					return $content;
+				}
+			}
+		}
+
 		// Replace line breaks from all HTML elements with placeholders.
 		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 		$old_content = $content;
