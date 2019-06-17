@@ -1448,6 +1448,8 @@ function bp_activity_content() {
 	 */
 	function bp_get_activity_content() {
 
+		global $activities_template;
+
 		/**
 		 * If you want to filter activity update content, please use
 		 * the filter 'bp_get_activity_content_body'.
@@ -1455,7 +1457,10 @@ function bp_activity_content() {
 		 * This function is mainly for backwards compatibility.
 		 */
 		$content = bp_get_activity_action() . ' ' . bp_get_activity_content_body();
-		return apply_filters( 'bp_get_activity_content', $content );
+		//return apply_filters( 'bp_get_activity_content', $content );
+		return apply_filters_ref_array( 'bp_get_activity_content', array( $content, &$activities_template->activity ) );
+
+
 	}
 
 /**
@@ -2133,7 +2138,9 @@ function bp_activity_comment_content() {
 		}
 
 		/** This filter is documented in bp-activity/bp-activity-template.php */
-		$content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );
+		//$content = apply_filters( 'bp_get_activity_content', $activities_template->activity->current_comment->content );
+		$content = apply_filters_ref_array( 'bp_get_activity_content', array( $activities_template->activity->current_comment->content, &$activities_template->activity->current_comment ) );
+
 
 		/**
 		 * Filters the content of the current activity comment.

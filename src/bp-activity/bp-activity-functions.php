@@ -4851,6 +4851,18 @@ function bp_activity_action_parse_url() {
 	if ( class_exists( 'WebsiteParser' ) ) {
 
 		$url    = $_POST['url'];
+
+		if ( strpos( $url, 'youtube' ) > 0 || strpos( $url, 'youtu' ) > 0 || strpos( $url, 'vimeo' ) > 0 ) {
+
+			$json_data['title']       = '';
+			$json_data['description'] = '';
+			$json_data['images']      = '';
+			$json_data['error']       = '';
+
+			wp_send_json( $json_data );
+		}
+
+
 		$parser = new WebsiteParser( $url );
 		$body   = wp_remote_get( $url );
 
