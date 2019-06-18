@@ -1357,3 +1357,24 @@ function bp_dd_delete_avatar( $args ) {
 }
 
 add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
+
+/**
+ * Removed the CKEditor Js on the activity page.
+ *
+ * @since BuddyBoss 1.0.5
+ *
+ */
+function bb_remove_badgeos_conflict_ckeditor_dequeue_script() {
+		?>
+		<script type="text/javascript">
+
+			if ( $('body').hasClass('activity') ) {
+				<?php
+				wp_deregister_script( 'ck_editor_cdn' );
+				wp_dequeue_script( 'ck_editor_cdn' );
+				?>
+			}
+		</script>
+		<?php
+}
+add_action( 'wp_enqueue_scripts', 'bb_remove_badgeos_conflict_ckeditor_dequeue_script', 999999999999999 );
