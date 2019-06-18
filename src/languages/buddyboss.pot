@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-18 07:42:53+00:00\n"
+"POT-Creation-Date: 2019-06-18 09:51:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12941,36 +12941,36 @@ msgid ""
 "Platform."
 msgstr ""
 
-#: bp-loader.php:127
+#: bp-loader.php:106
 msgid "Your site does not support BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:130
+#: bp-loader.php:109
 #. translators: 1: current PHP version, 2: required PHP version
 msgid ""
 "Your site is currently running PHP version %1$s, while BuddyBoss Platform "
 "requires version %2$s or greater."
 msgstr ""
 
-#: bp-loader.php:131
+#: bp-loader.php:110
 msgid "Please update your server or deactivate BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:208 bp-loader.php:226
+#: bp-loader.php:187 bp-loader.php:205
 msgid "deactivate"
 msgstr ""
 
-#: bp-loader.php:212 bp-loader.php:230 bp-loader.php:241
+#: bp-loader.php:191 bp-loader.php:209 bp-loader.php:220
 msgid "BuddyBoss Platform is disabled."
 msgstr ""
 
-#: bp-loader.php:213
+#: bp-loader.php:192
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress plugin is active. Please "
 "%s BuddyPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:231
+#: bp-loader.php:210
 msgid ""
 "The BuddyBoss Platform can't work while bbPress plugin is active. Please %s "
 "bbPress to re-enable BuddyBoss Platform."
@@ -17294,7 +17294,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:797
+#: class-buddypress.php:800
 msgid "BuddyPress Nouveau"
 msgstr ""
 

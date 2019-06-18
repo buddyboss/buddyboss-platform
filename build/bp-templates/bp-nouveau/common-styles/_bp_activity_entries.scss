@@ -568,3 +568,8 @@
 #activity-link-preview-close-image:focus {
 	outline: 0;
 }
+
+.activity-inner .buddyboss-media-photo-link,
+.acomment-content .buddyboss-media-photo-link {
+	display: none !important;
+}
