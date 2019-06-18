@@ -3053,7 +3053,7 @@ function bp_activity_delete( $args = '' ) {
 		: $args['user_id'];
 
 	$latest_update = bp_get_user_meta( $user_id, 'bp_latest_update', true );
-	if ( !empty( $latest_update ) ) {
+	if ( !empty( $latest_update['id'] ) ) {
 		if ( in_array( (int) $latest_update['id'], (array) $activity_ids_deleted ) ) {
 			bp_delete_user_meta( $user_id, 'bp_latest_update' );
 		}
@@ -4854,14 +4854,16 @@ function bp_activity_action_parse_url() {
 
 		if ( strpos( $url, 'youtube' ) > 0 || strpos( $url, 'youtu' ) > 0 || strpos( $url, 'vimeo' ) > 0 ) {
 
-			$json_data['title']       = '';
-			$json_data['description'] = '';
+			// Fetch the oembed code for URL.
+			$embed_code = wp_oembed_get( $url );
+
+			$json_data['title']       = ' ';
+			$json_data['description'] = $embed_code;
 			$json_data['images']      = '';
 			$json_data['error']       = '';
 
 			wp_send_json( $json_data );
 		}
-
 
 		$parser = new WebsiteParser( $url );
 		$body   = wp_remote_get( $url );

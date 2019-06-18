@@ -59,8 +59,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Discussion/topic URL slugs from bbPress auto-migrate now
 * Forums - Fixed issues with replying to discussions on mobile
 * Activity - Fixed comment issues on new activity posts
-* Media - When migrating from BuddyBoss Media plugin, add media to activity posts
-* Documentation - Migrating from Boss Theme
+* Activity - Display video embeds and link previews in different styles
+* Media - When migrating from BuddyBoss Media plugin, add media to activity, forums, messages
+* Compatibility - Fixed conflict with BadgeOS plugin
+* Compatibility - Fixed conflict with BuddyPress Follow plugin
+* Documentation - How to migrate from Boss Theme
 
 = 1.0.4 =
 * Multisite - Fixed various issues
@@ -70,7 +73,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.0.3 =
 * Multisite - Fixed various issues
 * Forums - Tagging improvements in replies
-* Documentation - Migrating from Social Learner
+* Documentation - How to migrate from Social Learner
 * Documentation - How to use the Resources website
 
 = 1.0.2 =

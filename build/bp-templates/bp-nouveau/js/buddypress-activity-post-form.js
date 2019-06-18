@@ -721,6 +721,8 @@ window.bp = window.bp || {};
 
 			if( '' !== urlString ) {
 				this.loadURLPreview( urlString );
+			} else {
+				$('#activity-close-link-suggestion').click();
 			}
 		},
 
@@ -747,6 +749,10 @@ window.bp = window.bp || {};
 			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 			if ( regexp.test( url ) ) {
 
+				if ( typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true ) {
+					return false;
+				}
+
 				self.options.activity.set( {
 					link_scrapping: true,
 					link_loading: true,
@@ -770,7 +776,24 @@ window.bp = window.bp || {};
 							link_images: response.images,
 							link_image_index: 0
 						} );
+
 						$('#whats-new-attachments').removeClass('empty');
+
+						if ( $('#whats-new-attachments').hasClass('activity-video-preview') ) {
+                                                    $('#whats-new-attachments').removeClass('activity-video-preview');
+						}
+
+						if ( $('#whats-new-attachments').hasClass('activity-link-preview') ) {
+                                                    $('#whats-new-attachments').removeClass('activity-link-preview');
+						}
+
+						if ( $('.activity-media-container').length ) {
+                                                    if (  response.description.indexOf('iframe') > -1 ) {
+                                                            $('#whats-new-attachments').addClass('activity-video-preview');
+                                                    } else {
+                                                            $('#whats-new-attachments').addClass('activity-link-preview');
+                                                    }
+						}
 					} else {
 						self.options.activity.set( {
 							link_success: false,
