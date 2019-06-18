@@ -715,7 +715,7 @@ function bp_media_import_submenu_page() {
 	if ( isset( $_POST['bp-media-import-submit'] ) && ! empty( $background_updater ) ) {
 		$update_queued          = false;
 
-		if ( 'done' != $bp_media_import_status || isset( $_POST['bp-media-import-rerun'] ) ) {
+		if ( 'done' != $bp_media_import_status ) {
 			foreach ( bp_media_get_import_callbacks() as $update_callback ) {
 				error_log( sprintf( 'Queuing %s', $update_callback ) );
 				$background_updater->push_to_queue( $update_callback );
@@ -778,14 +778,10 @@ function bp_media_import_submenu_page() {
 								<label id="bp-media-import-msg"></label>
                             </p>
                             <input type="hidden" value="bp-media-import-updating" id="bp-media-import-updating" />
-                            <input type="hidden" name="bp-media-import-rerun" id="bp-media-import-rerun" />
-                            <input type="submit" value="<?php _e('Re-Run Migration', 'buddyboss'); ?>" style="display: none;" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 							<?php
 						} else if ( 'done' == $bp_media_import_status ) {
 							?>
                             <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
-                            <input type="hidden" name="bp-media-import-rerun" id="bp-media-import-rerun" />
-                            <input type="submit" value="<?php _e('Re-Run Migration', 'buddyboss'); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 							<?php
 						} else { ?>
                             <p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
@@ -810,8 +806,8 @@ function bp_media_import_submenu_page() {
 function bp_media_get_import_callbacks() {
 	return array(
 		'bp_media_import_reset_options',
-		'bp_media_import_reset_media_albums',
-		'bp_media_import_reset_media',
+		//'bp_media_import_reset_media_albums',
+		//'bp_media_import_reset_media',
 		'bp_media_import_buddyboss_media_tables',
 		'bp_media_import_buddyboss_forum_media',
 		'bp_media_import_buddyboss_topic_media',
