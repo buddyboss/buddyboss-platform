@@ -352,6 +352,7 @@
 							if ( import_status == 'done' && total_albums == albums_done && total_media == media_done ) {
 								clearInterval(import_status_interval);
 								$('#bp-media-import-msg').text(response.data.success_msg);
+								$('#bp-media-import-submit').show();
 							}
 						} else {
 							clearInterval(import_status_interval);
