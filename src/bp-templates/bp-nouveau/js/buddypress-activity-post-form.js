@@ -777,6 +777,23 @@ window.bp = window.bp || {};
 							link_image_index: 0
 						} );
 						$('#whats-new-attachments').removeClass('empty');
+
+
+						if ( $('.activity-media-container').hasClass('activity-video-preview') ) {
+							$('.activity-media-container').removeClass('activity-video-preview');
+						}
+
+						if ( $('.activity-media-container').hasClass('activity-link-preview') ) {
+							$('.activity-media-container').removeClass('activity-link-preview');
+						}
+
+						if ( $('.activity-media-container').length ) {
+							if (  response.description.indexOf('iframe') > -1 ) {
+								$('.activity-media-container').addClass('activity-video-preview');
+							} else {
+								$('.activity-media-container').addClass('activity-link-preview');
+							}
+						}
 					} else {
 						self.options.activity.set( {
 							link_success: false,
