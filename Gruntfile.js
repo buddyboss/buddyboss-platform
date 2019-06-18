@@ -304,7 +304,7 @@ module.exports = function( grunt ) {
 		compress: {
 			main: {
 				options: {
-					archive: 'buddyboss-platform.zip'
+					archive: 'buddyboss-platform-plugin.zip'
 				},
 				files: [{
 					src: BUILD_DIR + '**',
@@ -318,7 +318,7 @@ module.exports = function( grunt ) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', 'imagemin', 'uglify', 'cssmin', 'makepot:src'] );
+	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
 	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
 	grunt.registerTask( 'release', ['src', 'build'] );
 
