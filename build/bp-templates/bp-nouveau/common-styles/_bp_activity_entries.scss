@@ -439,6 +439,17 @@
 	-webkit-box-direction: normal;
 	-ms-flex-flow: row wrap;
 	flex-flow: row wrap;
+
+	.activity-video-preview & {
+		border: 0;
+		margin: 0;
+		max-width: 640px;
+	}
+
+	div.fluid-width-video-wrapper {
+		margin-top: 0;
+		margin-bottom: 0;
+	}
 }
 
 .activity-link-preview-image-wrap {
@@ -485,6 +496,10 @@
 	letter-spacing: -0.24px;
 	line-height: 1.38;
 	align-self: center;
+
+	.activity-video-preview & {
+		padding: 0;
+	}
 }
 
 .activity-url-thumb-nav {
