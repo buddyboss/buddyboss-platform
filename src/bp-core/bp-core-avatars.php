@@ -668,11 +668,15 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
-		// Set up the Gravatar URL.
-		$gravatar = esc_url( add_query_arg(
-			rawurlencode_deep( array_filter( $url_args ) ),
-			$gravatar
-		) );
+		if ( isset( $url_args['d'] ) && ( 'mm' === $url_args['d'] || 'blank' === $url_args['d'] ) ) {
+			$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+		} else {
+			// Set up the Gravatar URL.
+			$gravatar = esc_url( add_query_arg(
+				rawurlencode_deep( array_filter( $url_args ) ),
+				$gravatar
+			) );
+		}
 
 	// No avatar was found, and we've been told not to use a gravatar.
 	} else {
@@ -1386,7 +1390,7 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	global $pagenow;
 	if ( 'options-discussion.php' === $pagenow ) {
 		if ( true === $args["force_default"] && 'mm' === $args["default"] ) {
-			return buddypress()->plugin_url . 'bp-core/images/mystery-man-50.jpg';
+			return buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
 		} else if ( true === $args["force_default"] ) {
 			return $retval;
 		}
@@ -1876,7 +1880,7 @@ function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
 
 	// Use the local default image.
 	} elseif ( 'local' === $type ) {
-		$avatar = buddypress()->plugin_url . 'bp-core/images/mystery-man-50.jpg';
+		$avatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
 
 	// Use Gravatar's mystery person as fallback.
 	} else {

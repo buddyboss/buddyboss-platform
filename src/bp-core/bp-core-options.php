@@ -22,36 +22,36 @@ defined( 'ABSPATH' ) || exit;
 function bp_get_default_options() {
 
 	// Default options.
-	$options = array (
+	$options = array(
 
 		/* Components ********************************************************/
 
-		'bp-deactivated-components'            => array(),
+		'bp-deactivated-components'        => array(),
 
 		/* XProfile **********************************************************/
 
 		// Default profile groups name.
-		'bp-xprofile-base-group-name'          => 'Details',
+		'bp-xprofile-base-group-name'      => 'Details',
 
 		// Default fullname field name.
-		'bp-xprofile-firstname-field-name'     => 'First Name',
+		'bp-xprofile-firstname-field-name' => 'First Name',
 
 		// Default fullname field name.
-		'bp-xprofile-lastname-field-name'      => 'Last Name',
+		'bp-xprofile-lastname-field-name'  => 'Last Name',
 
 		// Default fullname field name.
-		'bp-xprofile-nickname-field-name'      => 'Nickname',
+		'bp-xprofile-nickname-field-name'  => 'Nickname',
 
 		// Default fullname field name. (for backward compat)
-		'bp-xprofile-fullname-field-name'      => 'Name',
+		'bp-xprofile-fullname-field-name'  => 'Name',
 
-		'bp-display-name-format'			   => 'first_name',
+		'bp-display-name-format'               => 'first_name',
 
 		// Enable/Disable Profile Type.
-		'bp-member-type-enable-disable'         => false,
+		'bp-member-type-enable-disable'        => false,
 
 		// Enable/Disable Display on profiles.
-		'bp-member-type-display-on-profile'         => false,
+		'bp-member-type-display-on-profile'    => false,
 
 		/* Blogs *************************************************************/
 
@@ -79,19 +79,19 @@ function bp_get_default_options() {
 		'bp-disable-group-cover-image-uploads' => false,
 
 		// Group Types.
-		'bp-disable-group-type-creation' => false,
+		'bp-disable-group-type-creation'       => false,
 
 		// Auto Group Membership Approval.
-		'bp-enable-group-auto-join' => false,
+		'bp-enable-group-auto-join'            => false,
 
 		// Group restrict invites to members who already in specific parent group.
-		'bp-enable-group-restrict-invites' => false,
+		'bp-enable-group-restrict-invites'     => false,
 
 		// Allow users to delete their own accounts.
 		'bp-disable-account-deletion'          => false,
 
 		// Allow site owner to enable private network.
-		'bp-enable-private-network'          => true,
+		'bp-enable-private-network'            => true,
 
 		// Allow comments on post and comment activity items.
 		'bp-disable-blogforum-comments'        => true,
@@ -102,40 +102,43 @@ function bp_get_default_options() {
 		// Email unsubscribe salt.
 		'bp-emails-unsubscribe-salt'           => '',
 
+		// Profile Enable Gravatar
+		'bp-enable-profile-gravatar'   => false,
+
 		/* Groups ************************************************************/
 
 		// @todo Move this into the groups component
 		// Restrict group creation to super admins.
-		'bp_restrict_group_creation'           => false,
+		'bp_restrict_group_creation'   => false,
 
 		/* Akismet ***********************************************************/
 
 		// Users from all sites can post.
-		'_bp_enable_akismet'                   => true,
+		'_bp_enable_akismet'           => true,
 
 		/* Activity HeartBeat ************************************************/
 
 		// HeartBeat is on to refresh activities.
-		'_bp_enable_heartbeat_refresh'         => true,
+		'_bp_enable_heartbeat_refresh' => true,
 
 		/* BuddyBar **********************************************************/
 
 		// Force the BuddyBar.
-		'_bp_force_buddybar'                   => false,
+		'_bp_force_buddybar'           => false,
 
 		/* Legacy *********************************************/
 
 		// Do not register the bp-default themes directory.
-		'_bp_retain_bp_default'                => false,
+		'_bp_retain_bp_default'        => false,
 
 		// Ignore deprecated code.
-		'_bp_ignore_deprecated_code'           => true,
+		'_bp_ignore_deprecated_code'   => true,
 
 		/* Invites ************************************************************/
 
-		'bp-disable-invite-member-email-subject'         => false,
-		'bp-disable-invite-member-email-content'         => true,
-		'bp-disable-invite-member-type'                  => false,
+		'bp-disable-invite-member-email-subject'     => false,
+		'bp-disable-invite-member-email-content'     => true,
+		'bp-disable-invite-member-type'              => false,
 
 		/* Widgets **************************************************/
 		'widget_bp_core_login_widget'                => false,
@@ -1261,4 +1264,25 @@ function bp_show_login_adminbar( $default = true ) {
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
 	return (bool) apply_filters( 'bp_show_login_adminbar', (bool) bp_get_option( 'show-login-adminbar', $default ) );
+}
+
+/**
+ * Are members able to upload their own cover photos?
+ *
+ * @since BuddyPress 2.4.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if cover photo uploads are disabled, otherwise false.
+ */
+function bp_enable_profile_gravatar( $default = false ) {
+
+	/**
+	 * Filters whether or not members are able to upload their own cover photos.
+	 *
+	 * @since BuddyPress 2.4.0
+	 *
+	 * @param bool $value Whether or not members are able to upload their own cover photos.
+	 */
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
 }
