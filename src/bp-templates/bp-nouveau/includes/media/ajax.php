@@ -561,6 +561,14 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
+	$main_activity_id = false;
+	// make an activity
+	if ( bp_is_active( 'activity' ) ) {
+		$main_activity_id = bp_activity_post_update();
+	}
+
+	$media_ids     = array();
+
 	// save media
 	$medias = $_POST['medias'];
 	if ( ! empty( $medias ) ) {
@@ -597,6 +605,29 @@ function bp_nouveau_ajax_media_album_save() {
 
 			//save media is saved in attachment
 			update_post_meta( $media['id'], 'bp_media_saved', true );
+
+			//save media meta for activity
+			if ( ! empty( $main_activity_id ) ) {
+				update_post_meta( $media['id'], 'bp_media_parent_activity_id', $main_activity_id );
+				update_post_meta( $media['id'], 'bp_media_activity_id', $activity_id );
+			}
+
+			$media_ids[] = $media_id;
+		}
+	}
+
+	if ( ! empty( $media_ids ) && bp_is_active( 'activity' ) ) {
+		$media_ids = implode( ',', $media_ids );
+
+		//save media meta for activity
+		if ( ! empty( $main_activity_id ) ) {
+			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+
+			$main_activity = new BP_Activity_Activity( $main_activity_id );
+			if ( ! empty( $main_activity ) ) {
+				$main_activity->privacy = $privacy;
+				$main_activity->save();
+			}
 		}
 	}
 
