@@ -1364,7 +1364,7 @@ add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
  * @since BuddyBoss 1.0.5
  *
  */
-function bb_remove_badgeos_conflict_ckeditor_dequeue_script() {
+function bp_remove_badgeos_conflict_ckeditor_dequeue_script() {
 		?>
 		<script type="text/javascript">
 
@@ -1377,4 +1377,4 @@ function bb_remove_badgeos_conflict_ckeditor_dequeue_script() {
 		</script>
 		<?php
 }
-add_action( 'wp_enqueue_scripts', 'bb_remove_badgeos_conflict_ckeditor_dequeue_script', 999999999999999 );
+add_action( 'wp_enqueue_scripts', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 999999999999999 );
