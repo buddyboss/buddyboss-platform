@@ -169,11 +169,6 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
  *                     Boolean false on failure.
  */
 function bp_locate_template_asset( $filename ) {
-	// Ensure assets can be located when running from /src/.
-	if ( defined( 'BP_SOURCE_SUBDIRECTORY' ) && 'src' === BP_SOURCE_SUBDIRECTORY ) {
-		$filename = str_replace( '.min', '', $filename );
-	}
-
 	// Use bp_locate_template() to find our asset.
 	$located = bp_locate_template( $filename, false );
 	if ( false === $located ) {
