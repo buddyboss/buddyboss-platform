@@ -2,10 +2,12 @@
 /* global module */
 module.exports = function( grunt ) {
 	var SOURCE_DIR = 'src/',
-		BUILD_DIR = 'build/',
+		BUILD_DIR = 'buddyboss-platform/',
 
 		BP_CSS = [
-			'**/*.css'
+			'**/*.css',
+			'!**/*.min.css',
+			'!**/vendor/*.css'
 		],
 
 		// CSS exclusions, for excluding files from certain tasks, e.g. rtlcss
@@ -15,7 +17,10 @@ module.exports = function( grunt ) {
 		],
 
 		BP_JS = [
-			'**/*.js'
+			'**/*.js',
+			'!**/*.min.js',
+			'!bp-forums/**/*.js',
+			'!**/vendor/*.js'
 		],
 
 		BP_EXCLUDED_MISC = [
@@ -98,15 +103,6 @@ module.exports = function( grunt ) {
 				//indentType: 'tab',
 				//indentWidth: '1'
 			},
-			// legacy: {
-			// 	cwd: SOURCE_DIR,
-			// 	extDot: 'last',
-			// 	expand: true,
-			// 	ext: '.css',
-			// 	flatten: true,
-			// 	src: ['bp-templates/bp-legacy/css/*.scss'],
-			// 	dest: SOURCE_DIR + 'bp-templates/bp-legacy/css/'
-			// },
 			nouveau: {
 				cwd: SOURCE_DIR,
 				extDot: 'last',
@@ -176,39 +172,20 @@ module.exports = function( grunt ) {
 				options: {
 					cwd: SOURCE_DIR,
 					domainPath: '/languages',
-                    exclude: [ 'node_modules/*' ], // List of files or directories to ignore.
+					exclude: [ 'node_modules/*' ], // List of files or directories to ignore.
 					mainFile: 'bp-loader.php',
 					potFilename: 'buddyboss.pot',
-                    potHeaders: { // Headers to add to the generated POT file.
-                        poedit: true, // Includes common Poedit headers.
-                        'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
-                        'Language-Team': 'BuddyBoss <support@buddyboss.com>',
-                        'report-msgid-bugs-to': 'https://www.buddyboss.com/contact/',
-                        'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
-                    },
+					potHeaders: { // Headers to add to the generated POT file.
+						poedit: true, // Includes common Poedit headers.
+						'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
+						'Language-Team': 'BuddyBoss <support@buddyboss.com>',
+						'report-msgid-bugs-to': 'https://www.buddyboss.com/contact/',
+						'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
+					},
 					type: 'wp-plugin',
-                    updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
-                    updatePoFiles: false // Whether to update PO files in the same directory as the POT file.
-                }
-			},
-			build: {
-				options: {
-					cwd: BUILD_DIR,
-					domainPath: '/languages',
-                    exclude: [ 'node_modules/*' ], // List of files or directories to ignore.
-					mainFile: 'bp-loader.php',
-					potFilename: 'buddyboss.pot',
-                    potHeaders: { // Headers to add to the generated POT file.
-                        poedit: true, // Includes common Poedit headers.
-                        'Last-Translator': 'BuddyBoss <support@buddyboss.com>',
-                        'Language-Team': 'BuddyBoss <support@buddyboss.com>',
-                        'report-msgid-bugs-to': 'https://www.buddyboss.com/contact/',
-                        'x-poedit-keywordslist': true // Include a list of all possible gettext functions.
-                    },
-					type: 'wp-plugin',
-                    updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
-                    updatePoFiles: true // Whether to update PO files in the same directory as the POT file.
-                }
+					updateTimestamp: true, // Whether the POT-Creation-Date should be updated without other changes.
+					updatePoFiles: false // Whether to update PO files in the same directory as the POT file.
+				}
 			}
 		},
 		imagemin: {
@@ -243,8 +220,8 @@ module.exports = function( grunt ) {
 		},
 		uglify: {
 			core: {
-				cwd: BUILD_DIR,
-				dest: BUILD_DIR,
+				cwd: SOURCE_DIR,
+				dest: SOURCE_DIR,
 				extDot: 'last',
 				expand: true,
 				ext: '.min.js',
@@ -279,8 +256,8 @@ module.exports = function( grunt ) {
 		},
 		cssmin: {
 			minify: {
-				cwd: BUILD_DIR,
-				dest: BUILD_DIR,
+				cwd: SOURCE_DIR,
+				dest: SOURCE_DIR,
 				extDot: 'last',
 				expand: true,
 				ext: '.min.css',
@@ -302,14 +279,9 @@ module.exports = function( grunt ) {
 			}
 		},
 		exec: {
-			// bpdefault: {
-			// 	command: 'svn export --force https://github.com/buddypress/BP-Default.git/trunk bp-themes/bp-default',
-			// 	cwd: BUILD_DIR,
-			// 	stdout: false
-			// },
 			cli: {
-				command: 'svn export --force https://github.com/buddypress/wp-cli-buddypress.git/trunk@595 cli',
-				cwd: BUILD_DIR,
+				command: 'git add .; git commit -am "grunt release build";',
+				cwd: '.',
 				stdout: false
 			}
 		},
@@ -318,11 +290,6 @@ module.exports = function( grunt ) {
 				globals: {},
 				esprimaOptions:{},
 				verbose: false
-			},
-			build: {
-				files: {
-					src: [BUILD_DIR + '/**/*.js']
-				}
 			},
 			src: {
 				files: {
@@ -334,26 +301,26 @@ module.exports = function( grunt ) {
 				}
 			}
 		},
-		patch: {
-			options: {
-				tracUrl: 'buddypress.trac.wordpress.org'
+		compress: {
+			main: {
+				options: {
+					archive: 'buddyboss-platform.zip'
+				},
+				files: [{
+					src: BUILD_DIR + '**',
+					dest: '.'
+				}]
 			}
 		},
-		upload_patch: {
-			options: {
-				tracUrl: 'buddypress.trac.wordpress.org'
-			}
-		}
 	});
 
 
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate:src', 'jshint', 'stylelint', 'sass', 'makepot:src', 'rtlcss'] );
-	grunt.registerTask( 'commit',  ['src', 'checktextdomain', 'imagemin'] );
-	grunt.registerTask( 'build',   ['commit', 'clean:all', 'copy:files', 'uglify', 'jsvalidate:build', 'cssmin', 'makepot:build', /*, 'exec:bpdefault','exec:cli' */] );
-	grunt.registerTask( 'release', ['build'] );
+	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', 'imagemin', 'uglify', 'cssmin', 'makepot:src'] );
+	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
+	grunt.registerTask( 'release', ['src', 'build'] );
 
 	// Testing tasks.
 	grunt.registerMultiTask( 'phpunit', 'Runs PHPUnit tests, including the ajax and multisite tests.', function() {
@@ -366,11 +333,11 @@ module.exports = function( grunt ) {
 
 	grunt.registerTask( 'test', 'Run all unit test tasks.', ['phpunit:default', 'phpunit:multisite'] );
 
-	grunt.registerTask( 'jstest', 'Runs all JavaScript tasks.', [ 'jsvalidate:src', 'jshint' ] );
+	grunt.registerTask( 'jstest', 'Runs all JavaScript tasks.', [ 'jsvalidate', 'jshint' ] );
 
 	// Travis CI Tasks.
-	grunt.registerTask( 'travis:grunt', 'Runs Grunt build task.', [ 'build' ]);
-	grunt.registerTask( 'travis:phpunit', ['jsvalidate:src', 'jshint', 'checktextdomain', 'test'] );
+	grunt.registerTask( 'travis:grunt', 'Runs Grunt build task.', [ 'src' ]);
+	grunt.registerTask( 'travis:phpunit', ['jsvalidate', 'jshint', 'checktextdomain', 'test'] );
 	grunt.registerTask( 'travis:codecoverage', 'Runs PHPUnit tasks with code-coverage generation.', ['phpunit:codecoverage'] );
 
 	// Patch task.
