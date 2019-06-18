@@ -4,11 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-<<<<<<< HEAD
 "POT-Creation-Date: 2019-06-18 07:03:48+00:00\n"
-=======
-"POT-Creation-Date: 2019-06-18 06:48:12+00:00\n"
->>>>>>> 80711dc460d5919b56c924545180ddd1bdd5986b
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -869,11 +865,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2679
-<<<<<<< HEAD
 #: bp-core/bp-core-attachments.php:776 bp-forums/replies/template.php:2042
-=======
-#: bp-core/bp-core-attachments.php:776 bp-forums/replies/template.php:2037
->>>>>>> 80711dc460d5919b56c924545180ddd1bdd5986b
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2618
