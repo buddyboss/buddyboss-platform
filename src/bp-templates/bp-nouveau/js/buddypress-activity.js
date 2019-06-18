@@ -236,6 +236,8 @@ window.bp = window.bp || {};
 				$( '#buddypress [data-bp-list="activity"] ul.activity-list' ).prepend( '<li class="load-newest"><a href="#newest">' + BP_Nouveau.newest + ' (' + newest_activities_count + ')</a></li>' );
 			}
 
+			$( '#buddypress [data-bp-list="activity"] li.load-newest' ).trigger('click');
+
 			/**
 			 * Finally trigger a pending event containing the activity heartbeat data
 			 */
