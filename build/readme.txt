@@ -56,7 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.0.5 =
-* Forums - topic URL slugs from bbPress auto-migrate now
+* Forums - Discussion/topic URL slugs from bbPress auto-migrate now
+* Forums - Fixed issues with replying to discussions on mobile
+* Activity - Fixed comment issues on new activity posts
+* Media - When migrating from BuddyBoss Media plugin, add media to activity posts
 * Documentation - Migrating from Boss Theme
 
 = 1.0.4 =

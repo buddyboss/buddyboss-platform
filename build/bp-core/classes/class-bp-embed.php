@@ -264,8 +264,15 @@ class BP_Embed extends WP_Embed {
 					$html = '';
 					// Remove duplicate from array and run the loop
 					foreach ( array_unique( $match[0] ) as $url ) {
-						// Fetch the oembed code for URL.
-						$embed_code = wp_oembed_get( $url );
+						// Store oembed iframe in database cache for 1 day
+						if ( false === ( $embed_code = get_transient( $url ) ) ) {
+
+                            // Fetch the oembed code for URL.
+                            $embed_code = wp_oembed_get( $url );
+
+                            set_transient( $url, $embed_code, DAY_IN_SECONDS );
+
+                        }
 						// If oembed found then store into the $html
 						if (strpos($embed_code,'<iframe') !== false) {
 							$html .= '<p>'.$embed_code.'</p>';
