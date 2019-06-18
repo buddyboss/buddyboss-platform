@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issues with replying to discussions on mobile
 * Activity - Fixed comment issues on new activity posts
 * Media - When migrating from BuddyBoss Media plugin, add media to activity, forums, messages
+* Compatibility - Fixed conflict with BadgeOS plugin
 * Compatibility - Fixed conflict with BuddyPress Follow plugin
 * Documentation - How to migrate from Boss Theme
 
