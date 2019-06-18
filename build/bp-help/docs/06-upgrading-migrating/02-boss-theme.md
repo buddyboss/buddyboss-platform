@@ -15,7 +15,7 @@ In this video we will do a live migration from [**Boss theme**](https://www.budd
 - **6:34** - Upload BuddyBoss Child Theme
 - **7:48** - Activate license key for BuddyBoss Theme
 - **9:18** - Enable Forums component
-- **10:10** - Fix Forums permalinks
+- **10:10** - Fix Forums permalinks *(no longer required)*
 - **11:45** - Enable Media component
 - **12:05** - Run Media migration
 - **13:41** - Enable Network Search

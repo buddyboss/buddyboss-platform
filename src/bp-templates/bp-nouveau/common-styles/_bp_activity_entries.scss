@@ -454,7 +454,7 @@
 }
 
 .activity-link-preview-image {
-	border-radius: 3px 3px 0 0;
+	border-radius: 3px 0 0 3px;
 	position: relative;
 	overflow: hidden;
 	background: #809ab4;
@@ -567,4 +567,9 @@
 #activity-close-link-suggestion:focus,
 #activity-link-preview-close-image:focus {
 	outline: 0;
+}
+
+.activity-inner .buddyboss-media-photo-link,
+.acomment-content .buddyboss-media-photo-link {
+	display: none !important;
 }

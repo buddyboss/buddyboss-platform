@@ -112,19 +112,23 @@ function bp_admin_tools_default_data_save() {
 	}
 
 
-	$forum_ids = bp_get_option( 'bp_dd_imported_forum_ids', array() );
-	if ( ! empty( $forum_ids ) ) {
-		foreach ( $forum_ids as $forum_id ) {
-			bbp_update_forum_topic_count( $forum_id );
-			bbp_update_forum_reply_count( $forum_id );
-		}
-	}
+	if ( bp_is_active( 'forums' ) ) {
 
-	$topic_ids = bp_get_option( 'bp_dd_imported_topic_ids', array() );
-	if ( ! empty( $topic_ids ) ) {
-		foreach ( $topic_ids as $topic_id ) {
-			bbp_update_topic_reply_count( $topic_id );
+		$forum_ids = bp_get_option( 'bp_dd_imported_forum_ids', array() );
+		if ( ! empty( $forum_ids ) ) {
+			foreach ( $forum_ids as $forum_id ) {
+				bbp_update_forum_topic_count( $forum_id );
+				bbp_update_forum_reply_count( $forum_id );
+			}
 		}
+
+		$topic_ids = bp_get_option( 'bp_dd_imported_topic_ids', array() );
+		if ( ! empty( $topic_ids ) ) {
+			foreach ( $topic_ids as $topic_id ) {
+				bbp_update_topic_reply_count( $topic_id );
+			}
+		}
+
 	}
 }
 

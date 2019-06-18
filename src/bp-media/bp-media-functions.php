@@ -1223,12 +1223,8 @@ function bp_media_import_buddyboss_forum_media() {
 		)
 	);
 
-	if ( $forums_media_query->have_posts() ) {
-		while ( $forums_media_query->have_posts() ) {
-			the_post();
-
-			$post_id = get_the_ID();
-
+	if ( ! empty( $forums_media_query->posts ) ) {
+		foreach( $forums_media_query->posts as $post_id ) {
 			$attachment_ids = get_post_meta( $post_id, 'bbm_bbpress_attachment_ids', true );
 
 			// save activity id if it is saved in forums and enabled in platform settings
@@ -1292,11 +1288,8 @@ function bp_media_import_buddyboss_topic_media() {
 		)
 	);
 
-	if ( $topics_media_query->have_posts() ) {
-		while ( $topics_media_query->have_posts() ) {
-			the_post();
-
-			$post_id = get_the_ID();
+	if ( ! empty( $topics_media_query->posts ) ) {
+		foreach( $topics_media_query->posts as $post_id ) {
 
 			$attachment_ids = get_post_meta( $post_id, 'bbm_bbpress_attachment_ids', true );
 
@@ -1361,11 +1354,8 @@ function bp_media_import_buddyboss_reply_media() {
 		)
 	);
 
-	if ( $replies_media_query->have_posts() ) {
-		while ( $replies_media_query->have_posts() ) {
-			the_post();
-
-			$post_id = get_the_ID();
+	if ( ! empty( $replies_media_query->posts ) ) {
+		foreach( $replies_media_query->posts as $post_id ) {
 
 			$attachment_ids = get_post_meta( $post_id, 'bbm_bbpress_attachment_ids', true );
 

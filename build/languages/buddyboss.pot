@@ -2,9 +2,13 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.0.4\n"
+"Project-Id-Version: BuddyBoss Platform 1.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
+<<<<<<< HEAD
 "POT-Creation-Date: 2019-06-18 07:04:10+00:00\n"
+=======
+"POT-Creation-Date: 2019-06-18 05:48:38+00:00\n"
+>>>>>>> 80711dc460d5919b56c924545180ddd1bdd5986b
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -370,7 +374,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-akismet.php:233
 #: bp-core/admin/bp-core-admin-functions.php:1389
 #: bp-forums/admin/replies.php:745 bp-forums/admin/topics.php:808
-#: bp-forums/classes/class-bbpress.php:534 bp-forums/replies/template.php:2111
+#: bp-forums/classes/class-bbpress.php:534 bp-forums/replies/template.php:2106
 #: bp-forums/topics/functions.php:1966 bp-forums/topics/template.php:2873
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:535
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:541
@@ -395,7 +399,7 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:761
 #: bp-activity/classes/class-bp-activity-list-table.php:623
 #: bp-forums/common/template.php:2258 bp-forums/forums/template.php:52
-#: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1916
+#: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1911
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
 #: bp-groups/classes/class-bp-groups-list-table.php:526
 #: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:816
@@ -516,7 +520,7 @@ msgstr ""
 msgid "Reply"
 msgstr ""
 
-#: bp-activity/bp-activity-admin.php:1045 bp-forums/replies/template.php:1701
+#: bp-activity/bp-activity-admin.php:1045 bp-forums/replies/template.php:1696
 #: bp-groups/bp-groups-admin.php:928
 #: bp-members/classes/class-bp-members-admin.php:2326
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:66
@@ -865,7 +869,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2679
-#: bp-core/bp-core-attachments.php:776 bp-forums/replies/template.php:2042
+#: bp-core/bp-core-attachments.php:776 bp-forums/replies/template.php:2037
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2618
@@ -1427,7 +1431,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:283
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:112
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:176
-#: bp-core/bp-core-functions.php:757 bp-core/bp-core-update.php:633
+#: bp-core/bp-core-functions.php:757 bp-core/bp-core-update.php:638
 msgid "Sites"
 msgstr ""
 
@@ -2333,7 +2337,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
 #: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:758
-#: bp-core/bp-core-template.php:546 bp-core/bp-core-update.php:635
+#: bp-core/bp-core-template.php:546 bp-core/bp-core-update.php:640
 #: bp-core/classes/class-bp-email-tokens.php:381 bp-forums/admin/topics.php:631
 #: bp-groups/bp-groups-admin.php:1205 bp-groups/bp-groups-admin.php:1848
 #: bp-groups/bp-groups-template.php:5051
@@ -2381,7 +2385,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:111
 #: bp-core/admin/settings/bp-admin-setting-groups.php:23
 #: bp-core/bp-core-functions.php:756 bp-core/bp-core-template.php:550
-#: bp-core/bp-core-update.php:634 bp-core/gdpr/class-bp-group-export.php:27
+#: bp-core/bp-core-update.php:639 bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:35
 #: bp-groups/bp-groups-admin.php:36 bp-groups/bp-groups-admin.php:46
 #: bp-groups/bp-groups-admin.php:47 bp-groups/bp-groups-admin.php:202
@@ -4597,11 +4601,11 @@ msgstr ""
 msgid "Data was successfully imported"
 msgstr ""
 
-#: bp-core/bp-core-tools-default-data.php:1378
+#: bp-core/bp-core-tools-default-data.php:1382
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:632
+#: bp-core/bp-core-update.php:637
 msgid "Site-Wide Activity"
 msgstr ""
 
@@ -7390,28 +7394,28 @@ msgid "Mark this reply as spam"
 msgstr ""
 
 #: bp-forums/admin/replies.php:754 bp-forums/admin/topics.php:816
-#: bp-forums/replies/template.php:2053 bp-forums/topics/template.php:2629
+#: bp-forums/replies/template.php:2048 bp-forums/topics/template.php:2629
 msgid "Restore this item from the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:754 bp-forums/admin/topics.php:816
-#: bp-forums/replies/template.php:2041 bp-forums/topics/template.php:2617
+#: bp-forums/replies/template.php:2036 bp-forums/topics/template.php:2617
 msgid "Restore"
 msgstr ""
 
 #: bp-forums/admin/replies.php:756 bp-forums/admin/topics.php:818
-#: bp-forums/replies/template.php:2055 bp-forums/topics/template.php:2631
+#: bp-forums/replies/template.php:2050 bp-forums/topics/template.php:2631
 msgid "Move this item to the Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:756 bp-forums/admin/topics.php:818
-#: bp-forums/replies/template.php:2040 bp-forums/topics/functions.php:1967
+#: bp-forums/replies/template.php:2035 bp-forums/topics/functions.php:1967
 #: bp-forums/topics/template.php:2616
 msgid "Trash"
 msgstr ""
 
 #: bp-forums/admin/replies.php:760 bp-forums/admin/topics.php:822
-#: bp-forums/replies/template.php:2059 bp-forums/topics/template.php:2635
+#: bp-forums/replies/template.php:2054 bp-forums/topics/template.php:2635
 msgid "Delete this item permanently"
 msgstr ""
 
@@ -9564,55 +9568,55 @@ msgstr ""
 msgid "Visit %s's website"
 msgstr ""
 
-#: bp-forums/replies/template.php:2059 bp-forums/topics/template.php:2635
+#: bp-forums/replies/template.php:2054 bp-forums/topics/template.php:2635
 msgid "Are you sure you want to delete that permanently?"
 msgstr ""
 
-#: bp-forums/replies/template.php:2112 bp-forums/topics/template.php:2874
+#: bp-forums/replies/template.php:2107 bp-forums/topics/template.php:2874
 msgid "Unspam"
 msgstr ""
 
-#: bp-forums/replies/template.php:2175
+#: bp-forums/replies/template.php:2170
 msgid "Move"
 msgstr ""
 
-#: bp-forums/replies/template.php:2176
+#: bp-forums/replies/template.php:2171
 msgid "Move this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2242
+#: bp-forums/replies/template.php:2237
 msgid "Split"
 msgstr ""
 
-#: bp-forums/replies/template.php:2243
+#: bp-forums/replies/template.php:2238
 msgid "Split the topic from this reply"
 msgstr ""
 
-#: bp-forums/replies/template.php:2349
+#: bp-forums/replies/template.php:2344
 msgid "Viewing %1$s reply thread"
 msgid_plural "Viewing %1$s reply threads"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2356
+#: bp-forums/replies/template.php:2351
 msgid "Viewing %1$s reply"
 msgid_plural "Viewing %1$s replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2360
+#: bp-forums/replies/template.php:2355
 msgid "Viewing %2$s of %4$s replies"
 msgid_plural "Viewing %2$s - %3$s of %4$s replies"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2368
+#: bp-forums/replies/template.php:2363
 msgid "Viewing %1$s post"
 msgid_plural "Viewing %1$s posts"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/replies/template.php:2372
+#: bp-forums/replies/template.php:2367
 msgid "Viewing %2$s of %4$s posts"
 msgid_plural "Viewing %2$s - %3$s of %4$s posts"
 msgstr[0] ""
