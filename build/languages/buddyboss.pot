@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-18 10:30:46+00:00\n"
+"POT-Creation-Date: 2019-06-18 14:50:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15697,8 +15697,8 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:687
-#: bp-templates/bp-nouveau/includes/media/ajax.php:724
+#: bp-templates/bp-nouveau/includes/media/ajax.php:718
+#: bp-templates/bp-nouveau/includes/media/ajax.php:755
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -15899,7 +15899,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:351
 #: bp-templates/bp-nouveau/includes/media/ajax.php:419
 #: bp-templates/bp-nouveau/includes/media/ajax.php:517
-#: bp-templates/bp-nouveau/includes/media/ajax.php:624
+#: bp-templates/bp-nouveau/includes/media/ajax.php:655
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
@@ -16469,7 +16469,7 @@ msgid "Please upload media before saving."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/media/ajax.php:291
-#: bp-templates/bp-nouveau/includes/media/ajax.php:593
+#: bp-templates/bp-nouveau/includes/media/ajax.php:601
 msgid "There was a problem when trying to add the media."
 msgstr ""
 
@@ -16497,11 +16497,11 @@ msgstr ""
 msgid "There was a problem when trying to create the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:649
+#: bp-templates/bp-nouveau/includes/media/ajax.php:680
 msgid "Please provide ID of album to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:736
+#: bp-templates/bp-nouveau/includes/media/ajax.php:767
 msgid "Please provide attachment id to delete."
 msgstr ""
 
