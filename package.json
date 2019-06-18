@@ -8,7 +8,7 @@
 		"grunt-contrib-compress": "^1.5.0",
 		"grunt-contrib-copy": "~1.0.0",
 		"grunt-contrib-cssmin": "^2.2.1",
-		"grunt-contrib-imagemin": "^2.0.1",
+		"grunt-contrib-imagemin": "^3.1.0",
 		"grunt-contrib-jshint": "~1.1.0",
 		"grunt-contrib-uglify": "~3.0.1",
 		"grunt-contrib-watch": "^1.1.0",
@@ -20,10 +20,10 @@
 		"grunt-sass": "~2.0.0",
 		"grunt-stylelint": "^0.8.0",
 		"grunt-wp-i18n": "^1.0.3",
-		"matchdep": "~1.0.1",
+		"matchdep": "^2.0.0",
 		"node-sass": "^4.12.0",
 		"postcss-scss": "^1.0.5",
-		"stylelint": "~7.10.1",
+		"stylelint": "^10.1.0",
 		"stylelint-config-wordpress": "~11.0.0"
 	},
 	"engines": {
