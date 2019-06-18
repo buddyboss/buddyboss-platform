@@ -4854,14 +4854,16 @@ function bp_activity_action_parse_url() {
 
 		if ( strpos( $url, 'youtube' ) > 0 || strpos( $url, 'youtu' ) > 0 || strpos( $url, 'vimeo' ) > 0 ) {
 
-			$json_data['title']       = '';
-			$json_data['description'] = '';
+			// Fetch the oembed code for URL.
+			$embed_code = wp_oembed_get( $url );
+
+			$json_data['title']       = ' ';
+			$json_data['description'] = $embed_code;
 			$json_data['images']      = '';
 			$json_data['error']       = '';
 
 			wp_send_json( $json_data );
 		}
-
 
 		$parser = new WebsiteParser( $url );
 		$body   = wp_remote_get( $url );

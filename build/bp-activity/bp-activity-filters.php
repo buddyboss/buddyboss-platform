@@ -216,6 +216,11 @@ function bp_activity_save_link_data( $activity ) {
 		return;
 	}
 
+	// Ignore YouTube and Vimeo Preview link.
+	if ( strpos( $_POST['link_url'], 'youtube' ) > 0 || strpos( $_POST['link_url'], 'youtu' ) > 0 || strpos( $_POST['link_url'], 'vimeo' ) > 0 ) {
+		return;
+	}
+
 	$preview_data['url'] = $_POST['link_url'];
 
 	if ( ! empty( $_POST['link_image'] ) ) {
