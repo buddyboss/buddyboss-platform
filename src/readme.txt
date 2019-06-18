@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.0.5 =
 * Forums - topic URL slugs from bbPress auto-migrate now
+* Documentation - Migrating from Boss Theme
 
 = 1.0.4 =
 * Multisite - Fixed various issues

@@ -17,7 +17,7 @@ In this video we will do a live migration from [**Social Learner**](https://www.
 - **7:42** - Set LearnDash to 'LearnDash 3.0' template
 - **8:31** - Activate license key for BuddyBoss Theme
 - **10:05** - Enable Forums component
-- **11:33** - Fix Forums permalinks
+- **11:33** - Fix Forums permalinks *(no longer required)*
 - **12:21** - Enable Media component
 - **12:50** - Run Media migration
 - **14:15** - Enable Network Search
