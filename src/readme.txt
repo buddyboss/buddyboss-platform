@@ -56,54 +56,54 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.0.5 =
-* Forums -- topic URL slugs from bbPress auto-migrate now
+* Forums - topic URL slugs from bbPress auto-migrate now
 
 = 1.0.4 =
-* Multisite -- Fixed various issues
-* Photos -- show photos count when viewing other member's profile
-* Compatibility -- improved support for plugins that "Require bbPress"
+* Multisite - Fixed various issues
+* Photos - show photos count when viewing other member's profile
+* Compatibility - improved support for plugins that "Require bbPress"
 
 = 1.0.3 =
-* Multisite -- Fixed various issues
-* Forums -- Tagging improvements in replies
-* Documentation -- Migrating from Social Learner
-* Documentation -- How to use the Resources website
+* Multisite - Fixed various issues
+* Forums - Tagging improvements in replies
+* Documentation - Migrating from Social Learner
+* Documentation - How to use the Resources website
 
 = 1.0.2 =
-* Forums -- allow Forums page to be set as Homepage
-* Forums -- added nicer tagging interface when replying
-* Messages -- inline editor fixes
+* Forums - allow Forums page to be set as Homepage
+* Forums - added nicer tagging interface when replying
+* Messages - inline editor fixes
 * Media - fix issues with emoji not displaying
-* Documentation -- Events Calendar Pro
-* Documentation -- WooCommerce
-* Documentation -- WP Job Manager
+* Documentation - Events Calendar Pro
+* Documentation - WooCommerce
+* Documentation - WP Job Manager
 
 = 1.0.1 =
 * Documentation fixes
 
 = 1.0.0 =
-* Initial Release -- fork of BuddyPress
-* Forum Discussions -- merged in bbPress and re-factored as a native forum component
-* Media Uploading -- Photos, Albums, Emoji, Animated GIFs
-* Email Inivites -- members can invite outside users to your community
-* Network Search -- search content across the entire network
-* Private Network -- restrict access to all of your content with a single click
-* Profiles -- new 'Repeater Fields' options
-* Profiles -- new 'Profile Types' manager
-* Profiles -- new 'View As' button to toggle between members
-* Profiles -- new profile fields for 'Gender' and 'Social Networks'
-* Profiles -- new option to set display name as First, First & Last, or Nickname
-* Groups -- new Group Types manager
-* Groups -- new Group Heirarchies manager
-* Messages -- combined all messages into single threads, like Facebook and LinkedIn
-* Messages -- significantly enhanced messaging interface
-* Activity -- combined all activity into single feed, like Facebook and LinkedIn
-* Activity -- new 'Likes' option
-* Activity -- new 'Follow' option
-* Activity -- new option to add any custom post types into activity feed
-* Default Data -- new tool to easily install default data
-* LearnDash -- ability to connect one or more courses with social groups
-* LearnDash -- ability to run group reports on course progress
+* Initial Release - fork of BuddyPress
+* Forum Discussions - merged in bbPress and re-factored as a native forum component
+* Media Uploading - Photos, Albums, Emoji, Animated GIFs
+* Email Inivites - members can invite outside users to your community
+* Network Search - search content across the entire network
+* Private Network - restrict access to all of your content with a single click
+* Profiles - new 'Repeater Fields' options
+* Profiles - new 'Profile Types' manager
+* Profiles - new 'View As' button to toggle between members
+* Profiles - new profile fields for 'Gender' and 'Social Networks'
+* Profiles - new option to set display name as First, First & Last, or Nickname
+* Groups - new Group Types manager
+* Groups - new Group Heirarchies manager
+* Messages - combined all messages into single threads, like Facebook and LinkedIn
+* Messages - significantly enhanced messaging interface
+* Activity - combined all activity into single feed, like Facebook and LinkedIn
+* Activity - new 'Likes' option
+* Activity - new 'Follow' option
+* Activity - new option to add any custom post types into activity feed
+* Default Data - new tool to easily install default data
+* LearnDash - ability to connect one or more courses with social groups
+* LearnDash - ability to run group reports on course progress
 * Many more features and improvements!
 
 
