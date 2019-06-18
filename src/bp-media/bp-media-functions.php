@@ -1398,3 +1398,135 @@ function bp_media_import_buddyboss_reply_media() {
 	}
 	wp_reset_postdata();
 }
+
+/**
+ * Reset all media albums related data in tables
+ *
+ * @since BuddyBoss 1.0.5
+ */
+function bp_media_import_reset_media_albums() {
+	global $wpdb;
+
+	$bp_media_table        = $wpdb->prefix . 'bp_media';
+	$bp_media_albums_table = $wpdb->prefix . 'bp_media_albums';
+
+	$albums = $wpdb->get_results( "SELECT DISTINCT id FROM {$bp_media_albums_table}" );
+
+	if ( ! empty( $albums ) ) {
+		foreach ( $albums as $album ) {
+
+			if ( empty( $album->id ) ) {
+				continue;
+			}
+
+			$album_obj = new BP_Media_Album( $album->id );
+
+			if ( ! empty( $album_obj->id ) ) {
+				$media_ids = BP_Media::get_album_media_ids( $album->id );
+				if ( ! empty( $media_ids ) ) {
+					foreach( $media_ids as $media ) {
+						$media_obj = new BP_Media( $media );
+
+						if ( ! empty( $media_obj->activity_id ) && bp_is_active( 'activity' ) ) {
+							$activity = new BP_Activity_Activity( (int) $media_obj->activity_id );
+
+							/** This action is documented in bp-activity/bp-activity-actions.php */
+							do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+
+							// Deleting an activity comment.
+							if ( 'activity_comment' == $activity->type ) {
+								if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
+									/** This action is documented in bp-activity/bp-activity-actions.php */
+									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+								}
+
+								// Deleting an activity.
+							} else {
+								if ( bp_activity_delete( array( 'id'      => $activity->id,
+								                                'user_id' => $activity->user_id
+								) ) ) {
+									/** This action is documented in bp-activity/bp-activity-actions.php */
+									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+								}
+							}
+						}
+					}
+
+					$media_ids = implode( ',', $media_ids );
+					$wpdb->query( "DELETE FROM {$bp_media_table} WHERE id IN ({$media_ids});" );
+				}
+			}
+
+			$wpdb->query( "DELETE FROM {$bp_media_albums_table} WHERE id = {$album_obj->id};" );
+		}
+	}
+}
+
+/**
+ * Reset all media related data in tables
+ *
+ * @since BuddyBoss 1.0.5
+ */
+function bp_media_import_reset_media() {
+	global $wpdb;
+
+	$bp_media_table        = $wpdb->prefix . 'bp_media';
+
+	$medias = $wpdb->get_results( "SELECT DISTINCT id FROM {$bp_media_table}" );
+
+	if ( ! empty( $medias ) ) {
+		$media_ids = array();
+		foreach( $medias as $media ) {
+
+			if ( empty( $media->id ) ) {
+				continue;
+			}
+
+			$media_obj = new BP_Media( $media->id );
+
+			if ( ! empty( $media_obj->activity_id ) && bp_is_active( 'activity' ) ) {
+				$activity = new BP_Activity_Activity( (int) $media_obj->activity_id );
+
+				/** This action is documented in bp-activity/bp-activity-actions.php */
+				do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
+
+				// Deleting an activity comment.
+				if ( 'activity_comment' == $activity->type ) {
+					if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
+						/** This action is documented in bp-activity/bp-activity-actions.php */
+						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+					}
+
+					// Deleting an activity.
+				} else {
+					if ( bp_activity_delete( array( 'id'      => $activity->id,
+					                                'user_id' => $activity->user_id
+					) ) ) {
+						/** This action is documented in bp-activity/bp-activity-actions.php */
+						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
+					}
+				}
+			}
+
+			if ( ! empty( $media_obj->id ) ) {
+				$media_ids[] = $media_obj->id;
+			}
+		}
+
+		$media_ids = implode( ',', $media_ids );
+		$wpdb->query( "DELETE FROM {$bp_media_table} WHERE id IN ({$media_ids})" );
+	}
+}
+
+/**
+ * Reset all options related to media import
+ *
+ * @since BuddyBoss 1.0.5
+ */
+function bp_media_import_reset_options() {
+	update_option( 'bp_media_import_status', '' );
+	update_option( 'bp_media_import_total_media', 0 );
+	update_option( 'bp_media_import_total_albums', 0 );
+	update_option( 'bp_media_import_albums_done', 0 );
+	update_option( 'bp_media_import_media_done', 0 );
+}

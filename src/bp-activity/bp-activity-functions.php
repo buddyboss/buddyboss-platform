@@ -3053,7 +3053,7 @@ function bp_activity_delete( $args = '' ) {
 		: $args['user_id'];
 
 	$latest_update = bp_get_user_meta( $user_id, 'bp_latest_update', true );
-	if ( !empty( $latest_update ) ) {
+	if ( !empty( $latest_update['id'] ) ) {
 		if ( in_array( (int) $latest_update['id'], (array) $activity_ids_deleted ) ) {
 			bp_delete_user_meta( $user_id, 'bp_latest_update' );
 		}
