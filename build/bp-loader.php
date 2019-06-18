@@ -19,14 +19,16 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+global $incompatible_plugins;
 global $is_bp_active;
 global $bp_plugin_file;
 global $is_bb_active;
 global $bb_plugin_file;
 global $sitewide_plugins;
 global $plugins;
-$is_bp_active   = false;
-$bp_plugin_file = 'buddypress/bp-loader.php';
+$incompatible_plugins = array();
+$is_bp_active         = false;
+$bp_plugin_file       = 'buddypress/bp-loader.php';
 
 $is_bb_active     = false;
 $bb_plugin_file   = 'bbpress/bbpress.php';
@@ -57,74 +59,18 @@ if ( in_array( $bb_plugin_file, $plugins ) ) {
  * Prevent running BuddyBoss Platform if any incompatible plugins are active.
  * Show admin error message instead.
  */
-if ( ! function_exists( 'bp_check_incompatible_plugins' ) ) {
+$incompatible_plugins_list = array(
+	'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+	'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Following/followers functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+);
 
-	add_action( 'admin_init', 'bp_check_incompatible_plugins', 0.50 );
-	/**
-	 * Check for incompatible plugins that are currently active.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	function bp_check_incompatible_plugins() {
-		if ( is_admin() && current_user_can( 'activate_plugins' ) ) {
-
-			$incompatible_plugins = array(
-				'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-				'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Following/followers functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-			);
-
-			$incompatible_plugins_messages = array();
-
-			foreach ( $incompatible_plugins as $incompatible_plugin => $error_message ) {
-				if ( is_plugin_active( $incompatible_plugin ) ) {
-					$incompatible_plugins_messages[] = $error_message;
-				}
-			}
-
-			if ( empty( $incompatible_plugins_messages ) ) {
-				return;
-			}
-
-			global $bp_incompatible_plugins_messages;
-			$bp_incompatible_plugins_messages = $incompatible_plugins_messages;
-
-			add_action( 'admin_notices', 'bp_incompatible_plugins_deactivate_notice' );
-
-			remove_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 ); // Prevent activation redirect
-
-			deactivate_plugins( 'buddyboss-platform/bp-loader.php' );
-
-			if ( isset( $_GET['activate'] ) ) {
-				unset( $_GET['activate'] );
-			}
-		}
+foreach ( $incompatible_plugins_list as $incompatible_plugin => $error_message ) {
+	if ( in_array( $incompatible_plugin, $plugins ) ) {
+		$incompatible_plugins[] = $error_message;
 	}
 }
 
-/**
- * We need to show a message for incompatible plugins that are currently active.
- *
- */
-if ( ! function_exists( 'bp_incompatible_plugins_deactivate_notice' ) ) {
-	/**
-	 * Admin Notice for having one or more incompatible plugins activated.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	function bp_incompatible_plugins_deactivate_notice() {
-		global $bp_incompatible_plugins_messages;
-		if ( empty( $bp_incompatible_plugins_messages ) ) {
-			return;
-		}
-		?>
-        <div id="message" class="error">
-        <p><strong><?php esc_html_e( 'BuddyBoss Platform can\'t be activated.', 'buddyboss' ); ?></strong></p>
-        <p><?php echo implode( '<br>', $bp_incompatible_plugins_messages ); ?></p>
-        </div><?php
-	}
-}
-
-if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
+if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_plugins ) ) {
 
 
 	// Required PHP version.
@@ -224,6 +170,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 		}
 
 
+		global $incompatible_plugins;
 		global $bp_plugin_file;
 		global $bb_plugin_file;
 		global $sitewide_plugins;
@@ -233,7 +180,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 
 		// Disable BuddyPress message
 		if ( $is_bp_active ) {
-			if ( is_multisite() && (is_network_admin() && ! in_array( $bp_plugin_file, $sitewide_plugins ) || in_array( $bp_plugin_file, $plugins ) ) ) {
+			if ( is_multisite() && ( is_network_admin() && ! in_array( $bp_plugin_file, $sitewide_plugins ) || in_array( $bp_plugin_file, $plugins ) ) ) {
 				return;
 			}
 			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
@@ -251,7 +198,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
 		// Disable bbPress message
 		if ( $is_bb_active ) {
 
-			if ( is_multisite() && (is_network_admin() && ! in_array( $bb_plugin_file, $sitewide_plugins ) || in_array( $bb_plugin_file, $plugins ) ) ) {
+			if ( is_multisite() && ( is_network_admin() && ! in_array( $bb_plugin_file, $sitewide_plugins ) || in_array( $bb_plugin_file, $plugins ) ) ) {
 				return;
 			}
 			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
@@ -264,6 +211,18 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) ) {
             </div>
 
 			<?php
+		}
+
+		if ( ! empty( $incompatible_plugins ) ) {
+			foreach ( $incompatible_plugins as $incompatible_plugin_message ) {
+				?>
+                <div id="message" class="error notice">
+                    <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
+					<?php
+					printf( '<p>%s</p>', $incompatible_plugin_message ); ?>
+                </div>
+				<?php
+			}
 		}
 	}
 
