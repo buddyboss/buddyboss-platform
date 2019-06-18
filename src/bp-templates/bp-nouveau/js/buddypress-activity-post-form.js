@@ -776,23 +776,23 @@ window.bp = window.bp || {};
 							link_images: response.images,
 							link_image_index: 0
 						} );
+
 						$('#whats-new-attachments').removeClass('empty');
 
-
-						if ( $('.activity-media-container').hasClass('activity-video-preview') ) {
-							$('.activity-media-container').removeClass('activity-video-preview');
+						if ( $('#whats-new-attachments').hasClass('activity-video-preview') ) {
+                                                    $('#whats-new-attachments').removeClass('activity-video-preview');
 						}
 
-						if ( $('.activity-media-container').hasClass('activity-link-preview') ) {
-							$('.activity-media-container').removeClass('activity-link-preview');
+						if ( $('#whats-new-attachments').hasClass('activity-link-preview') ) {
+                                                    $('#whats-new-attachments').removeClass('activity-link-preview');
 						}
 
 						if ( $('.activity-media-container').length ) {
-							if (  response.description.indexOf('iframe') > -1 ) {
-								$('.activity-media-container').addClass('activity-video-preview');
-							} else {
-								$('.activity-media-container').addClass('activity-link-preview');
-							}
+                                                    if (  response.description.indexOf('iframe') > -1 ) {
+                                                            $('#whats-new-attachments').addClass('activity-video-preview');
+                                                    } else {
+                                                            $('#whats-new-attachments').addClass('activity-link-preview');
+                                                    }
 						}
 					} else {
 						self.options.activity.set( {
