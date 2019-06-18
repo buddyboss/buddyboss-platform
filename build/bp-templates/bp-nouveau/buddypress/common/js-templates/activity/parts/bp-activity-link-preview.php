@@ -32,8 +32,8 @@
 			<# if ( data.link_error && ! data.link_success ) { #>
 			<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
 			<# } #>
-
 			<# if ( data.link_description.indexOf('iframe') > -1 ) { #>
+			<a style="display: none;" title="Cancel Preview" href="#" id="activity-close-link-suggestion"><i class="dashicons dashicons-no-alt"></i></a>
 			<# } else { #>
 			<a title="Cancel Preview" href="#" id="activity-close-link-suggestion"><i class="dashicons dashicons-no-alt"></i></a>
 			<# } #>

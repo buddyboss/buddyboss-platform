@@ -721,6 +721,8 @@ window.bp = window.bp || {};
 
 			if( '' !== urlString ) {
 				this.loadURLPreview( urlString );
+			} else {
+				$('#activity-close-link-suggestion').click();
 			}
 		},
 
@@ -746,6 +748,10 @@ window.bp = window.bp || {};
 
 			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
 			if ( regexp.test( url ) ) {
+
+				if ( typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true ) {
+					return false;
+				}
 
 				self.options.activity.set( {
 					link_scrapping: true,
