@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Discussion/topic URL slugs from bbPress auto-migrate now
 * Forums - Fixed issues with replying to discussions on mobile
 * Activity - Fixed comment issues on new activity posts
+* Activity - Display video embeds and link previews in different styles
 * Media - When migrating from BuddyBoss Media plugin, add media to activity, forums, messages
 * Compatibility - Fixed conflict with BadgeOS plugin
 * Compatibility - Fixed conflict with BuddyPress Follow plugin
