@@ -668,6 +668,8 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
+
+
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
 			$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
