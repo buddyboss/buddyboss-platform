@@ -57,21 +57,14 @@ add_filter( 'bp_email_set_content_html', 'wp_filter_post_kses', 6 );
 add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
-add_action( 'init', 'bp_enable_gravatar_callback');
 
-function bp_enable_gravatar_callback() {
-	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+// Avatars
+/**
+ * Disable gravatars fallback for member avatars.
+ * @since BuddyBoss 1.0.0
+ */
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 
-	if ( false === $avatar ) {
-		// Avatars
-		/**
-		 * Disable gravatars fallback for member avatars.
-		 * @since BuddyBoss 1.0.0
-		 */
-		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
-	}
-
-}
 
 /**
  * Template Compatibility.
@@ -1329,24 +1322,3 @@ function bp_dd_delete_avatar( $args ) {
 }
 
 add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
-
-/**
- * Removed the CKEditor Js on the activity page.
- *
- * @since BuddyBoss 1.0.5
- *
- */
-function bp_remove_badgeos_conflict_ckeditor_dequeue_script() {
-		?>
-		<script type="text/javascript">
-
-			if ( $('body').hasClass('activity') ) {
-				<?php
-				wp_deregister_script( 'ck_editor_cdn' );
-				wp_dequeue_script( 'ck_editor_cdn' );
-				?>
-			}
-		</script>
-		<?php
-}
-add_action( 'wp_enqueue_scripts', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 999999999999999 );
