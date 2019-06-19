@@ -22,4 +22,4 @@ function bp_helper_plugins_loaded_callback() {
 	}
 }
 
-add_action( 'plugins_loaded', 'bp_helper_plugins_loaded_callback', 1000 );
+add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );

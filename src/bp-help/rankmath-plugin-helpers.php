@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * 404 Error.
  */
-class BP_RankMath_Group_Title implements IPaper {
+class BP_RankMath_Title implements IPaper {
 
 	/**
 	 * Retrieves the SEO title.
@@ -23,7 +23,14 @@ class BP_RankMath_Group_Title implements IPaper {
 	 * @return string
 	 */
 	public function title() {
-		$title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : __( 'Social Group', 'buddyboss-platform' );
+		if ( bp_is_user() ) {
+			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
+			if ( empty( $title )) {
+				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
+			}
+		} else {
+			$title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : __( 'Social Group', 'buddyboss-platform' );
+		}
 
 		return $title . ' - ' . bp_get_site_name();
 	}
@@ -70,8 +77,12 @@ class BP_RankMath_Group_Title implements IPaper {
  * Add Page Title on Platform Group Page
  */
 function bp_helper_rankmath_group_page_support( $title ) {
-	if ( bp_is_active( 'groups' ) && ! empty( buddypress()->groups->current_group ) ) {
-		$group_page = new BP_RankMath_Group_Title();
+
+	if (
+		bp_is_active( 'groups' ) && ! empty( buddypress()->groups->current_group )
+		|| bp_is_user()
+	) {
+		$group_page = new BP_RankMath_Title();
 		$title      = $group_page->title();
 	}
 
