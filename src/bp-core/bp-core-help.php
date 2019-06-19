@@ -30,7 +30,7 @@ function bp_core_help_bp_docs_link( $attr ) {
 	$return = apply_filters( 'bp_core_help_bp_docs_link', $url, $attr );
 
 	if ( ! empty( $text ) ) {
-		$return = sprintf( '<a href="%s">%s</a>', $url, $text );
+		$return = sprintf( '<a href="%s">%s</a>', $return, $text );
 	}
 
 	return $return;
