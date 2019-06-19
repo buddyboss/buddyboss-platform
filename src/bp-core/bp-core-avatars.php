@@ -668,11 +668,15 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
-		// Set up the Gravatar URL.
-		$gravatar = esc_url( add_query_arg(
-			rawurlencode_deep( array_filter( $url_args ) ),
-			$gravatar
-		) );
+		if ( isset( $url_args['d'] ) && ( 'mm' === $url_args['d'] || 'blank' === $url_args['d'] ) ) {
+			$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+		} else {
+			// Set up the Gravatar URL.
+			$gravatar = esc_url( add_query_arg(
+				rawurlencode_deep( array_filter( $url_args ) ),
+				$gravatar
+			) );
+		}
 
 	// No avatar was found, and we've been told not to use a gravatar.
 	} else {
