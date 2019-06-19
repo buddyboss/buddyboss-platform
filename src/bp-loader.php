@@ -98,8 +98,21 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_pl
 		return $value;
 	}
 
-	// Filter for setting the spoofing of BuddyPress.
-	add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+	if ( is_multisite() ) {
+		/**
+		 * Load Plugin after plugin is been loaded
+		 */
+		function bp_core_plugins_loaded_callback() {
+
+			// Filter for setting the spoofing of BuddyPress.
+			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+		}
+		add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
+	} else {
+		// Filter for setting the spoofing of BuddyPress.
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+	}
+
 
 	// Required PHP version.
 	define( 'BP_REQUIRED_PHP_VERSION', '5.3.0' );
