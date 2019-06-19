@@ -1333,7 +1333,7 @@ add_filter( 'script_loader_src', 'bp_remove_badgeos_conflict_ckeditor_dequeue_sc
 
 function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 
-	if ( is_plugin_active('badgeos/badgeos.php') ) {
+	if ( function_exists( 'is_plugin_active' ) && is_plugin_active('badgeos/badgeos.php') ) {
 
 		if ( bp_is_user_activity() || bp_is_group_activity() || bp_is_activity_directory() || bp_is_messages_component() ) {
 
