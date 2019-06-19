@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-18 18:47:16+00:00\n"
+"POT-Creation-Date: 2019-06-19 11:29:42+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2075,7 +2075,7 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:436
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:167
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:165
 msgid "First Name"
 msgstr ""
 
@@ -2084,7 +2084,7 @@ msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:444
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:169
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:167
 msgid "Nickname"
 msgstr ""
 
@@ -2111,8 +2111,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:821
 #: bp-core/admin/bp-core-admin-slugs.php:98
 #: bp-core/admin/settings/bp-admin-setting-friends.php:79
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:295
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:338
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:293
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:336
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:228
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:357
 #: bp-media/bp-media-settings.php:457 bp-media/bp-media-settings.php:601
@@ -2282,10 +2282,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:802
 msgid "Only allow the selected profile types to send invites."
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:835
-msgid "Allow profiles to use gravatar"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -2815,12 +2811,8 @@ msgstr ""
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:83
-msgid "Profile Enable Gravatar"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:100
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:103
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
 #: bp-members/bp-members-functions.php:3012
 #: bp-members/bp-members-functions.php:3015
 #: bp-xprofile/bp-xprofile-admin.php:994 bp-xprofile/bp-xprofile-admin.php:1046
@@ -2828,16 +2820,16 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:108
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:106
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:113
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:111
 msgid "Default Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:120
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:118
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:121
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
@@ -2845,49 +2837,49 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:139
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:137
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:144
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:142
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:161
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:159
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:168
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:166
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:188
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:186
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:212
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:210
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:220
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:218
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:234
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:232
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:251
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:249
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:259
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:257
 #: bp-members/classes/class-bp-members-admin.php:1287
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:111
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:111
@@ -2895,7 +2887,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:274
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:272
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -2903,11 +2895,11 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:315
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:313
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:323
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:321
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
@@ -3198,7 +3190,7 @@ msgstr ""
 msgid "HTTP error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:660 bp-core/bp-core-avatars.php:1074
+#: bp-core/bp-core-attachments.php:660 bp-core/bp-core-avatars.php:1070
 msgid "Upload failed."
 msgstr ""
 
@@ -3291,11 +3283,11 @@ msgstr ""
 msgid "No photo captured. Click \"Capture\" to take your photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:839 bp-core/bp-core-avatars.php:951
+#: bp-core/bp-core-attachments.php:839 bp-core/bp-core-avatars.php:947
 msgid "For best results, upload an image that is %1$spx by %2$spx or larger."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1343 bp-core/bp-core-avatars.php:945
+#: bp-core/bp-core-attachments.php:1343 bp-core/bp-core-avatars.php:941
 msgid "Upload Error: %s"
 msgstr ""
 
@@ -3310,7 +3302,7 @@ msgstr ""
 msgid "Profile Photo"
 msgstr ""
 
-#: bp-core/bp-core-avatars.php:917
+#: bp-core/bp-core-avatars.php:913
 msgid "Upload Failed! Error was: %s"
 msgstr ""
 
@@ -3346,7 +3338,7 @@ msgstr ""
 msgid "Customize the appearance of emails sent by BuddyBoss."
 msgstr ""
 
-#: bp-core/bp-core-customizer-email.php:26 bp-core/bp-core-filters.php:1151
+#: bp-core/bp-core-customizer-email.php:26 bp-core/bp-core-filters.php:1144
 #: bp-templates/bp-nouveau/includes/customizer.php:46
 msgid "BuddyBoss Emails"
 msgstr ""
@@ -3444,23 +3436,23 @@ msgstr ""
 msgid "Footer Text Size"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:421 bp-core/bp-core-filters.php:454
+#: bp-core/bp-core-filters.php:414 bp-core/bp-core-filters.php:447
 msgid "[User Set]"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:597
+#: bp-core/bp-core-filters.php:590
 msgid "Page %s"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:793
+#: bp-core/bp-core-filters.php:786
 msgid "Custom Link"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:814
+#: bp-core/bp-core-filters.php:807
 msgid "BuddyPress (logged-in)"
 msgstr ""
 
-#: bp-core/bp-core-filters.php:819
+#: bp-core/bp-core-filters.php:812
 msgid "BuddyPress (logged-out)"
 msgstr ""
 
@@ -12949,36 +12941,36 @@ msgid ""
 "Platform."
 msgstr ""
 
-#: bp-loader.php:106
+#: bp-loader.php:147
 msgid "Your site does not support BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:109
+#: bp-loader.php:150
 #. translators: 1: current PHP version, 2: required PHP version
 msgid ""
 "Your site is currently running PHP version %1$s, while BuddyBoss Platform "
 "requires version %2$s or greater."
 msgstr ""
 
-#: bp-loader.php:110
+#: bp-loader.php:151
 msgid "Please update your server or deactivate BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:187 bp-loader.php:205
+#: bp-loader.php:228 bp-loader.php:246
 msgid "deactivate"
 msgstr ""
 
-#: bp-loader.php:191 bp-loader.php:209 bp-loader.php:220
+#: bp-loader.php:232 bp-loader.php:250 bp-loader.php:261
 msgid "BuddyBoss Platform is disabled."
 msgstr ""
 
-#: bp-loader.php:192
+#: bp-loader.php:233
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress plugin is active. Please "
 "%s BuddyPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:210
+#: bp-loader.php:251
 msgid ""
 "The BuddyBoss Platform can't work while bbPress plugin is active. Please %s "
 "bbPress to re-enable BuddyBoss Platform."
