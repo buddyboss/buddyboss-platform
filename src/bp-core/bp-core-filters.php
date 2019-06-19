@@ -1332,11 +1332,16 @@ add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
 add_filter( 'script_loader_src', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 9999, 2 );
 
 function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
-	if ( bp_is_user_activity() || bp_is_group_activity() || bp_is_activity_directory() || bp_is_messages_component() ) {
 
-		if ( 'ck_editor_cdn'  ===  $handle || 'custom_script' === $handle ) {
-			$src = '';
+	if ( is_plugin_active('badgeos/badgeos.php') ) {
+
+		if ( bp_is_user_activity() || bp_is_group_activity() || bp_is_activity_directory() || bp_is_messages_component() ) {
+
+			if ( 'ck_editor_cdn' === $handle || 'custom_script' === $handle ) {
+				$src = '';
+			}
 		}
+
 	}
 
 	return $src;
