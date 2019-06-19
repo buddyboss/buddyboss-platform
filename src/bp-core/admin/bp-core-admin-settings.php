@@ -832,6 +832,17 @@ function bp_email_invites_tutorial() {
 function bp_admin_setting_callback_enable_profile_gravatar() {
 	?>
 	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
-	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile photos', 'buddyboss' ); ?></label>
 	<?php
+	$whitelist = array(
+		'127.0.0.1',
+		'::1'
+	);
+
+	if( in_array($_SERVER['REMOTE_ADDR'], $whitelist)){
+		?>
+		<p class="description"><?php _e( 'You are running this website on localhost. Gravatars will only work when enabled on an online website.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
 }
