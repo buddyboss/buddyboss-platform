@@ -1167,42 +1167,6 @@ add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
 
 
 /**
- * Filter for setting the spoofing of BuddyPress.
- *
- * @param $value
- * @param $option
- *
- * @since BuddyBoss 1.0.0
- * @return mixed
- */
-function bp_core_set_bbpress_buddypress_active( $value, $option ) {
-
-	// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
-	if ( is_network_admin() || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
-		return $value;
-	} else {
-		// Check if Forum Component is enabled if so then add
-		if ( bp_is_active( 'forums' ) ) {
-			array_push( $value, 'bbpress/bbpress.php' );
-		}
-		array_push( $value, 'buddypress/bp-loader.php' );
-	}
-
-	return $value;
-}
-
-/**
- * Load Plugin after plugin is been loaded
- */
-function bp_core_plugins_loaded_callback() {
-
-	// Filter for setting the spoofing of BuddyPress.
-	add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
-}
-add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
-
-
-/**
  * Filter to update group cover images
  *
  * @since BuddyBoss 1.0.0
