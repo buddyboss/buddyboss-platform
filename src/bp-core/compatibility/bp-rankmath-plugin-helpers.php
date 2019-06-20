@@ -1,6 +1,6 @@
 <?php
 /**
- * The 404 paper.
+ * The BP_RankMath_Title paper.
  *
  * @since      1.0.22
  * @package    RankMath
@@ -13,7 +13,7 @@ namespace RankMath\Paper;
 defined( 'ABSPATH' ) || exit;
 
 /**
- * 404 Error.
+ * BP_RankMath_Title Error.
  */
 class BP_RankMath_Title implements IPaper {
 
@@ -74,7 +74,7 @@ class BP_RankMath_Title implements IPaper {
 
 
 /**
- * Add Page Title on Platform Group Page
+ * Add Page Title on Platform Group Page in Rank Math Plugin
  */
 function bp_helper_rankmath_group_page_support( $title ) {
 

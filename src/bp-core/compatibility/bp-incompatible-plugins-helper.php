@@ -6,16 +6,22 @@ defined( 'ABSPATH' ) || exit;
 
 /**
  * Remove buddypress follow init hook action
+ *
+ * Support buddypress follow
  */
 remove_action( 'bp_include', 'bp_follow_init' );
 
 /**
  * Remove message of BuddyPress Groups Export & Import
+ *
+ * Support ddyPress Groups Export & Import
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
 /**
- * Load helper plugins
+ * Include plugin when plugin is activated
+ *
+ * Support Rank Math SEO
  */
 function bp_helper_plugins_loaded_callback() {
 	global $plugins;
@@ -25,3 +31,10 @@ function bp_helper_plugins_loaded_callback() {
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
+
+/**
+ * Remove message of BuddyPress Groups Export & Import
+ *
+ * Support ddyPress Groups Export & Import
+ */
+remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
