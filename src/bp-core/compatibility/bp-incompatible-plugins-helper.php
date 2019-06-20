@@ -19,7 +19,7 @@ remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
  */
 function bp_helper_plugins_loaded_callback() {
 	global $plugins;
-	if ( in_array( 'seo-by-rank-math/rank-math.php', $plugins ) ) {
+	if ( in_array( 'seo-by-rank-math/rank-math.php', $plugins ) && ! is_admin() ) {
 		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
 	}
 }
