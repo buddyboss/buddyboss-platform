@@ -52,13 +52,14 @@ add_action( 'generate_rewrite_rules',  'bp_generate_rewrite_rules', 10    );
  * The load order helps to execute code at the correct time.
  *                                                      v---Load order
  */
-add_action( 'bp_loaded', 'bp_setup_components',         2  );
-add_action( 'bp_loaded', 'bp_setup_integrations',       3  );
-add_action( 'bp_loaded', 'bp_include',                  4  );
-add_action( 'bp_loaded', 'bp_setup_option_filters',     5  );
-add_action( 'bp_loaded', 'bp_setup_cache_groups',       5  );
-add_action( 'bp_loaded', 'bp_setup_widgets',            6  );
-add_action( 'bp_loaded', 'bp_register_theme_packages',  12 );
+add_action( 'bp_loaded', 'bp_setup_components',                        2  );
+add_action( 'bp_loaded', 'bp_setup_integrations',                      3  );
+add_action( 'bp_loaded', 'bp_include',                                 4  );
+add_action( 'bp_loaded', 'bp_setup_option_filters',                    5  );
+add_action( 'bp_loaded', 'bp_setup_cache_groups',                      5  );
+add_action( 'bp_loaded', 'bp_setup_widgets',                           6  );
+add_action( 'bp_loaded', 'bp_register_theme_packages',                 12 );
+add_action( 'bp_loaded', 'bp_load_course_post_type_rewrite_callback',  12 );
 
 /**
  * The bp_init hook - Attached to 'init' above.

@@ -782,3 +782,92 @@ function bp_get_request() {
 	 */
 	do_action( 'bp_get_request',   $action );
 }
+
+function bp_load_course_post_type_rewrite_callback() {
+
+	add_action( 'registered_post_type',     'bp_update_course_post_type', 11, 2 );
+
+}
+
+function bp_update_course_post_type( $post_type, $args ) {
+
+	global $wp_post_types, $wp_rewrite;
+
+	$post_type_page = get_option( "page_for_{$post_type}" );
+
+	//var_dump( $post_type);
+
+	if ( ! $post_type_page ) {
+		return;
+	}
+
+	// make sure we don't create rules for an unpublished page preview URL
+	if ( 'publish' !== get_post_status( $post_type_page ) ) {
+		return;
+	}
+
+
+
+	// get the old slug
+	$args->rewrite = (array) $args->rewrite;
+	$old_slug      = isset( $args->rewrite['slug'] ) ? $args->rewrite['slug'] : $post_type;
+
+	$original_slugs = array();
+	// store this for our options page
+	$original_slugs[ $post_type ] = $old_slug;
+
+	// get page slug
+	$slug = get_permalink( $post_type_page );
+	$slug = str_replace( home_url(), '', $slug );
+	$slug = trim( $slug, '/' );
+
+	$args->rewrite     = wp_parse_args( array( 'slug' => $slug ), $args->rewrite );
+	$args->has_archive = $slug;
+
+	// rebuild rewrite rules
+	if ( is_admin() || '' != get_option( 'permalink_structure' ) ) {
+
+
+		if ( $args->has_archive ) {
+			$archive_slug = $args->has_archive === true ? $args->rewrite['slug'] : $args->has_archive;
+			if ( $args->rewrite['with_front'] ) {
+				$archive_slug = substr( $wp_rewrite->front, 1 ) . $archive_slug;
+			} else {
+				$archive_slug = $wp_rewrite->root . $archive_slug;
+			}
+
+			add_rewrite_rule( "{$archive_slug}/?$", "index.php?post_type=$post_type", 'top' );
+			if ( $args->rewrite['feeds'] && $wp_rewrite->feeds ) {
+
+				$feeds = '(' . trim( implode( '|', $wp_rewrite->feeds ) ) . ')';
+				add_rewrite_rule( "{$archive_slug}/feed/$feeds/?$", "index.php?post_type=$post_type" . '&feed=$matches[1]', 'top' );
+				add_rewrite_rule( "{$archive_slug}/$feeds/?$", "index.php?post_type=$post_type" . '&feed=$matches[1]', 'top' );
+			}
+			if ( $args->rewrite['pages'] ) {
+
+				add_rewrite_rule( "{$archive_slug}/{$wp_rewrite->pagination_base}/([0-9]{1,})/?$", "index.php?post_type=$post_type" . '&paged=$matches[1]', 'top' );
+			}
+		}
+
+		$permastruct_args         = $args->rewrite;
+		$permastruct_args['feed'] = $permastruct_args['feeds'];
+
+		// support plugins that enable 'permastruct' option
+		if ( isset( $args->rewrite['permastruct'] ) ) {
+			$permastruct = str_replace( $old_slug, $slug, $args->rewrite['permastruct'] );
+		} else {
+			$permastruct = "{$args->rewrite['slug']}/%$post_type%";
+		}
+
+		add_permastruct( $post_type, $permastruct, $permastruct_args );
+
+	}
+
+	//var_dump( 'dfd s df sd' );
+	//var_dump( $args );
+
+	// update the global
+	$wp_post_types[ $post_type ] = $args;
+
+
+}
