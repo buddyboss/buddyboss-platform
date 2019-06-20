@@ -110,14 +110,6 @@ function bbp_admin_get_settings_fields() {
 			),
 
 			// Allow global access (on multisite)
-			'_bbp_allow_global_access' => array(
-				'title'             => __( 'Auto role', 'buddyboss' ),
-				'callback'          => 'bbp_admin_setting_callback_global_access',
-				'sanitize_callback' => 'intval',
-				'args'              => array()
-			),
-
-			// Allow global access (on multisite)
 			'_bbp_default_role' => array(
 				'sanitize_callback' => 'sanitize_text_field',
 				'args'              => array()
@@ -459,41 +451,6 @@ function bbp_admin_setting_callback_anonymous() {
 
 	<input name="_bbp_allow_anonymous" id="_bbp_allow_anonymous" type="checkbox" value="1" <?php checked( bbp_allow_anonymous( false ) ); bbp_maybe_admin_setting_disabled( '_bbp_allow_anonymous' ); ?> />
 	<label for="_bbp_allow_anonymous"><?php esc_html_e( 'Allow guest users without accounts to create discussions and replies', 'buddyboss' ); ?></label>
-
-<?php
-}
-
-/**
- * Allow global access setting field
- *
- * @since bbPress (r3378)
- *
- * @uses checked() To display the checked attribute
- */
-function bbp_admin_setting_callback_global_access() {
-
-	// Get the default role once rather than loop repeatedly below
-	$default_role = bbp_get_default_role();
-
-	// Start the output buffer for the select dropdown
-	ob_start(); ?>
-
-	<label for="_bbp_default_role">
-		<select name="_bbp_default_role" id="_bbp_default_role" <?php bbp_maybe_admin_setting_disabled( '_bbp_default_role' ); ?>>
-		<?php foreach ( bbp_get_dynamic_roles() as $role => $details ) : ?>
-
-			<option <?php selected( $default_role, $role ); ?> value="<?php echo esc_attr( $role ); ?>"><?php echo bbp_translate_user_role( $details['name'] ); ?></option>
-
-		<?php endforeach; ?>
-		</select>
-
-	<?php $select = ob_get_clean(); ?>
-    </label>
-
-	<label for="_bbp_allow_global_access">
-		<input name="_bbp_allow_global_access" id="_bbp_allow_global_access" type="checkbox" value="1" <?php checked( bbp_allow_global_access( true ) ); bbp_maybe_admin_setting_disabled( '_bbp_allow_global_access' ); ?> />
-		<?php printf( esc_html__( 'Automatically give registered visitors the %s forum role', 'bbpress' ), $select ); ?>
-	</label>
 
 <?php
 }
