@@ -31,10 +31,3 @@ function bp_helper_plugins_loaded_callback() {
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
-
-/**
- * Remove message of BuddyPress Groups Export & Import
- *
- * Support ddyPress Groups Export & Import
- */
-remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
