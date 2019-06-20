@@ -5,16 +5,16 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Remove buddypress follow init hook action
+ * Remove BuddyPress Follow init hook action
  *
- * Support buddypress follow
+ * Support BuddyPress Follow
  */
 remove_action( 'bp_include', 'bp_follow_init' );
 
 /**
  * Remove message of BuddyPress Groups Export & Import
  *
- * Support ddyPress Groups Export & Import
+ * Support BuddyPress Groups Export & Import
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
