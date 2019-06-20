@@ -341,6 +341,14 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		$forum_id   = 0;
 		$group_id   = !empty( $group_id ) ? $group_id : bp_get_current_group_id();
 
+		// update current forum id groups meta data
+		$current_forum_ids  = array_values( bbp_get_group_forum_ids( $group_id ) );
+		if ( ! empty( $current_forum_ids ) ) {
+		    foreach( $current_forum_ids as $f_id ) {
+			    bbp_update_forum_group_ids( $f_id, array() );
+            }
+        }
+
 		// Keymasters have the ability to reconfigure forums
 		if ( bbp_is_user_keymaster() ) {
 			$forum_ids = ! empty( $_POST['bbp_group_forum_id'] ) ? (array) (int) $_POST['bbp_group_forum_id'] : array();
@@ -375,7 +383,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		bbp_update_forum_group_ids( $forum_id, (array) $group_id  );
 
 		// Update the group forum setting
-		$group = $this->toggle_group_forum( $group_id, $edit_forum );
+		$group = $this->toggle_group_forum( $group_id, $edit_forum, $forum_id );
 
 		// Create a new forum
 		if ( empty( $forum_id ) && ( true === $edit_forum ) ) {
@@ -545,7 +553,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 				groups_update_groupmeta( bp_get_new_group_id(), '_bbp_forum_enabled_' . $forum_id, true );
 
 				// Toggle forum on
-				$this->toggle_group_forum( bp_get_new_group_id(), true );
+				$this->toggle_group_forum( bp_get_new_group_id(), true, $forum_id );
 
 				break;
 			case false :
@@ -671,7 +679,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 	 * @uses groups_get_group() To get the group to toggle
 	 * @return False if group is not found, otherwise return the group
 	 */
-	public function toggle_group_forum( $group_id = 0, $enabled = false ) {
+	public function toggle_group_forum( $group_id = 0, $enabled = false, $forum_id = false ) {
 
 		// Get the group
 		$group = groups_get_group( array( 'group_id' => $group_id ) );
@@ -689,7 +697,31 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		// Maybe disconnect forum from group
 		if ( empty( $enabled ) ) {
 			$this->disconnect_forum_from_group( $group_id );
-		}
+		} else {
+
+			// Enforce forum status inherit the groups status
+			if ( ! empty( $forum_id ) ) {
+
+				// Set the default forum status
+				switch ( $group->status ) {
+					case 'hidden'  :
+						$status = bbp_get_hidden_status_id();
+						break;
+					case 'private' :
+						$status = bbp_get_private_status_id();
+						break;
+					case 'public'  :
+					default        :
+						$status = bbp_get_public_status_id();
+						break;
+				}
+
+				wp_update_post( array(
+					'ID'          => $forum_id,
+					'post_status' => $status
+				) );
+			}
+        }
 
 		// Update Forums' internal private and forum ID variables
 		bbp_repair_forum_visibility();

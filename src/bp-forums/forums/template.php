@@ -2487,10 +2487,12 @@ function bbp_form_forum_visibility_dropdown( $args = '' ) {
 		// Used variables
 		$tab = ! empty( $r['tab'] ) ? ' tabindex="' . (int) $r['tab'] . '"' : '';
 
+		$group_ids = bbp_get_forum_group_ids( $r['forum_id'] );
+
 		// Start an output buffer, we'll finish it after the select loop
 		ob_start(); ?>
 
-		<select name="<?php echo esc_attr( $r['select_id'] ) ?>" id="<?php echo esc_attr( $r['select_id'] ) ?>_select"<?php echo $tab; ?>>
+		<select name="<?php echo esc_attr( $r['select_id'] ) ?>" id="<?php echo esc_attr( $r['select_id'] ) ?>_select"<?php echo $tab; ?> <?php echo ! empty( $group_ids ) ? 'disabled="disabled"' : ''; ?>>
 
 			<?php foreach ( bbp_get_forum_visibilities() as $key => $label ) : ?>
 
