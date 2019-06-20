@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.0.5\n"
+"Project-Id-Version: BuddyBoss Platform 1.0.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-19 11:29:42+00:00\n"
+"POT-Creation-Date: 2019-06-20 09:58:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2406,7 +2406,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:221 bp-forums/admin/settings.php:242
 #: bp-forums/admin/tools.php:1226 bp-forums/admin/topics.php:628
 #: bp-forums/admin.php:222 bp-forums/admin.php:280
-#: bp-forums/forums/template.php:2567 bp-forums/groups.php:49
+#: bp-forums/forums/template.php:2569 bp-forums/groups.php:49
 #: bp-forums/groups.php:50
 #: bp-forums/templates/default/bbpress/content-statistics.php:26
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
@@ -2420,7 +2420,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:229 bp-forums/admin/settings.php:250
 #: bp-forums/admin/tools.php:1227 bp-forums/admin/topics.php:630
 #: bp-forums/admin.php:234 bp-forums/admin.php:300
-#: bp-forums/core/theme-compat.php:645 bp-forums/forums/template.php:2631
+#: bp-forums/core/theme-compat.php:645 bp-forums/forums/template.php:2633
 #: bp-forums/replies/template.php:46 bp-forums/replies/template.php:47
 #: bp-forums/templates/default/bbpress/content-statistics.php:31
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
@@ -3072,7 +3072,7 @@ msgid "Marketing and Strategy"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:34
-msgid "45 People and Growing!"
+msgid "50 People and Growing!"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:40
@@ -5471,6 +5471,10 @@ msgstr ""
 msgid "View Profile"
 msgstr ""
 
+#: bp-core/compatibility/bp-rankmath-plugin-helpers.php:32
+msgid "Social Group"
+msgstr ""
+
 #: bp-core/deprecated/buddyboss/1.0.php:492
 msgid "The selected Template Pack will serve all BuddyBoss templates."
 msgstr ""
@@ -7111,7 +7115,7 @@ msgid "Select whether to open or close the discussion."
 msgstr ""
 
 #: bp-forums/admin/metaboxes.php:369 bp-forums/admin/metaboxes.php:423
-#: bp-forums/groups.php:1038
+#: bp-forums/groups.php:1070
 #: bp-forums/templates/default/bbpress/form-topic.php:106
 #: bp-forums/topics/template.php:60
 msgid "Forum:"
@@ -9091,7 +9095,7 @@ msgid "No recorded history. Akismet has not checked this post."
 msgstr ""
 
 #: bp-forums/forums/functions.php:117 bp-forums/forums/functions.php:394
-#: bp-forums/groups.php:336 bp-forums/groups.php:495
+#: bp-forums/groups.php:336 bp-forums/groups.php:503
 #: bp-forums/notifications.php:166 bp-forums/replies/functions.php:115
 #: bp-forums/replies/functions.php:515 bp-forums/replies/functions.php:1245
 #: bp-forums/topics/functions.php:121 bp-forums/topics/functions.php:519
@@ -9255,13 +9259,13 @@ msgstr ""
 msgid "Group Forum Settings"
 msgstr ""
 
-#: bp-forums/groups.php:276 bp-forums/groups.php:477
+#: bp-forums/groups.php:276 bp-forums/groups.php:485
 msgid ""
 "Create a discussion forum to allow members of this group to communicate in "
 "a structured, bulletin-board style fashion."
 msgstr ""
 
-#: bp-forums/groups.php:280 bp-forums/groups.php:480
+#: bp-forums/groups.php:280 bp-forums/groups.php:488
 msgid "Yes. I want this group to have a discussion forum."
 msgstr ""
 
@@ -9277,15 +9281,15 @@ msgstr ""
 msgid "Only site administrators can reconfigure which forum belongs to this group."
 msgstr ""
 
-#: bp-forums/groups.php:434
+#: bp-forums/groups.php:442
 msgid "Discussion Forum"
 msgstr ""
 
-#: bp-forums/groups.php:475
+#: bp-forums/groups.php:483
 msgid "Group Forum"
 msgstr ""
 
-#: bp-forums/groups.php:771
+#: bp-forums/groups.php:803
 msgid "This group does not currently have a forum."
 msgstr ""
 
@@ -12936,9 +12940,8 @@ msgstr ""
 #: bp-loader.php:64
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress Follow plugin is active. "
-"Following/followers functionality is built into the platform. Please "
-"deactivate BuddyPress Follow first, if you wish to activate BuddyBoss "
-"Platform."
+"Follow functionality is built into the platform. Please deactivate "
+"BuddyPress Follow first, if you wish to activate BuddyBoss Platform."
 msgstr ""
 
 #: bp-loader.php:147
@@ -14607,11 +14610,11 @@ msgstr ""
 msgid "This user's notification settings have been saved."
 msgstr ""
 
-#: bp-settings/bp-settings-template.php:88
+#: bp-settings/bp-settings-template.php:89
 msgid "There is a pending change of your email address to %s."
 msgstr ""
 
-#: bp-settings/bp-settings-template.php:93
+#: bp-settings/bp-settings-template.php:94
 msgid ""
 "Check your email (%1$s) for the verification link, or <a "
 "href=\"%2$s\">cancel the pending change</a>."

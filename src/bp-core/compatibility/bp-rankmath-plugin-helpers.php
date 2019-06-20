@@ -29,7 +29,7 @@ class BP_RankMath_Title implements IPaper {
 				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
 			}
 		} else {
-			$title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : __( 'Social Group', 'buddyboss-platform' );
+			$title = isset( buddypress()->groups->current_group->name ) ? buddypress()->groups->current_group->name : __( 'Social Group', 'buddyboss' );
 		}
 
 		return $title . ' - ' . bp_get_site_name();
