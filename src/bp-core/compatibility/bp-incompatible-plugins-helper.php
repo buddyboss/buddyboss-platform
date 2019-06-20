@@ -5,9 +5,9 @@ defined( 'ABSPATH' ) || exit;
 
 
 /**
- * Remove buddypress follow init hook action
+ * Remove BuddyPress Follow init hook action
  *
- * Support buddypress follow
+ * Support BuddyPress Follow
  */
 remove_action( 'bp_include', 'bp_follow_init' );
 
