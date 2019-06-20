@@ -504,7 +504,8 @@ class BuddyPress {
 	private function includes() {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
-		require( $this->plugin_dir . '/bp-core/compatible/bp-incompatible_plugins-helper.php' );
+		// Load the compatibility helpers for third party plugins.
+		require( $this->plugin_dir . '/bp-core/compatibility/bp-incompatible_plugins-helper.php' );
 
 		// Load the WP abstraction file so BuddyPress can run on all WordPress setups.
 		require( $this->plugin_dir . 'bp-core/bp-core-wpabstraction.php' );

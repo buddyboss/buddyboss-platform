@@ -18,7 +18,7 @@ remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 function bp_helper_plugins_loaded_callback() {
 	global $plugins;
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $plugins ) ) {
-		require( buddypress()->plugin_dir . '/bp-help/rankmath-plugin-helpers.php' );
+		require( buddypress()->plugin_dir . '/compatibility/bp-rankmath-plugin-helpers.php' );
 	}
 }
 
