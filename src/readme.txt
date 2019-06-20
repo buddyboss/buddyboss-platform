@@ -62,7 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Automatically load newest posts, without clicking a button
 * Compatibility - Improved support for plugin 'Rank Math SEO'
 * Compatibility - Improved support for plugin 'MemberPress + BuddyPress Integration'
-* Compatibility - Improved support for plugins that 'Require BudddyPress'
+* Compatibility - Improved support for plugins that 'Require BuddyPress'
 
 = 1.0.5 =
 * Forums - Discussion/topic URL slugs from bbPress auto-migrate now
