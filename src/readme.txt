@@ -56,9 +56,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.0.6 =
+* Forums - Fixed issues with forum role assignment to new users
+* Forums - Automatically inherit forum status from group status
+* Profile Fields - Fixed issues with 'Gender' field validation
 * Activity - Automatically load newest posts, without clicking a button
-* Compatibility - Improved support for plugins that "Require BudddyPress"
-* Compatibility - Improved support for plugin "MemberPress + BuddyPress Integration"
+* Compatibility - Improved support for plugin 'Rank Math SEO'
+* Compatibility - Improved support for plugin 'MemberPress + BuddyPress Integration'
+* Compatibility - Improved support for plugins that 'Require BudddyPress'
 
 = 1.0.5 =
 * Forums - Discussion/topic URL slugs from bbPress auto-migrate now
@@ -73,7 +77,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.0.4 =
 * Multisite - Fixed various issues
 * Photos - Show photos count when viewing other member's profile
-* Compatibility - Improved support for plugins that "Require bbPress"
+* Compatibility - Improved support for plugins that 'Require bbPress'
 
 = 1.0.3 =
 * Multisite - Fixed various issues
