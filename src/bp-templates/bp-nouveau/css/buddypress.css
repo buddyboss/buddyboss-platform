@@ -7995,10 +7995,6 @@ fieldset div.avatar {
 --------------------------------------------------------------*/
 /* =Standard Mobile Landscape
 -------------------------------------------------------------- */
-@media screen and (max-device-width: 480px), screen and (-webkit-min-device-pixel-ratio: 2) {
-  -webkit-text-size-adjust: none;
-}
-
 @media only screen and (max-width: 480px) {
   #bbpress-forums div.bbp-topic-tags {
     clear: left;
