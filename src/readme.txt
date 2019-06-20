@@ -57,6 +57,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.0.6 =
 * Activity - Automatically load newest posts, without clicking a button
+* Compatibility - Improved support for plugins that "Require BudddyPress"
+* Compatibility - Improved support for plugin "MemberPress + BuddyPress Integration"
 
 = 1.0.5 =
 * Forums - Discussion/topic URL slugs from bbPress auto-migrate now
@@ -70,8 +72,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.0.4 =
 * Multisite - Fixed various issues
-* Photos - show photos count when viewing other member's profile
-* Compatibility - improved support for plugins that "Require bbPress"
+* Photos - Show photos count when viewing other member's profile
+* Compatibility - Improved support for plugins that "Require bbPress"
 
 = 1.0.3 =
 * Multisite - Fixed various issues
