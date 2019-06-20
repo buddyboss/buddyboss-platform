@@ -14,7 +14,7 @@ remove_action( 'bp_include', 'bp_follow_init' );
 /**
  * Remove message of BuddyPress Groups Export & Import
  *
- * Support ddyPress Groups Export & Import
+ * Support BuddyPress Groups Export & Import
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
@@ -35,6 +35,6 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
 /**
  * Remove message of BuddyPress Groups Export & Import
  *
- * Support ddyPress Groups Export & Import
+ * Support BuddyPress Groups Export & Import
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
