@@ -14,7 +14,9 @@ remove_action( 'bp_include', 'bp_follow_init' );
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
-
+/**
+ * Load helper plugins
+ */
 function bp_helper_plugins_loaded_callback() {
 	global $plugins;
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $plugins ) ) {
