@@ -49,6 +49,11 @@ function bp_core_admin_get_directory_pages() {
 		}
 	}
 
+	if ( function_exists( 'is_plugin_active' ) && is_plugin_active('sfwd-lms/sfwd_lms.php') ) {
+		$directory_pages = array_insert_after( $directory_pages, 'new_courses_page', array( 'new_courses_page' => __( LearnDash_Custom_Label::get_label( 'courses' ), 'buddyboss' ) ) );
+	}
+
+
 	/** Directory Display *****************************************************/
 
 	/**

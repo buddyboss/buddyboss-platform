@@ -132,6 +132,8 @@ function bp_core_admin_register_page_fields() {
 			$description = 'This directory shows all sitewide activity.';
 		} elseif ( 'media' === $name ) {
 			$description = 'This directory shows all photos uploaded by members.';
+		}elseif ( 'new_courses_page' === $name ) {
+			$description = 'This directory shows all LearnDash Courses.';
 		}
 		add_settings_field( $name, $label, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_pages', compact('existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
@@ -234,7 +236,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 	if ( 'button' === $name ) {
 
 	    printf( '<p><a href="%s" class="button">%s</a> </p>', $args['label']['link'], $args['label']['label'] );
-		// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
+	// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
 	} elseif ( 'new_forums_page' === $name ) {
 
 		// Get the page id from the options.
@@ -269,8 +271,42 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 				$description
 			);
 		}
+	// For the forums will set the page selected from the custom option `_bbp_root_slug_custom_slug`
+	} elseif ( 'new_courses_page' === $name ) {
 
-		// For the normal directory pages.
+		// Get the page id from the options.
+		$id = (int) bp_get_option( 'page_for_sfwd-courses' );
+
+		// Check the status of current set value.
+		$status = get_post_status( $id );
+
+		// Set the page id if page exists and in publish otherwise set blank.
+		$id = ( '' !== $status && 'publish' === $status ) ? $id : '';
+
+		echo wp_dropdown_pages( array(
+			'name'             => 'bp_pages[' . esc_attr( $name ) . ']',
+			'echo'             => false,
+			'show_option_none' => __( '- Select a page -', 'buddyboss' ),
+			'selected'         => ! empty( $id ) ? $id : false
+		) );
+
+		if ( ! empty( $id ) ) {
+			printf( '<a href="%s" class="button-secondary" target="_bp">%s</a>',
+				get_permalink( $id ),
+				__( 'View', 'buddyboss' ) );
+		} else {
+			printf( '<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'javascript:void(0);', esc_attr( $name ),
+				__( 'Create Page', 'buddyboss' ) );
+		}
+
+		if ( '' !== $description ) {
+			printf(
+				'<p class="description">%s</p>',
+				$description
+			);
+		}
+	// For the normal directory pages.
 	} else {
 
 		echo wp_dropdown_pages( array(
@@ -330,6 +366,10 @@ function bp_core_admin_maybe_save_pages_settings() {
 			if ( isset( $valid_pages[ $key ] ) && 'new_forums_page' !== $key ) {
 				$new_directory_pages[ $key ] = (int) $value;
 			}
+			// Exclude the new_forums_page to set in $new_directory_pages array.
+			if ( isset( $valid_pages[ $key ] ) && 'new_courses_page' !== $key ) {
+				$new_directory_pages[ $key ] = (int) $value;
+			}
 		}
 		bp_core_update_directory_page_ids( $new_directory_pages );
 
@@ -343,9 +383,19 @@ function bp_core_admin_maybe_save_pages_settings() {
 				bp_update_option('_bbp_root_slug_custom_slug', (int)$_POST['bp_pages']['new_forums_page'] );
 			}
 		}
+
+		if ( function_exists( 'is_plugin_active' ) && is_plugin_active('sfwd-lms/sfwd_lms.php') ) {
+			if ( isset( $_POST['bp_pages'] ) && '' === $_POST['bp_pages']['new_courses_page'] ) {
+				bp_update_option('page_for_sfwd-courses', 0 );
+			} else {
+				bp_update_option('page_for_sfwd-courses', (int)$_POST['bp_pages']['new_courses_page'] );
+			}
+		}
 	}
 
 	bp_core_redirect( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-pages', 'added' => 'true' ) , 'admin.php' ) ) );
 }
 
 add_action( 'bp_admin_init', 'bp_core_admin_maybe_save_pages_settings', 100 );
+
+

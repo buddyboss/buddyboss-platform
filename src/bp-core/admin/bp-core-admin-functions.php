@@ -2306,7 +2306,9 @@ function bp_core_admin_create_background_page() {
 
 		// If forums page then store into the _bbp_root_slug_custom_slug option.
 		if ( 'new_forums_page' === $_POST['page'] ) {
-			bp_update_option('_bbp_root_slug_custom_slug', $page_id );
+			bp_update_option( '_bbp_root_slug_custom_slug', $page_id );
+		} elseif ( 'new_courses_page' === $_POST['page'] ) {
+			bp_update_option( 'page_for_sfwd-courses', $page_id );
 		// Else store into the directory pages.
 		} else {
 			bp_core_update_directory_page_ids( $page_ids );
