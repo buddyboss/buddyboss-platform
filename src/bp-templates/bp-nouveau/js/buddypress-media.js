@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 							$('.bb-photos-actions').hide();
 							var feedback = '<aside class="bp-feedback bp-messages info">\n' +
 								'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
-								'\t<p>'+BP_Nouveau.media.i18n_strings.np_photos_found+'</p>\n' +
+								'\t<p>'+BP_Nouveau.media.i18n_strings.no_photos_found+'</p>\n' +
 								'\t</aside>';
 							$('#buddypress [data-bp-list="media"]').html(feedback);
 						}
