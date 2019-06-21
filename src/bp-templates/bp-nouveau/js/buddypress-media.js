@@ -148,11 +148,11 @@ window.bp = window.bp || {};
 		addSelectedClassToWrapper: function(event) {
 			var target = event.currentTarget;
 			if ( $(target).is(':checked') ) {
-				$(target).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',wp.i18n.__('Unselect','buddyboss'));
+				$(target).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',BP_Nouveau.media.i18n_strings.unselect);
 				$(target).closest('.bb-photo-thumb').addClass('selected');
 			} else {
 				$(target).closest('.bb-photo-thumb').removeClass('selected');
-				$(target).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',wp.i18n.__('Select','buddyboss'));
+				$(target).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',BP_Nouveau.media.i18n_strings.select);
 
 				if ( $( '.bp-nouveau #bb-select-deselect-all-media' ).hasClass('selected') ) {
 					$( '.bp-nouveau #bb-select-deselect-all-media' ).removeClass('selected');
@@ -201,7 +201,7 @@ window.bp = window.bp || {};
 							$('.bb-photos-actions').hide();
 							var feedback = '<aside class="bp-feedback bp-messages info">\n' +
 								'\t<span class="bp-icon" aria-hidden="true"></span>\n' +
-								'\t<p>'+wp.i18n.__('Sorry, no photos were found.','buddyboss')+'</p>\n' +
+								'\t<p>'+BP_Nouveau.media.i18n_strings.np_photos_found+'</p>\n' +
 								'\t</aside>';
 							$('#buddypress [data-bp-list="media"]').html(feedback);
 						}
@@ -217,10 +217,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			if ( $(event.currentTarget).hasClass('selected') ) {
-				$(event.currentTarget).data('bp-tooltip',wp.i18n.__('Select All','buddyboss'));
+				$(event.currentTarget).data('bp-tooltip',BP_Nouveau.media.i18n_strings.selectall);
 				this.deselectAllMedia(event);
 			} else {
-				$(event.currentTarget).data('bp-tooltip',wp.i18n.__('Unselect All','buddyboss'));
+				$(event.currentTarget).data('bp-tooltip',BP_Nouveau.media.i18n_strings.unselectall);
 				this.selectAllMedia(event);
 			}
 
@@ -233,7 +233,7 @@ window.bp = window.bp || {};
 			$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]').each(function(){
 				$(this).prop('checked',true);
 				$(this).closest('.bb-photo-thumb').addClass('selected');
-				$(this).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',wp.i18n.__('Unselect','buddyboss'));
+				$(this).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',BP_Nouveau.media.i18n_strings.unselect);
 			});
 		},
 
@@ -243,7 +243,7 @@ window.bp = window.bp || {};
 			$('#buddypress').find('.media-list:not(.existing-media-list)').find('.bb-media-check-wrap [name="bb-media-select"]').each(function(){
 				$(this).prop('checked',false);
 				$(this).closest('.bb-photo-thumb').removeClass('selected');
-				$(this).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',wp.i18n.__('Select','buddyboss'));
+				$(this).closest('.bb-media-check-wrap').find('.bp-tooltip').attr('data-bp-tooltip',BP_Nouveau.media.i18n_strings.select);
 			});
 		},
 
@@ -278,7 +278,7 @@ window.bp = window.bp || {};
 
 			$('#bp-media-uploader').hide();
 			$('#bp-media-add-more').hide();
-			$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Upload', 'buddyboss' ));
+			$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.upload);
 			$('#bp-media-uploader-modal-status-text').text('');
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
@@ -680,7 +680,7 @@ window.bp = window.bp || {};
 				self.dropzone_obj.on('addedfile', function() {
 					setTimeout(function(){
 						if ( self.dropzone_obj.getAcceptedFiles().length ) {
-							$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(wp.i18n.__('%d out of %d uploaded', 'buddyboss'), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
+							$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
 						}
 					},1000);
 				});
@@ -696,11 +696,11 @@ window.bp = window.bp || {};
 				});
 
 				self.dropzone_obj.on('queuecomplete', function() {
-					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Upload', 'buddyboss' ));
+					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.upload);
 				});
 
 				self.dropzone_obj.on('processing', function() {
-					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
+					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
 				});
 
 				self.dropzone_obj.on('success', function(file, response) {
@@ -715,8 +715,8 @@ window.bp = window.bp || {};
 					}
 					$('#bp-media-add-more').show();
 					$('#bp-media-submit').show();
-					$('#bp-media-uploader-modal-title').text(wp.i18n.__( 'Uploading', 'buddyboss' ) + '...');
-					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
+					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
+					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 				});
 
 				self.dropzone_obj.on('removedfile', function(file) {
@@ -738,7 +738,7 @@ window.bp = window.bp || {};
 						$('#bp-media-add-more').hide();
 						$('#bp-media-submit').hide();
 					} else {
-						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( wp.i18n.__( '%d out of %d uploaded', 'buddyboss' ), self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
+						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 					}
 				});
 			}
@@ -956,7 +956,7 @@ window.bp = window.bp || {};
 				return false;
 			}
 
-			if ( ! confirm( wp.i18n.__( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ) ) ) {
+			if ( ! confirm( BP_Nouveau.media.i18n_strings.album_delete_confirm ) ) {
 				return false;
 			}
 
@@ -977,7 +977,7 @@ window.bp = window.bp || {};
 					if ( response.success ) {
 						window.location.href = response.data.redirect_url;
 					} else {
-						alert( wp.i18n.__( 'There was a problem deleting the album.', 'buddyboss' ) );
+						alert( BP_Nouveau.media.i18n_strings.album_delete_error );
 						$(event.currentTarget).prop('disabled',false);
 					}
 				}

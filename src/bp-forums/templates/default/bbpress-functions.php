@@ -191,6 +191,14 @@ class BBP_Default extends BBP_Theme_Compat {
 		foreach ( $scripts as $handle => $attributes ) {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
+
+		if ( bbp_use_wp_editor() ) {
+			wp_localize_script( 'bbpress-editor', 'bbpEditorJsStrs', array(
+				'description' => __( 'Description', 'buddyboss' ),
+				'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
+				'type_topic'  => __( 'Type your topic here', 'buddyboss' ),
+			) );
+		}
 	}
 
 	/**
