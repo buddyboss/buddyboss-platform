@@ -43,7 +43,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 		function update_plugin( $transient ) {
 
-			if ( empty( $transient->checked ) || empty( $transient->checked[ $this->plugin_path ] ) ) {
+			if ( empty( $transient->checked ) || ! empty( $transient->checked[ $this->plugin_path ] ) ) {
 				return $transient;
 			}
 
