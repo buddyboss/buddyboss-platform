@@ -3464,7 +3464,6 @@ function bp_get_group_type_post_id( $group_type = '' ) {
  * @param $label_name
  *
  * @return string
- * @todo should these labels be added to the text domain?
  */
 function get_group_role_label( $group_id, $label_name ) {
 
@@ -3478,17 +3477,17 @@ function get_group_role_label( $group_id, $label_name ) {
 	if ( ! $get_group_type ) {
 
 		if ( 'organizer_plural_label_name' === $label_name ) {
-			$label = 'Organizers';
+			$label = __( 'Organizers', 'buddyboss' );
 		} elseif ( 'moderator_plural_label_name' === $label_name ) {
-			$label = 'Moderators';
+			$label = __( 'Moderators', 'buddyboss' );
 		} elseif ( 'member_plural_label_name' === $label_name ) {
-			$label = 'Members';
+			$label = __( 'Members', 'buddyboss' );
 		} elseif ( 'organizer_singular_label_name' === $label_name ) {
-			$label = 'Organizer';
+			$label = __( 'Organizer', 'buddyboss' );
 		} elseif ( 'moderator_singular_label_name' === $label_name ) {
-			$label = 'Moderator';
+			$label = __( 'Moderator', 'buddyboss' );
 		} elseif ( 'member_singular_label_name' === $label_name ) {
-			$label = 'Member';
+			$label = __( 'Member', 'buddyboss' );
 		}
 
 	} else {
@@ -3498,17 +3497,17 @@ function get_group_role_label( $group_id, $label_name ) {
 		if ( '' === $group_type_post_id ) {
 
 			if ( 'organizer_plural_label_name' === $label_name ) {
-				$label = 'Organizers';
+				$label = __( 'Organizers', 'buddyboss' );
 			} elseif ( 'moderator_plural_label_name' === $label_name ) {
-				$label = 'Moderators';
+				$label = __( 'Moderators', 'buddyboss' );
 			} elseif ( 'member_plural_label_name' === $label_name ) {
-				$label = 'Members';
+				$label = __( 'Members', 'buddyboss' );
 			} elseif ( 'organizer_singular_label_name' === $label_name ) {
-				$label = 'Organizer';
+				$label = __( 'Organizer', 'buddyboss' );
 			} elseif ( 'moderator_singular_label_name' === $label_name ) {
-				$label = 'Moderator';
+				$label = __( 'Moderator', 'buddyboss' );
 			} elseif ( 'member_singular_label_name' === $label_name ) {
-				$label = 'Member';
+				$label = __( 'Member', 'buddyboss' );
 			}
 
 		}
@@ -3516,17 +3515,17 @@ function get_group_role_label( $group_id, $label_name ) {
 		$group_type_roles = get_post_meta( $group_type_post_id, '_bp_group_type_role_labels', true ) ?: [];
 
 		if ( 'organizer_plural_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : 'Organizers';
+			$label = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : __( 'Organizers', 'buddyboss' );
 		} elseif ( 'moderator_plural_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : 'Moderators';
+			$label = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : __( 'Moderators', 'buddyboss' );
 		} elseif ( 'member_plural_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : 'Members';
+			$label = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : __( 'Members', 'buddyboss' );
 		} elseif ( 'organizer_singular_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['organizer_singular_label_name'] ) && $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : 'Organizer';
+			$label = ( isset( $group_type_roles['organizer_singular_label_name'] ) && $group_type_roles['organizer_singular_label_name'] ) ? $group_type_roles['organizer_singular_label_name'] : __( 'Organizer', 'buddyboss' );
 		} elseif ( 'moderator_singular_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['moderator_singular_label_name'] ) && $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : 'Moderator';
+			$label = ( isset( $group_type_roles['moderator_singular_label_name'] ) && $group_type_roles['moderator_singular_label_name'] ) ? $group_type_roles['moderator_singular_label_name'] : __( 'Moderator', 'buddyboss' );
 		} elseif ( 'member_singular_label_name' === $label_name ) {
-			$label = ( isset( $group_type_roles['member_singular_label_name'] ) && $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : 'Member';
+			$label = ( isset( $group_type_roles['member_singular_label_name'] ) && $group_type_roles['member_singular_label_name'] ) ? $group_type_roles['member_singular_label_name'] : __( 'Member', 'buddyboss' );
 		}
 	}
 
