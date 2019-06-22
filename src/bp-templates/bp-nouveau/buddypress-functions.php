@@ -448,7 +448,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		$scripts['bp-nouveau-magnific-popup'] = array(
-			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup%s.js',
+			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 			'dependencies' => array(),
 			'footer'       => true,
 		);
