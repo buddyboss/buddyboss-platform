@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.0.6
+Stable tag: 1.0.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.0.7 =
+* Messages - Fixed issues with media tooltips in messages
+* Translations - Fixed text instances that were not available for translation
+* Updater - Fixed issues with platform not pinging for updates
 
 = 1.0.6 =
 * Forums - Fixed issues with forum role assignment to new users
