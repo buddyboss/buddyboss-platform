@@ -55,6 +55,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.0.8 =
+* Updater - Improvements to updater code
+
 = 1.0.7 =
 * Messages - Fixed issues with media tooltips in messages
 * Translations - Fixed text instances that were not available for translation
