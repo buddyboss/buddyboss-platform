@@ -1380,7 +1380,7 @@ function bp_dd_import_forums_in_groups() {
 		if ( ! empty( $group ) ) {
 			$forum['name']        = $group->name;
 			$forum['description'] = sprintf( __( 'Default Forum for %s Group', 'buddyboss' ), $group->name );
-			$forum['visibility']  = 'publish';
+			$forum['visibility']  = $group->status;
 			$forum['status']      = 'open';
 
 			$forum_id = bp_dd_create_forums( $forum, $users );

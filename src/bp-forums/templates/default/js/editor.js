@@ -8,7 +8,7 @@ jQuery(document).ready( function() {
 		if ( jQuery( '#bbp_editor_forum_content' ).length ) {
 			window.forums_medium_forum_editor = new window.MediumEditor('#bbp_editor_forum_content',{
 				placeholder: {
-					text: wp.i18n.__('Description', 'buddyboss'),
+					text: window.bbpEditorJsStrs.description,
 					hideOnClick: true
 				},
 				toolbar: toolbarOptions
@@ -21,7 +21,7 @@ jQuery(document).ready( function() {
 		if ( jQuery( '#bbp_editor_reply_content' ).length ) {
 			window.forums_medium_reply_editor = new window.MediumEditor('#bbp_editor_reply_content',{
 				placeholder: {
-					text: wp.i18n.__('Type your reply here', 'buddyboss'),
+					text: window.bbpEditorJsStrs.type_reply,
 					hideOnClick: true
 				},
 				toolbar: toolbarOptions
@@ -34,7 +34,7 @@ jQuery(document).ready( function() {
 		if ( jQuery( '#bbp_editor_topic_content' ).length ) {
 			window.forums_medium_topic_editor = new window.MediumEditor('#bbp_editor_topic_content',{
 				placeholder: {
-					text: wp.i18n.__('Type your discussion here', 'buddyboss'),
+					text: window.bbpEditorJsStrs.type_topic,
 					hideOnClick: true
 				},
 				toolbar: toolbarOptions

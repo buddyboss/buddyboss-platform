@@ -57,21 +57,14 @@ add_filter( 'bp_email_set_content_html', 'wp_filter_post_kses', 6 );
 add_filter( 'bp_email_set_content_html', 'stripslashes', 8 );
 add_filter( 'bp_email_set_content_plaintext', 'wp_strip_all_tags', 6 );
 add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
-add_action( 'init', 'bp_enable_gravatar_callback');
 
-function bp_enable_gravatar_callback() {
-	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+// Avatars
+/**
+ * Disable gravatars fallback for member avatars.
+ * @since BuddyBoss 1.0.0
+ */
+add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 
-	if ( false === $avatar ) {
-		// Avatars
-		/**
-		 * Disable gravatars fallback for member avatars.
-		 * @since BuddyBoss 1.0.0
-		 */
-		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
-	}
-
-}
 
 /**
  * Template Compatibility.
@@ -1167,42 +1160,6 @@ add_action( 'bp_template_include', 'bp_core_render_email_template', 12 );
 
 
 /**
- * Filter for setting the spoofing of BuddyPress.
- *
- * @param $value
- * @param $option
- *
- * @since BuddyBoss 1.0.0
- * @return mixed
- */
-function bp_core_set_bbpress_buddypress_active( $value, $option ) {
-
-	// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
-	if ( is_network_admin() || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
-		return $value;
-	} else {
-		// Check if Forum Component is enabled if so then add
-		if ( bp_is_active( 'forums' ) ) {
-			array_push( $value, 'bbpress/bbpress.php' );
-		}
-		array_push( $value, 'buddypress/bp-loader.php' );
-	}
-
-	return $value;
-}
-
-/**
- * Load Plugin after plugin is been loaded
- */
-function bp_core_plugins_loaded_callback() {
-
-	// Filter for setting the spoofing of BuddyPress.
-	add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
-}
-add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
-
-
-/**
  * Filter to update group cover images
  *
  * @since BuddyBoss 1.0.0
@@ -1372,17 +1329,20 @@ add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
  * @since BuddyBoss 1.0.5
  *
  */
-function bp_remove_badgeos_conflict_ckeditor_dequeue_script() {
-		?>
-		<script type="text/javascript">
+add_filter( 'script_loader_src', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 9999, 2 );
 
-			if ( $('body').hasClass('activity') ) {
-				<?php
-				wp_deregister_script( 'ck_editor_cdn' );
-				wp_dequeue_script( 'ck_editor_cdn' );
-				?>
+function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
+
+	if ( function_exists( 'is_plugin_active' ) && is_plugin_active('badgeos/badgeos.php') ) {
+
+		if ( bp_is_user_activity() || bp_is_group_activity() || bp_is_activity_directory() || bp_is_messages_component() ) {
+
+			if ( 'ck_editor_cdn' === $handle || 'custom_script' === $handle ) {
+				$src = '';
 			}
-		</script>
-		<?php
+		}
+
+	}
+
+	return $src;
 }
-add_action( 'wp_enqueue_scripts', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 999999999999999 );

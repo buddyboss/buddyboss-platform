@@ -83,18 +83,19 @@ function bp_settings_pending_email_notice() {
 
 	?>
 
-	<div id="message" class="bp-template-notice error">
+	<aside class="bp-feedback bp-messages error">
+		<span class="bp-icon" aria-hidden="true"></span>
 		<p><?php printf(
 			__( 'There is a pending change of your email address to %s.', 'buddyboss' ),
-			'<code>' . esc_html( $pending_email['newemail'] ) . '</code>'
+			'<strong>' . esc_html( $pending_email['newemail'] ) . '</strong>'
 		); ?>
 		<br />
 		<?php printf(
 			__( 'Check your email (%1$s) for the verification link, or <a href="%2$s">cancel the pending change</a>.', 'buddyboss' ),
-			'<code>' . esc_html( bp_get_displayed_user_email() ) . '</code>',
+			'<strong>' . esc_html( bp_get_displayed_user_email() ) . '</strong>',
 			esc_url( wp_nonce_url( bp_displayed_user_domain() . bp_get_settings_slug() . '/?dismiss_email_change=1', 'bp_dismiss_email_change' ) )
 		); ?></p>
-	</div>
+	</aside>
 
 	<?php
 }

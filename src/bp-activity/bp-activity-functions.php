@@ -4138,7 +4138,7 @@ function bp_embed_activity_save_cache( $cache, $cachekey, $id ) {
 function bp_activity_do_heartbeat() {
 	$retval = false;
 
-	if ( bp_is_activity_heartbeat_active() && ( bp_is_activity_directory() || bp_is_group_activity() ) ) {
+	if ( bp_is_activity_heartbeat_active() && ( bp_is_activity_directory() || bp_is_group_activity() || bp_is_user_activity() ) ) {
 		$retval = true;
 	}
 

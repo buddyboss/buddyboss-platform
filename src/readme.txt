@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.2.1
+Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.0.5
+Stable tag: 1.0.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.0.8 =
+* Updater - Improvements to updater code
+
+= 1.0.7 =
+* Messages - Fixed issues with media tooltips in messages
+* Translations - Fixed text instances that were not available for translation
+* Updater - Fixed issues with platform not pinging for updates
+
+= 1.0.6 =
+* Forums - Fixed issues with forum role assignment to new users
+* Forums - Automatically inherit forum status from group status
+* Profile Fields - Fixed issues with 'Gender' field validation
+* Activity - Automatically load newest posts, without clicking a button
+* Compatibility - Improved support for plugin 'Rank Math SEO'
+* Compatibility - Improved support for plugin 'MemberPress + BuddyPress Integration'
+* Compatibility - Improved support for plugins that 'Require BuddyPress'
+
 = 1.0.5 =
 * Forums - Discussion/topic URL slugs from bbPress auto-migrate now
 * Forums - Fixed issues with replying to discussions on mobile
@@ -67,8 +84,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.0.4 =
 * Multisite - Fixed various issues
-* Photos - show photos count when viewing other member's profile
-* Compatibility - improved support for plugins that "Require bbPress"
+* Photos - Show photos count when viewing other member's profile
+* Compatibility - Improved support for plugins that 'Require bbPress'
 
 = 1.0.3 =
 * Multisite - Fixed various issues

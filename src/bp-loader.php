@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.0.5
+ * Version:     1.0.8
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -61,7 +61,7 @@ if ( in_array( $bb_plugin_file, $plugins ) ) {
  */
 $incompatible_plugins_list = array(
 	'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-	'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Following/followers functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+	'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
 );
 
 foreach ( $incompatible_plugins_list as $incompatible_plugin => $error_message ) {
@@ -71,6 +71,47 @@ foreach ( $incompatible_plugins_list as $incompatible_plugin => $error_message )
 }
 
 if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_plugins ) ) {
+
+
+	/**
+	 * Filter for setting the spoofing of BuddyPress.
+	 *
+	 * @param $value
+	 * @param $option
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @return mixed
+	 */
+	function bp_core_set_bbpress_buddypress_active( $value, $option ) {
+
+		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
+		if ( is_network_admin() || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
+			return $value;
+		} else {
+			// Check if Forum Component is enabled if so then add
+			if ( bp_is_active( 'forums' ) ) {
+				array_push( $value, 'bbpress/bbpress.php' );
+			}
+			array_push( $value, 'buddypress/bp-loader.php' );
+		}
+
+		return $value;
+	}
+
+	if ( is_multisite() ) {
+		/**
+		 * Load Plugin after plugin is been loaded
+		 */
+		function bp_core_plugins_loaded_callback() {
+
+			// Filter for setting the spoofing of BuddyPress.
+			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+		}
+		add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
+	} else {
+		// Filter for setting the spoofing of BuddyPress.
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+	}
 
 
 	// Required PHP version.
