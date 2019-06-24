@@ -264,8 +264,8 @@ class BP_Members_Admin {
 			$check_current_bp = (bool) bp_enable_site_registration();
 			if ( ( 'all' === $check_current_wp || 'user' === $check_current_wp ) && false === $check_current_bp ) {
 				bp_update_option( 'bp-enable-site-registration', 1 );
-			} elseif ( ( 'all' !== $check_current_wp || 'user' !== $check_current_wp ) && true === $check_current_bp ) {
-				update_site_option( 'registration', 'all' );
+			} elseif ( 'none' == $check_current_wp && true === $check_current_bp ) {
+				update_site_option( 'registration', 'user' );
 				bp_update_option( 'bp-enable-site-registration', 1 );
 			}
 		}
@@ -286,7 +286,7 @@ class BP_Members_Admin {
 			if ( ! is_multisite() ) {
 				update_option( 'users_can_register', 1 );
 			} else {
-				update_site_option( 'registration', 'all' );
+				update_site_option( 'registration', 'user' );
 			}
 
 		} else {
