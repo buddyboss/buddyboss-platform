@@ -569,7 +569,6 @@ function bp_update_to_3_1_1() {
 	bp_core_update_activity_favorites();
 	bp_core_fix_media_activities();
 	bp_core_install_media();
-	bp_core_install_network_search();
 }
 
 /**
