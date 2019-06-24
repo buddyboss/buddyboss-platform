@@ -668,11 +668,33 @@ function bp_core_fetch_avatar( $args = '' ) {
 			$url_args['d'] = $default_grav;
 		}
 
+		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
+			$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
+			$gravcheck = "https://www.gravatar.com/avatar/".md5( strtolower( $params['email'] ) )."?d=404";
+			$response = get_headers($gravcheck);
+			if ( isset( $response[0] ) && $response[0] == "HTTP/1.1 404 Not Found"){
+				$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+			} else {
+				// Set up the Gravatar URL.
+				$gravatar = esc_url( add_query_arg(
+					rawurlencode_deep( array_filter( $url_args ) ),
+					$gravatar
+				) );
+			}
+		} else {
+			// Set up the Gravatar URL.
+			$gravatar = esc_url( add_query_arg(
+				rawurlencode_deep( array_filter( $url_args ) ),
+				$gravatar
+			) );
+		}
+
 		// Set up the Gravatar URL.
-		$gravatar = esc_url( add_query_arg(
-			rawurlencode_deep( array_filter( $url_args ) ),
-			$gravatar
-		) );
+//		$gravatar = esc_url( add_query_arg(
+//			rawurlencode_deep( array_filter( $url_args ) ),
+//			$gravatar
+//		) );
 
 	// No avatar was found, and we've been told not to use a gravatar.
 	} else {

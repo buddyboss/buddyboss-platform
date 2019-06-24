@@ -63,7 +63,21 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
  * Disable gravatars fallback for member avatars.
  * @since BuddyBoss 1.0.0
  */
-add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+add_action( 'init', 'bp_enable_gravatar_callback');
+//add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+function bp_enable_gravatar_callback() {
+	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
+
+	if ( false === $avatar ) {
+		// Avatars
+		/**
+		 * Disable gravatars fallback for member avatars.
+		 * @since BuddyBoss 1.0.0
+		 */
+		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+	}
+
+}
 
 
 /**
