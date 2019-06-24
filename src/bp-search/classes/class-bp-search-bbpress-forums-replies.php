@@ -61,7 +61,7 @@ if (!class_exists('Bp_Search_bbPress_Replies')):
 
 			$where = array();
 			$where[] = "1=1";
-			$where[] = "(post_title LIKE %s OR {$bp_prefix}bp_strip_tags(post_content) LIKE %s)";
+			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
 			$where[] = '(' . $group_query . '
