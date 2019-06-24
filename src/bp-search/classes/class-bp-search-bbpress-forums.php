@@ -35,7 +35,7 @@ if (!class_exists('Bp_Search_bbPress_Forums')):
 
 			$where = array();
 			$where[] = "1=1";
-			$where[] = "(post_title LIKE %s OR {$bp_prefix}bp_strip_tags(post_content) LIKE %s)";
+			$where[] = "(post_title LIKE %s OR ExtractValue(post_content, '//text()') LIKE %s)";
 			$where[] = "post_type = '{$this->type}'";
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
