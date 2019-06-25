@@ -7079,6 +7079,29 @@ button[data-bp-tooltip] {
   }
 }
 
+.admin-bar.bp-hide-adminbar {
+  margin-top: -32px;
+}
+
+@media screen and (max-width: 782px) {
+  .admin-bar.bp-hide-adminbar {
+    margin-top: -46px;
+  }
+}
+
+.admin-bar.bp-hide-adminbar #wpadminbar {
+  display: none;
+}
+
+.admin-bar.bp-hide-adminbar .bb-mobile-panel-wrapper {
+  top: 0;
+  height: 100%;
+}
+
+.admin-bar.bp-hide-adminbar a.bb-close-panel i {
+  top: 32px;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 10.0 - Forums classes

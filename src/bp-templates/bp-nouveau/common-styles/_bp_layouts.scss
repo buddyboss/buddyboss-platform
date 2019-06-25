@@ -536,3 +536,25 @@
 	}
 
 } // close @media
+
+// Adminbar Styles
+.admin-bar.bp-hide-adminbar {
+	margin-top: -32px;
+
+	@media screen and (max-width: 782px) {
+		margin-top: -46px;
+	}
+
+	#wpadminbar {
+		display: none;
+	}
+
+	.bb-mobile-panel-wrapper {
+		top: 0;
+		height: 100%;
+	}
+
+	a.bb-close-panel i {
+		top: 32px;
+	}
+}
