@@ -1955,14 +1955,20 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 
 	$get_existing = get_post_meta( $post_id, '_bp_member_type_key', true );
 	( '' === $get_existing ) ? update_post_meta( $post_id, '_bp_member_type_key', sanitize_key( $key ) ) : '';
+
+	$enable_group_type_create        = isset( $_POST['bp-group-type'] ) ? $_POST['bp-group-type'] : '';
+	$enable_group_type_auto_join     = isset( $_POST['bp-group-type-auto-join'] ) ? $_POST['bp-group-type-auto-join'] : '';
+	$enable_group_type_invite        = isset( $_POST['bp-member-type-invite'] ) ? $_POST['bp-member-type-invite'] : '';
+	$enable_group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? $_POST['bp-member-type-enabled-invite'] : '';
+
 	update_post_meta( $post_id, '_bp_member_type_label_name', $label_name );
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
-	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $_POST['bp-group-type'] );
-	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $_POST['bp-group-type-auto-join'] );
-	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $_POST['bp-member-type-invite'] );
-	update_post_meta( $post_id, '_bp_member_type_enable_invite', $_POST['bp-member-type-enabled-invite'] );
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $enable_group_type_create );
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
+	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );
+	update_post_meta( $post_id, '_bp_member_type_enable_invite', $enable_group_type_enable_invite );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
@@ -1982,11 +1988,13 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		// flag to check condition.
 		$bp_prevent_data_update = false;
 
-		// Fetch all the users which associated this profile type.
-		$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
-		if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
-			if ( in_array( get_current_user_id(), $get_user_ids ) ) {
-				$bp_prevent_data_update = true;
+		if ( isset( $type_term->term_id ) ) {
+			// Fetch all the users which associated this profile type.
+			$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_term->term_id );
+			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+				if ( in_array( get_current_user_id(), $get_user_ids ) ) {
+					$bp_prevent_data_update = true;
+				}
 			}
 		}
 

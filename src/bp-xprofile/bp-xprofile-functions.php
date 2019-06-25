@@ -179,6 +179,10 @@ function bp_xprofile_get_field_types() {
 		'socialnetworks' => 'BP_XProfile_Field_Type_Social_Networks',
 	);
 
+	if ( function_exists( 'bp_member_type_enable_disable') && true === bp_member_type_enable_disable() ) {
+		$fields['membertypes'] = 'BP_XProfile_Field_Type_member_Types';
+	}
+
 	/**
 	 * Filters the list of all xprofile field types.
 	 *

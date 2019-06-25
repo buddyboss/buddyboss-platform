@@ -593,8 +593,8 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 				'field_id' => (int) $field_id
 			), $users_url );
 
-			wp_safe_redirect( $redirect );
-			exit();
+//			wp_safe_redirect( $redirect );
+//			exit();
 
 		} else {
 			$field->render_admin_form( $message );

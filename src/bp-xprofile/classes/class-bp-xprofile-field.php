@@ -1293,7 +1293,7 @@ class BP_XProfile_Field {
 					'page'     => 'bp-profile-setup',
 					'mode'     => 'add_field',
 					'group_id' => (int) $this->group_id
-				), $users_url . '#tabs-' . (int) $this->group_id );
+				), $users_url );
 
 				?>
 
