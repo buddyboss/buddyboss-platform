@@ -544,4 +544,8 @@
 	#wpadminbar {
 		display: none;
 	}
+
+	@media screen and (max-width: 782px) {
+		margin-top: -46px;
+	}
 }

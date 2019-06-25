@@ -7087,6 +7087,12 @@ button[data-bp-tooltip] {
   display: none;
 }
 
+@media screen and (max-width: 782px) {
+  .admin-bar.bp-hide-adminbar {
+    margin-top: -46px;
+  }
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 10.0 - Forums classes
