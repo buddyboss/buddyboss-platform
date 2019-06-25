@@ -57,7 +57,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.0.9 =
 * Private Network - Improved logic for URL exclusions
-* Gravatars - New option to allow for 'gravatars' as profile avatars
+* Profiles - Allow 'Last Name' field to be set as optional
+* Profiles - New option to allow for 'gravatars' as profile avatars
 
 = 1.0.8 =
 * Updater - Improvements to updater code
