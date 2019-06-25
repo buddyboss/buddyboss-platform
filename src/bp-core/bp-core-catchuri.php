@@ -1090,7 +1090,7 @@ function bp_core_filter_wp_query( $retval, $query ) {
  */
 function bp_private_network_template_redirect() {
 
-	global $wp_query;
+	global $wp_query, $wp;
 
 	if ( ! is_user_logged_in() ) {
 
@@ -1112,18 +1112,16 @@ function bp_private_network_template_redirect() {
 			// Get excluded list from the settings
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
+
 				// Convert string to URL array
 				$exclude_arr_url = preg_split("/\r\n|\n|\r/",$exclude);
 				foreach ( $exclude_arr_url as $url ) {
 					$check_is_full_url = filter_var( $url, FILTER_VALIDATE_URL );
-					$extract_source    = parse_url( $url );
-					$path              = isset( $extract_source['path'] ) ? $extract_source['path'] : '';
-					$query             = isset( $extract_source['query'] ) && '' !== $extract_source['query'] ? '?' . $extract_source['query'] : '';
-					$url               = $path . $query;
+
 					// Check if strict match
-					if ( false !== $check_is_full_url && $_SERVER['REQUEST_URI'] === $url ) {
+					if ( false !== $check_is_full_url && home_url(add_query_arg(array(), $wp->request)) === untrailingslashit( $url ) ) {
 						return;
-					} elseif ( false === $check_is_full_url && strpos( $_SERVER['REQUEST_URI'], $url) !== false ) {
+					} elseif ( false === $check_is_full_url && strpos( home_url(add_query_arg(array(), $wp->request)), untrailingslashit( $url ) ) !== false ) {
 						return;
 					}
 				}
