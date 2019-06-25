@@ -823,3 +823,15 @@ function bp_email_invites_tutorial() {
 
 	<?php
 }
+
+/**
+ * Allow members to enable gravatar.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_profile_gravatar() {
+	?>
+	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
+	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile photos', 'buddyboss' ); ?></label>
+	<?php
+}
