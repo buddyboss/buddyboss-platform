@@ -1122,7 +1122,15 @@ function bp_private_network_template_redirect() {
 					if ( false !== $check_is_full_url && home_url(add_query_arg(array(), $wp->request)) === untrailingslashit( $url ) ) {
 						return;
 					} elseif ( false === $check_is_full_url && strpos( home_url(add_query_arg(array(), $wp->request)), untrailingslashit( $url ) ) !== false ) {
-						return;
+
+						$fragments = explode( '/', home_url ( add_query_arg( array(), $wp->request) ) );
+
+						foreach ( $fragments as $fragment ) {
+							if ( $fragment === trim( $url, '/' ) ) {
+								return;
+							}
+						}
+
 					}
 				}
 			}
