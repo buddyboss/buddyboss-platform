@@ -1122,6 +1122,8 @@ function bp_private_network_template_redirect() {
 					// Check if strict match
 					if ( $_SERVER['REQUEST_URI'] === $url ) {
 						return;
+					} elseif ( strpos( $_SERVER['REQUEST_URI'], $url) !== false ) {
+						return;
 					}
 				}
 			}
