@@ -1115,14 +1115,15 @@ function bp_private_network_template_redirect() {
 				// Convert string to URL array
 				$exclude_arr_url = preg_split("/\r\n|\n|\r/",$exclude);
 				foreach ( $exclude_arr_url as $url ) {
-					$extract_source = parse_url( $url );
-					$path = isset( $extract_source['path'] ) ? $extract_source['path'] :'';
-					$query = isset( $extract_source['query'] ) && '' !== $extract_source['query'] ? '?'.$extract_source['query'] :'';
-					$url = $path.$query;
+					$check_is_full_url = filter_var( $url, FILTER_VALIDATE_URL );
+					$extract_source    = parse_url( $url );
+					$path              = isset( $extract_source['path'] ) ? $extract_source['path'] : '';
+					$query             = isset( $extract_source['query'] ) && '' !== $extract_source['query'] ? '?' . $extract_source['query'] : '';
+					$url               = $path . $query;
 					// Check if strict match
-					if ( $_SERVER['REQUEST_URI'] === $url ) {
+					if ( false !== $check_is_full_url && $_SERVER['REQUEST_URI'] === $url ) {
 						return;
-					} elseif ( strpos( $_SERVER['REQUEST_URI'], $url) !== false ) {
+					} elseif ( false === $check_is_full_url && strpos( $_SERVER['REQUEST_URI'], $url) !== false ) {
 						return;
 					}
 				}
