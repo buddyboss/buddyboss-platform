@@ -1742,7 +1742,7 @@ class BP_XProfile_Field {
 		];
 
 		if ( bp_get_option( 'bp-display-name-format' ) == 'first_last_name' ) {
-			$synced_fields[] = bp_xprofile_lastname_field_id();
+			//$synced_fields[] = bp_xprofile_lastname_field_id();
 		}
 
 		// Compare & return.
