@@ -7079,6 +7079,14 @@ button[data-bp-tooltip] {
   }
 }
 
+.admin-bar.bp-hide-adminbar {
+  margin-top: -32px;
+}
+
+.admin-bar.bp-hide-adminbar #wpadminbar {
+  display: none;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 10.0 - Forums classes

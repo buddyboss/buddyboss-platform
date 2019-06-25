@@ -536,3 +536,12 @@
 	}
 
 } // close @media
+
+// Adminbar Styles
+.admin-bar.bp-hide-adminbar {
+	margin-top: -32px;
+
+	#wpadminbar {
+		display: none;
+	}
+}
