@@ -75,12 +75,13 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
 
+		// Gravatars.
+		$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
+
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {
 			$this->add_field( 'bp-disable-cover-image-uploads', __( 'Profile Cover Images', 'buddyboss' ), 'bp_admin_setting_callback_cover_image_uploads', 'intval' );
 		}
-
-		$this->add_field( 'bp-enable-profile-gravatar', __( 'Enable Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
 
 		// Profile Settings Tutorial
 		$this->add_field( 'bp-profile-setting-tutorial','', 'bp_profile_setting_tutorial' );
