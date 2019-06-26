@@ -20,42 +20,42 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'BP_VERSION' ) ) {
-    define( 'BP_VERSION', '1.0.9' );
+	define( 'BP_VERSION', '1.0.9' );
 }
 
-global $incompatible_plugins;
+global $bp_incompatible_plugins;
 global $is_bp_active;
 global $bp_plugin_file;
 global $is_bb_active;
 global $bb_plugin_file;
-global $sitewide_plugins;
-global $plugins;
-$incompatible_plugins = array();
-$is_bp_active         = false;
-$bp_plugin_file       = 'buddypress/bp-loader.php';
+global $bp_sitewide_plugins;
+global $bp_plugins;
+$bp_incompatible_plugins = array();
+$is_bp_active            = false;
+$bp_plugin_file          = 'buddypress/bp-loader.php';
 
-$is_bb_active     = false;
-$bb_plugin_file   = 'bbpress/bbpress.php';
-$sitewide_plugins = array();
+$is_bb_active        = false;
+$bb_plugin_file      = 'bbpress/bbpress.php';
+$bp_sitewide_plugins = array();
 
 if ( is_multisite() ) {
 	// get network-activated plugins
 	foreach ( get_site_option( 'active_sitewide_plugins', array() ) as $key => $value ) {
-		$sitewide_plugins[] = $key;
+		$bp_sitewide_plugins[] = $key;
 	}
 
 }
 
-$plugins   = array_merge( $sitewide_plugins, get_option( 'active_plugins' ) );
-$plugins[] = isset( $_GET['plugin'] ) ? $_GET['plugin'] : array();
+$bp_plugins   = array_merge( $bp_sitewide_plugins, get_option( 'active_plugins' ) );
+$bp_plugins[] = isset( $_GET['plugin'] ) ? $_GET['plugin'] : array();
 
 //check if BuddyPress is activated
-if ( in_array( $bp_plugin_file, $plugins ) ) {
+if ( in_array( $bp_plugin_file, $bp_plugins ) ) {
 	$is_bp_active = true;
 }
 
 //check if bbPress is activated
-if ( in_array( $bb_plugin_file, $plugins ) ) {
+if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
 	$is_bb_active = true;
 }
 
@@ -63,18 +63,18 @@ if ( in_array( $bb_plugin_file, $plugins ) ) {
  * Prevent running BuddyBoss Platform if any incompatible plugins are active.
  * Show admin error message instead.
  */
-$incompatible_plugins_list = array(
+$bp_incompatible_plugins_list = array(
 	'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
 	'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
 );
 
-foreach ( $incompatible_plugins_list as $incompatible_plugin => $error_message ) {
-	if ( in_array( $incompatible_plugin, $plugins ) ) {
-		$incompatible_plugins[] = $error_message;
+foreach ( $bp_incompatible_plugins_list as $incompatible_plugin => $error_message ) {
+	if ( in_array( $incompatible_plugin, $bp_plugins ) ) {
+		$bp_incompatible_plugins[] = $error_message;
 	}
 }
 
-if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_plugins ) ) {
+if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible_plugins ) ) {
 
 
 	/**
@@ -111,6 +111,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_pl
 			// Filter for setting the spoofing of BuddyPress.
 			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
 		}
+
 		add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
 	} else {
 		// Filter for setting the spoofing of BuddyPress.
@@ -215,21 +216,21 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_pl
 		}
 
 
-		global $incompatible_plugins;
+		global $bp_incompatible_plugins;
 		global $bp_plugin_file;
 		global $bb_plugin_file;
-		global $sitewide_plugins;
+		global $bp_sitewide_plugins;
 		global $is_bp_active;
 		global $is_bb_active;
-		global $plugins;
+		global $bp_plugins;
 
 		// Disable BuddyPress message
 		if ( $is_bp_active ) {
-			if ( is_multisite() && ( is_network_admin() && ! in_array( $bp_plugin_file, $sitewide_plugins ) || in_array( $bp_plugin_file, $plugins ) ) ) {
+			if ( is_multisite() && ( is_network_admin() && ! in_array( $bp_plugin_file, $bp_sitewide_plugins ) || in_array( $bp_plugin_file, $bp_plugins ) ) ) {
 				return;
 			}
-			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
+			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
 
             <div id="message" class="error notice">
@@ -243,11 +244,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_pl
 		// Disable bbPress message
 		if ( $is_bb_active ) {
 
-			if ( is_multisite() && ( is_network_admin() && ! in_array( $bb_plugin_file, $sitewide_plugins ) || in_array( $bb_plugin_file, $plugins ) ) ) {
+			if ( is_multisite() && ( is_network_admin() && ! in_array( $bb_plugin_file, $bp_sitewide_plugins ) || in_array( $bb_plugin_file, $bp_plugins ) ) ) {
 				return;
 			}
-			$plugins_url  = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
-			$link_plugins = sprintf( "<a href='%s'>%s</a>", $plugins_url, __( 'deactivate', 'buddyboss' ) );
+			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
+			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
 
             <div id="message" class="error notice">
@@ -258,8 +259,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $incompatible_pl
 			<?php
 		}
 
-		if ( ! empty( $incompatible_plugins ) ) {
-			foreach ( $incompatible_plugins as $incompatible_plugin_message ) {
+		if ( ! empty( $bp_incompatible_plugins ) ) {
+			foreach ( $bp_incompatible_plugins as $incompatible_plugin_message ) {
 				?>
                 <div id="message" class="error notice">
                     <p><strong><?php esc_html_e( 'BuddyBoss Platform is disabled.', 'buddyboss' ); ?></strong></p>
