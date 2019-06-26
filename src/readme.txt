@@ -56,7 +56,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.0.9 =
-* Private Network - Improved logic for URL exclusions
+* Profiles - Fixed profile dropdown not working with Toolbar disabled
+* Private Network - Improved logic for Public URLs
 * Profiles - Allow 'Last Name' field to be set as optional
 * Profiles - New option to allow for 'gravatars' as profile avatars
 
