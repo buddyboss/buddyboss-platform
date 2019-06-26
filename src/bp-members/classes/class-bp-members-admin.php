@@ -1386,24 +1386,29 @@ class BP_Members_Admin {
 
 				} else {
 
-					$bp_current_user = new WP_User( get_current_user_id() );
+					if ( 'none' !== $selected_member_type_wp_roles[0] ) {
 
-					// Remove role
-					$bp_current_user->remove_role( $bp_current_user->roles[0] );
+						$bp_current_user = new WP_User( get_current_user_id() );
 
-					// Add role
-					$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+						// Remove role
+						$bp_current_user->remove_role( $bp_current_user->roles[0] );
+
+						// Add role
+						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+					}
 				}
 
 			} else {
 
-				$bp_user = new WP_User( $user_id );
+				if ( 'none' !== $selected_member_type_wp_roles[0] ) {
+					$bp_user = new WP_User( $user_id );
 
-				// Remove role
-				$bp_user->remove_role( $bp_user->roles[0] );
+					// Remove role
+					$bp_user->remove_role( $bp_user->roles[0] );
 
-				// Add role
-				$bp_user->add_role( $selected_member_type_wp_roles[0] );
+					// Add role
+					$bp_user->add_role( $selected_member_type_wp_roles[0] );
+				}
 
 			}
 

@@ -1866,14 +1866,14 @@ function bp_member_type_wprole_metabox( $post ) {
 				type='radio'
 				name='bp-member-type[wp_roles][]'
 				id="bp-member-type-roles-none"
-				value='' />
+				value='none' <?php echo in_array('none', $selected_roles) ? 'checked' : ''; ?> />
 			<?php _e( '(None)', 'buddyboss' ) ?>
 		</label>
 	</p>
 	<?php
 
 	empty( $selected_roles[0] ) ? $selected_roles = array('subscriber') : '' ;
-			
+
 	if( isset($all_roles) && !empty($all_roles) ){
 		foreach($all_roles as $key => $val){
 			?>
@@ -2019,15 +2019,20 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		//term exist
 		if ( $type_term ) {
 
-			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
-				foreach ( $get_user_ids as $single_user ) {
-					$bp_user = new WP_User( $single_user );
-					foreach ( $bp_user->roles as $role ) {
-						// Remove role
-						$bp_user->remove_role( $role );
+			// Get selected profile type role.
+			$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+
+			if ( 'none' !== $selected_member_type_wp_roles[0] ) {
+				if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+					foreach ( $get_user_ids as $single_user ) {
+						$bp_user = new WP_User( $single_user );
+						foreach ( $bp_user->roles as $role ) {
+							// Remove role
+							$bp_user->remove_role( $role );
+						}
+						// Add role
+						$bp_user->add_role( $wp_roles[0] );
 					}
-					// Add role
-					$bp_user->add_role( $wp_roles[0] );
 				}
 			}
 		}
