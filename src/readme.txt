@@ -62,6 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Private Network - Improved logic for Public URLs
 * Multisite - Fixed logic for new signups registering sub-sites
 * Search - Exclude HTML meta data from search results
+* Documentation - LearnDash Course Grid
 
 = 1.0.8 =
 * Updater - Improvements to updater code
