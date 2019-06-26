@@ -19,6 +19,10 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+if ( ! defined( 'BP_VERSION' ) ) {
+    define( 'BP_VERSION', '1.0.9' );
+}
+
 global $incompatible_plugins;
 global $is_bp_active;
 global $bp_plugin_file;
