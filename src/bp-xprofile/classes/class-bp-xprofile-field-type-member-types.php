@@ -52,31 +52,36 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 *                              that you want to add.
 	 */
 	public function edit_field_html( array $raw_properties = array() ) {
-		$user_id = bp_displayed_user_id();
-
+		// User_id is a special optional parameter that we pass to
+		// {@link bp_the_profile_field_options()}.
 		if ( isset( $raw_properties['user_id'] ) ) {
 			$user_id = (int) $raw_properties['user_id'];
 			unset( $raw_properties['user_id'] );
-		}
-
-		$html = $this->get_edit_field_html_elements( $raw_properties );
-		?>
+		} else {
+			$user_id = bp_displayed_user_id();
+		} ?>
 
 		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
 			<?php bp_the_profile_field_name(); ?>
-			<?php bp_the_profile_field_required_label(); ?>
+			<?php if ( bp_is_register_page() ) : ?>
+				<?php bp_the_profile_field_optional_label(); ?>
+			<?php else: ?>
+				<?php bp_the_profile_field_required_label(); ?>
+			<?php endif; ?>
 		</legend>
-
-		<?php do_action( bp_get_the_profile_field_errors_action() ); ?>
-
-		<select <?php echo $html; ?>>
-			<option value=""><?php _e( 'Select Profile Type', 'buddyboss' ); ?></option>
-			<?php bp_the_profile_field_options( "user_id={$user_id}" ); ?>
-		</select>
 
 		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
+
+		<?php
+
+		/** This action is documented in bp-xprofile/bp-xprofile-classes */
+		do_action( bp_get_the_profile_field_errors_action() ); ?>
+
+		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
+		</select>
 
 		<?php
 	}
@@ -115,6 +120,9 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			'order'          => 'ASC'
 		) );
 		if ( $posts ) {
+
+			$html    .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+
 			foreach ( $posts->posts as $post ) {
 				$html .= sprintf( '<option value="%s"%s>%s</option>',
 					$post->ID,
@@ -170,7 +178,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			return '';
 		}
 
-		return sprintf( '<a href="%1$s">%2$s</a>', esc_url( get_permalink( $post_id ) ), get_the_title( $post_id ) );
+		return __( get_the_title( $post_id ), 'buddyboss');
 	}
 
 	/**

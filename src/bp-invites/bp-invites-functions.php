@@ -456,6 +456,20 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 			if ( isset( $member_type ) && !empty( $member_type ) ) {
 				bp_set_member_type( $user_id, '' );
 				bp_set_member_type( $user_id, $member_type );
+
+				$member_type_id = bp_member_type_post_by_type( $member_type );
+				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+					$bp_user = new WP_User( $user_id );
+					foreach ( $bp_user->roles as $role ) {
+						// Remove role
+						$bp_user->remove_role( $role );
+					}
+					// Add role
+					$bp_user->add_role( $selected_member_type_wp_roles[0] );
+				}
+
 			}
 		}
 

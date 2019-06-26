@@ -1386,7 +1386,7 @@ class BP_Members_Admin {
 
 				} else {
 
-					if ( 'none' !== $selected_member_type_wp_roles[0] ) {
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 
 						$bp_current_user = new WP_User( get_current_user_id() );
 
@@ -1400,7 +1400,7 @@ class BP_Members_Admin {
 
 			} else {
 
-				if ( 'none' !== $selected_member_type_wp_roles[0] ) {
+				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 					$bp_user = new WP_User( $user_id );
 
 					// Remove role

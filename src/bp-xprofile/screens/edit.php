@@ -93,7 +93,7 @@ function xprofile_screen_edit_profile() {
 					bp_set_member_type( bp_displayed_user_id(), '' );
 					bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
-					if ( 'none' !== $selected_member_type_wp_roles[0] ) {
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 						$bp_current_user = new WP_User( bp_displayed_user_id() );
 
 						foreach ( $bp_current_user->roles as $role ) {

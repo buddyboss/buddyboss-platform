@@ -2022,7 +2022,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 			// Get selected profile type role.
 			$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
 
-			if ( 'none' !== $selected_member_type_wp_roles[0] ) {
+			if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 				if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
 					foreach ( $get_user_ids as $single_user ) {
 						$bp_user = new WP_User( $single_user );
