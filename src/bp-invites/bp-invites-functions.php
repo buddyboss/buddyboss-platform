@@ -226,9 +226,39 @@ function bp_invites_member_invite_register_screen_message() {
             echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
 		}
 
-		?>
+		if ( isset( $_GET['inviter'] ) ) {
+			$args = array(
+				'post_type'      => bp_get_invite_post_type(),
+				'posts_per_page' => -1,
+				'posts_author'   => base64_decode( $_GET['inviter'] ),
+				'meta_query'     => array(
+					array(
+						'key'     => '_bp_invitee_email',
+						'value'   => $email,
+						'compare' => '=',
+					),
+				),
+			);
 
-	<?php endif; ?>
+			$bp_get_invitee_email_new = new WP_Query( $args );
+			$posts = $bp_get_invitee_email_new->posts;
+			$post_id = $posts[0]->ID;
+			$get_invite_profile_type = get_post_meta( $post_id, '_bp_invitee_member_type', true );
+			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
+				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
+				?>
+				<script>
+					jQuery(document).ready(function () {
+						if ( jQuery(".field_type_membertypes").length) {
+							jQuery(".field_type_membertypes fieldset select").val("<?php echo esc_js( $member_type_post_id ); ?>");
+							jQuery(".field_type_membertypes fieldset select").attr('disabled', 'disabled');
+						}
+					});
+				</script>
+				<?php
+			}
+		}
+	endif; ?>
 	<?php
 }
 add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen_message' );
@@ -383,6 +413,7 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 	$accept_link  = add_query_arg( array(
 		'bp-invites' => 'accept-member-invitation',
 		'email'    => $email,
+		'inviter'    => base64_encode( bp_loggedin_user_id() ),
 	), bp_get_root_domain() . '/' . bp_get_signup_slug() . '/' );
 	$accept_link  = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 
