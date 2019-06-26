@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - New option for 'gravatars' to be used as profile avatars
 * Private Network - Improved logic for Public URLs
 * Multisite - Fixed logic for new signups registering sub-sites
+* Search - Exclude HTML meta data from search results
 
 = 1.0.8 =
 * Updater - Improvements to updater code
