@@ -71,7 +71,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			$request_data = array(
 				'id'      => $this->plugin_id,
 				'slug'    => $this->plugin_slug,
-				'version' => $transient->checked[ $this->plugin_path ]
+				'version' => $current_version
 			);
 
 			if ( ! empty( $this->license ) ) {
