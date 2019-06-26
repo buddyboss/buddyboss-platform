@@ -2422,7 +2422,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				// Constructed safely above.
 				printf(
 					'%1$s %2$s . %3$s',
-					is_ssl() ? 'https://' : 'http://',
+					is_ssl() ? '<code>https://</code>' : '<code>http://</code>',
 					$field_output,
 					bp_signup_get_subdomain_base()
 				);
@@ -2430,7 +2430,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			// Subfolders!
 			} else {
 				printf(
-					'%1$s %2$s',
+					'<code>%1$s %2$s</code>',
 					home_url( '/' ),
 					$field_output  // Constructed safely above.
 				);
