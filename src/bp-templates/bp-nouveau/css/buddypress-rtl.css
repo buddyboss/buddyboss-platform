@@ -2383,6 +2383,14 @@ form.ac-form .ac-reply-content input {
   border: 1px solid #eee;
 }
 
+.register-page .signup-form .blog-details {
+  margin-top: 25px;
+}
+
+.register-page .signup-form .blog-details h2 {
+  margin-bottom: 10px;
+}
+
 .register-page .register-privacy-info {
   margin: 15px 0 0;
 }
