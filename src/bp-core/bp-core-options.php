@@ -31,19 +31,19 @@ function bp_get_default_options() {
 		/* XProfile **********************************************************/
 
 		// Default profile groups name.
-		'bp-xprofile-base-group-name'      => 'Details',
+		'bp-xprofile-base-group-name'      => __( 'Details', 'buddyboss' ),
 
 		// Default fullname field name.
-		'bp-xprofile-firstname-field-name' => 'First Name',
+		'bp-xprofile-firstname-field-name' => __( 'First Name', 'buddyboss' ),
 
 		// Default fullname field name.
-		'bp-xprofile-lastname-field-name'  => 'Last Name',
+		'bp-xprofile-lastname-field-name'  => __( 'Last Name', 'buddyboss' ),
 
 		// Default fullname field name.
-		'bp-xprofile-nickname-field-name'  => 'Nickname',
+		'bp-xprofile-nickname-field-name'  => __( 'Nickname', 'buddyboss' ),
 
 		// Default fullname field name. (for backward compat)
-		'bp-xprofile-fullname-field-name'  => 'Name',
+		'bp-xprofile-fullname-field-name'  => __( 'Name', 'buddyboss' ),
 
 		'bp-display-name-format'               => 'first_name',
 

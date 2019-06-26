@@ -130,7 +130,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
     			</div>
                 
                 <?php if (  $members_template->total_member_count < $total_online ){ ?>
-                    <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more">More<i class="bb-icon-angle-right"></i></a></div>
+                    <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
                 <?php } ?>
     
     		<?php else: ?>
@@ -158,7 +158,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				</div>
 
 				<?php if (  $members_template->total_member_count > (int)$settings['max_members'] ){ ?>
-					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more">More<i class="bb-icon-angle-right"></i></a></div>
+					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 				<?php } ?>
 
 			<?php else: ?>
@@ -320,7 +320,7 @@ function buddyboss_theme_whos_online_widget_heartbeat( $response = array(), $dat
         </div>
 
 		<?php if (  $members_template->total_member_count < $total_online ){ ?>
-            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more">More<i class="bb-icon-angle-right"></i></a></div>
+            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 		<?php } ?>
 
 	<?php else: ?>
