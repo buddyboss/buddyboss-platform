@@ -489,7 +489,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
 				}
 			}
-		} else if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
 			$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
