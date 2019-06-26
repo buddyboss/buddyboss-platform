@@ -59,6 +59,14 @@
 		.password-entry-confirm {
 			border: 1px solid $bp-border-color;
 		}
+
+		.blog-details {
+			margin-top: 25px;
+
+			h2 {
+				margin-bottom: 10px;
+			}
+		}
 	} // close .signup-form
 
 	.register-privacy-info {

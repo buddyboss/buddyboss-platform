@@ -83,7 +83,7 @@ $template_args = array(
 	'lessons'                    => $lessons,
 	'quizzes'                    => $quizzes,
 	'lesson_progression_enabled' => $lesson_progression_enabled,
-	'has_topics'                 => $has_topics,
+	'has_topics'                 => isset( $has_topics ) ? $has_topics : false,
 	'lesson_topics'              => $lesson_topics,
 );
 

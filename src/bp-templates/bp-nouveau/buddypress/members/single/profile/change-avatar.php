@@ -7,7 +7,15 @@
  */
 ?>
 
-<h2 class="screen-heading change-avatar-screen"><?php esc_html_e( 'Change Profile Photo', 'buddyboss' ); ?></h2>
+<h2 class="screen-heading change-avatar-screen">
+
+	<?php if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) ) : ?>
+		<?php esc_html_e( 'Change Profile Photo', 'buddyboss' ); ?>
+	<?php else : ?>
+		<?php esc_html_e( 'Profile Photo', 'buddyboss' ); ?>
+	<?php endif; ?>
+			
+</h2>
 
 <?php bp_nouveau_member_hook( 'before', 'avatar_upload_content' ); ?>
 
@@ -76,9 +84,10 @@
 
 <?php else : ?>
 
-	<p class="bp-help-text">
-		<?php esc_html_e( 'Your profile photo will be used on your profile and throughout the site.', 'buddyboss' ); ?>
-	</p>
+	<div class="bp-feedback info">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p><?php esc_html_e( 'Your profile photo cannot be changed.', 'buddyboss' ); ?></p>
+	</div>
 
 <?php endif; ?>
 

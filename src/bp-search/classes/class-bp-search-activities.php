@@ -80,7 +80,7 @@ if (!class_exists('Bp_Search_Activities')):
 					WHERE 
 						1=1 
 						AND is_spam = 0 
-						AND {$bp_prefix}bp_strip_tags(a.content) LIKE %s 
+						AND ExtractValue(a.content, '//text()') LIKE %s 
 						AND a.hide_sitewide = 0 
 						AND a.type = 'activity_update' 
 				";

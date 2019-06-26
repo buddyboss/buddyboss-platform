@@ -548,7 +548,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes'  );
 add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
-//add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
+add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2856,20 +2856,31 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 		return $display_name;
 	}
 
+	global $wpdb;
+
 	$format = bp_get_option( 'bp-display-name-format' );
+	$table = $wpdb->prefix.'bp_xprofile_data';
 
 	switch ( $format ) {
 		case 'first_name':
-			$display_name = get_user_meta( $user_id, 'first_name', true );
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
+			$display_name = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
 			break;
 		case 'first_last_name':
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$last_name_id = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
+			$queried_data_last_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
 			$display_name = implode( ' ', array_filter( [
-				get_user_meta( $user_id, 'first_name',true ),
-				get_user_meta( $user_id, 'last_name', true )
+				isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '',
+				isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : ''
 			] ) );
 			break;
 		case 'nickname':
-			$display_name = get_user_meta( $user_id, 'nickname', true );
+			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
+			$display_name = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
 			break;
 	}
 

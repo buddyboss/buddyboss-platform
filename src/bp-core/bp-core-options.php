@@ -102,6 +102,9 @@ function bp_get_default_options() {
 		// Email unsubscribe salt.
 		'bp-emails-unsubscribe-salt'           => '',
 
+		// Profile Enable Gravatar
+		'bp-enable-profile-gravatar'   => false,
+
 		/* Groups ************************************************************/
 
 		// @todo Move this into the groups component
@@ -1261,4 +1264,25 @@ function bp_show_login_adminbar( $default = true ) {
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
 	return (bool) apply_filters( 'bp_show_login_adminbar', (bool) bp_get_option( 'show-login-adminbar', $default ) );
+}
+
+/**
+ * Are members able to upload their own cover photos?
+ *
+ * @since BuddyPress 2.4.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if cover photo uploads are disabled, otherwise false.
+ */
+function bp_enable_profile_gravatar( $default = false ) {
+
+	/**
+	 * Filters whether or not members are able to upload their own cover photos.
+	 *
+	 * @since BuddyPress 2.4.0
+	 *
+	 * @param bool $value Whether or not members are able to upload their own cover photos.
+	 */
+	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
 }
