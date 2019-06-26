@@ -2333,9 +2333,9 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		// Handle the specific case of Site's privacy differently
 		} elseif ( 'signup_blog_privacy_private' !== $name ) {
 			?>
-				<span class="label">
+				<label for="signup_blog_privacy">
 					<?php esc_html_e( 'I would like my site to appear in search engines, and in public listings around this network.', 'buddyboss' ); ?>
-				</span>
+				</label>
 			<?php
 		}
 
