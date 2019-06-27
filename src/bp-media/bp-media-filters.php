@@ -762,6 +762,8 @@ function bp_media_import_submenu_page() {
 							$topics_total  = get_option( 'bp_media_import_topics_total', 0 );
 							$replies_done  = get_option( 'bp_media_import_replies_done', 0 );
 							$replies_total = get_option( 'bp_media_import_replies_total', 0 );
+							$albums_ids    = get_option( 'bp_media_import_albums_ids', array() );
+							$media_ids     = get_option( 'bp_media_import_media_ids', array() );
 							?>
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
@@ -802,17 +804,29 @@ function bp_media_import_submenu_page() {
                                 <label id="bp-media-import-msg"></label>
                             </p>
                             <input type="hidden" value="bp-media-import-updating" id="bp-media-import-updating"/>
-                            <input type="hidden" value="1" name="bp-media-re-run-import" id="bp-media-re-run-import"/>
-                            <input type="submit" style="display: none;" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
-                                   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
-							<?php
+		                    <?php if( ! empty( $albums_ids ) && ! empty( $media_ids ) ) { ?>
+                                <input type="hidden" value="1" name="bp-media-re-run-import"
+                                       id="bp-media-re-run-import"/>
+                                <input type="submit" style="display: none;"
+                                       value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+                                       id="bp-media-import-submit" name="bp-media-import-submit"
+                                       class="button-primary"/>
+								<?php
+							}
 						} else if ( 'done' == $bp_media_import_status ) {
+							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
+							$media_ids = get_option( 'bp_media_import_media_ids', array() );
 							?>
                             <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
-                            <input type="hidden" value="1" name="bp-media-re-run-import" id="bp-media-re-run-import"/>
-                            <input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
-                                   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
-							<?php
+
+                            <?php if( ! empty( $albums_ids ) && ! empty( $media_ids ) ) { ?>
+                                <input type="hidden" value="1" name="bp-media-re-run-import"
+                                       id="bp-media-re-run-import"/>
+                                <input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+                                       id="bp-media-import-submit" name="bp-media-import-submit"
+                                       class="button-primary"/>
+								<?php
+							}
 						} else { ?>
                             <p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
                             <input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
