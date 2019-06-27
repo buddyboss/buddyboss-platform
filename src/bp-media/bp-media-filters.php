@@ -708,25 +708,9 @@ add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
  *
  */
 function bp_media_import_submenu_page() {
-	global $wpdb, $background_updater;
+	global $wpdb;
 
 	$bp_media_import_status = get_option( 'bp_media_import_status' );
-
-	if ( isset( $_POST['bp-media-import-submit'] ) && ! empty( $background_updater ) ) {
-		$update_queued          = false;
-
-		if ( 'done' != $bp_media_import_status ) {
-			foreach ( bp_media_get_import_callbacks() as $update_callback ) {
-				error_log( sprintf( 'Queuing %s', $update_callback ) );
-				$background_updater->push_to_queue( $update_callback );
-				$update_queued = true;
-			}
-		}
-
-		if ( $update_queued ) {
-			$background_updater->save()->dispatch();
-		}
-	}
 
 	$check                        = false;
 	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
@@ -734,6 +718,22 @@ function bp_media_import_submenu_page() {
 	if ( empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) || empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
 		$check = true;
 	}
+
+	$is_updating = false;
+	if ( isset( $_POST['bp-media-import-submit'] ) && ! $check ) {
+		if ( 'done' != $bp_media_import_status ) {
+		    foreach( bp_media_get_import_callbacks() as $callback ) {
+		        if ( is_callable( $callback ) ) {
+		            call_user_func( $callback );
+                }
+            }
+			$is_updating = true;
+		}
+	}
+
+	if ( 'importing' == $bp_media_import_status ) {
+	    $is_updating = true;
+    }
 
 	?>
     <div class="wrap">
@@ -755,11 +755,17 @@ function bp_media_import_submenu_page() {
 							?>
                             <p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
 							<?php
-						} else if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
+						} else if ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
 							$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
 							$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
 							$media_done    = get_option( 'bp_media_import_media_done', 0 );
+							$forums_done    = get_option( 'bp_media_import_forums_done', 0 );
+							$forums_total    = get_option( 'bp_media_import_forums_total', 0 );
+							$topics_done    = get_option( 'bp_media_import_topics_done', 0 );
+							$topics_total    = get_option( 'bp_media_import_topics_total', 0 );
+							$replies_done    = get_option( 'bp_media_import_replies_done', 0 );
+							$replies_total    = get_option( 'bp_media_import_replies_total', 0 );
 							?>
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
@@ -772,6 +778,18 @@ function bp_media_import_submenu_page() {
                                 <tr>
                                     <td><h4><?php _e( 'Media', 'buddyboss' ); ?></h4></td>
                                     <td><span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?> <span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?php _e( 'Forums', 'buddyboss' ); ?></h4></td>
+                                    <td><span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?> <span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?php _e( 'Discussions', 'buddyboss' ); ?></h4></td>
+                                    <td><span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?> <span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?php _e( 'Replies', 'buddyboss' ); ?></h4></td>
+                                    <td><span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?> <span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
                                 </tr>
                             </table>
                             <p>
@@ -812,7 +830,7 @@ function bp_media_get_import_callbacks() {
 		'bp_media_import_buddyboss_forum_media',
 		'bp_media_import_buddyboss_topic_media',
 		'bp_media_import_buddyboss_reply_media',
-		'bp_media_update_import_status',
+		//'bp_media_update_import_status',
 	);
 }
 
@@ -857,17 +875,70 @@ function bp_media_activation_notice() {
  * @since BuddyBoss 1.0.0
  */
 function bp_media_import_status_request() {
+
+	$total_media   = get_option( 'bp_media_import_total_media', 0 );
+	$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
+	$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
+	$media_done    = get_option( 'bp_media_import_media_done', 0 );
+	$forums_done   = get_option( 'bp_media_import_forums_done', 0 );
+	$forums_total  = get_option( 'bp_media_import_forums_total', 0 );
+	$topics_done   = get_option( 'bp_media_import_topics_done', 0 );
+	$topics_total  = get_option( 'bp_media_import_topics_total', 0 );
+	$replies_done  = get_option( 'bp_media_import_replies_done', 0 );
+	$replies_total = get_option( 'bp_media_import_replies_total', 0 );
+
+	$importing = false;
+	if ( $albums_done != $total_albums || $media_done != $total_media ) {
+		bp_media_import_buddyboss_media_tables();
+		$importing = true;
+	}
+
+	if ( bp_is_active( 'forums' ) ) {
+		if ( $forums_done != $forums_total ) {
+			bp_media_import_buddyboss_forum_media();
+			$importing = true;
+		}
+
+		if ( $topics_done != $topics_total ) {
+			bp_media_import_buddyboss_topic_media();
+			$importing = true;
+		}
+
+		if ( $replies_done != $replies_total ) {
+			bp_media_import_buddyboss_reply_media();
+			$importing = true;
+		}
+	}
+
+	if ( ! $importing ) {
+	    update_option( 'bp_media_import_status', 'done' );
+    } else {
+		update_option( 'bp_media_import_status', 'importing' );
+    }
+
 	$import_status = get_option( 'bp_media_import_status' );
 	$total_media   = get_option( 'bp_media_import_total_media', 0 );
 	$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
 	$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
 	$media_done    = get_option( 'bp_media_import_media_done', 0 );
+	$forums_done   = get_option( 'bp_media_import_forums_done', 0 );
+	$forums_total  = get_option( 'bp_media_import_forums_total', 0 );
+	$topics_done   = get_option( 'bp_media_import_topics_done', 0 );
+	$topics_total  = get_option( 'bp_media_import_topics_total', 0 );
+	$replies_done  = get_option( 'bp_media_import_replies_done', 0 );
+	$replies_total = get_option( 'bp_media_import_replies_total', 0 );
 
 	wp_send_json_success( array(
 		'total_media'   => $total_media,
 		'total_albums'  => $total_albums,
 		'albums_done'   => $albums_done,
 		'media_done'    => $media_done,
+		'forums_done'   => $forums_done,
+		'topics_done'   => $topics_done,
+		'replies_done'  => $replies_done,
+		'forums_total'  => $forums_total,
+		'topics_total'  => $topics_total,
+		'replies_total' => $replies_total,
 		'import_status' => $import_status,
 		'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ),
 		'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
