@@ -45,7 +45,20 @@
 						<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
 						<?php while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
 
-							<?php while ( bp_profile_fields() ) : bp_the_profile_field(); ?>
+							<?php while ( bp_profile_fields() ) : bp_the_profile_field();
+
+								// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+								$current_value = bp_get_option( 'bp-display-name-format' );
+
+								// If First Name selected then do not add last name field.
+								if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
+									continue;
+								// If Nick Name selected then do not add first & last name field.
+								} elseif ( 'nickname' === $current_value && ( bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() || bp_get_the_profile_field_id() === bp_xprofile_firstname_field_id() ) ) {
+									continue;
+								}
+
+							?>
 
 								<div<?php bp_field_css_class( 'editfield' ); ?>>
 									<fieldset>

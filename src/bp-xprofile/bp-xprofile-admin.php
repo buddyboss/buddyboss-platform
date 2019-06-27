@@ -292,6 +292,19 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 							if ( !empty( $group->fields ) ) :
 								foreach ( $group->fields as $field ) {
 
+									// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+									$current_value = bp_get_option( 'bp-display-name-format' );
+
+									// If First Name selected then do not add last name field.
+									if ( 'first_name' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
+										continue;
+									// If Nick Name selected then do not add first & last name field.
+									} elseif ( 'nickname' === $current_value && ( $field->id === bp_xprofile_lastname_field_id() || $field->id === bp_xprofile_firstname_field_id() ) ) {
+										continue;
+									}
+
+									if ( $current_value )
+
 									// Load the field.
 									$field = xprofile_get_field( $field->id );
 

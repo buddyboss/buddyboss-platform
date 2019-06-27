@@ -446,6 +446,17 @@ function bp_the_profile_field_ids() {
 			}
 		}
 
+		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+		$current_value = bp_get_option( 'bp-display-name-format' );
+
+		// If First Name selected then do not add last name field.
+		if ( 'first_name' === $current_value  ) {
+			$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
+		// If Nick Name selected then do not add first & last name field.
+		} elseif ( 'nickname' === $current_value ) {
+			$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id(), bp_xprofile_firstname_field_id() ) );
+		}
+
 		$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
 
 		/**
