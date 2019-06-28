@@ -421,9 +421,6 @@ function bp_core_install_extended_profiles() {
 function bp_core_install_default_profiles_fields() {
 	global $wpdb;
 
-	// update group fields id
-	bp_core_update_group_fields_id_in_db();
-
 	$bp_prefix = bp_core_get_table_prefix();
 
 	$is_multisite = is_multisite() ? true : false;
