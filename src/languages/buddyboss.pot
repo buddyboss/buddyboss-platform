@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.0.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-26 05:29:30+00:00\n"
+"POT-Creation-Date: 2019-06-28 19:12:49+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2070,23 +2070,25 @@ msgstr ""
 msgid "Create Page"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:428
+#: bp-core/admin/bp-core-admin-schema.php:432
 #: bp-core/admin/settings/bp-admin-setting-general.php:21
 #: bp-forums/core/update.php:185
 msgid "General"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:432
+#: bp-core/admin/bp-core-admin-schema.php:436
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:168
+#: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:436
+#: bp-core/admin/bp-core-admin-schema.php:440 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:440
+#: bp-core/admin/bp-core-admin-schema.php:444
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
+#: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
 
@@ -4506,6 +4508,22 @@ msgstr ""
 msgid "You have posted an inappropriate word."
 msgstr ""
 
+#: bp-core/bp-core-options.php:34
+#: bp-groups/classes/class-bp-groups-component.php:392
+#: bp-groups/classes/class-bp-groups-component.php:756
+msgid "Details"
+msgstr ""
+
+#: bp-core/bp-core-options.php:46 bp-core/deprecated/buddypress/1.5.php:157
+#: bp-forums/admin/metaboxes.php:529 bp-groups/bp-groups-admin.php:1219
+#: bp-groups/classes/class-bp-groups-list-table.php:394
+#: bp-members/classes/class-bp-members-list-table.php:150
+#: bp-members/classes/class-bp-members-ms-list-table.php:137
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:50
+#: bp-templates/bp-nouveau/includes/members/functions.php:457
+msgid "Name"
+msgstr ""
+
 #: bp-core/bp-core-taxonomy.php:32
 msgid "BuddyBoss email types"
 msgstr ""
@@ -5278,6 +5296,17 @@ msgstr ""
 msgid "(BB) - Users I'm Following"
 msgstr ""
 
+#: bp-core/classes/class-bp-core-follow-following-widget.php:81
+#: bp-groups/classes/class-bp-groups-widget.php:157
+#: bp-members/classes/class-bp-core-members-widget.php:165
+#: bp-members/classes/class-bp-core-recently-active-widget.php:95
+#: bp-members/classes/class-bp-core-recently-active-widget.php:221
+#: bp-members/classes/class-bp-core-whos-online-widget.php:133
+#: bp-members/classes/class-bp-core-whos-online-widget.php:161
+#: bp-members/classes/class-bp-core-whos-online-widget.php:323
+msgid "More"
+msgstr ""
+
 #: bp-core/classes/class-bp-core-follow-following-widget.php:108
 msgid "Users I'm Following"
 msgstr ""
@@ -5570,16 +5599,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-wp.php:16
 #: bp-xprofile/classes/class-bp-xprofile-component.php:436
 msgid "My Profile"
-msgstr ""
-
-#: bp-core/deprecated/buddypress/1.5.php:157 bp-forums/admin/metaboxes.php:529
-#: bp-groups/bp-groups-admin.php:1219
-#: bp-groups/classes/class-bp-groups-list-table.php:394
-#: bp-members/classes/class-bp-members-list-table.php:150
-#: bp-members/classes/class-bp-members-ms-list-table.php:137
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:50
-#: bp-templates/bp-nouveau/includes/members/functions.php:457
-msgid "Name"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:166
@@ -11702,6 +11721,11 @@ msgid ""
 "Extension API to generate Manage tabs."
 msgstr ""
 
+#: bp-groups/bp-groups-template.php:3860 bp-groups/bp-groups-template.php:3862
+#: bp-groups/bp-groups-template.php:3865 bp-groups/bp-groups-template.php:3867
+msgid "You're an %s"
+msgstr ""
+
 #: bp-groups/bp-groups-template.php:3882
 msgid "Leave group"
 msgstr ""
@@ -11850,11 +11874,6 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:262
 msgid "Search Groups&hellip;"
-msgstr ""
-
-#: bp-groups/classes/class-bp-groups-component.php:392
-#: bp-groups/classes/class-bp-groups-component.php:756
-msgid "Details"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:405
@@ -12966,7 +12985,7 @@ msgstr ""
 msgid "BuddyBoss Invites"
 msgstr ""
 
-#: bp-loader.php:63
+#: bp-loader.php:67
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress Global Search plugin is "
 "active. Global Search functionality is built into the platform. Please "
@@ -12974,43 +12993,43 @@ msgid ""
 "BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:64
+#: bp-loader.php:68
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress Follow plugin is active. "
 "Follow functionality is built into the platform. Please deactivate "
 "BuddyPress Follow first, if you wish to activate BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:147
+#: bp-loader.php:152
 msgid "Your site does not support BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:150
+#: bp-loader.php:155
 #. translators: 1: current PHP version, 2: required PHP version
 msgid ""
 "Your site is currently running PHP version %1$s, while BuddyBoss Platform "
 "requires version %2$s or greater."
 msgstr ""
 
-#: bp-loader.php:151
+#: bp-loader.php:156
 msgid "Please update your server or deactivate BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:228 bp-loader.php:246
+#: bp-loader.php:233 bp-loader.php:251
 msgid "deactivate"
 msgstr ""
 
-#: bp-loader.php:232 bp-loader.php:250 bp-loader.php:261
+#: bp-loader.php:237 bp-loader.php:255 bp-loader.php:266
 msgid "BuddyBoss Platform is disabled."
 msgstr ""
 
-#: bp-loader.php:233
+#: bp-loader.php:238
 msgid ""
 "The BuddyBoss Platform can't work while BuddyPress plugin is active. Please "
 "%s BuddyPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-loader.php:251
+#: bp-loader.php:256
 msgid ""
 "The BuddyBoss Platform can't work while bbPress plugin is active. Please %s "
 "bbPress to re-enable BuddyBoss Platform."
@@ -14007,7 +14026,7 @@ msgid "Messages marked as read"
 msgstr ""
 
 #: bp-messages/actions/bulk-manage.php:67
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:937
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:939
 msgid "Messages marked as unread."
 msgstr ""
 
@@ -14112,7 +14131,7 @@ msgid "You need to be connected with this member in order to send a message."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:205
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:618
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:620
 msgid "You need to be connected with this member to continue this conversation."
 msgstr ""
 
@@ -14123,7 +14142,7 @@ msgid ""
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:207
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:616
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:618
 msgid "You need to be connected with all recipients to continue this conversation."
 msgstr ""
 
@@ -16610,12 +16629,12 @@ msgid "Please add some content to your message."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:366
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:572
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:574
 msgid "Unauthorized request."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:390
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:578
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:580
 #: bp-templates/bp-nouveau/includes/messages/functions.php:109
 msgid "Sorry, no messages were found."
 msgstr ""
@@ -16628,59 +16647,59 @@ msgstr ""
 msgid "sent some photos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:496
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:498
 msgid "sent a gif"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:583
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:585
 msgid "Sorry, no more messages can be loaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:771
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:773
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:794
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:796
 msgid "Messages deleted"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:812
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:814
 msgid "There was a problem starring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:814
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:816
 msgid "There was a problem unstarring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:888
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:890
 msgid "Messages successfully starred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:890
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:892
 msgid "Messages successfully unstarred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:913
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:915
 msgid "There was a problem marking your messages as read. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:919
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:921
 msgid "There was a problem marking your messages as unread. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:939
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:941
 msgid "Messages marked as read."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:976
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:978
 msgid "There was a problem dismissing the notice. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1010
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1012
 msgid "Sitewide notice dismissed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1027
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1029
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
 
@@ -17373,7 +17392,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:800
+#: class-buddypress.php:799
 msgid "BuddyPress Nouveau"
 msgstr ""
 
