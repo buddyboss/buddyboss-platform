@@ -1203,13 +1203,33 @@ function bp_xprofile_fullname_field_id() {
 }
 
 /**
+ * Get the group id of the base name field
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_xprofile_base_group_id( $defalut = 1 ) {
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-base-group-id', $defalut );
+	} else {
+		$field_id = bp_get_option( 'bp-xprofile-base-group-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_base_group_id', $field_id );
+}
+
+/**
  * Get the field id of the first name field
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_firstname_field_id() {
-	$field_id = apply_filters( 'bp_xprofile_firstname_field_id', bp_get_option( 'bp-xprofile-firstname-field-id' ) );
-	return absint( $field_id );
+function bp_xprofile_firstname_field_id( $defalut = 1 ) {
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-firstname-field-id', 1 );
+	} else {
+		$field_id = bp_get_option( 'bp-xprofile-firstname-field-id', 1 );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_firstname_field_id', $field_id );
 }
 
 /**
@@ -1217,9 +1237,14 @@ function bp_xprofile_firstname_field_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_lastname_field_id() {
-	$field_id = apply_filters( 'bp_xprofile_lastname_field_id', bp_get_option( 'bp-xprofile-lastname-field-id' ) );
-	return absint( $field_id );
+function bp_xprofile_lastname_field_id( $defalut = 0 ) {
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-lastname-field-id', $defalut );
+	} else {
+		$field_id = bp_get_option( 'bp-xprofile-lastname-field-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_lastname_field_id', $field_id );
 }
 
 /**
@@ -1228,11 +1253,14 @@ function bp_xprofile_lastname_field_id() {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_nickname_field_id( $no_fallback = false ) {
-	$field_id = apply_filters(
-		'bp_xprofile_nickname_field_id',
-		bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback? null : bp_xprofile_fullname_field_id() )
-	);
-	return absint( $field_id );
+
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-nickname-field-id', $no_fallback ? null : bp_xprofile_fullname_field_id() );
+	} else {
+		$field_id = bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? null : bp_xprofile_fullname_field_id() );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_nickname_field_id', $field_id );
 }
 
 /**
