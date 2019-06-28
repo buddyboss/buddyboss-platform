@@ -377,7 +377,7 @@ class BP_Admin {
 			$this->settings_page,
 			'bp_core_admin_backpat_menu',
 			buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
-			62
+			3
 		);
 
 		$hooks[] = add_submenu_page(
