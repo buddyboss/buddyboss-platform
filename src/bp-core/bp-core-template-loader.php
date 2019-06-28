@@ -620,15 +620,22 @@ function bp_get_theme_compat_templates() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @return bool.
  */
 function bp_show_hide_toolbar() {
 
 	if ( is_user_logged_in() ) {
-		if ( true === bp_show_login_adminbar() ) {
-			add_filter( 'show_admin_bar', '__return_true' );
+		if ( current_user_can( 'administrator' ) ) {
+			if ( true === bp_show_admin_adminbar() ) {
+				add_filter( 'show_admin_bar', '__return_true' );
+			} else {
+				add_filter( 'show_admin_bar', '__return_false' );
+			}
 		} else {
-			add_filter( 'show_admin_bar', '__return_true' );
+			if ( true === bp_show_login_adminbar() ) {
+				add_filter( 'show_admin_bar', '__return_true' );
+			} else {
+				add_filter( 'show_admin_bar', '__return_false' );
+			}
 		}
 	} else {
 		if ( false === bp_hide_loggedout_adminbar() ) {

@@ -63,6 +63,21 @@ function bp_admin_setting_callback_login_admin_bar() {
 }
 
 /**
+ * Admin bar for admin users setting field.
+ *
+ * @since BuddyBoss 1.0.10
+ *
+ */
+function bp_admin_setting_callback_admin_admin_bar() {
+	?>
+
+    <input id="show-admin-adminbar" name="show-admin-adminbar" type="checkbox" value="1" <?php checked( bp_show_admin_adminbar( true ) ); ?> />
+    <label for="show-admin-adminbar"><?php _e( 'Show the Toolbar for admins', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Link to Admin Settings tutorial
  *
  * @since BuddyBoss 1.0.0
