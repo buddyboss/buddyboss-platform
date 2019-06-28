@@ -34,10 +34,12 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
 
 /**
  * On BuddyPress update
+ *
+ * @since BuddyBoss 1.0.9
  */
 function bp_core_update_group_fields_id_in_db() {
 
-	if ( is_multisite() && get_site_option( 'bp_core_update_group_fields_id', false ) ) {
+	if ( is_multisite()) {
 		global $wpdb;
 		$bp_prefix = bp_core_get_table_prefix();
 
@@ -67,9 +69,5 @@ function bp_core_update_group_fields_id_in_db() {
 				add_site_option( 'bp-xprofile-nickname-field-id', $result['id'] );
 			}
 		}
-
-		add_site_option( 'bp_core_update_group_fields_ids', true );
 	}
 }
-
-add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 10000 );
