@@ -37,7 +37,7 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
  *
  * @since BuddyBoss 1.0.9
  */
-function bp_core_update_group_fields_id_in_db( $bypass = false ) {
+function bp_core_update_group_fields_id_in_db() {
 
 	if ( is_multisite() ) {
 		global $wpdb;

@@ -423,6 +423,8 @@ function bp_core_install_default_profiles_fields() {
 
 	$bp_prefix = bp_core_get_table_prefix();
 
+	bp_core_update_group_fields_id_in_db();
+
 	$is_multisite = is_multisite() ? true : false;
 
 	// These values should only be updated if they are not already present.
