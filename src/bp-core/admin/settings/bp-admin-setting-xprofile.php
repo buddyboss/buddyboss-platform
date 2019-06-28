@@ -43,7 +43,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         //Set requirement for last name based on display format
         if ( isset( $_POST[ 'bp-display-name-format' ] ) && $_POST[ 'bp-display-name-format' ] == 'first_last_name' ) {
         	if ( $last_name_field = xprofile_get_field( bp_xprofile_lastname_field_id() ) ) {
-        		$last_name_field->is_required = true;
+        		//$last_name_field->is_required = true;
         		$last_name_field->save();
         	}
         }
@@ -74,6 +74,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
+
+		// Gravatars.
+		$this->add_field( 'bp-enable-profile-gravatar', __( 'Profile Gravatars', 'buddyboss' ), 'bp_admin_setting_callback_enable_profile_gravatar', 'intval' );
 
 		// cover photos.
 		if ( bp_is_active( 'xprofile', 'cover_image' ) ) {

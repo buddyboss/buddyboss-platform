@@ -577,7 +577,7 @@ window.bp = window.bp || {};
 
 				bp.Nouveau.Messages.mediumEditor = new window.MediumEditor('#message_content',{
 					placeholder: {
-						text: wp.i18n.__('Type message','buddyboss'),
+						text: BP_Nouveau.messages.type_message,
 						hideOnClick: true
 					},
 					toolbar: {
@@ -1370,7 +1370,7 @@ window.bp = window.bp || {};
 			if ( BP_Nouveau.messages.hasThreads ) {
 				this.requestThreads();
 			} else {
-				this.threadsFetchError( {}, { feedback : wp.i18n.__( 'Sorry, no messages were found.', 'buddyboss' ), type: 'info' } );
+				this.threadsFetchError( {}, { feedback : BP_Nouveau.messages.errors.no_messages, type: 'info' } );
 			}
 
 			this.collection.on( 'reset', this.cleanContent, this );

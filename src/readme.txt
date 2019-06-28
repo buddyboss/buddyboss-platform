@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.0.6
+Stable tag: 1.0.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.0.9 =
+* Profiles - Fixed profile dropdown not working with Toolbar disabled
+* Profiles - New option for 'Last Name' field to be set as optional
+* Profiles - New option for 'gravatars' to be used as profile avatars
+* Private Network - Improved logic for Public URLs
+* Multisite - Fixed logic for new signups registering sub-sites
+* Search - Exclude HTML meta data from search results
+* Documentation - LearnDash Course Grid
+
+= 1.0.8 =
+* Updater - Improvements to updater code
+
+= 1.0.7 =
+* Messages - Fixed issues with media tooltips in messages
+* Translations - Fixed text instances that were not available for translation
+* Updater - Fixed issues with platform not pinging for updates
 
 = 1.0.6 =
 * Forums - Fixed issues with forum role assignment to new users

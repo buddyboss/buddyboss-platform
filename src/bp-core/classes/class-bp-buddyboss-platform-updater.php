@@ -43,14 +43,35 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 		function update_plugin( $transient ) {
 
-			if ( empty( $transient->checked ) || empty( $transient->checked[ $this->plugin_path ] ) ) {
+			if ( empty( $transient->checked ) ) {
+				return $transient;
+			}
+
+			/**
+			 * Some plugins like seedprod-pro, wp-analytify-pro, uncanny-toolkit-pro etc explicitly set
+			 * their corresponding value in $transient->checked array.
+			 * Doing that, wipes out other records from that array, for reasons not known yet.
+			 * This causes 'version' => $transient->checked[$this->plugin_path],' to return null and so, api query always returns
+			 * with the message that there is an update available.
+			 *
+			 * To fix that, we need to get version number differently, by directly reading the plugin file.
+			 */
+			$current_version = isset( $transient->checked[ $this->plugin_path ] ) ? $transient->checked[ $this->plugin_path ] : false;
+			if ( ! $current_version ) {
+				$plugin_data = get_plugin_data( trailingslashit( WP_PLUGIN_DIR ) . $this->plugin_path, false, false );
+				if ( ! empty( $plugin_data ) && isset( $plugin_data['Version'] ) ) {
+					$current_version = $plugin_data['Version'];
+				}
+			}
+
+			if ( ! $current_version ) {
 				return $transient;
 			}
 
 			$request_data = array(
 				'id'      => $this->plugin_id,
 				'slug'    => $this->plugin_slug,
-				'version' => $transient->checked[ $this->plugin_path ]
+				'version' => $current_version
 			);
 
 			if ( ! empty( $this->license ) ) {
