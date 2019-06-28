@@ -1261,11 +1261,11 @@ function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
 function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true ) {
 
 	if ( is_multisite() ) {
-		$field_id = get_site_option( 'bp-xprofile-nickname-field-id', $no_fallback ? null : bp_xprofile_fullname_field_id() );
+		$field_id = get_site_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : bp_xprofile_fullname_field_id() );
 	}
 
 	if ( empty( $field_id ) && $get_option ) {
-		$field_id = bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? null : bp_xprofile_fullname_field_id() );
+		$field_id = bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : bp_xprofile_fullname_field_id() );
 	}
 
 	return (int) apply_filters( 'bp_xprofile_nickname_field_id', $field_id );

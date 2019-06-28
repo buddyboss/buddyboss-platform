@@ -82,7 +82,8 @@ function bp_core_update_group_fields_id_in_db( $bypass = false ) {
 			}
 		}
 
-		if ( empty( bp_xprofile_nickname_field_id( 0, false ) ) ) {
+
+		if ( empty( bp_xprofile_nickname_field_id( true, false ) ) ) {
 			//nick name fields update
 			$nickname = bp_get_option( 'bp-xprofile-nickname-field-name' );
 			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$nickname}'" );
