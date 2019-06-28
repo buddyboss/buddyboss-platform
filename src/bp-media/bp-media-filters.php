@@ -804,7 +804,7 @@ function bp_media_import_submenu_page() {
                                 <label id="bp-media-import-msg"></label>
                             </p>
                             <input type="hidden" value="bp-media-import-updating" id="bp-media-import-updating"/>
-		                    <?php if( ! empty( $albums_ids ) && ! empty( $media_ids ) ) { ?>
+		                    <?php if( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
                                 <input type="hidden" value="1" name="bp-media-re-run-import"
                                        id="bp-media-re-run-import"/>
                                 <input type="submit" style="display: none;"
@@ -819,7 +819,7 @@ function bp_media_import_submenu_page() {
 							?>
                             <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
 
-                            <?php if( ! empty( $albums_ids ) && ! empty( $media_ids ) ) { ?>
+                            <?php if( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
                                 <input type="hidden" value="1" name="bp-media-re-run-import"
                                        id="bp-media-re-run-import"/>
                                 <input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
