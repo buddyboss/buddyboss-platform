@@ -57,7 +57,7 @@ function bp_core_update_group_fields_id_in_db( $bypass = false ) {
 						add_site_option( 'bp-xprofile-firstname-field-id', $id );
 						$count ++;
 					} else {
-						$wpdb->update( $table_name, array( 'can_delete' => 1 ), array( 'id' => $id ) );
+						$wpdb->delete( $table_name, array( 'id' => $id ) );
 					}
 				}
 			}
@@ -76,7 +76,7 @@ function bp_core_update_group_fields_id_in_db( $bypass = false ) {
 						add_site_option( 'bp-xprofile-lastname-field-id', $id );
 						$count ++;
 					} else {
-						$wpdb->update( $table_name, array( 'can_delete' => 1 ), array( 'id' => $id ) );
+						$wpdb->delete( $table_name, array( 'id' => $id ) );
 					}
 				}
 			}
@@ -95,7 +95,7 @@ function bp_core_update_group_fields_id_in_db( $bypass = false ) {
 						add_site_option( 'bp-xprofile-nickname-field-id', $id );
 						$count ++;
 					} else {
-						$wpdb->update( $table_name, array( 'can_delete' => 1 ), array( 'id' => $id ) );
+						$wpdb->delete( $table_name, array( 'id' => $id ) );
 					}
 				}
 			}
