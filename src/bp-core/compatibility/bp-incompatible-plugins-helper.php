@@ -45,7 +45,7 @@ function bp_core_update_group_fields_id_in_db( $bypass = false ) {
 
 		$table_name = $bp_prefix . 'bp_xprofile_fields';
 
-		if ( empty( bp_xprofile_firstname_field_id( 1, false ) ) ) {
+		if ( empty( bp_xprofile_firstname_field_id( 0, false ) ) ) {
 			//first name fields update
 			$firstname = bp_get_option( 'bp-xprofile-firstname-field-name' );
 			$results   = $wpdb->get_results( "SELECT id FROM {$table_name} WHERE name = '{$firstname}'" );
