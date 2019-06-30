@@ -631,15 +631,11 @@ function bp_show_hide_toolbar() {
 		if ( ! empty( $old_user ) ) {
 			if ( $user->ID != $old_user->ID ) {
 				$userdata = get_userdata( $user->ID );
-				if ( is_object( $userdata ) ) {
-					$current_user_caps = $userdata->allcaps;
-				}
+				$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
 			}
 		} else {
 			$userdata = get_userdata( $user->ID );
-			if ( is_object( $userdata ) ) {
-				$current_user_caps = $userdata->allcaps;
-			}
+			$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
 		}
 
 		if ( current_user_can( 'administrator' ) && in_array( 'administrator', $current_user_caps ) ) {
