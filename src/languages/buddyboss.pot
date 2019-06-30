@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.0.9\n"
+"Project-Id-Version: BuddyBoss Platform 1.1.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-28 19:12:49+00:00\n"
+"POT-Creation-Date: 2019-06-30 01:11:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1202,7 +1202,7 @@ msgstr ""
 msgid "New post published"
 msgstr ""
 
-#: bp-blogs/bp-blogs-activity.php:107 bp-core/bp-core-template.php:3928
+#: bp-blogs/bp-blogs-activity.php:107 bp-core/bp-core-template.php:3922
 #: bp-messages/bp-messages-functions.php:193
 #: bp-messages/bp-messages-template.php:2074
 #: bp-search/bp-search-settings.php:768 bp-settings/actions/export.php:37
@@ -1555,7 +1555,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:230
 #: bp-core/admin/bp-core-admin-functions.php:618
-#: bp-core/admin/bp-core-admin-settings.php:541
+#: bp-core/admin/bp-core-admin-settings.php:556
 #: bp-core/classes/class-bp-admin.php:322
 #: bp-core/classes/class-bp-admin.php:424
 #: bp-core/classes/class-bp-admin.php:677
@@ -1653,7 +1653,7 @@ msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:623
-#: bp-core/admin/bp-core-admin-settings.php:566
+#: bp-core/admin/bp-core-admin-settings.php:581
 #: bp-core/classes/class-bp-admin.php:331
 #: bp-core/classes/class-bp-admin.php:433
 msgid "Integrations"
@@ -2105,14 +2105,18 @@ msgid "Show the Toolbar for logged in members"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:75
-#: bp-core/admin/bp-core-admin-settings.php:128
-#: bp-core/admin/bp-core-admin-settings.php:182
-#: bp-core/admin/bp-core-admin-settings.php:269
-#: bp-core/admin/bp-core-admin-settings.php:338
-#: bp-core/admin/bp-core-admin-settings.php:404
-#: bp-core/admin/bp-core-admin-settings.php:478
-#: bp-core/admin/bp-core-admin-settings.php:521
-#: bp-core/admin/bp-core-admin-settings.php:833
+msgid "Show the Toolbar for admins"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:90
+#: bp-core/admin/bp-core-admin-settings.php:143
+#: bp-core/admin/bp-core-admin-settings.php:197
+#: bp-core/admin/bp-core-admin-settings.php:284
+#: bp-core/admin/bp-core-admin-settings.php:353
+#: bp-core/admin/bp-core-admin-settings.php:419
+#: bp-core/admin/bp-core-admin-settings.php:493
+#: bp-core/admin/bp-core-admin-settings.php:536
+#: bp-core/admin/bp-core-admin-settings.php:848
 #: bp-core/admin/bp-core-admin-slugs.php:98
 #: bp-core/admin/settings/bp-admin-setting-friends.php:79
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:296
@@ -2124,171 +2128,171 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:91
+#: bp-core/admin/bp-core-admin-settings.php:106
 msgid "Restrict site access to only logged-in members"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:96
+#: bp-core/admin/bp-core-admin-settings.php:111
 msgid ""
 "Login and <a href=\"%s\">Registration</a> content will remain publicly "
 "visible."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:113
+#: bp-core/admin/bp-core-admin-settings.php:128
 msgid ""
 "Enter URLs or URI fragments (e.g. /groups/) to remain publicly visible "
 "always. Enter one URL or URI per line. "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:153
+#: bp-core/admin/bp-core-admin-settings.php:168
 msgid "Enable Akismet spam protection for activity feed"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:167
+#: bp-core/admin/bp-core-admin-settings.php:182
 msgid ""
 "Allow activity stream commenting on blog posts, forum discussions and "
 "replies"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:197
+#: bp-core/admin/bp-core-admin-settings.php:212
 msgid "Automatically check for new activity posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:211
+#: bp-core/admin/bp-core-admin-settings.php:226
 msgid ""
 "Automatically load more activity posts when scrolling to the bottom of the "
 "page "
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:225
+#: bp-core/admin/bp-core-admin-settings.php:240
 msgid "Allow your users to follow the activity of each other on their timeline"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:239
+#: bp-core/admin/bp-core-admin-settings.php:254
 msgid "Allow your users to \"Like\" each other's activity posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:254
+#: bp-core/admin/bp-core-admin-settings.php:269
 msgid ""
 "When links are used in activity posts, display an image and excerpt from "
 "the site"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:311
+#: bp-core/admin/bp-core-admin-settings.php:326
 msgid "Allow members to upload photos for profile avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:324
+#: bp-core/admin/bp-core-admin-settings.php:339
 msgid "Allow members to upload cover images"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:364
+#: bp-core/admin/bp-core-admin-settings.php:379
 msgid "Enable social group creation by all users"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:365
+#: bp-core/admin/bp-core-admin-settings.php:380
 msgid "Administrators can always create groups, regardless of this setting."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:378
+#: bp-core/admin/bp-core-admin-settings.php:393
 msgid "Allow group organizers to upload an avatar"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:390
+#: bp-core/admin/bp-core-admin-settings.php:405
 msgid "Allow group organizers to upload cover photos"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:425
+#: bp-core/admin/bp-core-admin-settings.php:440
 msgid "Enable <a href=\"%s\">group types</a> to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:433
+#: bp-core/admin/bp-core-admin-settings.php:448
 msgid "Enable group types to better organize groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:452
+#: bp-core/admin/bp-core-admin-settings.php:467
 msgid "Allow selected <a href=\"%s\">profile types</a> to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:460
+#: bp-core/admin/bp-core-admin-settings.php:475
 msgid "Allow selected profile types to automatically join groups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:464
+#: bp-core/admin/bp-core-admin-settings.php:479
 msgid ""
 "When a member requests to join a group their membership is automatically "
 "accepted"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:494
+#: bp-core/admin/bp-core-admin-settings.php:509
 msgid "Allow groups to have subgroups"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:506
+#: bp-core/admin/bp-core-admin-settings.php:521
 msgid "Restrict subgroup invites to members of the parent group"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:507
+#: bp-core/admin/bp-core-admin-settings.php:522
 msgid ""
 "Members must first be a member of the parent group prior to being invited "
 "to a subgroup"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:588
+#: bp-core/admin/bp-core-admin-settings.php:603
 #: bp-integrations/appboss/bp-appboss-integration.php:22
 #: bp-integrations/appboss/templates/admin/integration-tab-intro.php:11
 msgid "AppBoss"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:662
+#: bp-core/admin/bp-core-admin-settings.php:677
 msgid "Allow members to customize the email subject"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:674
+#: bp-core/admin/bp-core-admin-settings.php:689
 msgid "Allow members to customize the email body content"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:687
+#: bp-core/admin/bp-core-admin-settings.php:702
 msgid "Allow members to select profile type of invitee"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:692
+#: bp-core/admin/bp-core-admin-settings.php:707
 msgid ""
 "Customize this setting while editing any of your <a href=\"%s\">Profile "
 "Types</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:717
+#: bp-core/admin/bp-core-admin-settings.php:732
 msgid ""
 "Select which Custom Post Types (coming from your plugins) should be shown "
 "in the activity feed. For example, if using WooCommerce it could post into "
 "the activity feed every time someone creates a new product."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:729
+#: bp-core/admin/bp-core-admin-settings.php:744
 #: bp-search/bp-search-functions.php:360 bp-search/bp-search-settings.php:580
 msgid "Blog Posts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:736
+#: bp-core/admin/bp-core-admin-settings.php:751
 msgid "When users publish new blog posts, show them in the activity feed."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:773
+#: bp-core/admin/bp-core-admin-settings.php:788
 msgid "Allow non-members to register new accounts"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:777
+#: bp-core/admin/bp-core-admin-settings.php:792
 msgid ""
 "Because <a href=\"%s\">Email Invites</a> is enabled, invited users will "
 "still be allowed to register new accounts."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:802
+#: bp-core/admin/bp-core-admin-settings.php:817
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:819
+#: bp-core/admin/bp-core-admin-settings.php:834
 msgid ""
 "Allow members to use <a href=\"https://gravatar.com/\">gravatars</a> for "
 "profile avatars"
@@ -2696,17 +2700,17 @@ msgstr ""
 msgid "Toolbar"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:38
+#: bp-core/admin/settings/bp-admin-setting-general.php:41
 #: bp-xprofile/classes/class-bp-xprofile-component.php:340
 #: bp-xprofile/classes/class-bp-xprofile-component.php:486
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:39
+#: bp-core/admin/settings/bp-admin-setting-general.php:42
 msgid "Private Network"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:42
+#: bp-core/admin/settings/bp-admin-setting-general.php:45
 msgid "Public Content"
 msgstr ""
 
@@ -14573,17 +14577,17 @@ msgstr ""
 msgid "Nothing found for '%s'"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:535
+#: bp-search/classes/class-bp-search.php:537
 msgid "%d result"
 msgid_plural "%d results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-search/classes/class-bp-search.php:551
+#: bp-search/classes/class-bp-search.php:553
 msgid "View (%d) more"
 msgstr ""
 
-#: bp-search/classes/class-bp-search.php:787
+#: bp-search/classes/class-bp-search.php:791
 msgid "All Results"
 msgstr ""
 
