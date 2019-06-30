@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.0 =
 * Profiles - Fixed profile dropdown not appearing with some plugins
 * Multisite - Fixed issue with Name fields duplicating in new sub-sites
+* Performance - Made functions less likely to timeout on shared hosting
 * Dashboard - Moved 'BuddyBoss' menu higher up for accessibility
 
 = 1.0.9 =
