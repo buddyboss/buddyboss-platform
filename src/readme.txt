@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed profile dropdown not appearing with some plugins
 * Toolbar - New option to show/hide Toolbar for admin users vs members
 * Messages - Nicer text preview when message contains only an image or gif
+* Media - When migrating from BuddyBoss Media plugin, fixed migration issues
 * Multisite - Fixed issue with Name fields duplicating in new sub-sites
 * Performance - Made functions less likely to timeout on shared hosting
 * Translations - Fixed text instances that were not available for translation
