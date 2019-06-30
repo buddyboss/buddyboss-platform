@@ -624,7 +624,25 @@ function bp_get_theme_compat_templates() {
 function bp_show_hide_toolbar() {
 
 	if ( is_user_logged_in() ) {
-		if ( current_user_can( 'administrator' ) ) {
+
+		$old_user = BP_Core_Members_Switching::get_old_user();
+		$user     = wp_get_current_user();
+
+		if ( ! empty( $old_user ) ) {
+			if ( $user->ID != $old_user->ID ) {
+				$userdata = get_userdata( $user->ID );
+				if ( is_object( $userdata ) ) {
+					$current_user_caps = $userdata->allcaps;
+				}
+			}
+		} else {
+			$userdata = get_userdata( $user->ID );
+			if ( is_object( $userdata ) ) {
+				$current_user_caps = $userdata->allcaps;
+			}
+		}
+
+		if ( current_user_can( 'administrator' ) && in_array( 'administrator', $current_user_caps ) ) {
 			if ( true === bp_show_admin_adminbar() ) {
 				add_filter( 'show_admin_bar', '__return_true' );
 			} else {
