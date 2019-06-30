@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Multisite - Fixed issue with Name fields duplicating in new sub-sites
 * Messages - Nicer text preview when message contains only an image or gif
 * Performance - Made functions less likely to timeout on shared hosting
+* Translations - Fixed text instances that were not available for translation
 * Dashboard - Moved 'BuddyBoss' menu higher up for accessibility
 
 = 1.0.9 =
