@@ -708,31 +708,27 @@ add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
  *
  */
 function bp_media_import_submenu_page() {
-	global $wpdb, $background_updater;
+	global $wpdb;
 
 	$bp_media_import_status = get_option( 'bp_media_import_status' );
-
-	if ( isset( $_POST['bp-media-import-submit'] ) && ! empty( $background_updater ) ) {
-		$update_queued          = false;
-
-		if ( 'done' != $bp_media_import_status ) {
-			foreach ( bp_media_get_import_callbacks() as $update_callback ) {
-				error_log( sprintf( 'Queuing %s', $update_callback ) );
-				$background_updater->push_to_queue( $update_callback );
-				$update_queued = true;
-			}
-		}
-
-		if ( $update_queued ) {
-			$background_updater->save()->dispatch();
-		}
-	}
 
 	$check                        = false;
 	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
 	$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
 	if ( empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) || empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
 		$check = true;
+	}
+
+	$is_updating = false;
+	if ( isset( $_POST['bp-media-import-submit'] ) && ! $check ) {
+		if ( 'done' != $bp_media_import_status || isset( $_POST['bp-media-re-run-import'] ) ) {
+			update_option( 'bp_media_import_status', 'reset_albums' );
+			$is_updating = true;
+		}
+	}
+
+	if ( 'importing' == $bp_media_import_status ) {
+		$is_updating = true;
 	}
 
 	?>
@@ -755,11 +751,19 @@ function bp_media_import_submenu_page() {
 							?>
                             <p><?php _e( 'BuddyBoss Media plugin database tables do not exist, meaning you have nothing to import.', 'buddyboss' ); ?></p>
 							<?php
-						} else if ( ! empty( $background_updater ) && $background_updater->is_updating() ) {
+						} else if ( $is_updating ) {
 							$total_media   = get_option( 'bp_media_import_total_media', 0 );
 							$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
 							$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
 							$media_done    = get_option( 'bp_media_import_media_done', 0 );
+							$forums_done   = get_option( 'bp_media_import_forums_done', 0 );
+							$forums_total  = get_option( 'bp_media_import_forums_total', 0 );
+							$topics_done   = get_option( 'bp_media_import_topics_done', 0 );
+							$topics_total  = get_option( 'bp_media_import_topics_total', 0 );
+							$replies_done  = get_option( 'bp_media_import_replies_done', 0 );
+							$replies_total = get_option( 'bp_media_import_replies_total', 0 );
+							$albums_ids    = get_option( 'bp_media_import_albums_ids', array() );
+							$media_ids     = get_option( 'bp_media_import_media_ids', array() );
 							?>
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
@@ -767,52 +771,95 @@ function bp_media_import_submenu_page() {
                             <table>
                                 <tr>
                                     <td><h4><?php _e( 'Albums', 'buddyboss' ); ?></h4></td>
-                                    <td><span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?> <span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
+                                    <td>
+                                        <span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+                                        <span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
                                 </tr>
                                 <tr>
                                     <td><h4><?php _e( 'Media', 'buddyboss' ); ?></h4></td>
-                                    <td><span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?> <span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+                                    <td>
+                                        <span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+                                        <span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?php _e( 'Forums', 'buddyboss' ); ?></h4></td>
+                                    <td>
+                                        <span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+                                        <span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?php _e( 'Discussions', 'buddyboss' ); ?></h4></td>
+                                    <td>
+                                        <span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+                                        <span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
+                                </tr>
+                                <tr>
+                                    <td><h4><?php _e( 'Replies', 'buddyboss' ); ?></h4></td>
+                                    <td>
+                                        <span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
+                                        <span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
                                 </tr>
                             </table>
                             <p>
-								<label id="bp-media-import-msg"></label>
+                                <label id="bp-media-import-msg"></label>
                             </p>
-                            <input type="hidden" value="bp-media-import-updating" id="bp-media-import-updating" />
-							<?php
+                            <input type="hidden" value="bp-media-import-updating" id="bp-media-import-updating"/>
+		                    <?php if( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
+                                <input type="hidden" value="1" name="bp-media-re-run-import"
+                                       id="bp-media-re-run-import"/>
+                                <input type="submit" style="display: none;"
+                                       value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+                                       id="bp-media-import-submit" name="bp-media-import-submit"
+                                       class="button-primary"/>
+								<?php
+							}
 						} else if ( 'done' == $bp_media_import_status ) {
+							$albums_ids = get_option( 'bp_media_import_albums_ids', array() );
+							$media_ids = get_option( 'bp_media_import_media_ids', array() );
 							?>
                             <p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
-							<?php
+
+                            <?php if( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
+                                <input type="hidden" value="1" name="bp-media-re-run-import"
+                                       id="bp-media-re-run-import"/>
+                                <input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
+                                       id="bp-media-import-submit" name="bp-media-import-submit"
+                                       class="button-primary"/>
+								<?php
+							}
 						} else { ?>
                             <p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-                            <input type="submit" value="<?php _e('Run Migration', 'buddyboss'); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
+                            <input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
+                                   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
                     </div>
                 </form>
             </div>
         </div>
     </div>
-    <br />
+    <br/>
 
 	<?php
 }
 
 /**
+ * Callback for media migration
  *
- *
- * @since BuddyBoss 1.0.0
  * @return array
+ * @since BuddyBoss 1.0.0
  */
 function bp_media_get_import_callbacks() {
 	return array(
+		'bp_media_import_reset_media_albums',
+		'bp_media_import_reset_media',
+		'bp_media_import_reset_forum_media',
+		'bp_media_import_reset_topic_media',
+		'bp_media_import_reset_reply_media',
 		'bp_media_import_reset_options',
-		//'bp_media_import_reset_media_albums',
-		//'bp_media_import_reset_media',
 		'bp_media_import_buddyboss_media_tables',
 		'bp_media_import_buddyboss_forum_media',
 		'bp_media_import_buddyboss_topic_media',
 		'bp_media_import_buddyboss_reply_media',
-		'bp_media_update_import_status',
 	);
 }
 
@@ -849,27 +896,4 @@ function bp_media_activation_notice() {
 			bp_core_add_admin_notice( $notice );
 		}
 	}
-}
-
-/**
- * AJAX function for media import status
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_import_status_request() {
-	$import_status = get_option( 'bp_media_import_status' );
-	$total_media   = get_option( 'bp_media_import_total_media', 0 );
-	$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
-	$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
-	$media_done    = get_option( 'bp_media_import_media_done', 0 );
-
-	wp_send_json_success( array(
-		'total_media'   => $total_media,
-		'total_albums'  => $total_albums,
-		'albums_done'   => $albums_done,
-		'media_done'    => $media_done,
-		'import_status' => $import_status,
-		'success_msg'   => __( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ),
-		'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
-	) );
 }
