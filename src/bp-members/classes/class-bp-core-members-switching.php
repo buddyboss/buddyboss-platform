@@ -83,7 +83,7 @@ class BP_Core_Members_Switching {
 		?>
 		<tr>
 			<th scope="row"><?php echo esc_html__( 'Member Switching', 'buddyboss' ); ?></th>
-			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Switch&nbsp;To', 'buddyboss' ); ?></a>
+			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss' ); ?></a>
 			</td>
 		</tr>
 		<?php
@@ -503,7 +503,7 @@ class BP_Core_Members_Switching {
 			return $actions;
 		}
 
-		$actions['switch_to_user'] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Switch&nbsp;To', 'buddyboss' ) . '</a>';
+		$actions['switch_to_user'] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'View As', 'buddyboss' ) . '</a>';
 
 		return $actions;
 	}
@@ -543,7 +543,7 @@ class BP_Core_Members_Switching {
 			'id'         => 'bp_member_switching',
 			'component'  => reset( $components ),
 			'link_href'  => esc_url( $link ),
-			'link_text'  => esc_html__( 'Switch&nbsp;To', 'buddyboss' ),
+			'link_text'  => esc_html__( 'View As', 'buddyboss' ),
 			'wrapper_id' => 'bp_member_switching_switch_to',
 		) );
 	}
@@ -573,7 +573,7 @@ class BP_Core_Members_Switching {
 
 		?>
 		<ul id="bp_member_switching_switch_to">
-			<li><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Switch&nbsp;To', 'buddyboss' ); ?></a>
+			<li><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss' ); ?></a>
 			</li>
 		</ul>
 		<?php
