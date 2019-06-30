@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.0 =
+* Profiles - Fixed profile dropdown not appearing with some plugins
 
 = 1.0.9 =
 * Profiles - Fixed profile dropdown not working with Toolbar disabled
