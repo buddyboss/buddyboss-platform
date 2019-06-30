@@ -67,7 +67,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Outputs the 'Switch To' link on the user editing screen if the current user has permission to switch to them.
+	 * Outputs the 'View As' link on the user editing screen if the current user has permission to switch to them.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -487,7 +487,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Adds a 'Switch To' link to each list of user actions on the Users screen.
+	 * Adds a 'View As' link to each list of user actions on the Users screen.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -509,7 +509,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Adds a 'Switch To' link to each member's profile page and profile listings in BuddyPress.
+	 * Adds a 'View As' link to each member's profile page and profile listings in BuddyPress.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -549,7 +549,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Adds a 'Switch To' link to each member's profile page in bbPress.
+	 * Adds a 'View As' link to each member's profile page in bbPress.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
