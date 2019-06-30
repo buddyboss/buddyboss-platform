@@ -57,7 +57,7 @@ function bp_admin_setting_callback_login_admin_bar() {
 	?>
 
 	<input id="show-login-adminbar" name="show-login-adminbar" type="checkbox" value="1" <?php checked( bp_show_login_adminbar( true ) ); ?> />
-	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for members (non-admins)', 'buddyboss' ); ?></label>
+	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for logged-in members (non-admins)', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -72,7 +72,7 @@ function bp_admin_setting_callback_admin_admin_bar() {
 	?>
 
     <input id="show-admin-adminbar" name="show-admin-adminbar" type="checkbox" value="1" <?php checked( bp_show_admin_adminbar( true ) ); ?> />
-    <label for="show-admin-adminbar"><?php _e( 'Show the Toolbar for admins', 'buddyboss' ); ?></label>
+    <label for="show-admin-adminbar"><?php _e( 'Show the Toolbar for logged-in admins', 'buddyboss' ); ?></label>
 
 	<?php
 }
