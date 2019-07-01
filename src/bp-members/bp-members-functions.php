@@ -4697,3 +4697,16 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 
 	return $buttons;
 }
+
+/**
+ * Return the member type xprofile field id.
+ *
+ * @return string|null
+ */
+function bp_get_xprofile_member_type_field_id() {
+	global $wpdb;
+
+	$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+
+	return (int) $get_parent_id_of_member_types_field;
+}

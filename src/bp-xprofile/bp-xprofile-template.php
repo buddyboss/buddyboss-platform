@@ -591,6 +591,35 @@ function bp_the_profile_field_value() {
 			$field->data->value = $split_string[1];
 		}
 
+		if ( 'membertypes' === $field->type ) {
+
+			// Check member type function exists.
+			if ( function_exists( 'bp_get_member_type') ) {
+
+				// Get member existing member type.
+				$member_type = bp_get_member_type( bp_displayed_user_id() );
+				if ( '' === trim( $member_type ) ) {
+					$field->data->value = '---';
+					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+						xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), '');
+					}
+				} else {
+					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+						xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), bp_member_type_post_by_type( $member_type ) );
+					}
+					$member_type_name = get_post_meta( $field->data->value,'_bp_member_type_label_singular_name',true );
+					if ( '' === $member_type_name || false === $member_type_name ) {
+						$field->data->value = '---';
+					} else {
+						$field->data->value = $member_type_name;
+					}
+				}
+			} else {
+				$field->data->value = '---';
+			}
+
+		}
+
 		/**
 		 * Filters the XProfile field value.
 		 *

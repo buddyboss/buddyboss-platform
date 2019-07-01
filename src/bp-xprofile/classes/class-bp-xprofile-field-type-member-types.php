@@ -165,23 +165,6 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	}
 
 	/**
-	 * @param mixed $field_value
-	 * @param string $field_id
-	 *
-	 * @return string
-	 */
-	public static function display_filter( $field_value, $field_id = '' ) {
-
-		$post_id = absint( $field_value );
-
-		if ( empty( $field_value ) || ! get_post( $post_id ) ) {
-			return '';
-		}
-
-		return __( get_the_title( $post_id ), 'buddyboss');
-	}
-
-	/**
 	 * Get the terms content.
 	 *
 	 * @param int $field_id field id.

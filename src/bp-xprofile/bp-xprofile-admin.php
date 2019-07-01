@@ -1118,7 +1118,7 @@ function xprofile_check_social_networks_added_previously() {
 add_action( 'wp_ajax_xprofile_check_social_networks_added_previously', 'xprofile_check_social_networks_added_previously' );
 
 /**
- * Check if the gender field has been added.
+ * Check if the member type field has been added.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1138,9 +1138,9 @@ function xprofile_check_member_type_added_previously() {
 
 		$current_edit_id = intval( $parsed_array['field_id'] );
 
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' ");
-		if ( intval( $exists_gender[0]->count ) > 0 ) {
-			if ( $current_edit_id === intval( $exists_gender[0]->id ) ) {
+		$exists_member_type = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' ");
+		if ( intval( $exists_member_type[0]->count ) > 0 ) {
+			if ( $current_edit_id === intval( $exists_member_type[0]->id ) ) {
 				$response['status'] = 'not_added';
 			} else {
 				$response['status'] = 'added';
@@ -1149,8 +1149,8 @@ function xprofile_check_member_type_added_previously() {
 			$response['status'] = 'not_added';
 		}
 	} else {
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' ");
-		if ( intval( $exists_gender[0]->count ) > 0 ) {
+		$exists_member_type = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'membertypes' ");
+		if ( intval( $exists_member_type[0]->count ) > 0 ) {
 			$response['status'] = 'added';
 		} else {
 			$response['status'] = 'not_added';
