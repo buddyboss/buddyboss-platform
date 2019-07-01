@@ -418,7 +418,7 @@ class BP_Activity_Activity {
 		// Select conditions.
 		$select_sql = "SELECT DISTINCT a.id";
 
-		$from_sql   = " FROM {$bp->activity->table_name} a";
+		$from_sql   = apply_filters( 'bp_activity_get_from_sql', " FROM {$bp->activity->table_name} a", $r );
 
 		$join_sql   = '';
 
@@ -694,6 +694,8 @@ class BP_Activity_Activity {
 			 * @param array  $r                Array of arguments passed into method.
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
+
+			error_log($activity_ids_sql);
 
 			/*
 			 * Queries that include 'last_activity' are cached separately,
