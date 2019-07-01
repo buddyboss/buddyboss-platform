@@ -371,6 +371,10 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
 }
 
+.bp-admin-card.section-bp_member_avatar_settings h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
+}
+
 .bp-admin-card.section-bp_member_type_settings h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/user-tag.svg);
   background-size: 22px 22px;

@@ -1286,3 +1286,66 @@ function bp_enable_profile_gravatar( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
 }
+
+/**
+ * Allow members to hide last name field if in display format first name selected.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if avatar uploads are disabled, otherwise false.
+ */
+function bp_hide_last_name( $default = true ) {
+
+	/**
+	 * Filters whether or not members are able to upload their own avatars.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not members are able to upload their own avatars.
+	 */
+	return (bool) apply_filters( 'bp_hide_last_name', (bool) bp_get_option( 'bp-hide-last-name', $default ) );
+}
+
+/**
+ * Allow members to hide first name field if in display format nick name selected.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if avatar uploads are disabled, otherwise false.
+ */
+function bp_hide_nickname_first_name( $default = true ) {
+
+	/**
+	 * Filters whether or not members are able to upload their own avatars.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not members are able to upload their own avatars.
+	 */
+	return (bool) apply_filters( 'bp_hide_nickname_first_name', (bool) bp_get_option( 'bp-hide-nickname-first-name', $default ) );
+}
+
+/**
+ * Allow members to hide last name field if in display format nick name selected.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if avatar uploads are disabled, otherwise false.
+ */
+function bp_hide_nickname_last_name( $default = true ) {
+
+	/**
+	 * Filters whether or not members are able to upload their own avatars.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param bool $value Whether or not members are able to upload their own avatars.
+	 */
+	return (bool) apply_filters( 'bp_hide_nickname_last_name', (bool) bp_get_option( 'bp-hide-nickname-last-name', $default ) );
+}

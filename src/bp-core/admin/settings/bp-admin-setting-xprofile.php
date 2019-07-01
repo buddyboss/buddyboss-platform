@@ -63,7 +63,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_xprofile', __( 'Profile Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_xprofile', __( 'Profile Name', 'buddyboss' ) );
 
 		// Display name format.
 		$this->add_field(
@@ -71,6 +71,28 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			__( 'Display Name Format', 'buddyboss' ),
 			[ $this, 'callback_display_name_format']
 		);
+
+		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+		$current_value = get_option( 'bp-display-name-format' );
+
+		// If First Name selected then add last name show field option.
+		if ( 'first_name' === $current_value  ) {
+
+			// Show Last Name.
+			$this->add_field( 'bp-hide-last-name', __( 'Last Name', 'buddyboss' ), 'bp_admin_setting_callback_hide_last_name', 'intval' );
+
+			// If Nick Name selected then add First & last name show field option.
+		} elseif ( 'nickname' === $current_value ) {
+
+			// Show Last Name.
+			$this->add_field( 'bp-hide-nickname-first-name', __( 'First Name', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_first_name', 'intval' );
+
+			// Show Last Name.
+			$this->add_field( 'bp-hide-nickname-last-name', __( 'Last Name', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval' );
+
+		}
+
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Avatars', 'buddyboss' ) );
 
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );

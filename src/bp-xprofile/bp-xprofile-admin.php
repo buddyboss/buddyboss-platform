@@ -297,13 +297,19 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 									// If First Name selected then do not add last name field.
 									if ( 'first_name' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
-										continue;
+										if ( function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+											continue;
+										}
 									// If Nick Name selected then do not add first & last name field.
-									} elseif ( 'nickname' === $current_value && ( $field->id === bp_xprofile_lastname_field_id() || $field->id === bp_xprofile_firstname_field_id() ) ) {
-										continue;
+									} elseif ( 'nickname' === $current_value && $field->id === bp_xprofile_lastname_field_id() ) {
+										if ( function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+											continue;
+										}
+									} elseif ( 'nickname' === $current_value && $field->id === bp_xprofile_firstname_field_id() ) {
+										if ( function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+											continue;
+										}
 									}
-
-									if ( $current_value )
 
 									// Load the field.
 									$field = xprofile_get_field( $field->id );

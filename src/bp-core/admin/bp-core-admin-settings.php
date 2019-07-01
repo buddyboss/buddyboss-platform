@@ -835,3 +835,48 @@ function bp_email_invites_tutorial() {
 
 	<?php
 }
+
+/**
+ * Allow members to hide last name field if in display format first name selected.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_hide_last_name() {
+	?>
+
+	<input id="bp-hide-last-name" name="bp-hide-last-name" type="checkbox" value="1" <?php checked( bp_hide_last_name( true ) ); ?> />
+	<label for="bp-hide-last-name"><?php _e( 'Display Last Name', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Allow members to hide first name field if in display format nick name selected.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_first_name() {
+	?>
+
+	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
+	<label for="bp-hide-nickname-first-name"><?php _e( 'Display First Name', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Allow members to hide last name field if in display format nick name selected.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_last_name() {
+	?>
+
+	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
+	<label for="bp-hide-nickname-last-name"><?php _e( 'Display Last Name', 'buddyboss' ); ?></label>
+
+	<?php
+}
