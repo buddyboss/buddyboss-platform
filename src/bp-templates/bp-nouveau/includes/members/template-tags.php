@@ -680,7 +680,7 @@ function bp_nouveau_member_meta() {
 		if ( empty( $member->template_meta ) ) {
 			// It's a single user's header
 			if ( ! $is_loop ) {
-				$register_date = date('F Y', strtotime(get_userdata(bp_displayed_user_id( ))->user_registered));
+				$register_date = date_i18n('F Y', strtotime(get_userdata(bp_displayed_user_id( ))->user_registered));
 
 				$meta['last_activity'] = sprintf(
 					'<span class="activity">' . __( 'Joined %s', 'buddyboss' ) . '</span>',

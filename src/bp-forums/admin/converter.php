@@ -1457,9 +1457,9 @@ abstract class BBP_Converter_Base {
 
 	protected function callback_datetime( $field ) {
 		if ( is_numeric( $field ) ) {
-			return date( 'Y-m-d H:i:s', $field );
+			return date_i18n( 'Y-m-d H:i:s', $field );
 		} else {
-			return date( 'Y-m-d H:i:s', strtotime( $field ) );
+			return date_i18n( 'Y-m-d H:i:s', strtotime( $field ) );
 		}
 	}
 }
