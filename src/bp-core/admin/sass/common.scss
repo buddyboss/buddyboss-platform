@@ -380,10 +380,13 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
+.bp-admin-card.section-bp_privacy h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
+}
+
 /* Profiles */
 .bp-admin-card.section-bp_xprofile h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
-
 }
 
 .bp-admin-card.section-bp_member_avatar_settings h2:before {
