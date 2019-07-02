@@ -175,6 +175,13 @@ function bp_media_get_settings_fields() {
 		];
 	}
 
+	$fields['bp_media_settings_photos']['bp_media_photo_rotation'] = [
+		'title'             => __( 'Fix Photos Rotation', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_photo_rotation',
+		'sanitize_callback' => 'absint',
+		'args'              => []
+	];
+
 	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = [
 		'title'             => __( '&#160;', 'buddyboss' ),
 		'callback'          => 'bp_photo_uploading_tutorial',
@@ -769,6 +776,49 @@ function bp_is_messages_gif_support_enabled( $default = 0 ) {
  */
 function bp_is_forums_gif_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_forums_gif_support_enabled', (bool) get_option( 'bp_media_forums_gif_support', $default ) );
+}
+
+/**
+ * Setting > Media > Photo Rotation
+ *
+ * @since BuddyBoss 1.1.1
+ */
+function bp_media_settings_callback_photo_rotation() {
+	$memory_limit = @ini_get( 'memory_limit' );
+
+	if ( empty( $memory_limit ) ) {
+		$memory_limit = 'N/A';
+	}
+	?>
+    <input name="bp_media_photo_rotation"
+           id="bp_media_photo_rotation"
+           type="checkbox"
+           value="1"
+		<?php checked( bp_is_media_rotation_enabled() ); ?>
+    />
+    <label for="bp_media_photo_rotation">
+		<?php _e( 'Enable fix for photos uploads rotating', 'buddyboss' ) ?>
+    </label>
+    <p class="description">
+		<?php _e( 'It\'s recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail.', 'buddyboss' ); ?>
+        <br/>
+		<?php _e( 'Your current memory limit is', 'buddyboss' ); ?><strong><?php echo ' ' . $memory_limit . '.'; ?></strong>
+		<?php _e( 'You can contact your web host to increase the memory limit.', 'buddyboss' ); ?>
+    </p>
+	<?php
+}
+
+/**
+ * Checks if media rotation is enabled.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ * @param $default integer
+ *
+ * @return bool Is media rotation enabled or not
+ */
+function bp_is_media_rotation_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_media_rotation_enabled', (bool) get_option( 'bp_media_photo_rotation', $default ) );
 }
 
 /**
