@@ -3729,10 +3729,10 @@ function bp_member_type_show_data( $column, $post_id  ) {
  */
 function bp_member_type_add_sortable_columns( $columns ) {
 
-	$columns['total_users']	= 'total_users';
-	$columns['enable_filter']	= 'enable_filter';
-	$columns['enable_remove']	= 'enable_remove';
-	$columns['member_type']			= 'member_type';
+	$columns['total_users']   = 'total_users';
+	$columns['enable_filter'] = 'enable_filter';
+	$columns['enable_remove'] = 'enable_remove';
+	$columns['member_type']   = 'member_type';
 
 	return $columns;
 }
@@ -3770,14 +3770,14 @@ function bp_member_type_sort_items( $qv ) {
 		case 'member_type':
 
 			$qv['meta_key'] = '_bp_member_type_name';
-			$qv['orderby'] = 'meta_value';
+			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'enable_filter':
 
 			$qv['meta_key'] = '_bp_member_type_enable_filter';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby']  = 'meta_value_num';
 
 			break;
 
