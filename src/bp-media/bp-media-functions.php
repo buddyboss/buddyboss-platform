@@ -127,6 +127,9 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 		return $aid;
 	}
 
+	// Image rotation fix
+	do_action( 'bp_media_attachment_uploaded', $aid );
+
 	$attachment = get_post( $aid );
 
 	if ( ! empty( $attachment ) ) {
