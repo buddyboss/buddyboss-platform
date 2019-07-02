@@ -866,7 +866,7 @@ function bp_admin_setting_display_name_first_name() {
 	<br /><br />
 
 	<input id="bp-hide-last-name" name="bp-hide-last-name" type="checkbox" value="1" <?php checked( bp_hide_last_name( true ) ); ?> />
-	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></span></label>
 
 	<br /><br />
 
@@ -875,7 +875,7 @@ function bp_admin_setting_display_name_first_name() {
 
 	<br /><br />
 
-	<p class="description"><?php _e( 'You can disable "Last Name" with this format. Best used for casual communities.', 'buddyboss' ); ?></p>
+	<p class="description"><?php _e( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ); ?></p>
 
 	<?php
 }
@@ -919,12 +919,12 @@ function bp_admin_setting_display_name_nickname() {
 	?>
 
 	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
-	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
+	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
 	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
-	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
+	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
 
 	<br /><br />
 
@@ -933,7 +933,7 @@ function bp_admin_setting_display_name_nickname() {
 
 	<br /><br />
 
-	<p class="description"><?php _e( 'You can disable "First Name" and "Last Name" with this format. Best used for anonymous communities.', 'buddyboss' ); ?></p></p>
+	<p class="description"><?php _e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
 
 	<?php
 }
