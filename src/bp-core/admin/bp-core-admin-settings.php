@@ -50,7 +50,7 @@ function bp_admin_setting_callback_account_deletion() {
 /**
  * Admin bar for logged in users setting field.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.0
  *
  */
 function bp_admin_setting_callback_login_admin_bar() {
@@ -65,7 +65,7 @@ function bp_admin_setting_callback_login_admin_bar() {
 /**
  * Admin bar for admin users setting field.
  *
- * @since BuddyBoss 1.0.10
+ * @since BuddyBoss 1.1.0
  *
  */
 function bp_admin_setting_callback_admin_admin_bar() {
@@ -729,7 +729,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
@@ -847,6 +847,103 @@ function bp_email_invites_tutorial() {
 	<p>
 		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/invites/invites-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
+
+	<?php
+}
+
+/**
+ * If 'First Name' selected then add option to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_display_name_first_name() {
+	?>
+
+	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-last-name" name="bp-hide-last-name" type="checkbox" value="1" <?php checked( bp_hide_last_name( true ) ); ?> />
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></span></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * If 'First Name & Last Name' selected then add option to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_display_name_first_last_name() {
+	?>
+
+	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-last-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * If 'Nickname' selected then add options to hide First Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_first_name() {
+	?>
+
+	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
+	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * If 'Nickname' selected then add options to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_last_name() {
+	?>
+
+	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
+	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
 
 	<?php
 }

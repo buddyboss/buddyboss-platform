@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-06-30 06:08:01+00:00\n"
+"POT-Creation-Date: 2019-07-02 07:17:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -398,7 +398,7 @@ msgstr ""
 #: bp-forums/replies/template.php:52 bp-forums/replies/template.php:1911
 #: bp-forums/topics/template.php:52 bp-forums/topics/template.php:2492
 #: bp-groups/classes/class-bp-groups-list-table.php:526
-#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:816
+#: bp-invites/bp-invites-admin.php:265 bp-xprofile/bp-xprofile-admin.php:835
 #: bp-xprofile/bp-xprofile-repeaters.php:749
 #: bp-xprofile/bp-xprofile-repeaters.php:751
 #: bp-xprofile/bp-xprofile-repeaters.php:775
@@ -885,7 +885,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:838
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
-#: bp-xprofile/bp-xprofile-admin.php:821
+#: bp-xprofile/bp-xprofile-admin.php:840
 #: bp-xprofile/bp-xprofile-repeaters.php:755
 #: bp-xprofile/bp-xprofile-repeaters.php:757
 #: bp-xprofile/bp-xprofile-repeaters.php:781
@@ -1089,7 +1089,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:633
 #: bp-core/bp-core-cssjs.php:191
-#: bp-templates/bp-nouveau/buddypress-functions.php:545
+#: bp-templates/bp-nouveau/buddypress-functions.php:546
 msgid "Are you sure?"
 msgstr ""
 
@@ -2077,17 +2077,26 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:436
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:168
+#: bp-core/admin/bp-core-admin-settings.php:864
+#: bp-core/admin/bp-core-admin-settings.php:893
+#: bp-core/admin/bp-core-admin-settings.php:922
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:193
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-schema.php:440 bp-core/bp-core-options.php:40
+#: bp-core/admin/bp-core-admin-schema.php:440
+#: bp-core/admin/bp-core-admin-settings.php:869
+#: bp-core/admin/bp-core-admin-settings.php:898
+#: bp-core/admin/bp-core-admin-settings.php:927 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:444
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
+#: bp-core/admin/bp-core-admin-settings.php:874
+#: bp-core/admin/bp-core-admin-settings.php:903
+#: bp-core/admin/bp-core-admin-settings.php:932
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:195
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -2119,8 +2128,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:848
 #: bp-core/admin/bp-core-admin-slugs.php:98
 #: bp-core/admin/settings/bp-admin-setting-friends.php:79
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:296
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:339
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:321
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:364
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:228
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:357
 #: bp-media/bp-media-settings.php:457 bp-media/bp-media-settings.php:601
@@ -2296,6 +2305,30 @@ msgstr ""
 msgid ""
 "Allow members to use <a href=\"https://gravatar.com/\">gravatars</a> for "
 "profile avatars"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:869
+#: bp-core/admin/bp-core-admin-settings.php:922
+#: bp-core/admin/bp-core-admin-settings.php:927
+msgid "(Optional)"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:878
+msgid ""
+"You can disable \"Last Name\" with this format. Best used for casual "
+"communities."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:907
+msgid ""
+"All name fields are required with this format. Best used for professional "
+"networks."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:936
+msgid ""
+"You can disable \"First Name\" and \"Last Name\" with this format. Best "
+"used for anonymous communities."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -2815,94 +2848,105 @@ msgid "Profiles"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:66
-msgid "Profile Settings"
+msgid "Profile Names"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:71
 msgid "Display Name Format"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:76
-msgid "Profile Avatars"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:82
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:88
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:94
+msgid "Display Name Fields"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:79
-msgid "Profile Gravatars"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:83
-msgid "Profile Cover Images"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
+msgid "Profile Photos"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
+msgid "Profile Avatars"
+msgstr ""
+
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
+msgid "Profile Gravatars"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:108
+msgid "Profile Cover Images"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:126
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:129
 #: bp-members/bp-members-functions.php:3023
 #: bp-members/bp-members-functions.php:3026
-#: bp-xprofile/bp-xprofile-admin.php:994 bp-xprofile/bp-xprofile-admin.php:1046
+#: bp-xprofile/bp-xprofile-admin.php:1013
+#: bp-xprofile/bp-xprofile-admin.php:1065
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1553
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:109
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:134
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:114
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:139
 msgid "Default Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:121
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:124
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:146
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:149
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
-#: bp-xprofile/bp-xprofile-admin.php:1002
+#: bp-xprofile/bp-xprofile-admin.php:1021
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:140
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:165
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:145
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:162
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:187
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:169
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:194
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:189
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:214
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:213
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:238
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:221
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:246
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:235
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:260
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:252
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:277
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:260
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:285
 #: bp-members/classes/class-bp-members-admin.php:1316
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:111
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:111
@@ -2910,7 +2954,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:275
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:300
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -2918,11 +2962,11 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:316
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:341
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:324
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:349
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
@@ -3562,7 +3606,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2451 bp-xprofile/bp-xprofile-admin.php:156
 #: bp-xprofile/bp-xprofile-admin.php:163 bp-xprofile/bp-xprofile-admin.php:172
-#: bp-xprofile/bp-xprofile-admin.php:980
+#: bp-xprofile/bp-xprofile-admin.php:999
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1285
 #: bp-xprofile/classes/class-bp-xprofile-group.php:816
@@ -6411,7 +6455,7 @@ msgstr ""
 
 #: bp-core/profile-search/bps-xprofile.php:313
 #: bp-core/profile-search/bps-xprofile.php:601
-#: bp-xprofile/bp-xprofile-admin.php:867
+#: bp-xprofile/bp-xprofile-admin.php:886
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:332
 msgid "Other"
 msgstr ""
@@ -8569,7 +8613,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:10
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:35
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:412
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:433
 msgid "Close"
 msgstr ""
 
@@ -12011,7 +12055,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-list-table.php:787
 #: bp-members/classes/class-bp-members-admin.php:2403
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:24
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:398
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:419
 #. translators: field visibility level, e.g. "public".
 msgid "Change"
 msgstr ""
@@ -13273,12 +13317,12 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:553
 #: bp-members/classes/class-bp-members-admin.php:589
 #: bp-members/classes/class-bp-members-admin.php:590
-#: bp-xprofile/bp-xprofile-template.php:1276
+#: bp-xprofile/bp-xprofile-template.php:1294
 msgid "Edit Profile"
 msgstr ""
 
 #: bp-members/bp-members-adminbar.php:119
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:492
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:513
 msgid "Edit Profile Photo"
 msgstr ""
 
@@ -13711,7 +13755,7 @@ msgid "Update Profile"
 msgstr ""
 
 #: bp-members/classes/class-bp-members-admin.php:1238
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:443
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:464
 msgid ""
 "%s has been marked as a spammer. All BuddyPress data associated with the "
 "user has been removed"
@@ -13942,6 +13986,7 @@ msgid "Search Members&hellip;"
 msgstr ""
 
 #: bp-members/classes/class-bp-members-component.php:435
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:30
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-list.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:38
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:49
@@ -14892,6 +14937,10 @@ msgstr ""
 msgid ","
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:34
+msgid "Started"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:40
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:42
 msgid "Delete conversation"
@@ -15373,11 +15422,11 @@ msgstr ""
 msgid "Activation Key:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/register.php:84
+#: bp-templates/bp-nouveau/buddypress/members/register.php:105
 msgid "Site Details"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/register.php:86
+#: bp-templates/bp-nouveau/buddypress/members/register.php:107
 msgid "Yes, I'd like to create a new site"
 msgstr ""
 
@@ -15555,11 +15604,11 @@ msgstr ""
 msgid "Edit \"%s\" Information"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:77
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:97
 msgid "You have not yet added details to your profile."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:79
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-loop.php:99
 msgid "This member has not yet added details to their profile."
 msgstr ""
 
@@ -15721,26 +15770,26 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:543
+#: bp-templates/bp-nouveau/buddypress-functions.php:544
 msgid ""
 "As you are the only organizer of this group, you cannot leave it. You can "
 "either delete the group or promote another member to be an organizer first "
 "and then leave the group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:544
+#: bp-templates/bp-nouveau/buddypress-functions.php:545
 msgid "Are you sure you want to remove your connection with this member?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:546
+#: bp-templates/bp-nouveau/buddypress-functions.php:547
 msgid "Are you sure you want to delete this set? This cannot be undone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:547
+#: bp-templates/bp-nouveau/buddypress-functions.php:548
 msgid "View previous comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:548
+#: bp-templates/bp-nouveau/buddypress-functions.php:549
 msgid ""
 "Your profile has unsaved changes. If you leave the page, the changes will "
 "be lost."
@@ -15935,7 +15984,7 @@ msgid "Customize the appearance of the BuddyBoss Platform."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:40
-#: bp-xprofile/bp-xprofile-admin.php:1011
+#: bp-xprofile/bp-xprofile-admin.php:1030
 msgid "Profile Navigation"
 msgstr ""
 
@@ -16857,13 +16906,13 @@ msgid "%s updated %s profile"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-admin.php:165 bp-xprofile/bp-xprofile-admin.php:173
-#: bp-xprofile/bp-xprofile-admin.php:330
+#: bp-xprofile/bp-xprofile-admin.php:349
 #: bp-xprofile/classes/class-bp-xprofile-group.php:793
 msgid "New Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:789
-#: bp-xprofile/bp-xprofile-admin.php:791
+#: bp-xprofile/bp-xprofile-admin.php:207 bp-xprofile/bp-xprofile-admin.php:808
+#: bp-xprofile/bp-xprofile-admin.php:810
 msgid "(Signup)"
 msgstr ""
 
@@ -16887,70 +16936,70 @@ msgstr ""
 msgid "Fields for \"%s\" Field Set"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:313
+#: bp-xprofile/bp-xprofile-admin.php:332
 msgid "There are no fields in this field set."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:321
+#: bp-xprofile/bp-xprofile-admin.php:340
 msgid ""
 "* These fields appear on the signup page. The (Signup) fields cannot be "
 "deleted or moved, as they are needed for the signup process."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:329
+#: bp-xprofile/bp-xprofile-admin.php:348
 msgid "You have no field sets."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:375
+#: bp-xprofile/bp-xprofile-admin.php:394
 msgid "There was an error saving the field set. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:380
+#: bp-xprofile/bp-xprofile-admin.php:399
 msgid "The field set was saved successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:423
+#: bp-xprofile/bp-xprofile-admin.php:442
 msgid "There was an error deleting the field set. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:426
+#: bp-xprofile/bp-xprofile-admin.php:445
 msgid "The field set was deleted successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:489
+#: bp-xprofile/bp-xprofile-admin.php:508
 msgid "You can only have one instance of the \"Social Network\" profile field."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:530
+#: bp-xprofile/bp-xprofile-admin.php:549
 msgid "There was an error saving the field. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:533
+#: bp-xprofile/bp-xprofile-admin.php:552
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1311
 msgid "The field was saved successfully."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:624
+#: bp-xprofile/bp-xprofile-admin.php:643
 msgid "field"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:624
+#: bp-xprofile/bp-xprofile-admin.php:643
 msgid "option"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:628
+#: bp-xprofile/bp-xprofile-admin.php:647
 msgid "There was an error deleting the %s. Please try again."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:631
+#: bp-xprofile/bp-xprofile-admin.php:650
 msgid "The %s was deleted successfully!"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:704
+#: bp-xprofile/bp-xprofile-admin.php:723
 msgid "You can only have one instance of the \"Gender\" profile field."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-admin.php:1087
+#: bp-xprofile/bp-xprofile-admin.php:1106
 msgid ""
 "You can only have one instance of the \"Social Networks\" profile field on "
 "the website."
@@ -17010,24 +17059,24 @@ msgstr ""
 msgid "This member's profile settings have been saved."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1169
+#: bp-xprofile/bp-xprofile-template.php:1187
 msgid "Profile not recently updated."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1195
+#: bp-xprofile/bp-xprofile-template.php:1213
 msgid "Profile updated %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1432
+#: bp-xprofile/bp-xprofile-template.php:1450
 #. translators: accessibility text
 msgid "Select visibility"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1491
+#: bp-xprofile/bp-xprofile-template.php:1509
 msgid "(required)"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-template.php:1524
+#: bp-xprofile/bp-xprofile-template.php:1542
 msgid "(optional)"
 msgstr ""
 
@@ -17386,15 +17435,15 @@ msgstr ""
 msgid "User marked as a spammer"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:390
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:411
 msgid "This field can be seen by: %s"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:407
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:428
 msgid "Who can see this field?"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:486
+#: bp-xprofile/classes/class-bp-xprofile-user-admin.php:507
 msgid "Delete Profile Photo"
 msgstr ""
 
