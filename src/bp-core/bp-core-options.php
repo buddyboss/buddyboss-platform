@@ -657,7 +657,7 @@ function bp_disable_group_cover_image_uploads( $default = false ) {
 }
 
 /**
- * Are group types disabled?
+ * Are group types creation disabled?
  *
  * @since BuddyBoss 1.0.0
  *
@@ -670,7 +670,7 @@ function bp_disable_group_type_creation( $default = false ) {
 	/**
 	 * Filters whether or not members are able to create group types.
 	 *
-	 * @since BuddyPress 2.4.0
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether or not members are able to create groups types.
 	 */
@@ -710,11 +710,11 @@ function bp_enable_group_hierarchies( $default = false ) {
 function bp_enable_group_restrict_invites( $default = false ) {
 
 	/**
-	 * Filters whether or not groups are able to have a subgroups.
+	 * Filters whether group restrict invites to members who already in specific parent group?
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value whether or not groups are able to have a parent and sub groups.
+	 * @param bool $value whether or not group restrict invites to members who already in specific parent group?
 	 */
 	return (bool) apply_filters( 'bp_enable_group_restrict_invites', (bool) bp_get_option( 'bp-enable-group-restrict-invites', $default ) );
 }
@@ -769,17 +769,17 @@ function bp_disable_account_deletion( $default = false ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
- * @return bool True if users are able to delete their own accounts, otherwise
+ * @return bool True if private network for site is enabled, otherwise
  *              false.
  */
 function bp_enable_private_network( $default = false ) {
 
 	/**
-	 * Filters whether or not members are able to delete their own accounts.
+	 * Filters whether private network for site is enabled.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether site owner uses private network.
+	 * @param bool $value Whether private network for site is enabled.
 	 */
 	return apply_filters( 'bp_enable_private_network', (bool) bp_get_option( 'bp-enable-private-network', $default ) );
 }
@@ -948,11 +948,11 @@ function bp_is_activity_follow_active( $default = false ) {
 function bp_is_activity_like_active( $default = true ) {
 
 	/**
-	 * Filters whether or not Activity Follow is enabled.
+	 * Filters whether or not Activity Like is enabled.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether or not Activity Follow is enabled.
+	 * @param bool $value Whether or not Activity Like is enabled.
 	 */
 	return (bool) apply_filters( 'bp_is_activity_like_active', (bool) bp_get_option( '_bp_enable_activity_like', $default ) );
 }
@@ -1022,22 +1022,22 @@ function bp_force_friendship_to_message( $default = false ) {
 }
 
 /**
- * Is profile type disabled?
+ * Is member type disabled?
  *
  * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if profile type enabled, otherwise false.
+ * @return bool True if member type enabled, otherwise false.
  */
 function bp_member_type_enable_disable( $default = false ) {
 
 	/**
-	 * Filters whether profile type is enabled or not.
+	 * Filters whether member type is enabled or not.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether profile type is enabled or not.
+	 * @param bool $value Whether member type is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_member_type_enable_disable', (bool) bp_get_option( 'bp-member-type-enable-disable', $default ) );
 }
@@ -1049,16 +1049,16 @@ function bp_member_type_enable_disable( $default = false ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if profile type enabled, otherwise false.
+ * @return bool True if display member type on profile is enabled, otherwise false.
  */
 function bp_member_type_display_on_profile( $default = false ) {
 
 	/**
-	 * Filters whether profile type is enabled or not.
+	 * Filters whether display member type on profile is enabled or not.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool $value Whether profile type is enabled or not.
+	 * @param bool $value Whether display member type on profile is enabled or not.
 	 */
 	return (bool) apply_filters( 'bp_member_type_display_on_profile', (bool) bp_get_option( 'bp-member-type-display-on-profile', $default ) );
 }
@@ -1188,7 +1188,7 @@ function bp_enable_site_registration( $default = false ) {
 }
 
 /**
- * Default profile type on registration.
+ * Default member type on registration.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1223,24 +1223,17 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 }
 
 /**
- * Enable private network for site owner.
+ * Add URL OR URI which will ignore even if private network is enabled.
  *
  * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
- * @return bool True if users are able to delete their own accounts, otherwise
- *              false.
+ * @return string
+ *
  */
 function bp_enable_private_network_public_content( $default = '' ) {
 
-	/**
-	 * Filters the private network options
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param bool $value Whether site owner uses private network.
-	 */
 	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
 }
 
@@ -1295,16 +1288,16 @@ function bp_show_admin_adminbar( $default = true ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if cover photo uploads are disabled, otherwise false.
+ * @return bool True if members able to use gravatars, otherwise false.
  */
 function bp_enable_profile_gravatar( $default = false ) {
 
 	/**
-	 * Filters whether or not members are able to use gravatars
+	 * Filters whether or not members are able to use gravatars.
 	 *
 	 * @since BuddyBoss 1.0.9
 	 *
-	 * @param bool $value Whether or not members are able to use gravatars
+	 * @param bool $value Whether or not members are able to use gravatars.
 	 */
 	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
 }
@@ -1357,7 +1350,7 @@ function bp_hide_nickname_first_name( $default = true ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
- * @return bool True if avatar uploads are disabled, otherwise false.
+ * @return bool True if Whether or not members are able to hide last name field if in display format nick name selected.
  */
 function bp_hide_nickname_last_name( $default = true ) {
 
