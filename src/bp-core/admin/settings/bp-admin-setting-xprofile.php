@@ -79,7 +79,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		if ( 'first_name' === $current_value  ) {
 
 			// Show Last Name.
-			$this->add_field( 'bp-hide-last-name', __( 'Last Name', 'buddyboss' ), 'bp_admin_setting_callback_hide_last_name', 'intval' );
+			$this->add_field( 'bp-hide-last-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_name', 'intval' );
 
 			// If Nick Name selected then add First & last name show field option.
 		} elseif ( 'nickname' === $current_value ) {

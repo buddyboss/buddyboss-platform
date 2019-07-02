@@ -729,7 +729,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
@@ -857,11 +857,21 @@ function bp_email_invites_tutorial() {
  * @since BuddyPress 1.6.0
  *
  */
-function bp_admin_setting_callback_hide_last_name() {
+function bp_admin_setting_display_name_first_name() {
 	?>
 
+	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
 	<input id="bp-hide-last-name" name="bp-hide-last-name" type="checkbox" value="1" <?php checked( bp_hide_last_name( true ) ); ?> />
-	<label for="bp-hide-last-name"><?php _e( 'Display Last Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -876,7 +886,7 @@ function bp_admin_setting_callback_nickname_hide_first_name() {
 	?>
 
 	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
-	<label for="bp-hide-nickname-first-name"><?php _e( 'Display First Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -891,7 +901,7 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
 	?>
 
 	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
-	<label for="bp-hide-nickname-last-name"><?php _e( 'Display Last Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?></label>
 
 	<?php
 }
