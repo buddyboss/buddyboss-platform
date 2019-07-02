@@ -709,12 +709,13 @@ add_action( bp_core_admin_hook(), 'bp_media_import_admin_menu' );
  */
 function bp_media_import_submenu_page() {
 	global $wpdb;
+	global $bp;
 
 	$bp_media_import_status = get_option( 'bp_media_import_status' );
 
 	$check                        = false;
-	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
-	$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
+	$buddyboss_media_table        = $bp->table_prefix . 'buddyboss_media';
+	$buddyboss_media_albums_table = $bp->table_prefix . 'buddyboss_media_albums';
 	if ( empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) || empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
 		$check = true;
 	}
@@ -870,6 +871,7 @@ function bp_media_get_import_callbacks() {
  */
 function bp_media_activation_notice() {
 	global $wpdb;
+	global $bp;
 
 	if ( ! empty( $_GET['page'] ) && 'bp-media-import' == $_GET['page'] ) {
 		return;
@@ -879,8 +881,8 @@ function bp_media_activation_notice() {
 
 	if ( 'done' != $bp_media_import_status ) {
 
-		$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
-		$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
+		$buddyboss_media_table        = $bp->table_prefix . 'buddyboss_media';
+		$buddyboss_media_albums_table = $bp->table_prefix . 'buddyboss_media_albums';
 
 		if ( ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_table}' ;" ) ) && ! empty( $wpdb->get_results( "SHOW TABLES LIKE '{$buddyboss_media_albums_table}' ;" ) ) ) {
 

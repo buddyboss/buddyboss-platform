@@ -1016,9 +1016,10 @@ function bp_media_handle_sideload( $file_array, $post_data = array() ) {
  */
 function bp_media_import_buddyboss_media_tables() {
 	global $wpdb;
+	global $bp;
 
-	$buddyboss_media_table        = $wpdb->prefix . 'buddyboss_media';
-	$buddyboss_media_albums_table = $wpdb->prefix . 'buddyboss_media_albums';
+	$buddyboss_media_table        = $bp->table_prefix . 'buddyboss_media';
+	$buddyboss_media_albums_table = $bp->table_prefix . 'buddyboss_media_albums';
 
 	$total_media  = $wpdb->get_var( "SELECT COUNT(*) FROM {$buddyboss_media_table}" );
 	$total_albums = $wpdb->get_var( "SELECT COUNT(*) FROM {$buddyboss_media_albums_table}" );
@@ -1476,9 +1477,10 @@ function bp_media_import_buddyboss_reply_media() {
  */
 function bp_media_import_reset_media_albums() {
 	global $wpdb;
+	global $bp;
 
-	$bp_media_table        = $wpdb->prefix . 'bp_media';
-	$bp_media_albums_table = $wpdb->prefix . 'bp_media_albums';
+	$bp_media_table        = $bp->table_prefix . 'bp_media';
+	$bp_media_albums_table = $bp->table_prefix . 'bp_media_albums';
 
 	$album_ids = get_option( 'bp_media_import_albums_ids', array() );
 
@@ -1548,8 +1550,9 @@ function bp_media_import_reset_media_albums() {
  */
 function bp_media_import_reset_media() {
 	global $wpdb;
+	global $bp;
 
-	$bp_media_table = $wpdb->prefix . 'bp_media';
+	$bp_media_table = $bp->table_prefix . 'bp_media';
 
 	$medias = get_option( 'bp_media_import_media_ids', array() );
 
@@ -1613,8 +1616,9 @@ function bp_media_import_reset_media() {
  */
 function bp_media_import_reset_forum_media() {
 	global $wpdb;
+	global $bp;
 
-	$bp_media_table = $wpdb->prefix . 'bp_media';
+	$bp_media_table = $bp->table_prefix . 'bp_media';
 
 	$medias = get_option( 'bp_media_import_forum_media_ids', array() );
 
@@ -1634,8 +1638,9 @@ function bp_media_import_reset_forum_media() {
  */
 function bp_media_import_reset_topic_media() {
 	global $wpdb;
+	global $bp;
 
-	$bp_media_table = $wpdb->prefix . 'bp_media';
+	$bp_media_table = $bp->table_prefix . 'bp_media';
 
 	$medias = get_option( 'bp_media_import_topic_media_ids', array() );
 
@@ -1655,8 +1660,9 @@ function bp_media_import_reset_topic_media() {
  */
 function bp_media_import_reset_reply_media() {
 	global $wpdb;
+	global $bp;
 
-	$bp_media_table = $wpdb->prefix . 'bp_media';
+	$bp_media_table = $bp->table_prefix . 'bp_media';
 
 	$medias = get_option( 'bp_media_import_reply_media_ids', array() );
 
