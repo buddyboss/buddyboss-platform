@@ -85,10 +85,6 @@ class BP_Media_Component extends BP_Component {
 			'settings',
 		);
 
-		if ( class_exists( 'BP_Media_Rotation' ) ) {
-			$GLOBALS['bp_media_rotation'] = new BP_Media_Rotation();
-		}
-
 		parent::includes( $includes );
 	}
 
