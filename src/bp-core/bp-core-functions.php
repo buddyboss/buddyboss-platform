@@ -4096,6 +4096,13 @@ function bp_core_get_active_custom_post_type_feed() {
 	return $cpt_arr;
 }
 
+/**
+ * Return all the default activity of platform.
+ *
+ * @since BuddyBoss 1.0.0
+ * 
+ * @return array
+ */
 function bp_platform_default_activity_types() {
 
 	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(

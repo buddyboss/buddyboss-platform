@@ -421,7 +421,7 @@ abstract class BP_Admin_Tab {
 	 *
 	 * @global $wp_settings_sections Storage array of all settings sections added to admin pages
 	 * @global $wp_settings_fields Storage array of settings fields and info about their pages/sections
-	 * @since BuddyPress 2.7.0
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $page The slug name of the page whose settings sections you want to output
 	 */
@@ -460,7 +460,7 @@ abstract class BP_Admin_Tab {
 	 *
 	 * @global $wp_settings_fields Storage array of settings fields and their pages/sections
 	 *
-	 * @since BuddyPress 2.7.0
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $page Slug title of the admin page who's settings fields you want to show.
 	 * @param string $section Slug title of the settings section who's fields you want to show.

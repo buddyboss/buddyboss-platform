@@ -223,6 +223,9 @@ class BP_Admin {
 	 * Add the separator above the BuddyBoss menu in admin.
 	 *
 	 * @param int $menu_order Menu order.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * 
 	 * @return array
 	 */
 	public function buddyboss_menu_order( $menu_order ) {
@@ -253,6 +256,9 @@ class BP_Admin {
 	 * Add the separator above the plugins menu in admin.
 	 *
 	 * @param int $menu_order Menu order.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
 	 * @return array
 	 */
 	public function buddyboss_plugins_menu_order( $menu_order ) {

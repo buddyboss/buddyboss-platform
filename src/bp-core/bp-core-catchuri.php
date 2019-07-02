@@ -1417,6 +1417,17 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 add_filter( 'lostpassword_url', 'bp_remove_wc_lostpassword_url', 11, 1 );
 
 add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_private_network', 999999, 2 );
+
+/**
+ * Change the Privacy Policy link if private network is enabled.
+ *
+ * @param $link
+ * @param $privacy_policy_url
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
 function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_policy_url ) {
 
 	if ( ! is_user_logged_in() ) {

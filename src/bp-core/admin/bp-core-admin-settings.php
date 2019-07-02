@@ -694,7 +694,7 @@ function bp_admin_setting_callback_member_invite_email_content() {
  * Enable member invite field markup.
  *
  * @since BuddyBoss 1.0.0
- * @todo link to Profile Types
+ * 
  */
 function bp_admin_setting_callback_member_invite_member_type() {
 	?>
