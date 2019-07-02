@@ -1267,6 +1267,28 @@ function bp_show_login_adminbar( $default = true ) {
 }
 
 /**
+ * Is the Toolbar hidden for admin users?
+ *
+ * @since BuddyBoss 1.0.10
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if the admin bar should be hidden for admin users,
+ *              otherwise false.
+ */
+function bp_show_admin_adminbar( $default = true ) {
+
+	/**
+	 * Filters whether or not the toolbar is hidden for admin users.
+	 *
+	 * @since BuddyBoss 1.0.10
+	 *
+	 * @param bool $value Whether or not the toolbar is hidden.
+	 */
+	return (bool) apply_filters( 'bp_show_admin_adminbar', (bool) bp_get_option( 'show-admin-adminbar', $default ) );
+}
+
+/**
  * Are members able to upload their own cover photos?
  *
  * @since BuddyPress 2.4.0

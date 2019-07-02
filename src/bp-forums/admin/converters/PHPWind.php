@@ -136,17 +136,17 @@ class PHPWind extends BBP_Converter_Base {
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date_i18n('Y-m-d H:i:s')
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date_i18n('Y-m-d H:i:s')
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date_i18n('Y-m-d H:i:s')
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',

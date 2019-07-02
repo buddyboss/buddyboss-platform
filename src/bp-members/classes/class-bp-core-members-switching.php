@@ -40,7 +40,7 @@ class BP_Core_Members_Switching {
 		add_action( 'personal_options', array( $this, 'action_personal_options' ) );
 		add_action( 'admin_bar_menu', array( $this, 'action_admin_bar_menu' ), 100 );
 		add_action( 'bbp_template_after_user_details', array( $this, 'action_bbpress_button' ) );
-		add_filter( 'show_admin_bar', array( $this, 'filter_show_admin_bar' ), 999, 1 );
+		//add_filter( 'show_admin_bar', array( $this, 'filter_show_admin_bar' ), 999, 1 );
 	}
 
 	/**
@@ -67,7 +67,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Outputs the 'Switch To' link on the user editing screen if the current user has permission to switch to them.
+	 * Outputs the 'View As' link on the user editing screen if the current user has permission to switch to them.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -83,7 +83,7 @@ class BP_Core_Members_Switching {
 		?>
 		<tr>
 			<th scope="row"><?php echo esc_html__( 'Member Switching', 'buddyboss' ); ?></th>
-			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Switch&nbsp;To', 'buddyboss' ); ?></a>
+			<td><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss' ); ?></a>
 			</td>
 		</tr>
 		<?php
@@ -487,7 +487,7 @@ class BP_Core_Members_Switching {
 	}
 
 	/**
-	 * Adds a 'Switch To' link to each list of user actions on the Users screen.
+	 * Adds a 'View As' link to each list of user actions on the Users screen.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -503,13 +503,13 @@ class BP_Core_Members_Switching {
 			return $actions;
 		}
 
-		$actions['switch_to_user'] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'Switch&nbsp;To', 'buddyboss' ) . '</a>';
+		$actions['switch_to_user'] = '<a href="' . esc_url( $link ) . '">' . esc_html__( 'View As', 'buddyboss' ) . '</a>';
 
 		return $actions;
 	}
 
 	/**
-	 * Adds a 'Switch To' link to each member's profile page and profile listings in BuddyPress.
+	 * Adds a 'View As' link to each member's profile page and profile listings in BuddyPress.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -543,13 +543,13 @@ class BP_Core_Members_Switching {
 			'id'         => 'bp_member_switching',
 			'component'  => reset( $components ),
 			'link_href'  => esc_url( $link ),
-			'link_text'  => esc_html__( 'Switch&nbsp;To', 'buddyboss' ),
+			'link_text'  => esc_html__( 'View As', 'buddyboss' ),
 			'wrapper_id' => 'bp_member_switching_switch_to',
 		) );
 	}
 
 	/**
-	 * Adds a 'Switch To' link to each member's profile page in bbPress.
+	 * Adds a 'View As' link to each member's profile page in bbPress.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -573,7 +573,7 @@ class BP_Core_Members_Switching {
 
 		?>
 		<ul id="bp_member_switching_switch_to">
-			<li><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Switch&nbsp;To', 'buddyboss' ); ?></a>
+			<li><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'View As', 'buddyboss' ); ?></a>
 			</li>
 		</ul>
 		<?php

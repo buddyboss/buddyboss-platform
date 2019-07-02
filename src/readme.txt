@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.0.9
+Stable tag: 1.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,16 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.1.0 =
+* Profiles - Fixed profile dropdown not appearing with some plugins
+* Toolbar - New option to show/hide Toolbar for admin users vs members
+* Messages - Nicer text preview when message contains only an image or gif
+* Media - When migrating from BuddyBoss Media plugin, fixed migration issues
+* Multisite - Fixed issue with Name fields duplicating in new sub-sites
+* Performance - Made functions less likely to timeout on shared hosting
+* Translations - Fixed text instances that were not available for translation
+* Dashboard - Moved 'BuddyBoss' menu higher up for accessibility
 
 = 1.0.9 =
 * Profiles - Fixed profile dropdown not working with Toolbar disabled

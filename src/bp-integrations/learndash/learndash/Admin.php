@@ -43,7 +43,7 @@ class Admin
 	}
 
 	/**
-	 * Add gorup sync metabox to admin
+	 * Add group sync metabox to admin
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */

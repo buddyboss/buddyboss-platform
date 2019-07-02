@@ -249,12 +249,13 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if( is_404() or $item->url == $homepage_url )
 			return $classes;
 
-		if ( 'forum' === get_post_type() || 'topic' === get_post_type() )
-		{
+		if ( 'forum' === get_post_type() || 'topic' === get_post_type() ) {
 			unset($classes[array_search('current_page_parent',$classes)]);
-			if ( isset($item->url) )
-				if ( strstr( $current_url, $item->url) )
+			if ( isset($item->url) ) {
+				if ( isset( $current_url ) && isset( $item->url ) && strstr( $current_url, $item->url ) ) {
 					$classes[] = 'current-menu-item';
+				}
+			}
 		}
 
 		return $classes;

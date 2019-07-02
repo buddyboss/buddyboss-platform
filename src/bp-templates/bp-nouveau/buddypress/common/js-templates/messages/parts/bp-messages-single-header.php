@@ -27,11 +27,11 @@
 				<# } #>
 
 				<# if ( include_you ) { #>
-				<span class="participants-name"><a href="{{current_user.user_link}}">You</a></span>
+				<span class="participants-name"><a href="{{current_user.user_link}}"><?php esc_html_e( 'You', 'buddyboss' ); ?></a></span>
 				<# } #>
 			</dt>
 			<dd>
-				<span class="thread-date">Started {{data.started_date}}</span>
+				<span class="thread-date"><?php esc_html_e( 'Started', 'buddyboss' ); ?> {{data.started_date}}</span>
 			</dd>
 		</dl>
 		<# } #>

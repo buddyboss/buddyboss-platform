@@ -190,7 +190,7 @@ class BP_Admin {
 		add_filter( 'bp_admin_menu_order', array( $this, 'emails_admin_menu_order' ), 20 );
 
 		// Add the separator above the BuddyBoss in admin.
-		add_filter( 'menu_order', array( $this, 'buddyboss_menu_order' ) );
+		//add_filter( 'menu_order', array( $this, 'buddyboss_menu_order' ) );
 
 		// Add the separator above the plugins in admin.
 		add_filter( 'menu_order', array( $this, 'buddyboss_plugins_menu_order' ) );

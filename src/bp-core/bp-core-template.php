@@ -3553,12 +3553,6 @@ function bp_the_body_class() {
 			$bp_classes[] = 'buddypress';
 		}
 
-		if ( is_user_logged_in() ) {
-			if ( false === bp_show_login_adminbar() ) {
-				$bp_classes[] = 'bp-hide-adminbar';
-			}
-		}
-
 		// Add the theme name/id to the body classes
 		$bp_classes[] = 'bp-' . bp_get_theme_compat_id();
 
