@@ -852,7 +852,7 @@ function bp_email_invites_tutorial() {
 }
 
 /**
- * If First Name selected then add option to hide Last Name.
+ * If 'First Name' selected then add option to hide Last Name.
  *
  * @since BuddyBoss 1.1.1
  *
@@ -873,11 +873,44 @@ function bp_admin_setting_display_name_first_name() {
 	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
 	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
 
+	<br /><br />
+
+	<p class="description"><?php _e( 'You can disable "Last Name" with this format. Best used for casual communities.', 'buddyboss' ); ?></p>
+
 	<?php
 }
 
 /**
- * If Nickname selected then add options to hide First Name and Last Name.
+ * If 'First Name & Last Name' selected then add option to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_display_name_first_last_name() {
+	?>
+
+	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-last-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * If 'Nickname' selected then add options to hide First Name and Last Name.
  *
  * @since BuddyBoss 1.1.1
  *
@@ -900,7 +933,7 @@ function bp_admin_setting_display_name_nickname() {
 
 	<br /><br />
 
-	<p class="description"><?php _e( 'If you uncheck First Name and Last Name, your members will become anonymous.', 'buddyboss' ); ?></p>
+	<p class="description"><?php _e( 'You can disable "First Name" and "Last Name" with this format. Best used for anonymous communities.', 'buddyboss' ); ?></p></p>
 
 	<?php
 }

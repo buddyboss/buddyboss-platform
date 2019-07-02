@@ -75,16 +75,22 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 		$current_value = get_option( 'bp-display-name-format' );
 
-		// If First Name selected then add option to hide Last Name.
+		// If 'First Name' selected then add option to hide Last Name.
 		if ( 'first_name' === $current_value  ) {
 
-			// Show Last Name.
+			// Hide Last Name.
 			$this->add_field( 'bp-hide-last-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_name', 'intval' );
 
-		// If Nickname selected then add options to hide First Name and Last Name.
+		// If 'First Name & Last Name' selected then add option to hide Last Name.
+		} elseif ( 'first_last_name' === $current_value  ) { 
+
+			// Hide Nothing
+			$this->add_field( 'bp-hide-nothing', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_last_name', 'intval' );
+
+		// If 'Nickname' selected then add options to hide First Name and Last Name.
 		} elseif ( 'nickname' === $current_value ) {
 
-			// Show Last Name.
+			// Hide First Name or Last Name.
 			$this->add_field( 'bp-hide-nickname-first-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_nickname', 'intval' );
 
 		}
