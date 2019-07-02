@@ -852,9 +852,9 @@ function bp_email_invites_tutorial() {
 }
 
 /**
- * Allow members to hide last name field if in display format first name selected.
+ * If First Name selected then add option to hide Last Name.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.1.1
  *
  */
 function bp_admin_setting_display_name_first_name() {
@@ -877,31 +877,30 @@ function bp_admin_setting_display_name_first_name() {
 }
 
 /**
- * Allow members to hide first name field if in display format nick name selected.
+ * If Nickname selected then add options to hide First Name and Last Name.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.1.1
  *
  */
-function bp_admin_setting_callback_nickname_hide_first_name() {
+function bp_admin_setting_display_name_nickname() {
 	?>
 
 	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
-	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
 
-	<?php
-}
-
-/**
- * Allow members to hide last name field if in display format nick name selected.
- *
- * @since BuddyPress 1.6.0
- *
- */
-function bp_admin_setting_callback_nickname_hide_last_name() {
-	?>
+	<br /><br />
 
 	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
-	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?></label>
+	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'If you uncheck First Name and Last Name, your members will become anonymous.', 'buddyboss' ); ?></p>
 
 	<?php
 }
