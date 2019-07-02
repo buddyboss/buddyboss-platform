@@ -77,6 +77,7 @@ function bp_core_register_common_scripts() {
 
 		'emojione'     => array( 'file' => "{$url}emojione-edited.js", 'dependencies' => array(), 'footer' => true ),
 		'emojionearea' => array( 'file' => "{$url}emojionearea-edited.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
+		'bp-exif' => array( 'file' => "{$url}vendor/exif.js" ),
 
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
