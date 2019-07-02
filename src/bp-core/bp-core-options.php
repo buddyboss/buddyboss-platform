@@ -1168,7 +1168,7 @@ function bp_platform_is_feed_enable( $activity_type, $default = true ) {
 /**
  * Is the Registration enabled?
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.0.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1180,7 +1180,7 @@ function bp_enable_site_registration( $default = false ) {
 	/**
 	 * Filters whether or not the registration enable.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param bool $value Whether or not the registration enable.
 	 */
@@ -1235,7 +1235,7 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
 function bp_enable_private_network_public_content( $default = '' ) {
 
 	/**
-	 * Filters whether or not members are able to delete their own accounts.
+	 * Filters the private network options
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -1257,9 +1257,9 @@ function bp_enable_private_network_public_content( $default = '' ) {
 function bp_show_login_adminbar( $default = true ) {
 
 	/**
-	 * Filters whether or not the toolbar is hidden for logged in users.
+	 * Filters whether or not the toolbar is hidden for logged in users (non-admins).
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.1.0
 	 *
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
@@ -1269,7 +1269,7 @@ function bp_show_login_adminbar( $default = true ) {
 /**
  * Is the Toolbar hidden for admin users?
  *
- * @since BuddyBoss 1.0.10
+ * @since BuddyBoss 1.1.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1281,7 +1281,7 @@ function bp_show_admin_adminbar( $default = true ) {
 	/**
 	 * Filters whether or not the toolbar is hidden for admin users.
 	 *
-	 * @since BuddyBoss 1.0.10
+	 * @since BuddyBoss 1.1.0
 	 *
 	 * @param bool $value Whether or not the toolbar is hidden.
 	 */
@@ -1289,9 +1289,9 @@ function bp_show_admin_adminbar( $default = true ) {
 }
 
 /**
- * Are members able to upload their own cover photos?
+ * Are members able to use gravatars?
  *
- * @since BuddyPress 2.4.0
+ * @since BuddyBoss 1.0.9
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -1300,11 +1300,11 @@ function bp_show_admin_adminbar( $default = true ) {
 function bp_enable_profile_gravatar( $default = false ) {
 
 	/**
-	 * Filters whether or not members are able to upload their own cover photos.
+	 * Filters whether or not members are able to use gravatars
 	 *
-	 * @since BuddyPress 2.4.0
+	 * @since BuddyBoss 1.0.9
 	 *
-	 * @param bool $value Whether or not members are able to upload their own cover photos.
+	 * @param bool $value Whether or not members are able to use gravatars
 	 */
 	return (bool) apply_filters( 'bp_enable_profile_gravatar', (bool) bp_get_option( 'bp-enable-profile-gravatar', $default ) );
 }
@@ -1312,7 +1312,7 @@ function bp_enable_profile_gravatar( $default = false ) {
 /**
  * Allow members to hide last name field if in display format first name selected.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.1.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1321,11 +1321,11 @@ function bp_enable_profile_gravatar( $default = false ) {
 function bp_hide_last_name( $default = true ) {
 
 	/**
-	 * Filters whether or not members are able to upload their own avatars.
+	 * Filters whether or not members are able to hide last name field.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.1.1
 	 *
-	 * @param bool $value Whether or not members are able to upload their own avatars.
+	 * @param bool $value Whether or not members are able to hide last name field.
 	 */
 	return (bool) apply_filters( 'bp_hide_last_name', (bool) bp_get_option( 'bp-hide-last-name', $default ) );
 }
@@ -1333,7 +1333,7 @@ function bp_hide_last_name( $default = true ) {
 /**
  * Allow members to hide first name field if in display format nick name selected.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.1.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1342,11 +1342,11 @@ function bp_hide_last_name( $default = true ) {
 function bp_hide_nickname_first_name( $default = true ) {
 
 	/**
-	 * Filters whether or not members are able to upload their own avatars.
+	 * Filters whether or not members are able to hide first name field if in display format nick name selected.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.1.1
 	 *
-	 * @param bool $value Whether or not members are able to upload their own avatars.
+	 * @param bool $value Whether or not members are able to hide first name field if in display format nick name selected.
 	 */
 	return (bool) apply_filters( 'bp_hide_nickname_first_name', (bool) bp_get_option( 'bp-hide-nickname-first-name', $default ) );
 }
@@ -1354,7 +1354,7 @@ function bp_hide_nickname_first_name( $default = true ) {
 /**
  * Allow members to hide last name field if in display format nick name selected.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.1.1
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
@@ -1363,11 +1363,11 @@ function bp_hide_nickname_first_name( $default = true ) {
 function bp_hide_nickname_last_name( $default = true ) {
 
 	/**
-	 * Filters whether or not members are able to upload their own avatars.
+	 * Filters whether or not members are able to hide last name field if in display format nick name selected.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.1.1
 	 *
-	 * @param bool $value Whether or not members are able to upload their own avatars.
+	 * @param bool $value Whether or not members are able to hide last name field if in display format nick name selected.
 	 */
 	return (bool) apply_filters( 'bp_hide_nickname_last_name', (bool) bp_get_option( 'bp-hide-nickname-last-name', $default ) );
 }

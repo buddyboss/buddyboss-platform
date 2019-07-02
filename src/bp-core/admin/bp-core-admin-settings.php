@@ -50,7 +50,7 @@ function bp_admin_setting_callback_account_deletion() {
 /**
  * Admin bar for logged in users setting field.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.0
  *
  */
 function bp_admin_setting_callback_login_admin_bar() {
@@ -65,7 +65,7 @@ function bp_admin_setting_callback_login_admin_bar() {
 /**
  * Admin bar for admin users setting field.
  *
- * @since BuddyBoss 1.0.10
+ * @since BuddyBoss 1.1.0
  *
  */
 function bp_admin_setting_callback_admin_admin_bar() {
