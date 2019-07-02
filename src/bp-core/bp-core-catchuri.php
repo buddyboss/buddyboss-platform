@@ -49,10 +49,36 @@ function bp_core_set_uri_globals() {
 		$bp->pages = bp_core_get_directory_pages();
 
 	// Ajax or not?
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) )
+	if ( wp_doing_ajax() || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) )
 		$path = bp_get_referer_path();
 	else
 		$path = esc_url( $_SERVER['REQUEST_URI'] );
+
+	$front_end_request = false;
+	if ( wp_doing_ajax() ) {
+		$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? $_SERVER['SCRIPT_FILENAME'] : '';
+		$ref             = '';
+		if ( ! empty( $_REQUEST['_wp_http_referer'] ) ) {
+			$ref = wp_unslash( $_REQUEST['_wp_http_referer'] );
+		} elseif ( ! empty( $_SERVER['HTTP_REFERER'] ) ) {
+			$ref = wp_unslash( $_SERVER['HTTP_REFERER'] );
+		}
+
+		//If referer does not contain admin URL and we are using the admin-ajax.php endpoint, this is likely a frontend AJAX request
+		if ( ( ( strpos( $ref, admin_url() ) === false ) && ( basename( $script_filename ) === 'admin-ajax.php' ) ) ) {
+			$front_end_request = true;
+		}
+	} else {
+		$script_filename = isset( $_SERVER['SCRIPT_FILENAME'] ) ? $_SERVER['SCRIPT_FILENAME'] : '';
+
+		$ref = wp_unslash( $_SERVER['REQUEST_URI'] );
+
+		if ( ( ( strpos( $ref, 'elementor_library=' ) === false &&
+		         ( strpos( $ref, 'wp-admin' ) === false ) ) &&
+		       ( basename( $script_filename ) !== 'admin-ajax.php' ) ) ) {
+			$front_end_request = true;
+		}
+	}
 
 	/**
 	 * Filters the BuddyPress global URI path.
@@ -136,10 +162,12 @@ function bp_core_set_uri_globals() {
 	 * so that $current_component is populated (unless a specific WP post is being requested
 	 * via a URL parameter, usually signifying Preview mode).
 	 */
-	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) ) {
-		$post = get_post( get_option( 'page_on_front' ) );
-		if ( !empty( $post ) ) {
-			$bp_uri[0] = $post->post_name;
+	if ( $front_end_request ) {
+		if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) ) {
+			$post = get_post( get_option( 'page_on_front' ) );
+			if ( !empty( $post ) ) {
+				$bp_uri[0] = $post->post_name;
+			}
 		}
 	}
 
