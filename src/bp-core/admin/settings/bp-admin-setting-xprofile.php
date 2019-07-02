@@ -90,8 +90,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// If 'Nickname' selected then add options to hide First Name and Last Name.
 		} elseif ( 'nickname' === $current_value ) {
 
-			// Hide First Name or Last Name.
-			$this->add_field( 'bp-hide-nickname-first-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_nickname', 'intval' );
+			// Hide First Name.
+			$args = array();
+			$args['class'] = 'child-no-padding';
+			$this->add_field( 'bp-hide-nickname-first-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_first_name', 'intval', $args );
+
+			// Hide Last Name.
+			$args = array();
+			$args['class'] = 'child-no-padding-first';
+			$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
 		}
 

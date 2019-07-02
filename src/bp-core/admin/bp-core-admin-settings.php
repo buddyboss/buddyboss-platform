@@ -910,18 +910,28 @@ function bp_admin_setting_display_name_first_last_name() {
 }
 
 /**
- * If 'Nickname' selected then add options to hide First Name and Last Name.
+ * If 'Nickname' selected then add options to hide First Name.
  *
  * @since BuddyBoss 1.1.1
  *
  */
-function bp_admin_setting_display_name_nickname() {
+function bp_admin_setting_callback_nickname_hide_first_name() {
 	?>
 
 	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
 	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
 
-	<br /><br />
+	<?php
+}
+
+/**
+ * If 'Nickname' selected then add options to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_last_name() {
+	?>
 
 	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
 	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(Optional)', 'buddyboss' ); ?></span></label>
