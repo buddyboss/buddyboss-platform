@@ -1337,7 +1337,6 @@ function bp_hide_last_name( $default = true ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
- * @return bool True if avatar uploads are disabled, otherwise false.
  */
 function bp_hide_nickname_first_name( $default = true ) {
 
