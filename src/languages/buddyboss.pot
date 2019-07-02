@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-07-02 05:03:13+00:00\n"
+"POT-Creation-Date: 2019-07-02 07:17:14+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2077,21 +2077,26 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:436
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:88
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:190
+#: bp-core/admin/bp-core-admin-settings.php:864
+#: bp-core/admin/bp-core-admin-settings.php:893
+#: bp-core/admin/bp-core-admin-settings.php:922
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:193
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:440
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:82
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:91
-#: bp-core/bp-core-options.php:40
+#: bp-core/admin/bp-core-admin-settings.php:869
+#: bp-core/admin/bp-core-admin-settings.php:898
+#: bp-core/admin/bp-core-admin-settings.php:927 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:444
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:192
+#: bp-core/admin/bp-core-admin-settings.php:874
+#: bp-core/admin/bp-core-admin-settings.php:903
+#: bp-core/admin/bp-core-admin-settings.php:932
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:195
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -2123,8 +2128,8 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:848
 #: bp-core/admin/bp-core-admin-slugs.php:98
 #: bp-core/admin/settings/bp-admin-setting-friends.php:79
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:318
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:361
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:321
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:364
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:228
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:357
 #: bp-media/bp-media-settings.php:457 bp-media/bp-media-settings.php:601
@@ -2302,13 +2307,28 @@ msgid ""
 "profile avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:864
-#: bp-core/admin/bp-core-admin-settings.php:894
-msgid "Display Last Name"
+#: bp-core/admin/bp-core-admin-settings.php:869
+#: bp-core/admin/bp-core-admin-settings.php:922
+#: bp-core/admin/bp-core-admin-settings.php:927
+msgid "(Optional)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:879
-msgid "Display First Name"
+#: bp-core/admin/bp-core-admin-settings.php:878
+msgid ""
+"You can disable \"Last Name\" with this format. Best used for casual "
+"communities."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:907
+msgid ""
+"All name fields are required with this format. Best used for professional "
+"networks."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:936
+msgid ""
+"You can disable \"First Name\" and \"Last Name\" with this format. Best "
+"used for anonymous communities."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -2835,24 +2855,30 @@ msgstr ""
 msgid "Display Name Format"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:95
-msgid "Profile Photos"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:82
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:88
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:94
+msgid "Display Name Fields"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:98
-msgid "Profile Avatars"
+msgid "Profile Photos"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:101
+msgid "Profile Avatars"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:104
 msgid "Profile Gravatars"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:105
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:108
 msgid "Profile Cover Images"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:123
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:126
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:129
 #: bp-members/bp-members-functions.php:3023
 #: bp-members/bp-members-functions.php:3026
 #: bp-xprofile/bp-xprofile-admin.php:1013
@@ -2861,16 +2887,16 @@ msgstr ""
 msgid "Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:131
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:134
 msgid "Display Profile Types"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:136
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:139
 msgid "Default Profile Type"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:143
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:146
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:149
 #: bp-core/profile-search/bps-start.php:57
 #: bp-core/profile-search/bps-start.php:60
 #: bp-core/profile-search/bps-start.php:240
@@ -2878,49 +2904,49 @@ msgstr ""
 msgid "Profile Search"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:162
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:165
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:167
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:184
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:187
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:191
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:194
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:211
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:214
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:235
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:238
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:243
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:246
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:257
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:260
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:274
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:277
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:282
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:285
 #: bp-members/classes/class-bp-members-admin.php:1316
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:111
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:111
@@ -2928,7 +2954,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:297
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:300
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -2936,11 +2962,11 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:338
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:341
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:346
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:349
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
