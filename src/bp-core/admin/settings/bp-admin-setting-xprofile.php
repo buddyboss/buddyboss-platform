@@ -63,7 +63,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_xprofile', __( 'Profile Name', 'buddyboss' ) );
+		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
 
 		// Display name format.
 		$this->add_field(
@@ -92,7 +92,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		}
 
-		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Avatars', 'buddyboss' ) );
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
 
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );

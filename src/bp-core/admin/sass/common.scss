@@ -380,25 +380,23 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
-.bp-admin-card.section-bp_privacy h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
-}
-
 /* Profiles */
 .bp-admin-card.section-bp_xprofile h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/user.svg);
+
+}
+
+.bp-admin-card.section-bp_member_avatar_settings h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/solid/camera.svg);
 }
 
 .bp-admin-card.section-bp_member_type_settings h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/user-tag.svg);
-	background-size: 22px 22px;
-	background-position-x: 10px;
+	background-image: url(../../images/admin/icons/fontawesome/solid/tag.svg);
+	background-position: 11px 11px;
 }
 
 .bp-admin-card.section-bp_profile_search_settings h2:before {
-	background-image: url(../../images/admin/icons/fontawesome/solid/user-plus.svg);
-	background-size: 21px 21px;
-	background-position-x: 10px;
+	background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
 /* Activity */
