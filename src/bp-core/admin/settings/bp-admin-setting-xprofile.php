@@ -72,35 +72,25 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			[ $this, 'callback_display_name_format']
 		);
 
-		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-		$current_value = get_option( 'bp-display-name-format' );
+		// Hide Last Name.
+		$args = array();
+		$args['class'] = 'first-name-options display-options';
+		$this->add_field( 'bp-hide-last-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_name', 'intval', $args );
 
-		// If 'First Name' selected then add option to hide Last Name.
-		if ( 'first_name' === $current_value  ) {
+		// Hide Nothing
+		$args = array();
+		$args['class'] = 'first-last-name-options display-options';
+		$this->add_field( 'bp-hide-nothing', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_last_name', 'intval', $args );
 
-			// Hide Last Name.
-			$this->add_field( 'bp-hide-last-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_name', 'intval' );
+		// Hide First Name.
+		$args = array();
+		$args['class'] = 'child-no-padding nick-name-options display-options';
+		$this->add_field( 'bp-hide-nickname-first-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_first_name', 'intval', $args );
 
-		// If 'First Name & Last Name' selected then add option to hide Last Name.
-		} elseif ( 'first_last_name' === $current_value  ) { 
-
-			// Hide Nothing
-			$this->add_field( 'bp-hide-nothing', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_last_name', 'intval' );
-
-		// If 'Nickname' selected then add options to hide First Name and Last Name.
-		} elseif ( 'nickname' === $current_value ) {
-
-			// Hide First Name.
-			$args = array();
-			$args['class'] = 'child-no-padding';
-			$this->add_field( 'bp-hide-nickname-first-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_first_name', 'intval', $args );
-
-			// Hide Last Name.
-			$args = array();
-			$args['class'] = 'child-no-padding-first';
-			$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
-
-		}
+		// Hide Last Name.
+		$args = array();
+		$args['class'] = 'child-no-padding-first nick-name-options display-options';
+		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
 		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
 
