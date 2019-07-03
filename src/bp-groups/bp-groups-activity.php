@@ -598,3 +598,45 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 add_action( 'groups_leave_group',   'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_ban_member',    'bp_groups_leave_group_delete_recent_activity', 10, 2 );
+
+/**
+ * Filters the where condition to add private groups posts into user's feed
+ * This filter supports `bp_groups_filter_activity_scope` function because
+ * we truncated the scope queries
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ * @param $where_conditions
+ * @param $args
+ * @param $select_sql
+ * @param $from_sql
+ *
+ * @return mixed
+ */
+function bp_groups_get_activity_where_conditions( $where_conditions, $args ) {
+
+	// Only for activity directory and user's activity
+	if ( bp_is_activity_directory() || bp_is_user_activity() ) {
+
+		// Determine the user_id.
+		if ( ! empty( $args['filter']['user_id'] ) ) {
+			$user_id = $args['filter']['user_id'];
+		} else {
+			$user_id = bp_displayed_user_id()
+				? bp_displayed_user_id()
+				: bp_loggedin_user_id();
+		}
+
+		if ( ! empty( $user_id ) ) {
+			// Determine groups of user.
+			$groups = groups_get_user_groups( $user_id );
+			if ( ! empty( $groups['groups'] ) ) {
+				$groups                           = implode( ',', $groups['groups'] );
+				$where_conditions['groups_scope'] = "a.component <> 'groups' OR ( a.component = 'groups' AND a.item_id IN ({$groups}) )";
+			}
+		}
+	}
+
+	return $where_conditions;
+}
+add_filter( 'bp_activity_get_where_conditions', 'bp_groups_get_activity_where_conditions', 10, 2 );
