@@ -69,7 +69,7 @@ window.bp = window.bp || {};
 			this.objectNavParent        = BP_Nouveau.object_nav_parent;
 
 			// HeartBeat Global
-			this.heartbeat              = wp.heartbeat || {};
+			this.heartbeat              = wp.heartbeat || false;
 
 			// An object containing each query var
 			this.querystring            = this.getLinkParams();
