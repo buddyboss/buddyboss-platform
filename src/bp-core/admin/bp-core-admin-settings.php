@@ -917,10 +917,10 @@ function bp_admin_setting_display_name_first_last_name() {
  */
 function bp_admin_setting_callback_nickname_hide_first_name() {
 	?>
-
-	<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
-	<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
-
+	<div class="bb-nickname-hide-first-name">
+		<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
+		<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+	</div>
 	<?php
 }
 
@@ -932,18 +932,18 @@ function bp_admin_setting_callback_nickname_hide_first_name() {
  */
 function bp_admin_setting_callback_nickname_hide_last_name() {
 	?>
+	<div class="bb-nickname-hide-last-name">
+		<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
+		<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
 
-	<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
-	<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+		<br /><br />
 
-	<br /><br />
+		<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+		<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
 
-	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
-	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+		<br /><br />
 
-	<br /><br />
-
-	<p class="description"><?php _e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
-
+		<p class="description"><?php _e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
+	</div>
 	<?php
 }

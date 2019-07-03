@@ -1630,3 +1630,19 @@ td label.platform-activity {
 		vertical-align: top;
 	}
 }
+
+.bb-nickname-hide-last-name {
+	margin-top: -21px;
+
+	input[type="checkbox"] {
+		margin-top: 0;
+	}
+}
+
+.bb-nickname-hide-first-name {
+	margin-top: -8px;
+
+	input[type="checkbox"] {
+		margin-top: 0;
+	}
+}

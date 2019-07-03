@@ -221,7 +221,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 			array(
 				'parent' => 'user-actions',
 				'id'     => 'edit-profile',
-				'title'  => __( 'Edit My Profile' ),
+				'title'  => __( 'Edit My Profile', 'buddyboss' ),
 				'href'   => $profile_url,
 			)
 		);
@@ -231,7 +231,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		array(
 			'parent' => 'user-actions',
 			'id'     => 'logout',
-			'title'  => __( 'Log Out' ),
+			'title'  => __( 'Log Out', 'buddyboss' ),
 			'href'   => wp_logout_url(),
 		)
 	);

@@ -1564,3 +1564,19 @@ td label.platform-activity {
   display: inline-block;
   vertical-align: top;
 }
+
+.bb-nickname-hide-last-name {
+  margin-top: -21px;
+}
+
+.bb-nickname-hide-last-name input[type="checkbox"] {
+  margin-top: 0;
+}
+
+.bb-nickname-hide-first-name {
+  margin-top: -8px;
+}
+
+.bb-nickname-hide-first-name input[type="checkbox"] {
+  margin-top: 0;
+}
