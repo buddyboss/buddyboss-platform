@@ -418,7 +418,7 @@ class BP_Activity_Activity {
 		// Select conditions.
 		$select_sql = "SELECT DISTINCT a.id";
 
-		$from_sql   = apply_filters( 'bp_activity_get_from_sql', " FROM {$bp->activity->table_name} a", $r );
+		$from_sql   = " FROM {$bp->activity->table_name} a";
 
 		$join_sql   = '';
 

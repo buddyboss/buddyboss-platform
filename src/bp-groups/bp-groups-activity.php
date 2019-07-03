@@ -600,42 +600,6 @@ add_action( 'groups_remove_member', 'bp_groups_leave_group_delete_recent_activit
 add_action( 'groups_ban_member',    'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 
 /**
- * Filters the from table to add private groups posts into user's feed
- * This filter supports `bp_groups_filter_activity_scope` function because
- * we truncated the scope queries
- *
- * @since BuddyBoss 1.1.1
- *
- * @param $from_sql
- * @param $args
- *
- * @return string
- */
-function bp_groups_get_activity_from_sql( $from_sql, $args ) {
-	global $bp;
-
-	// Determine the user_id.
-	if ( ! empty( $args['filter']['user_id'] ) ) {
-		$user_id = $args['filter']['user_id'];
-	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
-	}
-
-	if ( ! empty( $user_id ) ) {
-		// Determine groups of user.
-		$groups = groups_get_user_groups( $user_id );
-		if ( ! empty( $groups['groups'] ) ) {
-			$from_sql .= ", {$bp->activity->table_name} b";
-		}
-	}
-
-	return $from_sql;
-}
-add_filter( 'bp_activity_get_from_sql', 'bp_groups_get_activity_from_sql', 10, 2 );
-
-/**
  * Filters the where condition to add private groups posts into user's feed
  * This filter supports `bp_groups_filter_activity_scope` function because
  * we truncated the scope queries
@@ -649,33 +613,25 @@ add_filter( 'bp_activity_get_from_sql', 'bp_groups_get_activity_from_sql', 10, 2
  *
  * @return mixed
  */
-function bp_groups_get_activity_where_conditions( $where_conditions, $args, $select_sql, $from_sql ) {
-	global $bp;
+function bp_groups_get_activity_where_conditions( $where_conditions, $args ) {
+	// Determine the user_id.
+	if ( ! empty( $args['filter']['user_id'] ) ) {
+		$user_id = $args['filter']['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
 
-	if ( strpos( $from_sql, $bp->activity->table_name . ' b' ) ) {
-		// Determine the user_id.
-		if ( ! empty( $args['filter']['user_id'] ) ) {
-			$user_id = $args['filter']['user_id'];
-		} else {
-			$user_id = bp_displayed_user_id()
-				? bp_displayed_user_id()
-				: bp_loggedin_user_id();
-		}
-
-		if ( ! empty( $user_id ) ) {
-			// Determine groups of user.
-			$groups = groups_get_user_groups( $user_id );
-			if ( ! empty( $groups['groups'] ) ) {
-				$groups                           = implode( ',', $groups['groups'] );
-				$where_conditions['groups_scope'] = "a.id <> b.id AND b.item_id IN ({$groups})";
-
-				if ( isset( $where_conditions['hidden_sql'] ) ) {
-					unset( $where_conditions['hidden_sql'] );
-				}
-			}
+	if ( ! empty( $user_id ) ) {
+		// Determine groups of user.
+		$groups = groups_get_user_groups( $user_id );
+		if ( ! empty( $groups['groups'] ) ) {
+			$groups                           = implode( ',', $groups['groups'] );
+			$where_conditions['groups_scope'] = "a.component <> 'groups' OR ( a.component = 'groups' AND a.item_id IN ({$groups}) )";
 		}
 	}
 
 	return $where_conditions;
 }
-add_filter( 'bp_activity_get_where_conditions', 'bp_groups_get_activity_where_conditions', 10, 4 );
+add_filter( 'bp_activity_get_where_conditions', 'bp_groups_get_activity_where_conditions', 10, 2 );
