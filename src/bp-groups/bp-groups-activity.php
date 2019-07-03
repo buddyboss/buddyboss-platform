@@ -614,21 +614,26 @@ add_action( 'groups_ban_member',    'bp_groups_leave_group_delete_recent_activit
  * @return mixed
  */
 function bp_groups_get_activity_where_conditions( $where_conditions, $args ) {
-	// Determine the user_id.
-	if ( ! empty( $args['filter']['user_id'] ) ) {
-		$user_id = $args['filter']['user_id'];
-	} else {
-		$user_id = bp_displayed_user_id()
-			? bp_displayed_user_id()
-			: bp_loggedin_user_id();
-	}
 
-	if ( ! empty( $user_id ) ) {
-		// Determine groups of user.
-		$groups = groups_get_user_groups( $user_id );
-		if ( ! empty( $groups['groups'] ) ) {
-			$groups                           = implode( ',', $groups['groups'] );
-			$where_conditions['groups_scope'] = "a.component <> 'groups' OR ( a.component = 'groups' AND a.item_id IN ({$groups}) )";
+	// Only for activity directory and user's activity
+	if ( bp_is_activity_directory() || bp_is_user_activity() ) {
+
+		// Determine the user_id.
+		if ( ! empty( $args['filter']['user_id'] ) ) {
+			$user_id = $args['filter']['user_id'];
+		} else {
+			$user_id = bp_displayed_user_id()
+				? bp_displayed_user_id()
+				: bp_loggedin_user_id();
+		}
+
+		if ( ! empty( $user_id ) ) {
+			// Determine groups of user.
+			$groups = groups_get_user_groups( $user_id );
+			if ( ! empty( $groups['groups'] ) ) {
+				$groups                           = implode( ',', $groups['groups'] );
+				$where_conditions['groups_scope'] = "a.component <> 'groups' OR ( a.component = 'groups' AND a.item_id IN ({$groups}) )";
+			}
 		}
 	}
 
