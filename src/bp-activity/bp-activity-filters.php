@@ -575,7 +575,7 @@ function bp_activity_enqueue_heartbeat_js() {
 		wp_enqueue_script( 'heartbeat' );
 	}
 }
-add_action( 'bp_nouveau_enqueue_scripts', 'bp_activity_enqueue_heartbeat_js', 10, 1 );
+add_action( 'bp_nouveau_enqueue_scripts', 'bp_activity_enqueue_heartbeat_js' );
 
 /**
  * Add a just-posted classes to the most recent activity item.
