@@ -695,6 +695,8 @@ class BP_Activity_Activity {
 			 */
 			$activity_ids_sql = apply_filters( 'bp_activity_paged_activities_sql', $activity_ids_sql, $r );
 
+			error_log($activity_ids_sql);
+
 			/*
 			 * Queries that include 'last_activity' are cached separately,
 			 * since they are generally much less long-lived.
