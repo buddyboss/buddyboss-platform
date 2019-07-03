@@ -29,9 +29,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 		}
 
 		function init() {
-			if ( bp_is_media_rotation_enabled() ) {
-				add_action( 'bp_media_attachment_uploaded', array( $this, 'attachment_uploaded' ) );
-			}
+			add_action( 'bp_media_attachment_uploaded', array( $this, 'attachment_uploaded' ) );
 		}
 
 		/**
@@ -85,8 +83,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 
 			if ( $attachment !== null ) {
 				$name     = $attachment->post_title;
-				$img_size = 'buddyboss_media_photo_wide';
-				$url_nfo  = wp_get_attachment_image_src( $aid, $img_size );
+				$url_nfo  = wp_get_attachment_image_src( $aid );
 				$url      = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
 			}
 
