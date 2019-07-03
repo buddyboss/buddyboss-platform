@@ -797,13 +797,13 @@ function bp_media_settings_callback_photo_rotation() {
 		<?php checked( bp_is_media_rotation_enabled() ); ?>
     />
     <label for="bp_media_photo_rotation">
-		<?php _e( 'Enable fix for photos uploads rotating', 'buddyboss' ) ?>
+		<?php _e( 'Fix photo upload rotations on mobile', 'buddyboss' ) ?>
     </label>
     <p class="description">
-		<?php _e( 'It\'s recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail.', 'buddyboss' ); ?>
-        <br/>
-		<?php _e( 'Your current memory limit is', 'buddyboss' ); ?><strong><?php echo ' ' . $memory_limit . '.'; ?></strong>
-		<?php _e( 'You can contact your web host to increase the memory limit.', 'buddyboss' ); ?>
+		<?php _e( 'When using a mobile device in a web browser, it can sometimes rotate your image by 90 degrees. This is an issue with the mobile browsers in any website. We can enable a script that will auto-detect and properly rotate the photos. However it requires some server resources to function. To use this option, it is recommended that you have at least 256M-512M of RAM allocated to PHP, otherwise photo uploads may fail. You can contact your web host to increase the RAM on your server.', 'buddyboss' ); ?>
+    </p>
+    <p class="description">
+		<code><?php _e( 'Your current memory limit is', 'buddyboss' ); ?><strong><?php echo ' ' . $memory_limit . '.'; ?></strong></code>
     </p>
 	<?php
 }
