@@ -2865,22 +2865,83 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 		case 'first_name':
 			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
 			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$display_name            = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
+			$display_name            = isset( $queried_data_first_name[0]->value ) ? trim( $queried_data_first_name[0]->value ) : '';
+			if ( '' === $display_name ) {
+				xprofile_set_field_data( $first_name_id, $user_id, get_user_meta( $user_id, 'first_name', true ) );
+				$display_name = get_user_meta( $user_id, 'first_name', true );
+			}
+
+			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
+			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+
+			if ( '' === trim( $nick_name ) ) {
+
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
 			break;
 		case 'first_last_name':
 			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
 			$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
 			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
 			$queried_data_last_name  = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
-			$display_name            = implode( ' ', array_filter( [
-				isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '',
-				isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : ''
-			] ) );
+			$display_name            = implode( ' ', array_filter( [ isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '', isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '' ] ) );
+			if ( '' === trim( $display_name ) ) {
+				xprofile_set_field_data( $first_name_id, $user_id, get_user_meta( $user_id, 'first_name', true ) );
+				xprofile_set_field_data( $last_name_id, $user_id, get_user_meta( $user_id, 'last_name', true ) );
+				$display_name = get_user_meta( $user_id, 'first_name', true ) . ' '. get_user_meta( $user_id, 'last_name', true );
+			}
+
+			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
+			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+
+			if ( '' === trim( $nick_name ) ) {
+
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
 			break;
 		case 'nickname':
 			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
 			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
 			$display_name          = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+			if ( '' === trim( $display_name ) ) {
+
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				$display_name = $nickname;
+			}
 			break;
 	}
 

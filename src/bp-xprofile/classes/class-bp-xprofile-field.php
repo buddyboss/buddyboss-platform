@@ -221,7 +221,13 @@ class BP_XProfile_Field {
 		if ( false === $field ) {
 			$bp = buddypress();
 
-			$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $id ) );
+			if ( isset( $bp->profile->table_name_fields ) ) {
+				$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $id ) );
+			} else {
+				$table = bp_core_get_table_prefix() .'bp_xprofile_fields';
+				$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
+			}
+
 
 			if ( ! $field ) {
 				return false;
