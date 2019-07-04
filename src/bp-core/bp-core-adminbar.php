@@ -128,11 +128,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	if ( ! $user_id ) {
 		return;
 	}
-
-	$name = empty( $current_user->display_name ) ? empty( $current_user->user_nicename ) ?  $current_user->user_login : $current_user->user_nicename : $current_user->display_name;
-	$display_name = bp_custom_display_name_format( $name, $user_id );
-	$display_name = empty( $display_name ) ? $name : $display_name;
-
+	$display_name = $current_user->data->display_name;
 	$avatar = get_avatar( $user_id, 26 );
 
 	// my account
