@@ -356,7 +356,19 @@ class BP_XProfile_User_Admin {
 		// Loop through profile groups & fields.
 		while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
 
-			<input type="hidden" name="field_ids[]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( bp_get_the_profile_group_field_ids() ); ?>" />
+			<?php
+				if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+					$ids     = bp_get_the_profile_group_field_ids();
+					$ids_arr = explode( ',', $ids );
+					if ( ( $key = array_search( bp_get_xprofile_member_type_field_id(), $ids_arr ) ) !== false ) {
+						unset( $ids_arr[$key] );
+					}
+					$ids = implode (",", $ids_arr);
+				} else {
+					$ids = bp_get_the_profile_group_field_ids();
+				}
+			?>
+			<input type="hidden" name="field_ids[]" id="<?php echo esc_attr( 'field_ids_' . bp_get_the_profile_group_slug() ); ?>" value="<?php echo esc_attr( $ids ); ?>" />
 
 			<?php if ( bp_get_the_profile_group_description() ) : ?>
 
@@ -365,6 +377,14 @@ class BP_XProfile_User_Admin {
 			<?php endif; ?>
 
 			<?php while ( bp_profile_fields() ) : bp_the_profile_field(); ?>
+
+
+				<?php
+				$field = new BP_XProfile_Field( bp_get_the_profile_field_id() );
+				if ( 'membertypes' === $field->type ) {
+					continue;
+				}
+				?>
 
 				<div<?php bp_field_css_class( 'bp-profile-field' ); ?>>
 					<fieldset>

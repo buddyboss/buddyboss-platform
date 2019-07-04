@@ -1427,6 +1427,9 @@ class BP_Members_Admin {
 			if ( $id > 0 ) {
 				xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, $id );
 			}
+			if ( '' === $member_type ) {
+				xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, '' );
+			}
 		}
 
 	}
