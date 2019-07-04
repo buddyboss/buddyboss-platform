@@ -4309,7 +4309,7 @@ function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user )
 
 		// Check Member Type Dropdown added on register page.
 		$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
-		$get_selected_member_type_on_register = $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) );
+		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
 
