@@ -443,15 +443,14 @@ add_filter ('bp_ps_add_fields', 'bp_ps_gender_setup');
  */
 function bp_ps_xprofile_gender_users_search( $f ) {
 
-	global $wpdb;
-	global $bp;
+	global $wpdb, $bp;
 
 	$gender = $f->value;
 	if ( isset( $gender ) && ! empty( $gender ) ) {
 
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
 
-		$custom_ids = $wpdb->get_col("SELECT user_id FROM {$bp->table_prefix}bp_xprofile_data WHERE field_id = {$exists_gender[0]->id} AND value = '{$gender}'");
+		$custom_ids = $wpdb->get_col("SELECT user_id FROM {$wpdb->prefix}bp_xprofile_data WHERE field_id = {$exists_gender[0]->id} AND value = '{$gender}'");
 
 		if ( isset( $custom_ids ) && ! empty( $custom_ids ) ) {
 			return $custom_ids;
