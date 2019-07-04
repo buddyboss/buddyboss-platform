@@ -1202,8 +1202,7 @@ class BP_Members_Admin {
 						<?php
 
 						// Translators: Publish box date format, see http://php.net/date.
-						$datef = __( 'M j, Y @ G:i', 'buddyboss' );
-						$date  = date_i18n( $datef, strtotime( $user->user_registered ) );
+						$date  = date_i18n( bp_core_date_format( true ), strtotime( $user->user_registered ) );
 						?>
 						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
 					</div>
@@ -1262,8 +1261,7 @@ class BP_Members_Admin {
 			$last_active = bp_get_user_last_activity( $user->ID );
 		}
 
-		$datef = __( 'M j, Y @ G:i', 'buddyboss' );
-		$date  = date_i18n( $datef, strtotime( $last_active ) ); ?>
+		$date  = date_i18n( bp_core_date_format( true ), strtotime( $last_active ) ); ?>
 
 		<ul>
 			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
