@@ -106,7 +106,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		// Profile Settings Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial','', 'bp_profile_setting_tutorial' );
+		$this->add_field( 'bp-profile-setting-tutorial','', 'bp_profile_photos_tutorial' );
 
 		// @todo will use this later on
 		// Section for profile dashboard.

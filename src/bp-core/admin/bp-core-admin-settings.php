@@ -341,16 +341,16 @@ function bp_admin_setting_callback_cover_image_uploads() {
 }
 
 /**
- * Link to Profile Settings tutorial
+ * Link to Profile Photos tutorial
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.1
  *
  */
-function bp_profile_setting_tutorial() {
+function bp_profile_photos_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-photos.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
