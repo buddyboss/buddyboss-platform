@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.1 =
 * Profiles - New option to remove First and Last Name, depending on Display Name Format
+* Cover Photos - Display validation message when cover photo was uploaded successfully
 
 = 1.1.0 =
 * Profiles - Fixed profile dropdown not appearing with some plugins
