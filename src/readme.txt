@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.1 =
 * Profiles - New option to remove First and Last Name, depending on Display Name Format
+* Groups - Activity posted in private groups now displays in activity feed
 * Media - Fixed image rotation issues for photos uploaded in mobile browsers
 * Activity - Allow activity to load when 'Heartbeat API' is disabled, for WPEngine hosting
 * Cover Photos - Display validation message when cover photo was uploaded successfully
