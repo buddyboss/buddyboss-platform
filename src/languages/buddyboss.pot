@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-07-04 03:17:41+00:00\n"
+"POT-Creation-Date: 2019-07-04 03:54:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5233,7 +5233,7 @@ msgid "There was a problem deleting your cover photo. Please try again."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:211
-msgid "Your cover photo was deleted successfully!"
+msgid "Your cover photo was deleted successfully."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment-cover-image.php:227
