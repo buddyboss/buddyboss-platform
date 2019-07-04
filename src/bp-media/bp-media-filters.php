@@ -728,7 +728,7 @@ function bp_media_import_submenu_page() {
 		}
 	}
 
-	if ( 'importing' == $bp_media_import_status ) {
+	if ( in_array( $bp_media_import_status, array( 'importing', 'start', 'reset_albums', 'reset_media', 'reset_forum', 'reset_topic', 'reset_reply', 'reset_options' ) ) ) {
 		$is_updating = true;
 	}
 
@@ -769,6 +769,7 @@ function bp_media_import_submenu_page() {
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
                             </p>
+                            <label style="display: none;" id="bp-media-resetting"><strong><?php echo __( 'Reset in progress', 'buddyboss' ) . '...'; ?></strong></label>
                             <table>
                                 <tr>
                                     <td><h4><?php _e( 'Albums', 'buddyboss' ); ?></h4></td>
@@ -841,27 +842,6 @@ function bp_media_import_submenu_page() {
     <br/>
 
 	<?php
-}
-
-/**
- * Callback for media migration
- *
- * @return array
- * @since BuddyBoss 1.0.0
- */
-function bp_media_get_import_callbacks() {
-	return array(
-		'bp_media_import_reset_media_albums',
-		'bp_media_import_reset_media',
-		'bp_media_import_reset_forum_media',
-		'bp_media_import_reset_topic_media',
-		'bp_media_import_reset_reply_media',
-		'bp_media_import_reset_options',
-		'bp_media_import_buddyboss_media_tables',
-		'bp_media_import_buddyboss_forum_media',
-		'bp_media_import_buddyboss_topic_media',
-		'bp_media_import_buddyboss_reply_media',
-	);
 }
 
 /**

@@ -347,6 +347,18 @@
 						$('#bp-media-import-albums-done').text(albums_done);
 						$('#bp-media-import-media-done').text(media_done);
 
+						if ( import_status == 'reset_albums' ||
+							import_status == 'reset_media' ||
+							import_status == 'reset_forum' ||
+							import_status == 'reset_topic' ||
+							import_status == 'reset_reply' ||
+							import_status == 'reset_options'
+						) {
+							$('#bp-media-resetting').show();
+						} else {
+							$('#bp-media-resetting').hide();
+						}
+
 						if ( import_status == 'done' && total_albums == albums_done && total_media == media_done ) {
 							$('#bp-media-import-msg').text(response.data.success_msg);
 							$('#bp-media-import-submit').show();
