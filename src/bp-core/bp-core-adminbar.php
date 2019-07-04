@@ -114,41 +114,6 @@ function bp_core_enqueue_admin_bar_css() {
 	wp_enqueue_style( 'bp-admin-bar' );
 }
 
-
-/**
- * Replace admin bar "Howdy" text
- * Use proper display name and mention
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_core_fix_admin_bar_names( $wp_admin_bar ) {
-	$user_id      = get_current_user_id();
-	$current_user = wp_get_current_user();
-
-	if ( ! $user_id ) {
-		return;
-	}
-
-	$avatar = get_avatar( $user_id, 26 );
-
-	// my account
-    $wp_admin_bar->add_node( [
-        'id' => 'my-account',
-        'title' => '<span class="display-name">' . bp_custom_display_name_format( $current_user->display_name, $user_id ) . $avatar . '</span>'
-    ] );
-
-	// user info
-	$user_info  = get_avatar( $user_id, 64 );
-	$user_info .= "<span class='display-name'>". bp_custom_display_name_format( $current_user->display_name, $user_id ) . "</span>";
-	$user_info .= "<span class='username'>" . bp_activity_get_user_mentionname( $user_id ) . "</span>";
-
-	$wp_admin_bar->add_menu([
-		'id' => 'user-info',
-		'title'  => $user_info
-	]);
-}
-add_filter( 'admin_bar_menu', 'bp_core_fix_admin_bar_names', 25 );
-
 /**
  * Add the "My Account" submenu items.
  *
@@ -163,6 +128,24 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	if ( ! $user_id ) {
 		return;
 	}
+	$display_name = $current_user->data->display_name;
+	$avatar = get_avatar( $user_id, 26 );
+
+	// my account
+	$wp_admin_bar->add_node( [
+		'id' => 'my-account',
+		'title' => '<span class="display-name">' . $display_name . $avatar . '</span>'
+	] );
+
+	// user info
+	$user_info  = get_avatar( $user_id, 64 );
+	$user_info .= "<span class='display-name'>". $display_name . "</span>";
+	$user_info .= "<span class='username'>" . bp_activity_get_user_mentionname( $user_id ) . "</span>";
+
+	$wp_admin_bar->add_menu([
+		'id' => 'user-info',
+		'title'  => $user_info
+	]);
 
 	if ( current_user_can( 'read' ) ) {
 		$profile_url = get_edit_profile_url( $user_id );
@@ -180,13 +163,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	);
 
 	$user_info  = get_avatar( $user_id, 64 );
-
-	$display_name = bp_custom_display_name_format( $current_user->display_name, $user_id );
-	if ( '' === $display_name ) {
-		$user_info .= "<span class='display-name'>{$current_user->display_name}</span>";
-	} else {
-		$user_info .= "<span class='display-name'>{$display_name}</span>";
-	}
+	$user_info .= "<span class='display-name'>{$display_name}</span>";
 
 	if ( $current_user->display_name !== $current_user->user_login ) {
 

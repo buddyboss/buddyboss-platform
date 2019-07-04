@@ -2859,7 +2859,7 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 	global $wpdb;
 
 	$format = bp_get_option( 'bp-display-name-format' );
-	$table  = $wpdb->prefix . 'bp_xprofile_data';
+	$table  = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 	switch ( $format ) {
 		case 'first_name':
