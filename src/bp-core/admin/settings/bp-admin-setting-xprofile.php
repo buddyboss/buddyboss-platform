@@ -63,6 +63,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
+		
+		// Section for Profile Names
 		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
 
 		// Display name format.
@@ -92,6 +94,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
+		// Profile Names Tutorial
+		$this->add_field( 'bp-profile-names-tutorial','', 'bp_profile_names_tutorial' );
+
+		// Section for Profile Photos
 		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
 
 		// Avatars.

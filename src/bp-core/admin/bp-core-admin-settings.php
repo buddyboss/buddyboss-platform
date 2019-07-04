@@ -947,3 +947,19 @@ function bp_admin_setting_callback_nickname_hide_last_name() {
 	</div>
 	<?php
 }
+
+/**
+ * Link to Profile Names tutorial
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_profile_names_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-names.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
