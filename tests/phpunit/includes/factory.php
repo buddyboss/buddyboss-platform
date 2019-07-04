@@ -29,7 +29,7 @@ class BP_UnitTest_Factory_For_User extends WP_UnitTest_Factory_For_User {
 	public function create_object( $args ) {
 		$r = wp_parse_args( $args, array(
 			'role' => 'subscriber',
-			'last_activity' => date( 'Y-m-d H:i:s', strtotime( bp_core_current_time() ) - 60*60*24*365 ),
+			'last_activity' => date_i18n( 'Y-m-d H:i:s', strtotime( bp_core_current_time() ) - 60*60*24*365 ),
 		) );
 
 		$last_activity = $r['last_activity'];
@@ -113,7 +113,7 @@ class BP_UnitTest_Factory_For_Group extends WP_UnitTest_Factory_For_Thing {
 
 			// Create a user. This is based on from BP_UnitTestCase->create_user().
 			} else {
-				$last_activity      = date( 'Y-m-d H:i:s', strtotime( bp_core_current_time() ) - 60 * 60 * 24 * 365 );
+				$last_activity      = date_i18n( 'Y-m-d H:i:s', strtotime( bp_core_current_time() ) - 60 * 60 * 24 * 365 );
 				$user_factory       = new WP_UnitTest_Factory_For_User();
 				$args['creator_id'] = $this->factory->user->create( array( 'role' => 'subscriber' ) );
 

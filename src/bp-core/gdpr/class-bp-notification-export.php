@@ -143,10 +143,11 @@ final class BP_Notification_Export extends BP_Export {
 	 */
 	function get_data( $user, $page ) {
 		global $wpdb;
+		global $bp;
 
 		$wpdb->show_errors( false );
 
-		$table              = "{$wpdb->prefix}bp_notifications item";
+		$table              = "{$bp->table_prefix}bp_notifications item";
 		$query_select       = "item.*";
 		$query_select_count = "COUNT(item.id)";
 		$query_where        = "item.user_id=%d";

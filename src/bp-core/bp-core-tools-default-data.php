@@ -560,7 +560,7 @@ function bp_dd_get_random_date( $days_from = 30, $days_to = 0 ) {
 	$date_from = new DateTime( 'now - ' . $days_from . ' days' );
 	$date_to   = new DateTime( 'now - ' . $days_to . ' days' );
 
-	return date( 'Y-m-d H:i:s', mt_rand( $date_from->getTimestamp(), $date_to->getTimestamp() ) );
+	return date_i18n( 'Y-m-d H:i:s', mt_rand( $date_from->getTimestamp(), $date_to->getTimestamp() ) );
 }
 
 /**

@@ -534,8 +534,9 @@ class BBP_Converter {
 	 */
 	public function sync_table( $drop = false ) {
 		global $wpdb;
+		global $bp;
 
-		$table_name = $wpdb->prefix . 'bbp_converter_translator';
+		$table_name = $bp->table_prefix . 'bbp_converter_translator';
 		if ( ! empty( $drop ) && $wpdb->get_var( "SHOW TABLES LIKE '{$table_name}'" ) == $table_name )
 			$wpdb->query( "DROP TABLE {$table_name}" );
 
@@ -1457,9 +1458,9 @@ abstract class BBP_Converter_Base {
 
 	protected function callback_datetime( $field ) {
 		if ( is_numeric( $field ) ) {
-			return date( 'Y-m-d H:i:s', $field );
+			return date_i18n( 'Y-m-d H:i:s', $field );
 		} else {
-			return date( 'Y-m-d H:i:s', strtotime( $field ) );
+			return date_i18n( 'Y-m-d H:i:s', strtotime( $field ) );
 		}
 	}
 }

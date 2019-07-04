@@ -197,8 +197,11 @@ window.bp = window.bp || {};
 
 			if ( ! _.isUndefined( model.get( 'url' ) ) ) {
 
+				// initially remove the warning
+				$('.bp-cover-image-status > .warning').remove();
+
 				// Image is too small
-				if ( 0 === model.get( 'feedback_code' ) ) {
+				/*if ( 0 === model.get( 'feedback_code' ) ) {
 					message = BP_Uploader.strings.cover_image_warnings.dimensions;
 					type    = 'warning';
 
@@ -211,7 +214,23 @@ window.bp = window.bp || {};
 				this.views.set( '.bp-uploader-progress', new bp.Views.CoverImageStatus( {
 					value : message,
 					type  : type
+				} ) );*/
+
+				/*
+				* if image url is defined meaning cover image uploaded successfully
+				* so feedback message should always be 1
+				*/
+				message = BP_Uploader.strings.feedback_messages[1];
+				type = 'success';
+
+				this.views.set( '.bp-uploader-progress', new bp.Views.CoverImageStatus( {
+					value : message,
+					type  : type
 				} ) );
+
+				if ( model.get( 'feedback_code' ) === 0 ) { // add suggested dimensions if true
+					$('.bp-cover-image-status').append('<p class="warning">'+BP_Uploader.strings.cover_image_warnings.dimensions+'</p>');
+				}
 
 				// Update the header of the page
 				$( '#header-cover-image' ).css( {

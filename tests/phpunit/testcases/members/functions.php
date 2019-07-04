@@ -273,9 +273,9 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		$u3 = self::factory()->user->create();
 
 		$time = time();
-		$t1 = date( 'Y-m-d H:i:s', $time - 50 );
-		$t2 = date( 'Y-m-d H:i:s', $time - 500 );
-		$t3 = date( 'Y-m-d H:i:s', $time - 5000 );
+		$t1 = date_i18n( 'Y-m-d H:i:s', $time - 50 );
+		$t2 = date_i18n( 'Y-m-d H:i:s', $time - 500 );
+		$t3 = date_i18n( 'Y-m-d H:i:s', $time - 5000 );
 
 		update_user_meta( $u1, 'last_activity', $t1 );
 		update_user_meta( $u2, 'last_activity', $t2 );
@@ -330,7 +330,7 @@ class BP_Tests_Members_Functions extends BP_UnitTestCase {
 		// We explicitly do not want last_activity created, so use the
 		// WP factory methods
 		$user = self::factory()->user->create();
-		$time = date( 'Y-m-d H:i:s', time() - 50 );
+		$time = date_i18n( 'Y-m-d H:i:s', time() - 50 );
 
 		// Update last user activity
 		bp_update_user_last_activity( $user, $time );

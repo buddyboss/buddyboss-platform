@@ -367,6 +367,56 @@
 			bp_media_import_send_status_requests();
 		}
 
+		// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
+		if ( $('.display-options').length ) {
+
+			var selectorAll = $('.display-options');
+			var displayOptions = $('select[name=bp-display-name-format]');
+			var currentValue = displayOptions.val();
+
+			$(selectorAll).each(function() {
+				$(this).hide();
+			});
+
+			if ( 'first_name' === currentValue ) {
+				$('.first-name-options').show();
+				$('.nick-name-options').hide();
+				$('.first-last-name-options').hide();
+			} else if ( 'first_last_name' === currentValue ) {
+				$('.first-last-name-options').show();
+				$('.first-name-options').hide();
+				$('.nick-name-options').hide();
+			} else {
+				$('.nick-name-options').show();
+				$('.first-name-options').hide();
+				$('.first-last-name-options').hide();
+			}
+
+			$(displayOptions).change(function () {
+
+				$(selectorAll).each(function() {
+					$(this).hide();
+				});
+
+				currentValue = $(this).val();
+
+				if ( 'first_name' === currentValue ) {
+					$('.first-name-options').show();
+					$('.nick-name-options').hide();
+					$('.first-last-name-options').hide();
+				} else if ( 'first_last_name' === currentValue ) {
+					$('.first-last-name-options').show();
+					$('.first-name-options').hide();
+					$('.nick-name-options').hide();
+				} else {
+					$('.nick-name-options').show();
+					$('.first-name-options').hide();
+					$('.first-last-name-options').hide();
+				}
+
+			});
+		}
+
 	});
 
 }());

@@ -1626,7 +1626,7 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 	/**
 	 * Filters the new blog post action for the new blog.
 	 *
-	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $action   Constructed activity action.
 	 * @param object $activity Activity data object.

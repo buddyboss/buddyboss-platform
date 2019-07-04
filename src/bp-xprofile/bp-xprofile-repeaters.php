@@ -198,7 +198,7 @@ function bp_profile_repeaters_update_field_data ( $user_id, $posted_field_ids, $
                     $new_visibility_level = isset( $new_values[ $field_of_current_set ][ 'visibility' ] ) ? $new_values[ $field_of_current_set ][ 'visibility' ] : '';
                     xprofile_set_field_visibility_level( $corresponding_field_id, $user_id, $new_visibility_level );
 
-	                $type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$wpdb->prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
+	                $type = $wpdb->get_var( $wpdb->prepare( "SELECT `type` FROM {$bp->table_prefix}bp_xprofile_fields WHERE id = %d", $corresponding_field_id ) );
 
 	                if ( 'datebox' === $type ) {
 		                $new_data = $new_data.' 00:00:00';

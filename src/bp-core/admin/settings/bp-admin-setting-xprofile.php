@@ -63,7 +63,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		$this->add_section( 'bp_xprofile', __( 'Profile Settings', 'buddyboss' ) );
+		
+		// Section for Profile Names
+		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
 
 		// Display name format.
 		$this->add_field(
@@ -71,6 +73,32 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			__( 'Display Name Format', 'buddyboss' ),
 			[ $this, 'callback_display_name_format']
 		);
+
+		// Hide Last Name.
+		$args = array();
+		$args['class'] = 'first-name-options display-options';
+		$this->add_field( 'bp-hide-last-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_name', 'intval', $args );
+
+		// Hide Nothing
+		$args = array();
+		$args['class'] = 'first-last-name-options display-options';
+		$this->add_field( 'bp-hide-nothing', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_display_name_first_last_name', 'intval', $args );
+
+		// Hide First Name.
+		$args = array();
+		$args['class'] = 'nick-name-options display-options';
+		$this->add_field( 'bp-hide-nickname-first-name', __( 'Display Name Fields', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_first_name', 'intval', $args );
+
+		// Hide Last Name.
+		$args = array();
+		$args['class'] = 'nick-name-options display-options';
+		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
+
+		// Profile Names Tutorial
+		$this->add_field( 'bp-profile-names-tutorial','', 'bp_profile_names_tutorial' );
+
+		// Section for Profile Photos
+		$this->add_section( 'bp_member_avatar_settings', __( 'Profile Photos', 'buddyboss' ) );
 
 		// Avatars.
 		$this->add_field( 'bp-disable-avatar-uploads', __( 'Profile Avatars', 'buddyboss' ), 'bp_admin_setting_callback_avatar_uploads', 'intval' );
@@ -84,7 +112,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		}
 
 		// Profile Settings Tutorial
-		$this->add_field( 'bp-profile-setting-tutorial','', 'bp_profile_setting_tutorial' );
+		$this->add_field( 'bp-profile-setting-tutorial','', 'bp_profile_photos_tutorial' );
 
 		// @todo will use this later on
 		// Section for profile dashboard.

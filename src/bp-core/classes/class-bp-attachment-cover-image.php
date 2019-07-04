@@ -208,7 +208,7 @@ class BP_Attachment_Cover_Image extends BP_Attachment {
 			$script_data['feedback_messages'] = array(
 				1 => __( 'Your new cover photo was uploaded successfully.', 'buddyboss' ),
 				2 => __( 'There was a problem deleting your cover photo. Please try again.', 'buddyboss' ),
-				3 => __( 'Your cover photo was deleted successfully!', 'buddyboss' ),
+				3 => __( 'Your cover photo was deleted successfully.', 'buddyboss' ),
 			);
 		} elseif ( bp_is_group() ) {
 			$item_id = bp_get_current_group_id();

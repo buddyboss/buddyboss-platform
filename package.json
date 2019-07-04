@@ -24,7 +24,7 @@
 		"node-sass": "^4.12.0",
 		"postcss-scss": "^1.0.5",
 		"stylelint": "^10.1.0",
-		"stylelint-config-wordpress": "~11.0.0"
+		"stylelint-config-wordpress": "^14.0.0"
 	},
 	"engines": {
 		"node": ">=6.9.1"

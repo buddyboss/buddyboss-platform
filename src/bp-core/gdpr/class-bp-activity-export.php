@@ -127,12 +127,13 @@ final class BP_Activity_Export extends BP_Export {
 	function process_erase( $user, $page, $email_address ) {
 
 		global $wpdb;
+		global $bp;
 
 		if ( ! $user || is_wp_error( $user ) ) {
 			return $this->response_erase( array(), true );
 		}
 
-		$table          = "{$wpdb->prefix}bp_activity";
+		$table          = "{$bp->table_prefix}bp_activity";
 		$number         = $this->items_per_batch;
 		$page           = (int) $page;
 		$items_removed  = true;
@@ -161,10 +162,11 @@ final class BP_Activity_Export extends BP_Export {
 	 */
 	function get_data( $user, $page, $mode = "erase" ) {
 		global $wpdb;
+		global $bp;
 
 		$wpdb->show_errors( false );
 
-		$table              = "{$wpdb->prefix}bp_activity item";
+		$table              = "{$bp->table_prefix}bp_activity item";
 		$query_select       = "item.*";
 		$query_select_count = "COUNT(item.id)";
 

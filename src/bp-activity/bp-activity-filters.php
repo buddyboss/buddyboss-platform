@@ -562,7 +562,20 @@ function bp_activity_get_js_dependencies( $js_handles = array() ) {
 
 	return $js_handles;
 }
-add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10, 1 );
+//add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10, 1 );
+//NOTICE: this dependency breaks activity stream when heartbeat is dequed via external sources
+
+/**
+ * Enqueue Heartbeat js for the activity
+ *
+ * @since BuddyBoss 1.1.1
+ */
+function bp_activity_enqueue_heartbeat_js() {
+	if ( bp_activity_do_heartbeat() ) {
+		wp_enqueue_script( 'heartbeat' );
+	}
+}
+add_action( 'bp_nouveau_enqueue_scripts', 'bp_activity_enqueue_heartbeat_js' );
 
 /**
  * Add a just-posted classes to the most recent activity item.
@@ -663,7 +676,7 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 	// filters), but force the offset to get only new items.
 	$activity_latest_args = bp_parse_args(
 		bp_ajax_querystring( 'activity' ),
-		array( 'since' => date( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
+		array( 'since' => date_i18n( 'Y-m-d H:i:s', $data['bp_activity_last_recorded'] ) ),
 		'activity_latest_args'
 	);
 
