@@ -94,7 +94,7 @@ function messages_new_message( $args = '' ) {
 
 		// Set a default reply subject if none was sent.
 		if ( empty( $message->subject ) ) {
-			$re = __( 'Re: ', 'buddyboss' );
+			$re = __( 'Re', 'buddyboss' ) . ': ';
 
 			if ( strpos($thread->messages[0]->subject, $re) === 0 ) {
 				$message->subject = $thread->messages[0]->subject;
