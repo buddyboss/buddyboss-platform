@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-07-04 03:54:36+00:00\n"
+"POT-Creation-Date: 2019-07-04 13:44:56+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1963,7 +1963,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2178
-#: bp-media/bp-media-filters.php:833
+#: bp-media/bp-media-filters.php:834
 msgid "Run Migration"
 msgstr ""
 
@@ -2354,7 +2354,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:312
 #: bp-forums/common/widgets.php:686 bp-forums/forums/template.php:46
 #: bp-forums/templates/default/bbpress/content-statistics.php:21
-#: bp-media/bp-media-filters.php:786 bp-media/bp-media-settings.php:157
+#: bp-media/bp-media-filters.php:787 bp-media/bp-media-settings.php:157
 #: bp-media/bp-media-settings.php:164 bp-media/bp-media-settings.php:171
 #: bp-search/bp-search-functions.php:368
 #: bp-templates/bp-nouveau/includes/customizer.php:173
@@ -2464,7 +2464,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:46 bp-forums/topics/template.php:47
-#: bp-media/bp-media-filters.php:792
+#: bp-media/bp-media-filters.php:793
 #: bp-templates/bp-nouveau/includes/groups/classes.php:263
 msgid "Discussions"
 msgstr ""
@@ -2480,7 +2480,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:69
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:798
+#: bp-media/bp-media-filters.php:799
 msgid "Replies"
 msgstr ""
 
@@ -2813,7 +2813,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:780
+#: bp-media/bp-media-filters.php:781
 msgid "Media"
 msgstr ""
 
@@ -11986,7 +11986,7 @@ msgid "Send Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:717
-#: bp-media/bp-media-filters.php:774
+#: bp-media/bp-media-filters.php:775
 #: bp-media/classes/class-bp-media-component.php:274
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 msgid "Albums"
@@ -13094,7 +13094,7 @@ msgstr ""
 
 #: bp-media/bp-media-filters.php:678 bp-media/bp-media-filters.php:694
 #: bp-media/bp-media-filters.php:695 bp-media/bp-media-filters.php:749
-#: bp-media/bp-media-filters.php:896
+#: bp-media/bp-media-filters.php:876
 msgid "Import Media"
 msgstr ""
 
@@ -13108,23 +13108,27 @@ msgstr ""
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:776 bp-media/bp-media-filters.php:782
-#: bp-media/bp-media-filters.php:788 bp-media/bp-media-filters.php:794
-#: bp-media/bp-media-filters.php:800
+#: bp-media/bp-media-filters.php:772
+msgid "Reset in progress"
+msgstr ""
+
+#: bp-media/bp-media-filters.php:777 bp-media/bp-media-filters.php:783
+#: bp-media/bp-media-filters.php:789 bp-media/bp-media-filters.php:795
+#: bp-media/bp-media-filters.php:801
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:812 bp-media/bp-media-filters.php:826
+#: bp-media/bp-media-filters.php:813 bp-media/bp-media-filters.php:827
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:821 bp-media/bp-media-functions.php:1802
+#: bp-media/bp-media-filters.php:822 bp-media/bp-media-functions.php:1802
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:832
+#: bp-media/bp-media-filters.php:833
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -13132,7 +13136,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:894
+#: bp-media/bp-media-filters.php:874
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "

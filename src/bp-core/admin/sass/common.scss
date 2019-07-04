@@ -1646,3 +1646,14 @@ td label.platform-activity {
 		margin-top: 0;
 	}
 }
+
+@media screen and (max-width: 782px) {
+
+	.bb-nickname-hide-last-name {
+		margin-top: -2px;
+	}
+
+	.bb-nickname-hide-first-name {
+		margin-top: 0;
+	}
+}

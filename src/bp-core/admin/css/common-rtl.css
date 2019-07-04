@@ -1580,3 +1580,12 @@ td label.platform-activity {
 .bb-nickname-hide-first-name input[type="checkbox"] {
   margin-top: 0;
 }
+
+@media screen and (max-width: 782px) {
+  .bb-nickname-hide-last-name {
+    margin-top: -2px;
+  }
+  .bb-nickname-hide-first-name {
+    margin-top: 0;
+  }
+}
