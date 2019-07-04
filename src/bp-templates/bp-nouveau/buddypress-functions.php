@@ -184,6 +184,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
+		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), 99999 );
 
 		// Register login and forgot password popup link
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
@@ -510,6 +511,19 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		do_action( 'bp_nouveau_enqueue_scripts' );
 	}
+
+	/**
+	 * Check the Heartbeat API if it is enabled or not on front end
+     *
+     * @since BuddyBoss 1.1.2
+	 */
+	public function check_heartbeat_api() {
+		if ( ! wp_script_is( 'heartbeat', 'registered' ) && ! is_admin() ) {
+			update_option( 'bp_wp_heartbeat_disabled', '1' );
+		} else {
+			update_option( 'bp_wp_heartbeat_disabled', '0' );
+        }
+    }
 
 	/**
 	 * Adds the no-js class to the body tag.
