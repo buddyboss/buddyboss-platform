@@ -446,6 +446,12 @@ function bp_the_profile_field_ids() {
 			}
 		}
 
+		if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+			if ( function_exists( 'bp_get_xprofile_member_type_field_id ') ) {
+				$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
+			}
+		}
+
 		$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
 
 		/**

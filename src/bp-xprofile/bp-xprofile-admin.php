@@ -292,6 +292,12 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 							if ( !empty( $group->fields ) ) :
 								foreach ( $group->fields as $field ) {
 
+									if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+										if ( function_exists( 'bp_get_xprofile_member_type_field_id') && $field->id === bp_get_xprofile_member_type_field_id() ) {
+											continue;
+										}
+									}
+
 									// Load the field.
 									$field = xprofile_get_field( $field->id );
 

@@ -40,6 +40,14 @@ bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 					bp_the_profile_field();
 				?>
 
+					<?php
+					if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+						if ( function_exists( 'bp_get_xprofile_member_type_field_id') && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
+							continue;
+						}
+					}
+					?>
+
                     <?php bp_nouveau_xprofile_hook( 'before', 'field_html' ); ?>
             
 					<div<?php bp_field_css_class( 'editfield' ); ?>>
