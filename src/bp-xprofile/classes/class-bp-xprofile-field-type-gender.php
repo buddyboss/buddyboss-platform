@@ -381,7 +381,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			return true;
 		}
 
-		$split_value = explode('_', $values );
+		$split_value = explode('_', $values, 2 );
 		if ( 2 === count( $split_value ) ) {
 			if ( '' !== $split_value[1] && '' !== $split_value[0] ) {
 				$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
