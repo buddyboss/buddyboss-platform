@@ -1851,7 +1851,27 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
 			$size = '-50';
 		}
 
-		$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg" );
+		// Support WP User Avatar Plugin default avatar image.
+		$avatar_option = bp_get_option( 'avatar_default', 'mystery' );
+		if ( 'wp_user_avatar' === $avatar_option ) {
+			if ( function_exists( 'is_plugin_active' ) && is_plugin_active('wp-user-avatar/wp-user-avatar.php') ) {
+				$default_image_id = bp_get_option( 'avatar_default_wp_user_avatar', '' );
+				if ( '' !== $default_image_id ) {
+					$image_attributes = wp_get_attachment_image_src( (int) $default_image_id );
+					if ( isset( $image_attributes[0] ) && '' !== $image_attributes[0] ) {
+						$avatar = apply_filters( 'bp_core_avatar_default_local_size', $image_attributes[0], $size );
+					} else {
+						$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
+					}
+				} else {
+					$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
+				}
+			} else {
+				$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
+			}
+		} else {
+			$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg", $size );
+		}
 
 	// Use Gravatar's mystery person as fallback.
 	} else {
