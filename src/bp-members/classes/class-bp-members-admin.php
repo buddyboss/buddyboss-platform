@@ -2338,6 +2338,15 @@ class BP_Members_Admin {
 												<td><?php echo esc_html( $member_type_name ); ?></td>
 											</tr>
 											<?php
+										} else if ( function_exists( 'bp_get_xprofile_gender_type_field_id' ) && bp_get_xprofile_gender_type_field_id() > 0 && bp_get_xprofile_gender_type_field_id() === (int) $pid ) {
+											$split_string = explode( '_', $field_value, 2 );
+											$field_value = $split_string[1];
+											?>
+											<tr>
+												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
+												<td><?php echo esc_html( $field_value ); ?></td>
+											</tr>
+											<?php
 										} else {
 											?>
 											<tr>
