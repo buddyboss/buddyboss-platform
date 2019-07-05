@@ -2433,7 +2433,7 @@ function bp_signup_avatar( $args = '' ) {
 			if ( empty( $bp->grav_default->user ) )
 				$default_grav = 'wavatar';
 			elseif ( 'mystery' == $bp->grav_default->user )
-				$default_grav = $bp->plugin_url . 'bp-core/images/mystery-man.jpg';
+				$default_grav = apply_filters( 'bp_get_signup_avatar_mystery', $bp->plugin_url . 'bp-core/images/mystery-man.jpg' );
 			else
 				$default_grav = $bp->grav_default->user;
 

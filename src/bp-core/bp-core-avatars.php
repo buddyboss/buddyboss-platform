@@ -669,12 +669,12 @@ function bp_core_fetch_avatar( $args = '' ) {
 		}
 
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
-			$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
 			$gravcheck = "https://www.gravatar.com/avatar/".md5( strtolower( $params['email'] ) )."?d=404";
 			$response = get_headers($gravcheck);
 			if ( isset( $response[0] ) && $response[0] == "HTTP/1.1 404 Not Found"){
-				$gravatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+				$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 			} else {
 				// Set up the Gravatar URL.
 				$gravatar = esc_url( add_query_arg(
@@ -1408,7 +1408,7 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	global $pagenow;
 	if ( 'options-discussion.php' === $pagenow ) {
 		if ( true === $args["force_default"] && 'mm' === $args["default"] ) {
-			return buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+			return apply_filters( 'bp_set_wp_backend_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 		} else if ( true === $args["force_default"] ) {
 			return $retval;
 		}
@@ -1851,7 +1851,7 @@ function bp_core_avatar_default( $type = 'gravatar', $params = array() ) {
 			$size = '-50';
 		}
 
-		$avatar = buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg";
+		$avatar = apply_filters( 'bp_core_avatar_default_local_size', buddypress()->plugin_url . "bp-core/images/mystery-man{$size}.jpg" );
 
 	// Use Gravatar's mystery person as fallback.
 	} else {
@@ -1898,7 +1898,7 @@ function bp_core_avatar_default_thumb( $type = 'gravatar', $params = array() ) {
 
 	// Use the local default image.
 	} elseif ( 'local' === $type ) {
-		$avatar = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+		$avatar = apply_filters( 'bp_core_avatar_default_thumb_local', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 
 	// Use Gravatar's mystery person as fallback.
 	} else {
