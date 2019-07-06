@@ -25,7 +25,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		parent::__construct();
 
 		$this->category = __( 'Multi Fields', 'buddyboss' );
-		$this->name     = __( 'Profile Types', 'buddyboss' );
+		$this->name     = __( 'Profile Type', 'buddyboss' );
 
 		$this->supports_options = false;
 
