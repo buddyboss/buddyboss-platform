@@ -100,7 +100,7 @@ function bp_media_upload_handler( $file_id = 'file' ) {
 	}
 
 	add_image_size( 'bp-media-thumbnail', 400, 400 );
-	add_image_size( 'bp-activity-media-thumbnail', 1400, 700 );
+	add_image_size( 'bp-activity-media-thumbnail', 1600, 1600 );
 
 	add_filter( 'upload_mimes', 'bp_media_allowed_mimes', 9, 1 );
 
