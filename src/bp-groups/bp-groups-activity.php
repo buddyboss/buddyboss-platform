@@ -612,8 +612,18 @@ add_action( 'groups_ban_member',    'bp_groups_leave_group_delete_recent_activit
  */
 function bp_groups_get_activity_where_conditions( $where_conditions ) {
 
+	$by_pass_action = array( 'media_get_activity' );
+
 	// Only for activity directory
-	if ( is_user_logged_in() && bp_is_activity_directory() ) {
+	if (
+		is_user_logged_in()
+		&& bp_is_activity_directory()
+		&& (
+			empty( $_REQUEST['action'] )
+			|| ( ! in_array( $_REQUEST['action'], $by_pass_action )
+			)
+		)
+	) {
 
 		// Determine groups of user.
 		$groups = groups_get_user_groups( bp_loggedin_user_id() );
@@ -625,4 +635,5 @@ function bp_groups_get_activity_where_conditions( $where_conditions ) {
 
 	return $where_conditions;
 }
+
 add_filter( 'bp_activity_get_where_conditions', 'bp_groups_get_activity_where_conditions', 10 );
