@@ -1558,7 +1558,7 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-inner p {
-  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-read-more {
