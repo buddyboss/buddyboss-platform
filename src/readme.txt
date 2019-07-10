@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed crop ratio for wide/landscape media images
 * Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
 * Date Format - Now using WordPress 'Date Format' for dates in LearnDash
+* Compatibility - Fixed conflict with WP User Avatar plugin
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.1 =
