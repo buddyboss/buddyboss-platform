@@ -535,7 +535,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		$avatar_url = apply_filters( 'bp_core_fetch_avatar_url_check', $avatar_url, $params );
 
 		// If we found a locally uploaded avatar.
-		if ( isset( $avatar_url ) ) {
+		if ( isset( $avatar_url ) && ! empty($avatar_url) ) {
 			// Support custom scheme.
 			$avatar_url = set_url_scheme( $avatar_url, $params['scheme'] );
 
