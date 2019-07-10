@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.2 =
+* Activity - Fixed word-wrapping when long sentences are posted in activity
 
 = 1.1.1 =
 * Profiles - New option to remove First and Last Name, depending on Display Name Format
