@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.2 =
 * Activity - Fixed word-wrapping when long sentences are posted in activity
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' option
 
 = 1.1.1 =
 * Profiles - New option to remove First and Last Name, depending on Display Name Format
