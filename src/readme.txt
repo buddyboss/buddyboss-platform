@@ -58,7 +58,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.2 =
 * Activity - Fixed media popup showing no image with Groups component enabled
 * Activity - Fixed word-wrapping when long sentences are posted in activity
-* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' option
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
+* Activity - Fixed crop ratio for wide/landscape media images
 * Date Format - Now using WordPress 'Date Format' for dates in LearnDash
 * Errors - Fixed various PHP errors in certain situations
 
