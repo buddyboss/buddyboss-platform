@@ -773,7 +773,7 @@ function bp_media_import_submenu_page() {
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
                             </p>
-                            <label style="display: none;" id="bp-media-resetting"><strong><?php echo __( 'Reset in progress', 'buddyboss' ) . '...'; ?></strong></label>
+                            <label style="display: none;" id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
                             <table>
                                 <tr>
                                     <td><h4><?php _e( 'Albums', 'buddyboss' ); ?></h4></td>
