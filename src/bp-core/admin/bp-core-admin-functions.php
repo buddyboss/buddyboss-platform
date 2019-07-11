@@ -1866,7 +1866,7 @@ function bp_member_type_wprole_metabox( $post ) {
 				type='radio'
 				name='bp-member-type[wp_roles][]'
 				id="bp-member-type-roles-none"
-				value='' />
+				value='none' <?php echo in_array('none', $selected_roles) ? 'checked' : ''; ?> />
 			<?php _e( '(None)', 'buddyboss' ) ?>
 		</label>
 	</p>
@@ -1991,7 +1991,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		}
 
 		if ( true === $bp_prevent_data_update ) {
-			if ( 'administrator' === $old_wp_roles[0] ) {
+			if ( isset( $old_wp_roles[0] ) && 'administrator' === $old_wp_roles[0] ) {
 				if ( ! in_array( $current_user_role, $wp_roles ) ) {
 					$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.', 'buddyboss' );
 					$error_message           = apply_filters( 'bp_member_type_admin_error_message', $bp_error_message_string);
@@ -2011,15 +2011,20 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		//term exist
 		if ( $type_term ) {
 
-			if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
-				foreach ( $get_user_ids as $single_user ) {
-					$bp_user = new WP_User( $single_user );
-					foreach ( $bp_user->roles as $role ) {
-						// Remove role
-						$bp_user->remove_role( $role );
+			// Get selected profile type role.
+			$selected_member_type_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
+
+			if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+				if ( isset( $get_user_ids ) && ! empty( $get_user_ids ) ) {
+					foreach ( $get_user_ids as $single_user ) {
+						$bp_user = new WP_User( $single_user );
+						foreach ( $bp_user->roles as $role ) {
+							// Remove role
+							$bp_user->remove_role( $role );
+						}
+						// Add role
+						$bp_user->add_role( $wp_roles[0] );
 					}
-					// Add role
-					$bp_user->add_role( $wp_roles[0] );
 				}
 			}
 		}
