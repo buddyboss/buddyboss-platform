@@ -565,11 +565,6 @@ function bp_nouveau_loop_classes() {
 
 		// Only the available components supports custom layouts.
 		if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
-			$customizer_option = sprintf( '%s_layout', $component );
-			$layout_prefs      = bp_nouveau_get_temporary_setting(
-				$customizer_option,
-				bp_nouveau_get_appearance_settings( $customizer_option )
-			);
 
 			// check for layout options in browsers storage
 			$list = false;
@@ -577,29 +572,21 @@ function bp_nouveau_loop_classes() {
 				$list = true;
             }
 
-			if ( $layout_prefs && (int) $layout_prefs > 1 ) {
-				$grid_classes = bp_nouveau_customizer_grid_choices( 'classes' );
+            if ( ! $list ) {
+                $classes = array_merge( $classes, array(
+                    'grid',
+                    'four',
+                ) );
+            } else {
+                $classes = array_merge( $classes, array(
+                    'four',
+                ) );
+            }
 
-				if ( isset( $grid_classes[ $layout_prefs ] ) && ! $list ) {
-					$classes = array_merge( $classes, array(
-						'grid',
-                        'four',/*Remove customizer number of columns in grid view*/
-						//$grid_classes[ $layout_prefs ],/*Remove customizer number of columns in grid view*/
-					) );
-				} else {
-					$classes = array_merge( $classes, array(
-                        'four',/*Remove customizer number of columns in grid view*/
-						//$grid_classes[ $layout_prefs ],/*Remove customizer number of columns in grid view*/
-					) );
-                }
+            if ( ! isset( $bp_nouveau->{$component} ) ) {
+                $bp_nouveau->{$component} = new stdClass;
+            }
 
-				if ( ! isset( $bp_nouveau->{$component} ) ) {
-				    $bp_nouveau->{$component} = new stdClass;
-				}
-
-				// Set the global for a later use.
-				$bp_nouveau->{$component}->loop_layout = $layout_prefs;
-			}
 		}
 
 		/**
