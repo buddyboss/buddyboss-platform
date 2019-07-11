@@ -221,7 +221,13 @@ class BP_XProfile_Field {
 		if ( false === $field ) {
 			$bp = buddypress();
 
-			$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $id ) );
+			if ( isset( $bp->profile->table_name_fields ) ) {
+				$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id = %d", $id ) );
+			} else {
+				$table = bp_core_get_table_prefix() .'bp_xprofile_fields';
+				$field = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$table} WHERE id = %d", $id ) );
+			}
+
 
 			if ( ! $field ) {
 				return false;
@@ -921,15 +927,15 @@ class BP_XProfile_Field {
 	 * @return bool|null|string
 	 */
 	public static function get_type( $field_id = 0 ) {
-		global $wpdb;
+		global $wpdb, $bp;
 
 		// Bail if no field ID.
 		if ( empty( $field_id ) ) {
 			return false;
 		}
 
-		$bp   = buddypress();
-		$sql  = $wpdb->prepare( "SELECT type FROM {$bp->profile->table_name_fields} WHERE id = %d", $field_id );
+		$table_name = $bp->table_prefix . 'bp_xprofile_fields';
+		$sql  = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
 		$type = $wpdb->get_var( $sql );
 
 		// Return field type.

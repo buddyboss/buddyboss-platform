@@ -46,7 +46,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 			$attachment = get_post( $id );
 			$path       = get_attached_file( $id );
 
-			if ( 'image/jpeg' == $attachment->post_mime_type && ! empty( $path ) && file_exists( $path ) ) {
+			if ( in_array( $attachment->post_mime_type, array( 'image/jpeg', 'image/png', 'image/gif' ) ) && ! empty( $path ) && file_exists( $path ) ) {
 				// Add a fallback on shutdown in the case that memory runs out
 				add_action( 'shutdown', array( $this, 'rotation_shutdown_fallback' ) );
 

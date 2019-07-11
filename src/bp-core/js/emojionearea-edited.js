@@ -68,9 +68,9 @@ document = window.document || {};
 	function getTemplate(template, unicode, shortname) {
 		var imageType = emojione.imageType, imagePath;
 		if (imageType=='svg'){
-			imagePath = _wpemojiSettings.svgUrl;
+			imagePath = typeof _wpemojiSettings !== 'undefined' ? _wpemojiSettings.svgUrl : 'https://s.w.org/images/core/emoji/12.0.0-1/svg/';
 		} else {
-			imagePath = _wpemojiSettings.baseUrl;
+			imagePath = typeof _wpemojiSettings !== 'undefined' ? _wpemojiSettings.baseUrl : 'https://s.w.org/images/core/emoji/12.0.0-1/72x72/';
 		}
 		var friendlyName = '';
 		if (shortname) {

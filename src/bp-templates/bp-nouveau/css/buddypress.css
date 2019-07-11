@@ -1558,7 +1558,7 @@ input.search-query-input {
 }
 
 .activity-list .activity-item .activity-inner p {
-  word-wrap: break-word;
+  word-break: break-word;
 }
 
 .activity-list .activity-item .activity-read-more {
@@ -4834,8 +4834,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .buddypress .buddypress-wrap .activity-state a,
 .buddypress .buddypress-wrap .generic-button a,
 .buddypress .buddypress-wrap .comment-reply-link,
-.buddypress .buddypress-wrap a.bp-title-button,
-.buddypress .buddypress-wrap .activity-read-more a {
+.buddypress .buddypress-wrap a.bp-title-button {
   background: #fff;
   /* Old browsers */
   border-color: #ccc;
@@ -4873,9 +4872,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap .generic-button a:hover,
 .buddypress .buddypress-wrap .comment-reply-link:focus,
-.buddypress .buddypress-wrap .comment-reply-link:hover,
-.buddypress .buddypress-wrap .activity-read-more a:focus,
-.buddypress .buddypress-wrap .activity-read-more a:hover {
+.buddypress .buddypress-wrap .comment-reply-link:hover {
   background: #ededed;
   border-color: #999999;
   color: #333;
@@ -9505,7 +9502,7 @@ body.login .login-popup .mfp-close:hover {
 }
 
 .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout .entry-img {
-  padding-top: 119%;
+  padding-top: 118%;
 }
 
 .bb-activity-media-wrap.bb-media-length-3 .act-grid-1-1.bb-vertical-layout + div + div {

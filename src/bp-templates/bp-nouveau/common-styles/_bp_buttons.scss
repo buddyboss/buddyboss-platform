@@ -20,8 +20,7 @@
 		.activity-state a,
 		.generic-button a,
 		.comment-reply-link,
-		a.bp-title-button,
-		.activity-read-more a {
+		a.bp-title-button {
 			background: $white; /* Old browsers */
 			border-color: $bp-border-dark;
 			border-style: solid;
@@ -60,9 +59,7 @@
 		.generic-button a:focus,
 		.generic-button a:hover,
 		.comment-reply-link:focus,
-		.comment-reply-link:hover,
-		.activity-read-more a:focus,
-		.activity-read-more a:hover {
+		.comment-reply-link:hover {
 			background: $buttons-background;
 			border-color: darken($bp-border-dark, 20%);
 			color: $black;

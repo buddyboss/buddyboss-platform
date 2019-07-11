@@ -1202,8 +1202,7 @@ class BP_Members_Admin {
 						<?php
 
 						// Translators: Publish box date format, see http://php.net/date.
-						$datef = __( 'M j, Y @ G:i', 'buddyboss' );
-						$date  = date_i18n( $datef, strtotime( $user->user_registered ) );
+						$date  = date_i18n( bp_core_date_format( true ), strtotime( $user->user_registered ) );
 						?>
 						<span id="timestamp"><?php printf( __( 'Registered on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>
 					</div>
@@ -1262,8 +1261,7 @@ class BP_Members_Admin {
 			$last_active = bp_get_user_last_activity( $user->ID );
 		}
 
-		$datef = __( 'M j, Y @ G:i', 'buddyboss' );
-		$date  = date_i18n( $datef, strtotime( $last_active ) ); ?>
+		$date  = date_i18n( bp_core_date_format( true ), strtotime( $last_active ) ); ?>
 
 		<ul>
 			<li class="bp-members-profile-stats"><?php printf( __( 'Last active: %1$s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></li>
@@ -1360,7 +1358,7 @@ class BP_Members_Admin {
 
 			if ( $user_id === get_current_user_id() ) {
 
-				if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+				if ( isset( $selected_member_type_wp_roles[0] ) && 'administrator' !== $selected_member_type_wp_roles[0] ) {
 
 					if ( empty( $selected_member_type_wp_roles  ) ) {
 
@@ -1386,24 +1384,29 @@ class BP_Members_Admin {
 
 				} else {
 
-					$bp_current_user = new WP_User( get_current_user_id() );
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
 
-					// Remove role
-					$bp_current_user->remove_role( $bp_current_user->roles[0] );
+						$bp_current_user = new WP_User( get_current_user_id() );
 
-					// Add role
-					$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+						// Remove role
+						$bp_current_user->remove_role( $bp_current_user->roles[0] );
+
+						// Add role
+						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+					}
 				}
 
 			} else {
 
-				$bp_user = new WP_User( $user_id );
+				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+					$bp_user = new WP_User( $user_id );
 
-				// Remove role
-				$bp_user->remove_role( $bp_user->roles[0] );
+					// Remove role
+					$bp_user->remove_role( $bp_user->roles[0] );
 
-				// Add role
-				$bp_user->add_role( $selected_member_type_wp_roles[0] );
+					// Add role
+					$bp_user->add_role( $selected_member_type_wp_roles[0] );
+				}
 
 			}
 
@@ -2310,18 +2313,29 @@ class BP_Members_Admin {
 									<td><?php echo sanitize_email( $signup->user_email ); ?></td>
 								</tr>
 
-								<?php if ( bp_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) : ?>
-									<?php foreach ( $profile_field_ids as $pid => $noop ) :
-										$field_value = isset( $signup->meta[ "field_{$pid}" ] ) ? $signup->meta[ "field_{$pid}" ] : ''; ?>
-										<tr>
-											<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
-											<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
-										</tr>
-
-									<?php endforeach;  ?>
-
-								<?php endif; ?>
-
+								<?php
+								if ( bp_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) :
+									foreach ( $profile_field_ids as $pid => $noop ) :
+										$field_value = isset( $signup->meta[ "field_{$pid}" ] ) ? $signup->meta[ "field_{$pid}" ] : '';
+										if ( function_exists( 'bp_get_xprofile_gender_type_field_id' ) && bp_get_xprofile_gender_type_field_id() > 0 && bp_get_xprofile_gender_type_field_id() === (int) $pid ) {
+											$split_string = explode( '_', $field_value, 2 );
+											$field_value = $split_string[1];
+											?>
+											<tr>
+												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
+												<td><?php echo esc_html( $field_value ); ?></td>
+											</tr>
+											<?php
+										} else {
+											?>
+											<tr>
+												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
+												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
+											</tr>
+											<?php
+										}
+									endforeach;
+								endif; ?>
 							</tbody>
 						</table>
 					<?php endif; ?>
@@ -2476,7 +2490,7 @@ class BP_Members_Admin {
 									$error = true;
 								}
 							} else {
-								if ( 'administrator' !== $selected_member_type_wp_roles[0] ) {
+								if ( isset( $selected_member_type_wp_roles[0] ) && 'administrator' !== $selected_member_type_wp_roles[0] ) {
 									$bp_error_message = true;
 									$error = true;
 								} else {

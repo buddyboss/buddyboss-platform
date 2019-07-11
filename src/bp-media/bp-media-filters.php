@@ -8,7 +8,7 @@ add_action( 'bp_media_album_after_save',                        'bp_media_update
 
 // Activity
 add_action( 'bp_after_activity_loop',                           'bp_media_add_theatre_template'                     );
-add_action( 'bp_activity_entry_content',                        'bp_media_activity_entry'                           );
+add_action( 'bp_get_activity_content_body',                     'bp_media_activity_entry',                  20, 2   );
 add_action( 'bp_activity_after_comment_content',                'bp_media_activity_comment_entry'                   );
 add_action( 'bp_activity_posted_update',                        'bp_media_update_media_meta',               10, 3   );
 add_action( 'bp_groups_posted_update',                          'bp_media_groups_update_media_meta',        10, 4   );
@@ -53,18 +53,22 @@ function bp_media_add_theatre_template() {
 /**
  * Get activity entry media to render on front end
  */
-function bp_media_activity_entry() {
+function bp_media_activity_entry( $content, $activity ) {
 	global $media_template;
-	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
+        <?php ob_start(); ?>
 		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
 		} ?>
 		</div><?php
+		$content .= ob_get_clean();
 	}
+
+	return $content;
 }
 
 /**
@@ -728,7 +732,7 @@ function bp_media_import_submenu_page() {
 		}
 	}
 
-	if ( 'importing' == $bp_media_import_status ) {
+	if ( in_array( $bp_media_import_status, array( 'importing', 'start', 'reset_albums', 'reset_media', 'reset_forum', 'reset_topic', 'reset_reply', 'reset_options' ) ) ) {
 		$is_updating = true;
 	}
 
@@ -769,33 +773,34 @@ function bp_media_import_submenu_page() {
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
                             </p>
-                            <table>
+                            <label style="display: none;" id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+                            <table class="form-table">
                                 <tr>
-                                    <td><h4><?php _e( 'Albums', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Media', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Media', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Forums', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Discussions', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Replies', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>
@@ -841,27 +846,6 @@ function bp_media_import_submenu_page() {
     <br/>
 
 	<?php
-}
-
-/**
- * Callback for media migration
- *
- * @return array
- * @since BuddyBoss 1.0.0
- */
-function bp_media_get_import_callbacks() {
-	return array(
-		'bp_media_import_reset_media_albums',
-		'bp_media_import_reset_media',
-		'bp_media_import_reset_forum_media',
-		'bp_media_import_reset_topic_media',
-		'bp_media_import_reset_reply_media',
-		'bp_media_import_reset_options',
-		'bp_media_import_buddyboss_media_tables',
-		'bp_media_import_buddyboss_forum_media',
-		'bp_media_import_buddyboss_topic_media',
-		'bp_media_import_buddyboss_reply_media',
-	);
 }
 
 /**

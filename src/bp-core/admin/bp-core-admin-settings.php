@@ -206,11 +206,16 @@ function bp_posts_in_activity_tutorial() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_setting_callback_heartbeat() {
+	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not
+    wp_remote_get( bp_core_get_user_domain( bp_loggedin_user_id() ) );
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 ?>
 
-	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php checked( bp_is_activity_heartbeat_active( true ) ); ?> />
+	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php if ( '1' != $heartbeat_disabled ) { checked( bp_is_activity_heartbeat_active( true ) ); } else { echo 'disabled="disabled"'; } ?> />
 	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
-
+    <?php if ( '1' == $heartbeat_disabled ) { ?>
+        <p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
+    <?php } ?>
 <?php
 }
 

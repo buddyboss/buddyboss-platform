@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.1.2 =
+* Activity - Fixed media popup showing no image with Groups component enabled
+* Activity - Fixed word-wrapping when long sentences are posted in activity
+* Activity - Fixed crop ratio for wide/landscape media images
+* Activity - Fixed media disappearing when clicking 'Read more' in activity feed
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
+* Media - Improved the image rotation script for photos uploaded in mobile browsers
+* Media - Improved experience for media migrations, and ability to re-migrate
+* Profile Types - When creating new type, fixed issue when selecting 'None' as WordPress role
+* Multisite - Fixed issue with names not displaying in sub-sites
+* LearnDash - Fixed conflict with 'Memberium' protected content in Lesson sidebar
+* LearnDash - Now using WordPress 'Date Format' for dates in LearnDash
+* Compatibility - Fixed default avatar conflict with 'WP User Avatar' plugin
+* Compatibility - Fixed registration field syncing with 'WooCommerce Memberships' plugin
+* Errors - Fixed various PHP errors in certain situations
 
 = 1.1.1 =
 * Profiles - New option to remove First and Last Name, depending on Display Name Format

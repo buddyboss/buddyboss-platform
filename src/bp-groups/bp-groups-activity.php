@@ -635,4 +635,5 @@ function bp_groups_get_activity_where_conditions( $where_conditions ) {
 
 	return $where_conditions;
 }
+
 add_filter( 'bp_activity_get_where_conditions', 'bp_groups_get_activity_where_conditions', 10 );

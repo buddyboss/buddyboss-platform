@@ -605,7 +605,7 @@ function bp_the_profile_field_value() {
 		$field->data->value = bp_unserialize_profile_field( $field->data->value );
 
 		if ( 'gender' === $field->type ) {
-			$split_string = explode( '_', $field->data->value );
+			$split_string = explode( '_', $field->data->value, 2 );
 			$field->data->value = $split_string[1];
 		}
 

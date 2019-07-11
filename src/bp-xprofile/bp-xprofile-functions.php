@@ -1194,7 +1194,13 @@ function bp_xprofile_fullname_field_id() {
 		global $wpdb;
 
 		$bp = buddypress();
-		$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+
+		if ( isset( $bp->profile->table_name_fields ) ) {
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+		} else {
+			$table = bp_core_get_table_prefix() .'bp_xprofile_fields';
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+		}
 
 		wp_cache_set( 'fullname_field_id', $id, 'bp_xprofile' );
 	}
