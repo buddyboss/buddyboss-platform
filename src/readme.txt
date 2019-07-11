@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed crop ratio for wide/landscape media images
 * Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
 * Media - Improved the image rotation script for photos uploaded in mobile browsers
+* Media - Improved experience for media migrations, and ability to re-migrate
 * Multisite - Fixed issue with names not displaying in sub-sites
 * LearnDash - Fixed conflict with 'Memberium' protected content in Lesson sidebar
 * LearnDash - Now using WordPress 'Date Format' for dates in LearnDash
