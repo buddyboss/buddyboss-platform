@@ -2313,18 +2313,29 @@ class BP_Members_Admin {
 									<td><?php echo sanitize_email( $signup->user_email ); ?></td>
 								</tr>
 
-								<?php if ( bp_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) : ?>
-									<?php foreach ( $profile_field_ids as $pid => $noop ) :
-										$field_value = isset( $signup->meta[ "field_{$pid}" ] ) ? $signup->meta[ "field_{$pid}" ] : ''; ?>
-										<tr>
-											<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
-											<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
-										</tr>
-
-									<?php endforeach;  ?>
-
-								<?php endif; ?>
-
+								<?php
+								if ( bp_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) :
+									foreach ( $profile_field_ids as $pid => $noop ) :
+										$field_value = isset( $signup->meta[ "field_{$pid}" ] ) ? $signup->meta[ "field_{$pid}" ] : '';
+										if ( function_exists( 'bp_get_xprofile_gender_type_field_id' ) && bp_get_xprofile_gender_type_field_id() > 0 && bp_get_xprofile_gender_type_field_id() === (int) $pid ) {
+											$split_string = explode( '_', $field_value, 2 );
+											$field_value = $split_string[1];
+											?>
+											<tr>
+												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
+												<td><?php echo esc_html( $field_value ); ?></td>
+											</tr>
+											<?php
+										} else {
+											?>
+											<tr>
+												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
+												<td><?php echo $this->format_xprofile_field_for_display( $field_value ); ?></td>
+											</tr>
+											<?php
+										}
+									endforeach;
+								endif; ?>
 							</tbody>
 						</table>
 					<?php endif; ?>

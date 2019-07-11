@@ -4582,3 +4582,17 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 
 	return $buttons;
 }
+
+/**
+ * Return the gender type xprofile field id.
+ *
+ * @return string|null
+ */
+function bp_get_xprofile_gender_type_field_id() {
+	global $wpdb;
+
+	$table = bp_core_get_table_prefix().'bp_xprofile_fields';
+	$get_parent_id_of_gender_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+
+	return (int) $get_parent_id_of_gender_types_field;
+}
