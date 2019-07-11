@@ -582,11 +582,6 @@ function bp_nouveau_loop_classes() {
                     'four',
                 ) );
             }
-
-            if ( ! isset( $bp_nouveau->{$component} ) ) {
-                $bp_nouveau->{$component} = new stdClass;
-            }
-
 		}
 
 		/**
