@@ -240,7 +240,7 @@ window.bp = window.bp || {};
 			}
 
 			// inject all unread notifications
-			$('.notification-list').empty().append(data.bp_activity_newest_activities.unread_notifs);
+			$('.notification-list').empty().html(data.unread_notifs);
 
 			// Add an information about the number of newest activities inside the document's title
 			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );
