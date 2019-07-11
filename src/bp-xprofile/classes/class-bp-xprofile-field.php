@@ -934,7 +934,7 @@ class BP_XProfile_Field {
 			return false;
 		}
 
-		$table_name = $bp->table_prefix . 'bp_xprofile_data';
+		$table_name = $bp->table_prefix . 'bp_xprofile_fields';
 		$sql  = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
 		$type = $wpdb->get_var( $sql );
 
