@@ -703,9 +703,36 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 			bp_get_template_part( 'activity/entry' );
 		}
 	}
-
+                
 	$newest_activities['activities']    = ob_get_contents();
 	$newest_activities['last_recorded'] = $last_activity_recorded;
+
+	if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) 
+	{
+		$notifs = '';
+		while ( bp_the_notifications() ) : bp_the_notification();
+			$bp      = buddypress();
+			$user_id = $bp->notifications->query_loop->notification->secondary_item_id;
+
+			$notifs .= '<li class="read-item">';
+				$notifs .= '<span class="bb-full-link">';
+				$notifs .= bp_get_the_notification_description();
+				$notifs .= '</span>';
+                $notifs .= '<div class="notification-avatar">';
+				$notifs .= buddyboss_notification_avatar();
+                $notifs .= '</div>';
+                $notifs .= '<div class="notification-content">';
+				$notifs .= '<span class="bb-full-link">';
+				$notifs .= bp_the_notification_description();
+				$notifs .= '</span>';
+                $notifs .= '<span>'.bp_the_notification_description().'</span>';
+                $notifs .= '<span class="posted">'.bp_the_notification_time_since().'</span>';
+                $notifs .= '</div>';
+			$notifs .= '</li>';
+		endwhile;
+	}
+
+	$newest_activities['unread_notifs'] = $notifs;
 	ob_end_clean();
 
 	// Remove the temporary filter.
