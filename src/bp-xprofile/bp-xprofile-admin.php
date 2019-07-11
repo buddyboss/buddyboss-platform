@@ -717,8 +717,7 @@ add_action( 'wp_ajax_xprofile_reorder_groups', 'xprofile_ajax_reorder_field_grou
  */
 function xprofile_check_gender_added_previously() {
 
-	global $wpdb;
-	global $bp;
+	global $wpdb, $bp;
 
 	$response = array();
 	$response['message'] = __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss');
@@ -732,7 +731,7 @@ function xprofile_check_gender_added_previously() {
 		$current_edit_id = intval( $parsed_array['field_id'] );
 
 		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
-		if ( intval( $exists_gender[0]->count ) > 0 ) {
+		if ( isset( $exists_gender[0] ) && intval( $exists_gender[0]->count ) > 0 ) {
 			if ( $current_edit_id === intval( $exists_gender[0]->id ) ) {
 				$response['status'] = 'not_added';
 			} else {
@@ -743,13 +742,14 @@ function xprofile_check_gender_added_previously() {
 		}
 	} else {
 		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->tabl_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
-		if ( intval( $exists_gender[0]->count ) > 0 ) {
+		if ( isset( $exists_gender[0] ) && intval( $exists_gender[0]->count ) > 0 ) {
 			$response['status'] = 'added';
 		} else {
 			$response['status'] = 'not_added';
 		}
 	}
 	echo wp_json_encode( $response );
+
 	wp_die();
 }
 add_action( 'wp_ajax_xprofile_check_gender_added_previously', 'xprofile_check_gender_added_previously' );
@@ -1102,13 +1102,11 @@ function bp_profile_type_set_platform_tab_submenu_active( $parent_file ) {
  */
 function xprofile_check_social_networks_added_previously() {
 
-	global $wpdb;
-	global $bp;
+	global $wpdb, $bp;
 
-	$response = array();
-	$response['message'] = __( 'You can only have one instance of the "Social Networks" profile field on the website.', 'buddyboss');
-
-	$referer = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
+	$response            = array();
+	$response['message'] = __( 'You can only have one instance of the "Social Networks" profile field on the website.', 'buddyboss' );
+	$referer             = filter_input( INPUT_POST, 'referer', FILTER_SANITIZE_STRING );
 
 	parse_str( $referer, $parsed_array);
 
@@ -1116,9 +1114,9 @@ function xprofile_check_social_networks_added_previously() {
 
 		$current_edit_id = intval( $parsed_array['field_id'] );
 
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
-		if ( intval( $exists_gender[0]->count ) > 0 ) {
-			if ( $current_edit_id === intval( $exists_gender[0]->id ) ) {
+		$exists_social_networks = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+		if ( isset( $exists_social_networks[0] ) && intval( $exists_social_networks[0]->count ) > 0 ) {
+			if ( $current_edit_id === intval( $exists_social_networks[0]->id ) ) {
 				$response['status'] = 'not_added';
 			} else {
 				$response['status'] = 'added';
@@ -1127,8 +1125,8 @@ function xprofile_check_social_networks_added_previously() {
 			$response['status'] = 'not_added';
 		}
 	} else {
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
-		if ( intval( $exists_gender[0]->count ) > 0 ) {
+		$exists_social_networks = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+		if ( isset( $exists_social_networks[0] ) && intval( $exists_social_networks[0]->count ) > 0 ) {
 			$response['status'] = 'added';
 		} else {
 			$response['status'] = 'not_added';

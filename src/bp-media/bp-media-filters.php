@@ -773,34 +773,34 @@ function bp_media_import_submenu_page() {
                             <p>
 								<?php esc_html_e( 'Your database is being updated in the background.', 'buddyboss' ); ?>
                             </p>
-                            <label style="display: none;" id="bp-media-resetting"><strong><?php echo __( 'Reset in progress', 'buddyboss' ) . '...'; ?></strong></label>
-                            <table>
+                            <label style="display: none;" id="bp-media-resetting"><strong><?php echo __( 'Migration in progress', 'buddyboss' ) . '...'; ?></strong></label>
+                            <table class="form-table">
                                 <tr>
-                                    <td><h4><?php _e( 'Albums', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Albums', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-albums-done"><?php echo $albums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-albums-total"><?php echo $total_albums; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Media', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Media', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-media-done"><?php echo $media_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $total_media; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Forums', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Forums', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-forums-done"><?php echo $forums_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $forums_total; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Discussions', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Discussions', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-forums-done"><?php echo $topics_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $topics_total; ?></span></td>
                                 </tr>
                                 <tr>
-                                    <td><h4><?php _e( 'Replies', 'buddyboss' ); ?></h4></td>
+                                    <th scope="row"><?php _e( 'Replies', 'buddyboss' ); ?></th>
                                     <td>
                                         <span id="bp-media-import-forums-done"><?php echo $replies_done; ?></span> <?php _e( 'out of', 'buddyboss' ); ?>
                                         <span id="bp-media-import-media-total"><?php echo $replies_total; ?></span></td>

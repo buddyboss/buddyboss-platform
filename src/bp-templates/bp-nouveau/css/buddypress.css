@@ -4834,8 +4834,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .buddypress .buddypress-wrap .activity-state a,
 .buddypress .buddypress-wrap .generic-button a,
 .buddypress .buddypress-wrap .comment-reply-link,
-.buddypress .buddypress-wrap a.bp-title-button,
-.buddypress .buddypress-wrap .activity-read-more a {
+.buddypress .buddypress-wrap a.bp-title-button {
   background: #fff;
   /* Old browsers */
   border-color: #ccc;
@@ -4873,9 +4872,7 @@ body.no-js .buddypress #messages-bulk-management #select-all-messages {
 .buddypress .buddypress-wrap .generic-button a:focus,
 .buddypress .buddypress-wrap .generic-button a:hover,
 .buddypress .buddypress-wrap .comment-reply-link:focus,
-.buddypress .buddypress-wrap .comment-reply-link:hover,
-.buddypress .buddypress-wrap .activity-read-more a:focus,
-.buddypress .buddypress-wrap .activity-read-more a:hover {
+.buddypress .buddypress-wrap .comment-reply-link:hover {
   background: #ededed;
   border-color: #999999;
   color: #333;

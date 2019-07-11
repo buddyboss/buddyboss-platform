@@ -468,7 +468,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 *
 	 * @param string $value Internationalized "Read more" text.
 	 */
-	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( '[Read more]', 'buddyboss' ) );
+	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
