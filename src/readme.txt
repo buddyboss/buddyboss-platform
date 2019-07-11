@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed media popup showing no image with Groups component enabled
 * Activity - Fixed word-wrapping when long sentences are posted in activity
 * Activity - Fixed crop ratio for wide/landscape media images
+* Activity - Fixed media disappearing when clicking 'Read more' in activity feed
 * Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
 * Media - Improved the image rotation script for photos uploaded in mobile browsers
 * Media - Improved experience for media migrations, and ability to re-migrate
