@@ -81,15 +81,7 @@ class BP_Nouveau_Blogs {
 	 *
 	 * @since BuddyPress 3.0.0
 	 */
-	protected function setup_filters() {
-		if ( is_multisite() ) {
-			// Add settings into the Blogs sections of the customizer.
-			add_filter( 'bp_nouveau_customizer_settings', 'bp_nouveau_blogs_customizer_settings', 11, 1 );
-
-			// Add controls into the Blogs sections of the customizer.
-			add_filter( 'bp_nouveau_customizer_controls', 'bp_nouveau_blogs_customizer_controls', 11, 1 );
-		}
-	}
+	protected function setup_filters() {}
 }
 
 /**
