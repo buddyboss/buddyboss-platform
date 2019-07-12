@@ -282,7 +282,8 @@ $settings = bp_email_get_appearance_settings();
 								if ( ! empty( $email_user->ID ) ) {
 									echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
 											'item_id' => $email_user->ID,
-											'html'    => false
+											'html'    => false,
+											'email'   => bp_core_get_user_email( $email_user->ID )
 										) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 								}
 
