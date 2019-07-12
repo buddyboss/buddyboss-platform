@@ -8,7 +8,7 @@ add_action( 'bp_media_album_after_save',                        'bp_media_update
 
 // Activity
 add_action( 'bp_after_activity_loop',                           'bp_media_add_theatre_template'                     );
-add_action( 'bp_get_activity_content_body',                     'bp_media_activity_entry',                  20, 2   );
+add_action( 'bp_activity_entry_content',                        'bp_media_activity_entry'                           );
 add_action( 'bp_activity_after_comment_content',                'bp_media_activity_comment_entry'                   );
 add_action( 'bp_activity_posted_update',                        'bp_media_update_media_meta',               10, 3   );
 add_action( 'bp_groups_posted_update',                          'bp_media_groups_update_media_meta',        10, 4   );
@@ -52,22 +52,47 @@ function bp_media_add_theatre_template() {
 
 /**
  * Get activity entry media to render on front end
+ *
+ * @BuddyBoss 1.0.0
  */
-function bp_media_activity_entry( $content, $activity ) {
+function bp_media_activity_entry() {
+	global $media_template;
+	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
+        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
+		while ( bp_media() ) {
+			bp_the_media();
+			bp_get_template_part( 'media/activity-entry' );
+		} ?>
+        </div><?php
+	}
+}
+
+/**
+ * Append the media content to activity read more content
+ *
+ * @BuddyBoss 1.1.3
+ *
+ * @param $content
+ * @param $activity
+ *
+ * @return string
+ */
+function bp_media_activity_append_media( $content, $activity ) {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
         <?php ob_start(); ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
+        <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
 			bp_the_media();
 			bp_get_template_part( 'media/activity-entry' );
 		} ?>
-		</div><?php
+        </div><?php
 		$content .= ob_get_clean();
 	}
-
 	return $content;
 }
 
@@ -128,6 +153,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 
 			$title         = ! empty( $media['name'] ) ? $media['name'] : '&nbsp;';
 			$album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+			$group_id      = ! empty( $media['group_id'] ) ? $media['group_id'] : 0;
 			$privacy       = ! empty( $media['privacy'] ) ? $media['privacy'] : 'public';
 			$attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
 			$menu_order    = ! empty( $media['menu_order'] ) ? $media['menu_order'] : $media_index;
@@ -136,6 +162,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 				array(
 					'title'         => $title,
 					'album_id'      => $album_id,
+					'group_id'      => $group_id,
 					'activity_id'   => $a_id,
 					'privacy'       => $privacy,
 					'attachment_id' => $attachment_id,

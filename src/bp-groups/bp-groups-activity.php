@@ -612,7 +612,7 @@ add_action( 'groups_ban_member',    'bp_groups_leave_group_delete_recent_activit
  */
 function bp_groups_get_activity_where_conditions( $where_conditions ) {
 
-	$by_pass_action = array( 'media_get_activity' );
+	$by_pass_action = array( 'media_get_activity', 'get_single_activity_content' );
 
 	// Only for activity directory
 	if (
