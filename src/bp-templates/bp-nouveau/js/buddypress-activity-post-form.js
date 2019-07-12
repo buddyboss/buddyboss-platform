@@ -255,6 +255,7 @@ window.bp = window.bp || {};
 				if ( response.data.id ) {
 					file.id = response.data.id;
 					response.data.uuid = file.upload.uuid;
+					response.data.group_id = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 					response.data.saved = false;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					self.media.push( response.data );

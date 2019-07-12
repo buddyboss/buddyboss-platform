@@ -128,6 +128,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 
 			$title         = ! empty( $media['name'] ) ? $media['name'] : '&nbsp;';
 			$album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+			$group_id      = ! empty( $media['group_id'] ) ? $media['group_id'] : 0;
 			$privacy       = ! empty( $media['privacy'] ) ? $media['privacy'] : 'public';
 			$attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
 			$menu_order    = ! empty( $media['menu_order'] ) ? $media['menu_order'] : $media_index;
@@ -136,6 +137,7 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
 				array(
 					'title'         => $title,
 					'album_id'      => $album_id,
+					'group_id'      => $group_id,
 					'activity_id'   => $a_id,
 					'privacy'       => $privacy,
 					'attachment_id' => $attachment_id,
