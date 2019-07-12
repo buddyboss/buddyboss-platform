@@ -574,12 +574,7 @@ function bp_nouveau_loop_classes() {
 
             if ( ! $list ) {
                 $classes = array_merge( $classes, array(
-                    'grid',
-                    'four',
-                ) );
-            } else {
-                $classes = array_merge( $classes, array(
-                    'four',
+                    'grid'
                 ) );
             }
 		}
