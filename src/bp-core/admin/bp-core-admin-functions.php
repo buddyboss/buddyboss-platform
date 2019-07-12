@@ -1598,6 +1598,7 @@ function bp_member_type_permissions_metabox( $post ) {
 	$meta = get_post_custom( $post->ID );
 	?><?php
 	$enable_filter = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; //disabled by default
+	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; //enable by default
 	?>
 
 	<table class="widefat bp-postbox-table">
@@ -1624,6 +1625,24 @@ function bp_member_type_permissions_metabox( $post ) {
 				<input type='checkbox' name='bp-member-type[enable_remove]' value='1' <?php checked( $enable_remove,
 					1 ); ?> />
 				<?php _e( 'Hide all members of this type from Members Directory', 'buddyboss' ); ?>
+			</td>
+		</tr>
+		</tbody>
+	</table>
+
+	<table class="widefat bp-postbox-table">
+		<thead>
+		<tr>
+			<th scope="col" colspan="2">
+				<?php _e( 'Profile Field', 'buddyboss' ); ?>
+			</th>
+		</tr>
+		</thead>
+		<tbody>
+		<tr>
+			<td colspan="2">
+				<input type='checkbox' name='bp-member-type[enable_profile_field]' value='1' <?php checked( $enable_profile_field, 1 ); ?> />
+				<?php _e( 'Allow users to self-select as this profile type from the "Profile Type" profile field dropdown.', 'buddyboss' ); ?>
 			</td>
 		</tr>
 		</tbody>
@@ -1940,8 +1959,9 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	$label_name     = trim( $label_name );
 	$singular_name  = trim( $singular_name );
 
-	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
-	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
+	$enable_filter        = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; //default inactive
+	$enable_remove        = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; //default inactive
+	$enable_profile_field = isset( $data['enable_profile_field'] ) ? absint( $data['enable_profile_field'] ) : 0; //default active
 
 	$data[ 'wp_roles' ] = array_filter( $data[ 'wp_roles' ] ); // Remove empty value from wp_roles array
 	$wp_roles = isset( $data[ 'wp_roles' ] ) ? $data[ 'wp_roles' ] : '';
@@ -1965,6 +1985,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
+	update_post_meta( $post_id, '_bp_member_type_enable_profile_field', $enable_profile_field );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $enable_group_type_create );
 	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $enable_group_type_auto_join );
 	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $enable_group_type_invite );

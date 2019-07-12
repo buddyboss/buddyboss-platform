@@ -180,7 +180,7 @@ function bp_xprofile_get_field_types() {
 	);
 
 	if ( function_exists( 'bp_member_type_enable_disable') && true === bp_member_type_enable_disable() ) {
-		$fields['membertypes'] = 'BP_XProfile_Field_Type_member_Types';
+		$fields['membertypes'] = 'BP_XProfile_Field_Type_Member_Types';
 	}
 
 	/**

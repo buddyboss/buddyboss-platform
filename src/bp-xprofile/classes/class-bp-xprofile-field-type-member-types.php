@@ -3,7 +3,7 @@
  * BuddyPress XProfile Member Types field Classes.
  *
  * @package BuddyBoss\XProfile\Classes
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.3
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Member Types xprofile field type.
  *
- * @since BuddyBoss 1.9.0
+ * @since BuddyBoss 1.1.3
  */
 class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 
 	/**
 	 * Constructor for the Member Types field type.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.1.3
 	 */
 	public function __construct() {
 		parent::__construct();
@@ -32,7 +32,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		/**
 		 * Fires inside __construct() method for BP_XProfile_Field_Type_Member_Types class.
 		 *
-		 * @since BuddyBoss 1.0.0
+		 * @since BuddyBoss 1.1.3
 		 *
 		 * @param BP_XProfile_Field_Type_Member_Types $this Current instance of
 		 *                                               the field type select box.
@@ -41,11 +41,52 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	}
 
 	/**
+	 * Output HTML for this field type's children options on the wp-admin Profile Fields "Add Field" and "Edit Field" screens.
+	 *
+	 * Must be used inside the {@link bp_profile_fields()} template loop.
+	 *
+	 * @since BuddyBoss 1.1.3
+	 *
+	 * @param BP_XProfile_Field $current_field The current profile field on the add/edit screen.
+	 * @param string            $control_type  Optional. HTML input type used to render the current
+	 *                                         field's child options.
+	 */
+	public function admin_new_field_html( BP_XProfile_Field $current_field, $control_type = 'radio' ) {
+		$type = array_search( get_class( $this ), bp_xprofile_get_field_types() );
+		if ( false === $type ) {
+			return;
+		}
+
+		$class            = $current_field->type != $type ? 'display: none;' : '';
+		$current_type_obj = bp_xprofile_create_field_type( $type );
+
+		$active_member_type = bp_get_active_member_types();
+		if ( empty( $active_member_type ) ) {
+			?>
+			<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
+				<h3>
+					<?php
+					printf( '%s',
+						sprintf( __( 'Please make sure to add some <a href="%s">profile types</a> first.',
+							'buddyboss' ),
+							add_query_arg( [
+								'post_type' => bp_get_member_type_post_type(),
+							],
+								admin_url( 'edit.php' ) ) ) );
+					?>
+				</h3>
+			</div>
+
+			<?php
+		}
+	}
+
+	/**
 	 * Output the edit field HTML for this field type.
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.1.3
 	 *
 	 * @param array $raw_properties Optional key/value array of
 	 *                              {@link http://dev.w3.org/html5/markup/select.html permitted attributes}
@@ -97,7 +138,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.1.3
 	 *
 	 * @param array $args Optional. The arguments passed to {@link bp_the_profile_field_options()}.
 	 */
@@ -124,10 +165,13 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			$html    .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
 
 			foreach ( $posts->posts as $post ) {
-				$html .= sprintf( '<option value="%s"%s>%s</option>',
-					$post->ID,
-					( $post_selected == $post->ID ) ? ' selected="selected"' : '',
-					$post->post_title );
+				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
+				if ( '' === $enabled || '1' === $enabled ) {
+					$html .= sprintf( '<option value="%s" %s>%s</option>',
+						$post->ID,
+						( $post_selected == $post->ID ) ? ' selected="selected"' : '',
+						$post->post_title );
+				}
 			}
 		}
 
@@ -140,7 +184,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 	 *
 	 * Must be used inside the {@link bp_profile_fields()} template loop.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.1.3
 	 *
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
