@@ -75,27 +75,6 @@
 
 }
 
-// If groups loop is in grid mode then description on narrow multi grids
-// can be too large so modify font-size by grid class parents.
-
-.buddypress-wrap {
-
-	.groups-list.grid {
-
-		@include medium-up {
-
-			&.three,
-			&.four {
-
-				.group-desc {
-
-					@include font-size(14);
-				}
-			}
-		} // @media
-	}
-}
-
 // If BP Dir Navs or user screen main navs are selected as vertical
 // We need to just adjust the loop item elements a little
 // to cope with the decreased width.

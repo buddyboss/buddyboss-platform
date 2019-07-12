@@ -135,60 +135,6 @@ function bp_nouveau_blogs_catch_button_args( $button = array() ) {
 }
 
 /**
- * Add settings to the customizer for the blogs component.
- *
- * @since BuddyPress 3.0.0
- *
- * @param array $settings the settings to add.
- *
- * @return array the settings to add.
- */
-function bp_nouveau_blogs_customizer_settings( $settings = array() ) {
-	return array_merge( $settings, array(
-		'bp_nouveau_appearance[blogs_layout]' => array(
-			'index'             => 'blogs_layout',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-	) );
-}
-
-/**
- * Add controls for the settings of the customizer for the blogs component.
- *
- * @since BuddyPress 3.0.0
- *
- * @param array $controls the controls to add.
- *
- * @return array the controls to add.
- */
-function bp_nouveau_blogs_customizer_controls( $controls = array() ) {
-	return array_merge( $controls, array(
-		'blogs_layout' => array(
-			'label'      => __( 'Sites loop:', 'buddyboss' ),
-			'section'    => 'bp_nouveau_loops_layout',
-			'settings'   => 'bp_nouveau_appearance[blogs_layout]',
-			'type'       => 'select',
-			'choices'    => bp_nouveau_customizer_grid_choices(),
-		),
-//		'sites_dir_layout' => array(
-//			'label'      => __( 'Use column navigation for the Sites directory.', 'buddyboss' ),
-//			'section'    => 'bp_nouveau_dir_layout',
-//			'settings'   => 'bp_nouveau_appearance[sites_dir_layout]',
-//			'type'       => 'checkbox',
-//		),
-//		'sites_dir_tabs' => array(
-//			'label'      => __( 'Use tab styling for Sites directory navigation.', 'buddyboss' ),
-//			'section'    => 'bp_nouveau_dir_layout',
-//			'settings'   => 'bp_nouveau_appearance[sites_dir_tabs]',
-//			'type'       => 'checkbox',
-//		),
-	) );
-}
-
-/**
  * Inline script to toggle the signup blog form
  *
  * @since BuddyPress 3.0.0

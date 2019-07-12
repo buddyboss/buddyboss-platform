@@ -132,84 +132,8 @@
 			float: left;
 			margin: 0;
 		}
-
-		&.two {
-
-			> li {
-				padding-bottom: 20px;
-
-				// With two to a row large screens could allow
-				// unchecked fluid widths resulting in overlarge avatars.
-				// This ruleset adds a max width to inner element where
-				// max page widths aren't set.
-				@include large-up() {
-
-					.list-wrap {
-						max-width: 500px;
-						margin: 0 auto;
-					}
-				}
-			}
-		}
-
-		&.two,
-		&.three,
-		&.four {
-
-			> li {
-				flex: 0 0 50%;
-				max-width: 50%;
-				min-width: 0;
-
-				.item {
-					margin: 1rem auto 0;
-					width: 80%;
-
-					.item-title {
-						width: auto;
-					}
-				}
-			} // close > li
-		}
 	}
 }
-
-/* Build the three column class medium up */
-
-@include medium-up() {
-
-	.grid {
-
-		// Set three to a row
-		&.three {
-
-			> li {
-				padding-top: 0;
-				flex: 0 0 33.333333%;
-				max-width: 33.333333%;
-				min-width: 0;
-			} // close >li
-		}
-	} // .grid
-} // close @media
-
-/* Build the four column class medium up */
-
-@include medium-up() {
-
-	// Set four to a row
-	.grid {
-
-		&.four {
-
-			> li {
-				flex: 0 0 25%;
-				max-width: 25%;
-				min-width: 0;
-			} // close > li
-		}
-	} // .grid
-} // close @media
 
 // This block styles the loop items for a grid layout
 // The block might be better located in the generic bp-lists section
@@ -230,8 +154,21 @@
 
 		> li {
 			border-bottom: none;
+			flex: 0 0 100%;
+                        max-width: 100%;
+                        min-width: 0;
 			padding: 0 5px;
 			margin-bottom: $marg-sml;
+
+                        @include medium-small-up() {
+				flex: 0 0 50%;
+                        	max-width: 50%;
+                        }
+
+                        @include large-up() {
+				flex: 0 0 33.33%;
+                        	max-width: 33.33%;
+                        }
 
 			.item-avatar {
 				margin: 0;
@@ -334,37 +271,6 @@
 				max-width: 100%;
 				flex: 100%;
 				min-width: 0;
-			}
-		}
-	}
-
-	// Specific grid layout adjustments by grid row qnt & component
-
-	.blogs-list.grid.two {
-
-		> li {
-
-			.blogs-title {
-				min-height: 5em;
-			}
-		}
-	}
-
-	// where three or four items to a row we need to increase the desc height as
-	// narrow widths force the box taller & adjust some padding values.
-	// In addition blogs grid in narrow theme widths need a little more height.
-
-	.blogs-list.grid.three,
-	.blogs-list.grid.four {
-
-		> li {
-
-			.last-activity {
-				margin-bottom: 0;
-			}
-
-			.last-post {
-				margin-top: 0;
 			}
 		}
 	}
