@@ -642,13 +642,15 @@ function bp_show_hide_toolbar() {
 			if ( true === bp_show_admin_adminbar() ) {
 				add_filter( 'show_admin_bar', '__return_true' );
 			} else {
-				add_filter( 'show_admin_bar', '__return_false' );
+				// add_filter( 'show_admin_bar', '__return_false' );
+				add_action('wp_loaded', 'force_remove_toolbar', 9);
 			}
 		} else {
 			if ( true === bp_show_login_adminbar() ) {
 				add_filter( 'show_admin_bar', '__return_true' );
 			} else {
-				add_filter( 'show_admin_bar', '__return_false' );
+				// add_filter( 'show_admin_bar', '__return_false' );
+				add_action('wp_loaded', 'force_remove_toolbar', 9);
 			}
 		}
 	} else {
