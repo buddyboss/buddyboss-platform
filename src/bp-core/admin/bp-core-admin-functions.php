@@ -1959,10 +1959,14 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_member_type_label_singular_name', $singular_name );
 	update_post_meta( $post_id, '_bp_member_type_enable_filter', $enable_filter );
 	update_post_meta( $post_id, '_bp_member_type_enable_remove', $enable_remove );
-	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $_POST['bp-group-type'] );
-	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $_POST['bp-group-type-auto-join'] );
-	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $_POST['bp-member-type-invite'] );
-	update_post_meta( $post_id, '_bp_member_type_enable_invite', $_POST['bp-member-type-enabled-invite'] );
+	$group_type = isset( $_POST['bp-group-type'] ) ? $_POST['bp-group-type'] : '';
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_create', $group_type );
+	$group_type_auto_join = isset( $_POST['bp-group-type-auto-join'] ) ? $_POST['bp-group-type-auto-join'] : '';
+	update_post_meta( $post_id, '_bp_member_type_enabled_group_type_auto_join', $group_type_auto_join );
+	$group_type_invite = isset( $_POST['bp-member-type-invite'] ) ? $_POST['bp-member-type-invite'] : '';
+	update_post_meta( $post_id, '_bp_member_type_allowed_member_type_invite', $group_type_invite );
+	$group_type_enable_invite = isset( $_POST['bp-member-type-enabled-invite'] ) ? $_POST['bp-member-type-enabled-invite'] : '';
+	update_post_meta( $post_id, '_bp_member_type_enable_invite', $group_type_enable_invite );
 
 	// Get user previous role.
 	$old_wp_roles = get_post_meta( $post_id, '_bp_member_type_wp_roles', true );
