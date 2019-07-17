@@ -2867,8 +2867,12 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
 			$display_name            = isset( $queried_data_first_name[0]->value ) ? trim( $queried_data_first_name[0]->value ) : '';
 			if ( '' === $display_name ) {
-				xprofile_set_field_data( $first_name_id, $user_id, get_user_meta( $user_id, 'first_name', true ) );
+
 				$display_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $display_name ) ) {
+					$display_name = get_user_meta( $user_id,'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
 			}
 
 			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
@@ -2896,12 +2900,25 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 			$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
 			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
 			$queried_data_last_name  = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
-			$display_name            = implode( ' ', array_filter( [ isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '', isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '' ] ) );
-			if ( '' === trim( $display_name ) ) {
-				xprofile_set_field_data( $first_name_id, $user_id, get_user_meta( $user_id, 'first_name', true ) );
-				xprofile_set_field_data( $last_name_id, $user_id, get_user_meta( $user_id, 'last_name', true ) );
-				$display_name = get_user_meta( $user_id, 'first_name', true ) . ' '. get_user_meta( $user_id, 'last_name', true );
+
+			$result_first_name = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
+			$result_last_name = isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '';
+
+			if ( '' === $result_first_name ) {
+				$result_first_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $result_first_name ) ) {
+					$result_first_name = get_user_meta( $user_id,'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
 			}
+
+			if ( '' === $result_last_name ) {
+
+				$result_last_name = get_user_meta( $user_id, 'last_name', true );
+				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+			}
+
+			$display_name            = implode( ' ', array_filter( [ isset( $result_first_name ) ? $result_first_name : '', isset( $result_last_name ) ? $result_last_name : '' ] ) );
 
 			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
 			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
