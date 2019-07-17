@@ -44,8 +44,8 @@ function bp_helper_create_nav_link_for_wpml( $args ) {
 		&& isset( $args['slug'] )
 		&& (
 			$args['slug'] == bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG )
-			|| $args['slug'] == bp_get_groups_slug()
-			|| $args['slug'] == bp_get_media_slug()
+			|| ( function_exists( 'bp_get_groups_slug' ) && $args['slug'] == bp_get_groups_slug() )
+			|| ( function_exists( 'bp_get_media_slug' ) && $args['slug'] == bp_get_media_slug() )
 		)
 	) {
 		$args['link']                = trailingslashit( bp_loggedin_user_domain() . $args['slug'] ) . $args['default_subnav_slug'] . '/';
