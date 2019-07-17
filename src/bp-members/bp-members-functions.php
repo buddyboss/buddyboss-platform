@@ -3394,7 +3394,7 @@ function bp_active_member_type_by_type( $type_id ) {
 
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
-			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->tabl_prefix}bp_activity a WHERE a.user_id = " . $single );
+			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->activity->table_name} a WHERE a.user_id = " . $single );
 			if ( $member_activity > 0 ) {
 				$member_ids[] = $single;
 			}
