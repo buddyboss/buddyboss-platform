@@ -483,6 +483,11 @@ class BuddyPress {
 			define( 'BP_PLATFORM_VERSION', $this->version );
 		}
 
+		// Define the BuddyPress version
+		if ( ! defined( 'BP_VERSION' ) ) {
+			define( 'BP_VERSION', $this->version );
+		}
+
 		// Define the database version
 		if ( ! defined( 'BP_DB_VERSION' ) ) {
 			define( 'BP_DB_VERSION', $this->db_version );
