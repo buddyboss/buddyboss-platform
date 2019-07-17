@@ -325,7 +325,7 @@ class BuddyPress {
 	private function setup_globals() {
 
 		/** Versions **********************************************************/
-		$this->version    = defined('BP_VERSION' ) ? BP_VERSION : '1.0.0';
+		$this->version    = defined('BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : '1.0.0';
 		$this->db_version = 13731;
 
 		/** Loading ***********************************************************/
@@ -479,8 +479,8 @@ class BuddyPress {
 	private function legacy_constants() {
 
 		// Define the BuddyPress version
-		if ( ! defined( 'BP_VERSION' ) ) {
-			define( 'BP_VERSION', $this->version );
+		if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
+			define( 'BP_PLATFORM_VERSION', $this->version );
 		}
 
 		// Define the database version

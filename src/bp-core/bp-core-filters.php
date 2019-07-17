@@ -1360,32 +1360,3 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 
 	return $src;
 }
-
-/**
- * Add compatibility of Events Manager plugin with platform.
- *
- * @todo Deprecate this function when platform reach to 1.3 version.
- *
- * @since BuddyBoss 1.1.3
- *
- */
-function bp_remove_event_manager_plugin_version_check_dependency() {
-
-	$current = get_option( 'active_plugins', array() );
-
-	// Check Events Manager plugin is in Active plugins array.
-	if ( in_array( 'events-manager/events-manager.php', $current ) ) {
-		// Check Platform plugin version less then 1.3
-		if ( version_compare( BP_VERSION, '1.3', '<' ) ) {
-			// Remove action from Event Manager plugin
-			remove_action( 'bp_include', 'bp_em_init' );
-			$plugin_dir = ABSPATH . 'wp-content/plugins/events-manager/buddypress/bp-em-core.php';
-			if ( file_exists( $plugin_dir ) ) {
-				// Add Event Manager plugin component file.
-				require( $plugin_dir );
-			}
-		}
-	}
-
-}
-add_action( 'bp_include', 'bp_remove_event_manager_plugin_version_check_dependency' );

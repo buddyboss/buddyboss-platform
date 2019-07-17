@@ -25,7 +25,7 @@ function bp_core_load_profile_search () {
         return false;//do not load
     }
     
-    define ( 'BPS_VERSION', BP_VERSION );
+    define ( 'BPS_VERSION', BP_PLATFORM_VERSION );
     
     if ( bp_is_active ( 'xprofile' ) ) {
 		include buddypress()->plugin_dir . 'bp-core/profile-search/bps-start.php';
