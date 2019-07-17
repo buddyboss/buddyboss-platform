@@ -139,7 +139,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		$r['item_css_id'] = $r['slug'];
 	}
 
-	$nav_item = array(
+	$nav_item = apply_filters( 'bp_core_create_nav_link', array(
 		'name'                    => $r['name'],
 		'slug'                    => $r['slug'],
 		'link'                    => trailingslashit( bp_loggedin_user_domain() . $r['slug'] ),
@@ -148,7 +148,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		'position'                => $r['position'],
 		'screen_function'         => &$r['screen_function'],
 		'default_subnav_slug'	  => $r['default_subnav_slug']
-	);
+	) );
 
 	// Add the item to the nav.
 	buddypress()->{$component}->nav->add_nav( $nav_item );
