@@ -799,6 +799,7 @@ window.bp = window.bp || {};
 				}
 
 				form.slideDown( 200 );
+				$('#ac-form-'+activity_id).show();
 
 				// change the aria state from false to true
 				target.attr( 'aria-expanded', 'true' );
