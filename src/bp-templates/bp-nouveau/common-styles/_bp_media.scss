@@ -1217,3 +1217,11 @@ ul.bb-albums-list {
 		left: 102px;
 	}
 }
+
+img.emoji,
+img.emojioneemoji {
+	display: inline-block;
+	margin: 3px;
+	width: 24px !important;
+	height: 24px !important;
+}
