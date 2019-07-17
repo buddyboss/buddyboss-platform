@@ -20,7 +20,7 @@
 defined( 'ABSPATH' ) || exit;
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '1.1.4' );
+	define( 'BP_PLATFORM_VERSION', '1.1.3' );
 }
 
 global $bp_incompatible_plugins;
