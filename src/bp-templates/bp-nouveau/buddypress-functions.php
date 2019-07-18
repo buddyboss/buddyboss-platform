@@ -201,9 +201,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Register directory nav items
 		add_action( 'bp_screens', array( $this, 'setup_directory_nav' ), 15 );
 
-		// Register the Primary Object nav widget
-		add_action( 'bp_widgets_init', array( 'BP_Nouveau_Object_Nav_Widget', 'register_widget' ) );
-
 		// Set the BP Uri for the Ajax customizer preview
 		add_filter( 'bp_uri', array( $this, 'customizer_set_uri' ), 10, 1 );
 

@@ -625,7 +625,11 @@ function bp_show_hide_toolbar() {
 
 	if ( is_user_logged_in() ) {
 
-		$old_user = BP_Core_Members_Switching::get_old_user();
+		$old_user = false;
+		if ( class_exists( 'BP_Core_Members_Switching' ) ) {
+			$old_user = BP_Core_Members_Switching::get_old_user();
+		}
+
 		$user     = wp_get_current_user();
 
 		if ( ! empty( $old_user ) ) {
