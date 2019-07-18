@@ -100,31 +100,36 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			unset( $raw_properties['user_id'] );
 		} else {
 			$user_id = bp_displayed_user_id();
-		} ?>
+		}
 
-		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
-			<?php bp_the_profile_field_name(); ?>
-			<?php if ( bp_is_register_page() ) : ?>
-				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
-				<?php bp_the_profile_field_required_label(); ?>
+		if ( function_exists( 'bp_check_member_type_field_have_options' ) && true === bp_check_member_type_field_have_options() ) {
+			?>
+
+			<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
+				<?php bp_the_profile_field_name(); ?>
+				<?php if ( bp_is_register_page() ) : ?>
+					<?php bp_the_profile_field_optional_label(); ?>
+				<?php else: ?>
+					<?php bp_the_profile_field_required_label(); ?>
+				<?php endif; ?>
+			</legend>
+
+			<?php if ( bp_get_the_profile_field_description() ) : ?>
+				<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 			<?php endif; ?>
-		</legend>
 
-		<?php if ( bp_get_the_profile_field_description() ) : ?>
-			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
-		<?php endif; ?>
+			<?php
 
-		<?php
+			/** This action is documented in bp-xprofile/bp-xprofile-classes */
+			do_action( bp_get_the_profile_field_errors_action() );
 
-		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() ); ?>
+			?>
+			<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
+				<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
+			</select>
+			<?php
 
-		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
-			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
-		</select>
-
-		<?php
+		}
 	}
 
 	/**

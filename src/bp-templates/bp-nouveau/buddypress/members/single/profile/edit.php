@@ -58,13 +58,15 @@ bp_nouveau_xprofile_hook( 'before', 'edit_content' ); ?>
 							continue;
 						}
 					}
-				?>
 
-					<?php
 					if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
 						if ( function_exists( 'bp_get_xprofile_member_type_field_id') && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
 							continue;
 						}
+					}
+
+					if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id()) {
+						continue;
 					}
 					?>
 

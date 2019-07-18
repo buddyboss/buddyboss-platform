@@ -1733,3 +1733,31 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 	return apply_filters( 'bp_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
 }
+
+function bp_check_member_type_field_have_options() {
+
+	$arr = array();
+
+	// Get posts of custom post type selected.
+	$posts = new \WP_Query( array(
+		'posts_per_page' => - 1,
+		'post_type'      => bp_get_member_type_post_type(),
+		'orderby'        => 'title',
+		'order'          => 'ASC'
+	) );
+	if ( $posts ) {
+		foreach ( $posts->posts as $post ) {
+			$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
+			if ( '' === $enabled || '1' === $enabled ) {
+				$arr[] = $post->ID;
+			}
+		}
+	}
+
+	if ( empty( $arr ) ) {
+		return false;
+	} else {
+		return true;
+	}
+
+}

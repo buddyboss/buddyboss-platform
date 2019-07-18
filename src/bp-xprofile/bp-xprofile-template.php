@@ -452,6 +452,10 @@ function bp_the_profile_field_ids() {
 			}
 		}
 
+		if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
+			$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
+		}
+
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 		$current_value = bp_get_option( 'bp-display-name-format' );
 
