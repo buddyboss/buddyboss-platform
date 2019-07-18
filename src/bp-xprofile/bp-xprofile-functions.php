@@ -1734,6 +1734,13 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	return apply_filters( 'bp_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );
 }
 
+/**
+ * Decide need to add profile field select box or not.
+ *
+ * @since BuddyBoss 1.1.3
+ *
+ * @return bool
+ */
 function bp_check_member_type_field_have_options() {
 
 	$arr = array();
