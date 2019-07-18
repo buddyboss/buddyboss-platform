@@ -120,7 +120,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					'count'         => bp_get_message_thread_total_count(),
 					'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 					'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-					'started_date'  => date(
+					'started_date'  => date_i18n(
 						get_option( 'date_format' ),
 						strtotime( $messages_template->thread->first_message_date )
 					)
@@ -430,7 +430,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'count'         => bp_get_message_thread_total_count(),
 			'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 			'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date' => date(
+			'started_date' => date_i18n(
 				get_option('date_format'),
 				strtotime($messages_template->thread->first_message_date)
 			)
@@ -489,7 +489,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					$threads->threads[ $i ]['excerpt'] = __( 'sent some photos', 'buddyboss' );
 				}
 			}
-		} else if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_gif_support_enabled() ) {
 			$gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true );
 
 			if ( ! empty( $gif_data ) ) {
@@ -641,7 +643,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$thread->thread = array(
 			'id'      => bp_get_the_thread_id(),
 			'subject' => strip_tags( bp_get_the_thread_subject() ),
-			'started_date' => date(
+			'started_date' => date_i18n(
 				get_option('date_format'),
 				strtotime($thread_template->thread->first_message_date)
 			)

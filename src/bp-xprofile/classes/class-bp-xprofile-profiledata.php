@@ -83,11 +83,11 @@ class BP_XProfile_ProfileData {
 
 		$cache_key   = "{$user_id}:{$field_id}";
 		$profiledata = wp_cache_get( $cache_key, 'bp_xprofile_data' );
+		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 		if ( false === $profiledata ) {
-			$bp = buddypress();
 
-			$sql         = $wpdb->prepare( "SELECT * FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
+			$sql         = $wpdb->prepare( "SELECT * FROM {$table_name} WHERE field_id = %d AND user_id = %d", $field_id, $user_id );
 			$profiledata = $wpdb->get_row( $sql );
 
 			if ( $profiledata ) {
@@ -282,6 +282,7 @@ class BP_XProfile_ProfileData {
 		global $wpdb;
 
 		$bp = buddypress();
+		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 		/**
 		 * Fires before the current profile data instance gets deleted.
@@ -292,7 +293,7 @@ class BP_XProfile_ProfileData {
 		 */
 		do_action_ref_array( 'xprofile_data_before_delete', array( $this ) );
 
-		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id = %d", $this->field_id, $this->user_id ) );
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$table_name} WHERE field_id = %d AND user_id = %d", $this->field_id, $this->user_id ) );
 		if ( empty( $deleted ) ) {
 			return false;
 		}

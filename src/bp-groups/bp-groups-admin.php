@@ -1679,33 +1679,35 @@ function bp_register_group_type_sections_filters_actions() {
  */
 function bp_group_type_show_correct_current_menu(){
 	$screen = get_current_screen();
-	if ( $screen->id == 'bp-group-type' || $screen->id == 'edit-bp-group-type' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				$('#toplevel_page_bp-groups').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
-				$('#toplevel_page_bp-groups > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
-			});
-		</script>
-		<?php
-	}
-	if ( $screen->id == 'bp-group-type' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				$('li.wp-first-item').next().addClass('current');
-			});
-		</script>
-		<?php
-	}
-	if ( $screen->id == 'edit-bp-group-type' ) {
-		?>
-		<script>
-			jQuery(document).ready(function($) {
-				$('li.wp-first-item').next().addClass('current');
-			});
-		</script>
-		<?php
+	if ( isset( $screen->id ) ) {
+		if ( $screen->id == 'bp-group-type' || $screen->id == 'edit-bp-group-type' ) {
+			?>
+			<script>
+				jQuery(document).ready(function ($) {
+					$('#toplevel_page_bp-groups').addClass('wp-has-current-submenu wp-menu-open menu-top menu-top-first').removeClass('wp-not-current-submenu');
+					$('#toplevel_page_bp-groups > a').addClass('wp-has-current-submenu').removeClass('wp-not-current-submenu');
+				});
+			</script>
+			<?php
+		}
+		if ( $screen->id == 'bp-group-type' ) {
+			?>
+			<script>
+				jQuery(document).ready(function ($) {
+					$('li.wp-first-item').next().addClass('current');
+				});
+			</script>
+			<?php
+		}
+		if ( $screen->id == 'edit-bp-group-type' ) {
+			?>
+			<script>
+				jQuery(document).ready(function ($) {
+					$('li.wp-first-item').next().addClass('current');
+				});
+			</script>
+			<?php
+		}
 	}
 }
 
@@ -2254,7 +2256,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
 	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
 
-	$member_type = $_POST['bp-member-type'];
+	$member_type = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
 	$member_type_group_invites = $_POST['bp-member-type-group-invites'];
 	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 

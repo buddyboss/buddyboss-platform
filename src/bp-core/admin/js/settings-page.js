@@ -328,47 +328,105 @@
         doFitVids();
 
 		var bp_media_import_send_status_requests = function() {
-			var import_status_interval = setInterval(function() {
+			$.ajax({
+				'url' : BP_ADMIN.ajax_url,
+				'method' : 'POST',
+				'data' : {
+					'action' : 'bp_media_import_status_request',
+				},
+				'success' : function( response ) {
+					if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
+						var total_media = response.data.total_media;
+						var total_albums = response.data.total_albums;
+						var albums_done = response.data.albums_done;
+						var media_done = response.data.media_done;
+						var import_status = response.data.import_status;
 
-				$.ajax({
-					'url' : BP_ADMIN.ajax_url,
-					'method' : 'POST',
-					'data' : {
-						'action' : 'bp_media_import_status_request',
-					},
-					'success' : function( response ) {
-						if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
-							var total_media = response.data.total_media;
-							var total_albums = response.data.total_albums;
-							var albums_done = response.data.albums_done;
-							var media_done = response.data.media_done;
-							var import_status = response.data.import_status;
+						$('#bp-media-import-albums-total').text(total_albums);
+						$('#bp-media-import-media-total').text(total_media);
+						$('#bp-media-import-albums-done').text(albums_done);
+						$('#bp-media-import-media-done').text(media_done);
 
-							$('#bp-media-import-albums-total').text(total_albums);
-							$('#bp-media-import-media-total').text(total_media);
-							$('#bp-media-import-albums-done').text(albums_done);
-							$('#bp-media-import-media-done').text(media_done);
-
-							if ( import_status == 'done' && total_albums == albums_done && total_media == media_done ) {
-								clearInterval(import_status_interval);
-								$('#bp-media-import-msg').text(response.data.success_msg);
-								$('#bp-media-import-submit').show();
-							}
+						if ( import_status == 'reset_albums' ||
+							import_status == 'reset_media' ||
+							import_status == 'reset_forum' ||
+							import_status == 'reset_topic' ||
+							import_status == 'reset_reply' ||
+							import_status == 'reset_options'
+						) {
+							$('#bp-media-resetting').show();
 						} else {
-							clearInterval(import_status_interval);
-							$('#bp-media-import-msg').text(response.data.error_msg);
+							$('#bp-media-resetting').hide();
 						}
-					},
-					'error' : function() {
-						clearInterval(import_status_interval);
-					}
-				});
 
-			}, 2000);
+						if ( import_status == 'done' && total_albums == albums_done && total_media == media_done ) {
+							$('#bp-media-import-msg').text(response.data.success_msg);
+							$('#bp-media-import-submit').show();
+						} else {
+							bp_media_import_send_status_requests();
+						}
+					} else {
+						$('#bp-media-import-msg').text(response.data.error_msg);
+					}
+				},
+				'error' : function() {
+
+				}
+			});
 		};
 
 		if ( $('#bp-media-import-updating').length ) {
 			bp_media_import_send_status_requests();
+		}
+
+		// Show/Hide options ( Display Name Fields ) based on the ( Display Name Format ) selected.
+		if ( $('.display-options').length ) {
+
+			var selectorAll = $('.display-options');
+			var displayOptions = $('select[name=bp-display-name-format]');
+			var currentValue = displayOptions.val();
+
+			$(selectorAll).each(function() {
+				$(this).hide();
+			});
+
+			if ( 'first_name' === currentValue ) {
+				$('.first-name-options').show();
+				$('.nick-name-options').hide();
+				$('.first-last-name-options').hide();
+			} else if ( 'first_last_name' === currentValue ) {
+				$('.first-last-name-options').show();
+				$('.first-name-options').hide();
+				$('.nick-name-options').hide();
+			} else {
+				$('.nick-name-options').show();
+				$('.first-name-options').hide();
+				$('.first-last-name-options').hide();
+			}
+
+			$(displayOptions).change(function () {
+
+				$(selectorAll).each(function() {
+					$(this).hide();
+				});
+
+				currentValue = $(this).val();
+
+				if ( 'first_name' === currentValue ) {
+					$('.first-name-options').show();
+					$('.nick-name-options').hide();
+					$('.first-last-name-options').hide();
+				} else if ( 'first_last_name' === currentValue ) {
+					$('.first-last-name-options').show();
+					$('.first-name-options').hide();
+					$('.nick-name-options').hide();
+				} else {
+					$('.nick-name-options').show();
+					$('.first-name-options').hide();
+					$('.first-last-name-options').hide();
+				}
+
+			});
 		}
 
 	});

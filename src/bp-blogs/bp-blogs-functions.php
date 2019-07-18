@@ -1463,6 +1463,12 @@ function bp_blogs_restore_data( $user_id = 0 ) {
 }
 add_action( 'bp_make_ham_user', 'bp_blogs_restore_data', 10, 1 );
 
+/**
+ * Save all the public custom post type to options.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ */
 function bp_core_admin_get_active_custom_post_type_feed() {
 
 	$post_types = get_post_types( [ 'public' => true ] );

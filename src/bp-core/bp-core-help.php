@@ -291,3 +291,21 @@ function bp_core_get_all_file_from_dir_and_subdir( $dir, &$results = array() ) {
 
 	return $results;
 }
+
+/**
+ * Return the Default data format
+ *
+ * @param bool $date
+ * @param bool $time
+ *
+ * @return mixed
+ */
+function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
+
+	$format = $date ? get_option( 'date_format' ) : '';
+
+	if ( $time ) {
+		$format .= empty( $format ) ? get_option( 'time_format' ) : $symbol . get_option( 'time_format' );
+	}
+	return $format;
+}

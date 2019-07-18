@@ -29,7 +29,10 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
 		$args = array();
 		$args['class'] = 'child-no-padding-first';
-		$this->add_field( 'show-login-adminbar', __( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_login_admin_bar', 'intval', $args );
+		$this->add_field( 'show-admin-adminbar',__( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_admin_admin_bar', 'intval', $args );
+		$args = array();
+		$args['class'] = 'child-no-padding';
+		$this->add_field( 'show-login-adminbar', '', 'bp_admin_setting_callback_login_admin_bar', 'intval', $args );
 		$args = array();
 		$args['class'] = 'child-no-padding';
 		$this->add_field( 'hide-loggedout-adminbar','', 'bp_admin_setting_callback_admin_bar', 'intval', $args );

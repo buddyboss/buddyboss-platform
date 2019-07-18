@@ -112,7 +112,7 @@ function bp_member_invite_submit() {
 
 		//  Set both variable which will use in email.
 		$_POST['custom_user_name'] = $name;
-		$_POST['custom_user_avatar'] = buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg';
+		$_POST['custom_user_avatar'] = apply_filters( 'bp_sent_invite_email_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 
 		$accept_link  = add_query_arg( array(
 			'bp-invites' => 'accept-member-invitation',

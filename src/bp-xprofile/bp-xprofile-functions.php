@@ -1198,7 +1198,13 @@ function bp_xprofile_fullname_field_id() {
 		global $wpdb;
 
 		$bp = buddypress();
-		$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+
+		if ( isset( $bp->profile->table_name_fields ) ) {
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+		} else {
+			$table = bp_core_get_table_prefix() .'bp_xprofile_fields';
+			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+		}
 
 		wp_cache_set( 'fullname_field_id', $id, 'bp_xprofile' );
 	}
@@ -1207,13 +1213,37 @@ function bp_xprofile_fullname_field_id() {
 }
 
 /**
+ * Get the group id of the base name field
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_xprofile_base_group_id( $defalut = 1, $get_option = true ) {
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-base-group-id' );
+	}
+
+	if ( empty( $field_id ) && $get_option ) {
+		$field_id = bp_get_option( 'bp-xprofile-base-group-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_base_group_id', $field_id );
+}
+
+/**
  * Get the field id of the first name field
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_firstname_field_id() {
-	$field_id = apply_filters( 'bp_xprofile_firstname_field_id', bp_get_option( 'bp-xprofile-firstname-field-id' ) );
-	return absint( $field_id );
+function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-firstname-field-id' );
+	}
+
+	if ( empty( $field_id ) && $get_option ) {
+		$field_id = bp_get_option( 'bp-xprofile-firstname-field-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_firstname_field_id', $field_id );
 }
 
 /**
@@ -1221,9 +1251,16 @@ function bp_xprofile_firstname_field_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_lastname_field_id() {
-	$field_id = apply_filters( 'bp_xprofile_lastname_field_id', bp_get_option( 'bp-xprofile-lastname-field-id' ) );
-	return absint( $field_id );
+function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-lastname-field-id' );
+	}
+
+	if ( empty( $field_id ) && $get_option ) {
+		$field_id = bp_get_option( 'bp-xprofile-lastname-field-id', $defalut );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_lastname_field_id', $field_id );
 }
 
 /**
@@ -1231,12 +1268,17 @@ function bp_xprofile_lastname_field_id() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_xprofile_nickname_field_id( $no_fallback = false ) {
-	$field_id = apply_filters(
-		'bp_xprofile_nickname_field_id',
-		bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback? null : bp_xprofile_fullname_field_id() )
-	);
-	return absint( $field_id );
+function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true ) {
+
+	if ( is_multisite() ) {
+		$field_id = get_site_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
+	}
+
+	if ( empty( $field_id ) && $get_option ) {
+		$field_id = bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
+	}
+
+	return (int) apply_filters( 'bp_xprofile_nickname_field_id', $field_id );
 }
 
 /**
@@ -1640,49 +1682,68 @@ function social_network_provider() {
  *
  * @return string
  */
-function bp_get_user_social_networks_urls() {
+function bp_get_user_social_networks_urls($user_id = null) {
 
 	global $wpdb;
+	global $bp;
 
-	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
+	$social_networks_id = (int) $wpdb->get_var( "SELECT a.id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'socialnetworks' ");
 
 	$html = '';
-	$original_option_values = array();
-	if ( $social_networks_id > 0 ) {
-		$providers = social_network_provider();
-		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, bp_displayed_user_id() ) );
 
-		if ( isset( $original_option_values ) && !empty( $original_option_values ) ) {
-			foreach ( $original_option_values as $key => $original_option_value ) {
-				if ( '' !== $original_option_value ) {
+	$original_option_values = array();
+
+	$user = ($user_id !== null && $user_id > 0) ? $user_id : bp_displayed_user_id();
+
+	if ( $social_networks_id > 0 ) 
+	{
+		$providers = social_network_provider();
+
+		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
+
+		if ( isset( $original_option_values ) && !empty( $original_option_values ) ) 
+		{
+			foreach ( $original_option_values as $key => $original_option_value ) 
+			{
+				if ( '' !== $original_option_value ) 
+				{
 					$key  = bp_social_network_search_key( $key, $providers );
+
 					$html .= '<span class="social ' . $providers[ $key ]->value . '"><a target="_blank" data-balloon-pos="up" data-balloon="' . $providers[ $key ]->name . '" href="' . esc_url( $original_option_value ) . '">' . $providers[ $key ]->svg . '</a></span>';
 				}
 			}
 		}
-	} else {
-		$html = '';
 	}
 
-	if ( '' !== $html ) {
-
+	if ( $html !== '' ) 
+	{
 		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
 
-		if ( bp_displayed_user_id() === bp_loggedin_user_id() ) {
+		if ( bp_displayed_user_id() === bp_loggedin_user_id() ) 
+		{
 			$html = '<div class="social-networks-wrap">'.$html.'</div>';
-		} elseif ( 'public' === $level ) {
+		} 
+		elseif ( 'public' === $level ) 
+		{
 			$html = '<div class="social-networks-wrap">'.$html.'</div>';
-		} elseif ( 'loggedin' === $level && is_user_logged_in() ) {
+		} 
+		elseif ( 'loggedin' === $level && is_user_logged_in() ) 
+		{
 			$html = '<div class="social-networks-wrap">'.$html.'</div>';
-		} elseif ( 'friends' === $level && is_user_logged_in() ) {
+		} 
+		elseif ( 'friends' === $level && is_user_logged_in() ) 
+		{
 			$member_friend_status = friends_check_friendship_status( bp_loggedin_user_id(), bp_displayed_user_id() );
-			if ( 'is_friend' === $member_friend_status ) {
+
+			if ( 'is_friend' === $member_friend_status ) 
+			{
 				$html = '<div class="social-networks-wrap">' . $html . '</div>';
-			} else {
+			} 
+			else 
+			{
 				$html = '';
 			}
 		}
-
 	}
 
 	return apply_filters( 'bp_get_user_social_networks_urls', $html, $original_option_values, $social_networks_id );

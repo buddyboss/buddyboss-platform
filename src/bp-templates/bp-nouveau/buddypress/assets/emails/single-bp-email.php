@@ -286,7 +286,7 @@ $settings = bp_email_get_appearance_settings();
 
 						//echo bp_get_option( 'blogname' );
 						if ( bp_is_email_customizer() ) {
-							echo '{{recipient.name}} <img src="' . buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+							echo '{{recipient.name}} <img src="' . apply_filters( 'bp_email_customizer_default_avatar', buddypress()->plugin_url . "bp-core/images/mystery-man.jpg" ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 						} else {
 							bp_email_the_salutation( $settings );
 						}
@@ -328,7 +328,7 @@ $settings = bp_email_get_appearance_settings();
 							<tr>
 								<td valign="middle" width="10%" style="vertical-align: middle;">
 									<a href="#" target="_blank">
-										<img alt="Avatar" src="<?php echo buddypress()->plugin_url; ?>bp-core/images/mystery-man.jpg" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
+										<img alt="Avatar" src="<?php echo apply_filters( 'bp_email_default_avatar', buddypress()->plugin_url .'bp-core/images/mystery-man.jpg' ); ?>" width="45" height="45" style="border: 1px solid #b9babc; border-radius: 50%; vertical-align: middle;" />
 									</a>
 									<span class="body_secondary_text_color body_text_size" style="margin-left: 10px; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_secondary_text_color'] ); ?>; letter-spacing: -0.24px;">{{sender.name}}</span>
 								</td>

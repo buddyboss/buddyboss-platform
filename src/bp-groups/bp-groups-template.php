@@ -1754,7 +1754,7 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip" data-bp-tooltip-pos="up" 
+						<a href="<?php bp_group_permalink( $parent_group ) ?>" class="bp-tooltip" data-bp-tooltip-pos="up"
 						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ) ?>"><?php echo bp_core_fetch_avatar( array(
 								'item_id' => $parent_group->id,
 								'object'  => 'group',
@@ -3856,15 +3856,15 @@ function bp_group_join_button( $group = false ) {
 			}
 
 			if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
-				if ( 'Organizer' === get_group_role_label( $group->id, 'organizer_singular_label_name') ) {
-					$button_text = __( 'You\'re an ' . get_group_role_label( $group->id, 'organizer_singular_label_name'), 'buddyboss' );
+				if ( 'Organizer' === get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) {
+					$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re an %s', 'buddyboss' ), get_group_role_label( $group->id, 'organizer_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
 				} else {
-					$button_text = __( 'You\'re a ' . get_group_role_label( $group->id, 'organizer_singular_label_name'), 'buddyboss' );
+					$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re an %s', 'buddyboss' ), get_group_role_label( $group->id, 'organizer_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
 				}
 			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
-				$button_text = __( 'You\'re a ' . get_group_role_label( $group->id, 'moderator_singular_label_name'), 'buddyboss' );
+				$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
 			} else {
-				$button_text = __( 'You\'re a ' . get_group_role_label( $group->id, 'member_singular_label_name'), 'buddyboss' );
+				$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'member_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
 			}
 
 			// Setup button attributes.
@@ -4409,6 +4409,9 @@ function bp_group_member_section_title() {
 		if ( $last_user_group_role_title != $user_group_role_title ) {
 			$last_user_group_role_title = $user_group_role_title; ?>
 			<li class="item-entry item-entry-header">
+
+				<?php bp_nouveau_group_hook( 'before', 'member_section_title' ); ?>
+
 				<?php if ( groups_is_user_admin( $user_id, $group_id ) ) {
 						echo esc_html( get_group_role_label( $group_id, 'organizer_plural_label_name' ), 'buddyboss' );
 					} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
@@ -4416,6 +4419,9 @@ function bp_group_member_section_title() {
 					} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
 						echo esc_html( get_group_role_label( $group_id, 'member_plural_label_name' ), 'buddyboss' );
 					} ?>
+
+				<?php bp_nouveau_group_hook( 'after', 'member_section_title' ); ?>
+
 			</li>
 		<?php }
 

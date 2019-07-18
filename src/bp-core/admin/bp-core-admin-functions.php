@@ -1892,7 +1892,7 @@ function bp_member_type_wprole_metabox( $post ) {
 	<?php
 
 	empty( $selected_roles[0] ) ? $selected_roles = array('subscriber') : '' ;
-
+			
 	if( isset($all_roles) && !empty($all_roles) ){
 		foreach($all_roles as $key => $val){
 			?>
@@ -2020,7 +2020,7 @@ function bp_save_member_type_post_metabox_data( $post_id ) {
 		}
 
 		if ( true === $bp_prevent_data_update ) {
-			if ( 'administrator' === $old_wp_roles[0] ) {
+			if ( isset( $old_wp_roles[0] ) && 'administrator' === $old_wp_roles[0] ) {
 				if ( ! in_array( $current_user_role, $wp_roles ) ) {
 					$bp_error_message_string = __( 'As your profile is currently assigned to this profile type, you cannot change its associated WordPress role. Changing this setting would remove your Administrator role and lock you out of the WordPress admin. You first need to remove yourself from this profile type (at Users > Your Profile > Extended) and then you can come back to this page to update the associated WordPress role.', 'buddyboss' );
 					$error_message           = apply_filters( 'bp_member_type_admin_error_message', $bp_error_message_string);

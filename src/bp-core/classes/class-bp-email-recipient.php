@@ -113,6 +113,7 @@ class BP_Email_Recipient {
 			$this->name    = sanitize_text_field( $wp_name );
 			$this->avatar  = bp_core_fetch_avatar( array(
 				'item_id' => $this->user_object->ID,
+				'email'   => bp_core_get_user_email( $this->user_object->ID ),
 				'html'    => false
 			) );
 		}

@@ -620,15 +620,36 @@ function bp_get_theme_compat_templates() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @return bool.
  */
 function bp_show_hide_toolbar() {
 
 	if ( is_user_logged_in() ) {
-		if ( true === bp_show_login_adminbar() ) {
-			add_filter( 'show_admin_bar', '__return_true' );
+
+		$old_user = BP_Core_Members_Switching::get_old_user();
+		$user     = wp_get_current_user();
+
+		if ( ! empty( $old_user ) ) {
+			if ( $user->ID != $old_user->ID ) {
+				$userdata = get_userdata( $user->ID );
+				$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
+			}
 		} else {
-			add_filter( 'show_admin_bar', '__return_true' );
+			$userdata = get_userdata( $user->ID );
+			$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
+		}
+
+		if ( current_user_can( 'administrator' ) && in_array( 'administrator', $current_user_caps ) ) {
+			if ( true === bp_show_admin_adminbar() ) {
+				add_filter( 'show_admin_bar', '__return_true' );
+			} else {
+				add_filter( 'show_admin_bar', '__return_false' );
+			}
+		} else {
+			if ( true === bp_show_login_adminbar() ) {
+				add_filter( 'show_admin_bar', '__return_true' );
+			} else {
+				add_filter( 'show_admin_bar', '__return_false' );
+			}
 		}
 	} else {
 		if ( false === bp_hide_loggedout_adminbar() ) {

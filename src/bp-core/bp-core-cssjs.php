@@ -77,6 +77,7 @@ function bp_core_register_common_scripts() {
 
 		'emojione'     => array( 'file' => "{$url}emojione-edited.js", 'dependencies' => array(), 'footer' => true ),
 		'emojionearea' => array( 'file' => "{$url}emojionearea-edited.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
+		'bp-exif' => array( 'file' => "{$url}vendor/exif.js" ),
 
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
@@ -109,7 +110,9 @@ function bp_core_register_common_scripts() {
 
 	$version = bp_get_version();
 	foreach ( $scripts as $id => $script ) {
-		wp_register_script( $id, $script['file'], $script['dependencies'], $version, $script['footer'] );
+		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
+		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
+		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
 }
 add_action( 'bp_enqueue_scripts',       'bp_core_register_common_scripts', 1 );

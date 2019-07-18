@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.0.9
+Stable tag: 1.1.3
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,10 +55,53 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.1.3 =
+* Activity - Fixed media posted in activity feed not always displaying
+* Activity - Fixed photos added to group feed not displaying in group photos tab
+* Activity - Fixed 'Read more' link appending media into the content
+
+= 1.1.2 =
+* Activity - Fixed media popup showing no image with Groups component enabled
+* Activity - Fixed word-wrapping when long sentences are posted in activity
+* Activity - Fixed crop ratio for wide/landscape media images
+* Activity - Fixed media disappearing when clicking 'Read more' in activity feed
+* Activity - Show admin notice when 'Heartbeat API' is disabled, for 'auto-refresh' 
+* Media - Improved the image rotation script for photos uploaded in mobile browsers
+* Media - Improved experience for media migrations, and ability to re-migrate
+* Profile Types - When creating new type, fixed issue when selecting 'None' as WordPress role
+* Multisite - Fixed issue with names not displaying in sub-sites
+* LearnDash - Fixed conflict with 'Memberium' protected content in Lesson sidebar
+* LearnDash - Now using WordPress 'Date Format' for dates in LearnDash
+* Compatibility - Fixed default avatar conflict with 'WP User Avatar' plugin
+* Compatibility - Fixed registration field syncing with 'WooCommerce Memberships' plugin
+* Errors - Fixed various PHP errors in certain situations
+
+= 1.1.1 =
+* Profiles - New option to remove First and Last Name, depending on Display Name Format
+* Groups - Activity posted in private groups now displays in activity feed
+* Media - Fixed image rotation issues for photos uploaded in mobile browsers
+* Activity - Allow activity to load when 'Heartbeat API' is disabled, for WPEngine hosting
+* Cover Photos - Display validation message when cover photo was uploaded successfully
+* Date Format - Now using WordPress 'Date Format' for dates throughout the network
+
+= 1.1.0 =
+* Profiles - Fixed profile dropdown not appearing with some plugins
+* Toolbar - New option to show/hide Toolbar for admin users vs members
+* Messages - Nicer text preview when message contains only an image or gif
+* Media - When migrating from BuddyBoss Media plugin, fixed migration issues
+* Multisite - Fixed issue with Name fields duplicating in new sub-sites
+* Performance - Made functions less likely to timeout on shared hosting
+* Translations - Fixed text instances that were not available for translation
+* Dashboard - Moved 'BuddyBoss' menu higher up for accessibility
+
 = 1.0.9 =
-* Private Network - Improved logic for URL exclusions
-* Profiles - Allow 'Last Name' field to be set as optional
-* Profiles - New option to allow for 'gravatars' as profile avatars
+* Profiles - Fixed profile dropdown not working with Toolbar disabled
+* Profiles - New option for 'Last Name' field to be set as optional
+* Profiles - New option for 'gravatars' to be used as profile avatars
+* Private Network - Improved logic for Public URLs
+* Multisite - Fixed logic for new signups registering sub-sites
+* Search - Exclude HTML meta data from search results
+* Documentation - LearnDash Course Grid
 
 = 1.0.8 =
 * Updater - Improvements to updater code

@@ -79,6 +79,9 @@ window.bp = window.bp || {};
 			this.dropzone_media = [];
 
 			this.models = [];
+
+			this.bb_icon_bell_small_count = $('.bb-icon-bell-small').parent().children('.count');
+			this.bb_icon_bell_small_count.removeClass('animated heartBeat');
 		},
 
 		/**
@@ -222,6 +225,22 @@ window.bp = window.bp || {};
 			 * Let's remove the mentions from objects!
 			 */
 			objects.pop();
+
+			/* 
+			* trigger only if element exist
+			* update all notification counts - sidebars, header notif, etc.
+			*/
+			var notifs = $('.bb-icon-bell-small');
+			var notif_icons = notifs.parent().children('.count');
+			var notif_icons_exist = notif_icons.length;
+			if ( notif_icons_exist > 0 ) {
+				notif_icons.addClass('animated heartBeat').text( Number(notif_icons.first().text()) + newest_activities_count );
+			} else {
+				notifs.parent().append( '<span class="count"> ' + newest_activities_count + ' </span>' );
+			}
+
+			// inject all unread notifications
+			$('.notification-list').empty().html(data.unread_notifs);
 
 			// Add an information about the number of newest activities inside the document's title
 			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );
@@ -393,7 +412,7 @@ window.bp = window.bp || {};
 
 				// If all parents are hidden, reveal at least one. It seems very risky to manipulate the DOM to keep exactly 5 comments!
 				if ( $( comment_parents ).children( '.bp-hidden' ).length === $( comment_parents ).children( 'li' ).length - 1 && $( comment_parents ).find( 'li.show-all' ).length ) {
-					$( comment_parents ).children( 'li' ).removeClass( 'bp-hidden' ).toggle();
+					$( comment_parents ).children( 'li:not(.show-all)' ).removeClass( 'bp-hidden' ).toggle();
 				}
 			} );
 		},
@@ -780,7 +799,6 @@ window.bp = window.bp || {};
 				}
 
 				form.slideDown( 200 );
-				$('#ac-form-'+activity_id).show();
 
 				// change the aria state from false to true
 				target.attr( 'aria-expanded', 'true' );
@@ -1048,8 +1066,8 @@ window.bp = window.bp || {};
 							file.id = response.id;
 							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
-							response.data.album_id = self.album_id;
-							response.data.group_id = self.group_id;
+							response.data.album_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+							response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 							response.data.saved    = false;
 							self.dropzone_media.push( response.data );
 						}

@@ -846,8 +846,14 @@ function bp_core_admin_notice_repopulate_blogs_resume() {
 
 add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resume' );
 
+/**
+ * Assign members without a profile type to the default profile type (excludes admins).
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array
+ */
 function bp_admin_assign_member_type() {
-
 
 	$users = get_users( [
 		'fields' => [ 'ID' ]

@@ -2859,28 +2859,106 @@ function bp_custom_display_name_format( $display_name, $user_id = null ) {
 	global $wpdb;
 
 	$format = bp_get_option( 'bp-display-name-format' );
-	$table = $wpdb->prefix.'bp_xprofile_data';
+	$table  = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 	switch ( $format ) {
 		case 'first_name':
-			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
 			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$display_name = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
+			$display_name            = isset( $queried_data_first_name[0]->value ) ? trim( $queried_data_first_name[0]->value ) : '';
+			if ( '' === $display_name ) {
+
+				$display_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $display_name ) ) {
+					$display_name = get_user_meta( $user_id,'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+			}
+
+			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
+			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+
+			if ( '' === trim( $nick_name ) ) {
+
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
 			break;
 		case 'first_last_name':
-			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$last_name_id = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
 			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$queried_data_last_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
-			$display_name = implode( ' ', array_filter( [
-				isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '',
-				isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : ''
-			] ) );
+			$queried_data_last_name  = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
+
+			$result_first_name = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
+			$result_last_name = isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '';
+
+			if ( '' === $result_first_name ) {
+				$result_first_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $result_first_name ) ) {
+					$result_first_name = get_user_meta( $user_id,'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+			}
+
+			if ( '' === $result_last_name ) {
+
+				$result_last_name = get_user_meta( $user_id, 'last_name', true );
+				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+			}
+
+			$display_name            = implode( ' ', array_filter( [ isset( $result_first_name ) ? $result_first_name : '', isset( $result_last_name ) ? $result_last_name : '' ] ) );
+
+			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
+			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+
+			if ( '' === trim( $nick_name ) ) {
+
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
 			break;
 		case 'nickname':
-			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
 			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$display_name = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+			$display_name          = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
+			if ( '' === trim( $display_name ) ) {
+
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				$display_name = $nickname;
+			}
 			break;
 	}
 
@@ -3321,6 +3399,7 @@ function bp_member_type_by_type( $type_id ) {
  */
 function bp_active_member_type_by_type( $type_id ) {
 	global $wpdb;
+	global $bp;
 
 	$member_ids = array();
 
@@ -3332,7 +3411,7 @@ function bp_active_member_type_by_type( $type_id ) {
 
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
-			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$wpdb->prefix}bp_activity a WHERE a.user_id = " . $single );
+			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->activity->table_name} a WHERE a.user_id = " . $single );
 			if ( $member_activity > 0 ) {
 				$member_ids[] = $single;
 			}
@@ -3729,10 +3808,10 @@ function bp_member_type_show_data( $column, $post_id  ) {
  */
 function bp_member_type_add_sortable_columns( $columns ) {
 
-	$columns['total_users']	= 'total_users';
-	$columns['enable_filter']	= 'enable_filter';
-	$columns['enable_remove']	= 'enable_remove';
-	$columns['member_type']			= 'member_type';
+	$columns['total_users']   = 'total_users';
+	$columns['enable_filter'] = 'enable_filter';
+	$columns['enable_remove'] = 'enable_remove';
+	$columns['member_type']   = 'member_type';
 
 	return $columns;
 }
@@ -3770,14 +3849,14 @@ function bp_member_type_sort_items( $qv ) {
 		case 'member_type':
 
 			$qv['meta_key'] = '_bp_member_type_name';
-			$qv['orderby'] = 'meta_value';
+			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'enable_filter':
 
 			$qv['meta_key'] = '_bp_member_type_enable_filter';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby']  = 'meta_value_num';
 
 			break;
 
@@ -4020,11 +4099,12 @@ function bp_get_user_member_type( $user_id ) {
 function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 
 	global $wpdb;
+	global $bp;
 
 	if ( '' === $user_id ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
 			$gender = xprofile_get_field_data( $field_id , $user_id );

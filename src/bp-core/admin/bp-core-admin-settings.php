@@ -50,14 +50,29 @@ function bp_admin_setting_callback_account_deletion() {
 /**
  * Admin bar for logged in users setting field.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.0
  *
  */
 function bp_admin_setting_callback_login_admin_bar() {
 	?>
 
 	<input id="show-login-adminbar" name="show-login-adminbar" type="checkbox" value="1" <?php checked( bp_show_login_adminbar( true ) ); ?> />
-	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for logged in members', 'buddyboss' ); ?></label>
+	<label for="show-login-adminbar"><?php _e( 'Show the Toolbar for logged-in members (non-admins)', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Admin bar for admin users setting field.
+ *
+ * @since BuddyBoss 1.1.0
+ *
+ */
+function bp_admin_setting_callback_admin_admin_bar() {
+	?>
+
+    <input id="show-admin-adminbar" name="show-admin-adminbar" type="checkbox" value="1" <?php checked( bp_show_admin_adminbar( true ) ); ?> />
+    <label for="show-admin-adminbar"><?php _e( 'Show the Toolbar for logged-in admins', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -191,11 +206,16 @@ function bp_posts_in_activity_tutorial() {
  * @since BuddyPress 2.0.0
  */
 function bp_admin_setting_callback_heartbeat() {
+	// NOTE: this request is made to check for Heartbeat API on front end if it enabled or not
+    wp_remote_get( bp_core_get_user_domain( bp_loggedin_user_id() ) );
+	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 ?>
 
-	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php checked( bp_is_activity_heartbeat_active( true ) ); ?> />
+	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" <?php if ( '1' != $heartbeat_disabled ) { checked( bp_is_activity_heartbeat_active( true ) ); } else { echo 'disabled="disabled"'; } ?> />
 	<label for="_bp_enable_heartbeat_refresh"><?php _e( 'Automatically check for new activity posts', 'buddyboss' ); ?></label>
-
+    <?php if ( '1' == $heartbeat_disabled ) { ?>
+        <p class="description"><?php _e( 'This feature requires the WordPress <a href="https://developer.wordpress.org/plugins/javascript/heartbeat-api/" target="_blank">Heartbeat API</a> to function, which is disabled on your server.', 'buddyboss' ); ?></p>
+    <?php } ?>
 <?php
 }
 
@@ -308,7 +328,7 @@ function bp_admin_setting_callback_avatar_uploads() {
 ?>
 
 	<input id="bp-disable-avatar-uploads" name="bp-disable-avatar-uploads" type="checkbox" value="1" <?php checked( !bp_disable_avatar_uploads( false ) ); ?> />
-	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload profile avatars', 'buddyboss' ); ?></label>
+	<label for="bp-disable-avatar-uploads"><?php _e( 'Allow members to upload photos for profile avatars', 'buddyboss' ); ?></label>
 
 <?php
 }
@@ -326,16 +346,16 @@ function bp_admin_setting_callback_cover_image_uploads() {
 }
 
 /**
- * Link to Profile Settings tutorial
+ * Link to Profile Photos tutorial
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.1
  *
  */
-function bp_profile_setting_tutorial() {
+function bp_profile_photos_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-photos.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -679,7 +699,7 @@ function bp_admin_setting_callback_member_invite_email_content() {
  * Enable member invite field markup.
  *
  * @since BuddyBoss 1.0.0
- * @todo link to Profile Types
+ * 
  */
 function bp_admin_setting_callback_member_invite_member_type() {
 	?>
@@ -714,7 +734,7 @@ function bp_feed_settings_callback_post_type( $args ) {
 	// Description for the last option of CPT
 	if ( true === $args['description'] && 'post' !== $post_type ) {
 		?>
-		<p class="description"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
+		<p class="description" style="margin-bottom: 10px;"><?php _e( 'Select which Custom Post Types (coming from your plugins) should be shown in the activity feed. For example, if using WooCommerce it could post into the activity feed every time someone creates a new product.', 'buddyboss' ); ?></p>
 		<?php
 	}
 	?>
@@ -809,6 +829,18 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 }
 
 /**
+ * Allow members to enable gravatars.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_admin_setting_callback_enable_profile_gravatar() {
+	?>
+	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
+	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile avatars', 'buddyboss' ); ?></label>
+	<?php
+}
+
+/**
  * Link to Email Invites tutorial
  *
  * @since BuddyBoss 1.0.0
@@ -825,13 +857,114 @@ function bp_email_invites_tutorial() {
 }
 
 /**
- * Allow members to enable gravatar.
+ * If 'First Name' selected then add option to hide Last Name.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.1
+ *
  */
-function bp_admin_setting_callback_enable_profile_gravatar() {
+function bp_admin_setting_display_name_first_name() {
 	?>
-	<input id="bp-enable-profile-gravatar" name="bp-enable-profile-gravatar" type="checkbox" value="1" <?php checked( bp_enable_profile_gravatar() ); ?> />
-	<label for="bp-enable-profile-gravatar"><?php _e( 'Allow members to use <a href="https://gravatar.com/">gravatars</a> for profile photos', 'buddyboss' ); ?></label>
+
+	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-last-name" name="bp-hide-last-name" type="checkbox" value="1" <?php checked( bp_hide_last_name( true ) ); ?> />
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></span></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'If you disable "Last Name" field, it will not appear anywhere in the network.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * If 'First Name & Last Name' selected then add option to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_display_name_first_last_name() {
+	?>
+
+	<input id="bp-hide-first-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-first-name"><?php _e( 'First Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-last-name" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+	<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+	<br /><br />
+
+	<p class="description"><?php _e( 'All name fields are required with this format. Best used for professional networks.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * If 'Nickname' selected then add options to hide First Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_first_name() {
+	?>
+	<div class="bb-nickname-hide-first-name">
+		<input id="bp-hide-nickname-first-name" name="bp-hide-nickname-first-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_first_name( true ) ); ?> />
+		<label for="bp-hide-nickname-first-name"><?php _e( 'First Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+	</div>
+	<?php
+}
+
+/**
+ * If 'Nickname' selected then add options to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_callback_nickname_hide_last_name() {
+	?>
+	<div class="bb-nickname-hide-last-name">
+		<input id="bp-hide-nickname-last-name" name="bp-hide-nickname-last-name" type="checkbox" value="1" <?php checked( bp_hide_nickname_last_name( true ) ); ?> />
+		<label for="bp-hide-nickname-last-name"><?php _e( 'Last Name', 'buddyboss' ); ?> <span class="description"><?php _e( '(can be disabled)', 'buddyboss' ); ?></label>
+
+		<br /><br />
+
+		<input id="bp-hide-nickname" type="checkbox" disabled="disabled" checked="checked" />
+		<label for="bp-hide-nickname"><?php _e( 'Nickname', 'buddyboss' ); ?></label>
+
+		<br /><br />
+
+		<p class="description"><?php _e( 'If you disable "First Name" and "Last Name" fields, they will not appear anywhere in the network. This allows your members to be fully anonymous (if they use a pseudonym for their nickname).', 'buddyboss' ); ?></p></p>
+	</div>
+	<?php
+}
+
+/**
+ * Link to Profile Names tutorial
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_profile_names_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-names.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
 	<?php
 }

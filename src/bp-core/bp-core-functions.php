@@ -1358,26 +1358,27 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 function bp_core_format_date( $date = '', $format = '' ) {
 	echo bp_core_get_format_date( $date, $format );
 }
-    /**
-     * Return formatted date from a date string.
-     *
-     * @since BuddyBoss 1.0.0
-     *
-     * @param string String of date to convert. Timezone should be UTC before using this.
-     * @param string String of format of date.
-     * @return string
-     */
-    function bp_core_get_format_date( $date = '', $format = '' ) {
-        if ( ! $date ) {
-            return '';
-        }
 
-        if ( empty( $format ) ) {
-            $format = get_option( 'date_format' );
-        }
-
-	    return date_i18n( $format, strtotime( $date ) );
+/**
+ * Return formatted date from a date string.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string String of date to convert. Timezone should be UTC before using this.
+ * @param string String of format of date.
+ * @return string
+ */
+function bp_core_get_format_date( $date = '', $format = '' ) {
+    if ( ! $date ) {
+        return '';
     }
+
+    if ( empty( $format ) ) {
+        $format = bp_core_date_format();
+    }
+
+    return date_i18n( $format, strtotime( $date ) );
+}
 
 
 /** Messages ******************************************************************/
@@ -4096,6 +4097,13 @@ function bp_core_get_active_custom_post_type_feed() {
 	return $cpt_arr;
 }
 
+/**
+ * Return all the default activity of platform.
+ *
+ * @since BuddyBoss 1.0.0
+ * 
+ * @return array
+ */
 function bp_platform_default_activity_types() {
 
 	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(

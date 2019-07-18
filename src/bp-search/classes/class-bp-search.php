@@ -474,6 +474,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				40 | posts | 1 | 2014-10-26 13:52:06
 				4 | groups | 0 | 2014-10-21 15:15:36
 				*/
+				$results = apply_filters( 'bp_search_query_results', $results, $this );
+
 				if ( ! empty( $results ) ) {
 					$this->search_results['all'] = array(
 						'total_match_count' => 0,
@@ -609,6 +611,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				40 | posts | 1 | 2014-10-26 13:52:06
 				4 | groups | 0 | 2014-10-21 15:15:36
 				*/
+				$results = apply_filters( 'bp_search_query_results', $results, $this );
+
 				if ( ! empty( $results ) ) {
 					$obj                                            = $this->search_helpers[ $args['search_subset'] ];
 					$this->search_results[ $args['search_subset'] ] = array(

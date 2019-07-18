@@ -161,10 +161,11 @@ final class BP_Activity_Export extends BP_Export {
 	 */
 	function get_data( $user, $page, $mode = "erase" ) {
 		global $wpdb;
+		global $bp;
 
 		$wpdb->show_errors( false );
 
-		$table              = "{$wpdb->prefix}bp_activity item";
+		$table              = "{$bp->table_prefix}bp_activity item";
 		$query_select       = "item.*";
 		$query_select_count = "COUNT(item.id)";
 

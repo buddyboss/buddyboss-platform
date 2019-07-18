@@ -386,8 +386,9 @@ function bp_ps_learndash_course_setup ($fields) {
 function bp_ps_gender_setup ($fields) {
 
 	global $wpdb;
+	global $bp;
 
-	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+	$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
 
 	if ( $exists_gender[0]->count > 0 ) {
 
@@ -442,14 +443,17 @@ add_filter ('bp_ps_add_fields', 'bp_ps_gender_setup');
  */
 function bp_ps_xprofile_gender_users_search( $f ) {
 
-	global $wpdb;
+	global $wpdb, $bp;
+
+	$table_profile_fields = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+	$table_profile_data   = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 	$gender = $f->value;
 	if ( isset( $gender ) && ! empty( $gender ) ) {
 
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$wpdb->prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table_profile_fields} a WHERE parent_id = 0 AND type = 'gender' ");
 
-		$custom_ids = $wpdb->get_col("SELECT user_id FROM {$wpdb->prefix}bp_xprofile_data WHERE field_id = {$exists_gender[0]->id} AND value = '{$gender}'");
+		$custom_ids = $wpdb->get_col("SELECT user_id FROM {$table_profile_data} WHERE field_id = {$exists_gender[0]->id} AND value = '{$gender}'");
 
 		if ( isset( $custom_ids ) && ! empty( $custom_ids ) ) {
 			return $custom_ids;

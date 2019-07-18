@@ -622,30 +622,6 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 }
 
 /**
- * Returns the choices for the Layout option of the customizer
- * or the list of corresponding css classes.
- *
- * @since BuddyPress 3.0.0
- *
- * @param string $type 'option' to get the labels, 'classes' to get the classes
- *
- * @return array The list of labels or classes preserving keys.
- */
-function bp_nouveau_customizer_grid_choices( $type = 'option' ) {
-	$columns = array(
-		array( 'key' => '2', 'label' => __( 'Two columns', 'buddyboss'   ), 'class' => 'two'   ),
-		array( 'key' => '3', 'label' => __( 'Three columns', 'buddyboss' ), 'class' => 'three' ),
-		array( 'key' => '4', 'label' => __( 'Four columns', 'buddyboss'  ), 'class' => 'four'  ),
-	);
-
-	if ( 'option' === $type ) {
-		return wp_list_pluck( $columns, 'label', 'key' );
-	}
-
-	return wp_list_pluck( $columns, 'class', 'key' );
-}
-
-/**
  * Sanitize a list of slugs to save it as an array
  *
  * @since BuddyPress 3.0.0
