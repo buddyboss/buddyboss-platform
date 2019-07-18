@@ -1576,7 +1576,7 @@ function bp_at_mention_default_options() {
  *
  * @return array
  */
-function social_network_provider() {
+function bp_xprofile_social_network_provider() {
 
 	$options = array();
 
@@ -1696,7 +1696,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
-		$providers = social_network_provider();
+		$providers = bp_xprofile_social_network_provider();
 
 		$original_option_values = maybe_unserialize( BP_XProfile_ProfileData::get_value_byid( $social_networks_id, $user ) );
 
