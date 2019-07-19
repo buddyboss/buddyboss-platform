@@ -93,10 +93,6 @@ function bp_core_admin_get_static_pages() {
 		'terms'    => __( 'Terms of Service', 'buddyboss' ),
 		'privacy'  => __( 'Privacy Policy', 'buddyboss' ),
 		'activate' => __( 'Activate Account', 'buddyboss' ),
-		'button'   => array(
-			'link'  => bp_core_help_docs_link( 'components/registration/registration-pages.md' ),
-			'label' => __( 'View Tutorial', 'buddyboss' ),
-		),
 	);
 
 	/**
