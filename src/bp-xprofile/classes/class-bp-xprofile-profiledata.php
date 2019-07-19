@@ -129,8 +129,9 @@ class BP_XProfile_ProfileData {
 		if ( $cached && ! empty( $cached->id ) ) {
 			$retval = true;
 		} else {
-			$bp = buddypress();
-			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_data} WHERE user_id = %d AND field_id = %d", $this->user_id, $this->field_id ) );
+
+			$table = bp_core_get_table_prefix() .'bp_xprofile_data';
+			$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE user_id = %d AND field_id = %d", $this->user_id, $this->field_id ) );
 		}
 
 		/**
@@ -155,10 +156,8 @@ class BP_XProfile_ProfileData {
 	 */
 	public function is_valid_field() {
 		global $wpdb;
-
-		$bp = buddypress();
-
-		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE id = %d", $this->field_id ) );
+		$table = bp_core_get_table_prefix() .'bp_xprofile_fields';
+		$retval = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$table} WHERE id = %d", $this->field_id ) );
 
 		/**
 		 * Filters whether or not data is for a valid field.
@@ -246,7 +245,8 @@ class BP_XProfile_ProfileData {
 				$result   = $this->delete();
 
 			} else {
-				$result   = $wpdb->query( $wpdb->prepare("INSERT INTO {$bp->profile->table_name_data} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated ) );
+				$table = bp_core_get_table_prefix() .'bp_xprofile_data';
+				$result   = $wpdb->query( $wpdb->prepare("INSERT INTO {$table} (user_id, field_id, value, last_updated) VALUES (%d, %d, %s, %s)", $this->user_id, $this->field_id, $this->value, $this->last_updated ) );
 				$this->id = $wpdb->insert_id;
 			}
 
@@ -508,7 +508,8 @@ class BP_XProfile_ProfileData {
 		if ( ! empty( $uncached_ids ) ) {
 			$bp = buddypress();
 			$uncached_ids_sql = implode( ',', $uncached_ids );
-			$queried_data = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, field_id, value, last_updated FROM {$bp->profile->table_name_data} WHERE field_id = %d AND user_id IN ({$uncached_ids_sql})", $field_id ) );
+			$table = bp_core_get_table_prefix() .'bp_xprofile_data';
+			$queried_data = $wpdb->get_results( $wpdb->prepare( "SELECT id, user_id, field_id, value, last_updated FROM {$table} WHERE field_id = %d AND user_id IN ({$uncached_ids_sql})", $field_id ) );
 
 			// Rekey.
 			$qd = array();
