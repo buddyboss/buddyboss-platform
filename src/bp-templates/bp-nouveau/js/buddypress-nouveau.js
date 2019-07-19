@@ -277,6 +277,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// prevent activity response to append to media model activity list element
+			if ( data.object == 'activity' && data.target == '#buddypress [data-bp-list] ul.bp-list' ) {
+				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );

@@ -829,7 +829,12 @@ function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_adjust_display_user_display_name( $userdata ) {
-	$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
+	// Profile Fields.
+	$active_components = bp_get_option( 'bp-active-components' );
+	if ( ! empty( $active_components['xprofile'] ) ) {
+		$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
+	}
+
 	return $userdata;
 }
 

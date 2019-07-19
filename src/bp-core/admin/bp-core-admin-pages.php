@@ -148,12 +148,18 @@ function bp_core_admin_register_registration_page_fields() {
 
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
 
-	$existing_pages = bp_core_get_directory_page_ids();
-	$static_pages = bp_core_admin_get_static_pages();
-	$description = '';
+	$existing_pages         = bp_core_get_directory_page_ids();
+	$static_pages           = bp_core_admin_get_static_pages();
 
-	foreach ($static_pages as $name => $label) {
-	    $title = $label;
+	// add view tutorial button
+	$static_pages['button'] = array(
+		'link'  => bp_core_help_docs_link( 'components/registration/registration-pages.md' ),
+		'label' => __( 'View Tutorial', 'buddyboss' ),
+	);
+	$description            = '';
+
+	foreach ( $static_pages as $name => $label ) {
+		$title = $label;
 		if ( 'register' === $name ) {
 			$description = 'New users fill out this form to register their accounts.';
 		} elseif ( 'terms' === $name ) {
@@ -166,12 +172,13 @@ function bp_core_admin_register_registration_page_fields() {
 
 		if ( 'button' === $name ) {
 			$title = '';
-        }
+		}
 
-		add_settings_field( $name, $title, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact('existing_pages', 'name', 'label', 'description' ) );
+		add_settings_field( $name, $title, 'bp_admin_setting_callback_page_directory_dropdown', 'bp-pages', 'bp_registration_pages', compact( 'existing_pages', 'name', 'label', 'description' ) );
 		register_setting( 'bp-pages', $name, [] );
 	}
 }
+
 add_action( 'admin_init', 'bp_core_admin_register_registration_page_fields' );
 
 /**
