@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.3 =
+* Groups - Status button said "You're an Member" instead of "You're a Member"
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
