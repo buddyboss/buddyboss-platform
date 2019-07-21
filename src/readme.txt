@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed members without First Name displaying in messages as 'Deleted User'
 * Groups - Status button said "You're an Member" instead of "You're a Member"
 * Compatibility - Allow 'Events Manager' and other plugins to activate properly with Platform
+* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress 
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
