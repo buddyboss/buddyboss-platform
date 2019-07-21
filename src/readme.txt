@@ -56,9 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.3 =
-* Activity - Fixed media posted in activity feed not always displaying
-* Activity - Fixed photos added to group feed not displaying in group photos tab
-* Activity - Fixed 'Read more' link appending media into the content
+* Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
 * Activity - Fixed media popup showing no image with Groups component enabled
