@@ -56,7 +56,6 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.4 =
-* Errors - Fixed various PHP errors in certain situations
 
 = 1.1.3 =
 * Activity - Fixed media posted in activity feed not always displaying
