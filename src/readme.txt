@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.3 =
 * Activity - Fixed issue with commenting on activity after clicking 'Load More' multiple times
+* Messages - Fixed members without First Name displaying in messages as 'Deleted User'
 * Groups - Status button said "You're an Member" instead of "You're a Member"
 * Compatibility - Allow 'Events Manager' and other plugins to activate properly with Platform
 * Errors - Fixed various PHP errors in certain situations
