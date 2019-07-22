@@ -117,6 +117,7 @@ function bp_member_invite_submit() {
 		$accept_link  = add_query_arg( array(
 			'bp-invites' => 'accept-member-invitation',
 			'email'    => $email_encode,
+			'inviter'    => base64_encode( bp_loggedin_user_id() ),
 		), bp_get_root_domain() . '/' . bp_get_signup_slug() . '/' );
 		$accept_link  = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 		$args = array(

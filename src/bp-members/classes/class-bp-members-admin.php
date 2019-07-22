@@ -1419,6 +1419,17 @@ class BP_Members_Admin {
 		if ( bp_set_member_type( $user_id, $member_type ) ) {
 			// @todo Success messages can't be posted because other stuff happens on the page load.
 		}
+
+		if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+			$id = (int) bp_member_type_post_by_type( $member_type );
+			if ( $id > 0 ) {
+				xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, $id );
+			}
+			if ( '' === $member_type ) {
+				xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, '' );
+			}
+		}
+
 	}
 
 	/**
@@ -2317,7 +2328,15 @@ class BP_Members_Admin {
 								if ( bp_is_active( 'xprofile' ) && ! empty( $profile_field_ids ) ) :
 									foreach ( $profile_field_ids as $pid => $noop ) :
 										$field_value = isset( $signup->meta[ "field_{$pid}" ] ) ? $signup->meta[ "field_{$pid}" ] : '';
-										if ( function_exists( 'bp_get_xprofile_gender_type_field_id' ) && bp_get_xprofile_gender_type_field_id() > 0 && bp_get_xprofile_gender_type_field_id() === (int) $pid ) {
+										if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 && bp_get_xprofile_member_type_field_id() === (int) $pid ) {
+											$member_type_name = get_post_meta( $field_value, '_bp_member_type_label_singular_name', true );
+											?>
+											<tr>
+												<td class="column-fields"><?php echo esc_html( $fdata[ $pid ] ); ?></td>
+												<td><?php echo esc_html( $member_type_name ); ?></td>
+											</tr>
+											<?php
+										} else if ( function_exists( 'bp_get_xprofile_gender_type_field_id' ) && bp_get_xprofile_gender_type_field_id() > 0 && bp_get_xprofile_gender_type_field_id() === (int) $pid ) {
 											$split_string = explode( '_', $field_value, 2 );
 											$field_value = $split_string[1];
 											?>
@@ -2470,6 +2489,10 @@ class BP_Members_Admin {
 						$removed = bp_remove_member_type( $user_id, $member_type );
 						if ( false === $removed || is_wp_error( $removed ) ) {
 							$error = true;
+						} else {
+							if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+								xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, '');
+							}
 						}
 					}
 				} else {
@@ -2488,6 +2511,10 @@ class BP_Members_Admin {
 								$set = bp_set_member_type( $user_id, $new_type );
 								if ( false === $set || is_wp_error( $set ) ) {
 									$error = true;
+								} else {
+									if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+										xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, bp_member_type_post_by_type( $new_type ));
+									}
 								}
 							} else {
 								if ( isset( $selected_member_type_wp_roles[0] ) && 'administrator' !== $selected_member_type_wp_roles[0] ) {
@@ -2497,6 +2524,10 @@ class BP_Members_Admin {
 									$set = bp_set_member_type( $user_id, $new_type );
 									if ( false === $set || is_wp_error( $set ) ) {
 										$error = true;
+									} else {
+										if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+											xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, bp_member_type_post_by_type( $new_type ));
+										}
 									}
 								}
 							}
@@ -2508,6 +2539,10 @@ class BP_Members_Admin {
 							$set = bp_set_member_type( $user_id, $new_type );
 							if ( false === $set || is_wp_error( $set ) ) {
 								$error = true;
+							} else {
+								if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+									xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), $user_id, bp_member_type_post_by_type( $new_type ));
+								}
 							}
 						}
 					}

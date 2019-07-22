@@ -79,9 +79,6 @@ window.bp = window.bp || {};
 			this.dropzone_media = [];
 
 			this.models = [];
-
-			this.bb_icon_bell_small_count = $('.bb-icon-bell-small').parent().children('.count');
-			this.bb_icon_bell_small_count.removeClass('animated heartBeat');
 		},
 
 		/**
@@ -225,22 +222,6 @@ window.bp = window.bp || {};
 			 * Let's remove the mentions from objects!
 			 */
 			objects.pop();
-
-			/* 
-			* trigger only if element exist
-			* update all notification counts - sidebars, header notif, etc.
-			*/
-			var notifs = $('.bb-icon-bell-small');
-			var notif_icons = notifs.parent().children('.count');
-			var notif_icons_exist = notif_icons.length;
-			if ( notif_icons_exist > 0 ) {
-				notif_icons.addClass('animated heartBeat').text( Number(notif_icons.first().text()) + newest_activities_count );
-			} else {
-				notifs.parent().append( '<span class="count"> ' + newest_activities_count + ' </span>' );
-			}
-
-			// inject all unread notifications
-			$('.notification-list').empty().html(data.unread_notifs);
 
 			// Add an information about the number of newest activities inside the document's title
 			$( document ).prop( 'title', '(' + newest_activities_count + ') ' + this.heartbeat_data.document_title );

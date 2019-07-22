@@ -114,7 +114,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
-		$providers = social_network_provider();
+		$providers = bp_xprofile_social_network_provider();
 		$field_name = bp_get_the_profile_field_input_name();
 		foreach ( $options as $option ) {
 
@@ -202,10 +202,10 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 
 				if ( empty( $options ) ) {
 					$default_options = apply_filters( 'social_network_default_options', array( 'facebook', 'twitter', 'linkedIn' ) );
-					$all_options     = social_network_provider();
+					$all_options     = bp_xprofile_social_network_provider();
 					$options = array();
 					if ( empty( $default_options ) ) {
-						$options = social_network_provider();
+						$options = bp_xprofile_social_network_provider();
 					} else {
 						foreach ( $all_options as $opt ) {
 							if ( in_array( $opt->value, $default_options ) ) {
@@ -279,7 +279,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 								?></label>
 							<select class="select-social-networks" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
 								<?php
-								foreach ( social_network_provider() as $option ) {
+								foreach ( bp_xprofile_social_network_provider() as $option ) {
 									$compare = ( true === $fresh_setup ) ? $options[$i]->value : $options[$i]->name;
 									?><option class="<?php echo $options[$i]->name.' '.$option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php esc_html_e( $option->name, 'buddyboss' ); ?></option><?php
 
@@ -303,7 +303,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				<?php } ?>
 
 				<?php
-				if ( $options < social_network_provider() ) { ?>
+				if ( $options < bp_xprofile_social_network_provider() ) { ?>
 					<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>					<p>
 					<a class="social_networks_add_more" href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option','buddyboss' ); ?></a></p><?php
 				}
