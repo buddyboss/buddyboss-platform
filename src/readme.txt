@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.3 =
+* Profiles - Allow users to self-select 'Profile Type' via new profile field
 * Activity - Fixed issue with commenting on activity after clicking 'Load More' multiple times
 * Activity - Fixed media posted in activity feed not always displaying
 * Activity - Fixed photos added to group feed not displaying in group photos tab
