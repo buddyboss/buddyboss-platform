@@ -446,6 +446,16 @@ function bp_the_profile_field_ids() {
 			}
 		}
 
+		if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+			if ( function_exists( 'bp_get_xprofile_member_type_field_id ') ) {
+				$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
+			}
+		}
+
+		if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
+			$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
+		}
+
 		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 		$current_value = bp_get_option( 'bp-display-name-format' );
 
@@ -607,6 +617,35 @@ function bp_the_profile_field_value() {
 		if ( 'gender' === $field->type ) {
 			$split_string = explode( '_', $field->data->value, 2 );
 			$field->data->value = $split_string[1];
+		}
+
+		if ( 'membertypes' === $field->type ) {
+
+			// Check member type function exists.
+			if ( function_exists( 'bp_get_member_type') ) {
+
+				// Get member existing member type.
+				$member_type = bp_get_member_type( bp_displayed_user_id() );
+				if ( '' === trim( $member_type ) ) {
+					$field->data->value = '---';
+					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+						xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), '');
+					}
+				} else {
+					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+						xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), bp_member_type_post_by_type( $member_type ) );
+					}
+					$member_type_name = get_post_meta( $field->data->value,'_bp_member_type_label_singular_name',true );
+					if ( '' === $member_type_name || false === $member_type_name ) {
+						$field->data->value = '---';
+					} else {
+						$field->data->value = $member_type_name;
+					}
+				}
+			} else {
+				$field->data->value = '---';
+			}
+
 		}
 
 		/**

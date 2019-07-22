@@ -15,6 +15,8 @@
  */
 function xprofile_screen_edit_profile() {
 
+	global $wpdb;
+
 	if ( ! bp_is_my_profile() && ! bp_current_user_can( 'bp_moderate' ) ) {
 		return false;
 	}
@@ -70,6 +72,42 @@ function xprofile_screen_edit_profile() {
 				$field_name                 = $field->name;
 				$is_required_fields_error[] = $field_name;
 			}
+
+			$field = new BP_XProfile_Field( $field_id );
+			if ( 'membertypes' === $field->type ) {
+
+				$member_type_name = bp_get_member_type_key( $_POST['field_' . $field_id] );
+
+				// Get selected profile type role.
+				$selected_member_type_wp_roles = get_post_meta( $_POST['field_' . $field_id], '_bp_member_type_wp_roles', true );
+
+				if ( 'administrator' !== $selected_member_type_wp_roles[0] && current_user_can('administrator') ) {
+					$errors = true;
+					$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
+					$validations[] = $bp_error_message_string;
+				} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor','administrator')) && current_user_can('editor') ) {
+					$errors = true;
+					$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
+					$validations[] = $bp_error_message_string;
+				} else {
+					bp_set_member_type( bp_displayed_user_id(), '' );
+					bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+						$bp_current_user = new WP_User( bp_displayed_user_id() );
+
+						foreach ( $bp_current_user->roles as $role ) {
+							// Remove role
+							$bp_current_user->remove_role( $role );
+						}
+
+						// Add role
+						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
+					}
+				}
+
+			}
+
 
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
 				$errors = true;

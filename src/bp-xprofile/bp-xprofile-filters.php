@@ -890,7 +890,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		}
 	}
 
-	$providers = social_network_provider();
+	$providers = bp_xprofile_social_network_provider();
 	foreach ( $value as $k => $v ) {
 		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL) ) {
 

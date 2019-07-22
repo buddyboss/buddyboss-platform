@@ -79,11 +79,11 @@ class BP_XProfile_ProfileData {
 	 * @param int $user_id  User ID to populate for.
 	 */
 	public function populate( $field_id, $user_id ) {
-		global $wpdb, $bp;
+		global $wpdb;
 
 		$cache_key   = "{$user_id}:{$field_id}";
 		$profiledata = wp_cache_get( $cache_key, 'bp_xprofile_data' );
-		$table_name = $bp->table_prefix . 'bp_xprofile_data';
+		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 		if ( false === $profiledata ) {
 
@@ -282,7 +282,7 @@ class BP_XProfile_ProfileData {
 		global $wpdb;
 
 		$bp = buddypress();
-		$table_name = $bp->table_prefix . 'bp_xprofile_data';
+		$table_name = bp_core_get_table_prefix() . 'bp_xprofile_data';
 
 		/**
 		 * Fires before the current profile data instance gets deleted.

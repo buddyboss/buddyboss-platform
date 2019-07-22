@@ -277,6 +277,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// prevent activity response to append to media model activity list element
+			if ( data.object == 'activity' && data.target == '#buddypress [data-bp-list] ul.bp-list' ) {
+				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -873,7 +878,7 @@ window.bp = window.bp || {};
 		filterQuery: function( event ) {
 			var self = event.data, object = $( event.target ).data( 'bp-filter' ),
 				scope = 'all', filter = $( event.target ).val(),
-				search_terms = '', template = null;
+				search_terms = '', template = null, extras = false;
 
 			if ( ! object ) {
 				return event;
@@ -891,6 +896,13 @@ window.bp = window.bp || {};
 				object = 'members';
 			}
 
+			var objectData = self.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
 			if ( 'members' === object ) {
 				self.objectRequest( {
 					object         : object,
@@ -898,6 +910,7 @@ window.bp = window.bp || {};
 					filter         : filter,
 					search_terms   : search_terms,
 					page           : 1,
+					extras         : extras,
 					template       : template,
 					member_type_id : $( '#buddypress [data-bp-member-type-filter="' + object + '"]' ).val()
 				} );
@@ -908,6 +921,7 @@ window.bp = window.bp || {};
 					filter       : filter,
 					search_terms : search_terms,
 					page         : 1,
+					extras       : extras,
 					template     : template,
 					group_type   : $( '#buddypress [data-bp-group-type-filter="' + object + '"]' ).val()
 				} );
@@ -918,6 +932,7 @@ window.bp = window.bp || {};
 					filter       : filter,
 					search_terms : search_terms,
 					page         : 1,
+					extras       : extras,
 					template     : template
 				} );
 			}
@@ -1004,7 +1019,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		searchQuery: function( event ) {
-			var self = event.data, object, scope = 'all', filter = null, template = null, search_terms = '';
+			var self = event.data, object, scope = 'all', filter = null, template = null, search_terms = '', extras = false;
 
 			if ( $( event.delegateTarget ).hasClass( 'no-ajax' ) || undefined === $( event.delegateTarget ).data( 'bp-search' ) ) {
 				return event;
@@ -1021,12 +1036,20 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
+			var objectData = self.getStorage( 'bp-' + object );
+
+			// Notifications always need to start with Newest ones
+			if ( undefined !== objectData.extras && 'notifications' !== object ) {
+				extras = objectData.extras;
+			}
+
 			self.objectRequest( {
 				object       : object,
 				scope        : scope,
 				filter       : filter,
 				search_terms : search_terms,
 				page         : 1,
+				extras       : extras,
 				template     : template
 			} );
 		},

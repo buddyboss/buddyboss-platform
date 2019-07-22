@@ -927,14 +927,14 @@ class BP_XProfile_Field {
 	 * @return bool|null|string
 	 */
 	public static function get_type( $field_id = 0 ) {
-		global $wpdb, $bp;
+		global $wpdb;
 
 		// Bail if no field ID.
 		if ( empty( $field_id ) ) {
 			return false;
 		}
 
-		$table_name = $bp->table_prefix . 'bp_xprofile_fields';
+		$table_name = bp_core_get_table_prefix() .'bp_xprofile_fields';
 		$sql  = $wpdb->prepare( "SELECT type FROM {$table_name} WHERE id = %d", $field_id );
 		$type = $wpdb->get_var( $sql );
 
@@ -1299,7 +1299,7 @@ class BP_XProfile_Field {
 					'page'     => 'bp-profile-setup',
 					'mode'     => 'add_field',
 					'group_id' => (int) $this->group_id
-				), $users_url . '#tabs-' . (int) $this->group_id );
+				), $users_url );
 
 				?>
 

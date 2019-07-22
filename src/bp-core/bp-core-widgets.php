@@ -19,7 +19,7 @@ function bp_core_register_widgets() {
     if(is_multisite()) {
         add_action( 'widgets_init', function() { register_widget( 'BP_Core_Network_Posts_Widget' ); } );
     }
-    if(function_exists("bp_get_following_ids")) {
+    if(function_exists("bp_get_following_ids") && class_exists( 'BP_Core_Follow_Following_Widget' ) ) {
         add_action( 'widgets_init', function() { register_widget( 'BP_Core_Follow_Following_Widget' ); } );
     }
 }

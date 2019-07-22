@@ -67,7 +67,7 @@ function xprofile_add_admin_js() {
 			}
 		}
 
-		$providers = social_network_provider();
+		$providers = bp_xprofile_social_network_provider();
 		$strings['social_networks_provider_count'] = count( $providers );
 		foreach ( $providers as $provider ) {
 			$strings['social_networks_provider'][]       = $provider->name;

@@ -2188,12 +2188,6 @@ form.ac-form .ac-reply-content input {
 }
 
 @media screen and (min-width: 46.8em) {
-  .buddypress-wrap .groups-list.grid.three .group-desc, .buddypress-wrap .groups-list.grid.four .group-desc {
-    font-size: 14px;
-  }
-}
-
-@media screen and (min-width: 46.8em) {
   .buddypress .bp-vertical-navs .groups-list .item-avatar {
     margin-right: 3%;
     width: 15%;
@@ -6809,50 +6803,6 @@ button[data-bp-tooltip] {
     float: left;
     margin: 0;
   }
-  .grid.two > li {
-    padding-bottom: 20px;
-  }
-}
-
-@media screen and (min-width: 24em) and (min-width: 75em) {
-  .grid.two > li .list-wrap {
-    max-width: 500px;
-    margin: 0 auto;
-  }
-}
-
-@media screen and (min-width: 24em) {
-  .grid.two > li, .grid.three > li, .grid.four > li {
-    flex: 0 0 50%;
-    max-width: 50%;
-    min-width: 0;
-  }
-  .grid.two > li .item, .grid.three > li .item, .grid.four > li .item {
-    margin: 1rem auto 0;
-    width: 80%;
-  }
-  .grid.two > li .item .item-title, .grid.three > li .item .item-title, .grid.four > li .item .item-title {
-    width: auto;
-  }
-}
-
-/* Build the three column class medium up */
-@media screen and (min-width: 46.8em) {
-  .grid.three > li {
-    padding-top: 0;
-    flex: 0 0 33.333333%;
-    max-width: 33.333333%;
-    min-width: 0;
-  }
-}
-
-/* Build the four column class medium up */
-@media screen and (min-width: 46.8em) {
-  .grid.four > li {
-    flex: 0 0 25%;
-    max-width: 25%;
-    min-width: 0;
-  }
 }
 
 .buddypress-wrap .grid.bp-list {
@@ -6866,8 +6816,25 @@ button[data-bp-tooltip] {
 
 .buddypress-wrap .grid.bp-list > li {
   border-bottom: none;
+  flex: 0 0 100%;
+  max-width: 100%;
+  min-width: 0;
   padding: 0 5px;
   margin-bottom: 10px;
+}
+
+@media screen and (min-width: 32em) {
+  .buddypress-wrap .grid.bp-list > li {
+    flex: 0 0 50%;
+    max-width: 50%;
+  }
+}
+
+@media screen and (min-width: 75em) {
+  .buddypress-wrap .grid.bp-list > li {
+    flex: 0 0 33.33%;
+    max-width: 33.33%;
+  }
 }
 
 .buddypress-wrap .grid.bp-list > li .item-avatar {
@@ -6958,20 +6925,6 @@ button[data-bp-tooltip] {
   max-width: 100%;
   flex: 100%;
   min-width: 0;
-}
-
-.buddypress-wrap .blogs-list.grid.two > li .blogs-title {
-  min-height: 5em;
-}
-
-.buddypress-wrap .blogs-list.grid.three > li .last-activity,
-.buddypress-wrap .blogs-list.grid.four > li .last-activity {
-  margin-bottom: 0;
-}
-
-.buddypress-wrap .blogs-list.grid.three > li .last-post,
-.buddypress-wrap .blogs-list.grid.four > li .last-post {
-  margin-top: 0;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -10494,6 +10447,14 @@ ul.bb-albums-list .bb-more-photos strong {
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
   left: 102px;
+}
+
+img.emoji,
+img.emojioneemoji {
+  display: inline-block;
+  margin: 3px;
+  width: 24px !important;
+  height: 24px !important;
 }
 
 /**
