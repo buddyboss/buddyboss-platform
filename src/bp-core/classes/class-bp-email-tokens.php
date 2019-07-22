@@ -588,7 +588,6 @@ class BP_Email_Tokens {
 										'height'  => 100,
 										'type'    => 'full',
 										'html'    => false,
-										'email'    => bp_core_get_user_email( $activity_comment->user_id )
 									) );
 									?>
                                     <img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" border="0"
