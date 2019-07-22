@@ -793,3 +793,4 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 
 	return $retval;
 }
+

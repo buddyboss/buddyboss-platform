@@ -803,6 +803,33 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		heartbeatTick: function( event, data ) {
+			// inject all unread notifications
+			if ( data.unread_notifs && data.unread_notifs !== '') {
+				$('#header-notifications-dropdown-elem .notification-dropdown .notification-list').empty().html(data.unread_notifs);
+			}
+			
+			if (data.total_notifs > 0) {
+				var notifs = $('.bb-icon-bell-small');
+				var notif_icons = $(notifs).parent().children('.count');
+
+				if ( notif_icons.length > 0 ) {
+					$(notif_icons).text(data.total_notifs);
+				} else {
+					$(notifs).parent().append( '<span class="count"> ' + data.total_notifs + ' </span>' );
+				}
+			}
+
+			if (data.msg_notifs !== undefined) {
+				var msg = $('.bb-icon-inbox-small');
+				var msg_icons = $(msg).parent().children('.count');
+
+				if ( msg_icons.length > 0 ) {
+					$(msg_icons).text(data.msg_notifs);
+				} else {
+					$(msg).parent().append( '<span class="count"> ' + data.msg_notifs + ' </span>' );
+				}
+			}
+
 			// Add an heartbeat send event to possibly any BuddyPress pages
 			$( '#buddypress' ).trigger( 'bp_heartbeat_tick', data );
 		},
