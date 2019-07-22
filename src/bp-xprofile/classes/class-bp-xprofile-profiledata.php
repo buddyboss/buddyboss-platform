@@ -79,7 +79,7 @@ class BP_XProfile_ProfileData {
 	 * @param int $user_id  User ID to populate for.
 	 */
 	public function populate( $field_id, $user_id ) {
-		global $wpdb, $bp;
+		global $wpdb;
 
 		$cache_key   = "{$user_id}:{$field_id}";
 		$profiledata = wp_cache_get( $cache_key, 'bp_xprofile_data' );
