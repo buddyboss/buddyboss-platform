@@ -4746,8 +4746,6 @@ function bp_get_xprofile_gender_type_field_id() {
 	return (int) $get_parent_id_of_gender_types_field;
 }
 
-add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
-
 /**
  * Sync the BP data based on the WP data via infusion soft API.
  *
@@ -4757,7 +4755,7 @@ add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
  */
 function bp_infusion_soft_sync_bp_data( $user_id ) {
 
-	if ( function_exists( 'iMember360') ) {
+	if ( function_exists('iMember360') ) {
 
 		$first_name_id = (int) get_option( 'bp-xprofile-firstname-field-id' );
 		$nickname_id   = (int) get_option( 'bp-xprofile-nickname-field-id' );
@@ -4797,3 +4795,4 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 	}
 
 }
+add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
