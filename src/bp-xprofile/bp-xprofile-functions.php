@@ -877,9 +877,22 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 		return false;
 	}
 
+	// Get First, Last and Nickname field id from DB.
 	$firstname_id = bp_xprofile_firstname_field_id();
 	$lastname_id  = bp_xprofile_lastname_field_id();
 	$nickname_id  = bp_xprofile_nickname_field_id();
+
+	// Remove transient of user nickname.
+	$nick_name_key = 'nick_'.$nickname_id.'_'.$user_id;
+	delete_transient( $nick_name_key );
+
+	// Remove transient of user first name.
+	$first_name_key    = 'first_' . $firstname_id . '_' . $user_id;
+	delete_transient( $first_name_key );
+
+	// Remove transient of user last name.
+	$last_name_key    = 'last_' . $lastname_id . '_' . $user_id;
+	delete_transient( $last_name_key );
 
 	if ( ! $field_id || $field_id == $firstname_id ) {
 		$firstname = xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id );
@@ -1766,5 +1779,33 @@ function bp_check_member_type_field_have_options() {
 	} else {
 		return true;
 	}
+
+}
+
+add_action( 'xprofile_updated_profile', 'bp_profile_remove_user_display_name_transient_cache', 11, 5 );
+
+/**
+ * Remove transient data when user change the profile field data.
+ *
+ * @since BuddyBoss 1.1.7
+ */
+function bp_profile_remove_user_display_name_transient_cache ( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+
+	// Get First, Last and Nickname field id from DB.
+	$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+	$nickname_id             = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+	$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+
+	// Remove transient of user nickname.
+	$nick_name_key = 'nick_'.$nickname_id.'_'.$user_id;
+	delete_transient( $nick_name_key );
+
+	// Remove transient of user first name.
+	$first_name_key    = 'first_' . $first_name_id . '_' . $user_id;
+	delete_transient( $first_name_key );
+
+	// Remove transient of user last name.
+	$last_name_key    = 'last_' . $last_name_id . '_' . $user_id;
+	delete_transient( $last_name_key );
 
 }

@@ -158,6 +158,15 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			$new_post_selected = (int) $_POST[ 'field_' . $this->field_obj->id ];
 			$post_selected     = ( $post_selected != $new_post_selected ) ? $new_post_selected : $post_selected;
 		}
+
+		// Add Profile Type selected if users have previously added profile type in his/her account.
+		if ( '' === $post_selected ) {
+			$member_type = bp_get_member_type( (int) $args['user_id'] );
+			if ( '' !== $member_type ) {
+				$post_selected = bp_member_type_post_by_type( $member_type );
+			}
+		}
+
 		// Get posts of custom post type selected.
 		$posts = new \WP_Query( array(
 			'posts_per_page' => - 1,
