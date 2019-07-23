@@ -482,8 +482,9 @@ function bp_nouveau_members_loop_buttons( $args = array() ) {
 				}
 			}
 
-			if ( ( bp_is_active( 'messages' ) && ! $bp_force_friendship_to_message ) ||
-			     ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $user_id ) )
+			if ( bp_is_active( 'messages' ) &&
+			     ( ! $bp_force_friendship_to_message ||
+			     ( $bp_force_friendship_to_message && bp_is_active( 'friends' ) && friends_check_friendship( bp_loggedin_user_id(), $user_id ) ) )
 			) {
 				/**
 				 * This filter workaround is waiting for a core adaptation

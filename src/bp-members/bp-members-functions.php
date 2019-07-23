@@ -548,7 +548,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes'  );
 add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
-add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
+add_filter( 'bp_core_get_user_displayname', 'bp_core_get_member_display_name', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2850,119 +2850,21 @@ function bp_get_current_member_type() {
  *
  * @return string
  */
-function bp_custom_display_name_format( $display_name, $user_id = null ) {
+function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
 		return $display_name;
 	}
 
-	global $wpdb;
+	$old_display_name = $display_name;
 
-	$format = bp_get_option( 'bp-display-name-format' );
-	$table  = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-	switch ( $format ) {
-		case 'first_name':
-			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$display_name            = isset( $queried_data_first_name[0]->value ) ? trim( $queried_data_first_name[0]->value ) : '';
-			if ( '' === $display_name ) {
-
-				$display_name = get_user_meta( $user_id, 'first_name', true );
-				if ( empty( $display_name ) ) {
-					$display_name = get_user_meta( $user_id,'nickname', true );
-				}
-				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
-			}
-
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-
-			if ( '' === trim( $nick_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-			}
-
-			break;
-		case 'first_last_name':
-			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
-			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$queried_data_last_name  = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
-
-			$result_first_name = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
-			$result_last_name = isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '';
-
-			if ( '' === $result_first_name ) {
-				$result_first_name = get_user_meta( $user_id, 'first_name', true );
-				if ( empty( $result_first_name ) ) {
-					$result_first_name = get_user_meta( $user_id,'nickname', true );
-				}
-				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
-			}
-
-			if ( '' === $result_last_name ) {
-
-				$result_last_name = get_user_meta( $user_id, 'last_name', true );
-				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
-			}
-
-			$display_name            = implode( ' ', array_filter( [ isset( $result_first_name ) ? $result_first_name : '', isset( $result_last_name ) ? $result_last_name : '' ] ) );
-
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-
-			if ( '' === trim( $nick_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-			}
-
-			break;
-		case 'nickname':
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$display_name          = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-			if ( '' === trim( $display_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-				$display_name = $nickname;
-			}
-			break;
+	if ( empty( $display_name ) ) {
+		$display_name = $old_display_name;
 	}
 
-	return trim( $display_name );
+	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
 /**
@@ -3429,13 +3331,51 @@ function bp_active_member_type_by_type( $type_id ) {
  * @global wpdb $wpdb WordPress database abstraction object.
  * @return type array
  */
-function bp_get_active_member_types() {
+function bp_get_active_member_types( $force_refresh = false ) {
 
-	global $wpdb;
-	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+	// Check for the bp_active_member_types in the 'active_member_types' group.
+	$bp_active_member_types = wp_cache_get( 'bp_active_member_types', 'active_member_types' );
 
-	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
+	// If nothing is found, build the object.
+	if ( true === $force_refresh || false === $bp_active_member_types ) {
+
+		global $wpdb;
+		$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+		$bp_active_member_types = $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
+
+		// Cache the whole WP_Query object in the cache and store it for 5 minutes (300 secs).
+		wp_cache_set( 'bp_active_member_types', $bp_active_member_types, 'active_member_types', 5 * MINUTE_IN_SECONDS );
+	}
+
+	return $bp_active_member_types;
 }
+
+/**
+ * Build the cache for the bp_active_member_types post types.
+ *
+ * @param int $post_id The post ID.
+ * @param post $post The post object.
+ * @param bool $update Whether this is an existing member type being updated or not.
+ *
+ * @since BuddyBoss 1.1.4
+ *
+ */
+function bp_refresh_member_types_cache( $post_id, $post, $update ) {
+
+	/*
+	 * In production code, $slug should be set only once in the plugin,
+	 * preferably as a class property, rather than in each function that needs it.
+	 */
+	$post_type = get_post_type($post_id);
+
+	// If this isn't a 'member_type' post, don't update it.
+	if ( bp_get_member_type_post_type() !== $post_type ) return;
+
+	// Force the cache refresh for active_member_types posts.
+	bp_get_active_member_types( $force_refresh = true );
+
+}
+add_action( 'save_post', 'bp_refresh_member_types_cache', 10, 3 );
 
 /**
  * Get all plural labels.

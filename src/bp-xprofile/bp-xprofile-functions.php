@@ -877,6 +877,7 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 		return false;
 	}
 
+	// Get First, Last and Nickname field id from DB.
 	$firstname_id = bp_xprofile_firstname_field_id();
 	$lastname_id  = bp_xprofile_lastname_field_id();
 	$nickname_id  = bp_xprofile_nickname_field_id();
@@ -929,7 +930,7 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
 	}
 
-	$user->display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
+	$user->display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
 }
 add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 
@@ -941,7 +942,7 @@ add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user( array(
 		'ID' => $user_id,
-		'display_name' => bp_custom_display_name_format( get_user_by( 'ID', $user_id )->display_name, $user_id )
+		'display_name' => bp_core_get_member_display_name( get_user_by( 'ID', $user_id )->display_name, $user_id )
 	) );
 }
 
@@ -1767,4 +1768,131 @@ function bp_check_member_type_field_have_options() {
 		return true;
 	}
 
+}
+
+/**
+ * Get the display_name for member based on user_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $display_name
+ * @param int $user_id
+ *
+ * @return string
+ */
+function bp_xprofile_get_member_display_name( $user_id = null ) {
+	// some cases it calls the filter directly, therefore no user id is passed
+	if ( ! $user_id ) {
+		return false;
+	}
+
+	$format = bp_get_option( 'bp-display-name-format' );
+
+	switch ( $format ) {
+		case 'first_name':
+
+			// Get First Name Field Id.
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+
+			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+
+			if ( '' === $display_name ) {
+				$display_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $display_name ) ) {
+					$display_name = get_user_meta( $user_id, 'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+			}
+
+			// Get Nick Name Field Id.
+			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
+
+			if ( '' === trim( $nick_name ) ) {
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
+			break;
+		case 'first_last_name':
+
+			// Get First Name Field Id.
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			// Get Last Name Field Id.
+			$last_name_id      = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+			$result_first_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$result_last_name  = xprofile_get_field_data( $last_name_id, $user_id );
+
+			if ( '' === $result_first_name ) {
+				$result_first_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $result_first_name ) ) {
+					$result_first_name = get_user_meta( $user_id, 'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+			}
+
+			if ( '' === $result_last_name ) {
+				$result_last_name = get_user_meta( $user_id, 'last_name', true );
+				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+			}
+
+			$display_name = implode( ' ',
+				array_filter( [
+					isset( $result_first_name ) ? $result_first_name : '',
+					isset( $result_last_name ) ? $result_last_name : '',
+				] ) );
+
+			// Get Nick Name Field Id.
+			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
+
+			if ( '' === trim( $nick_name ) ) {
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
+			break;
+		case 'nickname':
+
+			// Get Nick Name Field Id.
+			$nickname_id  = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$display_name = xprofile_get_field_data( $nickname_id, $user_id );
+
+			if ( '' === trim( $display_name ) ) {
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				$display_name = $nickname;
+
+			}
+			break;
+	}
+
+	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
