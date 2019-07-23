@@ -4745,3 +4745,54 @@ function bp_get_xprofile_gender_type_field_id() {
 
 	return (int) $get_parent_id_of_gender_types_field;
 }
+
+/**
+ * Sync the BP data based on the WP data via infusion soft API.
+ *
+ * @param $user_id
+ *
+ * @since BuddyBoss 1.1.5
+ */
+function bp_infusion_soft_sync_bp_data( $user_id ) {
+
+	if ( function_exists('iMember360') ) {
+
+		$first_name_id = (int) get_option( 'bp-xprofile-firstname-field-id' );
+		$nickname_id   = (int) get_option( 'bp-xprofile-nickname-field-id' );
+		$last_name_id  = (int) get_option( 'bp-xprofile-lastname-field-id' );
+
+		$xprofile_nick_name  = xprofile_get_field_data( $nickname_id, $user_id );
+		$xprofile_first_name = xprofile_get_field_data( $first_name_id, $user_id );
+		$xprofile_last_name  = xprofile_get_field_data( $last_name_id, $user_id );
+
+		if ( '' === $xprofile_first_name ) {
+			$result_first_name = get_user_meta( $user_id, 'first_name', true );
+			if ( empty( $result_first_name ) ) {
+				$result_first_name = get_user_meta( $user_id, 'nickname', true );
+			}
+			xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+		}
+
+		if ( '' === trim( $xprofile_nick_name ) ) {
+			$user = get_userdata( $user_id );
+			// make sure nickname is valid
+			$nickname = get_user_meta( $user_id, 'nickname', true );
+			$nickname = sanitize_title( $nickname );
+			$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+			// or use the user_nicename
+			if ( ! $nickname || $invalid ) {
+				$nickname = $user->user_nicename;
+			}
+			xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+		}
+
+		if ( '' === $xprofile_last_name ) {
+			$result_last_name = get_user_meta( $user_id, 'last_name', true );
+			xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+		}
+
+	}
+
+}
+add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
