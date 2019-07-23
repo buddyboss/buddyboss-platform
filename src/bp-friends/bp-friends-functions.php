@@ -805,7 +805,7 @@ function bp_friends_prime_mentions_results() {
 		$result->image  = bp_core_fetch_avatar( array( 'html' => false, 'item_id' => $user->ID ) );
 
 		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = bp_custom_display_name_format( $user->display_name, $user->ID );
+			$result->name = bp_core_get_member_display_name( $user->display_name, $user->ID );
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}

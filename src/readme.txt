@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.1.4 =
+* Profiles - Fixed issue with member profile recognizing existing Profile Type
+* Forums - Improved database query performance for Forums component
+* Forums - Removed non-functional Edit and Merge links from some forum roles
+* Errors - Fixed various PHP errors in certain situations
 
 = 1.1.3 =
 * Profiles - Allow users to self-select 'Profile Type' via new profile field

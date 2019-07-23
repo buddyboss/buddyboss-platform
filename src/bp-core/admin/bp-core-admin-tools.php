@@ -628,6 +628,7 @@ function resync_wordpress_xprofile_fields() {
 	] );
 
 	foreach ( $users as $user ) {
+
 		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
 		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
 
@@ -661,7 +662,7 @@ function xprofile_update_display_names() {
 	] );
 
 	foreach ( $users as $user ) {
-		$display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
+		$display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
 
 		wp_update_user( $args = [
 			'ID'           => $user->ID,
