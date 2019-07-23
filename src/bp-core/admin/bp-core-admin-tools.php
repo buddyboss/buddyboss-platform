@@ -627,24 +627,7 @@ function resync_wordpress_xprofile_fields() {
 		'fields' => [ 'ID', 'user_nicename' ]
 	] );
 
-	// Get First, Last and Nickname field id from DB.
-	$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-	$nickname_id             = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-	$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
-
 	foreach ( $users as $user ) {
-
-		// Remove transient of user nickname.
-		$nick_name_key = 'nick_'.$nickname_id.'_'.$user->ID;
-		delete_transient( $nick_name_key );
-
-		// Remove transient of user first name.
-		$first_name_key    = 'first_' . $first_name_id . '_' . $user->ID;
-		delete_transient( $first_name_key );
-
-		// Remove transient of user last name.
-		$last_name_key    = 'last_' . $last_name_id . '_' . $user->ID;
-		delete_transient( $last_name_key );
 
 		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
 		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
@@ -679,7 +662,7 @@ function xprofile_update_display_names() {
 	] );
 
 	foreach ( $users as $user ) {
-		$display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
+		$display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
 
 		wp_update_user( $args = [
 			'ID'           => $user->ID,

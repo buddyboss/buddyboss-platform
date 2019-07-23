@@ -548,7 +548,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes'  );
 add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
-add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
+add_filter( 'bp_core_get_user_displayname', 'bp_core_get_member_display_name', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2850,212 +2850,21 @@ function bp_get_current_member_type() {
  *
  * @return string
  */
-function bp_custom_display_name_format( $display_name, $user_id = null ) {
+function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
 		return $display_name;
 	}
 
-	global $wpdb;
+	$old_display_name = $display_name;
 
-	$format = bp_get_option( 'bp-display-name-format' );
-	$table  = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-	switch ( $format ) {
-		case 'first_name':
-
-			// Get First Name Field Id.
-			$first_name_id  = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-
-			// Prepare key for the first name.
-			$first_name_key = 'first_' . $first_name_id . '_' . $user_id;
-
-			// Get the first name data from the transient.
-			$display_name   = get_transient( "$first_name_key" );
-
-			// If empty from transient then do the query on DB.
-			if ( false === $display_name ) {
-				$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-				$display_name            = isset( $queried_data_first_name[0]->value ) ? trim( $queried_data_first_name[0]->value ) : '';
-				// Set first name data into the transient.
-				set_transient( "$first_name_key", $display_name );
-			}
-
-			if ( '' === $display_name ) {
-				$display_name = get_user_meta( $user_id, 'first_name', true );
-				if ( empty( $display_name ) ) {
-					$display_name = get_user_meta( $user_id,'nickname', true );
-				}
-				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
-
-				// Set first name data into the transient.
-				set_transient( "$first_name_key", $display_name );
-			}
-
-			// Get Nick Name Field Id.
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-
-			// Prepare key for the nickname name.
-			$nick_name_key = 'nick_'.$nickname_id.'_'.$user_id;
-
-			// Get the nickname name data from the transient.
-			$nick_name = get_transient( "$nick_name_key" );
-			if ( false === $nick_name ) {
-				$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-				$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-				// Set nick_name name data into the transient.
-				set_transient( "$nick_name_key", $nick_name );
-			}
-
-			if ( '' === trim( $nick_name ) ) {
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-
-				// Set nick_name name data into the transient.
-				set_transient( "$nick_name_key", $nick_name );
-			}
-
-			break;
-		case 'first_last_name':
-
-			// Get First Name Field Id.
-			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-
-			// Get Last Name Field Id.
-			$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
-
-			// Prepare key for the first name.
-			$first_name_key    = 'first_' . $first_name_id . '_' . $user_id;
-
-			// Get the first name data from the transient.
-			$result_first_name = get_transient( "$first_name_key" );
-
-			// If empty from transient then do the query on DB.
-			if ( false === $result_first_name ) {
-				$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-				$result_first_name       = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
-				// Set first name data into the transient.
-				set_transient( "$first_name_key", $result_first_name );
-			}
-
-			// Prepare key for the last name.
-			$last_name_key    = 'last_' . $last_name_id . '_' . $user_id;
-
-			// Get the last name data from the transient.
-			$result_last_name = get_transient( "$last_name_key" );
-
-			// If empty from transient then do the query on DB.
-			if ( false === $result_last_name ) {
-				$queried_data_last_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
-				$result_last_name       = isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '';
-				// Set last name data into the transient.
-				set_transient( "$last_name_key", $result_last_name );
-			}
-
-			if ( '' === $result_first_name ) {
-				$result_first_name = get_user_meta( $user_id, 'first_name', true );
-				if ( empty( $result_first_name ) ) {
-					$result_first_name = get_user_meta( $user_id,'nickname', true );
-				}
-				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
-
-				// Set first name data into the transient.
-				set_transient( "$first_name_key", $result_first_name );
-			}
-
-			if ( '' === $result_last_name ) {
-				$result_last_name = get_user_meta( $user_id, 'last_name', true );
-				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
-
-				// Set last name data into the transient.
-				set_transient( "$last_name_key", $result_last_name );
-			}
-
-			$display_name            = implode( ' ', array_filter( [ isset( $result_first_name ) ? $result_first_name : '', isset( $result_last_name ) ? $result_last_name : '' ] ) );
-
-			// Get Nick Name Field Id.
-			$nickname_id   = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-
-			// Prepare key for the nick name.
-			$nick_name_key = 'nick_' . $nickname_id . '_' . $user_id;
-
-			// Get the nick name data from the transient.
-			$nick_name     = get_transient( "$nick_name_key" );
-
-			// If empty from transient then do the query on DB.
-			if ( false === $nick_name ) {
-				$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-				$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-				// Set nick name data into the transient.
-				set_transient( "$nick_name_key", $nick_name );
-			}
-
-			if ( '' === trim( $nick_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-				// Set nick name data into the transient.
-				set_transient( "$nick_name_key", $nick_name );
-			}
-
-			break;
-		case 'nickname':
-
-			// Get Nick Name Field Id.
-			$nickname_id   = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-
-			// Prepare key for the nickname name.
-			$nick_name_key = 'nick_' . $nickname_id . '_' . $user_id;
-
-			// Get the nickname name data from the transient.
-			$nick_name     = get_transient( "$nick_name_key" );
-
-			// If empty from transient then do the query on DB.
-			if ( false === $nick_name ) {
-				$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-				$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-				// Set nick name data into the transient.
-				set_transient( "$nick_name_key", $nick_name );
-			}
-
-			if ( '' === trim( $display_name ) ) {
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-				$display_name = $nickname;
-				// Set nick name data into the transient.
-				set_transient( "$nick_name_key", $nick_name );
-			}
-			break;
+	if ( empty( $display_name ) ) {
+		$display_name = $old_display_name;
 	}
 
-	return trim( $display_name );
+	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
 /**
@@ -3547,6 +3356,9 @@ function bp_get_active_member_types( $force_refresh = false ) {
  * @param int $post_id The post ID.
  * @param post $post The post object.
  * @param bool $update Whether this is an existing member type being updated or not.
+ *
+ * @since BuddyBoss 1.1.4
+ *
  */
 function bp_refresh_member_types_cache( $post_id, $post, $update ) {
 
@@ -3556,7 +3368,7 @@ function bp_refresh_member_types_cache( $post_id, $post, $update ) {
 	 */
 	$post_type = get_post_type($post_id);
 
-	// If this isn't a 'book' post, don't update it.
+	// If this isn't a 'member_type' post, don't update it.
 	if ( bp_get_member_type_post_type() !== $post_type ) return;
 
 	// Force the cache refresh for active_member_types posts.

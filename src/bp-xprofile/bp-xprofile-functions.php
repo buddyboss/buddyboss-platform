@@ -882,18 +882,6 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 	$lastname_id  = bp_xprofile_lastname_field_id();
 	$nickname_id  = bp_xprofile_nickname_field_id();
 
-	// Remove transient of user nickname.
-	$nick_name_key = 'nick_'.$nickname_id.'_'.$user_id;
-	delete_transient( $nick_name_key );
-
-	// Remove transient of user first name.
-	$first_name_key    = 'first_' . $firstname_id . '_' . $user_id;
-	delete_transient( $first_name_key );
-
-	// Remove transient of user last name.
-	$last_name_key    = 'last_' . $lastname_id . '_' . $user_id;
-	delete_transient( $last_name_key );
-
 	if ( ! $field_id || $field_id == $firstname_id ) {
 		$firstname = xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id );
 		bp_update_user_meta( $user_id, 'first_name', $firstname );
@@ -942,7 +930,7 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
 	}
 
-	$user->display_name = bp_custom_display_name_format( $user->display_name, $user->ID );
+	$user->display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
 }
 add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 
@@ -954,7 +942,7 @@ add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user( array(
 		'ID' => $user_id,
-		'display_name' => bp_custom_display_name_format( get_user_by( 'ID', $user_id )->display_name, $user_id )
+		'display_name' => bp_core_get_member_display_name( get_user_by( 'ID', $user_id )->display_name, $user_id )
 	) );
 }
 
@@ -1782,30 +1770,129 @@ function bp_check_member_type_field_have_options() {
 
 }
 
-add_action( 'xprofile_updated_profile', 'bp_profile_remove_user_display_name_transient_cache', 11, 5 );
-
 /**
- * Remove transient data when user change the profile field data.
+ * Get the display_name for member based on user_id
  *
- * @since BuddyBoss 1.1.7
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $display_name
+ * @param int $user_id
+ *
+ * @return string
  */
-function bp_profile_remove_user_display_name_transient_cache ( $user_id, $posted_field_ids, $errors, $old_values, $new_values ) {
+function bp_xprofile_get_member_display_name( $user_id = null ) {
+	// some cases it calls the filter directly, therefore no user id is passed
+	if ( ! $user_id ) {
+		return false;
+	}
 
-	// Get First, Last and Nickname field id from DB.
-	$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-	$nickname_id             = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-	$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+	$format = bp_get_option( 'bp-display-name-format' );
 
-	// Remove transient of user nickname.
-	$nick_name_key = 'nick_'.$nickname_id.'_'.$user_id;
-	delete_transient( $nick_name_key );
+	switch ( $format ) {
+		case 'first_name':
 
-	// Remove transient of user first name.
-	$first_name_key    = 'first_' . $first_name_id . '_' . $user_id;
-	delete_transient( $first_name_key );
+			// Get First Name Field Id.
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
 
-	// Remove transient of user last name.
-	$last_name_key    = 'last_' . $last_name_id . '_' . $user_id;
-	delete_transient( $last_name_key );
+			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
 
+			if ( '' === $display_name ) {
+				$display_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $display_name ) ) {
+					$display_name = get_user_meta( $user_id, 'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
+			}
+
+			// Get Nick Name Field Id.
+			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
+
+			if ( '' === trim( $nick_name ) ) {
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
+			break;
+		case 'first_last_name':
+
+			// Get First Name Field Id.
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			// Get Last Name Field Id.
+			$last_name_id      = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
+			$result_first_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$result_last_name  = xprofile_get_field_data( $last_name_id, $user_id );
+
+			if ( '' === $result_first_name ) {
+				$result_first_name = get_user_meta( $user_id, 'first_name', true );
+				if ( empty( $result_first_name ) ) {
+					$result_first_name = get_user_meta( $user_id, 'nickname', true );
+				}
+				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+			}
+
+			if ( '' === $result_last_name ) {
+				$result_last_name = get_user_meta( $user_id, 'last_name', true );
+				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+			}
+
+			$display_name = implode( ' ',
+				array_filter( [
+					isset( $result_first_name ) ? $result_first_name : '',
+					isset( $result_last_name ) ? $result_last_name : '',
+				] ) );
+
+			// Get Nick Name Field Id.
+			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$nick_name   = xprofile_get_field_data( $nickname_id, $user_id );
+
+			if ( '' === trim( $nick_name ) ) {
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+			}
+
+			break;
+		case 'nickname':
+
+			// Get Nick Name Field Id.
+			$nickname_id  = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
+			$display_name = xprofile_get_field_data( $nickname_id, $user_id );
+
+			if ( '' === trim( $display_name ) ) {
+				$user = get_userdata( $user_id );
+				// make sure nickname is valid
+				$nickname = get_user_meta( $user_id, 'nickname', true );
+				$nickname = sanitize_title( $nickname );
+				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+				// or use the user_nicename
+				if ( ! $nickname || $invalid ) {
+					$nickname = $user->user_nicename;
+				}
+				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+				$display_name = $nickname;
+
+			}
+			break;
+	}
+
+	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
