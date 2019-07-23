@@ -57,7 +57,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.4 =
 * Profiles - Fixed issue with member profile recognizing existing Profile Type
-* Performance - Improved database queries for Forums component
+* Forums - Improved database query performance for Forums component
+* Forums - Removed non-functional Edit and Merge links from some forum roles
 * Errors - Fixed various PHP errors in certain situations
 
 = 1.1.3 =
