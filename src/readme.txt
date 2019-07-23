@@ -56,6 +56,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.4 =
+* Profiles - Fixed issue with member profile recognizing existing Profile Type
+* Performance - Improved database queries for Forums component
+* Errors - Fixed 'undefined' error on Messages
 
 = 1.1.3 =
 * Profiles - Allow users to self-select 'Profile Type' via new profile field
