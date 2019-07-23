@@ -210,9 +210,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Set the Forums to selected in menu items.
 		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class'), 10, 3 );
 
-		add_filter( 'heartbeat_received', [ $this, 'bp_heartbeat_unread_notifs'], 11, 2 );
-		add_filter( 'heartbeat_nopriv_received', [ $this, 'bp_heartbeat_unread_notifs'], 11, 2 );
-
 		/** Override **********************************************************/
 
 		/**
@@ -223,42 +220,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 * @param BP_Nouveau $this Current BP_Nouveau instance.
 		 */
 		do_action_ref_array( 'bp_theme_compat_actions', array( &$this ) );
-	}
-
-	/**
-	* Gets all unread notifications
-	*
-	* @param array $response Array containing Heartbeat API response.
-	* @param array $data     Array containing data for Heartbeat API response.
-	* @return array $response
-	*/
-	function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
-		ob_start();
-		
-		if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) 
-		{
-			while ( bp_the_notifications() ) : bp_the_notification();
-				bp_get_template_part( 'activity/notifs' );
-			endwhile;
-		}
-
-		$response['unread_notifs'] = ob_get_contents();
-		ob_end_clean();
-
-		$total_notifs = 0;
-		$counts = bp_notifications_get_notifications_for_user(bp_loggedin_user_id(), 'object');
-wp_die(print_r($counts));
-		foreach ($counts as $count) {
-			$total_notifs += $count->total_count;
-
-			if($count->component_name === 'messages') {
-				$response['msg_notifs'] =  $count->total_count;
-			}
-		}
-
-		$response['total_notifs'] = $total_notifs;
-
-		return $response;
 	}
 
 	/**
