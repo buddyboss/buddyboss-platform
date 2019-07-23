@@ -802,8 +802,6 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 * @return array $response
 */
 function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
-	global $messages_template;
-
 	ob_start();
 		if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) 
 		{
@@ -816,12 +814,7 @@ function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
 	ob_end_clean();
 
 	ob_start();
-		if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . get_current_user_id() ) ) 
-		{
-			while ( bp_message_threads() ) : bp_message_thread();
-				bp_get_template_part( 'activity/notifs' );
-			endwhile;
-		}
+		bp_get_template_part( 'activity/unread-messages' );
 
 		$response['unread_messages'] = ob_get_contents();
 	ob_end_clean();
@@ -831,12 +824,9 @@ function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
 
 	foreach ($counts as $count) {
 		$total_notifs += $count->total_count;
-
-		if($count->component_name === 'messages') {
-			$response['msg_notifs'] =  $count->total_count;
-		}
 	}
 
+	$response['msg_notifs'] =  messages_get_unread_count();
 	$response['total_notifs'] = $total_notifs;
 
 	return $response;

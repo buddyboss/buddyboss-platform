@@ -1,3 +1,5 @@
+<?php global $messages_template; ?>
+
 <?php if ( bp_has_message_threads( bp_ajax_querystring( 'messages' ) . '&user_id=' . get_current_user_id() ) ) : ?>
 	<?php while ( bp_message_threads() ) : bp_message_thread(); ?>
 
@@ -20,7 +22,7 @@
 						<?php bp_message_thread_subject(); ?>
 					</a>
 				</span>
-                <span>
+                <span class="notification-users">
 					<a href="<?php bp_message_thread_view_link( bp_get_message_thread_id() ); ?>">
 						<?php $recipients = (array) $messages_template->thread->recipients; ?>
 						<?php $recipient_names = array(); ?>
