@@ -2416,26 +2416,15 @@ function bbp_topic_admin_links( $args = array() ) {
 		), 'get_topic_admin_links' );
 
 		if ( empty( $r['links'] ) ) {
-
-			if ( bp_is_active( 'groups' ) && bp_is_group() && ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) ) {
-				$r['links'] = apply_filters( 'bbp_topic_admin_links', array(
-					'close' => bbp_get_topic_close_link( $r ),
-					'stick' => bbp_get_topic_stick_link( $r ),
-					'trash' => bbp_get_topic_trash_link( $r ),
-					'spam'  => bbp_get_topic_spam_link ( $r ),
-					'reply' => bbp_get_topic_reply_link( $r )
-				), $r['id'] );
-            } else {
-				$r['links'] = apply_filters( 'bbp_topic_admin_links', array(
-					'edit'  => bbp_get_topic_edit_link ( $r ),
-					'close' => bbp_get_topic_close_link( $r ),
-					'stick' => bbp_get_topic_stick_link( $r ),
-					'merge' => bbp_get_topic_merge_link( $r ),
-					'trash' => bbp_get_topic_trash_link( $r ),
-					'spam'  => bbp_get_topic_spam_link ( $r ),
-					'reply' => bbp_get_topic_reply_link( $r )
-				), $r['id'] );
-            }
+			$r['links'] = apply_filters( 'bbp_topic_admin_links', array(
+				'edit'  => bbp_get_topic_edit_link ( $r ),
+				'close' => bbp_get_topic_close_link( $r ),
+				'stick' => bbp_get_topic_stick_link( $r ),
+				'merge' => bbp_get_topic_merge_link( $r ),
+				'trash' => bbp_get_topic_trash_link( $r ),
+				'spam'  => bbp_get_topic_spam_link ( $r ),
+				'reply' => bbp_get_topic_reply_link( $r )
+			), $r['id'] );
 		}
 
 		// See if links need to be unset
