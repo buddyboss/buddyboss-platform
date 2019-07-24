@@ -147,7 +147,7 @@ final class BP_Notification_Export extends BP_Export {
 
 		$wpdb->show_errors( false );
 
-		$table              = "{$bp->table_prefix}bp_notifications item";
+		$table              = bp_core_get_table_prefix(). "bp_notifications item";
 		$query_select       = "item.*";
 		$query_select_count = "COUNT(item.id)";
 		$query_where        = "item.user_id=%d";

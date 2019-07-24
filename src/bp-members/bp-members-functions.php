@@ -3313,7 +3313,8 @@ function bp_active_member_type_by_type( $type_id ) {
 
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
-			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->activity->table_name} a WHERE a.user_id = " . $single );
+			$table = bp_core_get_table_prefix() . 'bp_activity';
+			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = " . $single );
 			if ( $member_activity > 0 ) {
 				$member_ids[] = $single;
 			}
@@ -4044,7 +4045,8 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 	if ( '' === $user_id ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$table = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' ");
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
 			$gender = xprofile_get_field_data( $field_id , $user_id );

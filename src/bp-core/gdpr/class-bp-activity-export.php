@@ -165,7 +165,7 @@ final class BP_Activity_Export extends BP_Export {
 
 		$wpdb->show_errors( false );
 
-		$table              = "{$bp->table_prefix}bp_activity item";
+		$table              = bp_core_get_table_prefix(). "bp_activity item";
 		$query_select       = "item.*";
 		$query_select_count = "COUNT(item.id)";
 
