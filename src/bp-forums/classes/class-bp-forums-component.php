@@ -142,6 +142,17 @@ class BP_Forums_Component extends BP_Component {
 
         // Register the group extension only if groups are active
         if ( bbp_is_group_forums_active() && bp_is_active( 'groups' ) ) {
+
+	        /**
+	         * need to remove this hooks before group extension because
+	         * it was checking for access to that post before wp handles the post id assign
+	         */
+        	if ( bp_is_group() ) {
+		        remove_action( 'bbp_template_redirect', 'bbp_check_forum_edit', 10 );
+		        remove_action( 'bbp_template_redirect', 'bbp_check_topic_edit', 10 );
+		        remove_action( 'bbp_template_redirect', 'bbp_check_reply_edit', 10 );
+	        }
+
             bp_register_group_extension( 'BBP_Forums_Group_Extension' );
         }
     }

@@ -778,6 +778,15 @@ class BP_Group_Extension {
 		add_action( 'bp_template_content', array( &$this, 'call_display' ) );
 
 		/**
+		 * need to add this hooks before group extension because
+		 * it was checking for access to that post before wp handles the post id assign
+		 * check `class-bp-forum-component.php` function `setup_components`
+		 */
+		add_action( 'bbp_template_redirect', 'bbp_check_forum_edit', 10 );
+		add_action( 'bbp_template_redirect', 'bbp_check_topic_edit', 10 );
+		add_action( 'bbp_template_redirect', 'bbp_check_reply_edit', 10 );
+
+		/**
 		 * Filters the template to load for the main display method.
 		 *
 		 * @since BuddyPress 1.0.0
