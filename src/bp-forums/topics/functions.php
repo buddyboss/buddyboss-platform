@@ -3547,9 +3547,6 @@ function bbp_check_topic_edit() {
 	if ( !bbp_is_topic_edit() )
 		return;
 
-	error_log("check topic edit");
-	error_log(bbp_get_topic_id());
-
 	// User cannot edit topic, so redirect back to topic
 	if ( !current_user_can( 'edit_topic', bbp_get_topic_id() ) ) {
 		wp_safe_redirect( bbp_get_topic_permalink() );

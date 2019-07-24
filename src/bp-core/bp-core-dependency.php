@@ -345,8 +345,6 @@ function bp_ready() {
  */
 function bp_actions() {
 
-	error_log("bp_actions");
-
 	/**
 	 * Fires inside the 'bp_actions' function, which runs just before rendering.
 	 *
@@ -423,8 +421,6 @@ function bp_head() {
  * @since BuddyPress 1.6.0
  */
 function bp_template_redirect() {
-
-	error_log('bp_template_redirect');
 
 	/**
 	 * Fires inside the 'bp_template_redirect' function.
