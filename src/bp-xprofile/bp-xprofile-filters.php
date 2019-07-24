@@ -698,6 +698,11 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%s must be shorter than %d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
+	// Minimum of 4 characters.
+	if ( strlen( $value ) < 4 ) {
+		return sprintf( __( '%s must be at least 4 characters', 'buddyboss' ), $field_name );
+	}
+
 	global $wpdb;
 	$where = [
 		'meta_key = "nickname"',
