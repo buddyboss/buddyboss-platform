@@ -277,6 +277,11 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// prevent activity response to append to media model activity list element
+			if ( data.object == 'activity' && data.target == '#buddypress [data-bp-list] ul.bp-list' ) {
+				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -455,14 +460,14 @@ window.bp = window.bp || {};
 			// Extend "send" with BuddyPress namespace
 			$.fn.extend( {
 				'heartbeat-send': function() {
-					return this.bind( 'heartbeat-send.buddypress' );
+					return this.bind( 'heartbeat-send' );
 				}
 			} );
 
 			// Extend "tick" with BuddyPress namespace
 			$.fn.extend( {
 				'heartbeat-tick': function() {
-					return this.bind( 'heartbeat-tick.buddypress' );
+					return this.bind( 'heartbeat-tick' );
 				}
 			} );
 		},
@@ -477,8 +482,8 @@ window.bp = window.bp || {};
 			$( '[data-bp-disable-input]' ).on( 'change', this.toggleDisabledInput );
 
 			// HeartBeat Send and Receive
-			$( document ).on( 'heartbeat-send.buddypress', this.heartbeatSend );
-			$( document ).on( 'heartbeat-tick.buddypress', this.heartbeatTick );
+			$( document ).on( 'heartbeat-send', this.heartbeatSend );
+			$( document ).on( 'heartbeat-tick', this.heartbeatTick );
 
 			// Refreshing
 			$( this.objectNavParent + ' .bp-navs' ).on( 'click', 'a', this, this.scopeQuery );
@@ -787,6 +792,8 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		heartbeatSend: function( event, data ) {
+			data.customfield = '';
+
 			// Add an heartbeat send event to possibly any BuddyPress pages
 			$( '#buddypress' ).trigger( 'bp_heartbeat_send', data );
 		},
@@ -798,8 +805,46 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		heartbeatTick: function( event, data ) {
+			bp.Nouveau.injectNotifications(event, data);
+
 			// Add an heartbeat send event to possibly any BuddyPress pages
 			$( '#buddypress' ).trigger( 'bp_heartbeat_tick', data );
+		},
+
+		/**
+		 * Injects all unread notifications
+		 */
+		injectNotifications: function(event, data) {
+			if ( data.unread_notifs && data.unread_notifs !== '') {
+				$('#header-notifications-dropdown-elem .notification-dropdown .notification-list').empty().html(data.unread_notifs);
+			}
+
+			// inject all unread messages notifications
+			if ( data.unread_messages && data.unread_messages !== '') {
+				$('#header-messages-dropdown-elem .notification-dropdown .notification-list').empty().html(data.unread_messages);
+			}
+			
+			if (data.total_notifs !== undefined && data.total_notifs > 0) {
+				var notifs = $('.bb-icon-bell-small');
+				var notif_icons = $(notifs).parent().children('.count');
+
+				if ( notif_icons.length > 0 ) {
+					$(notif_icons).text(data.total_notifs);
+				} else {
+					$(notifs).parent().append( '<span class="count"> ' + data.total_notifs + ' </span>' );
+				}
+			}
+
+			if (data.msg_notifs !== undefined && data.msg_notifs > 0) {
+				var msg = $('.bb-icon-inbox-small');
+				var msg_icons = $(msg).parent().children('.count');
+
+				if ( msg_icons.length > 0 ) {
+					$(msg_icons).text(data.msg_notifs);
+				} else {
+					$(msg).parent().append( '<span class="count"> ' + data.msg_notifs + ' </span>' );
+				}
+			}
 		},
 
 		/**

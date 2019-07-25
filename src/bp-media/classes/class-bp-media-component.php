@@ -10,7 +10,7 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Creates Invites component.
+ * Creates Media component.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -68,7 +68,7 @@ class BP_Media_Component extends BP_Component {
 	}
 
 	/**
-	 * Include Invites component files.
+	 * Include Media component files.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *

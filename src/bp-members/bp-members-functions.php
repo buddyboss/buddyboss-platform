@@ -548,7 +548,7 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim'          );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes'  );
 add_filter( 'bp_core_get_user_displayname', 'esc_html'      );
-add_filter( 'bp_core_get_user_displayname', 'bp_custom_display_name_format', 15, 2 );
+add_filter( 'bp_core_get_user_displayname', 'bp_core_get_member_display_name', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2850,119 +2850,21 @@ function bp_get_current_member_type() {
  *
  * @return string
  */
-function bp_custom_display_name_format( $display_name, $user_id = null ) {
+function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 	// some cases it calls the filter directly, therefore no user id is passed
 	if ( ! $user_id ) {
 		return $display_name;
 	}
 
-	global $wpdb;
+	$old_display_name = $display_name;
 
-	$format = bp_get_option( 'bp-display-name-format' );
-	$table  = bp_core_get_table_prefix() . 'bp_xprofile_data';
+	$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-	switch ( $format ) {
-		case 'first_name':
-			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$display_name            = isset( $queried_data_first_name[0]->value ) ? trim( $queried_data_first_name[0]->value ) : '';
-			if ( '' === $display_name ) {
-
-				$display_name = get_user_meta( $user_id, 'first_name', true );
-				if ( empty( $display_name ) ) {
-					$display_name = get_user_meta( $user_id,'nickname', true );
-				}
-				xprofile_set_field_data( $first_name_id, $user_id, $display_name );
-			}
-
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-
-			if ( '' === trim( $nick_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-			}
-
-			break;
-		case 'first_last_name':
-			$first_name_id           = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$last_name_id            = (int) bp_get_option( 'bp-xprofile-lastname-field-id' );
-			$queried_data_first_name = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $first_name_id, $user_id ) );
-			$queried_data_last_name  = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $last_name_id, $user_id ) );
-
-			$result_first_name = isset( $queried_data_first_name[0]->value ) ? $queried_data_first_name[0]->value : '';
-			$result_last_name = isset( $queried_data_last_name[0]->value ) ? $queried_data_last_name[0]->value : '';
-
-			if ( '' === $result_first_name ) {
-				$result_first_name = get_user_meta( $user_id, 'first_name', true );
-				if ( empty( $result_first_name ) ) {
-					$result_first_name = get_user_meta( $user_id,'nickname', true );
-				}
-				xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
-			}
-
-			if ( '' === $result_last_name ) {
-
-				$result_last_name = get_user_meta( $user_id, 'last_name', true );
-				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
-			}
-
-			$display_name            = implode( ' ', array_filter( [ isset( $result_first_name ) ? $result_first_name : '', isset( $result_last_name ) ? $result_last_name : '' ] ) );
-
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$nick_name             = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-
-			if ( '' === trim( $nick_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-			}
-
-			break;
-		case 'nickname':
-			$nickname_id           = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
-			$queried_data_nickname = $wpdb->get_results( $wpdb->prepare( "SELECT value FROM $table WHERE field_id = %d AND user_id = %d", $nickname_id, $user_id ) );
-			$display_name          = isset( $queried_data_nickname[0]->value ) ? $queried_data_nickname[0]->value : '';
-			if ( '' === trim( $display_name ) ) {
-
-				$user = get_userdata( $user_id );
-				// make sure nickname is valid
-				$nickname = get_user_meta( $user_id, 'nickname', true );
-				$nickname = sanitize_title( $nickname );
-				$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
-
-				// or use the user_nicename
-				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
-				}
-				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
-				$display_name = $nickname;
-			}
-			break;
+	if ( empty( $display_name ) ) {
+		$display_name = $old_display_name;
 	}
 
-	return trim( $display_name );
+	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
 /**
@@ -3411,7 +3313,8 @@ function bp_active_member_type_by_type( $type_id ) {
 
 	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
 		foreach ( $get_user_ids as $single ) {
-			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->activity->table_name} a WHERE a.user_id = " . $single );
+			$table = bp_core_get_table_prefix() . 'bp_activity';
+			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = " . $single );
 			if ( $member_activity > 0 ) {
 				$member_ids[] = $single;
 			}
@@ -3429,13 +3332,51 @@ function bp_active_member_type_by_type( $type_id ) {
  * @global wpdb $wpdb WordPress database abstraction object.
  * @return type array
  */
-function bp_get_active_member_types() {
+function bp_get_active_member_types( $force_refresh = false ) {
 
-	global $wpdb;
-	$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+	// Check for the bp_active_member_types in the 'active_member_types' group.
+	$bp_active_member_types = wp_cache_get( 'bp_active_member_types', 'active_member_types' );
 
-	return $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
+	// If nothing is found, build the object.
+	if ( true === $force_refresh || false === $bp_active_member_types ) {
+
+		global $wpdb;
+		$query = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
+		$bp_active_member_types = $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
+
+		// Cache the whole WP_Query object in the cache and store it for 5 minutes (300 secs).
+		wp_cache_set( 'bp_active_member_types', $bp_active_member_types, 'active_member_types', 5 * MINUTE_IN_SECONDS );
+	}
+
+	return $bp_active_member_types;
 }
+
+/**
+ * Build the cache for the bp_active_member_types post types.
+ *
+ * @param int $post_id The post ID.
+ * @param post $post The post object.
+ * @param bool $update Whether this is an existing member type being updated or not.
+ *
+ * @since BuddyBoss 1.1.4
+ *
+ */
+function bp_refresh_member_types_cache( $post_id, $post, $update ) {
+
+	/*
+	 * In production code, $slug should be set only once in the plugin,
+	 * preferably as a class property, rather than in each function that needs it.
+	 */
+	$post_type = get_post_type($post_id);
+
+	// If this isn't a 'member_type' post, don't update it.
+	if ( bp_get_member_type_post_type() !== $post_type ) return;
+
+	// Force the cache refresh for active_member_types posts.
+	bp_get_active_member_types( $force_refresh = true );
+
+}
+add_action( 'save_post', 'bp_refresh_member_types_cache', 10, 3 );
 
 /**
  * Get all plural labels.
@@ -4104,7 +4045,8 @@ function bp_get_user_gender_pronoun_type( $user_id = '' ) {
 	if ( '' === $user_id ) {
 		$gender_pronoun = esc_html__( 'their', 'buddyboss' );
 	} else {
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$table = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$table} a WHERE parent_id = 0 AND type = 'gender' ");
 		if ( $exists_gender[0]->count > 0 ) {
 			$field_id = $exists_gender[0]->id;
 			$gender = xprofile_get_field_data( $field_id , $user_id );
@@ -4382,60 +4324,186 @@ add_action( 'bp_core_activated_user', 'bp_member_add_auto_join_groups', 99, 3 );
  * @param $user
  */
 function bp_assign_default_member_type_to_activate_user( $user_id, $key, $user ) {
-	global $bp;
+	global $bp, $wpdb;
 
 	// Check whether member type is enabled.
 	if ( true === bp_member_type_enable_disable() ) {
 
+		// Check Member Type Dropdown added on register page.
+		$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+		$get_selected_member_type_on_register = trim( $wpdb->get_var( $wpdb->prepare( "SELECT value FROM {$wpdb->prefix}bp_xprofile_data WHERE user_id = %s AND field_id = %d ", $user_id, $get_parent_id_of_member_types_field ) ) );
 		// return to user if default member type is not set.
 		$existing_selected = bp_member_type_default_on_registration();
-		if ( '' === $existing_selected ) {
-			return;
-		}
 
-		$email = bp_core_get_user_email( $user_id );
+		// Check one of them is added
+		if ( '' !== $existing_selected ||  '' !== $get_selected_member_type_on_register ) {
 
-		// Check if invites component enabled.
-		if ( bp_is_active( 'invites' ) ) {
-			$inviters = array();
+			$email = bp_core_get_user_email( $user_id );
 
-			$args = array(
-				'post_type'      => bp_get_invite_post_type(),
-				'posts_per_page' => - 1,
-				'meta_query'     => array(
-					array(
-						'key'     => '_bp_invitee_email',
-						'value'   => $email,
-						'compare' => '=',
+			// Check if invites component enabled.
+			if ( bp_is_active( 'invites' ) ) {
+				$inviters = array();
+
+				$args = array(
+					'post_type'      => bp_get_invite_post_type(),
+					'posts_per_page' => - 1,
+					'meta_query'     => array(
+						array(
+							'key'     => '_bp_invitee_email',
+							'value'   => $email,
+							'compare' => '=',
+						),
 					),
-				),
-			);
+				);
 
-			$bp_get_invitee_email = new WP_Query( $args );
+				$bp_get_invitee_email = new WP_Query( $args );
 
-			if ( $bp_get_invitee_email->have_posts() ) {
+				if ( $bp_get_invitee_email->have_posts() ) {
 
-				$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
-				// Check if user is invited for specific member type
-				if ( isset( $member_type ) && ! empty( $member_type ) ) {
-					// Assign the invited member type to user.
+					$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
+					// Check if user is invited for specific member type
+					if ( isset( $member_type ) && ! empty( $member_type ) ) {
+
+						// Assign the invited member type to user.
+						bp_set_member_type( $user_id, '' );
+						bp_set_member_type( $user_id, $member_type );
+						$member_type_id = bp_member_type_post_by_type( $member_type );
+						$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+							$bp_user = new WP_User( $user_id );
+							foreach ( $bp_user->roles as $role ) {
+								// Remove role
+								$bp_user->remove_role( $role );
+							}
+							// Add role
+							$bp_user->add_role( $selected_member_type_wp_roles[0] );
+						}
+
+					} else {
+
+						if ( '' !== $get_selected_member_type_on_register ) {
+							// Get selected profile type role.
+							$selected_member_type_wp_roles = get_post_meta( $get_selected_member_type_on_register, '_bp_member_type_wp_roles', true );
+							$type_name                = bp_get_member_type_key( $get_selected_member_type_on_register );
+
+							// Assign the default member type to user.
+							bp_set_member_type( $user_id, '' );
+							bp_set_member_type( $user_id, $type_name );
+							if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+								$bp_user = new WP_User( $user_id );
+								foreach ( $bp_user->roles as $role ) {
+									// Remove role
+									$bp_user->remove_role( $role );
+								}
+								// Add role
+								$bp_user->add_role( $selected_member_type_wp_roles[0] );
+							}
+
+						} else {
+							// Assign the default member type to user.
+							bp_set_member_type( $user_id, '' );
+							bp_set_member_type( $user_id, $existing_selected );
+							$member_type_id = bp_member_type_post_by_type( $existing_selected );
+							$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+							if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+								$bp_user = new WP_User( $user_id );
+								foreach ( $bp_user->roles as $role ) {
+									// Remove role
+									$bp_user->remove_role( $role );
+								}
+								// Add role
+								$bp_user->add_role( $selected_member_type_wp_roles[0] );
+							}
+
+						}
+					}
+				// If user is not invited by send invites then assign default member type.
+				} else {
+
+					if ( '' !== $get_selected_member_type_on_register ) {
+						// Get selected profile type role.
+						$selected_member_type_wp_roles = get_post_meta( $get_selected_member_type_on_register, '_bp_member_type_wp_roles', true );
+						$type_name                = bp_get_member_type_key( $get_selected_member_type_on_register );
+
+						// Assign the default member type to user.
+						bp_set_member_type( $user_id, '' );
+						bp_set_member_type( $user_id, $type_name );
+
+						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+							$bp_user = new WP_User( $user_id );
+							foreach ( $bp_user->roles as $role ) {
+								// Remove role
+								$bp_user->remove_role( $role );
+							}
+							// Add role
+							$bp_user->add_role( $selected_member_type_wp_roles[0] );
+						}
+
+					} else {
+						// Assign the default member type to user.
+						bp_set_member_type( $user_id, '' );
+						bp_set_member_type( $user_id, $existing_selected );
+						$member_type_id = bp_member_type_post_by_type( $existing_selected );
+						$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+							$bp_user = new WP_User( $user_id );
+							foreach ( $bp_user->roles as $role ) {
+								// Remove role
+								$bp_user->remove_role( $role );
+							}
+							// Add role
+							$bp_user->add_role( $selected_member_type_wp_roles[0] );
+						}
+
+					}
+
+				}
+			} else {
+
+				if ( '' !== $get_selected_member_type_on_register ) {
+					// Get selected profile type role.
+					$selected_member_type_wp_roles = get_post_meta( $get_selected_member_type_on_register, '_bp_member_type_wp_roles', true );
+					$type_name                = bp_get_member_type_key( $get_selected_member_type_on_register );
+
+					// Assign the default member type to user.
 					bp_set_member_type( $user_id, '' );
-					bp_set_member_type( $user_id, $member_type );
+					bp_set_member_type( $user_id, $type_name );
+
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+						$bp_user = new WP_User( $user_id );
+						foreach ( $bp_user->roles as $role ) {
+							// Remove role
+							$bp_user->remove_role( $role );
+						}
+						// Add role
+						$bp_user->add_role( $selected_member_type_wp_roles[0] );
+					}
+
 				} else {
 					// Assign the default member type to user.
 					bp_set_member_type( $user_id, '' );
 					bp_set_member_type( $user_id, $existing_selected );
+
+					$member_type_id = bp_member_type_post_by_type( $existing_selected );
+					$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+						$bp_user = new WP_User( $user_id );
+						foreach ( $bp_user->roles as $role ) {
+							// Remove role
+							$bp_user->remove_role( $role );
+						}
+						// Add role
+						$bp_user->add_role( $selected_member_type_wp_roles[0] );
+					}
+
 				}
-				// If user is not invited by send invites then assign default member type.
-			} else {
-				// Assign the default member type to user.
-				bp_set_member_type( $user_id, '' );
-				bp_set_member_type( $user_id, $existing_selected );
+
 			}
-		} else {
-			// Assign the default member type to user.
-			bp_set_member_type( $user_id, '' );
-			bp_set_member_type( $user_id, $existing_selected );
+
 		}
 	}
 
@@ -4492,21 +4560,73 @@ function bp_assign_default_member_type_to_activate_user_on_admin( $user_id) {
 						// Assign the invited member type to user.
 						bp_set_member_type( $user_id, '' );
 						bp_set_member_type( $user_id, $member_type );
+
+						$member_type_id = bp_member_type_post_by_type( $member_type );
+						$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+							$bp_user = new WP_User( $user_id );
+							foreach ( $bp_user->roles as $role ) {
+								// Remove role
+								$bp_user->remove_role( $role );
+							}
+							// Add role
+							$bp_user->add_role( $selected_member_type_wp_roles[0] );
+						}
 					} else {
 						// Assign the default member type to user.
 						bp_set_member_type( $user_id, '' );
 						bp_set_member_type( $user_id, $existing_selected );
+
+						$member_type_id = bp_member_type_post_by_type( $existing_selected );
+						$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+							$bp_user = new WP_User( $user_id );
+							foreach ( $bp_user->roles as $role ) {
+								// Remove role
+								$bp_user->remove_role( $role );
+							}
+							// Add role
+							$bp_user->add_role( $selected_member_type_wp_roles[0] );
+						}
 					}
 					// If user is not invited by send invites then assign default member type.
 				} else {
 					// Assign the default member type to user.
 					bp_set_member_type( $user_id, '' );
 					bp_set_member_type( $user_id, $existing_selected );
+
+					$member_type_id = bp_member_type_post_by_type( $existing_selected );
+					$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+						$bp_user = new WP_User( $user_id );
+						foreach ( $bp_user->roles as $role ) {
+							// Remove role
+							$bp_user->remove_role( $role );
+						}
+						// Add role
+						$bp_user->add_role( $selected_member_type_wp_roles[0] );
+					}
 				}
 			} else {
 				// Assign the default member type to user.
 				bp_set_member_type( $user_id, '' );
 				bp_set_member_type( $user_id, $existing_selected );
+
+				$member_type_id = bp_member_type_post_by_type( $existing_selected );
+				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
+
+				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+					$bp_user = new WP_User( $user_id );
+					foreach ( $bp_user->roles as $role ) {
+						// Remove role
+						$bp_user->remove_role( $role );
+					}
+					// Add role
+					$bp_user->add_role( $selected_member_type_wp_roles[0] );
+				}
 			}
 		}
 	}
@@ -4601,6 +4721,20 @@ function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
 }
 
 /**
+ * Return the member type xprofile field id.
+ *
+ * @return string|null
+ */
+function bp_get_xprofile_member_type_field_id() {
+	global $wpdb;
+
+	$table = bp_core_get_table_prefix().'bp_xprofile_fields';
+	$get_parent_id_of_member_types_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE type = %s AND parent_id = %d ", 'membertypes', 0 ) );
+
+	return (int) $get_parent_id_of_member_types_field;
+}
+
+/**
  * Return the gender type xprofile field id.
  *
  * @return string|null
@@ -4613,3 +4747,54 @@ function bp_get_xprofile_gender_type_field_id() {
 
 	return (int) $get_parent_id_of_gender_types_field;
 }
+
+/**
+ * Sync the BP data based on the WP data via infusion soft API.
+ *
+ * @param $user_id
+ *
+ * @since BuddyBoss 1.1.5
+ */
+function bp_infusion_soft_sync_bp_data( $user_id ) {
+
+	if ( function_exists('iMember360') ) {
+
+		$first_name_id = (int) get_option( 'bp-xprofile-firstname-field-id' );
+		$nickname_id   = (int) get_option( 'bp-xprofile-nickname-field-id' );
+		$last_name_id  = (int) get_option( 'bp-xprofile-lastname-field-id' );
+
+		$xprofile_nick_name  = xprofile_get_field_data( $nickname_id, $user_id );
+		$xprofile_first_name = xprofile_get_field_data( $first_name_id, $user_id );
+		$xprofile_last_name  = xprofile_get_field_data( $last_name_id, $user_id );
+
+		if ( '' === $xprofile_first_name ) {
+			$result_first_name = get_user_meta( $user_id, 'first_name', true );
+			if ( empty( $result_first_name ) ) {
+				$result_first_name = get_user_meta( $user_id, 'nickname', true );
+			}
+			xprofile_set_field_data( $first_name_id, $user_id, $result_first_name );
+		}
+
+		if ( '' === trim( $xprofile_nick_name ) ) {
+			$user = get_userdata( $user_id );
+			// make sure nickname is valid
+			$nickname = get_user_meta( $user_id, 'nickname', true );
+			$nickname = sanitize_title( $nickname );
+			$invalid  = bp_xprofile_validate_nickname_value( '', $nickname_id, $nickname, $user_id );
+
+			// or use the user_nicename
+			if ( ! $nickname || $invalid ) {
+				$nickname = $user->user_nicename;
+			}
+			xprofile_set_field_data( $nickname_id, $user_id, $nickname );
+		}
+
+		if ( '' === $xprofile_last_name ) {
+			$result_last_name = get_user_meta( $user_id, 'last_name', true );
+			xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
+		}
+
+	}
+
+}
+add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );

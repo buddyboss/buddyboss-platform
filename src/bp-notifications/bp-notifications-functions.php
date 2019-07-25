@@ -793,3 +793,43 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 
 	return $retval;
 }
+
+/**
+* Gets all unread notifications
+*
+* @param array $response Array containing Heartbeat API response.
+* @param array $data     Array containing data for Heartbeat API response.
+* @return array $response
+*/
+function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
+	ob_start();
+		if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) 
+		{
+			while ( bp_the_notifications() ) : bp_the_notification();
+				bp_get_template_part( 'activity/notifs' );
+			endwhile;
+		}
+
+		$response['unread_notifs'] = ob_get_contents();
+	ob_end_clean();
+
+	ob_start();
+		bp_get_template_part( 'activity/unread-messages' );
+
+		$response['unread_messages'] = ob_get_contents();
+	ob_end_clean();
+
+	$total_notifs = 0;
+	$counts = bp_notifications_get_notifications_for_user(bp_loggedin_user_id(), 'object');
+
+	foreach ($counts as $count) {
+		$total_notifs += $count->total_count;
+	}
+
+	$response['msg_notifs'] =  messages_get_unread_count();
+	$response['total_notifs'] = $total_notifs;
+
+	return $response;
+}
+add_filter( 'heartbeat_received', 'bp_heartbeat_unread_notifs', 11, 2 );
+add_filter( 'heartbeat_nopriv_received', 'bp_heartbeat_unread_notifs', 11, 2 );

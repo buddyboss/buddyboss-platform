@@ -698,6 +698,11 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%s must be shorter than %d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
+	// Minimum of 4 characters.
+	if ( strlen( $value ) < 4 ) {
+		return sprintf( __( '%s must be at least 4 characters', 'buddyboss' ), $field_name );
+	}
+
 	global $wpdb;
 	$where = [
 		'meta_key = "nickname"',
@@ -797,7 +802,7 @@ function bp_xprofile_adjust_current_user_display_name() {
 	}
 
 	$name = empty( $current_user->display_name ) ? empty( $current_user->user_nicename ) ?  $current_user->user_login : $current_user->user_nicename : $current_user->display_name;
-	$display_name = bp_custom_display_name_format( $name, $current_user->ID );
+	$display_name = bp_core_get_member_display_name( $name, $current_user->ID );
 	$current_user->data->display_name = empty( $display_name ) ? $name : $display_name;
 }
 
@@ -811,7 +816,7 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 		return $null;
 	}
 
-	return bp_custom_display_name_format( $null, $object_id );
+	return bp_core_get_member_display_name( $null, $object_id );
 }
 
 /**
@@ -820,7 +825,7 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
-	return bp_custom_display_name_format( $display_name, $user_id );
+	return bp_core_get_member_display_name( $display_name, $user_id );
 }
 
 /**
@@ -829,7 +834,12 @@ function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_adjust_display_user_display_name( $userdata ) {
-	$userdata->display_name = bp_custom_display_name_format( $userdata->display_name, $userdata->ID );
+	// Profile Fields.
+	$active_components = bp_get_option( 'bp-active-components' );
+	if ( ! empty( $active_components['xprofile'] ) ) {
+		$userdata->display_name = bp_core_get_member_display_name( $userdata->display_name, $userdata->ID );
+	}
+
 	return $userdata;
 }
 
@@ -849,7 +859,7 @@ function bp_xprofile_replace_username_to_display_name( $email_content, $user = n
 
 	return str_replace(
 		'###USERNAME###',
-		bp_custom_display_name_format( $user['display_name'], $user['ID'] ),
+		bp_core_get_member_display_name( $user['display_name'], $user['ID'] ),
 		$email_content
 	);
 }
@@ -890,7 +900,7 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 		}
 	}
 
-	$providers = social_network_provider();
+	$providers = bp_xprofile_social_network_provider();
 	foreach ( $value as $k => $v ) {
 		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL) ) {
 

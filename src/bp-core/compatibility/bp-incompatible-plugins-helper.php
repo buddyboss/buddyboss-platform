@@ -33,32 +33,6 @@ function bp_helper_plugins_loaded_callback() {
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
 
 /**
- * Filter hook when BuddyBoss Platform menu is created
- *
- * Support WPML Multilingual CMS
- */
-function bp_helper_create_nav_link_for_wpml( $args ) {
-	global $bp_plugins;
-	if (
-		in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins )
-		&& isset( $args['slug'] )
-		&& (
-			$args['slug'] == bp_get_option( '_bbp_root_slug', BP_FORUMS_SLUG )
-			|| ( function_exists( 'bp_get_groups_slug' ) && $args['slug'] == bp_get_groups_slug() )
-			|| ( function_exists( 'bp_get_media_slug' ) && $args['slug'] == bp_get_media_slug() )
-		)
-	) {
-		$args['link']                = trailingslashit( bp_loggedin_user_domain() . $args['slug'] ) . $args['default_subnav_slug'] . '/';
-		$args['default_subnav_slug'] = false;
-	}
-
-	return $args;
-}
-
-add_filter( 'bp_core_create_nav_link', 'bp_helper_create_nav_link_for_wpml' );
-
-
-/**
  * On BuddyPress update
  *
  * @since BuddyBoss 1.0.9

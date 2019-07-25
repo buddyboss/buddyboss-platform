@@ -47,7 +47,7 @@ function bp_nouveau_search_enqueue_scripts() {
 		'ajaxurl'               => admin_url( 'admin-ajax.php', is_ssl() ? 'admin' : 'http' ),
 		//'search_url'    => home_url( '/' ), Now we are using form[role='search'] selector
 		'loading_msg'           => __( "Loading Suggestions", "buddyboss" ),
-		'enable_ajax_search'    => bp_is_search_autotcomplete_enable(),
+		'enable_ajax_search'    => ( function_exists( 'bp_is_active' ) && bp_is_active( 'search' ) && function_exists( 'bp_is_search_autotcomplete_enable' ) ) ? bp_is_search_autotcomplete_enable() : false,
 		'per_page'              => bp_search_get_form_option( 'bp_search_number_of_results', 5 ),
 		'autocomplete_selector' => "form[role='search'], form.search-form, form.searchform, form#adminbarsearch, .bp-search-form>#search-form",
 		'form_selector'         => '',

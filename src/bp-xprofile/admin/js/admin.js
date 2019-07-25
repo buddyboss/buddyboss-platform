@@ -169,6 +169,62 @@ function show_options( forWhat ) {
 				}
 			}
 		});
+	} else if( forWhat === 'membertypes' ) {
+		jQuery.ajax({
+			url : ajaxurl,
+			type : 'post',
+			data : {
+				action : 'xprofile_check_member_type_added_previously',
+				type   : 'membertypes',
+				referer: jQuery('#bp-xprofile-add-field').find('input[name="_wp_http_referer"]').val()
+			},
+			success : function( response ) {
+				var result = jQuery.parseJSON( response );
+
+				if ( 'added' === result.status ) {
+					alert( result.message );
+					jQuery('#fieldtype').val('');
+					jQuery('#fieldtype').val('textbox');
+					forWhat = 'textbox';
+					for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				} else {
+					for ( i = 0; i < XProfileAdmin.do_settings_section_field_types.length; i++ ) {
+						document.getElementById( XProfileAdmin.do_settings_section_field_types[i] ).style.display = 'none';
+					}
+
+					if ( XProfileAdmin.do_settings_section_field_types.indexOf( forWhat ) >= 0 ) {
+						document.getElementById( forWhat ).style.display = '';
+						do_autolink = 'on';
+					} else {
+						jQuery( '#do-autolink' ).val( '' );
+						do_autolink = '';
+					}
+
+					// Only overwrite the do_autolink setting if no setting is saved in the database.
+					if ( '' === XProfileAdmin.do_autolink ) {
+						jQuery( '#do-autolink' ).val( do_autolink );
+					}
+					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
+				}
+			}
+		});
 	} else if( forWhat === 'socialnetworks' ) {
 		jQuery.ajax({
 			url : ajaxurl,

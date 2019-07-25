@@ -927,7 +927,7 @@ class BP_XProfile_Field {
 	 * @return bool|null|string
 	 */
 	public static function get_type( $field_id = 0 ) {
-		global $wpdb, $bp;
+		global $wpdb;
 
 		// Bail if no field ID.
 		if ( empty( $field_id ) ) {
@@ -1299,7 +1299,7 @@ class BP_XProfile_Field {
 					'page'     => 'bp-profile-setup',
 					'mode'     => 'add_field',
 					'group_id' => (int) $this->group_id
-				), $users_url . '#tabs-' . (int) $this->group_id );
+				), $users_url );
 
 				?>
 

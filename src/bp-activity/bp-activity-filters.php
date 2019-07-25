@@ -720,27 +720,6 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 add_filter( 'heartbeat_received', 'bp_activity_heartbeat_last_recorded', 10, 2 );
 add_filter( 'heartbeat_nopriv_received', 'bp_activity_heartbeat_last_recorded', 10, 2 );
 
-function bp_activity_heartbeat_unread_notifs( $response = array(), $data = array() ) {
-	if ( empty( $data['bp_activity_last_recorded'] ) ) {
-		return $response;
-	}
-	
-	ob_start();
-	
-	if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) 
-	{
-		while ( bp_the_notifications() ) : bp_the_notification();
-			bp_get_template_part( 'activity/notifs' );
-		endwhile;
-	}
-
-	$response['unread_notifs'] = ob_get_contents();
-	ob_end_clean();
-
-	return $response;
-}
-add_filter( 'heartbeat_received', 'bp_activity_heartbeat_unread_notifs', 10, 2 );
-add_filter( 'heartbeat_nopriv_received', 'bp_activity_heartbeat_unread_notifs', 10, 2 );
 /**
  * Set the strings for WP HeartBeat API where needed.
  *

@@ -346,5 +346,6 @@ function bp_ps_clear_form_elements( ele ) {
 	} );
 
 	jQuery.removeCookie( 'bp_ps_request', {path: '/'} );
-	$form.find( '.submit' ).trigger( 'click' );
+	// $form.find( '.submit' ).trigger( 'click' );
+	window.location = window.location.href;
 }

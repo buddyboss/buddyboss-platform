@@ -53,8 +53,32 @@ function bp_ps_set_request ()
 		$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_request');
 		if ($_REQUEST[BP_PS_FORM] != 'clear')
 		{
-			$_REQUEST['bp_ps_directory'] = bp_ps_current_page ();
-			setcookie ($cookie, http_build_query ($_REQUEST), 0, COOKIEPATH);
+			$filtered_request = array_filter($_REQUEST);
+			
+			// removing arrays with empty value
+			foreach ($filtered_request as $key => $value) {
+				if(! is_array($value)) continue;
+
+				foreach ($value as $subfields) {
+					if(! is_array($subfields)) continue;
+				
+					$subfield_checker = [];
+
+					foreach ($subfields as $subfield) {
+						if(empty($subfield)) continue;
+
+						$subfield_checker[] = $subfield;
+					}
+				}
+
+				if(empty($subfield_checker)){
+					unset($filtered_request[$key]);
+				}
+			}
+
+			$filtered_request['bp_ps_directory'] = bp_ps_current_page ();
+
+			setcookie ($cookie, http_build_query ($filtered_request), 0, COOKIEPATH);
 		}
 		else
 		{

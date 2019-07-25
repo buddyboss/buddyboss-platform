@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.3
+Stable tag: 1.1.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,10 +55,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.1.4 =
+* Profiles - Fixed issue with member profile recognizing existing Profile Type
+* Forums - Improved database query performance for Forums component
+* Forums - Removed non-functional Edit and Merge links from some forum roles
+* Errors - Fixed various PHP errors in certain situations
+
 = 1.1.3 =
+* Profiles - Allow users to self-select 'Profile Type' via new profile field
+* Activity - Fixed issue with commenting on activity after clicking 'Load More' multiple times
 * Activity - Fixed media posted in activity feed not always displaying
 * Activity - Fixed photos added to group feed not displaying in group photos tab
-* Activity - Fixed 'Read more' link appending media into the content
+* Activity - Fixed clicking 'Read more' link hiding the media attachment
+* Messages - Fixed members without First Name displaying in messages as 'Deleted User'
+* Groups - Status button said "You're an Member" instead of "You're a Member"
+* Compatibility - Allow 'Events Manager' and other plugins to activate properly with Platform
+* Migration - Fixed 'Nickname' field not displaying after migrating from BuddyPress 
+* Errors - Fixed various PHP errors in certain situations
 
 = 1.1.2 =
 * Activity - Fixed media popup showing no image with Groups component enabled

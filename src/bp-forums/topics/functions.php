@@ -3380,7 +3380,7 @@ function bbp_topic_content_autoembed() {
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
 		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
-		add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
+		//add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}
 }
 
