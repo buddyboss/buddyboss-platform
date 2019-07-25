@@ -37,6 +37,18 @@
 		padding-top: 42.56%;
 		overflow: hidden;
 
+		.bb-media-length-1 & {
+			padding-top: 42.56%;
+		}
+
+		.bb-media-length-2 & {
+			padding-top: 72.56%;
+		}
+
+		.bb-media-length-3 &.act-grid-1-1 {
+			padding-top: 52.56%;
+		}
+
 		img {
 			position: absolute;
 			top: 0;
@@ -74,21 +86,6 @@
 			font-weight: 400;
 			margin-bottom: 10px;
 		}
-	}
-}
-
-.bb-activity-media-elem .entry-img {
-
-	.bb-media-length-1 & {
-		padding-top: 42.56%;
-	}
-
-	.bb-media-length-2 & {
-		padding-top: 72.56%;
-	}
-
-	.bb-media-length-3 &.act-grid-1-1 {
-		padding-top: 52.56%;
 	}
 }
 
