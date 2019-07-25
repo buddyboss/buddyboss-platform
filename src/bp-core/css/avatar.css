@@ -93,22 +93,22 @@ div.bp-avatar-nav {
 	text-decoration: none;
 }
 
-.bp-avatar-nav	ul:before,
-.bp-avatar-nav	ul:after {
+.bp-avatar-nav ul::before,
+.bp-avatar-nav ul::after {
 	content: " ";
 	display: table;
 }
 
-.bp-avatar-nav	ul:after {
+.bp-avatar-nav ul::after {
 	clear: both;
 }
 
-.bp-avatar-nav	ul {
+.bp-avatar-nav ul {
 	border-bottom: 1px solid #ccc;
 	margin-bottom: 10px;
 }
 
-.bp-avatar-nav	ul.avatar-nav-items li.current {
+.bp-avatar-nav ul.avatar-nav-items li.current {
 	border: 1px solid #ccc;
 	border-bottom-color: #fff;
 	border-top-left-radius: 4px;
@@ -116,7 +116,7 @@ div.bp-avatar-nav {
 	margin-bottom: -1px;
 }
 
-.bp-avatar-nav	li.current a {
+.bp-avatar-nav li.current a {
 	background: none;
 	color: inherit;
 	font-weight: 700;
