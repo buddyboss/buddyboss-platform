@@ -814,15 +814,8 @@ function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
 		$response['unread_messages'] = ob_get_contents();
 	ob_end_clean();
 
-	$total_notifs = 0;
-	$counts = bp_notifications_get_notifications_for_user(bp_loggedin_user_id(), 'object');
-
-	foreach ($counts as $count) {
-		$total_notifs += $count->total_count;
-	}
-
 	$response['msg_notifs'] =  messages_get_unread_count();
-	$response['total_notifs'] = $total_notifs;
+	$response['total_notifs'] = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 
 	return $response;
 }
