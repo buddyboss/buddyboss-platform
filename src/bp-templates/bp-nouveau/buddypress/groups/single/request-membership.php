@@ -11,9 +11,9 @@ bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
 <?php if ( ! bp_group_has_requested_membership() ) : ?>
 	<p>
 		<?php
-		esc_html_e(
+		printf(
+			'%s',
 			sprintf(
-				/* translators: %s = group name */
 				__( 'You are requesting to become a member of the group "%s".', 'buddyboss' ),
 				bp_get_group_name()
 			)
