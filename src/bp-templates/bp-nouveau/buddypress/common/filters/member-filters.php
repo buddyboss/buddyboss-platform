@@ -23,18 +23,15 @@ foreach ( $member_types as $member_type_id ) {
 		continue;
 	}
 
-	$type_name = bp_get_member_type_key( $member_type_id );
-	$type_id = bp_member_type_term_taxonomy_id( $type_name );
-	$members_count = count(  bp_member_type_by_type( $type_id ));
-	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+	$type_name        = bp_get_member_type_key( $member_type_id );
+	$type_id          = bp_member_type_term_taxonomy_id( $type_name );
+	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 
-	if ( !empty( $type_id ) ) {
-		$display_arr[] = array(
-			'id' => $type_id,
-			'member_type_id' => $member_type_id,
-			'name' => $member_type_name,
-		);
-	}
+	$display_arr[] = array(
+		'id' => $type_id,
+		'member_type_id' => $member_type_id,
+		'name' => $member_type_name,
+	);
 
 }
 
