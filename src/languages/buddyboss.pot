@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-07-23 09:38:43+00:00\n"
+"POT-Creation-Date: 2019-07-25 09:07:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15388,8 +15388,11 @@ msgstr ""
 msgid "Group menu"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/groups/single/request-membership.php:17
+msgid "You are requesting to become a member of the group \"%s\"."
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/groups/single/request-membership.php:30
-#. translators: %s = group name
 msgid "Send Request"
 msgstr ""
 

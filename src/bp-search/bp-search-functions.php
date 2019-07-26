@@ -588,3 +588,78 @@ function bp_search_get_total_quizzes_count( $lesson_id ) {
 function bp_search_is_search() {
 	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
 }
+
+if( in_array('geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
+	function bps_get_request( $type, $form = 0 ) {
+		$current        = bps_current_page();
+		$hidden_filters = bps_get_hidden_filters();
+
+		$cookie  = apply_filters( 'bps_cookie_name', 'bps_request' );
+		$request = isset ( $_REQUEST[ 'bps_form' ] ) ? $_REQUEST : array();
+		if ( empty ( $request ) && isset ( $_COOKIE[ $cookie ] ) ) {
+			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+		}
+
+		switch ( $type ) {
+			case 'form':
+				if ( isset ( $request[ 'bps_form' ] ) && $request[ 'bps_form' ] != $form ) {
+					$request = array();
+				}
+				break;
+
+			case 'filters':
+				if ( isset ( $request['bps_directory'] ) && $request['bps_directory'] != $current ) {
+					$request = array();
+				}
+				foreach ( $hidden_filters as $key => $value ) {
+					unset ( $request[ $key ] );
+				}
+				break;
+
+			case 'search':
+				if ( isset ( $request['bps_directory'] ) && $request['bps_directory'] != $current ) {
+					$request = array();
+				}
+				foreach ( $hidden_filters as $key => $value ) {
+					$request[ $key ] = $value;
+				}
+				break;
+		}
+
+		return apply_filters( 'bps_request', $request, $type, $form );
+	}
+
+	function bps_current_page() {
+		$current = defined( 'DOING_AJAX' ) ? parse_url( $_SERVER['HTTP_REFERER'],
+			PHP_URL_PATH ) : parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+
+		return apply_filters( 'bps_current_page', $current );        // published interface, 20190324
+	}
+
+	function bps_get_hidden_filters() {
+		$data = bps_get_directory_data();
+		unset ( $data['page'], $data['template'], $data['ajax_template'], $data['show'], $data['order_by'] );
+
+		return apply_filters( 'bps_hidden_filters', $data );
+	}
+
+	function bps_get_directory_data() {
+		global $bps_directory_data;
+
+		$data   = array();
+		$cookie = apply_filters( 'bps_cookie_name', 'bps_directory' );
+
+		if ( ! defined( 'DOING_AJAX' ) ) {
+			$data = isset ( $bps_directory_data ) ? $bps_directory_data : array();
+		} elseif ( isset ( $_COOKIE[ $cookie ] ) ) {
+			$current = bps_current_page();
+			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $data );
+			if ( $data['page'] != $current ) {
+				$data = array();
+			}
+		}
+
+		return apply_filters( 'bps_directory_data', $data );
+	}
+}
