@@ -9352,6 +9352,18 @@ body.login .login-popup .mfp-close:hover {
   overflow: hidden;
 }
 
+.bb-media-length-1 .bb-activity-media-elem .entry-img {
+  padding-top: 42.56%;
+}
+
+.bb-media-length-2 .bb-activity-media-elem .entry-img {
+  padding-top: 72.56%;
+}
+
+.bb-media-length-3 .bb-activity-media-elem .entry-img.act-grid-1-1 {
+  padding-top: 52.56%;
+}
+
 .bb-activity-media-elem .entry-img img {
   position: absolute;
   top: 0;
@@ -9388,18 +9400,6 @@ body.login .login-popup .mfp-close:hover {
   font-size: 28px;
   font-weight: 400;
   margin-bottom: 10px;
-}
-
-.bb-media-length-1 .bb-activity-media-elem .entry-img {
-  padding-top: 42.56%;
-}
-
-.bb-media-length-2 .bb-activity-media-elem .entry-img {
-  padding-top: 72.56%;
-}
-
-.bb-media-length-3 .bb-activity-media-elem .entry-img.act-grid-1-1 {
-  padding-top: 52.56%;
 }
 
 .bb-media-length-4 .act-grid-1-2 {
