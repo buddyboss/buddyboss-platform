@@ -230,7 +230,13 @@ function bp_nouveau_activity_state() {
         </a>
         <span class="ac-state-separator">&middot;</span>
 		<a href="#" class="activity-state-comments">
-			<span class="comments-count"><?php echo sprintf( _n( '%s Comment', '%s Comments', $comment_count, 'buddyboss' ), $comment_count ); ?></span>
+			<span class="comments-count">
+                <?php if ( $comment_count > 1 ) {
+                    echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+                } else {
+	                echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+                } ?>
+            </span>
 		</a>
 	</div>
 	<?php
