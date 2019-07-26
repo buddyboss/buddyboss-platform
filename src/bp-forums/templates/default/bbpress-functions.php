@@ -206,7 +206,7 @@ class BBP_Default extends BBP_Theme_Compat {
 	/**
 	 * Localize scripts for Media component for forums
      *
-     * @since BuddyBoss 1.1.6
+     * @since BuddyBoss 1.1.5
 	 */
 	function media_localize_script() {
 
