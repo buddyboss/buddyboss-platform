@@ -893,12 +893,22 @@ function bp_has_albums( $args = '' ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
-	$privacy  = array( 'public' );
+	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
-			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-			if( $is_friend ) {
+
+			// get the login user id.
+			$current_user_id = get_current_user_id();
+
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, $user_id );
+
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
 				$privacy[] = 'friends';
 			}
 		}
