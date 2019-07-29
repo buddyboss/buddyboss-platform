@@ -32,12 +32,12 @@
 								<?php $recipient_name = bp_core_get_user_displayname( $recipient->user_id ); ?>
 
 								<?php if ( empty( $recipient_name ) ) : ?>
-									<?php $recipient_name = __( 'Deleted User', 'buddyboss-theme' ); ?>
+									<?php $recipient_name = __( 'Deleted User', 'buddyboss' ); ?>
 								<?php endif; ?>
 
 								<?php $recipient_names[] = $recipient_name; ?>
 							<?php else : ?>
-								<?php $recipient_names[] = __( 'you', 'buddyboss-theme' ); ?>
+								<?php $recipient_names[] = __( 'you', 'buddyboss' ); ?>
 							<?php endif; ?>
 						<?php endforeach; ?>
 
@@ -58,9 +58,9 @@
                                 <?php $media_ids = explode( ',', $media_ids ); ?>
                                 
                                 <?php if ( sizeof( $media_ids ) < 2 ) : ?>
-	                                <?php $exerpt = __( 'sent a photo', 'buddyboss-theme' ); ?>
+	                                <?php $exerpt = __( 'sent a photo', 'buddyboss' ); ?>
                                 <?php else : ?>
-	                                <?php $exerpt = __( 'sent some photos', 'buddyboss-theme' ); ?>
+	                                <?php $exerpt = __( 'sent some photos', 'buddyboss' ); ?>
                                 <?php endif; ?>
                            <?php endif; ?>
                         <?php endif; ?>
@@ -69,7 +69,7 @@
                             <?php $gif_data = bp_messages_get_meta( $last_message_id, '_gif_data', true ); ?>
 
                             <?php if ( ! empty( $gif_data ) ) : ?>
-                                <?php $exerpt = __( 'sent a gif', 'buddyboss-theme' ); ?>
+                                <?php $exerpt = __( 'sent a gif', 'buddyboss' ); ?>
                             <?php endif; ?>
                         <?php endif; ?>
                     <?php endif; ?>
@@ -81,6 +81,6 @@
 	<?php endwhile; ?>
 <?php else : ?>
     <li class="bs-item-wrap">
-        <div class="notification-content"><?php _e( 'No new messages', 'buddyboss-theme' ); ?>!</div>
+        <div class="notification-content"><?php _e( 'No new messages', 'buddyboss' ); ?>!</div>
     </li>
  <?php endif; ?>
