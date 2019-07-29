@@ -671,11 +671,17 @@ function bp_core_fetch_avatar( $args = '' ) {
 		if ( isset( $url_args['d'] ) && 'blank' === $url_args['d'] ) {
 			$gravatar = apply_filters( 'bp_discussion_blank_option_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 		} elseif ( isset( $url_args['d'] ) && 'mm' === $url_args['d'] ) {
-			$gravcheck = "https://www.gravatar.com/avatar/".md5( strtolower( $params['email'] ) )."?d=404";
-			$response = get_headers($gravcheck);
+			$key      = base64_encode( "https://www.gravatar.com/avatar/" . md5( strtolower( $params['email'] ) ) . "?d=404" );
+			$response = get_transient( $key );
+			if ( false === $response ) {
+				$gravcheck = "https://www.gravatar.com/avatar/" . md5( strtolower( $params['email'] ) ) . "?d=404";
+				$response  = get_headers( $gravcheck );
+				set_transient( $key, $response, DAY_IN_SECONDS );
+			}
 			if ( isset( $response[0] ) && $response[0] == "HTTP/1.1 404 Not Found"){
 				$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 			} else {
+
 				// Set up the Gravatar URL.
 				$gravatar = esc_url( add_query_arg(
 					rawurlencode_deep( array_filter( $url_args ) ),
