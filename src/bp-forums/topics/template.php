@@ -161,7 +161,9 @@ function bbp_has_topics( $args = '' ) {
 	);
 
 	/**
-	 * Set the post parent in if this function is called from the Forum archive page
+     * if this function is called from the Forum archive page
+	 * Set the post_parent__in args
+     *
 	 */
 	if ( bbp_is_forum_archive() && bbp_has_forums() ) {
 		while ( bbp_forums() ) {
