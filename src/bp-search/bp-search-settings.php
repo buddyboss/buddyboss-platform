@@ -337,7 +337,7 @@ function bp_search_settings_callback_autocomplete() {
 	?>
 
 	<input name="bp_search_autocomplete" id="bp_search_autocomplete" type="checkbox" value="1"
-		<?php checked( bp_is_search_autotcomplete_enable( true ) ) ?> />
+		<?php checked( bp_is_search_autocomplete_enable( true ) ); ?> />
 	<label
 		for="bp_search_autocomplete"><?php esc_html_e( 'Enable autocomplete dropdown when typing into search inputs.', 'buddyboss' ); ?></label>
 
@@ -354,8 +354,8 @@ function bp_search_settings_callback_autocomplete() {
  * @uses get_option() To get the bp_search_autocomplete option
  * @return bool Is search autocomplete enabled or not
  */
-function bp_is_search_autotcomplete_enable( $default = 1 ) {
-	return (bool) apply_filters( 'bp_is_search_autotcomplete_enable', (bool) get_option( 'bp_search_autocomplete', $default ) );
+function bp_is_search_autocomplete_enable( $default = 1 ) {
+	return (bool) apply_filters( 'bp_is_search_autocomplete_enable', (bool) get_option( 'bp_search_autocomplete', $default ) );
 }
 
 /**

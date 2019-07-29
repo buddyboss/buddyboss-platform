@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-07-25 08:29:49+00:00\n"
+"POT-Creation-Date: 2019-07-25 09:07:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -372,9 +372,9 @@ msgstr ""
 #: bp-forums/admin/replies.php:745 bp-forums/admin/topics.php:808
 #: bp-forums/classes/class-bbpress.php:534 bp-forums/replies/template.php:2106
 #: bp-forums/topics/functions.php:1966 bp-forums/topics/template.php:2873
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:535
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:541
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:865
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:547
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:871
 msgid "Spam"
 msgstr ""
 
@@ -508,7 +508,7 @@ msgstr ""
 #: bp-forums/replies/template.php:48 bp-forums/replies/template.php:1622
 #: bp-forums/topics/template.php:2922
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:369
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:824
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:830
 #. translators: accessibility text
 msgid "Reply"
 msgstr ""
@@ -877,9 +877,9 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:783
 #: bp-notifications/bp-notifications-template.php:1029
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:485
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:486
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:838
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:491
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:492
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:844
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:846
@@ -1211,6 +1211,7 @@ msgid "New post comment posted"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:140
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:235
 msgid "Comments"
 msgstr ""
 
@@ -5899,8 +5900,9 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-activity-export.php:70
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:22
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:428
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:429
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:237
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:434
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:435
 msgid "Comment"
 msgstr ""
 
@@ -15386,8 +15388,11 @@ msgstr ""
 msgid "Group menu"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/groups/single/request-membership.php:17
+msgid "You are requesting to become a member of the group \"%s\"."
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/groups/single/request-membership.php:30
-#. translators: %s = group name
 msgid "Send Request"
 msgstr ""
 
@@ -15770,8 +15775,8 @@ msgid "and you."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/message.php:19
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:390
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:395
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:396
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:401
 msgid "View Conversation"
 msgstr ""
 
@@ -15847,7 +15852,7 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:106
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:347
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:353
 msgid "Unlike"
 msgstr ""
 
@@ -15856,7 +15861,7 @@ msgid "Liked"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:150
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:335
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:341
 msgid "Like"
 msgstr ""
 
@@ -15963,13 +15968,7 @@ msgstr ""
 msgid "New update comment replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:233
-msgid "%s Comment"
-msgid_plural "%s Comments"
-msgstr[0] ""
-msgstr[1] ""
-
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:715
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:721
 #. translators: 1: user profile link, 2: user name, 3: activity permalink, 4:
 #. activity recorded date, 5: activity timestamp, 6: activity human time since
 msgid ""

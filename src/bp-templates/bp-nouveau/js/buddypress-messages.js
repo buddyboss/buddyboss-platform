@@ -1430,7 +1430,8 @@ window.bp = window.bp || {};
 
 			if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) == target.innerHeight() &&
 				this.collection.length &&
-				this.collection.options.page < this.collection.options.total_page
+				this.collection.options.page < this.collection.options.total_page &&
+				! target.find('.bp-user-messages-loading').length
 			) {
 				this.collection.options.page = this.collection.options.page + 1;
 
