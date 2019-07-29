@@ -166,11 +166,12 @@ function bbp_has_topics( $args = '' ) {
      *
 	 */
 	if ( bbp_is_forum_archive() && bbp_has_forums() ) {
+		$parents = array();
 		while ( bbp_forums() ) {
 			bbp_the_forum();
-			$parent__in[] = bbp_get_forum_id();
+			$parents[] = bbp_get_forum_id();
 		}
-		$default['post_parent__in'] = $parent__in;
+		$default['post_parent__in'] = $parents;
 	}
 
 	// What are the default allowed statuses (based on user caps)
