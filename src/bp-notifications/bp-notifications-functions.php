@@ -802,21 +802,25 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 * @return array $response
 */
 function bp_heartbeat_unread_notifs( $response = array(), $data = array() ) {
-	ob_start();
-		bp_get_template_part( 'activity/notifs' );
+	$show_notifications = buddyboss_theme_get_option( 'notifications' );
+	
+	if( $show_notifications && function_exists( 'bp_is_active' ) && bp_is_active( 'notifications' ) && bp_loggedin_user_id() ) {
+		ob_start();
+			bp_get_template_part( 'members/notifications' );
 
-		$response['unread_notifs'] = ob_get_contents();
-	ob_end_clean();
+			$response['unread_notifs'] = ob_get_contents();
+		ob_end_clean();
 
-	ob_start();
-		bp_get_template_part( 'activity/unread-messages' );
+		ob_start();
+			bp_get_template_part( 'members/messages-notifications' );
 
-		$response['unread_messages'] = ob_get_contents();
-	ob_end_clean();
+			$response['unread_messages'] = ob_get_contents();
+		ob_end_clean();
 
-	$response['msg_notifs'] =  messages_get_unread_count();
-	$response['total_notifs'] = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
-
+		$response['msg_notifs'] =  messages_get_unread_count();
+		$response['total_notifs'] = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
+	}
+	
 	return $response;
 }
 add_filter( 'heartbeat_received', 'bp_heartbeat_unread_notifs', 11, 2 );
