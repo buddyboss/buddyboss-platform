@@ -74,7 +74,7 @@
                         <?php endif; ?>
                     <?php endif; ?>
 
-                    <?php echo bp_core_get_user_displayname( $messages_template->thread->last_sender_id ); ?>: <?php echo $exerpt; ?>
+                    <?php echo bp_core_get_user_displayname( $messages_template->thread->last_sender_id ); ?>: <?php echo stripslashes_deep($exerpt); ?>
                 </span>
             </div>
         </li>
