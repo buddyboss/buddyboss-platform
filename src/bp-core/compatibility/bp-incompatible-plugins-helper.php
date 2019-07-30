@@ -61,8 +61,7 @@ function bp_helper_plugins_loaded_callback() {
 function bp_helper_bp_power_seo_notice() {
 	?>
 	<div id="message" class="error notice">
-		<p><strong><?php esc_html_e( 'Menu remove from the Plugin Dashboard Page.', 'buddyboss' ); ?></strong></p>
-		<p><?php printf( esc_html__( 'To add support for BuddyPress Power SEO in BuddyBoss Platform we have to remove the menu bar from plugin dashboard page.', 'buddyboss' ) ); ?></p>
+		<p><?php printf( __( 'To add support for <strong>BuddyPress Power SEO</strong> plugin in BuddyBoss Platform, we have to disable the admin bar from the plugins page.', 'buddyboss' ) ); ?></p>
 	</div>
 	<?php
 }
