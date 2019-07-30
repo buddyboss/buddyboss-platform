@@ -94,6 +94,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'nick-name-options display-options';
 		$this->add_field( 'bp-hide-nickname-last-name', __( '', 'buddyboss' ), 'bp_admin_setting_callback_nickname_hide_last_name', 'intval', $args );
 
+		// Profile sync setting.
+		$this->add_field( 'bp-disable-profile-sync',   __( 'Profile Name Syncing',  'buddyboss' ), 'bp_admin_setting_callback_profile_sync', 'intval' );
+
 		// Profile Names Tutorial
 		$this->add_field( 'bp-profile-names-tutorial','', 'bp_profile_names_tutorial' );
 

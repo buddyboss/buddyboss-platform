@@ -968,3 +968,18 @@ function bp_profile_names_tutorial() {
 
 	<?php
 }
+
+/**
+ * Enable BP->WP profile syncing field.
+ *
+ * @since BuddyPress 1.6.0
+ *
+ */
+function bp_admin_setting_callback_profile_sync() {
+	?>
+
+	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
+	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyPress to WordPress profile syncing', 'buddyboss' ); ?></label>
+
+	<?php
+}
