@@ -83,6 +83,7 @@ class BP_Media_Component extends BP_Component {
 			'template',
 			'functions',
 			'settings',
+			'cache'
 		);
 
 		if ( class_exists( 'BP_Media_Rotation' ) ) {
