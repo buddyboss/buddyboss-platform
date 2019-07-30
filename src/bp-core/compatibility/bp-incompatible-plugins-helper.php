@@ -63,6 +63,11 @@ function bp_helper_bp_power_seo_notice() {
 	<div id="message" class="error notice">
 		<p><?php printf( __( 'To add support for <strong>BuddyPress Power SEO</strong> plugin in BuddyBoss Platform, we have to disable the admin bar from the plugins page.', 'buddyboss' ) ); ?></p>
 	</div>
+	<style type="text/css">
+		html.wp-toolbar {
+			padding-top: 0 !important;
+		}
+	</style>
 	<?php
 }
 
