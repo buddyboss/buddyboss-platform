@@ -19,15 +19,52 @@ remove_action( 'bp_include', 'bp_follow_init' );
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
 /**
- * Include plugin when plugin is activated
+ * Run when init hook is called
  *
- * Support Rank Math SEO
+ * @since BuddyBoss 1.1.0
  */
 function bp_helper_plugins_loaded_callback() {
 	global $bp_plugins;
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Rank Math SEO
+	 */
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
 		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
 	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support BP Power SEO
+	 */
+	if ( in_array( 'bp-power-seo/bp-power-seo.php', $bp_plugins ) ) {
+		if ( is_network_admin()
+		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false
+		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false
+		) {
+			remove_all_actions( 'admin_init' );
+			add_action( 'admin_notices', 'bp_helperbp_power_seo_notice' );
+			add_action( 'network_admin_notices', 'bp_helperbp_power_seo_notice' );
+		}
+	}
+
+}
+
+/**
+ * Display message when user is on plugin dashboard page and BP Power SEO plugin is activated
+ *
+ * @since BuddyBoss 1.1.5
+ */
+function bp_helperbp_power_seo_notice() {
+	?>
+	<div id="message" class="error notice">
+		<p><strong><?php esc_html_e( 'Menu remove from the Plugin Dashboard Page.', 'buddyboss' ); ?></strong></p>
+		<p><?php printf( esc_html__( 'To add support for BuddyPress Power SEO in BuddyBoss Platform we have to remove the menu bar from plugin dashboard page.', 'buddyboss' ) ); ?></p>
+	</div>
+	<?php
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
