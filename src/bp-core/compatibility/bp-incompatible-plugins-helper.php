@@ -46,8 +46,8 @@ function bp_helper_plugins_loaded_callback() {
 		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false
 		) {
 			remove_all_actions( 'admin_init' );
-			add_action( 'admin_notices', 'bp_helperbp_power_seo_notice' );
-			add_action( 'network_admin_notices', 'bp_helperbp_power_seo_notice' );
+			add_action( 'admin_notices', 'bp_helper_bp_power_seo_notice' );
+			add_action( 'network_admin_notices', 'bp_helper_bp_power_seo_notice' );
 		}
 	}
 
@@ -58,7 +58,7 @@ function bp_helper_plugins_loaded_callback() {
  *
  * @since BuddyBoss 1.1.5
  */
-function bp_helperbp_power_seo_notice() {
+function bp_helper_bp_power_seo_notice() {
 	?>
 	<div id="message" class="error notice">
 		<p><strong><?php esc_html_e( 'Menu remove from the Plugin Dashboard Page.', 'buddyboss' ); ?></strong></p>
