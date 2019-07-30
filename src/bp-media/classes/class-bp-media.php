@@ -582,15 +582,15 @@ class BP_Media {
 				$media->activity_id   = (int) $media->activity_id;
 				$media->group_id      = (int) $media->group_id;
 				$media->menu_order    = (int) $media->menu_order;
-
-				//fetch attachment data
-				$attachment_data                 = new stdClass();
-				$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
-				$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
-				$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
-				$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
-				$media->attachment_data          = $attachment_data;
 			}
+
+			//fetch attachment data
+			$attachment_data                 = new stdClass();
+			$attachment_data->full           = wp_get_attachment_image_url( $media->attachment_id, 'full' );
+			$attachment_data->thumb          = wp_get_attachment_image_url( $media->attachment_id, 'bp-media-thumbnail' );
+			$attachment_data->activity_thumb = wp_get_attachment_image_url( $media->attachment_id, 'bp-activity-media-thumbnail' );
+			$attachment_data->meta           = wp_get_attachment_metadata( $media->attachment_id );
+			$media->attachment_data          = $attachment_data;
 
 			$medias[] = $media;
 		}
@@ -876,9 +876,7 @@ class BP_Media {
 	 * @return array|bool|int
 	 */
 	public static function total_media_count( $user_id = 0 ) {
-		global $wpdb;
-
-		$bp = buddypress();
+		global $bp, $wpdb;
 
 		$privacy = array( 'public' );
 		if ( is_user_logged_in() ) {
@@ -892,18 +890,7 @@ class BP_Media {
 		}
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})";
-
-		$cache_group = 'bp_media_user_media_count';
-
-		$cached = bp_core_get_incremented_cache( $count_sql, $cache_group );
-		if ( false === $cached ) {
-			$results = $wpdb->get_col( $count_sql );
-			$total_count = intval( $results[0] );
-			bp_core_set_incremented_cache( $count_sql, $cache_group, $total_count );
-		} else {
-			$total_count = $cached;
-		}
+		$total_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
 
 		return $total_count;
 	}
@@ -918,22 +905,9 @@ class BP_Media {
 	 * @return array|bool|int
 	 */
 	public static function total_group_media_count( $group_id = 0 ) {
-		global $wpdb;
+		global $bp, $wpdb;
 
-		$bp = buddypress();
-
-		$count_sql = "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}";
-
-		$cache_group = 'bp_media_group_media_count';
-
-		$cached = bp_core_get_incremented_cache( $count_sql, $cache_group );
-		if ( false === $cached ) {
-			$results = $wpdb->get_col( $count_sql );
-			$total_count = intval( $results[0] );
-			bp_core_set_incremented_cache( $count_sql, $cache_group, $total_count );
-		} else {
-			$total_count = $cached;
-		}
+		$total_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
 
 		return $total_count;
 	}
@@ -947,27 +921,13 @@ class BP_Media {
 	 * @return array|bool
 	 */
 	public static function get_album_media_ids( $album_id = false ) {
+		global $bp, $wpdb;
 
 		if ( ! $album_id ) {
 			return false;
 		}
 
-		global $wpdb;
-
-		$bp = buddypress();
-
-		// Select conditions.
-		$select_sql = "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.album_id = {$album_id}";
-
-		$cache_group = 'bp_media_album_media_ids';
-
-		$cached = bp_core_get_incremented_cache( $select_sql, $cache_group );
-		if ( false === $cached ) {
-			$media_ids = $wpdb->get_col( $select_sql );
-			bp_core_set_incremented_cache( $select_sql, $cache_group, $media_ids );
-		} else {
-			$media_ids = $cached;
-		}
+		$media_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.album_id = %d", $album_id ) );
 
 		return $media_ids;
 	}
