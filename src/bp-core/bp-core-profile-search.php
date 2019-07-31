@@ -25,6 +25,13 @@ function bp_core_load_profile_search () {
         return false;//do not load
     }
     
+    // Added this action and function because of Geo my WP plugin checking if this function exists.
+    if( ! function_exists( 'bps_buddypress') && in_array('geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+        add_action( 'bp_include', 'bps_buddypress' );
+        function bps_buddypress() {
+        }
+    }
+    
     define ( 'BPS_VERSION', BP_PLATFORM_VERSION );
     
     if ( bp_is_active ( 'xprofile' ) ) {

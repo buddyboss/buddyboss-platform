@@ -43,6 +43,11 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_media_enqueue_scripts() {
+
+	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
+		return false;
+	}
+
 	wp_enqueue_script( 'bp-nouveau-media' );
 	wp_enqueue_script( 'bp-nouveau-media-theatre' );
 	wp_enqueue_script( 'giphy' );
@@ -61,6 +66,10 @@ function bp_nouveau_media_enqueue_scripts() {
  * @return array         The same array with specific strings for the messages UI if needed.
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
+
+	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
+		return $params;
+	}
 
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size(),
@@ -94,135 +103,6 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'forums'   => bp_is_forums_gif_support_enabled(),
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
-
-    if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
-
-        // check if topic edit
-	    if ( bbp_is_topic_edit() ) {
-		    $params['media']['bbp_is_topic_edit'] = true;
-
-		    $media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
-		    if ( ! empty( $media_ids ) && bp_has_media(
-				    array(
-					    'include'  => $media_ids,
-					    'order_by' => 'menu_order',
-					    'sort'     => 'ASC'
-				    ) ) ) {
-			    $params['media']['topic_edit_media'] = array();
-			    $index                               = 0;
-			    while ( bp_media() ) {
-				    bp_the_media();
-
-				    $params['media']['topic_edit_media'][] = array(
-					    'id'            => bp_get_media_id(),
-					    'attachment_id' => bp_get_media_attachment_id(),
-					    'name'          => bp_get_media_title(),
-					    'thumb'         => bp_get_media_attachment_image_thumbnail(),
-					    'url'           => bp_get_media_attachment_image(),
-					    'menu_order'    => $index,
-				    );
-				    $index ++;
-			    }
-		    }
-
-		    $gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
-
-		    if ( ! empty( $gif_data ) ) {
-			    $preview_url = wp_get_attachment_url( $gif_data['still'] );
-			    $video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-			    $params['media']['topic_edit_gif_data'] = array(
-				    'preview_url' => $preview_url,
-				    'video_url' => $video_url,
-				    'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
-			    );
-		    }
-	    }
-
-        // check if reply edit
-        if ( bbp_is_reply_edit() ) {
-	        $params['media']['bbp_is_reply_edit'] = true;
-
-	        $media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
-	        if ( ! empty( $media_ids ) && bp_has_media(
-			        array(
-				        'include'  => $media_ids,
-				        'order_by' => 'menu_order',
-				        'sort'     => 'ASC'
-			        ) ) ) {
-		        $params['media']['reply_edit_media'] = array();
-		        $index                               = 0;
-		        while ( bp_media() ) {
-			        bp_the_media();
-
-			        $params['media']['reply_edit_media'][] = array(
-				        'id'            => bp_get_media_id(),
-				        'attachment_id' => bp_get_media_attachment_id(),
-				        'name'          => bp_get_media_title(),
-				        'thumb'         => bp_get_media_attachment_image_thumbnail(),
-				        'url'           => bp_get_media_attachment_image(),
-				        'menu_order'    => $index,
-			        );
-			        $index ++;
-		        }
-	        }
-
-	        $gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
-
-	        if ( ! empty( $gif_data ) ) {
-		        $preview_url = wp_get_attachment_url( $gif_data['still'] );
-		        $video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-		        $params['media']['reply_edit_gif_data'] = array(
-		        	'preview_url' => $preview_url,
-		        	'video_url' => $video_url,
-			        'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
-		        );
-	        }
-        }
-
-        // check if forum edit
-	    if ( bbp_is_forum_edit() ) {
-		    $params['media']['bbp_is_forum_edit'] = true;
-
-		    $media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
-		    if ( ! empty( $media_ids ) && bp_has_media(
-				    array(
-					    'include'  => $media_ids,
-					    'order_by' => 'menu_order',
-					    'sort'     => 'ASC'
-				    ) ) ) {
-			    $params['media']['forum_edit_media'] = array();
-			    $index                               = 0;
-			    while ( bp_media() ) {
-				    bp_the_media();
-
-				    $params['media']['forum_edit_media'][] = array(
-					    'id'            => bp_get_media_id(),
-					    'attachment_id' => bp_get_media_attachment_id(),
-					    'name'          => bp_get_media_title(),
-					    'thumb'         => bp_get_media_attachment_image_thumbnail(),
-					    'url'           => bp_get_media_attachment_image(),
-					    'menu_order'    => $index,
-				    );
-				    $index ++;
-			    }
-		    }
-
-		    $gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
-
-		    if ( ! empty( $gif_data ) ) {
-			    $preview_url = wp_get_attachment_url( $gif_data['still'] );
-			    $video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-			    $params['media']['forum_edit_gif_data'] = array(
-				    'preview_url' => $preview_url,
-				    'video_url' => $video_url,
-				    'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
-			    );
-		    }
-        }
-    }
 
 	$params['media']['i18n_strings'] = array(
 		'select'               => __( 'Select', 'buddyboss' ),

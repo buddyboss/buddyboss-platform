@@ -53,3 +53,39 @@ function bp_ps_address(position, input) {
 		}
 	});
 }
+
+/**
+ * Reset the search form value in members screen
+ * Need to add this function here for
+ * Network Search component is deactivate
+ * 
+ * @param ele
+ */
+function bp_ps_clear_form_elements( ele ) {
+	var $form = jQuery( ele ).closest( 'form' );
+	var event = new Event( 'change' );
+
+	$form.find( ':input' ).each( function () {
+		switch ( this.type ) {
+			case 'password':
+			case 'select-multiple':
+			case 'select-one':
+			case 'text':
+			case 'email':
+			case 'date':
+			case 'url':
+			case 'search':
+			case 'textarea':
+				jQuery( this ).val( '' );
+				break;
+			case 'checkbox':
+			case 'radio':
+				this.checked = false;
+				this.dispatchEvent( event );
+				break;
+		}
+	} );
+
+	jQuery.removeCookie( 'bp_ps_request', {path: '/'} );
+	$form.find( '.submit' ).trigger( 'click' );
+}
