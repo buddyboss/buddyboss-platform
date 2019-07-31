@@ -3,7 +3,7 @@
  * Functions related to the BuddyBoss Media component and the WP Cache.
  *
  * @package BuddyBoss\Media
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.5
  */
 
 // Exit if accessed directly.
