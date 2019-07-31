@@ -50,18 +50,23 @@ function bp_ps_set_request ()
 
 	if (isset ($_REQUEST[BP_PS_FORM]))
 	{
+
 		$cookie = apply_filters ('bp_ps_cookie_name', 'bp_ps_request');
 		if ($_REQUEST[BP_PS_FORM] != 'clear')
 		{
 			$filtered_request = array_filter($_REQUEST);
-			
-			// removing arrays with empty value
+
+			/* 
+			* removing arrays with empty value
+			* specifically for date range only
+			*/ 
 			foreach ($filtered_request as $key => $value) {
-				if(! is_array($value)) continue;
+				if(! is_array($value) || strpos($key, 'date_range') === FALSE) continue;
 
 				foreach ($value as $subfields) {
-					if(! is_array($subfields)) continue;
-				
+
+					if(! is_array($subfields) || empty($subfields)) continue;
+
 					$subfield_checker = [];
 
 					foreach ($subfields as $subfield) {
