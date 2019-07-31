@@ -19,8 +19,9 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-if ( ! defined( 'BP_VERSION' ) ) {
-	define( 'BP_VERSION', '1.1.4' );
+
+if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
+	define( 'BP_PLATFORM_VERSION', '1.1.4' );
 }
 
 global $bp_incompatible_plugins;
@@ -76,6 +77,9 @@ foreach ( $bp_incompatible_plugins_list as $incompatible_plugin => $error_messag
 
 if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible_plugins ) ) {
 
+	if ( ! defined( 'BP_VERSION' ) ) {
+		define( 'BP_VERSION', '4.3.0' );
+	}
 
 	/**
 	 * Filter for setting the spoofing of BuddyPress.
