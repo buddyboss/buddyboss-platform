@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.5 =
+* Performance - Gravatars load faster on Members directory
 * Documentation - Membership Plugins
 
 = 1.1.4 =
