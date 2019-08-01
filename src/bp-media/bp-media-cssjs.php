@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_media_add_dropzone_js() {
 
-	if ( bp_is_media_component() || bp_is_user_media() || bp_is_single_album() || bp_is_media_directory() || bp_is_activity_component() || bp_is_group() || bp_is_messages_component() || ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
+	if ( bp_is_media_component() || bp_is_user_media() || bp_is_single_album() || bp_is_media_directory() || bp_is_activity_component() || bp_is_group() || bp_is_messages_component() || ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
 
 		// Include the dropzone JS
 		$url = buddypress()->plugin_url . 'bp-media/js/';
