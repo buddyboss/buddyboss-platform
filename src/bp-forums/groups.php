@@ -422,6 +422,15 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 			$this->new_forum( $new_forum_args );
 		}
 
+		/**
+		 * Add action that fire before user redirect
+         *
+         * @Since BuddyBoss 1.1.5
+         *
+         * @param int $group_id Current group id
+		 */
+		do_action( 'bp_group_admin_edit_after_before_redirect',  $group_id );
+
 		// Redirect after save when not in admin
 		if ( !is_admin() ) {
 			bp_core_redirect( trailingslashit( bp_get_group_permalink( buddypress()->groups->current_group ) . '/admin/' . $this->slug ) );

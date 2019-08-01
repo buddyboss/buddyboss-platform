@@ -730,6 +730,7 @@ function bbp_forum_topics_reply_tinymce_settings($settings) {
  * @since BuddyBoss 1.1.5
  */
 function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
+
 	if ( $group_id ) {
 		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
 		if ( ! empty( $forum_ids ) ) {
@@ -760,8 +761,11 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 				}
 			}
 		}
+
+		// Update Forums' internal private and forum ID variables
+		bbp_repair_forum_visibility();
 	}
 }
 
-add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 10000 );
-add_action( 'bp_group_admin_edit_after', 'bbp_forum_update_forum_status_when_group_updates', 10000 );
+add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
+add_action( 'bp_group_admin_edit_after_before_redirect', 'bbp_forum_update_forum_status_when_group_updates', 10 );
