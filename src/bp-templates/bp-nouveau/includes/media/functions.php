@@ -48,13 +48,22 @@ function bp_nouveau_media_enqueue_scripts() {
 		return false;
 	}
 
-	wp_enqueue_script( 'bp-nouveau-media' );
-	wp_enqueue_script( 'bp-nouveau-media-theatre' );
-	wp_enqueue_script( 'giphy' );
-	wp_enqueue_script( 'emojionearea' );
-	wp_enqueue_style( 'emojionearea' );
+	if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() ) {
+		wp_enqueue_script( 'bp-nouveau-media' );
+		wp_enqueue_script( 'bp-nouveau-media-theatre' );
+		wp_enqueue_script( 'bp-exif' );
+	}
+
+	if ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() || bp_is_forums_gif_support_enabled() ) {
+		wp_enqueue_script( 'giphy' );
+	}
+
+	if ( bp_is_profiles_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() || bp_is_messages_emoji_support_enabled() || bp_is_forums_emoji_support_enabled() ) {
+		wp_enqueue_script( 'emojionearea' );
+		wp_enqueue_style( 'emojionearea' );
+	}
+
 	wp_enqueue_script( 'isInViewport' );
-	wp_enqueue_script( 'bp-exif' );
 }
 
 /**

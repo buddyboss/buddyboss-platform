@@ -132,12 +132,12 @@ class BBP_Default extends BBP_Theme_Compat {
 		$scripts = array();
 
 		// Tag Input
-		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && is_bbpress() ) {
 			wp_enqueue_script( 'bp-tagify' );
 		}
 
 		// Always pull in jQuery for TinyMCE shortcode usage
-		if ( bbp_use_wp_editor() ) {
+		if ( is_bbpress() && bbp_use_wp_editor() ) {
 			$scripts['bbpress-editor'] = array(
 				'file'         => 'js/editor.js',
 				'dependencies' => array( 'jquery' )
@@ -194,7 +194,7 @@ class BBP_Default extends BBP_Theme_Compat {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
 
-		if ( bbp_use_wp_editor() ) {
+		if ( is_bbpress() && bbp_use_wp_editor() ) {
 			wp_localize_script( 'bbpress-editor', 'bbpEditorJsStrs', array(
 				'description' => __( 'Description', 'buddyboss' ),
 				'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
