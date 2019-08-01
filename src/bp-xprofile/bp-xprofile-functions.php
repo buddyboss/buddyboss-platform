@@ -1279,6 +1279,12 @@ function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true
 		$field_id = bp_get_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
 	}
 
+	// Set nickname field id to 0(zero) if first name and nickname both are same.
+	$first_name_id = bp_xprofile_firstname_field_id();
+	if ( $first_name_id === (int) $field_id ) {
+		$field_id = 0;
+	}
+
 	return (int) apply_filters( 'bp_xprofile_nickname_field_id', $field_id );
 }
 
