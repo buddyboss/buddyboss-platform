@@ -423,7 +423,21 @@ function bp_activity_make_nofollow_filter( $text ) {
 	function bp_activity_make_nofollow_filter_callback( $matches ) {
 		$text = $matches[1];
 		$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'"), '', $text );
-		return "<a $text rel=\"nofollow\">";
+
+		// Extract URL from href
+		preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match);
+
+		$url_host      = parse_url( $match[0][0], PHP_URL_HOST );
+		$base_url_host = parse_url( site_url(), PHP_URL_HOST );
+
+		// If site link then nothing to do.
+		if($url_host == $base_url_host || empty($url_host)) {
+			return "<a $text rel=\"nofollow\">";
+		// Else open in new tab.
+		} else {
+			return "<a target='_blank' $text rel=\"nofollow\">";
+		}
+
 	}
 
 /**
