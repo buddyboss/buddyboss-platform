@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.5 =
 * Performance - Gravatars load faster on Members directory
 * Documentation - Membership Plugins
+* Errors - Fixed various PHP errors in certain situations
 
 = 1.1.4 =
 * Profiles - Fixed issue with member profile recognizing existing Profile Type
