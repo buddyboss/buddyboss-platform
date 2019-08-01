@@ -697,31 +697,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		// Maybe disconnect forum from group
 		if ( empty( $enabled ) ) {
 			$this->disconnect_forum_from_group( $group_id );
-		} else {
-
-			// Enforce forum status inherit the groups status
-			if ( ! empty( $forum_id ) ) {
-
-				// Set the default forum status
-				switch ( $group->status ) {
-					case 'hidden'  :
-						$status = bbp_get_hidden_status_id();
-						break;
-					case 'private' :
-						$status = bbp_get_private_status_id();
-						break;
-					case 'public'  :
-					default        :
-						$status = bbp_get_public_status_id();
-						break;
-				}
-
-				wp_update_post( array(
-					'ID'          => $forum_id,
-					'post_status' => $status
-				) );
-			}
-        }
+		}
 
 		// Update Forums' internal private and forum ID variables
 		bbp_repair_forum_visibility();
