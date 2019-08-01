@@ -446,12 +446,14 @@ function bp_the_profile_field_ids() {
 			}
 		}
 
+		// Remove member type field if already added in DB and if profile type is disabled.
 		if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-			if ( function_exists( 'bp_get_xprofile_member_type_field_id ') ) {
+			if ( function_exists( 'bp_get_xprofile_member_type_field_id') ) {
 				$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
 			}
 		}
 
+		// Remove member type field if there is no any member type in options.
 		if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
 			$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
 		}

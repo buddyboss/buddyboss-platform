@@ -513,7 +513,7 @@ function bp_disable_profile_sync( $default = false ) {
 	 *
 	 * @param bool $value Whether or not syncing is disabled.
 	 */
-	return (bool) apply_filters( 'bp_disable_profile_sync', (bool) bp_get_option( 'bp-disable-profile-sync', $default ) );
+	return (bool) apply_filters( 'bp_disable_profile_sync', $default );
 }
 
 /**
