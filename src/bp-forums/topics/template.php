@@ -160,20 +160,6 @@ function bbp_has_topics( $args = '' ) {
 		'max_num_pages'  => false,                     // Maximum number of pages to show
 	);
 
-	/**
-     * if this function is called from the Forum archive page
-	 * Set the post_parent__in args
-     *
-	 */
-	if ( bbp_is_forum_archive() && bbp_has_forums() ) {
-		$parents = array();
-		while ( bbp_forums() ) {
-			bbp_the_forum();
-			$parents[] = bbp_get_forum_id();
-		}
-		$default['post_parent__in'] = $parents;
-	}
-
 	// What are the default allowed statuses (based on user caps)
 	if ( bbp_get_view_all() ) {
 
