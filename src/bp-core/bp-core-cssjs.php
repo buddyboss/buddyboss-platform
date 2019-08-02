@@ -79,6 +79,7 @@ function bp_core_register_common_scripts() {
 		'emojionearea' => array( 'file' => "{$url}emojionearea-edited.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 		'bp-exif' => array( 'file' => "{$url}vendor/exif.js" ),
 
+        'bp-media-dropzone'        => array( 'file' => "{$url}vendor/dropzone.min.js", 'dependencies' => array(), 'footer' => false ),
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),

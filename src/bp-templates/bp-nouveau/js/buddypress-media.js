@@ -43,7 +43,9 @@ window.bp = window.bp || {};
 			this.current_tab   = $('body').hasClass('single-topic') || $('body').hasClass('single-forum') ? false : 'bp-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones
-			window.Dropzone.autoDiscover = false;
+			if ( typeof window.Dropzone !== 'undefined' ) {
+				window.Dropzone.autoDiscover = false;
+			}
 
 			this.options = {
 				url: BP_Nouveau.ajaxurl,

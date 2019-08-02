@@ -194,6 +194,25 @@ class BBP_Default extends BBP_Theme_Compat {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
 
+		if ( is_bbpress() && bp_is_active( 'media' ) ) {
+
+			if ( bp_is_forums_media_support_enabled() ) {
+				wp_enqueue_script( 'bp-media-dropzone' );
+				wp_enqueue_script( 'bp-nouveau-media' );
+				wp_enqueue_script( 'bp-nouveau-media-theatre' );
+				wp_enqueue_script( 'bp-exif' );
+			}
+
+			if ( bp_is_forums_gif_support_enabled() ) {
+				wp_enqueue_script( 'giphy' );
+			}
+
+			if ( bp_is_forums_emoji_support_enabled() ) {
+				wp_enqueue_script( 'emojionearea' );
+				wp_enqueue_style( 'emojionearea' );
+			}
+		}
+
 		if ( bbp_use_wp_editor() ) {
 			wp_localize_script( 'bbpress-editor', 'bbpEditorJsStrs', array(
 				'description' => __( 'Description', 'buddyboss' ),
