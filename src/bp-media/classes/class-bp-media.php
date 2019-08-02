@@ -890,7 +890,7 @@ class BP_Media {
 		}
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
 
 		return $total_count;
 	}
@@ -907,7 +907,7 @@ class BP_Media {
 	public static function total_group_media_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE group_id = {$group_id}" );
 
 		return $total_count;
 	}
@@ -927,9 +927,18 @@ class BP_Media {
 			return false;
 		}
 
-		$media_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.album_id = %d", $album_id ) );
+		$album_media_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.album_id = %d", $album_id );
 
-		return $media_ids;
+		$cached = bp_core_get_incremented_cache( $album_media_sql, 'bp_media' );
+
+		if ( false === $cached ) {
+			$media_ids = $wpdb->get_col( $album_media_sql );
+			bp_core_set_incremented_cache( $album_media_sql, 'bp_media', $media_ids );
+		} else {
+			$media_ids = $cached;
+		}
+
+		return (array) $media_ids;
 	}
 
 }
