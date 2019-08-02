@@ -895,6 +895,27 @@ function bp_is_activity_autoload_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity Scopes is enabled.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Scopes is enabled, otherwise false.
+ */
+function bp_is_activity_scopes_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity Scopes is enabled.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param bool $value Whether or not Activity Scopes is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_scopes_active', (bool) bp_get_option( '_bp_enable_activity_scopes', $default ) );
+}
+
+/**
  * Check whether Activity Heartbeat refresh is enabled.
  *
  * @since BuddyPress 2.0.0
