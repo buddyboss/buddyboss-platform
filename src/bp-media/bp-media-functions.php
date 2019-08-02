@@ -521,9 +521,12 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
 	if ( empty( $user_id ) )
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 
-	$count = BP_Media::total_media_count( $user_id );
-	if ( empty( $count ) )
-		$count = 0;
+	$count = wp_cache_get( 'bp_total_media_for_user_' . $user_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media::total_media_count( $user_id );
+		wp_cache_set( 'bp_total_media_for_user_' . $user_id, $count, 'bp' );
+	}
 
 	/**
 	 * Filters the total media count for a given user.
@@ -532,7 +535,7 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
 	 *
 	 * @param int $count Total media count for a given user.
 	 */
-	return apply_filters( 'bp_media_get_total_media_count', $count );
+	return apply_filters( 'bp_media_get_total_media_count', (int) $count );
 }
 
 /**
@@ -548,9 +551,12 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 		$group_id = bp_get_current_group_id();
 	}
 
-	$count = BP_Media::total_group_media_count( $group_id );
-	if ( empty( $count ) )
-		$count = 0;
+	$count = wp_cache_get( 'bp_total_media_for_group_' . $group_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media::total_group_media_count( $group_id );
+		wp_cache_set( 'bp_total_media_for_group_' . $group_id, $count, 'bp' );
+	}
 
 	/**
 	 * Filters the total media count for a given group.
@@ -559,7 +565,7 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 	 *
 	 * @param int $count Total media count for a given group.
 	 */
-	return apply_filters( 'bp_media_get_total_group_media_count', $count );
+	return apply_filters( 'bp_media_get_total_group_media_count', (int) $count );
 }
 
 /**
@@ -570,11 +576,10 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
  * @return int Media count.
  */
 function bp_get_total_media_count() {
-	global $wpdb;
+	global $bp, $wpdb;
 
 	$count = wp_cache_get( 'bp_total_media_count', 'bp' );
 
-	$bp = buddypress();
 	if ( false === $count ) {
 
 		$privacy = array( 'public' );
@@ -594,7 +599,7 @@ function bp_get_total_media_count() {
 	 *
 	 * @param int $count Total number of media.
 	 */
-	return apply_filters( 'bp_get_total_media_count', $count );
+	return apply_filters( 'bp_get_total_media_count', (int) $count );
 }
 
 //******************** Albums *********************/
