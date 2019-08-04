@@ -50,13 +50,13 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		 * For Backward compatibility
 		 */
 		// Add the main section.
-		add_settings_section( 'bp_main', __( 'Main Settings', 'buddypress' ), 'bp_admin_setting_callback_main_section', 'buddypress' );
+		add_settings_section( 'bp_main', __( 'Main Settings', 'buddypress' ), '__return_null', 'buddypress' );
 		// Add the main section.
-		add_settings_section( 'bp_xprofile', _x( 'Profile Settings', 'BuddyPress setting tab', 'buddypress' ), 'bp_admin_setting_callback_xprofile_section', 'buddypress' );
+		add_settings_section( 'bp_xprofile', _x( 'Profile Settings', 'BuddyPress setting tab', 'buddypress' ), '__return_null', 'buddypress' );
 
-		add_settings_section( 'bp_groups', __( 'Groups Settings', 'buddypress' ), 'bp_admin_setting_callback_groups_section', 'buddypress' );
+		add_settings_section( 'bp_groups', __( 'Groups Settings', 'buddypress' ), '__return_null', 'buddypress' );
 
-		add_settings_section( 'bp_activity', __( 'Activity Settings', 'buddypress' ), 'bp_admin_setting_callback_activity_section', 'buddypress' );
+		add_settings_section( 'bp_activity', __( 'Activity Settings', 'buddypress' ), '__return_null', 'buddypress' );
 
 	}
 }

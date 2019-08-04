@@ -10,13 +10,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_main_section() { }
-
-/**
  * Admin bar for logged out users setting field.
  *
  * @since BuddyPress 1.6.0
@@ -147,13 +140,6 @@ function bp_privacy_tutorial() {
 }
 
 /** Activity *******************************************************************/
-
-/**
- * Groups settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_activity_section() { }
 
 /**
  * Allow Akismet setting field.
@@ -309,15 +295,6 @@ function bp_admin_sanitize_callback_blogforum_comments( $value = false ) {
 	return $value ? 0 : 1;
 }
 
-/** XProfile ******************************************************************/
-
-/**
- * Profile settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_xprofile_section() { }
-
 /**
  * Allow members to upload avatars field.
  *
@@ -362,14 +339,6 @@ function bp_profile_photos_tutorial() {
 }
 
 /** Group Settings ************************************************************/
-
-/**
- * Groups settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- * @todo deprecate this function?
- */
-function bp_admin_setting_callback_groups_section() { }
 
 /**
  * Allow all users to create groups field.
