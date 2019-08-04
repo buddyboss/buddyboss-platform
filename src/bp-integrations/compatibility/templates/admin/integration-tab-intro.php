@@ -1,6 +1,6 @@
 <div class="wrap">
 
-    <div class="bp-admin-card section-bp_appboss-integration">
+    <div class="bp-admin-card section-bp_compatibility-integration">
         <h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
 
 		<?php

@@ -31,6 +31,7 @@ TABLE OF CONTENTS:
 7.0 Plugins page
 8.0 AppBoss page
 9.0 Miscellaneous
+1.0 Integrations
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -1655,5 +1656,16 @@ td label.platform-activity {
 
 	.bb-nickname-hide-first-name {
 		margin-top: 0;
+	}
+}
+
+/*------------------------------------------------------------------------------
+ * 10 Integration
+ *----------------------------------------------------------------------------*/
+body.buddyboss_page_bp-integrations {
+	.section-bp_compatibility-integration {
+		h2 {
+			display: none;
+		}
 	}
 }
