@@ -937,3 +937,42 @@ function bp_profile_names_tutorial() {
 
 	<?php
 }
+
+/**
+ * Save our settings.
+ *
+ * @since 1.6.0
+ */
+function bp_core_admin_settings_save() {
+	global $wp_settings_fields;
+
+	if (
+		isset( $_GET['page'] )
+		&& 'bp-integrations' == $_GET['page']
+		&& isset( $_GET['tab'] )
+		&& 'bp-compatibility' == $_GET['tab']
+		&& ! empty( $_POST['submit'] ) ) {
+
+		check_admin_referer( 'buddypress-options' );
+
+		// Because many settings are saved with checkboxes, and thus will have no values
+		// in the $_POST array when unchecked, we loop through the registered settings.
+		if ( isset( $wp_settings_fields['buddypress'] ) ) {
+			foreach ( (array) $wp_settings_fields['buddypress'] as $section => $settings ) {
+				foreach ( $settings as $setting_name => $setting ) {
+					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
+
+					bp_update_option( $setting_name, $value );
+				}
+			}
+		}
+
+		bp_core_redirect( add_query_arg( array(
+			'page'    => 'bp-integrations',
+			'tab'     => 'bp-compatibility',
+			'updated' => 'true'
+		), bp_get_admin_url( 'admin.php' ) ) );
+	}
+}
+
+add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
