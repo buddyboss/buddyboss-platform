@@ -768,4 +768,4 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 }
 
 add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
-add_action( 'bp_group_admin_edit_after_before_redirect', 'bbp_forum_update_forum_status_when_group_updates', 10 );
+add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );

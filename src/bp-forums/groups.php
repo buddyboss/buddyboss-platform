@@ -429,7 +429,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
          *
          * @param int $group_id Current group id
 		 */
-		do_action( 'bp_group_admin_edit_after_before_redirect',  $group_id );
+		do_action( 'bp_group_admin_after_edit_screen_save',  $group_id );
 
 		// Redirect after save when not in admin
 		if ( !is_admin() ) {
