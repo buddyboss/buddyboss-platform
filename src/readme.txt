@@ -60,8 +60,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Reduced number of CSS and Javascript files loaded per page
 * Performance - Removed Heartbeat API from all pages besides Activity, reduces requests to server
 * Performance - Improved PHP caching for Media, Albums and Activity (when using a PHP caching plugin)
-* Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
 * Profiles - Added 'Snapchat' as option in 'Social Networks' profile field
+* Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
+* Profiles - Fixes issue with 'Reset' filter not always working
 * Profiles - Fixed 'Profile Types' filter showing wrong label, and not displaying if type has no members
 * Activity - External links added in activity posts now open in a new tab/window
 * Messages - Fixed issue with message thread loading, now doing one thread fetch request at a time
