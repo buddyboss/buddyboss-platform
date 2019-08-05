@@ -27,7 +27,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 	}
 
 	/**
-	 * Register admin setting tab, only if AppBoss plugin is disabled
+	 * Register admin setting tab, only if Compatibility plugin is disabled
 	 *
 	 * @since BuddyBoss 1.1.5
 	 */
