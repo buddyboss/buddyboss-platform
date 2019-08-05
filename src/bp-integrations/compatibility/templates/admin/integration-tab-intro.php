@@ -1,7 +1,7 @@
 <div class="wrap">
 
     <div class="bp-admin-card section-bp_compatibility-integration">
-        <h1><?php _e( 'BuddyPress Settings', 'buddyboss' ); ?> </h1>
+        <h2><?php _e( 'BuddyPress <span>&mdash; third party plugin settings</span>', 'buddyboss' ); ?></h2>
 
 		<?php
 		// We're saving our own options, until the WP Settings API is updated to work with Multisite.
