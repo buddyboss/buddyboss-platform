@@ -69,8 +69,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Display group member role in singular format, if only 1 member of that role
 * Compatibility - Improved support for 'GEO my WordPress' plugin
 * Compatibility - Improved support for Keap (Infusionsoft) API in plugins
-* Documentation - Membership Plugins
+* Translations - Fixed text instances that were not available for translation
 * Errors - Fixed various PHP errors in certain situations
+* Documentation - Membership Plugins
 
 = 1.1.4 =
 * Profiles - Fixed issue with member profile recognizing existing Profile Type
