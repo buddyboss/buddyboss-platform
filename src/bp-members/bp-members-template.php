@@ -2704,12 +2704,12 @@ function bp_member_latest_update( $args = '' ) {
 		 */
 		$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
 
-		$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddypress' ), $update_content );
+		$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
 
 		// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
 		// been truncated), add the "View" link.
 		if ( $view_link && ( $update_content != $update['content'] ) ) {
-			$view = __( 'View', 'buddypress' );
+			$view = __( 'View', 'buddyboss' );
 
 			$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
 		}
