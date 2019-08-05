@@ -67,6 +67,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issue with editing forum posts that include media attachments
 * Forums - Fixed Edit and Merge links for all forum roles
 * Groups - Display group member role in singular format, if only 1 member of that role
+* Registration - Added validation notice if Nickname added is less than 4 characters
 * Compatibility - Improved support for 'GEO my WordPress' plugin
 * Compatibility - Improved support for Keap (Infusionsoft) API in plugins
 * Translations - Fixed text instances that were not available for translation
