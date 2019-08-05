@@ -65,6 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - External links added in activity posts now open in a new tab/window
 * Messages - Fixed issue with message thread loading, now doing one thread fetch request at a time
 * Forums - Fixed issue with editing forum posts that include media attachments
+* Groups - Display group member role in singular format, if only 1 member of that role
 * Compatibility - Improved support for BuddyPress plugins activating with BuddyBoss Platform
 * Compatibility - Improved support for 'GEO my WordPress' plugin
 * Documentation - Membership Plugins
