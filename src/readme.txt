@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
 * Activity - External links added in activity posts now open in a new tab/window
 * Forums - Fixed issue with editing forum posts that include media attachments
+* Compatibility - Improved support for BuddyPress plugins activating with BuddyBoss Platform
 * Documentation - Membership Plugins
 * Errors - Fixed various PHP errors in certain situations
 
