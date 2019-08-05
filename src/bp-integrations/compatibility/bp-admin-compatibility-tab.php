@@ -2,7 +2,7 @@
 /**
  * Compatibility integration admin tab
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.5
  */
 
 // Exit if accessed directly.
@@ -11,7 +11,7 @@ defined('ABSPATH') || exit;
 /**
  * Setup Compatibility integration admin tab class.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.5
  */
 class BP_Compatibility_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	protected $current_section;

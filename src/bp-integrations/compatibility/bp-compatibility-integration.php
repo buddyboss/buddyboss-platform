@@ -2,7 +2,7 @@
 /**
  * BuddyBoss Compatibility Integration Class.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.5
  */
 
 // Exit if accessed directly.
@@ -11,7 +11,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Setup the bp compatibility class.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.5
  */
 class BP_Compatibility_Integration extends BP_Integration {
 
@@ -29,7 +29,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 	/**
 	 * Register admin setting tab, only if AppBoss plugin is disabled
 	 *
-	 * @since BuddyBoss 1.1.6
+	 * @since BuddyBoss 1.1.5
 	 */
 	public function setup_admin_integration_tab() {
 
