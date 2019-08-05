@@ -493,9 +493,9 @@ class BP_Media_Album {
 				$album->id       = (int) $album->id;
 				$album->user_id  = (int) $album->user_id;
 				$album->group_id = (int) $album->group_id;
-
-				$album->media = bp_media_get( array( 'album_id' => $album->id, 'count_total' => true ) );
 			}
+
+			$album->media = bp_media_get( array( 'album_id' => $album->id, 'count_total' => true ) );
 
 			$albums[] = $album;
 		}
