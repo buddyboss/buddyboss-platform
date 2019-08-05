@@ -31,7 +31,6 @@ TABLE OF CONTENTS:
 7.0 Plugins page
 8.0 AppBoss page
 9.0 Miscellaneous
-1.0 Integrations
 ------------------------------------------------------------------------------*/
 
 /*------------------------------------------------------------------------------
@@ -531,6 +530,12 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 /* Integrations - WooCommerce */
 .bp-admin-card.section-bp-woocommerce-integration h2:before {
 	background-image: url(../../images/admin/icons/logos/woocommerce.png);
+	background-size: 100% 100%;
+}
+
+/* Integrations - BuddyPress Plugins */
+.bp-admin-card.section-bp_compatibility-integration h2:before {
+	background-image: url(../../images/admin/icons/logos/buddypress.png);
 	background-size: 100% 100%;
 }
 
@@ -1656,16 +1661,5 @@ td label.platform-activity {
 
 	.bb-nickname-hide-first-name {
 		margin-top: 0;
-	}
-}
-
-/*------------------------------------------------------------------------------
- * 10 Integration
- *----------------------------------------------------------------------------*/
-body.buddyboss_page_bp-integrations {
-	.section-bp_compatibility-integration {
-		h2 {
-			display: none;
-		}
 	}
 }
