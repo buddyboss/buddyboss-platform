@@ -59,7 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Faster loading of Gravatar images on Members directory
 * Performance - Reduced number of CSS and Javascript files loaded per page
 * Performance - Removed Heartbeat API from all pages besides Activity, reduces requests to server
-* Performance - Improved PHP caching for Media, Albums and Activity (when using a PHP caching plugin)
+* Performance - Improved PHP caching for Media, Albums and Activity
 * Profiles - Added 'Snapchat' as option in 'Social Networks' profile field
 * Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
 * Profiles - Fixes issue with 'Reset' filter not always working
