@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss AppBoss Integration Class.
+ * BuddyBoss Compatibility Integration Class.
  *
- * @package BuddyBoss\AppBoss
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.1.6
  */
 
 // Exit if accessed directly.
@@ -36,7 +35,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 
 		require_once trailingslashit( $this->path ) . 'bp-admin-compatibility-tab.php';
 
-		new BP_Appboss_Admin_Integration_Tab(
+		new BP_Compatibility_Admin_Integration_Tab(
 			"bp-{$this->id}",
 			$this->name,
 			[
