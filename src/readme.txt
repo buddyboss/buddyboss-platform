@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Removed Heartbeat API from all pages besides Activity, reduces requests to server
 * Performance - Improved PHP caching for Media, Albums and Activity (when using a PHP caching plugin)
 * Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
+* Activity - External links added in activity posts now open in a new tab/window 
 * Documentation - Membership Plugins
 * Errors - Fixed various PHP errors in certain situations
 
