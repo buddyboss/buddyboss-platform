@@ -62,6 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Improved PHP caching for Media, Albums and Activity (when using a PHP caching plugin)
 * Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
 * Profiles - Added 'Snapchat' as option in 'Social Networks' profile field
+* Profiles - Fixed 'Profile Types' filter showing wrong label, and not displaying if type has no members
 * Activity - External links added in activity posts now open in a new tab/window
 * Messages - Fixed issue with message thread loading, now doing one thread fetch request at a time
 * Forums - Fixed issue with editing forum posts that include media attachments
