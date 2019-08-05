@@ -1,7 +1,7 @@
 <div class="wrap">
 
     <div class="bp-admin-card section-bp_compatibility-integration">
-        <h1><?php _e( 'BuddyPress Settings', 'buddypress' ); ?> </h1>
+        <h1><?php _e( 'BuddyPress Settings', 'buddyboss' ); ?> </h1>
 
 		<?php
 		// We're saving our own options, until the WP Settings API is updated to work with Multisite.
@@ -21,8 +21,7 @@
 			do_settings_sections( "buddypress" );
 			?>
             <p class="submit">
-                <input type="submit" name="submit" class="button-primary"
-                       value="<?php esc_attr_e( 'Save Settings', 'buddypress' ); ?>"/>
+                <input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>"/>
             </p>
 
         </form>
