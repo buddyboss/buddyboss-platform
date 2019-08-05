@@ -49,13 +49,16 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		/**
 		 * For Backward compatibility
 		 */
-		// Add the main section.
+		// Add the Main Settings.
 		add_settings_section( 'bp_main', __( 'Main Settings', 'buddyboss' ), '__return_null', 'buddypress' );
-		// Add the main section.
+		
+		// Add the Profile Settings.
 		add_settings_section( 'bp_xprofile', _x( 'Profile Settings', 'BuddyPress setting tab', 'buddyboss' ), '__return_null', 'buddypress' );
 
+		// Add the Groups Settings.
 		add_settings_section( 'bp_groups', __( 'Groups Settings', 'buddyboss' ), '__return_null', 'buddypress' );
 
+		// Add the Activity Settings.
 		add_settings_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '__return_null', 'buddypress' );
 
 	}
