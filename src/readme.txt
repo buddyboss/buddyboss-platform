@@ -66,6 +66,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed issue with message thread loading, now doing one thread fetch request at a time
 * Forums - Fixed issue with editing forum posts that include media attachments
 * Compatibility - Improved support for BuddyPress plugins activating with BuddyBoss Platform
+* Compatibility - Improved support for 'GEO my WordPress' plugin
 * Documentation - Membership Plugins
 * Errors - Fixed various PHP errors in certain situations
 
