@@ -220,6 +220,11 @@ class BP_Invites_Component extends BP_Component {
 				$access       = bp_core_can_edit_settings();
 				$invites_link = trailingslashit( $user_domain . $slug );
 
+				// Condition for set the $access to true if Email Invites added in BuddyPanel.
+				if ( 'invites' === $slug && false === $access && '' !== $nav_name ) {
+					$access = true;
+				}
+
 				if ( $access ) {
 
 					if ( true === bp_allow_user_to_send_invites() ) {
