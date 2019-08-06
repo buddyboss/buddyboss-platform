@@ -322,7 +322,7 @@ function xprofile_admin_screen( $message = '', $type = 'error' ) {
 
 									$class = '';
 									if ( empty( $field->can_delete ) ) {
-										$class = ' core nodrag';
+										$class = ' core';
 									}
 
 									/**
@@ -800,7 +800,7 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 		bp_xprofile_firstname_field_id(),
 		bp_xprofile_lastname_field_id(),
 		bp_xprofile_nickname_field_id()
-	] ) )? 'primary_field' : 'sortable';
+	] ) )? 'primary_field sortable' : 'sortable';
 
 	$fieldset_class[] = ! empty( $class )? $class : '';
 	$fieldset_class = array_filter( $fieldset_class );
