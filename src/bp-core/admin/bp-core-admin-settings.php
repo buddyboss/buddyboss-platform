@@ -979,7 +979,7 @@ function bp_admin_setting_callback_register_show_email_opt() {
 	?>
 
 	<input id="register-double-opt-email" name="register-double-opt-email" type="checkbox" value="1" <?php checked( bp_register_double_opt_email( false ) ); ?> />
-	<label for="register-double-opt-email"><?php _e( 'Show the double opt email in registrations', 'buddyboss' ); ?></label>
+	<label for="register-double-opt-email"><?php _e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -994,7 +994,7 @@ function bp_admin_setting_callback_register_show_password_opt() {
 	?>
 
 	<input id="register-double-opt-password" name="register-double-opt-password" type="checkbox" value="1" <?php checked( bp_register_double_opt_password( false ) ); ?> />
-	<label for="register-double-opt-password"><?php _e( 'Show the double opt password in registrations', 'buddyboss' ); ?></label>
+	<label for="register-double-opt-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }

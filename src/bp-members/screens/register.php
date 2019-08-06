@@ -76,12 +76,12 @@ function bp_core_screen_signup() {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-				$bp->signup->errors['signup_email'] = __( 'Please make sure you enter your email twice', 'buddyboss' );
+				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss' );
 			}
 
 			// Check that the passwords match.
 			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
-				$bp->signup->errors['signup_email'] = __( 'The email you entered do not match.', 'buddyboss' );
+				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
 			}
 
 		}
@@ -91,12 +91,12 @@ function bp_core_screen_signup() {
 
 			// Check that both password fields are filled in.
 			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) {
-				$bp->signup->errors['signup_password'] = __( 'Please make sure you enter your password twice', 'buddyboss' );
+				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss' );
 			}
 
 			// Check that the passwords match.
 			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) {
-				$bp->signup->errors['signup_password'] = __( 'The passwords you entered do not match.', 'buddyboss' );
+				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
 			}
 
 		}
