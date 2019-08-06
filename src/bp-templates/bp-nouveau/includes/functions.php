@@ -1051,10 +1051,10 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'signup_email_confirm' => array(
 					'label'          => __( 'Confirm Email', 'buddyboss' ),
 					'required'       => true,
-					'value'          => '',
+					'value'          => 'bp_get_signup_confirm_email_value',
 					'attribute_type' => 'email',
 					'type'           => 'email',
-					'class'          => 'email-entry-confirm',
+					'class'          => '',
 				),
 				'signup_password' => array(
 					'label'          => __( 'Password', 'buddyboss' ),
@@ -1185,10 +1185,10 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 				'signup_email_confirm' => array(
 					'label'          => __( 'Confirm Email', 'buddyboss' ),
 					'required'       => true,
-					'value'          => '',
+					'value'          => 'bp_get_signup_confirm_email_value',
 					'attribute_type' => 'email',
 					'type'           => 'email',
-					'class'          => 'email-entry-confirm',
+					'class'          => '',
 				),
 				'signup_password' => array(
 					'label'          => __( 'Password', 'buddyboss' ),
