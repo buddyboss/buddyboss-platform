@@ -24,9 +24,25 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
+
+		// Main General Settings Section
 		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ) );
-		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval' );
+
+		// Registration Settings.
+		$args = array();
+		$args['class'] = 'child-no-padding-first';
+		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval', $args );
+		$args = array();
+		$args['class'] = 'child-no-padding';
+		$this->add_field( 'register-double-opt-email', '', 'bp_admin_setting_callback_register_show_email_opt', 'intval', $args );
+		$args = array();
+		$args['class'] = 'child-no-padding';
+		$this->add_field( 'register-double-opt-password','', 'bp_admin_setting_callback_register_show_password_opt', 'intval', $args );
+
+		// Account Deletion Settings.
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
+
+		// Toolbar Settings.
 		$args = array();
 		$args['class'] = 'child-no-padding-first';
 		$this->add_field( 'show-admin-adminbar',__( 'Toolbar', 'buddyboss' ), 'bp_admin_setting_callback_admin_admin_bar', 'intval', $args );
@@ -38,7 +54,11 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'hide-loggedout-adminbar','', 'bp_admin_setting_callback_admin_bar', 'intval', $args );
 		$args = array();
 		$this->add_field( 'bp-admin-setting-tutorial','', 'bp_admin_setting_tutorial' );
+
+		// Main Privacy Settings Section
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );
+
+		// Private Network Settings.
 		$this->add_field( 'bp-enable-private-network', __( 'Private Network', 'buddyboss' ), 'bp_admin_setting_callback_private_network', 'intval' );
 		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
 		if ( '0' === $enable_private_network ) {

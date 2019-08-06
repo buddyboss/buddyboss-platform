@@ -1363,3 +1363,45 @@ function bp_hide_nickname_last_name( $default = true ) {
 	 */
 	return (bool) apply_filters( 'bp_hide_nickname_last_name', (bool) bp_get_option( 'bp-hide-nickname-last-name', $default ) );
 }
+
+/**
+ * Display double opt email field in registrations.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Whether or not display double opt email field in registrations.
+ */
+function bp_register_double_opt_email( $default = false ) {
+
+	/**
+	 * Filters whether or not display double opt email field in registrations.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param bool $value whether or not display double opt email field in registrations.
+	 */
+	return (bool) apply_filters( 'bp_register_double_opt_email', (bool) bp_get_option( 'register-double-opt-email', $default ) );
+}
+
+/**
+ * Display double opt password field in registrations.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Whether or not display double opt password field in registrations.
+ */
+function bp_register_double_opt_password( $default = false ) {
+
+	/**
+	 * Filters whether or not display double opt password field in registrations.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param bool $value whether or not display double opt password field in registrations.
+	 */
+	return (bool) apply_filters( 'bp_register_double_opt_password', (bool) bp_get_option( 'register-double-opt-password', $default ) );
+}
