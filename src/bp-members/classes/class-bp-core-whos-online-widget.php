@@ -96,7 +96,8 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			<?php
 			if ( bp_is_active( 'friends' ) ) :
 
-				$count = 0;
+				$count        = 0;
+				$friend_array = array();
 				if ( bp_is_active( 'friends' ) ) {
 
 					$personal_friend_comma_separated_string = bp_get_friend_ids( bp_loggedin_user_id() );
