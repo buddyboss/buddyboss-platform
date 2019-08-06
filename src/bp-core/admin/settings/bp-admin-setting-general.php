@@ -34,10 +34,10 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval', $args );
 		$args = array();
 		$args['class'] = 'child-no-padding';
-		$this->add_field( 'register-double-opt-email', '', 'bp_admin_setting_callback_register_show_email_opt', 'intval', $args );
+		$this->add_field( 'register-confirm-email', '', 'bp_admin_setting_callback_register_show_confirm_email', 'intval', $args );
 		$args = array();
 		$args['class'] = 'child-no-padding';
-		$this->add_field( 'register-double-opt-password','', 'bp_admin_setting_callback_register_show_password_opt', 'intval', $args );
+		$this->add_field( 'register-confirm-password','', 'bp_admin_setting_callback_register_show_confirm_password', 'intval', $args );
 
 		// Account Deletion Settings.
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );

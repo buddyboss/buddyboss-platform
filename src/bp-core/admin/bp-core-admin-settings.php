@@ -970,31 +970,31 @@ function bp_profile_names_tutorial() {
 }
 
 /**
- * Admin settings for to show the double opt email field.
+ * Admin settings for showing the email confirmation field.
  *
  * @since BuddyBoss 1.1.6
  *
  */
-function bp_admin_setting_callback_register_show_email_opt() {
+function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
 
-	<input id="register-double-opt-email" name="register-double-opt-email" type="checkbox" value="1" <?php checked( bp_register_double_opt_email( false ) ); ?> />
-	<label for="register-double-opt-email"><?php _e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
+	<input id="register-confirm-email" name="register-confirm-email" type="checkbox" value="1" <?php checked( bp_register_confirm_email( false ) ); ?> />
+	<label for="register-confirm-email"><?php _e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }
 
 /**
- * Admin settings for to show the double opt password field.
+ * Admin settings for showing the password confirmation field.
  *
  * @since BuddyBoss 1.1.6
  *
  */
-function bp_admin_setting_callback_register_show_password_opt() {
+function bp_admin_setting_callback_register_show_confirm_password() {
 	?>
 
-	<input id="register-double-opt-password" name="register-double-opt-password" type="checkbox" value="1" <?php checked( bp_register_double_opt_password( false ) ); ?> />
-	<label for="register-double-opt-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
+	<input id="register-confirm-password" name="register-confirm-password" type="checkbox" value="1" <?php checked( bp_register_confirm_password( false ) ); ?> />
+	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }

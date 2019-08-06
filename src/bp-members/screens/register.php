@@ -57,8 +57,8 @@ function bp_core_screen_signup() {
 		// Check the base account details for problems.
 		$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
 
-		$email_opt    = function_exists( 'bp_register_double_opt_email' ) && true === bp_register_double_opt_email() ? true : false;
-		$password_opt = function_exists( 'bp_register_double_opt_password' ) && true === bp_register_double_opt_password() ? true : false;
+		$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
+		$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
 
 		// If there are errors with account details, set them for display.
 		if ( !empty( $account_details['errors']->errors['user_name'] ) )

@@ -1034,8 +1034,8 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	 * @param array $value The list of fields organized into sections.
 	 */
 
-	$email_opt    = function_exists( 'bp_register_double_opt_email' ) && true === bp_register_double_opt_email() ? true : false;
-	$password_opt = function_exists( 'bp_register_double_opt_password' ) && true === bp_register_double_opt_password() ? true : false;
+	$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
+	$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
 
 	if ( true === $email_opt && true === $password_opt ) {
 		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(

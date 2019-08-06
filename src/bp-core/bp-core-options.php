@@ -1365,43 +1365,43 @@ function bp_hide_nickname_last_name( $default = true ) {
 }
 
 /**
- * Display double opt email field in registrations.
+ * Display email confirmation field in registrations.
  *
  * @since BuddyBoss 1.1.6
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
- * @return bool True if Whether or not display double opt email field in registrations.
+ * @return bool True if Whether or not display email confirmation field in registrations.
  */
-function bp_register_double_opt_email( $default = false ) {
+function bp_register_confirm_email( $default = false ) {
 
 	/**
-	 * Filters whether or not display double opt email field in registrations.
+	 * Filters whether or not display email confirmation field in registrations.
 	 *
 	 * @since BuddyBoss 1.1.6
 	 *
-	 * @param bool $value whether or not display double opt email field in registrations.
+	 * @param bool $value whether or not display email confirmation field in registrations.
 	 */
-	return (bool) apply_filters( 'bp_register_double_opt_email', (bool) bp_get_option( 'register-double-opt-email', $default ) );
+	return (bool) apply_filters( 'bp_register_confirm_email', (bool) bp_get_option( 'register-confirm-email', $default ) );
 }
 
 /**
- * Display double opt password field in registrations.
+ * Display password confirmation field in registrations.
  *
  * @since BuddyBoss 1.1.6
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
- * @return bool True if Whether or not display double opt password field in registrations.
+ * @return bool True if Whether or not display password confirmation field in registrations.
  */
-function bp_register_double_opt_password( $default = false ) {
+function bp_register_confirm_password( $default = false ) {
 
 	/**
-	 * Filters whether or not display double opt password field in registrations.
+	 * Filters whether or not display password confirmation field in registrations.
 	 *
 	 * @since BuddyBoss 1.1.6
 	 *
-	 * @param bool $value whether or not display double opt password field in registrations.
+	 * @param bool $value whether or not display password confirmation field in registrations.
 	 */
-	return (bool) apply_filters( 'bp_register_double_opt_password', (bool) bp_get_option( 'register-double-opt-password', $default ) );
+	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
 }
