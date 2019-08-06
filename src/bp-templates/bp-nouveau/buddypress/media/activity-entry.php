@@ -17,7 +17,7 @@
 	   data-attachment-full="<?php bp_media_attachment_image(); ?>"
 	   data-activity-id="<?php bp_media_activity_id(); ?>">
 
-		<img src="/wp-content/plugins/buddyboss-platform/src/bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_activity_thumbnail(); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
+		<img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_activity_thumbnail(); ?>" class="no-round photo lazy" alt="<?php bp_media_title(); ?>" />
 
 		<?php if ( $media_template->media_count > 5 && $media_template->current_media == 4 ) {
 			?>
