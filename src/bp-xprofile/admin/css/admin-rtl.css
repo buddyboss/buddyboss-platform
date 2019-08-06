@@ -169,8 +169,7 @@ div.field-group {
 
 .field-group fieldset {
 	position: relative;
-	border-width: 1px;
-	border-color: #d2d2d2;
+	border: 1px solid #d2d2d2;
 	background-color: #fafafa;
 	margin: 20px 0 0;
 	padding: 10px 0 0;
@@ -179,12 +178,10 @@ div.field-group {
 
 .field-group fieldset.sortable {
 	cursor: move;
-	border-style: solid;
 	box-shadow: 0 1px 0 #d2d2d2;
 }
 
 .field-group fieldset.core {
-	border-style: dashed;
 	background-color: #fff;
 }
 
@@ -223,7 +220,7 @@ fieldset span.bp-required-field-label {
 	float: none;
 }
 
-.field-group fieldset:not(.core):hover {
+.field-group fieldset:hover {
 	border-color: #999;
 }
 
