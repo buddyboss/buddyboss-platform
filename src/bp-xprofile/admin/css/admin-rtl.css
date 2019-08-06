@@ -205,6 +205,11 @@ fieldset div.field-wrapper {
 	padding: 29px 14px 14px;
 }
 
+fieldset span.bp-signup-field-label {
+	color: #5A9758;
+	font-weight: 500;
+}
+
 fieldset span.bp-required-field-label {
 	color: #999;
 }

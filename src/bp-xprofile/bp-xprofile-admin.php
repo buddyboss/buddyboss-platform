@@ -811,9 +811,11 @@ function xprofile_admin_field( $admin_field, $admin_group, $class = '' ) {
 			<span>
 				<span class="field-name"><?php bp_the_profile_field_name(); ?></span>
 
-				<?php if ( empty( $field->can_delete ) ) : ?><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?>
+				<?php if ( empty( $field->can_delete ) ) : ?>
+					<span class="bp-signup-field-label"><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?></span>
 				<?php bp_the_profile_field_required_label(); ?>
-				<?php if ( bp_xprofile_get_meta( $field->id, 'field', 'signup_position' ) ) : ?><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?>
+				<?php if ( bp_xprofile_get_meta( $field->id, 'field', 'signup_position' ) ) : ?>
+					<span class="bp-signup-field-label"><?php esc_html_e( '(Signup)', 'buddyboss' ); endif; ?></span>
 				<?php if ( bp_get_member_types() ) : echo $field->get_member_type_label(); endif; ?>
 
 				<?php
