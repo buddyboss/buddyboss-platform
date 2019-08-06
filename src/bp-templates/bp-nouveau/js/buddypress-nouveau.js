@@ -367,6 +367,12 @@ window.bp = window.bp || {};
 
 								// Inform other scripts the list of objects has been refreshed.
 								$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
+								//Lazy Load Images
+								if(bp.Nouveau.lazyLoad){
+									setTimeout(function(){ // Waiting to load dummy image
+										bp.Nouveau.lazyLoad( '.lazy' );
+									},1000);
+								}
 							} );
 						} );
 
@@ -378,12 +384,14 @@ window.bp = window.bp || {};
 							// Inform other scripts the list of objects has been refreshed.
 							$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
 							//Lazy Load Images
-							setTimeout(function(){ // Waiting to load dummy image
-								bp.Nouveau.lazyLoad( '.lazy' );
-								$( window ).on( 'scroll resize',function(){
-									bp.Nouveau.lazyLoad('.lazy');
-								});
-							},1000);
+							if(bp.Nouveau.lazyLoad){
+								setTimeout(function(){ // Waiting to load dummy image
+									bp.Nouveau.lazyLoad( '.lazy' );
+									$( window ).on( 'scroll resize',function(){
+										bp.Nouveau.lazyLoad('.lazy');
+									});
+								},1000);
+							}
 						} );
 					}
 				}
