@@ -169,7 +169,8 @@ div.field-group {
 
 .field-group fieldset {
 	position: relative;
-	border: 1px solid #d2d2d2;
+	border-width: 1px;
+	border-color: #d2d2d2;
 	background-color: #fafafa;
 	margin: 20px 0 0;
 	padding: 10px 0 0;
@@ -178,10 +179,12 @@ div.field-group {
 
 .field-group fieldset.sortable {
 	cursor: move;
+	border-style: solid;
 	box-shadow: 0 1px 0 #d2d2d2;
 }
 
 .field-group fieldset.core {
+	border-style: dashed;
 	background-color: #fff;
 }
 
@@ -205,11 +208,6 @@ fieldset div.field-wrapper {
 	padding: 29px 14px 14px;
 }
 
-fieldset span.bp-signup-field-label {
-	color: #5A9758;
-	font-weight: 500;
-}
-
 fieldset span.bp-required-field-label {
 	color: #999;
 }
@@ -225,7 +223,7 @@ fieldset span.bp-required-field-label {
 	float: none;
 }
 
-.field-group fieldset:hover {
+.field-group fieldset:not(.core):hover {
 	border-color: #999;
 }
 
