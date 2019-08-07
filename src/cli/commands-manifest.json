@@ -1,0 +1,746 @@
+{
+  "activity": {
+    "title": "activity",
+    "slug": "activity",
+    "cmd_path": "activity",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity.md",
+    "repo_url": ""
+  },
+  "component": {
+    "title": "component",
+    "slug": "component",
+    "cmd_path": "component",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/component.md",
+    "repo_url": ""
+  },
+  "email": {
+    "title": "email",
+    "slug": "email",
+    "cmd_path": "email",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/email.md",
+    "repo_url": ""
+  },
+  "friend": {
+    "title": "friend",
+    "slug": "friend",
+    "cmd_path": "friend",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend.md",
+    "repo_url": ""
+  },
+  "group": {
+    "title": "group",
+    "slug": "group",
+    "cmd_path": "group",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group.md",
+    "repo_url": ""
+  },
+  "group\/invite": {
+    "title": "group invite",
+    "slug": "group-invite",
+    "cmd_path": "group\/invite",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite.md",
+    "repo_url": ""
+  },
+  "member": {
+    "title": "member",
+    "slug": "member",
+    "cmd_path": "member",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/member.md",
+    "repo_url": ""
+  },
+  "group\/member": {
+    "title": "group member",
+    "slug": "group-member",
+    "cmd_path": "group\/member",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member.md",
+    "repo_url": ""
+  },
+  "message": {
+    "title": "message",
+    "slug": "message",
+    "cmd_path": "message",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message.md",
+    "repo_url": ""
+  },
+  "signup": {
+    "title": "signup",
+    "slug": "signup",
+    "cmd_path": "signup",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup.md",
+    "repo_url": ""
+  },
+  "notification": {
+    "title": "notification",
+    "slug": "notification",
+    "cmd_path": "notification",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/notification.md",
+    "repo_url": ""
+  },
+  "tool": {
+    "title": "tool",
+    "slug": "tool",
+    "cmd_path": "tool",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/tool.md",
+    "repo_url": ""
+  },
+  "xprofile": {
+    "title": "xprofile",
+    "slug": "xprofile",
+    "cmd_path": "xprofile",
+    "parent": null,
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile.md",
+    "repo_url": ""
+  },
+  "activity\/create": {
+    "title": "activity create",
+    "slug": "create",
+    "cmd_path": "activity\/create",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-create.md",
+    "repo_url": ""
+  },
+  "activity\/list": {
+    "title": "activity list",
+    "slug": "list",
+    "cmd_path": "activity\/list",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-list.md",
+    "repo_url": ""
+  },
+  "activity\/generate": {
+    "title": "activity generate",
+    "slug": "generate",
+    "cmd_path": "activity\/generate",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-generate.md",
+    "repo_url": ""
+  },
+  "activity\/get": {
+    "title": "activity get",
+    "slug": "get",
+    "cmd_path": "activity\/get",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-get.md",
+    "repo_url": ""
+  },
+  "activity\/delete": {
+    "title": "activity delete",
+    "slug": "delete",
+    "cmd_path": "activity\/delete",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-delete.md",
+    "repo_url": ""
+  },
+  "activity\/spam": {
+    "title": "activity spam",
+    "slug": "spam",
+    "cmd_path": "activity\/spam",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-spam.md",
+    "repo_url": ""
+  },
+  "activity\/ham": {
+    "title": "activity ham",
+    "slug": "ham",
+    "cmd_path": "activity\/ham",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-ham.md",
+    "repo_url": ""
+  },
+  "activity\/post_update": {
+    "title": "activity post_update",
+    "slug": "post-update",
+    "cmd_path": "activity\/post_update",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-post-update.md",
+    "repo_url": ""
+  },
+  "activity\/comment": {
+    "title": "activity comment",
+    "slug": "comment",
+    "cmd_path": "activity\/comment",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-comment.md",
+    "repo_url": ""
+  },
+  "activity\/delete_comment": {
+    "title": "activity delete_comment",
+    "slug": "delete-comment",
+    "cmd_path": "activity\/delete_comment",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-delete-comment.md",
+    "repo_url": ""
+  },
+  "activity\/favorite\/add": {
+    "title": "activity favorite add",
+    "slug": "favorite-add",
+    "cmd_path": "activity\/favorite\/add",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-favorite-add.md",
+    "repo_url": ""
+  },
+  "activity\/favorite\/remove": {
+    "title": "activity favorite remove",
+    "slug": "favorite-remove",
+    "cmd_path": "activity\/favorite\/remove",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-favorite-remove.md",
+    "repo_url": ""
+  },
+  "activity\/favorite\/list": {
+    "title": "activity favorite list",
+    "slug": "favorite-list",
+    "cmd_path": "activity\/favorite\/list",
+    "parent": "activity",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/activity-favorite-list.md",
+    "repo_url": ""
+  },
+  "component\/activate": {
+    "title": "component activate",
+    "slug": "activate",
+    "cmd_path": "component\/activate",
+    "parent": "component",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/component-activate.md",
+    "repo_url": ""
+  },
+  "component\/deactivate": {
+    "title": "component deactivate",
+    "slug": "deactivate",
+    "cmd_path": "component\/deactivate",
+    "parent": "component",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/component-deactivate.md",
+    "repo_url": ""
+  },
+  "component\/list": {
+    "title": "component list",
+    "slug": "list",
+    "cmd_path": "component\/list",
+    "parent": "component",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/component-list.md",
+    "repo_url": ""
+  },
+  "email\/create": {
+    "title": "email create",
+    "slug": "create",
+    "cmd_path": "email\/create",
+    "parent": "email",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/email-create.md",
+    "repo_url": ""
+  },
+  "email\/get-post": {
+    "title": "email get-post",
+    "slug": "get-post",
+    "cmd_path": "email\/get-post",
+    "parent": "email",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/email-get-post.md",
+    "repo_url": ""
+  },
+  "email\/reinstall": {
+    "title": "email reinstall",
+    "slug": "reinstall",
+    "cmd_path": "email\/reinstall",
+    "parent": "email",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/email-reinstall.md",
+    "repo_url": ""
+  },
+  "friend\/create": {
+    "title": "friend create",
+    "slug": "create",
+    "cmd_path": "friend\/create",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-create.md",
+    "repo_url": ""
+  },
+  "friend\/remove": {
+    "title": "friend remove",
+    "slug": "remove",
+    "cmd_path": "friend\/remove",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-remove.md",
+    "repo_url": ""
+  },
+  "friend\/accept": {
+    "title": "friend accept",
+    "slug": "accept",
+    "cmd_path": "friend\/accept",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-accept.md",
+    "repo_url": ""
+  },
+  "friend\/reject": {
+    "title": "friend reject",
+    "slug": "reject",
+    "cmd_path": "friend\/reject",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-reject.md",
+    "repo_url": ""
+  },
+  "friend\/check": {
+    "title": "friend check",
+    "slug": "check",
+    "cmd_path": "friend\/check",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-check.md",
+    "repo_url": ""
+  },
+  "friend\/list": {
+    "title": "friend list",
+    "slug": "list",
+    "cmd_path": "friend\/list",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-list.md",
+    "repo_url": ""
+  },
+  "friend\/generate": {
+    "title": "friend generate",
+    "slug": "generate",
+    "cmd_path": "friend\/generate",
+    "parent": "friend",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/friend-generate.md",
+    "repo_url": ""
+  },
+  "group\/create": {
+    "title": "group create",
+    "slug": "create",
+    "cmd_path": "group\/create",
+    "parent": "group",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-create.md",
+    "repo_url": ""
+  },
+  "group\/generate": {
+    "title": "group generate",
+    "slug": "generate",
+    "cmd_path": "group\/generate",
+    "parent": "group",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-generate.md",
+    "repo_url": ""
+  },
+  "group\/get": {
+    "title": "group get",
+    "slug": "get",
+    "cmd_path": "group\/get",
+    "parent": "group",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-get.md",
+    "repo_url": ""
+  },
+  "group\/delete": {
+    "title": "group delete",
+    "slug": "delete",
+    "cmd_path": "group\/delete",
+    "parent": "group",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-delete.md",
+    "repo_url": ""
+  },
+  "group\/update": {
+    "title": "group update",
+    "slug": "update",
+    "cmd_path": "group\/update",
+    "parent": "group",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-update.md",
+    "repo_url": ""
+  },
+  "group\/list": {
+    "title": "group list",
+    "slug": "list",
+    "cmd_path": "group\/list",
+    "parent": "group",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-list.md",
+    "repo_url": ""
+  },
+  "group\/invite\/create": {
+    "title": "group invite create",
+    "slug": "create",
+    "cmd_path": "group\/invite\/create",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-create.md",
+    "repo_url": ""
+  },
+  "group\/invite\/remove": {
+    "title": "group invite remove",
+    "slug": "remove",
+    "cmd_path": "group\/invite\/remove",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-remove.md",
+    "repo_url": ""
+  },
+  "group\/invite\/list": {
+    "title": "group invite list",
+    "slug": "list",
+    "cmd_path": "group\/invite\/list",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-list.md",
+    "repo_url": ""
+  },
+  "group\/invite\/generate": {
+    "title": "group invite generate",
+    "slug": "generate",
+    "cmd_path": "group\/invite\/generate",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-generate.md",
+    "repo_url": ""
+  },
+  "group\/invite\/accept": {
+    "title": "group invite accept",
+    "slug": "accept",
+    "cmd_path": "group\/invite\/accept",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-accept.md",
+    "repo_url": ""
+  },
+  "group\/invite\/reject": {
+    "title": "group invite reject",
+    "slug": "reject",
+    "cmd_path": "group\/invite\/reject",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-reject.md",
+    "repo_url": ""
+  },
+  "group\/invite\/delete": {
+    "title": "group invite delete",
+    "slug": "delete",
+    "cmd_path": "group\/invite\/delete",
+    "parent": "group-invite",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-invite-delete.md",
+    "repo_url": ""
+  },
+  "group\/member\/create": {
+    "title": "group member create",
+    "slug": "create",
+    "cmd_path": "group\/member\/create",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-create.md",
+    "repo_url": ""
+  },
+  "group\/member\/remove": {
+    "title": "group member remove",
+    "slug": "remove",
+    "cmd_path": "group\/member\/remove",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-remove.md",
+    "repo_url": ""
+  },
+  "group\/member\/list": {
+    "title": "group member list",
+    "slug": "list",
+    "cmd_path": "group\/member\/list",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-list.md",
+    "repo_url": ""
+  },
+  "group\/member\/promote": {
+    "title": "group member promote",
+    "slug": "promote",
+    "cmd_path": "group\/member\/promote",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-promote.md",
+    "repo_url": ""
+  },
+  "group\/member\/demote": {
+    "title": "group member demote",
+    "slug": "demote",
+    "cmd_path": "group\/member\/demote",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-demote.md",
+    "repo_url": ""
+  },
+  "group\/member\/ban": {
+    "title": "group member ban",
+    "slug": "ban",
+    "cmd_path": "group\/member\/ban",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-ban.md",
+    "repo_url": ""
+  },
+  "group\/member\/unban": {
+    "title": "group member unban",
+    "slug": "unban",
+    "cmd_path": "group\/member\/unban",
+    "parent": "group-member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/group-member-unban.md",
+    "repo_url": ""
+  },
+  "member\/generate": {
+    "title": "member generate",
+    "slug": "generate",
+    "cmd_path": "member\/generate",
+    "parent": "member",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/member-generate.md",
+    "repo_url": ""
+  },
+  "message\/create": {
+    "title": "message create",
+    "slug": "create",
+    "cmd_path": "message\/create",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-create.md",
+    "repo_url": ""
+  },
+  "message\/delete\/thread": {
+    "title": "message delete-thread",
+    "slug": "delete-thread",
+    "cmd_path": "message\/delete\/thread",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-delete-thread.md",
+    "repo_url": ""
+  },
+  "message\/get": {
+    "title": "message get",
+    "slug": "get",
+    "cmd_path": "message\/get",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-get.md",
+    "repo_url": ""
+  },
+  "message\/list": {
+    "title": "message list",
+    "slug": "list",
+    "cmd_path": "message\/list",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-list.md",
+    "repo_url": ""
+  },
+  "message\/generate": {
+    "title": "message generate",
+    "slug": "generate",
+    "cmd_path": "message\/generate",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-generate.md",
+    "repo_url": ""
+  },
+  "message\/star": {
+    "title": "message star",
+    "slug": "star",
+    "cmd_path": "message\/star",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-star.md",
+    "repo_url": ""
+  },
+  "message\/unstar": {
+    "title": "message unstar",
+    "slug": "unstar",
+    "cmd_path": "message\/unstar",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-unstar.md",
+    "repo_url": ""
+  },
+  "message\/star\/thread": {
+    "title": "message star-thread",
+    "slug": "star-thread",
+    "cmd_path": "message\/star\/thread",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-star-thread.md",
+    "repo_url": ""
+  },
+  "message\/unstar\/thread": {
+    "title": "message unstar-thread",
+    "slug": "unstar-thread",
+    "cmd_path": "message\/unstar\/thread",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-unstar-thread.md",
+    "repo_url": ""
+  },
+  "message\/send-notice": {
+    "title": "message send-notice",
+    "slug": "send-notice",
+    "cmd_path": "message\/send\/notice",
+    "parent": "message",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/message-send-notice.md",
+    "repo_url": ""
+  },
+  "signup\/create": {
+    "title": "signup create",
+    "slug": "create",
+    "cmd_path": "signup\/create",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-create.md",
+    "repo_url": ""
+  },
+  "signup\/get": {
+    "title": "signup get",
+    "slug": "get",
+    "cmd_path": "signup\/get",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-get.md",
+    "repo_url": ""
+  },
+  "signup\/delete": {
+    "title": "signup delete",
+    "slug": "delete",
+    "cmd_path": "signup\/delete",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-delete.md",
+    "repo_url": ""
+  },
+  "signup\/activate": {
+    "title": "signup activate",
+    "slug": "activate",
+    "cmd_path": "signup\/activate",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-activate.md",
+    "repo_url": ""
+  },
+  "signup\/generate": {
+    "title": "signup generate",
+    "slug": "generate",
+    "cmd_path": "signup\/generate",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-generate.md",
+    "repo_url": ""
+  },
+  "signup\/resend": {
+    "title": "signup resend",
+    "slug": "resend",
+    "cmd_path": "signup\/resend",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-resend.md",
+    "repo_url": ""
+  },
+  "signup\/list": {
+    "title": "signup list",
+    "slug": "list",
+    "cmd_path": "signup\/list",
+    "parent": "signup",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/signup-list.md",
+    "repo_url": ""
+  },
+  "notification\/create": {
+    "title": "notification create",
+    "slug": "create",
+    "cmd_path": "notification\/create",
+    "parent": "notification",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/notification-create.md",
+    "repo_url": ""
+  },
+  "notification\/get": {
+    "title": "notification get",
+    "slug": "get",
+    "cmd_path": "notification\/get",
+    "parent": "notification",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/notification-get.md",
+    "repo_url": ""
+  },
+  "notification\/delete": {
+    "title": "notification delete",
+    "slug": "delete",
+    "cmd_path": "notification\/delete",
+    "parent": "notification",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/notification-delete.md",
+    "repo_url": ""
+  },
+  "notification\/generate": {
+    "title": "notification generate",
+    "slug": "generate",
+    "cmd_path": "notification\/generate",
+    "parent": "notification",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/notification-generate.md",
+    "repo_url": ""
+  },
+  "notification\/list": {
+    "title": "notification list",
+    "slug": "list",
+    "cmd_path": "notification\/list",
+    "parent": "notification",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/notification-list.md",
+    "repo_url": ""
+  },
+  "tool\/repair": {
+    "title": "tool repair",
+    "slug": "repair",
+    "cmd_path": "tool\/repair",
+    "parent": "tool",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/tool-repair.md",
+    "repo_url": ""
+  },
+  "xprofile\/data\/set": {
+    "title": "xprofile data set",
+    "slug": "xprofile-data-set",
+    "cmd_path": "xprofile\/data\/set",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-data-set.md",
+    "repo_url": ""
+  },
+  "xprofile\/data\/get": {
+    "title": "xprofile data get",
+    "slug": "xprofile-data-get",
+    "cmd_path": "xprofile\/data\/get",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-data-get.md",
+    "repo_url": ""
+  },
+  "xprofile\/data\/delete": {
+    "title": "xprofile data delete",
+    "slug": "xprofile-data-delete",
+    "cmd_path": "xprofile\/data\/delete",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-data-delete.md",
+    "repo_url": ""
+  },
+  "xprofile\/field\/list": {
+    "title": "xprofile field list",
+    "slug": "xprofile-field-list",
+    "cmd_path": "xprofile\/field\/list",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-field-list.md",
+    "repo_url": ""
+  },
+  "xprofile\/field\/create": {
+    "title": "xprofile field create",
+    "slug": "xprofile-field-create",
+    "cmd_path": "xprofile\/field\/create",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-field-create.md",
+    "repo_url": ""
+  },
+  "xprofile\/field\/get": {
+    "title": "xprofile field get",
+    "slug": "xprofile-field-get",
+    "cmd_path": "xprofile\/field\/get",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-field-get.md",
+    "repo_url": ""
+  },
+  "xprofile\/field\/delete": {
+    "title": "xprofile field delete",
+    "slug": "xprofile-field-delete",
+    "cmd_path": "xprofile\/field\/delete",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-field-delete.md",
+    "repo_url": ""
+  },
+  "xprofile\/group\/create": {
+    "title": "xprofile group create",
+    "slug": "xprofile-group-create",
+    "cmd_path": "xprofile\/group\/create",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-group-create.md",
+    "repo_url": ""
+  },
+  "xprofile\/group\/get": {
+    "title": "xprofile group get",
+    "slug": "xprofile-group-get",
+    "cmd_path": "xprofile\/group\/get",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-group-get.md",
+    "repo_url": ""
+  },
+  "xprofile\/group\/delete": {
+    "title": "xprofile group delete",
+    "slug": "xprofile-group-delete",
+    "cmd_path": "xprofile\/group\/delete",
+    "parent": "xprofile",
+    "markdown_source": "/wp-content/plugins/buddyboss-platform/cli/components/xprofile-group-delete.md",
+    "repo_url": ""
+  }
+}

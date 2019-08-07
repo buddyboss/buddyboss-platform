@@ -1,0 +1,39 @@
+{
+	"name": "buddypress/wp-cli-buddypress",
+	"type": "wp-cli-package",
+	"description": "WP-CLI Community Package of BuddyPress commands",
+	"keywords": [ "wp-cli", "buddypress", "community", "wordpress", "bp" ],
+	"homepage": "https://github.com/buddypress/wp-cli-buddypress",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "The BuddPress Contributors",
+			"homepage": "https://buddypress.org/"
+		}
+	],
+	"support": {
+		"issues": "https://github.com/buddypress/wp-cli-buddypress/issues",
+		"source": "https://github.com/buddypress/wp-cli-buddypress"
+	},
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "files": [ "wp-cli-bp.php" ]
+    },
+    "require": {
+        "php": ">=5.4",
+        "wp-cli/wp-cli": ">=0.23.0"
+    },
+    "require-dev": {
+        "behat/behat": "~2.5"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.x-dev"
+        },
+        "bundled": true,
+        "commands": [
+            "bp"
+        ]
+    }
+}

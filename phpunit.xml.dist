@@ -1,0 +1,18 @@
+<phpunit
+	bootstrap="tests/phpunit/bootstrap.php"
+	backupGlobals="false"
+	colors="true"
+	convertErrorsToExceptions="true"
+	convertNoticesToExceptions="true"
+	convertWarningsToExceptions="true"
+	stopOnError="true"
+	>
+	<testsuites>
+		<testsuite>
+			<directory suffix=".php">tests/phpunit/testcases/</directory>
+		</testsuite>
+		<testsuite name="learndash">
+			<directory suffix=".php">tests/phpunit/testcases/integrations/learndash</directory>
+		</testsuite>
+	</testsuites>
+</phpunit>
