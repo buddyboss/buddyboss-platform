@@ -768,9 +768,9 @@ function bp_album_add( $args = '' ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $r Array of parsed arguments for the album item being added.
+	 * @param object $album Album object.
 	 */
-	do_action( 'bp_album_add', $r );
+	do_action( 'bp_album_add', $album );
 
 	return $album->id;
 }
