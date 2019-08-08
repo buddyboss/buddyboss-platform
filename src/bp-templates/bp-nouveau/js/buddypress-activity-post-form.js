@@ -1662,9 +1662,6 @@ window.bp = window.bp || {};
 
 					// Prepend the activity.
 					bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
-					
-					//replace dummy image with original image by faking scroll event
-					jQuery(window).scroll();
 				}
 			} ).fail( function( response ) {
 

@@ -367,12 +367,6 @@ window.bp = window.bp || {};
 
 								// Inform other scripts the list of objects has been refreshed.
 								$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
-								//Lazy Load Images
-								if(bp.Nouveau.lazyLoad){
-									setTimeout(function(){ // Waiting to load dummy image
-										bp.Nouveau.lazyLoad( '.lazy' );
-									},1000);
-								}
 							} );
 						} );
 
@@ -383,15 +377,6 @@ window.bp = window.bp || {};
 
 							// Inform other scripts the list of objects has been refreshed.
 							$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
-							//Lazy Load Images
-							if(bp.Nouveau.lazyLoad){
-								setTimeout(function(){ // Waiting to load dummy image
-									bp.Nouveau.lazyLoad( '.lazy' );
-									$( window ).on( 'scroll resize',function(){
-										bp.Nouveau.lazyLoad('.lazy');
-									});
-								},1000);
-							}
 						} );
 					}
 				}
@@ -1435,32 +1420,6 @@ window.bp = window.bp || {};
 					$('.emojionearea-button.active').removeClass('active');
 				}
 			}
-		},
-		/**
-		 * Lazy Load Images of Activity Feed
-		 * @param event
-		 */
-		lazyLoad: function( lazyTarget ){
-			var lazy = $( lazyTarget );
-			if( lazy.length){
-				function cleanLazy() {
-					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
-				}
-				function isInViewport( el ) {
-					return (
-						el.getBoundingClientRect().top <= (( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY )
-					)
-				}
-				for( var i=0; i<lazy.length; i++ ) {
-					if( isInViewport( lazy[i]) ) {
-						if ( lazy[i].getAttribute('data-src') ){
-							lazy[i].src = lazy[i].getAttribute('data-src');
-							lazy[i].removeAttribute('data-src');
-						}
-					}
-				}
-				cleanLazy();
-			}			
 		}
 	};
 
