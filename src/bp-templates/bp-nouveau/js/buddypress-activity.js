@@ -86,7 +86,9 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function() {
 			// HeartBeat listeners
-			$( '#buddypress' ).on( 'bp_heartbeat_send', this.heartbeatSend.bind( this ) );
+			if ( !$( 'body' ).hasClass( 'activity-singular' ) ) {
+				$('#buddypress').on('bp_heartbeat_send', this.heartbeatSend.bind(this));
+			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities

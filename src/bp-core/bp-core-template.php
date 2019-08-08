@@ -3526,7 +3526,7 @@ function bp_the_body_class() {
 		}
 
 		if ( bp_is_single_activity() ) {
-			$bp_classes[] = 'activity-permalink';
+			$bp_classes[] = 'activity-permalink activity-singular';
 		}
 
 		/* Registration ******************************************************/
