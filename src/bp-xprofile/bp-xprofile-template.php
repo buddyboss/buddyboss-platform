@@ -63,6 +63,7 @@ function bp_has_profile( $args = '' ) {
 		'fetch_visibility_level' => $fetch_visibility_level_default,
 		'exclude_groups'         => false, // Comma-separated list of profile field group IDs to exclude.
 		'exclude_fields'         => false, // Comma-separated list of profile field IDs to exclude.
+		'include_fields'         => false, // Comma-separated list of profile field IDs to include.
 		'update_meta_cache'      => true,
 	), 'has_profile' );
 

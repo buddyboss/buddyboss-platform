@@ -281,6 +281,7 @@ class BP_XProfile_Group {
 			'fetch_visibility_level' => false,
 			'exclude_groups'         => false,
 			'exclude_fields'         => false,
+			'include_fields'         => false,
 			'update_meta_cache'      => true,
             'repeater_show_main_fields_only' => false,
 		) );
@@ -396,6 +397,16 @@ class BP_XProfile_Group {
 				$member_types_fields = BP_XProfile_Field::get_fields_for_member_type( $member_types );
 				$include_field_ids += array_keys( $member_types_fields );
 			}
+		}
+
+		if ( $r['include_fields'] ) {
+
+			if (  '' !== $include_field_ids ) {
+				$include_field_ids = array_merge( $include_field_ids, array_map( 'intval', explode( ',', $r['include_fields'] ) ) );
+			} else {
+				$include_field_ids = array_map( 'intval', explode( ',', $r['include_fields'] ) );
+			}
+
 		}
 
 		$in_sql = '';

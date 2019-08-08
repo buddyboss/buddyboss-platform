@@ -155,6 +155,7 @@ class BP_XProfile_Data_Template {
 			'fetch_visibility_level' => false,
 			'exclude_groups'         => false,
 			'exclude_fields'         => false,
+			'include_fields'         => false,
 			'update_meta_cache'      => true
 		) );
 

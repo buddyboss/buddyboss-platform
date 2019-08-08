@@ -1551,6 +1551,11 @@ class BP_XProfile_Field {
 			return;
 		}
 
+		// Remove the Profile Type Metabox for the Profile Type Field.
+		if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $this->id === bp_get_xprofile_member_type_field_id() ) {
+			return;
+		}
+
 		$field_member_types = $this->get_member_types();
 
 		?>
