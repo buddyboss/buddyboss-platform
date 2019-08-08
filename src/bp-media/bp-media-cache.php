@@ -26,10 +26,10 @@ add_action( 'bp_media_after_save', 'bp_media_clear_cache_for_media' );
  *
  * @since BuddyBoss 1.1.5
  *
- * @param int $deleted_id IDs of deleted media item.
+ * @param object $media Media object item.
  */
-function bp_media_clear_cache_for_deleted_media( $deleted_id ) {
-	wp_cache_delete( $deleted_id, 'bp_media' );
+function bp_media_clear_cache_for_deleted_media( $media ) {
+	wp_cache_delete( $media->id, 'bp_media' );
 }
 add_action( 'bp_media_delete', 'bp_media_clear_cache_for_deleted_media' );
 
@@ -54,43 +54,34 @@ add_action( 'bp_media_add',       'bp_media_reset_cache_incrementor' );
  *
  * @since BuddyBoss 1.1.5
  *
- * @param array $r  Media add arguments.
+ * @param object $media Media object item.
  */
-function bp_media_clear_media_user_object_cache( $r ) {
-
-	if ( ! empty( $r[0] ) && is_object( $r[0] ) ) {
-		$user_id = ! empty( $r[0]->user_id ) ? $r[0]->user_id : false;
-	} else {
-		$user_id = ! empty( $r['user_id'] ) ? $r['user_id'] : false;
-	}
+function bp_media_clear_media_user_object_cache( $media ) {
+	$user_id = ! empty( $media->user_id ) ? $media->user_id : false;
 
 	if ( $user_id ) {
 		wp_cache_delete( 'bp_total_media_for_user_' . $user_id, 'bp' );
 	}
 }
-add_action( 'bp_media_add',             'bp_media_clear_media_user_object_cache', 10 );
-add_action( 'bp_media_after_delete',    'bp_media_clear_media_user_object_cache', 10 );
+add_action( 'bp_media_add',       'bp_media_clear_media_user_object_cache', 10 );
+add_action( 'bp_media_delete',    'bp_media_clear_media_user_object_cache', 10 );
 
 /**
  * Clear a group's cached media count.
  *
  * @since BuddyBoss 1.1.5
  *
- * @param array $r  Media add arguments.
+ * @param object $media Media object item.
  */
-function bp_media_clear_media_group_object_cache( $r ) {
-	if ( ! empty( $r[0] ) && is_object( $r[0] ) ) {
-		$group_id = ! empty( $r[0]->group_id ) ? $r[0]->group_id : false;
-	} else {
-		$group_id = ! empty( $r['group_id'] ) ? $r['group_id'] : false;
-	}
+function bp_media_clear_media_group_object_cache( $media ) {
+	$group_id = ! empty( $media->group_id ) ? $media->group_id : false;
 
 	if ( $group_id ) {
 		wp_cache_delete( 'bp_total_media_for_group_' . $group_id, 'bp' );
 	}
 }
-add_action( 'bp_media_add',             'bp_media_clear_media_group_object_cache', 10 );
-add_action( 'bp_media_after_delete',    'bp_media_clear_media_group_object_cache', 10 );
+add_action( 'bp_media_add',       'bp_media_clear_media_group_object_cache', 10 );
+add_action( 'bp_media_delete',    'bp_media_clear_media_group_object_cache', 10 );
 
 /**
  * Clear a cached album item when that item is updated.
@@ -109,10 +100,10 @@ add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
  *
  * @since BuddyBoss 1.1.5
  *
- * @param int $deleted_id IDs of deleted album item.
+ * @param object $album Album object item.
  */
-function bp_media_clear_cache_for_deleted_album( $deleted_id ) {
-	wp_cache_delete( $deleted_id, 'bp_media_album' );
+function bp_media_clear_cache_for_deleted_album( $album ) {
+	wp_cache_delete( $album->id, 'bp_media_album' );
 }
 add_action( 'bp_album_delete', 'bp_media_clear_cache_for_deleted_album' );
 

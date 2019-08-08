@@ -439,9 +439,9 @@ function bp_media_add( $args = '' ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $r Array of parsed arguments for the media item being added.
+	 * @param object $media Media object.
 	 */
-	do_action( 'bp_media_add', $r );
+	do_action( 'bp_media_add', $media );
 
 	return $media->id;
 }
@@ -468,9 +468,9 @@ function bp_media_delete( $media_id ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $media_id ID of media
+	 * @param object $media Media object
 	 */
-	do_action( 'bp_media_delete', $media_id );
+	do_action( 'bp_media_delete', $media );
 
 	return $media_id;
 }
@@ -797,9 +797,9 @@ function bp_album_delete( $album_id ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $album_id ID of album
+	 * @param object $album Album object
 	 */
-	do_action( 'bp_album_delete', $album_id );
+	do_action( 'bp_album_delete', $album );
 
 	return $album_id;
 }
