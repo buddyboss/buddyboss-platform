@@ -1570,7 +1570,7 @@ function bbp_form_slug_conflict_check( $slug, $default ) {
 
 		/** BuddyBoss Core *******************************************************/
 
-		if ( defined( 'BP_VERSION' ) ) {
+		if ( defined( 'BP_PLATFORM_VERSION' ) ) {
 			$bp = buddypress();
 
 			// Loop through root slugs and check for conflict

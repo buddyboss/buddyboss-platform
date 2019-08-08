@@ -4914,7 +4914,70 @@ function bp_activity_action_parse_url() {
 			$json_data['images']      = $images;
 			$json_data['error']       = '';
 		} else {
-			$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+			// Extract HTML using curl
+			$ch = curl_init();
+
+			curl_setopt($ch, CURLOPT_HEADER, 1);
+			curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+			curl_setopt($ch, CURLOPT_URL, $url);
+			curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
+
+			$data = curl_exec($ch);
+			curl_close($ch);
+
+			// Load HTML to DOM Object
+			$dom = new DOMDocument();
+			@$dom->loadHTML($data);
+
+			// Parse DOM to get Title
+			$nodes = $dom->getElementsByTagName('title');
+			$title = $nodes->item(0)->nodeValue;
+
+			if ( '' === $title || null === $title ) {
+				$nodes = $dom->getElementsByTagName('h1');
+				$title = $nodes->item(0)->nodeValue;
+			}
+
+			if ( '' === $title || null === $title ) {
+				$nodes = $dom->getElementsByTagName('h2');
+				$title = $nodes->item(0)->nodeValue;
+			}
+
+			// Parse DOM to get Meta Description
+			$metas = $dom->getElementsByTagName('meta');
+			$body = "";
+			for ($i = 0; $i < $metas->length; $i ++) {
+				$meta = $metas->item($i);
+				if ($meta->getAttribute('name') == 'description') {
+					$body = $meta->getAttribute('content');
+				}
+			}
+
+			// Parse DOM to get Images
+			$image_urls = array();
+			$images = $dom->getElementsByTagName('img');
+
+			for ($i = 0; $i < $images->length; $i ++) {
+				$image = $images->item($i);
+				$src = $image->getAttribute('src');
+
+				if(filter_var($src, FILTER_VALIDATE_URL)) {
+					$image_src[] = $src;
+				}
+			}
+
+			if ( isset( $image_src) && isset( $body ) && '' === trim( $title ) ) {
+				$title = $body;
+			}
+
+			if ( isset( $title ) && isset( $body ) && isset( $image_src ) ) {
+				$json_data['title']       = $title;
+				$json_data['description'] = $body;
+				$json_data['images']      = $image_src;
+				$json_data['error']       = '';
+			} else {
+				$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';
+			}
 		}
 	} else {
 		$json_data['error'] = 'Sorry! preview is not available right now. Please try again later.';

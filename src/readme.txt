@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.4
+Stable tag: 1.1.5
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,28 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.1.5 =
+* Performance - Faster loading of Gravatar images on Members directory
+* Performance - Reduced number of CSS and Javascript files loaded per page
+* Performance - Removed Heartbeat API from all pages besides Activity, reduces requests to server
+* Performance - Improved PHP caching for Media, Albums and Activity
+* Profiles - Added 'Snapchat' as option in 'Social Networks' profile field
+* Profiles - Fixed profile name field syncing between WordPress admin and BuddyBoss profiles
+* Profiles - Fixes issue with 'Reset' filter not always working
+* Profiles - Fixed 'Profile Types' filter showing wrong label, and not displaying if type has no members
+* Activity - External links added in activity posts now open in a new tab/window
+* Messages - Fixed issue with message thread loading, now doing one thread fetch request at a time
+* Forums - Fixed issue with editing forum posts that include media attachments
+* Forums - Fixed Edit and Merge links for all forum roles
+* Groups - Display group member role in singular format, if only 1 member of that role
+* Media - Fixed issue with creating an album set to 'My Friends' privacy
+* Registration - Added validation notice if Nickname added is less than 4 characters
+* Compatibility - Improved support for 'GEO my WordPress' plugin
+* Compatibility - Improved support for Keap (Infusionsoft) API in plugins
+* Translations - Fixed text instances that were not available for translation
+* Errors - Fixed various PHP errors in certain situations
+* Documentation - Membership Plugins
 
 = 1.1.4 =
 * Profiles - Fixed issue with member profile recognizing existing Profile Type

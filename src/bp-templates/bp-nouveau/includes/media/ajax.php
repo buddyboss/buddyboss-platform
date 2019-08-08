@@ -550,6 +550,7 @@ function bp_nouveau_ajax_media_album_save() {
 	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$medias   = ! empty( $_POST['medias'] ) && is_array( $_POST['medias'] ) ? $_POST['medias'] : array();
 
 	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
 
@@ -570,7 +571,6 @@ function bp_nouveau_ajax_media_album_save() {
 	$media_ids     = array();
 
 	// save media
-	$medias = $_POST['medias'];
 	if ( ! empty( $medias ) ) {
 
 		foreach ( $medias as $media ) {
@@ -850,7 +850,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	if ( ! empty( $_POST['caller'] && 'bp-existing-media' == $_POST['caller'] ) ) {
+	if ( ! empty( $_POST['caller'] ) && 'bp-existing-media' == $_POST['caller'] ) {
 		$querystring['album_id'] = 0;
 	}
 

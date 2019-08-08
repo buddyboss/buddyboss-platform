@@ -44,7 +44,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
-	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
+	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! bp_is_messages_component() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
 		return false;
 	}
 
@@ -67,7 +67,7 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
-	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
+	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! bp_is_messages_component() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
 		return $params;
 	}
 

@@ -1690,24 +1690,6 @@ function bp_group_type_show_correct_current_menu(){
 			</script>
 			<?php
 		}
-		if ( $screen->id == 'bp-group-type' ) {
-			?>
-			<script>
-				jQuery(document).ready(function ($) {
-					$('li.wp-first-item').next().addClass('current');
-				});
-			</script>
-			<?php
-		}
-		if ( $screen->id == 'edit-bp-group-type' ) {
-			?>
-			<script>
-				jQuery(document).ready(function ($) {
-					$('li.wp-first-item').next().addClass('current');
-				});
-			</script>
-			<?php
-		}
 	}
 }
 

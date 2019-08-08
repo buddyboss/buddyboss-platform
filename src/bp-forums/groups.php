@@ -422,6 +422,15 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 			$this->new_forum( $new_forum_args );
 		}
 
+		/**
+		 * Add action that fire before user redirect
+         *
+         * @Since BuddyBoss 1.1.5
+         *
+         * @param int $group_id Current group id
+		 */
+		do_action( 'bp_group_admin_after_edit_screen_save',  $group_id );
+
 		// Redirect after save when not in admin
 		if ( !is_admin() ) {
 			bp_core_redirect( trailingslashit( bp_get_group_permalink( buddypress()->groups->current_group ) . '/admin/' . $this->slug ) );
@@ -697,31 +706,7 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		// Maybe disconnect forum from group
 		if ( empty( $enabled ) ) {
 			$this->disconnect_forum_from_group( $group_id );
-		} else {
-
-			// Enforce forum status inherit the groups status
-			if ( ! empty( $forum_id ) ) {
-
-				// Set the default forum status
-				switch ( $group->status ) {
-					case 'hidden'  :
-						$status = bbp_get_hidden_status_id();
-						break;
-					case 'private' :
-						$status = bbp_get_private_status_id();
-						break;
-					case 'public'  :
-					default        :
-						$status = bbp_get_public_status_id();
-						break;
-				}
-
-				wp_update_post( array(
-					'ID'          => $forum_id,
-					'post_status' => $status
-				) );
-			}
-        }
+		}
 
 		// Update Forums' internal private and forum ID variables
 		bbp_repair_forum_visibility();

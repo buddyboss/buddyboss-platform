@@ -1485,12 +1485,14 @@ function bp_insert_activity_meta( $content = '' ) {
 	// Get the time since this activity was recorded.
 	$date_recorded  = bp_core_time_since( $activities_template->activity->date_recorded );
 
-	// Set up 'time-since' <span>.
-	$time_since = sprintf(
-		'<span class="time-since" data-livestamp="%1$s">%2$s</span>',
-		bp_core_get_iso8601_date( $activities_template->activity->date_recorded ),
-		$date_recorded
-	);
+	$time_since = '';
+	// Remove time since from single activity page.
+	if ( ! bp_is_single_activity() ) {
+		// Set up 'time-since' <span>.
+		$time_since = sprintf( '<span class="time-since" data-livestamp="%1$s">%2$s</span>',
+			bp_core_get_iso8601_date( $activities_template->activity->date_recorded ),
+			$date_recorded );
+	}
 
 	/**
 	 * Filters the activity item time since markup.
