@@ -515,12 +515,6 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
   background-size: 100% 100%;
 }
 
-/* Integrations - BuddyPress Plugins */
-.bp-admin-card.section-bp_compatibility-integration h2:before {
-  background-image: url(../../images/admin/icons/logos/buddypress.png);
-  background-size: 100% 100%;
-}
-
 /*
  * 3.0 Content
  */
