@@ -1101,6 +1101,10 @@ class BP_XProfile_Field {
 			$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
 		}
 
+		if ( function_exists( 'bp_is_register_page' ) && bp_is_register_page() ) {
+			$member_types[] = 'null';
+		}
+
 		/*
 		 * Filter out fields that don't match any passed types, or those marked '_none'.
 		 * The 'any' type is implicitly handled here: it will match no types.
@@ -1109,6 +1113,10 @@ class BP_XProfile_Field {
 			if ( ! array_intersect( $field_types, $member_types ) ) {
 				unset( $fields[ $field_id ] );
 			}
+		}
+
+		if ( function_exists( 'bp_is_register_page' ) && bp_is_register_page() ) {
+			unset( $member_types[ 'null' ] );
 		}
 
 		// Any fields with no member_type metadata are available to all profile types.
