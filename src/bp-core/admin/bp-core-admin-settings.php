@@ -234,6 +234,20 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 }
 
 /**
+ * Enable activity scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_admin_setting_callback_enable_activity_scopes() {
+	?>
+
+    <input id="_bp_enable_activity_scopes" name="_bp_enable_activity_scopes" type="checkbox" value="1" <?php checked( bp_is_activity_scopes_active( false ) ); ?> />
+    <label for="_bp_enable_activity_scopes"><?php _e( 'Allow users to filter the activities with scopes', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow following activity stream.
  *
  * @since BuddyBoss 1.0.0

@@ -85,6 +85,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		// Allow autoload
 		$this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
 
+		// Allow scopes
+		$this->add_field( '_bp_enable_activity_scopes', __( 'Activity scopes', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_scopes', 'intval' );
+
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
 
