@@ -1005,6 +1005,12 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * @return array
  */
 function bp_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
+
+	// Is follow active?
+	if ( ! bp_is_activity_follow_active() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
