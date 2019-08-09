@@ -234,6 +234,20 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 }
 
 /**
+ * Enable activity scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_admin_setting_callback_enable_activity_scopes() {
+	?>
+
+    <input id="_bp_enable_activity_scopes" name="_bp_enable_activity_scopes" type="checkbox" value="1" <?php checked( bp_is_activity_scopes_active( false ) ); ?> />
+    <label for="_bp_enable_activity_scopes"><?php _e( 'Allow users to filter the activities with scopes', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow following activity stream.
  *
  * @since BuddyBoss 1.0.0
@@ -970,16 +984,31 @@ function bp_profile_names_tutorial() {
 }
 
 /**
- * Enable BP->WP profile syncing field.
+ * Admin settings for showing the email confirmation field.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.1.6
  *
  */
-function bp_admin_setting_callback_profile_sync() {
+function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
 
-	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
-	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyPress to WordPress profile syncing', 'buddyboss' ); ?></label>
+	<input id="register-confirm-email" name="register-confirm-email" type="checkbox" value="1" <?php checked( bp_register_confirm_email( false ) ); ?> />
+	<label for="register-confirm-email"><?php _e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Admin settings for showing the password confirmation field.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ */
+function bp_admin_setting_callback_register_show_confirm_password() {
+	?>
+
+	<input id="register-confirm-password" name="register-confirm-password" type="checkbox" value="1" <?php checked( bp_register_confirm_password( false ) ); ?> />
+	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }

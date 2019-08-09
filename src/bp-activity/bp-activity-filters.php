@@ -423,7 +423,21 @@ function bp_activity_make_nofollow_filter( $text ) {
 	function bp_activity_make_nofollow_filter_callback( $matches ) {
 		$text = $matches[1];
 		$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'"), '', $text );
-		return "<a $text rel=\"nofollow\">";
+
+		// Extract URL from href
+		preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match);
+
+		$url_host      = parse_url( $match[0][0], PHP_URL_HOST );
+		$base_url_host = parse_url( site_url(), PHP_URL_HOST );
+
+		// If site link then nothing to do.
+		if($url_host == $base_url_host || empty($url_host)) {
+			return "<a $text rel=\"nofollow\">";
+		// Else open in new tab.
+		} else {
+			return "<a target='_blank' $text rel=\"nofollow\">";
+		}
+
 	}
 
 /**
@@ -608,6 +622,11 @@ function bp_activity_newest_class( $classes = '' ) {
  * @return array $args
  */
 function bp_activity_display_all_types_on_just_me($args) {
+
+	if ( bp_is_activity_scopes_active() ) {
+		return $args;
+	}
+
 	if ( ! isset( $args['scope'] ) ) {
 		return $args;
 	}
@@ -992,6 +1011,12 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * @return array
  */
 function bp_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
+
+	// Is follow active?
+	if ( ! bp_is_activity_follow_active() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];
