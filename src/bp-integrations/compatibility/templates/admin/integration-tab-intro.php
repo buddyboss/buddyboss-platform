@@ -1,7 +1,7 @@
 <div class="wrap">
 
     <div class="bp-admin-card section-bp_compatibility-integration">
-        <h2><?php _e( 'BuddyPress <span>&mdash; third party plugin settings</span>', 'buddyboss' ); ?></h2>
+        <h1><?php _e( 'BuddyPress <span>&mdash; Third party plugin settings</span>', 'buddyboss' ); ?></h1>
 
 		<?php
 		// We're saving our own options, until the WP Settings API is updated to work with Multisite.
@@ -17,13 +17,21 @@
 			//add_settings_section callback is displayed here. For every new section we need to call settings_fields.
 			settings_fields( "buddypress" );
 
-			// all the add_settings_field callbacks is displayed here
-			do_settings_sections( "buddypress" );
-			?>
-            <p class="submit">
-                <input type="submit" name="submit" class="button-primary" value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>"/>
-            </p>
 
+			ob_start();
+
+			// all the add_settings_field callbacks is displayed here
+			bp_core_compatibility_do_settings_sections( "buddypress" );
+
+			$output = ob_get_contents();
+			ob_clean();
+
+			if ( ! empty( $output ) ) {
+				echo $output;
+
+				submit_button( __( 'Save Settings', 'buddyboss' ) );
+			}
+			?>
         </form>
     </div>
 
