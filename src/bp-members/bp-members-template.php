@@ -2725,3 +2725,33 @@ function bp_member_latest_update( $args = '' ) {
 		 */
 		return apply_filters( 'bp_get_member_latest_update', $update_content, $r );
 	}
+
+/**
+ * Output the user confirm email address submitted during signup.
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_signup_confirm_email_value() {
+	echo bp_get_signup_confirm_email_value();
+}
+	/**
+	 * Get the confirm email address submitted during signup.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @return string
+	 */
+	function bp_get_signup_confirm_email_value() {
+		$value = '';
+		if ( isset( $_POST['signup_email_confirm'] ) )
+			$value = sanitize_email( $_POST['signup_email_confirm'] );
+
+		/**
+		 * Filters the confirm email address submitted during signup.
+		 *
+		 * @since BuddyBoss 1.1.6
+		 *
+		 * @param string $value Email address submitted during signup.
+		 */
+		return apply_filters( 'bp_get_signup_confirm_email_value', $value );
+	}
