@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-08-05 16:14:45+00:00\n"
+"POT-Creation-Date: 2019-08-09 10:08:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2043,7 +2043,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-pages.php:35
 #: bp-core/classes/class-bp-admin-tab.php:237 bp-forums/groups.php:301
-#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:24
+#: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:32
 msgid "Save Settings"
 msgstr ""
 
@@ -12293,7 +12293,7 @@ msgid "BuddyPress Plugins"
 msgstr ""
 
 #: bp-integrations/compatibility/templates/admin/integration-tab-intro.php:4
-msgid "BuddyPress <span>&mdash; third party plugin settings</span>"
+msgid "BuddyPress <span>&mdash; Third party plugin settings</span>"
 msgstr ""
 
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:96
