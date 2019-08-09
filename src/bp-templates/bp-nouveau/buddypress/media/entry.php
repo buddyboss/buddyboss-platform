@@ -14,7 +14,7 @@
            data-attachment-full="<?php bp_media_attachment_image(); ?>"
            data-activity-id="<?php bp_media_activity_id(); ?>"
            href="#">
-            <img src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>"/>
+           <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
         </a>
         <?php if ( bp_is_my_profile() || ( bp_is_group() && ( ( bp_is_group_media() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) || ( bp_is_group_albums() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) ) ) : ?>
             <div class="bb-media-check-wrap">

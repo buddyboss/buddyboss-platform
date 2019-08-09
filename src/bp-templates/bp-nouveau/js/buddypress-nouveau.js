@@ -73,6 +73,13 @@ window.bp = window.bp || {};
 
 			// An object containing each query var
 			this.querystring            = this.getLinkParams();
+
+			// Check for lazy images and load them also register scroll event to load.
+			bp.Nouveau.lazyLoad( '.lazy' );
+			$( window ).on( 'scroll resize',function(){
+				bp.Nouveau.lazyLoad('.lazy');
+			});
+			
 		},
 
 		/**
@@ -387,9 +394,6 @@ window.bp = window.bp || {};
 							if(bp.Nouveau.lazyLoad){
 								setTimeout(function(){ // Waiting to load dummy image
 									bp.Nouveau.lazyLoad( '.lazy' );
-									$( window ).on( 'scroll resize',function(){
-										bp.Nouveau.lazyLoad('.lazy');
-									});
 								},1000);
 							}
 						} );
