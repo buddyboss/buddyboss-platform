@@ -31,7 +31,7 @@
 
 				submit_button( __( 'Save Settings', 'buddyboss' ) );
 			} else {
-			    printf( '<p>%s</p>', __( "Here we have setting for the third party plugins", 'buddyboss' ) );
+			    printf( '<p>%s</p>', __( "In BuddyPress, developers frequently added their plugin options into Settings > BuddyPress > Options. If you enable any third party BuddyPress plugins that used this method, those options will appear on this page.", 'buddyboss' ) );
             }
 			?>
         </form>
