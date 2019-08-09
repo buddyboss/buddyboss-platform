@@ -357,6 +357,11 @@ tr.bp-search-parent-field label {
   margin-left: 15px;
 }
 
+.bp-admin-card h3 {
+  font-size: 19px;
+  font-weight: 600;
+}
+
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
