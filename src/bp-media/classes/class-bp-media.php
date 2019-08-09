@@ -941,4 +941,24 @@ class BP_Media {
 		return (array) $media_ids;
 	}
 
+	/**
+	 * Get media id for the activity.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 * @param bool $activity_id
+	 *
+	 * @return array|bool
+	 */
+	public static function get_activity_media_id( $activity_id = false ) {
+		global $bp, $wpdb;
+
+		if ( ! $activity_id ) {
+			return false;
+		}
+
+		$activity_media_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->media->table_name} m WHERE m.activity_id = {$activity_id}" );
+
+		return $activity_media_id;
+	}
+
 }

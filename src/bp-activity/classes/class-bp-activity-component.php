@@ -124,7 +124,7 @@ class BP_Activity_Component extends BP_Component {
 			}
 
 			// Screens - User secondary nav.
-			if ( bp_is_user() && in_array( bp_current_action(), array( 'friends', 'groups', 'favorites', 'mentions' ), true ) ) {
+			if ( bp_is_user() && in_array( bp_current_action(), array( 'friends', 'groups', 'favorites', 'mentions', 'following' ), true ) ) {
 				require $this->path . 'bp-activity/screens/' . bp_current_action() . '.php';
 			}
 
@@ -156,6 +156,10 @@ class BP_Activity_Component extends BP_Component {
 		// Define a slug, if necessary.
 		if ( ! defined( 'BP_ACTIVITY_SLUG' ) ) {
 			define( 'BP_ACTIVITY_SLUG', $this->id );
+		}
+
+		if ( ! defined( 'BP_FOLLOW_SLUG' ) ) {
+			define( 'BP_FOLLOW_SLUG', $this->id . '_follow' );
 		}
 
 		// Global tables for activity component.
@@ -235,24 +239,122 @@ class BP_Activity_Component extends BP_Component {
 		$slug          = bp_get_activity_slug();
 		$activity_link = trailingslashit( $user_domain . $slug );
 
-		$main_slug = ['just-me'];
-		if ( bp_activity_do_mentions() )   $main_slug[] = 'mentions';
-		if ( bp_is_active( 'friends' ) && bp_is_my_profile() )   $main_slug[] = 'friends';
-		if ( bp_is_active( 'groups' ) && bp_is_my_profile() )    $main_slug[] = 'groups';
-		if ( bp_is_activity_follow_active() && bp_is_my_profile() )    $main_slug[] = 'following';
+		$scopes_active = bp_is_activity_scopes_active();
 
+		if ( ! $scopes_active ) {
 
-		// Add 'Activity' to the main navigation.
-		$main_nav = array(
-			'name'                => __( 'Timeline', 'buddyboss' ),
-			'slug'                => $slug,
-			'position'            => 25,
-			'screen_function'     => 'bp_activity_screen_my_activity',
-			'default_subnav_slug' => implode( ',', $main_slug ),
-			'item_css_id'         => $this->id
-		);
+			$main_slug = [ 'just-me' ];
+			if ( bp_activity_do_mentions() ) {
+				$main_slug[] = 'mentions';
+			}
+			if ( bp_is_active( 'friends' ) && bp_is_my_profile() ) {
+				$main_slug[] = 'friends';
+			}
+			if ( bp_is_active( 'groups' ) && bp_is_my_profile() ) {
+				$main_slug[] = 'groups';
+			}
+			if ( bp_is_activity_follow_active() && bp_is_my_profile() ) {
+				$main_slug[] = 'following';
+			}
 
-		parent::setup_nav( $main_nav );
+			// Add 'Activity' to the main navigation.
+			$main_nav = array(
+				'name'                => __( 'Timeline', 'buddyboss' ),
+				'slug'                => $slug,
+				'position'            => 25,
+				'screen_function'     => 'bp_activity_screen_my_activity',
+				'default_subnav_slug' => implode( ',', $main_slug ),
+				'item_css_id'         => $this->id
+			);
+		} else {
+
+			// Add 'Activity' to the main navigation.
+			$main_nav = array(
+				'name'                => _x( 'Timeline', 'Profile activity screen nav', 'buddyboss' ),
+				'slug'                => $slug,
+				'position'            => 10,
+				'screen_function'     => 'bp_activity_screen_my_activity',
+				'default_subnav_slug' => 'just-me',
+				'item_css_id'         => $this->id
+			);
+
+			// Add the subnav items to the activity nav item if we are using a theme that supports this.
+			$sub_nav[] = array(
+				'name'            => _x( 'Personal', 'Profile activity screen sub nav', 'buddyboss' ),
+				'slug'            => 'just-me',
+				'parent_url'      => $activity_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'bp_activity_screen_my_activity',
+				'position'        => 10
+			);
+
+			// Check @mentions.
+			if ( bp_activity_do_mentions() ) {
+				$sub_nav[] = array(
+					'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
+					'slug'            => 'mentions',
+					'parent_url'      => $activity_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_activity_screen_mentions',
+					'position'        => 20,
+					'item_css_id'     => 'activity-mentions'
+				);
+			}
+
+			// Favorite activity items.
+			if ( bp_activity_can_favorite() ) {
+				$sub_nav[] = array(
+					'name'            => _x( 'Favorites', 'Profile activity screen sub nav', 'buddyboss' ),
+					'slug'            => 'favorites',
+					'parent_url'      => $activity_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_activity_screen_favorites',
+					'position'        => 30,
+					'item_css_id'     => 'activity-favs'
+				);
+			}
+
+			// Additional menu if friends is active.
+			if ( bp_is_active( 'friends' ) ) {
+				$sub_nav[] = array(
+					'name'            => _x( 'Friends', 'Profile activity screen sub nav', 'buddyboss' ),
+					'slug'            => bp_get_friends_slug(),
+					'parent_url'      => $activity_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_activity_screen_friends',
+					'position'        => 40,
+					'item_css_id'     => 'activity-friends'
+				);
+			}
+
+			// Additional menu if groups is active.
+			if ( bp_is_active( 'groups' ) ) {
+				$sub_nav[] = array(
+					'name'            => _x( 'Groups', 'Profile activity screen sub nav', 'buddyboss' ),
+					'slug'            => bp_get_groups_slug(),
+					'parent_url'      => $activity_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_activity_screen_groups',
+					'position'        => 50,
+					'item_css_id'     => 'activity-groups'
+				);
+			}
+
+			// Additional menu if follow is active.
+			if ( bp_is_activity_follow_active() ) {
+				$sub_nav[] = array(
+					'name'            => _x( 'Following', 'Profile activity screen sub nav', 'buddyboss' ),
+					'slug'            => 'following',
+					'parent_url'      => $activity_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_activity_screen_following',
+					'position'        => 60,
+					'item_css_id'     => 'activity-following'
+				);
+			}
+		}
+
+		parent::setup_nav( $main_nav, $sub_nav );
 	}
 
 	/**
