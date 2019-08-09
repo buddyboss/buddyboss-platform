@@ -107,6 +107,7 @@ add_filter( 'bp_get_total_favorite_count_for_user', 'bp_core_number_format' );
 add_filter( 'bp_get_total_mention_count_for_user',  'bp_core_number_format' );
 
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
+add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
 
@@ -621,6 +622,11 @@ function bp_activity_newest_class( $classes = '' ) {
  * @return array $args
  */
 function bp_activity_display_all_types_on_just_me($args) {
+
+	if ( ! bp_is_activity_scopes_active() ) {
+		return $args;
+	}
+
 	if ( ! isset( $args['scope'] ) ) {
 		return $args;
 	}
