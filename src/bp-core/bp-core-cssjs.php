@@ -432,7 +432,6 @@ function bp_core_get_js_dependencies() {
 		'bp-jquery-cookie',
 		'bp-jquery-scroll-to',
 		'wp-util',
-        'wp-i18n'
 	) );
 }
 
