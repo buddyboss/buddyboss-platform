@@ -1912,6 +1912,12 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 add_action( 'wp_ajax_nopriv_bp_get_xprofile_field_ajax', 'bp_get_xprofile_field_ajax' );
 
+/**
+ * Ajax callback for get the conditional field based on the selected member type.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ */
 function bp_get_xprofile_field_ajax() {
 	global $wpdb;
 
@@ -1931,18 +1937,16 @@ function bp_get_xprofile_field_ajax() {
 	if ( isset( $get_db_ids ) ) {
 		foreach ( $get_db_ids as $id ) {
 			if ( ! in_array( $id->object_id, $existing_fields_arr ) ) {
-				$new_fields[] = $id->object_id;
+				$new_fields[]          = $id->object_id;
 				$existing_fields_arr[] = $id->object_id;
 			}
 		}
 	}
 
-	$existing_fields = implode( ',', $existing_fields_arr );
-	$include_fields  = implode( ',', $new_fields );
-	$fixed_fields_arr  = explode( ',', $existing_fields_fixed_ids );
+	$existing_fields  = implode( ',', $existing_fields_arr );
+	$include_fields   = implode( ',', $new_fields );
+	$fixed_fields_arr = explode( ',', $existing_fields_fixed_ids );
 	$signup_group_id  = bp_xprofile_base_group_id();
-
-
 
 	ob_start();
 
@@ -1982,12 +1986,10 @@ function bp_get_xprofile_field_ajax() {
 		endwhile;
 	endif;
 
-	$content = ob_get_clean();
-
-	$response = array();
-
-	$response['field_ids'] = $existing_fields;
-	$response['field_html'] = '<div class="newely_added">'.$content.'</div>';
+	$content                = ob_get_clean();
+	$response               = array();
+	$response['field_ids']  = $existing_fields;
+	$response['field_html'] = '<div class="newely_added">' . $content . '</div>';
 	$response['field_tiny'] = $tinymce_added;
 
 	wp_die( json_encode( $response ) );
