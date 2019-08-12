@@ -35,8 +35,9 @@ function bp_core_set_uri_globals() {
 	global $current_blog, $wp_rewrite;
 
 	// Don't catch URIs on non-root blogs unless multiblog mode is on.
-	if ( !bp_is_root_blog() && !bp_is_multiblog_mode() )
+	if ( ! bp_is_root_blog() && ! bp_is_multiblog_mode() ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
@@ -45,14 +46,16 @@ function bp_core_set_uri_globals() {
 	$key_slugs    = $matches = $uri_chunks = array();
 
 	// Fetch all the WP page names for each component.
-	if ( empty( $bp->pages ) )
+	if ( empty( $bp->pages ) ) {
 		$bp->pages = bp_core_get_directory_pages();
+	}
 
 	// Ajax or not?
-	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) )
+	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
-	else
+	} else {
 		$path = esc_url( $_SERVER['REQUEST_URI'] );
+	}
 
 	/**
 	 * Filters the BuddyPress global URI path.
@@ -71,8 +74,8 @@ function bp_core_set_uri_globals() {
 
 	// Loop and remove empties.
 	foreach ( (array) $bp_uri as $key => $uri_chunk ) {
-		if ( empty( $bp_uri[$key] ) ) {
-			unset( $bp_uri[$key] );
+		if ( empty( $bp_uri[ $key ] ) ) {
+			unset( $bp_uri[ $key ] );
 		}
 	}
 
@@ -84,21 +87,21 @@ function bp_core_set_uri_globals() {
 	 * 2. when BP is running on secondary blog of a subdirectory
 	 * multisite installation. Phew!
 	 */
-	if ( is_multisite() && !is_subdomain_install() && ( bp_is_multiblog_mode() || 1 != bp_get_root_blog_id() ) ) {
+	if ( is_multisite() && ! is_subdomain_install() && ( bp_is_multiblog_mode() || 1 != bp_get_root_blog_id() ) ) {
 
 		// Blow chunks.
 		$chunks = explode( '/', $current_blog->path );
 
 		// If chunks exist...
-		if ( !empty( $chunks ) ) {
+		if ( ! empty( $chunks ) ) {
 
 			// ...loop through them...
-			foreach( $chunks as $key => $chunk ) {
+			foreach ( $chunks as $key => $chunk ) {
 				$bkey = array_search( $chunk, $bp_uri );
 
 				// ...and unset offending keys
 				if ( false !== $bkey ) {
-					unset( $bp_uri[$bkey] );
+					unset( $bp_uri[ $bkey ] );
 				}
 
 				$bp_uri = array_values( $bp_uri );
@@ -110,12 +113,14 @@ function bp_core_set_uri_globals() {
 	$paths = explode( '/', bp_core_get_site_path() );
 
 	// Take empties off the end of path.
-	if ( empty( $paths[count( $paths ) - 1] ) )
+	if ( empty( $paths[ count( $paths ) - 1 ] ) ) {
 		array_pop( $paths );
+	}
 
 	// Take empties off the start of path.
-	if ( empty( $paths[0] ) )
+	if ( empty( $paths[0] ) ) {
 		array_shift( $paths );
+	}
 
 	// Reset indexes.
 	$bp_uri = array_values( $bp_uri );
@@ -123,8 +128,8 @@ function bp_core_set_uri_globals() {
 
 	// Unset URI indices if they intersect with the paths.
 	foreach ( (array) $bp_uri as $key => $uri_chunk ) {
-		if ( isset( $paths[$key] ) && $uri_chunk == $paths[$key] ) {
-			unset( $bp_uri[$key] );
+		if ( isset( $paths[ $key ] ) && $uri_chunk == $paths[ $key ] ) {
+			unset( $bp_uri[ $key ] );
 		}
 	}
 
@@ -138,7 +143,7 @@ function bp_core_set_uri_globals() {
 	 */
 	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) ) {
 		$post = get_post( get_option( 'page_on_front' ) );
-		if ( !empty( $post ) ) {
+		if ( ! empty( $post ) ) {
 			$bp_uri[0] = $post->post_name;
 		}
 	}
@@ -150,12 +155,14 @@ function bp_core_set_uri_globals() {
 	$GLOBALS['bp_unfiltered_uri'] = &$bp->unfiltered_uri;
 
 	// Get slugs of pages into array.
-	foreach ( (array) $bp->pages as $page_key => $bp_page )
-		$key_slugs[$page_key] = trailingslashit( '/' . $bp_page->slug );
+	foreach ( (array) $bp->pages as $page_key => $bp_page ) {
+		$key_slugs[ $page_key ] = trailingslashit( '/' . $bp_page->slug );
+	}
 
 	// Bail if keyslugs are empty, as BP is not setup correct.
-	if ( empty( $key_slugs ) )
+	if ( empty( $key_slugs ) ) {
 		return;
+	}
 
 	// Loop through page slugs and look for exact match to path.
 	foreach ( $key_slugs as $key => $slug ) {
@@ -183,17 +190,17 @@ function bp_core_set_uri_globals() {
 				foreach ( (array) $uri_chunks as $key => $uri_chunk ) {
 
 					// Make sure chunk is in the correct position.
-					if ( !empty( $bp_uri[$key] ) && ( $bp_uri[$key] == $uri_chunk ) ) {
+					if ( ! empty( $bp_uri[ $key ] ) && ( $bp_uri[ $key ] == $uri_chunk ) ) {
 						$matches[] = 1;
 
-					// No match.
+						// No match.
 					} else {
 						$matches[] = 0;
 					}
 				}
 
 				// Have a match.
-				if ( !in_array( 0, (array) $matches ) ) {
+				if ( ! in_array( 0, (array) $matches ) ) {
 					$match      = $bp_page;
 					$match->key = $page_key;
 					break;
@@ -239,25 +246,26 @@ function bp_core_set_uri_globals() {
 	}
 
 	// Search doesn't have an associated page, so we check for it separately.
-	if ( !empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
+	if ( ! empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
 		$matches[]   = 1;
-		$match       = new stdClass;
+		$match       = new stdClass();
 		$match->key  = 'search';
 		$match->slug = bp_get_search_slug();
 	}
 
 	// This is not a BuddyPress page, so just return.
-	if ( empty( $matches ) )
+	if ( empty( $matches ) ) {
 		return false;
+	}
 
 	$wp_rewrite->use_verbose_page_rules = false;
 
 	// Find the offset. With $root_profile set, we fudge the offset down so later parsing works.
-	$slug       = !empty ( $match ) ? explode( '/', $match->slug ) : '';
+	$slug       = ! empty( $match ) ? explode( '/', $match->slug ) : '';
 	$uri_offset = empty( $root_profile ) ? 0 : -1;
 
 	// Rejig the offset.
-	if ( !empty( $slug ) && ( 1 < count( $slug ) ) ) {
+	if ( ! empty( $slug ) && ( 1 < count( $slug ) ) ) {
 		// Only offset if not on a root profile. Fixes issue when Members page is nested.
 		if ( false === $root_profile ) {
 			array_pop( $slug );
@@ -293,7 +301,7 @@ function bp_core_set_uri_globals() {
 				if ( $root_profile instanceof WP_User ) {
 					$bp->displayed_user->id = $root_profile->ID;
 
-				// Switch the displayed_user based on compatibility mode.
+					// Switch the displayed_user based on compatibility mode.
 				} elseif ( bp_is_username_compatibility_mode() ) {
 					$bp->displayed_user->id = (int) bp_core_get_userid( urldecode( $after_member_slug ) );
 
@@ -304,10 +312,12 @@ function bp_core_set_uri_globals() {
 
 			// Is this a profile type directory?
 			if ( ! bp_displayed_user_id() && $after_member_slug === bp_get_members_member_type_base() && ! empty( $bp_uri[ $uri_offset + 2 ] ) ) {
-				$matched_types = bp_get_member_types( array(
-					'has_directory'  => true,
-					'directory_slug' => $bp_uri[ $uri_offset + 2 ],
-				) );
+				$matched_types = bp_get_member_types(
+					array(
+						'has_directory'  => true,
+						'directory_slug' => $bp_uri[ $uri_offset + 2 ],
+					)
+				);
 
 				if ( ! empty( $matched_types ) ) {
 					$bp->current_member_type = reset( $matched_types );
@@ -335,11 +345,11 @@ function bp_core_set_uri_globals() {
 
 			// Bump the offset.
 			if ( bp_displayed_user_id() ) {
-				if ( isset( $bp_uri[$uri_offset + 2] ) ) {
+				if ( isset( $bp_uri[ $uri_offset + 2 ] ) ) {
 					$bp_uri                = array_merge( array(), array_slice( $bp_uri, $uri_offset + 2 ) );
 					$bp->current_component = $bp_uri[0];
 
-				// No component, so default will be picked later.
+					// No component, so default will be picked later.
 				} else {
 					$bp_uri                = array_merge( array(), array_slice( $bp_uri, $uri_offset + 2 ) );
 					$bp->current_component = '';
@@ -358,7 +368,7 @@ function bp_core_set_uri_globals() {
 	 * If a BuddyPress directory is set to the WP front page, URLs like example.com/members/?s=foo
 	 * shouldn't interfere with blog searches.
 	 */
-	if ( empty( $current_action) && ! empty( $_GET['s'] ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
+	if ( empty( $current_action ) && ! empty( $_GET['s'] ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
 		$page_on_front = (int) get_option( 'page_on_front' );
 		if ( (int) $match->id === $page_on_front ) {
 			$bp->current_component = '';
@@ -369,8 +379,8 @@ function bp_core_set_uri_globals() {
 	$bp->current_action = $current_action;
 
 	// Slice the rest of the $bp_uri array and reset offset.
-	$bp_uri      = array_slice( $bp_uri, $uri_offset + 2 );
-	$uri_offset  = 0;
+	$bp_uri     = array_slice( $bp_uri, $uri_offset + 2 );
+	$uri_offset = 0;
 
 	// Set the entire URI as the action variables, we will unset the current_component and action in a second.
 	$bp->action_variables = $bp_uri;
@@ -390,8 +400,9 @@ function bp_core_enable_root_profiles() {
 
 	$retval = false;
 
-	if ( defined( 'BP_ENABLE_ROOT_PROFILES' ) && ( true == BP_ENABLE_ROOT_PROFILES ) )
+	if ( defined( 'BP_ENABLE_ROOT_PROFILES' ) && ( true == BP_ENABLE_ROOT_PROFILES ) ) {
 		$retval = true;
+	}
 
 	/**
 	 * Filters whether or not root profiles are enabled and allowed.
@@ -419,11 +430,13 @@ function bp_core_load_template( $templates ) {
 	global $wp_query;
 
 	// Reset the post.
-	bp_theme_compat_reset_post( array(
-		'ID'          => 0,
-		'is_404'      => true,
-		'post_status' => 'publish',
-	) );
+	bp_theme_compat_reset_post(
+		array(
+			'ID'          => 0,
+			'is_404'      => true,
+			'post_status' => 'publish',
+		)
+	);
 
 	// Set theme compat to false since the reset post function automatically sets
 	// theme compat to true.
@@ -439,7 +452,7 @@ function bp_core_load_template( $templates ) {
 	if ( ! bp_use_theme_compat_with_current_theme() ) {
 		$template = locate_template( (array) $filtered_templates, false );
 
-	// Theme compat doesn't require a template lookup.
+		// Theme compat doesn't require a template lookup.
 	} else {
 		$template = '';
 	}
@@ -466,7 +479,7 @@ function bp_core_load_template( $templates ) {
 		$located_template = '';
 	}
 
-	if ( !empty( $located_template ) ) {
+	if ( ! empty( $located_template ) ) {
 		// Template was located, lets set this as a valid page and not a 404.
 		status_header( 200 );
 		$wp_query->is_page     = true;
@@ -503,8 +516,8 @@ function bp_core_load_template( $templates ) {
 		// Kill any other output after this.
 		exit();
 
-	// No template found, so setup theme compatibility.
-	// @todo Some other 404 handling if theme compat doesn't kick in.
+		// No template found, so setup theme compatibility.
+		// @todo Some other 404 handling if theme compat doesn't kick in.
 	} else {
 
 		// We know where we are, so reset important $wp_query bits here early.
@@ -531,7 +544,7 @@ function bp_core_load_template( $templates ) {
  * @since BuddyPress 1.0.0
  */
 function bp_core_catch_profile_uri() {
-	if ( !bp_is_active( 'xprofile' ) ) {
+	if ( ! bp_is_active( 'xprofile' ) ) {
 
 		/**
 		 * Filters the path to redirect users to if XProfile is not enabled.
@@ -598,10 +611,11 @@ function bp_core_catch_no_access() {
 
 	// If coming from bp_core_redirect() and $bp_no_status_set is true,
 	// we are redirecting to an accessible page so skip this check.
-	if ( !empty( $bp->no_status_set ) )
+	if ( ! empty( $bp->no_status_set ) ) {
 		return false;
+	}
 
-	if ( !isset( $wp_query->queried_object ) && !bp_is_blog_page() ) {
+	if ( ! isset( $wp_query->queried_object ) && ! bp_is_blog_page() ) {
 		bp_do_404();
 	}
 }
@@ -639,7 +653,7 @@ function bp_core_no_access( $args = '' ) {
 		'mode'     => 2,                    // 1 = $root, 2 = wp-login.php.
 		'redirect' => $redirect_url,        // the URL you get redirected to when a user successfully logs in.
 		'root'     => bp_get_root_domain(), // the landing page you get redirected to when a user doesn't have access.
-		'message'  => __( 'Please login to access this website.', 'buddyboss' )
+		'message'  => __( 'Please login to access this website.', 'buddyboss' ),
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -657,22 +671,27 @@ function bp_core_no_access( $args = '' ) {
 	/*
 	 * @ignore Ignore these filters and use 'bp_core_no_access' above.
 	 */
-	$mode     = apply_filters( 'bp_no_access_mode',     $mode,     $root,     $redirect, $message );
-	$redirect = apply_filters( 'bp_no_access_redirect', $redirect, $root,     $message,  $mode    );
-	$root     = apply_filters( 'bp_no_access_root',     $root,     $redirect, $message,  $mode    );
-	$message  = apply_filters( 'bp_no_access_message',  $message,  $root,     $redirect, $mode    );
+	$mode     = apply_filters( 'bp_no_access_mode', $mode, $root, $redirect, $message );
+	$redirect = apply_filters( 'bp_no_access_redirect', $redirect, $root, $message, $mode );
+	$root     = apply_filters( 'bp_no_access_root', $root, $redirect, $message, $mode );
+	$message  = apply_filters( 'bp_no_access_message', $message, $root, $redirect, $mode );
 	$root     = trailingslashit( $root );
 
 	switch ( $mode ) {
 
 		// Option to redirect to wp-login.php.
 		// Error message is displayed with bp_core_no_access_wp_login_error().
-		case 2 :
-			if ( !empty( $redirect ) ) {
-				bp_core_redirect( add_query_arg( array(
-					'bp-auth' => 1,
-					'action'  => 'bpnoaccess'
-				), wp_login_url( $redirect ) ) );
+		case 2:
+			if ( ! empty( $redirect ) ) {
+				bp_core_redirect(
+					add_query_arg(
+						array(
+							'bp-auth' => 1,
+							'action'  => 'bpnoaccess',
+						),
+						wp_login_url( $redirect )
+					)
+				);
 			} else {
 				bp_core_redirect( $root );
 			}
@@ -681,15 +700,14 @@ function bp_core_no_access( $args = '' ) {
 
 		// Redirect to root with "redirect_to" parameter.
 		// Error message is displayed with bp_core_add_message().
-		case 1 :
-		default :
-
+		case 1:
+		default:
 			$url = $root;
-			if ( !empty( $redirect ) ) {
+			if ( ! empty( $redirect ) ) {
 				$url = add_query_arg( 'redirect_to', urlencode( $redirect ), $root );
 			}
 
-			if ( !empty( $message ) ) {
+			if ( ! empty( $message ) ) {
 				bp_core_add_message( $message, 'error' );
 			}
 
@@ -796,24 +814,24 @@ function bp_redirect_canonical() {
 	 *
 	 * @param bool $value Whether or not to do canonical redirects. Default true.
 	 */
-	if ( !bp_is_blog_page() && apply_filters( 'bp_do_redirect_canonical', true ) ) {
+	if ( ! bp_is_blog_page() && apply_filters( 'bp_do_redirect_canonical', true ) ) {
 		// If this is a POST request, don't do a canonical redirect.
 		// This is for backward compatibility with plugins that submit form requests to
 		// non-canonical URLs. Plugin authors should do their best to use canonical URLs in
 		// their form actions.
-		if ( !empty( $_POST ) ) {
+		if ( ! empty( $_POST ) ) {
 			return;
 		}
 
 		// Build the URL in the address bar.
-		$requested_url  = bp_get_requested_url();
+		$requested_url = bp_get_requested_url();
 
 		// Stash query args.
-		$url_stack      = explode( '?', $requested_url );
-		$req_url_clean  = $url_stack[0];
-		$query_args     = isset( $url_stack[1] ) ? $url_stack[1] : '';
+		$url_stack     = explode( '?', $requested_url );
+		$req_url_clean = $url_stack[0];
+		$query_args    = isset( $url_stack[1] ) ? $url_stack[1] : '';
 
-		$canonical_url  = bp_get_canonical_url();
+		$canonical_url = bp_get_canonical_url();
 
 		// Only redirect if we've assembled a URL different from the request.
 		if ( $canonical_url !== $req_url_clean ) {
@@ -829,7 +847,7 @@ function bp_redirect_canonical() {
 				bp_core_add_message( $message, $message_type );
 			}
 
-			if ( !empty( $query_args ) ) {
+			if ( ! empty( $query_args ) ) {
 				$canonical_url .= '?' . $query_args;
 			}
 
@@ -872,9 +890,9 @@ function bp_get_canonical_url( $args = array() ) {
 	$bp = buddypress();
 
 	$defaults = array(
-		'include_query_args' => false // Include URL arguments, eg ?foo=bar&foo2=bar2.
+		'include_query_args' => false, // Include URL arguments, eg ?foo=bar&foo2=bar2.
 	);
-	$r = wp_parse_args( $args, $defaults );
+	$r        = wp_parse_args( $args, $defaults );
 	extract( $r );
 
 	// Special case: when a BuddyPress directory (eg example.com/members)
@@ -893,9 +911,9 @@ function bp_get_canonical_url( $args = array() ) {
 		if ( false !== $front_page_component && bp_is_current_component( $front_page_component ) && ! bp_current_action() && ! bp_get_current_member_type() ) {
 			$bp->canonical_stack['canonical_url'] = trailingslashit( bp_get_root_domain() );
 
-		// Except when the front page is set to the registration page
-		// and the current user is logged in. In this case we send to
-		// the members directory to avoid redirect loops.
+			// Except when the front page is set to the registration page
+			// and the current user is logged in. In this case we send to
+			// the members directory to avoid redirect loops.
 		} elseif ( bp_is_register_page() && 'register' == $front_page_component && is_user_logged_in() ) {
 
 			/**
@@ -911,23 +929,26 @@ function bp_get_canonical_url( $args = array() ) {
 
 	if ( empty( $bp->canonical_stack['canonical_url'] ) ) {
 		// Build the URL in the address bar.
-		$requested_url  = bp_get_requested_url();
+		$requested_url = bp_get_requested_url();
 
 		// Stash query args.
-		$url_stack      = explode( '?', $requested_url );
+		$url_stack = explode( '?', $requested_url );
 
 		// Build the canonical URL out of the redirect stack.
-		if ( isset( $bp->canonical_stack['base_url'] ) )
+		if ( isset( $bp->canonical_stack['base_url'] ) ) {
 			$url_stack[0] = $bp->canonical_stack['base_url'];
+		}
 
-		if ( isset( $bp->canonical_stack['component'] ) )
+		if ( isset( $bp->canonical_stack['component'] ) ) {
 			$url_stack[0] = trailingslashit( $url_stack[0] . $bp->canonical_stack['component'] );
+		}
 
-		if ( isset( $bp->canonical_stack['action'] ) )
+		if ( isset( $bp->canonical_stack['action'] ) ) {
 			$url_stack[0] = trailingslashit( $url_stack[0] . $bp->canonical_stack['action'] );
+		}
 
-		if ( !empty( $bp->canonical_stack['action_variables'] ) ) {
-			foreach( (array) $bp->canonical_stack['action_variables'] as $av ) {
+		if ( ! empty( $bp->canonical_stack['action_variables'] ) ) {
+			foreach ( (array) $bp->canonical_stack['action_variables'] as $av ) {
 				$url_stack[0] = trailingslashit( $url_stack[0] . $av );
 			}
 		}
@@ -941,7 +962,7 @@ function bp_get_canonical_url( $args = array() ) {
 
 	$canonical_url = $bp->canonical_stack['canonical_url'];
 
-	if ( !$include_query_args ) {
+	if ( ! $include_query_args ) {
 		$canonical_url = array_reverse( explode( '?', $canonical_url ) );
 		$canonical_url = array_pop( $canonical_url );
 	}
@@ -994,8 +1015,9 @@ function bp_get_requested_url() {
  * @since BuddyPress 1.6.0
  */
 function _bp_maybe_remove_redirect_canonical() {
-	if ( ! bp_is_blog_page() )
+	if ( ! bp_is_blog_page() ) {
 		remove_action( 'template_redirect', 'redirect_canonical' );
+	}
 }
 add_action( 'bp_init', '_bp_maybe_remove_redirect_canonical' );
 
@@ -1105,8 +1127,17 @@ function bp_private_network_template_redirect() {
 
 		if ( '0' === $enable_private_network ) {
 
-			if (apply_filters('bp_private_network_pre_check', false)) {
+			if ( apply_filters( 'bp_private_network_pre_check', false ) ) {
 				return;
+			}
+
+			// Redirect to MemberPress custom login page.
+			if ( function_exists( 'is_plugin_active' ) && is_plugin_active('memberpress/memberpress.php' ) ) {
+				$mepr_options_array = get_option( MEPR_OPTIONS_SLUG );
+
+				if ( isset( $mepr_options_array['login_page_id'] ) && $id === $mepr_options_array['login_page_id'] ) {
+					return;
+				}
 			}
 
 			// Get excluded list from the settings
@@ -1114,197 +1145,153 @@ function bp_private_network_template_redirect() {
 			if ( '' !== $exclude ) {
 
 				// Convert string to URL array
-				$exclude_arr_url = preg_split("/\r\n|\n|\r/",$exclude);
+				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
 				foreach ( $exclude_arr_url as $url ) {
 					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
 					$request_url              = home_url( add_query_arg( array(), $wp->request ) );
 					$un_trailing_slash_it_url = untrailingslashit( $url );
 
 					// Check if strict match
-					if ( false !== $check_is_full_url && home_url(add_query_arg(array(), $wp->request)) === $un_trailing_slash_it_url ) {
+					if ( false !== $check_is_full_url && $request_url === $un_trailing_slash_it_url ) {
 						return;
 					} elseif ( false === $check_is_full_url && isset( $request_url ) && isset( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 
-						$fragments = explode( '/', home_url ( add_query_arg( array(), $wp->request) ) );
+						$fragments = explode( '/', $request_url );
 
 						foreach ( $fragments as $fragment ) {
 							if ( $fragment === trim( $url, '/' ) ) {
 								return;
 							}
 						}
-
 					}
 				}
 			}
-
 			if ( get_option( 'users_can_register' ) ) {
-
 				if ( isset( $id ) ) {
-
 					if ( ! bp_is_register_page() && ! $activate && $terms !== $id && $privacy !== $id ) {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
-							$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
+								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
 
-								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
-
-									$redirect_url = is_ssl() ? 'https://' : 'http://';
-									$redirect_url .= $_SERVER['HTTP_HOST'];
-									$redirect_url .= $_SERVER['REQUEST_URI'];
+									$redirect_url  = is_ssl() ? 'https://' : 'http://';
+									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+									$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 									$defaults = array(
 										'mode'     => 2,
-										// 1 = $root, 2 = wp-login.php.
 										'redirect' => $redirect_url,
-										// the URL you get redirected to when a user successfully logs in.
 										'root'     => bp_get_root_domain(),
-										// the landing page you get redirected to when a user doesn't have access.
-										'message'  => __( 'Please login to access this website.',
-											'buddyboss' ),
+										'message'  => __( 'Please login to access this website.', 'buddyboss' ),
 									);
 
 									bp_core_no_access( $defaults );
 									exit();
 								}
-
 							}
-
 						} else {
-
-							$redirect_url = is_ssl() ? 'https://' : 'http://';
-							$redirect_url .= $_SERVER['HTTP_HOST'];
-							$redirect_url .= $_SERVER['REQUEST_URI'];
+							$redirect_url  = is_ssl() ? 'https://' : 'http://';
+							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+							$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 							$defaults = array(
 								'mode'     => 2,
-								// 1 = $root, 2 = wp-login.php.
 								'redirect' => $redirect_url,
-								// the URL you get redirected to when a user successfully logs in.
 								'root'     => bp_get_root_domain(),
-								// the landing page you get redirected to when a user doesn't have access.
-								'message'  => __( 'You must log in to access the page you requested dfdfd.',
-									'buddyboss' ),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
 							);
 
 							bp_core_no_access( $defaults );
 							exit();
-
 						}
-					// 404 redirect
+						// 404 redirect
 					} elseif ( is_404() ) {
-						$redirect_url = is_ssl() ? 'https://' : 'http://';
-						$redirect_url .= $_SERVER['HTTP_HOST'];
-						$redirect_url .= $_SERVER['REQUEST_URI'];
+						$redirect_url  = is_ssl() ? 'https://' : 'http://';
+						$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+						$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 						$defaults = array(
 							'mode'     => 2,
-							// 1 = $root, 2 = wp-login.php.
 							'redirect' => $redirect_url,
-							// the URL you get redirected to when a user successfully logs in.
 							'root'     => bp_get_root_domain(),
-							// the landing page you get redirected to when a user doesn't have access.
-							'message'  => __( 'You must log in to access the page you requested dfdfd.',
-								'buddyboss' ),
+							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
 						);
 
 						bp_core_no_access( $defaults );
 						exit();
 					}
-
 				} else {
-
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 						if ( $actual_link !== wc_lostpassword_url() ) {
+							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
 
-							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
-
-								$redirect_url = is_ssl() ? 'https://' : 'http://';
-								$redirect_url .= $_SERVER['HTTP_HOST'];
-								$redirect_url .= $_SERVER['REQUEST_URI'];
+								$redirect_url  = is_ssl() ? 'https://' : 'http://';
+								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+								$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 								$defaults = array(
-									'mode' => 2,
-									// 1 = $root, 2 = wp-login.php.
+									'mode'     => 2,
 									'redirect' => $redirect_url,
-									// the URL you get redirected to when a user successfully logs in.
-									'root' => bp_get_root_domain(),
-									// the landing page you get redirected to when a user doesn't have access.
-									'message' => __( 'You must log in to access the page you requested dfdfd.',
-										'buddyboss' ),
+									'root'     => bp_get_root_domain(),
+									'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
 								);
 
 								bp_core_no_access( $defaults );
 								exit();
 
 							}
-
 						}
-
 					} else {
-
-						$redirect_url = is_ssl() ? 'https://' : 'http://';
-						$redirect_url .= $_SERVER['HTTP_HOST'];
-						$redirect_url .= $_SERVER['REQUEST_URI'];
+						$redirect_url  = is_ssl() ? 'https://' : 'http://';
+						$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+						$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 						$defaults = array(
 							'mode'     => 2,
-							// 1 = $root, 2 = wp-login.php.
 							'redirect' => $redirect_url,
-							// the URL you get redirected to when a user successfully logs in.
 							'root'     => bp_get_root_domain(),
-							// the landing page you get redirected to when a user doesn't have access.
-							'message'  => __( 'You must log in to access the page you requested dfdfd.', 'buddyboss' ),
+							'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
 						);
 
 						bp_core_no_access( $defaults );
 						exit();
-
 					}
 				}
-
 			} else {
 
 				if ( class_exists( 'woocommerce' ) ) {
 
-					$actual_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
+						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
 
-						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration') && $id !== intval( get_option( 'woocommerce_myaccount_page_id') ) ) {
-
-							$redirect_url = is_ssl() ? 'https://' : 'http://';
-							$redirect_url .= $_SERVER['HTTP_HOST'];
-							$redirect_url .= $_SERVER['REQUEST_URI'];
+							$redirect_url  = is_ssl() ? 'https://' : 'http://';
+							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+							$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 							$defaults = array(
-								'mode' => 2,
-								// 1 = $root, 2 = wp-login.php.
+								'mode'     => 2,
 								'redirect' => $redirect_url,
-								// the URL you get redirected to when a user successfully logs in.
-								'root' => bp_get_root_domain(),
-								// the landing page you get redirected to when a user doesn't have access.
-								'message' => __( 'You must log in to access the page you requested dfdfd.',
-									'buddyboss' ),
+								'root'     => bp_get_root_domain(),
+								'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
 							);
 
 							bp_core_no_access( $defaults );
 							exit();
-
 						}
-
 					}
-
 				} else {
 
-					$redirect_url = is_ssl() ? 'https://' : 'http://';
-					$redirect_url .= $_SERVER['HTTP_HOST'];
-					$redirect_url .= $_SERVER['REQUEST_URI'];
+					$redirect_url  = is_ssl() ? 'https://' : 'http://';
+					$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+					$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
 					$defaults = array(
 						'mode'     => 2,
@@ -1313,28 +1300,24 @@ function bp_private_network_template_redirect() {
 						// the URL you get redirected to when a user successfully logs in.
 						'root'     => bp_get_root_domain(),
 						// the landing page you get redirected to when a user doesn't have access.
-						'message'  => __( 'You must log in to access the page you requested dfdfd.', 'buddyboss' ),
+						'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
 					);
 
 					bp_core_no_access( $defaults );
 					exit();
 
 				}
-
 			}
-
 		}
-
 	}
-
 }
 
 /**
  * Redirect member to profile dashboard.
  *
- * @param $redirect_to
- * @param $redirect_to_raw
- * @param $user
+ * @param string $redirect_to redirect to.
+ * @param string $redirect_to_raw redirect toraw.
+ * @param array  $user user.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1353,24 +1336,22 @@ function bp_core_login_profile_dashboard_redirect( $redirect_to, $redirect_to_ra
 				$dashboard_link = get_permalink( $profile_dashboard );
 				$redirect_to    = $dashboard_link;
 			}
-
 		}
 	}
 	return apply_filters( 'bp_core_login_profile_dashboard_redirect', $redirect_to );
 }
 
 // @todo will use this later on
-//add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );
+// add_filter( 'bp_login_redirect', 'bp_core_login_profile_dashboard_redirect', 10, 3 );
 
 /**
  * Redirect user to profile dashboard if not logged in.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_core_profile_dashboard_non_logged_redirect() {
 
-	if ( !is_user_logged_in() ) {
+	if ( ! is_user_logged_in() ) {
 		if ( function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
 			if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
 				$page_ids          = bp_core_get_directory_page_ids();
@@ -1398,7 +1379,7 @@ add_filter( 'bp_template_redirect', 'bp_core_profile_dashboard_non_logged_redire
  */
 function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 
-	if ( !is_user_logged_in() ) {
+	if ( ! is_user_logged_in() ) {
 
 		$enable_private_network = bp_get_option( 'bp-enable-private-network' );
 
@@ -1406,7 +1387,7 @@ function bp_remove_wc_lostpassword_url( $default_url = '' ) {
 
 			$args = array( 'action' => 'lostpassword' );
 			if ( ! empty( $redirect ) ) {
-				$args['redirect_to'] = urlencode( $redirect );
+				$args['redirect_to'] = rawurlencode( $redirect );
 			}
 
 			$default_url = add_query_arg( $args, network_site_url( 'wp-login.php', 'login' ) );
@@ -1423,8 +1404,8 @@ add_filter( 'the_privacy_policy_link', 'bp_core_change_privacy_policy_link_on_pr
 /**
  * Change the Privacy Policy link if private network is enabled.
  *
- * @param $link
- * @param $privacy_policy_url
+ * @param string $link link.
+ * @param string $privacy_policy_url privacy policy link.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -1444,23 +1425,12 @@ function bp_core_change_privacy_policy_link_on_private_network( $link, $privacy_
 
 			if ( $privacy_policy_url && $page_title ) {
 				$get_privacy_policy = get_post( $policy_page_id );
-				$link = sprintf(
-					'<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>',
-					'#privacy-modal',
-					esc_html( $page_title ),
-					esc_html( $page_title ),
-					wp_kses_post( apply_filters( 'the_content',  $get_privacy_policy->post_content ) ),
-					esc_html( 'Close (Esc)' ),
-					esc_html( '×' )
-				);
+				$link               = sprintf( '<a class="privacy-policy-link popup-modal-login popup-privacy" href="%s">%s</a><div id="privacy-modal" class="mfp-hide login-popup bb-modal"><h1>%s</h1>%s<button title="%s" type="button" class="mfp-close">%s</button></div>', '#privacy-modal', esc_html( $page_title ), esc_html( $page_title ), wp_kses_post( apply_filters( 'the_content', $get_privacy_policy->post_content ) ), esc_html( 'Close (Esc)' ), esc_html( '×' ) );
 			}
-
 		}
-
 	}
 
 	$link = apply_filters( 'bp_core_change_privacy_policy_link_on_private_network', $link, $privacy_policy_url );
-
 
 	return $link;
 }
