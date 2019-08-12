@@ -199,7 +199,6 @@ class BBP_Default extends BBP_Theme_Compat {
 			if ( bp_is_forums_media_support_enabled() ) {
 				wp_enqueue_script( 'bp-media-dropzone' );
 				wp_enqueue_script( 'bp-nouveau-media' );
-				wp_enqueue_script( 'bp-nouveau-media-theatre' );
 				wp_enqueue_script( 'bp-exif' );
 			}
 
