@@ -1101,6 +1101,7 @@ class BP_XProfile_Field {
 			$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
 		}
 
+		// Add temp null member type before add field to register page from the $member_types array.
 		if ( function_exists( 'bp_is_register_page' ) && bp_is_register_page() ) {
 			$member_types[] = 'null';
 		}
@@ -1115,6 +1116,7 @@ class BP_XProfile_Field {
 			}
 		}
 
+		// Remove temp null member type after add field to register page from the $member_types array.
 		if ( function_exists( 'bp_is_register_page' ) && bp_is_register_page() ) {
 			unset( $member_types[ 'null' ] );
 		}

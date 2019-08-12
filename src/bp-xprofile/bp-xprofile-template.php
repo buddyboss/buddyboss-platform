@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                                                viewing her own profile, or during registration. Otherwise false.
  *     @type int|bool     $exclude_groups         Default: false.
  *     @type int|bool     $exclude_fields         Default: false
+ *     @type int|bool     $include_fields         Default: false
  *     @type bool         $update_meta_cache      Default: true.
  * }
  *

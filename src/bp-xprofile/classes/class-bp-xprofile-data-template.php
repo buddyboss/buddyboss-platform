@@ -117,6 +117,7 @@ class BP_XProfile_Data_Template {
 	 *     @type int|bool     $fetch_field_data        Fetch field data for fields in group.
 	 *     @type array        $exclude_groups          Exclude these field groups.
 	 *     @type array        $exclude_fields          Exclude these fields.
+	 *     @type array        $include_fields          Include these fields.
 	 *     @type int|bool     $hide_empty_fields       Should empty fields be skipped.
 	 *     @type int|bool     $fetch_visibility_level  Fetch visibility levels.
 	 *     @type int|bool     $update_meta_cache       Should metadata cache be updated.
