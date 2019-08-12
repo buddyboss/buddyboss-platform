@@ -1156,7 +1156,7 @@ function bp_private_network_template_redirect() {
 						return;
 					} elseif ( false === $check_is_full_url && isset( $request_url ) && isset( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 
-						$fragments = explode( '/', home_url( add_query_arg( array(), $wp->request ) ) );
+						$fragments = explode( '/', $request_url );
 
 						foreach ( $fragments as $fragment ) {
 							if ( $fragment === trim( $url, '/' ) ) {
@@ -1172,7 +1172,7 @@ function bp_private_network_template_redirect() {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
-							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
 								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
@@ -1226,7 +1226,7 @@ function bp_private_network_template_redirect() {
 				} else {
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 						if ( $actual_link !== wc_lostpassword_url() ) {
 							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
@@ -1267,7 +1267,7 @@ function bp_private_network_template_redirect() {
 
 				if ( class_exists( 'woocommerce' ) ) {
 
-					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
 						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
