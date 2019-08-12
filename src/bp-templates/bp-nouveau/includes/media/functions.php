@@ -75,7 +75,7 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
-	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! bp_is_messages_component() ) {
+	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! bp_is_messages_component() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
 		return $params;
 	}
 
@@ -86,7 +86,6 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_media'     => bp_is_group_media_support_enabled(),
 		'group_album'     => bp_is_group_albums_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
-		'forums_media'    => bp_is_forums_media_support_enabled(),
 	);
 
 	if ( bp_is_single_album() ) {
