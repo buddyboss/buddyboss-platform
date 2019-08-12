@@ -457,6 +457,13 @@ function bp_media_add( $args = '' ) {
  */
 function bp_media_delete( $media_id ) {
 
+	$media = new BP_Media( $media_id );
+
+	//check if user has permission
+	if ( empty( $media->id ) || bp_loggedin_user_id() != $media->user_id || ! bp_current_user_can( 'bp_moderate' ) ) {
+		return false;
+	}
+
 	$delete = BP_Media::delete( array( 'id' => $media_id ) );
 
 	if ( ! $delete ) {
@@ -785,6 +792,16 @@ function bp_album_add( $args = '' ) {
  * @return bool|int The ID of the album on success. False on error.
  */
 function bp_album_delete( $album_id ) {
+
+	$album = new BP_Media_Album( $album_id );
+
+	if ( ! empty( $album->group_id ) && ! groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
+		return false;
+	}
+
+	if ( empty( $album->id ) || bp_loggedin_user_id() != $album->user_id || ! bp_current_user_can( 'bp_moderator' ) ) {
+		return false;
+	}
 
 	$delete = BP_Media_Album::delete( array( 'id' => $album_id ) );
 
