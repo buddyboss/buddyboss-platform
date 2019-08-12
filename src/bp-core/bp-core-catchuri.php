@@ -1109,6 +1109,14 @@ function bp_private_network_template_redirect() {
 				return;
 			}
 
+			// Redirect to MemberPress custom login page.
+			if ( function_exists( 'is_plugin_active' ) && is_plugin_active('memberpress/memberpress.php') ) {
+				$mepr_options_array = get_option(MEPR_OPTIONS_SLUG);
+				if ( $id === $mepr_options_array["login_page_id"] ) {
+					return;
+				}
+			}
+
 			// Get excluded list from the settings
 			$exclude = bp_enable_private_network_public_content();
 			if ( '' !== $exclude ) {
