@@ -1147,12 +1147,14 @@ function bp_private_network_template_redirect() {
 				// Convert string to URL array
 				$exclude_arr_url = preg_split( "/\r\n|\n|\r/", $exclude );
 				foreach ( $exclude_arr_url as $url ) {
-					$check_is_full_url = filter_var( $url, FILTER_VALIDATE_URL );
+					$check_is_full_url        = filter_var( $url, FILTER_VALIDATE_URL );
+					$request_url              = home_url( add_query_arg( array(), $wp->request ) );
+					$un_trailing_slash_it_url = untrailingslashit( $url );
 
 					// Check if strict match
-					if ( false !== $check_is_full_url && home_url( add_query_arg( array(), $wp->request ) ) === untrailingslashit( $url ) ) {
+					if ( false !== $check_is_full_url && $request_url === $un_trailing_slash_it_url ) {
 						return;
-					} elseif ( false === $check_is_full_url && strpos( home_url( add_query_arg( array(), $wp->request ) ), untrailingslashit( $url ) ) !== false ) {
+					} elseif ( false === $check_is_full_url && isset( $request_url ) && isset( $un_trailing_slash_it_url ) && strpos( $request_url, $un_trailing_slash_it_url ) !== false ) {
 
 						$fragments = explode( '/', home_url( add_query_arg( array(), $wp->request ) ) );
 
