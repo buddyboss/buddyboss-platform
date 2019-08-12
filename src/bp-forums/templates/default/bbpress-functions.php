@@ -67,8 +67,8 @@ class BBP_Default extends BBP_Theme_Compat {
 
 		/** Scripts ***********************************************************/
 
-		add_action( 'bbp_enqueue_scripts',         array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
-		add_filter( 'bbp_enqueue_scripts',         array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
+		add_action( 'wp_footer',                   array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
+		add_filter( 'wp_footer',                   array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
 		add_action( 'bbp_ajax_subscription',       array( $this, 'ajax_subscription'       ) ); // Handles the topic ajax subscribe/unsubscribe
 		add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe
@@ -127,6 +127,10 @@ class BBP_Default extends BBP_Theme_Compat {
 	 * @uses wp_enqueue_script() To enqueue the scripts
 	 */
 	public function enqueue_scripts() {
+
+	    if ( ! is_bbpress() ) {
+	        return false;
+        }
 
 		// Setup scripts array
 		$scripts = array();
@@ -227,6 +231,10 @@ class BBP_Default extends BBP_Theme_Compat {
      * @since BuddyBoss 1.1.5
 	 */
 	function media_localize_script() {
+
+		if ( ! is_bbpress() ) {
+			return false;
+		}
 
 		$params = array();
 
