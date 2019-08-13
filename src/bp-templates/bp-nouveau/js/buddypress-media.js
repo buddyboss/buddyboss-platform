@@ -824,6 +824,10 @@ window.bp = window.bp || {};
 							}
 							
 							self.closeUploader(event);
+
+							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+							jQuery(window).scroll();
+
 						} else {
 							$('#bp-dropzone-content').prepend(response.data.feedback);
 						}
@@ -867,6 +871,9 @@ window.bp = window.bp || {};
 									$(this).closest('li').remove();
 								}
 							});
+
+							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+							jQuery(window).scroll();
 
 							self.closeUploader(event);
 						} else {
@@ -1029,6 +1036,9 @@ window.bp = window.bp || {};
 
 						// Update the current page
 						self.current_page = next_page;
+
+						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+						jQuery(window).scroll();
 					}
 				} );
 			}
@@ -1411,6 +1421,9 @@ window.bp = window.bp || {};
 						if (response.success) {
 							$('.bb-media-info-section .activity-list').removeClass('loading').html(response.data.activity);
 							$('.bb-media-info-section').show();
+
+							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+							jQuery(window).scroll();
 						}
 					}
 				});
