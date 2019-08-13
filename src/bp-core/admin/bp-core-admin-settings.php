@@ -10,13 +10,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Main settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_main_section() { }
-
-/**
  * Admin bar for logged out users setting field.
  *
  * @since BuddyPress 1.6.0
@@ -149,13 +142,6 @@ function bp_privacy_tutorial() {
 /** Activity *******************************************************************/
 
 /**
- * Groups settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_activity_section() { }
-
-/**
  * Allow Akismet setting field.
  *
  * @since BuddyPress 1.6.0
@@ -234,6 +220,20 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 }
 
 /**
+ * Enable activity scopes like groups, friends, mentions, following etc.
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_admin_setting_callback_enable_activity_scopes() {
+	?>
+
+    <input id="_bp_enable_activity_scopes" name="_bp_enable_activity_scopes" type="checkbox" value="1" <?php checked( bp_is_activity_scopes_active( false ) ); ?> />
+    <label for="_bp_enable_activity_scopes"><?php _e( 'Allow users to filter the activities with scopes', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Allow following activity stream.
  *
  * @since BuddyBoss 1.0.0
@@ -309,15 +309,6 @@ function bp_admin_sanitize_callback_blogforum_comments( $value = false ) {
 	return $value ? 0 : 1;
 }
 
-/** XProfile ******************************************************************/
-
-/**
- * Profile settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- */
-function bp_admin_setting_callback_xprofile_section() { }
-
 /**
  * Allow members to upload avatars field.
  *
@@ -362,14 +353,6 @@ function bp_profile_photos_tutorial() {
 }
 
 /** Group Settings ************************************************************/
-
-/**
- * Groups settings section description for the settings page.
- *
- * @since BuddyPress 1.6.0
- * @todo deprecate this function?
- */
-function bp_admin_setting_callback_groups_section() { }
 
 /**
  * Allow all users to create groups field.
@@ -970,16 +953,69 @@ function bp_profile_names_tutorial() {
 }
 
 /**
- * Enable BP->WP profile syncing field.
+ * Save our settings.
  *
- * @since BuddyPress 1.6.0
+ * @since 1.6.0
+ */
+function bp_core_admin_settings_save() {
+	global $wp_settings_fields;
+
+	if (
+		isset( $_GET['page'] )
+		&& 'bp-integrations' == $_GET['page']
+		&& isset( $_GET['tab'] )
+		&& 'bp-compatibility' == $_GET['tab']
+		&& ! empty( $_POST['submit'] ) ) {
+
+		check_admin_referer( 'buddypress-options' );
+
+		// Because many settings are saved with checkboxes, and thus will have no values
+		// in the $_POST array when unchecked, we loop through the registered settings.
+		if ( isset( $wp_settings_fields['buddypress'] ) ) {
+			foreach ( (array) $wp_settings_fields['buddypress'] as $section => $settings ) {
+				foreach ( $settings as $setting_name => $setting ) {
+					$value = isset( $_POST[ $setting_name ] ) ? $_POST[ $setting_name ] : '';
+
+					bp_update_option( $setting_name, $value );
+				}
+			}
+		}
+
+		bp_core_redirect( add_query_arg( array(
+			'page'    => 'bp-integrations',
+			'tab'     => 'bp-compatibility',
+			'updated' => 'true'
+		), bp_get_admin_url( 'admin.php' ) ) );
+	}
+}
+
+add_action( 'bp_admin_init', 'bp_core_admin_settings_save', 100 );
+
+ /* Admin settings for showing the email confirmation field.
+ *
+ * @since BuddyBoss 1.1.6
  *
  */
-function bp_admin_setting_callback_profile_sync() {
+function bp_admin_setting_callback_register_show_confirm_email() {
 	?>
 
-	<input id="bp-disable-profile-sync" name="bp-disable-profile-sync" type="checkbox" value="1" <?php checked( !bp_disable_profile_sync( false ) ); ?> />
-	<label for="bp-disable-profile-sync"><?php _e( 'Enable BuddyPress to WordPress profile syncing', 'buddyboss' ); ?></label>
+	<input id="register-confirm-email" name="register-confirm-email" type="checkbox" value="1" <?php checked( bp_register_confirm_email( false ) ); ?> />
+	<label for="register-confirm-email"><?php _e( 'Add Email confirmation to register form', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
+ * Admin settings for showing the password confirmation field.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ */
+function bp_admin_setting_callback_register_show_confirm_password() {
+	?>
+
+	<input id="register-confirm-password" name="register-confirm-password" type="checkbox" value="1" <?php checked( bp_register_confirm_password( false ) ); ?> />
+	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
 }

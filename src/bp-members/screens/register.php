@@ -57,6 +57,9 @@ function bp_core_screen_signup() {
 		// Check the base account details for problems.
 		$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
 
+		$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
+		$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
+
 		// If there are errors with account details, set them for display.
 		if ( !empty( $account_details['errors']->errors['user_name'] ) )
 			$bp->signup->errors['signup_username'] = $account_details['errors']->errors['user_name'][0];
@@ -67,6 +70,36 @@ function bp_core_screen_signup() {
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_password'] ) )
 			$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password.', 'buddyboss' );
+
+		// if email opt enabled.
+		if ( true === $email_opt ) {
+
+			// Check that both password fields are filled in.
+			if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
+				$bp->signup->errors['signup_email'] = __( 'Please make sure to enter your email twice.', 'buddyboss' );
+			}
+
+			// Check that the passwords match.
+			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
+				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
+			}
+
+		}
+
+		// if password opt enabled.
+		if ( true === $password_opt ) {
+
+			// Check that both password fields are filled in.
+			if ( empty( $_POST['signup_password'] ) || empty( $_POST['signup_password_confirm'] ) ) {
+				$bp->signup->errors['signup_password'] = __( 'Please make sure to enter your password twice.', 'buddyboss' );
+			}
+
+			// Check that the passwords match.
+			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) {
+				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
+			}
+
+		}
 
 		$bp->signup->username = bp_get_signup_username_value();
 		$bp->signup->email = bp_get_signup_email_value();

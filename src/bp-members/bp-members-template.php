@@ -2704,12 +2704,12 @@ function bp_member_latest_update( $args = '' ) {
 		 */
 		$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
 
-		$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddypress' ), $update_content );
+		$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
 
 		// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
 		// been truncated), add the "View" link.
 		if ( $view_link && ( $update_content != $update['content'] ) ) {
-			$view = __( 'View', 'buddypress' );
+			$view = __( 'View', 'buddyboss' );
 
 			$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
 		}
@@ -2724,4 +2724,34 @@ function bp_member_latest_update( $args = '' ) {
 		 * @param array  $r              Array of parsed arguments.
 		 */
 		return apply_filters( 'bp_get_member_latest_update', $update_content, $r );
+	}
+
+/**
+ * Output the user confirm email address submitted during signup.
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_signup_confirm_email_value() {
+	echo bp_get_signup_confirm_email_value();
+}
+	/**
+	 * Get the confirm email address submitted during signup.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @return string
+	 */
+	function bp_get_signup_confirm_email_value() {
+		$value = '';
+		if ( isset( $_POST['signup_email_confirm'] ) )
+			$value = sanitize_email( $_POST['signup_email_confirm'] );
+
+		/**
+		 * Filters the confirm email address submitted during signup.
+		 *
+		 * @since BuddyBoss 1.1.6
+		 *
+		 * @param string $value Email address submitted during signup.
+		 */
+		return apply_filters( 'bp_get_signup_confirm_email_value', $value );
 	}

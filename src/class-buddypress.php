@@ -262,11 +262,6 @@ class BuddyPress {
 			define( 'BP_FORUMS_SLUG', 'forums' );
 		}
 
-		// Define a slug, if necessary.
-		if ( ! defined( 'BP_FOLLOW_SLUG' ) ) {
-			define( 'BP_FOLLOW_SLUG', $this->id );
-		}
-
 		// Only applicable to those running trunk
 		if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
 			define( 'BP_SOURCE_SUBDIRECTORY', '' );
@@ -325,7 +320,7 @@ class BuddyPress {
 	private function setup_globals() {
 
 		/** Versions **********************************************************/
-		$this->version    = defined('BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : defined('BP_VERSION' ) ? BP_VERSION : '1.0.0';
+		$this->version    = defined('BP_PLATFORM_VERSION' ) ? BP_PLATFORM_VERSION : ( defined('BP_VERSION' ) ? BP_VERSION : '1.0.0' );
 		$this->db_version = 13731;
 
 		/** Loading ***********************************************************/

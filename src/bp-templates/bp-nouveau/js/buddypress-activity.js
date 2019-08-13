@@ -86,7 +86,9 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function() {
 			// HeartBeat listeners
-			$( '#buddypress' ).on( 'bp_heartbeat_send', this.heartbeatSend.bind( this ) );
+			if ( !$( 'body' ).hasClass( 'activity-singular' ) ) {
+				$('#buddypress').on('bp_heartbeat_send', this.heartbeatSend.bind(this));
+			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities
@@ -905,8 +907,6 @@ window.bp = window.bp || {};
 							activity_comments.parent().addClass( 'has-comments' );
 							activity_comments.parent().addClass( 'comments-loaded' );
 							activity_state.addClass( 'has-comments' );
-							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
-							jQuery(window).scroll();
 						} );
 
 						// why, as it's already done a few lines ahead ???

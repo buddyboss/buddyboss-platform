@@ -489,7 +489,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	    if ( bp_is_register_page() ) {
+		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	    }
 
 		wp_enqueue_script( 'bp-nouveau' );
 

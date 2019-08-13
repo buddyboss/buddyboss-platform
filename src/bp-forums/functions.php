@@ -723,3 +723,49 @@ function bbp_forum_topics_reply_tinymce_settings($settings) {
 
 	return $settings;
 }
+
+/**
+ * Update Forum status depending on the group status
+ *
+ * @since BuddyBoss 1.1.5
+ */
+function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
+
+	if ( $group_id ) {
+		$forum_ids = array_values( bbp_get_group_forum_ids( $group_id ) );
+		if ( ! empty( $forum_ids ) ) {
+			// Get the group
+			$group = groups_get_group( absint( $group_id ) );
+
+			foreach ( $forum_ids as $forum_id ) {
+				if ( ! empty( $forum_id ) ) {
+
+					// Set the default forum status
+					switch ( $group->status ) {
+						case 'hidden'  :
+							$status = bbp_get_hidden_status_id();
+							break;
+						case 'private' :
+							$status = bbp_get_private_status_id();
+							break;
+						case 'public'  :
+						default        :
+							$status = bbp_get_public_status_id();
+							break;
+					}
+
+					wp_update_post( array(
+						'ID'          => $forum_id,
+						'post_status' => $status
+					) );
+				}
+			}
+		}
+
+		// Update Forums' internal private and forum ID variables
+		bbp_repair_forum_visibility();
+	}
+}
+
+add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
+add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );
