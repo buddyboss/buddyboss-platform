@@ -87,8 +87,8 @@ function bp_core_register_common_scripts() {
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field
-	if ( function_exists( 'bp_is_register_page' ) && function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
-		$scripts[ 'bp-core-register' ] = array( 'file' => "{$url}register{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false );
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		$scripts[ 'bp-register-page' ] = array( 'file' => "{$url}register{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false );
 	}
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
@@ -711,19 +711,20 @@ function bp_core_add_jquery_mask_inline_js () {
  *
  * @since BuddyBoss 1.1.6
  */
-function bp_core_register_js() {
+function bp_core_register_page_js() {
 
-	if ( function_exists( 'bp_is_register_page' ) && function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
-		wp_enqueue_script( 'bp-core-register' );
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		wp_enqueue_script( 'bp-register-page' );
 
 		$data = array(
-			'action'                => 'bp_get_xprofile_field_ajax',
-			'ajaxurl'               => bp_core_ajax_url(),
-			'field_id'              => 'field_'.bp_get_xprofile_member_type_field_id(),
+			'ajaxurl'  => bp_core_ajax_url(),
+			'field_id' => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'nonce'    => wp_create_nonce( 'bp-core-register-page-js' ),
 		);
 
-		wp_localize_script( 'bp-core-register', 'BP_REGISTER', apply_filters( 'bp_core_register_js_settings', $data ) );
+		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
 	}
 
 }
-add_action( 'bp_enqueue_scripts',       'bp_core_register_js' );
+
+add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );

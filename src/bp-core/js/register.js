@@ -1,5 +1,5 @@
 /* jshint devel: true */
-/* global BP_REGISTER */
+/* global BP_Register */
 
 jQuery( document ).ready( function() {
 
@@ -19,12 +19,10 @@ jQuery( document ).ready( function() {
 	// Add existing profile fields ids to new hidden field value.
 	onLoadField.val( getExistingFieldsSelector.val() );
 
-	console.log( BP_REGISTER.field_id );
-
 	tinymce.remove('textarea');
 
 	// Profile Type field select box change action.
-	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_REGISTER.field_id , function() {
+	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
 
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
@@ -36,54 +34,59 @@ jQuery( document ).ready( function() {
 		var appendHtmlDiv 	  = jQuery('.register-section.extended-profile');
 		var fixedIds 		  = onLoadField.val();
 
+		var data = {
+			'action'  : 'xprofile_get_field',
+			'_wpnonce': BP_Register.nonce,
+			'fields'  : getExistingFields,
+			'fixedIds': fixedIds,
+			'tinymce' : tinyMceAdded,
+			'type'	  : getSelectedValue
+		};
+
 		// Ajax get the data based on the selected profile type.
-		jQuery.post(
-			BP_REGISTER.ajaxurl, {
-				action: BP_REGISTER.action,
-				'fields': getExistingFields,
-				'fixedIds': fixedIds,
-				'tinymce': tinyMceAdded,
-				'type': getSelectedValue
-			},
-			function ( response ) {
+		jQuery.ajax({
+			type: 'GET',
+			url: BP_Register.ajaxurl,
+			data: data,
+			success: function ( response ) {
 
-				firstCall = 1;
+				if ( response.success ) {
+					firstCall = 1;
 
-				var responseArr = jQuery.parseJSON( response );
+					if ( true === parseInt( response.data.field_html ) ) {
+						tinyMceAdded = 1;
+					}
 
-				if ( true === parseInt( responseArr[ 'field_html' ] ) ) {
-					tinyMceAdded = 1;
-				}
+					getExistingFieldsSelector.val('');
+					getExistingFieldsSelector.val( response.data.field_ids );
+					appendHtmlDiv.append( response.data.field_html );
 
-				getExistingFieldsSelector.val('');
-				getExistingFieldsSelector.val(responseArr[ 'field_ids' ] );
-				appendHtmlDiv.append( responseArr[ 'field_html' ] );
+					var divList = jQuery( 'body .editfield' );
+					divList.sort(function(a, b){
+						return jQuery(a).data('index' ) - jQuery(b).data('index' );
+					});
 
-				var divList = jQuery( 'body .editfield' );
-				divList.sort(function(a, b){
-					return jQuery(a).data('index' ) - jQuery(b).data('index' );
-				});
+					jQuery( '#profile-details-section' ).html( divList );
 
-				jQuery( '#profile-details-section' ).html(divList);
+					if ( typeof( tinymce ) !== 'undefined' ) {
 
-				if ( typeof( tinymce ) !== 'undefined' ) {
+						tinymce.remove('textarea');
 
-					tinymce.remove('textarea');
+						tinymce.init(
+							{
+								selector: 'textarea',
+								branding: false,
+								menubar:false,
+								statusbar: false,
+								plugins: 'lists fullscreen link',
+								toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
 
-					tinymce.init(
-						{
-							selector: 'textarea',
-							branding: false,
-							menubar:false,
-							statusbar: false,
-							plugins: 'lists fullscreen link',
-							toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
-
-						}
-					);
-					tinyMCE.execCommand('mceRepaint');
+							}
+						);
+						tinyMCE.execCommand('mceRepaint');
+					}
 				}
 			}
-		);
+		});
 	});
 } );

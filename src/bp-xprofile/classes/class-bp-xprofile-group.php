@@ -401,12 +401,8 @@ class BP_XProfile_Group {
 		}
 
 		// Add include fields.
-		if ( $r['include_fields'] ) {
-			if (  '' !== $include_field_ids ) {
-				$include_field_ids = array_merge( $include_field_ids, array_map( 'intval', explode( ',', $r['include_fields'] ) ) );
-			} else {
-				$include_field_ids = array_map( 'intval', explode( ',', $r['include_fields'] ) );
-			}
+		if ( ! empty( $r['include_fields'] ) && ! empty( $include_field_ids ) ) {
+			$include_field_ids = array_merge( $include_field_ids, array_map( 'intval', explode( ',', $r['include_fields'] ) ) );
 		}
 
 		$in_sql = '';

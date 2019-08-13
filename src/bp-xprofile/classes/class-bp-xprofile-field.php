@@ -1102,7 +1102,7 @@ class BP_XProfile_Field {
 		}
 
 		// Add temp null member type before add field to register page from the $member_types array.
-		if ( function_exists( 'bp_is_register_page' ) && bp_is_register_page() ) {
+		if ( bp_is_register_page() ) {
 			$member_types[] = 'null';
 		}
 
@@ -1117,7 +1117,7 @@ class BP_XProfile_Field {
 		}
 
 		// Remove temp null member type after add field to register page from the $member_types array.
-		if ( function_exists( 'bp_is_register_page' ) && bp_is_register_page() ) {
+		if ( bp_is_register_page() ) {
 			unset( $member_types[ 'null' ] );
 		}
 
@@ -1562,7 +1562,7 @@ class BP_XProfile_Field {
 		}
 
 		// Remove the Profile Type Metabox for the Profile Type Field.
-		if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && $this->id === bp_get_xprofile_member_type_field_id() ) {
+		if ( $this->id === bp_get_xprofile_member_type_field_id() ) {
 			return;
 		}
 
