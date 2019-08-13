@@ -1973,7 +1973,7 @@ function bp_get_xprofile_field_ajax() {
 		while ( bp_profile_groups() ) : bp_the_profile_group();
 			while ( bp_profile_fields() ) : bp_the_profile_field();
 				?>
-				<div<?php bp_field_css_class( 'editfield' ); ?>>
+				<div<?php bp_field_css_class( 'editfield ajax_added' ); bp_field_data_attribute(); ?>>
 					<fieldset>
 						<?php
 						$field_type = bp_xprofile_create_field_type( bp_get_the_profile_field_type() );
@@ -1989,7 +1989,7 @@ function bp_get_xprofile_field_ajax() {
 	$content                = ob_get_clean();
 	$response               = array();
 	$response['field_ids']  = $existing_fields;
-	$response['field_html'] = '<div class="newely_added">' . $content . '</div>';
+	$response['field_html'] = $content;
 	$response['field_tiny'] = $tinymce_added;
 
 	wp_die( json_encode( $response ) );

@@ -8,24 +8,26 @@ jQuery( document ).ready( function() {
 
 	// Add new hidden field for keep existing field to add again in change profile type action.
 	var hiddenField  = jQuery("<input type=\"hidden\" class=\"onloadfields\" value='' />");
-	var tinyMceAdded = 0;
-	var onLoadField  = jQuery('.onloadfields');
-	var newField     = jQuery('body .newely_added');
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
 
+	var tinyMceAdded = 0;
+	var onLoadField  = jQuery('body .onloadfields');
+	var firstCall    = 0;
+
 	// Add existing profile fields ids to new hidden field value.
 	onLoadField.val( getExistingFieldsSelector.val() );
 
+	console.log( BP_REGISTER.field_id );
+
+	tinymce.remove('textarea');
+
 	// Profile Type field select box change action.
-	jQuery( '#' + BP_REGISTER.field_id ).on('change', function() {
+	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_REGISTER.field_id , function() {
 
-		// On change set the older fields value to #signup_profile_field_ids hidden field
-		if ( newField.length ) {
-
-			// Remove the new field.
-			newField.remove();
+		if ( 1 === firstCall ) {
+			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
 		}
 
@@ -45,6 +47,8 @@ jQuery( document ).ready( function() {
 			},
 			function ( response ) {
 
+				firstCall = 1;
+
 				var responseArr = jQuery.parseJSON( response );
 
 				if ( true === parseInt( responseArr[ 'field_html' ] ) ) {
@@ -54,20 +58,30 @@ jQuery( document ).ready( function() {
 				getExistingFieldsSelector.val('');
 				getExistingFieldsSelector.val(responseArr[ 'field_ids' ] );
 				appendHtmlDiv.append( responseArr[ 'field_html' ] );
+
+				var divList = jQuery( 'body .editfield' );
+				divList.sort(function(a, b){
+					return jQuery(a).data('index' ) - jQuery(b).data('index' );
+				});
+
+				jQuery( '#profile-details-section' ).html(divList);
+
 				if ( typeof( tinymce ) !== 'undefined' ) {
+
+					tinymce.remove('textarea');
+
 					tinymce.init(
 						{
 							selector: 'textarea',
+							branding: false,
 							menubar:false,
 							statusbar: false,
-							format: {
-								removeformat: [
-									{selector: 'b,strong,em,i,font,u,strike', remove : 'all', split : true, expand : false, block_expand: true, deep : true},
-								]
-							}
+							plugins: 'lists fullscreen link',
+							toolbar: ' bold italic underline blockquote strikethrough bullist numlist alignleft aligncenter alignright undo redo link fullscreen',
+
 						}
 					);
-					//tinyMCE.execCommand("mceRepaint");
+					tinyMCE.execCommand('mceRepaint');
 				}
 			}
 		);
