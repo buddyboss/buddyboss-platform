@@ -728,3 +728,18 @@ function bp_messages_remove_data( $user_id ) {
 add_action( 'wpmu_delete_user', 'bp_messages_remove_data' );
 add_action( 'delete_user', 'bp_messages_remove_data' );
 add_action( 'bp_make_spam_user', 'bp_messages_remove_data' );
+
+/**
+ * Display Sites notices on all the page
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_messages_show_sites_notices() {
+	if (
+		( ! bp_is_directory() && ! bp_is_single_item() && bp_is_blog_page() )
+		|| ( empty( bp_is_blog_page() ) && bp_is_members_component() ) // check that it's members page on the members component
+	) {
+		bp_nouveau_template_notices();
+	}
+}
+add_action( 'wp_head', 'bp_messages_show_sites_notices' );
