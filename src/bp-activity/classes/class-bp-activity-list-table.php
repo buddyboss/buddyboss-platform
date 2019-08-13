@@ -552,7 +552,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			if ( strpos( $item['type'], 'new_blog_' ) !== false ) {
 				$get_action = bp_activity_get_meta( $item['id'], 'admin_filters' );
 				if ( '' !== $get_action ) {
-					echo __( $get_action, 'buddyboss' );
+					_e( $get_action, 'buddyboss' );
 				} else {
 					$split_cpt = explode('new_blog_', $item['type'] );
 
