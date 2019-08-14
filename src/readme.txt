@@ -66,6 +66,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Toolbar - Display the correct name format in admin Toolbar, as used in frontend Toolbar
 * BuddyPanel - When using the 'Email Invites' menu in the BuddyPanel, it was missing when switching users
 * MemberPress - Fixed redirect issues with the MemberPress custom login page
+* Compatibility - Added settings at BuddyBoss > Integrations > BuddyPress Plugins, for BuddyPress add-on options
 
 = 1.1.5 =
 * Performance - Faster loading of Gravatar images on Members directory
