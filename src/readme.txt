@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Lazy load images in Activity, Forums, Photos and Albums
 * Profiles - Added the ability to re-order First Name, Last Name, and Nickname profile fields
 * Forums - Hide private and hidden discussions from logged out users on the Forums index
+* MemberPress - Fixed redirect issues with the MemberPress custom login page
 
 = 1.1.5 =
 * Performance - Faster loading of Gravatar images on Members directory
