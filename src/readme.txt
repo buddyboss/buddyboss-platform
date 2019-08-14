@@ -56,10 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.6 =
-* Performance - Lazy load images in Activity
-* Performance - Lazy load images in Forums
-* Performance - Lazy load images in Photos
-* Performance - Lazy load images in Albums
+* Performance - Lazy loading for images in Activity
+* Performance - Lazy loading for images in Forums
+* Performance - Lazy loading for images in Photos
+* Performance - Lazy loading for images in Albums
 
 = 1.1.5 =
 * Performance - Faster loading of Gravatar images on Members directory
