@@ -61,9 +61,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - When a member changes their Nickname, the auto-suggest for mentions now uses the updated Nickname
 * Activity - When a member changes their Nickname, the 'Email Preferences' page now uses the updated Nickname
 * Activity - Fixed 'Link Previews' failing when pasting URLs from certain websites
-* Forums - Hide private and hidden discussions from logged out users on the Forums index
+* Forums - Fixed Private and Hidden forum discussion access on the Forums index, for logged out users
 * Forums - Consistent styling of site notices in Forums tabs on member profiles
-* Toolbar - Display the same name format in admin Toolbar as frontend Toolbar
+* Toolbar - Display the correct name format in admin Toolbar, as used in frontend Toolbar
+* BuddyPanel - When using the 'Email Invites' menu in the BuddyPanel, it was missing when switching users
 * MemberPress - Fixed redirect issues with the MemberPress custom login page
 
 = 1.1.5 =
