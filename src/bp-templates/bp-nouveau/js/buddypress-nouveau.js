@@ -312,11 +312,7 @@ window.bp = window.bp || {};
 				// $( this ).find( 'span' ).text('');
 			} );
 
-			if ( $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
-				$(this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current').addClass('selected loading');
-			} else {
-				$(this.objectNavParent + ' [data-bp-scope]:eq(0), #object-nav li.current').addClass('selected loading');
-			}
+			$( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).addClass( 'selected loading' );
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).text('');
 			// $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"], #object-nav li.current' ).find( 'span' ).show();
 			$( '#buddypress [data-bp-filter="' + data.object + '"] option[value="' + data.filter + '"]' ).prop( 'selected', true );

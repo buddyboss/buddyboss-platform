@@ -262,6 +262,11 @@ class BuddyPress {
 			define( 'BP_FORUMS_SLUG', 'forums' );
 		}
 
+		// Define a slug, if necessary.
+		if ( ! defined( 'BP_FOLLOW_SLUG' ) ) {
+			define( 'BP_FOLLOW_SLUG', $this->id );
+		}
+
 		// Only applicable to those running trunk
 		if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
 			define( 'BP_SOURCE_SUBDIRECTORY', '' );
