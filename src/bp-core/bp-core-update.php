@@ -278,6 +278,11 @@ function bp_version_updater() {
 		if ( $raw_db_version < 13731 ) {
 			bp_update_to_3_1_1();
 		}
+
+		// BuddyBoss Version 1.1.6
+		if ( $raw_db_version < 14000 ) {
+			bp_update_to_1_1_6();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -920,4 +925,13 @@ function bp_core_fix_media_activities() {
 	if ( bp_is_active( 'activity' ) ) {
 		bp_activity_media_fix_data();
 	}
+}
+
+/**
+ * 1.1.6 update routine.
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_update_to_1_1_6() {
+	bp_core_update_registration_pages_template();
 }
