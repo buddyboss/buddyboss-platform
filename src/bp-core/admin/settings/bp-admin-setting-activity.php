@@ -74,11 +74,6 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function register_fields() {
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ) );
 
-		// Blog Feeds Option (will sync with "blogs" component)
-//		$this->add_checkbox_field( 'bp-enable-blog-feeds', __( 'Blog Posts', 'buddyboss' ), [
-//			'input_text' => __( 'Automatically publish new blog posts into the activity feed', 'buddyboss' )
-//		] );
-
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
