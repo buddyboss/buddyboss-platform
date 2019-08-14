@@ -50,6 +50,7 @@ function bp_nouveau_media_enqueue_scripts() {
 
 		if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_script( 'isInViewport' );
 			wp_enqueue_script( 'bp-nouveau-media' );
 			wp_enqueue_script( 'bp-exif' );
 		}
