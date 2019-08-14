@@ -278,7 +278,7 @@ class BP_Activity_Component extends BP_Component {
 
 			// Add the subnav items to the activity nav item if we are using a theme that supports this.
 			$sub_nav[] = array(
-				'name'            => _x( 'Posts', 'Profile activity screen sub nav', 'buddyboss' ),
+				'name'            => _x( 'Personal', 'Profile activity screen sub nav', 'buddyboss' ),
 				'slug'            => 'just-me',
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
@@ -287,7 +287,7 @@ class BP_Activity_Component extends BP_Component {
 			);
 
 			// Favorite activity items.
-			if ( bp_activity_can_favorite() ) {
+			if ( bp_is_activity_like_active() ) {
 				$sub_nav[] = array(
 					'name'            => _x( 'Likes', 'Profile activity screen sub nav', 'buddyboss' ),
 					'slug'            => 'favorites',
@@ -400,7 +400,7 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-personal',
-				'title'    => __( 'Posts', 'buddyboss' ),
+				'title'    => bp_is_activity_tabs_active() ? __( 'Personal', 'buddyboss' ) : __( 'Posts', 'buddyboss' ),
 				'href'     => $activity_link,
 				'position' => 10
 			);
@@ -408,7 +408,7 @@ class BP_Activity_Component extends BP_Component {
 			if ( bp_is_activity_tabs_active() ) {
 
 				// Favorite activity items.
-				if ( bp_activity_can_favorite() ) {
+				if ( bp_is_activity_like_active() ) {
 					$wp_admin_nav[] = array(
 						'parent'   => 'my-account-' . $this->id,
 						'id'       => 'my-account-' . $this->id . '-favorites',

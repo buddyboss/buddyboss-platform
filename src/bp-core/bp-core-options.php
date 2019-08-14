@@ -912,7 +912,8 @@ function bp_is_activity_tabs_active( $default = false ) {
 	 *
 	 * @param bool $value Whether or not Activity Tabs are enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_activity_tabs_active', (bool) bp_get_option( '_bp_enable_activity_tabs', $default ) );
+	return (bool) apply_filters( 'bp_is_activity_tabs_active', false );
+	//return (bool) apply_filters( 'bp_is_activity_tabs_active', (bool) bp_get_option( '_bp_enable_activity_tabs', $default ) );
 }
 
 /**
