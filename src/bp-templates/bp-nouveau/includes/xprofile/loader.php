@@ -44,6 +44,19 @@ class BP_Nouveau_xProfile {
 	protected function includes() {
 		require( trailingslashit( $this->dir ) . 'functions.php' );
 		require( trailingslashit( $this->dir ) . 'template-tags.php' );
+
+		// Test suite requires the AJAX functions early.
+		if ( function_exists( 'tests_add_filter' ) ) {
+			require trailingslashit( $this->dir ) . 'ajax.php';
+
+			// Load AJAX code only on AJAX requests.
+		} else {
+			add_action( 'admin_init', function() {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'xprofile_' ) ) {
+					require trailingslashit( $this->dir ) . 'ajax.php';
+				}
+			} );
+		}
 	}
 
 	/**
