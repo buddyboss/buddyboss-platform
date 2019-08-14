@@ -850,7 +850,7 @@ add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_albums_ex
 function bp_nouveau_object_template_results_albums_existing_media_query( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	if ( ! empty( $_POST['caller'] && 'bp-existing-media' == $_POST['caller'] ) ) {
+	if ( ! empty( $_POST['caller'] ) && 'bp-existing-media' == $_POST['caller'] ) {
 		$querystring['album_id'] = 0;
 	}
 

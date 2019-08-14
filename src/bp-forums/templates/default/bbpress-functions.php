@@ -67,8 +67,8 @@ class BBP_Default extends BBP_Theme_Compat {
 
 		/** Scripts ***********************************************************/
 
-		add_action( 'bbp_enqueue_scripts',         array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
-		add_filter( 'bbp_enqueue_scripts',         array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
+		add_action( 'wp_footer',                   array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
+		add_filter( 'wp_footer',                   array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
 		add_action( 'bbp_ajax_subscription',       array( $this, 'ajax_subscription'       ) ); // Handles the topic ajax subscribe/unsubscribe
 		add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe
@@ -127,6 +127,10 @@ class BBP_Default extends BBP_Theme_Compat {
 	 * @uses wp_enqueue_script() To enqueue the scripts
 	 */
 	public function enqueue_scripts() {
+
+	    if ( ! is_bbpress() ) {
+	        return false;
+        }
 
 		// Setup scripts array
 		$scripts = array();
@@ -194,6 +198,25 @@ class BBP_Default extends BBP_Theme_Compat {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
 
+		if ( is_bbpress() && bp_is_active( 'media' ) ) {
+
+			if ( bp_is_forums_media_support_enabled() ) {
+				wp_enqueue_script( 'bp-media-dropzone' );
+				wp_enqueue_script( 'isInViewport' );
+				wp_enqueue_script( 'bp-nouveau-media' );
+				wp_enqueue_script( 'bp-exif' );
+			}
+
+			if ( bp_is_forums_gif_support_enabled() ) {
+				wp_enqueue_script( 'giphy' );
+			}
+
+			if ( bp_is_forums_emoji_support_enabled() ) {
+				wp_enqueue_script( 'emojionearea' );
+				wp_enqueue_style( 'emojionearea' );
+			}
+		}
+
 		if ( bbp_use_wp_editor() ) {
 			wp_localize_script( 'bbpress-editor', 'bbpEditorJsStrs', array(
 				'description' => __( 'Description', 'buddyboss' ),
@@ -209,6 +232,10 @@ class BBP_Default extends BBP_Theme_Compat {
      * @since BuddyBoss 1.1.5
 	 */
 	function media_localize_script() {
+
+		if ( ! is_bbpress() ) {
+			return false;
+		}
 
 		$params = array();
 

@@ -895,6 +895,27 @@ function bp_is_activity_autoload_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity Scopes is enabled.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Scopes is enabled, otherwise false.
+ */
+function bp_is_activity_scopes_active( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity Scopes is enabled.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param bool $value Whether or not Activity Scopes is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_scopes_active', (bool) bp_get_option( '_bp_enable_activity_scopes', $default ) );
+}
+
+/**
  * Check whether Activity Heartbeat refresh is enabled.
  *
  * @since BuddyPress 2.0.0
@@ -1362,4 +1383,46 @@ function bp_hide_nickname_last_name( $default = true ) {
 	 * @param bool $value Whether or not members are able to hide last name field if in display format nick name selected.
 	 */
 	return (bool) apply_filters( 'bp_hide_nickname_last_name', (bool) bp_get_option( 'bp-hide-nickname-last-name', $default ) );
+}
+
+/**
+ * Display email confirmation field in registrations.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Whether or not display email confirmation field in registrations.
+ */
+function bp_register_confirm_email( $default = false ) {
+
+	/**
+	 * Filters whether or not display email confirmation field in registrations.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param bool $value whether or not display email confirmation field in registrations.
+	 */
+	return (bool) apply_filters( 'bp_register_confirm_email', (bool) bp_get_option( 'register-confirm-email', $default ) );
+}
+
+/**
+ * Display password confirmation field in registrations.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if Whether or not display password confirmation field in registrations.
+ */
+function bp_register_confirm_password( $default = false ) {
+
+	/**
+	 * Filters whether or not display password confirmation field in registrations.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param bool $value whether or not display password confirmation field in registrations.
+	 */
+	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
 }

@@ -79,12 +79,18 @@ function bp_core_register_common_scripts() {
 		'emojionearea' => array( 'file' => "{$url}emojionearea-edited.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
 		'bp-exif' => array( 'file' => "{$url}vendor/exif.js" ),
 
+        'bp-media-dropzone'        => array( 'file' => "{$url}vendor/dropzone.min.js", 'dependencies' => array(), 'footer' => false ),
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
 		'bp-tagify'        => array( 'file' => "{$url}vendor/tagify{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 	);
+
+	// Add the "register.js" file if it's a register page and Profile Type field
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		$scripts[ 'bp-register-page' ] = array( 'file' => "{$url}register{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false );
+	}
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
 	if ( isset( $moment_locale_url ) ) {
@@ -431,7 +437,6 @@ function bp_core_get_js_dependencies() {
 		'bp-jquery-cookie',
 		'bp-jquery-scroll-to',
 		'wp-util',
-        'wp-i18n'
 	) );
 }
 
@@ -700,3 +705,26 @@ function bp_core_add_jquery_mask_inline_js () {
 
     <?php
 }
+
+/**
+ * Load the JS for register page and populate conditional field
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_core_register_page_js() {
+
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		wp_enqueue_script( 'bp-register-page' );
+
+		$data = array(
+			'ajaxurl'  => bp_core_ajax_url(),
+			'field_id' => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'nonce'    => wp_create_nonce( 'bp-core-register-page-js' ),
+		);
+
+		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
+	}
+
+}
+
+add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );

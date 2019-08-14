@@ -1909,3 +1909,4 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
+
