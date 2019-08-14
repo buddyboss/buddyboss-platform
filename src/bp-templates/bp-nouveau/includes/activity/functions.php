@@ -262,7 +262,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 			);
 		}
 
-		if ( bp_is_activity_scopes_active() ) {
+		if ( bp_is_activity_tabs_active() ) {
 
 			// The friends component is active and user has friends
 			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
