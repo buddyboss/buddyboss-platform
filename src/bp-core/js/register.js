@@ -4,10 +4,11 @@
 jQuery( document ).ready( function() {
 
 	// Get Existing Register page field ids.
-	var getExistingFieldsSelector = jQuery('#signup_profile_field_ids');
+	var getExistingFieldsSelector = jQuery('body #profile-details-section #signup_profile_field_ids');
 
 	// Add new hidden field for keep existing field to add again in change profile type action.
 	var hiddenField  = jQuery("<input type=\"hidden\" class=\"onloadfields\" value='' />");
+	var existsField  = jQuery("<input type=\"hidden\" name=\"signup_profile_field_ids\" id=\"signup_profile_field_ids\" value='' />");
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
@@ -69,6 +70,8 @@ jQuery( document ).ready( function() {
 					});
 
 					jQuery( '#profile-details-section' ).html( divList );
+					jQuery( 'body #profile-details-section' ).append( existsField );
+					existsField.val( response.data.field_ids );
 
 					if ( typeof( tinymce ) !== 'undefined' ) {
 
