@@ -50,7 +50,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 		),
 	);
 
-	// Bail if not a POST action.
+	// Bail if not a GET action.
 	if ( ! bp_is_get_request() ) {
 		wp_send_json_error( $response );
 	}
