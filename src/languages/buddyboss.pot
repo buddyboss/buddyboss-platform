@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-08-14 18:19:35+00:00\n"
+"POT-Creation-Date: 2019-08-14 19:11:37+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -812,7 +812,7 @@ msgstr[1] ""
 #: bp-activity/bp-activity-template.php:1044
 #: bp-activity/bp-activity-template.php:1213
 #: bp-activity/bp-activity-template.php:1224
-#: bp-activity/classes/class-bp-activity-component.php:430
+#: bp-activity/classes/class-bp-activity-component.php:488
 #: bp-blogs/classes/class-bp-blogs-component.php:331
 #: bp-core/bp-core-template.php:198 bp-core/bp-core-template.php:217
 #: bp-core/classes/class-bp-core-user.php:168
@@ -984,6 +984,10 @@ msgid "Mentions"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:403
+msgid "Personal"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:403
 #: bp-blogs/bp-blogs-activity.php:80 bp-core/bp-core-template.php:557
 #: bp-forums/admin/settings.php:1532
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
@@ -993,7 +997,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:425
+#: bp-activity/classes/class-bp-activity-component.php:483
 msgid "My Activity"
 msgstr ""
 
@@ -15899,7 +15903,8 @@ msgid "Unlike"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:117
-msgid "Liked"
+#: bp-templates/bp-nouveau/includes/activity/functions.php:259
+msgid "My Likes"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:150
@@ -15992,10 +15997,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:231
 msgid "All Updates"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/activity/functions.php:259
-msgid "My Likes"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/functions.php:538
@@ -17650,26 +17651,46 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:292
 msgctxt "Profile activity screen sub nav"
-msgid "Mentions"
+msgid "Likes"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:305
 msgctxt "Profile activity screen sub nav"
-msgid "Favorites"
+msgid "Connections"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:318
 msgctxt "Profile activity screen sub nav"
-msgid "Connections"
+msgid "Groups"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:331
 msgctxt "Profile activity screen sub nav"
-msgid "Groups"
+msgid "Mentions"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-component.php:344
 msgctxt "Profile activity screen sub nav"
+msgid "Following"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:415
+msgctxt "My Account Activity sub nav"
+msgid "Likes"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:426
+msgctxt "My Account Activity sub nav"
+msgid "Connections"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:437
+msgctxt "My Account Activity sub nav"
+msgid "Groups"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:459
+msgctxt "My Account Activity sub nav"
 msgid "Following"
 msgstr ""
 
