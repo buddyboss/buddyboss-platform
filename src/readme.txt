@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Added the ability to re-order First Name, Last Name, and Nickname profile fields
 * Forums - Hide private and hidden discussions from logged out users on the Forums index
 * Forums - Consistent styling of site notices in Forums tabs on member profiles
+* Toolbar - Display the same name format in admin Toolbar as frontend Toolbar
 * MemberPress - Fixed redirect issues with the MemberPress custom login page
 
 = 1.1.5 =
