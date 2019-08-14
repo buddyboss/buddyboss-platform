@@ -58,7 +58,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.6 =
 * Performance - Lazy load images in Activity, Forums, Photos and Albums
 * Profiles - Added the ability to re-order First Name, Last Name, and Nickname profile fields
-* Activity - When a member changes their Nickname, the auto-suggest for mentions shows the updated Nickname
+* Activity - When a member changes their Nickname, the auto-suggest for mentions now uses the updated Nickname
+* Activity - When a member changes their Nickname, the 'Email Preferences' page now uses the updated Nickname
 * Activity - Fixed 'Link Previews' failing when pasting URLs from certain websites
 * Forums - Hide private and hidden discussions from logged out users on the Forums index
 * Forums - Consistent styling of site notices in Forums tabs on member profiles
