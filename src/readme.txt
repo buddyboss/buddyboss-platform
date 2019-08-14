@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Lazy loading for images in Forums
 * Performance - Lazy loading for images in Photos
 * Performance - Lazy loading for images in Albums
+* Forums - Hide private and hidden discussions from logged out users on the Forums index
 
 = 1.1.5 =
 * Performance - Faster loading of Gravatar images on Members directory
