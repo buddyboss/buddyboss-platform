@@ -180,11 +180,12 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 
 			foreach ( $posts->posts as $post ) {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
+				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				if ( '' === $enabled || '1' === $enabled ) {
 					$html .= sprintf( '<option value="%s" %s>%s</option>',
 						$post->ID,
 						( $post_selected == $post->ID ) ? ' selected="selected"' : '',
-						$post->post_title );
+						$name );
 				}
 			}
 		}
