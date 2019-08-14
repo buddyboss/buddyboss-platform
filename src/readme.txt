@@ -56,10 +56,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.6 =
-* Performance - Lazy loading for images in Activity
-* Performance - Lazy loading for images in Forums
-* Performance - Lazy loading for images in Photos
-* Performance - Lazy loading for images in Albums
+* Performance - Lazy load images in Activity, Forums, Photos and Albums
+* Profiles - Added the ability to re-order First Name, Last Name, and Nickname profile fields
 * Forums - Hide private and hidden discussions from logged out users on the Forums index
 
 = 1.1.5 =
