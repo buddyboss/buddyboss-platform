@@ -104,3 +104,21 @@ function bp_core_update_group_fields_id_in_db() {
 }
 
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
+
+/**
+ * Include plugin when plugin is activated
+ *
+ * Support Google Captcha Pro
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
+	if ( in_array( $section_slug, array( 'bbpress', 'buddypress' ) ) ) {
+		$section_notice = '';
+	}
+
+	return $section_notice;
+
+}
+
+add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
