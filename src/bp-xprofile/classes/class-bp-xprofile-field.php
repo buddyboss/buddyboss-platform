@@ -1583,7 +1583,7 @@ class BP_XProfile_Field {
                                        id="member-type-<?php echo $member_type->labels['name']; ?>"
                                        class="member-type-selector" type="checkbox"
                                        value="<?php echo $member_type->name; ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
-								<?php echo $member_type->labels['name']; ?>
+								<?php echo $member_type->labels['singular_name']; ?>
                             </label>
                         </li>
 					<?php endforeach; ?>
