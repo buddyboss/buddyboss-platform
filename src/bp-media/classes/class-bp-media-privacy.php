@@ -49,7 +49,7 @@ class BP_Media_Privacy {
 			'public'   => __( 'Everyone', 'buddyboss' ),
 			'loggedin' => __( 'Logged In Users', 'buddyboss' ),
 			'onlyme'   => __( 'Only Me', 'buddyboss' ),
-			'friends'  => __( 'My Friends', 'buddyboss' ),
+			'friends'  => __( 'My Connections', 'buddyboss' ),
 		);
 
 		if( $is_group && bp_is_active( 'groups' ) ) {

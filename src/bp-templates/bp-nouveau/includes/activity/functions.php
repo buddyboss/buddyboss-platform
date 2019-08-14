@@ -271,7 +271,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 					'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array( 'dynamic' ),
 					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-					'text'      => __( 'My Friends', 'buddyboss' ),
+					'text'      => __( 'My Connections', 'buddyboss' ),
 					'count'     => false,
 					'position'  => 15,
 				);

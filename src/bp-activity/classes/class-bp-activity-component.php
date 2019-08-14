@@ -315,7 +315,7 @@ class BP_Activity_Component extends BP_Component {
 			// Additional menu if friends is active.
 			if ( bp_is_active( 'friends' ) ) {
 				$sub_nav[] = array(
-					'name'            => _x( 'Friends', 'Profile activity screen sub nav', 'buddyboss' ),
+					'name'            => _x( 'Connections', 'Profile activity screen sub nav', 'buddyboss' ),
 					'slug'            => bp_get_friends_slug(),
 					'parent_url'      => $activity_link,
 					'parent_slug'     => $slug,
