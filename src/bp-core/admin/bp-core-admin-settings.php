@@ -224,11 +224,11 @@ function bp_admin_setting_callback_enable_activity_autoload() {
  *
  * @since BuddyBoss 1.1.6
  */
-function bp_admin_setting_callback_enable_activity_scopes() {
+function bp_admin_setting_callback_enable_activity_tabs() {
 	?>
 
-    <input id="_bp_enable_activity_scopes" name="_bp_enable_activity_scopes" type="checkbox" value="1" <?php checked( bp_is_activity_scopes_active( false ) ); ?> />
-    <label for="_bp_enable_activity_scopes"><?php _e( 'Filter activity into tabs based on activity type', 'buddyboss' ); ?></label>
+    <input id="_bp_enable_activity_tabs" name="_bp_enable_activity_tabs" type="checkbox" value="1" <?php checked( bp_is_activity_tabs_active( false ) ); ?> />
+    <label for="_bp_enable_activity_tabs"><?php _e( 'Filter activity into tabs based on activity type', 'buddyboss' ); ?></label>
 
 	<?php
 }
