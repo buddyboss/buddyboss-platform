@@ -19,7 +19,9 @@ jQuery( document ).ready( function() {
 	// Add existing profile fields ids to new hidden field value.
 	onLoadField.val( getExistingFieldsSelector.val() );
 
-	tinymce.remove('textarea');
+	if ( typeof( tinymce ) !== 'undefined' ) {
+		tinymce.remove('textarea');
+	}
 
 	// Profile Type field select box change action.
 	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
