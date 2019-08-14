@@ -63,6 +63,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed 'Link Previews' failing when pasting URLs from certain websites
 * Forums - Fixed Private and Hidden forum discussion access on the Forums index, for logged out users
 * Forums - Consistent styling of site notices in Forums tabs on member profiles
+* Registration - New option to require Email confirmation on the register form
+* Registration - New option to require Password confirmation on the register form
 * Toolbar - Display the correct name format in admin Toolbar, as used in frontend Toolbar
 * BuddyPanel - When using the 'Email Invites' menu in the BuddyPanel, it was missing when switching users
 * MemberPress - Fixed redirect issues with the MemberPress custom login page
