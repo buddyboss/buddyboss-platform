@@ -63,7 +63,7 @@ jQuery( document ).ready( function() {
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
 
-					var divList = jQuery( 'body .editfield' );
+					var divList = jQuery( 'body #profile-details-section > .editfield' );
 					divList.sort(function(a, b){
 						return jQuery(a).data('index' ) - jQuery(b).data('index' );
 					});
