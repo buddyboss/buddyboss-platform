@@ -130,11 +130,12 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	}
 	$display_name = $current_user->data->display_name;
 	$avatar = get_avatar( $user_id, 26 );
+	$name = bp_xprofile_get_member_display_name( $user_id );
 
 	// my account
 	$wp_admin_bar->add_node( [
 		'id' => 'my-account',
-		'title' => '<span class="display-name">' . $display_name . $avatar . '</span>'
+		'title' => '<span class="display-name">' . $name . $avatar . '</span>'
 	] );
 
 	// user info
@@ -163,7 +164,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	);
 
 	$user_info  = get_avatar( $user_id, 64 );
-	$user_info .= "<span class='display-name'>{$display_name}</span>";
+	$user_info .= "<span class='display-name'>{$name}</span>";
 
 	if ( $current_user->display_name !== $current_user->user_login ) {
 
