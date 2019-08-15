@@ -743,4 +743,4 @@ function bp_messages_show_sites_notices() {
 		bp_nouveau_template_notices();
 	}
 }
-add_action( 'wp_head', 'bp_messages_show_sites_notices' );
+add_action( 'wp_head', 'bp_messages_show_sites_notices', 10000 );
