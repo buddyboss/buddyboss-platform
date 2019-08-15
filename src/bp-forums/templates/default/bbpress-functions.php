@@ -208,6 +208,8 @@ class BBP_Default extends BBP_Theme_Compat {
 			}
 
 			if ( bp_is_forums_gif_support_enabled() ) {
+				wp_enqueue_script( 'isInViewport' );
+				wp_enqueue_script( 'bp-nouveau-media' );
 				wp_enqueue_script( 'giphy' );
 			}
 
