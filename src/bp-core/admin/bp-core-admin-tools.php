@@ -582,6 +582,10 @@ function bp_admin_repair_last_activity() {
  * @since BuddyBoss 1.0.0
  */
 function repair_default_profiles_fields() {
+	global $wpdb;
+
+	$bp_prefix = bp_core_get_table_prefix();
+
 	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
 	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
 
@@ -594,6 +598,34 @@ function repair_default_profiles_fields() {
 	if ( ! bp_get_option( 'bp-xprofile-firstname-field-id' ) ) {
 		bp_update_option( 'bp-xprofile-firstname-field-id', 1 );
 	}
+
+	// First name field id.
+	$first_name_id = bp_xprofile_firstname_field_id();
+
+	// Last name field id.
+	$last_name_id = bp_xprofile_lastname_field_id();
+
+	// Nickname field id.
+	$nickname_id = bp_xprofile_nickname_field_id();
+
+	// Query to remove all duplicate first name fields.
+	$first_name = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'First Name', 'textbox', $first_name_id );
+
+	// Query to remove all duplicate last name fields.
+	$last_name  = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'Last Name', 'textbox', $last_name_id );
+
+	// Query to remove all duplicate nick name fields.
+	$nick_name  = $wpdb->prepare( "DELETE FROM {$bp_prefix}bp_xprofile_fields WHERE can_delete = %d AND parent_id = %d AND is_required = %d AND name = %s AND type = %s AND id != %d", 0, 0, 1, 'Nickname', 'textbox', $nickname_id );
+
+	// Remove all duplicate first name fields.
+	$wpdb->query( $first_name );
+
+	// Remove all duplicate last name fields.
+	$wpdb->query( $last_name );
+
+	// Remove all duplicate nick name fields.
+	$wpdb->query( $nick_name );
+
 
 	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
 
