@@ -100,11 +100,14 @@
 								$all_terms_arr      = get_terms( bbp_get_topic_tag_tax_id(), $args );
 								$all_terms_name_arr = wp_list_pluck( $all_terms_arr, 'name' );
 								$tags               = bbp_get_form_topic_tags();
-								$suggestion_arr     = array_diff( $all_terms_name_arr, $tags );
-
-								if ( $tags ) {
-									$tags_arr = explode( ',', $tags );
-									foreach ( $tags_arr as $tag ) {
+								$tags               = explode( ',', $tags );
+								if ( '' !== $tags ) {
+									$suggestion_arr = array_diff( $all_terms_name_arr, $tags );
+								} else {
+									$suggestion_arr = $all_terms_name_arr;
+								}
+								if ( '' !== $tags ) {
+									foreach ( $tags as $tag ) {
 										?>
 										<option selected="selected"><?php echo $tag; ?></option>
 										<?php

@@ -68,6 +68,7 @@ class BBP_Default extends BBP_Theme_Compat {
 		/** Scripts ***********************************************************/
 
 		add_action( 'wp_footer',                   array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
+		add_action( 'wp_footer',                   array( $this, 'enqueue_style'         ) ); // Enqueue theme JS
 		add_filter( 'wp_footer',                   array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
 		add_action( 'bbp_ajax_subscription',       array( $this, 'ajax_subscription'       ) ); // Handles the topic ajax subscribe/unsubscribe
@@ -115,6 +116,16 @@ class BBP_Default extends BBP_Theme_Compat {
 	<?php
 	}
 
+	public function enqueue_style() {
+
+		if ( ! is_bbpress() ) {
+			return false;
+		}
+
+		wp_enqueue_style('main-styles', buddypress()->plugin_url . 'bp-core/css/select2.min.css', array(), $this->version );
+
+	}
+
 	/**
 	 * Enqueue the required Javascript files
 	 *
@@ -134,11 +145,6 @@ class BBP_Default extends BBP_Theme_Compat {
 
 		// Setup scripts array
 		$scripts = array();
-
-		// Tag Input
-		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
-			wp_enqueue_script( 'bp-tagify' );
-		}
 
 		// Always pull in jQuery for TinyMCE shortcode usage
 		if ( bbp_use_wp_editor() ) {
@@ -193,10 +199,17 @@ class BBP_Default extends BBP_Theme_Compat {
 		// Filter the scripts
 		$scripts = apply_filters( 'bbp_default_scripts', $scripts );
 
+		wp_enqueue_script( 'bbpress-common-select2', buddypress()->plugin_url . 'bp-core/js/vendor/select2.min.js', array( 'jquery' ), $this->version, true );
+
+
 		// Enqueue the scripts
 		foreach ( $scripts as $handle => $attributes ) {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
+
+		wp_localize_script( 'bbpress-common', 'bbpTagsSelect', array(
+			'description' => __( 'Select Tags OR Type a new tag', 'buddyboss' ),
+		) );
 
 		if ( bp_is_active( 'media' ) ) {
 

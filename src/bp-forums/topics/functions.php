@@ -288,12 +288,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && !empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
-
-		// Explode by comma
-		if ( strstr( $terms, ',' ) ) {
-			$terms = explode( ',', $terms );
-		}
+		$terms = $_POST['bbp_topic_tags'];
 
 		// Add topic tag ID as main key
 		$terms = array( bbp_get_topic_tag_tax_id() => $terms );
@@ -625,11 +620,7 @@ function bbp_edit_topic_handler( $action = '' ) {
 	if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) && ! empty( $_POST['bbp_topic_tags'] ) ) {
 
 		// Escape tag input
-		$terms = esc_attr( strip_tags( $_POST['bbp_topic_tags'] ) );
-
-		// Explode by comma
-		if ( strstr( $terms, ',' ) )
-			$terms = explode( ',', $terms );
+		$terms = $_POST['bbp_topic_tags'];
 
 		// Add topic tag ID as main key
 		$terms = array( bbp_get_topic_tag_tax_id() => $terms );
