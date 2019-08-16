@@ -1456,10 +1456,15 @@ window.bp = window.bp || {};
 				}
 				for( var i=0; i<lazy.length; i++ ) {
 					var isInViewPort = false;
-					if( $(lazy[i]).is( ':in-viewport' ) ) {
-						isInViewPort = true;
-					} else if ( lazy[i].getBoundingClientRect().top <= (( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY ) ) {
-						isInViewPort = true;
+					try {
+						if( $(lazy[i]).is( ':in-viewport' ) ) {
+							isInViewPort = true;
+						}
+					} catch (err) {
+						console.error(err.message);
+						if ( ! isInViewPort && lazy[i].getBoundingClientRect().top <= (( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY ) ) {
+							isInViewPort = true;
+						}
 					}
 
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
