@@ -39,7 +39,7 @@ jQuery(document).ready( function() {
         } else if ( jQuery( '#bbp_forum_content' ).length ) {
             bbp_editor_content_elem = '#bbp_forum_content';
         }
-        if (jQuery(bbp_editor_content_elem).length) {
+        if (jQuery(bbp_editor_content_elem).length && typeof jQuery.prototype.emojioneArea !== 'undefined' ) {
             jQuery(bbp_editor_content_elem).emojioneArea({
                 standalone: true,
                 hideSource: false,
