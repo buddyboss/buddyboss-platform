@@ -91,7 +91,34 @@
 
 						<p>
 							<label for="bbp_topic_tags"><?php _e( 'Tags:', 'buddyboss' ); ?></label><br />
-							<input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags" id="bbp_topic_tags" <?php disabled( bbp_is_topic_spam() ); ?> />
+							<select style="width: 100%;" class="form-control" multiple="multiple" tabindex="<?php bbp_tab_index(); ?>" name="bbp_topic_tags[]" <?php disabled( bbp_is_topic_spam() ); ?>>
+								<?php
+								$args = array(
+									'hide_empty' => false,
+								);
+
+								$all_terms_arr      = get_terms( bbp_get_topic_tag_tax_id(), $args );
+								$all_terms_name_arr = wp_list_pluck( $all_terms_arr, 'name' );
+								$tags               = bbp_get_form_topic_tags();
+								$suggestion_arr     = array_diff( $all_terms_name_arr, $tags );
+
+								if ( $tags ) {
+									$tags_arr = explode( ',', $tags );
+									foreach ( $tags_arr as $tag ) {
+										?>
+										<option selected="selected"><?php echo $tag; ?></option>
+										<?php
+									}
+								}
+								if ( $suggestion_arr ) {
+									foreach ( $suggestion_arr as $tag ) {
+										?>
+										<option><?php echo $tag; ?></option>
+										<?php
+									}
+								}
+								?>
+							</select>
 						</p>
 
 						<?php do_action( 'bbp_theme_after_topic_form_tags' ); ?>
