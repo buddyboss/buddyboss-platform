@@ -3,7 +3,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
+/** yes
  * Main BuddyPress Class.
  *
  * Tap tap tap... Is this thing on?
