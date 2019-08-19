@@ -110,7 +110,6 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 			$( document ).ajaxComplete(function( event, request, settings ) {
-				console.log(settings);
 				var _checkindex = -1;
 				if(typeof settings.data !== "undefined"){
 					var _dataslit = settings.data.split('&');
