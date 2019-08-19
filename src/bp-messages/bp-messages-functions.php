@@ -732,7 +732,7 @@ add_action( 'bp_make_spam_user', 'bp_messages_remove_data' );
 /**
  * Display Sites notices on all the page
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.7
  */
 function bp_messages_show_sites_notices() {
 	if (
@@ -743,4 +743,4 @@ function bp_messages_show_sites_notices() {
 		bp_nouveau_template_notices();
 	}
 }
-add_action( 'wp_head', 'bp_messages_show_sites_notices', 10000 );
+add_action( 'wp_footer', 'bp_messages_show_sites_notices', 10000 );
