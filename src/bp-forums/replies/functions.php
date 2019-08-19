@@ -2305,16 +2305,20 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		$current_group = bp_get_current_group_id();
 
 		if ( groups_is_user_member( $author_id, $current_group ) ) {
-			$display_role = __( 'Member', 'buddyboss' );
+			$role_label = bbp_get_cutom_role_label('Member', $current_group);
+			$display_role = __( $role_label, 'buddyboss' );
 		}
 
 		if ( groups_is_user_mod( $author_id, $current_group ) ) {
-			$display_role = __( 'Moderator', 'buddyboss' );
+			$role_label = bbp_get_cutom_role_label('Moderator', $current_group);
+			$display_role = __( $role_label, 'buddyboss' );
 		}
 
 		if ( groups_is_user_admin( $author_id, $current_group ) ) {
-			$display_role = __( 'Organizer', 'buddyboss' );
+			$role_label = bbp_get_cutom_role_label('Organizer', $current_group);
+			$display_role = __( $role_label, 'buddyboss' );
 		}
+
 	} else {
 		if ( ! $author_id ) {
 			$display_role = __( 'Guest', 'buddyboss' );
@@ -2338,4 +2342,30 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		esc_html( $display_role ),
 		$args['after']
 	);
+}
+
+/**
+* Get Custom Roles Label
+*
+* @param $member_type string - Organizer, Moderator, Member
+* @param $current_group int - assign group type to a group
+*/
+function bbp_get_cutom_role_label($member_type, $current_group) {
+	$group_type = bp_groups_get_group_type( $current_group, false );
+
+	if (!$group_type) {
+		return __( $member_type, 'buddyboss' );
+	}
+
+	$type = get_page_by_path($group_type[0], OBJECT, 'bp-group-type');
+
+	$metas = get_post_meta($type->ID);
+
+	$custom_label = isset($metas['_bp_group_type_role_labels'][0]) ? unserialize($metas['_bp_group_type_role_labels'][0]) : false;
+
+	$label_type = $custom_label[strtolower($member_type).'_singular_label_name'];
+
+	$custom_label = ($custom_label && isset($label_type) && !empty($label_type)) ? $label_type:$member_type;
+
+	return $custom_label;
 }
