@@ -769,3 +769,55 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 
 add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
 add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );
+add_action( 'wp_ajax_search_tags',        'ajax_forum_search_tags' );
+function ajax_forum_search_tags() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_get_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_GET['_wpnonce'];
+	$check = 'search_tag';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['tag'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// WP_Term_Query arguments
+	$args = array(
+		'taxonomy'               => array( 'topic-tag' ),
+		'search'             => $_GET['tag'],
+		'hide_empty'             => false,
+	);
+
+	// The Term Query
+	$term_query = new WP_Term_Query( $args );
+
+	$tags = array();
+	// The Loop
+	if ( ! empty( $term_query ) && ! is_wp_error( $term_query ) ) {
+		$tags = wp_list_pluck( $term_query->terms, 'name' );
+	}
+
+		wp_send_json_success( array(
+			'tags' => $tags,
+		) );
+}
