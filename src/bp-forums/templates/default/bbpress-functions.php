@@ -72,6 +72,7 @@ class BBP_Default extends BBP_Theme_Compat {
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
 		add_action( 'bbp_ajax_subscription',       array( $this, 'ajax_subscription'       ) ); // Handles the topic ajax subscribe/unsubscribe
 		add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe
+		add_action( 'bbp_ajax_search_tags',        array( $this, 'ajax_forum_search_tags' ) ); // Handles the forum ajax subscribe/unsubscribe
 
 		/** Template Wrappers *************************************************/
 
@@ -197,6 +198,14 @@ class BBP_Default extends BBP_Theme_Compat {
 		foreach ( $scripts as $handle => $attributes ) {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
+
+		$common_array = array(
+			'loading_text' => __( 'Loading', 'buddyboss' ),
+			'ajax_url' => bp_core_ajax_url(),
+			'nonce' => wp_create_nonce('search_tag' ),
+		);
+
+		wp_localize_script( 'bbpress-common', 'Common_Data', $common_array );
 
 		if ( bp_is_active( 'media' ) ) {
 
@@ -612,6 +621,31 @@ class BBP_Default extends BBP_Theme_Compat {
 		// Bail if user did not take this action
 		if ( ! isset( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'toggle-subscription_' . $topic->ID ) ) {
 			bbp_ajax_response( false, __( 'Are you sure you meant to do that?', 'buddyboss' ), 304 );
+		}
+
+		// Take action
+		$status = bbp_is_user_subscribed( $user_id, $topic->ID ) ? bbp_remove_user_subscription( $user_id, $topic->ID ) : bbp_add_user_subscription( $user_id, $topic->ID );
+
+		// Bail if action failed
+		if ( empty( $status ) ) {
+			bbp_ajax_response( false, __( 'The request was unsuccessful. Please try again.', 'buddyboss' ), 305 );
+		}
+
+		// Put subscription attributes in convenient array
+		$attrs = array(
+			'topic_id' => $topic->ID,
+			'user_id'  => $user_id
+		);
+
+		// Action succeeded
+		bbp_ajax_response( true, bbp_get_user_subscribe_link( $attrs, $user_id, false ), 200 );
+	}
+
+	public function ajax_forum_search_tags() {
+
+		// Bail if user did not take this action
+		if ( ! isset( $_GET['_wpnonce'] ) || ! wp_verify_nonce( $_GET['_wpnonce'], 'search_tag' ) ) {
+			bbp_ajax_response( false, __( 'nonce verify failed', 'buddyboss' ), 304 );
 		}
 
 		// Take action
