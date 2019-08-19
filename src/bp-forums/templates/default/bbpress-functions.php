@@ -136,9 +136,9 @@ class BBP_Default extends BBP_Theme_Compat {
 		$scripts = array();
 
 		// Tag Input
-		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+		//if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
 			wp_enqueue_script( 'bp-tagify' );
-		}
+		//}
 
 		// Always pull in jQuery for TinyMCE shortcode usage
 		if ( bbp_use_wp_editor() ) {
@@ -198,10 +198,16 @@ class BBP_Default extends BBP_Theme_Compat {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
 
+		$no_load_topic = true;
+		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+			$no_load_topic = false;
+		}
+
 		$common_array = array(
 			'loading_text' => __( 'Loading', 'buddyboss' ),
 			'ajax_url' => bp_core_ajax_url(),
 			'nonce' => wp_create_nonce('search_tag' ),
+			'load' => $no_load_topic,
 		);
 
 		wp_localize_script( 'bbpress-common', 'Common_Data', $common_array );
