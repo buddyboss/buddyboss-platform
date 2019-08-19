@@ -623,7 +623,7 @@ function bp_activity_newest_class( $classes = '' ) {
  */
 function bp_activity_display_all_types_on_just_me($args) {
 
-	if ( bp_is_activity_scopes_active() ) {
+	if ( bp_is_activity_tabs_active() ) {
 		return $args;
 	}
 

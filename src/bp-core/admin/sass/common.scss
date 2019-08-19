@@ -375,6 +375,12 @@ tr.bp-search-parent-field label {
 	margin-right: 15px;
 }
 
+.bp-admin-card h3 {
+	font-size: 19px;
+	font-weight: 600;
+}
+
+
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
@@ -530,6 +536,12 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 /* Integrations - WooCommerce */
 .bp-admin-card.section-bp-woocommerce-integration h2:before {
 	background-image: url(../../images/admin/icons/logos/woocommerce.png);
+	background-size: 100% 100%;
+}
+
+/* Integrations - BuddyPress Plugins */
+.bp-admin-card.section-bp_compatibility-integration h2:before {
+	background-image: url(../../images/admin/icons/logos/buddypress.png);
 	background-size: 100% 100%;
 }
 

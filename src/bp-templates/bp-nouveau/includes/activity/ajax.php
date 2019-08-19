@@ -114,7 +114,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 			if ( 1 === $fav_count ) {
 				$response['directory_tab'] = '<li id="activity-favorites" data-bp-scope="favorites" data-bp-object="activity">
 					<a href="' . bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/">
-						' . esc_html__( 'Liked', 'buddyboss' ) . '
+						' . esc_html__( 'My Likes', 'buddyboss' ) . '
 					</a>
 				</li>';
 			} else {
