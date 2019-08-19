@@ -32,7 +32,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 			'bp-search-template',
 			'bp-search-filters',
 			'bp-search-settings',
-			'bp-search-cache',
 			'classes/class-bp-search',
 			'plugins/search-cpt/index'
 		];

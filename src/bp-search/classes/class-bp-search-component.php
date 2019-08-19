@@ -38,19 +38,4 @@ class BP_Search_Component extends BP_Component {
 	public function setup_globals( $args = array() ) {
 		parent::setup_globals( $args );
 	}
-
-	/**
-	 * Setup cache groups.
-	 *
-	 * @since BuddyBoss 1.1.6
-	 */
-	public function setup_cache_groups() {
-
-		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_search',
-		) );
-
-		parent::setup_cache_groups();
-	}
 }
