@@ -59,16 +59,13 @@ $settings = bp_email_get_appearance_settings();
 		/* Beware: It can remove the padding / margin and add a background color to the compose a reply window. */
 		html,
 		body {
-			Margin: 0 !important;
+			margin: 0 !important;
 			padding: 0 !important;
-			height: 100% !important;
-			width: 100% !important;
 		}
 
 		/* What it does: Stops email clients resizing small text. */
 		* {
-			-ms-text-size-adjust: 100%;
-			-webkit-text-size-adjust: 100%;
+
 		}
 
 		/* What is does: Centers email on Android 4.4 */
@@ -100,7 +97,6 @@ $settings = bp_email_get_appearance_settings();
 		img {
 			-ms-interpolation-mode:bicubic;
 			height: auto;
-			max-width: 100%;
 		}
 
 		/* What it does: A work-around for email clients meddling in triggered links. */
@@ -142,15 +138,14 @@ $settings = bp_email_get_appearance_settings();
 
 		/* What it does: Forces Outlook.com to display emails full width. */
 		.ExternalClass {
-			width: 100%;
+
 		}
 
 		/* MOBILE STYLES */
 		@media screen and (max-width: 525px) {
 			/* ALLOWS FOR FLUID TABLES */
 			.wrapper {
-				width: 100% !important;
-				max-width: 100% !important;
+
 			}
 
 			/* ADJUSTS LAYOUT OF LOGO IMAGE */
@@ -164,14 +159,11 @@ $settings = bp_email_get_appearance_settings();
 			}
 
 			.img-max {
-				max-width: 100% !important;
-				width: 100% !important;
 				height: auto !important;
 			}
 
 			/* FULL-WIDTH TABLES */
 			.responsive-table {
-				width: 100% !important;
 			}
 
 			.mobile-text-center {
@@ -194,13 +186,11 @@ $settings = bp_email_get_appearance_settings();
 
 			.mobile-block-full {
 				display: block !important;
-				width: 100% !important;
 			}
 
 			.mobile-block-padding-full {
 				display: block !important;
 				padding: 0 20px !important;
-				width: 100% !important;
 				box-sizing: border-box;
 			}
 
@@ -224,10 +214,10 @@ $settings = bp_email_get_appearance_settings();
 	</style>
 </head>
 	
-<body class="email_bg" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
-	<table cellpadding="0" cellspacing="0" border="0" height="100%" width="100%" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
+<body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
+	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse;" class="email_bg">
 		<tr><td valign="top">
-			<center style="width: 100%; text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
+			<center style="text-align: <?php echo esc_attr( $settings['direction'] ); ?>;">
 
 				<div style="max-width: 600px; margin: auto; padding: 10px;" class="email-container">
 					<!--[if mso]>
@@ -237,7 +227,7 @@ $settings = bp_email_get_appearance_settings();
 					<![endif]-->
 
 					<!-- Email Header : BEGIN -->
-					<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" width="100%" style="max-width: 600px;">
+					<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="max-width: 600px;">
 						<tr>
 							<td style="text-align: left; padding: 50px 0 30px 0; font-family: sans-serif; mso-height-rule: exactly; font-weight: bold; color: <?php echo esc_attr( $settings['site_title_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['site_title_text_size'] . 'px' ); ?>" class="site_title_text_color site_title_text_size">
 								<?php
@@ -279,7 +269,7 @@ $settings = bp_email_get_appearance_settings();
 								 */
 								do_action( 'bp_before_email_recipient' );
 
-								if ( ! empty( $email_user->ID ) ) {
+								if ( $email_user && ! empty( $email_user->ID ) ) {
 									echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
 											'item_id' => $email_user->ID,
 											'html'    => false
@@ -299,12 +289,12 @@ $settings = bp_email_get_appearance_settings();
 					<!-- Email Header : END -->
 
 					<!-- Email Body : BEGIN -->
-					<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" width="100%" style="border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
+					<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" bgcolor="<?php echo esc_attr( $settings['body_bg'] ); ?>" style="border-collapse: separate !important; max-width: 600px; border-radius: 5px; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>" class="body_bg body_border_color">
 
 						<!-- 1 Column Text : BEGIN -->
 						<tr>
 							<td>
-								<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+								<table role="presentation" cellspacing="0" cellpadding="0" border="0">
 									<tr>
 										<td style="padding: 20px 40px; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['body_text_size'] * 1.618 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>; font-size: <?php echo esc_attr( $settings['body_text_size'] . 'px' ); ?>" class="body_text_color body_text_size repsonsive-padding">
 											<?php echo $email_content; ?>
@@ -320,9 +310,9 @@ $settings = bp_email_get_appearance_settings();
 
 					<!-- Email Footer : BEGIN -->
 					<br>
-					<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" width="100%" style="max-width: 600px; border-radius: 5px;">
+					<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="<?php echo esc_attr( $settings['direction'] ); ?>" style="max-width: 600px; border-radius: 5px;">
 						<tr>
-							<td style="padding: 20px 40px; width: 100%; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
+							<td style="padding: 20px 40px; font-size: <?php echo esc_attr( $settings['footer_text_size'] . 'px' ); ?>; font-family: sans-serif; mso-height-rule: exactly; line-height: <?php echo esc_attr( floor( $settings['footer_text_size'] * 1.618 ) . 'px' ); ?>; text-align: center; color: <?php echo esc_attr( $settings['footer_text_color'] ); ?>;" class="footer_text_color footer_text_size repsonsive-padding">
 								<?php
 								/**
 								 * Fires before the display of the email template footer.
@@ -345,7 +335,7 @@ $settings = bp_email_get_appearance_settings();
 							</td>
 						</tr>
 						<tr>
-							<td height="45px" style="font-size: 45px; line-height: 45px;">&nbsp;</td>
+							<td style="font-size: 45px; line-height: 45px;">&nbsp;</td>
 						</tr>
 					</table>
 					<!-- Email Footer : END -->
