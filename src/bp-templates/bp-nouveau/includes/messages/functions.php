@@ -280,7 +280,7 @@ function bp_nouveau_unregister_notices_widget() {
  */
 function bp_nouveau_push_sitewide_notices() {
 	// Do not show notices if user is not logged in.
-	if ( ! is_user_logged_in() || ! bp_is_my_profile() ) {
+	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
