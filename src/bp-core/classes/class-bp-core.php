@@ -129,15 +129,15 @@ class BP_Core extends BP_Component {
 
 		// Loop through optional components.
 		foreach ($bp->optional_components as $component) {
-			if (bp_is_active($component) && file_exists($bp->plugin_dir . '/bp-' . $component . '/bp-' . $component . '-loader.php')) {
-				include $bp->plugin_dir . '/bp-' . $component . '/bp-' . $component . '-loader.php';
+			if (bp_is_active($component) && file_exists($bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php')) {
+				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
 			}
 		}
 
 		// Loop through required components.
 		foreach ($bp->required_components as $component) {
-			if (file_exists($bp->plugin_dir . '/bp-' . $component . '/bp-' . $component . '-loader.php')) {
-				include $bp->plugin_dir . '/bp-' . $component . '/bp-' . $component . '-loader.php';
+			if (file_exists($bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php')) {
+				include $bp->plugin_dir . 'bp-' . $component . '/bp-' . $component . '-loader.php';
 			}
 		}
 
@@ -168,7 +168,7 @@ class BP_Core extends BP_Component {
 		 * @param array $value Array of included and optional integrations.
 		 */
 		$bp->available_integrations = apply_filters('bp_integrations', array(
-			'appboss', 'learndash',
+			'appboss', 'learndash', 'compatibility',
 		));
 
 		$integration_dir = $bp->plugin_dir . '/bp-integrations/';
