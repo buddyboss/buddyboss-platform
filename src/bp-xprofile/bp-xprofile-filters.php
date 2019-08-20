@@ -674,7 +674,6 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return $retval;
 	}
 
-	// $value = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
 	// Empty nickname
