@@ -152,6 +152,11 @@ function messages_new_message( $args = '' ) {
 				}
 			}
 
+			// If $recipient_id still blank then try last time to find $recipient_id via the nickname field.
+			if ( empty( $recipient_id ) ) {
+				$recipient_id = bp_core_get_userid_from_nickname( $recipient );
+			}
+
 			// Decide which group to add this recipient to.
 			if ( empty( $recipient_id ) ) {
 				$invalid_recipients[] = $recipient;
