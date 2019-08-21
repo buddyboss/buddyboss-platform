@@ -465,61 +465,114 @@ function bp_core_install_default_profiles_fields() {
 
 	// First name
 	$first_name_id = bp_xprofile_firstname_field_id();
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$first_name_id}" ) ) {
 
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
-			'group_id'    => $base_group_id,
-			'parent_id'   => 0,
-			'type'        => 'textbox',
-			'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
-			'description' => '',
-			'is_required' => 1,
-			'can_delete'  => 0,
-		] );
+	if ( $first_name_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$first_name_id}" ) ) {
+			$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields",
+				[
+					'group_id'    => $base_group_id,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				] );
+
+			$first_name_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+			}
+		}
+	} else {
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields",
+			[
+				'group_id'    => $base_group_id,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			] );
 
 		$first_name_id = $wpdb->insert_id;
 		if ( $is_multisite ) {
 			add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 		}
-
 	}
 	bp_update_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 
 	// Last name
 	$last_name_id = bp_xprofile_lastname_field_id();
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$last_name_id}" ) ) {
+	if ( $last_name_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$last_name_id}" ) ) {
+			$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields",
+				[
+					'group_id'    => $base_group_id,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				] );
 
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
-			'group_id'    => $base_group_id,
-			'parent_id'   => 0,
-			'type'        => 'textbox',
-			'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
-			'description' => '',
-			'is_required' => 1,
-			'can_delete'  => 0,
-		] );
+			$last_name_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+			}
+		}
+	} else {
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields",
+			[
+				'group_id'    => $base_group_id,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			] );
 
 		$last_name_id = $wpdb->insert_id;
 		if ( $is_multisite ) {
 			add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 		}
-
 	}
 	bp_update_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 
 	// Nickname
 	$nickname_id = bp_xprofile_nickname_field_id();
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$nickname_id}" ) ) {
+	if ( $last_name_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$nickname_id}" ) ) {
+			$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields",
+				[
+					'group_id'    => $base_group_id,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				] );
 
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
-			'group_id'    => $base_group_id,
-			'parent_id'   => 0,
-			'type'        => 'textbox',
-			'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
-			'description' => '',
-			'is_required' => 1,
-			'can_delete'  => 0,
-		] );
+			$nickname_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+			}
+		}
+	} else {
+		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields",
+			[
+				'group_id'    => $base_group_id,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			] );
 
 		$nickname_id = $wpdb->insert_id;
 		if ( $is_multisite ) {
