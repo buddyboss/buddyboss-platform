@@ -109,6 +109,8 @@ window.bp = window.bp || {};
 			//forums
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
+
+			//For hide single url
 			$( document ).ajaxComplete(function( event, request, settings ) {
 				var _checkindex = -1;
 				if(typeof settings.data !== "undefined"){
@@ -152,7 +154,6 @@ window.bp = window.bp || {};
 									_newString = $.trim(_findtext.replace(_url, ''));
 								}
 							}
-							//console.log(_newString +" ====> "+_newString.length);
 							if(0 >= _newString.length){
 								
 								$( this ).find( '.activity-inner a').hide();
