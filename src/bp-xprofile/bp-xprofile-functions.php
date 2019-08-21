@@ -1236,6 +1236,8 @@ function bp_xprofile_base_group_id( $defalut = 1, $get_option = true ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
+	$field_id = 0;
+
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-firstname-field-id' );
 	}
@@ -1253,6 +1255,8 @@ function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
+	$field_id = 0;
+
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-lastname-field-id' );
 	}
@@ -1270,6 +1274,7 @@ function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true ) {
+	$field_id = 0;
 
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
