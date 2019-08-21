@@ -68,11 +68,13 @@ function bbp_kses_allowed_tags() {
 
 		// Images
 		'img'          => array(
-			'src'      => true,
-			'border'   => true,
-			'alt'      => true,
-			'height'   => true,
-			'width'    => true,
+			'src'             => true,
+			'border'          => true,
+			'alt'             => true,
+			'height'          => true,
+			'width'           => true,
+			'class'           => true,
+			'data-emoji-char' => true,
 		)
 	) );
 }
