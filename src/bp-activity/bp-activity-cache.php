@@ -87,7 +87,7 @@ add_action( 'deleted_activity_meta', 'bp_activity_reset_cache_incrementor' );
 /**
  * Clear cached data for deleted users.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.7
  *
  * @param int $user_id ID of the user.
  */
@@ -100,7 +100,7 @@ add_action( 'bp_remove_follow_data', 'bp_activity_follow_clear_user_object_cache
 /**
  * Clear cached data for deleted users and reset incrementor.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.7
  *
  * @param object $follow Follow object.
  */
@@ -124,7 +124,7 @@ add_action( 'bp_stop_following', 'bp_activity_follow_reset_cache_incrementor' );
 /**
  * Clear cached data for follow object.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.7
  *
  * @param object $follow Follow object.
  */
@@ -138,7 +138,7 @@ add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
 /**
  * Clear cached data for follow object when user is deleted.
  *
- * @since BuddyBoss 1.1.6
+ * @since BuddyBoss 1.1.7
  *
  * @param int $user_id ID of user.
  * @param array|bool $ids array of follow ids or false.
