@@ -335,7 +335,7 @@ $settings = bp_email_get_appearance_settings();
 							</td>
 						</tr>
 						<tr>
-							<td style="font-size: 45px; line-height: 45px;">&nbsp;</td>
+							<td height="45px" style="font-size: 45px; line-height: 45px;">&nbsp;</td>
 						</tr>
 					</table>
 					<!-- Email Footer : END -->
