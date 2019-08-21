@@ -127,9 +127,10 @@ function bp_nouveau_ajax_xprofile_get_field() {
 				// If First Name selected then do not add last name field.
 				if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() && false === bp_hide_last_name() ) {
 					continue;
-				// If Nick Name selected then do not add first & last name field.
+				// If Nick Name selected then do not add last name field.
 				} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() && false === bp_hide_nickname_last_name() ) {
 					continue;
+				// If Nick Name selected then do not add first field.
 				} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_firstname_field_id() && false === bp_hide_nickname_first_name() ) {
 					continue;
 				}
