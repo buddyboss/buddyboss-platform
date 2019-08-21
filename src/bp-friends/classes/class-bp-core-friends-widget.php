@@ -23,7 +23,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 */
 	function __construct() {
 		$widget_ops = array(
-			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of the displayed member.  Widget is only shown when viewing a member profile.', 'buddyboss' ),
+			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of current logged in member if widget is added outside members profile pages else it will display the displayed member.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
@@ -77,6 +77,12 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			add_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
 			$id                           = bp_displayed_user_id();
 			$filter                       = true;
+
+			// If $id still blank then return.
+			if ( ! $id ) {
+				return;
+			}
+
 			// Set the global $bp->displayed_user variables.
 			$bp->displayed_user->id       = $id;
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( $id );
@@ -169,7 +175,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		<?php else: ?>
 
 			<div class="widget-error">
-				<?php _e( 'Sorry, no members were found.', 'buddyboss' ); ?>
+				<?php _e( 'Sorry, no connections were found.', 'buddyboss' ); ?>
 			</div>
 
 		<?php endif; ?>
