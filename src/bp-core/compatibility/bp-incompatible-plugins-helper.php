@@ -113,8 +113,22 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  * @since BuddyBoss 1.1.7
  */
 function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
-	if ( in_array( $section_slug, array( 'bbpress', 'buddypress' ) ) ) {
+
+	// check for BuddyPress plugin
+	if ( 'buddypress' === $section_slug ) {
 		$section_notice = '';
+	}
+
+	// check for bbPress plugin
+	if ( 'bbpress' === $section_slug ) {
+		$section_notice = '';
+		if ( empty( bp_is_active( 'forums' ) ) ) {
+			$section_notice = sprintf(
+				'<a href="%s">%s</a>',
+				bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
+				__( 'Activate Forum Discussions Components', 'buddyboss' )
+			);
+		}
 	}
 
 	return $section_notice;
