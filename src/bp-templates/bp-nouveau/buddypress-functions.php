@@ -446,14 +446,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 			);
 		}
 
-		if ( bp_is_register_page() ) {
-			$scripts['bp-nouveau-email-verify'] = array(
-				'file'         => 'js/email-verify%s.js',
-				'dependencies' => array( 'bp-nouveau', 'password-strength-meter' ),
-				'footer'       => true,
-			);
-		}
-
 		$scripts['bp-nouveau-magnific-popup'] = array(
 			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/magnific-popup.js',
 			'dependencies' => array(),
@@ -505,14 +497,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );
-		}
 
-		if ( bp_is_register_page() ) {
-			wp_enqueue_script( 'bp-nouveau-email-verify' );
-			wp_localize_script( 'bp-nouveau-email-verify', 'BP_Signup_Email', array(
-				'incorrect'         => __( 'Enter valid email.', 'buddyboss' ),
-				'mismatch'          => __( 'Email & Confirm email should be same.', 'buddyboss' ),
-			) );
+			wp_localize_script( 'bp-nouveau-password-verify',
+				'BP_Signup_Email',
+				array(
+					'incorrect' => __( 'Enter valid email.', 'buddyboss' ),
+					'mismatch'  => __( 'Email & Confirm email should be same.', 'buddyboss' ),
+					'signup'    => bp_is_register_page() ? 'show' : 'hide',
+				) );
+
 		}
 
 		if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) ) {
