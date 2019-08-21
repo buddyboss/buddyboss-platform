@@ -19,12 +19,27 @@ remove_action( 'bp_include', 'bp_follow_init' );
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
 /**
- * Include plugin when plugin is activated
- *
- * Support Rank Math SEO
+ * Get called in init hook action of WP.
+ * This functions provided support for Third Part Plugin
  */
 function bp_helper_plugins_loaded_callback() {
 	global $bp_plugins;
+
+	/**
+	 * Add BuddyBoss Platform Login Module when user sing up from WooCommerce Checkout Page
+	 *
+	 * Support WooCommerce
+	 */
+	if ( in_array( 'woocommerce/woocommerce.php', $bp_plugins ) && ! is_admin() ) {
+		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-woocommerce-plugin-helpers.php' );
+
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Rank Math SEO
+	 */
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
 		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
 	}
