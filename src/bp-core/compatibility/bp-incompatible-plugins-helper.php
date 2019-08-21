@@ -50,7 +50,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Co-Authors Plus
 	 */
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
-		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus' );
+		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus',100 ,2 );
 	}
 }
 
@@ -137,10 +137,13 @@ add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db
  * @since 1.1.7
  *
  * @param array $taxonomies Taxonomies which are registered for the requested object or object type
+ * @param array $post_type Post type
  *
  * @return array Return the names or objects of the taxonomies which are registered for the requested object or object type
  */
-function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies = array() ) {
+function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies = array(), $post_type ) {
+
+	delete_blog_option( bp_get_root_blog_id(), "bp_search_{$post_type}_tax_author" );
 	return array_diff( $taxonomies, array( 'author' ) );
 }
 
