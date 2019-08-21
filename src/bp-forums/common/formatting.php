@@ -26,6 +26,15 @@ function bbp_kses_allowed_tags() {
 		//Paragraph
 		'p' => array(),
 
+		//Bold
+		'b' => array(),
+
+		// Italic
+		'i' => array(),
+
+		// Br
+		'br' => array(),
+
 		// Links
 		'a' => array(
 			'href'     => array(),
