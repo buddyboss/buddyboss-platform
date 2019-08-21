@@ -110,9 +110,6 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
-			//For hide single url
-			$( document ).ajaxComplete( this.hideSingleUrl);
-
 			// Activity autoload
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.autoload ) ) {
 				$( window ).scroll( this.loadMoreActivities );
@@ -281,7 +278,7 @@ window.bp = window.bp || {};
 				} );
 
 				// Now the stream is cleaned, prepend newest
-				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
+				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 
 				// Reset the newest activities now they're displayed
 				this.heartbeat_data.newest = '';
@@ -1188,62 +1185,7 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		},
-
-		/**
-		 * [hideSingleUrl description]
-		 * @param  {[type]} event [description]
-		 * @param  {[type]} request [description]
-		 * @param  {[type]} settings [description]
-		 * @return {[type]}       [description]
-		 */
-		hideSingleUrl: function( event, request, settings ) {
-			var _checkindex = -1;
-			if(typeof settings.data !== "undefined"){
-				var _dataslit = settings.data.split('&');
-				_checkindex = $.inArray("action=activity_filter", _dataslit);
-			}
-			if ((typeof _dataslit !== "undefined") && 
-				(	parseInt($.inArray("action=activity_filter", _dataslit), 10) != parseInt(-1, 10) || 
-					parseInt($.inArray("action=post_update", _dataslit), 10)
-				)) {
-				setTimeout( function() {
-					$( 'li.activity-item' ).each(function() {
-						var _findtext 	= 	$( this ).find('.activity-inner > p').removeAttr('br').removeAttr('a').text();
-						var	_url	 	= 	'',
-							_newString	=	'',
-							startIndex  =   '',
-							_is_exist 	=	0;
-						if ( 0 <= _findtext.indexOf( 'http://' )) {
-							startIndex 	= 	_findtext.indexOf( 'http://' );
-							_is_exist	=	1;
-						} else if (0 	<= _findtext.indexOf( 'https://' )) {
-							startIndex 	= 	_findtext.indexOf( 'https://' );
-							_is_exist	=	1;
-						} else if (0 	<= _findtext.indexOf( 'www.' )) {
-							startIndex 	= 	_findtext.indexOf( 'www' );
-							_is_exist	=	1;
-						}
-						if (_is_exist	==	1) {
-							for ( var i = startIndex; i < _findtext.length; i ++ ) {
-								if ( _findtext[i] === ' ' || _findtext[i] === '\n' ) {
-									break;
-								} else {
-									_url += _findtext[i];
-								}
-							}
-
-							if( _url !== '' ){
-								_newString = $.trim(_findtext.replace(_url, ''));
-							}
-						}
-						if(0 >= _newString.length){
-							$( this ).find( '.activity-inner a').hide();
-						}
-					});
-				}, 2000 );
-			}
-        }
+		}
 	};
 
 	// Launch BP Nouveau Activity
