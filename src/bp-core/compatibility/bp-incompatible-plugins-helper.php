@@ -126,7 +126,7 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 			$section_notice = sprintf(
 				'<a href="%s">%s</a>',
 				bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
-				__( 'Activate Forum Discussions Components', 'buddyboss' )
+				__( 'Activate Forum Discussions Component', 'buddyboss' )
 			);
 		}
 	}
