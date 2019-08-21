@@ -524,7 +524,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
-			$( '#buddypress [data-bp-close]' ).on( 'click', this, this.closeNotice );
+			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
@@ -1450,21 +1450,26 @@ window.bp = window.bp || {};
 		 */
 		lazyLoad: function( lazyTarget ){
 			var lazy = $( lazyTarget );
-			if( lazy.length){
+			if( lazy.length ){
 				function cleanLazy() {
 					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
 				}
-				function isInViewport( el ) {
-					return (
-						el.getBoundingClientRect().top <= (( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY )
-					)
-				}
 				for( var i=0; i<lazy.length; i++ ) {
-					if( isInViewport( lazy[i]) ) {
-						if ( lazy[i].getAttribute('data-src') ){
-							lazy[i].src = lazy[i].getAttribute('data-src');
-							lazy[i].removeAttribute('data-src');
+					var isInViewPort = false;
+					try {
+						if( $(lazy[i]).is( ':in-viewport' ) ) {
+							isInViewPort = true;
 						}
+					} catch (err) {
+						console.error(err.message);
+						if ( ! isInViewPort && lazy[i].getBoundingClientRect().top <= (( window.innerHeight || document.documentElement.clientHeight ) + window.scrollY ) ) {
+							isInViewPort = true;
+						}
+					}
+
+					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
+						lazy[i].src = lazy[i].getAttribute('data-src');
+						lazy[i].removeAttribute('data-src');
 					}
 				}
 				cleanLazy();

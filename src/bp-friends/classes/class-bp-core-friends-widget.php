@@ -23,7 +23,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 */
 	function __construct() {
 		$widget_ops = array(
-			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of the displayed member.  Widget is only shown when viewing a member profile.', 'buddyboss' ),
+			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of current logged in member if widget is added outside members profile pages else it will display the displayed member.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
@@ -32,6 +32,18 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
 		}
+	}
+
+	/**
+	 * Set Display user_id to loggedin_user_id if someone added the widget on outside bp pages.
+	 *
+	 * @since BuddyBoss 1.1.7
+	 */
+	public function set_display_user( $id ) {
+		if ( ! $id ) {
+			$id = bp_loggedin_user_id();
+		}
+		return $id;
 	}
 
 	/**
@@ -53,15 +65,43 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 * @param array $instance The widget settings, as saved by the user.
 	 */
 	function widget( $args, $instance ) {
-		global $members_template;
+		global $members_template, $bp;
 
 		extract( $args );
 
-		if ( ! bp_displayed_user_id() ) {
-			return;
+		$id     = bp_displayed_user_id();
+		$filter = false;
+
+		if ( ! $id ) {
+			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
+			add_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
+			$id                           = bp_displayed_user_id();
+			$filter                       = true;
+
+			// If $id still blank then return.
+			if ( ! $id ) {
+				return;
+			}
+
+			// Set the global $bp->displayed_user variables.
+			$bp->displayed_user->id       = $id;
+			$bp->displayed_user->userdata = bp_core_get_core_userdata( $id );
+			$bp->displayed_user->fullname = isset( $bp->displayed_user->userdata->display_name ) ? $bp->displayed_user->userdata->display_name : '';
+			$bp->displayed_user->domain   = bp_core_get_user_domain( $id );
 		}
 
 		$user_id = bp_displayed_user_id();
+
+		// Remove the filter.
+		if ( $filter ) {
+			remove_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
+		}
+
+		// If $id still blank then return.
+		if ( ! $id ) {
+			return;
+		}
+
 		$link = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
 		$instance['title'] = sprintf( __( "%s's Connections", 'buddyboss' ), bp_get_displayed_user_fullname() );
 
@@ -135,7 +175,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		<?php else: ?>
 
 			<div class="widget-error">
-				<?php _e( 'Sorry, no members were found.', 'buddyboss' ); ?>
+				<?php _e( 'Sorry, no connections were found.', 'buddyboss' ); ?>
 			</div>
 
 		<?php endif; ?>

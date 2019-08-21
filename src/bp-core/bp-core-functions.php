@@ -4147,30 +4147,3 @@ function bp_platform_default_activity_types() {
 
 	return $activity_type;
 }
-
-/**
- * Assign the Full Width Page template to register and activate pages.
- *
- * @since BuddyBoss 1.1.6
- */
-function bp_core_update_registration_pages_template() {
-
-	$theme_name = wp_get_theme();
-	$name       = $theme_name->get( 'Name' );
-
-	// Check if theme is BuddyBoss
-	if ( strpos( $name, 'BuddyBoss' ) !== false ) {
-
-		$bp_directory_page_ids = bp_core_get_directory_page_ids();
-
-		if ( ! empty( $bp_directory_page_ids['activate'] ) ) {
-			update_post_meta( $bp_directory_page_ids['activate'], '_wp_page_template', 'page-fullscreen.php' );
-		}
-
-		if ( ! empty( $bp_directory_page_ids['register'] ) ) {
-			update_post_meta( $bp_directory_page_ids['register'], '_wp_page_template', 'page-fullscreen.php' );
-		}
-
-	}
-
-}

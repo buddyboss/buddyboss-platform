@@ -87,6 +87,11 @@ function bp_core_register_common_scripts() {
 
 	);
 
+	// Add the "register.js" file if it's a register page and Profile Type field
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		$scripts[ 'bp-register-page' ] = array( 'file' => "{$url}register{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false );
+	}
+
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
 	if ( isset( $moment_locale_url ) ) {
 		$scripts['bp-moment-locale'] = array( 'file' => esc_url( $moment_locale_url ), 'dependencies' => array( 'bp-moment' ), 'footer' => true );
@@ -432,6 +437,7 @@ function bp_core_get_js_dependencies() {
 		'bp-jquery-cookie',
 		'bp-jquery-scroll-to',
 		'wp-util',
+		'wp-i18n',
 	) );
 }
 
@@ -700,3 +706,42 @@ function bp_core_add_jquery_mask_inline_js () {
 
     <?php
 }
+
+/**
+ * Load the JS for register page and populate conditional field
+ *
+ * @since BuddyBoss 1.1.6
+ */
+function bp_core_register_page_js() {
+
+	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
+		wp_enqueue_script( 'bp-register-page' );
+
+		$data = array(
+			'ajaxurl'  => bp_core_ajax_url(),
+			'field_id' => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'nonce'    => wp_create_nonce( 'bp-core-register-page-js' ),
+		);
+
+		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
+	}
+
+}
+
+add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
+
+function bp_core_enqueue_isInViewPort() {
+	if ( bp_is_user_media() ||
+	     bp_is_single_album() ||
+	     bp_is_media_directory() ||
+	     bp_is_activity_component() ||
+	     bp_is_group_activity() ||
+	     bp_is_group_media() ||
+	     bp_is_group_albums() ||
+	     bp_is_messages_component() ||
+	     bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled()
+	) {
+		wp_enqueue_script( 'isInViewport' );
+    }
+}
+add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );

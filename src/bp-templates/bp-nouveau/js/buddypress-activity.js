@@ -348,6 +348,9 @@ window.bp = window.bp || {};
 
 						// Update the current page
 						self.current_page = next_page;
+
+						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+						jQuery(window).scroll();
 					}
 				} );
 			}
@@ -712,6 +715,9 @@ window.bp = window.bp || {};
 						content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 					} else {
 						$( content ).slideUp( 300 ).html( response.data.contents ).slideDown( 300 );
+
+						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+						jQuery(window).scroll();
 					}
 				} );
 			}

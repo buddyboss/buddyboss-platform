@@ -489,7 +489,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-	    if ( bp_is_register_page() ) {
+	    if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
 		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
 	    }
 
@@ -497,6 +497,15 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );
+
+			wp_localize_script( 'bp-nouveau-password-verify',
+				'BP_Signup_Email',
+				array(
+					'incorrect' => __( 'Enter valid email.', 'buddyboss' ),
+					'mismatch'  => __( 'Email & Confirm email should be same.', 'buddyboss' ),
+					'signup'    => bp_is_register_page() ? 'show' : 'hide',
+				) );
+
 		}
 
 		if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) ) {

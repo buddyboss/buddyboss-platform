@@ -193,18 +193,20 @@ class BP_Activity_Component extends BP_Component {
 
 		parent::setup_globals( $args );
 
-		// locally cache total count values for logged-in user
-		if ( is_user_logged_in() ) {
-			$bp->loggedin_user->total_follow_counts = bp_total_follow_counts( array(
-				'user_id' => bp_loggedin_user_id()
-			) );
-		}
+		if ( bp_is_activity_follow_active() ) {
+			// locally cache total count values for logged-in user
+			if ( is_user_logged_in() ) {
+				$bp->loggedin_user->total_follow_counts = bp_total_follow_counts( array(
+					'user_id' => bp_loggedin_user_id()
+				) );
+			}
 
-		// locally cache total count values for displayed user
-		if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
-			$bp->displayed_user->total_follow_counts = bp_total_follow_counts( array(
-				'user_id' => bp_displayed_user_id()
-			) );
+			// locally cache total count values for displayed user
+			if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
+				$bp->displayed_user->total_follow_counts = bp_total_follow_counts( array(
+					'user_id' => bp_displayed_user_id()
+				) );
+			}
 		}
 	}
 
@@ -237,9 +239,9 @@ class BP_Activity_Component extends BP_Component {
 		$slug          = bp_get_activity_slug();
 		$activity_link = trailingslashit( $user_domain . $slug );
 
-		$scopes_active = bp_is_activity_scopes_active();
+		$activity_tabs_active = bp_is_activity_tabs_active();
 
-		if ( ! $scopes_active ) {
+		if ( ! $activity_tabs_active ) {
 
 			$main_slug = [ 'just-me' ];
 			if ( bp_activity_do_mentions() ) {
@@ -286,28 +288,15 @@ class BP_Activity_Component extends BP_Component {
 				'position'        => 10
 			);
 
-			// Check @mentions.
-			if ( bp_activity_do_mentions() ) {
-				$sub_nav[] = array(
-					'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
-					'slug'            => 'mentions',
-					'parent_url'      => $activity_link,
-					'parent_slug'     => $slug,
-					'screen_function' => 'bp_activity_screen_mentions',
-					'position'        => 20,
-					'item_css_id'     => 'activity-mentions'
-				);
-			}
-
 			// Favorite activity items.
-			if ( bp_activity_can_favorite() ) {
+			if ( bp_is_activity_like_active() ) {
 				$sub_nav[] = array(
-					'name'            => _x( 'Favorites', 'Profile activity screen sub nav', 'buddyboss' ),
+					'name'            => _x( 'Likes', 'Profile activity screen sub nav', 'buddyboss' ),
 					'slug'            => 'favorites',
 					'parent_url'      => $activity_link,
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_favorites',
-					'position'        => 30,
+					'position'        => 20,
 					'item_css_id'     => 'activity-favs'
 				);
 			}
@@ -315,12 +304,12 @@ class BP_Activity_Component extends BP_Component {
 			// Additional menu if friends is active.
 			if ( bp_is_active( 'friends' ) ) {
 				$sub_nav[] = array(
-					'name'            => _x( 'Friends', 'Profile activity screen sub nav', 'buddyboss' ),
+					'name'            => _x( 'Connections', 'Profile activity screen sub nav', 'buddyboss' ),
 					'slug'            => bp_get_friends_slug(),
 					'parent_url'      => $activity_link,
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_friends',
-					'position'        => 40,
+					'position'        => 30,
 					'item_css_id'     => 'activity-friends'
 				);
 			}
@@ -333,8 +322,21 @@ class BP_Activity_Component extends BP_Component {
 					'parent_url'      => $activity_link,
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_groups',
-					'position'        => 50,
+					'position'        => 40,
 					'item_css_id'     => 'activity-groups'
+				);
+			}
+
+			// Check @mentions.
+			if ( bp_activity_do_mentions() ) {
+				$sub_nav[] = array(
+					'name'            => _x( 'Mentions', 'Profile activity screen sub nav', 'buddyboss' ),
+					'slug'            => 'mentions',
+					'parent_url'      => $activity_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_activity_screen_mentions',
+					'position'        => 50,
+					'item_css_id'     => 'activity-mentions'
 				);
 			}
 
@@ -400,10 +402,68 @@ class BP_Activity_Component extends BP_Component {
 			$wp_admin_nav[] = array(
 				'parent'   => 'my-account-' . $this->id,
 				'id'       => 'my-account-' . $this->id . '-personal',
-				'title'    => __( 'Posts', 'buddyboss' ),
+				'title'    => bp_is_activity_tabs_active() ? __( 'Personal', 'buddyboss' ) : __( 'Posts', 'buddyboss' ),
 				'href'     => $activity_link,
 				'position' => 10
 			);
+
+			if ( bp_is_activity_tabs_active() ) {
+
+				// Favorite activity items.
+				if ( bp_is_activity_like_active() ) {
+					$wp_admin_nav[] = array(
+						'parent'   => 'my-account-' . $this->id,
+						'id'       => 'my-account-' . $this->id . '-favorites',
+						'title'    => _x( 'Likes', 'My Account Activity sub nav', 'buddyboss' ),
+						'href'     => trailingslashit( $activity_link . 'favorites' ),
+						'position' => 10
+					);
+				}
+
+				// Friends?
+				if ( bp_is_active( 'friends' ) ) {
+					$wp_admin_nav[] = array(
+						'parent'   => 'my-account-' . $this->id,
+						'id'       => 'my-account-' . $this->id . '-friends',
+						'title'    => _x( 'Connections', 'My Account Activity sub nav', 'buddyboss' ),
+						'href'     => trailingslashit( $activity_link . bp_get_friends_slug() ),
+						'position' => 30
+					);
+				}
+
+				// Groups?
+				if ( bp_is_active( 'groups' ) ) {
+					$wp_admin_nav[] = array(
+						'parent'   => 'my-account-' . $this->id,
+						'id'       => 'my-account-' . $this->id . '-groups',
+						'title'    => _x( 'Groups', 'My Account Activity sub nav', 'buddyboss' ),
+						'href'     => trailingslashit( $activity_link . bp_get_groups_slug() ),
+						'position' => 40
+					);
+				}
+
+				// Mentions.
+				if ( bp_activity_do_mentions() ) {
+					$wp_admin_nav[] = array(
+						'parent'   => 'my-account-' . $this->id,
+						'id'       => 'my-account-' . $this->id . '-mentions',
+						'title'    => $title,
+						'href'     => trailingslashit( $activity_link . 'mentions' ),
+						'position' => 50
+					);
+				}
+
+				// Following?
+				if ( bp_is_activity_follow_active() ) {
+					$wp_admin_nav[] = array(
+						'parent'   => 'my-account-' . $this->id,
+						'id'       => 'my-account-' . $this->id . '-following',
+						'title'    => _x( 'Following', 'My Account Activity sub nav', 'buddyboss' ),
+						'href'     => trailingslashit( $activity_link . 'following' ),
+						'position' => 60
+					);
+				}
+			}
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
@@ -447,7 +507,8 @@ class BP_Activity_Component extends BP_Component {
 		wp_cache_add_global_groups( array(
 			'bp_activity',
 			'bp_activity_comments',
-			'activity_meta'
+			'activity_meta',
+			'bp_activity_follow'
 		) );
 
 		parent::setup_cache_groups();

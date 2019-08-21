@@ -261,6 +261,7 @@ class BP_XProfile_Group {
 	 *                                            Default: false.
 	 *      @type array        $exclude_groups    Comma-separated list or array of group IDs to exclude.
 	 *      @type array        $exclude_fields    Comma-separated list or array of field IDs to exclude.
+	 *      @type array        $includ_fields    Comma-separated list or array of field IDs to include.
 	 *      @type bool         $update_meta_cache Whether to pre-fetch xprofilemeta for all retrieved groups, fields,
 	 *                                            and data. Default: true.
 	 * }
@@ -281,6 +282,7 @@ class BP_XProfile_Group {
 			'fetch_visibility_level' => false,
 			'exclude_groups'         => false,
 			'exclude_fields'         => false,
+			'include_fields'         => false,
 			'update_meta_cache'      => true,
             'repeater_show_main_fields_only' => false,
 		) );
@@ -396,6 +398,11 @@ class BP_XProfile_Group {
 				$member_types_fields = BP_XProfile_Field::get_fields_for_member_type( $member_types );
 				$include_field_ids += array_keys( $member_types_fields );
 			}
+		}
+
+		// Add include fields.
+		if ( ! empty( $r['include_fields'] ) && ! empty( $include_field_ids ) ) {
+			$include_field_ids = array_merge( $include_field_ids, array_map( 'intval', explode( ',', $r['include_fields'] ) ) );
 		}
 
 		$in_sql = '';

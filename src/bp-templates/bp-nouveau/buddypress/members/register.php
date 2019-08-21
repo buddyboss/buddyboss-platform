@@ -76,7 +76,7 @@
 								}
 								?>
 
-								<div<?php bp_field_css_class( 'editfield' ); ?>>
+								<div<?php bp_field_css_class( 'editfield' ); bp_field_data_attribute(); ?>>
 									<fieldset>
 
 									<?php

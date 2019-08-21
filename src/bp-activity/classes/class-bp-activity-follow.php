@@ -64,8 +64,17 @@ class BP_Activity_Follow {
 	protected function populate() {
 		global $wpdb, $bp;
 
-		if ( $follow_id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->activity->table_name_follow} WHERE leader_id = %d AND follower_id = %d", $this->leader_id, $this->follower_id ) ) ) {
-			$this->id = $follow_id;
+		$row = wp_cache_get( $this->id, 'bp_activity_follow' );
+
+		if ( false === $row ) {
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->activity->table_name_follow} WHERE leader_id = %d AND follower_id = %d", $this->leader_id, $this->follower_id ) );
+		}
+
+		if ( ! empty( $row ) ) {
+			$this->id = $row->id;
+			wp_cache_set( $this->id, $row, 'bp_activity_follow' );
+		} else {
+			$this->id = 0;
 		}
 	}
 
@@ -139,7 +148,19 @@ class BP_Activity_Follow {
 	 */
 	public static function get_followers( $user_id ) {
 		global $bp, $wpdb;
-		return $wpdb->get_col( $wpdb->prepare( "SELECT follower_id FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id ) );
+
+		$followers_sql = $wpdb->prepare( "SELECT follower_id FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id );
+
+		$cached = bp_core_get_incremented_cache( $followers_sql, 'bp_activity_follow' );
+
+		if ( false === $cached ) {
+			$follower_ids = $wpdb->get_col( $followers_sql );
+			bp_core_set_incremented_cache( $followers_sql, 'bp_activity_follow', $follower_ids );
+		} else {
+			$follower_ids = $cached;
+		}
+
+		return (array) $follower_ids;
 	}
 
 	/**
@@ -152,7 +173,19 @@ class BP_Activity_Follow {
 	 */
 	public static function get_following( $user_id ) {
 		global $bp, $wpdb;
-		return $wpdb->get_col( $wpdb->prepare( "SELECT leader_id FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id ) );
+
+		$following_sql = $wpdb->prepare( "SELECT leader_id FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id );
+
+		$cached = bp_core_get_incremented_cache( $following_sql, 'bp_activity_follow' );
+
+		if ( false === $cached ) {
+			$following_ids = $wpdb->get_col( $following_sql );
+			bp_core_set_incremented_cache( $following_sql, 'bp_activity_follow', $following_ids );
+		} else {
+			$following_ids = $cached;
+		}
+
+		return (array) $following_ids;
 	}
 
 	/**
@@ -166,10 +199,21 @@ class BP_Activity_Follow {
 	public static function get_counts( $user_id ) {
 		global $bp, $wpdb;
 
-		$followers = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id ) );
-		$following = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id ) );
+		$followers = wp_cache_get( 'bp_total_follower_for_user_' . $user_id, 'bp' );
 
-		return array( 'followers' => $followers, 'following' => $following );
+		if ( false === $followers ) {
+			$followers = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE leader_id = %d", $user_id ) );
+			wp_cache_set( 'bp_total_follower_for_user_' . $user_id, $followers, 'bp' );
+		}
+
+		$following = wp_cache_get( 'bp_total_following_for_user_' . $user_id, 'bp' );
+
+		if ( false === $following ) {
+			$following = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$bp->activity->table_name_follow} WHERE follower_id = %d", $user_id ) );
+			wp_cache_set( 'bp_total_following_for_user_' . $user_id, $following, 'bp' );
+		}
+
+		return array( 'followers' => (int) $followers, 'following' => (int) $following );
 	}
 
 	/**
@@ -203,10 +247,20 @@ class BP_Activity_Follow {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param int $user_id The user ID
+	 * @return array|bool array of ids deleted or false if nothing was deleted
 	 */
 	public static function delete_all_for_user( $user_id ) {
 		global $bp, $wpdb;
 
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->activity->table_name_follow} WHERE leader_id = %d OR follower_id = %d", $user_id, $user_id ) );
+		$ids = $wpdb->get_results( $wpdb->prepare( "SELECT DISTINCT id FROM {$bp->activity->table_name_follow} WHERE leader_id = %d OR follower_id = %d", $user_id, $user_id ) );
+
+		$deleted = $wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->activity->table_name_follow} WHERE leader_id = %d OR follower_id = %d", $user_id, $user_id ) );
+
+		// Bail if nothing was deleted.
+		if ( empty( $deleted ) ) {
+			return false;
+		}
+
+		return $ids;
 	}
 }

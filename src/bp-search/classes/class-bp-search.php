@@ -259,17 +259,17 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 							continue;
 						}
 
-						//add group/type title in first one
-						/*
-						if( !$first_html_changed ){
-							//this filter can be used to change display of 'posts' to 'Blog Posts' etc..
-							$label = apply_filters( 'bp_search_label_search_type', $type );
-
-							//$item['html'] = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
-							$first_html_changed = true;
+						// Filter by default will be false.
+						$bp_search_group_or_type_title = apply_filters( 'bp_search_group_or_type_title', false );
+						if ( true === $bp_search_group_or_type_title ) {
+							//add group/type title in first one
+							if ( ! $first_html_changed ) {
+								//this filter can be used to change display of 'posts' to 'Blog Posts' etc..
+								$label              = apply_filters( 'bp_search_label_search_type', $type );
+								$item['html']       = "<div class='results-group results-group-{$type}'><span class='results-group-title'>{$label}</span></div>" . $item['html'];
+								$first_html_changed = true;
+							}
 						}
-
-						*/
 
 						$new_items[ $item_id ] = $item;
 					}
@@ -297,16 +297,21 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						$new_row['label'] = $item['title'];
 					}
 
-//					if ( $type_mem != $new_row['type'] ) {
-//						$type_mem              = $new_row['type'];
-//						$cat_row               = $new_row;
-//						$cat_row["type"]       = $item['type'];
-//						$cat_row['type_label'] = $type_label;
-//						$category_search_url   = esc_url( add_query_arg( array( 'subset' => $item['type'] ), $url ) );
-//						$html                  = "<span><a href='" . esc_url( $category_search_url ) . "'>" . $type_label . "</a></span>";
-//						$cat_row["value"]      = apply_filters( 'buddypress_gs_autocomplete_category', $html, $item['type'], $url, $type_label );
-//						$search_results[]      = $cat_row;
-//					}
+					// Filter by default will be false.
+					$bp_search_raw_type = apply_filters( 'bp_search_raw_type', false );
+
+					if ( true === $bp_search_raw_type ) {
+						if ( $type_mem != $new_row['type'] ) {
+							$type_mem              = $new_row['type'];
+							$cat_row               = $new_row;
+							$cat_row["type"]       = $item['type'];
+							$cat_row['type_label'] = $type_label;
+							$category_search_url   = esc_url( add_query_arg( array( 'subset' => $item['type'] ), $url ) );
+							$html                  = "<span><a href='" . esc_url( $category_search_url ) . "'>" . $type_label . "</a></span>";
+							$cat_row["value"]      = apply_filters( 'buddypress_gs_autocomplete_category', $html, $item['type'], $url, $type_label );
+							$search_results[]      = $cat_row;
+						}
+					}
 
 					$search_results[] = $new_row;
 				}

@@ -179,7 +179,7 @@ function bp_media_compress_image( $source, $destination, $quality = 90 ) {
  *
  * @return string
  */
-function bp_media_file_upload_max_size( $post_string = false ) {
+function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
 	static $max_size = - 1;
 
 	if ( $max_size < 0 ) {
@@ -212,7 +212,7 @@ function bp_media_file_upload_max_size( $post_string = false ) {
 		}
 	}
 
-	return bp_media_format_size_units( $max_size, $post_string );
+	return bp_media_format_size_units( $max_size, $post_string, $type );
 }
 
 /**
@@ -225,13 +225,24 @@ function bp_media_file_upload_max_size( $post_string = false ) {
  *
  * @return string
  */
-function bp_media_format_size_units( $bytes, $post_string = false ) {
+function bp_media_format_size_units( $bytes, $post_string = false, $type = 'bytes' ) {
+
+	if ( $bytes > 0 ) {
+		if ( 'GB' === $type && ! $post_string ) {
+			return $bytes / 1073741824;
+		} elseif ( 'MB' === $type && ! $post_string ) {
+			return $bytes / 1048576;
+		} elseif ( 'KB' === $type && ! $post_string ) {
+			return $bytes / 1024;
+		}
+	}
+
 	if ( $bytes >= 1073741824 ) {
-		$bytes = number_format( $bytes / 1073741824, 0 ) . ( $post_string ? ' GB' : '' );
+		$bytes = ( $bytes / 1073741824 ) . ( $post_string ? ' GB' : '' );
 	} elseif ( $bytes >= 1048576 ) {
-		$bytes = number_format( $bytes / 1048576, 0 ) . ( $post_string ? ' MB' : '' );
+		$bytes = ( $bytes / 1048576 ) . ( $post_string ? ' MB' : '' );
 	} elseif ( $bytes >= 1024 ) {
-		$bytes = number_format( $bytes / 1024, 0 ) . ( $post_string ? ' KB' : '' );
+		$bytes = ( $bytes / 1024 ) . ( $post_string ? ' KB' : '' );
 	} elseif ( $bytes > 1 ) {
 		$bytes = $bytes . ( $post_string ? ' bytes' : '' );
 	} elseif ( $bytes == 1 ) {
@@ -439,9 +450,9 @@ function bp_media_add( $args = '' ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $r Array of parsed arguments for the media item being added.
+	 * @param object $media Media object.
 	 */
-	do_action( 'bp_media_add', $r );
+	do_action( 'bp_media_add', $media );
 
 	return $media->id;
 }
@@ -475,9 +486,9 @@ function bp_media_delete( $media_id ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $media_id ID of media
+	 * @param object $media Media object
 	 */
-	do_action( 'bp_media_delete', $media_id );
+	do_action( 'bp_media_delete', $media );
 
 	return $media_id;
 }
@@ -775,9 +786,9 @@ function bp_album_add( $args = '' ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param array $r Array of parsed arguments for the album item being added.
+	 * @param object $album Album object.
 	 */
-	do_action( 'bp_album_add', $r );
+	do_action( 'bp_album_add', $album );
 
 	return $album->id;
 }
@@ -814,9 +825,9 @@ function bp_album_delete( $album_id ) {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $album_id ID of album
+	 * @param object $album Album object
 	 */
-	do_action( 'bp_album_delete', $album_id );
+	do_action( 'bp_album_delete', $album );
 
 	return $album_id;
 }

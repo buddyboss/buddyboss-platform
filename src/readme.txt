@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.5
+Stable tag: 1.1.6
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.1.6 =
+* Performance - Lazy load images in Activity, Forums, Photos and Albums
+* Profiles - Added the ability to re-order First Name, Last Name, and Nickname profile fields
+* Activity - When a member changes their Nickname, the auto-suggest for mentions now uses the updated Nickname
+* Activity - When a member changes their Nickname, the 'Email Preferences' page now uses the updated Nickname
+* Activity - Fixed 'Link Previews' failing when pasting URLs from certain websites
+* Forums - Fixed Private and Hidden forum discussion access on the Forums index, for logged out users
+* Forums - Consistent styling of site notices in Forums tabs on member profiles
+* Registration - New option to require Email confirmation on the register form
+* Registration - New option to require Password confirmation on the register form
+* Registration - Fixed conditional logic to display profile fields that depend on a Profile Type
+* Toolbar - Display the correct name format in admin Toolbar, as used in frontend Toolbar
+* BuddyPanel - When using the 'Email Invites' menu in the BuddyPanel, it was missing when switching users
+* MemberPress - Fixed redirect issues with the MemberPress custom login page
+* Compatibility - Added settings at BuddyBoss > Integrations > BuddyPress Plugins, for BuddyPress add-on options
+
 = 1.1.5 =
 * Performance - Faster loading of Gravatar images on Members directory
 * Performance - Reduced number of CSS and Javascript files loaded per page
@@ -69,7 +85,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issue with editing forum posts that include media attachments
 * Forums - Fixed Edit and Merge links for all forum roles
 * Groups - Display group member role in singular format, if only 1 member of that role
-* Media - Fixed issue with creating an album set to 'My Friends' privacy
+* Media - Fixed issue with creating an album set to 'My Connections' privacy
 * Registration - Added validation notice if Nickname added is less than 4 characters
 * Compatibility - Improved support for 'GEO my WordPress' plugin
 * Compatibility - Improved support for Keap (Infusionsoft) API in plugins
