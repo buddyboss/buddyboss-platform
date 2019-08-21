@@ -19,12 +19,27 @@ remove_action( 'bp_include', 'bp_follow_init' );
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
 /**
- * Include plugin when plugin is activated
- *
- * Support Rank Math SEO
+ * Get called in init hook action of WP.
+ * This functions provided support for Third Part Plugin
  */
 function bp_helper_plugins_loaded_callback() {
 	global $bp_plugins;
+
+	/**
+	 * Add BuddyBoss Platform Login Module when user sing up from WooCommerce Checkout Page
+	 *
+	 * Support WooCommerce
+	 */
+	if ( in_array( 'woocommerce/woocommerce.php', $bp_plugins ) && ! is_admin() ) {
+		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-woocommerce-plugin-helpers.php' );
+
+	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support Rank Math SEO
+	 */
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
 		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
 	}
@@ -104,3 +119,35 @@ function bp_core_update_group_fields_id_in_db() {
 }
 
 add_action( 'xprofile_admin_group_action', 'bp_core_update_group_fields_id_in_db', 100 );
+
+/**
+ * Include plugin when plugin is activated
+ *
+ * Support Google Captcha Pro
+ *
+ * @since BuddyBoss 1.1.7
+ */
+function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
+
+	// check for BuddyPress plugin
+	if ( 'buddypress' === $section_slug ) {
+		$section_notice = '';
+	}
+
+	// check for bbPress plugin
+	if ( 'bbpress' === $section_slug ) {
+		$section_notice = '';
+		if ( empty( bp_is_active( 'forums' ) ) ) {
+			$section_notice = sprintf(
+				'<a href="%s">%s</a>',
+				bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
+				__( 'Activate Forum Discussions Component', 'buddyboss' )
+			);
+		}
+	}
+
+	return $section_notice;
+
+}
+
+add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
