@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - When using Group Types with custom role labels, using correct label now in discussions
 * Activity - When '(BB) Connections' widget was used on Activity page, it was not working correctly
 * Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
+* Messages - Fixed issues with invalid usernames while sending messages
 * Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
 * Registration - When using Profile Type, and validation show errors, conditional fields remain now
 * Registration - Added validation telling users to use lowercase or number characters for 'Nickname'
