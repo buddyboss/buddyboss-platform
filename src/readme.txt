@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.2
 Requires PHP: 5.6.20
-Stable tag: 1.1.6
+Stable tag: 1.1.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,22 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.1.7 =
+* Profiles - Fixed issues with duplicate Name fields in some installations
+* Forums - Fixed media not displaying in replies, due to Lazy Load issues
+* Forums - Fixed formatting displaying as HTML when replying as non-admin
+* Forums - Fixed emoji displaying too big, for new forum replies only
+* Forums - Fixed GIFs not working, unless Photos was also enabled in Media settings
+* Groups - When using Group Types with custom role labels, using correct label now in discussions
+* Activity - When '(BB) Connections' widget was used on Activity page, it was not working correctly
+* Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
+* Messages - Fixed issues with invalid usernames while sending messages
+* Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
+* Registration - When using Profile Type, and validation show errors, conditional fields remain now
+* Registration - Added validation telling users to use lowercase or number characters for 'Nickname'
+* WooCommerce - When purchasing while logged out, and creating a new account, we now send account activation email
+* Compatibility - Improved support for 'Google Captcha (reCAPTCHA) Pro' plugin
 
 = 1.1.6 =
 * Performance - Lazy load images in Activity, Forums, Photos and Albums
