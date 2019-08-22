@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.7 =
+* Profiles - Fixed issues with duplicate Name fields in some installations
 * Forums - Fixed formatting displaying as HTML when replying as non-admin
 * Forums - Fixed emoji displaying too big, for new forum replies only
 * Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
