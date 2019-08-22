@@ -65,6 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
 * Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
 * Registration - When using Profile Type, and validation show errors, conditional fields remain now
+* Compatibility - Improved support for 'Google Captcha (reCAPTCHA) Pro' plugin
 
 = 1.1.6 =
 * Performance - Lazy load images in Activity, Forums, Photos and Albums
