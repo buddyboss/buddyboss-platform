@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed emoji displaying too big, for new forum replies only
 * Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
 * Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
+* Registration - When using Profile Type, and validation show errors, conditional fields remain now
 
 = 1.1.6 =
 * Performance - Lazy load images in Activity, Forums, Photos and Albums
