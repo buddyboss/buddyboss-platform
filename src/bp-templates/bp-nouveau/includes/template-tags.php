@@ -2419,29 +2419,12 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 			printf( $label_output, esc_attr( $name ), $field_output . ' ' . esc_html( $label ) );
 		}
 
-		// Email match
-		$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
-		if ( true === $email_opt && 'signup_email_confirm' === $name ) {
-			?>
-			<div id="email-validate-result"></div>
-			<?php
-		} else if ( false === $email_opt && 'signup_email' === $name ) {
-			?>
-			<div id="email-validate-result"></div>
-			<?php
-		}
-
 		// Password strength is restricted to the signup_password field
-		$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
-		if ( true === $password_opt && 'signup_password_confirm' === $name ) {
-			?>
+		if ( 'signup_password' === $name ) :
+		?>
 			<div id="pass-strength-result"></div>
-			<?php
-		} else if ( false === $password_opt && 'signup_password' === $name ) {
-			?>
-			<div id="pass-strength-result"></div>
-			<?php
-		}
+		<?php
+		endif;
 	}
 
 	/**

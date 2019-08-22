@@ -5296,7 +5296,7 @@ button[data-bp-close]:hover {
   content: "\f468";
 }
 
-#pass-strength-result, #email-validate-result {
+#pass-strength-result {
   background-color: #eee;
   border-color: #ddd;
   border-style: solid;
@@ -5309,17 +5309,17 @@ button[data-bp-close]:hover {
   width: auto;
 }
 
-#pass-strength-result.show, #email-validate-result.show {
+#pass-strength-result.show {
   display: block;
 }
 
-#pass-strength-result.mismatch, #email-validate-result.mismatch {
+#pass-strength-result.mismatch {
   background-color: #333;
   border-color: transparent;
   color: #fff;
 }
 
-#pass-strength-result.error, #pass-strength-result.bad, #email-validate-result.error {
+#pass-strength-result.error, #pass-strength-result.bad {
   background-color: #ffb78c;
   border-color: #ff853c;
   color: #fff;
