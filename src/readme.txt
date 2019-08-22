@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.7 =
 * Profiles - Fixed issues with duplicate Name fields in some installations
+* Forums - Fixed media not displaying in replies, due to Lazy Load issues
 * Forums - Fixed formatting displaying as HTML when replying as non-admin
 * Forums - Fixed emoji displaying too big, for new forum replies only
 * Forums - Fixed GIFs not working, unless Photos was also enabled in Media settings
