@@ -18,10 +18,7 @@ remove_action( 'bp_include', 'bp_follow_init' );
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
-/**
- * Get called in init hook action of WP.
- * This functions provided support for Third Part Plugin
- */
+
 function bp_helper_plugins_loaded_callback() {
 	global $bp_plugins;
 
