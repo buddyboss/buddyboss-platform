@@ -3900,14 +3900,14 @@ function bp_get_allowedtags() {
 	global $allowedtags;
 
 	return array_merge_recursive( $allowedtags, array(
-		'a' => array(
+		'a'       => array(
 			'aria-label'      => array(),
 			'class'           => array(),
 			'data-bp-tooltip' => array(),
 			'id'              => array(),
 			'rel'             => array(),
 		),
-		'img' => array(
+		'img'     => array(
 			'src'    => array(),
 			'alt'    => array(),
 			'width'  => array(),
@@ -3915,13 +3915,27 @@ function bp_get_allowedtags() {
 			'class'  => array(),
 			'id'     => array(),
 		),
-		'span'=> array(
+		'span'    => array(
 			'class'          => array(),
 			'data-livestamp' => array(),
+			'id'             => array(),
 		),
-		'ul' => array(),
-		'ol' => array(),
-		'li' => array(),
+		'ul'      => array(),
+		'ol'      => array(),
+		'li'      => array(),
+		'p'       => array(
+			'class' => array(),
+			'id'    => array(),
+			'style' => array(),
+		),
+		'abbr'    => array( 'title' => true ),
+		'acronym' => array( 'title' => true ),
+		'b'       => array(),
+		'u'       => array(),
+		'i'       => array(),
+		'br'      => array(),
+
+
 	) );
 }
 
