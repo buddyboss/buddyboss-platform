@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed formatting displaying as HTML when replying as non-admin
 * Forums - Fixed emoji displaying too big, for new forum replies only
 * Forums - Fixed GIFs not working, unless Photos was also enabled in Media settings
+* Groups - When using Group Types with custom role labels, using correct label now in discussions
 * Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
 * Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
 * Registration - When using Profile Type, and validation show errors, conditional fields remain now
