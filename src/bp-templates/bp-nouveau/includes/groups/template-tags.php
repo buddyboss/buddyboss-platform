@@ -1378,6 +1378,6 @@ function bp_nouveau_add_notify_group_members_checkbox() {
 		<label for="group-notify-members" class="bp-label-text">
 			<input type="checkbox" name="group-notify-members" id="group-notify-members" value="1" /> %s
 		</label>
-	</p>', esc_html__( 'Notify group members of these changes via email', 'buddypress' ) );
+	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );
