@@ -714,6 +714,9 @@ window.bp = window.bp || {};
 						content.after( response.data.feedback );
 						content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 					} else {
+						if( target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 && typeof response.data === 'undefined' ){
+							response = JSON.parse(response);
+						}
 						$( content ).slideUp( 300 ).html( response.data.contents ).slideDown( 300 );
 
 						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
