@@ -66,6 +66,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
 * Registration - When using Profile Type, and validation show errors, conditional fields remain now
 * Registration - Added validation telling users to use lowercase or number characters for 'Nickname'
+* WooCommerce - When purchasing while logged out, and creating a new account, we now send account activation email
 * Compatibility - Improved support for 'Google Captcha (reCAPTCHA) Pro' plugin
 
 = 1.1.6 =
