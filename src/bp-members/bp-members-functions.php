@@ -1740,12 +1740,11 @@ function bp_core_validate_blog_signup( $blog_url, $blog_title ) {
  *
  * @todo There appears to be a bug in the return value on success.
  *
- * @param string $user_login Login name requested by the user.
+ * @param string $user_login    Login name requested by the user.
  * @param string $user_password Password requested by the user.
- * @param string $user_email Email address entered by the user.
- * @param array $usermeta Miscellaneous metadata about the user (blog-specific
+ * @param string $user_email    Email address entered by the user.
+ * @param array  $usermeta      Miscellaneous metadata about the user (blog-specific
  *                              signup data, xprofile data, etc).
- *
  * @return int|false True on success, WP_Error on failure.
  */
 function bp_core_signup_user( $user_login, $user_password, $user_email, $usermeta ) {
@@ -1753,8 +1752,6 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 
 	// We need to cast $user_id to pass to the filters.
 	$user_id = false;
-
-	$activation_key = '';
 
 	// Multisite installs have their own install procedure.
 	if ( is_multisite() ) {
@@ -1779,10 +1776,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		 * clutter by defining setting the BP_SIGNUPS_SKIP_USER_CREATION
 		 * to true in your wp-config.php file.
 		 */
-		if (
-			( ! defined( 'BP_SIGNUPS_SKIP_USER_CREATION' ) || ! BP_SIGNUPS_SKIP_USER_CREATION )
-			&& apply_filters( 'bp_signups_do_not_skip_user_creation', true )
-		) {
+		if ( ! defined( 'BP_SIGNUPS_SKIP_USER_CREATION' ) || ! BP_SIGNUPS_SKIP_USER_CREATION ) {
 			$user_id = BP_Signup::add_backcompat( $user_login, $user_password, $user_email, $usermeta );
 
 			if ( is_wp_error( $user_id ) ) {
@@ -1806,11 +1800,11 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		 *
 		 * @since BuddyPress 1.2.3
 		 *
-		 * @param bool $value Whether or not to send the activation key.
-		 * @param int $user_id User ID to send activation key to.
-		 * @param string $user_email User email to send activation key to.
+		 * @param bool   $value          Whether or not to send the activation key.
+		 * @param int    $user_id        User ID to send activation key to.
+		 * @param string $user_email     User email to send activation key to.
 		 * @param string $activation_key Activation key to be sent.
-		 * @param array $usermeta Miscellaneous metadata about the user (blog-specific
+		 * @param array  $usermeta       Miscellaneous metadata about the user (blog-specific
 		 *                               signup data, xprofile data, etc).
 		 */
 		if ( apply_filters( 'bp_core_signup_send_activation_key', true, $user_id, $user_email, $activation_key, $usermeta ) ) {
@@ -1825,15 +1819,14 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	 *
 	 * @since BuddyPress 1.2.2
 	 *
-	 * @param bool|WP_Error $user_id True on success, WP_Error on failure.
-	 * @param string $user_login Login name requested by the user.
-	 * @param string $user_password Password requested by the user.
-	 * @param string $user_email Email address requested by the user.
-	 * @param array $usermeta Miscellaneous metadata about the user (blog-specific
+	 * @param bool|WP_Error   $user_id       True on success, WP_Error on failure.
+	 * @param string          $user_login    Login name requested by the user.
+	 * @param string          $user_password Password requested by the user.
+	 * @param string          $user_email    Email address requested by the user.
+	 * @param array           $usermeta      Miscellaneous metadata about the user (blog-specific
 	 *                                       signup data, xprofile data, etc).
-	 * @param string $activation_key Activation key to be sent.
 	 */
-	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta, $activation_key );
+	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta );
 
 	return $user_id;
 }
