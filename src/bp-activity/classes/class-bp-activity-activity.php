@@ -310,6 +310,19 @@ class BP_Activity_Activity {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
 
+		// Check course is published or not.
+		
+        if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+        	$types_array = ['sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'sfwd-essays'];
+        	
+            if ( in_array( get_post_type( (int)$this->secondary_item_id ), $types_array ) ) {
+                $course_id = learndash_get_course_id( $this->secondary_item_id );
+                if ( 0 < $course_id && get_post_status( $course_id ) != 'publish' ) {
+                	bp_activity_delete( array( 'id' => $this->id ) );
+                }
+            }
+        }
+        
 		/**
 		 * Fires after an activity item has been saved to the database.
 		 *
