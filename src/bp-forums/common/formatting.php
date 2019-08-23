@@ -24,14 +24,42 @@ function bbp_kses_allowed_tags() {
 	return apply_filters( 'bbp_kses_allowed_tags', array(
 
 		//Paragraph
-		'p' => array(),
+		'p' => array(
+			'class' => array(),
+			'id'    => array(),
+			'style' => array(),
+		),
+
+		'abbr'    => array( 'title' => true ),
+
+		'acronym' => array( 'title' => true ),
+
+		//Bold
+		'b' => array(),
+
+		//Underline
+		'u' => array(),
+
+		// Italic
+		'i' => array(),
+
+		// Br
+		'br' => array(),
 
 		// Links
 		'a' => array(
-			'href'     => array(),
-			'title'    => array(),
-			'rel'      => array(),
-			'target'   => array()
+			'href'   => array(),
+			'title'  => array(),
+			'rel'    => array(),
+			'class'  => array(),
+			'id'     => array(),
+			'target' => array()
+		),
+
+		// Span
+		'span' => array(
+			'class' => array(),
+			'id'    => array(),
 		),
 
 		// Quotes
@@ -59,11 +87,13 @@ function bbp_kses_allowed_tags() {
 
 		// Images
 		'img'          => array(
-			'src'      => true,
-			'border'   => true,
-			'alt'      => true,
-			'height'   => true,
-			'width'    => true,
+			'src'             => true,
+			'border'          => true,
+			'alt'             => true,
+			'height'          => true,
+			'width'           => true,
+			'class'           => true,
+			'data-emoji-char' => true,
 		)
 	) );
 }

@@ -562,7 +562,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
-			$( '#buddypress [data-bp-close]' ).on( 'click', this, this.closeNotice );
+			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
