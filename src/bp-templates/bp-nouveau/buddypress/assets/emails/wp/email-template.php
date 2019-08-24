@@ -62,7 +62,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		body {
 			margin: 0 !important;
 			padding: 0 !important;
-			width: <?php echo $width; ?> !important;
+			<?php echo wp_is_mobile() ? "width:{$width} !important" : ""; ?>;
 		}
 
 		/* What it does: Stops email clients resizing small text. */
@@ -230,7 +230,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 	</style>
 </head>
 	
-<body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="margin: 0; mso-line-height-rule: exactly;">
+<body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="mso-line-height-rule: exactly;">
 	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse; display: block;" class="email_bg">
 		<tbody style="display: block;">
 			<tr style="display: block;">
