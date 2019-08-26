@@ -291,10 +291,8 @@ class BP_Activity_Activity {
 		}
 
 		// If we have an existing ID, update the activity item, otherwise insert it.
-		file_put_contents($_SERVER["DOCUMENT_ROOT"]."/bb/manish.txt",print_r($_POST,true),FILE_APPEND);
 		if ( ! empty( $this->id ) ) {
 			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->id );
-
 		} else {
 			
 			$q = $wpdb->prepare( "INSERT INTO {$bp->activity->table_name} ( user_id, component, type, action, content, primary_link, date_recorded, item_id, secondary_item_id, hide_sitewide, is_spam, privacy ) VALUES ( %d, %s, %s, %s, %s, %s, %s, %d, %d, %d, %d, %s )", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy );
@@ -308,7 +306,6 @@ class BP_Activity_Activity {
             	if (0 < $course_id && get_post_status( $course_id ) != 'publish') {
             		return true;
             	}
-            	
             }
             if ((isset($_POST['action']) && $_POST['action'] =="learndash_builder_selector_step_new") && (isset($_POST['builder_query_args']["new_steps"]))) {
             	return true;
