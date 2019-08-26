@@ -4572,7 +4572,6 @@ function bp_get_following( $args = '' ) {
  * @return array [ followers => int, following => int ]
  */
 function bp_total_follow_counts( $args = '' ) {
-	global $bp;
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_loggedin_user_id()
@@ -4584,6 +4583,7 @@ function bp_total_follow_counts( $args = '' ) {
 
 	// logged-in user
 	if ( $r['user_id'] == bp_loggedin_user_id() && is_user_logged_in() ) {
+		global $bp;
 
 		if ( ! empty( $bp->loggedin_user->total_follow_counts ) ) {
 			$count = $bp->loggedin_user->total_follow_counts;
@@ -4591,6 +4591,7 @@ function bp_total_follow_counts( $args = '' ) {
 
 		// displayed user
 	} elseif ( $r['user_id'] == bp_displayed_user_id() && bp_is_user() ) {
+		global $bp;
 
 		if ( ! empty( $bp->displayed_user->total_follow_counts ) ) {
 			$count = $bp->displayed_user->total_follow_counts;
@@ -4614,22 +4615,20 @@ function bp_total_follow_counts( $args = '' ) {
  */
 function bp_remove_follow_data( $user_id ) {
 	/**
-	 * Actions to perform before follow data is removed for user
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_before_remove_follow_data', $user_id );
 
-	$return = BP_Activity_Follow::delete_all_for_user( $user_id );
+	BP_Activity_Follow::delete_all_for_user( $user_id );
 
 	/**
-	 * Actions to perform after follow data is removed for user
+	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
-	 * @param int $user_id User id
-	 * @param array|bool $return Array of ids deleted or false otherwise
 	 */
-	do_action( 'bp_remove_follow_data', $user_id, $return );
+	do_action( 'bp_remove_follow_data', $user_id );
 }
 add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );
 add_action( 'delete_user',	'bp_remove_follow_data' );
