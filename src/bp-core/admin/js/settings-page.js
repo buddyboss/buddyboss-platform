@@ -483,6 +483,7 @@
 
 				if ( BbToolsCommunityRepairActions.length ) {
 					$( 'body .section-repair_community .settings fieldset .submit a').addClass( 'disable-btn' );
+					$( 'body .section-repair_community .settings fieldset .checkbox code').remove();
 					bp_admin_repair_tools_wrapper_function(1, 0 );
 				}
 			});
