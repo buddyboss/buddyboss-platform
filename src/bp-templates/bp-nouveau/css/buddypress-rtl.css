@@ -11333,6 +11333,10 @@ img.emojioneemoji {
   transform: none;
 }
 
+#new-post .bbp-form div .bbp_topic_tags_wrapper .tagify .tagify__input:before {
+  content: attr(data-placeholder);
+}
+
 .tagify__input:before {
   content: attr(data-placeholder);
   line-height: 1.8;
