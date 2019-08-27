@@ -189,6 +189,9 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
+			
+			//show compose message screen
+			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
 
 		threadsView: function() {
