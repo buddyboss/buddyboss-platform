@@ -681,6 +681,10 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
+	if(preg_match('/[A-Z]/', $value ) ){
+		return sprintf( __( '%s contain uppercase letters are not allowed.', 'buddyboss' ), $field_name );
+	}
+
 	// only alpha numeric, underscore, dash
 	if ( ! preg_match( '/^([a-z-0-9-_\.]+)$/', $value ) ) {
 		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );

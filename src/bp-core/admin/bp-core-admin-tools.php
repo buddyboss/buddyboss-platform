@@ -241,15 +241,15 @@ function bp_repair_community_submenu_page() {
                                         type="checkbox"
                                         class="checkbox"
                                         name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>"
-                                        value="1"
+                                        value="<?php echo esc_attr( $item[0] ); ?>"
 									<?php if ( isset( $_GET['tool'] ) && $_GET['tool'] == esc_attr( str_replace( '_', '-', $item[0] ) )) {echo 'checked';} ?>
                                 /> <?php echo esc_html( $item[1] ); ?></label>
 						<?php endforeach; ?>
                     </div>
 
                     <p class="submit">
-                        <input class="button-primary" type="submit" name="bp-tools-submit" value="<?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?>" />
-						<?php wp_nonce_field( 'bp-do-counts' ); ?>
+	                    <?php wp_nonce_field( 'bp-do-counts' ); ?>
+	                    <a class="button-primary" id="bp-tools-submit"><?php esc_attr_e( 'Repair Items', 'buddyboss' ); ?></a>
                     </p>
 
                 </fieldset>
@@ -400,6 +400,12 @@ function bp_admin_repair_list() {
 		}
 	}
 
+	$repair_list[102] = array(
+		'bp-repair-nickname-value',
+		__( 'Repair nickname field uppercase letters values.', 'buddyboss' ),
+		'bp_admin_repair_nickname_value',
+	);
+
 	ksort( $repair_list );
 
 	/**
@@ -467,7 +473,7 @@ function bp_admin_repair_friend_count() {
 		return array( 2, sprintf( $statement, $result ) );
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -514,7 +520,7 @@ function bp_admin_repair_group_count() {
 		return array( 2, sprintf( $statement, $result ) );
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -546,7 +552,7 @@ function bp_admin_repair_blog_records() {
 	}
 
 	// All done!
-	return array( 0, sprintf( $statement, $result ) );
+	return array( 'status' => 1 , 'message' => sprintf( $statement, $result ) );
 }
 
 /**
@@ -559,7 +565,7 @@ function bp_admin_repair_count_members() {
 	delete_transient( 'bp_active_member_count' );
 	bp_core_get_active_member_count();
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -573,7 +579,7 @@ function bp_admin_repair_last_activity() {
 	$statement = __( 'Determining last activity dates for each user&hellip; %s', 'buddyboss' );
 	bp_last_activity_migrate();
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -629,7 +635,7 @@ function repair_default_profiles_fields() {
 
 	$statement = __( 'Repair default profile set and fields&hellip; %s', 'buddyboss' );
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -638,15 +644,29 @@ function repair_default_profiles_fields() {
  * @since BuddyBoss 1.0.0
  */
 function resync_xprofile_wordpress_fields() {
-	$users = get_users( [
-		'fields' => [ 'ID' ]
-	] );
 
-	array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	$statement = __( 'Re-sync user profile data to WordPress; %s', 'buddyboss' );
+	$args = array(
+		'number'       => 50,
+		'fields'       => [ 'ID' ],
+		'offset' => $offset,
+	);
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	$users = get_users( $args );
+
+	if ( ! empty( $users ) ) {
+		array_map( 'xprofile_sync_wp_profile', wp_list_pluck( $users, 'ID' ) );
+		foreach ( $users as $user ) {
+			$offset++;
+		}
+
+		$records_updated =  sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array( 'status' => 'running' , 'offset' => $offset, 'records' => $records_updated );
+	} else  {
+		$statement = __( 'Re-sync user profile data to WordPress; %s', 'buddyboss' );
+		return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	}
 }
 
 /**
@@ -655,32 +675,42 @@ function resync_xprofile_wordpress_fields() {
  * @since BuddyBoss 1.0.0
  */
 function resync_wordpress_xprofile_fields() {
-	$users = get_users( [
-		'fields' => [ 'ID', 'user_nicename' ]
-	] );
 
-	foreach ( $users as $user ) {
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-		xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
+	$args = array(
+		'number'       => 50,
+		'fields'       => [ 'ID', 'user_nicename' ],
+		'offset' => $offset,
+	);
 
-		// make sure nickname is valid
-		$nickname = get_user_meta( $user->ID, 'nickname', true );
-		$nickname = sanitize_title( $nickname );
-		$invalid  = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+	$users = get_users( $args );
 
-		// or use the user_nicename
-		if ( ! $nickname || $invalid ) {
-			$nickname = $user->user_nicename;
+	if ( ! empty( $users ) ) {
+		foreach ( $users as $user ) {
+			xprofile_set_field_data( bp_xprofile_firstname_field_id(), $user->ID, get_user_meta( $user->ID, 'first_name', true ) );
+			xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, get_user_meta( $user->ID, 'last_name', true ) );
+
+			// make sure nickname is valid
+			$nickname = get_user_meta( $user->ID, 'nickname', true );
+			$nickname = sanitize_title( $nickname );
+			$invalid  = bp_xprofile_validate_nickname_value( '', bp_xprofile_nickname_field_id(), $nickname, $user->ID );
+
+			// or use the user_nicename
+			if ( ! $nickname || $invalid ) {
+				$nickname = $user->user_nicename;
+			}
+
+			bp_update_user_meta( $user->ID, 'nickname', $nickname );
+			xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
+			$offset++;
 		}
-
-		bp_update_user_meta( $user->ID, 'nickname', $nickname );
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $nickname );
+		$records_updated =  sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array( 'status' => 'running' , 'offset' => $offset, 'records' => $records_updated );
+	} else {
+		$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields; %s', 'buddyboss' );
+		return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 	}
-
-	$statement = __( 'Re-sync user WordPress data to BuddyBoss profile fields; %s', 'buddyboss' );
-
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -689,22 +719,34 @@ function resync_wordpress_xprofile_fields() {
  * @since BuddyBoss 1.0.0
  */
 function xprofile_update_display_names() {
-	$users = get_users( [
-		'fields' => [ 'ID', 'display_name' ]
-	] );
 
-	foreach ( $users as $user ) {
-		$display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-		wp_update_user( $args = [
-			'ID'           => $user->ID,
-			'display_name' => $display_name
-		] );
+	$args = array(
+		'number'       => 50,
+		'fields'       => [ 'ID', 'display_name' ],
+		'offset' => $offset,
+	);
+
+	$users = get_users( $args );
+
+	if ( ! empty( $users ) ) {
+
+		foreach ( $users as $user ) {
+			$display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
+
+			wp_update_user( $args = [
+				'ID'           => $user->ID,
+				'display_name' => $display_name
+			] );
+			$offset++;
+		}
+		$records_updated =  sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array( 'status' => 'running' , 'offset' => $offset, 'records' => $records_updated );
+	} else {
+		$statement = __( 'Update WordPress user display names; %s', 'buddyboss' );
+		return array( 'status' => 1 , 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 	}
-
-	$statement = __( 'Update WordPress user display names; %s', 'buddyboss' );
-
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
 }
 
 /**
@@ -854,7 +896,7 @@ function bp_admin_reinstall_emails() {
 		restore_current_blog();
 	}
 
-	return array( 0, __( 'Emails have been successfully reinstalled.', 'buddyboss' ) );
+	return array( 'status' => 1 , 'message' => __( 'Emails have been successfully reinstalled.', 'buddyboss' ) );
 }
 
 /**
@@ -888,35 +930,119 @@ add_action( 'network_admin_notices', 'bp_core_admin_notice_repopulate_blogs_resu
  */
 function bp_admin_assign_member_type() {
 
-	$users = get_users( [
-		'fields' => [ 'ID' ]
-	] );
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
 
-	foreach ( $users as $user ) {
+	$args = array(
+		'number'       => 50,
+		'fields'       => [ 'ID' ],
+		'offset' => $offset,
+	);
 
-		$member_type = bp_get_member_type( $user->ID );
+	$users = get_users( $args );
 
-		if ( false === $member_type ) {
+	if ( ! empty( $users ) ) {
 
-			// Get the user object.
-			$user1 = get_userdata( $user->ID );
+		foreach ( $users as $user ) {
 
-			if ( ! in_array( 'administrator', $user1->roles, true ) ) {
+			$member_type = bp_get_member_type( $user->ID );
 
-				$existing_selected = bp_member_type_default_on_registration();
-				// Assign the default member type to user.
-				bp_set_member_type( $user->ID, '' );
-				bp_set_member_type( $user->ID, $existing_selected );
+			if ( false === $member_type ) {
+
+				// Get the user object.
+				$user1 = get_userdata( $user->ID );
+
+				if ( ! in_array( 'administrator', $user1->roles, true ) ) {
+
+					$existing_selected = bp_member_type_default_on_registration();
+					// Assign the default member type to user.
+					bp_set_member_type( $user->ID, '' );
+					bp_set_member_type( $user->ID, $existing_selected );
+				}
 			}
+			$offset++;
 		}
+		$records_updated =  sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array( 'status' => 'running' , 'offset' => $offset, 'records' => $records_updated );
+	} else {
+		// Description of this tool, displayed to the user.
+		$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
+		$result = __( 'Complete!', 'buddyboss' );
+		// All done!
+		return array( 'status' => 1 , 'message' => sprintf( $statement, $result ) );
 	}
 
-	// Description of this tool, displayed to the user.
-	$statement = __( 'Assign users without a profile type to the default profile type records&hellip; %s', 'buddyboss' );
-
-
-	$result = __( 'Complete!', 'buddyboss' );
-
-	// All done!
-	return array( 0, sprintf( $statement, $result ) );
 }
+
+function  bp_admin_repair_nickname_value() {
+
+	$offset = isset( $_POST['offset'] ) ? (int) ( $_POST['offset'] ) : 0;
+
+	$args = array(
+		'number'       => 50,
+		'fields'       => [ 'ID' ],
+		'offset' => $offset,
+	);
+	$users = get_users( $args );
+
+	if ( ! empty( $users ) ) {
+
+		foreach ( $users as $user ) {
+			$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user->ID );
+			if ( preg_match( '/[A-Z]/', $nickname ) ) {
+				xprofile_set_field_data( bp_xprofile_nickname_field_id(),
+					bp_loggedin_user_id(),
+					strtolower( $nickname ) );
+			}
+			$offset++;
+		}
+		$records_updated =  sprintf( __( '%s members updated successfully.', 'buddyboss' ), number_format_i18n( $offset ) );
+		return array( 'status' => 'running' , 'offset' => $offset, 'records' => $records_updated );
+	} else {
+		// Description of this tool, displayed to the user.
+		$statement = __( 'Repair Nickname&hellip; %s', 'buddyboss' );
+		$result = __( 'Complete!', 'buddyboss' );
+
+		// All done!
+		return array( 'status' => 1 , 'message' => sprintf( $statement, $result ) );
+	}
+
+}
+
+function bp_admin_repair_tools_wrapper_function() {
+
+	$type = isset( $_POST['type'] ) ? $_POST['type'] : '';
+
+	//foreach ( $types as $type ) {
+
+		if ( 'bp-user-friends' === $type ) {
+			$status = bp_admin_repair_friend_count();
+		} elseif ( 'bp-group-count' === $type ) {
+			$status = bp_admin_repair_group_count();
+		} elseif ( 'bp-total-member-count' === $type ) {
+			$status = bp_admin_repair_count_members();
+		} elseif ( 'bp-last-activity' === $type ) {
+			$status = bp_admin_repair_last_activity();
+		} elseif ( 'bp-xprofile-fields' === $type ) {
+			$status = repair_default_profiles_fields();
+		} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
+			$status = resync_xprofile_wordpress_fields();
+		} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
+			$status = resync_wordpress_xprofile_fields();
+		} elseif ( 'bp-wordpress-update-display-name' === $type ) {
+			$status = xprofile_update_display_names();
+		} elseif ( 'bp-blog-records' === $type ) {
+			$status = bp_admin_repair_blog_records();
+		} elseif ( 'bp-reinstall-emails' === $type ) {
+			$status = bp_admin_reinstall_emails();
+		} elseif ( 'bp-assign-member-type' === $type ) {
+			$status = bp_admin_assign_member_type();
+		} elseif ( 'bp-repair-nickname-value' === $type ) {
+			$status = bp_admin_repair_nickname_value();
+		}
+	//}
+
+	wp_send_json_success( $status );
+
+
+}
+add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );
