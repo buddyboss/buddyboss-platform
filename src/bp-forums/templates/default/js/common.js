@@ -3,9 +3,13 @@ jQuery(document).ready( function() {
         var input  = document.querySelector('input[name=bbp_topic_tags_tagify]');
 
         if ( input != null ) {
-            window.bbp_tagify = new window.Tagify(input);
+            window.bbp_tagify = new window.Tagify(input, {});
 
 			window.bbp_tagify.on('input', onInput);
+
+			if ( jQuery('#bbp_topic_tags').val() ) {
+				jQuery('.tagify__input').attr( 'data-placeholder', '' );
+			}
 
             window.bbp_tagify.on('add', function () {
                 var bbp_topic_tags = '';
@@ -13,12 +17,20 @@ jQuery(document).ready( function() {
                     bbp_topic_tags += window.bbp_tagify.value[i].value + ',';
                 }
                 jQuery('#bbp_topic_tags').val(bbp_topic_tags);
+                if ( bbp_topic_tags ) {
+					jQuery('.tagify__input').attr( 'data-placeholder', '' );
+				}
             }).on('remove', function () {
                 var bbp_topic_tags = '';
                 for( var i = 0 ; i < window.bbp_tagify.value.length; i++ ) {
                     bbp_topic_tags += window.bbp_tagify.value[i].value + ',';
                 }
                 jQuery('#bbp_topic_tags').val(bbp_topic_tags);
+				if ( jQuery('#bbp_topic_tags').val() ) {
+					jQuery('.tagify__input').attr( 'data-placeholder', '' );
+				} else {
+					jQuery('.tagify__input').attr( 'data-placeholder', Common_Data.tag_text );
+				}
             });
 
             // "remove all tags" button event listener

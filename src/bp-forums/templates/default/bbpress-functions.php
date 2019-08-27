@@ -205,9 +205,10 @@ class BBP_Default extends BBP_Theme_Compat {
 
 		$common_array = array(
 			'loading_text' => __( 'Loading', 'buddyboss' ),
-			'ajax_url' => bp_core_ajax_url(),
-			'nonce' => wp_create_nonce('search_tag' ),
-			'load' => $no_load_topic,
+			'ajax_url'     => bp_core_ajax_url(),
+			'nonce'        => wp_create_nonce( 'search_tag' ),
+			'load'         => $no_load_topic,
+			'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
 		);
 
 		wp_localize_script( 'bbpress-common', 'Common_Data', $common_array );
