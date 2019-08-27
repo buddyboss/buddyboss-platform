@@ -289,10 +289,11 @@ window.bp = window.bp || {};
 				if( _url !== '' ){
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
+				if(0 >= _newString.length){
+					$( this ).find('.activity-inner a').hide();
+				}
 			}
-			if(0 >= _newString.length){
-				$( this ).find('.activity-inner a').hide();
-			}
+			
         },
 		/**
 		 * [objectRequest description]
