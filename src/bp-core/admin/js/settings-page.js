@@ -440,7 +440,8 @@
 					'data' : {
 						'action' : 'bp_admin_repair_tools_wrapper_function',
 						'type' : BbToolsCommunityRepairActions[currentAction],
-						'offset' : offset
+						'offset' : offset,
+						'nonce' : $( 'body .section-repair_community .settings fieldset .submit input[name="_wpnonce"]').val()
 					},
 					'success' : function( response ) {
 						if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
@@ -462,6 +463,7 @@
 					},
 					'error' : function() {
 						$( 'body .section-repair_community .settings fieldset .submit a').removeClass( 'disable-btn' );
+						return false;
 					}
 				});
 			};
@@ -469,20 +471,20 @@
 			$( document ).on( 'click', '#bp-tools-submit', function( e ) {
 				e.preventDefault();
 
-				$( 'body .section-repair_community .settings fieldset .submit a').addClass( 'disable-btn' );
-
 				BbToolsCommunityRepairActions = [];
 
 				setTimeout(function () {
-				$( 'body .section-repair_community .settings fieldset .updated').remove();
+					$( 'body .section-repair_community .settings fieldset .updated').remove();
 				}, 500);
 
 				$.each($('.section-repair_community .settings fieldset .checkbox input[class="checkbox"]:checked'), function(){
 					BbToolsCommunityRepairActions.push($(this).val());
 				});
 
-				bp_admin_repair_tools_wrapper_function(1, 0 );
-
+				if ( BbToolsCommunityRepairActions.length ) {
+					$( 'body .section-repair_community .settings fieldset .submit a').addClass( 'disable-btn' );
+					bp_admin_repair_tools_wrapper_function(1, 0 );
+				}
 			});
 		}
 

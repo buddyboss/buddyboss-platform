@@ -1008,41 +1008,65 @@ function  bp_admin_repair_nickname_value() {
 
 }
 
+/**
+ * Wrapper function to handle Repair Community all the actions.
+ *
+ * @since 1.1.8
+ */
 function bp_admin_repair_tools_wrapper_function() {
 
 	$type = isset( $_POST['type'] ) ? $_POST['type'] : '';
 
-	//foreach ( $types as $type ) {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
 
-		if ( 'bp-user-friends' === $type ) {
-			$status = bp_admin_repair_friend_count();
-		} elseif ( 'bp-group-count' === $type ) {
-			$status = bp_admin_repair_group_count();
-		} elseif ( 'bp-total-member-count' === $type ) {
-			$status = bp_admin_repair_count_members();
-		} elseif ( 'bp-last-activity' === $type ) {
-			$status = bp_admin_repair_last_activity();
-		} elseif ( 'bp-xprofile-fields' === $type ) {
-			$status = repair_default_profiles_fields();
-		} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
-			$status = resync_xprofile_wordpress_fields();
-		} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
-			$status = resync_wordpress_xprofile_fields();
-		} elseif ( 'bp-wordpress-update-display-name' === $type ) {
-			$status = xprofile_update_display_names();
-		} elseif ( 'bp-blog-records' === $type ) {
-			$status = bp_admin_repair_blog_records();
-		} elseif ( 'bp-reinstall-emails' === $type ) {
-			$status = bp_admin_reinstall_emails();
-		} elseif ( 'bp-assign-member-type' === $type ) {
-			$status = bp_admin_assign_member_type();
-		} elseif ( 'bp-repair-nickname-value' === $type ) {
-			$status = bp_admin_repair_nickname_value();
-		}
-	//}
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
 
+	if ( empty( $_POST['nonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['nonce'];
+	$check = 'bp-do-counts';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( 'bp-user-friends' === $type ) {
+		$status = bp_admin_repair_friend_count();
+	} elseif ( 'bp-group-count' === $type ) {
+		$status = bp_admin_repair_group_count();
+	} elseif ( 'bp-total-member-count' === $type ) {
+		$status = bp_admin_repair_count_members();
+	} elseif ( 'bp-last-activity' === $type ) {
+		$status = bp_admin_repair_last_activity();
+	} elseif ( 'bp-xprofile-fields' === $type ) {
+		$status = repair_default_profiles_fields();
+	} elseif ( 'bp-xprofile-wordpress-resync' === $type ) {
+		$status = resync_xprofile_wordpress_fields();
+	} elseif ( 'bp-wordpress-xprofile-resync' === $type ) {
+		$status = resync_wordpress_xprofile_fields();
+	} elseif ( 'bp-wordpress-update-display-name' === $type ) {
+		$status = xprofile_update_display_names();
+	} elseif ( 'bp-blog-records' === $type ) {
+		$status = bp_admin_repair_blog_records();
+	} elseif ( 'bp-reinstall-emails' === $type ) {
+		$status = bp_admin_reinstall_emails();
+	} elseif ( 'bp-assign-member-type' === $type ) {
+		$status = bp_admin_assign_member_type();
+	} elseif ( 'bp-repair-nickname-value' === $type ) {
+		$status = bp_admin_repair_nickname_value();
+	}
 	wp_send_json_success( $status );
-
-
 }
 add_action( 'wp_ajax_bp_admin_repair_tools_wrapper_function', 'bp_admin_repair_tools_wrapper_function' );

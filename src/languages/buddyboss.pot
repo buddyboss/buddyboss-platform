@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-08-27 13:25:23+00:00\n"
+"POT-Creation-Date: 2019-08-27 13:59:01+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2726,6 +2726,21 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:1002
 msgid "Repair Nickname&hellip; %s"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-tools.php:1023
+#: bp-templates/bp-nouveau/includes/follow/ajax.php:50
+#: bp-templates/bp-nouveau/includes/friends/ajax.php:68
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:47
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:261
+#: bp-templates/bp-nouveau/includes/media/ajax.php:98
+#: bp-templates/bp-nouveau/includes/media/ajax.php:197
+#: bp-templates/bp-nouveau/includes/media/ajax.php:355
+#: bp-templates/bp-nouveau/includes/media/ajax.php:423
+#: bp-templates/bp-nouveau/includes/media/ajax.php:521
+#: bp-templates/bp-nouveau/includes/media/ajax.php:659
+#: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
+msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:75
@@ -16109,20 +16124,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:196
 msgid "Reorder the primary navigation for a member."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/follow/ajax.php:50
-#: bp-templates/bp-nouveau/includes/friends/ajax.php:68
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:47
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:261
-#: bp-templates/bp-nouveau/includes/media/ajax.php:98
-#: bp-templates/bp-nouveau/includes/media/ajax.php:197
-#: bp-templates/bp-nouveau/includes/media/ajax.php:355
-#: bp-templates/bp-nouveau/includes/media/ajax.php:423
-#: bp-templates/bp-nouveau/includes/media/ajax.php:521
-#: bp-templates/bp-nouveau/includes/media/ajax.php:659
-#: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
-msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:89
