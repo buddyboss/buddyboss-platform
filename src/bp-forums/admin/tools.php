@@ -1382,6 +1382,11 @@ function bbp_admin_reset_handler() {
 	}
 }
 
+/**
+ * Wrapper function to handle Repair Forums all the actions.
+ *
+ * @since BuddyBoss 1.1.8
+ */
 function bp_admin_forum_repair_tools_wrapper_function() {
 
 	$type = isset( $_POST['type'] ) ? $_POST['type'] : '';

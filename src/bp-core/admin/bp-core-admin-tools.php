@@ -1002,7 +1002,7 @@ function  bp_admin_repair_nickname_value() {
 /**
  * Wrapper function to handle Repair Community all the actions.
  *
- * @since 1.1.8
+ * @since BuddyBoss 1.1.8
  */
 function bp_admin_repair_tools_wrapper_function() {
 
