@@ -572,7 +572,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'bp_emails'          => '',
 		'user_default_tab'   => 'profile'
 	);
-    
+
     if ( bp_is_active( 'friends' ) ) {
 		$default_args['members_friends_layout'] = 4;
 	}
@@ -972,7 +972,7 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 	 * Adjust some messages to the context.
 	 */
 	if ( 'completed-confirmation' === $feedback_id && bp_registration_needs_activation() ) {
-		$feedback_messages['completed-confirmation']['message'] = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
+		$feedback_messages['completed-confirmation']['message'] = apply_filters( 'bp_register_confirmation_text_message', __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' ) );
 	} elseif ( 'member-notifications-none' === $feedback_id ) {
 		$is_myprofile = bp_is_my_profile();
 
