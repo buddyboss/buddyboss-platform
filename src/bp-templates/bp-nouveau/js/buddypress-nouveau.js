@@ -1469,13 +1469,7 @@ window.bp = window.bp || {};
 
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
-						lazy[i].removeAttribute('data-src');
-
-						//load iframe in correct dimension
-						if(lazy[i].getAttribute('data-lazy-type') == 'iframe' && window.BuddyBossTheme.bbFitVideo){
-							window.BuddyBossTheme.bbFitVideo();
-						}
-						
+						lazy[i].removeAttribute('data-src');						
 					}
 				}
 				cleanLazy();
