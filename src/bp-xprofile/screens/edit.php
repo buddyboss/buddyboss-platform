@@ -108,11 +108,6 @@ function xprofile_screen_edit_profile() {
 
 			}
 
-			$nickname_id = bp_xprofile_nickname_field_id();
-			if ( $nickname_id === (int) $field_id ) {
-				$_POST[ 'field_' . $field_id ] = strtolower( $_POST[ 'field_' . $field_id ] );
-			}
-
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
 				$errors = true;
 				$validations[] = $message;
@@ -146,11 +141,6 @@ function xprofile_screen_edit_profile() {
 
 				// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
 				$value = isset( $_POST['field_' . $field_id] ) ? $_POST['field_' . $field_id] : '';
-
-				$nickname_id = bp_xprofile_nickname_field_id();
-				if ( $nickname_id === (int) $field_id ) {
-					$value = strtolower( $value );
-				}
 
 				$visibility_level = !empty( $_POST['field_' . $field_id . '_visibility'] ) ? $_POST['field_' . $field_id . '_visibility'] : 'public';
 

@@ -702,17 +702,6 @@ function bp_the_profile_field_edit_value() {
 			$field->data->value = $_POST['field_' . $field->id];
 		}
 
-		$nickname_id = bp_xprofile_nickname_field_id();
-		if ( $nickname_id === (int) $field->id ) {
-			$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), bp_loggedin_user_id() );
-			if ( $nickname === $field->data->value ) {
-				if ( preg_match( '/[A-Z]/', $field->data->value ) ) {
-					xprofile_set_field_data( bp_xprofile_nickname_field_id(), bp_loggedin_user_id(), strtolower( $field->data->value ) );
-					$field->data->value = strtolower( $field->data->value );
-				}
-			}
-		}
-
 		/**
 		 * Filters the XProfile field edit value.
 		 *
