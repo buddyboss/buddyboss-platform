@@ -289,7 +289,7 @@ class BP_Activity_Activity {
 		if ( empty( $this->primary_link ) ) {
 			$this->primary_link = bp_loggedin_user_domain();
 		}
-		file_put_contents($_SERVER["DOCUMENT_ROOT"]."/bb/manish.txt",print_r($_POST,true),FILE_APPEND);
+		
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
 			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->id );
