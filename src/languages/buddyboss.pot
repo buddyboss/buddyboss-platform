@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-08-28 02:58:31+00:00\n"
+"POT-Creation-Date: 2019-08-28 08:40:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1678,7 +1678,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:464
 #: bp-core/classes/class-bp-admin.php:486
 #: bp-core/classes/class-bp-admin.php:487 bp-forums/admin/settings.php:1344
-#: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1207
+#: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1200
 #: bp-media/bp-media-filters.php:776
 msgid "Tools"
 msgstr ""
@@ -2387,7 +2387,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-forums/admin/settings.php:213 bp-forums/admin/tools.php:1225
+#: bp-forums/admin/settings.php:213 bp-forums/admin/tools.php:1218
 #: bp-forums/admin.php:216 bp-forums/admin.php:260
 #: bp-forums/classes/class-bbpress.php:433
 #: bp-forums/classes/class-bp-forums-component.php:38
@@ -2498,7 +2498,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:172 bp-forums/admin/forums.php:447
 #: bp-forums/admin/settings.php:221 bp-forums/admin/settings.php:242
-#: bp-forums/admin/tools.php:1226 bp-forums/admin/topics.php:628
+#: bp-forums/admin/tools.php:1219 bp-forums/admin/topics.php:628
 #: bp-forums/admin.php:222 bp-forums/admin.php:280
 #: bp-forums/forums/template.php:2569 bp-forums/groups.php:49
 #: bp-forums/groups.php:50
@@ -2513,7 +2513,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:181 bp-forums/admin/forums.php:448
 #: bp-forums/admin/settings.php:229 bp-forums/admin/settings.php:250
-#: bp-forums/admin/tools.php:1227 bp-forums/admin/topics.php:630
+#: bp-forums/admin/tools.php:1220 bp-forums/admin/topics.php:630
 #: bp-forums/admin.php:234 bp-forums/admin.php:300
 #: bp-forums/core/theme-compat.php:645 bp-forums/forums/template.php:2633
 #: bp-forums/replies/template.php:46 bp-forums/replies/template.php:47
@@ -2552,7 +2552,7 @@ msgstr ""
 msgid "Data to Repair:"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:252 bp-forums/admin/tools.php:57
+#: bp-core/admin/bp-core-admin-tools.php:252 bp-forums/admin/tools.php:55
 msgid "Repair Items"
 msgstr ""
 
@@ -2608,15 +2608,15 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:427
 #: bp-core/admin/bp-core-admin-tools.php:485
-#: bp-core/admin/bp-core-admin-tools.php:530 bp-forums/admin/tools.php:202
-#: bp-forums/admin/tools.php:253 bp-forums/admin/tools.php:295
-#: bp-forums/admin/tools.php:340 bp-forums/admin/tools.php:457
-#: bp-forums/admin/tools.php:491 bp-forums/admin/tools.php:534
-#: bp-forums/admin/tools.php:579 bp-forums/admin/tools.php:624
-#: bp-forums/admin/tools.php:686 bp-forums/admin/tools.php:747
-#: bp-forums/admin/tools.php:815 bp-forums/admin/tools.php:863
-#: bp-forums/admin/tools.php:969 bp-forums/admin/tools.php:1029
-#: bp-forums/admin/tools.php:1050 bp-forums/admin/tools.php:1104
+#: bp-core/admin/bp-core-admin-tools.php:530 bp-forums/admin/tools.php:195
+#: bp-forums/admin/tools.php:246 bp-forums/admin/tools.php:288
+#: bp-forums/admin/tools.php:333 bp-forums/admin/tools.php:450
+#: bp-forums/admin/tools.php:484 bp-forums/admin/tools.php:527
+#: bp-forums/admin/tools.php:572 bp-forums/admin/tools.php:617
+#: bp-forums/admin/tools.php:679 bp-forums/admin/tools.php:740
+#: bp-forums/admin/tools.php:808 bp-forums/admin/tools.php:856
+#: bp-forums/admin/tools.php:962 bp-forums/admin/tools.php:1022
+#: bp-forums/admin/tools.php:1043 bp-forums/admin/tools.php:1097
 msgid "Failed!"
 msgstr ""
 
@@ -2630,15 +2630,15 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:703
 #: bp-core/admin/bp-core-admin-tools.php:739
 #: bp-core/admin/bp-core-admin-tools.php:960
-#: bp-core/admin/bp-core-admin-tools.php:994 bp-forums/admin/tools.php:236
-#: bp-forums/admin/tools.php:279 bp-forums/admin/tools.php:305
-#: bp-forums/admin/tools.php:472 bp-forums/admin/tools.php:517
-#: bp-forums/admin/tools.php:562 bp-forums/admin/tools.php:607
-#: bp-forums/admin/tools.php:669 bp-forums/admin/tools.php:730
-#: bp-forums/admin/tools.php:791 bp-forums/admin/tools.php:953
-#: bp-forums/admin/tools.php:1010 bp-forums/admin/tools.php:1033
-#: bp-forums/admin/tools.php:1088 bp-forums/admin/tools.php:1133
-#: bp-forums/admin/tools.php:1189
+#: bp-core/admin/bp-core-admin-tools.php:994 bp-forums/admin/tools.php:229
+#: bp-forums/admin/tools.php:272 bp-forums/admin/tools.php:298
+#: bp-forums/admin/tools.php:465 bp-forums/admin/tools.php:510
+#: bp-forums/admin/tools.php:555 bp-forums/admin/tools.php:600
+#: bp-forums/admin/tools.php:662 bp-forums/admin/tools.php:723
+#: bp-forums/admin/tools.php:784 bp-forums/admin/tools.php:946
+#: bp-forums/admin/tools.php:1003 bp-forums/admin/tools.php:1026
+#: bp-forums/admin/tools.php:1081 bp-forums/admin/tools.php:1126
+#: bp-forums/admin/tools.php:1182 bp-forums/core/capabilities.php:600
 msgid "Complete!"
 msgstr ""
 
@@ -2718,7 +2718,7 @@ msgstr ""
 msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-tools.php:1014
+#: bp-core/admin/bp-core-admin-tools.php:1014 bp-forums/admin/tools.php:1397
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
@@ -7198,7 +7198,7 @@ msgstr ""
 msgid "Forum draft updated. <a target=\"_blank\" href=\"%s\">Preview forum</a>"
 msgstr ""
 
-#: bp-forums/admin/functions.php:240 bp-forums/admin/tools.php:1260
+#: bp-forums/admin/functions.php:240 bp-forums/admin/tools.php:1253
 msgid "Reset Forums"
 msgstr ""
 
@@ -7667,7 +7667,7 @@ msgstr ""
 msgid "Single Forum Slugs"
 msgstr ""
 
-#: bp-forums/admin/settings.php:63 bp-forums/admin/tools.php:420
+#: bp-forums/admin/settings.php:63 bp-forums/admin/tools.php:413
 msgid "Group Forums"
 msgstr ""
 
@@ -8170,291 +8170,285 @@ msgstr ""
 msgid "Relationships to Repair:"
 msgstr ""
 
-#: bp-forums/admin/tools.php:64
-msgid ""
-"Some of these tools utilize substantial database resources. Avoid running "
-"more than 1 repair job at a time."
-msgstr ""
-
-#: bp-forums/admin/tools.php:163
+#: bp-forums/admin/tools.php:156
 msgid "Recalculate the parent discussion for each post"
 msgstr ""
 
-#: bp-forums/admin/tools.php:164
+#: bp-forums/admin/tools.php:157
 msgid "Recalculate the parent forum for each post"
 msgstr ""
 
-#: bp-forums/admin/tools.php:165
+#: bp-forums/admin/tools.php:158
 msgid "Recalculate private and hidden forums"
 msgstr ""
 
-#: bp-forums/admin/tools.php:166
+#: bp-forums/admin/tools.php:159
 msgid "Recalculate last activity in each discussion and forum"
 msgstr ""
 
-#: bp-forums/admin/tools.php:167
+#: bp-forums/admin/tools.php:160
 msgid "Recalculate the sticky relationship of each discussion"
 msgstr ""
 
-#: bp-forums/admin/tools.php:168
+#: bp-forums/admin/tools.php:161
 msgid "Recalculate the position of each reply"
 msgstr ""
 
-#: bp-forums/admin/tools.php:169
+#: bp-forums/admin/tools.php:162
 msgid "Repair social group forum relationships"
 msgstr ""
 
-#: bp-forums/admin/tools.php:170
+#: bp-forums/admin/tools.php:163
 msgid "Count discussions in each forum"
 msgstr ""
 
-#: bp-forums/admin/tools.php:171
+#: bp-forums/admin/tools.php:164
 msgid "Count replies in each forum"
 msgstr ""
 
-#: bp-forums/admin/tools.php:172
+#: bp-forums/admin/tools.php:165
 msgid "Count replies in each discussion"
 msgstr ""
 
-#: bp-forums/admin/tools.php:173
+#: bp-forums/admin/tools.php:166
 msgid "Count members in each discussion"
 msgstr ""
 
-#: bp-forums/admin/tools.php:174
+#: bp-forums/admin/tools.php:167
 msgid "Count spammed & trashed replies in each discussion"
 msgstr ""
 
-#: bp-forums/admin/tools.php:175
+#: bp-forums/admin/tools.php:168
 msgid "Count discussions for each user"
 msgstr ""
 
-#: bp-forums/admin/tools.php:176
+#: bp-forums/admin/tools.php:169
 msgid "Count replies for each user"
 msgstr ""
 
-#: bp-forums/admin/tools.php:177
+#: bp-forums/admin/tools.php:170
 msgid "Remove trashed discussions from user favorites"
 msgstr ""
 
-#: bp-forums/admin/tools.php:178
+#: bp-forums/admin/tools.php:171
 msgid "Remove trashed discussions from user subscriptions"
 msgstr ""
 
-#: bp-forums/admin/tools.php:179
+#: bp-forums/admin/tools.php:172
 msgid "Remove trashed forums from user subscriptions"
 msgstr ""
 
-#: bp-forums/admin/tools.php:180
+#: bp-forums/admin/tools.php:173
 msgid "Remap existing users to default forum roles"
 msgstr ""
 
-#: bp-forums/admin/tools.php:181
+#: bp-forums/admin/tools.php:174
 msgid "Remove and restore Wordpress default role capabilities"
 msgstr ""
 
-#: bp-forums/admin/tools.php:201
+#: bp-forums/admin/tools.php:194
 msgid "Counting the number of replies in each discussion&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:252
+#: bp-forums/admin/tools.php:245
 msgid "Counting the number of members in each discussion&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:294
+#: bp-forums/admin/tools.php:287
 msgid ""
 "Counting the number of spammed and trashed replies in each "
 "discussion&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:319
+#: bp-forums/admin/tools.php:312
 msgid "Repairing BuddyBoss group-forum relationships&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:421
+#: bp-forums/admin/tools.php:414
 msgid "group-forums"
 msgstr ""
 
-#: bp-forums/admin/tools.php:437
+#: bp-forums/admin/tools.php:430
 msgid "Complete! %s groups updated; %s forums updated; %s forum statuses synced."
 msgstr ""
 
-#: bp-forums/admin/tools.php:456
+#: bp-forums/admin/tools.php:449
 msgid "Counting the number of discussions in each forum&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:490
+#: bp-forums/admin/tools.php:483
 msgid "Counting the number of replies in each forum&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:533
+#: bp-forums/admin/tools.php:526
 msgid "Counting the number of discussions each user has created&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:578
+#: bp-forums/admin/tools.php:571
 msgid "Counting the number of discussions to which each user has replied&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:623
+#: bp-forums/admin/tools.php:616
 msgid "Removing trashed discussions from user favorites&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:653 bp-forums/admin/tools.php:714
-#: bp-forums/admin/tools.php:775
+#: bp-forums/admin/tools.php:646 bp-forums/admin/tools.php:707
+#: bp-forums/admin/tools.php:768
 msgid "Nothing to remove!"
 msgstr ""
 
-#: bp-forums/admin/tools.php:685
+#: bp-forums/admin/tools.php:678
 msgid "Removing trashed discussions from user subscriptions&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:746
+#: bp-forums/admin/tools.php:739
 msgid "Removing trashed forums from user subscriptions&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:808
+#: bp-forums/admin/tools.php:801
 msgid "Remapping forum role for each user on this site&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:846
+#: bp-forums/admin/tools.php:839
 msgid "Complete! %s users updated."
 msgstr ""
 
-#: bp-forums/admin/tools.php:862
+#: bp-forums/admin/tools.php:855
 msgid "Recomputing latest post in every discussion and forum&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:968
+#: bp-forums/admin/tools.php:961
 msgid "Repairing the sticky discussion to the parent forum relationships&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1025
+#: bp-forums/admin/tools.php:1018
 msgid "Recalculating forum visibility &hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1049
+#: bp-forums/admin/tools.php:1042
 msgid "Recalculating the forum for each post &hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1103
+#: bp-forums/admin/tools.php:1096
 msgid "Recalculating the discussion for each post &hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1150
+#: bp-forums/admin/tools.php:1143
 msgid "Recalculating reply menu order &hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1151
+#: bp-forums/admin/tools.php:1144
 msgid "No reply positions to recalculate!"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1216
+#: bp-forums/admin/tools.php:1209
 msgid ""
 "Revert your forums back to a brand new installation. This process cannot be "
 "undone."
 msgstr ""
 
-#: bp-forums/admin/tools.php:1217
+#: bp-forums/admin/tools.php:1210
 msgid "Backup your database before proceeding."
 msgstr ""
 
-#: bp-forums/admin/tools.php:1223
+#: bp-forums/admin/tools.php:1216
 msgid "The following data will be removed:"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1228 bp-forums/admin.php:228
+#: bp-forums/admin/tools.php:1221 bp-forums/admin.php:228
 #: bp-forums/admin.php:320
 #: bp-forums/templates/default/bbpress/content-statistics.php:36
 #: bp-forums/topics/template.php:3282
 msgid "Discussion Tags"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1229
+#: bp-forums/admin/tools.php:1222
 msgid "Related Meta Data"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1230
+#: bp-forums/admin/tools.php:1223
 msgid "Forum Settings"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1231
+#: bp-forums/admin/tools.php:1224
 msgid "Forum Activity"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1232
+#: bp-forums/admin/tools.php:1225
 msgid "Forum User Roles"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1233
+#: bp-forums/admin/tools.php:1226
 msgid "Importer Helper Data"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1237
+#: bp-forums/admin/tools.php:1230
 msgid "Delete imported users?"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1240 bp-forums/admin/tools.php:1250
+#: bp-forums/admin/tools.php:1233 bp-forums/admin/tools.php:1243
 msgid "Say it ain't so!"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1241
+#: bp-forums/admin/tools.php:1234
 msgid "This option will delete all previously imported users, and cannot be undone."
 msgstr ""
 
-#: bp-forums/admin/tools.php:1242
+#: bp-forums/admin/tools.php:1235
 msgid ""
 "Note: Resetting without this checked will delete the meta-data necessary to "
 "delete these users."
 msgstr ""
 
-#: bp-forums/admin/tools.php:1247
+#: bp-forums/admin/tools.php:1240
 msgid "Are you sure you want to do this?"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1251
+#: bp-forums/admin/tools.php:1244
 msgid "This process cannot be undone."
 msgstr ""
 
-#: bp-forums/admin/tools.php:1252
+#: bp-forums/admin/tools.php:1245
 msgid "Human sacrifice, dogs and cats living together&hellip;mass hysteria!"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1293
+#: bp-forums/admin/tools.php:1286
 msgid "Failed"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1294
+#: bp-forums/admin/tools.php:1287
 msgid "Success!"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1301
+#: bp-forums/admin/tools.php:1294
 msgid "Deleting Posts&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1314
+#: bp-forums/admin/tools.php:1307
 msgid "Deleting Post Meta&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1323
+#: bp-forums/admin/tools.php:1316
 msgid "Deleting Discussions Tags&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1338
+#: bp-forums/admin/tools.php:1331
 msgid "Deleting User&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1343 bp-forums/admin/tools.php:1351
+#: bp-forums/admin/tools.php:1336 bp-forums/admin/tools.php:1344
 msgid "Deleting User Meta&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1359
+#: bp-forums/admin/tools.php:1352
 msgid "Deleting Conversion Table&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1371
+#: bp-forums/admin/tools.php:1364
 msgid "Deleting Settings&hellip; %s"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1377
+#: bp-forums/admin/tools.php:1370
 msgid "Deleting Roles and Capabilities&hellip; %s"
 msgstr ""
 

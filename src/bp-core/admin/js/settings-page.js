@@ -546,8 +546,6 @@
 					BbToolsForumsRepairActions.push($(this).val());
 				});
 
-				console.log( BbToolsForumsRepairActions);
-
 				if ( BbToolsForumsRepairActions.length ) {
 					$( 'body .section-repair_forums .settings fieldset .submit a').addClass( 'disable-btn' );
 					$( 'body .section-repair_forums .settings fieldset .checkbox code').remove();
