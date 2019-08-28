@@ -433,7 +433,7 @@
 		if ( $( '#bp-tools-submit' ).length ) {
 
 			var bp_admin_repair_tools_wrapper_function = function( offset, currentAction ) {
-				$( 'body .section-repair_community .settings fieldset .checkbox label[for="'+BbToolsCommunityRepairActions[currentAction]+'"]').append('<div class="loader"></div>');
+				$( 'body .section-repair_community .settings fieldset .checkbox label[for="'+BbToolsCommunityRepairActions[currentAction]+'"]').append('<div class="loader-repair-tools"></div>');
 				$.ajax({
 					'url' : BP_ADMIN.ajax_url,
 					'method' : 'POST',
@@ -446,12 +446,12 @@
 					'success' : function( response ) {
 						if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
 							if ( 'running' === response.data.status ) {
-								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader').remove();
+								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
 								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code').remove();
 								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]').append('<code>' + response.data.records + '</code>');
 								bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
 							} else {
-								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader').remove();
+								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
 								$( '.section-repair_community .settings fieldset' ).append( '<div class="updated"><p>' + response.data.message + '</p></div>');
 								currentAction = currentAction + 1;
 								bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
