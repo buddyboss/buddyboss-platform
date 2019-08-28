@@ -2820,33 +2820,3 @@ function bp_core_performance_settings_admin_tabs( $active_tab = '' ) {
 	 */
 	do_action( 'bp_performance_settings_admin_tabs' );
 }
-
-/**
- * Get the data for the performance tabs in the admin area.
- *
- * @since BuddyBoss 1.1.7
- *
- * @param string $active_tab Name of the tab that is active. Optional.
- * @return string
- */
-function bp_core_get_performance_settings_admin_tabs( $active_tab = '' ) {
-
-	// Tabs for the BuddyBoss > Performance
-	$tabs = array(
-		'0' => array(
-			'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-performance', 'tab' => 'bp-performance'  ), 'admin.php' ) ),
-			'name' => __( 'OpCache', 'buddyboss' ),
-			'slug' => 'bp-performance'
-		)
-	);
-
-
-	/**
-	 * Filters the tab data used in our wp-admin screens.
-	 *
-	 * @since BuddyBoss 1.1.8
-	 *
-	 * @param array $tabs Tab data.
-	 */
-	return apply_filters( 'bp_core_get_performance_settings_admin_tabs', $tabs );
-}
