@@ -1445,7 +1445,7 @@ window.bp = window.bp || {};
 			}
 		},
 		/**
-		 * Lazy Load Images of Activity Feed
+		 * Lazy Load Images and iframes
 		 * @param event
 		 */
 		lazyLoad: function( lazyTarget ){
@@ -1470,6 +1470,12 @@ window.bp = window.bp || {};
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
 						lazy[i].removeAttribute('data-src');
+
+						//load iframe in correct dimension
+						if(lazy[i].getAttribute('data-lazy-type') == 'iframe' && window.BuddyBossTheme.bbFitVideo){
+							window.BuddyBossTheme.bbFitVideo();
+						}
+						
 					}
 				}
 				cleanLazy();
