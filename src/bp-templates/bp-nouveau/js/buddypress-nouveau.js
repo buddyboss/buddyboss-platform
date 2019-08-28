@@ -1469,7 +1469,10 @@ window.bp = window.bp || {};
 
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
-						lazy[i].removeAttribute('data-src');						
+						lazy[i].removeAttribute('data-src');
+
+						// Inform other scripts about the lazy load.
+						$( document ).trigger( 'bp_nouveau_lazy_load', { element: lazy[i] } );
 					}
 				}
 				cleanLazy();
