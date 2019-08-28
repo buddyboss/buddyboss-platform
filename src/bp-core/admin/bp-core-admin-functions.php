@@ -629,11 +629,16 @@ function bp_core_get_admin_tabs( $active_tab = '' ) {
 			'class' => 'bp-tools',
 		),
 		'5' => array(
+			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance' ), 'admin.php' ) ),
+			'name'  => __( 'Performance', 'buddyboss' ),
+			'class' => 'bp-performance',
+		),
+		'6' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-help' ), 'admin.php' ) ),
 			'name'  => __( 'Help', 'buddyboss' ),
 			'class' => 'bp-help',
 		),
-		'6' => array(
+		'7' => array(
 			'href'  => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-credits' ), 'admin.php' ) ),
 			'name'  => __( 'Credits', 'buddyboss' ),
 			'class' => 'bp-credits',
@@ -2765,3 +2770,83 @@ function bp_change_forum_slug_quickedit_save_page( $post_id, $post ) {
 
 // Set the forum slug on edit page from backend.
 add_action( 'save_post', 'bp_change_forum_slug_quickedit_save_page', 10, 2 );
+
+/**
+ * Output the performance tabs in the admin area.
+ *
+ * @since BuddyBoss 1.1.8
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ */
+function bp_core_performance_settings_admin_tabs( $active_tab = '' ) {
+
+	$tabs_html    = '';
+	$idle_class   = '';
+	$active_class = 'current';
+	$active_tab   = isset( $_GET['tab'] ) ? $_GET['tab'] : 'bp-performance';
+
+	/**
+	 * Filters the admin tabs to be displayed.
+	 *
+	 * @since BuddyBoss 1.1.8
+	 *
+	 * @param array $value Array of tabs to output to the admin area.
+	 */
+	$tabs         = apply_filters( 'bp_core_performance_settings_admin_tabs', bp_core_get_performance_settings_admin_tabs( $active_tab ) );
+
+	$count = count( array_values( $tabs ) );
+	$i     = 1;
+
+	// Loop through tabs and build navigation.
+	foreach ( array_values( $tabs ) as $tab_data ) {
+
+		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
+		$tab_class  = $is_current ? $active_class : $idle_class;
+		if ( $i === $count ) {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a></li>';
+		} else {
+			$tabs_html .= '<li><a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a> |</li>';
+		}
+
+		$i = $i + 1;
+	}
+
+	echo $tabs_html;
+
+	/**
+	 * Fires after the output of tabs for the admin area.
+	 *
+	 * @since BuddyBoss 1.1.8
+	 */
+	do_action( 'bp_performance_settings_admin_tabs' );
+}
+
+/**
+ * Get the data for the performance tabs in the admin area.
+ *
+ * @since BuddyBoss 1.1.7
+ *
+ * @param string $active_tab Name of the tab that is active. Optional.
+ * @return string
+ */
+function bp_core_get_performance_settings_admin_tabs( $active_tab = '' ) {
+
+	// Tabs for the BuddyBoss > Performance
+	$tabs = array(
+		'0' => array(
+			'href' => get_admin_url( '', add_query_arg( array( 'page' => 'bp-performance', 'tab' => 'bp-performance'  ), 'admin.php' ) ),
+			'name' => __( 'OpCache', 'buddyboss' ),
+			'slug' => 'bp-performance'
+		)
+	);
+
+
+	/**
+	 * Filters the tab data used in our wp-admin screens.
+	 *
+	 * @since BuddyBoss 1.1.8
+	 *
+	 * @param array $tabs Tab data.
+	 */
+	return apply_filters( 'bp_core_get_performance_settings_admin_tabs', $tabs );
+}

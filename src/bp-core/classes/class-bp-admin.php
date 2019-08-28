@@ -116,14 +116,15 @@ class BP_Admin {
 	 * @since BuddyPress 1.6.0
 	 */
 	private function includes() {
-		require( $this->admin_dir . 'bp-core-admin-actions.php'    );
-		require( $this->admin_dir . 'bp-core-admin-settings.php'   );
-		require( $this->admin_dir . 'bp-core-admin-functions.php'  );
-		require( $this->admin_dir . 'bp-core-admin-components.php' );
-		require( $this->admin_dir . 'bp-core-admin-pages.php'      );
-		require( $this->admin_dir . 'bp-core-admin-slugs.php'      );
-		require( $this->admin_dir . 'bp-core-admin-tools.php'      );
-		require( $this->admin_dir . 'bp-core-admin-help.php'       );
+		require( $this->admin_dir . 'bp-core-admin-actions.php'         );
+		require( $this->admin_dir . 'bp-core-admin-settings.php'        );
+		require( $this->admin_dir . 'bp-core-admin-functions.php'       );
+		require( $this->admin_dir . 'bp-core-admin-components.php'      );
+		require( $this->admin_dir . 'bp-core-admin-pages.php'           );
+		require( $this->admin_dir . 'bp-core-admin-slugs.php'           );
+		require( $this->admin_dir . 'bp-core-admin-tools.php'           );
+		require( $this->admin_dir . 'bp-core-admin-performance.php'     );
+		require( $this->admin_dir . 'bp-core-admin-help.php'            );
 	}
 
 	/**
@@ -488,6 +489,15 @@ class BP_Admin {
 			$this->capability,
 			'bp-tools',
 			'bp_core_admin_tools'
+		);
+
+		$hooks[] = add_submenu_page(
+			$this->settings_page,
+			__( 'Performance', 'buddyboss' ),
+			__( 'Performance', 'buddyboss' ),
+			$this->capability,
+			'bp-performance',
+			'bp_core_admin_performance'
 		);
 
 		$hooks[] = add_submenu_page(
