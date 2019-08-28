@@ -596,4 +596,6 @@ function bbp_restore_caps_from_wp_roles() {
 			$wp_role_object->remove_cap($cap);
 		}
 	}
+
+	return array( 'status' => 1 , 'message' => __( 'Complete!', 'buddyboss' ) );
 }
