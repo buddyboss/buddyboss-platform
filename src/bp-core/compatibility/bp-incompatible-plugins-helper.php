@@ -136,3 +136,18 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 }
 
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
+
+/**
+ * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
+ *
+ * Support MemberPress and MemberPress Pro
+ *
+ * @since BuddyBoss 1.1.7
+ */
+function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
+	if ( ! empty( $txn->user_id ) ) {
+		bp_core_map_user_registration( $txn->user_id, true );
+	}
+}
+
+add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
