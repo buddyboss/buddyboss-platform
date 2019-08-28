@@ -254,9 +254,6 @@ function bp_repair_community_submenu_page() {
 
                 </fieldset>
             </form>
-
-            <p class="description"><?php esc_html_e( 'Some of these tools utilize substantial database resources. Avoid running more than 1 repair job at a time.', 'buddyboss' ); ?></p>
-
         </div>
     </div>
 
@@ -399,12 +396,6 @@ function bp_admin_repair_list() {
 			);
 		}
 	}
-
-	$repair_list[102] = array(
-		'bp-repair-nickname-value',
-		__( 'Repair nickname field uppercase letters values.', 'buddyboss' ),
-		'bp_admin_repair_nickname_value',
-	);
 
 	ksort( $repair_list );
 
@@ -1064,8 +1055,6 @@ function bp_admin_repair_tools_wrapper_function() {
 		$status = bp_admin_reinstall_emails();
 	} elseif ( 'bp-assign-member-type' === $type ) {
 		$status = bp_admin_assign_member_type();
-	} elseif ( 'bp-repair-nickname-value' === $type ) {
-		$status = bp_admin_repair_nickname_value();
 	}
 	wp_send_json_success( $status );
 }
