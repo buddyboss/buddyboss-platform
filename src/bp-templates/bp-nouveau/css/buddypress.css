@@ -1897,7 +1897,6 @@ input.search-query-input {
   animation-name: lazyAmination;
   animation-timing-function: linear;
   background: #f6f7f8;
-  background: linear-gradient(to right, #faf9f7 8%, #f3efef 18%, #faf9f7 33%);
   background-size: 800px 104px;
 }
 
