@@ -57,14 +57,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.8 =
 * Profiles - Allow Uppercase letters in Nicknames, and auto-convert them to lowercase for Usernames
-* Profiles - Fixed display of names fields that include unicode characters
+* Profiles - Fixed display of name fields that include unicode characters
 * Profiles - Fixed empty results in Profile Search form for 'Date' field type
 * Groups - When adding a photo, an activity post will now show in the group feed
 * Groups - Fixed loading of group members, when Activity Feeds and Network Search are both disabled
-* Groups - Fixed loading of plugin options added to 'Manage > Details' page
+* Groups - Fixed loading of 3rd party plugin options added to 'Manage > Details' group page
 * Blog - Fixed conflict with WordPress 'Categories' widget on blog archive
 * Tools - 'Repair Community' tool now runs in batch processes via AJAX
 * Tools - 'Repair Forums' tool now runs in batch processes via AJAX
+* Compatibility - Improved support for 'BuddyPress for LearnDash' plugin
 
 = 1.1.7 =
 * Profiles - Fixed issues with duplicate Name fields in some installations
