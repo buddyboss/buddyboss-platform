@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed 'Date' field type results in Profile Search form
 * Groups - When adding a photo, an activity post will now show in the group feed
 * Groups - Fixed loading of group members, when Activity Feeds and Network Search are both disabled
+* Groups - Fixed loading of plugin options added to 'Manage > Details' page
 * Blog - Fixed conflict with WordPress 'Categories' widget on blog archive
 
 = 1.1.7 =
