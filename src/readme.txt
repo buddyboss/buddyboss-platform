@@ -58,7 +58,6 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.8 =
 * Groups - When adding a photo, an activity post will now show in the group feed
 * Groups - Fixed loading of group members, when Activity Feeds and Network Search are both disabled
-* Messages - Fixed auto-loading the Compose screen when clicking a member's 'Message' button from mobile
 * Blog - Fixed conflict with WordPress 'Categories' widget on blog archive
 
 = 1.1.7 =
