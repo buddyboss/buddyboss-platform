@@ -2352,11 +2352,12 @@ add_action( 'login_form_bp-resend-activation', 'bp_members_login_resend_activati
  */
 function bp_core_wpsignup_redirect() {
 
-	// Bail if user register via LearnDash Register Modal.
-	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-		if ( isset( $_POST ) && 'true' === $_POST['learndash-registration-form'] ) {
-			return;
-		}
+	$redirect = true;
+
+	$redirect = apply_filters('bp_core_before_wpsignup_redirect', $redirect );
+
+	if ( ! $redirect ) {
+		return;
 	}
 
 	// Bail in admin or if custom signup page is broken.
