@@ -1,6 +1,8 @@
 /* global BP_ADMIN */
 (function() {
 	var $ = jQuery.noConflict();
+	var BbToolsCommunityRepairActions = [];
+	var BbToolsForumsRepairActions = [];
 
 	$(function() {
 		$('[data-run-js-condition]').each(function() {
@@ -319,7 +321,7 @@
 				return false;
 			} );
 		}
-        
+
         var doFitVids = function() {
             setTimeout(function () {
                 $( 'iframe[src*="youtube"], iframe[src*="vimeo"]' ).parent().fitVids();
@@ -426,6 +428,129 @@
 					$('.first-last-name-options').hide();
 				}
 
+			});
+		}
+
+		if ( $( '#bp-tools-submit' ).length ) {
+
+			var bp_admin_repair_tools_wrapper_function = function( offset, currentAction ) {
+				$( 'body .section-repair_community .settings fieldset .checkbox label[for="'+BbToolsCommunityRepairActions[currentAction]+'"]').append('<div class="loader-repair-tools"></div>');
+				$.ajax({
+					'url' : BP_ADMIN.ajax_url,
+					'method' : 'POST',
+					'data' : {
+						'action' : 'bp_admin_repair_tools_wrapper_function',
+						'type' : BbToolsCommunityRepairActions[currentAction],
+						'offset' : offset,
+						'nonce' : $( 'body .section-repair_community .settings fieldset .submit input[name="_wpnonce"]').val()
+					},
+					'success' : function( response ) {
+						if ( typeof response.success !== 'undefined' && typeof response.data !== 'undefined' ) {
+							if ( 'running' === response.data.status ) {
+								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] code').remove();
+								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]').append('<code>' + response.data.records + '</code>');
+								bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
+							} else {
+								$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+								$( '.section-repair_community .settings fieldset' ).append( '<div class="updated"><p>' + response.data.message + '</p></div>');
+								currentAction = currentAction + 1;
+								bp_admin_repair_tools_wrapper_function( response.data.offset, currentAction );
+							}
+							if ( BbToolsCommunityRepairActions.length === currentAction ) {
+								$( 'body .section-repair_community .settings fieldset .submit a').removeClass( 'disable-btn' );
+							}
+						}
+					},
+					'error' : function() {
+						$( 'body .section-repair_community .settings fieldset .submit a').removeClass( 'disable-btn' );
+						return false;
+					}
+				});
+			};
+
+			$( document ).on( 'click', '#bp-tools-submit', function( e ) {
+				e.preventDefault();
+
+				BbToolsCommunityRepairActions = [];
+
+				setTimeout(function () {
+					$( 'body .section-repair_community .settings fieldset .updated').remove();
+				}, 500);
+
+				$.each($('.section-repair_community .settings fieldset .checkbox input[class="checkbox"]:checked'), function(){
+					BbToolsCommunityRepairActions.push($(this).val());
+				});
+
+				if ( BbToolsCommunityRepairActions.length ) {
+					$( 'body .section-repair_community .settings fieldset .submit a').addClass( 'disable-btn' );
+					$( 'body .section-repair_community .settings fieldset .checkbox code').remove();
+					bp_admin_repair_tools_wrapper_function(1, 0 );
+				}
+			});
+		}
+
+		if ( $( '#bp-tools-forum-submit' ).length ) {
+			var bp_admin_forum_repair_tools_wrapper_function = function( offset, currentAction ) {
+				$( 'body .section-repair_forums .settings fieldset .checkbox label[for="'+BbToolsForumsRepairActions[currentAction]+'"]').append('<div class="loader-repair-tools"></div>');
+				if ( typeof BbToolsForumsRepairActions[currentAction] !== 'undefined' ) {
+					$.ajax({
+						'url': BP_ADMIN.ajax_url,
+						'method': 'POST',
+						'data': {
+							'action': 'bp_admin_forum_repair_tools_wrapper_function',
+							'type': BbToolsForumsRepairActions[currentAction],
+							'offset': offset,
+							'nonce': $('body .section-repair_forums .settings fieldset .submit input[name="_wpnonce"]').val()
+						},
+						'success': function (response) {
+							if (typeof response.success !== 'undefined' && typeof response.data !== 'undefined') {
+								if ('running' === response.data.status) {
+									$('body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+									$('body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"] code').remove();
+									$('body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"]').append('<code>' + response.data.records + '</code>');
+									bp_admin_forum_repair_tools_wrapper_function(response.data.offset, currentAction);
+								} else {
+									$('body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"] .loader-repair-tools').remove();
+									if ( response.data.status === 0 ) {
+										$('.section-repair_forums .settings fieldset').append('<div class="error"><p>' + response.data.message + '</p></div>');
+									} else {
+										$('.section-repair_forums .settings fieldset').append('<div class="updated"><p>' + response.data.message + '</p></div>');
+									}
+									currentAction = currentAction + 1;
+									bp_admin_forum_repair_tools_wrapper_function(response.data.offset, currentAction);
+								}
+								if (BbToolsForumsRepairActions.length === currentAction) {
+									$('body .section-repair_forums .settings fieldset .submit a').removeClass('disable-btn');
+								}
+							}
+						},
+						'error': function () {
+							$('body .section-repair_forums .settings fieldset .submit a').removeClass('disable-btn');
+							return false;
+						}
+					});
+				}
+			};
+
+			$( document ).on( 'click', '#bp-tools-forum-submit', function( e ) {
+				e.preventDefault();
+
+				BbToolsForumsRepairActions = [];
+
+				setTimeout(function () {
+					$( 'body .section-repair_forums .settings fieldset .updated').remove();
+				}, 500);
+
+				$.each($('.section-repair_forums .settings fieldset .checkbox input[class="checkbox"]:checked'), function(){
+					BbToolsForumsRepairActions.push($(this).val());
+				});
+
+				if ( BbToolsForumsRepairActions.length ) {
+					$( 'body .section-repair_forums .settings fieldset .submit a').addClass( 'disable-btn' );
+					$( 'body .section-repair_forums .settings fieldset .checkbox code').remove();
+					bp_admin_forum_repair_tools_wrapper_function(1, 0 );
+				}
 			});
 		}
 
