@@ -56,7 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.8 =
-* Forums - Fixed HTML attributes when replying as non-admin
+* Groups - When adding a photo, an activity post will now show in the group feed
 
 = 1.1.7 =
 * Profiles - Fixed issues with duplicate Name fields in some installations
