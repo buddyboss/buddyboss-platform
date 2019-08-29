@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.8 =
+* Forums - Fixed HTML attributes when replying as non-admin
 
 = 1.1.7 =
 * Profiles - Fixed issues with duplicate Name fields in some installations
