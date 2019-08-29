@@ -246,12 +246,3 @@ function learndash_integration_prepare_price_str( $price ) {
 
 	return '';
 }
-
-add_filter( 'bp_core_before_wpsignup_redirect', 'ld_register_redirect', 999 );
-function ld_register_redirect( $redirect ) {
-	if ( $redirect && isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) && 'true' === $_POST['learndash-registration-form'] ) {
-		$redirect = false;
-	}
-
-	return $redirect;
-}

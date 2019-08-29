@@ -2353,7 +2353,6 @@ add_action( 'login_form_bp-resend-activation', 'bp_members_login_resend_activati
 function bp_core_wpsignup_redirect() {
 
 	$redirect = true;
-
 	$redirect = apply_filters('bp_core_before_wpsignup_redirect', $redirect );
 
 	if ( ! $redirect ) {
