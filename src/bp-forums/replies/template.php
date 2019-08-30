@@ -606,6 +606,15 @@ function bbp_reply_content( $reply_id = 0 ) {
 
 		$content = get_post_field( 'post_content', $reply_id );
 
+		// Check is ajax request
+		if ( wp_doing_ajax() ) {
+			$content = apply_filters( 'bbp_get_pre_reply_content', $content, $reply_id );
+			global $wp_embed;
+			if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
+				add_filter( 'bbp_get_pre_reply_content', array( $wp_embed, 'autoembed' ), 2 );
+			}
+		}
+
 		return apply_filters( 'bbp_get_reply_content', $content, $reply_id );
 	}
 
