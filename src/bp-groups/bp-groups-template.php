@@ -4767,6 +4767,11 @@ function bp_group_member_joined_since( $args = array() ) {
 			'relative' => true,
 		), 'group_member_joined_since' );
 
+		// Set user date to user registered date when date_modified is 0000-00-00 00:00:00
+		if( strtotime( $members_template->member->date_modified ) < 0 ) {
+			$members_template->member->date_modified = $members_template->member->user_registered;
+		}
+
 		// We do not want relative time, so return now.
 		// @todo Should the 'bp_get_group_member_joined_since' filter be applied here?
 		if ( ! $r['relative'] ) {
