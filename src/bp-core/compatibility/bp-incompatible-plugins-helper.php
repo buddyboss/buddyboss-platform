@@ -12,13 +12,6 @@ defined( 'ABSPATH' ) || exit;
 remove_action( 'bp_include', 'bp_follow_init' );
 
 /**
- * Remove bbPress Integration admin init hook action
- *
- * Support bbPress Integration
- */
-remove_action('admin_init','wdm_activation_dependency_check');
-
-/**
  * Remove message of BuddyPress Groups Export & Import
  *
  * Support BuddyPress Groups Export & Import
@@ -31,6 +24,14 @@ remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
  * Support Rank Math SEO
  */
 function bp_helper_plugins_loaded_callback() {
+
+	/**
+	 * Remove bbPress Integration admin init hook action
+	 *
+	 * Support bbPress Integration
+	 */
+	remove_action( 'admin_init', 'wdm_activation_dependency_check' );
+
 	global $bp_plugins;
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
 		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
