@@ -4767,9 +4767,28 @@ function bp_group_member_joined_since( $args = array() ) {
 			'relative' => true,
 		), 'group_member_joined_since' );
 
-		// Set user date to user registered date when date_modified is 0000-00-00 00:00:00
+		/**
+		 * Set user date to user registered date when date_modified is 0000-00-00 00:00:00
+		 * This 0000-00-00 00:00:00 issue will occur only in previously created group via LD > BP group sync functionality.
+		 *
+		 */
 		if( strtotime( $members_template->member->date_modified ) < 0 ) {
-			$members_template->member->date_modified = '';
+
+			global $wpdb;
+
+			// Get current group id.
+			$current_group = bp_get_current_group_id();
+
+			// Get group object.
+			$args = array(
+				'group_id' => $current_group,
+			);
+			$group_obj = groups_get_group( $args );
+
+			$bp_prefix       = bp_core_get_table_prefix();
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp_prefix}bp_groups_members SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", bp_core_current_time(), $current_group, $members_template->member->ID ) );
+
+			$members_template->member->date_modified = $group_obj->date_created;
 		}
 
 		// We do not want relative time, so return now.
