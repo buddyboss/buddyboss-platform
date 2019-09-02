@@ -221,7 +221,7 @@ function bp_search_get_settings_fields() {
 		/**
 		 * Filter to add or remove the Taxonomy from Post Type
 		 *
-		 * @since 1.1.7
+		 * @since 1.1.9
 		 *
 		 * @param array Return the names or objects of the taxonomies which are registered for the requested object or object type
 		 * @param array $post_type Post type

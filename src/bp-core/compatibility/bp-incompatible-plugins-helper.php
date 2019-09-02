@@ -152,7 +152,7 @@ function bp_core_remove_authors_taxonomy_for_co_authors_plus( $taxonomies = arra
  *
  * Support Google Captcha Pro
  *
- * @since BuddyBoss 1.1.7
+ * @since BuddyBoss 1.1.9
  */
 function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_slug ) {
 
