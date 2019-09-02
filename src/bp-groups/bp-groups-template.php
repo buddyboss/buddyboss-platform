@@ -4761,7 +4761,9 @@ function bp_group_member_joined_since( $args = array() ) {
 	 * @return string
 	 */
 	function bp_get_group_member_joined_since( $args = array() ) {
-		global $members_template;
+		global $wpdb, $members_template;
+
+		$bp = buddypress();
 
 		$r = bp_parse_args( $args, array(
 			'relative' => true,
@@ -4774,21 +4776,19 @@ function bp_group_member_joined_since( $args = array() ) {
 		 */
 		if( strtotime( $members_template->member->date_modified ) < 0 ) {
 
-			global $wpdb;
-
 			// Get current group id.
-			$current_group = bp_get_current_group_id();
+			$current_group_id = bp_get_current_group_id();
 
 			// Get group object.
 			$args = array(
-				'group_id' => $current_group,
+				'group_id' => $current_group_id,
 			);
-			$group_obj = groups_get_group( $args );
+			$group = groups_get_group( $args );
 
 			$bp_prefix       = bp_core_get_table_prefix();
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp_prefix}bp_groups_members SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group_obj->date_created, $current_group, $members_template->member->ID ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) );
 
-			$members_template->member->date_modified = $group_obj->date_created;
+			$members_template->member->date_modified = $group->date_created;
 		}
 
 		// We do not want relative time, so return now.
