@@ -209,7 +209,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		// $type will be passed by calling function when needed.
 		switch ( $args['type'] ) {
 			case 'day':
-				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $day, 0, false ), /* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
+				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $day, 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
 
 				for ( $i = 1; $i < 32; ++$i ) {
 					$html .= sprintf( '<option value="%1$s" %2$s>%3$s</option>', (int) $i, selected( $day, $i, false ), (int) $i );
@@ -232,7 +232,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 					__( 'December',  'buddyboss' )
 				);
 
-				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $month, 0, false ), /* translators: no option picked in select box */ __( 'Select Month', 'buddyboss' ) );
+				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $month, 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
 
 				for ( $i = 0; $i < 12; ++$i ) {
 					$html .= sprintf( '<option value="%1$s" %2$s>%3$s</option>', esc_attr( $eng_months[$i] ), selected( $month, $eng_months[$i], false ), $months[$i] );
@@ -240,7 +240,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 			break;
 
 			case 'year':
-				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $year, 0, false ), /* translators: no option picked in select box */ __( 'Select Year', 'buddyboss' ) );
+				$html = sprintf( '<option value="" %1$s>%2$s</option>', selected( $year, 0, false ), /* translators: no option picked in select box */ __( '----', 'buddyboss' ) );
 
 				$settings = $this->get_field_settings( $this->field_obj->id );
 

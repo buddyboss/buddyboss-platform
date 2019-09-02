@@ -1750,6 +1750,8 @@ function bp_core_validate_blog_signup( $blog_url, $blog_title ) {
 function bp_core_signup_user( $user_login, $user_password, $user_email, $usermeta ) {
 	$bp = buddypress();
 
+	$user_login = strtolower( $user_login );
+
 	// We need to cast $user_id to pass to the filters.
 	$user_id = false;
 

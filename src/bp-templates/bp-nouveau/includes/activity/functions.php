@@ -97,7 +97,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			) ),
 			'avatar_width'      => $width,
 			'avatar_height'     => $height,
-			'user_display_name' => bp_get_loggedin_user_fullname(),
+			'user_display_name' => bp_core_get_user_displayname( bp_loggedin_user_id() ),
 			'user_domain'       => bp_loggedin_user_domain(),
 			'avatar_alt'        => sprintf(
 			/* translators: %s = member name */
