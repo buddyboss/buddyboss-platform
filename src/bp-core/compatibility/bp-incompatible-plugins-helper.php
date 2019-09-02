@@ -142,7 +142,7 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
  *
  * Support MemberPress and MemberPress Pro
  *
- * @since BuddyBoss 1.1.7
+ * @since BuddyBoss 1.1.9
  */
 function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
 	if ( ! empty( $txn->user_id ) ) {
