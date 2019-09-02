@@ -4910,10 +4910,6 @@ function bp_activity_action_parse_url() {
 				}
 			}
 
-			if ( empty( $images ) ) {
-				$images = $parser->getAmpImageSources( false );
-			}
-
 			$json_data['title']       = $title;
 			$json_data['description'] = $description;
 			$json_data['images']      = $images;
