@@ -18,43 +18,52 @@ function bp_core_admin_performance() {
 	?>
     <div class="wrap">
         <h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Performance', 'buddyboss' ) ); ?></h2>
+        <form action="" method="post">
+			<?php
+			settings_fields( 'bp-performance' );
+			bp_custom_pages_do_settings_sections( 'bp-performance' );
+
+			printf(
+				'<p class="submit">
+				<input type="submit" name="submit" class="button-primary" value="%s" />
+			</p>',
+				esc_attr__( 'Save Settings', 'buddyboss' )
+			);
+			?>
+        </form>
     </div>
-    <div class="wrap">
 
-        <div class="bp-admin-card section-default_data">
+	<?php
+}
 
-            <h2><?php esc_html_e( 'Object Cache', 'buddyboss' ); ?></h2>
+/**
+ * Caching setting field.
+ *
+ * @since BuddyBoss 1.1.8
+ *
+ */
+function bp_admin_setting_caching_callback() {
+	?>
 
-            <form action="" method="post" id="bp-admin-form" class="bp-admin-form">
+    <input id="bp-enable-caching" name="bp-enable-caching" type="checkbox" value="1" <?php checked( bp_is_caching_enabled() ); ?> />
+    <label for="bp-enable-caching"><?php _e( 'Enable cache using [dropdown] caching method', 'buddyboss' ); ?></label>
+    <p class="description"><?php _e( 'You have <a href="#">APC</a> and <a href="#">Memcached</a> enabled on your server.', 'buddyboss' ); ?></p>
 
-                <fieldset>
+	<?php
+}
 
-                    <?php if ( function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ) : ?>
-                    OPCache Enabled
-                    <?php endif; ?>
+/**
+ * Flush Caching setting field.
+ *
+ * @since BuddyBoss 1.1.8
+ *
+ */
+function bp_performance_flush_cache_callback() {
+	?>
 
-                    <legend><?php esc_html_e( 'Cache to use:', 'buddyboss' ); ?></legend>
+    <p>
+        <a class="button" href="#"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
+    </p>
 
-                    <div class="select">
-                        <label for="bp-object-cache">
-                            <select name="bp-object-cache">
-                                <option <?php echo function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ? '' : 'disabled'; ?> value="opcache"><?php esc_html_e( 'OPCache', 'buddyboss' ) ?></option>
-                                <option <?php echo function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ? '' : 'disabled'; ?> value="apc"><?php esc_html_e( 'APC', 'buddyboss' ) ?></option>
-                                <option <?php echo class_exists( 'Redis' ) ? '' : 'disabled'; ?> value="redis"><?php esc_html_e( 'Redis', 'buddyboss' ) ?></option>
-                                <option <?php echo class_exists( 'Memcache' ) || class_exists( 'Memcached' ) ? '' : 'disabled'; ?> value="memcache"><?php esc_html_e( 'Memcache', 'buddyboss' ) ?></option>
-                            </select>
-                        </label>
-                    </div>
-
-                    <p class="submit">
-                        <input class="button-primary" type="submit" name="bp-performance-submit" value="<?php esc_attr_e( 'Save', 'buddyboss' ); ?>" />
-	                    <?php wp_nonce_field( 'bp-admin-performance-settings' ); ?>
-                    </p>
-
-                </fieldset>
-            </form>
-
-        </div>
-    </div>
 	<?php
 }

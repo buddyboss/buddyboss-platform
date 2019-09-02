@@ -1427,3 +1427,25 @@ function bp_register_confirm_password( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
 }
+
+/**
+ * Is the caching enabled?
+ *
+ * @since BuddyBoss 1.1.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if the cahing is enabled,
+ *              otherwise false.
+ */
+function bp_is_caching_enabled( $default = false ) {
+
+	/**
+	 * Filters whether or not the caching is enabled or not.
+	 *
+	 * @since BuddyBoss 1.1.8
+	 *
+	 * @param bool $value Whether or not caching is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_caching_enabled', (bool) bp_get_option( 'bp-enable-caching', $default ) );
+}
