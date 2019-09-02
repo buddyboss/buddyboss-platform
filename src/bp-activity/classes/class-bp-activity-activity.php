@@ -1339,6 +1339,11 @@ class BP_Activity_Activity {
 			return false;
 		}
 
+		//Delete the media when activity delete
+		if ( function_exists( 'bp_media_delete_activity_media' ) ) {
+            bp_media_delete_activity_media( $activities );
+        }
+
 		/**
 		 * Action to allow intercepting activity items just deleted.
 		 *
@@ -1362,6 +1367,7 @@ class BP_Activity_Activity {
 			$comment_ids = array();
 
 			// Loop through activity ids and attempt to delete comments.
+
 			foreach ( $activity_ids as $activity_id ) {
 
 				// Attempt to delete comments.
@@ -1374,6 +1380,7 @@ class BP_Activity_Activity {
 				if ( ! empty( $comments ) ) {
 					$comment_ids = array_merge( $comment_ids, $comments );
 				}
+				
 			}
 
 			// Merge activity IDs with any deleted comment IDs.
