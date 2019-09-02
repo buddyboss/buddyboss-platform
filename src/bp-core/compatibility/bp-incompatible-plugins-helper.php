@@ -69,7 +69,7 @@ function bp_core_add_buddyboss_menu_for_memberpress_buddypress() {
 	global $bp;
 
 	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
-	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'memberpress-buddypress' ) );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
 	?>
 	<li id="wp-admin-bar-mp-membership" class="menupop">
 		<a class="ab-item" aria-haspopup="true" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/';?>">
@@ -79,17 +79,17 @@ function bp_core_add_buddyboss_menu_for_memberpress_buddypress() {
 			<ul id="wp-admin-bar-mp-membership-default" class="ab-submenu">
 				<li id="wp-admin-bar-mp-info">
 					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/';?>">
-						<?php echo _x( 'Info', 'ui', 'memberpress-buddypress' ); ?>
+						<?php echo _x( 'Info', 'ui', 'buddyboss' ); ?>
 					</a>
 				</li>
 				<li id="wp-admin-bar-mp-subscriptions">
 					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/';?>">
-						<?php echo _x( 'Subscriptions', 'ui', 'memberpress-buddypress' ); ?>
+						<?php echo _x( 'Subscriptions', 'ui', 'buddyboss' ); ?>
 					</a>
 				</li>
 				<li id="wp-admin-bar-mp-payments">
 					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/mp-payments/';?>">
-						<?php echo _x( 'Payments', 'ui', 'memberpress-buddypress' ); ?>
+						<?php echo _x( 'Payments', 'ui', 'buddyboss' ); ?>
 					</a>
 				</li>
 			</ul>
@@ -114,7 +114,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	}
 
 	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
-	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'memberpress-buddypress' ) );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
 	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
 
 	$wp_admin_bar->add_menu( array(
@@ -129,7 +129,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	$wp_admin_bar->add_menu( array(
 		'parent' => $main_slug,
 		'id'     => 'mp-info',
-		'title'  => _x( 'Info', 'ui', 'memberpress-buddypress' ),
+		'title'  => _x( 'Info', 'ui', 'buddyboss' ),
 		'href'   => $bp->loggedin_user->domain . $main_slug . '/'
 	) );
 
@@ -137,7 +137,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	$wp_admin_bar->add_menu( array(
 		'parent' => $main_slug,
 		'id'     => 'mp-subscriptions',
-		'title'  => _x( 'Subscriptions', 'ui', 'memberpress-buddypress' ),
+		'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
 		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/'
 	) );
 
@@ -145,7 +145,7 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	$wp_admin_bar->add_menu( array(
 		'parent' => $main_slug,
 		'id'     => 'mp-payments',
-		'title'  => _x( 'Payments', 'ui', 'memberpress-buddypress' ),
+		'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
 		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/'
 	) );
 
