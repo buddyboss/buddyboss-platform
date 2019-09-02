@@ -471,7 +471,7 @@ function bp_media_delete( $media_id ) {
 	$media = new BP_Media( $media_id );
 
 	//check if user has permission
-	if ( empty( $media->id ) || ( ! current_user_can('administrator' ) && bp_loggedin_user_id() != $media->user_id ) ) {
+	if ( empty( $media->id ) || ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() != $media->user_id ) ) {
 		return false;
 	}
 
@@ -810,7 +810,7 @@ function bp_album_delete( $album_id ) {
 		return false;
 	}
 
-	if ( empty( $album->id ) || ( ! current_user_can('administrator' ) && bp_loggedin_user_id() != $album->user_id ) ) {
+	if ( empty( $album->id ) || ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() != $album->user_id ) ) {
 		return false;
 	}
 
