@@ -221,14 +221,14 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	//public function onMemberRemoved($groupId, $memberId, $groupMemberObject)
-	// {
-	// 	if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
-	// 		return false;
-	// 	}
+	public function onMemberRemoved($groupId, $memberId, $groupMemberObject)
+	 {
+	 	if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
+	 		return false;
+	 	}
 
-	// 	$generator->syncBpMember($memberId, true);
-	// }
+	 	$generator->syncBpMember($memberId, true);
+	 }
 
 	/**
 	 * Check if the user type need to be synced
