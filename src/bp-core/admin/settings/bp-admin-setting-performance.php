@@ -32,6 +32,10 @@ class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 		$args = array();
 		$this->add_field( 'bp-enable-caching', __( 'Database / PHP Cache', 'buddyboss' ), 'bp_admin_setting_caching_callback', 'intval', $args );
 
+		$this->add_field( 'bp-caching-method', __( 'Caching method', 'buddyboss' ), '__return_true', 'intval', [
+			'class' => 'hidden'
+		] );
+
 		// Flush cache
 		$this->add_field( 'bp-flush-cache','', 'bp_performance_flush_cache_callback' );
 	}
