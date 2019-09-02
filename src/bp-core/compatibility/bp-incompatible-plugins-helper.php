@@ -37,9 +37,119 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
 		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus',100 ,2 );
 	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support MemberPress + BuddyPress Integration
+	 */
+	if ( in_array( 'memberpress-buddypress/main.php', $bp_plugins ) ) {
+		/**
+		 * This action is use when admin bar is Enable
+		 */
+		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 100 );
+
+		/**
+		 * This action is use when admin bar is Disable
+		 */
+		add_action( 'buddyboss_theme_after_bb_profile_menu', 'bp_core_add_buddyboss_menu_for_memberpress_buddypress', 100 );
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
+
+/**
+ * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param $menus
+ */
+function bp_core_add_buddyboss_menu_for_memberpress_buddypress() {
+	global $bp;
+
+	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'memberpress-buddypress' ) );
+	?>
+	<li id="wp-admin-bar-mp-membership" class="menupop">
+		<a class="ab-item" aria-haspopup="true" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/';?>">
+			<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo $name;?>
+		</a>
+		<div class="ab-sub-wrapper">
+			<ul id="wp-admin-bar-mp-membership-default" class="ab-submenu">
+				<li id="wp-admin-bar-mp-info">
+					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/';?>">
+						<?php echo _x( 'Info', 'ui', 'memberpress-buddypress' ); ?>
+					</a>
+				</li>
+				<li id="wp-admin-bar-mp-subscriptions">
+					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/';?>">
+						<?php echo _x( 'Subscriptions', 'ui', 'memberpress-buddypress' ); ?>
+					</a>
+				</li>
+				<li id="wp-admin-bar-mp-payments">
+					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/mp-payments/';?>">
+						<?php echo _x( 'Payments', 'ui', 'memberpress-buddypress' ); ?>
+					</a>
+				</li>
+			</ul>
+		</div>
+	</li>
+	<?php
+}
+
+/**
+ * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param $menus
+ */
+function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
+	// Define the WordPress global.
+	global $wp_admin_bar, $bp;
+
+	if ( ! bp_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
+		return;
+	}
+
+	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'memberpress-buddypress' ) );
+	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
+
+	$wp_admin_bar->add_menu( array(
+		'parent'   => $bp->my_account_menu_id,
+		'id'       => $main_slug,
+		'title'    => $name,
+		'href'     => $bp->loggedin_user->domain . $main_slug . '/',
+		'position' => $position,
+	) );
+
+	// add submenu item
+	$wp_admin_bar->add_menu( array(
+		'parent' => $main_slug,
+		'id'     => 'mp-info',
+		'title'  => _x( 'Info', 'ui', 'memberpress-buddypress' ),
+		'href'   => $bp->loggedin_user->domain . $main_slug . '/'
+	) );
+
+	// add submenu item
+	$wp_admin_bar->add_menu( array(
+		'parent' => $main_slug,
+		'id'     => 'mp-subscriptions',
+		'title'  => _x( 'Subscriptions', 'ui', 'memberpress-buddypress' ),
+		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/'
+	) );
+
+	// add submenu item
+	$wp_admin_bar->add_menu( array(
+		'parent' => $main_slug,
+		'id'     => 'mp-payments',
+		'title'  => _x( 'Payments', 'ui', 'memberpress-buddypress' ),
+		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/'
+	) );
+
+}
 
 /**
  * On BuddyPress update
