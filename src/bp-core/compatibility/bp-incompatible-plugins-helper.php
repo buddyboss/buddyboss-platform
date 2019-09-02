@@ -12,6 +12,13 @@ defined( 'ABSPATH' ) || exit;
 remove_action( 'bp_include', 'bp_follow_init' );
 
 /**
+ * Remove bbPress Integration admin init hook action
+ *
+ * Support bbPress Integration
+ */
+remove_action('admin_init','wdm_activation_dependency_check');
+
+/**
  * Remove message of BuddyPress Groups Export & Import
  *
  * Support BuddyPress Groups Export & Import
