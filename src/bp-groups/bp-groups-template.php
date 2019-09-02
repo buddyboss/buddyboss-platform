@@ -4786,7 +4786,7 @@ function bp_group_member_joined_since( $args = array() ) {
 			$group_obj = groups_get_group( $args );
 
 			$bp_prefix       = bp_core_get_table_prefix();
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp_prefix}bp_groups_members SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", bp_core_current_time(), $current_group, $members_template->member->ID ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp_prefix}bp_groups_members SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group_obj->date_created, $current_group, $members_template->member->ID ) );
 
 			$members_template->member->date_modified = $group_obj->date_created;
 		}
