@@ -545,6 +545,11 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 	background-size: 100% 100%;
 }
 
+/* Performance */
+.bp-admin-card.section-bp_performance h2:before {
+	background-image: url(../../images/admin/icons/fontawesome/solid/database.svg);
+}
+
 /*
  * 3.0 Content
  */
