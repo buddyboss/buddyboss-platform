@@ -527,10 +527,38 @@ class ReportsGenerator
 	 */
 	protected function coursePointsEarned($activity)
 	{
-		if ($activity->activity_type !== 'course') {
-			return '-';
+
+		$assignments   = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
+		if ( ! empty( $assignments ) ) {
+			foreach ( $assignments as $assignment ) {
+				$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
+				if ( $assignment_points || learndash_is_assignment_approved_by_meta( $assignment->ID ) ) {
+					if ( $assignment_points ) {
+						return sprintf( esc_html__( '%s/%s', 'platform' ), $assignment_points['current'], $assignment_points['max'] );
+					}
+				}
+			}
 		}
 
-		return $activity->activity_status? get_post_meta($activity->activity_course_id, 'course_points', true) : '0';
+		$post_settings = learndash_get_setting( $activity->post_id );
+
+		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type  ) ) {
+
+			if ( isset( $post_settings['lesson_assignment_points_enabled'] ) && 'on' === $post_settings['lesson_assignment_points_enabled'] && isset( $post_settings['lesson_assignment_points_amount'] ) && $post_settings['lesson_assignment_points_amount'] > 0 ) {
+				return $post_settings['lesson_assignment_points_amount'];
+			} else {
+				return '-';
+			}
+
+		} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
+
+			if ( isset( $post_settings['course_points_enabled'] ) && 'on' === $post_settings['course_points_enabled'] && isset( $post_settings['course_points'] ) && $post_settings['course_points'] > 0 ) {
+				return $post_settings['course_points'];
+			} else {
+				return '-';
+			}
+
+		}
+		return '-';
 	}
 }
