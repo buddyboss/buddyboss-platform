@@ -76,6 +76,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$member_type_key           = bp_get_member_type_key( $member_type_id );
 	$existing_fields_arr       = explode( ',', $existing_fields );
 	$tinymce_added             = filter_input( INPUT_GET, 'tinymce', FILTER_VALIDATE_INT );
+	$signup_group_id           = bp_xprofile_base_group_id();
 
 	$query      = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$member_type_key}' AND object_type = 'field'";
 	$get_db_ids = $wpdb->get_results( $query );
@@ -84,8 +85,11 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	if ( isset( $get_db_ids ) ) {
 		foreach ( $get_db_ids as $id ) {
 			if ( ! in_array( $id->object_id, $existing_fields_arr ) ) {
-				$new_fields[]          = $id->object_id;
-				$existing_fields_arr[] = $id->object_id;
+				$fields = xprofile_get_field( $id->object_id, null, false );
+				if ( $fields->group_id === (int) $id->object_id ) {
+					$new_fields[]          = $id->object_id;
+					$existing_fields_arr[] = $id->object_id;
+				}
 			}
 		}
 	}
@@ -93,7 +97,6 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$existing_fields  = implode( ',', $existing_fields_arr );
 	$include_fields   = implode( ',', $new_fields );
 	$fixed_fields_arr = explode( ',', $existing_fields_fixed_ids );
-	$signup_group_id  = bp_xprofile_base_group_id();
 
 	ob_start();
 
