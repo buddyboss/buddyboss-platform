@@ -1435,10 +1435,10 @@ function bp_register_confirm_password( $default = false ) {
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if the cahing is enabled,
+ * @return bool True if the caching is enabled,
  *              otherwise false.
  */
-function bp_is_caching_enabled( $default = false ) {
+function bp_performance_is_caching_enabled( $default = false ) {
 
 	/**
 	 * Filters whether or not the caching is enabled or not.
@@ -1447,5 +1447,27 @@ function bp_is_caching_enabled( $default = false ) {
 	 *
 	 * @param bool $value Whether or not caching is enabled.
 	 */
-	return (bool) apply_filters( 'bp_is_caching_enabled', (bool) bp_get_option( 'bp-enable-caching', $default ) );
+	return (bool) apply_filters( 'bp_performance_is_caching_enabled', (bool) bp_get_option( 'bp-performance-enable-caching', $default ) );
+}
+
+/**
+ * Get enabled caching method
+ *
+ * @since BuddyBoss 1.1.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return string|bool enabled caching method,
+ *              otherwise false.
+ */
+function bp_performance_enabled_caching_method( $default = false ) {
+
+	/**
+	 * Filters enabled caching method.
+	 *
+	 * @since BuddyBoss 1.1.8
+	 *
+	 * @param string $value Enabled caching method.
+	 */
+	return apply_filters( 'bp_performance_enabled_caching_method', bp_get_option( 'bp-performance-caching-method', $default ) );
 }

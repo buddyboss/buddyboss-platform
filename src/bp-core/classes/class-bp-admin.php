@@ -652,7 +652,6 @@ class BP_Admin {
 		require_once $this->admin_dir . '/settings/bp-admin-setting-forums.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-search.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-media.php';
-		require_once $this->admin_dir . '/settings/bp-admin-setting-performance.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-credit.php';
 		require_once $this->admin_dir . '/settings/bp-admin-setting-invites.php';
 	}

@@ -18,6 +18,7 @@ defined( 'ABSPATH' ) || exit;
 class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 
 	public function initialize() {
+		$this->menu_page = 'bp-performance';
 		$this->tab_label = __( 'Performance', 'buddyboss' );
 		$this->tab_name  = 'bp-performance';
 		$this->tab_order = 0;
@@ -30,14 +31,17 @@ class BP_Admin_Setting_Performance extends BP_Admin_Setting_tab {
 
 		// Caching Settings.
 		$args = array();
-		$this->add_field( 'bp-enable-caching', __( 'Database / PHP Cache', 'buddyboss' ), 'bp_admin_setting_caching_callback', 'intval', $args );
+		$this->add_field( 'bp-performance-enable-caching', __( 'Database / PHP Cache', 'buddyboss' ), 'bp_admin_performance_setting_caching_callback', 'intval', $args );
 
-		$this->add_field( 'bp-caching-method', __( 'Caching method', 'buddyboss' ), '__return_true', 'intval', [
+		$this->add_field( 'bp-performance-caching-method', __( 'Caching method', 'buddyboss' ), '__return_true', 'intval', [
 			'class' => 'hidden'
 		] );
 
 		// Flush cache
-		$this->add_field( 'bp-flush-cache','', 'bp_performance_flush_cache_callback' );
+		$this->add_field( 'bp-performance-flush-cache','', 'bp_performance_flush_cache_callback' );
+
+		// Cache Tutorial
+		$this->add_field( 'bp-performance-cache-tutorial','', 'bp_performance_cache_tutorial' );
 	}
 }
 
