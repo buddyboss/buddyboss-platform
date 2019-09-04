@@ -122,15 +122,15 @@ if(!empty($quiz_attempts_meta)){
                             ?></div>
                         <div class="flip" style="clear: both; display:none;">
 
-                            <div class="learndash_profile_heading course_overview_heading"><?php printf( _x( '%s Progress Overview', 'Course Progress Overview Label', 'buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?></div>
+                            <div class="learndash_profile_heading course_overview_heading"><?php printf( _x( '%s Progress Overview', 'Course Progress Overview Label', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?></div>
 
                             <div>
-                                <dd class="course_progress" title='<?php echo sprintf( __( '%s out of %s steps completed', 'buddypress-learndash' ), $progress['completed'], $progress['total'] ); ?>'>
+                                <dd class="course_progress" title='<?php echo sprintf( __( '%s out of %s steps completed', 'buddyboss' ), $progress['completed'], $progress['total'] ); ?>'>
                                     <div class="course_progress_blue" style='width: <?php echo esc_attr( $progress['percentage'] ); ?>%;'></div>
                                 </dd>
 
                                 <div class="right">
-                                    <?php echo sprintf( __( '%s%% Complete', 'buddypress-learndash' ), $progress['percentage'] ); ?>
+                                    <?php echo sprintf( __( '%s%% Complete', 'buddyboss' ), $progress['percentage'] ); ?>
                                 </div>
                             </div>
 
@@ -139,10 +139,10 @@ if(!empty($quiz_attempts_meta)){
 
                                     <div class="learndash_profile_quiz_heading">
                                         <div class="quiz_title"><?php echo LearnDash_Custom_Label::get_label( 'quizzes' ); ?></div>
-                                        <div class="certificate"><?php _e( 'Certificate', 'buddypress-learndash' ); ?></div>
-                                        <div class="scores"><?php _e( 'Score', 'buddypress-learndash' ); ?></div>
-                                        <div class="statistics"><?php _e( 'Statistics', 'buddypress-learndash' ); ?></div>
-                                        <div class="quiz_date"><?php _e( 'Date', 'buddypress-learndash' ); ?></div>
+                                        <div class="certificate"><?php _e( 'Certificate', 'buddyboss' ); ?></div>
+                                        <div class="scores"><?php _e( 'Score', 'buddyboss' ); ?></div>
+                                        <div class="statistics"><?php _e( 'Statistics', 'buddyboss' ); ?></div>
+                                        <div class="quiz_date"><?php _e( 'Date', 'buddyboss' ); ?></div>
                                     </div>
 
                                     <?php foreach ( $quiz_attempts[ $course_id ] as $k => $quiz_attempt ) : ?>
@@ -179,7 +179,7 @@ if(!empty($quiz_attempts_meta)){
 
                                                 <div class="scores">
                                                     <?php if ( (isset( $quiz_attempt['has_graded'] ) ) && (true === $quiz_attempt['has_graded']) && (true === LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt )) ) : ?>
-                                                        <?php echo _x('Pending', 'Pending Certificate Status Label', 'buddypress-learndash'); ?>
+                                                        <?php echo _x('Pending', 'Pending Certificate Status Label', 'buddyboss'); ?>
                                                     <?php else : ?>
                                                         <?php echo round( $quiz_attempt['percentage'], 2 ); ?>%
                                                     <?php endif; ?>
@@ -215,7 +215,7 @@ if(!empty($quiz_attempts_meta)){
                 </div>
             <?php } 
 		} else { ?>
-			<p class="no-lesson-msg"><strong><?php printf( __('No %s found.','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'courses' ) ); ?></strong></p><?php
+			<p class="no-lesson-msg"><strong><?php printf( __('No %s found.','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'courses' ) ); ?></strong></p><?php
 		} ?>
     </div>
 </div>

@@ -91,7 +91,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 				$user_has_access = $has_access ? "user_has_access" : "user_has_no_access";
 				echo '<div class="learndash ' . $user_has_access . '" id="learndash_post_' . $course_id . '">' . apply_filters( "learndash_content", $content, $post ) . '</div>';
 			} else { ?>
-				<p class="no-lesson-msg"><strong><?php printf( __('This %s has no %s added yet','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'course' ), LearnDash_Custom_Label::label_to_lower( 'lessons' ) ); ?></strong></p><?php
+				<p class="no-lesson-msg"><strong><?php printf( __('This %s has no %s added yet','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'course' ), LearnDash_Custom_Label::label_to_lower( 'lessons' ) ); ?></strong></p><?php
 			}
 		}
 

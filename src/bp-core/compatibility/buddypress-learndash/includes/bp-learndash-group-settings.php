@@ -19,7 +19,7 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 		function __construct() {
 			$args = array(
 				'slug' => 'group-course-settings',
-				'name' => sprintf( __('%s Settings','buddypress-learndash'), LearnDash_Custom_Label::get_label( 'course' ) ),
+				'name' => sprintf( __('%s Settings','buddyboss'), LearnDash_Custom_Label::get_label( 'course' ) ),
 				'enable_nav_item'	=> false
 			);
 			parent::init( $args );
@@ -42,9 +42,9 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 
 			if ( !empty($courses) ) { ?>
 				<div class="bp-learndash-group-course">
-					<h4><?php printf( __('Group %s','buddypress-learndash'), LearnDash_Custom_Label::get_label( 'course' ) ); ?></h4>
+					<h4><?php printf( __('Group %s','buddyboss'), LearnDash_Custom_Label::get_label( 'course' ) ); ?></h4>
 					<select name="bp_group_course" id="bp-group-course">
-						<option value="-1"><?php _e( '--Select--', 'buddypress-learndash' ); ?></option>
+						<option value="-1"><?php _e( '--Select--', 'buddyboss' ); ?></option>
 						<?php
 						foreach ( $courses as $course ) {
 							$group_attached = get_post_meta( $course->ID, 'bp_course_group', true );
@@ -66,18 +66,18 @@ if ( class_exists( 'BP_Group_Extension' ) ) :
 				?>
 				<div class="bp-learndash-course-activity-checkbox">
 					<input type="hidden" name="activity-checkbox-enable" value="1" />
-					<h4><?php printf( __( '%s Activity','buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?></h4>
-					<p><?php printf( __('Which %s activity should be displayed in this group?','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?></p><br/>
-					<input type="checkbox" name="user_course_start" value="true" <?php echo $this->bp_is_checked( 'user_course_start', $bp_learndash_course_activity ); ?>><?php printf( __('User starts a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?><br>
-					<input type="checkbox" name="user_course_end" value="true" <?php echo $this->bp_is_checked( 'user_course_end', $bp_learndash_course_activity ); ?> ><?php printf( __('User completes a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'course' )  ); ?><br>
-					<input type="checkbox" name="user_lesson_start" value="true" <?php echo $this->bp_is_checked( 'user_lesson_start', $bp_learndash_course_activity ); ?> ><?php printf( __('User creates a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'lesson' ) ); ?><br>
-					<input type="checkbox" name="user_lesson_end" value="true" <?php echo $this->bp_is_checked( 'user_lesson_end', $bp_learndash_course_activity ); ?> ><?php printf( __('User completes a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'lesson' )  ); ?><br>
-					<input type="checkbox" name="user_topic_start" value="true" <?php echo $this->bp_is_checked( 'user_topic_start', $bp_learndash_course_activity ); ?> ><?php printf( __('User creates a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'topic' ) ); ?><br>
-					<input type="checkbox" name="user_topic_end" value="true" <?php echo $this->bp_is_checked( 'user_topic_end', $bp_learndash_course_activity ); ?> ><?php printf( __('User completes a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'topic' ) ); ?><br>
-					<input type="checkbox" name="user_quiz_pass" value="true" <?php echo $this->bp_is_checked( 'user_quiz_pass', $bp_learndash_course_activity ); ?> ><?php printf( __('User passes a %s','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'quiz' ) ); ?><br>
-					<input type="checkbox" name="user_topic_comment" value="true" <?php echo $this->bp_is_checked( 'user_topic_comment', $bp_learndash_course_activity ); ?> ><?php printf( __('User comments on single %s page','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'topic' ) ); ?><br>
-					<input type="checkbox" name="user_lesson_comment" value="true" <?php echo $this->bp_is_checked( 'user_lesson_comment', $bp_learndash_course_activity ); ?> ><?php printf( __('User comments on single %s page','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'lesson' ) ); ?><br>
-					<input type="checkbox" name="user_course_comment" value="true" <?php echo $this->bp_is_checked( 'user_course_comment', $bp_learndash_course_activity ); ?> ><?php printf( __('User comments on single %s page','buddypress-learndash'), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?><br>
+					<h4><?php printf( __( '%s Activity','buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ); ?></h4>
+					<p><?php printf( __('Which %s activity should be displayed in this group?','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?></p><br/>
+					<input type="checkbox" name="user_course_start" value="true" <?php echo $this->bp_is_checked( 'user_course_start', $bp_learndash_course_activity ); ?>><?php printf( __('User starts a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?><br>
+					<input type="checkbox" name="user_course_end" value="true" <?php echo $this->bp_is_checked( 'user_course_end', $bp_learndash_course_activity ); ?> ><?php printf( __('User completes a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'course' )  ); ?><br>
+					<input type="checkbox" name="user_lesson_start" value="true" <?php echo $this->bp_is_checked( 'user_lesson_start', $bp_learndash_course_activity ); ?> ><?php printf( __('User creates a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'lesson' ) ); ?><br>
+					<input type="checkbox" name="user_lesson_end" value="true" <?php echo $this->bp_is_checked( 'user_lesson_end', $bp_learndash_course_activity ); ?> ><?php printf( __('User completes a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'lesson' )  ); ?><br>
+					<input type="checkbox" name="user_topic_start" value="true" <?php echo $this->bp_is_checked( 'user_topic_start', $bp_learndash_course_activity ); ?> ><?php printf( __('User creates a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'topic' ) ); ?><br>
+					<input type="checkbox" name="user_topic_end" value="true" <?php echo $this->bp_is_checked( 'user_topic_end', $bp_learndash_course_activity ); ?> ><?php printf( __('User completes a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'topic' ) ); ?><br>
+					<input type="checkbox" name="user_quiz_pass" value="true" <?php echo $this->bp_is_checked( 'user_quiz_pass', $bp_learndash_course_activity ); ?> ><?php printf( __('User passes a %s','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'quiz' ) ); ?><br>
+					<input type="checkbox" name="user_topic_comment" value="true" <?php echo $this->bp_is_checked( 'user_topic_comment', $bp_learndash_course_activity ); ?> ><?php printf( __('User comments on single %s page','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'topic' ) ); ?><br>
+					<input type="checkbox" name="user_lesson_comment" value="true" <?php echo $this->bp_is_checked( 'user_lesson_comment', $bp_learndash_course_activity ); ?> ><?php printf( __('User comments on single %s page','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'lesson' ) ); ?><br>
+					<input type="checkbox" name="user_course_comment" value="true" <?php echo $this->bp_is_checked( 'user_course_comment', $bp_learndash_course_activity ); ?> ><?php printf( __('User comments on single %s page','buddyboss'), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?><br>
 				</div><br/>
 				<?php
 			}

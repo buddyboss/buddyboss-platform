@@ -31,7 +31,7 @@ class BuddyPress_Learndash_Users_Enrollment {
         ?>
 
         <div id="enrollment-notice" class="notice notice-info hidden">
-            <p><span class="spinner"></span><?php _e( '<strong>BuddyPress for Learndash</strong> enrolling users to the course buddypress groups. This can take a while if you have many students(members). Do not navigate away from this page until this is done.', 'buddypress-learndash' ); ?>
+            <p><span class="spinner"></span><?php _e( '<strong>BuddyPress for Learndash</strong> enrolling users to the course buddypress groups. This can take a while if you have many students(members). Do not navigate away from this page until this is done.', 'buddyboss' ); ?>
             </p>
         </div>
         <?php

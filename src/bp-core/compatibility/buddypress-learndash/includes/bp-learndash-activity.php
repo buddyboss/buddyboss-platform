@@ -21,81 +21,81 @@ function bp_learndash_register_activity_actions() {
     bp_activity_set_action(
         $bp->groups->id,
         'started_course',
-        __( 'Started a course', 'buddypress-learndash' ),
+        __( 'Started a course', 'buddyboss' ),
         'bp_learndash_format_activity_action_started_course',
-        __( 'Started Course', 'buddypress-learndash' ),
+        __( 'Started Course', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'created_lesson',
-        __( 'Created a lesson', 'buddypress-learndash' ),
+        __( 'Created a lesson', 'buddyboss' ),
         'bp_learndash_format_activity_action_created_lesson',
-        __( 'New Lessons', 'buddypress-learndash' ),
+        __( 'New Lessons', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'created_topic',
-        __( 'Created a topic', 'buddypress-learndash' ),
+        __( 'Created a topic', 'buddyboss' ),
         'bp_learndash_format_activity_action_created_topic',
-        __( 'New Topics', 'buddypress-learndash' ),
+        __( 'New Topics', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'completed_lesson',
-        __( 'Completed a lesson', 'buddypress-learndash' ),
+        __( 'Completed a lesson', 'buddyboss' ),
         'bp_learndash_format_activity_action_completed_lesson',
-        __( 'Lesson Complete', 'buddypress-learndash' ),
+        __( 'Lesson Complete', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'completed_topic',
-        __( 'Completed a topic', 'buddypress-learndash' ),
+        __( 'Completed a topic', 'buddyboss' ),
         'bp_learndash_format_activity_action_completed_topic',
-        __( 'Topic Complete', 'buddypress-learndash' ),
+        __( 'Topic Complete', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'completed_course',
-        __( 'Completed a course', 'buddypress-learndash' ),
+        __( 'Completed a course', 'buddyboss' ),
         'bp_learndash_format_activity_action_completed_course',
-        __( 'Course Complete', 'buddypress-learndash' ),
+        __( 'Course Complete', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'lesson_comment',
-        __( 'Lesson comment', 'buddypress-learndash' ),
+        __( 'Lesson comment', 'buddyboss' ),
         'bp_learndash_format_activity_action_lesson_comment',
-        __( 'Lesson Comment', 'buddypress-learndash' ),
+        __( 'Lesson Comment', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'course_comment',
-        __( 'Course comment', 'buddypress-learndash' ),
+        __( 'Course comment', 'buddyboss' ),
         'bp_learndash_format_activity_action_course_comment',
-        __( 'Course Comment', 'buddypress-learndash' ),
+        __( 'Course Comment', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
     bp_activity_set_action(
         $bp->groups->id,
         'completed_quiz',
-        __( 'Completed a quiz', 'buddypress-learndash' ),
+        __( 'Completed a quiz', 'buddyboss' ),
         'bp_learndash_format_activity_action_completed_quiz',
-        __( 'Quiz Completed', 'buddypress-learndash' ),
+        __( 'Quiz Completed', 'buddyboss' ),
         array( 'activity', 'member', 'member_groups', 'group' )
     );
 
@@ -122,7 +122,7 @@ function bp_learndash_format_activity_action_created_lesson( $action, $activity 
     $course_link = get_permalink( $course_id );
     $course_link_html = '<a href="' . esc_url( $course_link ) . '">' . $course_title . '</a>';
 
-    $action = sprintf( __('%1$s added the %2$s %3$s to the %4$s %5$s', 'buddypress-learndash'), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html, LearnDash_Custom_Label::label_to_lower( 'course' ), $course_link_html );
+    $action = sprintf( __('%1$s added the %2$s %3$s to the %4$s %5$s', 'buddyboss'), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html, LearnDash_Custom_Label::label_to_lower( 'course' ), $course_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_created_lesson', $action, $activity );
 }
@@ -146,7 +146,7 @@ function bp_learndash_format_activity_action_created_topic( $action, $activity )
     $lesson_link = get_permalink( $lesson_id );
     $lesson_link_html = '<a href="' . esc_url( $lesson_link ) . '">' . $lesson_title . '</a>';
 
-    $action =  sprintf( __( '%1$s added the %2$s %3$s to the %4$s %5$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ), $topic_link_html, LearnDash_Custom_Label::get_label( 'lesson' ), $lesson_link_html );
+    $action =  sprintf( __( '%1$s added the %2$s %3$s to the %4$s %5$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ), $topic_link_html, LearnDash_Custom_Label::get_label( 'lesson' ), $lesson_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_created_topic', $action, $activity );
 }
@@ -166,7 +166,7 @@ function bp_learndash_format_activity_action_completed_lesson( $action, $activit
     $lesson_link = get_permalink( $lesson_id );
     $lesson_link_html = '<a href="' . esc_url( $lesson_link ) . '">' . $lesson_title . '</a>';
 
-    $action = sprintf( __( '%1$s completed the %2$s %3$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html );
+    $action = sprintf( __( '%1$s completed the %2$s %3$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_completed_lesson', $action, $activity );
 }
@@ -186,7 +186,7 @@ function bp_learndash_format_activity_action_completed_topic( $action, $activity
     $topic_link = get_permalink( $topic_id );
     $topic_link_html = '<a href="' . esc_url( $topic_link ) . '">' . $topic_title . '</a>';
 
-    $action = sprintf( __( '%1$s completed the %2$s %3$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ), $topic_link_html );
+    $action = sprintf( __( '%1$s completed the %2$s %3$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ), $topic_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_completed_topic', $action, $activity );
 }
@@ -206,7 +206,7 @@ function bp_learndash_format_activity_action_completed_course( $action, $activit
     $course_link = get_permalink( $course_id );
     $course_link_html = '<a href="' . esc_url( $course_link ) . '">' . $course_title . '</a>';
 
-    $action = sprintf( __( '%1$s completed the course %2$s', 'buddypress-learndash' ), $user_link, $course_link_html );
+    $action = sprintf( __( '%1$s completed the course %2$s', 'buddyboss' ), $user_link, $course_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_completed_course', $action, $activity );
 }
@@ -226,7 +226,7 @@ function bp_learndash_format_activity_action_lesson_comment( $action, $activity 
     $lesson_link = get_permalink( $post_id );
     $lesson_link_html = '<a href="' . esc_url( $lesson_link ) . '">' . $lesson_title . '</a>';
 
-    $action = sprintf( __( '%1$s commented on %2$s %3$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html );
+    $action = sprintf( __( '%1$s commented on %2$s %3$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_lesson_comment', $action, $activity );
 }
@@ -246,7 +246,7 @@ function bp_learndash_format_activity_action_course_comment( $action, $activity 
     $course_link = get_permalink( $post_id );
     $course_link_html = '<a href="' . esc_url( $course_link ) . '">' . $course_title . '</a>';
 
-    $action = sprintf( __( '%1$s commented on course %2$s', 'buddypress-learndash' ), $user_link, $course_link_html );
+    $action = sprintf( __( '%1$s commented on course %2$s', 'buddyboss' ), $user_link, $course_link_html );
 
     return apply_filters( 'bp_learndash_format_activity_action_course_comment', $action, $activity );
 }
@@ -269,7 +269,7 @@ function bp_learndash_format_activity_action_completed_quiz( $action, $activity 
     $quiz_link = get_permalink( $quiz_id );
     $quiz_link_html = '<a href="' . esc_url( $quiz_link ) . '">' . $quiz_title . '</a>';
 
-    $action = sprintf( __( '%1$s has passed the %2$s %3$s with score %4$s', 'buddypress-learndash' ), $user_link, $quiz_link_html, LearnDash_Custom_Label::label_to_lower( 'quiz' ), $quiz_grade );
+    $action = sprintf( __( '%1$s has passed the %2$s %3$s with score %4$s', 'buddyboss' ), $user_link, $quiz_link_html, LearnDash_Custom_Label::label_to_lower( 'quiz' ), $quiz_grade );
 
     return apply_filters( 'bp_learndash_format_activity_action_completed_quiz', $action, $activity );
 }
@@ -289,7 +289,7 @@ function bp_learndash_format_activity_action_started_course( $action, $activity 
     $course_link = get_permalink($course_id);
     $course_link_html = '<a href="' . esc_url($course_link) . '">' . $course_title . '</a>';
 
-    $action = sprintf(__('%1$s started taking the course %2$s', 'buddypress-learndash'), $user_link, $course_link_html);
+    $action = sprintf(__('%1$s started taking the course %2$s', 'buddyboss'), $user_link, $course_link_html);
 
     return apply_filters( 'bp_learndash_format_activity_action_started_course', $action, $activity );
 }

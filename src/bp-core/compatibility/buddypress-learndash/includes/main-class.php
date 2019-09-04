@@ -167,7 +167,7 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Plugin' ) ):
 		 * @since BuddyPress for LearnDash (1.0.0)
 		 */
 		public function __clone() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress-learndash' ), '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.0.0' );
 		}
 
 		/**
@@ -176,7 +176,7 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Plugin' ) ):
 		 * @since BuddyPress for LearnDash (1.0.0)
 		 */
 		public function __wakeup() {
-			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddypress-learndash' ), '1.0.0' );
+			_doing_it_wrong( __FUNCTION__, __( 'Cheatin&#8217; huh?', 'buddyboss' ), '1.0.0' );
 		}
 
 		/**
@@ -339,8 +339,8 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Plugin' ) ):
 		public function bp_learndash_enqueue_styles() {
 
 			// CSS > Main
-			//wp_enqueue_style( 'buddypress-learndash', $this->assets_url . '/css/buddypress-learndash.css', array(), '1.0.2', 'all' );
-			wp_enqueue_style( 'buddypress-learndash', $this->assets_url . '/css/buddypress-learndash.min.css', array(), BP_PLATFORM_VERSION, 'all' );
+			//wp_enqueue_style( 'buddyboss', $this->assets_url . '/css/buddypress-learndash.css', array(), '1.0.2', 'all' );
+			wp_enqueue_style( 'buddyboss', $this->assets_url . '/css/buddypress-learndash.min.css', array(), BP_PLATFORM_VERSION, 'all' );
 
 		}
 

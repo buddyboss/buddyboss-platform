@@ -12,12 +12,12 @@ function bp_learndash_courses_page(){
 
 function bp_learndash_courses_expand(){
     ?>
-    <div class="expand_collapse"><a href="#" onClick="return flip_expand_all('#course_list');"><?php _e('Expand All', 'buddypress-learndash'); ?></a> <span class="sep"><?php _e('/', 'buddypress-learndash'); ?></span> <a href="#" onClick="return flip_collapse_all('#course_list');"><?php _e('Collapse All','buddypress-learndash'); ?></a></div>
+    <div class="expand_collapse"><a href="#" onClick="return flip_expand_all('#course_list');"><?php _e('Expand All', 'buddyboss'); ?></a> <span class="sep"><?php _e('/', 'buddyboss'); ?></span> <a href="#" onClick="return flip_collapse_all('#course_list');"><?php _e('Collapse All','buddyboss'); ?></a></div>
     <?php 
 }
 
 function bp_learndash_courses_page_title(){
-    $title = sprintf( __( 'Registered %s', 'buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
+    $title = sprintf( __( 'Registered %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) );
 	echo apply_filters( 'bp_learndash_courses_page_title',$title );
 }
 

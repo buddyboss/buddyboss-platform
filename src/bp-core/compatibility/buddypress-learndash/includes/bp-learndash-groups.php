@@ -60,7 +60,7 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 			} elseif ( isset( $_POST[ 'post_ID' ] ) ) {
 				$post_id = $_POST[ 'post_ID' ];
 			}
-			add_meta_box( 'bp_course_group', sprintf( __( '%s Group', 'buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'course' ) ), array( $this, 'bp_learndash_metabox_function' ), 'sfwd-courses', 'side', 'core' );
+			add_meta_box( 'bp_course_group', sprintf( __( '%s Group', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) ), array( $this, 'bp_learndash_metabox_function' ), 'sfwd-courses', 'side', 'core' );
 		}
 
 		/**
@@ -78,9 +78,9 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 						) );
 			?>
 
-			<p><?php printf( __( 'Add this %s to a BuddyPress group.', 'buddypress-learndash' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?></p>
+			<p><?php printf( __( 'Add this %s to a BuddyPress group.', 'buddyboss' ), LearnDash_Custom_Label::label_to_lower( 'course' ) ); ?></p>
 			<select name="bp_course_group" id="bp-course-group">
-				<option value="-1"><?php _e( '--Select--', 'buddypress-learndash' ); ?></option>
+				<option value="-1"><?php _e( '--Select--', 'buddyboss' ); ?></option>
 				<?php
 				foreach ( $groups_arr[ 'groups' ] as $group ) {
 					$group_status = groups_get_groupmeta( $group->id, 'bp_course_attached', true );
@@ -88,11 +88,11 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 						continue;
 					}
 
-					?><option value="<?php echo $group->id; ?>" <?php echo (( $course_group == $group->id )) ? 'selected' : ''; ?>><?php _e( $group->name, 'buddypress-learndash' ); ?></option><?php
+					?><option value="<?php echo $group->id; ?>" <?php echo (( $course_group == $group->id )) ? 'selected' : ''; ?>><?php _e( $group->name, 'buddyboss' ); ?></option><?php
 				}
 				?>
 			</select>
-			<h4><a href="<?php echo ( home_url() .'/'. buddypress()->{'groups'}->root_slug .'/create' ); ?>" target="_blank"><?php _e( '&#43; Create New Group', 'buddypress-learndash' ); ?></a></h4><?php
+			<h4><a href="<?php echo ( home_url() .'/'. buddypress()->{'groups'}->root_slug .'/create' ); ?>" target="_blank"><?php _e( '&#43; Create New Group', 'buddyboss' ); ?></a></h4><?php
 		}
 
 		/**
@@ -246,7 +246,7 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Groups' ) ) {
 
 					$group 		= groups_get_group( array( 'group_id' => $group_attached ) );
 					$group_link = bp_get_group_permalink( $group );
-					$html 		= '<p class="bp-group-discussion"><a class="button" href="'. $group_link .'">'. sprintf( __('%s Discussion','buddypress-learndash'), LearnDash_Custom_Label::get_label( 'course' ) ).'</a></p>';
+					$html 		= '<p class="bp-group-discussion"><a class="button" href="'. $group_link .'">'. sprintf( __('%s Discussion','buddyboss'), LearnDash_Custom_Label::get_label( 'course' ) ).'</a></p>';
 
 					$content .= $html;
 				}

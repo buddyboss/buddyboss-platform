@@ -122,7 +122,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 'type' => 'created_lesson',
                 'user_id' => $user_id,
                 'action' => apply_filters( 'bp_learndash_create_lesson_activity',
-                    sprintf( __( '%1$s added the %2$s %3$s to the %4$s %5$s', 'buddypress-learndash' ),
+                    sprintf( __( '%1$s added the %2$s %3$s to the %4$s %5$s', 'buddyboss' ),
                         $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html, LearnDash_Custom_Label::label_to_lower( 'course' ), $course_link_html ), $user_id, $lesson_id ),
 				'item_id' => $group_attached,
 				'secondary_item_id' => $lesson_id,
@@ -189,7 +189,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 'type' => 'created_topic',
                 'user_id' => $user_id,
                 'action' => apply_filters( 'bp_learndash_create_topic_activity',
-                    sprintf( __( '%1$s added the %2$s %3$s to the %4$s %5$s', 'buddypress-learndash' ),
+                    sprintf( __( '%1$s added the %2$s %3$s to the %4$s %5$s', 'buddyboss' ),
                         $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ), $topic_link_html, LearnDash_Custom_Label::get_label( 'lesson' ), $lesson_link_html ), $user_id, $topic_id ),
 				'item_id' => $group_attached,
 				'secondary_item_id' => $topic_id,
@@ -228,7 +228,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                     'type' => 'completed_lesson',
                     'user_id' => $user_id,
                     'action' => apply_filters( 'bp_learndash_user_lesson_end_activity',
-                        sprintf( __( '%1$s completed the %2$s %3$s', 'buddypress-learndash' ),
+                        sprintf( __( '%1$s completed the %2$s %3$s', 'buddyboss' ),
                             $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html ), $user_id, $lesson_id ),
                     'item_id' => $group_attached,
 					'secondary_item_id' => $lesson_id,
@@ -266,7 +266,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                     'type' => 'completed_topic',
                     'user_id' => $user_id,
                     'action' => apply_filters( 'bp_learndash_user_topic_end_activity',
-                        sprintf( __( '%1$s completed the %2$s %3$s', 'buddypress-learndash' ),
+                        sprintf( __( '%1$s completed the %2$s %3$s', 'buddyboss' ),
                             $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ), $topic_link_html ), $user_id, $lesson_id ),
                     'item_id' => $group_attached,
 					'secondary_item_id' => $topic_id,
@@ -303,7 +303,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
 				'type' => 'completed_course',
 				'user_id' => $user_id,
 				'action' => apply_filters( 'bp_learndash_user_course_end_activity',
-					sprintf( __( '%1$s completed the course %2$s', 'buddypress-learndash' ),
+					sprintf( __( '%1$s completed the course %2$s', 'buddyboss' ),
 						$user_link, $course_link_html ), $user_id, $course_id ),
 				'item_id' => $group_attached,
 				'secondary_item_id' => $course_id,
@@ -345,7 +345,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 $lesson_link_html = '<a href="' . esc_url( $lesson_link ) . '">' . $lesson_title . '</a>';
 				$args = array(
 					'type' => 'lesson_comment',
-					'action' => apply_filters( 'bp_learndash_user_lesson_comment_activity', sprintf( __( '%1$s commented on %2$s %3$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html ), $comment_obj->user_id, $course_id ),
+					'action' => apply_filters( 'bp_learndash_user_lesson_comment_activity', sprintf( __( '%1$s commented on %2$s %3$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ), $lesson_link_html ), $comment_obj->user_id, $course_id ),
 					'item_id' => $group_attached,
 					'secondary_item_id' => $post_id,
 					'component' => $bp->groups->id,
@@ -386,7 +386,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 $lesson_link_html = '<a href="' . esc_url( $lesson_link ) . '">' . $lesson_title . '</a>';
 				$args = array(
 					'type' => 'activity_update',
-					'action' => apply_filters( 'bp_learndash_user_lesson_comment_activity', sprintf( __( '%1$s commented on %2$s %3$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ),$lesson_link_html ), $comment_obj->user_id, $course_id ),
+					'action' => apply_filters( 'bp_learndash_user_lesson_comment_activity', sprintf( __( '%1$s commented on %2$s %3$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'topic' ),$lesson_link_html ), $comment_obj->user_id, $course_id ),
 					'item_id' => $group_attached,
 					'component' => $bp->groups->id,
 					'content' => $comment_obj->comment_content
@@ -428,7 +428,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 $lesson_link_html = '<a href="' . esc_url( $lesson_link ) . '">' . $lesson_title . '</a>';
 				$args = array(
 					'type' => 'lesson_comment',
-					'action' => apply_filters( 'bp_learndash_user_lesson_comment_activity', sprintf( __( '%1$s commented on %2$s %3$s', 'buddypress-learndash' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ),  $lesson_link_html ), $comment_obj->user_id, $course_id ),
+					'action' => apply_filters( 'bp_learndash_user_lesson_comment_activity', sprintf( __( '%1$s commented on %2$s %3$s', 'buddyboss' ), $user_link, LearnDash_Custom_Label::label_to_lower( 'lesson' ),  $lesson_link_html ), $comment_obj->user_id, $course_id ),
 					'item_id' => $group_attached,
 					'component' => $bp->groups->id,
 					'secondary_item_id' => $post_id,
@@ -470,7 +470,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 $course_link_html = '<a href="' . esc_url( $course_link ) . '">' . $course_title . '</a>';
 				$args = array(
 					'type' => 'course_comment',
-					'action' => apply_filters( 'bp_learndash_course_comment_activity', sprintf( __( '%1$s commented on course %2$s', 'buddypress-learndash' ), $user_link, $course_link_html ), $comment_obj->user_id, $course_id ),
+					'action' => apply_filters( 'bp_learndash_course_comment_activity', sprintf( __( '%1$s commented on course %2$s', 'buddyboss' ), $user_link, $course_link_html ), $comment_obj->user_id, $course_id ),
 					'item_id' => $group_attached,
 					'secondary_item_id' => $post_id,
 					'component' => $bp->groups->id,
@@ -512,7 +512,7 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
                 $quiz_link_html = '<a href="' . esc_url( $quiz_link ) . '">' . $quiz_title . '</a>';
 				$args = array(
 					'type' => 'completed_quiz',
-					'action' => apply_filters( 'bp_learndash_complete_quiz_activity', sprintf( __( '%1$s has passed the %2$s %3$s with score %4$s', 'buddypress-learndash' ), $user_link, $quiz_link_html, LearnDash_Custom_Label::label_to_lower( 'quiz' ), $quiz_grade ), get_current_user_id(), $quiz_lesson_id ),
+					'action' => apply_filters( 'bp_learndash_complete_quiz_activity', sprintf( __( '%1$s has passed the %2$s %3$s with score %4$s', 'buddyboss' ), $user_link, $quiz_link_html, LearnDash_Custom_Label::label_to_lower( 'quiz' ), $quiz_grade ), get_current_user_id(), $quiz_lesson_id ),
 					'item_id' => $group_attached,
 					'secondary_item_id' => $quiz_id,
 					'component' => $bp->groups->id,
@@ -713,22 +713,22 @@ if( !class_exists('BuddyPress_LearnDash_Loader') ):
         public function bp_learndash_register_member_types() {
             bp_register_member_type( 'student', array(
                 'labels' => array(
-                    'name'          => __( 'Students', 'buddypress-learndash' ),
-                    'singular_name' => __( 'Student', 'buddypress-learndash' ),
+                    'name'          => __( 'Students', 'buddyboss' ),
+                    'singular_name' => __( 'Student', 'buddyboss' ),
                 ),
             ) );
             bp_register_member_type( 'group_leader', array(
                 'labels' => array(
-                    'name'          => __( 'Group Leaders', 'buddypress-learndash' ),
-                    'singular_name' => __( 'Group Leader', 'buddypress-learndash' ),
+                    'name'          => __( 'Group Leaders', 'buddyboss' ),
+                    'singular_name' => __( 'Group Leader', 'buddyboss' ),
                 ),
             ) );
         }
 
         public function bp_learndash_members_directory(){
             ?>
-            <li id="members-group_leader"><a href="<?php site_url(); ?>bpe-group_leader"><?php printf( __( 'Group Leaders <span>%s</span>', 'buddypress-learndash' ), bp_learndash_members_count_by_type('group_leader') ); ?></a></li>
-            <li id="members-student"><a href="<?php site_url(); ?>bpe-student"><?php printf( __( 'Students <span>%s</span>', 'buddypress-learndash' ), bp_learndash_members_count_by_type('student') ); ?></a></li>
+            <li id="members-group_leader"><a href="<?php site_url(); ?>bpe-group_leader"><?php printf( __( 'Group Leaders <span>%s</span>', 'buddyboss' ), bp_learndash_members_count_by_type('group_leader') ); ?></a></li>
+            <li id="members-student"><a href="<?php site_url(); ?>bpe-student"><?php printf( __( 'Students <span>%s</span>', 'buddyboss' ), bp_learndash_members_count_by_type('student') ); ?></a></li>
         <?php
         }
 

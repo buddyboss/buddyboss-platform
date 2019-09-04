@@ -27,7 +27,7 @@ function bp_learndash_profile_courses_slug()
  */
 function bp_learndash_profile_my_courses_name()
 {
-    return sprintf( __( 'My %s', 'buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'courses' ) );
+    return sprintf( __( 'My %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) );
 }
 
 /**
@@ -40,7 +40,7 @@ function bp_learndash_profile_my_courses_slug()
 }
 
 function bp_learndash_profile_create_courses_name() {
-    return sprintf( __( 'Create a %s', 'buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'course' ) );
+    return sprintf( __( 'Create a %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'course' ) );
 }
 
 function bp_learndash_profile_create_courses_slug() {
@@ -462,7 +462,7 @@ function bp_learndash_record_activity( $args = '' ) {
 		global $nav_menu_selected_id;
 
 		$menu_items = array(
-			'#learndashmycourses' => sprintf( __( 'My %s', 'buddypress-learndash' ), LearnDash_Custom_Label::get_label( 'courses' ) ),
+			'#learndashmycourses' => sprintf( __( 'My %s', 'buddyboss' ), LearnDash_Custom_Label::get_label( 'courses' ) ),
 		);
 
 		$menu_items_obj = array();
@@ -495,7 +495,7 @@ function bp_learndash_record_activity( $args = '' ) {
 			</div>
 			<p class="button-controls">
 				<span class="add-to-menu">
-					<input type="submit"<?php disabled( $nav_menu_selected_id, 0 ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddypress-learndash' ); ?>" name="add-learndash-links-menu-item" id="submit-learndash-links" />
+					<input type="submit"<?php disabled( $nav_menu_selected_id, 0 ); ?> class="button-secondary submit-add-to-menu right" value="<?php esc_attr_e( 'Add to Menu', 'buddyboss' ); ?>" name="add-learndash-links-menu-item" id="submit-learndash-links" />
 					<span class="spinner"></span>
 				</span>
 			</p>
@@ -714,7 +714,7 @@ function bp_learndash_user_course_access_update( $user_id, $course_id, $remove )
                 'type' => 'started_course',
                 'user_id' => $user_id,
                 'action' => apply_filters('bp_learndash_user_course_start_activity',
-                    sprintf(__('%1$s started taking the course %2$s', 'buddypress-learndash'),
+                    sprintf(__('%1$s started taking the course %2$s', 'buddyboss'),
                         $user_link, $course_link_html), $user_id, $course_id),
                 'item_id' => $group_attached,
                 'secondary_item_id' =>  $course_id,
