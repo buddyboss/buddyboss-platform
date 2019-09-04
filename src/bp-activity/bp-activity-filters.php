@@ -530,6 +530,22 @@ function bp_activity_link_preview( $content, $activity ) {
 
 	$preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true );
 
+	/**
+	 * Removes Wordpress embedded elements - blockquote and iframe
+	 * That duplicates with Buddypress's embed elements
+	 *
+	 * @since BuddyBoss 1.1.8
+	 */
+	$doc = new DOMDocument();
+	$doc->loadHTML( $content );
+	$selector = new DOMXPath( $doc );
+
+	foreach( $selector->query( '//*[contains(@class,"wp-embedded-content")]' ) as $e ) {
+	    $e->parentNode->removeChild( $e );
+	}
+
+	$content = $doc->saveHTML( $doc->documentElement );
+
 	if ( empty( $preview_data['url'] ) ) {
 		return $content;
 	}
