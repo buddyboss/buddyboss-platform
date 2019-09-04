@@ -14,6 +14,16 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
+ * Setup the bp-core-email-tokens component.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_setup_core_cache() {
+	new BP_Core_Cache();
+}
+add_action( 'bp_loaded', 'bp_setup_core_cache', 10 );
+
+/**
  * Prune the WP Super Cache.
  *
  * When WP Super Cache is installed, this function will clear cached pages

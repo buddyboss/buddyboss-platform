@@ -17,6 +17,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_performance() {
 
 	bp_admin_performance_data_save();
+	bp_admin_performance_data_flush();
 
 	?>
     <div class="wrap">
@@ -116,10 +117,11 @@ function bp_admin_performance_setting_caching_callback() {
  *
  */
 function bp_performance_flush_cache_callback() {
+	$performance_tab_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_flush_cache' => '1', '_wpnonce' => wp_create_nonce( 'bp-flush-cache' ) ), 'admin.php' ) );
 	?>
 
     <p>
-        <a class="button" href="#"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
+        <a class="button" href="<?php echo esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
     </p>
 
 	<?php
@@ -180,5 +182,20 @@ function bp_admin_performance_data_save() {
 			bp_delete_option( 'bp-performance-enable-caching' );
 			bp_delete_option( 'bp-performance-caching-method' );
         }
+
+		do_action( 'bp_admin_performance_data_save' );
+	}
+}
+
+/**
+ * Flush cache data
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bp_admin_performance_data_flush() {
+
+	if ( isset( $_GET['bp_flush_cache'] ) && '1' == $_GET['bp_flush_cache'] && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'bp-flush-cache' ) ) {
+		wp_cache_flush();
+		do_action( 'bp_admin_performance_data_flush' );
 	}
 }

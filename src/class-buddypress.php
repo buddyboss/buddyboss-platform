@@ -661,6 +661,7 @@ class BuddyPress {
 			'BP_Registration_Theme_Compat'   => 'members',
 			'BP_Signup'                      => 'members',
 			'BP_BuddyBoss_Platform_Updater'  => 'core',
+			'BP_Core_Cache'                  => 'core',
 		);
 
 		$component = null;
