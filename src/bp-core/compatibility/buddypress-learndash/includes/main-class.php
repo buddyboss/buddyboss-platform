@@ -245,7 +245,7 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Plugin' ) ):
 
 			$this->network_activated = $this->is_network_activated();
 
-			$saved_options = $this->network_activated ? get_site_option( 'buddypress_learndash_plugin_options' ) : get_option( 'buddypress_learndash_plugin_options' );
+			$saved_options = bp_ld_sync('settings')->get( 'coursetab' );
 			$saved_options = maybe_unserialize( $saved_options );
 
 			$this->options = wp_parse_args( $saved_options, $this->default_options );
