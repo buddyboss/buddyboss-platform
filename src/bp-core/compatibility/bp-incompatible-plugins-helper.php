@@ -18,11 +18,6 @@ remove_action( 'bp_include', 'bp_follow_init' );
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
 /**
- * Add Support for BuddyPress for LearnDash Plugin
- */
-require( buddypress()->compatibility_dir . 'buddypress-learndash/main-class.php' );
-
-/**
  * Include plugin when plugin is activated
  *
  * Support Rank Math SEO
