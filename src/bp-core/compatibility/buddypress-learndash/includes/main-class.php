@@ -44,7 +44,6 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Plugin' ) ):
 		 * @var array
 		 */
 		private $admin_includes = array(
-			'admin',
 			'bp-learndash-users-enrollment'
 		);
 
@@ -385,8 +384,6 @@ if ( ! class_exists( 'BuddyPress_LearnDash_Plugin' ) ):
 		 */
 		public function load_admin() {
 			$this->do_includes( $this->admin_includes );
-
-			$this->admin = BuddyPress_LearnDash_Admin::instance();
 		}
 
 		/**

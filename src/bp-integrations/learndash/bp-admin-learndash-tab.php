@@ -37,6 +37,41 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		if ($values = bp_ld_sync()->getRequest($settings->getName())) {
 			$settings->set(null, $values)->update();
+
+			if ( empty( $values['coursetab'] ) ) {
+				$coursetab = $values['coursetab'];
+                if ( $coursetab['convert_subscribers'] ) {
+	                $this->convert_users_to_bp_member_type( 'subscriber', 'student' );
+                } else {
+	                $this->remove_convertion_users_to_bp_member_type( 'subscriber', 'student' );
+                }
+
+				if ( $coursetab['convert_group_leaders'] ) {
+					$this->convert_users_to_bp_member_type( 'group_leader', 'group_leader' );
+				} else {
+					$this->remove_convertion_users_to_bp_member_type( 'group_leader', 'group_leader' );
+                }
+            }
+		}
+	}
+
+	public function convert_users_to_bp_member_type( $role, $bp_member_tpe ) {
+		$all_users = get_users( 'role=' . $role );
+		foreach ( $all_users as $user ) {
+			$member_type = bp_get_member_type( $user->ID );
+			if ( $member_type != $bp_member_tpe ) {
+				bp_set_member_type( $user->ID, $bp_member_tpe );
+			}
+		}
+	}
+
+	public function remove_convertion_users_to_bp_member_type( $role, $bp_member_tpe ) {
+		$subscribers = get_users( 'role=' . $role );
+		foreach ( $subscribers as $user ) {
+			$member_type = bp_get_member_type( $user->ID );
+			if ( $member_type == $bp_member_tpe ) {
+				bp_set_member_type( $user->ID, '' );
+			}
 		}
 	}
 
