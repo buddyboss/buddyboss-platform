@@ -3946,7 +3946,7 @@ function bp_group_join_button( $group = false ) {
 
 							$group_type = bp_groups_get_group_type( $group->id );
 
-							$group_type_id = bp_get_group_type_post_id( $group_type );
+							$group_type_id = bp_group_get_group_type_id( $group_type );
 
 							$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
 
