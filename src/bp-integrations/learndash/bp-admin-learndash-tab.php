@@ -50,6 +50,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$fields = apply_filters('bp_integrations_learndash_fields', array(
 			'buddypress' => [$this, 'registerBuddypressSettings'],
 			'learndash' => [$this, 'registerLearnDashSettings'],
+			'coursetab' => [$this, 'registerCourseTab'],
 			//'reports' => [$this, 'registerReportsSettings'],
 		), $this);
 
@@ -64,6 +65,46 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			do_action('bp_integrations_learndash_field_added', $key, $this);
 		}
 	}
+
+	/**
+	 * Register BuddyPress for LearnDash related settings
+	 *
+	 * @since BuddyBoss 1.9.1
+	 */
+	public function registerCourseTab() {
+		$this->current_section = 'coursetab';
+
+		$this->add_section(
+			'bp_ld_course_tab-buddypress',
+			__('BuddyBoss Platform <span>&rarr; LearnDash</span>', 'buddyboss')
+		);
+
+
+		$this->add_checkbox_field(
+			'courses_visibility',
+			__('Visibility', 'buddyboss'),
+			[
+				'input_text' => __(' Display Profile > Course content publicly', 'buddyboss'),
+			]
+		);
+
+		$this->add_checkbox_field(
+			'convert_subscribers',
+			__('User Roles', 'buddyboss'),
+			[
+				'input_text' => __(' Convert subscribers to user role Student', 'buddyboss'),
+			]
+		);
+
+		$this->add_checkbox_field(
+			'convert_group_leaders',
+			__('User Roles', 'buddyboss'),
+			[
+				'input_text' => __(' Convert group leaders to user role Group Leader', 'buddyboss'),
+			]
+		);
+	}
+
 
 	/**
 	 * Load the settings html
