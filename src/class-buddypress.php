@@ -405,6 +405,10 @@ class BuddyPress {
 		$this->integration_dir = $this->plugin_dir . 'bp-integrations';
 		$this->integration_url = $this->plugin_url . 'bp-integrations';
 
+		// Path to add support for third party plugin
+		$this->compatibility_dir = $this->plugin_dir . 'bp-core/compatibility/';
+		$this->compatibility_url = $this->plugin_url . 'bp-core/compatibility/';
+
 		/** Theme Compat ******************************************************/
 
 		$this->theme_compat   = new stdClass(); // Base theme compatibility class

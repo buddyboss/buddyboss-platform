@@ -3,7 +3,6 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-
 /**
  * Remove BuddyPress Follow init hook action
  *
@@ -18,6 +17,9 @@ remove_action( 'bp_include', 'bp_follow_init' );
  */
 remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
 
+
+require( buddypress()->compatibility_dir . 'buddypress-learndash/buddypress-learndash.php' );
+
 /**
  * Include plugin when plugin is activated
  *
@@ -25,8 +27,9 @@ remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
  */
 function bp_helper_plugins_loaded_callback() {
 	global $bp_plugins;
+
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
-		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
+		require( buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php' );
 	}
 
 	/**
