@@ -4761,11 +4761,34 @@ function bp_group_member_joined_since( $args = array() ) {
 	 * @return string
 	 */
 	function bp_get_group_member_joined_since( $args = array() ) {
-		global $members_template;
+		global $wpdb, $members_template;
+
+		$bp = buddypress();
 
 		$r = bp_parse_args( $args, array(
 			'relative' => true,
 		), 'group_member_joined_since' );
+
+		/**
+		 * Set user date to user registered date when date_modified is 0000-00-00 00:00:00
+		 * This 0000-00-00 00:00:00 issue will occur only in previously created group via LD > BP group sync functionality.
+		 *
+		 */
+		if( strtotime( $members_template->member->date_modified ) < 0 ) {
+
+			// Get current group id.
+			$current_group_id = bp_get_current_group_id();
+
+			// Get group object.
+			$args = array(
+				'group_id' => $current_group_id,
+			);
+			$group = groups_get_group( $args );
+
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) );
+
+			$members_template->member->date_modified = $group->date_created;
+		}
 
 		// We do not want relative time, so return now.
 		// @todo Should the 'bp_get_group_member_joined_since' filter be applied here?
