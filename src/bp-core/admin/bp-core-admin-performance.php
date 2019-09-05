@@ -28,9 +28,15 @@ function bp_core_admin_performance() {
                 <table class="form-table">
                     <tbody>
                     <tr>
-                        <th scope="row"><?php _e( 'Database / PHP Caching', 'buddyboss' ); ?></th>
+                        <th scope="row"><?php _e( 'PHP Cache', 'buddyboss' ); ?></th>
                         <td>
                             <?php bp_admin_performance_setting_caching_callback(); ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><?php _e( 'Data Cache', 'buddyboss' ); ?></th>
+                        <td>
+                            <?php _e( '(dummy text)', 'buddyboss' ); ?>
                         </td>
                     </tr>
                     <tr>
@@ -72,7 +78,7 @@ function bp_admin_performance_setting_caching_callback() {
 	?>
 
     <input id="bp-performance-enable-caching" name="bp-performance-enable-caching" type="checkbox" value="1" <?php checked( bp_performance_is_caching_enabled() ); ?> />
-    <label for="bp-performance-enable-caching"><?php echo sprintf( __( 'Enable cache using %s caching method', 'buddyboss' ), bp_performance_caching_methods_dropdown() ); ?></label>
+    <label for="bp-performance-enable-caching"><?php echo sprintf( __( 'Enable PHP cache using %s caching method', 'buddyboss' ), bp_performance_caching_methods_dropdown() ); ?></label>
     <?php
 	$cache_methods = array();
 
@@ -135,7 +141,7 @@ function bp_performance_caching_methods_dropdown() {
     ob_start();
     ?>
     <select name="bp-performance-caching-method">
-        <option value=""><?php _e( 'Select', 'buddyboss' ); ?></option>
+        <option value=""><?php _e( '----', 'buddyboss' ); ?></option>
         <option <?php echo function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ? '' : 'disabled'; ?> value="opcache" <?php echo 'opcache' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'OPcache', 'buddyboss' ) ?></option>
         <option <?php echo function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ? '' : 'disabled'; ?> value="apc" <?php echo 'apc' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'APC', 'buddyboss' ) ?></option>
         <option <?php echo class_exists( 'Redis' ) ? '' : 'disabled'; ?> value="redis" <?php echo 'redis' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'Redis', 'buddyboss' ) ?></option>
