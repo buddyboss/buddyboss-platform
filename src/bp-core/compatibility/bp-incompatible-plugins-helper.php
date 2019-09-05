@@ -34,19 +34,21 @@ function bp_helper_plugins_loaded_callback() {
 	 */
 	if ( in_array( 'learndash-bbpress/learndash-bbpress.php', $bp_plugins ) ) {
 
-		/**
-		 * Remove bbPress Integration admin init hook action
-		 *
-		 * Support bbPress Integration
-		 */
-		remove_action( 'admin_init', 'wdm_activation_dependency_check' );
 
-		if ( empty( bp_is_active( 'forums' ) ) ) {
-			deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
+            /**
+             * Remove bbPress Integration admin init hook action
+             *
+             * Support bbPress Integration
+             */
+            remove_action( 'admin_init', 'wdm_activation_dependency_check' );
 
-			add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
-			add_action( 'network_admin_notices', 'bp_core_learndash_bbpress_notices' );
-		}
+            if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+                deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
+
+                add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
+                add_action( 'network_admin_notices', 'bp_core_learndash_bbpress_notices' );
+            }
+
 	}
 
 	/**
@@ -193,6 +195,7 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
 
+
 /**
  * Include plugin when plugin is activated
  *
@@ -201,16 +204,27 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
  * @since BuddyBoss 1.1.9
  */
 function bp_core_learndash_bbpress_notices() {
+    global $bp_plugins;
 
-	$links = sprintf(
-		'<a href="%s">%s</a>',
-		bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) ),
-		__( 'enable', 'buddyboss' )
-	);
-	?>
-	<div id="message" class="error notice">
-		<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-		<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work while forums components is disable. Please %s the forum components first before activating LearnDash & bbPress Integration plugins.', 'buddyboss' ), $links ); ?></p>
-	</div>
-	<?php
+    if ( empty( bp_is_active( 'forums' ) ) ) {
+        $links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
+
+        $text = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
+        $activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss' ) );
+        ?>
+        <div id="message" class="error notice">
+            <p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
+            <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work while %s component is disabled. Please %s the component first before activating LearnDash & bbPress Integration plugins.', 'buddyboss' ), $text, $activate ); ?></p>
+        </div>
+        <?php
+	}
+
+	if ( empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) )  ) {
+	    ?>
+        <div id="message" class="error notice">
+            <p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
+            <p><?php esc_html_e( 'The LearnDash & bbPress Integration plugin can\'t work without LearnDash LMS plugin. Please activate LearnDash LMS first, if you want to activate LearnDash & bbPress Integration.', 'buddyboss' ); ?></p>
+        </div>
+        <?php
+    }
 }
