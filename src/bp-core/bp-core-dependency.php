@@ -169,6 +169,9 @@ function bp_setup_admin_bar() {
 		 *
 		 * @since BuddyPress 1.5.0
 		 */
+
+
+		var_dump( "sfdsfdsffdsfds 1" );
 		do_action( 'bp_setup_admin_bar', array() );
 	}
 }

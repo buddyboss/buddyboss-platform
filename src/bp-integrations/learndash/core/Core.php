@@ -44,6 +44,125 @@ class Core
 		$this->pluginName = __('BuddyBoss LearnDash', 'buddyboss');
 
 		add_action('bp_ld_sync/requirements_checked', [$this, 'init']);
+
+		$this->course->name = \LearnDash_Custom_Label::get_label( 'courses' );
+		$this->course->my_courses_name = sprintf( __( 'My %s', 'buddyboss' ), $this->course->name );
+		$this->course->create_courses_name = sprintf( __( 'Create a %s', 'buddypress-learndash' ), $this->course->name );
+		$this->course->create_courses_slug = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
+		$this->course->slug = apply_filters( 'bp_learndash_profile_courses_slug', 'courses' );
+		$this->course->my_courses_slug = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
+		$this->course->access = bp_core_can_edit_settings();
+		$this->registerCourseComponent();
+	}
+
+	/**
+	 * Add Course tab in profile menu
+	 *
+	 * @since BuddyBoss 1.9.1
+	 */
+	public function registerCourseComponent() {
+
+		var_dump( "sfdsfdsffdsfds 2" );
+
+		if ( $this->settings->get( 'course.courses_visibility' ) ) {
+
+			var_dump( "sfdsfdsffdsfds 3" );
+			add_action( 'bp_setup_nav', array($this, 'setup_nav'), 100 );
+			add_action( 'bp_setup_admin_bar', array($this, 'setup_admin_bar'), 900 );
+		}
+	}
+
+	public function setup_nav() {
+
+		bp_core_new_nav_item( array(
+			'name' => $this->course->name,
+			'slug' => $this->course->slug,
+			'screen_function' => array( $this, 'course_page' ),
+			'position' => 80,
+			'default_subnav_slug' => $this->course->slug,
+			'show_for_displayed_user' => $this->course->access,
+		) );
+
+		bp_core_new_subnav_item( array(
+			'name' => $this->course->my_courses_name,
+			'slug' => $this->course->my_courses_slug,
+			'parent_url' => $this->get_nav_link( $this->course->slug ),
+			'parent_slug' => $this->course->slug,
+			'screen_function' => array( $this, 'course_page' ),
+			'position' => 80,
+			'user_has_access' => $this->course->access,
+		) );
+	}
+
+	public function setup_admin_bar() {
+
+		var_dump( "sfdsfdsffdsfds 4" );
+
+
+		$all_post_types = array(
+			array(
+				'name' => $this->course->name,
+				'slug' => $this->course->slug,
+				'parent' => 'buddypress',
+				'nav_link' => $this->adminbar_nav_link( $this->course->slug ),
+			),
+			array(
+				'name' => $this->course->my_courses_name,
+				'slug' => $this->course->my_courses_slug,
+				'parent' => $this->course->slug,
+				'nav_link' => $this->adminbar_nav_link( $this->course->slug ),
+			)
+		);
+
+		if( current_user_can( 'manage_options' ) ) {
+			$all_post_types[] =
+				array(
+					'name' => $this->course->create_courses_name,
+					'slug' => $this->course->create_courses_slug,
+					'parent' => $this->course->slug,
+					'nav_link' => admin_url().'post-new.php?post_type=sfwd-courses'
+				);
+		}
+
+		global $wp_admin_bar;
+		foreach($all_post_types as $single){
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'my-account-'.$single['parent'],
+				'id'     => 'my-account-'.$single['slug'],
+				'title'  => $single['name'],
+				'href'   => $single['nav_link']
+			) );
+		}
+	}
+
+	public function get_nav_link($slug, $parent_slug=''){
+		$displayed_user_id = bp_displayed_user_id();
+		$user_domain = ( ! empty( $displayed_user_id ) ) ? bp_displayed_user_domain() : bp_loggedin_user_domain();
+		if(!empty($parent_slug)){
+			$nav_link = trailingslashit( $user_domain . $parent_slug .'/'. $slug );
+		}else{
+			$nav_link = trailingslashit( $user_domain . $slug );
+		}
+		return $nav_link;
+	}
+
+	public function adminbar_nav_link($slug, $parent_slug=''){
+		$user_domain = bp_loggedin_user_domain();
+		if(!empty($parent_slug)){
+			$nav_link = trailingslashit( $user_domain . $parent_slug .'/'. $slug );
+		}else{
+			$nav_link = trailingslashit( $user_domain . $slug );
+		}
+		return $nav_link;
+	}
+
+	/**
+	 * Display Course Page Content in Profile course menu
+	 *
+	 * @since BuddyBoss 1.9.1
+	 */
+	public function course_page() {
+
 	}
 
 	/**

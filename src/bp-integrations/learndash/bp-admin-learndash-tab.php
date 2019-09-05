@@ -72,7 +72,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 * @since BuddyBoss 1.9.1
 	 */
 	public function registerCourseTab() {
-		$this->current_section = 'coursetab';
+		$this->current_section = 'course';
 
 		$this->add_section(
 			'bp_ld_course_tab-buddypress',
