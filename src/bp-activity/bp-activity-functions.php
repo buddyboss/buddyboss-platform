@@ -5015,6 +5015,7 @@ function bp_activity_media_sideload_attachment( $file ) {
 
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+	$file                   = str_replace( '&amp;', '&', $file );
 	$file_array['tmp_name'] = download_url( $file );
 
 	// If error storing temporarily, return the error.
