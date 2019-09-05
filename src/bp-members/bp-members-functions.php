@@ -3215,12 +3215,12 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
  * @global wpdb $wpdb WordPress database abstraction object.
  */
 function bp_member_type_term_taxonomy_id( $member_type_name ) {
-	$get_taxonomy = get_term_by( 'slug', $member_type_name, 'bp_member_type' );
-	if ( ! $get_taxonomy ) {
+	$member_type = get_term_by( 'slug', $member_type_name, 'bp_member_type' );
+	if ( ! $member_type ) {
 		return 0;
 	}
 
-	$term_taxonomy_id = $get_taxonomy->term_taxonomy_id;
+	$term_taxonomy_id = $member_type->term_taxonomy_id;
 
 	return $term_taxonomy_id;
 }
@@ -3412,10 +3412,10 @@ function bp_get_users_of_removed_member_types() {
 	// get member user ids
 	if ( isset( $bp_member_type_names ) && ! empty( $bp_member_type_names ) ) {
 		foreach ( $bp_member_type_names as $type_name ) {
-			$type_id  = bp_member_type_term_taxonomy_id( $type_name );
-			$mb_users = bp_member_type_by_type( $type_id );
-			if ( isset( $mb_users ) && ! empty( $mb_users ) ) {
-				foreach ( $mb_users as $single ) {
+			$type_id           = bp_member_type_term_taxonomy_id( $type_name );
+			$member_type_users = bp_member_type_by_type( $type_id );
+			if ( isset( $member_type_users ) && ! empty( $member_type_users ) ) {
+				foreach ( $member_type_users as $single ) {
 					$user_ids[] = $single;
 				}
 			}
