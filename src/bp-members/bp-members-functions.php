@@ -3205,41 +3205,23 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 }
 
 /**
- * Gets profile type id.
- *
- * @since BuddyBoss 1.0.0
- *
- * @global wpdb $wpdb WordPress database abstraction object.
- *
- * @param type $type_name
- *
- * @return type int
- */
-function bp_member_type_type_id( $type_name ) {
-	global $wpdb;
-	$type_name = strtolower($type_name);
-	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
-
-	$type_id = $wpdb->get_col( "SELECT t.term_id FROM {$wpdb->prefix}terms t INNER JOIN {$wpdb->prefix}term_taxonomy tt ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
-	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
-}
-
-/**
  * Gets profile type term taxonomy id.
  *
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
- * @param type $type_name
- * @return type int
+ * @param $type_name
+ * @return int
  */
-function bp_member_type_term_taxonomy_id( $type_name ) {
-	global $wpdb;
-	$type_name = strtolower($type_name);
-	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
+function bp_member_type_term_taxonomy_id( $member_type_name ) {
+	$get_taxonomy = get_term_by( 'slug', $member_type_name, 'bp_member_type' );
+	if ( ! $get_taxonomy ) {
+		return 0;
+	}
 
-	$type_id = $wpdb->get_col( "SELECT tt.term_taxonomy_id FROM {$wpdb->prefix}term_taxonomy tt INNER JOIN {$wpdb->prefix}terms t ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
-	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
+	$term_taxonomy_id = $get_taxonomy->term_taxonomy_id;
+
+	return $term_taxonomy_id;
 }
 
 /**
@@ -3248,8 +3230,8 @@ function bp_member_type_term_taxonomy_id( $type_name ) {
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
- * @param type $member_type
- * @return type array
+ * @param $member_type
+ * @return array
  */
 function bp_member_type_post_by_type($member_type) {
 	global $wpdb;
@@ -3275,8 +3257,8 @@ function bp_member_type_post_by_type($member_type) {
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
- * @param type $type_id
- * @return type array
+ * @param $type_id
+ * @return array
  */
 function bp_member_type_by_type( $type_id ) {
 	global $wpdb;
@@ -3288,40 +3270,6 @@ function bp_member_type_by_type( $type_id ) {
 	}
 
 	$member_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
-
-	return $member_ids;
-}
-
-/**
- * Gets an active member by type.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $type_id
- *
- * @return array
- */
-function bp_active_member_type_by_type( $type_id ) {
-	global $wpdb;
-	global $bp;
-
-	$member_ids = array();
-
-	if ( empty ( $type_id ) ) {
-		return $member_ids;
-	}
-
-	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
-
-	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
-		foreach ( $get_user_ids as $single ) {
-			$table = bp_core_get_table_prefix() . 'bp_activity';
-			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = " . $single );
-			if ( $member_activity > 0 ) {
-				$member_ids[] = $single;
-			}
-		}
-	}
 
 	return $member_ids;
 }
@@ -3461,8 +3409,8 @@ function bp_get_users_of_removed_member_types(){
 	// get member user ids
 	if( isset($bp_member_type_names) && !empty($bp_member_type_names) ){
 		foreach($bp_member_type_names as $type_name){
-			$type_id = bp_member_type_type_id($type_name);
-			$mb_users = bp_active_member_type_by_type($type_id);
+			$type_id = bp_member_type_term_taxonomy_id($type_name);
+			$mb_users = bp_member_type_by_type($type_id);
 			if( isset($mb_users) && !empty($mb_users) ){
 				foreach($mb_users as $single){
 					$user_ids[] = $single;
