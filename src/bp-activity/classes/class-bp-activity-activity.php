@@ -1339,11 +1339,6 @@ class BP_Activity_Activity {
 			return false;
 		}
 
-		//Delete the media when activity delete
-		if ( function_exists( 'bp_media_delete_activity_media' ) ) {
-            bp_media_delete_activity_media( $activities );
-        }
-
 		/**
 		 * Action to allow intercepting activity items just deleted.
 		 *
