@@ -214,17 +214,16 @@ function bp_core_learndash_bbpress_notices() {
         ?>
         <div id="message" class="error notice">
             <p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-            <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work while %s component is disabled. Please %s the component first before activating LearnDash & bbPress Integration plugins.', 'buddyboss' ), $text, $activate ); ?></p>
+
+	        <?php if ( empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+		        ?>
+		        <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %s component is deactivated. Please activate LearnDash LMS plugin & %s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
+		        <?php
+	        } else {
+		        ?>
+		        <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work while %s component is deactivated. Please %s the component first before activating LearnDash & bbPress Integration.', 'buddyboss' ), $text, $activate ); ?></p><?php
+	        } ?>
         </div>
         <?php
 	}
-
-	if ( empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) )  ) {
-	    ?>
-        <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-            <p><?php esc_html_e( 'The LearnDash & bbPress Integration plugin can\'t work without LearnDash LMS plugin. Please activate LearnDash LMS first, if you want to activate LearnDash & bbPress Integration.', 'buddyboss' ); ?></p>
-        </div>
-        <?php
-    }
 }
