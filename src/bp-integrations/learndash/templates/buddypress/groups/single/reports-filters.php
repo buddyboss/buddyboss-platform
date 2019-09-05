@@ -4,7 +4,7 @@
 			<select name="<?php echo $name; ?>" data-report-filter="<?php echo $name; ?>">
 				<?php foreach ($filter['options'] as $key => $value): ?>
 					<?php $selected = isset($_GET[$name]) && $_GET[$name] == $key? 'selected' : ''; ?>
-					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo $value; ?></option>
+					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo ( '' === $key ) ? $value : bp_xprofile_get_member_display_name( $key ); ?></option>
 				<?php endforeach; ?>
 			</select>
 		</span>
