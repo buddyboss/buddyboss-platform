@@ -112,7 +112,7 @@ function bp_admin_performance_setting_caching_callback() {
     if ( ! empty( $cache_methods_str ) ) {
         ?><p class="description"><?php echo sprintf( __( 'You have %s enabled on your server. BuddyBoss supports <a href="https://www.php.net/manual/en/intro.opcache.php">OPcache</a> and <a href="https://redis.io/">Redis</a> only.', 'buddyboss' ), $cache_methods_str ); ?></p><?php
     } else {
-        ?><p class="description"><?php _e( '<strong>You have no cache enabled on your server.</strong> Ask your web hosting to enable <a href="https://www.php.net/manual/en/intro.opcache.php">OPcache</a> or <a href="https://redis.io/">Redis</a> (but not both) on your server, and then return here to finish the configuration. Your site will load faster after.', 'buddyboss' ); ?></p><?php
+        ?><p class="description"><?php _e( '<strong>You have no cache enabled on your server.</strong> Ask your web hosting to enable <a href="https://www.php.net/manual/en/intro.opcache.php">OPcache</a> or <a href="https://redis.io/">Redis</a> on your server, and then return here to finish the configuration. Your site will load faster after.', 'buddyboss' ); ?></p><?php
     }
 }
 
