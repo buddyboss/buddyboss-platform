@@ -28,6 +28,13 @@ function bp_core_install( $active_components = false ) {
 
 		/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
+
+		// check for xprofile is active component in db or not if not then update it
+		if ( empty( $active_components['xprofile'] ) ) {
+			$active_components['xprofile'] = 1;
+
+			bp_update_option( 'bp-active-components', $active_components );
+		}
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).
