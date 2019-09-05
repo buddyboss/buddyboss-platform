@@ -3207,11 +3207,12 @@ function bp_set_user_member_type( $user_id, $member_type, $append = false ) {
 /**
  * Gets profile type term taxonomy id.
  *
+ * @param $type_name
+ *
+ * @return int
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
- * @param $type_name
- * @return int
  */
 function bp_member_type_term_taxonomy_id( $member_type_name ) {
 	$get_taxonomy = get_term_by( 'slug', $member_type_name, 'bp_member_type' );
@@ -3227,24 +3228,25 @@ function bp_member_type_term_taxonomy_id( $member_type_name ) {
 /**
  * Get Member post by profile type.
  *
+ * @param $member_type
+ *
+ * @return array
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
- * @param $member_type
- * @return array
  */
-function bp_member_type_post_by_type($member_type) {
+function bp_member_type_post_by_type( $member_type ) {
 	global $wpdb;
 
-	$query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
-	$query = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
+	$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+	$query   = $wpdb->prepare( $query, '_bp_member_type_key', $member_type );
 	$post_id = $wpdb->get_var( $query );
 
 	// Fallback to legacy way to retrieve profile type from name by using singular label
 	if ( ! $post_id ) {
-		$name = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
-		$query = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
-		$query = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
+		$name    = str_replace( array( '-', '-' ), array( ' ', ',' ), $member_type );
+		$query   = "SELECT post_id FROM {$wpdb->postmeta} WHERE meta_key = '%s' AND LOWER(meta_value) = '%s'";
+		$query   = $wpdb->prepare( $query, '_bp_member_type_label_singular_name', $name );
 		$post_id = $wpdb->get_var( $query );
 	}
 
@@ -3254,11 +3256,12 @@ function bp_member_type_post_by_type($member_type) {
 /**
  * Gets member by type id.
  *
+ * @param $type_id
+ *
+ * @return array
  * @since BuddyBoss 1.0.0
  *
  * @global wpdb $wpdb WordPress database abstraction object.
- * @param $type_id
- * @return array
  */
 function bp_member_type_by_type( $type_id ) {
 	global $wpdb;
@@ -3390,29 +3393,29 @@ function bp_get_removed_member_types(){
 /**
  * Get members removed profile type.
  *
+ * @return array
  * @since BuddyBoss 1.0.0
  *
- * @return array
  */
-function bp_get_users_of_removed_member_types(){
+function bp_get_users_of_removed_member_types() {
 	$user_ids = array();
 	// get removed profile type post ids
 	$bp_member_type_ids = bp_get_removed_member_types();
 	// get removed profile type names/slugs
 	$bp_member_type_names = array();
-	if( isset($bp_member_type_ids) && !empty($bp_member_type_ids) ){
-		foreach($bp_member_type_ids as $single){
+	if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+		foreach ( $bp_member_type_ids as $single ) {
 			$bp_member_type_names[] = $single['name'];
 		}
 	}
 
 	// get member user ids
-	if( isset($bp_member_type_names) && !empty($bp_member_type_names) ){
-		foreach($bp_member_type_names as $type_name){
-			$type_id = bp_member_type_term_taxonomy_id($type_name);
-			$mb_users = bp_member_type_by_type($type_id);
-			if( isset($mb_users) && !empty($mb_users) ){
-				foreach($mb_users as $single){
+	if ( isset( $bp_member_type_names ) && ! empty( $bp_member_type_names ) ) {
+		foreach ( $bp_member_type_names as $type_name ) {
+			$type_id  = bp_member_type_term_taxonomy_id( $type_name );
+			$mb_users = bp_member_type_by_type( $type_id );
+			if ( isset( $mb_users ) && ! empty( $mb_users ) ) {
+				foreach ( $mb_users as $single ) {
 					$user_ids[] = $single;
 				}
 			}
