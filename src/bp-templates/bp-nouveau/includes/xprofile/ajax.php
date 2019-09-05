@@ -85,8 +85,8 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	if ( isset( $get_db_ids ) ) {
 		foreach ( $get_db_ids as $id ) {
 			if ( ! in_array( $id->object_id, $existing_fields_arr ) ) {
-				$fields = xprofile_get_field( $id->object_id, null, false );
-				if ( $fields->group_id === (int) $id->object_id ) {
+				$field = xprofile_get_field( $id->object_id, null, false );
+				if ( $field->group_id === (int) $signup_group_id ) {
 					$new_fields[]          = $id->object_id;
 					$existing_fields_arr[] = $id->object_id;
 				}
