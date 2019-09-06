@@ -97,3 +97,59 @@
 .export-indicator {
 	display: none;
 }
+
+.progress-bar {
+	position: relative;
+	height: 100px;
+	width: 100px;
+}
+
+.progress-bar div {
+	position: absolute;
+	height: 100px;
+	width: 100px;
+	border-radius: 50%;
+}
+
+.progress-bar div span {
+	position: absolute;
+	font-family: Arial;
+	font-size: 25px;
+	line-height: 75px;
+	height: 75px;
+	width: 75px;
+	left: 12.5px;
+	top: 12.5px;
+	text-align: center;
+	border-radius: 50%;
+	background-color: white;
+}
+
+.progress-bar .background { background-color: #b3cef6; }
+
+.progress-bar .rotate {
+	clip: rect(0 50px 100px 0);
+	background-color: #4b86db;
+}
+
+.progress-bar .left {
+	clip: rect(0 50px 100px 0);
+	opacity: 1;
+	background-color: #b3cef6;
+}
+
+.progress-bar .right {
+	clip: rect(0 50px 100px 0);
+	transform: rotate(180deg);
+	opacity: 0;
+	background-color: #4b86db;
+}
+
+@keyframes
+toggle {  0% {
+	opacity: 0;
+}
+	100% {
+		opacity: 1;
+	}
+}

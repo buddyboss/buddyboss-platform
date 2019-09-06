@@ -87,9 +87,17 @@ class Reports
 		wp_enqueue_style('bp-ld-reports-datatable', '//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css', [], false);
 
 		wp_enqueue_script(
+			'bp-ld-reports-progressbar',
+			bp_learndash_url($filePath = '/assets/scripts/bp-ld-reports-progressbar.js'),
+			['jquery'],
+			filemtime(bp_learndash_path($filePath)),
+			true
+		);
+
+		wp_enqueue_script(
 			'bp-ld-reports',
 			bp_learndash_url($filePath = '/assets/scripts/bp-learndash.js'),
-			['jquery', 'bp-ld-reports-datatable'],
+			['jquery', 'bp-ld-reports-datatable' ],
 			filemtime(bp_learndash_path($filePath)),
 			true
 		);

@@ -66,3 +66,28 @@ if ($courseId): ?>
 		</div>
 	<?php endif; ?>
 </div>
+
+<?php
+
+$progress = learndash_course_progress( array(
+'user_id'   => $user->ID,
+'course_id' => $course->ID,
+'array'     => true
+) );
+
+//learndash_lesson_progress();
+//learndash_get_assignment_progress();
+
+?>
+
+<div class="ld-progress">
+	<div class="progress-bar" data-percent="<?php echo 90; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+	<div class="ld-progress-heading">
+		<div class="ld-progress-stats">
+			<div class="ld-progress-steps"><?php echo sprintf( esc_html_x( '%1$d/%2$d Steps', 'placeholder: completed steps, total steps', 'learndash' ), $progress['completed'], $progress['total'] ); ?></div>
+		</div> <!--/.ld-course-progress-stats-->
+	</div> <!--/.ld-course-progress-heading-->
+
+</div> <!--/.ld-course-progress-->
+
+

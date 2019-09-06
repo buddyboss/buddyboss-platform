@@ -8,6 +8,8 @@
 			this.$report_tables  = jQuery('.bp_ld_report_table');
 
 			this.fetch_table_data();
+
+			$( '.progress-bar' ).loading();
 		},
 
 		fetch_table_data: function() {
