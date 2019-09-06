@@ -54,8 +54,8 @@ class Reports
 		add_action('bp_ld_sync/reports', [$this, 'showReportTables'], 30);
 		add_action('bp_ld_sync/reports', [$this, 'showReportExport'], 40);
 
-		add_filter('bp_ld_sync/reports_generator_params', [$this, 'forceOwnReportResults'], 99);
-		add_filter('bp_ld_sync/reports_generator_params', [$this, 'courseReportResults'], 99);
+		//add_filter('bp_ld_sync/reports_generator_params', [$this, 'forceOwnReportResults'], 99);
+		//add_filter('bp_ld_sync/reports_generator_params', [$this, 'courseReportResults'], 99);
 
 		add_filter('bp_ld_sync/report_filters', [$this, 'removeCourseFilterIfOnlyOne']);
 		add_filter('bp_ld_sync/report_filters', [$this, 'removeUserFilterIfStudent']);
