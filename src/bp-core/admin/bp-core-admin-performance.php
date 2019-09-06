@@ -126,7 +126,7 @@ function bp_performance_flush_cache_callback() {
 	?>
 
     <p>
-        <a class="button" href="<?php echo esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
+        <a <?php echo ! bp_performance_is_caching_enabled() ? 'disabled' : ''; ?> class="button" href="<?php echo esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
     </p>
 
 	<?php
