@@ -206,7 +206,7 @@ add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_p
 function bp_core_learndash_bbpress_notices() {
     global $bp_plugins;
 
-    if ( empty( bp_is_active( 'forums' ) ) ) {
+    if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
         $links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
         $text = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
@@ -214,15 +214,7 @@ function bp_core_learndash_bbpress_notices() {
         ?>
         <div id="message" class="error notice">
             <p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-
-	        <?php if ( empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
-		        ?>
-		        <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %s component is deactivated. Please activate LearnDash LMS plugin & %s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
-		        <?php
-	        } else {
-		        ?>
-		        <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work while %s component is deactivated. Please %s the component first before activating LearnDash & bbPress Integration.', 'buddyboss' ), $text, $activate ); ?></p><?php
-	        } ?>
+            <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %s component is deactivated. Please activate LearnDash LMS plugin & %s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
         </div>
         <?php
 	}
