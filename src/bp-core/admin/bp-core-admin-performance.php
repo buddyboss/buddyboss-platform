@@ -17,7 +17,6 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_admin_performance() {
 
 	bp_admin_performance_data_save();
-	bp_admin_performance_data_flush();
 
 	?>
     <div class="wrap">
@@ -86,17 +85,17 @@ function bp_admin_performance_setting_caching_callback() {
 		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.opcache.php">Zend OPcache</a>', 'buddyboss' );
     }
 
-	if ( function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ) {
-		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.apc.php">APC</a>', 'buddyboss' );
-	}
+//	if ( function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ) {
+//		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.apc.php">APC</a>', 'buddyboss' );
+//	}
 
 	if ( class_exists( 'Redis' ) ) {
 		$cache_methods[] = __( '<a href="https://redis.io/">Redis</a>', 'buddyboss' );
 	}
 
-	if ( class_exists( 'Memcache' ) ) {
-		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.memcache.php">Memcache</a>', 'buddyboss' );
-	}
+//	if ( class_exists( 'Memcache' ) ) {
+//		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.memcache.php">Memcache</a>', 'buddyboss' );
+//	}
 
 	$cache_methods_str   = '';
 	$cache_methods_count = 1;
@@ -123,7 +122,7 @@ function bp_admin_performance_setting_caching_callback() {
  *
  */
 function bp_performance_flush_cache_callback() {
-	$performance_tab_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_flush_cache' => '1', '_wpnonce' => wp_create_nonce( 'bp-flush-cache' ) ), 'admin.php' ) );
+	$performance_tab_url = wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_flush_opcache_action' => 'bpflushopcacheall' ), 'admin.php' ) ), 'bp_flush_opcache_all' );
 	?>
 
     <p>
@@ -190,18 +189,5 @@ function bp_admin_performance_data_save() {
         }
 
 		do_action( 'bp_admin_performance_data_save' );
-	}
-}
-
-/**
- * Flush cache data
- *
- * @since BuddyBoss 1.1.9
- */
-function bp_admin_performance_data_flush() {
-
-	if ( isset( $_GET['bp_flush_cache'] ) && '1' == $_GET['bp_flush_cache'] && ! empty( $_GET['_wpnonce'] ) && wp_verify_nonce( $_GET['_wpnonce'], 'bp-flush-cache' ) ) {
-		wp_cache_flush();
-		do_action( 'bp_admin_performance_data_flush' );
 	}
 }

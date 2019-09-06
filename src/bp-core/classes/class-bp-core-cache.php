@@ -36,6 +36,7 @@ class BP_Core_Cache {
 	public function __construct() {
 		$this->setup_globals();
 		$this->setup_actions();
+		$this->init_cache();
 	}
 
 	/**
@@ -47,7 +48,7 @@ class BP_Core_Cache {
 		$bp = buddypress();
 
 		// Paths and URLs
-		$this->install_file_object_cache  = $bp->plugin_dir  . 'bp-core/cache-files/object-cache.php'; // object cache file.
+		$this->install_file_object_cache  = $bp->plugin_dir  . 'bp-core/cache/files/object-cache.php'; // object cache file.
 		$this->addin_file_object_cache  = WP_CONTENT_DIR . '/object-cache.php'; // wp content object cache file url.
 	}
 
@@ -58,7 +59,9 @@ class BP_Core_Cache {
 	 *
 	 */
 	private function setup_actions() {
-		$this->init_cache();
+		add_action( 'admin_bar_menu', array( $this, 'flush_cache_button' ), 100 );
+		add_action( 'admin_init', array( $this, 'flush_cache' ) );
+		add_action( 'upgrader_process_complete', 'bp_core_performance_clear_cache' );
 	}
 
 	public function init_cache() {
@@ -139,6 +142,85 @@ class BP_Core_Cache {
 			if ( @unlink( $filename ) )
 				return;
         }
+	}
+
+	public function flush_cache_button() {
+		global $wp_admin_bar;
+
+		if ( ! is_user_logged_in() || ! is_admin_bar_showing() ) {
+			return false;
+		}
+
+		// User verification
+		if ( ! is_admin() ) {
+			return false;
+		}
+
+		// Check if user wants button in admin bar or not
+		if ( ! bp_performance_is_caching_enabled() ) {
+			return false;
+		}
+
+		// Button parameters
+		$flush_url = add_query_arg( array( 'bp_flush_opcache_action' => 'bpflushopcacheall' ) );
+		$nonced_url = wp_nonce_url( $flush_url, 'bp_flush_opcache_all' );
+
+		// Admin button only on main site in MS edition or admin bar if normal edition
+		if ( ( is_multisite() && is_super_admin() && is_main_site() ) || ! is_multisite() ) {
+			$wp_admin_bar->add_menu( array(
+					'parent' => '',
+					'id' => 'bp_flush_opcache',
+					'title' => __( 'Flush PHP OPcache', 'buddyboss' ),
+					'meta' => array( 'title' => __( 'Flush PHP OPcache', 'buddyboss' ) ),
+					'href' => $nonced_url
+				)
+			);
+		}
+	}
+
+	public function flush_cache() {
+		if ( ! isset( $_REQUEST['bp_flush_opcache_action'] ) ) {
+			return;
+		}
+
+		// User's verification
+		if ( ! is_admin() ) {
+			wp_die( __( 'Sorry, you can\'t flush OPcache.', 'buddyboss' ) );
+		}
+
+		// Show notice when flush is done
+		$action = sanitize_key( $_REQUEST['bp_flush_opcache_action'] );
+		if ( $action == 'done' ) {
+			if ( is_multisite() ) {
+				add_action( 'network_admin_notices', array( $this, 'show_opcache_notice' ) );
+				add_action( 'admin_notices', array( $this, 'show_opcache_notice' ) );
+			} else {
+				add_action( 'admin_notices', array( $this, 'show_opcache_notice' ) );
+			}
+			return;
+		}
+
+		// Check for nonce and admin
+		check_admin_referer( 'bp_flush_opcache_all' );
+
+		// OPcache reset
+		if ( $action == 'bpflushopcacheall' ) {
+			bp_core_performance_clear_cache();
+		}
+
+		wp_redirect( esc_url_raw( add_query_arg( array( 'bp_flush_opcache_action' => 'done' ) ) ) );
+		exit;
+	}
+
+	public function show_opcache_notice() {
+		?>
+		<div class="notice notice-success is-dismissible">
+			<p><strong><?php _e( 'OPcache was successfully flushed.', 'buddyboss' ); ?></strong></p>
+			<button type="button" class="notice-dismiss">
+				<span class="screen-reader-text"><?php _e( 'Dismiss this notice.', 'buddyboss' ); ?></span>
+			</button>
+		</div>
+		<?php
 	}
 }
 

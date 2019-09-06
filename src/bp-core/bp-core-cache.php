@@ -389,3 +389,24 @@ function bp_core_get_incrementor( $group ) {
 function bp_core_reset_incrementor( $group ) {
 	return wp_cache_delete( 'incrementor', $group );
 }
+
+function bp_core_performance_clear_cache() {
+
+	//clear opcache all
+	if ( function_exists( 'opcache_reset' ) ) {
+
+		// Check if file cache is enabled and delete it if enabled
+		if ( ini_get( 'opcache.file_cache' ) && is_writable( ini_get( 'opcache.file_cache' ) ) ) {
+			$files = new RecursiveIteratorIterator( new RecursiveDirectoryIterator( ini_get('opcache.file_cache'), RecursiveDirectoryIterator::SKIP_DOTS), RecursiveIteratorIterator::CHILD_FIRST );
+			foreach ( $files as $fileinfo ) {
+				$todo = ( $fileinfo->isDir() ? 'rmdir' : 'unlink' );
+				$todo( $fileinfo->getRealPath() );
+			}
+		}
+
+		// Flush OPcache
+		opcache_reset();
+	}
+
+	wp_cache_flush();
+}
