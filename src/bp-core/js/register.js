@@ -98,6 +98,9 @@ jQuery( document ).ready( function() {
 	// Profile Type field select box change action.
 	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
 
+		var buttonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
+		buttonSelector.prop( 'disabled', true );
+
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
@@ -125,6 +128,9 @@ jQuery( document ).ready( function() {
 			success: function ( response ) {
 
 				if ( response.success ) {
+
+					buttonSelector.prop( 'disabled', false );
+
 					firstCall = 1;
 
 					if ( true === parseInt( response.data.field_html ) ) {
@@ -161,6 +167,8 @@ jQuery( document ).ready( function() {
 						);
 						tinyMCE.execCommand('mceRepaint');
 					}
+				} else {
+					buttonSelector.prop( 'disabled', false );
 				}
 			}
 		});
