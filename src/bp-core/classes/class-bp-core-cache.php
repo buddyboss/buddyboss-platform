@@ -62,9 +62,15 @@ class BP_Core_Cache {
 		add_action( 'admin_bar_menu', array( $this, 'flush_cache_button' ), 100 );
 		add_action( 'admin_init', array( $this, 'flush_cache' ) );
 		add_action( 'upgrader_process_complete', 'bp_core_performance_clear_cache' );
+		register_activation_hook( __FILE__, 'bp_core_performance_clear_cache' );
+		add_action( 'deactivate_plugin', array( $this, 'on_deactivation' ) );
 	}
 
 	public function init_cache() {
+		if ( ! is_admin() ) {
+		    return;
+        }
+
 		$addin_required = bp_performance_is_caching_enabled();
 
 		if ( $addin_required ) {
@@ -79,6 +85,10 @@ class BP_Core_Cache {
 	 *
 	 */
 	private function create_addin() {
+		global $wp_filesystem;
+
+		$performance_tab_url = wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_remove_cache_file' => '1' ), 'admin.php' ) ) );
+
 		$src = $this->install_file_object_cache;
 		$dst = $this->addin_file_object_cache;
 
@@ -92,19 +102,26 @@ class BP_Core_Cache {
 				// we should try to apply ours
 				// (in case of missing permissions deletion could fail)
 			} else {
-				$performance_tab_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_remove_cache_file' => '1' ), 'admin.php' ) );
 				bp_core_add_admin_notice( sprintf( __( 'The Object Cache add-in file object-cache.php is not a BuddyBoss drop-in. Remove it or disable Object Caching. %s', 'buddyboss' ), sprintf( '<a href="%s" class="button">%s</a>', $performance_tab_url, __( 'Yes, remove it for me', 'buddyboss' ) ) ), 'error' );
 				return;
 			}
 		}
 
-		$contents = @file_get_contents( $src );
-		if ( $contents ) {
-			@file_put_contents( $dst, $contents );
-		}
-		if ( @file_exists( $dst ) ) {
-			if ( @file_get_contents( $dst ) == $contents ) {
-				return;
+		$result = false;
+		// do we have filesystem credentials?
+		if ( $this->initialize_filesystem( $performance_tab_url, true ) ) {
+			$result = $wp_filesystem->copy( $src, $dst, true );
+        }
+
+		if ( ! $result ) {
+			$contents = @file_get_contents( $src );
+			if ( $contents ) {
+				@file_put_contents( $dst, $contents );
+			}
+			if ( @file_exists( $dst ) ) {
+				if ( @file_get_contents( $dst ) == $contents ) {
+					return;
+				}
 			}
 		}
 	}
@@ -135,12 +152,29 @@ class BP_Core_Cache {
 	 * Deletes add-in
 	 */
 	private function delete_addin() {
-	    $filename = $this->addin_file_object_cache;
+		global $wp_filesystem;
+
+		$performance_tab_url = wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_remove_cache_file' => '1' ), 'admin.php' ) ) );
+		$filename = $this->addin_file_object_cache;
+
 		if ( $this->is_objectcache_add_in() ) {
-			if ( !@file_exists( $filename ) )
-				return;
-			if ( @unlink( $filename ) )
-				return;
+
+			$result = false;
+			// do we have filesystem credentials?
+			if ( $this->initialize_filesystem( $performance_tab_url, true ) ) {
+				$result = $wp_filesystem->delete( $filename );
+			}
+
+			if ( ! $result ) {
+				if ( ! @file_exists( $filename ) ) {
+					return;
+				}
+				if ( @unlink( $filename ) ) {
+					return;
+				}
+			}
+
+			bp_core_performance_clear_cache();
         }
 	}
 
@@ -221,6 +255,42 @@ class BP_Core_Cache {
 			</button>
 		</div>
 		<?php
+	}
+
+	public function initialize_filesystem( $url, $silent = false ) {
+	    if ( ! function_exists( 'request_filesystem_credentials' ) ) {
+		    require_once( ABSPATH . 'wp-admin/includes/file.php' );
+        }
+
+		if ( $silent ) {
+			ob_start();
+		}
+
+		if ( ( $credentials = request_filesystem_credentials( $url ) ) === false ) {
+			if ( $silent ) {
+				ob_end_clean();
+			}
+
+			return false;
+		}
+
+		if ( ! WP_Filesystem( $credentials ) ) {
+			request_filesystem_credentials( $url );
+
+			if ( $silent ) {
+				ob_end_clean();
+			}
+
+			return false;
+		}
+
+		return true;
+	}
+
+	public function on_deactivation( $plugin ) {
+		if ( $plugin === plugin_basename( __FILE__ ) ) {
+			$this->delete_addin();
+		}
 	}
 }
 

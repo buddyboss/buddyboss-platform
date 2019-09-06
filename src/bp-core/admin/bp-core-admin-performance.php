@@ -142,9 +142,9 @@ function bp_performance_caching_methods_dropdown() {
     <select name="bp-performance-caching-method">
         <option value=""><?php _e( 'Not Available', 'buddyboss' ); ?></option>
         <option <?php echo function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ? '' : 'disabled'; ?> value="opcache" <?php echo 'opcache' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'Zend OPcache', 'buddyboss' ) ?></option>
-        <option <?php echo function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ? '' : 'disabled'; ?> value="apc" <?php echo 'apc' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'APC', 'buddyboss' ) ?></option>
+<!--        <option --><?php //echo function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ? '' : 'disabled'; ?><!-- value="apc" --><?php //echo 'apc' == $caching_method? 'selected' : ''; ?><!-->--><?php //esc_html_e( 'APC', 'buddyboss' ) ?><!--</option>-->
         <option <?php echo class_exists( 'Redis' ) ? '' : 'disabled'; ?> value="redis" <?php echo 'redis' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'Redis', 'buddyboss' ) ?></option>
-        <option <?php echo class_exists( 'Memcache' ) || class_exists( 'Memcached' ) ? '' : 'disabled'; ?> value="memcache" <?php echo 'memcache' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'Memcache', 'buddyboss' ) ?></option>
+<!--        <option --><?php //echo class_exists( 'Memcache' ) || class_exists( 'Memcached' ) ? '' : 'disabled'; ?><!-- value="memcache" --><?php //echo 'memcache' == $caching_method? 'selected' : ''; ?><!-->--><?php //esc_html_e( 'Memcache', 'buddyboss' ) ?><!--</option>-->
     </select>
     <?php
     return ob_get_clean();
