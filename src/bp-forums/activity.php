@@ -684,7 +684,12 @@ class BBP_BuddyPress_Activity {
 		$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
 
 		// Group
-		$group_id   = current( bbp_get_forum_group_ids( $forum_id ) );
+		$group_id = bbp_forum_recursive_group_id( $forum_id );
+
+		if ( empty( $group_id ) ) {
+			$group_id = current( bbp_get_forum_group_ids( $forum_id ) );
+		}
+
 		$group      = groups_get_group( $group_id );
 		$group_link = bp_get_group_link( $group );
 
@@ -711,7 +716,12 @@ class BBP_BuddyPress_Activity {
 		$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
 
 		// Group
-		$group_id   = current( bbp_get_forum_group_ids( $forum_id ) );
+		$group_id = bbp_forum_recursive_group_id( $forum_id );
+
+		if ( empty( $group_id ) ) {
+			$group_id = current( bbp_get_forum_group_ids( $forum_id ) );
+		}
+
 		$group      = groups_get_group( $group_id );
 		$group_link = bp_get_group_link( $group );
 
