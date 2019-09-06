@@ -204,8 +204,8 @@ class BP_Core_Cache {
 			$wp_admin_bar->add_menu( array(
 					'parent' => '',
 					'id' => 'bp_flush_opcache',
-					'title' => __( 'Flush PHP OPcache', 'buddyboss' ),
-					'meta' => array( 'title' => __( 'Flush PHP OPcache', 'buddyboss' ) ),
+					'title' => __( 'Flush Cache', 'buddyboss' ),
+					'meta' => array( 'title' => __( 'Flush Cache', 'buddyboss' ) ),
 					'href' => $nonced_url
 				)
 			);

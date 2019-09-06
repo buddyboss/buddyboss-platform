@@ -33,7 +33,7 @@ function bp_core_admin_performance() {
                         </td>
                     </tr>
                     <tr>
-                        <th scope="row"><?php _e( 'Database Cache', 'buddyboss' ); ?></th>
+                        <th scope="row"><?php _e( 'Object Cache', 'buddyboss' ); ?></th>
                         <td>
                             <?php _e( '(dummy text)', 'buddyboss' ); ?>
                         </td>
