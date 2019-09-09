@@ -29,13 +29,13 @@ function bp_core_admin_performance() {
                     <tr>
                         <th scope="row"><?php _e( 'Opcode (PHP) Cache', 'buddyboss' ); ?></th>
                         <td>
-                            <?php bp_admin_performance_setting_caching_callback(); ?>
+                            <?php bp_admin_performance_setting_opcode_cache_callback(); ?>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row"><?php _e( 'Object Cache', 'buddyboss' ); ?></th>
                         <td>
-                            <?php _e( '(dummy text)', 'buddyboss' ); ?>
+                            <?php bp_admin_performance_setting_caching_callback(); ?>
                         </td>
                     </tr>
                     <tr>
@@ -68,33 +68,52 @@ function bp_core_admin_performance() {
 }
 
 /**
+ * OpCode Caching setting field.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ */
+function bp_admin_performance_setting_opcode_cache_callback() {
+
+	$zend_opcache = '<a href="https://www.php.net/manual/en/intro.opcache.php" target="_blank">' . __( 'Zend OPcache', 'buddyboss' ) . '</a>';
+
+	if ( function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ) {
+		?><p class="description"><?php echo sprintf( __( 'You have %s enabled on your server. BuddyBoss supports %s.', 'buddyboss' ), $zend_opcache, $zend_opcache ); ?></p><?php
+	} else {
+		?><p class="description"><?php echo sprintf( __( '<strong>You have no opcode cache enabled on your server.</strong> Ask your web hosting to enable on your server. Your site will load faster after.', 'buddyboss' ), $zend_opcache ); ?></p><?php
+	}
+}
+
+/**
  * Caching setting field.
  *
- * @since BuddyBoss 1.1.8
+ * @since BuddyBoss 1.1.9
  *
  */
 function bp_admin_performance_setting_caching_callback() {
 	?>
 
-    <input id="bp-performance-enable-caching" name="bp-performance-enable-caching" type="checkbox" value="1" <?php checked( bp_performance_is_caching_enabled() ); ?> />
-    <label for="bp-performance-enable-caching"><?php echo sprintf( __( 'Enable using %s caching method', 'buddyboss' ), bp_performance_caching_methods_dropdown() ); ?></label>
+    <input id="bp-performance-enable-caching" name="bp-performance-enable-caching" type="checkbox" value="1" <?php checked( bp_performance_is_object_caching_enabled() ); ?> />
+    <label for="bp-performance-enable-caching"><?php echo sprintf( __( 'Enable using %s caching method', 'buddyboss' ), bp_performance_object_caching_methods_dropdown() ); ?></label>
     <?php
 	$cache_methods = array();
 
+	$opcode_cache_link = '<a href="https://www.php.net/manual/en/intro.opcache.php" target="_blank">' . __( 'Zend OPcache', 'buddyboss' ) . '</a>';
 	if ( function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ) {
-		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.opcache.php">Zend OPcache</a>', 'buddyboss' );
+		$cache_methods['opcode'] = $opcode_cache_link;
     }
 
 //	if ( function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ) {
-//		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.apc.php">APC</a>', 'buddyboss' );
+//		$cache_methods['apc'] = '<a href="https://www.php.net/manual/en/intro.apc.php" target="_blank">' . __( 'APC', 'buddyboss' ) . '</a>';
 //	}
 
+    $redis_cache_link = '<a href="https://redis.io/" target="_blank">' . __( 'Redis', 'buddyboss' ) . '</a>';
 	if ( class_exists( 'Redis' ) ) {
-		$cache_methods[] = __( '<a href="https://redis.io/">Redis</a>', 'buddyboss' );
+		$cache_methods['redis'] = $redis_cache_link;
 	}
 
 //	if ( class_exists( 'Memcache' ) ) {
-//		$cache_methods[] = __( '<a href="https://www.php.net/manual/en/intro.memcache.php">Memcache</a>', 'buddyboss' );
+//		$cache_methods[''memcache'] = '<a href="https://www.php.net/manual/en/intro.memcache.php" target="_blank">' . __( 'Memcache', 'buddyboss' ) . '</a>';
 //	}
 
 	$cache_methods_str   = '';
@@ -109,9 +128,9 @@ function bp_admin_performance_setting_caching_callback() {
 	}
 
     if ( ! empty( $cache_methods_str ) ) {
-        ?><p class="description"><?php echo sprintf( __( 'You have %s enabled on your server. BuddyBoss supports <a href="https://www.php.net/manual/en/intro.opcache.php">Zend OPcache</a> and <a href="https://redis.io/">Redis</a> only.', 'buddyboss' ), $cache_methods_str ); ?></p><?php
+        ?><p class="description"><?php echo sprintf( __( 'You have %s enabled on your server. BuddyBoss supports %s and %s only.', 'buddyboss' ), $cache_methods_str, $opcode_cache_link, $redis_cache_link ); ?></p><?php
     } else {
-        ?><p class="description"><?php _e( '<strong>You have no cache enabled on your server.</strong> Ask your web hosting to enable <a href="https://www.php.net/manual/en/intro.opcache.php">Zend OPcache</a> or <a href="https://redis.io/">Redis</a> on your server, and then return here to finish the configuration. Your site will load faster after.', 'buddyboss' ); ?></p><?php
+        ?><p class="description"><?php echo sprintf( __( '<strong>You have no object cache enabled on your server.</strong> Ask your web hosting to enable %s or %s on your server, and then return here to finish the configuration. Your site will load faster after.', 'buddyboss' ), $opcode_cache_link, $redis_cache_link ); ?></p><?php
     }
 }
 
@@ -126,7 +145,7 @@ function bp_performance_flush_cache_callback() {
 	?>
 
     <p>
-        <a <?php echo ! bp_performance_is_caching_enabled() ? 'disabled' : ''; ?> class="button" href="<?php echo esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
+        <a <?php echo ! bp_performance_is_object_caching_enabled() ? 'disabled' : ''; ?> class="button" href="<?php echo esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
     </p>
 
 	<?php
@@ -135,8 +154,8 @@ function bp_performance_flush_cache_callback() {
 /**
  * @since BuddyBoss 1.1.9
  */
-function bp_performance_caching_methods_dropdown() {
-	$caching_method = bp_performance_enabled_caching_method();
+function bp_performance_object_caching_methods_dropdown() {
+	$caching_method = bp_performance_enabled_object_caching_method();
     ob_start();
     ?>
     <select name="bp-performance-caching-method">
@@ -177,15 +196,15 @@ function bp_admin_performance_data_save() {
 		// Check nonce before we do anything.
 		check_admin_referer( 'bp-admin-performance-settings' );
 
-		$enable_caching = isset( $_POST['bp-performance-enable-caching'] );
-		$caching_method = ! empty( $_POST['bp-performance-caching-method'] ) ? $_POST['bp-performance-caching-method'] : false;
+		$enable_caching = isset( $_POST['bp-performance-enable-object-caching'] );
+		$caching_method = ! empty( $_POST['bp-performance-object-caching-method'] ) ? $_POST['bp-performance-object-caching-method'] : false;
 
 		if ( $enable_caching && ! empty( $caching_method ) ) {
-		    bp_update_option( 'bp-performance-enable-caching', true );
-		    bp_update_option( 'bp-performance-caching-method', $caching_method );
+		    bp_update_option( 'bp-performance-enable-object-caching', true );
+		    bp_update_option( 'bp-performance-object-caching-method', $caching_method );
         } else {
-			bp_delete_option( 'bp-performance-enable-caching' );
-			bp_delete_option( 'bp-performance-caching-method' );
+			bp_delete_option( 'bp-performance-enable-object-caching' );
+			bp_delete_option( 'bp-performance-object-caching-method' );
         }
 
 		do_action( 'bp_admin_performance_data_save' );

@@ -1429,45 +1429,45 @@ function bp_register_confirm_password( $default = false ) {
 }
 
 /**
- * Is the caching enabled?
+ * Is the object caching enabled?
  *
  * @since BuddyBoss 1.1.8
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if the caching is enabled,
+ * @return bool True if the object caching is enabled,
  *              otherwise false.
  */
-function bp_performance_is_caching_enabled( $default = false ) {
+function bp_performance_is_object_caching_enabled( $default = false ) {
 
 	/**
-	 * Filters whether or not the caching is enabled or not.
+	 * Filters whether or not the object caching is enabled or not.
 	 *
 	 * @since BuddyBoss 1.1.8
 	 *
-	 * @param bool $value Whether or not caching is enabled.
+	 * @param bool $value Whether or not object caching is enabled.
 	 */
-	return (bool) apply_filters( 'bp_performance_is_caching_enabled', (bool) bp_get_option( 'bp-performance-enable-caching', $default ) );
+	return (bool) apply_filters( 'bp_performance_is_object_caching_enabled', (bool) bp_get_option( 'bp-performance-enable-object-caching', $default ) );
 }
 
 /**
- * Get enabled caching method
+ * Get enabled object caching method
  *
  * @since BuddyBoss 1.1.8
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return string|bool enabled caching method,
+ * @return string|bool enabled object caching method,
  *              otherwise false.
  */
-function bp_performance_enabled_caching_method( $default = false ) {
+function bp_performance_enabled_object_caching_method( $default = false ) {
 
 	/**
-	 * Filters enabled caching method.
+	 * Filters enabled object caching method.
 	 *
 	 * @since BuddyBoss 1.1.8
 	 *
-	 * @param string $value Enabled caching method.
+	 * @param string $value Enabled object caching method.
 	 */
-	return apply_filters( 'bp_performance_enabled_caching_method', bp_get_option( 'bp-performance-caching-method', $default ) );
+	return apply_filters( 'bp_performance_enabled_object_caching_method', bp_get_option( 'bp-performance-object-caching-method', $default ) );
 }

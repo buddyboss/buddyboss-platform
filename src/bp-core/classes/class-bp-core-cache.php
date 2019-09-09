@@ -36,13 +36,12 @@ class BP_Core_Cache {
 	public function __construct() {
 		$this->setup_globals();
 		$this->setup_actions();
-		$this->init_cache();
 	}
 
 	/**
 	 * Set cache-related globals.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.1.9
 	 */
 	private function setup_globals() {
 		$bp = buddypress();
@@ -55,7 +54,7 @@ class BP_Core_Cache {
 	/**
 	 * Set up the admin hooks, actions, and filters.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.1.9
 	 *
 	 */
 	private function setup_actions() {
@@ -64,14 +63,15 @@ class BP_Core_Cache {
 		add_action( 'upgrader_process_complete', 'bp_core_performance_clear_cache' );
 		register_activation_hook( __FILE__, 'bp_core_performance_clear_cache' );
 		add_action( 'deactivate_plugin', array( $this, 'on_deactivation' ) );
+		add_action( 'bp_admin_performance_data_save', array( $this, 'init_cache' ) );
 	}
 
 	public function init_cache() {
-		if ( ! is_admin() ) {
-		    return;
-        }
 
-		$addin_required = bp_performance_is_caching_enabled();
+	    //clear cache first
+		bp_core_performance_clear_cache();
+
+		$addin_required = bp_performance_is_object_caching_enabled();
 
 		if ( $addin_required ) {
 			$this->create_addin();
@@ -191,7 +191,7 @@ class BP_Core_Cache {
 		}
 
 		// Check if user wants button in admin bar or not
-		if ( ! bp_performance_is_caching_enabled() ) {
+		if ( ! bp_performance_is_object_caching_enabled() ) {
 			return false;
 		}
 
