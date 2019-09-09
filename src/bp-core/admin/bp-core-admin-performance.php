@@ -41,12 +41,6 @@ function bp_core_admin_performance() {
                     <tr>
                         <th scope="row"></th>
                         <td>
-                            <?php bp_performance_flush_cache_callback(); ?>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"></th>
-                        <td>
                             <?php bp_performance_cache_tutorial(); ?>
                         </td>
                     </tr>
@@ -57,6 +51,7 @@ function bp_core_admin_performance() {
             <p class="submit">
                 <input class="button-primary" type="submit" name="bp-admin-submit-performance" id="bp-admin-submit-performance"
                        value="<?php esc_attr_e( 'Save Settings', 'buddyboss' ); ?>"/>
+	            <?php bp_performance_flush_cache_callback(); ?>
             </p>
 
 	        <?php wp_nonce_field( 'bp-admin-performance-settings' ); ?>
@@ -144,9 +139,7 @@ function bp_performance_flush_cache_callback() {
 	$performance_tab_url = wp_nonce_url( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-performance', 'bp_flush_opcache_action' => 'bpflushopcacheall' ), 'admin.php' ) ), 'bp_flush_opcache_all' );
 	?>
 
-    <p>
-        <a <?php echo ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ? 'disabled="disabled" onclick="return false;"' : ''; ?> class="button" href="<?php echo ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ? '#' : esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
-    </p>
+    <a <?php echo ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ? 'disabled="disabled" onclick="return false;"' : ''; ?> class="button" href="<?php echo ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ? '#' : esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
 
 	<?php
 }
