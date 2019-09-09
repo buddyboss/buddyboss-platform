@@ -191,7 +191,7 @@ class BP_Core_Cache {
 		}
 
 		// Check if user wants button in admin bar or not
-		if ( ! bp_performance_is_object_caching_enabled() ) {
+		if ( ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ) {
 			return false;
 		}
 

@@ -1431,7 +1431,7 @@ function bp_register_confirm_password( $default = false ) {
 /**
  * Is the object caching enabled?
  *
- * @since BuddyBoss 1.1.8
+ * @since BuddyBoss 1.1.9
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -1443,7 +1443,7 @@ function bp_performance_is_object_caching_enabled( $default = false ) {
 	/**
 	 * Filters whether or not the object caching is enabled or not.
 	 *
-	 * @since BuddyBoss 1.1.8
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param bool $value Whether or not object caching is enabled.
 	 */
@@ -1453,7 +1453,7 @@ function bp_performance_is_object_caching_enabled( $default = false ) {
 /**
  * Get enabled object caching method
  *
- * @since BuddyBoss 1.1.8
+ * @since BuddyBoss 1.1.9
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
@@ -1465,9 +1465,25 @@ function bp_performance_enabled_object_caching_method( $default = false ) {
 	/**
 	 * Filters enabled object caching method.
 	 *
-	 * @since BuddyBoss 1.1.8
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param string $value Enabled object caching method.
 	 */
 	return apply_filters( 'bp_performance_enabled_object_caching_method', bp_get_option( 'bp-performance-object-caching-method', $default ) );
+}
+
+/**
+ * Is the opcode caching enabled?
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @return bool True if the opcode caching is enabled,
+ *              otherwise false.
+ */
+function bp_performance_is_opcode_caching_enabled(  ) {
+
+	if ( function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ) {
+		return true;
+	}
+	return false;
 }

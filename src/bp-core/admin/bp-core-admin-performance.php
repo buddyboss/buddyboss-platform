@@ -3,7 +3,7 @@
  * BuddyBoss Performance panel.
  *
  * @package BuddyBoss\Core
- * @since BuddyBoss 1.1.8
+ * @since BuddyBoss 1.1.9
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Render the BuddyBoss Performance page.
  *
- * @since BuddyBoss 1.1.8
+ * @since BuddyBoss 1.1.9
  */
 function bp_core_admin_performance() {
 
@@ -77,7 +77,7 @@ function bp_admin_performance_setting_opcode_cache_callback() {
 
 	$zend_opcache = '<a href="https://www.php.net/manual/en/intro.opcache.php" target="_blank">' . __( 'Zend OPcache', 'buddyboss' ) . '</a>';
 
-	if ( function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ) {
+	if ( bp_performance_is_opcode_caching_enabled() ) {
 		?><p class="description"><?php echo sprintf( __( 'You have %s enabled on your server. BuddyBoss supports %s.', 'buddyboss' ), $zend_opcache, $zend_opcache ); ?></p><?php
 	} else {
 		?><p class="description"><?php echo sprintf( __( '<strong>You have no opcode cache enabled on your server.</strong> Ask your web hosting to enable on your server. Your site will load faster after.', 'buddyboss' ), $zend_opcache ); ?></p><?php
