@@ -69,14 +69,13 @@ class BP_Core_Cache {
 	public function init_cache() {
 
 	    //clear cache first
-		bp_core_performance_clear_cache();
+		$this->delete_addin();
 
 		$addin_required = bp_performance_is_object_caching_enabled();
 
 		if ( $addin_required ) {
+		    error_log("object cache enabled");
 			$this->create_addin();
-		} else {
-			$this->delete_addin();
 		}
     }
 
@@ -163,6 +162,8 @@ class BP_Core_Cache {
 			// do we have filesystem credentials?
 			if ( $this->initialize_filesystem( $performance_tab_url, true ) ) {
 				$result = $wp_filesystem->delete( $filename );
+				error_log("deleted");
+				bp_core_performance_clear_cache();
 			}
 
 			if ( ! $result ) {
@@ -170,11 +171,11 @@ class BP_Core_Cache {
 					return;
 				}
 				if ( @unlink( $filename ) ) {
+					error_log("file deleted");
+					bp_core_performance_clear_cache();
 					return;
 				}
 			}
-
-			bp_core_performance_clear_cache();
         }
 	}
 

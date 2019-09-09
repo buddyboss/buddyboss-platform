@@ -93,8 +93,8 @@ function bp_admin_performance_setting_opcode_cache_callback() {
 function bp_admin_performance_setting_caching_callback() {
 	?>
 
-    <input id="bp-performance-enable-caching" name="bp-performance-enable-caching" type="checkbox" value="1" <?php checked( bp_performance_is_object_caching_enabled() ); ?> />
-    <label for="bp-performance-enable-caching"><?php echo sprintf( __( 'Enable using %s caching method', 'buddyboss' ), bp_performance_object_caching_methods_dropdown() ); ?></label>
+    <input id="bp-performance-enable-object-caching" name="bp-performance-enable-object-caching" type="checkbox" value="1" <?php checked( bp_performance_is_object_caching_enabled() ); ?> />
+    <label for="bp-performance-enable-object-caching"><?php echo sprintf( __( 'Enable using %s caching method', 'buddyboss' ), bp_performance_object_caching_methods_dropdown() ); ?></label>
     <?php
 	$cache_methods = array();
 
@@ -145,7 +145,7 @@ function bp_performance_flush_cache_callback() {
 	?>
 
     <p>
-        <a <?php echo ! bp_performance_is_object_caching_enabled() ? 'disabled' : ''; ?> class="button" href="<?php echo esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
+        <a <?php echo ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ? 'disabled="disabled" onclick="return false;"' : ''; ?> class="button" href="<?php echo ! bp_performance_is_object_caching_enabled() && ! bp_performance_is_opcode_caching_enabled() ? '#' : esc_url( $performance_tab_url ); ?>"><?php _e( 'Flush Cache', 'buddyboss' ); ?></a>
     </p>
 
 	<?php
@@ -158,7 +158,7 @@ function bp_performance_object_caching_methods_dropdown() {
 	$caching_method = bp_performance_enabled_object_caching_method();
     ob_start();
     ?>
-    <select name="bp-performance-caching-method">
+    <select name="bp-performance-object-caching-method">
         <option value=""><?php _e( 'Not Available', 'buddyboss' ); ?></option>
         <option <?php echo function_exists( 'opcache_reset' ) && ini_get( 'opcache.enable' ) ? '' : 'disabled'; ?> value="opcache" <?php echo 'opcache' == $caching_method? 'selected' : ''; ?>><?php esc_html_e( 'Zend OPcache', 'buddyboss' ) ?></option>
 <!--        <option --><?php //echo function_exists( 'apc_store' ) || function_exists( 'apcu_store' ) ? '' : 'disabled'; ?><!-- value="apc" --><?php //echo 'apc' == $caching_method? 'selected' : ''; ?><!-->--><?php //esc_html_e( 'APC', 'buddyboss' ) ?><!--</option>-->
@@ -198,6 +198,9 @@ function bp_admin_performance_data_save() {
 
 		$enable_caching = isset( $_POST['bp-performance-enable-object-caching'] );
 		$caching_method = ! empty( $_POST['bp-performance-object-caching-method'] ) ? $_POST['bp-performance-object-caching-method'] : false;
+
+		error_log($enable_caching);
+		error_log($caching_method);
 
 		if ( $enable_caching && ! empty( $caching_method ) ) {
 		    bp_update_option( 'bp-performance-enable-object-caching', true );

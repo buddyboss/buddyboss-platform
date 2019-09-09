@@ -406,7 +406,11 @@ function bp_core_performance_clear_cache() {
 
 		// Flush OPcache
 		opcache_reset();
+
+		error_log("opcode cache flushed");
 	}
 
 	wp_cache_flush();
+
+	error_log("object cache flushed");
 }
