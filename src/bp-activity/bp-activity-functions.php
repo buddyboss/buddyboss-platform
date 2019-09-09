@@ -2120,6 +2120,18 @@ function bp_activity_add( $args = '' ) {
 						? $r['action']
 						: bp_activity_generate_action_string( $activity );
 
+	// Check course is published or not when add new inside edit screen.
+	if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+    	$types_array 	= ['sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'sfwd-essays','sfwd-courses'];
+    	$post_type 		= isset($_POST['builder_data']["builder_post_type"])?(string)$_POST['builder_data']["builder_post_type"]:'';
+        if ((isset($_POST['action']) && ($_POST['action'] =="learndash_builder_selector_step_title" || $_POST['action'] =="learndash_builder_selector_step_new")) && in_array( $post_type, $types_array )) {
+        	$course_id  = isset($_POST['builder_data']['builder_post_id'])?$_POST['builder_data']['builder_post_id']:0;
+        	if (0 < $course_id && get_post_status( $course_id ) != 'publish') {
+        		return true;
+        	}
+        }
+    }
+    
 	$save = $activity->save();
 
 	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
