@@ -84,10 +84,27 @@ function bp_helper_plugins_loaded_callback() {
 		 * This action is use when admin bar is Disable
 		 */
 		add_action( 'buddyboss_theme_after_bb_profile_menu', 'bp_core_add_buddyboss_menu_for_memberpress_buddypress', 100 );
+
+		/**
+		 * This action to update the first and last name usermeta
+		 */
+		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
 	}
 }
 
-add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
+add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
+
+/**
+ * Add User meta as first and last name is update by BuddyBoss Platform itself
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param int $user_id Register member user id
+ */
+function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
+	$user_id = empty( $user_id ) ? bp_loggedin_user_id() : $user_id;
+	update_user_meta( $user_id, 'bp_flname_sync', 1 );
+}
 
 /**
  * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
