@@ -504,9 +504,19 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		wp_enqueue_script( 'bp-nouveau' );
 
+		if ( bp_is_register_page() ) {
+			wp_enqueue_script( 'bp-nouveau-email-verify' );
+			
+			// Localize the script with new data for email
+			$translation_array = array(
+				'mismatch_email' => __( 'Email are mismatch', 'platform' ),
+				'valid_email' => __( 'Enter valid email', 'platform' ),
+			);
+			wp_localize_script( 'bp-nouveau-email-verify', 'email_confirm', $translation_array );
+		}
+
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );
-			wp_enqueue_script( 'bp-nouveau-email-verify' );
 		}
 
 		if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) ) {

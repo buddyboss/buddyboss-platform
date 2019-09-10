@@ -11446,7 +11446,7 @@ img.emojioneemoji {
     text-align: center;
     width: auto;
 }
-.bs-bp-container-reg .buddypress-wrap #pass-strength-result.short, .bs-bp-container-reg .buddypress-wrap #email-strength-result.show {
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.show {
     font-weight: normal;
     background-color: #EF3E46;
     border-color: #EF3E46;
