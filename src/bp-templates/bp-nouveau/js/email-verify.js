@@ -5,11 +5,17 @@
 	
 	function check_email() {
 		var email1 = $( '#signup_email' ).val(),
+			email2 = $( '#signup_email_confirm' ).val(),
 		    regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		// Reset classes and result text
 		$( '#email-strength-result' ).removeClass( 'show bad' );
 		if(regex.test(email1)) {
 			$( '#email-strength-result' ).html( '' );
+
+			if (email2 !=='' && email1 !== email2) {
+				$( '#email-strength-result' ).addClass( 'show mismatch' ).html( email_confirm.mismatch_email );
+				return;
+			}
 			return;
 		}
 
