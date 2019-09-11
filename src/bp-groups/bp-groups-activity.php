@@ -140,9 +140,9 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 }
 
 /**
- * Format 'joined_group' activity actions.
+ * Format groups 'activity_update' activity actions.
  *
- * @since BuddyPress 2.0.0
+ * @since BuddyBoss 1.1.9
  *
  * @param string $action   Static activity action.
  * @param object $activity Activity data object.
@@ -157,11 +157,11 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	/**
-	 * Filters the 'joined_group' activity actions.
+	 * Filters the groups 'activity_update' activity actions.
 	 *
-	 * @since BuddyPress 2.0.0
+	 * @since BuddyBoss 1.1.9
 	 *
-	 * @param string $action   The 'joined_group' activity actions.
+	 * @param string $action   The groups 'activity_update' activity actions.
 	 * @param object $activity Activity data object.
 	 */
 	return apply_filters( 'bp_groups_format_activity_action_activity_update', $action, $activity );
