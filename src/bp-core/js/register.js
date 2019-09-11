@@ -92,6 +92,7 @@ jQuery( document ).ready( function() {
 						tinyMCE.execCommand('mceRepaint');
 					}
 					/* jshint ignore:end */
+
 				}
 			}
 		});
@@ -160,10 +161,10 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						// jshint undef:true
 						tinyMCE.execCommand('mceRepaint');
 					}
 					/* jshint ignore:end */
+
 				}
 			}
 		});
