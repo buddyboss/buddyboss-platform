@@ -136,9 +136,9 @@ class BBP_Default extends BBP_Theme_Compat {
 		$scripts = array();
 
 		// Tag Input
-		//if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
 			wp_enqueue_script( 'bp-tagify' );
-		//}
+		}
 
 		// Always pull in jQuery for TinyMCE shortcode usage
 		if ( bbp_use_wp_editor() ) {

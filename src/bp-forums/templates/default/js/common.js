@@ -5,7 +5,7 @@ jQuery(document).ready( function() {
         if ( input != null ) {
             window.bbp_tagify = new window.Tagify(input, {});
 
-			window.bbp_tagify.on('input', onInput);
+			window.bbp_tagify.on('input', bbpOnInputTags);
 
 			if ( jQuery('#bbp_topic_tags').val() ) {
 				jQuery('.tagify__input').attr( 'data-placeholder', '' );
@@ -38,7 +38,7 @@ jQuery(document).ready( function() {
         }
     }
 
-	function onInput( e ){
+	function bbpOnInputTags( e ){
 		var value = e.detail.value;
 		window.bbp_tagify.settings.whitelist.length = 0; // reset the whitelist
 
