@@ -694,7 +694,7 @@ class BBP_BuddyPress_Activity {
 		$group_link = bp_get_group_link( $group );
 
 		return sprintf(
-			esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+			esc_html__( '%1$s started the discussion %2$s in the group %3$s', 'buddyboss' ),
 			$user_link,
 			$topic_link,
 			$group_link
@@ -726,7 +726,7 @@ class BBP_BuddyPress_Activity {
 		$group_link = bp_get_group_link( $group );
 
 		return sprintf(
-			esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ),
+			esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss' ),
 			$user_link,
 			$topic_link,
 			$group_link
