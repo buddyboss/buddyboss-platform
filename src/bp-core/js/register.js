@@ -20,10 +20,11 @@ jQuery( document ).ready( function() {
 	// Add existing profile fields ids to new hidden field value.
 	onLoadField.val( getExistingFieldsSelector.val() );
 
+	/* jshint ignore:start */
 	if ( typeof( tinymce ) !== 'undefined' ) {
-		// jshint undef:true
 		tinymce.remove('textarea'); // jshint undef:true
 	}
+	/* jshint ignore:end */
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
 
@@ -74,10 +75,9 @@ jQuery( document ).ready( function() {
 					jQuery( 'body #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
+					/* jshint ignore:start */
 					if ( typeof( tinymce ) !== 'undefined' ) {
-						// jshint undef:true
 						tinymce.remove('textarea');
-						// jshint undef:true
 						tinymce.init(
 							{
 								selector: 'textarea',
@@ -91,6 +91,7 @@ jQuery( document ).ready( function() {
 						);
 						tinyMCE.execCommand('mceRepaint');
 					}
+					/* jshint ignore:end */
 				}
 			}
 		});
@@ -145,10 +146,9 @@ jQuery( document ).ready( function() {
 					jQuery( 'body #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
+					/* jshint ignore:start */
 					if ( typeof( tinymce ) !== 'undefined' ) {
-						// jshint undef:true
 						tinymce.remove('textarea');
-						// jshint undef:true
 						tinymce.init(
 							{
 								selector: 'textarea',
@@ -163,6 +163,7 @@ jQuery( document ).ready( function() {
 						// jshint undef:true
 						tinyMCE.execCommand('mceRepaint');
 					}
+					/* jshint ignore:end */
 				}
 			}
 		});
