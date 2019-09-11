@@ -287,6 +287,11 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
+			// if object is activity and object nav does not exists fallback to scope = all
+			if ( data.object == 'activity' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
