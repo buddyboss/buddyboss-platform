@@ -392,6 +392,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				return;
 			}
 
+			$total = [];
+
 			if ( 'all' == $args['search_subset'] ) {
 
 				/**
@@ -441,7 +443,6 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 				*/
 
 				$sql_queries   = [];
-				$total = [];
 
 				foreach ( $this->searchable_items as $search_type ) {
 					if ( ! isset( $this->search_helpers[ $search_type ] ) ) {
@@ -674,11 +675,15 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ):
 						continue;
 					}
 
-					$obj                                                       = $this->search_helpers[ $search_type ];
-					$total_match_count                                         = $obj->get_total_match_count( $this->search_args['search_term'] );
-					$this->search_results[ $search_type ]['total_match_count'] = $total_match_count;
+					if ( ! isset( $total[ $search_type ] ) ) {
+						$obj                                                       = $this->search_helpers[ $search_type ];
+						$total_match_count                                         = $obj->get_total_match_count( $this->search_args['search_term'] );
+						$this->search_results[ $search_type ]['total_match_count'] = (int) $total_match_count;
+					} else {
+						$this->search_results[ $search_type ]['total_match_count'] = (int) $total[ $search_type ];
+					}
 
-					$all_items_count += $total_match_count;
+					$all_items_count += $this->search_results[ $search_type ]['total_match_count'];
 				}
 
 				$this->search_results['all']['total_match_count'] = $all_items_count;
