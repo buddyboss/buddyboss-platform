@@ -1456,9 +1456,6 @@ window.bp = window.bp || {};
 		lazyLoad: function( lazyTarget ){
 			var lazy = $( lazyTarget );
 			if( lazy.length ){
-				function cleanLazy() {
-					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
-				}
 				for( var i=0; i<lazy.length; i++ ) {
 					var isInViewPort = false;
 					try {
@@ -1477,8 +1474,7 @@ window.bp = window.bp || {};
 						lazy[i].removeAttribute('data-src');
 					}
 				}
-				cleanLazy();
-			}			
+			}
 		}
 	};
 

@@ -705,6 +705,23 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
+	//check for privacy page if already exists in WP settings > privacy
+	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
+	$static_pages = array( 'terms' );
+
+	if ( empty( $policy_page_id ) ) {
+		$static_pages[] = 'privacy';
+    } else {
+		$pages_to_create[ 'privacy' ] = $page_titles[ 'privacy' ];
+    }
+
+	// Create terms and privacy pages
+	foreach ( $static_pages as $slug ) {
+		if ( ! isset( $pages[ $slug ] ) ) {
+			$pages_to_create[ $slug ] = $page_titles[ $slug ];
+		}
+	}
+
 	// No need for a Sites directory unless we're on multisite.
 	if ( ! is_multisite() && isset( $pages_to_create['blogs'] ) ) {
 		unset( $pages_to_create['blogs'] );
@@ -761,6 +778,8 @@ function bp_core_get_directory_page_default_titles() {
 		'register'          => __( 'Register', 'buddyboss' ),
 		//'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
 		'new_forums_page'   => __( 'Forums', 'buddyboss' ),
+		'terms'             => __( 'Terms of Service', 'buddyboss' ),
+		'privacy'           => __( 'Privacy Policy', 'buddyboss' ),
 	);
 
 	/**
@@ -3984,55 +4003,6 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 		}
 	}
 	return $allowed;
-}
-
-/**
- * Set default pages for Privacy Policy, Terms of Service, Activate and Register
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_core_set_default_pages() {
-
-	$page_ids       = bp_core_get_directory_page_ids( 'all' );
-	$valid_pages    = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
-	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
-
-	if ( ! bp_get_signup_allowed() ) {
-		unset( $valid_pages['activate'] );
-		unset( $valid_pages['register'] );
-	}
-
-	// Remove Terms of Service page from auto-creation on installation.
-	unset( $valid_pages['terms'] );
-
-	foreach ( $valid_pages as $key => $value ) {
-
-		if ( ! array_key_exists( $key, $page_ids ) ) {
-
-			$default_title = bp_core_get_directory_page_default_titles();
-
-			if ( 'privacy' === $key && $policy_page_id > 0 ) {
-				$page_ids[ $key ] = (int) $policy_page_id;
-			} else {
-				$title            = ( isset( $default_title[ $key ] ) ) ? $default_title[ $key ] : $value;
-				$new_page         = array(
-					'post_title'     => $title,
-					'post_status'    => 'publish',
-					'post_author'    => bp_loggedin_user_id(),
-					'post_type'      => 'page',
-					'comment_status' => 'closed',
-					'ping_status'    => 'closed',
-				);
-				$page_id          = wp_insert_post( $new_page );
-				$page_ids[ $key ] = (int) $page_id;
-			}
-
-			bp_core_update_directory_page_ids( $page_ids );
-
-		}
-
-	}
-
 }
 
 /**
