@@ -7,8 +7,8 @@ jQuery( document ).ready( function() {
 	var getExistingFieldsSelector = jQuery('body #profile-details-section #signup_profile_field_ids');
 
 	// Add new hidden field for keep existing field to add again in change profile type action.
-	var hiddenField  = jQuery("<input type=\"hidden\" class=\"onloadfields\" value='' />");
-	var existsField  = jQuery("<input type=\"hidden\" name=\"signup_profile_field_ids\" id=\"signup_profile_field_ids\" value='' />");
+	var hiddenField  = jQuery('<input type="hidden" class="onloadfields" value="" />');
+	var existsField  = jQuery('<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="" />');
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
@@ -21,7 +21,8 @@ jQuery( document ).ready( function() {
 	onLoadField.val( getExistingFieldsSelector.val() );
 
 	if ( typeof( tinymce ) !== 'undefined' ) {
-		tinymce.remove('textarea');
+		// jshint undef:true
+		tinymce.remove('textarea'); // jshint undef:true
 	}
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
@@ -74,9 +75,9 @@ jQuery( document ).ready( function() {
 					existsField.val( response.data.field_ids );
 
 					if ( typeof( tinymce ) !== 'undefined' ) {
-
+						// jshint undef:true
 						tinymce.remove('textarea');
-
+						// jshint undef:true
 						tinymce.init(
 							{
 								selector: 'textarea',
@@ -145,9 +146,9 @@ jQuery( document ).ready( function() {
 					existsField.val( response.data.field_ids );
 
 					if ( typeof( tinymce ) !== 'undefined' ) {
-
+						// jshint undef:true
 						tinymce.remove('textarea');
-
+						// jshint undef:true
 						tinymce.init(
 							{
 								selector: 'textarea',
@@ -159,6 +160,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
+						// jshint undef:true
 						tinyMCE.execCommand('mceRepaint');
 					}
 				}

@@ -54,7 +54,7 @@ window.bp = window.bp || {};
 
 			$.ajaxPrefilter( this.memberPreFilter );
 			$.ajaxPrefilter( this.groupPreFilter );
-			
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on( 'scroll resize',function(){
@@ -393,7 +393,7 @@ window.bp = window.bp || {};
 
 							// Inform other scripts the list of objects has been refreshed.
 							$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
-							
+
 							//Lazy Load Images
 							if(bp.Nouveau.lazyLoad){
 								setTimeout(function(){ // Waiting to load dummy image
@@ -1451,9 +1451,6 @@ window.bp = window.bp || {};
 		lazyLoad: function( lazyTarget ){
 			var lazy = $( lazyTarget );
 			if( lazy.length ){
-				function cleanLazy() {
-					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
-				}
 				for( var i=0; i<lazy.length; i++ ) {
 					var isInViewPort = false;
 					try {
@@ -1472,8 +1469,11 @@ window.bp = window.bp || {};
 						lazy[i].removeAttribute('data-src');
 					}
 				}
-				cleanLazy();
-			}			
+				bp.Nouveau.cleanLazy( lazy );
+			}
+		},
+		cleanLazy: function( lazy ){
+			Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
 		}
 	};
 
