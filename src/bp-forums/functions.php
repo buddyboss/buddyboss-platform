@@ -519,7 +519,7 @@ function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
  * @param int $forum_id
  * @uses bbp_get_forum_id() To get the forum id
  * @uses bbp_get_forum_group_ids() To get the forum's group ids
- * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id 
+ * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id
  * @return bool True if it is a group forum, false if not
  */
 function bbp_is_forum_group_forum( $forum_id = 0 ) {
@@ -769,8 +769,14 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 
 add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
 add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );
-add_action( 'wp_ajax_search_tags',        'ajax_forum_search_tags' );
-function ajax_forum_search_tags() {
+add_action( 'wp_ajax_search_tags',        'bbp_forum_topic_reply_ajax_form_search_tags' );
+
+/**
+ * Search the tags that already added on forums previously and give the suggestions list.
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bbp_forum_topic_reply_ajax_form_search_tags() {
 
 	$response = array(
 		'feedback' => sprintf(
