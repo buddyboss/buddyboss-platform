@@ -3066,13 +3066,13 @@ function bp_get_group_type_key( $post_id ) {
  * @return type array
  */
 function bp_get_active_group_types() {
-	$query = new WP_Query([
-		'post_per_page' => -1,
-		'post_type'     => bp_get_group_type_post_type(),
-		'post_status'   => 'publish',
-		'fields'        => 'ids',
-		'orderby'       => 'menu_order'
-	]);
+	$query = new WP_Query( [
+		'posts_per_page' => -1,
+		'post_type'      => bp_get_group_type_post_type(),
+		'post_status'    => 'publish',
+		'fields'         => 'ids',
+		'orderby'        => 'menu_order',
+	] );
 
 	return $query->posts;
 }

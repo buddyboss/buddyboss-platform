@@ -576,19 +576,19 @@ function bp_the_profile_field_name() {
 
 /**
  * Returns the XProfile field's alternate name, if added, empty otherwise.
- * 
+ *
  * @global \BP_XProfile_Field_Type $field
  * @since BuddyBoss 1.0.0
- * 
+ *
  * @param \BP_XProfile_Field_Type $the_field field object. Optional. Defaults to global $field object.
- * @return string 
+ * @return string
  */
 function bp_get_the_profile_field_alternate_name( $the_field = false ) {
     if ( !$the_field ) {
         global $field;
         $the_field = $field;
     }
-    
+
     /**
      * Filters the XProfile field's alternate name.
      *

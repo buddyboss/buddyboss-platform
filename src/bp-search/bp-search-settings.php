@@ -218,7 +218,17 @@ function bp_search_get_settings_fields() {
 			]
 		];
 
-		$taxonomies = get_object_taxonomies( $post_type );
+		/**
+		 * Filter to add or remove the Taxonomy from Post Type
+		 *
+		 * @since 1.1.9
+		 *
+		 * @param array Return the names or objects of the taxonomies which are registered for the requested object or object type
+		 * @param array $post_type Post type
+		 *
+		 * @return array $taxonomies Return the names or objects of the taxonomies which are registered for the requested object or object type
+		 */
+		$taxonomies = (array) apply_filters( 'bp_search_settings_post_type_taxonomies', get_object_taxonomies( $post_type ), $post_type );
 
 		foreach ( $taxonomies as $taxonomy ) {
 			$fields['bp_search_settings_post_types']["bp_search_{$post_type}_tax_{$taxonomy}"] = [

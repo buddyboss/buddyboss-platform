@@ -2305,16 +2305,17 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		$current_group = bp_get_current_group_id();
 
 		if ( groups_is_user_member( $author_id, $current_group ) ) {
-			$display_role = __( 'Member', 'buddyboss' );
+			$display_role = get_group_role_label( $current_group, 'member_singular_label_name' );
 		}
 
 		if ( groups_is_user_mod( $author_id, $current_group ) ) {
-			$display_role = __( 'Moderator', 'buddyboss' );
+			$display_role = get_group_role_label( $current_group, 'moderator_singular_label_name' );
 		}
 
 		if ( groups_is_user_admin( $author_id, $current_group ) ) {
-			$display_role = __( 'Organizer', 'buddyboss' );
+			$display_role = get_group_role_label( $current_group, 'organizer_singular_label_name' );
 		}
+
 	} else {
 		if ( ! $author_id ) {
 			$display_role = __( 'Guest', 'buddyboss' );
