@@ -25,7 +25,7 @@
 		    regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 		// Reset classes and result text
 		$( '#email-strength-result' ).removeClass( 'show mismatch bad' );
-		if(regex.test(email2)) {
+		if(regex.test(email2) && email1 == email2) {
 			$( '#email-strength-result' ).html( '' );
 			return;
 		}
