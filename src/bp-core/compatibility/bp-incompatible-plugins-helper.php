@@ -81,11 +81,6 @@ function bp_helper_plugins_loaded_callback() {
 		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 100 );
 
 		/**
-		 * This action is use when admin bar is Disable
-		 */
-		add_action( 'buddyboss_theme_after_bb_profile_menu', 'bp_core_add_buddyboss_menu_for_memberpress_buddypress', 100 );
-
-		/**
 		 * This action to update the first and last name usermeta
 		 */
 		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
@@ -104,46 +99,6 @@ add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
 function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
 	$user_id = empty( $user_id ) ? bp_loggedin_user_id() : $user_id;
 	update_user_meta( $user_id, 'bp_flname_sync', 1 );
-}
-
-/**
- * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
- *
- * @since BuddyBoss 1.1.9
- *
- * @param $menus
- */
-function bp_core_add_buddyboss_menu_for_memberpress_buddypress() {
-	global $bp;
-
-	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
-	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
-	?>
-	<li id="wp-admin-bar-mp-membership" class="menupop">
-		<a class="ab-item" aria-haspopup="true" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/';?>">
-			<span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo $name;?>
-		</a>
-		<div class="ab-sub-wrapper">
-			<ul id="wp-admin-bar-mp-membership-default" class="ab-submenu">
-				<li id="wp-admin-bar-mp-info">
-					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/';?>">
-						<?php echo _x( 'Info', 'ui', 'buddyboss' ); ?>
-					</a>
-				</li>
-				<li id="wp-admin-bar-mp-subscriptions">
-					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/';?>">
-						<?php echo _x( 'Subscriptions', 'ui', 'buddyboss' ); ?>
-					</a>
-				</li>
-				<li id="wp-admin-bar-mp-payments">
-					<a class="ab-item" href="<?php echo $bp->loggedin_user->domain . $main_slug . '/mp-payments/';?>">
-						<?php echo _x( 'Payments', 'ui', 'buddyboss' ); ?>
-					</a>
-				</li>
-			</ul>
-		</div>
-	</li>
-	<?php
 }
 
 /**
