@@ -78,7 +78,7 @@ function bp_helper_plugins_loaded_callback() {
 		/**
 		 * This action is use when admin bar is Enable
 		 */
-		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 20 );
+		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 100 );
 
 		/**
 		 * This action to update the first and last name usermeta
