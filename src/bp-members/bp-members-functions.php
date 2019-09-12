@@ -1653,8 +1653,8 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 		}
 
 		// Minimum of 4 characters.
-		if ( strlen( $user_name ) < 4 ) {
-			$errors->add( 'user_name',  __( 'Username must be at least 4 characters', 'buddyboss' ) );
+		if ( strlen( $user_name ) < 3 ) {
+			$errors->add( 'user_name',  __( 'Username must be at least 3 characters', 'buddyboss' ) );
 		}
 
 		// No underscores. @todo Why not?
