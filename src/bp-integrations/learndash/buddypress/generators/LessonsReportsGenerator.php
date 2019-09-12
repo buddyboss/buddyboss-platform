@@ -50,6 +50,11 @@ class LessonsReportsGenerator extends ReportsGenerator
 				'sortable'  => true,
 				'order_key' => 'post_title',
 			],
+			'lesson_points'     => [
+				'label'     => __( 'Points Earned', 'buddyboss' ),
+				'sortable'  => true,
+				'order_key' => 'activity_points',
+			],
 			'start_date'      => $this->column('start_date'),
 			'completion_date' => $this->column('completion_date'),
 			'updated_date'    => $this->column('updated_date'),
@@ -60,7 +65,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 	/**
 	 * Format the activity results for each column
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.0.0kkzjasjn
 	 */
 	protected function formatData($activity)
 	{
@@ -71,6 +76,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 			'course'          => $activity->activity_course_title,
 			'lesson'          => $activity->post_title,
 			'start_date'      => $activity->activity_started_formatted,
+			'lesson_points'   => '',
 			'completion_date' => $this->completionDate($activity),
 			'updated_date'    => $this->updatedDate($activity),
 			'time_spent'      => $this->timeSpent($activity),
