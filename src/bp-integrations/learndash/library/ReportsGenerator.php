@@ -7,7 +7,7 @@
  */
 
 namespace Buddyboss\LearndashIntegration\Library;
-
+use LDLMS_DB;
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
@@ -117,12 +117,148 @@ class ReportsGenerator
 	 */
 	public function fetch()
 	{
+		global $wpdb;
+
 		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
 		$this->activityQuery = learndash_reports_get_activity($this->params);
 		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
 		// print_r($this->activityQuery);die();
-		$this->results = $this->activityQuery['results'];
-		$this->pager = $this->activityQuery['pager'];
+
+		if ( 'IN_PROGRESS' === $this->params['activity_status'] ) {
+			$pending = [];
+			$pager = false;
+			foreach ( $this->activityQuery['results'] as $result ) {
+				$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $result->user_id, (int) $result->post_id, (int) $result->activity_course_id, 1 ) ); // db call ok; no-cache ok;
+				if ( empty($activity_data ) ) {
+					$pending[] = $result;
+				}
+			}
+			if ( 'sfwd-lessons' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
+
+				$get_user_all_lessons                = bp_get_user_course_lesson_data( $this->params['course_ids'], $this->params['user_ids'] );
+				$get_user_all_pending_lessons        = wp_list_filter( $get_user_all_lessons['all_lesson'], array( 'status' => 0 ) );
+				$get_user_all_pending_lessons_ids    = wp_list_pluck( $get_user_all_pending_lessons, 'id' );
+				$get_ld_activity_pending_lessons_ids = wp_list_pluck( $pending, 'post_id' );
+				$need_to_add_in_loop                 = array_diff( $get_user_all_pending_lessons_ids, $get_ld_activity_pending_lessons_ids );
+
+				foreach ( $need_to_add_in_loop as $id ) {
+					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
+					if ( ! empty( $activity_data ) ) {
+						continue;
+					}
+					$pending[] = (object) [
+						'user_id'                      => ( $this->params['user_ids'] ) ? $this->params['user_ids'] : '',
+						'user_display_name'            => bp_core_get_user_displayname( $this->params['user_ids'] ),
+						'user_email'                   => bp_core_get_user_email( $this->params['user_ids'] ),
+						'post_id'                      => $id,
+						'post_title'                   => get_the_title( $id ),
+						'post_type'                    => 'sfwd-lessons',
+						'activity_id'                  => '',
+						'activity_course_id'           => '',
+						'activity_type'                => '',
+						'activity_started'             => '',
+						'activity_completed'           => '',
+						'activity_updated'             => '',
+						'activity_status'              => '',
+						'activity_course_title'        => '',
+						'activity_time_spent'          => '',
+						'activity_started_formatted'   => '',
+						'activity_updated_formatted'   => '',
+						'activity_completed_formatted' => '',
+						'activity_meta'                => array(),
+					];
+				}
+			} elseif ( 'sfwd-topic' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
+
+				$get_user_all_topics                = bp_get_user_course_lesson_data( $this->params['course_ids'], $this->params['user_ids'] );
+				$get_user_all_pending_topics        = wp_list_filter( $get_user_all_topics['topics']['all_topics'], array( 'status' => 0 ) );
+				$get_user_all_pending_topics_ids    = wp_list_pluck( $get_user_all_pending_topics, 'id' );
+				$get_ld_activity_pending_topics_ids = wp_list_pluck( $pending, 'post_id' );
+				$need_to_add_in_loop                = array_diff( $get_user_all_pending_topics_ids, $get_ld_activity_pending_topics_ids );
+
+				foreach ( $need_to_add_in_loop as $id ) {
+					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
+					if ( ! empty( $activity_data ) ) {
+						continue;
+					}
+					$pending[] = (object) [
+						'user_id'                      => ( $this->params['user_ids'] ) ? $this->params['user_ids'] : '',
+						'user_display_name'            => bp_core_get_user_displayname( $this->params['user_ids'] ),
+						'user_email'                   => bp_core_get_user_email( $this->params['user_ids'] ),
+						'post_id'                      => $id,
+						'post_title'                   => get_the_title( $id ),
+						'post_type'                    => 'sfwd-topics',
+						'activity_id'                  => '',
+						'activity_course_id'           => '',
+						'activity_type'                => '',
+						'activity_started'             => '',
+						'activity_completed'           => '',
+						'activity_updated'             => '',
+						'activity_status'              => '',
+						'activity_course_title'        => '',
+						'activity_time_spent'          => '',
+						'activity_started_formatted'   => '',
+						'activity_updated_formatted'   => '',
+						'activity_completed_formatted' => '',
+						'activity_meta'                => array(),
+					];
+				}
+			} elseif ( 'sfwd-quiz' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
+
+				$get_user_all_quizzes                = bp_get_user_course_quiz_data( $this->params['course_ids'], $this->params['user_ids'] );
+				$get_user_all_pending_quizzes        = wp_list_filter( $get_user_all_quizzes['all_quizzes'], array( 'status' => 0 ) );
+				$get_user_all_pending_quizzes_ids    = wp_list_pluck( $get_user_all_pending_quizzes, 'id' );
+				$get_ld_activity_pending_quizzes_ids = wp_list_pluck( $pending, 'post_id' );
+				$need_to_add_in_loop                 = array_diff( $get_user_all_pending_quizzes_ids, $get_ld_activity_pending_quizzes_ids );
+				$pager = false;
+				if ( empty( $pending ) ) {
+					$pager = true;
+				}
+				foreach ( $need_to_add_in_loop as $id ) {
+					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
+					if ( ! empty( $activity_data ) ) {
+						continue;
+					}
+					$pending[] = (object) [
+						'user_id'                      => ( $this->params['user_ids'] ) ? $this->params['user_ids'] : '',
+						'user_display_name'            => bp_core_get_user_displayname( $this->params['user_ids'] ),
+						'user_email'                   => bp_core_get_user_email( $this->params['user_ids'] ),
+						'post_id'                      => $id,
+						'post_title'                   => get_the_title( $id ),
+						'post_type'                    => 'sfwd-quiz',
+						'activity_id'                  => '',
+						'activity_course_id'           => '',
+						'activity_type'                => '',
+						'activity_started'             => '',
+						'activity_completed'           => '',
+						'activity_updated'             => '',
+						'activity_status'              => '',
+						'activity_course_title'        => '',
+						'activity_time_spent'          => '',
+						'activity_score'               => '',
+						'activity_points'              => '',
+						'activity_attemps'             => '',
+						'activity_started_formatted'   => '',
+						'activity_updated_formatted'   => '',
+						'activity_completed_formatted' => '',
+						'activity_meta'                => array(),
+					];
+				}
+			}
+			if ( true === $pager ) {
+				$this->pager = [
+					'total_items' => count( $pending ),
+					'per_page'    => 20,
+					'total_pages' => 1,
+				];
+			}
+			$this->results = $pending;
+			$this->pager   = ( true === $pager ) ? $this->pager : $this->activityQuery['pager'];
+		} else {
+			$this->results = $this->activityQuery['results'];
+			$this->pager   = $this->activityQuery['pager'];
+		}
+
 	}
 
 	/**

@@ -22,23 +22,82 @@ if ($courseId): ?>
 			<a href="<?php echo bp_core_get_user_domain( $user->ID ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => $user->ID ) ); ?></a>
 		</div>
 		<div class="user-name">
-			<h5 class="list-title member-name"><a href="<?php echo bp_core_get_user_domain( $user->ID ); ?>"><?php echo $user->display_name; ?></a></h5>
+			<h5 class="list-title member-name"><a href="<?php echo bp_core_get_user_domain( $user->ID ); ?>"><?php echo bp_core_get_user_displayname( $user->ID ); ?></a></h5>
 			<p class="item-meta"><?php echo groups_is_user_admin($user->ID, $group->id)? __('Teacher', 'buddyboss') : __('Student', 'buddyboss'); ?></p>
 		</div>
 	</div>
 
-	<?php if ($courseId): ?>
+	<?php
+	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) && ( 'all' === $_GET['step'] || 'sfwd-courses' === $_GET['step'] ) ) {
+		$progress = learndash_course_progress( array(
+			'user_id'   => $user->ID,
+			'course_id' => $course->ID,
+			'array'     => true
+		) );
+		?>
+		<div class="user-info">
+			<div class="progress-bar" data-percent="<?php echo $progress['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+		</div>
 		<div class="user-steps">
 			<p><?php printf(
-				__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-				learndash_course_get_completed_steps($user->ID, $course->ID),
-				$totalSteps = learndash_get_course_steps_count($course->ID),
-				_n('step', 'steps', $totalSteps, 'buddyboss')
-			); ?></p>
+					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
+					learndash_course_get_completed_steps($user->ID, $course->ID),
+					$totalSteps = learndash_get_course_steps_count($course->ID),
+					_n('step', 'steps', $totalSteps, 'buddyboss')
+				); ?></p>
 		</div>
-	<?php endif; ?>
+		<?php
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-lessons' === $_GET['step'] ) {
+		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
+		?>
+		<div class="user-info">
+			<div class="progress-bar" data-percent="<?php echo $data['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+		</div>
+		<div class="user-steps">
+			<p><?php printf(
+					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
+					$data['complete'],
+					$data['total'],
+					_n( LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'lessons' ), $data['total'], 'buddyboss')
+				); ?></p>
+		</div>
+		<?php
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-topic' === $_GET['step'] ) {
+		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
+		?>
+		<div class="user-info">
+			<div class="progress-bar" data-percent="<?php echo $data['topics']['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+		</div>
+		<div class="user-steps">
+			<p><?php printf(
+					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
+					$data['topics']['complete'],
+					$data['topics']['total'],
+					_n( LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'topics' ), $data['topics']['total'], 'buddyboss')
+				); ?></p>
+		</div>
+		<?php
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-quiz' === $_GET['step'] ) {
+		$data = bp_get_user_course_quiz_data( $_GET['course'], $user->ID );
+		?>
+		<div class="user-info">
+			<div class="progress-bar" data-percent="<?php echo $data['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+		</div>
+		<div class="user-steps">
+			<p><?php printf(
+					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
+					$data['complete'],
+					$data['total'],
+					_n( LearnDash_Custom_Label::get_label( 'quiz' ), LearnDash_Custom_Label::get_label( 'quizzes' ), $data['total'], 'buddyboss')
+				); ?></p>
+		</div>
+		<?php
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-assignment' === $_GET['step'] ) {
 
-	<?php if ($points = learndash_get_user_course_points($user->ID)): ?>
+	}
+
+
+	if ($points = learndash_get_user_course_points($user->ID)): ?>
 		<div class="user-points">
 			<p><?php printf(
 				__('<b>%d</b> %s earned', 'buddyboss'),
@@ -66,28 +125,3 @@ if ($courseId): ?>
 		</div>
 	<?php endif; ?>
 </div>
-
-<?php
-
-$progress = learndash_course_progress( array(
-'user_id'   => $user->ID,
-'course_id' => $course->ID,
-'array'     => true
-) );
-
-//learndash_lesson_progress();
-//learndash_get_assignment_progress();
-
-?>
-
-<div class="ld-progress">
-	<div class="progress-bar" data-percent="<?php echo 90; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
-	<div class="ld-progress-heading">
-		<div class="ld-progress-stats">
-			<div class="ld-progress-steps"><?php echo sprintf( esc_html_x( '%1$d/%2$d Steps', 'placeholder: completed steps, total steps', 'learndash' ), $progress['completed'], $progress['total'] ); ?></div>
-		</div> <!--/.ld-course-progress-stats-->
-	</div> <!--/.ld-course-progress-heading-->
-
-</div> <!--/.ld-course-progress-->
-
-

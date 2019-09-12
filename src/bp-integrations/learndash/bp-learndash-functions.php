@@ -1,7 +1,7 @@
 <?php
 /**
  * LearnDash integration group sync helpers
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -245,4 +245,220 @@ function learndash_integration_prepare_price_str( $price ) {
 	}
 
 	return '';
+}
+
+function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
+	// Get Lessons
+	$lessons_list           = learndash_get_course_lessons_list( $couser_id, $user_id, [ 'num' => - 1 ] );
+	$lesson_order           = 0;
+	$topic_order            = 0;
+	$lessons                = [];
+	$status                 = [];
+	$status['completed']    = 1;
+	$status['notcompleted'] = 0;
+	$course_id              = $couser_id;
+	$data                   = [];
+	foreach ( $lessons_list as $lesson ) {
+		$lessons[ $lesson_order ] = [
+			'name'   => $lesson['post']->post_title,
+			'id'   => $lesson['post']->ID,
+			'status' => $status[ $lesson['status'] ],
+		];
+
+		$course_quiz_list[] = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
+		$lesson_topics      = learndash_get_topic_list( $lesson['post']->ID, $course_id );
+
+		foreach ( $lesson_topics as $topic ) {
+
+			$course_quiz_list[] = learndash_get_lesson_quiz_list( $topic->ID, $user_id, $course_id );
+
+			$topic_progress = learndash_get_course_progress( $user_id, $topic->ID, $course_id );
+
+			$topics[ $topic_order ] = [
+				'name'              => $topic->post_title,
+				'status'            => $status['notcompleted'],
+				'id'                => $topic->ID,
+				'associated_lesson' => $lesson['post']->post_title,
+			];
+
+			if ( ( isset( $topic_progress['posts'] ) ) && ( ! empty( $topic_progress['posts'] ) ) ) {
+				foreach ( $topic_progress['posts'] as $topic_progress ) {
+
+					if ( $topic->ID !== $topic_progress->ID ) {
+						continue;
+					}
+
+					if ( 1 === $topic_progress->completed ) {
+						$topics[ $topic_order ]['status'] = $status['completed'];
+					}
+				}
+			}
+			$topic_order ++;
+		}
+		$lesson_order ++;
+	}
+	$total_lesson     = count( $lessons );
+	$completed_lesson = count( wp_list_filter( $lessons, array( 'status' => 1 ) ) );
+	$pending_lesson   = count( wp_list_filter( $lessons, array( 'status' => 0 ) ) );
+	if ( $total_lesson > 0 ) {
+		$percentage = intval( $completed_lesson * 100 / $total_lesson );
+		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
+	} else {
+		$percentage = 0;
+	}
+
+	$total_topics     = count( $topics );
+	$completed_topics = count( wp_list_filter( $topics, array( 'status' => 1 ) ) );
+	$pending_topics   = count( wp_list_filter( $topics, array( 'status' => 0 ) ) );
+	if ( $total_topics > 0 ) {
+		$topics_percentage = intval( $completed_topics * 100 / $total_topics );
+		$topics_percentage = ( $topics_percentage > 100 ) ? 100 : $topics_percentage;
+	} else {
+		$topics_percentage = 0;
+	}
+
+	$data['all_lesson'] = $lessons;
+	$data['total']      = $total_lesson;
+	$data['complete']   = $completed_lesson;
+	$data['pending']    = $pending_lesson;
+	$data['percentage'] = $percentage;
+	$data['topics']     = array(
+		'all_topics' => $topics,
+		'total'      => $total_topics,
+		'complete'   => $completed_topics,
+		'pending'    => $pending_topics,
+		'percentage' => $topics_percentage,
+
+	);
+
+	return $data;
+}
+function bp_get_user_course_assignment_data( $course_id, $user_id ) {
+	global $wpdb;
+	// Assignments
+	$assignments            = [];
+	$sql_string             = "
+		SELECT post.ID, post.post_title, post.post_date, postmeta.meta_key, postmeta.meta_value 
+		FROM $wpdb->posts post 
+		JOIN $wpdb->postmeta postmeta ON post.ID = postmeta.post_id 
+		WHERE post.post_status = 'publish' AND post.post_type = 'sfwd-assignment' 
+		AND post.post_author = $user_id
+		AND ( postmeta.meta_key = 'approval_status' OR postmeta.meta_key = 'course_id' OR postmeta.meta_key LIKE 'ld_course_%' )";
+	$assignment_data_object = $wpdb->get_results( $sql_string );
+
+	foreach ( $assignment_data_object as $assignment ) {
+
+		// Assignment List
+		$data               = [];
+		$data['ID']         = $assignment->ID;
+		$data['post_title'] = $assignment->post_title;
+
+		$assignment_id                                = (int) $assignment->ID;
+		$rearranged_assignment_list[ $assignment_id ] = $data;
+
+		// User Assignment Data
+		$assignment_id = (int) $assignment->ID;
+		$meta_key      = $assignment->meta_key;
+		$meta_value    = (int) $assignment->meta_value;
+
+		$date = learndash_adjust_date_time_display( strtotime( $assignment->post_date ) );
+
+		$assignments[ $assignment_id ]['name']           = $assignment->post_title;
+		$assignments[ $assignment_id ]['completed_date'] = $date;
+		$assignments[ $assignment_id ][ $meta_key ]      = $meta_value;
+
+	}
+
+	foreach ( $assignments as $assignment_id => &$assignment ) {
+		if ( isset( $assignment['course_id'] ) && $course_id !== (int) $assignment['course_id'] ) {
+			unset( $assignments[ $assignment_id ] );
+		} else {
+			if ( isset( $assignment['approval_status'] ) && 1 == $assignment['approval_status'] ) {
+				$assignment['approval_status'] = 1;
+			} else {
+				$assignment['approval_status'] = 0;
+			}
+		}
+	}
+
+	$total_assignments     = count( $assignments );
+	$completed_assignments = count( wp_list_filter( $assignments, array( 'approval_status' => 1 ) ) );
+	$pending_assignments   = count( wp_list_filter( $assignments, array( 'approval_status' => 0 ) ) );
+	if ( $total_assignments > 0 ) {
+		$percentage = intval( $completed_assignments * 100 / $total_assignments );
+		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
+	} else {
+		$percentage = 0;
+	}
+
+	$data['all_lesson'] = $assignments;
+	$data['total']      = $total_assignments;
+	$data['complete']   = $completed_assignments;
+	$data['pending']    = $pending_assignments;
+	$data['percentage'] = $percentage;
+
+	return $data;
+}
+function bp_get_user_course_quiz_data( $course_id, $user_id ) {
+	global $wpdb;
+	$course_quiz_list   = [];
+	$course_quiz_list[] = learndash_get_course_quiz_list( $course_id );
+
+	$q = "
+			SELECT a.activity_id, a.course_id, a.post_id, a.activity_status, a.activity_completed, m.activity_meta_value as activity_percentage
+			FROM {$wpdb->prefix}learndash_user_activity a
+			LEFT JOIN {$wpdb->prefix}learndash_user_activity_meta m ON a.activity_id = m.activity_id
+			WHERE a.user_id = {$user_id}
+			AND a.course_id = {$course_id}
+			AND a.activity_type = 'quiz'
+			AND m.activity_meta_key = 'percentage'
+		";
+
+	$user_activities = $wpdb->get_results( $q );
+
+	foreach ( $course_quiz_list as $module_quiz_list ) {
+		if ( empty( $module_quiz_list ) ) {
+			continue;
+		}
+
+		foreach ( $module_quiz_list as $quiz ) {
+			if ( isset( $quiz['post'] ) ) {
+				foreach ( $user_activities as $activity ) {
+					if ( $activity->post_id == $quiz['post']->ID ) {
+						$quizzes[] = [
+							'name'             => $quiz['post']->post_title,
+							'id'                => $quiz['post']->ID,
+							'score'            => $activity->activity_percentage,
+							'status'   => 1,
+						];
+					} else {
+						$quizzes[] = [
+							'name'             => $quiz['post']->post_title,
+							'id'                => $quiz['post']->ID,
+							'score'            => $activity->activity_percentage,
+							'status'   => 0,
+						];
+					}
+				}
+			}
+		}
+	}
+
+	$total_quizzes     = count( $quizzes );
+	$completed_quizzes = count( wp_list_filter( $quizzes, array( 'status' => 1 ) ) );
+	$pending_quizzes   = count( wp_list_filter( $quizzes, array( 'status' => 0 ) ) );
+	if ( $total_quizzes > 0 ) {
+		$percentage = intval( $completed_quizzes * 100 / $total_quizzes );
+		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
+	} else {
+		$percentage = 0;
+	}
+
+	$data['all_quizzes'] = $quizzes;
+	$data['total']      = $total_quizzes;
+	$data['complete']   = $completed_quizzes;
+	$data['pending']    = $pending_quizzes;
+	$data['percentage'] = $percentage;
+
+	return $data;
 }

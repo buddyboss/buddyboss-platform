@@ -431,10 +431,6 @@ class Reports
 				'name'  => __('Quizzes', 'buddyboss'),
 				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator'
 			],
-			learndash_get_post_type_slug('essays') => [
-				'name'  => __('Essays', 'buddyboss'),
-				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\EssaysReportsGenerator'
-			],
 			learndash_get_post_type_slug('assignment') => [
 				'name'  => __('Assignments', 'buddyboss'),
 				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\AssignmentsReportsGenerator'
