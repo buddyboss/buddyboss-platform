@@ -159,7 +159,7 @@ class ReportsGenerator
 						'activity_started'             => '',
 						'activity_completed'           => '',
 						'activity_updated'             => '',
-						'activity_status'              => '',
+						'activity_status'              => 0,
 						'activity_course_title'        => '',
 						'activity_time_spent'          => '',
 						'activity_started_formatted'   => '',
@@ -194,7 +194,7 @@ class ReportsGenerator
 						'activity_started'             => '',
 						'activity_completed'           => '',
 						'activity_updated'             => '',
-						'activity_status'              => '',
+						'activity_status'              => 0,
 						'activity_course_title'        => '',
 						'activity_time_spent'          => '',
 						'activity_started_formatted'   => '',
@@ -232,7 +232,7 @@ class ReportsGenerator
 						'activity_started'             => '',
 						'activity_completed'           => '',
 						'activity_updated'             => '',
-						'activity_status'              => '',
+						'activity_status'              => 0,
 						'activity_course_title'        => '',
 						'activity_time_spent'          => '',
 						'activity_score'               => '',
@@ -680,6 +680,10 @@ class ReportsGenerator
 
 		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type  ) ) {
 
+			if ( 0 === $activity->activity_status ) {
+				return '-';
+			}
+
 			if ( isset( $post_settings['lesson_assignment_points_enabled'] ) && 'on' === $post_settings['lesson_assignment_points_enabled'] && isset( $post_settings['lesson_assignment_points_amount'] ) && $post_settings['lesson_assignment_points_amount'] > 0 ) {
 				return $post_settings['lesson_assignment_points_amount'];
 			} else {
@@ -687,6 +691,10 @@ class ReportsGenerator
 			}
 
 		} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
+
+			if ( 0 === $activity->activity_status ) {
+				return '-';
+			}
 
 			if ( isset( $post_settings['course_points_enabled'] ) && 'on' === $post_settings['course_points_enabled'] && isset( $post_settings['course_points'] ) && $post_settings['course_points'] > 0 ) {
 				return $post_settings['course_points'];
