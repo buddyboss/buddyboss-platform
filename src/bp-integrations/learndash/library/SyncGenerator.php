@@ -648,11 +648,12 @@ class SyncGenerator
 			return $groupMember->remove();
 		}
 
-		$groupMember->group_id     = $this->bpGroupId;
-		$groupMember->user_id      = $userId;
-		$groupMember->is_admin     = 0;
-		$groupMember->is_mod       = 0;
-		$groupMember->is_confirmed = 1;
+		$groupMember->group_id      = $this->bpGroupId;
+		$groupMember->user_id       = $userId;
+		$groupMember->is_admin      = 0;
+		$groupMember->is_mod        = 0;
+		$groupMember->is_confirmed  = 1;
+		$groupMember->date_modified = bp_core_current_time();
 
 		if ('user' != $syncTo) {
 			$var = "is_{$syncTo}";

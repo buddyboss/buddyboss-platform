@@ -79,6 +79,7 @@ class WebsiteParser
     private $href_filter_pattern = '/\<|#|javascript:void/';
     private $href_expression = '/\<a\s[^>]*href\s*=\s*\"([^\"]*)\"[^>]*>(.*?)<\/a>/';
     private $img_expression = '/<img[^>]+src=([\'"])?((?(1).+?|[^\s>]+))(?(1)\1)/';
+    private $amp_img_expression = '/<amp-img[^>]+src=([\'"])?((?(1).+?|[^\s>]+))(?(1)\1)/';
     private $external_link_pattern = "/^(https?:){0,1}\/\/(www\.){0,1}(.*)/i";
     private $internal_link_pattern = "/^(https?:){0,1}\/\/(www\.){0,1}#domain#/i";
     private $title_expression = "/<title>(.*)<\/title>/";
@@ -215,6 +216,24 @@ class WebsiteParser
                     }
                 }
             }
+
+	        $match_images = array();
+            //search for AMP images
+	        preg_match_all($this->amp_img_expression, $this->content, $match_images);
+
+	        if (isset($match_images[2]) && count($match_images[2])) {
+		        foreach ($match_images[2] as $match_image) {
+			        $match_image = trim($match_image);
+
+			        if ($match_image) {
+
+				        if (!preg_match($this->full_link_pattern, $match_image, $match))
+					        $match_image = $this->sanitizeUrl($match_image);
+
+				        $this->image_sources[] = $match_image;
+			        }
+		        }
+	        }
         }
 
         $this->image_sources = array_values(array_unique(array_filter($this->image_sources)));

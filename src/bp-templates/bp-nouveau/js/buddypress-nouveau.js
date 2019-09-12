@@ -287,6 +287,11 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
+			// if object is activity and object nav does not exists fallback to scope = all
+			if ( data.object == 'activity' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -1451,9 +1456,6 @@ window.bp = window.bp || {};
 		lazyLoad: function( lazyTarget ){
 			var lazy = $( lazyTarget );
 			if( lazy.length ){
-				function cleanLazy() {
-					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
-				}
 				for( var i=0; i<lazy.length; i++ ) {
 					var isInViewPort = false;
 					try {
@@ -1478,8 +1480,7 @@ window.bp = window.bp || {};
 						$( document ).trigger( 'bp_nouveau_lazy_load', { element: lazy[i] } );
 					}
 				}
-				cleanLazy();
-			}			
+			}
 		}
 	};
 
