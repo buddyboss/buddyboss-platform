@@ -36,6 +36,16 @@ jQuery(document).ready( function() {
             // "remove all tags" button event listener
             jQuery( 'body' ).on('click', '.js-modal-close', window.bbp_tagify.removeAllTags.bind(window.bbp_tagify));
         }
+
+		var topicReplyButton = jQuery('body .bbp-topic-reply-link');
+        if ( topicReplyButton.length ) {
+			topicReplyButton.click( function () {
+				var tagSelector = jQuery( '.bbp_topic_tags_wrapper tags tag');
+				if ( ! tagSelector.length ) {
+					jQuery('.tagify__input').attr( 'data-placeholder', Common_Data.tag_text );
+				}
+			});
+		}
     }
 
 	function bbpOnInputTags( e ){
