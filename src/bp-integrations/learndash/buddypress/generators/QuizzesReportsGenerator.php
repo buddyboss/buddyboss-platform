@@ -63,7 +63,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 			'time_spent'      => $this->column('time_spent'),
 			'quiz_points'     => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
-				'sortable'  => true,
+				'sortable'  => false,
 				'order_key' => 'activity_points',
 			],
 			'attempts'         => [
@@ -91,7 +91,7 @@ class QuizzesReportsGenerator extends ReportsGenerator
 			'updated_date'    => $this->updatedDate($activity),
 			'score'           => $activity->activity_score,
 			'time_spent'      => $this->timeSpent($activity),
-			'quiz_points'     => $activity->activity_points,
+			'quiz_points'     => ReportsGenerator::coursePointsEarned( $activity ),
 			'attempts'        => $activity->activity_attemps,
 		];
 	}

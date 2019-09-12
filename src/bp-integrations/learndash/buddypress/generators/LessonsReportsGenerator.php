@@ -52,7 +52,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 			],
 			'lesson_points'     => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
-				'sortable'  => true,
+				'sortable'  => false,
 				'order_key' => 'activity_points',
 			],
 			'start_date'      => $this->column('start_date'),
@@ -76,7 +76,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 			'course'          => $activity->activity_course_title,
 			'lesson'          => $activity->post_title,
 			'start_date'      => $activity->activity_started_formatted,
-			'lesson_points'   => '',
+			'lesson_points'   => ReportsGenerator::coursePointsEarned( $activity ),
 			'completion_date' => $this->completionDate($activity),
 			'updated_date'    => $this->updatedDate($activity),
 			'time_spent'      => $this->timeSpent($activity),

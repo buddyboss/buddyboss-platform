@@ -70,7 +70,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 			],
 			'assignment_points'     => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
-				'sortable'  => true,
+				'sortable'  => false,
 				'order_key' => 'activity_points',
 			],
 			'completion_date' => [
@@ -104,7 +104,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 			'course_id'         => $activity->activity_course_id,
 			'course'            => $activity->activity_course_title,
 			'assignment'        => $activity->assignment_title,
-			'assignment_points' => '',
+			'assignment_points' => ReportsGenerator::coursePointsEarned( $activity ),
 			'completion_date'   => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
 			'updated_date'      => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
 			'score'             => $this->getAssignmentScore( $activity ),
