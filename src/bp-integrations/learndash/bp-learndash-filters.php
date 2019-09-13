@@ -9,7 +9,6 @@ add_action( 'bp_core_before_wpsignup_redirect', 'bp_ld_popup_register_redirect',
  *
  * @since BuddyBoss 1.1.9
  *
- * @return bool
  */
 function bp_ld_popup_register_redirect() {
 	if ( isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) && 'true' === $_POST['learndash-registration-form'] ) {
