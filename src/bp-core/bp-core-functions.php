@@ -1375,7 +1375,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
  * @return string|null
  */
 function bp_core_format_date( $date = '', $format = '' ) {
-	echo bp_core_get_format_date( $date, $format );
+	echo bp_core_get_format_date( strtotime( $date ), $format );
 }
 
 /**
@@ -1396,7 +1396,7 @@ function bp_core_get_format_date( $date = '', $format = '' ) {
         $format = bp_core_date_format();
     }
 
-    return date_i18n( $format, strtotime( $date ) );
+    return date_i18n( $format, $date );
 }
 
 
