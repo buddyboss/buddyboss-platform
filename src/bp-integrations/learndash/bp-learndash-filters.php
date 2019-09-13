@@ -1,6 +1,6 @@
 <?php
 
-add_filter( 'bp_core_before_wpsignup_redirect', 'ld_register_redirect' );
+add_action( 'bp_core_before_wpsignup_redirect', 'bp_ld_popup_register_redirect', 10 );
 
 /**
  * Do not redirect to user on register page if user doing registration on LD Popup.
@@ -11,10 +11,9 @@ add_filter( 'bp_core_before_wpsignup_redirect', 'ld_register_redirect' );
  *
  * @return bool
  */
-function ld_register_redirect( $redirect ) {
-	if ( $redirect && isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) && 'true' === $_POST['learndash-registration-form'] ) {
-		$redirect = false;
+function bp_ld_popup_register_redirect() {
+	if ( isset( $_POST ) && isset( $_POST['learndash-registration-form'] ) && 'true' === $_POST['learndash-registration-form'] ) {
+		$url = isset( $_POST['redirect_to'] ) ? $_POST['redirect_to'] : bp_get_signup_page();
+		bp_core_redirect( esc_url( $url ) );
 	}
-
-	return $redirect;
 }
