@@ -198,6 +198,32 @@ function bbp_has_topics( $args = '' ) {
 	// Get Forums
 	$bbp = bbpress();
 
+	if ( bp_is_forums_component() ) {
+		/*
+		* WP is injecting meta_query to prevent Subscribers accessing the Private posts/pages
+		* 
+		* to bypass - add custom meta_query
+		*
+		* this was also reported in community as bug of bbpress 
+		*/
+		$forums_pages = get_pages( array( 
+						'post_type' 	=> bbp_get_forum_post_type(), 
+						'numberposts' 	=> -1,
+						'post_status' 	=> [ 'publish', 'private' ],
+						'parent'		=> 0
+					) 
+				);
+		
+		$r['meta_query'] = array(
+	        'relation' => 'OR',
+	        array(
+	            'key'     => '_bbp_forum_id',
+	            'value'   => wp_list_pluck( $forums_pages, 'ID' ),
+	            'compare' => 'IN',
+	        )
+	    );
+    }
+
 	// Call the query
 	$bbp->topic_query = new WP_Query( $r );
 
