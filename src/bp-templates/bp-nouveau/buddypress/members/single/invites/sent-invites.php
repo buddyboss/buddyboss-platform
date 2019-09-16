@@ -41,7 +41,7 @@ if ( isset( $exists ) && '' !== $exists ) {
         <span class="bp-icon" aria-hidden="true"></span>
         <p>
 			<?php
-			$text = __( 'Invitations did not send as the following email addresses are already a member:', 'buddyboss-theme' );
+			$text = __( 'Invitations did not send as the following email addresses as they are already a member:', 'buddyboss-theme' );
 			echo trim ($text.' '. $exists );
 			?>
         </p>

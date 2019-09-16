@@ -60,22 +60,23 @@ function bp_member_invite_submit() {
 	$invite_wrong_array = array();
 	$invite_exists_array = array();
 	foreach ( $_POST['email'] as $key => $value ) {
-		if(	!email_exists( (string)$_POST['email'][$key][0] )){
-			if ( '' !== $_POST['invitee'][$key][0] && '' !== $_POST['email'][$key][0] && is_email( $_POST['email'][$key][0] ) ) {
-				$invite_correct_array[] = array(
-					'name' => $_POST['invitee'][$key][0],
-					'email' => $_POST['email'][$key][0],
-					'member_type' => ( isset( $_POST['member-type'][$key][0] ) && !empty( $_POST['member-type'][$key][0] ) ) ? $_POST['member-type'][$key][0] : '' ,
-				);
+
+		if ( '' !== $_POST['invitee'][$key][0] && '' !== $_POST['email'][$key][0] && is_email( $_POST['email'][$key][0] ) ) {
+			if(	email_exists( (string) $_POST['email'][$key][0] ) ){
+				$invite_exists_array[]	=	$_POST['email'][$key][0];
 			} else {
-				$invite_wrong_array[] = array(
+				$invite_correct_array[] = array(
 					'name' => $_POST['invitee'][$key][0],
 					'email' => $_POST['email'][$key][0],
 					'member_type' => ( isset( $_POST['member-type'][$key][0] ) && !empty( $_POST['member-type'][$key][0] ) ) ? $_POST['member-type'][$key][0] : '' ,
 				);
 			}
 		} else {
-			$invite_exists_array[]	=	$_POST['email'][$key][0];
+			$invite_wrong_array[] = array(
+				'name' => $_POST['invitee'][$key][0],
+				'email' => $_POST['email'][$key][0],
+				'member_type' => ( isset( $_POST['member-type'][$key][0] ) && !empty( $_POST['member-type'][$key][0] ) ) ? $_POST['member-type'][$key][0] : '' ,
+			);
 		}
 	}
 	$query_string = array();
