@@ -402,6 +402,7 @@ function bp_get_user_course_assignment_data( $course_id, $user_id ) {
 function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 	global $wpdb;
 	$course_quiz_list   = [];
+	$quizzes            = [];
 	$course_quiz_list[] = learndash_get_course_quiz_list( $course_id );
 
 	$q = "

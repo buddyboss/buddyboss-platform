@@ -63,7 +63,7 @@ class AllReportsGenerator extends ReportsGenerator
 	{
 		return [
 			'user_id'         => $activity->user_id,
-			'user'            => $activity->user_display_name,
+			'user'            => bp_core_get_user_displayname( $activity->user_id ),
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'step'            => $activity->post_title,
