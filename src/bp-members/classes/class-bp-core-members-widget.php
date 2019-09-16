@@ -97,6 +97,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
+			'exclude'		  => bp_get_users_of_removed_member_types(),
 		);
         
         if ( empty($members_args['max']) ) {
