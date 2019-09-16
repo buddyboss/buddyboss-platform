@@ -283,6 +283,16 @@ class BP_Embed extends WP_Embed {
 						return $content;
 						// Return the new content by adding oembed after the content.
 					} else {
+
+						$html = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $html );
+
+						// add the lazy class to the img element
+						if ( preg_match( '/class=["\']/i', $html ) ) {
+							$html = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $html );
+						} else {
+							$html = preg_replace( '/<iframe/is', '<iframe class="lazy"', $html );
+						}
+
 						return $content.$html;
 					}
 					// Else return original content.

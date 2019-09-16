@@ -1450,7 +1450,7 @@ window.bp = window.bp || {};
 			}
 		},
 		/**
-		 * Lazy Load Images of Activity Feed
+		 * Lazy Load Images and iframes
 		 * @param event
 		 */
 		lazyLoad: function( lazyTarget ){
@@ -1472,6 +1472,12 @@ window.bp = window.bp || {};
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
 						lazy[i].removeAttribute('data-src');
+						$(lazy[i]).on('load', function () {
+							$(this).removeClass('lazy');
+						});
+
+						// Inform other scripts about the lazy load.
+						$( document ).trigger( 'bp_nouveau_lazy_load', { element: lazy[i] } );
 					}
 				}
 			}
