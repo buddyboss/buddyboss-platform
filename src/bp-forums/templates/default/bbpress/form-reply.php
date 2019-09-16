@@ -67,7 +67,7 @@
 
 						<p>
 							<label for="bbp_topic_tags_tagify"><?php _e( 'Tags:', 'buddyboss' ); ?></label><br />
-                            <input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" <?php disabled( bbp_is_topic_spam() ); ?> placeholder="<?php _e( 'Add Tags:', 'buddyboss' ); ?>" />
+                            <input type="text" value="" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" <?php disabled( bbp_is_topic_spam() ); ?> placeholder="<?php _e( 'Add Tags:', 'buddyboss' ); ?>" />
                             <input type="hidden" value="<?php bbp_form_topic_tags(); ?>" name="bbp_topic_tags" id="bbp_topic_tags" />
 						</p>
 
