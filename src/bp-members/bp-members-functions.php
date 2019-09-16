@@ -2354,6 +2354,8 @@ add_action( 'login_form_bp-resend-activation', 'bp_members_login_resend_activati
  */
 function bp_core_wpsignup_redirect() {
 
+	do_action('bp_core_before_wpsignup_redirect' );
+
 	// Bail in admin or if custom signup page is broken.
 	if ( is_admin() || ! bp_has_custom_signup_page() ) {
 		return;
