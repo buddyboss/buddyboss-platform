@@ -180,7 +180,7 @@ function bbp_has_replies( $args = '' ) {
 	$bbp = bbpress();
 
 	// Call the query
-	$bbp->reply_query = new WP_Query( $r );
+	$bbp->reply_query = apply_filters( 'bbp_reply_query', new WP_Query( $r ) );
 
 	// Add pagination values to query object
 	$bbp->reply_query->posts_per_page = $replies_per_page;

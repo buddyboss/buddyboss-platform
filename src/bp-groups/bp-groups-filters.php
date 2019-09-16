@@ -451,18 +451,18 @@ function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
 					'post_parent' => $exclude_forum_id,
 					'post_type'   => bbp_get_topic_post_type(),
 					'numberposts' => -1,
+					'fields'      => 'ids',
 				);
 				// Get topics of forum.
 				$topics = get_children( $args );
-				$exclude_topics = wp_list_pluck( $topics, 'ID' );
-				foreach ( $exclude_topics as $exclude_topic_id ) {
+				foreach ( $topics as $exclude_topic_id ) {
 					// Set $exclude_topic_ids array.
 					$exclude_topic_ids[] = $exclude_topic_id;
 				}
 			}
 		}
 	}
-	if ( isset( $exclude_topic_ids ) && !empty( $exclude_topic_ids ) ) {
+	if ( ! empty( $exclude_topic_ids ) ) {
 		$args_topic['post__not_in'] = $exclude_topic_ids;
 	}
 	return $args_topic;
@@ -490,21 +490,21 @@ function bp_groups_exclude_forums_replies_by_group_type_args( $args_reply ) {
 				$args = array(
 					'post_parent' => $exclude_forum_id,
 					'post_type'   => bbp_get_topic_post_type(),
-					'numberposts' => -1,
+					'numberposts' => - 1,
+					'fields'      => 'ids',
 				);
 				// Get topic attached to a forum.
 				$topics = get_children( $args );
-				$topic_ids[] = wp_list_pluck( $topics, 'ID' );
-				foreach ( $topic_ids as $topic_id ) {
+				foreach ( $topics as $topic_id ) {
 					$args = array(
 						'post_parent' => $topic_id,
 						'post_type'   => bbp_get_reply_post_type(),
-						'numberposts' => -1,
+						'numberposts' => - 1,
+						'fields'      => 'ids',
 					);
 					// Get replies attached to a topics.
 					$replies = get_children( $args );
-					$replies_ids[] = wp_list_pluck( $replies, 'ID' );
-					foreach ( $replies_ids as $reply ) {
+					foreach ( $replies as $reply ) {
 						// Set $exclude_reply_ids array.
 						$exclude_reply_ids[] = $reply;
 					}
@@ -512,7 +512,7 @@ function bp_groups_exclude_forums_replies_by_group_type_args( $args_reply ) {
 			}
 		}
 	}
-	if ( isset( $exclude_reply_ids ) && !empty( $exclude_reply_ids ) ) {
+	if ( ! empty( $exclude_reply_ids ) ) {
 		$args_reply['post__not_in'] = $exclude_reply_ids;
 	}
 	return $args_reply;
