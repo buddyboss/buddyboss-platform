@@ -77,8 +77,6 @@ add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
 // Exclude Forums if group type hide
 add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
-// Exclude Replies if group type hide
-add_filter( 'bbp_after_has_replies_parse_args', 'bp_groups_exclude_forums_replies_by_group_type_args' );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -407,22 +405,24 @@ add_filter( 'bp_activity_user_can_delete', 'bp_groups_allow_mods_to_delete_activ
  * @return mixed $args_forum
  */
 function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
-	$exclude_forum_ids = array();
-	// Check group type enabled
-	if ( true === bp_disable_group_type_creation() ) {
-		// Get excluded group ids.
-		$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
-		foreach ( $exclude_group_ids as $exclude_group_id ) {
-			// Get forums id by group id.
-			$exclude_forum_ids_by_group = bbp_get_group_forum_ids( (int) $exclude_group_id );
-			foreach ( $exclude_forum_ids_by_group as $exclude_id ) {
-				// Set $exclude_forum_ids array.
-				$exclude_forum_ids[] = $exclude_id;
+	if ( bbp_is_forum_archive() || bbp_is_topic_archive() ) {
+		$exclude_forum_ids = array();
+		// Check group type enabled
+		if ( true === bp_disable_group_type_creation() ) {
+			// Get excluded group ids.
+			$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+			foreach ( $exclude_group_ids as $exclude_group_id ) {
+				// Get forums id by group id.
+				$exclude_forum_ids_by_group = bbp_get_group_forum_ids( (int) $exclude_group_id );
+				foreach ( $exclude_forum_ids_by_group as $exclude_id ) {
+					// Set $exclude_forum_ids array.
+					$exclude_forum_ids[] = $exclude_id;
+				}
 			}
 		}
-	}
-	if ( isset( $exclude_forum_ids ) && !empty( $exclude_forum_ids ) ) {
-		$args_forum['post__not_in'] = $exclude_forum_ids;
+		if ( isset( $exclude_forum_ids ) && ! empty( $exclude_forum_ids ) ) {
+			$args_forum['post__not_in'] = $exclude_forum_ids;
+		}
 	}
 	return $args_forum;
 }
@@ -437,83 +437,36 @@ function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
  * @return mixed $args_topic
  */
 function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
-	$exclude_topic_ids = array();
-	// Check group type enabled
-	if ( true === bp_disable_group_type_creation() ) {
-		// Get excluded group ids.
-		$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
-		foreach ( $exclude_group_ids as $exclude_group_id ) {
-			// Get forums id by group id.
-			$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );
-			// Loop forum ids to get topics
-			foreach ( $exclude_forum_ids as $exclude_forum_id ) {
-				$args = array(
-					'post_parent' => $exclude_forum_id,
-					'post_type'   => bbp_get_topic_post_type(),
-					'numberposts' => -1,
-					'fields'      => 'ids',
-				);
-				// Get topics of forum.
-				$topics = get_children( $args );
-				foreach ( $topics as $exclude_topic_id ) {
-					// Set $exclude_topic_ids array.
-					$exclude_topic_ids[] = $exclude_topic_id;
-				}
-			}
-		}
-	}
-	if ( ! empty( $exclude_topic_ids ) ) {
-		$args_topic['post__not_in'] = $exclude_topic_ids;
-	}
-	return $args_topic;
-}
 
-/**
- * Exclude Forums replies from reply loop if any forum is attached to a group and that group have a
- * group type and that group type is hidden from the directory page.
- *
- * @since BuddyBoss 1.1.9
- *
- * @param $args_reply
- * @return mixed $args_reply
- */
-function bp_groups_exclude_forums_replies_by_group_type_args( $args_reply ) {
-	$exclude_reply_ids = array();
-	// Check group type enabled
-	if ( true === bp_disable_group_type_creation() ) {
-		// Get excluded group ids from group types settings.
-		$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
-		foreach ( $exclude_group_ids as $exclude_group_id ) {
-			// Get Forum ids attached to a group.
-			$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );
-			foreach ( $exclude_forum_ids as $exclude_forum_id ) {
-				$args = array(
-					'post_parent' => $exclude_forum_id,
-					'post_type'   => bbp_get_topic_post_type(),
-					'numberposts' => - 1,
-					'fields'      => 'ids',
-				);
-				// Get topic attached to a forum.
-				$topics = get_children( $args );
-				foreach ( $topics as $topic_id ) {
+	if ( bbp_is_forum_archive() || bbp_is_topic_archive() ) {
+		$exclude_topic_ids = array();
+		// Check group type enabled
+		if ( true === bp_disable_group_type_creation() ) {
+			// Get excluded group ids.
+			$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+			foreach ( $exclude_group_ids as $exclude_group_id ) {
+				// Get forums id by group id.
+				$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );
+				// Loop forum ids to get topics
+				foreach ( $exclude_forum_ids as $exclude_forum_id ) {
 					$args = array(
-						'post_parent' => $topic_id,
-						'post_type'   => bbp_get_reply_post_type(),
+						'post_parent' => $exclude_forum_id,
+						'post_type'   => bbp_get_topic_post_type(),
 						'numberposts' => - 1,
 						'fields'      => 'ids',
 					);
-					// Get replies attached to a topics.
-					$replies = get_children( $args );
-					foreach ( $replies as $reply ) {
-						// Set $exclude_reply_ids array.
-						$exclude_reply_ids[] = $reply;
+					// Get topics of forum.
+					$topics = get_children( $args );
+					foreach ( $topics as $exclude_topic_id ) {
+						// Set $exclude_topic_ids array.
+						$exclude_topic_ids[] = $exclude_topic_id;
 					}
 				}
 			}
 		}
+		if ( ! empty( $exclude_topic_ids ) ) {
+			$args_topic['post__not_in'] = $exclude_topic_ids;
+		}
 	}
-	if ( ! empty( $exclude_reply_ids ) ) {
-		$args_reply['post__not_in'] = $exclude_reply_ids;
-	}
-	return $args_reply;
+	return $args_topic;
 }
