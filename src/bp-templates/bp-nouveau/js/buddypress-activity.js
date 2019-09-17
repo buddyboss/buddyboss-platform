@@ -704,6 +704,12 @@ window.bp = window.bp || {};
 					action : 'get_single_activity_content',
 					id     : item_id
 				}, 'activity' ).done( function( response ) {
+
+					//check for JSON output
+					if ( typeof response !== 'object' && target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 ) {
+						response = JSON.parse(response);
+					}
+
 					$( readMore ).removeClass( 'loading' );
 
 					if ( content.parent().find( '.bp-feedback' ).length ) {

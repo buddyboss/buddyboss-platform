@@ -326,6 +326,11 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
+			// if object is activity and object nav does not exists fallback to scope = all
+			if ( data.object == 'activity' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -563,7 +568,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
-			$( '#buddypress [data-bp-close]' ).on( 'click', this, this.closeNotice );
+			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
 			// Pagination
 			$( '#buddypress [data-bp-list]' ).on( 'click', '[data-bp-pagination] a', this, this.paginateAction );
@@ -1484,15 +1489,12 @@ window.bp = window.bp || {};
 			}
 		},
 		/**
-		 * Lazy Load Images of Activity Feed
+		 * Lazy Load Images and iframes
 		 * @param event
 		 */
 		lazyLoad: function( lazyTarget ){
 			var lazy = $( lazyTarget );
 			if( lazy.length ){
-				function cleanLazy() {
-					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
-				}
 				for( var i=0; i<lazy.length; i++ ) {
 					var isInViewPort = false;
 					try {
@@ -1509,10 +1511,15 @@ window.bp = window.bp || {};
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
 						lazy[i].removeAttribute('data-src');
+						$(lazy[i]).on('load', function () {
+							$(this).removeClass('lazy');
+						});
+
+						// Inform other scripts about the lazy load.
+						$( document ).trigger( 'bp_nouveau_lazy_load', { element: lazy[i] } );
 					}
 				}
-				cleanLazy();
-			}			
+			}
 		}
 	};
 

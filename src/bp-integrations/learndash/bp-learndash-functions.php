@@ -1,7 +1,7 @@
 <?php
 /**
  * LearnDash integration group sync helpers
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */

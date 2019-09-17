@@ -739,9 +739,12 @@ function bp_core_enqueue_isInViewPort() {
 	     bp_is_group_media() ||
 	     bp_is_group_albums() ||
 	     bp_is_messages_component() ||
-	     bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled()
+	     ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
+	     ( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
+	     ( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
+	     ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
 	) {
 		wp_enqueue_script( 'isInViewport' );
-    }
+	}
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_isInViewPort', 5 );

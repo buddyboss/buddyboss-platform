@@ -247,7 +247,11 @@ function bp_nouveau_ajax_media_save() {
 		 */
 		$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
 
-		$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) ) {
+			$main_activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $_POST['group_id'] ) );
+        } else {
+			$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
+        }
 	}
 
 	$album_privacy = 'public';

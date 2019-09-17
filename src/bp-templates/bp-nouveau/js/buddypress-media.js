@@ -798,7 +798,9 @@ window.bp = window.bp || {};
 					'action': 'media_save',
 					'_wpnonce': BP_Nouveau.nonces.media,
 					'medias': self.dropzone_media,
-					'content' : post_content
+					'content' : post_content,
+					'album_id' : self.album_id,
+					'group_id' : self.group_id
 				};
 
 				$('#bp-dropzone-content .bp-feedback').remove();
