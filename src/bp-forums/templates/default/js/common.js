@@ -34,7 +34,10 @@ jQuery(document).ready( function() {
             });
 
             // "remove all tags" button event listener
-            jQuery( 'body' ).on('click', '.js-modal-close', window.bbp_tagify.removeAllTags.bind(window.bbp_tagify));
+			jQuery( 'body' ).on('click', '.js-modal-close', function() {
+				window.bbp_tagify.removeAllTags.bind( window.bbp_tagify );
+				jQuery( 'body' ).removeClass( 'popup-modal-reply' );
+			});
         }
 
 		var topicReplyButton = jQuery('body .bbp-topic-reply-link');
@@ -45,6 +48,7 @@ jQuery(document).ready( function() {
 					jQuery('.tagify__input').attr( 'data-placeholder', Common_Data.tag_text );
 				}
 			});
+			jQuery( 'body' ).addClass( 'popup-modal-reply' );
 		}
     }
 
