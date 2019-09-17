@@ -29,7 +29,7 @@ jQuery(document).ready( function() {
 				if ( jQuery('#bbp_topic_tags').val() ) {
 					jQuery('.tagify__input').attr( 'data-placeholder', '' );
 				} else {
-					jQuery('.tagify__input').attr( 'data-placeholder', Common_Data.tag_text );
+					jQuery('.tagify__input').attr( 'data-placeholder', bbpCommonJsData.tag_text );
 				}
             });
 
@@ -46,7 +46,7 @@ jQuery(document).ready( function() {
 				jQuery( 'body' ).addClass( 'popup-modal-reply' );
 				var tagSelector = jQuery( '.bbp_topic_tags_wrapper tags tag');
 				if ( ! tagSelector.length ) {
-					jQuery('.tagify__input').attr( 'data-placeholder', Common_Data.tag_text );
+					jQuery('.tagify__input').attr( 'data-placeholder', bbpCommonJsData.tag_text );
 				}
 			});
 		}
@@ -63,13 +63,13 @@ jQuery(document).ready( function() {
 
 		var data = {
 			'action': 'search_tags',
-			'_wpnonce': Common_Data.nonce,
+			'_wpnonce': bbpCommonJsData.nonce,
 			'tag' : value
 		};
 
 		window.bbp_tag_ajax = jQuery.ajax({
 			type: 'GET',
-			url: Common_Data.ajax_url,
+			url: bbpCommonJsData.ajax_url,
 			data: data,
 			success: function ( response ) {
 				if ( response.success ) {

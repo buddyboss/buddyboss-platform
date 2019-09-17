@@ -211,7 +211,7 @@ class BBP_Default extends BBP_Theme_Compat {
 			'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
 		);
 
-		wp_localize_script( 'bbpress-common', 'Common_Data', $common_array );
+		wp_localize_script( 'bbpress-common', 'bbpCommonJsData', $common_array );
 
 		if ( bp_is_active( 'media' ) ) {
 
