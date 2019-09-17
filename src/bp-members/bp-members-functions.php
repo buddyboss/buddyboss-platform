@@ -2160,12 +2160,14 @@ function bp_members_migrate_signups() {
  * @since BuddyPress 1.2.0
  *
  * @param int $user_id ID of the user.
+ * @param bool $by_pass ByPass is admin conditions.
+ *
  * @return bool
  */
-function bp_core_map_user_registration( $user_id ) {
+function bp_core_map_user_registration( $user_id, $by_pass = false ) {
 
 	// Only map data when the site admin is adding users, not on registration.
-	if ( ! is_admin() ) {
+	if ( ! is_admin() && empty( $by_pass ) ) {
 		return false;
 	}
 
