@@ -91,6 +91,25 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	/**
+	 * Action fire before option updated/save list activated plugins.
+	 *
+	 * @since BuddyBoss 1.1.9
+	 */
+	function bp_core_unset_bbpress_buddypress_option() {
+	    add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
+    }
+
+	/**
+	 * Removing the spoofing of BuddyPress and bbPress when option updated.
+	 *
+	 * @since BuddyBoss 1.1.9
+	 */
+    function pre_update_option_active_plugins( $value ) {
+	    $value = array_diff( $value, array( 'bbpress/bbpress.php', 'buddypress/bp-loader.php' ) );
+	    return $value;
+    }
+
+	/**
 	 * Filter for setting the spoofing of BuddyPress.
 	 *
 	 * @param $value
@@ -117,10 +136,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			 */
 			add_action( 'activate_plugin', 'bp_core_unset_bbpress_buddypress_active' );
 
-			/**
-			 * Add this so that spoofing plugin does not get added into DB at the time of plugin deactivation
-			 */
-			add_action( 'deactivate_plugin', 'bp_core_unset_bbpress_buddypress_active' );
 
 			if ( empty( $_REQUEST['action'] ) ) {
 				/**
@@ -129,6 +144,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 			}
 		}
+
+		/**
+		 * Add this so that spoofing plugin does not get added into DB at the time of plugin deactivation
+		 */
+		add_action( 'deactivated_plugin', 'bp_core_unset_bbpress_buddypress_option' );
 
 		// Check if Forum Component is enabled if so then add
 		if ( bp_is_active( 'forums' ) ) {
