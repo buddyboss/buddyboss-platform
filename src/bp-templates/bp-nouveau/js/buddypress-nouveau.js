@@ -242,20 +242,59 @@ window.bp = window.bp || {};
 			 * - prepend: the content will be added before selector's content
 			 */
 			method = method || 'reset';
-
 			if ( 'append' === method ) {
-				$( selector ).append( content );
+				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl	);
 			} else if ( 'prepend' === method ) {
-				$( selector ).prepend( content );
+				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else {
-				$( selector ).html( content );
+				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			}
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bp-suggestions' ).bp_mentions( bp.mentions.users );
 			}
 		},
+		/**
+		 * [hideSingleUrl description]
+		 * @param  {[type]} event [description]
+		 * @param  {[type]} request [description]
+		 * @param  {[type]} settings [description]
+		 * @return {[type]}       [description]
+		 */
+		hideSingleUrl: function() {
+			var _findtext 	= 	$( this ).find('.activity-inner > p').removeAttr('br').removeAttr('a').text();
+			var	_url	 	= 	'',
+				_newString	=	'',
+				startIndex  =   '',
+				_is_exist 	=	0;
+			if ( 0 <= _findtext.indexOf( 'http://' )) {
+				startIndex 	= 	_findtext.indexOf( 'http://' );
+				_is_exist	=	1;
+			} else if (0 	<= _findtext.indexOf( 'https://' )) {
+				startIndex 	= 	_findtext.indexOf( 'https://' );
+				_is_exist	=	1;
+			} else if (0 	<= _findtext.indexOf( 'www.' )) {
+				startIndex 	= 	_findtext.indexOf( 'www' );
+				_is_exist	=	1;
+			}
+			if (_is_exist	==	1) {
+				for ( var i = startIndex; i < _findtext.length; i ++ ) {
+					if ( _findtext[i] === ' ' || _findtext[i] === '\n' ) {
+						break;
+					} else {
+						_url += _findtext[i];
+					}
+				}
 
+				if( _url !== '' ){
+					_newString = $.trim(_findtext.replace(_url, ''));
+				}
+				if(0 >= _newString.length){
+					$( this ).find('.activity-inner a').hide();
+				}
+			}
+			
+        },
 		/**
 		 * [objectRequest description]
 		 * @param  {[type]} data [description]
