@@ -82,6 +82,15 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	/**
+	 * Action for removing the spoofing of BuddyPress and bbPress.
+     *
+	 * @since BuddyBoss 1.1.9
+	 */
+	function bp_core_unset_bbpress_buddypress_active() {
+		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10 );
+	}
+
+	/**
 	 * Filter for setting the spoofing of BuddyPress.
 	 *
 	 * @param $value
@@ -93,15 +102,39 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	function bp_core_set_bbpress_buddypress_active( $value, $option ) {
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
-		if ( is_network_admin() || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false ) {
-			return $value;
-		} else {
-			// Check if Forum Component is enabled if so then add
-			if ( bp_is_active( 'forums' ) ) {
-				array_push( $value, 'bbpress/bbpress.php' );
+		if ( is_network_admin()
+		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false
+		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false
+		) {
+
+			/**
+			 * Add this so the spoofing plugin does not get loaded by WordPress
+			 */
+			add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active' );
+
+			/**
+			 * Add this so that spoofing plugin does not get added into DB at the time of plugin activation
+			 */
+			add_action( 'activate_plugin', 'bp_core_unset_bbpress_buddypress_active' );
+
+			/**
+			 * Add this so that spoofing plugin does not get added into DB at the time of plugin deactivation
+			 */
+			add_action( 'deactivate_plugin', 'bp_core_unset_bbpress_buddypress_active' );
+
+			if ( empty( $_REQUEST['action'] ) ) {
+				/**
+				 * Add this so that plugin table does not show the spoofing plugin are activated
+				 */
+				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 			}
-			array_push( $value, 'buddypress/bp-loader.php' );
 		}
+
+		// Check if Forum Component is enabled if so then add
+		if ( bp_is_active( 'forums' ) ) {
+			array_push( $value, 'bbpress/bbpress.php' );
+		}
+		array_push( $value, 'buddypress/bp-loader.php' );
 
 		return $value;
 	}
