@@ -43,12 +43,12 @@ jQuery(document).ready( function() {
 		var topicReplyButton = jQuery('body .bbp-topic-reply-link');
         if ( topicReplyButton.length ) {
 			topicReplyButton.click( function () {
+				jQuery( 'body' ).addClass( 'popup-modal-reply' );
 				var tagSelector = jQuery( '.bbp_topic_tags_wrapper tags tag');
 				if ( ! tagSelector.length ) {
 					jQuery('.tagify__input').attr( 'data-placeholder', Common_Data.tag_text );
 				}
 			});
-			jQuery( 'body' ).addClass( 'popup-modal-reply' );
 		}
     }
 
