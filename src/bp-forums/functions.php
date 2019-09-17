@@ -821,6 +821,7 @@ function bbp_forum_recursive_group_id ( $forum_id ) {
     return false;
 }
 add_action( 'wp_ajax_search_tags',        'bbp_forum_topic_reply_ajax_form_search_tags' );
+add_action( 'wp_ajax_nopriv_search_tags', 'bbp_forum_topic_reply_ajax_form_search_tags' );
 
 /**
  * Search the tags that already added on forums previously and give the suggestions list.
