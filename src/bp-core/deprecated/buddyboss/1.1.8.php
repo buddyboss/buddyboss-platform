@@ -317,3 +317,57 @@ function bp_get_groups_of_removed_group_types() {
 	return bp_group_ids_array_flatten( $group_id );
 
 }
+
+/**
+ * Gets profile type id.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global wpdb $wpdb WordPress database abstraction object.
+ *
+ * @param type $type_name
+ *
+ * @return type int
+ */
+function bp_member_type_type_id( $type_name ) {
+
+	_deprecated_function( __FUNCTION__, '1.1.9' );
+
+	global $wpdb;
+	$type_name = strtolower($type_name);
+	$type_name = str_replace(array(' ', ','), array('-', '-'), $type_name);
+	$type_id = $wpdb->get_col( "SELECT t.term_id FROM {$wpdb->prefix}terms t INNER JOIN {$wpdb->prefix}term_taxonomy tt ON t.term_id = tt.term_id WHERE t.slug = '" . $type_name . "' AND  tt.taxonomy = 'bp_member_type' " );
+	return ! isset( $type_id[ 0 ] ) ? '' : $type_id[ 0 ];
+}
+
+
+/**
+ * Gets an active member by type.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $type_id
+ *
+ * @return array
+ */
+function bp_active_member_type_by_type( $type_id ) {
+
+	_deprecated_function( __FUNCTION__, '1.1.9' );
+
+	global $wpdb, $bp;
+	$member_ids = array();
+	if ( empty ( $type_id ) ) {
+		return $member_ids;
+	}
+	$get_user_ids = $wpdb->get_col( "SELECT u.ID FROM {$wpdb->users} u INNER JOIN {$wpdb->prefix}term_relationships r ON u.ID = r.object_id WHERE u.user_status = 0 AND r.term_taxonomy_id = " . $type_id );
+	if ( isset( $get_user_ids ) && !empty( $get_user_ids ) ) {
+		foreach ( $get_user_ids as $single ) {
+			$table = bp_core_get_table_prefix() . 'bp_activity';
+			$member_activity = $wpdb->get_var( "SELECT COUNT(*) FROM {$table} a WHERE a.user_id = " . $single );
+			if ( $member_activity > 0 ) {
+				$member_ids[] = $single;
+			}
+		}
+	}
+	return $member_ids;
+}
