@@ -228,7 +228,7 @@ function bp_admin_setting_callback_enable_activity_tabs() {
 	?>
 
     <input id="_bp_enable_activity_tabs" name="_bp_enable_activity_tabs" type="checkbox" value="1" <?php checked( bp_is_activity_tabs_active( false ) ); ?> />
-    <label for="_bp_enable_activity_tabs"><?php _e( 'Filter activity into tabs based on activity type', 'buddyboss' ); ?></label>
+    <label for="_bp_enable_activity_tabs"><?php _e( 'Display activity in separate tabs based on activity type', 'buddyboss' ); ?></label>
 
 	<?php
 }

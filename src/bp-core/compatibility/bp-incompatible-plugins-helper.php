@@ -68,9 +68,91 @@ function bp_helper_plugins_loaded_callback() {
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
 		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus',100 ,2 );
 	}
+
+	/**
+	 * Include plugin when plugin is activated
+	 *
+	 * Support MemberPress + BuddyPress Integration
+	 */
+	if ( in_array( 'memberpress-buddypress/main.php', $bp_plugins ) ) {
+		/**
+		 * This action is use when admin bar is Enable
+		 */
+		add_action( 'bp_setup_admin_bar', 'bp_core_add_admin_menu_for_memberpress_buddypress', 100 );
+
+		/**
+		 * This action to update the first and last name usermeta
+		 */
+		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
+	}
 }
 
-add_action( 'init', 'bp_helper_plugins_loaded_callback', 1000 );
+add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
+
+/**
+ * Add User meta as first and last name is update by BuddyBoss Platform itself
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param int $user_id Register member user id
+ */
+function bp_core_updated_flname_memberpress_buddypress( $user_id ) {
+	$user_id = empty( $user_id ) ? bp_loggedin_user_id() : $user_id;
+	update_user_meta( $user_id, 'bp_flname_sync', 1 );
+}
+
+/**
+ * Add Menu in Admin section for MemberPress + BuddyPress Integration plugin
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param $menus
+ */
+function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
+	// Define the WordPress global.
+	global $wp_admin_bar, $bp;
+
+	if ( ! bp_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
+		return;
+	}
+
+	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
+	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
+
+	$wp_admin_bar->add_menu( array(
+		'parent'   => $bp->my_account_menu_id,
+		'id'       => $main_slug,
+		'title'    => $name,
+		'href'     => $bp->loggedin_user->domain . $main_slug . '/',
+		'position' => $position,
+	) );
+
+	// add submenu item
+	$wp_admin_bar->add_menu( array(
+		'parent' => $main_slug,
+		'id'     => 'mp-info',
+		'title'  => _x( 'Info', 'ui', 'buddyboss' ),
+		'href'   => $bp->loggedin_user->domain . $main_slug . '/'
+	) );
+
+	// add submenu item
+	$wp_admin_bar->add_menu( array(
+		'parent' => $main_slug,
+		'id'     => 'mp-subscriptions',
+		'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
+		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/'
+	) );
+
+	// add submenu item
+	$wp_admin_bar->add_menu( array(
+		'parent' => $main_slug,
+		'id'     => 'mp-payments',
+		'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
+		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/'
+	) );
+
+}
 
 /**
  * On BuddyPress update
@@ -195,6 +277,21 @@ function bp_core_add_support_for_google_captcha_pro( $section_notice, $section_s
 
 add_filter( 'gglcptch_section_notice', 'bp_core_add_support_for_google_captcha_pro', 100, 2 );
 
+
+/**
+ * Update the BuddyBoss Platform Fields when user register from MemberPress Registration form
+ *
+ * Support MemberPress and MemberPress Pro
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bp_core_add_support_mepr_signup_map_user_fields( $txn ) {
+	if ( ! empty( $txn->user_id ) ) {
+		bp_core_map_user_registration( $txn->user_id, true );
+	}
+}
+
+add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 100 );
 
 /**
  * Include plugin when plugin is activated

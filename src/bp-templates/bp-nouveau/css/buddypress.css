@@ -1881,6 +1881,25 @@ input.search-query-input {
   display: none !important;
 }
 
+@keyframes lazyAmination {
+  0% {
+    background-position: 100% 0;
+  }
+  100% {
+    background-position: -300% 0;
+  }
+}
+
+.activity-inner iframe.lazy {
+  animation-duration: 1.3s;
+  animation-fill-mode: forwards;
+  animation-iteration-count: infinite;
+  animation-name: lazyAmination;
+  animation-timing-function: linear;
+  background: #f6f7f8;
+  background-size: 800px 104px;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments
@@ -2466,6 +2485,40 @@ body.register .registration-popup .mfp-close:hover {
 
 #buddypress #signup-form label.error {
   display: none !important;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result {
+  border-style: solid;
+  border-width: 1px;
+  display: none;
+  font-weight: 700;
+  margin: 10px 0 10px 0;
+  margin-bottom: 10px;
+  padding: 0.7em;
+  text-align: center;
+  width: auto;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.mismatch {
+  font-weight: normal;
+  background-color: #e0e1e1;
+  border-color: #e0e1e1;
+  border-radius: 3px;
+  font-size: 14px;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.show {
+  font-weight: normal;
+  color: #fff;
+  border-radius: 3px;
+  font-size: 14px;
+  display: block;
+}
+
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.error, #email-strength-result.bad {
+  background-color: #EF3E46;
+  border-color: #EF3E46;
+  color: #fff;
 }
 
 /**

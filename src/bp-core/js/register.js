@@ -7,8 +7,8 @@ jQuery( document ).ready( function() {
 	var getExistingFieldsSelector = jQuery('body #profile-details-section #signup_profile_field_ids');
 
 	// Add new hidden field for keep existing field to add again in change profile type action.
-	var hiddenField  = jQuery("<input type=\"hidden\" class=\"onloadfields\" value='' />");
-	var existsField  = jQuery("<input type=\"hidden\" name=\"signup_profile_field_ids\" id=\"signup_profile_field_ids\" value='' />");
+	var hiddenField  = jQuery('<input type="hidden" class="onloadfields" value="" />');
+	var existsField  = jQuery('<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="" />');
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
@@ -20,8 +20,8 @@ jQuery( document ).ready( function() {
 	// Add existing profile fields ids to new hidden field value.
 	onLoadField.val( getExistingFieldsSelector.val() );
 
-	if ( typeof( tinymce ) !== 'undefined' ) {
-		tinymce.remove('textarea');
+	if ( typeof window.tinymce !== 'undefined' ) {
+		window.tinymce.remove('textarea');
 	}
 
 	var dropDownSelected = jQuery( 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id);
@@ -73,11 +73,11 @@ jQuery( document ).ready( function() {
 					jQuery( 'body #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
-					if ( typeof( tinymce ) !== 'undefined' ) {
+					if ( typeof window.tinymce !== 'undefined' ) {
 
-						tinymce.remove('textarea');
+						window.tinymce.remove('textarea');
 
-						tinymce.init(
+						window.tinymce.init(
 							{
 								selector: 'textarea',
 								branding: false,
@@ -88,7 +88,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						tinyMCE.execCommand('mceRepaint');
+						window.tinymce.execCommand('mceRepaint');
 					}
 				}
 			}
@@ -144,11 +144,11 @@ jQuery( document ).ready( function() {
 					jQuery( 'body #profile-details-section' ).append( existsField );
 					existsField.val( response.data.field_ids );
 
-					if ( typeof( tinymce ) !== 'undefined' ) {
+					if ( typeof window.tinymce !== 'undefined' ) {
 
-						tinymce.remove('textarea');
+						window.tinymce.remove('textarea');
 
-						tinymce.init(
+						window.tinymce.init(
 							{
 								selector: 'textarea',
 								branding: false,
@@ -159,7 +159,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						tinyMCE.execCommand('mceRepaint');
+						window.tinymce.execCommand('mceRepaint');
 					}
 				}
 			}
@@ -167,8 +167,8 @@ jQuery( document ).ready( function() {
 	});
 
 	// Bind signup_email to keyup events in the email fields
-	jQuery( '#signup_email' ).val( '' ).on('keyup blur change', bp_register_validate_email );
-	jQuery( '#signup_email_confirm' ).val( '' ).on('keyup blur change', bp_register_validate_confirm_email );
+	jQuery( '#signup_email' ).val( '' ).on('keyup change', bp_register_validate_email );
+	jQuery( '#signup_email_confirm' ).val( '' ).on('keyup change', bp_register_validate_confirm_email );
 	
 	function bp_register_validate_email() {
 		var email1 = jQuery( '#signup_email' ).val(),
@@ -202,15 +202,15 @@ jQuery( document ).ready( function() {
 			jQuery( '#email-strength-result' ).html( '' );
 			return;
 		}
-		if ( (!regex.test( email1 ) || !regex.test( email2 ) ) ) {
-			jQuery( '#email-strength-result' ).addClass( 'show bad' ).html( BP_Register.valid_email );
-			return;
-		}else{
+		// if ( (!regex.test( email1 ) || !regex.test( email2 ) ) ) {
+		// 	jQuery( '#email-strength-result' ).addClass( 'show bad' ).html( BP_Register.valid_email );
+		// 	return;
+		// }else{
 			if ( email1 !== email2 ) {
 				jQuery( '#email-strength-result' ).addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 				return;
 			}
-		}
+		//}
 	}
 
 } );
