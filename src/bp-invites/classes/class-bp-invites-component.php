@@ -227,7 +227,7 @@ class BP_Invites_Component extends BP_Component {
 
 				if ( $access ) {
 
-					if ( true === bp_allow_user_to_send_invites() ) {
+					if ( true === bp_allow_user_to_send_invites() && bp_is_my_profile() ) {
 						// Add 'Send Invites' to the main navigation.
 						$main_nav = array(
 							'name'                => $nav_name,

@@ -178,7 +178,7 @@ window.bp = window.bp || {};
 		event.preventDefault();
 
 		var settings_div = $( this ).parent(),
-			vis_setting_text = settings_div.find( 'input:checked' ).parent().text();
+			vis_setting_text = $('.iradio_minimal').length > 0 ? settings_div.find( 'input:checked' ).parent().next('.field-visibility-text').text() : settings_div.find( 'input:checked' ).parent().text();
 
 		settings_div.removeClass( 'field-visibility-settings-open' ).addClass( 'bp-hide' )
 			.siblings( '.field-visibility-settings-toggle' )

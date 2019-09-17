@@ -70,6 +70,7 @@ function bp_core_ajax_widget_members() {
 		'max'             => $max_members,
 		'populate_extras' => true,
 		'search_terms'    => false,
+		'exclude'		  => bp_get_users_of_removed_member_types(),
 	);
 
 	// Query for members.

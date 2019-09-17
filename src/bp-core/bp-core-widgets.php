@@ -22,5 +22,9 @@ function bp_core_register_widgets() {
     if(function_exists("bp_get_following_ids") && class_exists( 'BP_Core_Follow_Following_Widget' ) ) {
         add_action( 'widgets_init', function() { register_widget( 'BP_Core_Follow_Following_Widget' ); } );
     }
+
+	if(function_exists("bp_get_following_ids") && class_exists( 'BP_Core_Follow_Follower_Widget' ) ) {
+		add_action( 'widgets_init', function() { register_widget( 'BP_Core_Follow_Follower_Widget' ); } );
+	}
 }
 add_action( 'bp_register_widgets', 'bp_core_register_widgets' );

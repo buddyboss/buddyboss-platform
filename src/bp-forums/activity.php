@@ -684,12 +684,17 @@ class BBP_BuddyPress_Activity {
 		$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
 
 		// Group
-		$group_id   = current( bbp_get_forum_group_ids( $forum_id ) );
+		$group_id = bbp_forum_recursive_group_id( $forum_id );
+
+		if ( empty( $group_id ) ) {
+			$group_id = current( bbp_get_forum_group_ids( $forum_id ) );
+		}
+
 		$group      = groups_get_group( $group_id );
 		$group_link = bp_get_group_link( $group );
 
 		return sprintf(
-			esc_html__( '%1$s started the discussion %2$s in the forum %3$s', 'buddyboss' ),
+			esc_html__( '%1$s started the discussion %2$s in the group %3$s', 'buddyboss' ),
 			$user_link,
 			$topic_link,
 			$group_link
@@ -711,12 +716,17 @@ class BBP_BuddyPress_Activity {
 		$topic_link      = '<a href="' . $topic_permalink . '">' . $topic_title . '</a>';
 
 		// Group
-		$group_id   = current( bbp_get_forum_group_ids( $forum_id ) );
+		$group_id = bbp_forum_recursive_group_id( $forum_id );
+
+		if ( empty( $group_id ) ) {
+			$group_id = current( bbp_get_forum_group_ids( $forum_id ) );
+		}
+
 		$group      = groups_get_group( $group_id );
 		$group_link = bp_get_group_link( $group );
 
 		return sprintf(
-			esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ),
+			esc_html__( '%1$s replied to the discussion %2$s in the group %3$s', 'buddyboss' ),
 			$user_link,
 			$topic_link,
 			$group_link

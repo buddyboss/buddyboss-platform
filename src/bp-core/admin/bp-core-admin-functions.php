@@ -1511,17 +1511,6 @@ function bp_core_admin_body_classes( $classes ) {
 add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
 
 /**
- * Prevent extended profile fields from being deactivated.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_xprofile_always_active( $components ) {
-	$components['xprofile'] = 1;
-	return $components;
-}
-add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
-
-/**
  * Custom metaboxes used by our 'bp-member-type' post type.
  *
  * @since BuddyBoss 1.0.0

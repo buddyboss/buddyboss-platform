@@ -1393,6 +1393,26 @@ class BBP_Forums_Group_Extension extends BP_Group_Extension {
 		// Get current BP group
 		$group = groups_get_current_group();
 
+		if ( empty( $group ) ) {
+
+			// if recorded activity is a subforum activity, we need to manipulate it to register as group activity
+			if ( ! empty( $args['type'] ) && 'bbp_reply_create' == $args['type'] ) {
+				$topic_id         = $args['secondary_item_id'];
+				$current_forum_id = bbp_get_topic_forum_id( $topic_id );
+			} else {
+				$current_forum_id = $args['secondary_item_id'];
+			}
+
+			if ( ! empty( $current_forum_id ) ) {
+
+				$group_id = bbp_forum_recursive_group_id( $current_forum_id );
+
+				if ( $group_id ) {
+					$group = groups_get_group( $group_id );
+				}
+			}
+		}
+
 		// Not posting from a BuddyBoss group? stop now!
 		if ( empty( $group ) )
 			return $args;
