@@ -53,6 +53,11 @@ jQuery(document).ready( function() {
     }
 
 	function bbpOnInputTags( e ){
+        //abort tag ajax
+        if ( typeof window.bbp_tag_ajax !== 'undefined' && window.bbp_tag_ajax != null ) {
+            window.bbp_tag_ajax.abort();
+        }
+
 		var value = e.detail.value;
 		window.bbp_tagify.settings.whitelist.length = 0; // reset the whitelist
 
@@ -62,7 +67,7 @@ jQuery(document).ready( function() {
 			'tag' : value
 		};
 
-		jQuery.ajax({
+		window.bbp_tag_ajax = jQuery.ajax({
 			type: 'GET',
 			url: Common_Data.ajax_url,
 			data: data,
