@@ -622,7 +622,7 @@ class BP_Admin {
 
 	public function bp_emails_add_sub_menu_page_admin_menu() {
 
-		if ( is_multisite() ) {
+		if ( is_multisite() && bp_is_network_activated() ) {
 			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
 			// Add our screen.
 			$hook = add_submenu_page( 'buddyboss-settings',
