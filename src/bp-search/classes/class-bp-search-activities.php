@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if (!class_exists('Bp_Search_Activities')):
+if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search activities class
@@ -30,7 +30,7 @@ if (!class_exists('Bp_Search_Activities')):
 			static $instance = null;
 
 			// Only run these methods if they haven't been run previously
-			if (null === $instance) {
+			if ( null === $instance ) {
 				$instance = new Bp_Search_Activities();
 			}
 
@@ -43,17 +43,18 @@ if (!class_exists('Bp_Search_Activities')):
 		 *
 		 * @since BuddyBoss 1.0.0
 		 */
-		private function __construct() { /* Do nothing here */
+		private function __construct() {
+			/* Do nothing here */
 		}
 
-		function sql( $search_term, $only_totalrow_count=false ){
+		function sql( $search_term, $only_totalrow_count = false ) {
 
 			/**
 			 * SELECT DISTINCT a.id
 			 * FROM wp_bp_activity a
 			 * WHERE
-			 *		a.is_spam = 0
-			 *	AND a.content LIKE '%nothing%'
+			 *      a.is_spam = 0
+			 *  AND a.content LIKE '%nothing%'
 			 *  AND a.hide_sitewide = 0
 			 *  AND a.type NOT IN ('activity_comment', 'last_activity')
 			 *
@@ -65,17 +66,17 @@ if (!class_exists('Bp_Search_Activities')):
 
 			$query_placeholder = array();
 
-			$sql = " SELECT ";
+			$sql = ' SELECT ';
 
-			if( $only_totalrow_count ){
-				$sql .= " COUNT( DISTINCT id ) ";
+			if ( $only_totalrow_count ) {
+				$sql .= ' COUNT( DISTINCT id ) ';
 			} else {
-				$sql .= " DISTINCT a.id , 'activity' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
-				$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
+				$sql                .= " DISTINCT a.id , 'activity' as type, a.content LIKE %s AS relevance, a.date_recorded as entry_date  ";
+				$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
 			}
 
-			//searching only activity updates, others don't make sense
-			$sql .= " FROM 
+			// searching only activity updates, others don't make sense
+			$sql                .= " FROM 
 						{$bp->activity->table_name} a 
 					WHERE 
 						1=1 
@@ -84,22 +85,22 @@ if (!class_exists('Bp_Search_Activities')):
 						AND a.hide_sitewide = 0 
 						AND a.type = 'activity_update' 
 				";
-			$query_placeholder[] = '%'.$wpdb->esc_like( $search_term ).'%';
-			$sql = $wpdb->prepare( $sql, $query_placeholder );
+			$query_placeholder[] = '%' . $wpdb->esc_like( $search_term ) . '%';
+			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
-            return apply_filters(
-                'Bp_Search_Activities_sql',
-                $sql,
-                array(
-                    'search_term'           => $search_term,
-                    'only_totalrow_count'   => $only_totalrow_count,
-                )
-            );
+			return apply_filters(
+				'Bp_Search_Activities_sql',
+				$sql,
+				array(
+					'search_term'         => $search_term,
+					'only_totalrow_count' => $only_totalrow_count,
+				)
+			);
 		}
 
-		protected function generate_html( $template_type='' ){
+		protected function generate_html( $template_type = '' ) {
 			$post_ids_arr = array();
-			foreach( $this->search_results['items'] as $item_id=>$item_html ){
+			foreach ( $this->search_results['items'] as $item_id => $item_html ) {
 				$post_ids_arr[] = $item_id;
 			}
 
@@ -107,18 +108,23 @@ if (!class_exists('Bp_Search_Activities')):
 
 			do_action( 'bp_before_search_activity_html' );
 
-			if( bp_has_activities( array( 'include'=>$post_ids, 'per_page'=>count($post_ids_arr) ) ) ){
-				while ( bp_activities() ){
+			if ( bp_has_activities(
+				array(
+					'include'  => $post_ids,
+					'per_page' => count( $post_ids_arr ),
+				)
+			) ) {
+				while ( bp_activities() ) {
 					bp_the_activity();
 
 					$result = array(
-						'id'	=> bp_get_activity_id(),
-						'type'	=> $this->type,
-						'title'	=> $this->search_term,
-						'html'	=> bp_search_buffer_template_part( 'loop/activity', $template_type, false ),
+						'id'    => bp_get_activity_id(),
+						'type'  => $this->type,
+						'title' => $this->search_term,
+						'html'  => bp_search_buffer_template_part( 'loop/activity', $template_type, false ),
 					);
 
-					$this->search_results['items'][bp_get_activity_id()] = $result;
+					$this->search_results['items'][ bp_get_activity_id() ] = $result;
 				}
 			}
 
@@ -127,7 +133,7 @@ if (!class_exists('Bp_Search_Activities')):
 
 	}
 
-// End class Bp_Search_Posts
+	// End class Bp_Search_Posts
 
 endif;
-?>
+
