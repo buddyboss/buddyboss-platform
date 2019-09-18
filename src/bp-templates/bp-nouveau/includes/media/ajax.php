@@ -803,8 +803,6 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
-	error_log("personal scope");
-	error_log(print_r(bp_ajax_querystring( 'media' ),1));
 	bp_has_media( bp_ajax_querystring( 'media' ) );
 	$results['scopes']['personal'] = $GLOBALS["media_template"]->total_media_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
