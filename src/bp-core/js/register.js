@@ -167,54 +167,61 @@ jQuery( document ).ready( function() {
 	});
 
 	// Bind signup_email to keyup events in the email fields
-	if ( jQuery( '#signup_email' ). length ) {
-        jQuery( '#signup_email' ).val( '' ).on('keyup change', bp_register_validate_email );
+	var emailSelector, confirmEmailSelector, errorMessageSelector;
+	emailSelector 	  = jQuery( '#signup_email' );
+	if ( emailSelector.length ) {
+	emailSelector.val( '' ).on( 'focusout', bp_register_validate_email );
     }
 
-    if ( jQuery( '#signup_email_confirm' ). length ) {
-        jQuery( '#signup_email_confirm' ).val( '' ).on( 'keyup change' , bp_register_validate_confirm_email );
+	confirmEmailSelector =  jQuery( '#signup_email_confirm' );
+    if ( confirmEmailSelector.length ) {
+		confirmEmailSelector.val( '' ).on( 'keyup change' , bp_register_validate_confirm_email );
     }
 
-	
+
 	function bp_register_validate_email() {
-		var email1 = jQuery( '#signup_email' ).val(),
-			email2 = jQuery( '#signup_email_confirm' ).val(),
-		    regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		var email1 				 = emailSelector.val(),
+			email2 				 = confirmEmailSelector.val(),
+		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			errorMessageSelector = jQuery( '#email-strength-result' );
+
 		// Reset classes and result text
-		jQuery( '#email-strength-result' ).removeClass( 'show mismatch bad' );
-		if( ( email1 == '' && email2 == '' ) && regex.test( email1 ) ) {
-			jQuery( '#email-strength-result' ).html( '' );
+		errorMessageSelector.removeClass( 'show mismatch bad' );
+		if( ( '' === email1 && '' === email2 ) && regex.test( email1 ) ) {
+			errorMessageSelector.html( '' );
 			return;
 		}else{
-			jQuery( '#email-strength-result' ).html( '' );
-			if ( ( email1 != '' || email2 != '' ) && !regex.test( email1 ) ) {
-				jQuery( '#email-strength-result' ).addClass( 'show bad' ).html( BP_Register.valid_email );
+			errorMessageSelector.html( '' );
+			if ( ( email1 !== '' || email2 !== '' ) && !regex.test( email1 ) ) {
+				errorMessageSelector.addClass( 'show bad' ).html( BP_Register.valid_email );
 				return;
 			}
-			if ( ( email2 != '' ) && ( email1 != email2 ) ) {
-				jQuery( '#email-strength-result' ).addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
+			if ( ( email2 !== '' ) && ( email1 !== email2 ) ) {
+				errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 				return;
 			}
-		}		
+		}
 	}
 
 	function bp_register_validate_confirm_email() {
-		
-		if(	window.event.keyCode == 9 ){
+
+		if(	window.event.keyCode === 9 ){
 			return;
 		}
 
-		var email1 = jQuery( '#signup_email' ).val(),
-		    email2 = jQuery( '#signup_email_confirm' ).val(),
-		    regex = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		var email1 				 = emailSelector.val(),
+		    email2 				 = confirmEmailSelector.val(),
+		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			errorMessageSelector = jQuery( '#email-strength-result' );
+
 		// Reset classes and result text
-		jQuery( '#email-strength-result' ).removeClass( 'show mismatch bad' );
-		if ( ( email1 == '' && email2 == '' ) || ( email2 == '') || ( regex.test( email2 ) && regex.test( email1 ) && ( email1 == email2	) ) ) {
-			jQuery( '#email-strength-result' ).html( '' );
+		errorMessageSelector.removeClass( 'show mismatch bad' );
+		if ( ( '' === email1 && '' === email2 ) || ( '' === email2 ) || ( regex.test( email2 ) && regex.test( email1 ) && ( email1 === email2	) ) ) {
+			errorMessageSelector.html( '' );
 			return;
 		}
 		if ( email1 !== email2 ) {
-			jQuery( '#email-strength-result' ).addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
+			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 			return;
 		}
 	}

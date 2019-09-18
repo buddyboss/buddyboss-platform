@@ -2427,7 +2427,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		endif;
 
 		// Email Confirm
-		if ( 'signup_email_confirm' === $name) :
+		if ( 'signup_email' === $name ) :
 		?>
 			<div id="email-strength-result"></div>
 		<?php
