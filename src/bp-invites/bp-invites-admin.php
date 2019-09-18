@@ -406,21 +406,33 @@ function bp_invites_js_bulk_admin_footer() {
  */
 function bp_invites_add_admin_menu() {
 
-	if ( is_network_admin() && bp_is_network_activated() ) {
-		$invites_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_invite_post_type() );
-	} else {
+	if ( ! is_network_admin() && ! bp_is_network_activated() ) {
 		$invites_url = 'edit.php?post_type=' . bp_get_invite_post_type();
+		// Add our screen.
+		$hook = add_submenu_page(
+			'buddyboss-platform',
+			__( 'Invites', 'buddyboss' ),
+			__( 'Invites', 'buddyboss' ),
+			'bp_moderate',
+			$invites_url,
+			''
+		);
 	}
-
-	// Add our screen.
-	$hook = add_submenu_page(
-		'buddyboss-platform',
-		__( 'Invites', 'buddyboss' ),
-		__( 'Invites', 'buddyboss' ),
-		'bp_moderate',
-		$invites_url,
-		''
-	);
 
 }
 add_action( bp_core_admin_hook(), 'bp_invites_add_admin_menu', 65 );
+
+function bp_invites_add_sub_menu_page_admin_menu() {
+
+	if ( is_multisite() ) {
+		$invites_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_invite_post_type() ); // buddyboss-settings
+		// Add our screen.
+		$hook = add_submenu_page( 'buddyboss-settings',
+			__( 'Invites', 'buddyboss' ),
+			__( 'Invites', 'buddyboss' ),
+			'bp_moderate',
+			$invites_url,
+			'' );
+	}
+}
+add_action( 'admin_menu', 'bp_invites_add_sub_menu_page_admin_menu', 10 );
