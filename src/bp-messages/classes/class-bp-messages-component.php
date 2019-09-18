@@ -39,7 +39,7 @@ class BP_Messages_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 50,
-				'features'                 => array( 'star' )
+				'features'                 => array( 'star' ),
 			)
 		);
 	}
@@ -174,14 +174,16 @@ class BP_Messages_Component extends BP_Component {
 
 		// All globals for messaging component.
 		// Note that global_tables is included in this array.
-		parent::setup_globals( array(
-			'slug'                  => BP_MESSAGES_SLUG,
-			'has_directory'         => false,
-			'notification_callback' => 'messages_format_notifications',
-			'search_string'         => __( 'Search Messages&hellip;', 'buddyboss' ),
-			'global_tables'         => $global_tables,
-			'meta_tables'           => $meta_tables
-		) );
+		parent::setup_globals(
+			array(
+				'slug'                  => BP_MESSAGES_SLUG,
+				'has_directory'         => false,
+				'notification_callback' => 'messages_format_notifications',
+				'search_string'         => __( 'Search Messages&hellip;', 'buddyboss' ),
+				'global_tables'         => $global_tables,
+				'meta_tables'           => $meta_tables,
+			)
+		);
 	}
 
 	/**
@@ -230,7 +232,7 @@ class BP_Messages_Component extends BP_Component {
 			'show_for_displayed_user' => $access,
 			'screen_function'         => 'messages_screen_inbox',
 			'default_subnav_slug'     => 'inbox',
-			'item_css_id'             => $this->id
+			'item_css_id'             => $this->id,
 		);
 
 		// Add the subnav items to the profile.
@@ -241,7 +243,7 @@ class BP_Messages_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'messages_screen_inbox',
 			'position'        => 10,
-			'user_has_access' => $access
+			'user_has_access' => $access,
 		);
 
 		// Show certain screens only if the current user is the displayed user.
@@ -255,7 +257,7 @@ class BP_Messages_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'messages_screen_compose',
 				'position'        => 30,
-				'user_has_access' => $access
+				'user_has_access' => $access,
 			);
 
 			/*
@@ -270,7 +272,7 @@ class BP_Messages_Component extends BP_Component {
 					'parent_slug'     => $slug,
 					'screen_function' => 'messages_screen_notices',
 					'position'        => 90,
-					'user_has_access' => true
+					'user_has_access' => true,
 				);
 			}
 		}
@@ -293,7 +295,7 @@ class BP_Messages_Component extends BP_Component {
 
 			// Unread message count.
 			$count = messages_get_unread_count( bp_loggedin_user_id() );
-			if ( !empty( $count ) ) {
+			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Unread message count for the current user */
 					__( 'Messages %s', 'buddyboss' ),
@@ -306,7 +308,7 @@ class BP_Messages_Component extends BP_Component {
 				);
 			} else {
 				$title = __( 'Messages', 'buddyboss' );
-				$inbox = __( 'Messages',    'buddyboss' );
+				$inbox = __( 'Messages', 'buddyboss' );
 			}
 
 			// Add main Messages menu.
@@ -314,7 +316,7 @@ class BP_Messages_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => $title,
-				'href'   => $messages_link
+				'href'   => $messages_link,
 			);
 
 			// Inbox.
@@ -323,7 +325,7 @@ class BP_Messages_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-inbox',
 				'title'    => $inbox,
 				'href'     => $messages_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			// Compose Message.
@@ -332,7 +334,7 @@ class BP_Messages_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-compose',
 				'title'    => __( 'New Message', 'buddyboss' ),
 				'href'     => trailingslashit( $messages_link . 'compose' ),
-				'position' => 30
+				'position' => 30,
 			);
 
 			// Site Wide Notices.
@@ -342,7 +344,7 @@ class BP_Messages_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-notices',
 					'title'    => __( 'Site Notices', 'buddyboss' ),
 					'href'     => trailingslashit( $messages_link . 'notices' ),
-					'position' => 90
+					'position' => 90,
 				);
 			}
 		}
@@ -361,12 +363,14 @@ class BP_Messages_Component extends BP_Component {
 			if ( bp_is_my_profile() ) {
 				$bp->bp_options_title = __( 'My Messages', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-					'item_id' => bp_displayed_user_id(),
-					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
-				) );
-				$bp->bp_options_title = bp_get_displayed_user_fullname();
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
+				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}
 		}
 
@@ -381,12 +385,14 @@ class BP_Messages_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_messages',
-			'bp_messages_threads',
-			'bp_messages_unread_count',
-			'message_meta'
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'bp_messages',
+				'bp_messages_threads',
+				'bp_messages_unread_count',
+				'message_meta',
+			)
+		);
 
 		parent::setup_cache_groups();
 	}

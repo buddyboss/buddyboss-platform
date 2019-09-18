@@ -90,7 +90,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 * @return array $instance See {@WP_Widget::update()}.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance = $old_instance;
+		$instance          = $old_instance;
 		$instance['title'] = strip_tags( $new_instance['title'] );
 		return $instance;
 	}
@@ -105,11 +105,15 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 	 * @return string|null Widget form output.
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
-			'title' => '',
-		) );
+		$instance = wp_parse_args(
+			(array) $instance,
+			array(
+				'title' => '',
+			)
+		);
 
-		$title = strip_tags( $instance['title'] ); ?>
+		$title = strip_tags( $instance['title'] );
+		?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
