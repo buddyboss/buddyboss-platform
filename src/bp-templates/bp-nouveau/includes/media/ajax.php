@@ -803,6 +803,8 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
+	error_log("personal scope");
+	error_log(print_r(bp_ajax_querystring( 'media' ),1));
 	bp_has_media( bp_ajax_querystring( 'media' ) );
 	$results['scopes']['personal'] = $GLOBALS["media_template"]->total_media_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
@@ -818,7 +820,20 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = 'all';
+	$querystring['scope'] = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+		$querystring['scope'][] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$querystring['scope'][] = 'groups';
+	}
+
+	if ( is_user_logged_in() ) {
+		$querystring['scope'][] = 'personal';
+	}
+
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = 0;
@@ -838,6 +853,14 @@ function bp_nouveau_object_template_results_media_personal_scope( $querystring )
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+
+	$privacy  = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		$privacy[] = 'onlyme';
+	}
+
+	$querystring['privacy'] = $privacy;
 	$querystring['count_total'] = true;
 	return http_build_query( $querystring );
 }
