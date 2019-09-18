@@ -46,8 +46,8 @@ add_action( 'bp_media_delete', 'bp_media_clear_cache_for_deleted_media' );
 function bp_media_reset_cache_incrementor() {
 	return bp_core_reset_incrementor( 'bp_media' );
 }
-add_action( 'bp_media_delete',    'bp_media_reset_cache_incrementor' );
-add_action( 'bp_media_add',       'bp_media_reset_cache_incrementor' );
+add_action( 'bp_media_delete', 'bp_media_reset_cache_incrementor' );
+add_action( 'bp_media_add', 'bp_media_reset_cache_incrementor' );
 
 /**
  * Clear a user's cached media count.
@@ -63,8 +63,8 @@ function bp_media_clear_media_user_object_cache( $media ) {
 		wp_cache_delete( 'bp_total_media_for_user_' . $user_id, 'bp' );
 	}
 }
-add_action( 'bp_media_add',       'bp_media_clear_media_user_object_cache', 10 );
-add_action( 'bp_media_delete',    'bp_media_clear_media_user_object_cache', 10 );
+add_action( 'bp_media_add', 'bp_media_clear_media_user_object_cache', 10 );
+add_action( 'bp_media_delete', 'bp_media_clear_media_user_object_cache', 10 );
 
 /**
  * Clear a group's cached media count.
@@ -80,8 +80,8 @@ function bp_media_clear_media_group_object_cache( $media ) {
 		wp_cache_delete( 'bp_total_media_for_group_' . $group_id, 'bp' );
 	}
 }
-add_action( 'bp_media_add',       'bp_media_clear_media_group_object_cache', 10 );
-add_action( 'bp_media_delete',    'bp_media_clear_media_group_object_cache', 10 );
+add_action( 'bp_media_add', 'bp_media_clear_media_group_object_cache', 10 );
+add_action( 'bp_media_delete', 'bp_media_clear_media_group_object_cache', 10 );
 
 /**
  * Clear a cached album item when that item is updated.
@@ -120,5 +120,5 @@ add_action( 'bp_album_delete', 'bp_media_clear_cache_for_deleted_album' );
 function bp_media_album_reset_cache_incrementor() {
 	return bp_core_reset_incrementor( 'bp_media_album' );
 }
-add_action( 'bp_album_delete',    'bp_media_album_reset_cache_incrementor' );
-add_action( 'bp_album_add',       'bp_media_album_reset_cache_incrementor' );
+add_action( 'bp_album_delete', 'bp_media_album_reset_cache_incrementor' );
+add_action( 'bp_album_add', 'bp_media_album_reset_cache_incrementor' );

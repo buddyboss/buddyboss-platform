@@ -7,7 +7,9 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * Database interaction class for the BuddyBoss media album component.
@@ -95,9 +97,9 @@ class BP_Media_Album {
 	 */
 	function __construct( $id = false ) {
 		// Instantiate errors object.
-		$this->errors = new WP_Error;
+		$this->errors = new WP_Error();
 
-		if ( !empty( $id ) ) {
+		if ( ! empty( $id ) ) {
 			$this->id = (int) $id;
 			$this->populate();
 		}
@@ -147,12 +149,12 @@ class BP_Media_Album {
 
 		$bp = buddypress();
 
-		$this->id            = apply_filters_ref_array( 'bp_media_id_before_save',                array( $this->id,                &$this ) );
-		$this->user_id       = apply_filters_ref_array( 'bp_media_user_id_before_save',           array( $this->user_id,           &$this ) );
-		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save',          array( $this->group_id,          &$this ) );
-		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save',             array( $this->title,             &$this ) );
-		$this->privacy       = apply_filters_ref_array( 'bp_media_privacy_before_save',           array( $this->privacy,           &$this ) );
-		$this->date_created  = apply_filters_ref_array( 'bp_media_date_created_before_save',      array( $this->date_created,      &$this ) );
+		$this->id           = apply_filters_ref_array( 'bp_media_id_before_save', array( $this->id, &$this ) );
+		$this->user_id      = apply_filters_ref_array( 'bp_media_user_id_before_save', array( $this->user_id, &$this ) );
+		$this->group_id     = apply_filters_ref_array( 'bp_media_group_id_before_save', array( $this->group_id, &$this ) );
+		$this->title        = apply_filters_ref_array( 'bp_media_title_before_save', array( $this->title, &$this ) );
+		$this->privacy      = apply_filters_ref_array( 'bp_media_privacy_before_save', array( $this->privacy, &$this ) );
+		$this->date_created = apply_filters_ref_array( 'bp_media_date_created_before_save', array( $this->date_created, &$this ) );
 
 		/**
 		 * Fires before the current album gets saved.
@@ -228,34 +230,37 @@ class BP_Media_Album {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args( $args, array(
-			'page'              => 1,               // The current page.
-			'per_page'          => 20,              // albums per page.
-			'max'               => false,           // Max number of items to return.
-			'fields'            => 'all',           // Fields to include.
-			'sort'              => 'DESC',          // ASC or DESC.
-			'order_by'          => 'date_created',  // Column to order by.
-			'exclude'           => false,           // Array of ids to exclude.
-			'search_terms'      => false,           // Terms to search by.
-			'user_id'           => false,           // user id.
-			'group_id'          => false,           // group id.
-			'privacy'           => false,           // public, loggedin, onlyme, friends, grouponly.
-			'count_total'       => false,           // Whether or not to use count_total.
-		) );
+		$r  = wp_parse_args(
+			$args,
+			array(
+				'page'         => 1,               // The current page.
+				'per_page'     => 20,              // albums per page.
+				'max'          => false,           // Max number of items to return.
+				'fields'       => 'all',           // Fields to include.
+				'sort'         => 'DESC',          // ASC or DESC.
+				'order_by'     => 'date_created',  // Column to order by.
+				'exclude'      => false,           // Array of ids to exclude.
+				'search_terms' => false,           // Terms to search by.
+				'user_id'      => false,           // user id.
+				'group_id'     => false,           // group id.
+				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly.
+				'count_total'  => false,           // Whether or not to use count_total.
+			)
+		);
 
 		// Select conditions.
-		$select_sql = "SELECT DISTINCT m.id";
+		$select_sql = 'SELECT DISTINCT m.id';
 
-		$from_sql   = " FROM {$bp->media->table_name_albums} m";
+		$from_sql = " FROM {$bp->media->table_name_albums} m";
 
-		$join_sql   = '';
+		$join_sql = '';
 
 		// Where conditions.
 		$where_conditions = array();
 
 		// Searching.
 		if ( $r['search_terms'] ) {
-			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
+			$search_terms_like              = '%' . bp_esc_like( $r['search_terms'] ) . '%';
 			$where_conditions['search_sql'] = $wpdb->prepare( 'm.title LIKE %s', $search_terms_like );
 
 			/**
@@ -280,15 +285,15 @@ class BP_Media_Album {
 			$sort = 'DESC';
 		}
 
-		switch( $r['order_by'] ) {
-			case 'id' :
-			case 'user_id' :
-			case 'group_id' :
-			case 'attachment_id' :
-			case 'title' :
+		switch ( $r['order_by'] ) {
+			case 'id':
+			case 'user_id':
+			case 'group_id':
+			case 'attachment_id':
+			case 'title':
 				break;
 
-			default :
+			default:
 				$r['order_by'] = 'date_created';
 				break;
 		}
@@ -296,13 +301,13 @@ class BP_Media_Album {
 
 		// Exclude specified items.
 		if ( ! empty( $r['exclude'] ) ) {
-			$exclude = implode( ',', wp_parse_id_list( $r['exclude'] ) );
+			$exclude                     = implode( ',', wp_parse_id_list( $r['exclude'] ) );
 			$where_conditions['exclude'] = "m.id NOT IN ({$exclude})";
 		}
 
 		// The specific ids to which you want to limit the query.
 		if ( ! empty( $r['in'] ) ) {
-			$in = implode( ',', wp_parse_id_list( $r['in'] ) );
+			$in                     = implode( ',', wp_parse_id_list( $r['in'] ) );
 			$where_conditions['in'] = "m.id IN ({$in})";
 		}
 
@@ -315,7 +320,7 @@ class BP_Media_Album {
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {
-			$privacy                     = "'" . implode ( "', '", $r['privacy'] ) . "'";
+			$privacy                     = "'" . implode( "', '", $r['privacy'] ) . "'";
 			$where_conditions['privacy'] = "m.privacy IN ({$privacy})";
 		}
 
@@ -353,7 +358,7 @@ class BP_Media_Album {
 		$join_sql = apply_filters( 'bp_media_album_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
 		// Sanitize page and per_page parameters.
-		$page     = absint( $r['page']     );
+		$page     = absint( $r['page'] );
 		$per_page = absint( $r['per_page'] );
 
 		$retval = array(
@@ -368,7 +373,7 @@ class BP_Media_Album {
 		if ( ! empty( $per_page ) && ! empty( $page ) ) {
 			// We query for $per_page + 1 items in order to
 			// populate the has_more_items flag.
-			$album_ids_sql .= $wpdb->prepare( " LIMIT %d, %d", absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
+			$album_ids_sql .= $wpdb->prepare( ' LIMIT %d, %d', absint( ( $page - 1 ) * $per_page ), $per_page + 1 );
 		}
 
 		/**
@@ -407,10 +412,10 @@ class BP_Media_Album {
 
 		if ( 'ids' !== $r['fields'] ) {
 			// Get the fullnames of users so we don't have to query in the loop.
-			//$albums = self::append_user_fullnames( $albums );
+			// $albums = self::append_user_fullnames( $albums );
 
 			// Pre-fetch data associated with media users and other objects.
-			$albums = BP_Media_Album::prefetch_object_data( $albums );
+			$albums = self::prefetch_object_data( $albums );
 		}
 
 		$retval['albums'] = $albums;
@@ -428,7 +433,7 @@ class BP_Media_Album {
 			 * @param string $sort      Sort direction for query.
 			 */
 			$total_albums_sql = apply_filters( 'bp_media_album_total_medias_sql', "SELECT count(DISTINCT m.id) FROM {$bp->media->table_name_albums} m {$join_sql} {$where_sql}", $where_sql, $sort );
-			$cached = bp_core_get_incremented_cache( $total_albums_sql, $cache_group );
+			$cached           = bp_core_get_incremented_cache( $total_albums_sql, $cache_group );
 			if ( false === $cached ) {
 				$total_albums = $wpdb->get_var( $total_albums_sql );
 				bp_core_set_incremented_cache( $total_albums_sql, $cache_group, $total_albums );
@@ -436,7 +441,7 @@ class BP_Media_Album {
 				$total_albums = $cached;
 			}
 
-			if ( !empty( $r['max'] ) ) {
+			if ( ! empty( $r['max'] ) ) {
 				if ( (int) $total_albums > (int) $r['max'] ) {
 					$total_albums = $r['max'];
 				}
@@ -467,7 +472,7 @@ class BP_Media_Album {
 		// Get BuddyPress.
 		$bp = buddypress();
 
-		$albums   = array();
+		$albums       = array();
 		$uncached_ids = bp_get_non_cached_ids( $album_ids, 'bp_media_album' );
 
 		// Prime caches as necessary.
@@ -476,7 +481,7 @@ class BP_Media_Album {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from album table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->media->table_name_albums} WHERE id IN ({$uncached_ids_sql})");
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->media->table_name_albums} WHERE id IN ({$uncached_ids_sql})" );
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
@@ -495,23 +500,30 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get( array( 'album_id' => $album->id, 'count_total' => true ) );
+			$album->media = bp_media_get(
+				array(
+					'album_id'    => $album->id,
+					'count_total' => true,
+				)
+			);
 
 			$albums[] = $album;
 		}
 
 		// Then fetch user data.
-		$user_query = new BP_User_Query( array(
-			'user_ids'        => wp_list_pluck( $albums, 'user_id' ),
-			'populate_extras' => false,
-		) );
+		$user_query = new BP_User_Query(
+			array(
+				'user_ids'        => wp_list_pluck( $albums, 'user_id' ),
+				'populate_extras' => false,
+			)
+		);
 
 		// Associated located user data with albums.
 		foreach ( $albums as $a_index => $a_item ) {
 			$a_user_id = intval( $a_item->user_id );
 			$a_user    = isset( $user_query->results[ $a_user_id ] ) ? $user_query->results[ $a_user_id ] : '';
 
-			if ( !empty( $a_user ) ) {
+			if ( ! empty( $a_user ) ) {
 				$albums[ $a_index ]->user_email    = $a_user->user_email;
 				$albums[ $a_index ]->user_nicename = $a_user->user_nicename;
 				$albums[ $a_index ]->user_login    = $a_user->user_login;
@@ -527,7 +539,7 @@ class BP_Media_Album {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param string      $id       ID to check.
+	 * @param string $id       ID to check.
 	 * @return int|bool Album ID if found; false if not.
 	 */
 	public static function album_exists( $id ) {
@@ -539,7 +551,7 @@ class BP_Media_Album {
 			'in' => $id,
 		);
 
-		$albums = BP_Media_Album::get( $args );
+		$albums = self::get( $args );
 
 		$album_id = false;
 		if ( ! empty( $albums['albums'] ) ) {
@@ -624,34 +636,37 @@ class BP_Media_Album {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r = wp_parse_args( $args, array(
-			'id'            => false,
-			'user_id'       => false,
-			'group_id'      => false,
-			'date_created'  => false,
-		) );
+		$r  = wp_parse_args(
+			$args,
+			array(
+				'id'           => false,
+				'user_id'      => false,
+				'group_id'     => false,
+				'date_created' => false,
+			)
+		);
 
 		// Setup empty array from where query arguments.
 		$where_args = array();
 
 		// ID.
 		if ( ! empty( $r['id'] ) ) {
-			$where_args[] = $wpdb->prepare( "id = %d", $r['id'] );
+			$where_args[] = $wpdb->prepare( 'id = %d', $r['id'] );
 		}
 
 		// User ID.
 		if ( ! empty( $r['user_id'] ) ) {
-			$where_args[] = $wpdb->prepare( "user_id = %d", $r['user_id'] );
+			$where_args[] = $wpdb->prepare( 'user_id = %d', $r['user_id'] );
 		}
 
 		// Group ID.
 		if ( ! empty( $r['group_id'] ) ) {
-			$where_args[] = $wpdb->prepare( "group_id = %d", $r['group_id'] );
+			$where_args[] = $wpdb->prepare( 'group_id = %d', $r['group_id'] );
 		}
 
 		// Date created.
 		if ( ! empty( $r['date_created'] ) ) {
-			$where_args[] = $wpdb->prepare( "date_created = %s", $r['date_created'] );
+			$where_args[] = $wpdb->prepare( 'date_created = %s', $r['date_created'] );
 		}
 
 		// Bail if no where arguments.
@@ -694,11 +709,11 @@ class BP_Media_Album {
 		do_action_ref_array( 'bp_media_album_after_delete', array( $albums, $r ) );
 
 		// Pluck the media albums IDs out of the $albums array.
-		$album_ids      = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
+		$album_ids = wp_parse_id_list( wp_list_pluck( $albums, 'id' ) );
 
 		// delete the media associated with album
 		if ( ! empty( $album_ids ) ) {
-			foreach( $album_ids as $album_id ) {
+			foreach ( $album_ids as $album_id ) {
 				BP_Media::delete( array( 'album_id' => $album_id ) );
 			}
 		}

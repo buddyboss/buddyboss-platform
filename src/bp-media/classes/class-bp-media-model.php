@@ -84,7 +84,7 @@ abstract class BP_Media_Model {
 	 * Delete from the table
 	 *
 	 * @param $value
-	 * @param bool $media_id
+	 * @param bool  $media_id
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -108,9 +108,9 @@ abstract class BP_Media_Model {
 	 * Fetch data from table with conditions on column
 	 *
 	 * @param $columns
-	 * @param bool $offset
-	 * @param bool $per_page
-	 * @param string $order_by
+	 * @param bool    $offset
+	 * @param bool    $per_page
+	 * @param string  $order_by
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -130,13 +130,13 @@ abstract class BP_Media_Model {
 					$colvalue['value'] = $colvalue;
 				}
 				$col_val_compare = ( $colvalue['value'] ) ? '(\'' . implode( "','", $colvalue['value'] ) . '\')' : '';
-				$where           .= " AND " . self::_table() . ".{$colname} {$compare} {$col_val_compare}";
+				$where          .= ' AND ' . self::_table() . ".{$colname} {$compare} {$col_val_compare}";
 			} else {
-				$where .= " AND " . self::_table() . ".{$colname} = '{$colvalue}'";
+				$where .= ' AND ' . self::_table() . ".{$colname} = '{$colvalue}'";
 			}
 		}
-		$sql = $select . $where;
-		$sql .= " ORDER BY " . self::_table() . ".$order_by";
+		$sql  = $select . $where;
+		$sql .= ' ORDER BY ' . self::_table() . ".$order_by";
 		if ( false !== $offset ) {
 			if ( ! is_integer( $offset ) ) {
 				$offset = 0;
@@ -180,9 +180,9 @@ abstract class BP_Media_Model {
 					$colvalue['value'] = $colvalue;
 				}
 				$col_val_comapare = ( $colvalue['value'] ) ? '(\'' . implode( "','", $colvalue['value'] ) . '\')' : '';
-				$where            .= " AND " . self::_table() . ".{$colname} {$compare} {$col_val_comapare}";
+				$where           .= ' AND ' . self::_table() . ".{$colname} {$compare} {$col_val_comapare}";
 			} else {
-				$where .= " AND " . self::_table() . ".{$colname} = '{$colvalue}'";
+				$where .= ' AND ' . self::_table() . ".{$colname} = '{$colvalue}'";
 			}
 		}
 		$sql = $select . $where;

@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Output the media component slug.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_slug() {
 	echo bp_get_media_slug();
@@ -41,7 +40,6 @@ function bp_get_media_slug() {
  * Output the media component root slug.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_root_slug() {
 	echo bp_get_media_root_slug();
@@ -128,7 +126,7 @@ function bp_has_media( $args = '' ) {
 		: false;
 
 	$search_terms_default = false;
-	$search_query_arg = bp_core_get_component_search_query_arg( 'media' );
+	$search_query_arg     = bp_core_get_component_search_query_arg( 'media' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
@@ -140,7 +138,7 @@ function bp_has_media( $args = '' ) {
 		$album_id = $args['album_id'];
 	}
 
-	$privacy  = array( 'public' );
+	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
 		if ( bp_is_active( 'friends' ) ) {
@@ -167,9 +165,9 @@ function bp_has_media( $args = '' ) {
 
 	$group_id = false;
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
-		$privacy = array( 'grouponly' );
-		$group_id  = bp_get_current_group_id();
-		$user_id   = false;
+		$privacy  = array( 'grouponly' );
+		$group_id = bp_get_current_group_id();
+		$user_id  = false;
 	}
 
 	/*
@@ -178,27 +176,31 @@ function bp_has_media( $args = '' ) {
 
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
-	$r = bp_parse_args( $args, array(
-		'include'           => false,           // Pass an media_id or string of IDs comma-separated.
-		'exclude'           => false,           // Pass an activity_id or string of IDs comma-separated.
-		'sort'              => 'DESC',          // Sort DESC or ASC.
-		'order_by'          => false,           // Order by. Default: date_created
-		'page'              => 1,               // Which page to load.
-		'per_page'          => 20,              // Number of items per page.
-		'page_arg'          => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
-		'max'               => false,           // Max number to return.
-		'fields'            => 'all',
-		'count_total'       => false,
+	$r = bp_parse_args(
+		$args,
+		array(
+			'include'      => false,           // Pass an media_id or string of IDs comma-separated.
+			'exclude'      => false,           // Pass an activity_id or string of IDs comma-separated.
+			'sort'         => 'DESC',          // Sort DESC or ASC.
+			'order_by'     => false,           // Order by. Default: date_created
+			'page'         => 1,               // Which page to load.
+			'per_page'     => 20,              // Number of items per page.
+			'page_arg'     => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'          => false,           // Max number to return.
+			'fields'       => 'all',
+			'count_total'  => false,
 
-		// Filtering
-		'user_id'           => $user_id,        // user_id to filter on.
-		'album_id'          => $album_id,       // album_id to filter on.
-		'group_id'          => $group_id,       // group_id to filter on.
-		'privacy'           => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			// Filtering
+			'user_id'      => $user_id,        // user_id to filter on.
+			'album_id'     => $album_id,       // album_id to filter on.
+			'group_id'     => $group_id,       // group_id to filter on.
+			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
-		'search_terms'      => $search_terms_default,
-	), 'has_media' );
+			'search_terms' => $search_terms_default,
+		),
+		'has_media'
+	);
 
 	/*
 	 * Smart Overrides.
@@ -330,7 +332,6 @@ function bp_get_media_pagination_count() {
  * Output the media pagination links.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_pagination_links() {
 	echo bp_get_media_pagination_links();
@@ -370,7 +371,7 @@ function bp_get_media_pagination_links() {
 function bp_media_has_more_items() {
 	global $media_template;
 
-	if ( ! empty( $media_template->has_more_items )  ) {
+	if ( ! empty( $media_template->has_more_items ) ) {
 		$has_more_items = true;
 	} else {
 		$remaining_pages = 0;
@@ -396,7 +397,6 @@ function bp_media_has_more_items() {
  * Output the media count.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_count() {
 	echo bp_get_media_count();
@@ -428,7 +428,6 @@ function bp_get_media_count() {
  * Output the number of media per page.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_per_page() {
 	echo bp_get_media_per_page();
@@ -460,7 +459,6 @@ function bp_get_media_per_page() {
  * Output the media ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_id() {
 	echo bp_get_media_id();
@@ -492,7 +490,6 @@ function bp_get_media_id() {
  * Output the media blog id.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_blog_id() {
 	echo bp_get_media_blog_id();
@@ -524,7 +521,6 @@ function bp_get_media_blog_id() {
  * Output the media user ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_user_id() {
 	echo bp_get_media_user_id();
@@ -556,7 +552,6 @@ function bp_get_media_user_id() {
  * Output the media attachment ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_attachment_id() {
 	echo bp_get_media_attachment_id();
@@ -588,7 +583,6 @@ function bp_get_media_attachment_id() {
  * Output the media title.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_title() {
 	echo bp_get_media_title();
@@ -620,7 +614,6 @@ function bp_get_media_title() {
  * Output the media album ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_album_id() {
 	echo bp_get_media_album_id();
@@ -652,7 +645,6 @@ function bp_get_media_album_id() {
  * Output the media activity ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_activity_id() {
 	echo bp_get_media_activity_id();
@@ -684,7 +676,6 @@ function bp_get_media_activity_id() {
  * Output the media date created.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_date_created() {
 	echo bp_get_media_date_created();
@@ -716,7 +707,6 @@ function bp_get_media_date_created() {
  * Output the media attachment thumbnail.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_attachment_image_thumbnail() {
 	echo bp_get_media_attachment_image_thumbnail();
@@ -748,7 +738,6 @@ function bp_get_media_attachment_image_thumbnail() {
  * Output the media attachment activity thumbnail.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_attachment_image_activity_thumbnail() {
 	echo bp_get_media_attachment_image_activity_thumbnail();
@@ -780,7 +769,6 @@ function bp_get_media_attachment_image_activity_thumbnail() {
  * Output the media attachment.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_attachment_image() {
 	echo bp_get_media_attachment_image();
@@ -812,7 +800,6 @@ function bp_get_media_attachment_image() {
  * Output media directory permalink.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_directory_permalink() {
 	echo esc_url( bp_get_media_directory_permalink() );
@@ -836,7 +823,7 @@ function bp_get_media_directory_permalink() {
 	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_media_root_slug() ) );
 }
 
-//****************************** Media Albums *********************************//
+// ****************************** Media Albums *********************************//
 
 /**
  * Initialize the album loop.
@@ -898,7 +885,7 @@ function bp_has_albums( $args = '' ) {
 		: false;
 
 	$search_terms_default = false;
-	$search_query_arg = bp_core_get_component_search_query_arg( 'album' );
+	$search_query_arg     = bp_core_get_component_search_query_arg( 'album' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
@@ -932,7 +919,7 @@ function bp_has_albums( $args = '' ) {
 	if ( bp_is_group() ) {
 		$group_id = bp_get_current_group_id();
 		$user_id  = false;
-		$privacy = array( 'grouponly' );
+		$privacy  = array( 'grouponly' );
 	}
 
 	/*
@@ -941,25 +928,29 @@ function bp_has_albums( $args = '' ) {
 
 	// Note: any params used for filtering can be a single value, or multiple
 	// values comma separated.
-	$r = bp_parse_args( $args, array(
-		'include'           => false,        // Pass an album_id or string of IDs comma-separated.
-		'exclude'           => false,        // Pass an activity_id or string of IDs comma-separated.
-		'sort'              => 'DESC',       // Sort DESC or ASC.
-		'page'              => 1,            // Which page to load.
-		'per_page'          => 20,           // Number of items per page.
-		'page_arg'          => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
-		'max'               => false,        // Max number to return.
-		'fields'            => 'all',
-		'count_total'       => false,
+	$r = bp_parse_args(
+		$args,
+		array(
+			'include'      => false,        // Pass an album_id or string of IDs comma-separated.
+			'exclude'      => false,        // Pass an activity_id or string of IDs comma-separated.
+			'sort'         => 'DESC',       // Sort DESC or ASC.
+			'page'         => 1,            // Which page to load.
+			'per_page'     => 20,           // Number of items per page.
+			'page_arg'     => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'          => false,        // Max number to return.
+			'fields'       => 'all',
+			'count_total'  => false,
 
-		// Filtering
-		'user_id'           => $user_id,     // user_id to filter on.
-		'group_id'          => $group_id,    // group_id to filter on.
-		'privacy'           => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
+			// Filtering
+			'user_id'      => $user_id,     // user_id to filter on.
+			'group_id'     => $group_id,    // group_id to filter on.
+			'privacy'      => $privacy,     // privacy to filter on - public, onlyme, loggedin, friends, grouponly.
 
 		// Searching.
-		'search_terms'      => $search_terms_default,
-	), 'has_albums' );
+			'search_terms' => $search_terms_default,
+		),
+		'has_albums'
+	);
 
 	/*
 	 * Smart Overrides.
@@ -1091,7 +1082,6 @@ function bp_get_album_pagination_count() {
  * Output the album pagination links.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_album_pagination_links() {
 	echo bp_get_album_pagination_links();
@@ -1131,7 +1121,7 @@ function bp_get_album_pagination_links() {
 function bp_album_has_more_items() {
 	global $media_album_template;
 
-	if ( ! empty( $media_album_template->has_more_items )  ) {
+	if ( ! empty( $media_album_template->has_more_items ) ) {
 		$has_more_items = true;
 	} else {
 		$remaining_pages = 0;
@@ -1157,7 +1147,6 @@ function bp_album_has_more_items() {
  * Output the album count.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_album_count() {
 	echo bp_get_album_count();
@@ -1189,7 +1178,6 @@ function bp_get_album_count() {
  * Output the number of media album per page.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_album_per_page() {
 	echo bp_get_album_per_page();
@@ -1221,7 +1209,6 @@ function bp_get_album_per_page() {
  * Output the media album ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_album_id() {
 	echo bp_get_album_id();
@@ -1253,7 +1240,6 @@ function bp_get_album_id() {
  * Output the media album title.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_album_title() {
 	echo bp_get_album_title();
@@ -1307,7 +1293,6 @@ function bp_get_album_privacy() {
  * Output the media album ID.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_album_link() {
 	echo bp_get_album_link();
@@ -1327,7 +1312,7 @@ function bp_get_album_link() {
 
 	if ( bp_is_group() && ! empty( $media_album_template->album->group_id ) ) {
 		$group_link = bp_get_group_permalink( buddypress()->groups->current_group );
-		$url = trailingslashit( $group_link . '/albums/' . bp_get_album_id() );
+		$url        = trailingslashit( $group_link . '/albums/' . bp_get_album_id() );
 	} else {
 		$url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' . bp_get_album_id() );
 	}

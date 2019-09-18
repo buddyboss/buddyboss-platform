@@ -10,7 +10,6 @@
  * Load the Media directory.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_media_screen_index() {
 	if ( bp_is_media_directory() ) {

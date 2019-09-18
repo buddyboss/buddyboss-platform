@@ -18,11 +18,11 @@ defined( 'ABSPATH' ) || exit;
 class BP_Media_Album_Template {
 
 	/**
-	* The loop iterator.
-	*
-	* @since BuddyBoss 1.0.0
-	* @var int
-	*/
+	 * The loop iterator.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var int
+	 */
 	public $current_album = -1;
 
 	/**
@@ -136,55 +136,59 @@ class BP_Media_Album_Template {
 	public function __construct( $args ) {
 
 		$defaults = array(
-			'page'              => 1,
-			'per_page'          => 20,
-			'page_arg'          => 'acpage',
-			'max'               => false,
-			'user_id'           => false,
-			'fields'            => 'all',
-			'count_total'       => false,
-			'sort'              => false,
-			'include'           => false,
-			'exclude'           => false,
-			'privacy'           => false,
-			'search_terms'      => false,
+			'page'         => 1,
+			'per_page'     => 20,
+			'page_arg'     => 'acpage',
+			'max'          => false,
+			'user_id'      => false,
+			'fields'       => 'all',
+			'count_total'  => false,
+			'sort'         => false,
+			'include'      => false,
+			'exclude'      => false,
+			'privacy'      => false,
+			'search_terms' => false,
 		);
-		$r = wp_parse_args( $args, $defaults );
+		$r        = wp_parse_args( $args, $defaults );
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page']     );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $r['per_page'] );
+		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		// Get an array of the logged in user's favorite album.
 		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_album', true );
 
 		// Fetch specific album items based on ID's.
-		if ( !empty( $include ) ) {
-			$this->albums = bp_album_get_specific( array(
-				'album_ids'         => explode( ',', $include ),
-				'max'               => $max,
-				'count_total'       => $count_total,
-				'page'              => $this->pag_page,
-				'per_page'          => $this->pag_num,
-				'sort'              => $sort,
-				'user_id'           => $user_id,
-			) );
+		if ( ! empty( $include ) ) {
+			$this->albums = bp_album_get_specific(
+				array(
+					'album_ids'   => explode( ',', $include ),
+					'max'         => $max,
+					'count_total' => $count_total,
+					'page'        => $this->pag_page,
+					'per_page'    => $this->pag_num,
+					'sort'        => $sort,
+					'user_id'     => $user_id,
+				)
+			);
 
 			// Fetch all albums.
 		} else {
-			$this->albums = bp_album_get( array(
-				'max'               => $max,
-				'count_total'       => $count_total,
-				'per_page'          => $this->pag_num,
-				'page'              => $this->pag_page,
-				'sort'              => $sort,
-				'search_terms'      => $search_terms,
-				'user_id'           => $user_id,
-				'group_id'          => $group_id,
-				'exclude'           => $exclude,
-				'privacy'           => $privacy,
-			) );
+			$this->albums = bp_album_get(
+				array(
+					'max'          => $max,
+					'count_total'  => $count_total,
+					'per_page'     => $this->pag_num,
+					'page'         => $this->pag_page,
+					'sort'         => $sort,
+					'search_terms' => $search_terms,
+					'user_id'      => $user_id,
+					'group_id'     => $group_id,
+					'exclude'      => $exclude,
+					'privacy'      => $privacy,
+				)
+			);
 		}
 
 		// The total_album_count property will be set only if a
@@ -202,7 +206,7 @@ class BP_Media_Album_Template {
 		$this->albums = $this->albums['albums'];
 
 		if ( $max ) {
-			if ( $max >= count($this->albums) ) {
+			if ( $max >= count( $this->albums ) ) {
 				$this->album_count = count( $this->albums );
 			} else {
 				$this->album_count = (int) $max;
@@ -212,16 +216,18 @@ class BP_Media_Album_Template {
 		}
 
 		if ( (int) $this->total_album_count && (int) $this->pag_num ) {
-			$this->pag_links = paginate_links( array(
-				'base'      => add_query_arg( $this->pag_arg, '%#%' ),
-				'format'    => '',
-				'total'     => ceil( (int) $this->total_album_count / (int) $this->pag_num ),
-				'current'   => (int) $this->pag_page,
-				'prev_text' => __( '&larr;', 'buddyboss' ),
-				'next_text' => __( '&rarr;', 'buddyboss' ),
-				'mid_size'  => 1,
-				'add_args'  => array(),
-			) );
+			$this->pag_links = paginate_links(
+				array(
+					'base'      => add_query_arg( $this->pag_arg, '%#%' ),
+					'format'    => '',
+					'total'     => ceil( (int) $this->total_album_count / (int) $this->pag_num ),
+					'current'   => (int) $this->pag_page,
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'mid_size'  => 1,
+					'add_args'  => array(),
+				)
+			);
 		}
 	}
 
@@ -331,7 +337,7 @@ class BP_Media_Album_Template {
 			 *
 			 * @since BuddyBoss 1.1.0
 			 */
-			do_action('album_loop_start');
+			do_action( 'album_loop_start' );
 		}
 	}
 }
