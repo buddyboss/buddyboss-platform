@@ -101,10 +101,10 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a class="ld-set-cookie" data-course-id="<?php echo esc_attr( get_the_ID() ); ?>" data-group-id="<?php echo esc_attr( ( bp_is_group_single() ? bp_get_current_group_id() : '' ) ); ?>" href="<?php the_permalink(); ?>">
-				<?php if ( has_post_thumbnail() ): ?>
-					<?php the_post_thumbnail('post-thumbnail', array('class'=> 'photo')); ?>
-				<?php else: ?>
-					<img src="<?php echo bp_learndash_url('/assets/images/mystery-course.png'); ?>" class="photo" />
+				<?php if ( has_post_thumbnail() ) : ?>
+					<?php the_post_thumbnail( 'post-thumbnail', array( 'class' => 'photo' ) ); ?>
+				<?php else : ?>
+					<img src="<?php echo bp_learndash_url( '/assets/images/mystery-course.png' ); ?>" class="photo" />
 				<?php endif; ?>
 			</a>
 		</div>
@@ -112,7 +112,7 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 		<div class="item">
 			<div class="item-block">
 				<?php
-				if( $lessons_count > 0 ) {
+				if ( $lessons_count > 0 ) {
 					echo '<div class="course-lesson-count">' . $total_lessons . '</div>';
 				} else {
 					echo '<div class="course-lesson-count">' . __( '0 Lessons', 'buddyboss' ) . '</div>';
@@ -124,19 +124,26 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 
 				<?php
 
-				if( function_exists( 'buddyboss_theme_get_option' ) && buddyboss_theme_get_option('learndash_course_author') ) {
-					SFWD_LMS::get_template('course_list_course_author', compact( 'post' ), true );
+				if ( function_exists( 'buddyboss_theme_get_option' ) && buddyboss_theme_get_option( 'learndash_course_author' ) ) {
+					SFWD_LMS::get_template( 'course_list_course_author', compact( 'post' ), true );
 				}
 
-				if( is_user_logged_in() && isset($has_access) && $has_access ) { ?>
+				if ( is_user_logged_in() && isset( $has_access ) && $has_access ) {
+					?>
 
 					<div class="course-progress-wrap">
 
-						<?php learndash_get_template_part( 'modules/progress.php', array(
-							'context'   =>  'course',
-							'user_id'   =>  $current_user_id,
-							'course_id' =>  get_the_ID()
-						), true ); ?>
+						<?php
+						learndash_get_template_part(
+							'modules/progress.php',
+							array(
+								'context'   => 'course',
+								'user_id'   => $current_user_id,
+								'course_id' => get_the_ID(),
+							),
+							true
+						);
+						?>
 
 					</div>
 
@@ -144,11 +151,23 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 					<div class="bb-course-excerpt">
 						<?php echo get_the_excerpt( get_the_ID() ); ?>
 					</div>
-				<?php }
+					<?php
+				}
 
 				// Price
-				if ( !empty( $course_price ) && $course_price_type !== 'closed' ) { ?>
-					<div class="bb-course-footer bb-course-pay"><span class="course-fee"><?php echo learndash_integration_prepare_price_str( array( 'code' => $paypal_settings['paypal_currency'], 'value' => $course_price ) ); ?></span></div><?php
+				if ( ! empty( $course_price ) && $course_price_type !== 'closed' ) {
+					?>
+					<div class="bb-course-footer bb-course-pay"><span class="course-fee">
+					<?php
+					echo learndash_integration_prepare_price_str(
+						array(
+							'code'  => $paypal_settings['paypal_currency'],
+							'value' => $course_price,
+						)
+					);
+					?>
+																							</span></div>
+																									<?php
 				}
 
 				?>
