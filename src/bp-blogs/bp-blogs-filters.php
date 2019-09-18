@@ -8,15 +8,15 @@
 
 /** Display Filters **********************************************************/
 
-add_filter( 'bp_get_blog_latest_post_title', 'wptexturize'   );
+add_filter( 'bp_get_blog_latest_post_title', 'wptexturize' );
 add_filter( 'bp_get_blog_latest_post_title', 'convert_chars' );
-add_filter( 'bp_get_blog_latest_post_title', 'trim'          );
+add_filter( 'bp_get_blog_latest_post_title', 'trim' );
 
-add_filter( 'bp_blog_latest_post_content', 'wptexturize'        );
-add_filter( 'bp_blog_latest_post_content', 'convert_smilies'    );
-add_filter( 'bp_blog_latest_post_content', 'convert_chars'      );
-add_filter( 'bp_blog_latest_post_content', 'wpautop'            );
-add_filter( 'bp_blog_latest_post_content', 'shortcode_unautop'  );
+add_filter( 'bp_blog_latest_post_content', 'wptexturize' );
+add_filter( 'bp_blog_latest_post_content', 'convert_smilies' );
+add_filter( 'bp_blog_latest_post_content', 'convert_chars' );
+add_filter( 'bp_blog_latest_post_content', 'wpautop' );
+add_filter( 'bp_blog_latest_post_content', 'shortcode_unautop' );
 add_filter( 'bp_blog_latest_post_content', 'prepend_attachment' );
 
 /**
@@ -85,7 +85,7 @@ function bp_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, 
 	 */
 	$sitewide_tags_blog_settings = bp_core_get_root_option( 'sitewide_tags_blog' );
 	if ( ! empty( $sitewide_tags_blog_settings ) ) {
-		$st_options = maybe_unserialize( $sitewide_tags_blog_settings );
+		$st_options   = maybe_unserialize( $sitewide_tags_blog_settings );
 		$tags_blog_id = isset( $st_options['tags_blog_id'] ) ? $st_options['tags_blog_id'] : 0;
 	} else {
 		$tags_blog_id = bp_core_get_root_option( 'sitewide_tags_blog' );
