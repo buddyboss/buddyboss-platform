@@ -2420,7 +2420,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		}
 
 		// Password strength is restricted to the signup_password field
-		if ( 'signup_password_confirm' === $name) :
+		if ( 'signup_password' === $name) :
 		?>
 			<div id="pass-strength-result"></div>
 		<?php
