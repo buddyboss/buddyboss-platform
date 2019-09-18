@@ -103,12 +103,12 @@ function bp_adminbar_blogs_menu() {
  * @deprecated BuddyPress 2.1.0
  */
 function bp_admin_setting_callback_force_buddybar() {
-?>
+	?>
 
 	<input id="_bp_force_buddybar" name="_bp_force_buddybar" type="checkbox" value="1" <?php checked( ! bp_force_buddybar( true ) ); ?> />
 	<label for="_bp_force_buddybar"><?php _e( 'Switch to WordPress Toolbar', 'buddyboss' ); ?></label>
 
-<?php
+	<?php
 }
 
 
@@ -140,7 +140,7 @@ function bp_core_admin_bar() {
 		return false;
 	}
 
-	if ( (int) bp_get_option( 'hide-loggedout-adminbar' ) && !is_user_logged_in() ) {
+	if ( (int) bp_get_option( 'hide-loggedout-adminbar' ) && ! is_user_logged_in() ) {
 		return false;
 	}
 
@@ -214,7 +214,7 @@ function bp_adminbar_account_menu() {
 
 	// Loop through each navigation item
 	$counter = 0;
-	foreach( (array) $bp->bp_nav as $nav_item ) {
+	foreach ( (array) $bp->bp_nav as $nav_item ) {
 		$alt = ( 0 == $counter % 2 ) ? ' class="alt"' : '';
 
 		if ( -1 == $nav_item['position'] ) {
@@ -224,11 +224,11 @@ function bp_adminbar_account_menu() {
 		echo '<li' . $alt . '>';
 		echo '<a id="bp-admin-' . $nav_item['css_id'] . '" href="' . $nav_item['link'] . '">' . $nav_item['name'] . '</a>';
 
-		if ( isset( $bp->bp_options_nav[$nav_item['slug']] ) && is_array( $bp->bp_options_nav[$nav_item['slug']] ) ) {
+		if ( isset( $bp->bp_options_nav[ $nav_item['slug'] ] ) && is_array( $bp->bp_options_nav[ $nav_item['slug'] ] ) ) {
 			echo '<ul>';
 			$sub_counter = 0;
 
-			foreach( (array) $bp->bp_options_nav[$nav_item['slug']] as $subnav_item ) {
+			foreach ( (array) $bp->bp_options_nav[ $nav_item['slug'] ] as $subnav_item ) {
 				$link = $subnav_item['link'];
 				$name = $subnav_item['name'];
 
@@ -290,26 +290,26 @@ function bp_adminbar_thisblog_menu() {
  * @deprecated BuddyPress 2.1.0
  */
 function bp_adminbar_random_menu() {
-?>
+	?>
 
 	<li class="align-right" id="bp-adminbar-visitrandom-menu">
-		<a href="#"><?php _e( 'Visit', 'buddyboss' ) ?></a>
+		<a href="#"><?php _e( 'Visit', 'buddyboss' ); ?></a>
 		<ul class="random-list">
-			<li><a href="<?php bp_members_directory_permalink(); ?>?random-member" rel="nofollow"><?php _e( 'Random Member', 'buddyboss' ) ?></a></li>
+			<li><a href="<?php bp_members_directory_permalink(); ?>?random-member" rel="nofollow"><?php _e( 'Random Member', 'buddyboss' ); ?></a></li>
 
 			<?php if ( bp_is_active( 'groups' ) ) : ?>
 
-				<li class="alt"><a href="<?php bp_groups_directory_permalink(); ?>?random-group"  rel="nofollow"><?php _e( 'Random Group', 'buddyboss' ) ?></a></li>
+				<li class="alt"><a href="<?php bp_groups_directory_permalink(); ?>?random-group"  rel="nofollow"><?php _e( 'Random Group', 'buddyboss' ); ?></a></li>
 
 			<?php endif; ?>
 
 			<?php if ( is_multisite() && bp_is_active( 'blogs' ) ) : ?>
 
-				<li><a href="<?php bp_blogs_directory_permalink(); ?>?random-blog"  rel="nofollow"><?php _e( 'Random Site', 'buddyboss' ) ?></a></li>
+				<li><a href="<?php bp_blogs_directory_permalink(); ?>?random-blog"  rel="nofollow"><?php _e( 'Random Site', 'buddyboss' ); ?></a></li>
 
 			<?php endif; ?>
 
-			<?php do_action( 'bp_adminbar_random_menu' ) ?>
+			<?php do_action( 'bp_adminbar_random_menu' ); ?>
 
 		</ul>
 	</li>
@@ -324,7 +324,7 @@ function bp_adminbar_random_menu() {
  */
 function bp_core_load_buddybar_css() {
 
-	if ( bp_use_wp_admin_bar() || ( (int) bp_get_option( 'hide-loggedout-adminbar' ) && !is_user_logged_in() ) || ( defined( 'BP_DISABLE_ADMIN_BAR' ) && BP_DISABLE_ADMIN_BAR ) ) {
+	if ( bp_use_wp_admin_bar() || ( (int) bp_get_option( 'hide-loggedout-adminbar' ) && ! is_user_logged_in() ) || ( defined( 'BP_DISABLE_ADMIN_BAR' ) && BP_DISABLE_ADMIN_BAR ) ) {
 		return;
 	}
 
@@ -360,9 +360,10 @@ function bp_groups_adminbar_admin_menu() {
 	}
 
 	// Only group admins and site admins can see this menu
-	if ( !current_user_can( 'edit_users' ) && !bp_current_user_can( 'bp_moderate' ) && !bp_is_item_admin() ) {
+	if ( ! current_user_can( 'edit_users' ) && ! bp_current_user_can( 'bp_moderate' ) && ! bp_is_item_admin() ) {
 		return false;
-	} ?>
+	}
+	?>
 
 	<li id="bp-adminbar-adminoptions-menu">
 		<a href="<?php bp_groups_action_link( 'admin' ); ?>"><?php _e( 'Admin Options', 'buddyboss' ); ?></a>
@@ -370,9 +371,9 @@ function bp_groups_adminbar_admin_menu() {
 		<ul>
 			<li><a href="<?php bp_groups_action_link( 'admin/edit-details' ); ?>"><?php _e( 'Edit Details', 'buddyboss' ); ?></a></li>
 
-			<li><a href="<?php bp_groups_action_link( 'admin/group-settings' );  ?>"><?php _e( 'Group Settings', 'buddyboss' ); ?></a></li>
+			<li><a href="<?php bp_groups_action_link( 'admin/group-settings' ); ?>"><?php _e( 'Group Settings', 'buddyboss' ); ?></a></li>
 
-			<?php if ( !(int)bp_get_option( 'bp-disable-avatar-uploads' ) && $bp->avatar->show_avatars ) : ?>
+			<?php if ( ! (int) bp_get_option( 'bp-disable-avatar-uploads' ) && $bp->avatar->show_avatars ) : ?>
 
 				<li><a href="<?php bp_groups_action_link( 'admin/group-avatar' ); ?>"><?php _e( 'Group Profile Photo', 'buddyboss' ); ?></a></li>
 
@@ -392,9 +393,9 @@ function bp_groups_adminbar_admin_menu() {
 
 			<?php endif; ?>
 
-			<li><a class="confirm" href="<?php echo wp_nonce_url( bp_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php _e( "Delete Group", 'buddyboss' ) ?></a></li>
+			<li><a class="confirm" href="<?php echo wp_nonce_url( bp_get_group_permalink( $bp->groups->current_group ) . 'admin/delete-group/', 'groups_delete_group' ); ?>&amp;delete-group-button=1&amp;delete-group-understand=1"><?php _e( 'Delete Group', 'buddyboss' ); ?></a></li>
 
-			<?php do_action( 'bp_groups_adminbar_admin_menu' ) ?>
+			<?php do_action( 'bp_groups_adminbar_admin_menu' ); ?>
 
 		</ul>
 	</li>
@@ -440,14 +441,14 @@ function bp_adminbar_authors_menu() {
 	$blog_prefix = $wpdb->get_blog_prefix( $wpdb->blogid );
 	$authors     = $wpdb->get_results( "SELECT user_id, user_login, user_nicename, display_name, user_email, meta_value as caps FROM $wpdb->users u, $wpdb->usermeta um WHERE u.ID = um.user_id AND meta_key = '{$blog_prefix}capabilities' ORDER BY um.user_id" );
 
-	if ( !empty( $authors ) ) {
+	if ( ! empty( $authors ) ) {
 		// This is a blog, render a menu with links to all authors
 		echo '<li id="bp-adminbar-authors-menu"><a href="/">';
-		_e('Blog Authors', 'buddyboss');
+		_e( 'Blog Authors', 'buddyboss' );
 		echo '</a>';
 
 		echo '<ul class="author-list">';
-		foreach( (array) $authors as $author ) {
+		foreach ( (array) $authors as $author ) {
 			$caps = maybe_unserialize( $author->caps );
 			if ( isset( $caps['subscriber'] ) || isset( $caps['contributor'] ) ) {
 				continue;
@@ -455,13 +456,15 @@ function bp_adminbar_authors_menu() {
 
 			echo '<li>';
 			echo '<a href="' . bp_core_get_user_domain( $author->user_id, $author->user_nicename, $author->user_login ) . '">';
-			echo bp_core_fetch_avatar( array(
-				'item_id' => $author->user_id,
-				'email'   => $author->user_email,
-				'width'   => 15,
-				'height'  => 15,
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $author->display_name )
-			) );
+			echo bp_core_fetch_avatar(
+				array(
+					'item_id' => $author->user_id,
+					'email'   => $author->user_email,
+					'width'   => 15,
+					'height'  => 15,
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $author->display_name ),
+				)
+			);
 			echo ' ' . $author->display_name . '</a>';
 			echo '<div class="admin-bar-clear"></div>';
 			echo '</li>';
@@ -488,28 +491,29 @@ function bp_members_adminbar_admin_menu() {
 	}
 
 	// Don't show this menu to non site admins or if you're viewing your own profile
-	if ( !current_user_can( 'edit_users' ) || bp_is_my_profile() ) {
+	if ( ! current_user_can( 'edit_users' ) || bp_is_my_profile() ) {
 		return false;
-	} ?>
+	}
+	?>
 
 	<li id="bp-adminbar-adminoptions-menu">
 
-		<a href=""><?php _e( 'Admin Options', 'buddyboss' ) ?></a>
+		<a href=""><?php _e( 'Admin Options', 'buddyboss' ); ?></a>
 
 		<ul>
 			<?php if ( bp_is_active( 'xprofile' ) ) : ?>
 
-				<li><a href="<?php bp_members_component_link( 'profile', 'edit' ); ?>"><?php printf( __( "Edit %s's Profile", 'buddyboss' ), esc_attr( bp_get_displayed_user_fullname() ) ) ?></a></li>
+				<li><a href="<?php bp_members_component_link( 'profile', 'edit' ); ?>"><?php printf( __( "Edit %s's Profile", 'buddyboss' ), esc_attr( bp_get_displayed_user_fullname() ) ); ?></a></li>
 
 			<?php endif ?>
 
-			<li><a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>"><?php printf( __( "Edit %s's Profile Photo", 'buddyboss' ), esc_attr( bp_get_displayed_user_fullname() ) ) ?></a></li>
+			<li><a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>"><?php printf( __( "Edit %s's Profile Photo", 'buddyboss' ), esc_attr( bp_get_displayed_user_fullname() ) ); ?></a></li>
 
 			<li><a href="<?php bp_members_component_link( 'settings', 'capabilities' ); ?>"><?php _e( 'User Capabilities', 'buddyboss' ); ?></a></li>
 
 			<li><a href="<?php bp_members_component_link( 'settings', 'delete-account' ); ?>"><?php printf( __( "Delete %s's Account", 'buddyboss' ), esc_attr( bp_get_displayed_user_fullname() ) ); ?></a></li>
 
-			<?php do_action( 'bp_members_adminbar_admin_menu' ) ?>
+			<?php do_action( 'bp_members_adminbar_admin_menu' ); ?>
 
 		</ul>
 	</li>
@@ -536,9 +540,10 @@ function bp_notifications_buddybar_menu() {
 	$notification_count = bp_notifications_get_unread_notification_count( bp_loggedin_user_id() );
 	$notifications      = bp_notifications_get_notifications_for_user( bp_loggedin_user_id() );
 
-	if ( ! empty( $notification_count ) ) : ?>
+	if ( ! empty( $notification_count ) ) :
+		?>
 		<span><?php echo bp_core_number_format( $notification_count ); ?></span>
-	<?php
+		<?php
 	endif;
 
 	echo '</a>';
@@ -547,17 +552,20 @@ function bp_notifications_buddybar_menu() {
 	if ( ! empty( $notifications ) ) {
 		$counter = 0;
 		for ( $i = 0, $count = count( $notifications ); $i < $count; ++$i ) {
-			$alt = ( 0 == $counter % 2 ) ? ' class="alt"' : ''; ?>
+			$alt = ( 0 == $counter % 2 ) ? ' class="alt"' : '';
+			?>
 
-			<li<?php echo $alt ?>><?php echo $notifications[$i] ?></li>
+			<li<?php echo $alt; ?>><?php echo $notifications[ $i ]; ?></li>
 
-			<?php $counter++;
+			<?php
+			$counter++;
 		}
-	} else { ?>
+	} else {
+		?>
 
 		<li><a href="<?php echo esc_url( bp_loggedin_user_domain() ); ?>"><?php _e( 'No new notifications.', 'buddyboss' ); ?></a></li>
 
-	<?php
+		<?php
 	}
 
 	echo '</ul>';
@@ -598,6 +606,6 @@ function bp_blogs_get_subdomain_base() {
  * @deprecated BuddyPress 2.1.0
  */
 function bp_avatar_upload_form() {
-	_deprecated_function(__FUNCTION__, '2.1', 'No longer used' );
+	_deprecated_function( __FUNCTION__, '2.1', 'No longer used' );
 }
 

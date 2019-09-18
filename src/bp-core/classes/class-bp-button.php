@@ -242,12 +242,24 @@ class BP_Button {
 
 		// Deprecated. Subject to removal in a future release.
 		$this->wrapper = $r['wrapper'];
-		if ( !empty( $r['link_id']    ) ) $this->link_id    = ' id="' .    $r['link_id']    . '"';
-		if ( !empty( $r['link_href']  ) ) $this->link_href  = ' href="' .  $r['link_href']  . '"';
-		if ( !empty( $r['link_title'] ) ) $this->link_title = ' title="' . $r['link_title'] . '"';
-		if ( !empty( $r['link_rel']   ) ) $this->link_rel   = ' rel="' .   $r['link_rel']   . '"';
-		if ( !empty( $r['link_class'] ) ) $this->link_class = ' class="' . $r['link_class'] . '"';
-		if ( !empty( $r['link_text']  ) ) $this->link_text  =              $r['link_text'];
+		if ( ! empty( $r['link_id'] ) ) {
+			$this->link_id = ' id="' . $r['link_id'] . '"';
+		}
+		if ( ! empty( $r['link_href'] ) ) {
+			$this->link_href = ' href="' . $r['link_href'] . '"';
+		}
+		if ( ! empty( $r['link_title'] ) ) {
+			$this->link_title = ' title="' . $r['link_title'] . '"';
+		}
+		if ( ! empty( $r['link_rel'] ) ) {
+			$this->link_rel = ' rel="' . $r['link_rel'] . '"';
+		}
+		if ( ! empty( $r['link_class'] ) ) {
+			$this->link_class = ' class="' . $r['link_class'] . '"';
+		}
+		if ( ! empty( $r['link_text'] ) ) {
+			$this->link_text = $r['link_text'];
+		}
 
 		// Required button properties.
 		$this->id                = $r['id'];
@@ -278,7 +290,7 @@ class BP_Button {
 					return false;
 				}
 
-			// No button if viewing your own profile (and not in a members loop).
+				// No button if viewing your own profile (and not in a members loop).
 			} elseif ( bp_is_my_profile() ) {
 				return false;
 			}
@@ -306,16 +318,18 @@ class BP_Button {
 			$this->parent_attr    = $r['parent_attr'];
 
 			// Render parent element attributes.
-			$parent_elem = new BP_Core_HTML_Element( array(
-				'element' => $r['parent_element'],
-				'attr'    => $r['parent_attr']
-			) );
+			$parent_elem = new BP_Core_HTML_Element(
+				array(
+					'element' => $r['parent_element'],
+					'attr'    => $r['parent_attr'],
+				)
+			);
 
 			// Set before and after.
 			$before = $parent_elem->get( 'open_tag' );
 			$after  = $parent_elem->get( 'close_tag' );
 
-		// No parent element.
+			// No parent element.
 		} else {
 			$before = $after = '';
 		}
@@ -323,11 +337,13 @@ class BP_Button {
 		// Button properties.
 		$button = '';
 		if ( ! empty( $r['button_element'] ) ) {
-			$button = new BP_Core_HTML_Element( array(
-				'element'    => $r['button_element'],
-				'attr'       => $r['button_attr'],
-				'inner_html' => ! empty( $r['link_text'] ) ? $r['link_text'] : ''
-			) );
+			$button = new BP_Core_HTML_Element(
+				array(
+					'element'    => $r['button_element'],
+					'attr'       => $r['button_attr'],
+					'inner_html' => ! empty( $r['link_text'] ) ? $r['link_text'] : '',
+				)
+			);
 			$button = $button->contents();
 		}
 
@@ -364,8 +380,14 @@ class BP_Button {
 	protected function backward_compatibility_args( $r = array() ) {
 		// Array of deprecated arguments.
 		$backpat_args = array(
-			'wrapper', 'wrapper_class', 'wrapper_id',
-			'link_href', 'link_class', 'link_id', 'link_rel', 'link_title'
+			'wrapper',
+			'wrapper_class',
+			'wrapper_id',
+			'link_href',
+			'link_class',
+			'link_id',
+			'link_rel',
+			'link_title',
 		);
 
 		foreach ( $backpat_args as $prop ) {
@@ -394,9 +416,9 @@ class BP_Button {
 			if ( false === $child && empty( $r[ "{$parent}_element" ] ) ) {
 				$r[ "{$parent}_element" ] = $r[ $prop ];
 
-			// Set attributes.
+				// Set attributes.
 			} elseif ( true === $child ) {
-				$new_prop = substr( $prop, strpos( $prop, '_' ) +1 );
+				$new_prop = substr( $prop, strpos( $prop, '_' ) + 1 );
 				if ( empty( $r[ "{$parent}_attr" ] ) ) {
 					$r[ "{$parent}_attr" ] = array();
 				}
@@ -428,7 +450,8 @@ class BP_Button {
 	 * @since BuddyPress 1.2.6
 	 */
 	public function display() {
-		if ( !empty( $this->contents ) )
+		if ( ! empty( $this->contents ) ) {
 			echo $this->contents;
+		}
 	}
 }

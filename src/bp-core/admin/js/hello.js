@@ -9,7 +9,7 @@
 	 */
 	var bp_hello_open_modal = function() {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal = document.getElementById( 'bp-hello-container' );
+			modal    = document.getElementById( 'bp-hello-container' );
 
 		document.body.classList.add( 'bp-disable-scroll' );
 
@@ -32,28 +32,32 @@
 	 *
 	 * @param {Event} event - A click event.
 	 */
-	document.addEventListener( 'click', function( event ) {
-		var backdrop = document.getElementById( 'bp-hello-backdrop' );
-		if ( ! backdrop || ! document.getElementById( 'bp-hello-container' ) ) {
-			return;
-		}
+	document.addEventListener(
+		'click',
+		function( event ) {
+			var backdrop = document.getElementById( 'bp-hello-backdrop' );
+			if ( ! backdrop || ! document.getElementById( 'bp-hello-container' ) ) {
+				return;
+			}
 
-		var backdrop_click    = backdrop.contains( event.target ),
-			modal_close_click = event.target.classList.contains( 'close-modal' );
+			var backdrop_click = backdrop.contains( event.target ),
+			modal_close_click  = event.target.classList.contains( 'close-modal' );
 
-		if ( ! modal_close_click && ! backdrop_click ) {
-			return;
-		}
+			if ( ! modal_close_click && ! backdrop_click ) {
+				return;
+			}
 
-		bp_hello_close_modal();
-	}, false );
+			bp_hello_close_modal();
+		},
+		false
+	);
 
 	/**
 	 * Close the Hello modal.
 	 */
 	var bp_hello_close_modal = function() {
 		var backdrop = document.getElementById( 'bp-hello-backdrop' ),
-			modal = document.getElementById( 'bp-hello-container' );
+			modal    = document.getElementById( 'bp-hello-container' );
 
 		document.body.classList.remove( 'bp-disable-scroll' );
 
@@ -68,8 +72,8 @@
 	 * @param {Event} event - A keyboard focus event.
 	 */
 	var bp_hello_handle_keyboard_events = function( event ) {
-		var modal = document.getElementById( 'bp-hello-container' ),
-			focus_targets = Array.prototype.slice.call(
+		var modal          = document.getElementById( 'bp-hello-container' ),
+			focus_targets  = Array.prototype.slice.call(
 				modal.querySelectorAll( 'a[href], button' )
 			),
 			first_tab_stop = focus_targets[0],
@@ -85,7 +89,7 @@
 			event.preventDefault();
 			last_tab_stop.focus();
 
-		// When TAB reaches last tab stop, go to first tab stop in modal.
+			// When TAB reaches last tab stop, go to first tab stop in modal.
 		} else if ( document.activeElement === last_tab_stop ) {
 			event.preventDefault();
 			first_tab_stop.focus();
@@ -97,15 +101,19 @@
 	 *
 	 * @param {Event} event - A keyboard focus event.
 	 */
-	document.addEventListener( 'keyup', function( event ) {
-		if ( event.keyCode === 27 ) {
-			if ( ! document.getElementById( 'bp-hello-backdrop' ) || ! document.getElementById( 'bp-hello-container' ) ) {
-				return;
-			}
+	document.addEventListener(
+		'keyup',
+		function( event ) {
+			if ( event.keyCode === 27 ) {
+				if ( ! document.getElementById( 'bp-hello-backdrop' ) || ! document.getElementById( 'bp-hello-container' ) ) {
+					return;
+				}
 
-			bp_hello_close_modal();
-		}
-	}, false );
+				bp_hello_close_modal();
+			}
+		},
+		false
+	);
 
 	// Init modal after the screen's loaded.
 	if ( document.attachEvent ? document.readyState === 'complete' : document.readyState !== 'loading' ) {
