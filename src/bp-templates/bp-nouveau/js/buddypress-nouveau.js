@@ -290,7 +290,7 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					$( this ).find('.activity-inner p a').hide();
+					$( this ).find('.activity-inner > p:first a').hide();
 				}
 			}
 
