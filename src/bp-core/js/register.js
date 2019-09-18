@@ -170,12 +170,12 @@ jQuery( document ).ready( function() {
 	var emailSelector, confirmEmailSelector, errorMessageSelector;
 	emailSelector 	  = jQuery( '#signup_email' );
 	if ( emailSelector.length ) {
-	emailSelector.val( '' ).on( 'focusout', bp_register_validate_email );
+	emailSelector.on( 'focusout', bp_register_validate_email );
     }
 
 	confirmEmailSelector =  jQuery( '#signup_email_confirm' );
     if ( confirmEmailSelector.length ) {
-		confirmEmailSelector.val( '' ).on( 'keyup change' , bp_register_validate_confirm_email );
+		confirmEmailSelector.on( 'keyup change' , bp_register_validate_confirm_email );
     }
 
 
