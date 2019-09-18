@@ -25,12 +25,12 @@ function bp_activity_update_meta_cache( $activity_ids = false ) {
 	$bp = buddypress();
 
 	$cache_args = array(
-		'object_ids' 	   => $activity_ids,
-		'object_type' 	   => $bp->activity->id,
+		'object_ids'       => $activity_ids,
+		'object_type'      => $bp->activity->id,
 		'object_column'    => 'activity_id',
 		'cache_group'      => 'activity_meta',
-		'meta_table' 	   => $bp->activity->table_name_meta,
-		'cache_key_prefix' => 'bp_activity_meta'
+		'meta_table'       => $bp->activity->table_name_meta,
+		'cache_key_prefix' => 'bp_activity_meta',
 	);
 
 	bp_update_meta_cache( $cache_args );
@@ -78,9 +78,9 @@ function bp_activity_reset_cache_incrementor() {
 	$with_last_activity    = bp_core_reset_incrementor( 'bp_activity_with_last_activity' );
 	return $without_last_activity && $with_last_activity;
 }
-add_action( 'bp_activity_delete',    'bp_activity_reset_cache_incrementor' );
-add_action( 'bp_activity_add',       'bp_activity_reset_cache_incrementor' );
-add_action( 'added_activity_meta',   'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_delete', 'bp_activity_reset_cache_incrementor' );
+add_action( 'bp_activity_add', 'bp_activity_reset_cache_incrementor' );
+add_action( 'added_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'updated_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'deleted_activity_meta', 'bp_activity_reset_cache_incrementor' );
 
@@ -140,12 +140,12 @@ add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
  *
  * @since BuddyBoss 1.1.7
  *
- * @param int $user_id ID of user.
+ * @param int        $user_id ID of user.
  * @param array|bool $ids array of follow ids or false.
  */
 function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
 	if ( ! empty( $ids ) ) {
-		foreach( $ids as $id ) {
+		foreach ( $ids as $id ) {
 			wp_cache_delete( $id, 'bp_activity_follow' );
 		}
 	}

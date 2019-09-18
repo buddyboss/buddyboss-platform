@@ -12,99 +12,99 @@ defined( 'ABSPATH' ) || exit;
 /* Filters *******************************************************************/
 
 // Apply WordPress defined filters.
-add_filter( 'bp_get_activity_action',                'bp_activity_filter_kses', 1 );
-add_filter( 'bp_get_activity_content_body',          'bp_activity_filter_kses', 1 );
-add_filter( 'bp_get_activity_content',               'bp_activity_filter_kses', 1 );
-add_filter( 'bp_get_activity_parent_content',        'bp_activity_filter_kses', 1 );
-add_filter( 'bp_get_activity_latest_update',         'bp_activity_filter_kses', 1 );
+add_filter( 'bp_get_activity_action', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_get_activity_content_body', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_get_activity_content', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_get_activity_parent_content', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_get_activity_latest_update', 'bp_activity_filter_kses', 1 );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'bp_activity_filter_kses', 1 );
 add_filter( 'bp_get_activity_feed_item_description', 'bp_activity_filter_kses', 1 );
-add_filter( 'bp_activity_content_before_save',       'bp_activity_filter_kses', 1 );
-add_filter( 'bp_activity_action_before_save',        'bp_activity_filter_kses', 1 );
-add_filter( 'bp_activity_latest_update_content',     'bp_activity_filter_kses', 1 );
+add_filter( 'bp_activity_content_before_save', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_activity_action_before_save', 'bp_activity_filter_kses', 1 );
+add_filter( 'bp_activity_latest_update_content', 'bp_activity_filter_kses', 1 );
 
-add_filter( 'bp_get_activity_action',                'force_balance_tags' );
-add_filter( 'bp_get_activity_content_body',          'force_balance_tags' );
-add_filter( 'bp_get_activity_content',               'force_balance_tags' );
-add_filter( 'bp_get_activity_latest_update',         'force_balance_tags' );
+add_filter( 'bp_get_activity_action', 'force_balance_tags' );
+add_filter( 'bp_get_activity_content_body', 'force_balance_tags' );
+add_filter( 'bp_get_activity_content', 'force_balance_tags' );
+add_filter( 'bp_get_activity_latest_update', 'force_balance_tags' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'force_balance_tags' );
 add_filter( 'bp_get_activity_feed_item_description', 'force_balance_tags' );
-add_filter( 'bp_activity_content_before_save',       'force_balance_tags' );
-add_filter( 'bp_activity_action_before_save',        'force_balance_tags' );
+add_filter( 'bp_activity_content_before_save', 'force_balance_tags' );
+add_filter( 'bp_activity_action_before_save', 'force_balance_tags' );
 
 if ( function_exists( 'wp_encode_emoji' ) ) {
 	add_filter( 'bp_activity_content_before_save', 'wp_encode_emoji' );
 }
 
-add_filter( 'bp_get_activity_action',                'wptexturize' );
-add_filter( 'bp_get_activity_content_body',          'wptexturize' );
-add_filter( 'bp_get_activity_content',               'wptexturize' );
-add_filter( 'bp_get_activity_parent_content',        'wptexturize' );
-add_filter( 'bp_get_activity_latest_update',         'wptexturize' );
+add_filter( 'bp_get_activity_action', 'wptexturize' );
+add_filter( 'bp_get_activity_content_body', 'wptexturize' );
+add_filter( 'bp_get_activity_content', 'wptexturize' );
+add_filter( 'bp_get_activity_parent_content', 'wptexturize' );
+add_filter( 'bp_get_activity_latest_update', 'wptexturize' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'wptexturize' );
-add_filter( 'bp_activity_get_embed_excerpt',         'wptexturize' );
+add_filter( 'bp_activity_get_embed_excerpt', 'wptexturize' );
 
-add_filter( 'bp_get_activity_action',                'convert_smilies' );
-add_filter( 'bp_get_activity_content_body',          'convert_smilies' );
-add_filter( 'bp_get_activity_content',               'convert_smilies' );
-add_filter( 'bp_get_activity_parent_content',        'convert_smilies' );
-add_filter( 'bp_get_activity_latest_update',         'convert_smilies' );
+add_filter( 'bp_get_activity_action', 'convert_smilies' );
+add_filter( 'bp_get_activity_content_body', 'convert_smilies' );
+add_filter( 'bp_get_activity_content', 'convert_smilies' );
+add_filter( 'bp_get_activity_parent_content', 'convert_smilies' );
+add_filter( 'bp_get_activity_latest_update', 'convert_smilies' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'convert_smilies' );
-add_filter( 'bp_activity_get_embed_excerpt',         'convert_smilies' );
+add_filter( 'bp_activity_get_embed_excerpt', 'convert_smilies' );
 
-add_filter( 'bp_get_activity_action',                'convert_chars' );
-add_filter( 'bp_get_activity_content_body',          'convert_chars' );
-add_filter( 'bp_get_activity_content',               'convert_chars' );
-add_filter( 'bp_get_activity_parent_content',        'convert_chars' );
-add_filter( 'bp_get_activity_latest_update',         'convert_chars' );
+add_filter( 'bp_get_activity_action', 'convert_chars' );
+add_filter( 'bp_get_activity_content_body', 'convert_chars' );
+add_filter( 'bp_get_activity_content', 'convert_chars' );
+add_filter( 'bp_get_activity_parent_content', 'convert_chars' );
+add_filter( 'bp_get_activity_latest_update', 'convert_chars' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'convert_chars' );
-add_filter( 'bp_activity_get_embed_excerpt',         'convert_chars' );
+add_filter( 'bp_activity_get_embed_excerpt', 'convert_chars' );
 
-add_filter( 'bp_get_activity_action',                'wpautop' );
-add_filter( 'bp_get_activity_content_body',          'wpautop' );
-add_filter( 'bp_get_activity_content',               'wpautop' );
+add_filter( 'bp_get_activity_action', 'wpautop' );
+add_filter( 'bp_get_activity_content_body', 'wpautop' );
+add_filter( 'bp_get_activity_content', 'wpautop' );
 add_filter( 'bp_get_activity_feed_item_description', 'wpautop' );
-add_filter( 'bp_activity_get_embed_excerpt',         'wpautop' );
+add_filter( 'bp_activity_get_embed_excerpt', 'wpautop' );
 
-add_filter( 'bp_get_activity_action',                'make_clickable', 9 );
-add_filter( 'bp_get_activity_content_body',          'make_clickable', 9 );
-add_filter( 'bp_get_activity_content',               'make_clickable', 9 );
-add_filter( 'bp_get_activity_parent_content',        'make_clickable', 9 );
-add_filter( 'bp_get_activity_latest_update',         'make_clickable', 9 );
+add_filter( 'bp_get_activity_action', 'make_clickable', 9 );
+add_filter( 'bp_get_activity_content_body', 'make_clickable', 9 );
+add_filter( 'bp_get_activity_content', 'make_clickable', 9 );
+add_filter( 'bp_get_activity_parent_content', 'make_clickable', 9 );
+add_filter( 'bp_get_activity_latest_update', 'make_clickable', 9 );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'make_clickable', 9 );
 add_filter( 'bp_get_activity_feed_item_description', 'make_clickable', 9 );
-add_filter( 'bp_activity_get_embed_excerpt',         'make_clickable', 9 );
+add_filter( 'bp_activity_get_embed_excerpt', 'make_clickable', 9 );
 
-add_filter( 'bp_acomment_name',                      'stripslashes_deep', 5 );
-add_filter( 'bp_get_activity_action',                'stripslashes_deep', 5 );
-add_filter( 'bp_get_activity_content',               'stripslashes_deep', 5 );
-add_filter( 'bp_get_activity_content_body',          'stripslashes_deep', 5 );
-add_filter( 'bp_get_activity_parent_content',        'stripslashes_deep', 5 );
-add_filter( 'bp_get_activity_latest_update',         'stripslashes_deep', 5 );
+add_filter( 'bp_acomment_name', 'stripslashes_deep', 5 );
+add_filter( 'bp_get_activity_action', 'stripslashes_deep', 5 );
+add_filter( 'bp_get_activity_content', 'stripslashes_deep', 5 );
+add_filter( 'bp_get_activity_content_body', 'stripslashes_deep', 5 );
+add_filter( 'bp_get_activity_parent_content', 'stripslashes_deep', 5 );
+add_filter( 'bp_get_activity_latest_update', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'stripslashes_deep', 5 );
 add_filter( 'bp_get_activity_feed_item_description', 'stripslashes_deep', 5 );
 
-add_filter( 'bp_activity_primary_link_before_save',  'esc_url_raw' );
+add_filter( 'bp_activity_primary_link_before_save', 'esc_url_raw' );
 
 // Apply BuddyPress-defined filters.
-add_filter( 'bp_get_activity_content',               'bp_activity_make_nofollow_filter' );
-add_filter( 'bp_get_activity_content_body',          'bp_activity_make_nofollow_filter' );
-add_filter( 'bp_get_activity_parent_content',        'bp_activity_make_nofollow_filter' );
-add_filter( 'bp_get_activity_latest_update',         'bp_activity_make_nofollow_filter' );
+add_filter( 'bp_get_activity_content', 'bp_activity_make_nofollow_filter' );
+add_filter( 'bp_get_activity_content_body', 'bp_activity_make_nofollow_filter' );
+add_filter( 'bp_get_activity_parent_content', 'bp_activity_make_nofollow_filter' );
+add_filter( 'bp_get_activity_latest_update', 'bp_activity_make_nofollow_filter' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'bp_activity_make_nofollow_filter' );
 add_filter( 'bp_get_activity_feed_item_description', 'bp_activity_make_nofollow_filter' );
 
-add_filter( 'pre_comment_content',                   'bp_activity_at_name_filter' );
-add_filter( 'the_content',                           'bp_activity_at_name_filter' );
-add_filter( 'bp_activity_get_embed_excerpt',         'bp_activity_at_name_filter' );
+add_filter( 'pre_comment_content', 'bp_activity_at_name_filter' );
+add_filter( 'the_content', 'bp_activity_at_name_filter' );
+add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_at_name_filter' );
 
-add_filter( 'bp_get_activity_parent_content',        'bp_create_excerpt' );
+add_filter( 'bp_get_activity_parent_content', 'bp_create_excerpt' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
-add_filter( 'bp_get_activity_content',      'bp_activity_truncate_entry', 5 );
+add_filter( 'bp_get_activity_content', 'bp_activity_truncate_entry', 5 );
 
 add_filter( 'bp_get_total_favorite_count_for_user', 'bp_core_number_format' );
-add_filter( 'bp_get_total_mention_count_for_user',  'bp_core_number_format' );
+add_filter( 'bp_get_total_mention_count_for_user', 'bp_core_number_format' );
 
 add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_location_filter', 9 );
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
@@ -118,7 +118,7 @@ add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 
 // Activity feed moderation.
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
-add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys',  2, 1 );
+add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2, 1 );
 
 // Activity link preview
 add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
@@ -140,7 +140,7 @@ add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 function bp_activity_get_moderated_activity_types() {
 	$types = array(
 		'activity_comment',
-		'activity_update'
+		'activity_update',
 	);
 
 	/**
@@ -281,20 +281,21 @@ function bp_activity_at_name_filter( $content, $activity_id = 0 ) {
 	$usernames = bp_activity_find_mentions( $content );
 
 	// No mentions? Stop now!
-	if ( empty( $usernames ) )
+	if ( empty( $usernames ) ) {
 		return $content;
+	}
 
 	// We don't want to link @mentions that are inside of links, so we
 	// temporarily remove them.
 	$replace_count = 0;
-	$replacements = array();
+	$replacements  = array();
 	foreach ( $usernames as $username ) {
 		// Prevent @ name linking inside <a> tags.
 		preg_match_all( '/(<a.*?(?!<\/a>)@' . $username . '.*?<\/a>)/', $content, $content_matches );
 		if ( ! empty( $content_matches[1] ) ) {
 			foreach ( $content_matches[1] as $replacement ) {
 				$replacements[ '#BPAN' . $replace_count ] = $replacement;
-				$content = str_replace( $replacement, '#BPAN' . $replace_count, $content );
+				$content                                  = str_replace( $replacement, '#BPAN' . $replace_count, $content );
 				$replace_count++;
 			}
 		}
@@ -333,8 +334,9 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	}
 
 	// If activity was marked as spam, stop the rest of this function.
-	if ( ! empty( $activity->is_spam ) )
+	if ( ! empty( $activity->is_spam ) ) {
 		return;
+	}
 
 	// Try to find mentions.
 	$usernames = bp_activity_find_mentions( $activity->content );
@@ -342,7 +344,7 @@ function bp_activity_at_name_filter_updates( $activity ) {
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
 		// Replace @mention text with userlinks.
-		foreach( (array) $usernames as $user_id => $username ) {
+		foreach ( (array) $usernames as $user_id => $username ) {
 			$activity->content = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bp_core_get_user_domain( $user_id ) . "' rel='nofollow'>@$username</a>", $activity->content );
 		}
 
@@ -368,8 +370,9 @@ function bp_activity_at_name_send_emails( $activity ) {
 	}
 
 	// If our temporary variable doesn't exist, stop now.
-	if ( empty( buddypress()->activity->mentioned_users ) )
+	if ( empty( buddypress()->activity->mentioned_users ) ) {
 		return;
+	}
 
 	// Grab our temporary variable from bp_activity_at_name_filter_updates().
 	$usernames = buddypress()->activity->mentioned_users;
@@ -378,7 +381,7 @@ function bp_activity_at_name_send_emails( $activity ) {
 	unset( buddypress()->activity->mentioned_users );
 
 	// Send @mentions and setup BP notifications.
-	foreach( (array) $usernames as $user_id => $username ) {
+	foreach ( (array) $usernames as $user_id => $username ) {
 
 		/**
 		 * Filters BuddyPress' ability to send email notifications for @mentions.
@@ -420,25 +423,25 @@ function bp_activity_make_nofollow_filter( $text ) {
 	 * @param array $matches Items matched by preg_replace_callback() in bp_activity_make_nofollow_filter().
 	 * @return string $text Link with rel=nofollow added.
 	 */
-	function bp_activity_make_nofollow_filter_callback( $matches ) {
-		$text = $matches[1];
-		$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'"), '', $text );
+function bp_activity_make_nofollow_filter_callback( $matches ) {
+	$text = $matches[1];
+	$text = str_replace( array( ' rel="nofollow"', " rel='nofollow'" ), '', $text );
 
-		// Extract URL from href
-		preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match);
+	// Extract URL from href
+	preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $text, $match );
 
-		$url_host      = parse_url( $match[0][0], PHP_URL_HOST );
-		$base_url_host = parse_url( site_url(), PHP_URL_HOST );
+	$url_host      = parse_url( $match[0][0], PHP_URL_HOST );
+	$base_url_host = parse_url( site_url(), PHP_URL_HOST );
 
-		// If site link then nothing to do.
-		if($url_host == $base_url_host || empty($url_host)) {
-			return "<a $text rel=\"nofollow\">";
+	// If site link then nothing to do.
+	if ( $url_host == $base_url_host || empty( $url_host ) ) {
+		return "<a $text rel=\"nofollow\">";
 		// Else open in new tab.
-		} else {
-			return "<a target='_blank' $text rel=\"nofollow\">";
-		}
-
+	} else {
+		return "<a target='_blank' $text rel=\"nofollow\">";
 	}
+
+}
 
 /**
  * Truncate long activity entries when viewed in activity feeds.
@@ -467,7 +470,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 */
 	$maybe_truncate_text = apply_filters(
 		'bp_activity_maybe_truncate_entry',
-		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array( 'new_blog_post', ), true )
+		isset( $activities_template->activity->type ) && ! in_array( $activities_template->activity->type, array( 'new_blog_post' ), true )
 	);
 
 	// The full text of the activity update should always show on the single activity screen.
@@ -482,14 +485,14 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 *
 	 * @param string $value Internationalized "Read more" text.
 	 */
-	$append_text    = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
+	$append_text = apply_filters( 'bp_activity_excerpt_append_text', __( ' Read more', 'buddyboss' ) );
 
 	$excerpt_length = bp_activity_get_excerpt_length();
 
 	$args = wp_parse_args( $args, array( 'ending' => __( '&hellip;', 'buddyboss' ) ) );
 
 	// Run the text through the excerpt function. If it's too short, the original text will be returned.
-	$excerpt        = bp_create_excerpt( $text, $excerpt_length, $args );
+	$excerpt = bp_create_excerpt( $text, $excerpt_length, $args );
 
 	/*
 	 * If the text returned by bp_create_excerpt() is different from the original text (ie it's
@@ -497,7 +500,7 @@ function bp_activity_truncate_entry( $text, $args = array() ) {
 	 * shortcodes, so we have strip them from the $text before the comparison.
 	 */
 	if ( strlen( $excerpt ) < strlen( strip_shortcodes( $text ) ) ) {
-		$id = !empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
+		$id = ! empty( $activities_template->activity->current_comment->id ) ? 'acomment-read-more-' . $activities_template->activity->current_comment->id : 'activity-read-more-' . bp_get_activity_id();
 
 		$excerpt = sprintf( '%1$s<span class="activity-read-more" id="%2$s"><a href="%3$s" rel="nofollow">%4$s</a></span>', $excerpt, $id, bp_get_activity_thread_permalink(), $append_text );
 	}
@@ -534,10 +537,13 @@ function bp_activity_link_preview( $content, $activity ) {
 		return $content;
 	}
 
-	$preview_data = bp_parse_args( $preview_data, [
-		'title'       => '',
-		'description' => '',
-	] );
+	$preview_data = bp_parse_args(
+		$preview_data,
+		array(
+			'title'       => '',
+			'description' => '',
+		)
+	);
 
 	$description = $preview_data['description'];
 	$read_more   = ' <a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Read more', 'buddyboss' ) . '...</a>';
@@ -548,9 +554,9 @@ function bp_activity_link_preview( $content, $activity ) {
 	$content .= '<div class="activity-link-preview-container">';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
-		$content   .= '<div class="activity-link-preview-image-wrap"><div class="activity-link-preview-image">';
-		$content   .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
-		$content   .= '</div></div>';
+		$content  .= '<div class="activity-link-preview-image-wrap"><div class="activity-link-preview-image">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
+		$content  .= '</div></div>';
 	}
 	$content .= '<div class="activity-link-preview-content">';
 	$content .= '<div class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></div>';
@@ -576,8 +582,8 @@ function bp_activity_get_js_dependencies( $js_handles = array() ) {
 
 	return $js_handles;
 }
-//add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10, 1 );
-//NOTICE: this dependency breaks activity stream when heartbeat is dequed via external sources
+// add_filter( 'bp_core_get_js_dependencies', 'bp_activity_get_js_dependencies', 10, 1 );
+// NOTICE: this dependency breaks activity stream when heartbeat is dequed via external sources
 
 /**
  * Enqueue Heartbeat js for the activity
@@ -621,7 +627,7 @@ function bp_activity_newest_class( $classes = '' ) {
  * @param array $args
  * @return array $args
  */
-function bp_activity_display_all_types_on_just_me($args) {
+function bp_activity_display_all_types_on_just_me( $args ) {
 
 	if ( bp_is_activity_tabs_active() ) {
 		return $args;
@@ -640,13 +646,21 @@ function bp_activity_display_all_types_on_just_me($args) {
 		return $args;
 	}
 
-	$scope = ['just-me'];
-	if ( bp_activity_do_mentions() )   $scope[] = 'mentions';
-	if ( bp_is_active( 'friends' ) && bp_is_my_profile() )          $scope[] = 'friends';
-	if ( bp_is_active( 'groups' ) && bp_is_my_profile() )           $scope[] = 'groups';
-	if ( bp_is_activity_follow_active() && bp_is_my_profile() )     $scope[] = 'following';
+	$scope = array( 'just-me' );
+	if ( bp_activity_do_mentions() ) {
+		$scope[] = 'mentions';
+	}
+	if ( bp_is_active( 'friends' ) && bp_is_my_profile() ) {
+		$scope[] = 'friends';
+	}
+	if ( bp_is_active( 'groups' ) && bp_is_my_profile() ) {
+		$scope[] = 'groups';
+	}
+	if ( bp_is_activity_follow_active() && bp_is_my_profile() ) {
+		$scope[] = 'following';
+	}
 
-	$args['scope'] = implode(',', $scope);
+	$args['scope'] = implode( ',', $scope );
 
 	return $args;
 }
@@ -703,7 +717,7 @@ function bp_activity_heartbeat_last_recorded( $response = array(), $data = array
 		$activity_latest_args['search_terms'] = addslashes( $data['bp_activity_last_recorded_search_terms'] );
 	}
 
-	$newest_activities = array();
+	$newest_activities      = array();
 	$last_activity_recorded = 0;
 
 	// Temporarily add a just-posted class for new activity items.
@@ -789,10 +803,13 @@ function bp_activity_heartbeat_strings( $strings = array() ) {
 		$pulse = $global_pulse;
 	}
 
-	$strings = array_merge( $strings, array(
-		'newest' => __( 'Load Newest', 'buddyboss' ),
-		'pulse'  => absint( $pulse ),
-	) );
+	$strings = array_merge(
+		$strings,
+		array(
+			'newest' => __( 'Load Newest', 'buddyboss' ),
+			'pulse'  => absint( $pulse ),
+		)
+	);
 
 	return $strings;
 }
@@ -825,7 +842,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
-			'value'  => 0
+			'value'  => 0,
 		);
 	}
 
@@ -833,15 +850,15 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 		'relation' => 'AND',
 		array(
 			'column' => 'user_id',
-			'value'  => $user_id
+			'value'  => $user_id,
 		),
 		$show_hidden,
 
 		// Overrides.
 		'override' => array(
-			'display_comments' => bp_show_streamed_activity_comment()? 'stream' : 'threaded',
+			'display_comments' => bp_show_streamed_activity_comment() ? 'stream' : 'threaded',
 			'filter'           => array( 'user_id' => 0 ),
-			'show_hidden'      => true
+			'show_hidden'      => true,
 		),
 	);
 
@@ -880,7 +897,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
-			'value'  => 0
+			'value'  => 0,
 		);
 	}
 
@@ -889,7 +906,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		array(
 			'column'  => 'id',
 			'compare' => 'IN',
-			'value'   => (array) $favs
+			'value'   => (array) $favs,
 		),
 		$show_hidden,
 
@@ -897,7 +914,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 		'override' => array(
 			'display_comments' => true,
 			'filter'           => array( 'user_id' => 0 ),
-			'show_hidden'      => true
+			'show_hidden'      => true,
 		),
 	);
 
@@ -936,7 +953,7 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
-			'value'  => 0
+			'value'  => 0,
 		);
 	}
 
@@ -947,15 +964,15 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 			'compare' => 'LIKE',
 
 			// Start search at @ symbol and stop search at closing tag delimiter.
-			'value'   => '@' . bp_activity_get_user_mentionname( $user_id ) . '<'
+			'value'   => '@' . bp_activity_get_user_mentionname( $user_id ) . '<',
 		),
 		$show_hidden,
 
 		// Overrides.
 		'override' => array(
-			'display_comments' => bp_show_streamed_activity_comment()? 'stream' : 'threaded',
+			'display_comments' => bp_show_streamed_activity_comment() ? 'stream' : 'threaded',
 			'filter'           => array( 'user_id' => 0 ),
-			'show_hidden'      => true
+			'show_hidden'      => true,
 		),
 	);
 
@@ -973,7 +990,7 @@ add_filter( 'bp_activity_set_mentions_scope_args', 'bp_activity_filter_mentions_
  * @since BuddyBoss 1.0.0
  *
  * @param array|string $qs The querystring for the BP loop.
- * @param str $object The current object for the querystring.
+ * @param str          $object The current object for the querystring.
  *
  * @return array|string Modified querystring
  */
@@ -988,9 +1005,11 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 		$qs_args = wp_parse_args( $qs );
 		// check if members scope is following before manipulating.
 		if ( isset( $qs_args['scope'] ) && 'following' === $qs_args['scope'] ) {
-			$qs .= '&include=' . bp_get_following_ids( array(
+			$qs .= '&include=' . bp_get_following_ids(
+				array(
 					'user_id' => bp_loggedin_user_id(),
-				) );
+				)
+			);
 		}
 	}
 
@@ -1027,9 +1046,11 @@ function bp_users_filter_activity_following_scope( $retval = array(), $filter = 
 	}
 
 	// Determine following of user.
-	$following_ids = bp_get_following( array(
-		'user_id' => $user_id,
-	) );
+	$following_ids = bp_get_following(
+		array(
+			'user_id' => $user_id,
+		)
+	);
 	if ( empty( $following_ids ) ) {
 		$following_ids = array( 0 );
 	}
@@ -1073,7 +1094,7 @@ add_filter( 'bp_activity_set_following_scope_args', 'bp_users_filter_activity_fo
  */
 function bp_activity_remove_platform_updates( $activity_object ) {
 
-	if ( false === bp_platform_is_feed_enable( 'bp-feed-platform-'.$activity_object->type ) ) {
+	if ( false === bp_platform_is_feed_enable( 'bp-feed-platform-' . $activity_object->type ) ) {
 		$activity_object->type = false;
 	}
 }
@@ -1085,16 +1106,23 @@ function bp_activity_remove_platform_updates( $activity_object ) {
  */
 function bp_activity_media_fix_data() {
 
-	$privacy  = array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly', 'media' );
+	$privacy    = array( 'public', 'loggedin', 'friends', 'onlyme', 'grouponly', 'media' );
 	$meta_query = array(
 		array(
 			'relation' => 'OR',
 			'key'      => 'bp_media_activity',
 			'compare'  => 'EXISTS',
-		)
+		),
 	);
 
-	$result = BP_Activity_Activity::get( array( 'per_page' => 10000, 'privacy' => $privacy, 'meta_query' => $meta_query, 'show_hidden' => true ) );
+	$result = BP_Activity_Activity::get(
+		array(
+			'per_page'    => 10000,
+			'privacy'     => $privacy,
+			'meta_query'  => $meta_query,
+			'show_hidden' => true,
+		)
+	);
 
 	if ( ! empty( $result['activities'] ) ) {
 		foreach ( $result['activities'] as $activity ) {
@@ -1143,12 +1171,11 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 
 					unset( $activities->activities[ $key ] );
 				}
-
 			}
 		}
 	}
 
-	$activities->activities	 = array_values( $activities->activities );
+	$activities->activities = array_values( $activities->activities );
 
 	return $has_activities;
 }
