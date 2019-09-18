@@ -38,19 +38,29 @@
 						<fieldset class="bbp-form">
 							<legend><?php _e( 'Destination', 'buddyboss' ); ?></legend>
 							<div>
-								<?php if ( bbp_has_topics( array( 'show_stickies' => false, 'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ), 'post__not_in' => array( bbp_get_topic_id() ) ) ) ) : ?>
+								<?php
+								if ( bbp_has_topics(
+									array(
+										'show_stickies' => false,
+										'post_parent'   => bbp_get_topic_forum_id( bbp_get_topic_id() ),
+										'post__not_in'  => array( bbp_get_topic_id() ),
+									)
+								) ) :
+									?>
 
 									<label for="bbp_destination_topic"><?php _e( 'Merge with this topic:', 'buddyboss' ); ?></label>
 
-									<?php
-										bbp_dropdown( array(
-											'post_type'   => bbp_get_topic_post_type(),
-											'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
-											'selected'    => -1,
-											'exclude'     => bbp_get_topic_id(),
-											'select_id'   => 'bbp_destination_topic'
-										) );
-									?>
+										<?php
+										bbp_dropdown(
+											array(
+												'post_type' => bbp_get_topic_post_type(),
+												'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
+												'selected' => -1,
+												'exclude'  => bbp_get_topic_id(),
+												'select_id' => 'bbp_destination_topic',
+											)
+										);
+										?>
 
 								<?php else : ?>
 

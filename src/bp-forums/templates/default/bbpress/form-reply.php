@@ -29,7 +29,7 @@
 
 				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
 
-				<?php if ( !bbp_is_topic_open() && !bbp_is_reply_edit() ) : ?>
+				<?php if ( ! bbp_is_topic_open() && ! bbp_is_reply_edit() ) : ?>
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -55,7 +55,7 @@
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:','buddyboss' ); ?></label><br />
+							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -67,15 +67,15 @@
 
 						<p>
 							<label for="bbp_topic_tags"><?php _e( 'Tags:', 'buddyboss' ); ?></label><br />
-                            <input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" <?php disabled( bbp_is_topic_spam() ); ?> />
-                            <input type="hidden" value="<?php bbp_form_topic_tags(); ?>" name="bbp_topic_tags" id="bbp_topic_tags" />
+							<input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" <?php disabled( bbp_is_topic_spam() ); ?> />
+							<input type="hidden" value="<?php bbp_form_topic_tags(); ?>" name="bbp_topic_tags" id="bbp_topic_tags" />
 						</p>
 
 						<?php do_action( 'bbp_theme_after_reply_form_tags' ); ?>
 
 					<?php endif; ?>
 
-					<?php if ( bbp_is_subscriptions_active() && !bbp_is_anonymous() && ( !bbp_is_reply_edit() || ( bbp_is_reply_edit() && !bbp_is_reply_anonymous() ) ) ) : ?>
+					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
 
