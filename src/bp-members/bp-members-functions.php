@@ -1755,6 +1755,8 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	// We need to cast $user_id to pass to the filters.
 	$user_id = false;
 
+	$activation_key = '';
+
 	// Multisite installs have their own install procedure.
 	if ( is_multisite() ) {
 		wpmu_signup_user( $user_login, $user_email, $usermeta );
@@ -1778,7 +1780,10 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		 * clutter by defining setting the BP_SIGNUPS_SKIP_USER_CREATION
 		 * to true in your wp-config.php file.
 		 */
-		if ( ! defined( 'BP_SIGNUPS_SKIP_USER_CREATION' ) || ! BP_SIGNUPS_SKIP_USER_CREATION ) {
+		if (
+			( ! defined( 'BP_SIGNUPS_SKIP_USER_CREATION' ) || ! BP_SIGNUPS_SKIP_USER_CREATION )
+			&& apply_filters( 'bp_signups_do_not_skip_user_creation', true )
+		) {
 			$user_id = BP_Signup::add_backcompat( $user_login, $user_password, $user_email, $usermeta );
 
 			if ( is_wp_error( $user_id ) ) {
@@ -1827,8 +1832,9 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 	 * @param string          $user_email    Email address requested by the user.
 	 * @param array           $usermeta      Miscellaneous metadata about the user (blog-specific
 	 *                                       signup data, xprofile data, etc).
+     * @param string $activation_key Activation key to be sent.
 	 */
-	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta );
+	do_action( 'bp_core_signup_user', $user_id, $user_login, $user_password, $user_email, $usermeta, $activation_key );
 
 	return $user_id;
 }
@@ -2236,7 +2242,7 @@ function bp_core_signup_avatar_upload_dir() {
  * @param string   $key        Activation key.
  * @param string   $user_login Optional. The user login name.
  */
-function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $user_login = '' ) {
+function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $user_login = '', $tokens ) {
 	$args = array(
 		'tokens' => array(
 			'activate.url' => esc_url( trailingslashit( bp_get_activation_page() ) . "{$key}/" ),
@@ -2245,6 +2251,11 @@ function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $use
 			'user.id'      => $user_id,
 		),
 	);
+
+
+	echo '<pre>';
+	var_dump( $args );
+	echo '</pre>';
 
 	if ( $user_id ) {
 		$to = $user_id;
