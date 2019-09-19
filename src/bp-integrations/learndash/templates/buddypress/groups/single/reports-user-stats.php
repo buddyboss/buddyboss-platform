@@ -28,22 +28,30 @@ if ($courseId): ?>
 	</div>
 
 	<?php
-	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) && ( 'all' === $_GET['step'] || 'sfwd-courses' === $_GET['step'] ) ) {
-		$progress = learndash_course_progress( array(
-			'user_id'   => $user->ID,
-			'course_id' => $course->ID,
-			'array'     => true
-		) );
-		?>
+	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) ) {  ?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $progress['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
 					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					learndash_course_get_completed_steps($user->ID, $course->ID),
-					$totalSteps = learndash_get_course_steps_count($course->ID),
-					_n('step', 'steps', $totalSteps, 'buddyboss')
+					$complete,
+					$total,
+					_n('step', 'steps', $total, 'buddyboss')
+				); ?></p>
+		</div>
+		<?php
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-courses' === $_GET['step'] ) {
+		?>
+		<div class="user-info">
+			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+		</div>
+		<div class="user-steps">
+			<p><?php printf(
+					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
+					$complete,
+					$total,
+					_n( LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'courses' ), $total, 'buddyboss')
 				); ?></p>
 		</div>
 		<?php
@@ -51,14 +59,14 @@ if ($courseId): ?>
 		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $data['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
 					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$data['complete'],
-					$data['total'],
-					_n( LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'lessons' ), $data['total'], 'buddyboss')
+					$complete,
+					$total,
+					_n( LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'lessons' ), $total, 'buddyboss')
 				); ?></p>
 		</div>
 		<?php
@@ -66,38 +74,45 @@ if ($courseId): ?>
 		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $data['topics']['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
 					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$data['topics']['complete'],
-					$data['topics']['total'],
-					_n( LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'topics' ), $data['topics']['total'], 'buddyboss')
+					$complete,
+					$total,
+					_n( LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'topics' ), $total, 'buddyboss')
 				); ?></p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-quiz' === $_GET['step'] ) {
-		$data = bp_get_user_course_quiz_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $data['percentage']; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
 					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$data['complete'],
-					$data['total'],
-					_n( LearnDash_Custom_Label::get_label( 'quiz' ), LearnDash_Custom_Label::get_label( 'quizzes' ), $data['total'], 'buddyboss')
+					$complete,
+					$total,
+					_n( LearnDash_Custom_Label::get_label( 'quiz' ), LearnDash_Custom_Label::get_label( 'quizzes' ), $total, 'buddyboss')
 				); ?></p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-assignment' === $_GET['step'] ) {
-
+		?>
+		<div class="user-steps">
+			<p><?php printf(
+					__('<b>%d</b> %s completed', 'buddyboss'),
+					$total,
+					_n( 'Assignment', 'Assignments', $total, 'buddyboss')
+				); ?></p>
+		</div>
+		<?php
 	}
 
 
-	if ($points = learndash_get_user_course_points($user->ID)): ?>
+	if ( $points ): ?>
 		<div class="user-points">
 			<p><?php printf(
 				__('<b>%d</b> %s earned', 'buddyboss'),

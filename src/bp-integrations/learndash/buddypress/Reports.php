@@ -15,6 +15,7 @@ use Buddyboss\LearndashIntegration\Buddypress\Generators\EssaysReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator;
+use LDLMS_DB;
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -148,17 +149,149 @@ class Reports
 	 */
 	public function showReportUserStats()
 	{
+		global $wpdb;
+
 		if (empty($_GET['user'])) {
 			return;
 		}
 
+		$courseId  = bp_ld_sync()->getRequest( 'course' );
+		$course    = $courseId ? get_post( $courseId ) : null;
+		$group     = groups_get_current_group();
+		$user      = get_user_by( 'ID', $_GET['user'] );
+		$ldGroupId = bp_ld_sync( 'buddypress' )->sync->generator( bp_get_current_group_id() )->getLdGroupId();
+		$param     = [];
 
-		$courseId = bp_ld_sync()->getRequest('course');
-		$course   = $courseId? get_post($courseId) : null;
-		$group    = groups_get_current_group();
-		$user     = get_user_by('ID', $_GET['user']);
+		$param['course_ids'] = $_GET['course'] ?:learndash_group_enrolled_courses($ldGroupId);
+
+		if ( $_GET['step'] ) {
+			global $learndash_post_types;
+			$param['post_types'] = $_GET['step'] == 'all'? array_diff( $learndash_post_types, ['groups'] ) : $_GET['step'];
+		}
+
+		$param['user_ids']        = $_GET['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
+		$param['activity_status'] = 'COMPLETED';
+		$param['per_page']        = '';
+
+
+		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
+		$data = learndash_reports_get_activity( $param );
+		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
+
+		$points      = 0;
+		$complete    = 0;
+		$in_complete = 0;
+		$total       = 0;
+		$percentage  = 0;
+
+		if ( !empty( $data ) ) {
+			foreach ( $data['results'] as $activity ) {
+				$points  =  $points + $this->coursePointsEarned( $activity );
+			}
+			$complete = (int) count( $data['results'] );
+		}
+
+		$param['activity_status'] = 'IN_PROGRESS';
+
+		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
+		$incomplete_data = learndash_reports_get_activity( $param );
+		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
+
+		$count = 0;
+		if ( !empty( $incomplete_data ) ) {
+			foreach ( $incomplete_data['results'] as $activity ) {
+				$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d",
+					(int) $activity->user_id,
+					(int) $activity->post_id,
+					(int) $activity->activity_course_id,
+					1 ) ); // db call ok; no-cache ok;
+				if ( ! empty( $activity_data ) ) {
+					continue;
+				} else {
+					$count++;
+				}
+			}
+		}
+
+		$in_complete = $count;
+		$total       = $complete + $in_complete;
+
+		if ( $total > 0 ) {
+			$percentage = intval( $complete * 100 / $total );
+			$percentage = ( $percentage > 100 ) ? 100 : $percentage;
+		} else {
+			$percentage = 0;
+		}
 
 		require bp_locate_template('groups/single/reports-user-stats.php', false, false);
+	}
+
+	/**
+	 * Format points earned if enabled
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function coursePointsEarned($activity)
+	{
+
+		$assignments   = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
+		if ( ! empty( $assignments ) ) {
+			foreach ( $assignments as $assignment ) {
+				$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
+				if ( $assignment_points || learndash_is_assignment_approved_by_meta( $assignment->ID ) ) {
+					if ( $assignment_points ) {
+						return (int) $assignment_points['current'];
+					}
+				}
+			}
+		}
+
+		$post_settings = learndash_get_setting( $activity->post_id );
+
+		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type  ) ) {
+
+			if ( 0 === $activity->activity_status ) {
+				return 0;
+			}
+
+			if ( isset( $post_settings['lesson_assignment_points_enabled'] ) && 'on' === $post_settings['lesson_assignment_points_enabled'] && isset( $post_settings['lesson_assignment_points_amount'] ) && $post_settings['lesson_assignment_points_amount'] > 0 ) {
+				return (int) $post_settings['lesson_assignment_points_amount'];
+			} else {
+				return 0;
+			}
+
+		} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
+
+			if ( 0 === $activity->activity_status ) {
+				return 0;
+			}
+
+			if ( isset( $post_settings['course_points_enabled'] ) && 'on' === $post_settings['course_points_enabled'] && isset( $post_settings['course_points'] ) && $post_settings['course_points'] > 0 ) {
+				return (int) $post_settings['course_points'];
+			} else {
+				return 0;
+			}
+
+		}
+		return 0;
+	}
+
+	/**
+	 * Remove post ids param from sql query
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param array $query_args
+	 *
+	 * @return array $query_args
+	 */
+	public function remove_post_ids_param( $query_args ) {
+		if ( isset( $query_args['post_ids'] ) ) {
+			unset( $query_args['post_ids'] );
+		}
+
+		return $query_args;
+
 	}
 
 	/**
