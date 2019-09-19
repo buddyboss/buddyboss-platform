@@ -769,3 +769,54 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 
 add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
 add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );
+
+/**
+ * Get Sub Forum's group id,
+ * if not associated with any group then it searches for the parent forums to fetch group associated
+ * otherwise returns false
+ *
+ * @param $forum_id
+ *
+ * @since BuddyBoss 1.1.9
+ * @return bool|int|mixed
+ */
+function bbp_forum_recursive_group_id ( $forum_id ) {
+
+	if ( empty( $forum_id ) ) {
+	    return false;
+    }
+
+    // initialize a few things
+    $group_id          = 0;
+    $found_group_forum = false;
+    $reached_the_top   = false;
+
+    // This loop works our way up to the top of the topic->sub-forum->parent-forum hierarchy.
+    // We will stop climbing when we find a forum_id that is also the id of a group's forum.
+    // When we find that, we've found the group, and we can stop looking.
+    // Or if we get to the top of the hierarchy, we'll bail out of the loop, never having found a forum
+    // that is associated with a group.
+    while ( ! $found_group_forum && ! $reached_the_top ) {
+        $forum_group_ids = bbp_get_forum_group_ids( $forum_id );
+        if ( ! empty( $forum_group_ids ) ) {
+            // We've found the forum_id that corresponds to the group's forum
+            $found_group_forum = true;
+            $group_id          = $forum_group_ids[0];
+        } else {
+            $current_post = get_post( $forum_id );
+            if ( $current_post->post_parent ) {
+                // $post->post_parent will be the ID of the parent, not an object
+	            $forum_id = $current_post->post_parent;
+            } else {
+                // We've reached the top of the hierarchy
+                $reached_the_top = true;
+            }
+        }
+    }
+
+    if ( $group_id ) {
+        return $group_id;
+    }
+
+    return false;
+}

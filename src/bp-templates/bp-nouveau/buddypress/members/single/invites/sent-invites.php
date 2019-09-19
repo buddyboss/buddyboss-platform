@@ -34,6 +34,21 @@ if ( isset( $failed ) && '' !== $failed ) {
 	<?php
 }
 
+$exists = trim ( filter_input( INPUT_GET, 'exists', FILTER_SANITIZE_STRING ) );
+if ( isset( $exists ) && '' !== $exists ) {
+	?>
+    <aside class="bp-feedback bp-send-invites bp-template-notice error">
+        <span class="bp-icon" aria-hidden="true"></span>
+        <p>
+			<?php
+			$text = __( 'Invitations did not send as the following email addresses as they are already a member:', 'buddyboss' );
+			echo trim ($text.' '. $exists );
+			?>
+        </p>
+
+    </aside>
+	<?php
+}
 ?>
 <script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">

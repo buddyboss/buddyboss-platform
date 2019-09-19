@@ -233,9 +233,9 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						<script>
 							jQuery(function ($) {
-								bps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
+                                bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
 								$('#<?php echo $id; ?>_icon').click(function () {
-									bps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
+                                    bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
 								});
 							});
 						</script>                        <?php

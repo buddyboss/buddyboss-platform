@@ -736,7 +736,7 @@ function xprofile_check_gender_added_previously() {
 
 		$current_edit_id = intval( $parsed_array['field_id'] );
 
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->table_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = 'gender' ");
 		if ( isset( $exists_gender[0] ) && intval( $exists_gender[0]->count ) > 0 ) {
 			if ( $current_edit_id === intval( $exists_gender[0]->id ) ) {
 				$response['status'] = 'not_added';
@@ -747,7 +747,7 @@ function xprofile_check_gender_added_previously() {
 			$response['status'] = 'not_added';
 		}
 	} else {
-		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->tabl_prefix}bp_xprofile_fields a WHERE parent_id = 0 AND type = 'gender' ");
+		$exists_gender = $wpdb->get_results( "SELECT COUNT(*) as count, id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = 'gender' ");
 		if ( isset( $exists_gender[0] ) && intval( $exists_gender[0]->count ) > 0 ) {
 			$response['status'] = 'added';
 		} else {
