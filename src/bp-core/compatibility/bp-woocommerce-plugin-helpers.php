@@ -33,7 +33,11 @@ function bp_helper_bp_email_set_content_html_callback( $content ) {
 		ob_start();
 		echo $content;
 
-		printf( __( '<p>Your username has been automatically generated: %s</p>', 'buddyboss' ), '<strong>' . esc_html( $customer_data['user_login'] ) . '</strong>' );
+		printf( '<p>%s %s</p>',
+			__( 'Your username has been automatically generated:', 'buddyboss' ),
+			'<strong>' . $customer_data['user_login'] . '</strong>'
+		);
+
 		$content = ob_get_contents();
 		ob_end_clean();
 	}
@@ -43,7 +47,7 @@ function bp_helper_bp_email_set_content_html_callback( $content ) {
 		echo $content;
 
 		printf( '<p>%s %s</p>',
-			__( 'Your password has been automatically generated: %s', 'buddyboss' ),
+			__( 'Your password has been automatically generated:', 'buddyboss' ),
 			'<strong>' . $password . '</strong>'
 		);
 		$content = ob_get_contents();
@@ -59,7 +63,7 @@ function bp_helper_bp_email_set_content_plaintext_callback( $content ) {
 	if ( 'yes' === get_option( 'woocommerce_registration_generate_username', 'yes' ) && ! empty( $customer_data ) ) {
 		ob_start();
 
-		printf( __( $content . '
+		printf( $content . __( '
 Your username has been automatically generated: %s', 'buddyboss' ),
 			esc_html( $customer_data['user_login'] )
 		);
@@ -70,7 +74,7 @@ Your username has been automatically generated: %s', 'buddyboss' ),
 	if ( ! empty( $password_generated ) ) {
 		ob_start();
 
-		printf( __( $content . '
+		printf( $content . __( '
 Your password has been automatically generated: %s', 'buddyboss' ),
 			$password
 		);
