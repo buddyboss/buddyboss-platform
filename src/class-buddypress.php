@@ -10,7 +10,6 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 1.6.0
  */
-
 class BuddyPress {
 	/**
 	 * Identify if ths BuddyPress class is from BuddyBoss Platform
