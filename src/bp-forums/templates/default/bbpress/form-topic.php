@@ -90,9 +90,8 @@
 						<?php do_action( 'bbp_theme_before_topic_form_tags' ); ?>
 
 						<p>
-							<label for="bbp_topic_tags_tagify"><?php _e( 'Tags:', 'buddyboss' ); ?></label><br />
-							<input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" <?php disabled( bbp_is_topic_spam() ); ?> placeholder="<?php _e( 'Add Tags:', 'buddyboss' ); ?>" />
-							<input type="hidden" value="<?php bbp_form_topic_tags(); ?>" name="bbp_topic_tags" id="bbp_topic_tags" />
+							<input type="hidden" value="" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_tagify[]" class="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" placeholder="<?php esc_html_e( 'Type the tags of one or more tag', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>">
 						</p>
 
 						<?php do_action( 'bbp_theme_after_topic_form_tags' ); ?>

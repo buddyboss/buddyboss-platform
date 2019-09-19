@@ -1,84 +1,76 @@
 jQuery(document).ready( function() {
-    if ( typeof window.Tagify !== 'undefined' ) {
-        var input  = document.querySelector('input[name=bbp_topic_tags_tagify]');
 
-        if ( input != null ) {
-            window.bbp_tagify = new window.Tagify(input, {});
+	var $input = jQuery( 'body' ).find( '#bbp_topic_tags_tagify' );
+	var ArrayData = [];
 
-			window.bbp_tagify.on('input', bbpOnInputTags);
-
-			if ( jQuery('#bbp_topic_tags').val() ) {
-				jQuery('.tagify__input').attr( 'data-placeholder', '' );
-			}
-
-            window.bbp_tagify.on('add', function () {
-                var bbp_topic_tags = '';
-                for( var i = 0 ; i < window.bbp_tagify.value.length; i++ ) {
-                    bbp_topic_tags += window.bbp_tagify.value[i].value + ',';
-                }
-                jQuery('#bbp_topic_tags').val(bbp_topic_tags);
-                if ( bbp_topic_tags ) {
-					jQuery('.tagify__input').attr( 'data-placeholder', '' );
-				}
-            }).on('remove', function () {
-                var bbp_topic_tags = '';
-                for( var i = 0 ; i < window.bbp_tagify.value.length; i++ ) {
-                    bbp_topic_tags += window.bbp_tagify.value[i].value + ',';
-                }
-                jQuery('#bbp_topic_tags').val(bbp_topic_tags);
-				if ( jQuery('#bbp_topic_tags').val() ) {
-					jQuery('.tagify__input').attr( 'data-placeholder', '' );
-				} else {
-					jQuery('.tagify__input').attr( 'data-placeholder', bbpCommonJsData.tag_text );
-				}
-            });
-
-            // "remove all tags" button event listener
-			jQuery( 'body' ).on('click', '.js-modal-close', function() {
-				window.bbp_tagify.removeAllTags.bind( window.bbp_tagify );
-				jQuery( 'body' ).removeClass( 'popup-modal-reply' );
-			});
-        }
-
-		var topicReplyButton = jQuery('body .bbp-topic-reply-link');
-        if ( topicReplyButton.length ) {
-			topicReplyButton.click( function () {
-				jQuery( 'body' ).addClass( 'popup-modal-reply' );
-				var tagSelector = jQuery( '.bbp_topic_tags_wrapper tags tag');
-				if ( ! tagSelector.length ) {
-					jQuery('.tagify__input').attr( 'data-placeholder', bbpCommonJsData.tag_text );
-				}
-			});
-		}
-    }
-
-	function bbpOnInputTags( e ){
-        //abort tag ajax
-        if ( typeof window.bbp_tag_ajax !== 'undefined' && window.bbp_tag_ajax != null ) {
-            window.bbp_tag_ajax.abort();
-        }
-
-		var value = e.detail.value;
-		window.bbp_tagify.settings.whitelist.length = 0; // reset the whitelist
-
-		var data = {
-			'action': 'search_tags',
-			'_wpnonce': bbpCommonJsData.nonce,
-			'tag' : value
-		};
-
-		window.bbp_tag_ajax = jQuery.ajax({
-			type: 'GET',
+	$input.select2({
+		placeholder: $input.attr('placeholder'),
+		minimumInputLength: 1,
+		tags: true,
+		tokenSeparators: [',', ' '],
+		ajax: {
 			url: bbpCommonJsData.ajax_url,
-			data: data,
-			success: function ( response ) {
-				if ( response.success ) {
-					window.bbp_tagify.settings.whitelist = response.data.tags;
-					window.bbp_tagify.dropdown.show.call(window.bbp_tagify, value); // render the suggestions dropdown
-				}
-			}
-		});
+			dataType: 'json',
+			delay: 250,
+			data: function(params) {
+				return jQuery.extend( {}, params, {
+					_wpnonce : bbpCommonJsData.nonce,
+					action: 'search_tags',
+				});
+			},
+			cache: true,
+			processResults: function( data ) {
 
+				// Removed the element from results if already selected.
+				if ( false === jQuery.isEmptyObject( ArrayData ) ) {
+					jQuery.each( ArrayData, function( index, value ) {
+						for(var i=0;i<data.data.results.length;i++){
+							if(data.data.results[i].id === value){
+								data.data.results.splice(i,1);
+							}
+						}
+					});
+				}
+
+				return {
+					results: data && data.success? data.data.results : []
+				};
+			}
+		}
+	});
+
+	// Add element into the Arrdata array.
+	$input.on('select2:select', function(e) {
+		var data = e.params.data;
+		ArrayData.push(data.id);
+		var tags = ArrayData.join(',');
+		jQuery( 'body #bbp_topic_tags').val( tags );
+	});
+
+	// Remove element into the Arrdata array.
+	$input.on('select2:unselect', function(e) {
+		var data = e.params.data;
+		ArrayData = jQuery.grep(ArrayData, function(value) {
+			return value !== data.id;
+		});
+		var tags = ArrayData.join(',');
+		jQuery( 'body #bbp_topic_tags').val( tags );
+	});
+
+	// "remove all tags" button event listener
+	jQuery( 'body' ).on('click', '.js-modal-close', function() {
+		$input.val('');
+		$input.trigger( 'change' ); // Notify any JS components that the value changed
+		jQuery( 'body' ).removeClass( 'popup-modal-reply' );
+	});
+
+	var topicReplyButton = jQuery('body .bbp-topic-reply-link');
+	if ( topicReplyButton.length ) {
+		topicReplyButton.click( function () {
+			jQuery( 'body' ).addClass( 'popup-modal-reply' );
+			$input.val('');
+			$input.trigger( 'change' ); // Notify any JS components that the value changed
+		});
 	}
 
     if (typeof BP_Nouveau !== 'undefined' && typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.emoji !== 'undefined' ) {

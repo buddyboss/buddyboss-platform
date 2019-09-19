@@ -854,27 +854,37 @@ function bbp_forum_topic_reply_ajax_form_search_tags() {
 		wp_send_json_error( $response );
 	}
 
-	if ( empty( $_GET['tag'] ) ) {
+	if ( empty( $_GET['term'] ) ) {
 		wp_send_json_error( $response );
 	}
 
 	// WP_Term_Query arguments
 	$args = array(
-		'taxonomy'               => array( 'topic-tag' ),
-		'search'             => $_GET['tag'],
-		'hide_empty'             => false,
+		'taxonomy'   => array( 'topic-tag' ),
+		'search'     => $_GET['term'],
+		'hide_empty' => false,
 	);
 
 	// The Term Query
 	$term_query = new WP_Term_Query( $args );
 
 	$tags = array();
+
 	// The Loop
 	if ( ! empty( $term_query ) && ! is_wp_error( $term_query ) ) {
-		$tags = wp_list_pluck( $term_query->terms, 'name' );
+		$tags = $term_query->terms;
 	}
 
-		wp_send_json_success( array(
-			'tags' => $tags,
-		) );
+	if ( empty( $tags ) ) {
+		$tags = array();
+	}
+
+	wp_send_json_success( [
+		'results' => array_map( function( $result ) {
+			return [
+				'id' => $result->slug,
+				'text' => $result->name
+			];
+		}, $tags )
+	] );
 }
