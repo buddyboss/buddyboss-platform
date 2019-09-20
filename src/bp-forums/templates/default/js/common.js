@@ -55,6 +55,9 @@ jQuery(document).ready( function() {
 		});
 		var tags = ArrayData.join(',');
 		jQuery( 'body #bbp_topic_tags').val( tags );
+		if ( tags.length === 0 ) {
+			jQuery(window).scrollTop( jQuery(window).scrollTop() + 1 );
+		}
 	});
 
 	// "remove all tags" button event listener
