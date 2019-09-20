@@ -98,8 +98,8 @@ jQuery( document ).ready( function() {
 	// Profile Type field select box change action.
 	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
 
-		var buttonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
-		buttonSelector.prop( 'disabled', true );
+		var registerSubmitButtonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
+		registerSubmitButtonSelector.prop( 'disabled', true );
 
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
@@ -129,7 +129,7 @@ jQuery( document ).ready( function() {
 
 				if ( response.success ) {
 
-					buttonSelector.prop( 'disabled', false );
+					registerSubmitButtonSelector.prop( 'disabled', false );
 
 					firstCall = 1;
 
@@ -168,7 +168,7 @@ jQuery( document ).ready( function() {
 						window.tinymce.execCommand('mceRepaint');
 					}
 				} else {
-					buttonSelector.prop( 'disabled', false );
+					registerSubmitButtonSelector.prop( 'disabled', false );
 				}
 			}
 		});
