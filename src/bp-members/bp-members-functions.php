@@ -2252,11 +2252,6 @@ function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $use
 		),
 	);
 
-
-	echo '<pre>';
-	var_dump( $args );
-	echo '</pre>';
-
 	if ( $user_id ) {
 		$to = $user_id;
 	} else {
