@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-09-18 03:55:42+00:00\n"
+"POT-Creation-Date: 2019-09-20 15:07:16+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -547,19 +547,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:485
+#: bp-activity/bp-activity-filters.php:488
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:489
+#: bp-activity/bp-activity-filters.php:492
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:543
+#: bp-activity/bp-activity-filters.php:546
 msgid "Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:793
+#: bp-activity/bp-activity-filters.php:796
 msgid "Load Newest"
 msgstr ""
 
@@ -1099,7 +1099,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:633
-#: bp-core/bp-core-cssjs.php:200
+#: bp-core/bp-core-cssjs.php:199
 #: bp-templates/bp-nouveau/buddypress-functions.php:561
 msgid "Are you sure?"
 msgstr ""
@@ -1523,7 +1523,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:165
 #: bp-core/admin/bp-core-admin-components.php:267
 #: bp-core/profile-search/bps-admin.php:85
-#: bp-forums/templates/default/bbpress-functions.php:226
+#: bp-forums/templates/default/bbpress-functions.php:236
 #: bp-groups/classes/class-bp-groups-list-table.php:395
 msgid "Description"
 msgstr ""
@@ -2723,6 +2723,7 @@ msgid "Repair Nickname&hellip; %s"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:1014 bp-forums/admin/tools.php:1397
+#: bp-forums/functions.php:835
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
@@ -3503,11 +3504,11 @@ msgstr ""
 msgid "You must log in to access the page you requested."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:724
+#: bp-core/bp-core-cssjs.php:723
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:725
+#: bp-core/bp-core-cssjs.php:724
 msgid "Enter valid email"
 msgstr ""
 
@@ -6760,6 +6761,7 @@ msgid "About Forums"
 msgstr ""
 
 #: bp-forums/admin/admin.php:493
+#: bp-forums/templates/default/bbpress-functions.php:202
 msgid "Loading"
 msgstr ""
 
@@ -9996,7 +9998,7 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:128
 #: bp-forums/templates/default/bbpress/form-reply-move.php:74
-#: bp-forums/templates/default/bbpress/form-reply.php:130
+#: bp-forums/templates/default/bbpress/form-reply.php:129
 #: bp-forums/templates/default/bbpress/form-topic-merge.php:95
 #: bp-forums/templates/default/bbpress/form-topic-split.php:99
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1438
@@ -10074,45 +10076,45 @@ msgid ""
 "capabilities still allow you to do so."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:69
-#: bp-forums/templates/default/bbpress/form-topic.php:93
-msgid "Tags:"
+#: bp-forums/templates/default/bbpress/form-reply.php:70
+#: bp-forums/templates/default/bbpress/form-topic.php:94
+msgid "Type one or more tag, comma separated"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:88
+#: bp-forums/templates/default/bbpress/form-reply.php:87
 #: bp-forums/templates/default/bbpress/form-topic.php:144
 msgid "Notify the author of follow-up replies via email"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:92
+#: bp-forums/templates/default/bbpress/form-reply.php:91
 #: bp-forums/templates/default/bbpress/form-topic.php:148
 msgid "Notify me of follow-up replies via email"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:109
+#: bp-forums/templates/default/bbpress/form-reply.php:108
 #: bp-forums/templates/default/bbpress/form-topic.php:164
 msgid "Keep a log of this edit:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:113
+#: bp-forums/templates/default/bbpress/form-reply.php:112
 #: bp-forums/templates/default/bbpress/form-topic.php:168
 msgid "Optional reason for editing:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:154
+#: bp-forums/templates/default/bbpress/form-reply.php:153
 msgid "The discussion \"%s\" is closed to new replies."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:163
+#: bp-forums/templates/default/bbpress/form-reply.php:162
 #: bp-forums/templates/default/bbpress/form-topic.php:207
 msgid "The forum \"%s\" is closed to new discussions and replies."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:172
+#: bp-forums/templates/default/bbpress/form-reply.php:171
 msgid "You cannot reply to this discussion."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-reply.php:172
+#: bp-forums/templates/default/bbpress/form-reply.php:171
 msgid "Log in  to reply."
 msgstr ""
 
@@ -10426,64 +10428,68 @@ msgstr ""
 msgid "This user has not created any discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:227
+#: bp-forums/templates/default/bbpress-functions.php:206
+msgid "Add Tags:"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress-functions.php:237
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:228
+#: bp-forums/templates/default/bbpress-functions.php:238
 msgid "Type your topic here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:414
-#: bp-forums/templates/default/bbpress-functions.php:423
+#: bp-forums/templates/default/bbpress-functions.php:424
+#: bp-forums/templates/default/bbpress-functions.php:433
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:451
-#: bp-forums/templates/default/bbpress-functions.php:587
+#: bp-forums/templates/default/bbpress-functions.php:461
+#: bp-forums/templates/default/bbpress-functions.php:597
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:456
+#: bp-forums/templates/default/bbpress-functions.php:466
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:465
-#: bp-forums/templates/default/bbpress-functions.php:533
-#: bp-forums/templates/default/bbpress-functions.php:601
+#: bp-forums/templates/default/bbpress-functions.php:475
+#: bp-forums/templates/default/bbpress-functions.php:543
+#: bp-forums/templates/default/bbpress-functions.php:611
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:473
+#: bp-forums/templates/default/bbpress-functions.php:483
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:478
-#: bp-forums/templates/default/bbpress-functions.php:546
-#: bp-forums/templates/default/bbpress-functions.php:614
+#: bp-forums/templates/default/bbpress-functions.php:488
+#: bp-forums/templates/default/bbpress-functions.php:556
+#: bp-forums/templates/default/bbpress-functions.php:624
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:486
-#: bp-forums/templates/default/bbpress-functions.php:554
-#: bp-forums/templates/default/bbpress-functions.php:622
+#: bp-forums/templates/default/bbpress-functions.php:496
+#: bp-forums/templates/default/bbpress-functions.php:564
+#: bp-forums/templates/default/bbpress-functions.php:632
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:519
+#: bp-forums/templates/default/bbpress-functions.php:529
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:524
+#: bp-forums/templates/default/bbpress-functions.php:534
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:541
-#: bp-forums/templates/default/bbpress-functions.php:609
+#: bp-forums/templates/default/bbpress-functions.php:551
+#: bp-forums/templates/default/bbpress-functions.php:619
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:592
+#: bp-forums/templates/default/bbpress-functions.php:602
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -17183,37 +17189,41 @@ msgid ""
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:682
-#: bp-xprofile/bp-xprofile-filters.php:770
-#: bp-xprofile/bp-xprofile-filters.php:899 bp-xprofile/screens/edit.php:128
+#: bp-xprofile/bp-xprofile-filters.php:775
+#: bp-xprofile/bp-xprofile-filters.php:904 bp-xprofile/screens/edit.php:128
 msgid "%s is required and not allowed to be empty."
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:687
-msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\", \"_\" and \".\" are allowed."
+msgid "Sorry, %s may not contain the character \"_\"!"
 msgstr ""
 
 #: bp-xprofile/bp-xprofile-filters.php:692
+msgid "Invalid %s. Only \"a-z\", \"0-9\", \"-\" and \".\" are allowed."
+msgstr ""
+
+#: bp-xprofile/bp-xprofile-filters.php:697
 msgid "\"-\", \"_\" and \".\" cannot be repeated twice in %s."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:698
+#: bp-xprofile/bp-xprofile-filters.php:703
 msgid "%s must be shorter than %d characters."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:703
+#: bp-xprofile/bp-xprofile-filters.php:708
 msgid "%s must be at least 3 characters"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:723
+#: bp-xprofile/bp-xprofile-filters.php:728
 msgid "%s has already been taken."
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:779
-#: bp-xprofile/bp-xprofile-filters.php:789
+#: bp-xprofile/bp-xprofile-filters.php:784
+#: bp-xprofile/bp-xprofile-filters.php:794
 msgid "Enter valid %s"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-filters.php:909
+#: bp-xprofile/bp-xprofile-filters.php:914
 msgid "Please enter valid %s profile url."
 msgstr ""
 
