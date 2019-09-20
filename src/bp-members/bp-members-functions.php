@@ -2242,7 +2242,7 @@ function bp_core_signup_avatar_upload_dir() {
  * @param string   $key        Activation key.
  * @param string   $user_login Optional. The user login name.
  */
-function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $user_login = '', $tokens ) {
+function bp_core_signup_send_validation_email( $user_id, $user_email, $key, $user_login = '' ) {
 	$args = array(
 		'tokens' => array(
 			'activate.url' => esc_url( trailingslashit( bp_get_activation_page() ) . "{$key}/" ),
