@@ -4857,13 +4857,13 @@ function bp_activity_action_parse_url() {
 
 			// Fetch the oembed code for URL.
 			$embed_code = wp_oembed_get( $url );
-
-			$json_data['title']       = ' ';
-			$json_data['description'] = $embed_code;
-			$json_data['images']      = '';
-			$json_data['error']       = '';
-
-			wp_send_json( $json_data );
+			if ( $embed_code ) {
+				$json_data['title']       = ' ';
+				$json_data['description'] = $embed_code;
+				$json_data['images']      = '';
+				$json_data['error']       = '';
+				wp_send_json( $json_data );
+			}
 		}
 
 		$parser = new WebsiteParser( $url );
@@ -5015,6 +5015,7 @@ function bp_activity_media_sideload_attachment( $file ) {
 
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+	$file                   = str_replace( '&amp;', '&', $file );
 	$file_array['tmp_name'] = download_url( $file );
 
 	// If error storing temporarily, return the error.

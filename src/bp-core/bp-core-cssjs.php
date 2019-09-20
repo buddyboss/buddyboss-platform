@@ -83,7 +83,6 @@ function bp_core_register_common_scripts() {
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
-		'bp-tagify'        => array( 'file' => "{$url}vendor/tagify{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 	);
 
@@ -718,9 +717,11 @@ function bp_core_register_page_js() {
 		wp_enqueue_script( 'bp-register-page' );
 
 		$data = array(
-			'ajaxurl'  => bp_core_ajax_url(),
-			'field_id' => 'field_' . bp_get_xprofile_member_type_field_id(),
-			'nonce'    => wp_create_nonce( 'bp-core-register-page-js' ),
+			'ajaxurl'        => bp_core_ajax_url(),
+			'field_id'       => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
+			'mismatch_email' => __( 'Mismatch', 'buddyboss' ),
+			'valid_email'    => __( 'Enter valid email', 'buddyboss' ),
 		);
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );

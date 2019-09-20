@@ -54,6 +54,7 @@ class BP_Learndash_Integration extends BP_Integration {
 	public function includes($includes = array()) {
 		parent::includes([
 			'functions',
+			'filters',
 			'groups-sync/loader.php',
 			'core/Core.php',
 		]);

@@ -3066,13 +3066,13 @@ function bp_get_group_type_key( $post_id ) {
  * @return type array
  */
 function bp_get_active_group_types() {
-	$query = new WP_Query([
-		'post_per_page' => -1,
-		'post_type'     => bp_get_group_type_post_type(),
-		'post_status'   => 'publish',
-		'fields'        => 'ids',
-		'orderby'       => 'menu_order'
-	]);
+	$query = new WP_Query( [
+		'posts_per_page' => -1,
+		'post_type'      => bp_get_group_type_post_type(),
+		'post_status'    => 'publish',
+		'fields'         => 'ids',
+		'orderby'        => 'menu_order',
+	] );
 
 	return $query->posts;
 }
@@ -3397,30 +3397,21 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 		return false;
 	}
 
-
 	if ( ! bp_is_root_blog() ) {
 		switch_to_blog( bp_get_root_blog_id() );
 	}
-	$bp_group_type_query         = array(
-		'select' => "SELECT t.slug, tt.term_id FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t",
-		'on'     => 'ON tt.term_id = t.term_id',
-		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
-	);
-	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
-	restore_current_blog();
 
-	$bp_group_type_count = wp_filter_object_list( $bp_get_group_type_count, array( 'slug' => $group_type ), 'and', 'term_id' );
-	$bp_group_type_count = array_values( $bp_group_type_count );
-	if ( empty( $bp_group_type_count ) ) {
-		return 0;
+	$bp_group_type_query = get_term_by( 'slug', $group_type, 'bp_group_type' );
+	if ( ! $bp_group_type_query ) {
+		return false;
 	}
-	$taxonomy_id =  (int) $bp_group_type_count[0];
 
-	$groups = $bp->table_prefix . 'bp_groups';
-	$group_meta = $bp->table_prefix . 'bp_groups_groupmeta';
+	$taxonomy_id        = $bp_group_type_query->term_taxonomy_id;
+	$groups             = $bp->table_prefix . 'bp_groups';
+	$group_meta         = $bp->table_prefix . 'bp_groups_groupmeta';
 	$term_relationships = $wpdb->term_relationships;
 
-	$query = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
+	$query   = "SELECT g.id as id FROM $groups g JOIN $group_meta gm_last_activity on ( g.id = gm_last_activity.group_id ) WHERE  g.id IN ( SELECT object_id FROM $term_relationships WHERE $term_relationships.term_taxonomy_id IN ($taxonomy_id) ) AND gm_last_activity.meta_key = 'last_activity'";
 	$results = $wpdb->get_results( $query, ARRAY_A );
 
 	return $results;

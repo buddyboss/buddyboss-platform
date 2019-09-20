@@ -29,6 +29,15 @@ function groups_register_activity_actions() {
 
 	bp_activity_set_action(
 		$bp->groups->id,
+		'activity_update',
+		__( 'Posted a status update', 'buddyboss' ),
+		'bp_groups_format_activity_action_activity_update',
+		__( 'Updates', 'buddyboss' ),
+		array( 'activity', 'group', 'member', 'member_groups' )
+	);
+
+	bp_activity_set_action(
+		$bp->groups->id,
 		'created_group',
 		__( 'Created a group', 'buddyboss' ),
 		'bp_groups_format_activity_action_created_group',
@@ -128,6 +137,34 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	 * @param object $activity Activity data object.
 	 */
 	return apply_filters( 'bp_groups_format_activity_action_joined_group', $action, $activity );
+}
+
+/**
+ * Format groups 'activity_update' activity actions.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param string $action   Static activity action.
+ * @param object $activity Activity data object.
+ * @return string
+ */
+function bp_groups_format_activity_action_activity_update( $action, $activity ) {
+	$user_link = bp_core_get_userlink( $activity->user_id );
+
+	$group      = groups_get_group( $activity->item_id );
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+
+	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
+
+	/**
+	 * Filters the groups 'activity_update' activity actions.
+	 *
+	 * @since BuddyBoss 1.1.9
+	 *
+	 * @param string $action   The groups 'activity_update' activity actions.
+	 * @param object $activity Activity data object.
+	 */
+	return apply_filters( 'bp_groups_format_activity_action_activity_update', $action, $activity );
 }
 
 /**
