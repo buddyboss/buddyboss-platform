@@ -1,10 +1,10 @@
 jQuery(document).ready( function() {
 
-	var $input = jQuery( 'body' ).find( '#bbp_topic_tags_select' );
-	var ArrayData = [];
+	var $tagsSelect = jQuery( 'body' ).find( '#bbp_topic_tags_dropdown' );
+	var tagsArrayData = [];
 
-	$input.select2({
-		placeholder: $input.attr('placeholder'),
+	$tagsSelect.select2({
+		placeholder: $tagsSelect.attr('placeholder'),
 		minimumInputLength: 1,
 		tags: true,
 		tokenSeparators: [',', ' '],
@@ -22,8 +22,8 @@ jQuery(document).ready( function() {
 			processResults: function( data ) {
 
 				// Removed the element from results if already selected.
-				if ( false === jQuery.isEmptyObject( ArrayData ) ) {
-					jQuery.each( ArrayData, function( index, value ) {
+				if ( false === jQuery.isEmptyObject( tagsArrayData ) ) {
+					jQuery.each( tagsArrayData, function( index, value ) {
 						for(var i=0;i<data.data.results.length;i++){
 							if(data.data.results[i].id === value){
 								data.data.results.splice(i,1);
@@ -40,20 +40,20 @@ jQuery(document).ready( function() {
 	});
 
 	// Add element into the Arrdata array.
-	$input.on('select2:select', function(e) {
+	$tagsSelect.on('select2:select', function(e) {
 		var data = e.params.data;
-		ArrayData.push(data.id);
-		var tags = ArrayData.join(',');
+		tagsArrayData.push(data.id);
+		var tags = tagsArrayData.join(',');
 		jQuery( 'body #bbp_topic_tags').val( tags );
 	});
 
 	// Remove element into the Arrdata array.
-	$input.on('select2:unselect', function(e) {
+	$tagsSelect.on('select2:unselect', function(e) {
 		var data = e.params.data;
-		ArrayData = jQuery.grep(ArrayData, function(value) {
+		tagsArrayData = jQuery.grep( tagsArrayData, function(value) {
 			return value !== data.id;
 		});
-		var tags = ArrayData.join(',');
+		var tags = tagsArrayData.join(',');
 		jQuery( 'body #bbp_topic_tags').val( tags );
 		if ( tags.length === 0 ) {
 			jQuery(window).scrollTop( jQuery(window).scrollTop() + 1 );
@@ -62,8 +62,8 @@ jQuery(document).ready( function() {
 
 	// "remove all tags" button event listener
 	jQuery( 'body' ).on('click', '.js-modal-close', function() {
-		$input.val('');
-		$input.trigger( 'change' ); // Notify any JS components that the value changed
+		$tagsSelect.val('');
+		$tagsSelect.trigger( 'change' ); // Notify any JS components that the value changed
 		jQuery( 'body' ).removeClass( 'popup-modal-reply' );
 	});
 
@@ -71,8 +71,8 @@ jQuery(document).ready( function() {
 	if ( topicReplyButton.length ) {
 		topicReplyButton.click( function () {
 			jQuery( 'body' ).addClass( 'popup-modal-reply' );
-			$input.val('');
-			$input.trigger( 'change' ); // Notify any JS components that the value changed
+			$tagsSelect.val('');
+			$tagsSelect.trigger( 'change' ); // Notify any JS components that the value changed
 		});
 	}
 
