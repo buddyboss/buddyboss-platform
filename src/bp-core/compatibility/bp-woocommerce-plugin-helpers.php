@@ -125,7 +125,7 @@ function bp_helper_woocommerce_new_customer_data_callback( $args ) {
  * @since BuddyBoss    1.1.9
  */
 function bp_helper_woocommerce_thankyou_order_received_text_callback( $text ) {
-	if ( ! is_user_logged_in() && is_checkout() ) {
+	if ( ! is_user_logged_in() && is_checkout() && bp_helper_woocommerce_change_checkout_process() ) {
 		$text = __( 'Before you can login, you need to confirm your email address via the email we just sent to you.', 'buddyboss' );
 	}
 
@@ -141,7 +141,7 @@ function bp_helper_woocommerce_thankyou_order_received_text_callback( $text ) {
  */
 function bp_helper_woocommerce_checkout_process_callback() {
 
-	if ( ! is_user_logged_in() ) {
+	if ( ! is_user_logged_in() && bp_helper_woocommerce_change_checkout_process() ) {
 		/**
 		 * Do not allow user to get login when they create account from checkout page
 		 */
@@ -155,7 +155,7 @@ function bp_helper_woocommerce_checkout_process_callback() {
 		/**
 		 * Do not allow the BuddyPress create account function to add nen user just add the Activation key for the user
 		 */
-		add_filter( 'bp_signups_do_not_skip_user_creation', '__return_false', 100 );
+		add_filter( 'bp_core_signups_do_not_skip_user_creation', '__return_false', 100 );
 
 		/**
 		 * Disable new account creating Email on Checkout page
@@ -167,9 +167,28 @@ function bp_helper_woocommerce_checkout_process_callback() {
 		 */
 		add_action( 'woocommerce_created_customer', 'bp_helper_woocommerce_created_customer_callback', 100, 3 );
 	}
-
-
 }
 
 add_action( 'woocommerce_checkout_process', 'bp_helper_woocommerce_checkout_process_callback' );
 add_filter( 'woocommerce_thankyou_order_received_text', 'bp_helper_woocommerce_thankyou_order_received_text_callback', 100, 3 );
+
+/**
+ * Get called to check if the WooCommerce checkout process should get change
+ *
+ * Support WooCommerce Checkout
+ *
+ * @since BuddyBoss    1.1.9
+ */
+function bp_helper_woocommerce_change_checkout_process() {
+	/**
+	 * Filter to alter the WooCommerce checkout process
+	 * Support WooCommerce Checkout
+	 *
+	 * @since BuddyBoss    1.1.9
+	 *
+	 * @param bool True if like BuddyPress Platform or else false
+	 *
+	 * @return bool True if like BuddyPress Platform or else false
+	 */
+	return (bool) apply_filters( 'bp_helper_woocommerce_change_checkout_process', true );
+}

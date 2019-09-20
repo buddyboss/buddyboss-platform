@@ -1782,7 +1782,7 @@ function bp_core_signup_user( $user_login, $user_password, $user_email, $usermet
 		 */
 		if (
 			( ! defined( 'BP_SIGNUPS_SKIP_USER_CREATION' ) || ! BP_SIGNUPS_SKIP_USER_CREATION )
-			&& apply_filters( 'bp_signups_do_not_skip_user_creation', true )
+			&& apply_filters( 'bp_core_signups_do_not_skip_user_creation', true )
 		) {
 			$user_id = BP_Signup::add_backcompat( $user_login, $user_password, $user_email, $usermeta );
 
