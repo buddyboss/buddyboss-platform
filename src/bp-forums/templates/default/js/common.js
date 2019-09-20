@@ -1,6 +1,6 @@
 jQuery(document).ready( function() {
 
-	var $input = jQuery( 'body' ).find( '#bbp_topic_tags_tagify' );
+	var $input = jQuery( 'body' ).find( '#bbp_topic_tags_select' );
 	var ArrayData = [];
 
 	$input.select2({
