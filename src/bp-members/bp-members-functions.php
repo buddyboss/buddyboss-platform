@@ -1657,6 +1657,11 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 			$errors->add( 'user_name',  __( 'Username must be at least 3 characters', 'buddyboss' ) );
 		}
 
+		// No underscores. @todo Why not?
+		if ( false !== strpos( ' ' . $user_name, '_' ) ) {
+			$errors->add( 'user_name', __( 'Sorry, usernames may not contain the character "_"!', 'buddyboss' ) );
+		}
+
 		// No usernames that are all numeric. @todo Why?
 		$match = array();
 		preg_match( '/[0-9]*/', $user_name, $match );
