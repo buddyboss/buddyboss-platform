@@ -684,7 +684,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 
 	// No underscores. @todo Why not?
 	if ( false !== strpos( ' ' . $value, '_' ) ) {
-		return sprintf( __( 'Sorry, %s may not contain the character "_"!', 'buddyboss' ) );
+		return sprintf( __( 'Sorry, %s may not contain the character "_"!', 'buddyboss' ), $field_name );
 	}
 
 	// only alpha numeric, underscore, dash
