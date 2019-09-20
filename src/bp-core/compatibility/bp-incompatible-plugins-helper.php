@@ -3,14 +3,6 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-
-/**
- * Remove BuddyPress Follow init hook action
- *
- * Support BuddyPress Follow
- */
-remove_action( 'bp_include', 'bp_follow_init' );
-
 /**
  * Fire to add support for third party plugin
  *
