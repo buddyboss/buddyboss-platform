@@ -166,7 +166,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name&hellip;', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}
