@@ -83,7 +83,6 @@ function bp_core_register_common_scripts() {
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
-		'bp-tagify'        => array( 'file' => "{$url}vendor/tagify{$min}.js", 'dependencies' => array(), 'footer' => false ),
 
 	);
 

@@ -77,6 +77,8 @@ add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
 // Exclude Forums if group type hide
 add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
+//media scope filter
+add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
 
 /**
  * Filter output of Group Description through WordPress's KSES API.
@@ -469,4 +471,49 @@ function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
 		}
 	}
 	return $args_topic;
+}
+
+/**
+ * Set up media arguments for use with the 'groups' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	// Determine groups of user.
+	$groups = groups_get_user_groups( $user_id );
+	if ( empty( $groups['groups'] ) ) {
+		$groups = array( 'groups' => 0 );
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'group_id',
+				'compare' => 'IN',
+				'value'   => (array) $groups['groups']
+			),
+			array(
+				'column'  => 'privacy',
+				'value'   => 'grouponly'
+			),
+		),
+	);
+
+	return $retval;
 }

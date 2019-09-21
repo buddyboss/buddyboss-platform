@@ -519,7 +519,7 @@ function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
  * @param int $forum_id
  * @uses bbp_get_forum_id() To get the forum id
  * @uses bbp_get_forum_group_ids() To get the forum's group ids
- * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id 
+ * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id
  * @return bool True if it is a group forum, false if not
  */
 function bbp_is_forum_group_forum( $forum_id = 0 ) {
@@ -819,4 +819,72 @@ function bbp_forum_recursive_group_id ( $forum_id ) {
     }
 
     return false;
+}
+add_action( 'wp_ajax_search_tags',        'bbp_forum_topic_reply_ajax_form_search_tags' );
+
+/**
+ * Search the tags that already added on forums previously and give the suggestions list.
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bbp_forum_topic_reply_ajax_form_search_tags() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_get_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_GET['_wpnonce'];
+	$check = 'search_tag';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['term'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// WP_Term_Query arguments
+	$args = array(
+		'taxonomy'   => array( 'topic-tag' ),
+		'search'     => $_GET['term'],
+		'hide_empty' => false,
+	);
+
+	// The Term Query
+	$term_query = new WP_Term_Query( $args );
+
+	$tags = array();
+
+	// The Loop
+	if ( ! empty( $term_query ) && ! is_wp_error( $term_query ) ) {
+		$tags = $term_query->terms;
+	}
+
+	if ( empty( $tags ) ) {
+		$tags = array();
+	}
+
+	wp_send_json_success( [
+		'results' => array_map( function( $result ) {
+			return [
+				'id' => $result->slug,
+				'text' => $result->name
+			];
+		}, $tags )
+	] );
 }
