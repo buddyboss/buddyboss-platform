@@ -64,6 +64,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Media - Fixed issue with deleting albums from groups
 * Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
 * Email Invites - If an invited email is already a member, providing proper validation now
+* Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
 * Registration - Added validation telling users that underscores are not allowed for 'Nickname'
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
