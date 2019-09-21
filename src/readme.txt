@@ -58,7 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity
 * Activity - New option to display activity in separate tabs based on activity type
-* Activity - When embedding videos without adding additional text, now hiding the video embed URL
+* Activity - When embedding links with no additional text, show the link preview and hide link URL
 * Groups - When changing your Name, now updates your name in previous group activity feeds
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
 * Media - Fixed issue with deleting albums from groups
