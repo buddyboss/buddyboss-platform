@@ -56,6 +56,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.9 =
+* Documentation - Forum Settings
+* Documentation - Activity Tabs
+* Documentation - Registration Confirm Email/Password
+* Documentation - Header (Mobile)
 
 = 1.1.8 =
 * Profiles - Allow Uppercase letters in Nicknames, and auto-convert them to lowercase for Usernames
