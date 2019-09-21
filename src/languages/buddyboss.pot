@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.1.8\n"
+"Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-09-21 21:39:58+00:00\n"
+"POT-Creation-Date: 2019-09-21 22:12:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15693,13 +15693,13 @@ msgid "Invitations were sent successfully to the following email addresses:"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:28
-msgid "Invitations did NOT send because these email addresses are invalid:"
+msgid "Invitations did not send because these email addresses are invalid:"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:44
 msgid ""
-"Invitations did not send as the following email addresses as they are "
-"already a member:"
+"Invitations did not send to the following email addresses, because they are "
+"already members:"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:59

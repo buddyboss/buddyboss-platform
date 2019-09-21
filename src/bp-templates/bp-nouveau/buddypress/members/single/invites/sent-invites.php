@@ -25,7 +25,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did NOT send because these email addresses are invalid:', 'buddyboss' );
+			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' );
 			echo trim ($text.' '. $failed );
 			?>
 		</p>
@@ -41,7 +41,7 @@ if ( isset( $exists ) && '' !== $exists ) {
         <span class="bp-icon" aria-hidden="true"></span>
         <p>
 			<?php
-			$text = __( 'Invitations did not send as the following email addresses as they are already a member:', 'buddyboss' );
+			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' );
 			echo trim ($text.' '. $exists );
 			?>
         </p>
