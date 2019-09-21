@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - When changing your Name, now updates your name in previous group activity feeds
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
 * Media - Fixed issue with deleting albums from groups
+* Email Invites - If an invited email is already a member, providing proper validation now
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
