@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-09-21 22:12:30+00:00\n"
+"POT-Creation-Date: 2019-09-21 23:32:19+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5446,11 +5446,11 @@ msgid ""
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:25
-msgid "Show a list of member avatars that the logged-in user follower."
+msgid "Show a list of member avatars that are following the logged-in user."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:31
-msgid "(BB) - Users who are Following me"
+msgid "(BB) - Users Following Me"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:81
