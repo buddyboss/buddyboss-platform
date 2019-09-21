@@ -60,11 +60,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - New option to display activity in separate tabs based on activity type
 * Activity - When embedding links with no additional text, show the link preview and hide link URL
 * Activity - Fixed link previews when embedding links from an AMP url
-* Groups - When changing your Name, now updates your name in previous group activity feeds
+* Groups - When group members changes their Name, now updates their name in old group activity feeds
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
 * Media - Fixed issue with deleting albums from groups
 * Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
 * Email Invites - If an invited email is already a member, providing proper validation now
+* Email Invites - Fixed 'Email Invites' tab showing on other member profiles, when viewing as Admin
+* Email Invites - Fixed WordPress error when sending invites, on some servers
 * Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
 * Registration - Added validation telling users that underscores are not allowed for 'Nickname'
 * Documentation - Forum Settings
