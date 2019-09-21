@@ -105,7 +105,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 	 */
 	function form( $instance ) {
 		$instance = wp_parse_args( (array) $instance, array(
-			'title'     => __( "Users who are Following me", 'buddyboss' ),
+			'title'     => __( "Users Following Me", 'buddyboss' ),
 			'max_users' => 16
 		) );
 	?>
@@ -114,7 +114,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" /></p>
 
 		<p><label for="bp-follow-widget-users-max"><?php _e('Max members to show:', 'buddyboss'); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_users' ); ?>" name="<?php echo $this->get_field_name( 'max_users' ); ?>" type="text" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is logged in and if the logged-in user is followed by some users.', 'buddyboss' ); ?></small></p>
+		<p><small><?php _e( 'Note: This widget is only displayed if a member is logged in and if the logged-in user is followed by other users.', 'buddyboss' ); ?></small></p>
 
 	<?php
 	}
