@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity
 * Activity - New option to display activity in separate tabs based on activity type
+* Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
 * Activity - When embedding links with no additional text, show the link preview and hide link URL
 * Activity - Fixed link previews when embedding links from an AMP url
 * Groups - When group members changes their Name, now updates their name in old group activity feeds
