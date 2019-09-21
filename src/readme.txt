@@ -69,6 +69,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Email Invites - Fixed WordPress error when sending invites, on some servers
 * Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
 * Registration - Added validation telling users that underscores are not allowed for 'Nickname'
+* Registration - Fixed validation when 'Profile Type' field is required and in a non-signup field set
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
