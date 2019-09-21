@@ -56,6 +56,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.1.9 =
+* Performance - Lazy load iframes (video embeds) in Activity
+* Activity - New option to display activity in separate tabs based on activity type
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
