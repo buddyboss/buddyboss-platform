@@ -71,6 +71,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
 * Registration - Added validation telling users that underscores are not allowed for 'Nickname'
 * Registration - Fixed validation when 'Profile Type' field is required and in a non-signup field set
+* Registration - Nicer 'Mismatch' validation when Email and Confirm Email do not match
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
