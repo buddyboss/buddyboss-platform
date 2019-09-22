@@ -57,14 +57,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity
-* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Activity - New option to display activity in separate tabs based on activity type
 * Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
 * Activity - When embedding links with no additional text, show the link preview and hide link URL
 * Activity - Fixed link previews when embedding links from a Facebook url
 * Activity - Fixed link previews when embedding links from an AMP url
+* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
-* Groups - Fixed logic with hidden groups, forums
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
 * Groups - When group members changes their Name, now updates their name in old group activity feeds
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
