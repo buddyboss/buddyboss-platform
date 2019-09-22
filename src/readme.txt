@@ -75,6 +75,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Registration - Added validation telling users that underscores are not allowed for 'Nickname'
 * Registration - Fixed validation when 'Profile Type' field is required and in a non-signup field set
 * Registration - Nicer 'Mismatch' validation when Email and Confirm Email do not match
+* Registration - Fixed activation email not sending in multisite, in some servers
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
