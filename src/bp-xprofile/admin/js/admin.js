@@ -172,7 +172,7 @@ function show_options( forWhat ) {
 				}
 				xprofileSaveButton.prop( 'disabled', false );
 			},
-			error:function (xhr, ajaxOptions, thrownError) {
+			error:function () {
 				xprofileSaveButton.prop( 'disabled', false );
 			}
 		});
@@ -233,7 +233,7 @@ function show_options( forWhat ) {
 				}
 				xprofileSaveButton.prop( 'disabled', false );
 			},
-			error:function (xhr, ajaxOptions, thrownError) {
+			error:function () {
 				xprofileSaveButton.prop( 'disabled', false );
 			}
 		});
@@ -294,7 +294,7 @@ function show_options( forWhat ) {
 				}
 				xprofileSaveButton.prop( 'disabled', false );
 			},
-			error:function (xhr, ajaxOptions, thrownError) {
+			error:function () {
 				xprofileSaveButton.prop( 'disabled', false );
 			}
 		});
