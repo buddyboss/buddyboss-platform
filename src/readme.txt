@@ -59,13 +59,14 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Performance - Lazy load iframes (video embeds) in Activity
 * Activity - New option to display activity in separate tabs based on activity type
 * Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
-* Activity - When embedding links with no additional text, show the link preview and hide link URL
+* Activity - When embedding links with no additional text, show the content preview and hide link URL
+* Activity - When embedding a Youtube link that cannot fetch a video preview, fall back to image preview
 * Activity - Fixed link previews when embedding links from a Facebook url
 * Activity - Fixed link previews when embedding links from an AMP url
 * Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
 * Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
-* Groups - When group members changes their Name, now updates their name in old group activity feeds
+* Groups - When a group member changes their Name, now updates their name in previous group activity feeds
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
 * Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
@@ -87,7 +88,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
-* Documentation - Header (Mobile)
+* Documentation - Theme Header (Mobile)
 
 = 1.1.8 =
 * Profiles - Allow Uppercase letters in Nicknames, and auto-convert them to lowercase for Usernames
