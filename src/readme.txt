@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity
+* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Activity - New option to display activity in separate tabs based on activity type
 * Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
 * Activity - When embedding links with no additional text, show the link preview and hide link URL
@@ -69,7 +70,6 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
 * Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
 * Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
-* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Media - Fixed issue with deleting albums from groups
 * Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
 * Email Invites - If an invited email is already a member, providing proper validation now
