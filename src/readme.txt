@@ -62,9 +62,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - When embedding links with no additional text, show the link preview and hide link URL
 * Activity - Fixed link previews when embedding links from a Facebook url
 * Activity - Fixed link previews when embedding links from an AMP url
-* Groups - When group members changes their Name, now updates their name in old group activity feeds
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
 * Groups - Fixed logic with hidden groups, forums
+* Groups - When group members changes their Name, now updates their name in old group activity feeds
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
 * Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
