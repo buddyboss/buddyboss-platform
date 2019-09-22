@@ -64,6 +64,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - When group members changes their Name, now updates their name in old group activity feeds
 * Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
+* Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
 * Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Media - Fixed issue with deleting albums from groups
 * Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
