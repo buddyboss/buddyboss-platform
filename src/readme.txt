@@ -83,6 +83,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Registration - Fixed activation email not sending in multisite, in some servers
 * MemberPress + BuddyPress Integration - Fixed Name fields when registering to a member level
 * MemberPress + BuddyPress Integration - Added the 'Membership' links into profile dropdown
+* Compatibility - Improved support for plugins that 'Require bbPress' and 'Require BuddyPress'
 * Documentation - Forum Settings
 * Documentation - Activity Tabs
 * Documentation - Registration Confirm Email/Password
