@@ -67,6 +67,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed logic with hidden groups, forums
 * Groups - When editing groups from backend, fixed dropdown list of available Group Types
 * Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
+* Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
 * Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
 * Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
 * Media - Fixed issue with deleting albums from groups
