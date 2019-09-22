@@ -71,6 +71,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
 * Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
 * Media - Fixed issue with deleting albums from groups
+* Media - Fixed displaying photos uploaded into groups in the global Photos page, based on group privacy
 * Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
 * Email Invites - If an invited email is already a member, providing proper validation now
 * Email Invites - Fixed 'Email Invites' tab showing on other member profiles, when viewing as Admin
