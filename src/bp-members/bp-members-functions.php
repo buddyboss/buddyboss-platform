@@ -4763,6 +4763,60 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 }
 add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
 
+
+/**
+ * Record the current user id to history just before switching back
+ *
+ * @param $switch_to_id    new user id
+ * @param $switch_from_id  old user id
+ * @param $set_old_user    switch to other users or not
+ *
+ * @since BuddyBoss 1.1.5
+ */
+function bp_record_switch_to_history( $switch_to_id, $switch_from_id, $set_old_user ) {
+    if ( $set_old_user ) { // don't need to record if switching to other user
+        return;
+    }
+
+    bp_add_member_switch_to_recent_ids($switch_from_id);
+}
+add_action( 'bp_before_member_switch_to', 'bp_record_switch_to_history', 10, 3 );
+
+/**
+ * Get the recently switched to user ids from cookie
+ *
+ * @return array
+ * @since BuddyBoss 1.1.5
+ */
+function bp_get_member_switch_to_recent_ids() {
+    $exists = isset( $_COOKIE['bp-recently-switched-users'] ) ? $_COOKIE['bp-recently-switched-users'] : '[]';
+    return json_decode($exists);
+}
+
+/**
+ * Prepend user id to the recently switched to user ids
+ *
+ * @param $user_id new user id to prepend
+ *
+ * @return void
+ * @since BuddyBoss 1.1.5
+ */
+function bp_add_member_switch_to_recent_ids( $user_id ) {
+    $history_limit  = apply_filters( 'bp_member_switch_to_recent_limit', 5 );
+    $history_expire = apply_filters( 'bp_member_switch_to_recent_expire', 30 );
+
+    $recentIds = bp_get_member_switch_to_recent_ids();
+    array_unshift($recentIds, $user_id);
+    $recentIds = array_unique($recentIds);
+    $recentIds = array_map('intval', $recentIds);
+    $recentIds = array_values($recentIds);
+    $recentIds = array_slice($recentIds, 0 , $history_limit);
+
+    $cookie_value = json_encode( $recentIds );
+    setcookie( 'bp-recently-switched-users', $cookie_value, time() + MINUTE_IN_SECONDS * $history_expire, '/', COOKIE_DOMAIN );
+    $_COOKIE['bp-recently-switched-users'] = $cookie_value;
+}
+
 /**
  * Add "Switch back to admin" menu item to admin bar
  *
@@ -4792,3 +4846,60 @@ function bp_add_switch_back_to_admin_menu( $menu_items ) {
     return $menu_items;
 }
 add_filter( 'bp_member_switch_to_admin_bar_menus', 'bp_add_switch_back_to_admin_menu' );
+
+/**
+ * Add "Switch back to recent" menu item to admin bar
+ *
+ * @param  array $menu_items admin bar menu items
+ *
+ * @return array
+ * @since BuddyBoss 1.1.5
+ */
+function bp_add_switch_back_to_recent_menu( $menu_items ) {
+    if ($old_user = BP_Core_Members_Switching::get_old_user() ) {
+        return $menu_items;
+    }
+
+    $recent_ids   = bp_get_member_switch_to_recent_ids();
+    $current_user = bp_loggedin_user_id();
+
+    // user might be deleted, need to filter out
+    $avaliable_recent_ids = [];
+
+    foreach ( $recent_ids as $recent_id ) {
+        if ( current_user_can( 'switch_to_user', $current_user ) || user_can( $current_user, 'switch_to_user', $recent_id ) ) {
+            $avaliable_recent_ids[] = $recent_id;
+        }
+    }
+
+    $avaliable_recent_users = array_map('get_userdata', $avaliable_recent_ids);
+    $avaliable_recent_users = array_filter($avaliable_recent_users);
+
+    if ( ! $avaliable_recent_users ) {
+        return $menu_items;
+    }
+
+    $menu_items[] = [
+        'parent' => 'top-secondary',
+        'id'     => 'switch-back',
+        'title'  => esc_html(__( 'Switch back to Recent', 'buddyboss' )),
+        'href'   => '#'
+    ];
+
+    foreach ($avaliable_recent_users as $user) {
+        $menu_items[] = [
+            'parent' => 'switch-back',
+            'id'     => 'switch-back-to-' . $user->ID,
+            'title'  => esc_html( sprintf(
+                __( 'Switch back to %s', 'buddyboss' ),
+                $user->display_name
+            ) ),
+            'href'   => add_query_arg( array(
+                'redirect_to' => urlencode( bp_core_get_user_domain( $user->ID ) ),
+            ), BP_Core_Members_Switching::switch_to_url( $user ) ),
+        ];
+    }
+
+    return $menu_items;
+}
+add_filter( 'bp_member_switch_to_admin_bar_menus', 'bp_add_switch_back_to_recent_menu' );

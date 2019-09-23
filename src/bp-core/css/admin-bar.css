@@ -73,7 +73,7 @@
 }
 
 /* Member Switching */
-#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
+#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back > a {
 	background: #0073aa;
 	color: #fff;
 }
