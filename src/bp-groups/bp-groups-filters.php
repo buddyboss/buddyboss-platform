@@ -493,10 +493,33 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 			: bp_loggedin_user_id();
 	}
 
+	//Fetch public groups
+	$public_groups = groups_get_groups( array( 'fields' => 'ids', 'status' => 'public', 'per_page' => -1 ) );
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = false;
+	}
+
 	// Determine groups of user.
 	$groups = groups_get_user_groups( $user_id );
-	if ( empty( $groups['groups'] ) ) {
-		$groups = array( 'groups' => 0 );
+	if ( ! empty( $groups['groups'] ) ) {
+		$groups = $groups['groups'];
+	} else {
+		$groups = false;
+	}
+
+	$group_ids = false;
+	if ( ! empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => array_unique( array_merge( $groups, $public_groups ) ) );
+	} else if ( empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $public_groups );
+	} else if ( ! empty( $groups ) && empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $groups );
+	}
+
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => 0 );
 	}
 
 	$retval = array(
@@ -506,7 +529,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 			array(
 				'column'  => 'group_id',
 				'compare' => 'IN',
-				'value'   => (array) $groups['groups']
+				'value'   => (array) $group_ids['groups']
 			),
 			array(
 				'column'  => 'privacy',
