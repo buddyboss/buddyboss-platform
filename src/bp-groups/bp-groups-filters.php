@@ -498,7 +498,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	if ( ! empty( $public_groups['groups'] ) ) {
 		$public_groups = $public_groups['groups'];
 	} else {
-		$public_groups = false;
+		$public_groups = array();
 	}
 
 	// Determine groups of user.
@@ -506,7 +506,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	if ( ! empty( $groups['groups'] ) ) {
 		$groups = $groups['groups'];
 	} else {
-		$groups = false;
+		$groups = array();
 	}
 
 	$group_ids = false;
