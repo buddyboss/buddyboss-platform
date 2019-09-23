@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-09-23 08:22:42+00:00\n"
+"POT-Creation-Date: 2019-09-23 18:11:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13695,6 +13695,18 @@ msgstr ""
 msgid "their"
 msgstr ""
 
+#: bp-members/bp-members-functions.php:4837
+msgid "Switch back to Admin"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:4885
+msgid "Switch back to Recent"
+msgstr ""
+
+#: bp-members/bp-members-functions.php:4894
+msgid "Switch back to %s"
+msgstr ""
+
 #: bp-members/bp-members-template.php:492
 msgid "Viewing 1 member with connections"
 msgid_plural "Viewing %1$s - %2$s of %3$s members with connections"
@@ -13725,9 +13737,9 @@ msgstr ""
 
 #: bp-members/bp-members-template.php:2640
 #: bp-members/classes/class-bp-core-members-switching.php:86
-#: bp-members/classes/class-bp-core-members-switching.php:506
-#: bp-members/classes/class-bp-core-members-switching.php:546
-#: bp-members/classes/class-bp-core-members-switching.php:576
+#: bp-members/classes/class-bp-core-members-switching.php:498
+#: bp-members/classes/class-bp-core-members-switching.php:538
+#: bp-members/classes/class-bp-core-members-switching.php:568
 msgid "View As"
 msgstr ""
 
@@ -13736,33 +13748,29 @@ msgid "Member Switching"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-members-switching.php:136
-#: bp-members/classes/class-bp-core-members-switching.php:161
-#: bp-members/classes/class-bp-core-members-switching.php:170
-#: bp-members/classes/class-bp-core-members-switching.php:175
-#: bp-members/classes/class-bp-core-members-switching.php:203
+#: bp-members/classes/class-bp-core-members-switching.php:163
+#: bp-members/classes/class-bp-core-members-switching.php:172
+#: bp-members/classes/class-bp-core-members-switching.php:177
+#: bp-members/classes/class-bp-core-members-switching.php:207
 msgid "Could not switch users."
 msgstr ""
 
-#: bp-members/classes/class-bp-core-members-switching.php:250
-#: bp-members/classes/class-bp-core-members-switching.php:302
+#: bp-members/classes/class-bp-core-members-switching.php:254
+#: bp-members/classes/class-bp-core-members-switching.php:306
 #. Translators: 1: user display name; 2: username;
 msgid "Switched to %1$s (%2$s)."
 msgstr ""
 
-#: bp-members/classes/class-bp-core-members-switching.php:264
-#: bp-members/classes/class-bp-core-members-switching.php:407
-#: bp-members/classes/class-bp-core-members-switching.php:464
+#: bp-members/classes/class-bp-core-members-switching.php:268
+#: bp-members/classes/class-bp-core-members-switching.php:399
+#: bp-members/classes/class-bp-core-members-switching.php:456
 #. Translators: 1: user display name; 2: username;
 msgid "Switch back to %1$s (%2$s)"
 msgstr ""
 
-#: bp-members/classes/class-bp-core-members-switching.php:295
+#: bp-members/classes/class-bp-core-members-switching.php:299
 #. Translators: 1: user display name; 2: username;
 msgid "Switched back to %1$s (%2$s)."
-msgstr ""
-
-#: bp-members/classes/class-bp-core-members-switching.php:384
-msgid "Switch back to Admin"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-members-widget.php:27
