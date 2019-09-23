@@ -4762,3 +4762,33 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 
 }
 add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
+
+/**
+ * Add "Switch back to admin" menu item to admin bar
+ *
+ * @param  array $menu_items admin bar menu items
+ *
+ * @return array
+ * @since BuddyBoss 1.1.5
+ */
+function bp_add_switch_back_to_admin_menu( $menu_items ) {
+    if (! $old_user = BP_Core_Members_Switching::get_old_user() ) {
+        return $menu_items;
+    }
+
+    $menu_items[] = [
+        'parent' => 'top-secondary',
+        'id'     => 'switch-back',
+        'title'  => esc_html( sprintf(
+            __( 'Switch back to Admin', 'buddyboss' ),
+            $old_user->display_name,
+            $old_user->user_login
+        ) ),
+        'href'   => add_query_arg( array(
+            'redirect_to' => urlencode( BP_Core_Members_Switching::current_url() ),
+        ), BP_Core_Members_Switching::switch_back_url( $old_user ) ),
+    ];
+
+    return $menu_items;
+}
+add_filter( 'bp_member_switch_to_admin_bar_menus', 'bp_add_switch_back_to_admin_menu' );

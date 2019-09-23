@@ -378,25 +378,11 @@ class BP_Core_Members_Switching {
 			return;
 		}
 
-        $menus = apply_filters( 'bp_member_switch_to_admin_bar_menus', [] );
+        $menu_items = apply_filters( 'bp_member_switch_to_admin_bar_menus', [] );
 
-		$old_user = self::get_old_user();
-
-		if ( $old_user ) {
-			$wp_admin_bar->add_menu( array(
-				'parent' => 'top-secondary',
-				'id'     => 'switch-back',
-				'title'  => esc_html( sprintf(
-					__( 'Switch back to Admin', 'buddyboss' ),
-					$old_user->display_name,
-					$old_user->user_login
-				) ),
-				'href'   => add_query_arg( array(
-					'redirect_to' => urlencode( self::current_url() ),
-				), self::switch_back_url( $old_user ) ),
-			) );
-		}
-
+        foreach ( $menu_items as $item ) {
+            $wp_admin_bar->add_menu( $item );
+        }
 	}
 
 	/**
