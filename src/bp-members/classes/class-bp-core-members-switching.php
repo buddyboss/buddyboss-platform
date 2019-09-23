@@ -149,6 +149,8 @@ class BP_Core_Members_Switching {
 						'user_switched' => 'true',
 					);
 
+                    $redirect_to = apply_filters( 'bp_member_switch_to_redirect_url', $redirect_to, $user, $current_user, $args );
+
 					if ( $redirect_to ) {
 						wp_safe_redirect( add_query_arg( $args, $redirect_to ), 302, self::$application );
 					} elseif ( ! current_user_can( 'read' ) ) {
@@ -192,6 +194,8 @@ class BP_Core_Members_Switching {
 						'user_switched' => 'true',
 						'switched_back' => 'true',
 					);
+
+                    $redirect_to = apply_filters( 'bp_member_switch_back_redirect_url', $redirect_to, $old_user, $current_user, $args );
 
 					if ( $redirect_to ) {
 						wp_safe_redirect( add_query_arg( $args, $redirect_to ), 302, self::$application );
@@ -373,6 +377,8 @@ class BP_Core_Members_Switching {
 		if ( ! is_admin_bar_showing() ) {
 			return;
 		}
+
+        $menus = apply_filters( 'bp_member_switch_to_admin_bar_menus', [] );
 
 		$old_user = self::get_old_user();
 

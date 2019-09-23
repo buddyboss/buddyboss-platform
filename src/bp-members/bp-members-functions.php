@@ -4168,6 +4168,8 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 	$auth_cookie  = bp_member_switching_get_auth_cookie();
 	$cookie_parts = wp_parse_auth_cookie( end( $auth_cookie ) );
 
+    do_action( 'bp_before_member_switch_to', $user_id, $old_user_id, $set_old_user );
+
 	if ( $set_old_user && $old_user_id ) {
 		// Switching to another user
 		$new_token = '';
@@ -4207,6 +4209,8 @@ function bp_member_switch_to( $user_id, $remember = false, $set_old_user = true 
 		$manager = WP_Session_Tokens::get_instance( $old_user_id );
 		$manager->destroy( $old_token );
 	}
+
+    do_action( 'bp_after_member_switch_to', $user_id, $old_user_id, $set_old_user );
 
 	return $user;
 }
