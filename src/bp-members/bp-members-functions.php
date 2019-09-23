@@ -4717,7 +4717,7 @@ function bp_get_xprofile_gender_type_field_id() {
  *
  * @param $user_id
  *
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.1.10
  */
 function bp_infusion_soft_sync_bp_data( $user_id ) {
 
@@ -4771,7 +4771,7 @@ add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
  * @param $switch_from_id  old user id
  * @param $set_old_user    switch to other users or not
  *
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.1.10
  */
 function bp_record_switch_to_history( $switch_to_id, $switch_from_id, $set_old_user ) {
     if ( $set_old_user ) { // don't need to record if switching to other user
@@ -4799,7 +4799,7 @@ function bp_get_member_switch_to_recent_ids() {
  * @param $user_id new user id to prepend
  *
  * @return void
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.1.10
  */
 function bp_add_member_switch_to_recent_ids( $user_id ) {
     $history_limit  = apply_filters( 'bp_member_switch_to_recent_limit', 5 );
@@ -4823,7 +4823,7 @@ function bp_add_member_switch_to_recent_ids( $user_id ) {
  * @param  array $menu_items admin bar menu items
  *
  * @return array
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.1.10
  */
 function bp_add_switch_back_to_admin_menu( $menu_items ) {
     if (! $old_user = BP_Core_Members_Switching::get_old_user() ) {
@@ -4853,7 +4853,7 @@ add_filter( 'bp_member_switch_to_admin_bar_menus', 'bp_add_switch_back_to_admin_
  * @param  array $menu_items admin bar menu items
  *
  * @return array
- * @since BuddyBoss 1.1.5
+ * @since BuddyBoss 1.1.10
  */
 function bp_add_switch_back_to_recent_menu( $menu_items ) {
     if ($old_user = BP_Core_Members_Switching::get_old_user() ) {
