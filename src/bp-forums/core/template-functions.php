@@ -670,5 +670,7 @@ function bbp_parse_query( $posts_query ) {
 	// Do topics on forums root
 	} elseif ( is_post_type_archive( array( bbp_get_forum_post_type(), bbp_get_topic_post_type() ) ) && ( 'topics' === bbp_show_on_root() ) ) {
 		$posts_query->bbp_show_topics_on_root = true;
+	} elseif ( is_post_type_archive( bbp_get_topic_post_type() ) ) {
+		$posts_query->set( 'posts_per_page', bbp_get_topics_per_page() );
 	}
 }
