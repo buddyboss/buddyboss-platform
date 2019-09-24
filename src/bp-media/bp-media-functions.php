@@ -466,10 +466,11 @@ function bp_media_add( $args = '' ) {
  * @since BuddyBoss 1.0.0
  *
  * @param int $media_id ID of media
+ * @param bool $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the media on success. False on error.
  */
-function bp_media_delete( $media_id ) {
+function bp_media_delete( $media_id, $from = false ) {
 
 	$media = new BP_Media( $media_id );
 
@@ -478,7 +479,7 @@ function bp_media_delete( $media_id ) {
 		return false;
 	}
 
-	$delete = BP_Media::delete( array( 'id' => $media_id ) );
+	$delete = BP_Media::delete( array( 'id' => $media_id ), $from );
 
 	if ( ! $delete ) {
 		return false;
@@ -943,7 +944,7 @@ function bp_media_delete_orphaned_attachments() {
 
 	if ( $orphaned_attachment_query->post_count > 0 ) {
 		foreach( $orphaned_attachment_query->posts as $a_id ) {
-			wp_delete_post( $a_id, true );
+			wp_delete_attachment( $a_id, true );
 		}
 	}
 }

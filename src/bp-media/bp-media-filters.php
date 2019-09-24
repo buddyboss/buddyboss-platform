@@ -5,6 +5,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 add_action( 'bp_media_album_after_save',                        'bp_media_update_media_privacy'                     );
+add_action( 'delete_attachment',                                     'bp_media_delete_attachment_media', 0          );
 
 // Activity
 add_action( 'bp_after_directory_activity_list',                 'bp_media_add_theatre_template'                     );
@@ -927,4 +928,27 @@ function bp_media_activation_notice() {
 			bp_core_add_admin_notice( $notice );
 		}
 	}
+}
+
+/**
+ * Delete media entries attached to the attachment
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_media_delete_attachment_media( $attachment_id ) {
+	global $wpdb;
+
+	$bp = buddypress();
+
+	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) );
+
+	if ( ! $media ) {
+		return false;
+	}
+
+	remove_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+
+	bp_media_delete( $media->id, 'attachment' );
+
+	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 }

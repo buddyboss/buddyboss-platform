@@ -848,7 +848,7 @@ class BP_Media {
 	 *
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */
-	public static function delete( $args = array() ) {
+	public static function delete( $args = array(), $from = false ) {
 		global $wpdb;
 
 		$bp = buddypress();
@@ -985,7 +985,9 @@ class BP_Media {
 					}
 				}
 
-				wp_delete_post( $attachment_id, true );
+				if ( empty( $from ) ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
 			}
 		}
 
