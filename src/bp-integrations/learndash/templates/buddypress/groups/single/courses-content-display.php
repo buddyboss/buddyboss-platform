@@ -21,6 +21,7 @@ $lessons_options            = learndash_get_option( 'sfwd-lessons' );
 $quizzes_options            = learndash_get_option( 'sfwd-quiz' );
 $course_status              = learndash_course_status( $course_id, null );
 $has_access                 = sfwd_lms_has_access( $course_id, $user_id );
+$has_topics 				= false;
 
 $content = apply_filters( 'the_content', $courses_new[0]->post_content );
 //$content = do_shortcode( $courses_new[0]->post_content );
