@@ -672,5 +672,8 @@ function bbp_parse_query( $posts_query ) {
 		$posts_query->bbp_show_topics_on_root = true;
 	} elseif ( is_post_type_archive( bbp_get_topic_post_type() ) ) {
 		$posts_query->set( 'posts_per_page', bbp_get_topics_per_page() );
+	} elseif ( $posts_query->is_paged() && bbp_get_topic_archive_slug() === $posts_query->query_vars['name'] && $posts_query->query_vars['paged'] > 1 && 'topics' === bbp_show_on_root() ) {
+		$posts_query->bbp_show_topics_on_root = true;
+		$posts_query->set( 'posts_per_page', bbp_get_topics_per_page() );
 	}
 }
