@@ -26,11 +26,13 @@ function bp_groups_group_access_protection() {
 
 		// Always allow access to request-membership.
 		if ( bp_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
-			$no_access_args = array(
-				'mode'     => 2,
-				'root'     => bp_get_root_domain(),
-				'redirect' => bp_get_group_permalink( $current_group )
-			);
+			$redirect = bp_get_group_permalink( $current_group );
+			bp_core_redirect( add_query_arg( array(
+					'bp-auth'       => 1,
+					'action'        => 'bpnoaccess',
+					'redirect_from' => 'private_group',
+				),
+					wp_login_url( $redirect ) ) );
 		} elseif ( bp_is_current_action( 'request-membership' ) && is_user_logged_in() ) {
 			$user_has_access = true;
 
