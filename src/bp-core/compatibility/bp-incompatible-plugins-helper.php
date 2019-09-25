@@ -3,6 +3,21 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
+
+/**
+ * Remove BuddyPress Follow init hook action
+ *
+ * Support BuddyPress Follow
+ */
+remove_action( 'bp_include', 'bp_follow_init' );
+
+/**
+ * Remove message of BuddyPress Groups Export & Import
+ *
+ * Support BuddyPress Groups Export & Import
+ */
+remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
+
 /**
  * Fire to add support for third party plugin
  *
@@ -18,6 +33,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support for LearnDash & bbPress Integration
 	 */
 	if ( in_array( 'learndash-bbpress/learndash-bbpress.php', $bp_plugins ) ) {
+
 
             /**
              * Remove bbPress Integration admin init hook action
