@@ -845,6 +845,7 @@ class BP_Media {
 	 * @string    $privacy           Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
+	 * @param bool $from Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */

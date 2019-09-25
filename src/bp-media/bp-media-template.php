@@ -640,6 +640,56 @@ function bp_get_media_title() {
 }
 
 /**
+ * Determine if the current user can delete an media item.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int|BP_Media $media BP_Media object or ID of the media
+ * @return bool True if can delete, false otherwise.
+ */
+function bp_media_user_can_delete( $media = false ) {
+
+	// Assume the user cannot delete the media item.
+	$can_delete = false;
+
+	if ( empty( $media ) ) {
+		return $can_delete;
+	}
+
+	if ( ! is_object( $media ) ) {
+		$media = new BP_Media( $media );
+	}
+
+	if ( empty( $media ) ) {
+		return $can_delete;
+	}
+
+	// Only logged in users can delete media.
+	if ( is_user_logged_in() ) {
+
+		// Community moderators can always delete media (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_delete = true;
+		}
+
+		// Users are allowed to delete their own media.
+		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
+			$can_delete = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can delete an media item.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool   $can_delete Whether the user can delete the item.
+	 * @param object $media   Current media item object.
+	 */
+	return (bool) apply_filters( 'bp_media_user_can_delete', $can_delete, $media );
+}
+
+/**
  * Output the media album ID.
  *
  * @since BuddyBoss 1.0.0

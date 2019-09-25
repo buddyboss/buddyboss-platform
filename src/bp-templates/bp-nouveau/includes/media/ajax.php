@@ -388,12 +388,15 @@ function bp_nouveau_ajax_media_delete() {
 	$media_ids = array();
 	foreach( $media as $media_id ) {
 
-		// delete media
-		$m_id = bp_media_delete( $media_id );
+	    if ( bp_media_user_can_delete( $media_id ) ) {
 
-		if ( $media_id ) {
-			$media_ids[] = $m_id;
-		}
+		    // delete media
+		    $m_id = bp_media_delete( array( 'id' => $media_id ) );
+
+		    if ( $m_id ) {
+			    $media_ids[] = $media_id;
+		    }
+	    }
 	}
 
 	if ( count( $media_ids ) != count( $media ) ) {

@@ -246,12 +246,7 @@ function bp_media_delete_activity_media( $activities ) {
 			$activity_id = $activity->id;
 			$media_activity = bp_activity_get_meta( $activity_id, 'bp_media_activity', true );
 			if ( ! empty( $media_activity ) && '1' == $media_activity ) {
-				$result = bp_media_get( array( 'activity_id' => $activity_id, 'fields' => 'ids' ) );
-				if ( ! empty( $result['medias'] ) ) {
-					foreach( $result['medias'] as $media_id ) {
-						bp_media_delete( $media_id ); // delete media
-					}
-				}
+				bp_media_delete( array( 'activity_id' => $activity_id ) );
 			}
 
 			// get media ids attached to activity
@@ -259,7 +254,7 @@ function bp_media_delete_activity_media( $activities ) {
             if ( ! empty( $media_ids ) ) {
                 $media_ids = explode( ',', $media_ids );
                 foreach( $media_ids as $media_id ) {
-                    bp_media_delete( $media_id );
+                    bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
             
@@ -394,7 +389,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		// delete medias which were not saved or removed from form
 		if ( ! empty( $existing_media_ids ) ) {
             foreach ( $existing_media_ids as $media_id ) {
-                bp_media_delete( $media_id );
+                bp_media_delete( array( 'id' => $media_id ) );
             }
 		}
 	}
@@ -581,7 +576,7 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 	        if ( ! empty( $media_ids ) ) {
 		        $media_ids = explode( ',', $media_ids );
                 foreach( $media_ids as $media_id ) {
-                    bp_media_delete( $media_id );
+                    bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
         }
@@ -934,6 +929,8 @@ function bp_media_activation_notice() {
  * Delete media entries attached to the attachment
  *
  * @since BuddyBoss 1.2.0
+ *
+ * @param int $attachment_id ID of the attachment being deleted.
  */
 function bp_media_delete_attachment_media( $attachment_id ) {
 	global $wpdb;
@@ -948,7 +945,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 
 	remove_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
-	bp_media_delete( $media->id, 'attachment' );
+	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 }
