@@ -28,15 +28,6 @@ function bp_helper_plugins_loaded_callback() {
 	global $bp_plugins;
 
 	/**
-	 * Add BuddyBoss Platform Login Module when user sing up from WooCommerce Checkout Page
-	 *
-	 * Support WooCommerce
-	 */
-	if ( in_array( 'woocommerce/woocommerce.php', $bp_plugins ) && ! is_admin() ) {
-		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-woocommerce-plugin-helpers.php' );
-	}
-
-	/**
 	 * Include plugin when plugin is activated
 	 *
 	 * Support for LearnDash & bbPress Integration
