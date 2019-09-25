@@ -98,6 +98,9 @@ jQuery( document ).ready( function() {
 	// Profile Type field select box change action.
 	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
 
+		var registerSubmitButtonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
+		registerSubmitButtonSelector.prop( 'disabled', true );
+
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
@@ -125,6 +128,9 @@ jQuery( document ).ready( function() {
 			success: function ( response ) {
 
 				if ( response.success ) {
+
+					registerSubmitButtonSelector.prop( 'disabled', false );
+
 					firstCall = 1;
 
 					if ( true === parseInt( response.data.field_html ) ) {
@@ -161,8 +167,71 @@ jQuery( document ).ready( function() {
 						);
 						window.tinymce.execCommand('mceRepaint');
 					}
+				} else {
+					registerSubmitButtonSelector.prop( 'disabled', false );
 				}
 			}
 		});
 	});
+
+	// Bind signup_email to keyup events in the email fields
+	var emailSelector, confirmEmailSelector, errorMessageSelector;
+	emailSelector 	  = jQuery( '#signup_email' );
+	if ( emailSelector.length ) {
+	emailSelector.on( 'focusout', bp_register_validate_email );
+    }
+
+	confirmEmailSelector =  jQuery( '#signup_email_confirm' );
+    if ( confirmEmailSelector.length ) {
+		confirmEmailSelector.on( 'keyup change' , bp_register_validate_confirm_email );
+    }
+
+
+	function bp_register_validate_email() {
+		var email1 				 = emailSelector.val(),
+			email2 				 = confirmEmailSelector.val(),
+		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			errorMessageSelector = jQuery( '#email-strength-result' );
+
+		// Reset classes and result text
+		errorMessageSelector.removeClass( 'show mismatch bad' );
+		if( ( '' === email1 && '' === email2 ) && regex.test( email1 ) ) {
+			errorMessageSelector.html( '' );
+			return;
+		}else{
+			errorMessageSelector.html( '' );
+			if ( ( email1 !== '' || email2 !== '' ) && !regex.test( email1 ) ) {
+				errorMessageSelector.addClass( 'show bad' ).html( BP_Register.valid_email );
+				return;
+			}
+			if ( ( email2 !== '' ) && ( email1 !== email2 ) ) {
+				errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
+				return;
+			}
+		}
+	}
+
+	function bp_register_validate_confirm_email() {
+
+		if(	window.event.keyCode === 9 ){
+			return;
+		}
+
+		var email1 				 = emailSelector.val(),
+		    email2 				 = confirmEmailSelector.val(),
+		    regex 				 = /^([a-zA-Z0-9_\.\-\+])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+			errorMessageSelector = jQuery( '#email-strength-result' );
+
+		// Reset classes and result text
+		errorMessageSelector.removeClass( 'show mismatch bad' );
+		if ( ( '' === email1 && '' === email2 ) || ( '' === email2 ) || ( regex.test( email2 ) && regex.test( email1 ) && ( email1 === email2	) ) ) {
+			errorMessageSelector.html( '' );
+			return;
+		}
+		if ( email1 !== email2 ) {
+			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
+			return;
+		}
+	}
+
 } );

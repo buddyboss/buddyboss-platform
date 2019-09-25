@@ -151,7 +151,7 @@ class BP_Messages_Thread {
 	 */
 	public function populate( $thread_id = 0, $order = 'DESC', $args = array() ) {
 
-		if ( 'ASC' !== $order || 'DESC' !== $order ) {
+		if ( 'ASC' !== $order && 'DESC' !== $order ) {
 			$order = 'DESC';
 		}
 

@@ -46,3 +46,51 @@ function bp_friends_filter_user_query_populate_extras( BP_User_Query $user_query
 
 }
 add_filter( 'bp_user_query_populate_extras', 'bp_friends_filter_user_query_populate_extras', 4, 2 );
+
+/**
+ * Set up media arguments for use with the 'friends' scope.
+ *
+ * For details on the syntax, see {@link BP_Media_Query}.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	// Determine friends of user.
+	$friends = friends_get_friend_user_ids( $user_id );
+	if ( empty( $friends ) ) {
+		$friends = array( 0 );
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		array(
+			'relation' => 'AND',
+			array(
+				'column' => 'user_id',
+				'compare' => 'IN',
+				'value'   => (array) $friends
+			),
+			array(
+				'column'  => 'privacy',
+				'value'   => 'friends'
+			),
+		),
+	);
+
+	return $retval;
+}
+add_filter( 'bp_media_set_friends_scope_args', 'bp_friends_filter_media_scope', 10, 2 );

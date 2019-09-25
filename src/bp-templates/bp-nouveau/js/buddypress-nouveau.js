@@ -54,7 +54,7 @@ window.bp = window.bp || {};
 
 			$.ajaxPrefilter( this.memberPreFilter );
 			$.ajaxPrefilter( this.groupPreFilter );
-			
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on( 'scroll resize',function(){
@@ -277,7 +277,7 @@ window.bp = window.bp || {};
 				startIndex 	= 	_findtext.indexOf( 'www' );
 				_is_exist	=	1;
 			}
-			if (_is_exist	==	1) {
+			if ( 1 === _is_exist ) {
 				for ( var i = startIndex; i < _findtext.length; i ++ ) {
 					if ( _findtext[i] === ' ' || _findtext[i] === '\n' ) {
 						break;
@@ -290,10 +290,10 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					$( this ).find('.activity-inner a').hide();
+					$( this ).find('.activity-inner > p:first a').hide();
 				}
 			}
-			
+
         },
 		/**
 		 * [objectRequest description]
@@ -437,7 +437,7 @@ window.bp = window.bp || {};
 
 							// Inform other scripts the list of objects has been refreshed.
 							$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
-							
+
 							//Lazy Load Images
 							if(bp.Nouveau.lazyLoad){
 								setTimeout(function(){ // Waiting to load dummy image
