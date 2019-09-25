@@ -148,16 +148,18 @@ function bp_media_clear_cache_for_album( $album ) {
 add_action( 'bp_media_album_after_save', 'bp_media_clear_cache_for_album' );
 
 /**
- * Clear cached data for deleted album item.
+ * Clear cached data for deleted album items.
  *
  * @since BuddyBoss 1.1.5
  *
- * @param object $album Album object item.
+ * @param array $deleted_ids IDs of deleted album items.
  */
-function bp_media_clear_cache_for_deleted_album( $album ) {
-	wp_cache_delete( $album->id, 'bp_media_album' );
+function bp_media_clear_cache_for_deleted_album( $deleted_ids ) {
+	foreach ( (array) $deleted_ids as $deleted_id ) {
+		wp_cache_delete( $deleted_id, 'bp_media_album' );
+	}
 }
-add_action( 'bp_album_delete', 'bp_media_clear_cache_for_deleted_album' );
+add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album' );
 
 /**
  * Reset cache incrementor for the Album.

@@ -691,7 +691,7 @@ function bp_nouveau_ajax_media_album_delete() {
 	}
 
 	// delete album
-	$album_id = bp_album_delete( $_POST['album_id'] );
+	$album_id = bp_album_delete( array( 'id' => $_POST['album_id'] ) );
 
 	if ( ! $album_id ) {
 		wp_send_json_error( $response );
