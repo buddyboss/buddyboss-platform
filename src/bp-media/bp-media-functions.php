@@ -288,6 +288,8 @@ function bp_media_get( $args = '' ) {
 		'sort'              => 'DESC',       // sort ASC or DESC
 		'order_by'          => false,       // order by
 
+		'scope'             => false,
+
 		// want to limit the query.
 		'user_id'           => false,
 		'activity_id'       => false,
@@ -310,6 +312,7 @@ function bp_media_get( $args = '' ) {
 		'sort'              => $r['sort'],
 		'order_by'          => $r['order_by'],
 		'search_terms'      => $r['search_terms'],
+		'scope'             => $r['scope'],
 		'privacy'           => $r['privacy'],
 		'exclude'           => $r['exclude'],
 		'count_total'       => $r['count_total'],
@@ -594,21 +597,11 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
  * @return int Media count.
  */
 function bp_get_total_media_count() {
-	global $bp, $wpdb;
 
-	$count = wp_cache_get( 'bp_total_media_count', 'bp' );
-
-	if ( false === $count ) {
-
-		$privacy = array( 'public' );
-		if ( is_user_logged_in() ) {
-			$privacy[] = 'loggedin';
-		}
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
-
-		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE privacy IN ({$privacy})" );
-		wp_cache_set( 'bp_total_media_count', $count, 'bp' );
-	}
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+	$count = $GLOBALS["media_template"]->total_media_count;
 
 	/**
 	 * Filters the total number of media.
@@ -618,6 +611,35 @@ function bp_get_total_media_count() {
 	 * @param int $count Total number of media.
 	 */
 	return apply_filters( 'bp_get_total_media_count', (int) $count );
+}
+
+/**
+ * Media results all scope.
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bp_media_object_results_media_all_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope'] = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+		$querystring['scope'][] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$querystring['scope'][] = 'groups';
+	}
+
+	if ( is_user_logged_in() ) {
+		$querystring['scope'][] = 'personal';
+	}
+
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = 0;
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
 }
 
 //******************** Albums *********************/

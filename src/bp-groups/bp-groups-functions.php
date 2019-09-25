@@ -3263,14 +3263,17 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
 	if( $object != 'groups' )
 		return $qs;
 
-	$args = wp_parse_args( $qs );
+	if ( bp_is_groups_directory() ) {
+		$args = wp_parse_args( $qs );
 
-	if( ! empty( $args['exclude'] ) )
-		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
-	else
-		$args['exclude'] = implode( ',', $exclude_group_ids );
+		if ( ! empty( $args['exclude'] ) ) {
+			$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
+		} else {
+			$args['exclude'] = implode( ',', $exclude_group_ids );
+		}
 
-	$qs = build_query( $args );
+		$qs = build_query( $args );
+	}
 
 	return $qs;
 }

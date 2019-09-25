@@ -110,9 +110,12 @@ function add_option(forWhat) {
  * @param {string} forWhat Value of the field to show options for
  */
 function show_options( forWhat ) {
-	var do_autolink, i;
-	if ( forWhat === 'gender' ) {
+	var do_autolink, i, xprofileSaveButton;
 
+	xprofileSaveButton = jQuery( 'body #wpwrap #wpcontent #wpbody #wpbody-content .wrap #bp-xprofile-add-field #poststuff #post-body .postbox-container #submitdiv .inside #submitcomment #major-publishing-actions #publishing-action :input[type="submit"]');
+
+	if ( forWhat === 'gender' ) {
+		xprofileSaveButton.prop( 'disabled', true );
 		jQuery.ajax({
 			url : ajaxurl,
 			type : 'post',
@@ -167,9 +170,14 @@ function show_options( forWhat ) {
 
 					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
 				}
+				xprofileSaveButton.prop( 'disabled', false );
+			},
+			error:function () {
+				xprofileSaveButton.prop( 'disabled', false );
 			}
 		});
 	} else if( forWhat === 'membertypes' ) {
+		xprofileSaveButton.prop( 'disabled', true );
 		jQuery.ajax({
 			url : ajaxurl,
 			type : 'post',
@@ -223,9 +231,14 @@ function show_options( forWhat ) {
 					}
 					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
 				}
+				xprofileSaveButton.prop( 'disabled', false );
+			},
+			error:function () {
+				xprofileSaveButton.prop( 'disabled', false );
 			}
 		});
 	} else if( forWhat === 'socialnetworks' ) {
+		xprofileSaveButton.prop( 'disabled', true );
 		jQuery.ajax({
 			url : ajaxurl,
 			type : 'post',
@@ -279,6 +292,10 @@ function show_options( forWhat ) {
 					}
 					jQuery( document ).trigger( 'bp-xprofile-show-options', forWhat );
 				}
+				xprofileSaveButton.prop( 'disabled', false );
+			},
+			error:function () {
+				xprofileSaveButton.prop( 'disabled', false );
 			}
 		});
 	} else {
@@ -412,7 +429,7 @@ function sortFieldOptions( sortElem ){
 }
 
 jQuery( document ).ready( function() {
-	
+
 	// Set focus in Field Title, if we're on the right page
 	jQuery( '#bp-xprofile-add-field #title' ).focus();
 
