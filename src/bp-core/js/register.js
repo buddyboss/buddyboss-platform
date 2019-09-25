@@ -204,7 +204,7 @@ jQuery( document ).ready( function() {
 				errorMessageSelector.addClass( 'show bad' ).html( BP_Register.valid_email );
 				return;
 			}
-			if ( ( email2 !== '' ) && ( email1 !== email2 ) ) {
+			if ( ( email2 !== '' ) && ( email1 !== email2 ) && confirmEmailSelector.length ) {
 				errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 				return;
 			}
