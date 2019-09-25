@@ -82,7 +82,7 @@ class Ajax
 			'data'            => $generator->getData(),
 		]);
 
-		header('Content-Type: application/json; charset=' . get_option('blog_charset'));
+		//header('Content-Type: application/json; charset=' . get_option('blog_charset'));
 		wp_die();
 		// wp_send_json_success([
 		// 	'draw' => (int) bp_ld_sync()->getRequest('draw'),

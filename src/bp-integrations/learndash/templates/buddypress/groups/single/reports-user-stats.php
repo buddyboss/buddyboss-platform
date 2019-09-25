@@ -103,10 +103,17 @@ if ($courseId): ?>
 		?>
 		<div class="user-steps">
 			<p><?php printf(
-					__('<b>%d</b> %s completed', 'buddyboss'),
+					__('<b>%d</b> %s Marked', 'buddyboss'),
 					$total,
 					_n( 'Assignment', 'Assignments', $total, 'buddyboss')
 				); ?></p>
+			<p><?php
+				if ( $unmarked > 0 ) {
+					printf( __( '<b>%d</b> %s Unmarked', 'buddyboss' ),
+						$unmarked,
+						_n( 'Assignment', 'Assignments', $unmarked, 'buddyboss' ) );
+				}
+				?></p>
 		</div>
 		<?php
 	}

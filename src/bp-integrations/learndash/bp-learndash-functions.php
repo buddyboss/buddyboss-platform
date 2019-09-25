@@ -258,6 +258,7 @@ function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
 	$status['notcompleted'] = 0;
 	$course_id              = $couser_id;
 	$data                   = [];
+	$topics                 = [];
 	foreach ( $lessons_list as $lesson ) {
 		$lessons[ $lesson_order ] = [
 			'name'   => $lesson['post']->post_title,

@@ -15,6 +15,7 @@ use Buddyboss\LearndashIntegration\Buddypress\Generators\EssaysReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator;
 use Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator;
+use Buddyboss\LearndashIntegration\Buddypress\ReportsGenerator;
 use LDLMS_DB;
 
 // Exit if accessed directly.
@@ -28,6 +29,17 @@ defined( 'ABSPATH' ) || exit;
 class Reports
 {
 	protected $isRealJoins = false;
+	protected $defaults = [
+		'user'        => null,
+		'step'        => 'all',
+		'course'      => null,
+		'group'       => null,
+		'completed'   => true,
+		'order'       => null,
+		'page'        => 1,
+		'per_page'    => 10,
+		'date_format' => 'Y-m-d',
+	];
 
 	/**
 	 * Constructor
@@ -36,7 +48,25 @@ class Reports
 	 */
 	public function __construct()
 	{
+		$this->args = apply_filters(
+			'bp_ld_sync/reports_generator_args',
+			wp_parse_args($this->getRequest(), $this->defaults)
+		);
 		add_action('bp_ld_sync/init', [$this, 'init']);
+	}
+
+	/**
+	 * Get the request from $_POST, $_GET, or $_REQUEST with default fallback
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function getRequest($key = '*', $default = null, $type = null) {
+		if ($type) {
+			return $key == '*'? $$type : (isset($$type[$key])? $$type[$key] : $default);
+		}
+
+		$merged = array_merge($_GET, $_POST, $_REQUEST);
+		return $key == '*'? $merged : (isset($merged[$key])? $merged[$key] : $default);
 	}
 
 	/**
@@ -71,6 +101,16 @@ class Reports
 		add_filter('bp_ld_sync/report_columns', [$this, 'removePointsColumnIfNotAssigned'], 10, 2);
 
 		add_action( 'bp_ld_sync/export_report_column', [ $this, 'export_report_column' ], 10, 2 );
+	}
+
+	/**
+	 * Check if the given argument is passed from request
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	protected function hasArg($key)
+	{
+		return isset($this->args[$key]) && ! is_null($this->args[$key]);
 	}
 
 	/**
@@ -143,6 +183,76 @@ class Reports
 	}
 
 	/**
+	 * Add additional field sql statement
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function addAdditionalFields($strFields)
+	{
+		global $wpdb;
+		$quizPostType = learndash_get_post_type_slug('quiz');
+
+		$fields = "
+			users.ID as user_id,
+			users.display_name as user_display_name,
+			users.user_email as user_email,
+			{$wpdb->posts}.ID as assignment_id,
+			{$wpdb->posts}.post_title as assignment_title,
+			{$wpdb->posts}.post_date_gmt as assignment_post_date,
+			{$wpdb->posts}.post_modified_gmt as assignment_modify_date,
+			(
+				SELECT meta_value
+				FROM {$wpdb->postmeta} as course_meta
+				WHERE course_meta.post_id = {$wpdb->posts}.ID
+				AND course_meta.meta_key = 'course_id'
+			) as activity_course_id,
+			(
+				SELECT post_title
+				FROM {$wpdb->posts} as courses
+				WHERE activity_course_id = courses.ID
+			) as activity_course_title
+		";
+
+		return $fields;
+	}
+
+	/**
+	 * Add additional joins sql statement
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function addAdditionalJoins($strJoins)
+	{
+		global $wpdb;
+
+		$strJoins .= "
+			INNER JOIN {$wpdb->users} as users ON users.ID = {$wpdb->posts}.post_author
+		";
+
+		return $strJoins;
+	}
+
+	/**
+	 * Add additional order sql statement
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	public function addAdditionalOrderBy($strOrder)
+	{
+		$strOrder = 'GREATEST(assignment_modify_date, assignment_post_date) DESC';
+
+		if ($this->hasArg('order')) {
+			$columns = $this->columns();
+			$columnIndex = $this->args['order'][0]['column'];
+			$column = $columns[$this->args['columns'][$columnIndex]['name']];
+
+			$strOrder = "{$column['order_key']} {$this->args['order'][0]['dir']}, {$strOrder}";
+		}
+
+		return $strOrder;
+	}
+
+	/**
 	 * Output report user stats html
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -159,56 +269,134 @@ class Reports
 		$course    = $courseId ? get_post( $courseId ) : null;
 		$group     = groups_get_current_group();
 		$user      = get_user_by( 'ID', $_GET['user'] );
-		$ldGroupId = bp_ld_sync( 'buddypress' )->sync->generator( bp_get_current_group_id() )->getLdGroupId();
-		$param     = [];
-
-		$param['course_ids'] = $_GET['course'] ?:learndash_group_enrolled_courses($ldGroupId);
-
-		if ( $_GET['step'] ) {
-			global $learndash_post_types;
-			$param['post_types'] = $_GET['step'] == 'all'? array_diff( $learndash_post_types, ['groups'] ) : $_GET['step'];
-		}
-
-		$param['user_ids']        = $_GET['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
-		$param['activity_status'] = 'COMPLETED';
-		$param['per_page']        = '';
-
-
-		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
-		$data = learndash_reports_get_activity( $param );
-		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
 
 		$points      = 0;
 		$complete    = 0;
 		$in_complete = 0;
 		$total       = 0;
 		$percentage  = 0;
+		$count       = 0;
+		$unmarked    = 0;
 
-		if ( !empty( $data ) ) {
-			foreach ( $data['results'] as $activity ) {
-				$points  =  $points + $this->coursePointsEarned( $activity );
+
+		if ( isset( $_GET ) && '' !== $_GET['user'] && 'sfwd-assignment' === $_GET['step'] ) {
+
+			if ($this->hasArg('course') && ! $this->args['course']) {
+				$courseIds = learndash_group_enrolled_courses(
+					bp_ld_sync('buddypress')->helpers->getLearndashGroupId($this->args['group'])
+				);
+			} else {
+				$courseIds = [$this->args['course']];
 			}
-			$complete = (int) count( $data['results'] );
-		}
 
-		$param['activity_status'] = 'IN_PROGRESS';
+			$args = [
+				'posts_per_page' => -1,
+				'post_type'      => learndash_get_post_type_slug('assignment'),
+				'post_status' => 'publish',
+				'meta_query' => [
+					[
+						'key' => 'course_id',
+						'value' => $courseIds
+					]
+				]
+			];
 
-		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
-		$incomplete_data = learndash_reports_get_activity( $param );
-		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
+			$args['meta_query'][] = [
+				'key' => 'approval_status',
+				'value' => 1
+			];
 
-		$count = 0;
-		if ( !empty( $incomplete_data ) ) {
-			foreach ( $incomplete_data['results'] as $activity ) {
-				$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d",
-					(int) $activity->user_id,
-					(int) $activity->post_id,
-					(int) $activity->activity_course_id,
-					1 ) ); // db call ok; no-cache ok;
-				if ( ! empty( $activity_data ) ) {
-					continue;
-				} else {
-					$count++;
+			$args['author'] = $this->args['user'];
+
+			add_filter('posts_fields', [$this, 'addAdditionalFields']);
+			add_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
+			add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+			$approved_query = new \WP_Query($args);
+			remove_filter('posts_fields', [$this, 'addAdditionalFields']);
+			remove_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
+			remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+
+			$args = [
+				'posts_per_page' => -1,
+				'post_type'      => learndash_get_post_type_slug('assignment'),
+				'post_status' => 'publish',
+				'meta_query' => [
+					[
+						'key' => 'course_id',
+						'value' => $courseIds
+					]
+				]
+			];
+
+			$args['meta_query'][] = [
+				'key' => 'approval_status',
+				'compare' => 'NOT EXISTS'
+			];
+
+			$args['author'] = $this->args['user'];
+
+			add_filter('posts_fields', [$this, 'addAdditionalFields']);
+			add_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
+			add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+			$un_approved_query = new \WP_Query($args);
+			remove_filter('posts_fields', [$this, 'addAdditionalFields']);
+			remove_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
+			remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+
+
+
+			$total    = $approved_query->found_posts;
+			$complete = $approved_query->found_posts;
+			$unmarked = $un_approved_query->found_posts;
+
+		} else {
+
+			$ldGroupId = bp_ld_sync( 'buddypress' )->sync->generator( bp_get_current_group_id() )->getLdGroupId();
+			$param     = [];
+
+			$param['course_ids'] = $_GET['course'] ?: learndash_group_enrolled_courses( $ldGroupId );
+
+			if ( $_GET['step'] ) {
+				global $learndash_post_types;
+				$param['post_types'] = $_GET['step'] == 'all' ? array_diff( $learndash_post_types,
+					[ 'groups' ] ) : $_GET['step'];
+			}
+
+			$param['user_ids'] = $_GET['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
+			$param['activity_status'] = 'COMPLETED';
+			$param['per_page'] = '';
+
+
+			add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
+			$data = learndash_reports_get_activity( $param );
+			remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
+
+			if ( ! empty( $data ) ) {
+				foreach ( $data['results'] as $activity ) {
+					$points = $points + $this->coursePointsEarned( $activity );
+				}
+				$complete = (int) count( $data['results'] );
+			}
+
+			$param['activity_status'] = 'IN_PROGRESS';
+
+			add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
+			$incomplete_data = learndash_reports_get_activity( $param );
+			remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
+
+			$count = 0;
+			if ( ! empty( $incomplete_data ) ) {
+				foreach ( $incomplete_data['results'] as $activity ) {
+					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d",
+						(int) $activity->user_id,
+						(int) $activity->post_id,
+						(int) $activity->activity_course_id,
+						1 ) ); // db call ok; no-cache ok;
+					if ( ! empty( $activity_data ) ) {
+						continue;
+					} else {
+						$count ++;
+					}
 				}
 			}
 		}
