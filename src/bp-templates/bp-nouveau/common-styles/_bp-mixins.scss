@@ -129,13 +129,13 @@
 
 @mixin clearfix-element($item) {
 
-	#{$item}:before,
-	#{$item}:after {
+	#{$item}::before,
+	#{$item}::after {
 		content: " ";
 		display: table;
 	}
 
-	#{$item}:after {
+	#{$item}::after {
 		clear: both;
 	}
 
@@ -339,14 +339,6 @@
 
 	ul {
 
-		li:not(.selected) {
-
-			a:hover,
-			a:focus {
-				background: none;
-			}
-		}
-
 		li.selected {
 			background: none;
 			border: 1px solid $med-light-grey;
@@ -362,6 +354,14 @@
 					border: 1px solid $med-light-grey;
 					color: $white;
 				}
+			}
+		}
+
+		li:not(.selected) {
+
+			a:hover,
+			a:focus {
+				background: none;
 			}
 		}
 
