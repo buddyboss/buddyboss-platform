@@ -722,6 +722,7 @@ function bp_core_register_page_js() {
 			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
 			'mismatch_email' => __( 'Mismatch', 'buddyboss' ),
 			'valid_email'    => __( 'Enter valid email', 'buddyboss' ),
+			'required_field' => __( 'This is a required field.', 'buddyboss' ),
 		);
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );

@@ -102,7 +102,7 @@ jQuery( document ).ready( function() {
 		registerSubmitButtonSelector.prop( 'disabled', true );
 
 		if ( 1 === firstCall ) {
-			jQuery( 'body .ajax_added' ).remove();
+			//jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
 		}
 
@@ -128,7 +128,26 @@ jQuery( document ).ready( function() {
 			success: function ( response ) {
 
 				if ( response.success ) {
+					var exist_field_by = [];
+					if ( existsField.val() ) {
+						exist_field_by = existsField.val().split(',');
+					}
+					var new_data 	= response.data.field_ids.split(',');
+					var difference = [];
+					if ( exist_field_by ) {
+						jQuery.grep( exist_field_by , function( el ) {
+					        if (jQuery.inArray( el, new_data ) == -1){
+				        		difference.push( el );
+				        	}
+						});
 
+						appendHtmlDiv.find( '.ajax_added' ).removeClass( 'ajax_added' );
+						if ( difference.length !== 0 ) {
+							jQuery.each( difference , function( index, value ) {
+							  	appendHtmlDiv.find( '.field_' + value ).remove();
+							});
+						}
+					}
 					registerSubmitButtonSelector.prop( 'disabled', false );
 
 					firstCall = 1;
@@ -141,6 +160,12 @@ jQuery( document ).ready( function() {
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
 
+					if (exist_field_by.length != 0) {
+						jQuery.each( exist_field_by , function( index, v ) {
+							jQuery( document ).find( '.ajax_added .field_' + v ).remove();
+						});
+					}
+				
 					var divList = jQuery( 'body #profile-details-section > .editfield' );
 					divList.sort(function(a, b){
 						return jQuery(a).data('index' ) - jQuery(b).data('index' );
@@ -165,7 +190,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						window.tinymce.execCommand('mceRepaint');
+						//window.tinymce.execCommand('mceRepaint');
 					}
 				} else {
 					registerSubmitButtonSelector.prop( 'disabled', false );
@@ -173,6 +198,34 @@ jQuery( document ).ready( function() {
 			}
 		});
 	});
+
+	//for form validation
+	/*jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
+		
+		//jQuery( '[aria-required="true"]' ).each(function( index ) {
+		jQuery( '.required-field' ).each(function( index ) {
+			var html_error = '<div class="bp-messages bp-feedback error">';
+				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
+				html_error += '<p>' + BP_Register.required_field + '</p>';
+				html_error += '</div>';
+			jQuery(this).find('input[type="text"]').val();
+			
+			if ( jQuery(this).find('input[type="text"]').length && jQuery(this).find('input[type="text"]').val() == '' ) {
+				if (0 >= jQuery(this).find('legend .error').length) {
+					jQuery(this).find('legend').after().append( html_error );
+				}
+				return;
+			}
+
+			if ( jQuery(this).find('input[type="checkbox"]').length ) {
+				if (0 >= jQuery(this).find('legend .error').length) {
+					jQuery(this).find('legend').after().append( html_error );
+				}
+				return;
+			}
+		});
+		e.preventDefault();
+	});*/
 
 	// Bind signup_email to keyup events in the email fields
 	var emailSelector, confirmEmailSelector, errorMessageSelector;
