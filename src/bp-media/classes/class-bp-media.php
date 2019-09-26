@@ -299,6 +299,7 @@ class BP_Media {
 		$r  = wp_parse_args(
 			$args,
 			array(
+				'scope'        => '',              // Scope - Groups, friends etc.
 				'page'         => 1,               // The current page.
 				'per_page'     => 20,              // Media items per page.
 				'max'          => false,           // Max number of items to return.
@@ -322,6 +323,15 @@ class BP_Media {
 
 		// Where conditions.
 		$where_conditions = array();
+
+		if ( ! empty( $r['scope'] ) ) {
+			$scope_query = self::get_scope_query_sql( $r['scope'], $r );
+
+			// Override some arguments if needed.
+			if ( ! empty( $scope_query['override'] ) ) {
+				$r = array_replace_recursive( $r, $scope_query['override'] );
+			}
+		}
 
 		// Searching.
 		if ( $r['search_terms'] ) {
@@ -426,7 +436,11 @@ class BP_Media {
 		}
 
 		// Join the where conditions together.
-		$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+		if ( ! empty( $scope_query['sql'] ) ) {
+			$where_sql = 'WHERE ( ' . join( ' AND ', $where_conditions ) . ' ) OR ( ' . $scope_query['sql'] . ' )';
+		} else {
+			$where_sql = 'WHERE ' . join( ' AND ', $where_conditions );
+		}
 
 		/**
 		 * Filter the MySQL JOIN clause for the main media query.
@@ -675,6 +689,148 @@ class BP_Media {
 		 * @param array $medias Array of media.
 		 */
 		return apply_filters( 'bp_media_prefetch_object_data', $medias );
+	}
+
+	/**
+	 * Get the SQL for the 'scope' param in BP_Media::get().
+	 *
+	 * A scope is a predetermined set of media arguments.  This method is used
+	 * to grab these media arguments and override any existing args if needed.
+	 *
+	 * Can handle multiple scopes.
+	 *
+	 * @since BuddyBoss 1.1.9
+	 *
+	 * @param  mixed $scope  The media scope. Accepts string or array of scopes.
+	 * @param  array $r      Current activity arguments. Same as those of BP_Media::get(),
+	 *                       but merged with defaults.
+	 * @return false|array 'sql' WHERE SQL string and 'override' media args.
+	 */
+	public static function get_scope_query_sql( $scope = false, $r = array() ) {
+
+		// Define arrays for future use.
+		$query_args = array();
+		$override   = array();
+		$retval     = array();
+
+		// Check for array of scopes.
+		if ( is_array( $scope ) ) {
+			$scopes = $scope;
+
+			// Explode a comma separated string of scopes.
+		} elseif ( is_string( $scope ) ) {
+			$scopes = explode( ',', $scope );
+		}
+
+		// Bail if no scope passed.
+		if ( empty( $scopes ) ) {
+			return false;
+		}
+
+		// Helper to easily grab the 'user_id'.
+		if ( ! empty( $r['filter']['user_id'] ) ) {
+			$r['user_id'] = $r['filter']['user_id'];
+		}
+
+		// Parse each scope; yes! we handle multiples!
+		foreach ( $scopes as $scope ) {
+			$scope_args = array();
+
+			/**
+			 * Plugins can hook here to set their media arguments for custom scopes.
+			 *
+			 * This is a dynamic filter based on the media scope. eg:
+			 *   - 'bp_media_set_groups_scope_args'
+			 *   - 'bp_media_set_friends_scope_args'
+			 *
+			 * To see how this filter is used, plugin devs should check out:
+			 *   - bp_groups_filter_media_scope() - used for 'groups' scope
+			 *   - bp_friends_filter_media_scope() - used for 'friends' scope
+			 *
+			 * @since BuddyBoss 1.1.9
+			 *
+			 * @param array {
+			 *     Media query clauses.
+			 *     @type array {
+			 *         Media arguments for your custom scope.
+			 *         See {@link BP_Media_Query::_construct()} for more details.
+			 *     }
+			 *     @type array  $override Optional. Override existing media arguments passed by $r.
+			 *     }
+			 * }
+			 * @param array $r Current activity arguments passed in BP_Media::get().
+			 */
+			$scope_args = apply_filters( "bp_media_set_{$scope}_scope_args", array(), $r );
+
+			if ( ! empty( $scope_args ) ) {
+				// Merge override properties from other scopes
+				// this might be a problem...
+				if ( ! empty( $scope_args['override'] ) ) {
+					$override = array_merge( $override, $scope_args['override'] );
+					unset( $scope_args['override'] );
+				}
+
+				// Save scope args.
+				if ( ! empty( $scope_args ) ) {
+					$query_args[] = $scope_args;
+				}
+			}
+		}
+
+		if ( ! empty( $query_args ) ) {
+			// Set relation to OR.
+			$query_args['relation'] = 'OR';
+
+			$query = new BP_Media_Query( $query_args );
+			$sql   = $query->get_sql();
+			if ( ! empty( $sql ) ) {
+				$retval['sql'] = $sql;
+			}
+		}
+
+		if ( ! empty( $override ) ) {
+			$retval['override'] = $override;
+		}
+
+		return $retval;
+	}
+
+	/**
+	 * Create SQL IN clause for filter queries.
+	 *
+	 * @since BuddyBoss 1.1.9
+	 *
+	 * @see BP_Media::get_filter_sql()
+	 *
+	 * @param string     $field The database field.
+	 * @param array|bool $items The values for the IN clause, or false when none are found.
+	 * @return string|false
+	 */
+	public static function get_in_operator_sql( $field, $items ) {
+		global $wpdb;
+
+		// Split items at the comma.
+		if ( ! is_array( $items ) ) {
+			$items = explode( ',', $items );
+		}
+
+		// Array of prepared integers or quoted strings.
+		$items_prepared = array();
+
+		// Clean up and format each item.
+		foreach ( $items as $item ) {
+			// Clean up the string.
+			$item = trim( $item );
+			// Pass everything through prepare for security and to safely quote strings.
+			$items_prepared[] = ( is_numeric( $item ) ) ? $wpdb->prepare( '%d', $item ) : $wpdb->prepare( '%s', $item );
+		}
+
+		// Build IN operator sql syntax.
+		if ( count( $items_prepared ) ) {
+			return sprintf( '%s IN ( %s )', trim( $field ), implode( ',', $items_prepared ) );
+		} else {
+			return false;
+		}
 	}
 
 	/**

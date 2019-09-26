@@ -140,11 +140,6 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			// Setup scripts array
 			$scripts = array();
 
-			// Tag Input
-			if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
-				wp_enqueue_script( 'bp-tagify' );
-			}
-
 			// Always pull in jQuery for TinyMCE shortcode usage
 			if ( bbp_use_wp_editor() ) {
 				$scripts['bbpress-editor'] = array(
@@ -202,6 +197,21 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			foreach ( $scripts as $handle => $attributes ) {
 				bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 			}
+
+			$no_load_topic = true;
+			if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+				$no_load_topic = false;
+			}
+
+			$common_array = array(
+				'loading_text' => __( 'Loading', 'buddyboss' ),
+				'ajax_url'     => bp_core_ajax_url(),
+				'nonce'        => wp_create_nonce( 'search_tag' ),
+				'load'         => $no_load_topic,
+				'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
+			);
+
+			wp_localize_script( 'bbpress-common', 'bbpCommonJsData', $common_array );
 
 			if ( bp_is_active( 'media' ) ) {
 

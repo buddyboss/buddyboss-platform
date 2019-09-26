@@ -167,11 +167,6 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => true,
 		),
-		'bp-tagify'           => array(
-			'file'         => "{$url}vendor/tagify{$min}.js",
-			'dependencies' => array(),
-			'footer'       => false,
-		),
 
 	);
 

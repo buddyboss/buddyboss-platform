@@ -588,8 +588,25 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 			$field_id = $field->save();
 
 			if ( empty( $field_id ) ) {
-				$message = __( 'There was an error saving the field. Please try again.', 'buddyboss' );
-				$type    = 'error';
+				if ( 'membertypes' === $field->type ) {
+					$message = __( 'You can only have one instance of the "Profile Type" profile field.', 'buddyboss' );
+					$type    = 'error';
+					$field->render_admin_form( $message, $type );
+					return false;
+				} elseif ( 'gender' === $field->type ) {
+					$message = __( 'You can only have one instance of the "Gender" profile field.', 'buddyboss' );
+					$type    = 'error';
+					$field->render_admin_form( $message, $type );
+					return false;
+				} elseif ( 'socialnetworks' === $field->type ) {
+					$message = __( 'You can only have one instance of the "Social Network" profile field.', 'buddyboss' );
+					$type    = 'error';
+					$field->render_admin_form( $message, $type );
+					return false;
+				} else {
+					$message = __( 'There was an error saving the field. Please try again.', 'buddyboss' );
+				}
+				$type = 'error';
 			} else {
 				$message = __( 'The field was saved successfully.', 'buddyboss' );
 				$type    = 'updated';

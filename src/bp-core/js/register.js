@@ -106,6 +106,9 @@ jQuery( document ).ready(
 				'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id ,
 				function() {
 
+					var registerSubmitButtonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
+					registerSubmitButtonSelector.prop( 'disabled', true );
+
 					if ( 1 === firstCall ) {
 						jQuery( 'body .ajax_added' ).remove();
 						getExistingFieldsSelector.val( jQuery( '.onloadfields' ).val() );
@@ -134,6 +137,9 @@ jQuery( document ).ready(
 							success: function ( response ) {
 
 								if ( response.success ) {
+
+									registerSubmitButtonSelector.prop( 'disabled', false );
+
 									firstCall = 1;
 
 									if ( true === parseInt( response.data.field_html ) ) {
@@ -172,6 +178,8 @@ jQuery( document ).ready(
 										);
 										window.tinymce.execCommand( 'mceRepaint' );
 									}
+								} else {
+									registerSubmitButtonSelector.prop( 'disabled', false );
 								}
 							}
 						}
@@ -183,12 +191,12 @@ jQuery( document ).ready(
 			var emailSelector, confirmEmailSelector, errorMessageSelector;
 			emailSelector = jQuery( '#signup_email' );
 		if ( emailSelector.length ) {
-			emailSelector.val( '' ).on( 'focusout', bp_register_validate_email );
+			emailSelector.on( 'focusout', bp_register_validate_email );
 		}
 
 			confirmEmailSelector = jQuery( '#signup_email_confirm' );
 		if ( confirmEmailSelector.length ) {
-			  confirmEmailSelector.val( '' ).on( 'keyup change' , bp_register_validate_confirm_email );
+			  confirmEmailSelector.on( 'keyup change' , bp_register_validate_confirm_email );
 		}
 
 		function bp_register_validate_email() {

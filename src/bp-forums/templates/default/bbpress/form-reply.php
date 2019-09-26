@@ -60,15 +60,14 @@
 						</p>
 
 					<?php endif; ?>
-					
+
 					<?php if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_reply_form_tags' ); ?>
 
 						<p>
-							<label for="bbp_topic_tags"><?php _e( 'Tags:', 'buddyboss' ); ?></label><br />
-							<input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags_tagify" id="bbp_topic_tags_tagify" <?php disabled( bbp_is_topic_spam() ); ?> />
-							<input type="hidden" value="<?php bbp_form_topic_tags(); ?>" name="bbp_topic_tags" id="bbp_topic_tags" />
+							<input type="hidden" value="" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>"></select>
 						</p>
 
 						<?php do_action( 'bbp_theme_after_reply_form_tags' ); ?>

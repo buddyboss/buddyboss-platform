@@ -3526,19 +3526,21 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, 
 		return $qs;
 	}
 
-	$args = wp_parse_args( $qs );
+	if ( bp_is_members_directory() ) {
+		$args = wp_parse_args( $qs );
 
-	// Removed this condition to add the profile type filter works properly do not remove because need to check if this causing anywhere.
-	// if( ! empty( $args['user_id'] ) )
+		// Removed this condition to add the profile type filter works properly do not remove because need to check if this causing anywhere.
+		// if( ! empty( $args['user_id'] ) )
 		// return $qs;
 
-	if ( ! empty( $args['exclude'] ) ) {
-		$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_user_ids );
-	} else {
-		$args['exclude'] = implode( ',', $exclude_user_ids );
-	}
+		if ( ! empty( $args['exclude'] ) ) {
+			$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_user_ids );
+		} else {
+			$args['exclude'] = implode( ',', $exclude_user_ids );
+		}
 
-	$qs = build_query( $args );
+		$qs = build_query( $args );
+	}
 
 	return $qs;
 }

@@ -454,6 +454,17 @@ class BP_XProfile_Field {
 
 		$is_new_field = is_null( $this->id );
 
+		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type ) {
+			$field = $wpdb->get_row( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = %s", $this->type ) );
+			if ( $is_new_field && $field ) {
+				return false;
+			} else {
+				if ( $this->id !== $field->id ) {
+					return false;
+				}
+			}
+		}
+
 		if ( ! $is_new_field ) {
 			$sql = $wpdb->prepare( "UPDATE {$bp->profile->table_name_fields} SET group_id = %d, parent_id = 0, type = %s, name = %s, description = %s, is_required = %d, order_by = %s, field_order = %d, option_order = %d, can_delete = %d, is_default_option = %d WHERE id = %d", $this->group_id, $this->type, $this->name, $this->description, $this->is_required, $this->order_by, $this->field_order, $this->option_order, $this->can_delete, $this->is_default_option, $this->id );
 		} else {

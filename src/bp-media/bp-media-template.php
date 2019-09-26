@@ -100,6 +100,10 @@ function bp_get_media_root_slug() {
  *                                               permalink page for a single media item, this value defaults to the ID of
  *                                               that item. Otherwise the default is false.
  *     @type string            $search_terms     Limit results by a search term. Default: false.
+ *     @type string            $scope            Use a BuddyPress pre-built filter.
+ *                                                 - 'friends' retrieves items belonging to the friends of a user.
+ *                                                 - 'groups' retrieves items belonging to groups to which a user belongs to.
+ *                                               defaults to false.
  *     @type int|array|bool    $user_id          The ID(s) of user(s) whose media should be fetched. Pass a single ID or
  *                                               an array of IDs. When viewing a user profile page, 'user_id' defaults to
  *                                               the ID of the displayed user. Otherwise the default is false.
@@ -170,6 +174,22 @@ function bp_has_media( $args = '' ) {
 		$user_id  = false;
 	}
 
+	// The default scope should recognize custom slugs.
+	$scope = array();
+	if ( bp_is_media_directory() ) {
+		if ( bp_is_active( 'friends' ) ) {
+			$scope[] = 'friends';
+		}
+
+		if ( bp_is_active( 'groups' ) ) {
+			$scope[] = 'groups';
+		}
+
+		if ( is_user_logged_in() ) {
+			$scope[] = 'personal';
+		}
+	}
+
 	/*
 	 * Parse Args.
 	 */
@@ -189,6 +209,9 @@ function bp_has_media( $args = '' ) {
 			'max'          => false,           // Max number to return.
 			'fields'       => 'all',
 			'count_total'  => false,
+
+			// Scope - pre-built media filters for a user (friends/groups).
+			'scope'        => $scope,
 
 			// Filtering
 			'user_id'      => $user_id,        // user_id to filter on.

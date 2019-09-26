@@ -14,8 +14,9 @@
  */
 
 function version_tags( $prefix, $current, $operator = '<' ) {
-	if ( ! $current )
+	if ( ! $current ) {
 		return array();
+	}
 
 	exec( "grep '@{$prefix}-[0-9\.]*' -h -o features/*.feature | uniq", $existing_tags );
 
@@ -44,13 +45,13 @@ $skip_tags = array_merge(
 	version_tags( 'less-than-php', PHP_VERSION, '>' )
 );
 
-# Skip Github API tests by default because of rate limiting. See https://github.com/wp-cli/wp-cli/issues/1612
+// Skip Github API tests by default because of rate limiting. See https://github.com/wp-cli/wp-cli/issues/1612
 $skip_tags[] = '@github-api';
 
-# Skip tests known to be broken.
+// Skip tests known to be broken.
 $skip_tags[] = '@broken';
 
-# Require PHP extension, eg 'imagick'.
+// Require PHP extension, eg 'imagick'.
 function extension_tags() {
 	$extension_tags = array();
 	exec( "grep '@require-extension-[A-Za-z_]*' -h -o features/*.feature | uniq", $extension_tags );
@@ -70,7 +71,7 @@ function extension_tags() {
 
 $skip_tags = array_merge( $skip_tags, extension_tags() );
 
-if ( !empty( $skip_tags ) ) {
+if ( ! empty( $skip_tags ) ) {
 	echo '--tags=~' . implode( '&&~', $skip_tags );
 }
 
