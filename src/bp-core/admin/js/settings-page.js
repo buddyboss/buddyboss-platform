@@ -463,19 +463,6 @@
 
 			});
 
-			var getCookies = function(){
-				var pairs = document.cookie.split(';');
-				var cookies = {};
-				for (var i=0; i<pairs.length; i++){
-					var pair = pairs[i].split('+');
-					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
-				}
-				return cookies;
-			}
-
-			var myCookies = getCookies();
-			console.log(myCookies);
-
 		}
 
 		if ( $( '#bp-tools-submit' ).length ) {
@@ -600,28 +587,5 @@
 				}
 			});
 		}
-
-		var cookies = get_cookies_array();
-		for(var name in cookies) {
-			console.log( name + ":" + cookies[name] + " ");
-		}
-		);
-
-	function get_cookies_array() {
-
-		var cookies = { };
-
-		if (document.cookie && document.cookie !== '') {
-			var split = document.cookie.split(';');
-			for (var i = 0; i < split.length; i++) {
-				var name_value = split[i].split('=');
-				name_value[0] = name_value[0].replace(/^ /, '');
-				cookies[decodeURIComponent(name_value[0])] = decodeURIComponent(name_value[1]);
-			}
-		}
-
-		return cookies;
-
-	}
 
 }());
