@@ -564,7 +564,7 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $group_id ID of the user whose media are being counted.
+ * @param int $group_id ID of the group whose media are being counted.
  * @return int media count of the group.
  */
 function bp_media_get_total_group_media_count( $group_id = 0 ) {
@@ -587,6 +587,36 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 	 * @param int $count Total media count for a given group.
 	 */
 	return apply_filters( 'bp_media_get_total_group_media_count', (int) $count );
+}
+
+/**
+ * Get the album count of a given group.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int $group_id ID of the group whose album are being counted.
+ * @return int album count of the group.
+ */
+function bp_media_get_total_group_album_count( $group_id = 0 ) {
+	if ( empty( $group_id ) && bp_get_current_group_id() ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	$count = wp_cache_get( 'bp_total_album_for_group_' . $group_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media_Album::total_group_album_count( $group_id );
+		wp_cache_set( 'bp_total_album_for_group_' . $group_id, $count, 'bp' );
+	}
+
+	/**
+	 * Filters the total album count for a given group.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $count Total album count for a given group.
+	 */
+	return apply_filters( 'bp_media_get_total_group_album_count', (int) $count );
 }
 
 /**
