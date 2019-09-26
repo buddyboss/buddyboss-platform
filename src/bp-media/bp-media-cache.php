@@ -133,7 +133,7 @@ function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
 		}
 	}
 }
-add_action( 'bp_before_media_delete', 'bp_media_clear_media_group_object_cache_on_delete', 10 );
+add_action( 'bp_media_before_delete', 'bp_media_clear_media_group_object_cache_on_delete', 10 );
 
 /**
  * Clear a cached album item when that item is updated.
@@ -211,4 +211,4 @@ function bp_media_clear_album_group_object_cache_on_delete( $albums ) {
 		}
 	}
 }
-add_action( 'bp_before_album_delete', 'bp_media_clear_album_group_object_cache_on_delete', 10 );
+add_action( 'bp_album_before_delete', 'bp_media_clear_album_group_object_cache_on_delete', 10 );
