@@ -67,8 +67,10 @@ class BBP_Default extends BBP_Theme_Compat {
 
 		/** Scripts ***********************************************************/
 
+		add_action( 'bbp_enqueue_scripts',         array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
+		add_action( 'bbp_enqueue_scripts',         array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'wp_footer',                   array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
-		add_filter( 'wp_footer',                   array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
+		add_action( 'wp_footer',                   array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
 		add_action( 'bbp_ajax_subscription',       array( $this, 'ajax_subscription'       ) ); // Handles the topic ajax subscribe/unsubscribe
 		add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe
@@ -78,7 +80,7 @@ class BBP_Default extends BBP_Theme_Compat {
 		add_action( 'bbp_before_main_content',  array( $this, 'before_main_content'   ) ); // Top wrapper HTML
 		add_action( 'bbp_after_main_content',   array( $this, 'after_main_content'    ) ); // Bottom wrapper HTML
 
-		add_filter( 'wp_footer',         array( $this, 'media_localize_script'  ) ); // Enqueue media script localization
+		add_action( 'wp_footer',         array( $this, 'media_localize_script'  ) ); // Enqueue media script localization
 
 		/** Override **********************************************************/
 
