@@ -133,7 +133,7 @@ function bp_media_clear_media_group_object_cache_on_delete( $medias ) {
 		}
 	}
 }
-add_action( 'bp_media_before_delete', 'bp_media_clear_media_group_object_cache_on_delete', 10 );
+add_action( 'bp_before_media_delete', 'bp_media_clear_media_group_object_cache_on_delete', 10 );
 
 /**
  * Clear a cached album item when that item is updated.
@@ -176,3 +176,39 @@ function bp_media_album_reset_cache_incrementor() {
 }
 add_action( 'bp_album_delete',    'bp_media_album_reset_cache_incrementor' );
 add_action( 'bp_album_add',       'bp_media_album_reset_cache_incrementor' );
+
+/**
+ * Clear a group's cached album count.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param object $album Album object item.
+ */
+function bp_media_clear_album_group_object_cache( $album ) {
+	$group_id = ! empty( $album->group_id ) ? $album->group_id : false;
+
+	if ( $group_id ) {
+		wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
+	}
+}
+add_action( 'bp_album_add',       'bp_media_clear_album_group_object_cache', 10 );
+
+/**
+ * Clear a group's cached album count when delete.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param array $albums DB results of album items.
+ */
+function bp_media_clear_album_group_object_cache_on_delete( $albums ) {
+	if ( ! empty( $albums[0] ) ) {
+		foreach ( (array) $albums[0] as $deleted_album ) {
+			$group_id = ! empty( $deleted_album->group_id ) ? $deleted_album->group_id : false;
+
+			if ( $group_id ) {
+				wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
+			}
+		}
+	}
+}
+add_action( 'bp_before_album_delete', 'bp_media_clear_album_group_object_cache_on_delete', 10 );
