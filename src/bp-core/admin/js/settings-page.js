@@ -223,7 +223,7 @@
 			$( '.bp-help-card-grid' ).on( 'click', 'span.open', function () {
 
 				$( this ).toggleClass( 'active' );
-                $( this ).closest( '.main' ).find( 'ul:first' ).toggle();
+				$( this ).closest( '.main' ).find( 'ul:first' ).toggle();
 			} );
 
 			// show the closest UI
@@ -231,7 +231,7 @@
 
 			// Show the child sub menu
 			$( '.bp-help-card-grid li.selected' ).find( 'ul:first' ).show();
-            $( '.bp-help-card-grid li.selected' ).find( '> span.actions .open' ).addClass( 'active' );
+			$( '.bp-help-card-grid li.selected' ).find( '> span.actions .open' ).addClass( 'active' );
 
 			// Update LI count via JS
 			$( '.bp-help-card-grid .sub-menu-count' ).each( function () {
@@ -322,12 +322,12 @@
 			} );
 		}
 
-        var doFitVids = function() {
-            setTimeout(function () {
-                $( 'iframe[src*="youtube"], iframe[src*="vimeo"]' ).parent().fitVids();
-            }, 300);
-        };
-        doFitVids();
+		var doFitVids = function() {
+			setTimeout(function () {
+				$( 'iframe[src*="youtube"], iframe[src*="vimeo"]' ).parent().fitVids();
+			}, 300);
+		};
+		doFitVids();
 
 		var bp_media_import_send_status_requests = function() {
 			$.ajax({
@@ -463,6 +463,23 @@
 
 			});
 
+			var getCookies = function(){
+				var pairs = document.cookie.split(";");
+				var cookies = {};
+				for (var i=0; i<pairs.length; i++){
+					var pair = pairs[i].split("=");
+					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
+				}
+				return cookies;
+			}
+
+			var getResetCookies = getCookies();
+			if ( getResetCookies.reset_member ) {
+				sessionStorage.setItem( 'bp-members', '' );
+				sessionStorage.setItem( 'bp-group_members', '' );
+				setCookie('reset_member','',0); // this will delete the cookie.
+			}
+
 		}
 
 		if ( $( '#bp-tools-submit' ).length ) {
@@ -587,5 +604,14 @@
 				}
 			});
 		}
+
+	});
+
+	function setCookie(cname, cvalue, exMins) {
+		var d = new Date();
+		d.setTime(d.getTime() + (exMins*60*1000));
+		var expires = "expires="+d.toUTCString();
+		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+	}
 
 }());

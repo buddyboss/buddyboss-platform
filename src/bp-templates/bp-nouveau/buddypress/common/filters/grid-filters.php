@@ -5,8 +5,9 @@
  * @since BuddyBoss 1.0.0
  */
 
+global $post;
 
-if ( bp_is_members_directory() || bp_is_user() )  {
+if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile') ) )  {
 	$current_value = bp_get_option( 'bp-profile-layout-format', 'list_grid' );
 } elseif ( bp_is_groups_directory() || bp_is_group() ) {
 	$current_value = bp_get_option( 'bp-group-layout-format', 'list_grid' );
@@ -22,7 +23,7 @@ if ( 'list_grid' === $current_value ) {
 	}
 
 	if ( ! $list ) {
-		if ( bp_is_members_directory() || bp_is_user() ) {
+		if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'profile') ) ) {
 			$default_current_value = bp_profile_layout_default_format( 'grid' );
 		} elseif ( bp_is_groups_directory() || bp_is_group() ) {
 			$default_current_value = bp_profile_layout_default_format( 'grid' );
