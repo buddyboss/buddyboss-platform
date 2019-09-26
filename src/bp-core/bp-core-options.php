@@ -1426,3 +1426,25 @@ function bp_register_confirm_password( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
 }
+
+/**
+ * Allow members to hide last name field if in display format first name selected.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
+ * @return bool True if avatar uploads are disabled, otherwise false.
+ */
+function bp_profile_layout_default_format( $default = 'grid' ) {
+
+	/**
+	 * Filters whether or not members are able to hide last name field.
+	 *
+	 * @param bool $value Whether or not members are able to hide last name field.
+	 *
+	 * @since BuddyBoss 1.1.1
+	 *
+	 */
+	return apply_filters( 'bp_profile_layout_default_format', bp_get_option( 'bp-profile-layout-default-format', $default ) );
+}

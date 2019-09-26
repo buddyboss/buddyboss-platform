@@ -567,16 +567,40 @@ function bp_nouveau_loop_classes() {
 		if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
 
 			// check for layout options in browsers storage
-			$list = false;
-			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
-				$list = true;
-            }
+			if ( bp_is_members_directory() || bp_is_user() )  {
+				$current_value = bp_get_option( 'bp-profile-layout-format' );
+			} elseif ( bp_is_groups_directory() || bp_is_group() ) {
+				$current_value = bp_get_option( 'bp-group-layout-format' );
+			}
+			$current_value = bp_get_option( 'bp-profile-layout-format' );
+			if ( 'list_grid' === $current_value ) {
+				$list = false;
+				if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
+					$list = true;
+				}
 
-            if ( ! $list ) {
-                $classes = array_merge( $classes, array(
-                    'grid'
-                ) );
-            }
+				if ( ! $list ) {
+					if ( bp_is_members_directory() || bp_is_user() )  {
+						$default_current_value = bp_profile_layout_default_format( 'grid' );
+					} elseif ( bp_is_groups_directory() || bp_is_group() ) {
+						$default_current_value = bp_profile_layout_default_format( 'grid' );
+					}
+					$classes = array_merge( $classes,
+						array(
+							$default_current_value
+						) );
+				}
+			} elseif ( 'list' === $current_value ) {
+				$classes = array_merge( $classes,
+					array(
+						'list'
+					) );
+			} else {
+				$classes = array_merge( $classes,
+					array(
+						'grid'
+					) );
+			}
 		}
 
 		/**

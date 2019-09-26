@@ -192,6 +192,9 @@ class BP_Members_Admin {
 		/** Signups **********************************************************
 		 */
 
+		add_action( 'update_option_bp-profile-layout-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
+		add_action( 'update_option_bp-profile-layout-default-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
+
 		if ( is_admin() ) {
 
 			// Filter non multisite user query to remove sign-up users.
@@ -221,6 +224,8 @@ class BP_Members_Admin {
 			add_action( 'update_option_bp-enable-site-registration', array( $this, 'bp_registration_update_option' ), 10, 2 );
 			add_action( 'update_site_option_registration', array( $this, 'bp_registration_update_site_option' ), 10, 2 );
 			add_action( 'admin_init', array( $this, 'bp_update_registration_update_option' ), 10 );
+
+
 		}
 
 		/** Users List - Members Types ***************************************
@@ -2691,5 +2696,14 @@ class BP_Members_Admin {
 
 		return $value;
 	}
+
+	public function bp_profile_layout_update_option( $old_value, $new_value ) {
+		if ( $old_value !== $new_value ) {
+			setcookie( 'reset_member', '1', time() + (86400 * 30), '/' );
+		}
+	}
+
+
+
 }
 endif; // End class_exists check.

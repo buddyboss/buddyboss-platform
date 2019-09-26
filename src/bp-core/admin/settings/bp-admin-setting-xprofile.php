@@ -25,9 +25,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 	public function settings_save() {
         $if_disabled_before_saving = bp_disable_advanced_profile_search();
-        
+
 		parent::settings_save();
-        
+
         $if_disabled_after_saving = bp_disable_advanced_profile_search();
 
         /**
@@ -47,14 +47,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
         		$last_name_field->save();
         	}
         }
-        
+
         if ( $if_disabled_before_saving && ! $if_disabled_after_saving ) {
             /**
              * Advanced profile search was disabled before and is now enabled.
              * So ideally, the new 'profile search' menu should now be visible under users nav.
              * But that doesn't happen becuase by the time settings are updated, register_post_type hooks have already been executed.
              * So user doesn't see that untill next reload/request.
-             * 
+             *
              * To avoid that, we'll need to do a force redirect.
              */
             wp_safe_redirect( bp_get_admin_url( 'admin.php?page=bp-settings&tab=bp-xprofile' ) );
@@ -63,7 +63,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	public function register_fields() {
-		
+
 		// Section for Profile Names
 		$this->add_section( 'bp_xprofile', __( 'Profile Names', 'buddyboss' ) );
 
@@ -153,6 +153,22 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		// Profile Search Tutorial
 		$this->add_field( 'bp-profile-search-tutorial','', [$this, 'bp_profile_search_tutorial'] );
+
+		// Section for profile list.
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile List', 'buddyboss' ) );
+
+		// Display name format.
+		$this->add_field(
+			'bp-profile-layout-format',
+			__( 'Profile List Type', 'buddyboss' ),
+			[ $this, 'callback_profile_layout_type_format']
+		);
+
+		// Hide Last Name.
+		$args = array();
+		$args['class'] = 'profile-default-layout profile-layout-options';
+		$this->add_field( 'bp-profile-layout-default-format', __( 'Default  Format', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
+
 
 	}
 
@@ -366,6 +382,47 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		<p>
 			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
+
+		<?php
+	}
+
+	public function callback_profile_layout_type_format() {
+		$options = [
+			'list_grid' => __( 'Grid & List View', 'buddyboss' ),
+			'list'      => __( 'List View', 'buddyboss' ),
+			'grid'      => __( 'Grid View', 'buddyboss' ),
+		];
+
+		$current_value = bp_get_option( 'bp-profile-layout-format' );
+
+		printf( '<select name="%1$s" for="%1$s">', 'bp-profile-layout-format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				$key,
+				$key == $current_value? 'selected' : '',
+				$value
+			);
+		}
+		printf( '</select>' );
+	}
+
+	/**
+	 * If 'First Name' selected then add option to hide Last Name.
+	 *
+	 * @since BuddyBoss 1.1.1
+	 *
+	 */
+	public function bp_admin_setting_profile_layout_default_option() {
+		$selected = bp_profile_layout_default_format( 'grid' );
+		?>
+
+		<input id="bp-profile-layout-list-default-format" name="bp-profile-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List View', 'buddyboss' ); ?><br>
+		<input id="bp-profile-layout-grid-default-format" name="bp-profile-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid View', 'buddyboss' ); ?><br>
+
+		<br /><br />
+
+		<p class="description"><?php _e( '', 'buddyboss' ); ?></p>
 
 		<?php
 	}
