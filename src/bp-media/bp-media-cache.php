@@ -211,4 +211,4 @@ function bp_media_clear_album_group_object_cache_on_delete( $albums ) {
 		}
 	}
 }
-add_action( 'bp_album_before_delete', 'bp_media_clear_album_group_object_cache_on_delete', 10 );
+add_action( 'bp_media_album_before_delete', 'bp_media_clear_album_group_object_cache_on_delete', 10 );
