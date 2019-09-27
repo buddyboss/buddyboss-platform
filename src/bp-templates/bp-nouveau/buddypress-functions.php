@@ -489,7 +489,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	    if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
+		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	    }
 
 		wp_enqueue_script( 'bp-nouveau' );
 
@@ -577,6 +579,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$supported_objects = (array) apply_filters( 'bp_nouveau_supported_components', bp_core_get_packaged_component_ids() );
 		$object_nonces     = array();
+		$group_sub_objects = false;
 
 		foreach ( $supported_objects as $key_object => $object ) {
 			if ( ! bp_is_active( $object ) || 'forums' === $object ) {
@@ -585,10 +588,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 			}
 
 			if ( 'groups' === $object ) {
-				$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
+				$group_sub_objects = true;
 			}
 
 			$object_nonces[ $object ] = wp_create_nonce( 'bp_nouveau_' . $object );
+		}
+
+		if ( true === $group_sub_objects ) {
+			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 		}
 
 		// Add components & nonces

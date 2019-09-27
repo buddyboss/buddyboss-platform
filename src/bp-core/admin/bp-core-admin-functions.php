@@ -1511,17 +1511,6 @@ function bp_core_admin_body_classes( $classes ) {
 add_filter( 'admin_body_class', 'bp_core_admin_body_classes' );
 
 /**
- * Prevent extended profile fields from being deactivated.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_xprofile_always_active( $components ) {
-	$components['xprofile'] = 1;
-	return $components;
-}
-add_filter( 'bp_active_components', 'bp_xprofile_always_active' );
-
-/**
  * Custom metaboxes used by our 'bp-member-type' post type.
  *
  * @since BuddyBoss 1.0.0
@@ -1739,7 +1728,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		}
 	}
 
-	if ( bp_is_active( 'groups' ) && true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() && bp_is_active( 'invites' ) ) {
+	if ( bp_is_active( 'groups' ) && true === bp_disable_group_type_creation() && true === bp_enable_group_auto_join() ) {
 
 		$get_all_registered_group_types = bp_get_active_group_types();
 

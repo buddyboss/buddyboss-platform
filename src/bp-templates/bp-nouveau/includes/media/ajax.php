@@ -238,7 +238,11 @@ function bp_nouveau_ajax_media_save() {
 		 */
 		$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
 
-		$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) ) {
+			$main_activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $_POST['group_id'] ) );
+        } else {
+			$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
+        }
 	}
 
 	$album_privacy = 'public';
@@ -805,7 +809,20 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = 'all';
+	$querystring['scope'] = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+		$querystring['scope'][] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$querystring['scope'][] = 'groups';
+	}
+
+	if ( is_user_logged_in() ) {
+		$querystring['scope'][] = 'personal';
+	}
+
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = 0;
@@ -825,6 +842,14 @@ function bp_nouveau_object_template_results_media_personal_scope( $querystring )
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+
+	$privacy  = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		$privacy[] = 'onlyme';
+	}
+
+	$querystring['privacy'] = $privacy;
 	$querystring['count_total'] = true;
 	return http_build_query( $querystring );
 }

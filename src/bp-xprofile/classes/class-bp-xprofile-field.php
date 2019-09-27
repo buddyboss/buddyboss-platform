@@ -455,6 +455,17 @@ class BP_XProfile_Field {
 
 		$is_new_field = is_null( $this->id );
 
+		if ( 'membertypes' === $this->type || 'gender' === $this->type || 'socialnetworks' === $this->type ) {
+			$field = $wpdb->get_row($wpdb->prepare("SELECT id FROM {$bp->profile->table_name_fields} a WHERE parent_id = 0 AND type = %s", $this->type ) );
+			if ( $is_new_field && $field ) {
+				return false;
+			} else {
+				if ( $this->id !== $field->id ) {
+					return false;
+				}
+			}
+		}
+
 		if ( ! $is_new_field ) {
 			$sql = $wpdb->prepare( "UPDATE {$bp->profile->table_name_fields} SET group_id = %d, parent_id = 0, type = %s, name = %s, description = %s, is_required = %d, order_by = %s, field_order = %d, option_order = %d, can_delete = %d, is_default_option = %d WHERE id = %d", $this->group_id, $this->type, $this->name, $this->description, $this->is_required, $this->order_by, $this->field_order, $this->option_order, $this->can_delete, $this->is_default_option, $this->id );
 		} else {
@@ -1101,6 +1112,11 @@ class BP_XProfile_Field {
 			$fields[ $_mt_meta->object_id ][] = $_mt_meta->meta_value;
 		}
 
+		// Add temp null member type before add field to register page from the $member_types array.
+		if ( bp_is_register_page() ) {
+			$member_types[] = 'null';
+		}
+
 		/*
 		 * Filter out fields that don't match any passed types, or those marked '_none'.
 		 * The 'any' type is implicitly handled here: it will match no types.
@@ -1109,6 +1125,11 @@ class BP_XProfile_Field {
 			if ( ! array_intersect( $field_types, $member_types ) ) {
 				unset( $fields[ $field_id ] );
 			}
+		}
+
+		// Remove temp null member type after add field to register page from the $member_types array.
+		if ( bp_is_register_page() ) {
+			unset( $member_types[ 'null' ] );
 		}
 
 		// Any fields with no member_type metadata are available to all profile types.
@@ -1551,6 +1572,11 @@ class BP_XProfile_Field {
 			return;
 		}
 
+		// Remove the Profile Type Metabox for the Profile Type Field.
+		if ( $this->id === bp_get_xprofile_member_type_field_id() ) {
+			return;
+		}
+
 		$field_member_types = $this->get_member_types();
 
 		?>
@@ -1568,7 +1594,7 @@ class BP_XProfile_Field {
                                        id="member-type-<?php echo $member_type->labels['name']; ?>"
                                        class="member-type-selector" type="checkbox"
                                        value="<?php echo $member_type->name; ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
-								<?php echo $member_type->labels['name']; ?>
+								<?php echo $member_type->labels['singular_name']; ?>
                             </label>
                         </li>
 					<?php endforeach; ?>

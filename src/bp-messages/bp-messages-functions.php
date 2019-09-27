@@ -152,6 +152,11 @@ function messages_new_message( $args = '' ) {
 				}
 			}
 
+			// If $recipient_id still blank then try last time to find $recipient_id via the nickname field.
+			if ( empty( $recipient_id ) ) {
+				$recipient_id = bp_core_get_userid_from_nickname( $recipient );
+			}
+
 			// Decide which group to add this recipient to.
 			if ( empty( $recipient_id ) ) {
 				$invalid_recipients[] = $recipient;
@@ -728,3 +733,19 @@ function bp_messages_remove_data( $user_id ) {
 add_action( 'wpmu_delete_user', 'bp_messages_remove_data' );
 add_action( 'delete_user', 'bp_messages_remove_data' );
 add_action( 'bp_make_spam_user', 'bp_messages_remove_data' );
+
+/**
+ * Display Sites notices on all the page
+ *
+ * @since BuddyBoss 1.1.7
+ */
+function bp_messages_show_sites_notices() {
+	if (
+		( ! bp_is_directory() && ! bp_is_single_item() && bp_is_blog_page() )
+		|| ( empty( bp_is_blog_page() ) && bp_is_members_component() ) // check that it's members page on the members component
+	) {
+		wp_enqueue_script( 'bp-nouveau' );
+		bp_nouveau_template_notices();
+	}
+}
+add_action( 'wp_footer', 'bp_messages_show_sites_notices', 10000 );

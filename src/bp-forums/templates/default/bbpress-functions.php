@@ -68,7 +68,9 @@ class BBP_Default extends BBP_Theme_Compat {
 		/** Scripts ***********************************************************/
 
 		add_action( 'bbp_enqueue_scripts',         array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
-		add_filter( 'bbp_enqueue_scripts',         array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
+		add_action( 'bbp_enqueue_scripts',         array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
+		add_action( 'wp_footer',                   array( $this, 'enqueue_scripts'         ) ); // Enqueue theme JS
+		add_action( 'wp_footer',                   array( $this, 'localize_topic_script'   ) ); // Enqueue theme script localization
 		add_action( 'bbp_ajax_favorite',           array( $this, 'ajax_favorite'           ) ); // Handles the topic ajax favorite/unfavorite
 		add_action( 'bbp_ajax_subscription',       array( $this, 'ajax_subscription'       ) ); // Handles the topic ajax subscribe/unsubscribe
 		add_action( 'bbp_ajax_forum_subscription', array( $this, 'ajax_forum_subscription' ) ); // Handles the forum ajax subscribe/unsubscribe
@@ -78,7 +80,7 @@ class BBP_Default extends BBP_Theme_Compat {
 		add_action( 'bbp_before_main_content',  array( $this, 'before_main_content'   ) ); // Top wrapper HTML
 		add_action( 'bbp_after_main_content',   array( $this, 'after_main_content'    ) ); // Bottom wrapper HTML
 
-		add_filter( 'wp_footer',         array( $this, 'media_localize_script'  ) ); // Enqueue media script localization
+		add_action( 'wp_footer',         array( $this, 'media_localize_script'  ) ); // Enqueue media script localization
 
 		/** Override **********************************************************/
 
@@ -128,13 +130,12 @@ class BBP_Default extends BBP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
+	    if ( ! is_bbpress() ) {
+	        return false;
+        }
+
 		// Setup scripts array
 		$scripts = array();
-
-		// Tag Input
-		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
-			wp_enqueue_script( 'bp-tagify' );
-		}
 
 		// Always pull in jQuery for TinyMCE shortcode usage
 		if ( bbp_use_wp_editor() ) {
@@ -194,6 +195,44 @@ class BBP_Default extends BBP_Theme_Compat {
 			bbp_enqueue_script( $handle, $attributes['file'], $attributes['dependencies'], $this->version, 'screen' );
 		}
 
+		$no_load_topic = true;
+		if ( bbp_allow_topic_tags() && current_user_can( 'assign_topic_tags' ) ) {
+			$no_load_topic = false;
+		}
+
+		$common_array = array(
+			'loading_text' => __( 'Loading', 'buddyboss' ),
+			'ajax_url'     => bp_core_ajax_url(),
+			'nonce'        => wp_create_nonce( 'search_tag' ),
+			'load'         => $no_load_topic,
+			'tag_text'     => __( 'Add Tags:', 'buddyboss' ),
+		);
+
+		wp_localize_script( 'bbpress-common', 'bbpCommonJsData', $common_array );
+
+		if ( bp_is_active( 'media' ) ) {
+
+		    $gif = false;
+			if ( bp_is_forums_gif_support_enabled() ) {
+				wp_enqueue_script( 'giphy' );
+				$gif = true;
+			}
+
+			$emoji = false;
+			if ( bp_is_forums_emoji_support_enabled() ) {
+				wp_enqueue_script( 'emojionearea' );
+				wp_enqueue_style( 'emojionearea' );
+				$emoji = true;
+			}
+
+			if ( bp_is_forums_media_support_enabled() || $gif || $emoji ) {
+				wp_enqueue_script( 'bp-media-dropzone' );
+				wp_enqueue_script( 'bp-nouveau-media' );
+				wp_enqueue_script( 'isInViewport' );
+				wp_enqueue_script( 'bp-exif' );
+			}
+		}
+
 		if ( bbp_use_wp_editor() ) {
 			wp_localize_script( 'bbpress-editor', 'bbpEditorJsStrs', array(
 				'description' => __( 'Description', 'buddyboss' ),
@@ -209,6 +248,10 @@ class BBP_Default extends BBP_Theme_Compat {
      * @since BuddyBoss 1.1.5
 	 */
 	function media_localize_script() {
+
+		if ( ! is_bbpress() ) {
+			return false;
+		}
 
 		$params = array();
 

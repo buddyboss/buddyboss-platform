@@ -1662,7 +1662,7 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 			'force_default' => false,
 		]);
 
-		$group_default_avatar = bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] );
+		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
 
 		if ( $group_avatar_url != $group_default_avatar ) {
 			return $group_avatar_url;
@@ -1693,7 +1693,7 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 			'force_default' => false,
 		]);
 
-		$group_default_avatar = bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] );
+		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
 
 		if ( $group_avatar_url != $group_default_avatar ) {
 			return bp_core_fetch_avatar([

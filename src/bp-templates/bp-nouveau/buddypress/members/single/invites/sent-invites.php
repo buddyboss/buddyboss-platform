@@ -25,7 +25,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<span class="bp-icon" aria-hidden="true"></span>
 		<p>
 			<?php
-			$text = __( 'Invitations did NOT send because these email addresses are invalid:', 'buddyboss' );
+			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' );
 			echo trim ($text.' '. $failed );
 			?>
 		</p>
@@ -34,6 +34,21 @@ if ( isset( $failed ) && '' !== $failed ) {
 	<?php
 }
 
+$exists = trim ( filter_input( INPUT_GET, 'exists', FILTER_SANITIZE_STRING ) );
+if ( isset( $exists ) && '' !== $exists ) {
+	?>
+    <aside class="bp-feedback bp-send-invites bp-template-notice error">
+        <span class="bp-icon" aria-hidden="true"></span>
+        <p>
+			<?php
+			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' );
+			echo trim ($text.' '. $exists );
+			?>
+        </p>
+
+    </aside>
+	<?php
+}
 ?>
 <script>window.history.replaceState(null, null, window.location.pathname);</script>
 <h2 class="screen-heading general-settings-screen">

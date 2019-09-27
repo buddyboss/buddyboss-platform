@@ -603,6 +603,23 @@ class BP_Media_Album {
 	}
 
 	/**
+	 * Count total album for the given group
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $group_id
+	 *
+	 * @return array|bool|int
+	 */
+	public static function total_group_album_count( $group_id = 0 ) {
+		global $bp, $wpdb;
+
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name_albums} WHERE group_id = {$group_id}" );
+
+		return $total_count;
+	}
+
+	/**
 	 * Delete albums from the database.
 	 *
 	 * To delete a specific album, pass an 'id' parameter.

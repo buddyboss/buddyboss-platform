@@ -73,6 +73,13 @@ add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mentio
 add_filter( 'bp_core_avatar_default',       'bp_groups_default_avatar', 10, 3 );
 add_filter( 'bp_core_avatar_default_thumb', 'bp_groups_default_avatar', 10, 3 );
 
+// Exclude Forums if group type hide
+add_filter( 'bbp_after_has_forums_parse_args', 'bp_groups_exclude_forums_by_group_type_args' );
+// Exclude Forums if group type hide
+add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_by_group_type_args' );
+//media scope filter
+add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -389,3 +396,147 @@ function bp_groups_allow_mods_to_delete_activity ( $can_delete, $activity ) {
 	return $can_delete;
 }
 add_filter( 'bp_activity_user_can_delete', 'bp_groups_allow_mods_to_delete_activity', 10, 2 );
+
+/**
+ * Exclude Forums from forum loop if any forum is attached to a group and that group have a
+ * group type and that group type is hidden from the directory page.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param $args_forum
+ * @return mixed $args_forum
+ */
+function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
+	if ( bbp_is_forum_archive() || bbp_is_topic_archive() ) {
+		$exclude_forum_ids = array();
+		// Check group type enabled
+		if ( true === bp_disable_group_type_creation() ) {
+			// Get excluded group ids.
+			$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+			foreach ( $exclude_group_ids as $exclude_group_id ) {
+				// Get forums id by group id.
+				$exclude_forum_ids_by_group = bbp_get_group_forum_ids( (int) $exclude_group_id );
+				foreach ( $exclude_forum_ids_by_group as $exclude_id ) {
+					// Set $exclude_forum_ids array.
+					$exclude_forum_ids[] = $exclude_id;
+				}
+			}
+		}
+		if ( isset( $exclude_forum_ids ) && ! empty( $exclude_forum_ids ) ) {
+			$args_forum['post__not_in'] = $exclude_forum_ids;
+		}
+	}
+	return $args_forum;
+}
+
+/**
+ * Exclude Forums topic from topic loop if any forum is attached to a group and that group have a
+ * group type and that group type is hidden from the directory page.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param $args_topic
+ * @return mixed $args_topic
+ */
+function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
+
+	if ( bbp_is_forum_archive() || bbp_is_topic_archive() ) {
+		$exclude_topic_ids = array();
+		// Check group type enabled
+		if ( true === bp_disable_group_type_creation() ) {
+			// Get excluded group ids.
+			$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+			foreach ( $exclude_group_ids as $exclude_group_id ) {
+				// Get forums id by group id.
+				$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );
+				// Loop forum ids to get topics
+				foreach ( $exclude_forum_ids as $exclude_forum_id ) {
+					$args = array(
+						'post_parent' => $exclude_forum_id,
+						'post_type'   => bbp_get_topic_post_type(),
+						'numberposts' => - 1,
+						'fields'      => 'ids',
+					);
+					// Get topics of forum.
+					$topics = get_children( $args );
+					foreach ( $topics as $exclude_topic_id ) {
+						// Set $exclude_topic_ids array.
+						$exclude_topic_ids[] = $exclude_topic_id;
+					}
+				}
+			}
+		}
+		if ( ! empty( $exclude_topic_ids ) ) {
+			$args_topic['post__not_in'] = $exclude_topic_ids;
+		}
+	}
+	return $args_topic;
+}
+
+/**
+ * Set up media arguments for use with the 'groups' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	//Fetch public groups
+	$public_groups = groups_get_groups( array( 'fields' => 'ids', 'status' => 'public', 'per_page' => -1 ) );
+	if ( ! empty( $public_groups['groups'] ) ) {
+		$public_groups = $public_groups['groups'];
+	} else {
+		$public_groups = array();
+	}
+
+	// Determine groups of user.
+	$groups = groups_get_user_groups( $user_id );
+	if ( ! empty( $groups['groups'] ) ) {
+		$groups = $groups['groups'];
+	} else {
+		$groups = array();
+	}
+
+	$group_ids = false;
+	if ( ! empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => array_unique( array_merge( $groups, $public_groups ) ) );
+	} else if ( empty( $groups ) && ! empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $public_groups );
+	} else if ( ! empty( $groups ) && empty( $public_groups ) ) {
+		$group_ids = array( 'groups' => $groups );
+	}
+
+	if ( empty( $group_ids ) ) {
+		$group_ids = array( 'groups' => 0 );
+	}
+
+	$retval = array(
+		'relation' => 'OR',
+		array(
+			'relation' => 'AND',
+			array(
+				'column'  => 'group_id',
+				'compare' => 'IN',
+				'value'   => (array) $group_ids['groups']
+			),
+			array(
+				'column'  => 'privacy',
+				'value'   => 'grouponly'
+			),
+		),
+	);
+
+	return $retval;
+}

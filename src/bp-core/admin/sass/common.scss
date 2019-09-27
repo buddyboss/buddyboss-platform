@@ -375,6 +375,12 @@ tr.bp-search-parent-field label {
 	margin-right: 15px;
 }
 
+.bp-admin-card h3 {
+	font-size: 19px;
+	font-weight: 600;
+}
+
+
 /* Settings */
 .bp-admin-card.section-bp_main h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
@@ -530,6 +536,12 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 /* Integrations - WooCommerce */
 .bp-admin-card.section-bp-woocommerce-integration h2:before {
 	background-image: url(../../images/admin/icons/logos/woocommerce.png);
+	background-size: 100% 100%;
+}
+
+/* Integrations - BuddyPress Plugins */
+.bp-admin-card.section-bp_compatibility-integration h2:before {
+	background-image: url(../../images/admin/icons/logos/buddypress.png);
 	background-size: 100% 100%;
 }
 
@@ -1645,6 +1657,34 @@ td label.platform-activity {
 	input[type="checkbox"] {
 		margin-top: 0;
 	}
+}
+
+.loader-repair-tools {
+	border: 4px solid #f3f3f3;
+	border-top: 4px solid #3498db;
+	border-right: 4px solid #008000;
+	border-left: 4px solid #FF0000;
+	border-bottom: 4px solid #FFC0CB;
+	border-radius: 50%;
+	width: 10px;
+	height: 10px;
+	animation: spin 2s linear infinite;
+	display: inline-block;
+	margin-left: 8px;
+	vertical-align: middle;
+}
+
+@keyframes spin {
+	0% { transform: rotate(0deg); }
+	100% { transform: rotate(360deg); }
+}
+
+body .section-repair_community .settings fieldset .submit a.disable-btn {
+	pointer-events: none;
+}
+
+body .section-repair_community .settings fieldset .checkbox label code {
+	margin-left: 10px;
 }
 
 @media screen and (max-width: 782px) {

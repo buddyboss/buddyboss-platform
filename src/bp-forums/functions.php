@@ -519,7 +519,7 @@ function bbp_remove_forum_id_from_all_groups( $forum_id = 0 ) {
  * @param int $forum_id
  * @uses bbp_get_forum_id() To get the forum id
  * @uses bbp_get_forum_group_ids() To get the forum's group ids
- * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id 
+ * @uses apply_filters() Calls 'bbp_forum_is_group_forum' with the forum id
  * @return bool True if it is a group forum, false if not
  */
 function bbp_is_forum_group_forum( $forum_id = 0 ) {
@@ -769,3 +769,122 @@ function bbp_forum_update_forum_status_when_group_updates( $group_id ) {
 
 add_action( 'groups_group_settings_edited', 'bbp_forum_update_forum_status_when_group_updates', 100 );
 add_action( 'bp_group_admin_after_edit_screen_save', 'bbp_forum_update_forum_status_when_group_updates', 10 );
+
+/**
+ * Get Sub Forum's group id,
+ * if not associated with any group then it searches for the parent forums to fetch group associated
+ * otherwise returns false
+ *
+ * @param $forum_id
+ *
+ * @since BuddyBoss 1.1.9
+ * @return bool|int|mixed
+ */
+function bbp_forum_recursive_group_id ( $forum_id ) {
+
+	if ( empty( $forum_id ) ) {
+	    return false;
+    }
+
+    // initialize a few things
+    $group_id          = 0;
+    $found_group_forum = false;
+    $reached_the_top   = false;
+
+    // This loop works our way up to the top of the topic->sub-forum->parent-forum hierarchy.
+    // We will stop climbing when we find a forum_id that is also the id of a group's forum.
+    // When we find that, we've found the group, and we can stop looking.
+    // Or if we get to the top of the hierarchy, we'll bail out of the loop, never having found a forum
+    // that is associated with a group.
+    while ( ! $found_group_forum && ! $reached_the_top ) {
+        $forum_group_ids = bbp_get_forum_group_ids( $forum_id );
+        if ( ! empty( $forum_group_ids ) ) {
+            // We've found the forum_id that corresponds to the group's forum
+            $found_group_forum = true;
+            $group_id          = $forum_group_ids[0];
+        } else {
+            $current_post = get_post( $forum_id );
+            if ( $current_post->post_parent ) {
+                // $post->post_parent will be the ID of the parent, not an object
+	            $forum_id = $current_post->post_parent;
+            } else {
+                // We've reached the top of the hierarchy
+                $reached_the_top = true;
+            }
+        }
+    }
+
+    if ( $group_id ) {
+        return $group_id;
+    }
+
+    return false;
+}
+add_action( 'wp_ajax_search_tags',        'bbp_forum_topic_reply_ajax_form_search_tags' );
+
+/**
+ * Search the tags that already added on forums previously and give the suggestions list.
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bbp_forum_topic_reply_ajax_form_search_tags() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_get_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_GET['_wpnonce'];
+	$check = 'search_tag';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['term'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// WP_Term_Query arguments
+	$args = array(
+		'taxonomy'   => array( 'topic-tag' ),
+		'search'     => $_GET['term'],
+		'hide_empty' => false,
+	);
+
+	// The Term Query
+	$term_query = new WP_Term_Query( $args );
+
+	$tags = array();
+
+	// The Loop
+	if ( ! empty( $term_query ) && ! is_wp_error( $term_query ) ) {
+		$tags = $term_query->terms;
+	}
+
+	if ( empty( $tags ) ) {
+		$tags = array();
+	}
+
+	wp_send_json_success( [
+		'results' => array_map( function( $result ) {
+			return [
+				'id' => $result->slug,
+				'text' => $result->name
+			];
+		}, $tags )
+	] );
+}

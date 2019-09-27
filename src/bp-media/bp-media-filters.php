@@ -61,6 +61,12 @@ function bp_media_activity_entry() {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
+	// Add Media to single activity page.
+	$media_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_activity', true );
+	if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' == $media_activity && empty( $media_ids ) ) {
+		$media_ids = BP_Media::get_activity_media_id( bp_get_activity_id() );
+	}
+
 	if ( ! empty( $media_ids ) && bp_has_media( array( 'include' => $media_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) { ?>
         <div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?>"><?php
 		while ( bp_media() ) {
@@ -246,6 +252,16 @@ function bp_media_delete_activity_media( $activities ) {
 					}
 				}
 			}
+
+			// get media ids attached to activity
+            $media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+            if ( ! empty( $media_ids ) ) {
+                $media_ids = explode( ',', $media_ids );
+                foreach( $media_ids as $media_id ) {
+                    bp_media_delete( $media_id );
+                }
+            }
+            
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 	}

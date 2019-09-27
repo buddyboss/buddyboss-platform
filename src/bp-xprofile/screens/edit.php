@@ -108,7 +108,6 @@ function xprofile_screen_edit_profile() {
 
 			}
 
-
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
 				$errors = true;
 				$validations[] = $message;

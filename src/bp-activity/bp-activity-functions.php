@@ -4572,6 +4572,7 @@ function bp_get_following( $args = '' ) {
  * @return array [ followers => int, following => int ]
  */
 function bp_total_follow_counts( $args = '' ) {
+	global $bp;
 
 	$r = wp_parse_args( $args, array(
 		'user_id' => bp_loggedin_user_id()
@@ -4583,7 +4584,6 @@ function bp_total_follow_counts( $args = '' ) {
 
 	// logged-in user
 	if ( $r['user_id'] == bp_loggedin_user_id() && is_user_logged_in() ) {
-		global $bp;
 
 		if ( ! empty( $bp->loggedin_user->total_follow_counts ) ) {
 			$count = $bp->loggedin_user->total_follow_counts;
@@ -4591,7 +4591,6 @@ function bp_total_follow_counts( $args = '' ) {
 
 		// displayed user
 	} elseif ( $r['user_id'] == bp_displayed_user_id() && bp_is_user() ) {
-		global $bp;
 
 		if ( ! empty( $bp->displayed_user->total_follow_counts ) ) {
 			$count = $bp->displayed_user->total_follow_counts;
@@ -4615,20 +4614,22 @@ function bp_total_follow_counts( $args = '' ) {
  */
 function bp_remove_follow_data( $user_id ) {
 	/**
-	 * @todo add title/description
+	 * Actions to perform before follow data is removed for user
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_before_remove_follow_data', $user_id );
 
-	BP_Activity_Follow::delete_all_for_user( $user_id );
+	$return = BP_Activity_Follow::delete_all_for_user( $user_id );
 
 	/**
-	 * @todo add title/description
+	 * Actions to perform after follow data is removed for user
 	 *
 	 * @since BuddyBoss 1.0.0
+	 * @param int $user_id User id
+	 * @param array|bool $return Array of ids deleted or false otherwise
 	 */
-	do_action( 'bp_remove_follow_data', $user_id );
+	do_action( 'bp_remove_follow_data', $user_id, $return );
 }
 add_action( 'wpmu_delete_user',	'bp_remove_follow_data' );
 add_action( 'delete_user',	'bp_remove_follow_data' );
@@ -4856,13 +4857,13 @@ function bp_activity_action_parse_url() {
 
 			// Fetch the oembed code for URL.
 			$embed_code = wp_oembed_get( $url );
-
-			$json_data['title']       = ' ';
-			$json_data['description'] = $embed_code;
-			$json_data['images']      = '';
-			$json_data['error']       = '';
-
-			wp_send_json( $json_data );
+			if ( $embed_code ) {
+				$json_data['title']       = ' ';
+				$json_data['description'] = $embed_code;
+				$json_data['images']      = '';
+				$json_data['error']       = '';
+				wp_send_json( $json_data );
+			}
 		}
 
 		$parser = new WebsiteParser( $url );
@@ -5014,6 +5015,7 @@ function bp_activity_media_sideload_attachment( $file ) {
 
 	// Download file to temp location.
 	$file                   = preg_replace( '/^:*?\/\//', $protocol = strtolower( substr( $_SERVER["SERVER_PROTOCOL"], 0, strpos( $_SERVER["SERVER_PROTOCOL"], '/' ) ) ) . '://', $file );
+	$file                   = str_replace( '&amp;', '&', $file );
 	$file_array['tmp_name'] = download_url( $file );
 
 	// If error storing temporarily, return the error.

@@ -32,6 +32,7 @@ defined( 'ABSPATH' ) || exit;
  *                                                viewing her own profile, or during registration. Otherwise false.
  *     @type int|bool     $exclude_groups         Default: false.
  *     @type int|bool     $exclude_fields         Default: false
+ *     @type int|bool     $include_fields         Default: false
  *     @type bool         $update_meta_cache      Default: true.
  * }
  *
@@ -63,6 +64,7 @@ function bp_has_profile( $args = '' ) {
 		'fetch_visibility_level' => $fetch_visibility_level_default,
 		'exclude_groups'         => false, // Comma-separated list of profile field group IDs to exclude.
 		'exclude_fields'         => false, // Comma-separated list of profile field IDs to exclude.
+		'include_fields'         => false, // Comma-separated list of profile field IDs to include.
 		'update_meta_cache'      => true,
 	), 'has_profile' );
 
@@ -156,6 +158,8 @@ function bp_field_css_class( $class = false ) {
 
 		// Set a class with the field name (sanitized).
 		$css_classes[] = 'field_' . sanitize_title( $profile_template->field->name );
+
+		$css_classes[] = 'field_order_' . $profile_template->field->field_order;
 
 		// Set a class indicating whether the field is required or optional.
 		if ( ! empty( $profile_template->field->is_required ) ) {
@@ -572,19 +576,19 @@ function bp_the_profile_field_name() {
 
 /**
  * Returns the XProfile field's alternate name, if added, empty otherwise.
- * 
+ *
  * @global \BP_XProfile_Field_Type $field
  * @since BuddyBoss 1.0.0
- * 
+ *
  * @param \BP_XProfile_Field_Type $the_field field object. Optional. Defaults to global $field object.
- * @return string 
+ * @return string
  */
 function bp_get_the_profile_field_alternate_name( $the_field = false ) {
     if ( !$the_field ) {
         global $field;
         $the_field = $field;
     }
-    
+
     /**
      * Filters the XProfile field's alternate name.
      *
@@ -1590,3 +1594,51 @@ function bp_get_the_profile_field_optional_label() {
 
 	return $retval;
 }
+
+/**
+ * Output the data attribute for a field.
+ *
+ * @since BuddyBoss 1.1.6
+ *
+ * @param mixed $class Extra data to append to data attribute.
+ *                     Pass mutiple data names as an array or
+ *                     space-delimited string.
+ */
+function bp_field_data_attribute( $attribute = false ) {
+	echo bp_get_field_data_attribute( $attribute );
+}
+
+	/**
+	 * Return the data attribute for a field.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param string|bool $attribute Extra data to append to data attribute.
+	 * @return string
+	 */
+	function bp_get_field_data_attribute( $attribute = false ) {
+		global $profile_template;
+
+		$data_attribute = array();
+
+
+		$data_attribute[] = ' data-index="' . $profile_template->field->field_order . '" ';
+
+		/**
+		 * Filters the field data to be applied to a field.
+		 *
+		 * @since BuddyBoss 1.1.6
+		 *
+		 * @param array $data_attribute Array of data attribute to be applied to field. Passed by reference.
+		 */
+		$data_attribute = apply_filters_ref_array( 'bp_field_data_attribute', array( &$data_attribute ) );
+
+		/**
+		 * Filters the data HTML attribute to be used on a field.
+		 *
+		 * @since BuddyBoss 1.1.6
+		 *
+		 * @param string $value data HTML attribute with imploded data attributes.
+		 */
+		return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
+	}

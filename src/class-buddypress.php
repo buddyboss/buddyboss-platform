@@ -262,11 +262,6 @@ class BuddyPress {
 			define( 'BP_FORUMS_SLUG', 'forums' );
 		}
 
-		// Define a slug, if necessary.
-		if ( ! defined( 'BP_FOLLOW_SLUG' ) ) {
-			define( 'BP_FOLLOW_SLUG', $this->id );
-		}
-
 		// Only applicable to those running trunk
 		if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
 			define( 'BP_SOURCE_SUBDIRECTORY', '' );
@@ -657,6 +652,7 @@ class BuddyPress {
 			'BP_Core_Friends_Widget'         => 'friends',
             'BP_Core_Network_Posts_Widget'   => 'core',
             'BP_Core_Follow_Following_Widget'=> 'core',
+            'BP_Core_Follow_Follower_Widget' => 'core',
 			'BP_Group_Extension'             => 'groups',
 			'BP_Group_Member_Query'          => 'groups',
 			'BP_Core_Members_Template'       => 'members',

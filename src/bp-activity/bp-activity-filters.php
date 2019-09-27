@@ -218,7 +218,10 @@ function bp_activity_save_link_data( $activity ) {
 
 	// Ignore YouTube and Vimeo Preview link.
 	if ( strpos( $_POST['link_url'], 'youtube' ) > 0 || strpos( $_POST['link_url'], 'youtu' ) > 0 || strpos( $_POST['link_url'], 'vimeo' ) > 0 ) {
-		return;
+		$embed_code = wp_oembed_get( $_POST['link_url'] );
+		if ( $embed_code ) {
+			return;
+		}
 	}
 
 	$preview_data['url'] = $_POST['link_url'];
@@ -622,6 +625,11 @@ function bp_activity_newest_class( $classes = '' ) {
  * @return array $args
  */
 function bp_activity_display_all_types_on_just_me($args) {
+
+	if ( bp_is_activity_tabs_active() ) {
+		return $args;
+	}
+
 	if ( ! isset( $args['scope'] ) ) {
 		return $args;
 	}
@@ -1006,6 +1014,12 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * @return array
  */
 function bp_users_filter_activity_following_scope( $retval = array(), $filter = array() ) {
+
+	// Is follow active?
+	if ( ! bp_is_activity_follow_active() ) {
+		return $retval;
+	}
+
 	// Determine the user_id.
 	if ( ! empty( $filter['user_id'] ) ) {
 		$user_id = $filter['user_id'];

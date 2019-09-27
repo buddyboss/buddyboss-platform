@@ -179,7 +179,7 @@ function bp_media_compress_image( $source, $destination, $quality = 90 ) {
  *
  * @return string
  */
-function bp_media_file_upload_max_size( $post_string = false ) {
+function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) {
 	static $max_size = - 1;
 
 	if ( $max_size < 0 ) {
@@ -212,7 +212,7 @@ function bp_media_file_upload_max_size( $post_string = false ) {
 		}
 	}
 
-	return bp_media_format_size_units( $max_size, $post_string );
+	return bp_media_format_size_units( $max_size, $post_string, $type );
 }
 
 /**
@@ -225,13 +225,24 @@ function bp_media_file_upload_max_size( $post_string = false ) {
  *
  * @return string
  */
-function bp_media_format_size_units( $bytes, $post_string = false ) {
+function bp_media_format_size_units( $bytes, $post_string = false, $type = 'bytes' ) {
+
+	if ( $bytes > 0 ) {
+		if ( 'GB' === $type && ! $post_string ) {
+			return $bytes / 1073741824;
+		} elseif ( 'MB' === $type && ! $post_string ) {
+			return $bytes / 1048576;
+		} elseif ( 'KB' === $type && ! $post_string ) {
+			return $bytes / 1024;
+		}
+	}
+
 	if ( $bytes >= 1073741824 ) {
-		$bytes = number_format( $bytes / 1073741824, 0 ) . ( $post_string ? ' GB' : '' );
+		$bytes = ( $bytes / 1073741824 ) . ( $post_string ? ' GB' : '' );
 	} elseif ( $bytes >= 1048576 ) {
-		$bytes = number_format( $bytes / 1048576, 0 ) . ( $post_string ? ' MB' : '' );
+		$bytes = ( $bytes / 1048576 ) . ( $post_string ? ' MB' : '' );
 	} elseif ( $bytes >= 1024 ) {
-		$bytes = number_format( $bytes / 1024, 0 ) . ( $post_string ? ' KB' : '' );
+		$bytes = ( $bytes / 1024 ) . ( $post_string ? ' KB' : '' );
 	} elseif ( $bytes > 1 ) {
 		$bytes = $bytes . ( $post_string ? ' bytes' : '' );
 	} elseif ( $bytes == 1 ) {
@@ -277,6 +288,8 @@ function bp_media_get( $args = '' ) {
 		'sort'              => 'DESC',       // sort ASC or DESC
 		'order_by'          => false,       // order by
 
+		'scope'             => false,
+
 		// want to limit the query.
 		'user_id'           => false,
 		'activity_id'       => false,
@@ -299,6 +312,7 @@ function bp_media_get( $args = '' ) {
 		'sort'              => $r['sort'],
 		'order_by'          => $r['order_by'],
 		'search_terms'      => $r['search_terms'],
+		'scope'             => $r['scope'],
 		'privacy'           => $r['privacy'],
 		'exclude'           => $r['exclude'],
 		'count_total'       => $r['count_total'],
@@ -460,7 +474,7 @@ function bp_media_delete( $media_id ) {
 	$media = new BP_Media( $media_id );
 
 	//check if user has permission
-	if ( empty( $media->id ) || bp_loggedin_user_id() != $media->user_id || ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( empty( $media->id ) || ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() != $media->user_id ) ) {
 		return false;
 	}
 
@@ -550,7 +564,7 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $group_id ID of the user whose media are being counted.
+ * @param int $group_id ID of the group whose media are being counted.
  * @return int media count of the group.
  */
 function bp_media_get_total_group_media_count( $group_id = 0 ) {
@@ -576,6 +590,36 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 }
 
 /**
+ * Get the album count of a given group.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int $group_id ID of the group whose album are being counted.
+ * @return int album count of the group.
+ */
+function bp_media_get_total_group_album_count( $group_id = 0 ) {
+	if ( empty( $group_id ) && bp_get_current_group_id() ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	$count = wp_cache_get( 'bp_total_album_for_group_' . $group_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media_Album::total_group_album_count( $group_id );
+		wp_cache_set( 'bp_total_album_for_group_' . $group_id, $count, 'bp' );
+	}
+
+	/**
+	 * Filters the total album count for a given group.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $count Total album count for a given group.
+	 */
+	return apply_filters( 'bp_media_get_total_group_album_count', (int) $count );
+}
+
+/**
  * Return the total media count in your BP instance.
  *
  * @since BuddyBoss 1.0.0
@@ -583,21 +627,11 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
  * @return int Media count.
  */
 function bp_get_total_media_count() {
-	global $bp, $wpdb;
 
-	$count = wp_cache_get( 'bp_total_media_count', 'bp' );
-
-	if ( false === $count ) {
-
-		$privacy = array( 'public' );
-		if ( is_user_logged_in() ) {
-			$privacy[] = 'loggedin';
-		}
-		$privacy = "'" . implode( "', '", $privacy ) . "'";
-
-		$count = $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE privacy IN ({$privacy})" );
-		wp_cache_set( 'bp_total_media_count', $count, 'bp' );
-	}
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+	$count = $GLOBALS["media_template"]->total_media_count;
 
 	/**
 	 * Filters the total number of media.
@@ -607,6 +641,35 @@ function bp_get_total_media_count() {
 	 * @param int $count Total number of media.
 	 */
 	return apply_filters( 'bp_get_total_media_count', (int) $count );
+}
+
+/**
+ * Media results all scope.
+ *
+ * @since BuddyBoss 1.1.9
+ */
+function bp_media_object_results_media_all_scope( $querystring ) {
+	$querystring = wp_parse_args( $querystring );
+
+	$querystring['scope'] = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+		$querystring['scope'][] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$querystring['scope'][] = 'groups';
+	}
+
+	if ( is_user_logged_in() ) {
+		$querystring['scope'][] = 'personal';
+	}
+
+	$querystring['page'] = 1;
+	$querystring['per_page'] = '1';
+	$querystring['user_id'] = 0;
+	$querystring['count_total'] = true;
+	return http_build_query( $querystring );
 }
 
 //******************** Albums *********************/
@@ -799,7 +862,7 @@ function bp_album_delete( $album_id ) {
 		return false;
 	}
 
-	if ( empty( $album->id ) || bp_loggedin_user_id() != $album->user_id || ! bp_current_user_can( 'bp_moderator' ) ) {
+	if ( empty( $album->id ) || ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() != $album->user_id ) ) {
 		return false;
 	}
 

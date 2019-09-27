@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.2.2
+Tested up to: 5.2.3
 Requires PHP: 5.6.20
-Stable tag: 1.1.5
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -55,6 +55,85 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 == Changelog ==
 
+= 1.1.9 =
+* Performance - Lazy load iframes (video embeds) in Activity
+* Activity - New option to display activity in separate tabs based on activity type
+* Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
+* Activity - When embedding links with no additional text, show the content preview and hide link URL
+* Activity - When embedding a Youtube link that cannot fetch a video preview, fall back to image preview
+* Activity - Fixed link previews when embedding links from a Facebook url
+* Activity - Fixed link previews when embedding links from an AMP url
+* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
+* Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
+* Groups - When a group member changes their Name, now updates their name in previous group activity feeds
+* Groups - When editing groups from backend, fixed dropdown list of available Group Types
+* Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
+* Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
+* Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
+* Media - Fixed issue with deleting albums from groups
+* Media - Fixed displaying photos uploaded into groups in the global Photos page, based on group privacy
+* Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
+* Email Invites - If an invited email is already a member, providing proper validation now
+* Email Invites - Fixed 'Email Invites' tab showing on other member profiles, when viewing as Admin
+* Email Invites - Fixed WordPress error when sending invites, on some servers
+* Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
+* Registration - Added validation telling users that underscores are not allowed for 'Nickname'
+* Registration - Fixed validation when 'Profile Type' field is required and in a non-signup field set
+* Registration - Nicer 'Mismatch' validation when Email and Confirm Email do not match
+* Registration - Fixed activation email not sending in multisite, in some servers
+* MemberPress + BuddyPress Integration - Fixed Name fields when registering to a member level
+* MemberPress + BuddyPress Integration - Added the 'Membership' links into profile dropdown
+* Compatibility - Improved support for plugins that 'Require bbPress' and 'Require BuddyPress'
+* Documentation - Forum Settings
+* Documentation - Activity Tabs
+* Documentation - Registration Confirm Email/Password
+* Documentation - Theme Header (Mobile)
+
+= 1.1.8 =
+* Profiles - Allow Uppercase letters in Nicknames, and auto-convert them to lowercase for Usernames
+* Profiles - Fixed display of name fields that include unicode characters
+* Profiles - Fixed empty results in Profile Search form for 'Date' field type
+* Groups - When adding a photo, an activity post will now show in the group feed
+* Groups - Fixed loading of group members, when Activity Feeds and Network Search are both disabled
+* Groups - Fixed loading of 3rd party plugin options added to 'Manage > Details' group page
+* Blog - Fixed conflict with WordPress 'Categories' widget on blog archive
+* Tools - 'Repair Community' tool now runs in batch processes via AJAX
+* Tools - 'Repair Forums' tool now runs in batch processes via AJAX
+* Compatibility - Improved support for 'BuddyPress for LearnDash' plugin
+
+= 1.1.7 =
+* Profiles - Fixed issues with duplicate Name fields in some installations
+* Forums - Fixed media not displaying in replies, due to Lazy Load issues
+* Forums - Fixed formatting displaying as HTML when replying as non-admin
+* Forums - Fixed emoji displaying too big, for new forum replies only
+* Forums - Fixed GIFs not working, unless Photos was also enabled in Media settings
+* Groups - When using Group Types with custom role labels, using correct label now in discussions
+* Activity - When '(BB) Connections' widget was used on Activity page, it was not working correctly
+* Login - Fixed layout of login page, when 'Privacy' is enabled with Privacy page used
+* Messages - Fixed issues with invalid usernames while sending messages
+* Registration - When using Profile Type, and hiding First Name and Last Name, fixed conditional logic
+* Registration - When using Profile Type, and validation show errors, conditional fields remain now
+* Registration - Added validation telling users to use lowercase or number characters for 'Nickname'
+* WooCommerce - When purchasing while logged out, and creating a new account, we now send account activation email
+* Compatibility - Improved support for 'Google Captcha (reCAPTCHA) Pro' plugin
+
+= 1.1.6 =
+* Performance - Lazy load images in Activity, Forums, Photos and Albums
+* Profiles - Added the ability to re-order First Name, Last Name, and Nickname profile fields
+* Activity - When a member changes their Nickname, the auto-suggest for mentions now uses the updated Nickname
+* Activity - When a member changes their Nickname, the 'Email Preferences' page now uses the updated Nickname
+* Activity - Fixed 'Link Previews' failing when pasting URLs from certain websites
+* Forums - Fixed Private and Hidden forum discussion access on the Forums index, for logged out users
+* Forums - Consistent styling of site notices in Forums tabs on member profiles
+* Registration - New option to require Email confirmation on the register form
+* Registration - New option to require Password confirmation on the register form
+* Registration - Fixed conditional logic to display profile fields that depend on a Profile Type
+* Toolbar - Display the correct name format in admin Toolbar, as used in frontend Toolbar
+* BuddyPanel - When using the 'Email Invites' menu in the BuddyPanel, it was missing when switching users
+* MemberPress - Fixed redirect issues with the MemberPress custom login page
+* Compatibility - Added settings at BuddyBoss > Integrations > BuddyPress Plugins, for BuddyPress add-on options
+
 = 1.1.5 =
 * Performance - Faster loading of Gravatar images on Members directory
 * Performance - Reduced number of CSS and Javascript files loaded per page
@@ -69,7 +148,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issue with editing forum posts that include media attachments
 * Forums - Fixed Edit and Merge links for all forum roles
 * Groups - Display group member role in singular format, if only 1 member of that role
-* Media - Fixed issue with creating an album set to 'My Friends' privacy
+* Media - Fixed issue with creating an album set to 'My Connections' privacy
 * Registration - Added validation notice if Nickname added is less than 4 characters
 * Compatibility - Improved support for 'GEO my WordPress' plugin
 * Compatibility - Improved support for Keap (Infusionsoft) API in plugins

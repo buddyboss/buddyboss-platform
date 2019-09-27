@@ -65,6 +65,22 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 			$this->add_field( 'bp-enable-private-network-public-content',__( 'Public Content', 'buddyboss' ),'bp_admin_setting_callback_private_network_public_content' );
 		}
 		$this->add_field( 'bp-privacy-tutorial','', 'bp_privacy_tutorial' );
+
+		/**
+		 * For Backward compatibility
+		 */
+		// Add the Main Settings.
+		add_settings_section( 'bp_main', __( 'Main Settings', 'buddyboss' ), '__return_null', 'buddypress' );
+		
+		// Add the Profile Settings.
+		add_settings_section( 'bp_xprofile', _x( 'Profile Settings', 'BuddyPress setting tab', 'buddyboss' ), '__return_null', 'buddypress' );
+
+		// Add the Groups Settings.
+		add_settings_section( 'bp_groups', __( 'Groups Settings', 'buddyboss' ), '__return_null', 'buddypress' );
+
+		// Add the Activity Settings.
+		add_settings_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '__return_null', 'buddypress' );
+
 	}
 }
 

@@ -83,3 +83,71 @@ add_action( 'bp_activity_add',       'bp_activity_reset_cache_incrementor' );
 add_action( 'added_activity_meta',   'bp_activity_reset_cache_incrementor' );
 add_action( 'updated_activity_meta', 'bp_activity_reset_cache_incrementor' );
 add_action( 'deleted_activity_meta', 'bp_activity_reset_cache_incrementor' );
+
+/**
+ * Clear cached data for deleted users.
+ *
+ * @since BuddyBoss 1.1.7
+ *
+ * @param int $user_id ID of the user.
+ */
+function bp_activity_follow_clear_user_object_cache( $user_id ) {
+	wp_cache_delete( 'bp_total_follower_for_user_' . $user_id, 'bp' );
+	wp_cache_delete( 'bp_total_following_for_user_' . $user_id, 'bp' );
+}
+add_action( 'bp_remove_follow_data', 'bp_activity_follow_clear_user_object_cache' );
+
+/**
+ * Clear cached data for deleted users and reset incrementor.
+ *
+ * @since BuddyBoss 1.1.7
+ *
+ * @param object $follow Follow object.
+ */
+function bp_activity_follow_reset_cache_incrementor( $follow ) {
+
+	if ( ! empty( $follow->leader_id ) ) {
+		wp_cache_delete( 'bp_total_follower_for_user_' . $follow->leader_id, 'bp' );
+		wp_cache_delete( 'bp_total_following_for_user_' . $follow->leader_id, 'bp' );
+	}
+
+	if ( ! empty( $follow->follower_id ) ) {
+		wp_cache_delete( 'bp_total_follower_for_user_' . $follow->follower_id, 'bp' );
+		wp_cache_delete( 'bp_total_following_for_user_' . $follow->follower_id, 'bp' );
+	}
+
+	return bp_core_reset_incrementor( 'bp_activity_follow' );
+}
+add_action( 'bp_start_following', 'bp_activity_follow_reset_cache_incrementor' );
+add_action( 'bp_stop_following', 'bp_activity_follow_reset_cache_incrementor' );
+
+/**
+ * Clear cached data for follow object.
+ *
+ * @since BuddyBoss 1.1.7
+ *
+ * @param object $follow Follow object.
+ */
+function bp_activity_follow_delete_object_cache( $follow ) {
+	if ( ! empty( $follow->id ) ) {
+		wp_cache_delete( $follow->id, 'bp_activity_follow' );
+	}
+}
+add_action( 'bp_stop_following', 'bp_activity_follow_delete_object_cache' );
+
+/**
+ * Clear cached data for follow object when user is deleted.
+ *
+ * @since BuddyBoss 1.1.7
+ *
+ * @param int $user_id ID of user.
+ * @param array|bool $ids array of follow ids or false.
+ */
+function bp_activity_follow_delete_follow_ids_object_cache( $user_id, $ids ) {
+	if ( ! empty( $ids ) ) {
+		foreach( $ids as $id ) {
+			wp_cache_delete( $id, 'bp_activity_follow' );
+		}
+	}
+}
+add_action( 'bp_remove_follow_data', 'bp_activity_follow_delete_follow_ids_object_cache', 10, 2 );
