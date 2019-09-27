@@ -682,7 +682,7 @@ function bp_admin_setting_callback_member_invite_email_content() {
  * Enable member invite field markup.
  *
  * @since BuddyBoss 1.0.0
- * 
+ *
  */
 function bp_admin_setting_callback_member_invite_member_type() {
 	?>
@@ -1016,6 +1016,47 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 
 	<input id="register-confirm-password" name="register-confirm-password" type="checkbox" value="1" <?php checked( bp_register_confirm_password( false ) ); ?> />
 	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+function callback_group_layout_type_format() {
+	$options = [
+		'list_grid' => __( 'Grid & List View', 'buddyboss' ),
+		'list'      => __( 'List View', 'buddyboss' ),
+		'grid'      => __( 'Grid View', 'buddyboss' ),
+	];
+
+	$current_value = bp_get_option( 'bp-group-layout-format' );
+
+	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-format' );
+	foreach ( $options as $key => $value ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			$key,
+			$key == $current_value? 'selected' : '',
+			$value
+		);
+	}
+	printf( '</select>' );
+}
+
+/**
+ * If 'First Name' selected then add option to hide Last Name.
+ *
+ * @since BuddyBoss 1.1.1
+ *
+ */
+function bp_admin_setting_group_layout_default_option() {
+	$selected = bp_group_layout_default_format( 'grid' );
+	?>
+
+	<input id="bp-group-layout-list-default-format" name="bp-group-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List View', 'buddyboss' ); ?><br>
+	<input id="bp-group-layout-grid-default-format" name="bp-group-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid View', 'buddyboss' ); ?><br>
+
+	<br /><br />
+
+	<p class="description"><?php _e( '', 'buddyboss' ); ?></p>
 
 	<?php
 }

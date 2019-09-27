@@ -431,9 +431,9 @@
 			});
 		}
 
-		if ( $('.profile-layout-options').length ) {
+		var profileSelectorType = $('.profile-layout-options');
+		if ( profileSelectorType.length ) {
 
-			var profileSelectorType = $('.profile-layout-options');
 			var profileSelectorOptions = $('select[name=bp-profile-layout-format]');
 			var profileView = profileSelectorOptions.val();
 
@@ -478,6 +478,56 @@
 				sessionStorage.setItem( 'bp-members', '' );
 				sessionStorage.setItem( 'bp-group_members', '' );
 				setCookie('reset_member','',0); // this will delete the cookie.
+			}
+
+		}
+
+		var groupSelectorType = $('.group-layout-options');
+		if ( groupSelectorType.length ) {
+
+			var groupSelectorOptions = $('select[name=bp-group-layout-format]');
+			var groupView = groupSelectorOptions.val();
+
+			$( groupSelectorType ).each(function() {
+				$(this).hide();
+			});
+
+			if ( 'list_grid' === groupView ) {
+				$('.group-default-layout').show();
+			} else {
+				$('.group-default-layout').hide();
+			}
+
+			$( groupSelectorOptions ).change(function () {
+
+				$( groupSelectorType ).each(function() {
+					$(this).hide();
+				});
+
+				groupView = $(this).val();
+
+				if ( 'list_grid' === groupView ) {
+					$('.group-default-layout').show();
+				} else {
+					$('.group-default-layout').hide();
+				}
+
+			});
+
+			var getGroupCookies = function(){
+				var pairs = document.cookie.split(";");
+				var cookies = {};
+				for (var i=0; i<pairs.length; i++){
+					var pair = pairs[i].split("=");
+					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
+				}
+				return cookies;
+			}
+
+			var getGroupResetCookies = getGroupCookies();
+			if ( getGroupResetCookies.reset_group ) {
+				sessionStorage.setItem( 'bp-groups', '' );
+				setCookie('reset_group','',0); // this will delete the cookie.
 			}
 
 		}
