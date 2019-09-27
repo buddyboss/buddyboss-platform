@@ -788,8 +788,14 @@ window.bp = window.bp || {};
 		},
 
 		submitMedia: function(event) {
+			var self = this, target = $( event.currentTarget ), data;
 			event.preventDefault();
-			var self = this, data;
+
+			if ( target.hasClass( 'saving' ) ) {
+				return false;
+			}
+
+			target.addClass( 'saving' );
 
 			if ( self.current_tab === 'bp-dropzone-content' ) {
 
@@ -833,6 +839,8 @@ window.bp = window.bp || {};
 						} else {
 							$('#bp-dropzone-content').prepend(response.data.feedback);
 						}
+
+						target.removeClass('saving');
 					}
 				});
 
@@ -882,10 +890,12 @@ window.bp = window.bp || {};
 							$('#bp-existing-media-content').prepend(response.data.feedback);
 						}
 
+						target.removeClass('saving');
 					}
 				});
 			} else if ( ! self.current_tab ) {
 				self.closeUploader(event);
+				target.removeClass('saving');
 			}
 
 		},
