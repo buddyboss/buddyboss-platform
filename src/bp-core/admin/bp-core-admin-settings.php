@@ -1020,6 +1020,11 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 	<?php
 }
 
+/**
+ * Admin Settings for Settings > Groups > Group Lists
+ *
+ * @since BuddyBoss 1.2.0
+ */
 function callback_group_layout_type_format() {
 	$options = [
 		'list_grid' => __( 'Grid & List View', 'buddyboss' ),
@@ -1042,10 +1047,9 @@ function callback_group_layout_type_format() {
 }
 
 /**
- * If 'First Name' selected then add option to hide Last Name.
+ * Admin Settings for Settings > Groups > Group Lists > Default Format
  *
- * @since BuddyBoss 1.1.1
- *
+ * @since BuddyBoss 1.2.0
  */
 function bp_admin_setting_group_layout_default_option() {
 	$selected = bp_group_layout_default_format( 'grid' );

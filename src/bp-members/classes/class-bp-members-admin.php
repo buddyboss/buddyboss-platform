@@ -189,9 +189,11 @@ class BP_Members_Admin {
 		// Process changes to profile type.
 		add_action( 'bp_members_admin_load', array( $this, 'process_member_type_update' ) );
 
+		// Set Cookie to reset the previous layout stored in browser storage.
 		add_action( 'update_option_bp-profile-layout-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
 		add_action( 'update_option_bp-profile-layout-default-format', array( $this, 'bp_profile_layout_update_option' ), 10, 2 );
 
+		// Set Cookie to reset the previous layout stored in browser storage.
 		add_action( 'update_option_bp-group-layout-format', array( $this, 'bp_group_layout_update_option' ), 10, 2 );
 		add_action( 'update_option_bp-group-layout-default-format', array( $this, 'bp_group_layout_update_option' ), 10, 2 );
 
@@ -2700,12 +2702,22 @@ class BP_Members_Admin {
 		return $value;
 	}
 
+	/**
+	 * Set Cookie to reset the previous layout stored in browser storage.
+	 *
+	 * @since BuddyPress 1.2.0
+	 */
 	public function bp_profile_layout_update_option( $old_value, $new_value ) {
 		if ( $old_value !== $new_value ) {
 			setcookie( 'reset_member', '1', time() + (86400 * 30), '/' );
 		}
 	}
 
+	/**
+	 * Set Cookie to reset the previous layout stored in browser storage.
+	 *
+	 * @since BuddyPress 1.2.0
+	 */
 	public function bp_group_layout_update_option( $old_value, $new_value ) {
 		if ( $old_value !== $new_value ) {
 			setcookie( 'reset_group', '1', time() + (86400 * 30), '/' );

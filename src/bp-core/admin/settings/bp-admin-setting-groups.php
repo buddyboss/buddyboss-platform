@@ -79,14 +79,14 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Section for group list.
 		$this->add_section( 'bp_group_list_settings', __( 'Group List', 'buddyboss' ) );
 
-		// Display name format.
+		// Admin Settings for Settings > Groups > Group Lists
 		$this->add_field(
 			'bp-group-layout-format',
 			__( 'Group List Type', 'buddyboss' ),
 			'callback_group_layout_type_format'
 		);
 
-		// Hide Last Name.
+		// Admin Settings for Settings > Groups > Group Lists > Default Format
 		$args = array();
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default  Format', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option',  'radio', $args );

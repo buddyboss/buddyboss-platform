@@ -157,14 +157,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Section for profile list.
 		$this->add_section( 'bp_profile_list_settings', __( 'Profile List', 'buddyboss' ) );
 
-		// Display name format.
+		// Admin Settings for Settings > Profile > Profile Lists
 		$this->add_field(
 			'bp-profile-layout-format',
 			__( 'Profile List Type', 'buddyboss' ),
 			[ $this, 'callback_profile_layout_type_format']
 		);
 
-		// Hide Last Name.
+		// Admin Settings for Settings > Profiles > Profile Lists > Default Format
 		$args = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default  Format', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
@@ -386,6 +386,11 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		<?php
 	}
 
+	/**
+	 * Admin Settings for Settings > Profiles > Profile Lists > Default Format
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
 	public function callback_profile_layout_type_format() {
 		$options = [
 			'list_grid' => __( 'Grid & List View', 'buddyboss' ),
@@ -408,10 +413,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * If 'First Name' selected then add option to hide Last Name.
+	 * Admin Settings for Settings > Profiles > Profile Lists > Default Format
 	 *
-	 * @since BuddyBoss 1.1.1
-	 *
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function bp_admin_setting_profile_layout_default_option() {
 		$selected = bp_profile_layout_default_format( 'grid' );
