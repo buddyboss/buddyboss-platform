@@ -492,7 +492,7 @@
 			var groupView = groupSelectorOptions.val();
 
 			$( groupSelectorType ).each(function() {
-				$(this).hides();
+				$(this).hide();
 			});
 
 			if ( 'list_grid' === groupView ) {
