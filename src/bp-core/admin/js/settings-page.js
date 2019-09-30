@@ -463,15 +463,16 @@
 
 			});
 
+			/* jshint ignore:start */
 			var getCookies = function(){
-				var pairs = document.cookie.split(";");
+				var pairs = document.cookie.split(';');
 				var cookies = {};
 				for (var i=0; i<pairs.length; i++){
-					var pair = pairs[i].split("=");
+					var pair = pairs[i].split('=');
 					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
 				}
 				return cookies;
-			}
+			};
 
 			var getResetCookies = getCookies();
 			if ( getResetCookies.reset_member ) {
@@ -479,6 +480,7 @@
 				sessionStorage.setItem( 'bp-group_members', '' );
 				setCookie('reset_member','',0); // this will delete the cookie.
 			}
+			/* jshint ignore:end */
 
 		}
 
@@ -514,21 +516,23 @@
 
 			});
 
+			/* jshint ignore:start */
 			var getGroupCookies = function(){
-				var pairs = document.cookie.split(";");
+				var pairs = document.cookie.split(';');
 				var cookies = {};
 				for (var i=0; i<pairs.length; i++){
-					var pair = pairs[i].split("=");
+					var pair = pairs[i].split('=');
 					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
 				}
 				return cookies;
-			}
+			};
 
 			var getGroupResetCookies = getGroupCookies();
 			if ( getGroupResetCookies.reset_group ) {
 				sessionStorage.setItem( 'bp-groups', '' );
 				setCookie('reset_group','',0); // this will delete the cookie.
 			}
+			/* jshint ignore:end */
 
 		}
 
@@ -657,11 +661,13 @@
 
 	});
 
+	/* jshint ignore:start */
 	function setCookie(cname, cvalue, exMins) {
 		var d = new Date();
 		d.setTime(d.getTime() + (exMins*60*1000));
-		var expires = "expires="+d.toUTCString();
-		document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+		var expires = 'expires='+d.toUTCString();
+		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
 	}
+	/* jshint ignore:end */
 
 }());

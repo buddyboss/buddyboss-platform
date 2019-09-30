@@ -83,7 +83,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_field(
 			'bp-group-layout-format',
 			__( 'Group List Type', 'buddyboss' ),
-			'callback_group_layout_type_format'
+			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
 		// Admin Settings for Settings > Groups > Group Lists > Default Format

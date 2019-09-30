@@ -1025,7 +1025,7 @@ function bp_admin_setting_callback_register_show_confirm_password() {
  *
  * @since BuddyBoss 1.2.0
  */
-function callback_group_layout_type_format() {
+function bp_admin_setting_callback_group_layout_type_format() {
 	$options = [
 		'list_grid' => __( 'Grid & List View', 'buddyboss' ),
 		'list'      => __( 'List View', 'buddyboss' ),
