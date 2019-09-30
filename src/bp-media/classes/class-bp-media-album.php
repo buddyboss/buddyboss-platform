@@ -730,8 +730,8 @@ class BP_Media_Album {
 
 		// delete the media associated with album
 		if ( ! empty( $album_ids ) ) {
-			foreach ( $album_ids as $album_id ) {
-				BP_Media::delete( array( 'album_id' => $album_id ) );
+			foreach( $album_ids as $album_id ) {
+				bp_media_delete( array( 'album_id' => $album_id ) );
 			}
 		}
 

@@ -634,6 +634,56 @@ function bp_get_media_title() {
 }
 
 /**
+ * Determine if the current user can delete an media item.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int|BP_Media $media BP_Media object or ID of the media
+ * @return bool True if can delete, false otherwise.
+ */
+function bp_media_user_can_delete( $media = false ) {
+
+	// Assume the user cannot delete the media item.
+	$can_delete = false;
+
+	if ( empty( $media ) ) {
+		return $can_delete;
+	}
+
+	if ( ! is_object( $media ) ) {
+		$media = new BP_Media( $media );
+	}
+
+	if ( empty( $media ) ) {
+		return $can_delete;
+	}
+
+	// Only logged in users can delete media.
+	if ( is_user_logged_in() ) {
+
+		// Community moderators can always delete media (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_delete = true;
+		}
+
+		// Users are allowed to delete their own media.
+		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
+			$can_delete = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can delete an media item.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool   $can_delete Whether the user can delete the item.
+	 * @param object $media   Current media item object.
+	 */
+	return (bool) apply_filters( 'bp_media_user_can_delete', $can_delete, $media );
+}
+
+/**
  * Output the media album ID.
  *
  * @since BuddyBoss 1.0.0
@@ -1348,4 +1398,58 @@ function bp_get_album_link() {
 	 * @param int $id The media album description.
 	 */
 	return apply_filters( 'bp_get_album_link', $url );
+}
+
+/**
+ * Determine if the current user can delete an album item.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int|BP_Media_Album $album BP_Media_Album object or ID of the album
+ * @return bool True if can delete, false otherwise.
+ */
+function bp_album_user_can_delete( $album = false ) {
+
+	// Assume the user cannot delete the album item.
+	$can_delete = false;
+
+	if ( empty( $album ) ) {
+		return $can_delete;
+	}
+
+	if ( ! is_object( $album ) ) {
+		$album = new BP_Media_Album( $album );
+	}
+
+	if ( empty( $album ) ) {
+		return $can_delete;
+	}
+
+	// Only logged in users can delete album.
+	if ( is_user_logged_in() ) {
+
+		// Groups albums have their own access
+		if ( ! empty( $album->group_id ) && groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
+			$can_delete = true;
+
+			// Users are allowed to delete their own album.
+		} else if ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
+			$can_delete = true;
+		}
+
+		// Community moderators can always delete album (at least for now).
+		if ( bp_current_user_can( 'bp_moderate' ) ) {
+			$can_delete = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can delete an album item.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool   $can_delete Whether the user can delete the item.
+	 * @param object $album   Current album item object.
+	 */
+	return (bool) apply_filters( 'bp_album_user_can_delete', $can_delete, $album );
 }

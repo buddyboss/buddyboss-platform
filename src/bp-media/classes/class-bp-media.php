@@ -853,10 +853,11 @@ class BP_Media {
 	 * @string    $privacy           Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
+	 * @param bool $from Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */
-	public static function delete( $args = array() ) {
+	public static function delete( $args = array(), $from = false ) {
 		global $wpdb;
 
 		$bp = buddypress();
@@ -996,7 +997,9 @@ class BP_Media {
 					}
 				}
 
-				wp_delete_post( $attachment_id, true );
+				if ( empty( $from ) ) {
+					wp_delete_attachment( $attachment_id, true );
+				}
 			}
 		}
 

@@ -247,7 +247,7 @@ function bp_nouveau_ajax_media_save() {
 		 */
 		$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
 
-		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) ) {
+		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) && false != (int) $_POST['group_id'] ) {
 			$main_activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $_POST['group_id'] ) );
         } else {
 			$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
@@ -388,12 +388,13 @@ function bp_nouveau_ajax_media_delete() {
 	$media_ids = array();
 	foreach( $media as $media_id ) {
 
-		// delete media
-		$m_id = bp_media_delete( $media_id );
+	    if ( bp_media_user_can_delete( $media_id ) ) {
 
-		if ( $media_id ) {
-			$media_ids[] = $m_id;
-		}
+		    // delete media
+		    if ( bp_media_delete( array( 'id' => $media_id ) ) ) {
+			    $media_ids[] = $media_id;
+		    }
+	    }
 	}
 
 	if ( count( $media_ids ) != count( $media ) ) {
@@ -687,8 +688,17 @@ function bp_nouveau_ajax_media_album_delete() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! bp_album_user_can_delete( $_POST['album_id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this album.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
 	// delete album
-	$album_id = bp_album_delete( $_POST['album_id'] );
+	$album_id = bp_album_delete( array( 'id' => $_POST['album_id'] ) );
 
 	if ( ! $album_id ) {
 		wp_send_json_error( $response );
