@@ -431,6 +431,7 @@
 			});
 		}
 
+		// For Profile layout options.
 		var profileSelectorType = $('.profile-layout-options');
 		if ( profileSelectorType.length ) {
 
@@ -473,7 +474,6 @@
 				}
 				return cookies;
 			};
-
 			var getResetCookies = getCookies();
 			if ( getResetCookies.reset_member ) {
 				sessionStorage.setItem( 'bp-members', '' );
@@ -484,6 +484,7 @@
 
 		}
 
+		// For Group layout options.
 		var groupSelectorType = $('.group-layout-options');
 		if ( groupSelectorType.length ) {
 
@@ -491,7 +492,7 @@
 			var groupView = groupSelectorOptions.val();
 
 			$( groupSelectorType ).each(function() {
-				$(this).hide();
+				$(this).hides();
 			});
 
 			if ( 'list_grid' === groupView ) {
@@ -526,7 +527,6 @@
 				}
 				return cookies;
 			};
-
 			var getGroupResetCookies = getGroupCookies();
 			if ( getGroupResetCookies.reset_group ) {
 				sessionStorage.setItem( 'bp-groups', '' );
