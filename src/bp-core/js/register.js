@@ -9,9 +9,11 @@ jQuery( document ).ready( function() {
 	// Add new hidden field for keep existing field to add again in change profile type action.
 	var hiddenField  = jQuery('<input type="hidden" class="onloadfields" value="" />');
 	var existsField  = jQuery('<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="" />');
+	var prevField  = jQuery('<input type="hidden" name="signup_profile_field_id_prev" id="signup_profile_field_id_prev" value="" />');
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
+	jQuery('body').append(prevField);
 
 	var tinyMceAdded = 0;
 	var onLoadField  = jQuery('body .onloadfields');
@@ -30,6 +32,7 @@ jQuery( document ).ready( function() {
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
+			prevField.val(dropDownSelected.val());
 		}
 
 		var getExistingFields = getExistingFieldsSelector.val();
@@ -117,9 +120,10 @@ jQuery( document ).ready( function() {
 			'fields'  : getExistingFields,
 			'fixedIds': fixedIds,
 			'tinymce' : tinyMceAdded,
-			'type'	  : getSelectedValue
+			'type'	  : getSelectedValue,
+			'prevId'  :prevField.val()
 		};
-
+		prevField.val(this.value);
 		// Ajax get the data based on the selected profile type.
 		jQuery.ajax({
 			type: 'GET',
@@ -141,7 +145,6 @@ jQuery( document ).ready( function() {
 				        	}
 						});
 
-						appendHtmlDiv.find( '.ajax_added' ).removeClass( 'ajax_added' );
 						if ( difference.length !== 0 ) {
 							jQuery.each( difference , function( index, value ) {
 							  	appendHtmlDiv.find( '.field_' + value ).remove();
@@ -155,17 +158,11 @@ jQuery( document ).ready( function() {
 					if ( true === parseInt( response.data.field_html ) ) {
 						tinyMceAdded = 1;
 					}
-
+					
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
 
-					if (exist_field_by.length != 0) {
-						jQuery.each( exist_field_by , function( index, v ) {
-							jQuery( document ).find( '.ajax_added .field_' + v ).remove();
-						});
-					}
-				
 					var divList = jQuery( 'body #profile-details-section > .editfield' );
 					divList.sort(function(a, b){
 						return jQuery(a).data('index' ) - jQuery(b).data('index' );
@@ -190,7 +187,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						//window.tinymce.execCommand('mceRepaint');
+						window.tinymce.execCommand('mceRepaint');
 					}
 				} else {
 					registerSubmitButtonSelector.prop( 'disabled', false );
@@ -198,34 +195,6 @@ jQuery( document ).ready( function() {
 			}
 		});
 	});
-
-	//for form validation
-	/*jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
-		
-		//jQuery( '[aria-required="true"]' ).each(function( index ) {
-		jQuery( '.required-field' ).each(function( index ) {
-			var html_error = '<div class="bp-messages bp-feedback error">';
-				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
-				html_error += '<p>' + BP_Register.required_field + '</p>';
-				html_error += '</div>';
-			jQuery(this).find('input[type="text"]').val();
-			
-			if ( jQuery(this).find('input[type="text"]').length && jQuery(this).find('input[type="text"]').val() == '' ) {
-				if (0 >= jQuery(this).find('legend .error').length) {
-					jQuery(this).find('legend').after().append( html_error );
-				}
-				return;
-			}
-
-			if ( jQuery(this).find('input[type="checkbox"]').length ) {
-				if (0 >= jQuery(this).find('legend .error').length) {
-					jQuery(this).find('legend').after().append( html_error );
-				}
-				return;
-			}
-		});
-		e.preventDefault();
-	});*/
 
 	// Bind signup_email to keyup events in the email fields
 	var emailSelector, confirmEmailSelector, errorMessageSelector;
