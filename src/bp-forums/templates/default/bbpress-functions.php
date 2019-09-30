@@ -146,6 +146,8 @@ class BBP_Default extends BBP_Theme_Compat {
 			wp_enqueue_script( 'bp-medium-editor' );
 			wp_enqueue_style( 'bp-medium-editor' );
 			wp_enqueue_style( 'bp-medium-editor-beagle' );
+			wp_enqueue_script( 'bp-select2' );
+			wp_enqueue_style( 'bp-select2' );
 		}
 
 		// Forum-specific scripts
