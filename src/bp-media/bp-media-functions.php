@@ -438,8 +438,16 @@ function bp_media_add( $args = '' ) {
 	// groups media always have privacy to `grouponly`
 	if ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
+
+	// album privacy is media privacy
+	} else if ( ! empty( $media->album_id ) ) {
+		$album        = new BP_Media_Album( $media->album_id );
+		if ( ! empty( $album ) ) {
+			$media->privacy = $album->privacy;
+		}
 	}
 
+	// save media
 	$save = $media->save();
 
 	if ( 'wp_error' === $r['error_type'] && is_wp_error( $save ) ) {
@@ -447,6 +455,9 @@ function bp_media_add( $args = '' ) {
 	} elseif ('bool' === $r['error_type'] && false === $save ) {
 		return false;
 	}
+
+	//media is saved for attachment
+	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
 
 	/**
 	 * Fires at the end of the execution of adding a new media item, before returning the new media item ID.
@@ -458,6 +469,49 @@ function bp_media_add( $args = '' ) {
 	do_action( 'bp_media_add', $media );
 
 	return $media->id;
+}
+
+/**
+ * Media add handler function
+ *
+ * @since BuddyBoss 1.2.0
+ * @param array $medias
+ *
+ * @return mixed|void
+ */
+function bp_media_add_handler( $medias = array() ) {
+	$media_ids = array();
+
+	if ( empty( $medias ) && ! empty( $_POST['medias'] ) ) {
+		$medias = $_POST['medias'];
+	}
+
+	if ( ! empty( $medias ) && is_array( $medias ) ) {
+		// save media
+		foreach ( $medias as $media ) {
+
+			$media_id = bp_media_add( array(
+				'attachment_id' => $media['id'],
+				'title'         => $media['name'],
+				'album_id'      => $media['album_id'],
+				'group_id'      => $media['group_id'],
+			) );
+
+			if ( $media_id ) {
+				$media_ids[] = $media_id;
+			}
+		}
+	}
+
+	/**
+	 * Fires at the end of the execution of adding saving a media item, before returning the new media items in ajax response.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param array $media_ids Media IDs.
+	 * @param array $medias Array of media from POST object or in function parameter.
+	 */
+	return apply_filters( 'bp_media_add_handler', $media_ids, (array) $medias );
 }
 
 /**

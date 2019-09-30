@@ -128,6 +128,9 @@ add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 99
 
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 
+add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -1154,4 +1157,93 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	$activities->activities	 = array_values( $activities->activities );
 
 	return $has_activities;
+}
+
+/**
+ * Create media activity for each media uploaded
+ *
+ * @since BuddyBoss 1.2.0
+ * @param $media
+ */
+function bp_activity_media_add( $media ) {
+
+	if ( ! empty( $media ) ) {
+
+		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
+
+		if ( $activity_id ) {
+
+			//save media activity id in media
+			$media->activity_id = $activity_id;
+			$media->save();
+
+			// update activity meta
+			bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
+
+			// save attachment meta for activity
+			update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
+		}
+	}
+}
+
+/**
+ * Create main activity for the media uploaded and saved.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param $media_ids
+ *
+ * @return mixed
+ */
+function bp_activity_create_parent_media_activity( $media_ids ) {
+
+	if ( ! empty( $media_ids ) ) {
+
+		$added_media_ids = $media_ids;
+		$content         = false;
+
+		if ( ! empty( $_POST['content'] ) ) {
+
+			/**
+			 * Filters the content provided in the activity input field.
+			 *
+			 * @param string $value Activity message being posted.
+			 *
+			 * @since BuddyPress 1.2.0
+			 *
+			 */
+			$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
+		}
+
+		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) && false != (int) $_POST['group_id'] ) {
+			$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $_POST['group_id'] ) );
+		} else {
+			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		}
+
+		//save media meta for activity
+		if ( ! empty( $activity_id ) ) {
+			$privacy = 'public';
+
+			foreach ( (array) $added_media_ids as $media_id ) {
+				$media = new BP_Media( $media_id );
+
+				// get one of the media's privacy for the activity privacy
+				$privacy = $media->privacy;
+
+				//save parent activity id in attachment meta
+				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $activity_id );
+			}
+
+			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
+
+			$main_activity = new BP_Activity_Activity( $activity_id );
+			if ( ! empty( $main_activity ) ) {
+				$main_activity->privacy = $privacy;
+				$main_activity->save();
+			}
+		}
+	}
+
+	return $media_ids;
 }
