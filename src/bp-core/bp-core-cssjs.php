@@ -81,7 +81,7 @@ function bp_core_register_common_scripts() {
 
         'bp-media-dropzone'        => array( 'file' => "{$url}vendor/dropzone.min.js", 'dependencies' => array(), 'footer' => false ),
         'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
-        'bp-forum-tags-select2'        => array( 'file' => "{$url}vendor/select2.min.js", 'dependencies' => array(), 'footer' => false ),
+        'bp-select2'        => array( 'file' => "{$url}vendor/select2.min.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
 
@@ -170,7 +170,7 @@ function bp_core_register_common_styles() {
 			'file'         => "{$url}medium-editor-beagle{$min}.css",
 			'dependencies' => array()
 		),
-		'bp-forum-tags-select2' => array(
+		'bp-select2' => array(
 			'file'         => "{$url}select2.min.css",
 			'dependencies' => array()
 		),
