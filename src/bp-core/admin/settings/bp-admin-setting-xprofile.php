@@ -394,8 +394,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	public function callback_profile_layout_type_format() {
 		$options = [
 			'list_grid' => __( 'Grid & List View', 'buddyboss' ),
-			'list'      => __( 'List View', 'buddyboss' ),
 			'grid'      => __( 'Grid View', 'buddyboss' ),
+			'list'      => __( 'List View', 'buddyboss' ),
 		];
 
 		$current_value = bp_get_option( 'bp-profile-layout-format' );

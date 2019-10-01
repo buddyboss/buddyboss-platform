@@ -1028,8 +1028,8 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 function bp_admin_setting_callback_group_layout_type_format() {
 	$options = [
 		'list_grid' => __( 'Grid & List View', 'buddyboss' ),
-		'list'      => __( 'List View', 'buddyboss' ),
 		'grid'      => __( 'Grid View', 'buddyboss' ),
+		'list'      => __( 'List View', 'buddyboss' ),
 	];
 
 	$current_value = bp_get_option( 'bp-group-layout-format' );
