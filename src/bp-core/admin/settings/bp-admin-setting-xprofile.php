@@ -393,9 +393,9 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function callback_profile_layout_type_format() {
 		$options = [
-			'list_grid' => __( 'Grid & List View', 'buddyboss' ),
-			'grid'      => __( 'Grid View', 'buddyboss' ),
-			'list'      => __( 'List View', 'buddyboss' ),
+			'list_grid' => __( 'Grid and List', 'buddyboss' ),
+			'grid'      => __( 'Grid', 'buddyboss' ),
+			'list'      => __( 'List', 'buddyboss' ),
 		];
 
 		$current_value = bp_get_option( 'bp-profile-layout-format' );
@@ -421,8 +421,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$selected = bp_profile_layout_default_format( 'grid' );
 		?>
 
-		<input id="bp-profile-layout-grid-default-format" name="bp-profile-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid View', 'buddyboss' ); ?><br />
-		<input id="bp-profile-layout-list-default-format" name="bp-profile-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List View', 'buddyboss' ); ?><br />
+		<input id="bp-profile-layout-grid-default-format" name="bp-profile-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid', 'buddyboss' ); ?><br />
+		<input id="bp-profile-layout-list-default-format" name="bp-profile-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List', 'buddyboss' ); ?><br />
 
 		<?php
 	}
