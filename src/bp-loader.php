@@ -84,7 +84,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Action for removing the spoofing of BuddyPress and bbPress.
      *
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.1.10
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
 		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10 );
@@ -93,7 +93,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Action fire before option updated/save list activated plugins.
 	 *
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.1.10
 	 */
 	function bp_core_unset_bbpress_buddypress_option() {
 	    add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
@@ -102,7 +102,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Removing the spoofing of BuddyPress and bbPress when option updated.
 	 *
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.1.10
 	 */
     function pre_update_option_active_plugins( $value ) {
 	    global $bp_plugin_file, $bb_plugin_file;
@@ -113,7 +113,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Again set the spoofing of BuddyPress and bbPress on Admin Notices
      *
-	 * @since BuddyBoss 1.1.9
+	 * @since BuddyBoss 1.1.10
 	 */
     function bp_core_set_bbpress_buddypress_on_admin_notices() {
 
