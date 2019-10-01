@@ -98,20 +98,20 @@
 	display: none;
 }
 
-.progress-bar {
+.bp-ld-reports-progress-bar {
 	position: relative;
 	height: 100px;
 	width: 100px;
 }
 
-.progress-bar div {
+.bp-ld-reports-progress-bar div {
 	position: absolute;
 	height: 100px;
 	width: 100px;
 	border-radius: 50%;
 }
 
-.progress-bar div span {
+.bp-ld-reports-progress-bar div span {
 	position: absolute;
 	font-family: Arial;
 	font-size: 25px;
@@ -125,20 +125,20 @@
 	background-color: white;
 }
 
-.progress-bar .background { background-color: #b3cef6; }
+.bp-ld-reports-progress-bar .background { background-color: #b3cef6; }
 
-.progress-bar .rotate {
+.bp-ld-reports-progress-bar .rotate {
 	clip: rect(0 50px 100px 0);
 	background-color: #4b86db;
 }
 
-.progress-bar .left {
+.bp-ld-reports-progress-bar .left {
 	clip: rect(0 50px 100px 0);
 	opacity: 1;
 	background-color: #b3cef6;
 }
 
-.progress-bar .right {
+.bp-ld-reports-progress-bar .right {
 	clip: rect(0 50px 100px 0);
 	transform: rotate(180deg);
 	opacity: 0;

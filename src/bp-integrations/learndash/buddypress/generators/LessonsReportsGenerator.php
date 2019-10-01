@@ -65,7 +65,7 @@ class LessonsReportsGenerator extends ReportsGenerator
 	/**
 	 * Format the activity results for each column
 	 *
-	 * @since BuddyBoss 1.0.0kkzjasjn
+	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatData($activity)
 	{

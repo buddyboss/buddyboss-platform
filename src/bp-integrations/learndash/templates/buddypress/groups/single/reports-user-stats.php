@@ -30,7 +30,7 @@ if ($courseId): ?>
 	<?php
 	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) ) {  ?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
@@ -44,7 +44,7 @@ if ($courseId): ?>
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-courses' === $_GET['step'] ) {
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
@@ -59,7 +59,7 @@ if ($courseId): ?>
 		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
@@ -74,7 +74,7 @@ if ($courseId): ?>
 		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(
@@ -88,7 +88,7 @@ if ($courseId): ?>
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-quiz' === $_GET['step'] ) {
 		?>
 		<div class="user-info">
-			<div class="progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
+			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
 			<p><?php printf(

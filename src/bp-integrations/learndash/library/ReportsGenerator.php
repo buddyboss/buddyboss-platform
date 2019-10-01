@@ -351,6 +351,16 @@ class ReportsGenerator
 				'<a href="%s" target="_blank">%s</a>',
 				get_permalink($activity->activity_course_id),
 				$activity->activity_course_title
+			),
+			'quiz' => sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				get_permalink($activity->post_id),
+				$activity->post_title
+			),
+			'topic' => sprintf(
+				'<a href="%s" target="_blank">%s</a>',
+				get_permalink($activity->post_id),
+				$activity->post_title
 			)
 		], $data);
 	}

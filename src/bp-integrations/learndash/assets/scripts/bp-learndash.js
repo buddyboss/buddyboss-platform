@@ -9,7 +9,7 @@
 
 			this.fetch_table_data();
 
-			$( '.progress-bar' ).loading();
+			$( '.bp-ld-reports-progress-bar' ).loading();
 		},
 
 		fetch_table_data: function() {
