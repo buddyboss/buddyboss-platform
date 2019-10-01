@@ -105,7 +105,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.1.9
 	 */
     function pre_update_option_active_plugins( $value ) {
-	    $value = array_diff( $value, array( 'bbpress/bbpress.php', 'buddypress/bp-loader.php' ) );
+	    global $bp_plugin_file, $bb_plugin_file;
+	    $value = array_diff( $value, array( $bb_plugin_file, $bp_plugin_file ) );
 	    return $value;
     }
 
@@ -119,6 +120,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @return mixed
 	 */
 	function bp_core_set_bbpress_buddypress_active( $value, $option ) {
+
+		global $bp_plugin_file, $bb_plugin_file;
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 		if ( is_network_admin()
@@ -152,9 +155,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		// Check if Forum Component is enabled if so then add
 		if ( bp_is_active( 'forums' ) ) {
-			array_push( $value, 'bbpress/bbpress.php' );
+			array_push( $value, $bb_plugin_file );
 		}
-		array_push( $value, 'buddypress/bp-loader.php' );
+		array_push( $value, $bp_plugin_file );
 
 		return $value;
 	}
