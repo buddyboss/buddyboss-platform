@@ -82,7 +82,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		// Admin Settings for Settings > Groups > Group Lists > Enabled Views
 		$this->add_field(
 			'bp-group-layout-format',
-			__( 'Enabled Views', 'buddyboss' ),
+			__( 'Enabled View(s)', 'buddyboss' ),
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
