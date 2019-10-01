@@ -111,6 +111,16 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
     }
 
 	/**
+	 * Again set the spoofing of BuddyPress and bbPress on Admin Notices
+     *
+	 * @since BuddyBoss 1.1.9
+	 */
+    function bp_core_set_bbpress_buddypress_on_admin_notices() {
+
+	    add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+    }
+
+	/**
 	 * Filter for setting the spoofing of BuddyPress.
 	 *
 	 * @param $value
@@ -145,6 +155,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				 * Add this so that plugin table does not show the spoofing plugin are activated
 				 */
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+
+				add_action( 'admin_notices', 'bp_core_set_bbpress_buddypress_on_admin_notices', -1 );
 			}
 		}
 

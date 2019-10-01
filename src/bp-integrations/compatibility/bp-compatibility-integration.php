@@ -24,6 +24,45 @@ class BP_Compatibility_Integration extends BP_Integration {
 			'required_plugin' => array(),
 			]
 		);
+
+		// Add link to settings page.
+		add_filter( 'plugin_action_links',               array( $this, 'action_links' ), 11000, 2 );
+		add_filter( 'network_admin_plugin_action_links', array( $this, 'action_links' ), 11000, 2 );
+	}
+
+	/**
+	 * Change the Third party plugin setting link.
+	 *
+	 * @param $link
+	 * @param $file
+	 *
+	 * @param 1.1.10
+	 *
+	 * @return array
+	 */
+	public function action_links( $link, $file ) {
+
+		// Return normal links if not BuddyBoss Platform plugin or it's does not have a setting links
+		if (
+			plugin_basename( 'buddyboss-platform/bp-loader.php' ) == $file
+			|| empty( $link['settings'] )
+		) {
+			return $link;
+		}
+
+		$result = new SimpleXMLElement( $link['settings'] );
+		if ( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ) == $result['href'] ) {
+
+			// Add a few links to the existing links array.
+			return array_merge( $link, array(
+				'settings' => '<a href="' . esc_url( bp_get_admin_url( add_query_arg( array(
+						'page' => 'bp-integrations',
+						'tab'  => 'bp-compatibility'
+					), 'admin.php' ) ) ) . '">' . esc_html__( 'Settings', 'buddyboss' ) . '</a>',
+			) );
+		}
+
+		return $link;
 	}
 
 	/**
