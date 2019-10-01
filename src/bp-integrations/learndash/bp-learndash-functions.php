@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_learndash_path($path = '') {
-    return trailingslashit( buddypress()->integrations['learndash']->path ) . trim($path, '/\\');
+function bp_learndash_path( $path = '' ) {
+	return trailingslashit( buddypress()->integrations['learndash']->path ) . trim( $path, '/\\' );
 }
 
 /**
@@ -23,8 +23,8 @@ function bp_learndash_path($path = '') {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_learndash_url($path = '') {
-    return trailingslashit( buddypress()->integrations['learndash']->url ) . trim($path, '/\\');
+function bp_learndash_url( $path = '' ) {
+	return trailingslashit( buddypress()->integrations['learndash']->url ) . trim( $path, '/\\' );
 }
 
 /**
@@ -32,8 +32,9 @@ function bp_learndash_url($path = '') {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ld_sync($component = null) {
+function bp_ld_sync( $component = null ) {
 	global $bp_ld_sync;
+
 	return $component ? $bp_ld_sync->$component : $bp_ld_sync;
 }
 
@@ -42,24 +43,24 @@ function bp_ld_sync($component = null) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_learndash_get_group_courses($bpGroupId) {
-	$generator = bp_ld_sync('buddypress')->sync->generator($bpGroupId);
+function bp_learndash_get_group_courses( $bpGroupId ) {
+	$generator = bp_ld_sync( 'buddypress' )->sync->generator( $bpGroupId );
 
-	if (! $generator->hasLdGroup()) {
+	if ( ! $generator->hasLdGroup() ) {
 		return [];
 	}
 
-	return learndash_group_enrolled_courses($generator->getLdGroupId());
+	return learndash_group_enrolled_courses( $generator->getLdGroupId() );
 }
 
 // forward compatibility
-if (! function_exists('learndash_get_post_type_slug')) {
+if ( ! function_exists( 'learndash_get_post_type_slug' ) ) {
 	/**
 	 * Returns array of slugs used by LearnDash integration.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	function learndash_get_post_type_slug($type) {
+	function learndash_get_post_type_slug( $type ) {
 		$postTypes = [
 			'course'       => 'sfwd-courses',
 			'lesson'       => 'sfwd-lessons',
@@ -73,7 +74,7 @@ if (! function_exists('learndash_get_post_type_slug')) {
 			'certificates' => 'sfwd-certificates',
 		];
 
-		return $postTypes[$type];
+		return $postTypes[ $type ];
 	}
 }
 
@@ -262,7 +263,7 @@ function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
 	foreach ( $lessons_list as $lesson ) {
 		$lessons[ $lesson_order ] = [
 			'name'   => $lesson['post']->post_title,
-			'id'   => $lesson['post']->ID,
+			'id'     => $lesson['post']->ID,
 			'status' => $status[ $lesson['status'] ],
 		];
 
@@ -334,72 +335,7 @@ function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
 
 	return $data;
 }
-function bp_get_user_course_assignment_data( $course_id, $user_id ) {
-	global $wpdb;
-	// Assignments
-	$assignments            = [];
-	$sql_string             = "
-		SELECT post.ID, post.post_title, post.post_date, postmeta.meta_key, postmeta.meta_value 
-		FROM $wpdb->posts post 
-		JOIN $wpdb->postmeta postmeta ON post.ID = postmeta.post_id 
-		WHERE post.post_status = 'publish' AND post.post_type = 'sfwd-assignment' 
-		AND post.post_author = $user_id
-		AND ( postmeta.meta_key = 'approval_status' OR postmeta.meta_key = 'course_id' OR postmeta.meta_key LIKE 'ld_course_%' )";
-	$assignment_data_object = $wpdb->get_results( $sql_string );
 
-	foreach ( $assignment_data_object as $assignment ) {
-
-		// Assignment List
-		$data               = [];
-		$data['ID']         = $assignment->ID;
-		$data['post_title'] = $assignment->post_title;
-
-		$assignment_id                                = (int) $assignment->ID;
-		$rearranged_assignment_list[ $assignment_id ] = $data;
-
-		// User Assignment Data
-		$assignment_id = (int) $assignment->ID;
-		$meta_key      = $assignment->meta_key;
-		$meta_value    = (int) $assignment->meta_value;
-
-		$date = learndash_adjust_date_time_display( strtotime( $assignment->post_date ) );
-
-		$assignments[ $assignment_id ]['name']           = $assignment->post_title;
-		$assignments[ $assignment_id ]['completed_date'] = $date;
-		$assignments[ $assignment_id ][ $meta_key ]      = $meta_value;
-
-	}
-
-	foreach ( $assignments as $assignment_id => &$assignment ) {
-		if ( isset( $assignment['course_id'] ) && $course_id !== (int) $assignment['course_id'] ) {
-			unset( $assignments[ $assignment_id ] );
-		} else {
-			if ( isset( $assignment['approval_status'] ) && 1 == $assignment['approval_status'] ) {
-				$assignment['approval_status'] = 1;
-			} else {
-				$assignment['approval_status'] = 0;
-			}
-		}
-	}
-
-	$total_assignments     = count( $assignments );
-	$completed_assignments = count( wp_list_filter( $assignments, array( 'approval_status' => 1 ) ) );
-	$pending_assignments   = count( wp_list_filter( $assignments, array( 'approval_status' => 0 ) ) );
-	if ( $total_assignments > 0 ) {
-		$percentage = intval( $completed_assignments * 100 / $total_assignments );
-		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
-	} else {
-		$percentage = 0;
-	}
-
-	$data['all_lesson'] = $assignments;
-	$data['total']      = $total_assignments;
-	$data['complete']   = $completed_assignments;
-	$data['pending']    = $pending_assignments;
-	$data['percentage'] = $percentage;
-
-	return $data;
-}
 function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 	global $wpdb;
 	$course_quiz_list   = [];
@@ -428,17 +364,17 @@ function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 				foreach ( $user_activities as $activity ) {
 					if ( $activity->post_id == $quiz['post']->ID ) {
 						$quizzes[] = [
-							'name'             => $quiz['post']->post_title,
-							'id'                => $quiz['post']->ID,
-							'score'            => $activity->activity_percentage,
-							'status'   => 1,
+							'name'   => $quiz['post']->post_title,
+							'id'     => $quiz['post']->ID,
+							'score'  => $activity->activity_percentage,
+							'status' => 1,
 						];
 					} else {
 						$quizzes[] = [
-							'name'             => $quiz['post']->post_title,
-							'id'                => $quiz['post']->ID,
-							'score'            => $activity->activity_percentage,
-							'status'   => 0,
+							'name'   => $quiz['post']->post_title,
+							'id'     => $quiz['post']->ID,
+							'score'  => $activity->activity_percentage,
+							'status' => 0,
 						];
 					}
 				}
@@ -457,10 +393,10 @@ function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 	}
 
 	$data['all_quizzes'] = $quizzes;
-	$data['total']      = $total_quizzes;
-	$data['complete']   = $completed_quizzes;
-	$data['pending']    = $pending_quizzes;
-	$data['percentage'] = $percentage;
+	$data['total']       = $total_quizzes;
+	$data['complete']    = $completed_quizzes;
+	$data['pending']     = $pending_quizzes;
+	$data['percentage']  = $percentage;
 
 	return $data;
 }
