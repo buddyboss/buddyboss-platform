@@ -155,19 +155,19 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-profile-search-tutorial','', [$this, 'bp_profile_search_tutorial'] );
 
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile List', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile Lists', 'buddyboss' ) );
 
-		// Admin Settings for Settings > Profile > Profile Lists
+		// Admin Settings for Settings > Profile > Profile Lists > Enabled Views
 		$this->add_field(
 			'bp-profile-layout-format',
-			__( 'Profile List Type', 'buddyboss' ),
+			__( 'Enabled Views', 'buddyboss' ),
 			[ $this, 'callback_profile_layout_type_format']
 		);
 
-		// Admin Settings for Settings > Profiles > Profile Lists > Default Format
+		// Admin Settings for Settings > Profiles > Profile Lists > Default View
 		$args = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
-		$this->add_field( 'bp-profile-layout-default-format', __( 'Default  Format', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
+		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
 
 
 	}

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-09-27 12:26:28+00:00\n"
+"POT-Creation-Date: 2019-10-01 18:14:24+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2891,16 +2891,17 @@ msgid "Restrict Invitations"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:80
-msgid "Group List"
+msgid "Group Lists"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:85
-msgid "Group List Type"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:163
+msgid "Enabled Views"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:92
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:170
-msgid "Default  Format"
+msgid "Default View"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
@@ -3025,11 +3026,7 @@ msgid "Profile Search"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:158
-msgid "Profile List"
-msgstr ""
-
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:163
-msgid "Profile List Type"
+msgid "Profile Lists"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:184
