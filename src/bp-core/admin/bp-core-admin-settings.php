@@ -1058,7 +1058,7 @@ function bp_admin_setting_group_layout_default_option() {
 	<input id="bp-group-layout-grid-default-format" name="bp-group-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid View', 'buddyboss' ); ?><br />
 	<input id="bp-group-layout-list-default-format" name="bp-group-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List View', 'buddyboss' ); ?><br />
 
-	<p class="description"><?php _e( '', 'buddyboss' ); ?></p>
+	<p class="description"><?php _e( 'hey', 'buddyboss' ); ?></p>
 
 	<?php
 }

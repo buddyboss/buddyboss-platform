@@ -389,6 +389,10 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
+.bp-admin-card.section-bp_profile_list_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
+}
+
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
   background-image: url(../../images/admin/icons/buddyboss/activity.svg);
@@ -419,6 +423,10 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_groups_hierarchies h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/layer-group.svg);
+}
+
+.bp-admin-card.section-bp_group_list_settings h2:before {
+  background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
 }
 
 /* Connections */
