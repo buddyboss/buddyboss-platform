@@ -2302,17 +2302,17 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 
 	// if group forum
 	if ( bbp_is_forum_group_forum( bbp_get_reply_forum_id( $args['reply_id'] ) ) ) {
-		$current_group = bp_get_current_group_id();
+		$current_group = ( bp_is_active( 'groups' ) ) ? bp_get_current_group_id() : 0;
 
-		if ( groups_is_user_member( $author_id, $current_group ) ) {
+		if ( bp_is_active( 'groups' ) && groups_is_user_member( $author_id, $current_group ) ) {
 			$display_role = get_group_role_label( $current_group, 'member_singular_label_name' );
 		}
 
-		if ( groups_is_user_mod( $author_id, $current_group ) ) {
+		if ( bp_is_active( 'groups' ) && groups_is_user_mod( $author_id, $current_group ) ) {
 			$display_role = get_group_role_label( $current_group, 'moderator_singular_label_name' );
 		}
 
-		if ( groups_is_user_admin( $author_id, $current_group ) ) {
+		if ( bp_is_active( 'groups' ) && groups_is_user_admin( $author_id, $current_group ) ) {
 			$display_role = get_group_role_label( $current_group, 'organizer_singular_label_name' );
 		}
 

@@ -464,37 +464,98 @@ function bp_media_add( $args = '' ) {
  * Delete media.
  *
  * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.0
  *
- * @param int $media_id ID of media
+ * @param array|string $args To delete specific media items, use
+ *                           $args = array( 'id' => $ids ); Otherwise, to use
+ *                           filters for item deletion, the argument format is
+ *                           the same as BP_Media::get().
+ *                           See that method for a description.
+ * @param bool $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the media on success. False on error.
  */
-function bp_media_delete( $media_id ) {
+function bp_media_delete( $args = '', $from = false ) {
 
-	$media = new BP_Media( $media_id );
+	// Pass one or more the of following variables to delete by those variables.
+	$args = bp_parse_args( $args, array(
+		'id'            => false,
+		'blog_id'       => false,
+		'attachment_id' => false,
+		'user_id'       => false,
+		'title'         => false,
+		'album_id'      => false,
+		'activity_id'   => false,
+		'group_id'      => false,
+		'privacy'       => false,
+		'date_created'  => false,
+	) );
 
-	//check if user has permission
-	if ( empty( $media->id ) || ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() != $media->user_id ) ) {
-		return false;
-	}
+	/**
+	 * Fires before an media item proceeds to be deleted.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param array $args Array of arguments to be used with the media deletion.
+	 */
+	do_action( 'bp_before_media_delete', $args );
 
-	$delete = BP_Media::delete( array( 'id' => $media_id ) );
-
-	if ( ! $delete ) {
+	$media_ids_deleted = BP_Media::delete( $args, $from );
+	if ( empty( $media_ids_deleted ) ) {
 		return false;
 	}
 
 	/**
-	 * Fires at the end of the execution of delete media item
+	 * Fires after the media item has been deleted.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param object $media Media object
+	 * @param array $args Array of arguments used with the media deletion.
 	 */
-	do_action( 'bp_media_delete', $media );
+	do_action( 'bp_media_delete', $args );
 
-	return $media_id;
+	/**
+	 * Fires after the media item has been deleted.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param array $media_ids_deleted Array of affected media item IDs.
+	 */
+	do_action( 'bp_media_deleted_medias', $media_ids_deleted );
+
+	return true;
 }
+
+/**
+ * Completely remove a user's media data.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int $user_id ID of the user whose media is being deleted.
+ * @return bool
+ */
+function bp_media_remove_all_user_data( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	// Clear the user's albums from the sitewide stream and clear their media tables.
+	bp_album_delete( array( 'user_id' => $user_id ) );
+
+	// Clear the user's media from the sitewide stream and clear their media tables.
+	bp_media_delete( array( 'user_id' => $user_id ) );
+
+	/**
+	 * Fires after the removal of all of a user's media data.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $user_id ID of the user being deleted.
+	 */
+	do_action( 'bp_media_remove_all_user_data', $user_id );
+}
+add_action( 'wpmu_delete_user',  'bp_media_remove_all_user_data' );
+add_action( 'delete_user',       'bp_media_remove_all_user_data' );
 
 /**
  * Return the media activity.
@@ -564,7 +625,7 @@ function bp_media_get_total_media_count( $user_id = 0 ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $group_id ID of the user whose media are being counted.
+ * @param int $group_id ID of the group whose media are being counted.
  * @return int media count of the group.
  */
 function bp_media_get_total_group_media_count( $group_id = 0 ) {
@@ -587,6 +648,36 @@ function bp_media_get_total_group_media_count( $group_id = 0 ) {
 	 * @param int $count Total media count for a given group.
 	 */
 	return apply_filters( 'bp_media_get_total_group_media_count', (int) $count );
+}
+
+/**
+ * Get the album count of a given group.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param int $group_id ID of the group whose album are being counted.
+ * @return int album count of the group.
+ */
+function bp_media_get_total_group_album_count( $group_id = 0 ) {
+	if ( empty( $group_id ) && bp_get_current_group_id() ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	$count = wp_cache_get( 'bp_total_album_for_group_' . $group_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media_Album::total_group_album_count( $group_id );
+		wp_cache_set( 'bp_total_album_for_group_' . $group_id, $count, 'bp' );
+	}
+
+	/**
+	 * Filters the total album count for a given group.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $count Total album count for a given group.
+	 */
+	return apply_filters( 'bp_media_get_total_group_album_count', (int) $count );
 }
 
 /**
@@ -820,38 +911,57 @@ function bp_album_add( $args = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $album_id ID if album
+ * @param array|string $args To delete specific album items, use
+ *                           $args = array( 'id' => $ids ); Otherwise, to use
+ *                           filters for item deletion, the argument format is
+ *                           the same as BP_Media_Album::get().
+ *                           See that method for a description.
  *
- * @return bool|int The ID of the album on success. False on error.
+ * @return bool True on Success. False on error.
  */
-function bp_album_delete( $album_id ) {
+function bp_album_delete( $args ) {
 
-	$album = new BP_Media_Album( $album_id );
+	// Pass one or more the of following variables to delete by those variables.
+	$args = bp_parse_args( $args, array(
+		'id'            => false,
+		'user_id'       => false,
+		'group_id'      => false,
+		'date_created'  => false,
+	) );
 
-	if ( ! empty( $album->group_id ) && ! groups_can_user_manage_albums( bp_loggedin_user_id(), $album->group_id ) ) {
-		return false;
-	}
+	/**
+	 * Fires before an album item proceeds to be deleted.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param array $args Array of arguments to be used with the album deletion.
+	 */
+	do_action( 'bp_before_album_delete', $args );
 
-	if ( empty( $album->id ) || ( ! bp_current_user_can( 'bp_moderate' ) && bp_loggedin_user_id() != $album->user_id ) ) {
-		return false;
-	}
-
-	$delete = BP_Media_Album::delete( array( 'id' => $album_id ) );
-
-	if ( ! $delete ) {
+	$album_ids_deleted = BP_Media_Album::delete( $args );
+	if ( empty( $album_ids_deleted ) ) {
 		return false;
 	}
 
 	/**
-	 * Fires at the end of the execution of delete an album item
+	 * Fires after the album item has been deleted.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.2.0
 	 *
-	 * @param object $album Album object
+	 * @param array $args Array of arguments used with the album deletion.
 	 */
-	do_action( 'bp_album_delete', $album );
+	do_action( 'bp_album_delete', $args );
 
-	return $album_id;
+	/**
+	 * Fires after the album item has been deleted.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param array $album_ids_deleted Array of affected album item IDs.
+	 */
+	do_action( 'bp_albums_deleted_albums', $album_ids_deleted );
+
+	return true;
 }
 
 /**
@@ -943,7 +1053,7 @@ function bp_media_delete_orphaned_attachments() {
 
 	if ( $orphaned_attachment_query->post_count > 0 ) {
 		foreach( $orphaned_attachment_query->posts as $a_id ) {
-			wp_delete_post( $a_id, true );
+			wp_delete_attachment( $a_id, true );
 		}
 	}
 }
