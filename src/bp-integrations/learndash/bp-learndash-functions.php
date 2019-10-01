@@ -342,7 +342,7 @@ function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 	$quizzes            = [];
 	$course_quiz_list[] = learndash_get_course_quiz_list( $course_id );
 
-	$q = "
+	$quiz_query_string = "
 			SELECT a.activity_id, a.course_id, a.post_id, a.activity_status, a.activity_completed, m.activity_meta_value as activity_percentage
 			FROM {$wpdb->prefix}learndash_user_activity a
 			LEFT JOIN {$wpdb->prefix}learndash_user_activity_meta m ON a.activity_id = m.activity_id
@@ -352,7 +352,7 @@ function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 			AND m.activity_meta_key = 'percentage'
 		";
 
-	$user_activities = $wpdb->get_results( $q );
+	$user_activities = $wpdb->get_results( $quiz_query_string );
 
 	foreach ( $course_quiz_list as $module_quiz_list ) {
 		if ( empty( $module_quiz_list ) ) {
