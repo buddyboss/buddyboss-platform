@@ -9,14 +9,15 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'BP_Search_Core' ) ):
+if ( ! class_exists( 'BP_Search_Core' ) ) :
 
 	/**
 	 * BuddyPress Global Search Core Controller class
 	 */
 	class BP_Search_Core {
 
-		/* Includes
+		/*
+		 Includes
 		 * ===================================================================
 		 */
 
@@ -24,27 +25,31 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * Most WordPress/BuddyPress plugin have the includes in the function
 		 * method that loads them, we like to keep them up here for easier
 		 * access.
+		 *
 		 * @var array
 		 */
-		private $main_includes = [
+		private $main_includes = array(
 			// Core
 			'bp-search-functions',
 			'bp-search-template',
 			'bp-search-filters',
 			'bp-search-settings',
 			'classes/class-bp-search',
-			'plugins/search-cpt/index'
-		];
+			'plugins/search-cpt/index',
+		);
 
-		/* Plugin Options
+		/*
+		 Plugin Options
 		 * ===================================================================
 		 */
 
-		/* Version
+		/*
+		 Version
 		 * ===================================================================
 		 */
 
-		/* Magic
+		/*
+		 Magic
 		 * ===================================================================
 		 */
 
@@ -61,7 +66,8 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 */
 		private $data;
 
-		/* Singleton
+		/*
+		 Singleton
 		 * ===================================================================
 		 */
 
@@ -96,7 +102,8 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 			return $instance;
 		}
 
-		/* Magic Methods
+		/*
+		 Magic Methods
 		 * ===================================================================
 		 */
 
@@ -107,7 +114,8 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 		 * @see bp_search_Plugin::instance()
 		 * @see buddypress()
 		 */
-		private function __construct() { /* Do nothing here */
+		private function __construct() {
+			/* Do nothing here */
 		}
 
 		/**
@@ -230,7 +238,8 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 			$this->load_main();
 		}
 
-		/* Load
+		/*
+		 Load
 		 * ===================================================================
 		 */
 
@@ -267,7 +276,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 			}
 
 			// Remove bp compose message deprecated autocomplete
-			//remove_action( "bp_enqueue_scripts", "messages_add_autocomplete_js" );
+			// remove_action( "bp_enqueue_scripts", "messages_add_autocomplete_js" );
 			// remove_action("wp_head","messages_add_autocomplete_css");
 		}
 
@@ -281,14 +290,16 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 
 		}
 
-		/* Print inline JS for initializing the bp messages autocomplete.
+		/*
+		 Print inline JS for initializing the bp messages autocomplete.
 		 * Proper updated auto complete code for buddypress message compose (replacing autocompletefb script).
 		 * @todo : Why this inline code is not at proper file.
 		 * @clean: This is not working.
 		 */
 
 
-		/* Utility functions
+		/*
+		 Utility functions
 		 * ===================================================================
 		 */
 
@@ -303,13 +314,13 @@ if ( ! class_exists( 'BP_Search_Core' ) ):
 			global $bp;
 
 			foreach ( (array) $includes as $include ) {
-				require_once( $bp->plugin_dir . '/bp-search/' . $include . '.php' );
+				require_once $bp->plugin_dir . '/bp-search/' . $include . '.php';
 			}
 		}
 
 	}
 
-// End class bp_search_Plugin
+	// End class bp_search_Plugin
 
 endif;
 

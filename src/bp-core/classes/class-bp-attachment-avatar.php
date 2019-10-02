@@ -29,17 +29,19 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		// Allowed avatar types.
 		$allowed_types = bp_core_get_allowed_avatar_types();
 
-		parent::__construct( array(
-			'action'                => 'bp_avatar_upload',
-			'file_input'            => 'file',
-			'original_max_filesize' => bp_core_avatar_original_max_filesize(),
+		parent::__construct(
+			array(
+				'action'                => 'bp_avatar_upload',
+				'file_input'            => 'file',
+				'original_max_filesize' => bp_core_avatar_original_max_filesize(),
 
-			// Specific errors for avatars.
-			'upload_error_strings'  => array(
-				9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( bp_core_avatar_original_max_filesize() ) ),
-				10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_avatar_types( $allowed_types ) ),
-			),
-		) );
+				// Specific errors for avatars.
+				'upload_error_strings'  => array(
+					9  => sprintf( __( 'That photo is too big. Please upload one smaller than %s', 'buddyboss' ), size_format( bp_core_avatar_original_max_filesize() ) ),
+					10 => sprintf( _n( 'Please upload only this file type: %s.', 'Please upload only these file types: %s.', count( $allowed_types ), 'buddyboss' ), self::get_avatar_types( $allowed_types ) ),
+				),
+			)
+		);
 	}
 
 	/**
@@ -92,7 +94,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		if ( ! bp_core_check_avatar_size( array( 'file' => $file ) ) ) {
 			$file['error'] = 9;
 
-		// File is of invalid type.
+			// File is of invalid type.
 		} elseif ( ! bp_core_check_avatar_type( array( 'file' => $file ) ) ) {
 			$file['error'] = 10;
 		}
@@ -147,7 +149,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		$angles = array(
 			3 => 180,
 			6 => -90,
-			8 =>  90,
+			8 => 90,
 		);
 
 		if ( isset( $avatar_data['meta']['orientation'] ) && isset( $angles[ $avatar_data['meta']['orientation'] ] ) ) {
@@ -158,7 +160,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		if ( empty( $edit_args ) ) {
 			return false;
 
-		// Add the file to the edit arguments.
+			// Add the file to the edit arguments.
 		} else {
 			$edit_args['file'] = $file;
 		}
@@ -222,7 +224,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		$absolute_path = $this->upload_path . $relative_path;
 
 		// Bail if the avatar is not available.
-		if ( ! file_exists( $absolute_path ) )  {
+		if ( ! file_exists( $absolute_path ) ) {
 			return false;
 		}
 
@@ -242,18 +244,26 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		// Delete the existing avatar files for the object.
-		$existing_avatar = bp_core_fetch_avatar( array(
-			'object'  => $args['object'],
-			'item_id' => $args['item_id'],
-			'html' => false,
-		) );
+		$existing_avatar = bp_core_fetch_avatar(
+			array(
+				'object'  => $args['object'],
+				'item_id' => $args['item_id'],
+				'html'    => false,
+			)
+		);
 
 		/**
 		 * Check that the new avatar doesn't have the same name as the
 		 * old one before deleting
 		 */
 		if ( ! empty( $existing_avatar ) && $existing_avatar !== $this->url . $relative_path ) {
-			bp_core_delete_existing_avatar( array( 'object' => $args['object'], 'item_id' => $args['item_id'], 'avatar_path' => $avatar_folder_dir ) );
+			bp_core_delete_existing_avatar(
+				array(
+					'object'      => $args['object'],
+					'item_id'     => $args['item_id'],
+					'avatar_path' => $avatar_folder_dir,
+				)
+			);
 		}
 
 		// Make sure we at least have minimal data for cropping.
@@ -271,7 +281,10 @@ class BP_Attachment_Avatar extends BP_Attachment {
 
 		$args['original_file'] = $absolute_path;
 		$args['src_abs']       = false;
-		$avatar_types = array( 'full' => '', 'thumb' => '' );
+		$avatar_types          = array(
+			'full'  => '',
+			'thumb' => '',
+		);
 
 		foreach ( $avatar_types as $key_type => $type ) {
 			if ( 'thumb' === $key_type ) {
@@ -303,7 +316,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 * @return integer The user ID.
 	 */
 	private function get_user_id() {
-		$bp = buddypress();
+		$bp      = buddypress();
 		$user_id = 0;
 
 		if ( bp_is_user() ) {
@@ -365,7 +378,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 				'object'     => 'user',
 				'item_id'    => $user_id,
 				'has_avatar' => bp_get_user_has_avatar( $user_id ),
-				'nonces'  => array(
+				'nonces'     => array(
 					'set'    => wp_create_nonce( 'bp_avatar_cropstore' ),
 					'remove' => wp_create_nonce( 'bp_delete_avatar_link' ),
 				),
@@ -413,7 +426,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		$script_data['extra_css'] = array( 'bp-avatar' );
 
 		// Include the specific css.
-		$script_data['extra_js']  = $js_scripts;
+		$script_data['extra_js'] = $js_scripts;
 
 		// Set the object to contextualize the filter.
 		if ( isset( $script_data['bp_params']['object'] ) ) {

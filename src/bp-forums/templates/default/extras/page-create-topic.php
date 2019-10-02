@@ -12,7 +12,10 @@ get_header(); ?>
 
 	<?php do_action( 'bbp_template_notices' ); ?>
 
-	<?php while ( have_posts() ) : the_post(); ?>
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
 
 		<div id="bbp-new-topic" class="bbp-new-topic">
 			<h1 class="entry-title"><?php the_title(); ?></h1>

@@ -5,7 +5,7 @@
  * @package BuddyBoss\Connections\Screens
  * @since BuddyBoss 1.0.0
  */
- 
+
  // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 

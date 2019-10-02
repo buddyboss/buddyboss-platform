@@ -97,7 +97,7 @@ class BP_XProfile_Data_Template {
 	 * @var int
 	 */
 	public $user_id;
-    
+
 	/**
 	 * Get activity items, as specified by parameters.
 	 *
@@ -139,26 +139,29 @@ class BP_XProfile_Data_Template {
 				6 => 'exclude_fields',
 				7 => 'hide_empty_fields',
 				8 => 'fetch_visibility_level',
-				9 => 'update_meta_cache'
+				9 => 'update_meta_cache',
 			);
 
 			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 		}
 
-		$r = wp_parse_args( $args, array(
-			'profile_group_id'       => false,
-			'user_id'                => false,
-			'member_type'            => 'any',
-			'hide_empty_groups'      => false,
-			'hide_empty_fields'      => false,
-			'fetch_fields'           => false,
-			'fetch_field_data'       => false,
-			'fetch_visibility_level' => false,
-			'exclude_groups'         => false,
-			'exclude_fields'         => false,
-			'include_fields'         => false,
-			'update_meta_cache'      => true
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'profile_group_id'       => false,
+				'user_id'                => false,
+				'member_type'            => 'any',
+				'hide_empty_groups'      => false,
+				'hide_empty_fields'      => false,
+				'fetch_fields'           => false,
+				'fetch_field_data'       => false,
+				'fetch_visibility_level' => false,
+				'exclude_groups'         => false,
+				'exclude_fields'         => false,
+				'include_fields'         => false,
+				'update_meta_cache'      => true,
+			)
+		);
 
 		$this->groups      = bp_xprofile_get_groups( $r );
 		$this->group_count = count( $this->groups );
@@ -258,7 +261,7 @@ class BP_XProfile_Data_Template {
 		global $group;
 
 		$this->in_the_loop = true;
-		$group = $this->next_group();
+		$group             = $this->next_group();
 
 		// Loop has just started.
 		if ( 0 === $this->current_group ) {

@@ -27,7 +27,7 @@ class BP_Bbp_Gdpr_Replies {
 
 	/**
 	 * Register forum replies exporter.
-	 * 
+	 *
 	 * @param $exporters
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -45,7 +45,7 @@ class BP_Bbp_Gdpr_Replies {
 
 	/**
 	 * Register forum replies deletion.
-	 * 
+	 *
 	 * @param $erasers
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -65,7 +65,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * Export member created forum replies.
 	 *
 	 * @param $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -113,8 +113,10 @@ class BP_Bbp_Gdpr_Replies {
 					),
 					array(
 						'name'  => __( 'Reply Title', 'buddyboss' ),
-						'value' => ! empty( $parent_title ) ? __( 'Reply To: ',
-								'buddyboss' ) . html_entity_decode( $parent_title ) : '',
+						'value' => ! empty( $parent_title ) ? __(
+							'Reply To: ',
+							'buddyboss'
+						) . html_entity_decode( $parent_title ) : '',
 					),
 					array(
 						'name'  => __( 'Reply Content', 'buddyboss' ),
@@ -172,7 +174,10 @@ class BP_Bbp_Gdpr_Replies {
 		$the_query = new \WP_Query( $pp_args );
 
 		if ( $the_query->have_posts() ) {
-			return array( 'replies' => $the_query->posts, 'total' => $the_query->post_count );
+			return array(
+				'replies' => $the_query->posts,
+				'total'   => $the_query->post_count,
+			);
 		}
 
 		return false;
@@ -182,7 +187,7 @@ class BP_Bbp_Gdpr_Replies {
 	 * Delete member created forum replies.
 	 *
 	 * @param $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -222,11 +227,13 @@ class BP_Bbp_Gdpr_Replies {
 
 		if ( $total ) {
 			foreach ( (array) $replies as $reply ) {
-				$attachments = get_posts( array(
-					'post_type'      => 'attachment',
-					'posts_per_page' => - 1,
-					'post_parent'    => $reply->ID,
-				) );
+				$attachments = get_posts(
+					array(
+						'post_type'      => 'attachment',
+						'posts_per_page' => - 1,
+						'post_parent'    => $reply->ID,
+					)
+				);
 
 				if ( $attachments ) {
 					foreach ( $attachments as $attachment ) {

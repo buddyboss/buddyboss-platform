@@ -52,11 +52,14 @@ class Signup extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args( $assoc_args, array(
-			'user-login'     => '',
-			'user-email'     => '',
-			'activation-key' => wp_generate_password( 32, false ),
-		) );
+		$r = wp_parse_args(
+			$assoc_args,
+			array(
+				'user-login'     => '',
+				'user-email'     => '',
+				'activation-key' => wp_generate_password( 32, false ),
+			)
+		);
 
 		$signup_args = array(
 			'meta' => '',
@@ -169,13 +172,17 @@ class Signup extends BuddypressCommand {
 
 		WP_CLI::confirm( 'Are you sure you want to delete this signup?', $assoc_args );
 
-		parent::_delete( array( $signup_id ), $assoc_args, function( $signup_id ) {
-			if ( \BP_Signup::delete( array( $signup_id ) ) ) {
-				return array( 'success', 'Signup deleted.' );
-			} else {
-				return array( 'error', 'Could not delete signup.' );
+		parent::_delete(
+			array( $signup_id ),
+			$assoc_args,
+			function( $signup_id ) {
+				if ( \BP_Signup::delete( array( $signup_id ) ) ) {
+					return array( 'success', 'Signup deleted.' );
+				} else {
+					return array( 'error', 'Could not delete signup.' );
+				}
 			}
-		} );
+		);
 	}
 
 	/**
@@ -226,11 +233,14 @@ class Signup extends BuddypressCommand {
 		$random_login = wp_generate_password( 12, false ); // Generate random user login.
 
 		for ( $i = 0; $i < $assoc_args['count']; $i++ ) {
-			$this->create( array(), array(
-				'user-login' => $random_login,
-				'user-email' => $random_login . substr( $email_domain, strpos( $email_domain, '@' ) ),
-				'silent',
-			) );
+			$this->create(
+				array(),
+				array(
+					'user-login' => $random_login,
+					'user-email' => $random_login . substr( $email_domain, strpos( $email_domain, '@' ) ),
+					'silent',
+				)
+			);
 
 			$notify->tick();
 		}
@@ -300,10 +310,13 @@ class Signup extends BuddypressCommand {
 	 */
 	public function _list( $_, $assoc_args ) {
 		$formatter  = $this->get_formatter( $assoc_args );
-		$assoc_args = wp_parse_args( $assoc_args, array(
-			'number' => 20,
-			'fields' => 'all',
-		) );
+		$assoc_args = wp_parse_args(
+			$assoc_args,
+			array(
+				'number' => 20,
+				'fields' => 'all',
+			)
+		);
 
 		if ( 'ids' === $formatter->format ) {
 			$assoc_args['fields'] = 'ids';

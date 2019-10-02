@@ -28,17 +28,18 @@
 				<legend>
 
 					<?php
-						if ( bbp_is_forum_edit() )
-							printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() );
-						else
-							bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Create New Forum', 'buddyboss' );
+					if ( bbp_is_forum_edit() ) {
+						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() );
+					} else {
+						bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Create New Forum', 'buddyboss' );
+					}
 					?>
 
 				</legend>
 
 				<?php do_action( 'bbp_theme_before_forum_form_notices' ); ?>
 
-				<?php if ( !bbp_is_forum_edit() && bbp_is_forum_closed() ) : ?>
+				<?php if ( ! bbp_is_forum_edit() && bbp_is_forum_closed() ) : ?>
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -69,7 +70,7 @@
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:','buddyboss' ); ?></label><br />
+							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -108,12 +109,14 @@
 						<label for="bbp_forum_parent_id"><?php _e( 'Parent Forum:', 'buddyboss' ); ?></label><br />
 
 						<?php
-							bbp_dropdown( array(
-								'select_id' => 'bbp_forum_parent_id',
-								'show_none' => __( '(No Parent)', 'buddyboss' ),
-								'selected'  => bbp_get_form_forum_parent(),
-								'exclude'   => bbp_get_forum_id()
-							) );
+							bbp_dropdown(
+								array(
+									'select_id' => 'bbp_forum_parent_id',
+									'show_none' => __( '(No Parent)', 'buddyboss' ),
+									'selected'  => bbp_get_form_forum_parent(),
+									'exclude'   => bbp_get_forum_id(),
+								)
+							);
 						?>
 					</p>
 

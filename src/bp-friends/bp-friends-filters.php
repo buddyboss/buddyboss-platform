@@ -80,13 +80,13 @@ function bp_friends_filter_media_scope( $retval = array(), $filter = array() ) {
 		array(
 			'relation' => 'AND',
 			array(
-				'column' => 'user_id',
+				'column'  => 'user_id',
 				'compare' => 'IN',
-				'value'   => (array) $friends
+				'value'   => (array) $friends,
 			),
 			array(
-				'column'  => 'privacy',
-				'value'   => 'friends'
+				'column' => 'privacy',
+				'value'  => 'friends',
 			),
 		),
 	);

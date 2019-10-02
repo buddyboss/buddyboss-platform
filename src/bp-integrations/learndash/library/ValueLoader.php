@@ -16,17 +16,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class ValueLoader
-{
-	protected $value = [];
+class ValueLoader {
+
+	protected $value = array();
 
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct($value)
-	{
+	public function __construct( $value ) {
 		$this->value = $value;
 	}
 
@@ -35,27 +34,26 @@ class ValueLoader
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function get($key = null, $default = null)
-	{
+	public function get( $key = null, $default = null ) {
 		$target = $this->value;
 
-		if (is_null($key)) {
+		if ( is_null( $key ) ) {
 			return $target;
 		}
 
-        if (isset($target[$key])) {
-        	return $target[$key];
-        }
+		if ( isset( $target[ $key ] ) ) {
+			return $target[ $key ];
+		}
 
-        foreach (explode('.', $key) as $segment) {
-            if (! is_array($target) || ! array_key_exists($segment, $target)) {
-                return $default;
-            }
+		foreach ( explode( '.', $key ) as $segment ) {
+			if ( ! is_array( $target ) || ! array_key_exists( $segment, $target ) ) {
+				return $default;
+			}
 
-            $target = $target[$segment];
-        }
+			$target = $target[ $segment ];
+		}
 
-        return $target;
+		return $target;
 	}
 
 	/**
@@ -63,28 +61,27 @@ class ValueLoader
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function set($key = null, $value = null)
-	{
+	public function set( $key = null, $value = null ) {
 		$target =& $this->value;
 
-        if (is_null($key)) {
-        	return $target = $value;
-        }
+		if ( is_null( $key ) ) {
+			return $target = $value;
+		}
 
-        $keys = explode('.', $key);
+		$keys = explode( '.', $key );
 
-        while (count($keys) > 1) {
-            $key = array_shift($keys);
+		while ( count( $keys ) > 1 ) {
+			$key = array_shift( $keys );
 
-            if (! isset($target[$key]) || ! is_array($target[$key])) {
-                $target[$key] = array();
-            }
+			if ( ! isset( $target[ $key ] ) || ! is_array( $target[ $key ] ) ) {
+				$target[ $key ] = array();
+			}
 
-            $target =& $target[$key];
-        }
+			$target =& $target[ $key ];
+		}
 
-        $target[array_shift($keys)] = $value;
+		$target[ array_shift( $keys ) ] = $value;
 
-        return $target;
-    }
+		return $target;
+	}
 }

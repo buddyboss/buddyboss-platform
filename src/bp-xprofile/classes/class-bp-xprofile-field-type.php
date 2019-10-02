@@ -179,17 +179,17 @@ abstract class BP_XProfile_Field_Type {
 
 		return $this;
 	}
-    
-    /**
-     * Get the list of whitelisted values.
-     * 
-     * @since BuddyBoss 1.0.0
-     * 
-     * @return array
-     */
-    public function get_whitelist_values () {
-        return $this->validation_whitelist;
-    }
+
+	/**
+	 * Get the list of whitelisted values.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return array
+	 */
+	public function get_whitelist_values() {
+		return $this->validation_whitelist;
+	}
 
 	/**
 	 * Check the given string against the registered formats for this field type.
@@ -336,9 +336,9 @@ abstract class BP_XProfile_Field_Type {
 				<p>
 					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom',     'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc',    $current_field->order_by ); ?>><?php esc_html_e( 'Ascending',  'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc',   $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
 					</select>
 				</p>
 
@@ -354,13 +354,13 @@ abstract class BP_XProfile_Field_Type {
 					$options = array();
 					$i       = 1;
 
-					while ( isset( $_POST[$type . '_option'][$i] ) ) {
+					while ( isset( $_POST[ $type . '_option' ][ $i ] ) ) {
 
 						// Multiselectbox and checkboxes support MULTIPLE default options; all other core types support only ONE.
-						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST["isDefault_{$type}_option"][$i] ) && (int) $_POST["isDefault_{$type}_option"] === $i ) {
+						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) && (int) $_POST[ "isDefault_{$type}_option" ] === $i ) {
 							$is_default_option = true;
-						} elseif ( isset( $_POST["isDefault_{$type}_option"][$i] ) ) {
-							$is_default_option = (bool) $_POST["isDefault_{$type}_option"][$i];
+						} elseif ( isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) ) {
+							$is_default_option = (bool) $_POST[ "isDefault_{$type}_option" ][ $i ];
 						} else {
 							$is_default_option = false;
 						}
@@ -369,7 +369,7 @@ abstract class BP_XProfile_Field_Type {
 						$options[] = (object) array(
 							'id'                => -1,
 							'is_default_option' => $is_default_option,
-							'name'              => sanitize_text_field( stripslashes( $_POST[$type . '_option'][$i] ) ),
+							'name'              => sanitize_text_field( stripslashes( $_POST[ $type . '_option' ][ $i ] ) ),
 						);
 
 						++$i;
@@ -400,13 +400,15 @@ abstract class BP_XProfile_Field_Type {
 
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option sortable">
 							<span class="bp-option-icon grabber"></span>
-							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text"><?php
-								/* translators: accessibility text */
-								esc_html_e( 'Add an option', 'buddyboss' );
-							?></label>
-							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[$i]->name ) ); ?>" />
+							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
+												   <?php
+													/* translators: accessibility text */
+													esc_html_e( 'Add an option', 'buddyboss' );
+													?>
+							</label>
+							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
-								<input type="<?php echo esc_attr( $control_type ); ?>" id="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>" name="<?php echo esc_attr( "isDefault_{$type}_option{$default_name}" ); ?>" <?php checked( $options[$i]->is_default_option, true ); ?> value="<?php echo esc_attr( $j ); ?>" />
+								<input type="<?php echo esc_attr( $control_type ); ?>" id="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>" name="<?php echo esc_attr( "isDefault_{$type}_option{$default_name}" ); ?>" <?php checked( $options[ $i ]->is_default_option, true ); ?> value="<?php echo esc_attr( $j ); ?>" />
 								<?php _e( 'Default Value', 'buddyboss' ); ?>
 							</label>
 
@@ -435,7 +437,8 @@ abstract class BP_XProfile_Field_Type {
 				 *
 				 * @param BP_XProfile_Field $current_field Current field being rendered.
 				 */
-				do_action( 'bp_xprofile_admin_new_field_additional_settings', $current_field ) ?>
+				do_action( 'bp_xprofile_admin_new_field_additional_settings', $current_field )
+				?>
 			</div>
 		</div>
 
@@ -513,18 +516,21 @@ abstract class BP_XProfile_Field_Type {
 	 */
 	protected function get_edit_field_html_elements( array $properties = array() ) {
 
-		$r = bp_parse_args( $properties, array(
-			'id'   => bp_get_the_profile_field_input_name(),
-			'name' => bp_get_the_profile_field_input_name(),
-		) );
+		$r = bp_parse_args(
+			$properties,
+			array(
+				'id'   => bp_get_the_profile_field_input_name(),
+				'name' => bp_get_the_profile_field_input_name(),
+			)
+		);
 
 		if ( bp_get_the_profile_field_is_required() ) {
 			$r['aria-required'] = 'true';
 
 			// Moderators can bypass field requirements.
-			//if ( ! bp_current_user_can( 'bp_moderate' ) ) {
-				//$r[] = 'required';
-			//}
+			// if ( ! bp_current_user_can( 'bp_moderate' ) ) {
+				// $r[] = 'required';
+			// }
 		}
 
 		/**

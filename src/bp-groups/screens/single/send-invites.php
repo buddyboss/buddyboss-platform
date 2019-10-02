@@ -13,25 +13,32 @@
  */
 function groups_screen_group_invite() {
 
-	if ( !bp_is_single_item() )
+	if ( ! bp_is_single_item() ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
 	if ( bp_is_action_variable( 'send', 0 ) ) {
 
-		if ( !check_admin_referer( 'groups_send_invites', '_wpnonce_send_invites' ) )
+		if ( ! check_admin_referer( 'groups_send_invites', '_wpnonce_send_invites' ) ) {
 			return false;
+		}
 
-		if ( !empty( $_POST['friends'] ) ) {
-			foreach( (array) $_POST['friends'] as $friend ) {
-				groups_invite_user( array( 'user_id' => $friend, 'group_id' => $bp->groups->current_group->id ) );
+		if ( ! empty( $_POST['friends'] ) ) {
+			foreach ( (array) $_POST['friends'] as $friend ) {
+				groups_invite_user(
+					array(
+						'user_id'  => $friend,
+						'group_id' => $bp->groups->current_group->id,
+					)
+				);
 			}
 		}
 
 		// Send the invites.
 		groups_send_invites( bp_loggedin_user_id(), $bp->groups->current_group->id );
-		bp_core_add_message( __('Group invites sent.', 'buddyboss') );
+		bp_core_add_message( __( 'Group invites sent.', 'buddyboss' ) );
 
 		/**
 		 * Fires after the sending of a group invite inside the group's Send Invites page.
@@ -43,7 +50,7 @@ function groups_screen_group_invite() {
 		do_action( 'groups_screen_group_invite', $bp->groups->current_group->id );
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 
-	} elseif ( !bp_action_variable( 0 ) ) {
+	} elseif ( ! bp_action_variable( 0 ) ) {
 
 		/**
 		 * Filters the template to load for a group's Send Invites page.
@@ -88,13 +95,13 @@ function groups_remove_group_invite() {
 
 	if ( ! bp_groups_user_can_send_invites( $group_id ) ) {
 		$message = __( 'You are not allowed to send or remove invites', 'buddyboss' );
-		$error = 'error';
+		$error   = 'error';
 	} elseif ( groups_check_for_membership_request( $friend_id, $group_id ) ) {
 		$message = __( 'The member requested to join the group', 'buddyboss' );
-		$error = 'error';
+		$error   = 'error';
 	} elseif ( ! groups_uninvite_user( $friend_id, $group_id ) ) {
 		$message = __( 'There was an error removing the invite', 'buddyboss' );
-		$error = 'error';
+		$error   = 'error';
 	}
 
 	bp_core_add_message( $message, $error );

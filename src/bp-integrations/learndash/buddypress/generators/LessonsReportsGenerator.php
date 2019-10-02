@@ -18,17 +18,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class LessonsReportsGenerator extends ReportsGenerator
-{
+class LessonsReportsGenerator extends ReportsGenerator {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->completed_table_title = __('Completed Lessons', 'buddyboss');
-		$this->incompleted_table_title = __('Incomplete Lessons', 'buddyboss');
+	public function __construct() {
+		 $this->completed_table_title  = __( 'Completed Lessons', 'buddyboss' );
+		$this->incompleted_table_title = __( 'Incomplete Lessons', 'buddyboss' );
 
 		parent::__construct();
 	}
@@ -38,23 +37,22 @@ class LessonsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function columns()
-	{
-		return [
-			'user_id'         => $this->column('user_id'),
-			'user'            => $this->column('user'),
-			'course_id'       => $this->column('course_id'),
-			'course'          => $this->column('course'),
-			'lesson'          => [
+	protected function columns() {
+		return array(
+			'user_id'         => $this->column( 'user_id' ),
+			'user'            => $this->column( 'user' ),
+			'course_id'       => $this->column( 'course_id' ),
+			'course'          => $this->column( 'course' ),
+			'lesson'          => array(
 				'label'     => __( 'Lesson', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'post_title',
-			],
-			'start_date'      => $this->column('start_date'),
-			'completion_date' => $this->column('completion_date'),
-			'updated_date'    => $this->column('updated_date'),
-			'time_spent'      => $this->column('time_spent'),
-		];
+			),
+			'start_date'      => $this->column( 'start_date' ),
+			'completion_date' => $this->column( 'completion_date' ),
+			'updated_date'    => $this->column( 'updated_date' ),
+			'time_spent'      => $this->column( 'time_spent' ),
+		);
 	}
 
 	/**
@@ -62,19 +60,18 @@ class LessonsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatData($activity)
-	{
-		return [
+	protected function formatData( $activity ) {
+		return array(
 			'user_id'         => $activity->user_id,
 			'user'            => $activity->user_display_name,
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'lesson'          => $activity->post_title,
 			'start_date'      => $activity->activity_started_formatted,
-			'completion_date' => $this->completionDate($activity),
-			'updated_date'    => $this->updatedDate($activity),
-			'time_spent'      => $this->timeSpent($activity),
-		];
+			'completion_date' => $this->completionDate( $activity ),
+			'updated_date'    => $this->updatedDate( $activity ),
+			'time_spent'      => $this->timeSpent( $activity ),
+		);
 	}
 
 	/**
@@ -93,16 +90,18 @@ class LessonsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatDataForDisplay($data, $activity)
-	{
-		$data = wp_parse_args([
-			'lesson' => sprintf(
-				'<a href="%s" target="_blank">%s</a>',
-				get_permalink($activity->post_id),
-				$activity->post_title
-			)
-		], $data);
+	protected function formatDataForDisplay( $data, $activity ) {
+		$data = wp_parse_args(
+			array(
+				'lesson' => sprintf(
+					'<a href="%s" target="_blank">%s</a>',
+					get_permalink( $activity->post_id ),
+					$activity->post_title
+				),
+			),
+			$data
+		);
 
-		return parent::formatDataForDisplay($data, $activity);
+		return parent::formatDataForDisplay( $data, $activity );
 	}
 }

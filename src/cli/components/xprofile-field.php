@@ -39,10 +39,13 @@ class XProfile_Field extends BuddypressCommand {
 	 * @subcommand list
 	 */
 	public function _list( $_, $assoc_args ) {
-		$args = array_merge( $assoc_args, array(
-			'fields'       => 'id,name',
-			'fetch_fields' => true,
-		) );
+		$args = array_merge(
+			$assoc_args,
+			array(
+				'fields'       => 'id,name',
+				'fetch_fields' => true,
+			)
+		);
 
 		$fields    = array();
 		$formatter = $this->get_formatter( $assoc_args );
@@ -201,17 +204,21 @@ class XProfile_Field extends BuddypressCommand {
 
 		WP_CLI::confirm( 'Are you sure you want to delete this field?', $assoc_args );
 
-		parent::_delete( array( $field_id ), $assoc_args, function( $field_id ) use ( $r ) {
-			$field   = new \BP_XProfile_Field( $field_id );
-			$name    = $field->name;
-			$id      = $field->id;
-			$deleted = $field->delete( $r['delete_data'] );
+		parent::_delete(
+			array( $field_id ),
+			$assoc_args,
+			function( $field_id ) use ( $r ) {
+				$field   = new \BP_XProfile_Field( $field_id );
+				$name    = $field->name;
+				$id      = $field->id;
+				$deleted = $field->delete( $r['delete_data'] );
 
-			if ( $deleted ) {
-				return array( 'success', sprintf( 'Deleted XProfile field "%s" (ID %d).', $name, $id ) );
-			} else {
-				return array( 'error', sprintf( 'Failed deleting XProfile field (ID %d).', $field_id ) );
+				if ( $deleted ) {
+					return array( 'success', sprintf( 'Deleted XProfile field "%s" (ID %d).', $name, $id ) );
+				} else {
+					return array( 'error', sprintf( 'Failed deleting XProfile field (ID %d).', $field_id ) );
+				}
 			}
-		} );
+		);
 	}
 }

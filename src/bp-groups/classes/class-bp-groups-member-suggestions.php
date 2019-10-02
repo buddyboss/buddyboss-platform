@@ -56,7 +56,7 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		 * @param array                        $args  Array of arguments for the suggestion service query.
 		 * @param BP_Groups_Member_Suggestions $this  Instance of the current suggestion class.
 		 */
-		$this->args             = apply_filters( 'bp_groups_member_suggestions_args', $this->args, $this );
+		$this->args = apply_filters( 'bp_groups_member_suggestions_args', $this->args, $this );
 
 		// Check for invalid or missing mandatory parameters.
 		if ( ! $this->args['group_id'] || ! bp_is_active( 'groups' ) ) {
@@ -109,15 +109,15 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		if ( $this->args['group_id'] > 0 ) {
 			$user_query['group_id'] = $this->args['group_id'];
 
-		// Negative Group IDs will restrict the search to members in every other group.
+			// Negative Group IDs will restrict the search to members in every other group.
 		} else {
 			$group_query = array(
-				'count_total'     => '',  // Prevents total count.
-				'type'            => 'alphabetical',
+				'count_total' => '',  // Prevents total count.
+				'type'        => 'alphabetical',
 
-				'group_id'        => absint( $this->args['group_id'] ),
-				'group_role'      => array( 'admin', 'member', 'mod' ),
-				'page'            => 1,
+				'group_id'    => absint( $this->args['group_id'] ),
+				'group_role'  => array( 'admin', 'member', 'mod' ),
+				'page'        => 1,
 			);
 			$group_users = new BP_Group_Member_Query( $group_query );
 
@@ -141,7 +141,6 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 			return $user_query;
 		}
 
-
 		if ( isset( $user_query['group_id'] ) ) {
 			$user_query = new BP_Group_Member_Query( $user_query );
 		} else {
@@ -152,7 +151,12 @@ class BP_Groups_Member_Suggestions extends BP_Members_Suggestions {
 		foreach ( $user_query->results as $user ) {
 			$result          = new stdClass();
 			$result->ID      = $user->user_nicename;
-			$result->image   = bp_core_fetch_avatar( array( 'html' => false, 'item_id' => $user->ID ) );
+			$result->image   = bp_core_fetch_avatar(
+				array(
+					'html'    => false,
+					'item_id' => $user->ID,
+				)
+			);
 			$result->name    = bp_core_get_user_displayname( $user->ID );
 			$result->user_id = $user->ID;
 

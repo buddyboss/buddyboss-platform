@@ -48,8 +48,8 @@ add_action( 'bp_media_deleted_medias', 'bp_media_clear_cache_for_deleted_media' 
 function bp_media_reset_cache_incrementor() {
 	return bp_core_reset_incrementor( 'bp_media' );
 }
-add_action( 'bp_media_delete',    'bp_media_reset_cache_incrementor' );
-add_action( 'bp_media_add',       'bp_media_reset_cache_incrementor' );
+add_action( 'bp_media_delete', 'bp_media_reset_cache_incrementor' );
+add_action( 'bp_media_add', 'bp_media_reset_cache_incrementor' );
 
 /**
  * Clear a user's cached media count.
@@ -174,8 +174,8 @@ add_action( 'bp_albums_deleted_albums', 'bp_media_clear_cache_for_deleted_album'
 function bp_media_album_reset_cache_incrementor() {
 	return bp_core_reset_incrementor( 'bp_media_album' );
 }
-add_action( 'bp_album_delete',    'bp_media_album_reset_cache_incrementor' );
-add_action( 'bp_album_add',       'bp_media_album_reset_cache_incrementor' );
+add_action( 'bp_album_delete', 'bp_media_album_reset_cache_incrementor' );
+add_action( 'bp_album_add', 'bp_media_album_reset_cache_incrementor' );
 
 /**
  * Clear a group's cached album count.
