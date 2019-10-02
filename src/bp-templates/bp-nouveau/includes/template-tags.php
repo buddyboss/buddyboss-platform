@@ -574,7 +574,11 @@ function bp_nouveau_loop_classes() {
 					$current_value = bp_get_option( 'bp-group-layout-format' );
 				}
 			} elseif ( bp_is_groups_directory() || bp_is_group() ) {
-				$current_value = bp_get_option( 'bp-group-layout-format' );
+				if ( ! bp_is_user_groups() ) {
+					$current_value = bp_get_option( 'bp-profile-layout-format' );
+				} else {
+					$current_value = bp_get_option( 'bp-group-layout-format' );
+				}
 			}
 			if ( 'list_grid' === $current_value ) {
 				$list = false;
@@ -590,7 +594,11 @@ function bp_nouveau_loop_classes() {
 							$default_current_value = bp_group_layout_default_format( 'grid' );
 						}
 					} elseif ( bp_is_groups_directory() || bp_is_group() ) {
-						$default_current_value = bp_group_layout_default_format( 'grid' );
+						if ( ! bp_is_user_groups() ) {
+							$default_current_value = bp_profile_layout_default_format( 'grid' );
+						} else {
+							$default_current_value = bp_group_layout_default_format( 'grid' );
+						}
 					}
 					$classes = array_merge( $classes,
 						array(
