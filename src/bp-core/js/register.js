@@ -91,7 +91,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						//window.tinymce.execCommand('mceRepaint');
+						window.tinymce.execCommand('mceRepaint');
 					}
 				}
 			}
@@ -187,7 +187,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						//window.tinymce.execCommand('mceRepaint');
+						window.tinymce.execCommand('mceRepaint');
 					}
 				} else {
 					registerSubmitButtonSelector.prop( 'disabled', false );
