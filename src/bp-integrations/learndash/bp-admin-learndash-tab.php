@@ -375,15 +375,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		 */
 		$this->add_section(
 			'bp_ld_sync-reports',
-			__('Group Reports Settings', 'buddyboss'),
-			[$this, 'learndash_groups_report_description']
+			__('Group Reports', 'buddyboss')
 		);
 
 		$this->add_checkbox_field(
 			'enabled',
 			__('Group Reports', 'buddyboss'),
 			[
-				'input_text' => __('Enable Social Group Report for LearnDash', 'buddyboss'),
+				'input_text' => __('Enable LearnDash group reports', 'buddyboss'),
+				'input_description' => __('For every social group synced to a LearnDash group, enable  reporting of group course progress.', 'buddyboss'),
 				'input_run_js' => 'reports_enabled',
 			]
 		);
@@ -403,20 +403,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			__('Report Results Per Page', 'buddyboss'),
 			[
 				'input_type' => 'number',
-				'input_description' => __('Number of report results displayed per page', 'buddyboss'),
+				'input_description' => __('', 'buddyboss'),
 				'class' => 'js-show-on-reports_enabled',
 			]
-		);
-	}
-
-	/**
-	 * Description for reports setting section
-	 *
-	 * @since BuddyBoss 1.0.0
-	 */
-	public function learndash_groups_report_description() {
-		echo wpautop(
-			__('Control the setting for social group\'s reports.', 'buddyboss')
 		);
 	}
 
@@ -438,15 +427,13 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		foreach ($input_options as $key => $value) {
 			$checked = in_array($key, $input_value) ? 'checked' : '';
 			printf('
-        		<p>
-	        		<label>
-	        			<input type="checkbox" name="%s[]" value="%s" %s>%s</option>
-	        		</label>
-	        	</p>
+    			<input type="checkbox" name="%s[]" value="%s" %s>
+    			<label>%s</label>
+    			<br /><br />
         	', $input_name, $key, $checked, $value);
 		}
 
-		echo $this->render_input_description(__('Select which roles can view reports', 'buddyboss'));
+		echo $this->render_input_description(__('Select which group roles can view reports. Organizers and Moderators can view all reports, while Members can only view reports for their own course progress.', 'buddyboss'));
 	}
 
 	/**
