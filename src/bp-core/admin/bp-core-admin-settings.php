@@ -1044,6 +1044,10 @@ function bp_admin_setting_callback_group_layout_type_format() {
 		);
 	}
 	printf( '</select>' );
+
+	?>
+	<p class="description"><?php _e( 'Choose if group lists should display in Grid or List View in all group directories.', 'buddyboss' ); ?></p>
+	<?php
 }
 
 /**

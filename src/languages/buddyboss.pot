@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-01 18:24:22+00:00\n"
+"POT-Creation-Date: 2019-10-02 04:49:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2379,28 +2379,27 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1030
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:396
-msgid "Grid & List View"
+msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1031
-#: bp-core/admin/bp-core-admin-settings.php:1059
+#: bp-core/admin/bp-core-admin-settings.php:1062
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:397
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:425
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:49
-msgid "List View"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:428
+msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1032
-#: bp-core/admin/bp-core-admin-settings.php:1058
+#: bp-core/admin/bp-core-admin-settings.php:1063
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:398
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:424
-#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:46
-msgid "Grid View"
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:429
+msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1061
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:427
-msgid "hey"
+#: bp-core/admin/bp-core-admin-settings.php:1049
+msgid ""
+"Choose if group lists should display in Grid or List View in all group "
+"directories."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -3102,6 +3101,12 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:368
 msgid "Enable advanced profile search on the members directory"
+msgstr ""
+
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:415
+msgid ""
+"Choose if profile lists should display in Grid or List View in all "
+"profile/member directories."
 msgstr ""
 
 #: bp-core/admin/templates/about-appboss.php:20
@@ -9245,7 +9250,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:925 bp-groups/bp-groups-template.php:5110
 #: bp-notifications/bp-notifications-template.php:995
-#: bp-templates/bp-nouveau/includes/template-tags.php:2122
+#: bp-templates/bp-nouveau/includes/template-tags.php:2130
 msgid "Order By:"
 msgstr ""
 
@@ -15077,6 +15082,14 @@ msgstr ""
 msgid "unsubscribe"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:46
+msgid "Grid View"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/filters/grid-filters.php:49
+msgid "List View"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/common/filters/group-filters.php:46
 #: bp-templates/bp-nouveau/buddypress/common/filters/member-filters.php:47
 msgid "All Types"
@@ -17035,49 +17048,49 @@ msgstr ""
 msgid "Loading Suggestions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2125
+#: bp-templates/bp-nouveau/includes/template-tags.php:2133
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2334
+#: bp-templates/bp-nouveau/includes/template-tags.php:2342
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2353
+#: bp-templates/bp-nouveau/includes/template-tags.php:2361
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2515
+#: bp-templates/bp-nouveau/includes/template-tags.php:2523
 msgid ""
 "terms-modalBy creating an account you are agreeing to the <a "
 "class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%s</a>."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2523
-#: bp-templates/bp-nouveau/includes/template-tags.php:2539
-#: bp-templates/bp-nouveau/includes/template-tags.php:2555
+#: bp-templates/bp-nouveau/includes/template-tags.php:2531
+#: bp-templates/bp-nouveau/includes/template-tags.php:2547
 #: bp-templates/bp-nouveau/includes/template-tags.php:2563
+#: bp-templates/bp-nouveau/includes/template-tags.php:2571
 msgid "Close (Esc)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2523
-#: bp-templates/bp-nouveau/includes/template-tags.php:2539
-#: bp-templates/bp-nouveau/includes/template-tags.php:2555
+#: bp-templates/bp-nouveau/includes/template-tags.php:2531
+#: bp-templates/bp-nouveau/includes/template-tags.php:2547
 #: bp-templates/bp-nouveau/includes/template-tags.php:2563
+#: bp-templates/bp-nouveau/includes/template-tags.php:2571
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2531
+#: bp-templates/bp-nouveau/includes/template-tags.php:2539
 msgid ""
 "By creating an account you are agreeing to the <a "
 "class=\"popup-modal-register popup-privacy\" href=\"#privacy-modal\">%s</a>."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2547
+#: bp-templates/bp-nouveau/includes/template-tags.php:2555
 msgid ""
 "By creating an account you are agreeing to the <a "
 "class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%s</a> and "

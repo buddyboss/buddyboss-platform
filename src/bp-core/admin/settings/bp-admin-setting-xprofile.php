@@ -161,7 +161,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field(
 			'bp-profile-layout-format',
 			__( 'Enabled View(s)', 'buddyboss' ),
-			[ $this, 'callback_profile_layout_type_format']
+			[ $this, 'bp_admin_setting_profile_layout_type_format']
 		);
 
 		// Admin Settings for Settings > Profiles > Profile Lists > Default View
@@ -391,7 +391,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	public function callback_profile_layout_type_format() {
+	public function bp_admin_setting_profile_layout_type_format() {
 		$options = [
 			'list_grid' => __( 'Grid and List', 'buddyboss' ),
 			'grid'      => __( 'Grid', 'buddyboss' ),
@@ -410,6 +410,10 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			);
 		}
 		printf( '</select>' );
+
+		?>
+		<p class="description"><?php _e( 'Choose if profile lists should display in Grid or List View in all profile/member directories.', 'buddyboss' ); ?></p>
+		<?php
 	}
 
 	/**
