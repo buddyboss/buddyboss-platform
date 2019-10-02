@@ -423,12 +423,22 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	 */
 	public function bp_admin_setting_profile_layout_default_option() {
 		$selected = bp_profile_layout_default_format( 'grid' );
-		?>
 
-		<input id="bp-profile-layout-grid-default-format" name="bp-profile-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid', 'buddyboss' ); ?><br />
-		<input id="bp-profile-layout-list-default-format" name="bp-profile-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List', 'buddyboss' ); ?><br />
+		$options = [
+			'grid'      => __( 'Grid', 'buddyboss' ),
+			'list'      => __( 'List', 'buddyboss' ),
+		];
 
-		<?php
+		printf( '<select name="%1$s" for="%1$s">', 'bp-profile-layout-default-format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				$key,
+				$key == $selected ? 'selected' : '',
+				$value
+			);
+		}
+		printf( '</select>' );
 	}
 }
 

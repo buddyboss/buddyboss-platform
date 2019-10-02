@@ -1057,10 +1057,21 @@ function bp_admin_setting_callback_group_layout_type_format() {
  */
 function bp_admin_setting_group_layout_default_option() {
 	$selected = bp_group_layout_default_format( 'grid' );
-	?>
 
-	<input id="bp-group-layout-grid-default-format" name="bp-group-layout-default-format" type="radio" value="grid" <?php echo ( 'grid' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'Grid', 'buddyboss' ); ?><br />
-	<input id="bp-group-layout-list-default-format" name="bp-group-layout-default-format" type="radio" value="list" <?php echo ( 'list' === $selected ) ? 'checked' : ''; ?> > <?php echo __( 'List', 'buddyboss' ); ?><br />
+	$options = [
+		'grid'      => __( 'Grid', 'buddyboss' ),
+		'list'      => __( 'List', 'buddyboss' ),
+	];
 
-	<?php
+	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-default-format' );
+	foreach ( $options as $key => $value ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			$key,
+			$key == $selected ? 'selected' : '',
+			$value
+		);
+	}
+	printf( '</select>' );
+
 }

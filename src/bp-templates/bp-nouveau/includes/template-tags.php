@@ -586,6 +586,10 @@ function bp_nouveau_loop_classes() {
 					$list = true;
 				}
 
+				if ( ! $list && isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
+					$list = true;
+				}
+
 				if ( ! $list ) {
 					if ( bp_is_members_directory() || bp_is_user() )  {
 						if ( ! bp_is_user_groups() ) {
@@ -603,6 +607,11 @@ function bp_nouveau_loop_classes() {
 					$classes = array_merge( $classes,
 						array(
 							$default_current_value
+						) );
+				} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
+					$classes = array_merge( $classes,
+						array(
+							$_POST['extras']['layout']
 						) );
 				}
 			} elseif ( 'list' === $current_value ) {
