@@ -161,6 +161,7 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
+        'bp-select2'        => array( 'file' => "{$url}vendor/select2.min.js", 'dependencies' => array(), 'footer' => false ),
 
 		'isInViewport'        => array(
 			'file'         => "{$url}vendor/isInViewport{$min}.js",
@@ -261,6 +262,10 @@ function bp_core_register_common_styles() {
 			'bp-medium-editor-beagle' => array(
 				'file'         => "{$url}medium-editor-beagle{$min}.css",
 				'dependencies' => array(),
+			),
+			'bp-select2' => array(
+				'file'         => "{$url}select2.min.css",
+				'dependencies' => array()
 			),
 		)
 	);

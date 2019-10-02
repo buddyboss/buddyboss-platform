@@ -760,6 +760,12 @@ function bp_core_no_access_wp_login_error( $errors ) {
 		return $errors;
 	}
 
+	if ( isset( $_REQUEST['redirect_from'] ) && 'private_group' === $_REQUEST['redirect_from'] ) {
+		$bp_error_message = __( 'Please login to access this group.', 'buddyboss' );
+	} else {
+		$bp_error_message = __( 'Please login to access this website.', 'buddyboss' );
+	}
+
 	/**
 	 * Filters the error message for wp-login.php when needing to log in before accessing.
 	 *
@@ -768,7 +774,7 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	 * @param string $value Error message to display.
 	 * @param string $value URL to redirect user to after successful login.
 	 */
-	$message = apply_filters( 'bp_wp_login_error', __( 'Please login to access this website.', 'buddyboss' ), $_REQUEST['redirect_to'] );
+	$message = apply_filters( 'bp_wp_login_error', $bp_error_message, $_REQUEST['redirect_to'] );
 
 	$errors->add( 'bp_no_access', $message );
 

@@ -151,6 +151,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				wp_enqueue_script( 'bp-medium-editor' );
 				wp_enqueue_style( 'bp-medium-editor' );
 				wp_enqueue_style( 'bp-medium-editor-beagle' );
+				wp_enqueue_script( 'bp-select2' );
+				wp_enqueue_style( 'bp-select2' );
 			}
 
 			// Forum-specific scripts
