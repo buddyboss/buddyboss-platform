@@ -476,8 +476,8 @@
 			};
 			var getResetCookies = getCookies();
 			if ( getResetCookies.reset_member ) {
-				sessionStorage.setItem( 'bp-members', '' );
-				sessionStorage.setItem( 'bp-group_members', '' );
+				localStorage.setItem( 'bp-members', '' );
+				localStorage.setItem( 'bp-group_members', '' );
 				setCookie('reset_member','',0); // this will delete the cookie.
 			}
 			/* jshint ignore:end */
@@ -529,7 +529,7 @@
 			};
 			var getGroupResetCookies = getGroupCookies();
 			if ( getGroupResetCookies.reset_group ) {
-				sessionStorage.setItem( 'bp-groups', '' );
+				localStorage.setItem( 'bp-groups', '' );
 				setCookie('reset_group','',0); // this will delete the cookie.
 			}
 			/* jshint ignore:end */
