@@ -1239,10 +1239,12 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
 
-			$main_activity = new BP_Activity_Activity( $activity_id );
-			if ( ! empty( $main_activity ) ) {
-				$main_activity->privacy = $privacy;
-				$main_activity->save();
+			if ( empty( $group_id ) ) {
+				$main_activity = new BP_Activity_Activity( $activity_id );
+				if ( ! empty( $main_activity ) ) {
+					$main_activity->privacy = $privacy;
+					$main_activity->save();
+				}
 			}
 		}
 	}
