@@ -680,7 +680,7 @@ class ReportsGenerator
 				$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 				if ( $assignment_points || learndash_is_assignment_approved_by_meta( $assignment->ID ) ) {
 					if ( $assignment_points ) {
-						return sprintf( esc_html__( '%s/%s', 'platform' ), $assignment_points['current'], $assignment_points['max'] );
+						return sprintf( esc_html__( '%s/%s', 'buddyboss' ), $assignment_points['current'], $assignment_points['max'] );
 					}
 				}
 			}
