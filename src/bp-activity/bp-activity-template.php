@@ -210,14 +210,21 @@ function bp_has_activities( $args = '' ) {
 	$privacy  = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) && ! bp_is_group() && ! bp_is_activity_directory() ) {
-			$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
-			if( $is_friend ) {
+
+		if ( bp_is_active( 'friends' ) ) {
+			if ( ! bp_is_group() && ! bp_is_activity_directory() ) {
+			    if ( bp_is_my_profile() ) {
+				    $privacy[] = 'friends';
+                } else {
+				    $is_friend = friends_check_friendship( get_current_user_id(), $user_id );
+				    if ( $is_friend ) {
+					    $privacy[] = 'friends';
+				    }
+			    }
+			} else if ( bp_is_activity_directory() ) {
 				$privacy[] = 'friends';
 			}
-		} else if ( bp_is_active( 'friends' ) && bp_is_activity_directory() ) {
-			$privacy[] = 'friends';
-        }
+		}
 
 		if ( bp_is_my_profile() ) {
 			$privacy[] = 'onlyme';

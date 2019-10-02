@@ -486,6 +486,8 @@ function bp_media_add_handler( $medias = array() ) {
 		$medias = $_POST['medias'];
 	}
 
+	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( BP_Media_Privacy::instance()->get_visibility_options() ) ) ? $_POST['privacy'] : 'public';
+
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 		// save media
 		foreach ( $medias as $media ) {
@@ -495,6 +497,7 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => $media['album_id'],
 				'group_id'      => $media['group_id'],
+				'privacy'       => $privacy,
 			) );
 
 			if ( $media_id ) {
