@@ -1215,8 +1215,10 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
 		}
 
-		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) && false != (int) $_POST['group_id'] ) {
-			$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $_POST['group_id'] ) );
+		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+
+		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $group_id ) );
 		} else {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
