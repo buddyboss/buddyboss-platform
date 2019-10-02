@@ -796,7 +796,7 @@ window.bp = window.bp || {};
 		},
 
 		submitMedia: function(event) {
-			var self = this, target = $( event.currentTarget ), data;
+			var self = this, target = $( event.currentTarget ), data, privacy = $('#bb-media-privacy');
 			event.preventDefault();
 
 			if ( target.hasClass( 'saving' ) ) {
@@ -814,7 +814,8 @@ window.bp = window.bp || {};
 					'medias': self.dropzone_media,
 					'content' : post_content,
 					'album_id' : self.album_id,
-					'group_id' : self.group_id
+					'group_id' : self.group_id,
+					'privacy': privacy.val()
 				};
 
 				$('#bp-dropzone-content .bp-feedback').remove();

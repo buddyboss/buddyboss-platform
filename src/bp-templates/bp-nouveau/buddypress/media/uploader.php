@@ -71,6 +71,20 @@
 
                     <footer class="flex align-items-center bb-model-footer">
                         <a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php _e( 'Add More Media', 'buddyboss' ); ?></a>
+
+	                    <?php if ( ! bp_is_group() ) : ?>
+                            <div class="bb-dropdown-wrap">
+			                    <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+                                <select id="bb-media-privacy">
+				                    <?php foreach ( $privacy_options as $k => $option ) {
+					                    ?>
+                                        <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
+					                    <?php
+				                    } ?>
+                                </select>
+                            </div>
+	                    <?php endif; ?>
+
                         <a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
                     </footer>
 
