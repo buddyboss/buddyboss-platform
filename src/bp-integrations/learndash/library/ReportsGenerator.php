@@ -562,8 +562,18 @@ class ReportsGenerator {
 		}
 
 		// if ($this->hasArg('user')) {
-			$this->params['user_ids'] = $this->args['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
+			//$this->params['user_ids'] = $this->args['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
 		// }
+
+		if ( $this->args['user'] ) {
+			$this->params['user_ids'] = $this->args['user'];
+		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $this->args['group'] ) ) {
+			$this->params['user_ids'] = learndash_get_groups_user_ids( $ldGroupId );
+		} elseif ( groups_is_user_admin( bp_loggedin_user_id(), $this->args['group'] ) ) {
+			$this->params['user_ids'] = learndash_get_groups_user_ids( $ldGroupId );
+		} else {
+			$this->params['user_ids'] = array( bp_loggedin_user_id() );
+		}
 
 		if ( $this->hasArg( 'completed' ) ) {
 			$this->params['activity_status'] = $this->args['completed'] ? 'COMPLETED' : 'IN_PROGRESS';
@@ -617,6 +627,9 @@ class ReportsGenerator {
 		$seconds = intval( $activity->activity_time_spent );
 
 		if ( $seconds < 60 ) {
+			if ( 0 === $seconds ){
+				return '-';
+			}
 			return sprintf( '%d sec', $seconds );
 		}
 
