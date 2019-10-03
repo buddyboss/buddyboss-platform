@@ -71,7 +71,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			$request_data = array(
 				'id'      => $this->plugin_id,
 				'slug'    => $this->plugin_slug,
-				'version' => $current_version
+				'version' => $current_version,
 			);
 
 			if ( ! empty( $this->license ) ) {
@@ -86,7 +86,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				$response = unserialize( $raw_response['body'] );
 			}
 
-			//Feed the candy
+			// Feed the candy
 			if ( is_object( $response ) && ! empty( $response ) ) {
 				$transient->response[ $this->plugin_path ] = $response;
 
@@ -114,7 +114,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			$request_data = array(
 				'id'      => $this->plugin_id,
 				'slug'    => $this->plugin_slug,
-				'version' => ( isset( $plugin_info->checked ) ) ? $plugin_info->checked[ $this->plugin_path ] : 0
+				'version' => ( isset( $plugin_info->checked ) ) ? $plugin_info->checked[ $this->plugin_path ] : 0,
 				// Current version
 			);
 
@@ -144,9 +144,9 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				'body'       => array(
 					'action'  => $action,
 					'request' => serialize( $args ),
-					'api-key' => md5( home_url() )
+					'api-key' => md5( home_url() ),
 				),
-				'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url()
+				'user-agent' => 'WordPress/' . $wp_version . '; ' . home_url(),
 			);
 		}
 
@@ -154,4 +154,4 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 endif; // End class_exists check.
 
-?>
+

@@ -28,4 +28,4 @@ class BP_Admin_Setting_Registration extends BP_Admin_Setting_tab {
 	}
 }
 
-return new BP_Admin_Setting_Registration;
+return new BP_Admin_Setting_Registration();

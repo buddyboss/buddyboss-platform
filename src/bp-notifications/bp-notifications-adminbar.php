@@ -32,29 +32,35 @@ function bp_notifications_toolbar_menu() {
 	$menu_link     = trailingslashit( bp_loggedin_user_domain() . bp_get_notifications_slug() );
 
 	// Add the top-level Notifications button.
-	$wp_admin_bar->add_menu( array(
-		'parent'    => 'top-secondary',
-		'id'        => 'bp-notifications',
-		'title'     => $menu_title,
-		'href'      => $menu_link,
-	) );
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => 'top-secondary',
+			'id'     => 'bp-notifications',
+			'title'  => $menu_title,
+			'href'   => $menu_link,
+		)
+	);
 
 	if ( ! empty( $notifications ) ) {
 		foreach ( (array) $notifications as $notification ) {
-			$wp_admin_bar->add_menu( array(
-				'parent' => 'bp-notifications',
-				'id'     => 'notification-' . $notification->id,
-				'title'  => $notification->content,
-				'href'   => $notification->href,
-			) );
+			$wp_admin_bar->add_menu(
+				array(
+					'parent' => 'bp-notifications',
+					'id'     => 'notification-' . $notification->id,
+					'title'  => $notification->content,
+					'href'   => $notification->href,
+				)
+			);
 		}
 	} else {
-		$wp_admin_bar->add_menu( array(
-			'parent' => 'bp-notifications',
-			'id'     => 'no-notifications',
-			'title'  => __( 'No new notifications', 'buddyboss' ),
-			'href'   => $menu_link,
-		) );
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'bp-notifications',
+				'id'     => 'no-notifications',
+				'title'  => __( 'No new notifications', 'buddyboss' ),
+				'href'   => $menu_link,
+			)
+		);
 	}
 
 	return;

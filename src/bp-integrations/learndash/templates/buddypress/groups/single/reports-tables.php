@@ -14,3 +14,4 @@
 	<h2><?php echo $incompleted_table_title; ?></h2>
 	<table class="bp_ld_report_table" data-completed="false"></table>
 </div>
+

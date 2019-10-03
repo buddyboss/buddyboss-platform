@@ -24,17 +24,17 @@ function bp_invites_slug() {
 	 *
 	 * @return string
 	 */
-	function bp_get_invites_slug() {
+function bp_get_invites_slug() {
 
-		/**
-		 * Filters the invites component slug.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 *
-		 * @param string $slug Invites component slug.
-		 */
-		return apply_filters( 'bp_get_invites_slug', buddypress()->invites->slug );
-	}
+	/**
+	 * Filters the invites component slug.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $slug Invites component slug.
+	 */
+	return apply_filters( 'bp_get_invites_slug', buddypress()->invites->slug );
+}
 
 /**
  * Output the invites component root slug.
@@ -51,15 +51,15 @@ function bp_invites_root_slug() {
 	 *
 	 * @return string
 	 */
-	function bp_get_invites_root_slug() {
+function bp_get_invites_root_slug() {
 
-		/**
-		 * Filters the invites component root slug.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 *
-		 * @param string $root_slug Invites component root slug.
-		 */
-		return apply_filters( 'bp_get_invites_root_slug', buddypress()->invites->root_slug );
-	}
+	/**
+	 * Filters the invites component root slug.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string $root_slug Invites component root slug.
+	 */
+	return apply_filters( 'bp_get_invites_root_slug', buddypress()->invites->root_slug );
+}
 

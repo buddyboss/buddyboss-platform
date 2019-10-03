@@ -1,29 +1,29 @@
 <?php
 /**
- * BuddyBoss Activity Query Classes
+ * BuddyBoss Media Query Classes
  *
- * @package BuddyBoss\Activity
- * @since BuddyPress 2.2.0
+ * @package BuddyBoss\Media
+ * @since BuddyBoss 1.1.9
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Class for generating the WHERE SQL clause for advanced activity fetching.
+ * Class for generating the WHERE SQL clause for advanced media fetching.
  *
- * This is notably used in {@link BP_Activity_Activity::get()} with the
+ * This is notably used in {@link BP_Media::get()} with the
  * 'filter_query' parameter.
  *
- * @since BuddyPress 2.2.0
+ * @since BuddyBoss 1.1.9
  */
-class BP_Activity_Query extends BP_Recursive_Query {
+class BP_Media_Query extends BP_Recursive_Query {
 	/**
-	 * Array of activity queries.
+	 * Array of media queries.
 	 *
-	 * See {@see BP_Activity_Query::__construct()} for information on query arguments.
+	 * See {@see BP_Media_Query::__construct()} for information on query arguments.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 * @var array
 	 */
 	public $queries = array();
@@ -31,7 +31,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	/**
 	 * Table alias.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 * @var string
 	 */
 	public $table_alias = '';
@@ -39,43 +39,43 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	/**
 	 * Supported DB columns.
 	 *
-	 * See the 'wp_bp_activity' DB table schema.
+	 * See the 'wp_bp_media' DB table schema.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 * @var array
 	 */
 	public $db_columns = array(
 		'id',
+		'blog_id',
+		'attachment_id',
 		'user_id',
-		'component',
-		'type',
-		'action',
-		'content',
-		'primary_link',
-		'item_id',
-		'secondary_item_id',
-		'hide_sitewide',
-		'is_spam',
+		'title',
+		'album_id',
+		'group_id',
+		'activity_id',
+		'privacy',
+		'menu_order',
+		'date_created',
 	);
 
 	/**
 	 * Constructor.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param array $query {
 	 *     Array of query clauses.
 	 *     @type array {
 	 *         @type string $column   Required. The column to query against. Basically, any DB column in the main
-	 *                                'wp_bp_activity' table.
+	 *                                'wp_bp_media' table.
 	 *         @type string $value    Required. Value to filter by.
 	 *         @type string $compare  Optional. The comparison operator. Default '='.
 	 *                                Accepts '=', '!=', '>', '>=', '<', '<=', 'IN', 'NOT IN', 'LIKE',
 	 *                                'NOT LIKE', BETWEEN', 'NOT BETWEEN', 'REGEXP', 'NOT REGEXP', 'RLIKE'.
-	 *         @type string $relation Optional. The boolean relationship between the activity queries.
+	 *         @type string $relation Optional. The boolean relationship between the media queries.
 	 *                                Accepts 'OR', 'AND'. Default 'AND'.
 	 *         @type array {
-	 *             Optional. Another fully-formed activity query. See parameters above.
+	 *             Optional. Another fully-formed media query. See parameters above.
 	 *         }
 	 *     }
 	 * }
@@ -91,13 +91,13 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	/**
 	 * Generates WHERE SQL clause to be appended to a main query.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param string $alias An existing table alias that is compatible with the current query clause.
-	 *                      Default: 'a'. BP_Activity_Activity::get() uses 'a', so we default to that.
+	 *                      Default: 'a'. BP_Media::get() uses 'a', so we default to that.
 	 * @return string SQL fragment to append to the main WHERE clause.
 	 */
-	public function get_sql( $alias = 'a' ) {
+	public function get_sql( $alias = 'm' ) {
 		if ( ! empty( $alias ) ) {
 			$this->table_alias = sanitize_title( $alias );
 		}
@@ -114,7 +114,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	/**
 	 * Generate WHERE clauses for a first-order clause.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param  array $clause       Array of arguments belonging to the clause.
 	 * @param  array $parent_query Parent query to which the clause belongs.
@@ -191,7 +191,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 					// IN uses different syntax.
 					case 'IN':
 					case 'NOT IN':
-						$in_sql = BP_Activity_Activity::get_in_operator_sql( "{$alias}{$column}", $value );
+						$in_sql = BP_Media::get_in_operator_sql( "{$alias}{$column}", $value );
 
 						// 'NOT IN' operator is as easy as a string replace!
 						if ( 'NOT IN' === $compare ) {
@@ -238,7 +238,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	/**
 	 * Determine whether a clause is first-order.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param array $query Clause to check.
 	 * @return bool
@@ -251,9 +251,9 @@ class BP_Activity_Query extends BP_Recursive_Query {
 	 * Validates a column name parameter.
 	 *
 	 * Column names are checked against a whitelist of known tables.
-	 * See {@link BP_Activity_Query::db_tables}.
+	 * See {@link BP_Media_Query::db_tables}.
 	 *
-	 * @since BuddyPress 2.2.0
+	 * @since BuddyBoss 1.1.9
 	 *
 	 * @param string $column The user-supplied column name.
 	 * @return string A validated column name value.

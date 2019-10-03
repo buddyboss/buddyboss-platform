@@ -25,24 +25,26 @@ defined( 'ABSPATH' ) || exit;
  *                                           comma-separated list or array of message ids.
  */
 function bp_messages_update_meta_cache( $message_ids = false ) {
-	bp_update_meta_cache( array(
-		'object_ids' 	   => $message_ids,
-		'object_type' 	   => buddypress()->messages->id,
-		'cache_group'      => 'message_meta',
-		'object_column'    => 'message_id',
-		'meta_table' 	   => buddypress()->messages->table_name_meta,
-		'cache_key_prefix' => 'bp_messages_meta'
-	) );
+	bp_update_meta_cache(
+		array(
+			'object_ids'       => $message_ids,
+			'object_type'      => buddypress()->messages->id,
+			'cache_group'      => 'message_meta',
+			'object_column'    => 'message_id',
+			'meta_table'       => buddypress()->messages->table_name_meta,
+			'cache_key_prefix' => 'bp_messages_meta',
+		)
+	);
 }
 
 // List actions to clear super cached pages on, if super cache is installed.
-add_action( 'messages_delete_thread',  'bp_core_clear_cache' );
-add_action( 'messages_send_notice',    'bp_core_clear_cache' );
-add_action( 'messages_message_sent',   'bp_core_clear_cache' );
+add_action( 'messages_delete_thread', 'bp_core_clear_cache' );
+add_action( 'messages_send_notice', 'bp_core_clear_cache' );
+add_action( 'messages_message_sent', 'bp_core_clear_cache' );
 
 // Don't cache message inbox/sentbox/compose as it's too problematic.
 add_action( 'messages_screen_compose', 'bp_core_clear_cache' );
-add_action( 'messages_screen_inbox',   'bp_core_clear_cache' );
+add_action( 'messages_screen_inbox', 'bp_core_clear_cache' );
 
 /**
  * Clear message cache after a message is saved.
@@ -77,7 +79,7 @@ add_action( 'messages_message_after_save', 'bp_messages_clear_cache_on_message_s
  */
 function bp_messages_clear_cache_on_message_delete( $thread_ids, $user_id ) {
 	// Delete thread and thread recipient cache.
-	foreach( (array) $thread_ids as $thread_id ) {
+	foreach ( (array) $thread_ids as $thread_id ) {
 		// wp_cache_delete( $thread_id, 'bp_messages_threads' );
 		bp_messages_delete_thread_paginated_messages_cache( $thread_id );
 		wp_cache_delete( "thread_recipients_{$thread_id}", 'bp_messages' );
@@ -100,7 +102,7 @@ add_action( 'messages_delete_thread', 'bp_messages_clear_cache_on_message_delete
 function bp_notices_clear_cache( $notice ) {
 	wp_cache_delete( 'active_notice', 'bp_messages' );
 }
-add_action( 'messages_notice_after_save',    'bp_notices_clear_cache' );
+add_action( 'messages_notice_after_save', 'bp_notices_clear_cache' );
 add_action( 'messages_notice_before_delete', 'bp_notices_clear_cache' );
 
 /**
@@ -110,16 +112,16 @@ add_action( 'messages_notice_before_delete', 'bp_notices_clear_cache' );
  */
 function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 	BP_Messages_Thread::$noCache = true;
-	$thread_id = $thread_id;
-	$before = null;
-	$perpage = 10;
+	$thread_id                   = $thread_id;
+	$before                      = null;
+	$perpage                     = 10;
 
 	while ( wp_cache_get( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' ) ) {
 		wp_cache_delete( "{$thread_id}{$before}{$perpage}", 'bp_messages_threads' );
 		$messages = BP_Messages_Thread::get_messages( $thread_id, $before, $perpage );
 
-		if ( end($messages) ) {
-			$before = end($messages)->date_sent;
+		if ( end( $messages ) ) {
+			$before = end( $messages )->date_sent;
 		}
 	}
 

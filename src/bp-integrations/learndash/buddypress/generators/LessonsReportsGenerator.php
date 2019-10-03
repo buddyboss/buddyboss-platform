@@ -18,17 +18,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class LessonsReportsGenerator extends ReportsGenerator
-{
+class LessonsReportsGenerator extends ReportsGenerator {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->completed_table_title = __('Completed Lessons', 'buddyboss');
-		$this->incompleted_table_title = __('Incomplete Lessons', 'buddyboss');
+	public function __construct() {
+		 $this->completed_table_title  = __( 'Completed Lessons', 'buddyboss' );
+		$this->incompleted_table_title = __( 'Incomplete Lessons', 'buddyboss' );
 
 		parent::__construct();
 	}
@@ -67,9 +66,8 @@ class LessonsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatData($activity)
-	{
-		return [
+	protected function formatData( $activity ) {
+		return array(
 			'user_id'         => $activity->user_id,
 			'user'            => bp_core_get_user_displayname( $activity->user_id ),
 			'course_id'       => $activity->activity_course_id,
@@ -79,8 +77,8 @@ class LessonsReportsGenerator extends ReportsGenerator
 			'lesson_points'   => ReportsGenerator::coursePointsEarned( $activity ),
 			'completion_date' => $this->completionDate($activity),
 			'updated_date'    => $this->updatedDate($activity),
-			'time_spent'      => $this->timeSpent($activity),
-		];
+			'time_spent'      => $this->timeSpent($activity)
+		);
 	}
 
 	/**
@@ -99,16 +97,18 @@ class LessonsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatDataForDisplay($data, $activity)
-	{
-		$data = wp_parse_args([
-			'lesson' => sprintf(
-				'<a href="%s" target="_blank">%s</a>',
-				get_permalink($activity->post_id),
-				$activity->post_title
-			)
-		], $data);
+	protected function formatDataForDisplay( $data, $activity ) {
+		$data = wp_parse_args(
+			array(
+				'lesson' => sprintf(
+					'<a href="%s" target="_blank">%s</a>',
+					get_permalink( $activity->post_id ),
+					$activity->post_title
+				),
+			),
+			$data
+		);
 
-		return parent::formatDataForDisplay($data, $activity);
+		return parent::formatDataForDisplay( $data, $activity );
 	}
 }

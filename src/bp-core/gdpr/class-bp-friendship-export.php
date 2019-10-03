@@ -52,7 +52,7 @@ final class BP_Friendship_Export extends BP_Export {
 
 		$data_items = $this->get_data( $user, $page );
 
-		foreach ( $data_items["items"] as $item ) {
+		foreach ( $data_items['items'] as $item ) {
 
 			$group_id    = 'bp_friends';
 			$group_label = __( 'Connections', 'buddyboss' );
@@ -66,13 +66,13 @@ final class BP_Friendship_Export extends BP_Export {
 				$is_initiator   = false;
 			}
 
-			if ( $item->is_confirmed == "0" && $is_initiator ) {
-				$group_id    .= '_pending_sent';
+			if ( $item->is_confirmed == '0' && $is_initiator ) {
+				$group_id   .= '_pending_sent';
 				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss' );
 			}
 
-			if ( $item->is_confirmed == "0" && ! $is_initiator ) {
-				$group_id    .= '_pending_received';
+			if ( $item->is_confirmed == '0' && ! $is_initiator ) {
+				$group_id   .= '_pending_received';
 				$group_label = __( 'Pending Received Connection Requests', 'buddyboss' );
 			}
 
@@ -80,12 +80,12 @@ final class BP_Friendship_Export extends BP_Export {
 
 			$data = array(
 				array(
-					'name' => __( 'Connection Name', 'buddyboss' ),
-					'value' => $friend_user->display_name
+					'name'  => __( 'Connection Name', 'buddyboss' ),
+					'value' => $friend_user->display_name,
 				),
 				array(
-					'name' => __( 'Sent Created (GMT)', 'buddyboss' ),
-					'value' => $item->date_created
+					'name'  => __( 'Sent Created (GMT)', 'buddyboss' ),
+					'value' => $item->date_created,
 				),
 			);
 
@@ -160,9 +160,9 @@ final class BP_Friendship_Export extends BP_Export {
 
 		$table = "{$friends_table} item";
 
-		$query_select       = "item.*";
-		$query_select_count = "COUNT(item.id)";
-		$query_where        = "item.initiator_user_id=%d OR item.friend_user_id=%d";
+		$query_select       = 'item.*';
+		$query_select_count = 'COUNT(item.id)';
+		$query_where        = 'item.initiator_user_id=%d OR item.friend_user_id=%d';
 
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";

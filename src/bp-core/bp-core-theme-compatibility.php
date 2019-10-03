@@ -34,12 +34,12 @@ function bp_setup_theme_compat( $theme = '' ) {
 	$bp = buddypress();
 
 	// Make sure theme package is available, set to default if not.
-	if ( ! isset( $bp->theme_compat->packages[$theme] ) || ! is_a( $bp->theme_compat->packages[$theme], 'BP_Theme_Compat' ) ) {
+	if ( ! isset( $bp->theme_compat->packages[ $theme ] ) || ! is_a( $bp->theme_compat->packages[ $theme ], 'BP_Theme_Compat' ) ) {
 		$theme = 'nouveau';
 	}
 
 	// Set the active theme compat theme.
-	$bp->theme_compat->theme = $bp->theme_compat->packages[$theme];
+	$bp->theme_compat->theme = $bp->theme_compat->packages[ $theme ];
 }
 
 /**
@@ -206,14 +206,14 @@ function bp_detect_theme_compat_with_current_theme() {
 	if ( current_theme_supports( 'buddypress' ) ) {
 		$theme_compat = false;
 
-	// If the theme doesn't support BP, do some additional checks.
+		// If the theme doesn't support BP, do some additional checks.
 	} else {
 		// Bail if theme is a derivative of bp-default.
 		if ( in_array( 'bp-default', array( get_template(), get_stylesheet() ) ) ) {
 			$theme_compat = false;
 
-		// Brute-force check for a BP template.
-		// Examples are clones of bp-default.
+			// Brute-force check for a BP template.
+			// Examples are clones of bp-default.
 		} elseif ( locate_template( 'members/members-loop.php', false, false ) ) {
 			$theme_compat = false;
 		}
@@ -439,8 +439,8 @@ function bp_register_theme_package( $theme = array(), $override = true ) {
 
 	// Only set if the theme package was not previously registered or if the
 	// override flag is set.
-	if ( empty( $bp->theme_compat->packages[$theme->id] ) || ( true === $override ) ) {
-		$bp->theme_compat->packages[$theme->id] = $theme;
+	if ( empty( $bp->theme_compat->packages[ $theme->id ] ) || ( true === $override ) ) {
+		$bp->theme_compat->packages[ $theme->id ] = $theme;
 	}
 }
 
@@ -465,71 +465,77 @@ function bp_theme_compat_reset_post( $args = array() ) {
 
 	// Switch defaults if post is set.
 	if ( isset( $wp_query->post ) ) {
-		$dummy = wp_parse_args( $args, array(
-			'ID'                    => $wp_query->post->ID,
-			'post_status'           => $wp_query->post->post_status,
-			'post_author'           => $wp_query->post->post_author,
-			'post_parent'           => $wp_query->post->post_parent,
-			'post_type'             => $wp_query->post->post_type,
-			'post_date'             => $wp_query->post->post_date,
-			'post_date_gmt'         => $wp_query->post->post_date_gmt,
-			'post_modified'         => $wp_query->post->post_modified,
-			'post_modified_gmt'     => $wp_query->post->post_modified_gmt,
-			'post_content'          => $wp_query->post->post_content,
-			'post_title'            => $wp_query->post->post_title,
-			'post_excerpt'          => $wp_query->post->post_excerpt,
-			'post_content_filtered' => $wp_query->post->post_content_filtered,
-			'post_mime_type'        => $wp_query->post->post_mime_type,
-			'post_password'         => $wp_query->post->post_password,
-			'post_name'             => $wp_query->post->post_name,
-			'guid'                  => $wp_query->post->guid,
-			'menu_order'            => $wp_query->post->menu_order,
-			'pinged'                => $wp_query->post->pinged,
-			'to_ping'               => $wp_query->post->to_ping,
-			'ping_status'           => $wp_query->post->ping_status,
-			'comment_status'        => $wp_query->post->comment_status,
-			'comment_count'         => $wp_query->post->comment_count,
-			'filter'                => $wp_query->post->filter,
+		$dummy = wp_parse_args(
+			$args,
+			array(
+				'ID'                    => $wp_query->post->ID,
+				'post_status'           => $wp_query->post->post_status,
+				'post_author'           => $wp_query->post->post_author,
+				'post_parent'           => $wp_query->post->post_parent,
+				'post_type'             => $wp_query->post->post_type,
+				'post_date'             => $wp_query->post->post_date,
+				'post_date_gmt'         => $wp_query->post->post_date_gmt,
+				'post_modified'         => $wp_query->post->post_modified,
+				'post_modified_gmt'     => $wp_query->post->post_modified_gmt,
+				'post_content'          => $wp_query->post->post_content,
+				'post_title'            => $wp_query->post->post_title,
+				'post_excerpt'          => $wp_query->post->post_excerpt,
+				'post_content_filtered' => $wp_query->post->post_content_filtered,
+				'post_mime_type'        => $wp_query->post->post_mime_type,
+				'post_password'         => $wp_query->post->post_password,
+				'post_name'             => $wp_query->post->post_name,
+				'guid'                  => $wp_query->post->guid,
+				'menu_order'            => $wp_query->post->menu_order,
+				'pinged'                => $wp_query->post->pinged,
+				'to_ping'               => $wp_query->post->to_ping,
+				'ping_status'           => $wp_query->post->ping_status,
+				'comment_status'        => $wp_query->post->comment_status,
+				'comment_count'         => $wp_query->post->comment_count,
+				'filter'                => $wp_query->post->filter,
 
-			'is_404'                => false,
-			'is_page'               => false,
-			'is_single'             => false,
-			'is_archive'            => false,
-			'is_tax'                => false,
-		) );
+				'is_404'                => false,
+				'is_page'               => false,
+				'is_single'             => false,
+				'is_archive'            => false,
+				'is_tax'                => false,
+			)
+		);
 	} else {
-		$dummy = wp_parse_args( $args, array(
-			'ID'                    => -9999,
-			'post_status'           => 'public',
-			'post_author'           => 0,
-			'post_parent'           => 0,
-			'post_type'             => 'page',
-			'post_date'             => 0,
-			'post_date_gmt'         => 0,
-			'post_modified'         => 0,
-			'post_modified_gmt'     => 0,
-			'post_content'          => '',
-			'post_title'            => '',
-			'post_excerpt'          => '',
-			'post_content_filtered' => '',
-			'post_mime_type'        => '',
-			'post_password'         => '',
-			'post_name'             => '',
-			'guid'                  => '',
-			'menu_order'            => 0,
-			'pinged'                => '',
-			'to_ping'               => '',
-			'ping_status'           => '',
-			'comment_status'        => 'closed',
-			'comment_count'         => 0,
-			'filter'                => 'raw',
+		$dummy = wp_parse_args(
+			$args,
+			array(
+				'ID'                    => -9999,
+				'post_status'           => 'public',
+				'post_author'           => 0,
+				'post_parent'           => 0,
+				'post_type'             => 'page',
+				'post_date'             => 0,
+				'post_date_gmt'         => 0,
+				'post_modified'         => 0,
+				'post_modified_gmt'     => 0,
+				'post_content'          => '',
+				'post_title'            => '',
+				'post_excerpt'          => '',
+				'post_content_filtered' => '',
+				'post_mime_type'        => '',
+				'post_password'         => '',
+				'post_name'             => '',
+				'guid'                  => '',
+				'menu_order'            => 0,
+				'pinged'                => '',
+				'to_ping'               => '',
+				'ping_status'           => '',
+				'comment_status'        => 'closed',
+				'comment_count'         => 0,
+				'filter'                => 'raw',
 
-			'is_404'                => false,
-			'is_page'               => false,
-			'is_single'             => false,
-			'is_archive'            => false,
-			'is_tax'                => false,
-		) );
+				'is_404'                => false,
+				'is_page'               => false,
+				'is_single'             => false,
+				'is_archive'            => false,
+				'is_tax'                => false,
+			)
+		);
 	}
 
 	// Bail if dummy post is empty.
@@ -541,8 +547,8 @@ function bp_theme_compat_reset_post( $args = array() ) {
 	$post = new WP_Post( (object) $dummy );
 
 	// Copy the new post global into the main $wp_query.
-	$wp_query->post       = $post;
-	$wp_query->posts      = array( $post );
+	$wp_query->post  = $post;
+	$wp_query->posts = array( $post );
 
 	// Prevent comments form from appearing.
 	$wp_query->post_count = 1;
@@ -730,36 +736,36 @@ function bp_remove_all_filters( $tag, $priority = false ) {
 	$bp = buddypress();
 
 	// Filters exist.
-	if ( isset( $wp_filter[$tag] ) ) {
+	if ( isset( $wp_filter[ $tag ] ) ) {
 
 		// Filters exist in this priority.
-		if ( ! empty( $priority ) && isset( $wp_filter[$tag][$priority] ) ) {
+		if ( ! empty( $priority ) && isset( $wp_filter[ $tag ][ $priority ] ) ) {
 
 			// Store filters in a backup.
-			$bp->filters->wp_filter[$tag][$priority] = $wp_filter[$tag][$priority];
+			$bp->filters->wp_filter[ $tag ][ $priority ] = $wp_filter[ $tag ][ $priority ];
 
 			// Unset the filters.
-			unset( $wp_filter[$tag][$priority] );
+			unset( $wp_filter[ $tag ][ $priority ] );
 
-		// Priority is empty.
+			// Priority is empty.
 		} else {
 
 			// Store filters in a backup.
-			$bp->filters->wp_filter[$tag] = $wp_filter[$tag];
+			$bp->filters->wp_filter[ $tag ] = $wp_filter[ $tag ];
 
 			// Unset the filters.
-			unset( $wp_filter[$tag] );
+			unset( $wp_filter[ $tag ] );
 		}
 	}
 
 	// Check merged filters.
-	if ( isset( $merged_filters[$tag] ) ) {
+	if ( isset( $merged_filters[ $tag ] ) ) {
 
 		// Store filters in a backup.
-		$bp->filters->merged_filters[$tag] = $merged_filters[$tag];
+		$bp->filters->merged_filters[ $tag ] = $merged_filters[ $tag ];
 
 		// Unset the filters.
-		unset( $merged_filters[$tag] );
+		unset( $merged_filters[ $tag ] );
 	}
 
 	return true;
@@ -785,36 +791,36 @@ function bp_restore_all_filters( $tag, $priority = false ) {
 	$bp = buddypress();
 
 	// Filters exist.
-	if ( isset( $bp->filters->wp_filter[$tag] ) ) {
+	if ( isset( $bp->filters->wp_filter[ $tag ] ) ) {
 
 		// Filters exist in this priority.
-		if ( ! empty( $priority ) && isset( $bp->filters->wp_filter[$tag][$priority] ) ) {
+		if ( ! empty( $priority ) && isset( $bp->filters->wp_filter[ $tag ][ $priority ] ) ) {
 
 			// Store filters in a backup.
-			$wp_filter[$tag][$priority] = $bp->filters->wp_filter[$tag][$priority];
+			$wp_filter[ $tag ][ $priority ] = $bp->filters->wp_filter[ $tag ][ $priority ];
 
 			// Unset the filters.
-			unset( $bp->filters->wp_filter[$tag][$priority] );
+			unset( $bp->filters->wp_filter[ $tag ][ $priority ] );
 
-		// Priority is empty.
+			// Priority is empty.
 		} else {
 
 			// Store filters in a backup.
-			$wp_filter[$tag] = $bp->filters->wp_filter[$tag];
+			$wp_filter[ $tag ] = $bp->filters->wp_filter[ $tag ];
 
 			// Unset the filters.
-			unset( $bp->filters->wp_filter[$tag] );
+			unset( $bp->filters->wp_filter[ $tag ] );
 		}
 	}
 
 	// Check merged filters.
-	if ( isset( $bp->filters->merged_filters[$tag] ) ) {
+	if ( isset( $bp->filters->merged_filters[ $tag ] ) ) {
 
 		// Store filters in a backup.
-		$merged_filters[$tag] = $bp->filters->merged_filters[$tag];
+		$merged_filters[ $tag ] = $bp->filters->merged_filters[ $tag ];
 
 		// Unset the filters.
-		unset( $bp->filters->merged_filters[$tag] );
+		unset( $bp->filters->merged_filters[ $tag ] );
 	}
 
 	return true;

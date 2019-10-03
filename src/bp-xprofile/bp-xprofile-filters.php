@@ -11,66 +11,66 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_filter( 'bp_get_the_profile_group_name',            'wp_filter_kses',       1 );
-add_filter( 'bp_get_the_profile_group_description',     'wp_filter_kses',       1 );
-add_filter( 'bp_get_the_profile_field_value',           'xprofile_filter_kses', 1 );
-add_filter( 'bp_get_the_profile_field_name',            'wp_filter_kses',       1 );
-add_filter( 'bp_get_the_profile_field_edit_value',      'wp_filter_kses',       1 );
-add_filter( 'bp_get_the_profile_field_description',     'wp_filter_kses',       1 );
+add_filter( 'bp_get_the_profile_group_name', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_group_description', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_field_value', 'xprofile_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_field_name', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_field_edit_value', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_field_description', 'wp_filter_kses', 1 );
 
-add_filter( 'bp_get_the_profile_field_value',           'wptexturize'        );
-add_filter( 'bp_get_the_profile_field_value',           'convert_chars'      );
-add_filter( 'bp_get_the_profile_field_value',           'wpautop'            );
-add_filter( 'bp_get_the_profile_field_value',           'force_balance_tags' );
-add_filter( 'bp_get_the_profile_field_value',           'make_clickable'     );
-add_filter( 'bp_get_the_profile_field_value',           'bp_xprofile_escape_field_data', 8, 3 );
-add_filter( 'bp_get_the_profile_field_value',           'convert_smilies', 9 );
-add_filter( 'bp_get_the_profile_field_value',           'xprofile_filter_format_field_value',         1, 2 );
-add_filter( 'bp_get_the_profile_field_value',           'xprofile_filter_format_field_value_by_type', 8, 3 );
-add_filter( 'bp_get_the_profile_field_value',           'xprofile_filter_link_profile_data',          9, 3 );
+add_filter( 'bp_get_the_profile_field_value', 'wptexturize' );
+add_filter( 'bp_get_the_profile_field_value', 'convert_chars' );
+add_filter( 'bp_get_the_profile_field_value', 'wpautop' );
+add_filter( 'bp_get_the_profile_field_value', 'force_balance_tags' );
+add_filter( 'bp_get_the_profile_field_value', 'make_clickable' );
+add_filter( 'bp_get_the_profile_field_value', 'bp_xprofile_escape_field_data', 8, 3 );
+add_filter( 'bp_get_the_profile_field_value', 'convert_smilies', 9 );
+add_filter( 'bp_get_the_profile_field_value', 'xprofile_filter_format_field_value', 1, 2 );
+add_filter( 'bp_get_the_profile_field_value', 'xprofile_filter_format_field_value_by_type', 8, 3 );
+add_filter( 'bp_get_the_profile_field_value', 'xprofile_filter_link_profile_data', 9, 3 );
 
-add_filter( 'bp_get_the_profile_field_edit_value',      'force_balance_tags' );
-add_filter( 'bp_get_the_profile_field_edit_value',      'bp_xprofile_escape_field_data', 10, 3 );
+add_filter( 'bp_get_the_profile_field_edit_value', 'force_balance_tags' );
+add_filter( 'bp_get_the_profile_field_edit_value', 'bp_xprofile_escape_field_data', 10, 3 );
 
-add_filter( 'bp_get_the_profile_group_name',            'stripslashes' );
-add_filter( 'bp_get_the_profile_group_description',     'stripslashes' );
-add_filter( 'bp_get_the_profile_field_value',           'stripslashes' );
-add_filter( 'bp_get_the_profile_field_edit_value',      'stripslashes' );
-add_filter( 'bp_get_the_profile_field_name',            'stripslashes' );
-add_filter( 'bp_get_the_profile_field_description',     'stripslashes' );
+add_filter( 'bp_get_the_profile_group_name', 'stripslashes' );
+add_filter( 'bp_get_the_profile_group_description', 'stripslashes' );
+add_filter( 'bp_get_the_profile_field_value', 'stripslashes' );
+add_filter( 'bp_get_the_profile_field_edit_value', 'stripslashes' );
+add_filter( 'bp_get_the_profile_field_name', 'stripslashes' );
+add_filter( 'bp_get_the_profile_field_description', 'stripslashes' );
 
-add_filter( 'xprofile_get_field_data',                  'xprofile_filter_kses', 1 );
-add_filter( 'xprofile_field_name_before_save',          'wp_filter_kses', 1 );
-add_filter( 'xprofile_field_description_before_save',   'wp_filter_kses', 1 );
+add_filter( 'xprofile_get_field_data', 'xprofile_filter_kses', 1 );
+add_filter( 'xprofile_field_name_before_save', 'wp_filter_kses', 1 );
+add_filter( 'xprofile_field_description_before_save', 'wp_filter_kses', 1 );
 
-add_filter( 'xprofile_get_field_data',                  'force_balance_tags' );
-add_filter( 'xprofile_field_name_before_save',          'force_balance_tags' );
-add_filter( 'xprofile_field_description_before_save',   'force_balance_tags' );
+add_filter( 'xprofile_get_field_data', 'force_balance_tags' );
+add_filter( 'xprofile_field_name_before_save', 'force_balance_tags' );
+add_filter( 'xprofile_field_description_before_save', 'force_balance_tags' );
 
-add_filter( 'xprofile_get_field_data',                  'stripslashes' );
-add_filter( 'xprofile_get_field_data',                  'xprofile_filter_format_field_value_by_field_id', 5, 2 );
+add_filter( 'xprofile_get_field_data', 'stripslashes' );
+add_filter( 'xprofile_get_field_data', 'xprofile_filter_format_field_value_by_field_id', 5, 2 );
 
-add_filter( 'bp_xprofile_set_field_data_pre_validate',  'xprofile_filter_pre_validate_value_by_field_type', 10, 3 );
-add_filter( 'xprofile_data_value_before_save',          'xprofile_sanitize_data_value_before_save', 1, 4 );
+add_filter( 'bp_xprofile_set_field_data_pre_validate', 'xprofile_filter_pre_validate_value_by_field_type', 10, 3 );
+add_filter( 'xprofile_data_value_before_save', 'xprofile_sanitize_data_value_before_save', 1, 4 );
 add_filter( 'xprofile_filtered_data_value_before_save', 'trim', 2 );
 
 // Save field groups.
-add_filter( 'xprofile_group_name_before_save',        'wp_filter_kses' );
+add_filter( 'xprofile_group_name_before_save', 'wp_filter_kses' );
 add_filter( 'xprofile_group_description_before_save', 'wp_filter_kses' );
 
-add_filter( 'xprofile_group_name_before_save',         'stripslashes' );
-add_filter( 'xprofile_group_description_before_save',  'stripslashes' );
+add_filter( 'xprofile_group_name_before_save', 'stripslashes' );
+add_filter( 'xprofile_group_description_before_save', 'stripslashes' );
 
 // Save fields.
-add_filter( 'xprofile_field_name_before_save',         'wp_filter_kses' );
-add_filter( 'xprofile_field_type_before_save',         'wp_filter_kses' );
-add_filter( 'xprofile_field_description_before_save',  'wp_filter_kses' );
-add_filter( 'xprofile_field_order_by_before_save',     'wp_filter_kses' );
+add_filter( 'xprofile_field_name_before_save', 'wp_filter_kses' );
+add_filter( 'xprofile_field_type_before_save', 'wp_filter_kses' );
+add_filter( 'xprofile_field_description_before_save', 'wp_filter_kses' );
+add_filter( 'xprofile_field_order_by_before_save', 'wp_filter_kses' );
 
-add_filter( 'xprofile_field_is_required_before_save',  'absint' );
-add_filter( 'xprofile_field_field_order_before_save',  'absint' );
+add_filter( 'xprofile_field_is_required_before_save', 'absint' );
+add_filter( 'xprofile_field_field_order_before_save', 'absint' );
 add_filter( 'xprofile_field_option_order_before_save', 'absint' );
-add_filter( 'xprofile_field_can_delete_before_save',   'absint' );
+add_filter( 'xprofile_field_can_delete_before_save', 'absint' );
 
 // Save field options.
 add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_options' );
@@ -147,10 +147,26 @@ function xprofile_filter_kses( $content, $data_obj = null ) {
 	// If the field supports rich text, we must allow tags that appear in wp_editor().
 	if ( $data_obj instanceof BP_XProfile_ProfileData && bp_xprofile_is_richtext_enabled_for_field( $data_obj->field_id ) ) {
 		$richtext_tags = array(
-			'img'  => array( 'id' => 1, 'class' => 1, 'src' => 1, 'alt' => 1, 'width' => 1, 'height' => 1 ),
-			'ul'   => array( 'id' => 1, 'class' => 1 ),
-			'ol'   => array( 'id' => 1, 'class' => 1 ),
-			'li'   => array( 'id' => 1, 'class' => 1 ),
+			'img'  => array(
+				'id'     => 1,
+				'class'  => 1,
+				'src'    => 1,
+				'alt'    => 1,
+				'width'  => 1,
+				'height' => 1,
+			),
+			'ul'   => array(
+				'id'    => 1,
+				'class' => 1,
+			),
+			'ol'   => array(
+				'id'    => 1,
+				'class' => 1,
+			),
+			'li'   => array(
+				'id'    => 1,
+				'class' => 1,
+			),
 			'span' => array( 'style' => 1 ),
 			'p'    => array( 'style' => 1 ),
 		);
@@ -175,9 +191,9 @@ function xprofile_filter_kses( $content, $data_obj = null ) {
  *
  * @since BuddyPress 1.2.6
  *
- * @param string $field_value Field value being santized.
- * @param int $field_id Field ID being sanitized.
- * @param bool $reserialize Whether to reserialize arrays before returning. Defaults to true.
+ * @param string      $field_value Field value being santized.
+ * @param int         $field_id Field ID being sanitized.
+ * @param bool        $reserialize Whether to reserialize arrays before returning. Defaults to true.
  * @param object|null $data_obj The BP_XProfile_ProfileData object.
  *
  * @return string
@@ -386,12 +402,12 @@ function xprofile_filter_link_profile_data( $field_value, $field_type = 'textbox
 		return $field_value;
 	}
 
-    // If the value is a URL, make it clickable.
-    if ( preg_match( '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', $field_value ) ) {
-        $field_value = make_clickable( $field_value );
-    }
+	// If the value is a URL, make it clickable.
+	if ( preg_match( '@(https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?)@', $field_value ) ) {
+		$field_value = make_clickable( $field_value );
+	}
 
-    return $field_value;
+	return $field_value;
 }
 
 /**
@@ -409,7 +425,7 @@ function xprofile_filter_link_profile_data( $field_value, $field_type = 'textbox
 function xprofile_filter_comments( $comments, $post_id = 0 ) {
 
 	// Locate comment authors with WP accounts.
-	foreach( (array) $comments as $comment ) {
+	foreach ( (array) $comments as $comment ) {
 		if ( $comment->user_id ) {
 			$user_ids[] = $comment->user_id;
 		}
@@ -422,13 +438,13 @@ function xprofile_filter_comments( $comments, $post_id = 0 ) {
 
 	// Pull up the xprofile fullname of each commenter.
 	if ( $fullnames = bp_core_get_user_displaynames( $user_ids ) ) {
-		foreach( (array) $fullnames as $user_id => $user_fullname ) {
+		foreach ( (array) $fullnames as $user_id => $user_fullname ) {
 			$users[ $user_id ] = trim( stripslashes( $user_fullname ) );
 		}
 	}
 
 	// Loop through and match xprofile fullname with commenters.
-	foreach( (array) $comments as $i => $comment ) {
+	foreach ( (array) $comments as $i => $comment ) {
 		if ( ! empty( $comment->user_id ) ) {
 			if ( ! empty( $users[ $comment->user_id ] ) ) {
 				$comments[ $i ]->comment_author = $users[ $comment->user_id ];
@@ -484,7 +500,7 @@ function bp_xprofile_add_xprofile_query_to_user_query( BP_User_Query $q ) {
 
 	if ( ! empty( $sql['join'] ) ) {
 		$q->uid_clauses['select'] .= $sql['join'];
-		$q->uid_clauses['where'] .= $sql['where'];
+		$q->uid_clauses['where']  .= $sql['where'];
 	}
 }
 add_action( 'bp_pre_user_query', 'bp_xprofile_add_xprofile_query_to_user_query' );
@@ -536,7 +552,7 @@ function bp_xprofile_filter_meta_query( $q ) {
 		 *   the query results
 		 * - append the 'object type' WHERE clause
 		 */
-		case 'SELECT' :
+		case 'SELECT':
 			$q = str_replace(
 				array(
 					$matches[0],
@@ -557,8 +573,8 @@ function bp_xprofile_filter_meta_query( $q ) {
 		 * - replace 'xprofile_{fieldtype}_id' with 'object_id'
 		 * - append the 'object type' WHERE clause
 		 */
-		case 'UPDATE' :
-		case 'DELETE' :
+		case 'UPDATE':
+		case 'DELETE':
 			$q = str_replace(
 				array(
 					$matches[0],
@@ -577,7 +593,7 @@ function bp_xprofile_filter_meta_query( $q ) {
 		 * - replace 'xprofile_{fieldtype}_id' with 'object_id'
 		 * - ensure that the object_type field gets filled in
 		 */
-		case 'INSERT' :
+		case 'INSERT':
 			$q = str_replace(
 				array(
 					'`' . $matches[0] . '`',
@@ -585,7 +601,7 @@ function bp_xprofile_filter_meta_query( $q ) {
 				),
 				array(
 					'`object_type`,`object_id`',
-					$wpdb->prepare( "VALUES (%s,", $matches[1] ),
+					$wpdb->prepare( 'VALUES (%s,', $matches[1] ),
 				),
 				$q
 			);
@@ -596,7 +612,7 @@ function bp_xprofile_filter_meta_query( $q ) {
 	if ( ! empty( $quoted_matches[0] ) ) {
 		for ( $i = 0; $i < count( $quoted_matches[0] ); $i++ ) {
 			$quote_pos = strpos( $q, '__QUOTE__' );
-			$q = substr_replace( $q, $quoted_matches[0][ $i ], $quote_pos, 9 );
+			$q         = substr_replace( $q, $quoted_matches[0][ $i ], $quote_pos, 9 );
 		}
 	}
 
@@ -616,40 +632,40 @@ function bp_xprofile_filter_meta_query( $q ) {
  * @param string $field_name
  * @return string
  */
-function xprofile_filter_field_edit_name ( $field_name ) {
-    $is_field_edit_mode = false;
+function xprofile_filter_field_edit_name( $field_name ) {
+	$is_field_edit_mode = false;
 
-    $current_field = false;
+	$current_field = false;
 
-    if ( bp_is_profile_component() && 'edit' == bp_current_action() ) {
-        //we are on profile > edit screens, we should display alternate name, if available, instead of main name.
-        $is_field_edit_mode = true;
+	if ( bp_is_profile_component() && 'edit' == bp_current_action() ) {
+		// we are on profile > edit screens, we should display alternate name, if available, instead of main name.
+		$is_field_edit_mode = true;
 
-        //we can use global $field variable here
-        global $field;
-        $current_field = $field;
-    }
+		// we can use global $field variable here
+		global $field;
+		$current_field = $field;
+	}
 
-    if ( !$is_field_edit_mode && bp_is_register_page() ) {
-        //We are on registration page/form. We should display alternate name, if available, instead of main name.
-        $is_field_edit_mode = true;
+	if ( ! $is_field_edit_mode && bp_is_register_page() ) {
+		// We are on registration page/form. We should display alternate name, if available, instead of main name.
+		$is_field_edit_mode = true;
 
-        //we can use global $field variable here
-        global $field;
-        $current_field = $field;
-    }
+		// we can use global $field variable here
+		global $field;
+		$current_field = $field;
+	}
 
-    //@todo : Should we do it if an admin is editing user profiles in backend ( wp-admin/edit-user.php... ) ?
+	// @todo : Should we do it if an admin is editing user profiles in backend ( wp-admin/edit-user.php... ) ?
 
-    if ( $is_field_edit_mode ) {
-        $alternate_name = bp_get_the_profile_field_alternate_name( $current_field );
+	if ( $is_field_edit_mode ) {
+		$alternate_name = bp_get_the_profile_field_alternate_name( $current_field );
 
-        if ( !empty( $alternate_name ) ) {
-            $field_name = $alternate_name;
-        }
-    }
+		if ( ! empty( $alternate_name ) ) {
+			$field_name = $alternate_name;
+		}
+	}
 
-    return $field_name;
+	return $field_name;
 }
 
 /**
@@ -674,7 +690,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return $retval;
 	}
 
-	$value = strtolower( $value );
+	$value      = strtolower( $value );
 	$field_name = xprofile_get_field( $field_id )->name;
 
 	// Empty nickname
@@ -682,9 +698,14 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
 
+	// No underscores. @todo Why not?
+	if ( false !== strpos( ' ' . $value, '_' ) ) {
+		return sprintf( __( 'Sorry, %s may not contain the character "_"!', 'buddyboss' ), $field_name );
+	}
+
 	// only alpha numeric, underscore, dash
 	if ( ! preg_match( '/^([A-Za-z0-9-_\.]+)$/', $value ) ) {
-		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-", "_" and "." are allowed.', 'buddyboss' ), $field_name );
+		return sprintf( __( 'Invalid %s. Only "a-z", "0-9", "-" and "." are allowed.', 'buddyboss' ), $field_name );
 	}
 
 	// cannot have 2 continued special characters
@@ -695,7 +716,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	// must be shorter then 32 characters
 	$nickname_length = apply_filters( 'xprofile_nickname_max_length', 32 );
 	if ( strlen( $value ) > $nickname_length ) {
-		return sprintf( __( '%s must be shorter than %d characters.', 'buddyboss' ), $field_name, $nickname_length );
+		return sprintf( __( '%1$s must be shorter than %2$d characters.', 'buddyboss' ), $field_name, $nickname_length );
 	}
 
 	// Minimum of 4 characters.
@@ -704,10 +725,10 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	}
 
 	global $wpdb;
-	$where = [
+	$where = array(
 		'meta_key = "nickname"',
-		'meta_value = "' . $value . '"'
-	];
+		'meta_value = "' . $value . '"',
+	);
 
 	if ( $user_id ) {
 		$where[] = 'user_id != ' . $user_id;
@@ -734,13 +755,13 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
  * @param $retval
  * @param $field_id
  * @param $value
- * @param null $user_id
+ * @param null     $user_id
  *
  * @return string
  */
 function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id = null ) {
 
-	if ( 'telephone' !== xprofile_get_field( $field_id)->type ) {
+	if ( 'telephone' !== xprofile_get_field( $field_id )->type ) {
 		return $retval;
 	}
 
@@ -752,7 +773,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 		return $retval;
 	}
 
-	$international = false;
+	$international   = false;
 	$selected_format = bp_xprofile_get_meta( $field_id, 'field', 'phone_format', true );
 	if ( empty( $selected_format ) ) {
 		$international = true;
@@ -765,7 +786,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	$field_name = xprofile_get_field( $field_id )->name;
 
-	if ( empty( $str) ) {
+	if ( empty( $str ) ) {
 		/* SET ERROR: The field must be a valid U.S. phone number (e.g. 888-888-8888) */
 		return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
 	}
@@ -801,8 +822,8 @@ function bp_xprofile_adjust_current_user_display_name() {
 		return;
 	}
 
-	$name = empty( $current_user->display_name ) ? empty( $current_user->user_nicename ) ?  $current_user->user_login : $current_user->user_nicename : $current_user->display_name;
-	$display_name = bp_core_get_member_display_name( $name, $current_user->ID );
+	$name                             = empty( $current_user->display_name ) ? empty( $current_user->user_nicename ) ? $current_user->user_login : $current_user->user_nicename : $current_user->display_name;
+	$display_name                     = bp_core_get_member_display_name( $name, $current_user->ID );
 	$current_user->data->display_name = empty( $display_name ) ? $name : $display_name;
 }
 
@@ -894,19 +915,20 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
 
 	if ( 1 === $field->is_required ) {
 		foreach ( $value as $key => $val ) {
-			$value = trim($val);
-			if (empty($value))
+			$value = trim( $val );
+			if ( empty( $value ) ) {
 				return sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), $field_name );
+			}
 		}
 	}
 
 	$providers = bp_xprofile_social_network_provider();
 	foreach ( $value as $k => $v ) {
-		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL) ) {
+		if ( '' === $v || filter_var( $v, FILTER_VALIDATE_URL ) ) {
 
 		} else {
-			$key = bp_social_network_search_key( $k, $providers);
-			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[$key]->name );
+			$key = bp_social_network_search_key( $k, $providers );
+			return sprintf( __( 'Please enter valid %s profile url.', 'buddyboss' ), $providers[ $key ]->name );
 		}
 	}
 
@@ -924,8 +946,8 @@ function bp_xprofile_validate_social_networks_value( $retval, $field_id, $value,
  * @return int|string|null
  */
 function bp_social_network_search_key( $id, $array ) {
-	foreach ($array as $key => $val) {
-		if ($val->value === $id) {
+	foreach ( $array as $key => $val ) {
+		if ( $val->value === $id ) {
 			return $key;
 		}
 	}

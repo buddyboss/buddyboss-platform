@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
- 
+
 class BP_Integration {
 
 	/**
@@ -48,7 +48,7 @@ class BP_Integration {
 	public function start( $id = '', $name = '', $path = '', $params = array() ) {
 
 		// Internal identifier of integration.
-		$this->id   = $id;
+		$this->id = $id;
 
 		// Internal integration name.
 		$this->name = $name;
@@ -71,8 +71,8 @@ class BP_Integration {
 
 		if ( $this->is_activated() ) {
 			$this->activation();
-			add_action( 'bp_include',                array( $this, 'includes'               ), 8 );
-			add_action( 'bp_late_include',           array( $this, 'late_includes'          ) );
+			add_action( 'bp_include', array( $this, 'includes' ), 8 );
+			add_action( 'bp_late_include', array( $this, 'late_includes' ) );
 		}
 	}
 
@@ -81,7 +81,7 @@ class BP_Integration {
 			return false;
 		}
 
-		$plugins = get_option( 'active_plugins' ) ?: [];
+		$plugins = get_option( 'active_plugins' ) ?: array();
 		if ( in_array( $this->required_plugin, $plugins ) ) {
 			return true;
 		}
@@ -90,8 +90,8 @@ class BP_Integration {
 			return false;
 		}
 
-		$plugins = get_site_option( 'active_sitewide_plugins' ) ?: [];
-		return isset( $plugins[$this->required_plugin] );
+		$plugins = get_site_option( 'active_sitewide_plugins' ) ?: array();
+		return isset( $plugins[ $this->required_plugin ] );
 	}
 
 	public function activation() {
@@ -117,7 +117,7 @@ class BP_Integration {
 			$paths = array(
 
 				// Passed with no extension.
-				'bp-' . $this->id . '/bp-' . $this->id . '-' . $file  . '.php',
+				'bp-' . $this->id . '/bp-' . $this->id . '-' . $file . '.php',
 				'bp-' . $this->id . '-' . $file . '.php',
 				'bp-' . $this->id . '/' . $file . '.php',
 
@@ -129,7 +129,7 @@ class BP_Integration {
 
 			foreach ( $paths as $path ) {
 				if ( @is_file( $slashed_path . $path ) ) {
-					require( $slashed_path . $path );
+					require $slashed_path . $path;
 					break;
 				}
 			}

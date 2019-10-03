@@ -34,7 +34,6 @@ function bp_learndash_url( $path = '' ) {
  */
 function bp_ld_sync( $component = null ) {
 	global $bp_ld_sync;
-
 	return $component ? $bp_ld_sync->$component : $bp_ld_sync;
 }
 
@@ -166,7 +165,7 @@ function learndash_integration_prepare_price_str( $price ) {
 			'LTL' => '&#76;&#116;',
 			'LVL' => '&#76;&#115;',
 			'LYD' => '&#1604;.&#1583;', // ?
-			'MAD' => '&#1583;.&#1605;.', //?
+			'MAD' => '&#1583;.&#1605;.', // ?
 			'MDL' => '&#76;',
 			'MGA' => '&#65;&#114;', // ?
 			'MKD' => '&#1076;&#1077;&#1085;',

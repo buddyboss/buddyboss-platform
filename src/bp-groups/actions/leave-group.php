@@ -44,7 +44,7 @@ function groups_action_leave_group() {
 			bp_core_add_message( __( 'You left the group.', 'buddyboss' ) );
 		}
 
-		$group = groups_get_current_group();
+		$group    = groups_get_current_group();
 		$redirect = bp_get_group_permalink( $group );
 
 		if ( ! $group->is_visible ) {

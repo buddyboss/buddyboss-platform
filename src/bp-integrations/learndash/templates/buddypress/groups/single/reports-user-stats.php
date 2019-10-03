@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * @todo Should we be labeling Teacher and Student here?
  */
-if ($courseId): ?>
+if ( $courseId ) : ?>
 	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
 <?php endif; ?>
 
@@ -135,14 +135,16 @@ if ($courseId): ?>
 				$link = apply_filters(
 					'bp_get_send_private_message_link',
 					wp_nonce_url(
-						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_activity_get_user_mentionname($user->ID)
+						bp_loggedin_user_domain() . bp_get_messages_slug() . '/compose/?r=' . bp_activity_get_user_mentionname( $user->ID )
 					)
 				);
 
-				echo bp_get_send_message_button([
-					'link_href' => $link,
-					'link_text' => __( 'Message', 'buddyboss' ),
-				]);
+				echo bp_get_send_message_button(
+					array(
+						'link_href' => $link,
+						'link_text' => __( 'Message', 'buddyboss' ),
+					)
+				);
 			?>
 		</div>
 	<?php endif; ?>

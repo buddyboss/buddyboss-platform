@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.2.2
+Tested up to: 5.2.3
 Requires PHP: 5.6.20
-Stable tag: 1.1.8
+Stable tag: 1.1.9
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,41 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.1.9 =
+* Performance - Lazy load iframes (video embeds) in Activity
+* Activity - New option to display activity in separate tabs based on activity type
+* Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
+* Activity - When embedding links with no additional text, show the content preview and hide link URL
+* Activity - When embedding a Youtube link that cannot fetch a video preview, fall back to image preview
+* Activity - Fixed link previews when embedding links from a Facebook url
+* Activity - Fixed link previews when embedding links from an AMP url
+* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
+* Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
+* Groups - When a group member changes their Name, now updates their name in previous group activity feeds
+* Groups - When editing groups from backend, fixed dropdown list of available Group Types
+* Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
+* Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
+* Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
+* Media - Fixed issue with deleting albums from groups
+* Media - Fixed displaying photos uploaded into groups in the global Photos page, based on group privacy
+* Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
+* Email Invites - If an invited email is already a member, providing proper validation now
+* Email Invites - Fixed 'Email Invites' tab showing on other member profiles, when viewing as Admin
+* Email Invites - Fixed WordPress error when sending invites, on some servers
+* Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
+* Registration - Added validation telling users that underscores are not allowed for 'Nickname'
+* Registration - Fixed validation when 'Profile Type' field is required and in a non-signup field set
+* Registration - Nicer 'Mismatch' validation when Email and Confirm Email do not match
+* Registration - Fixed activation email not sending in multisite, in some servers
+* MemberPress + BuddyPress Integration - Fixed Name fields when registering to a member level
+* MemberPress + BuddyPress Integration - Added the 'Membership' links into profile dropdown
+* Compatibility - Improved support for plugins that 'Require bbPress' and 'Require BuddyPress'
+* Documentation - Forum Settings
+* Documentation - Activity Tabs
+* Documentation - Registration Confirm Email/Password
+* Documentation - Theme Header (Mobile)
 
 = 1.1.8 =
 * Profiles - Allow Uppercase letters in Nicknames, and auto-convert them to lowercase for Usernames

@@ -55,21 +55,25 @@ final class BP_Xprofile_Export extends BP_Export {
 		 * Cover Photo & Avatar
 		 */
 		if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-			$avatar = bp_core_fetch_avatar( array(
-				'item_id' => $user->ID,
-				'object'  => 'user',
-				'type'    => 'full',
-				'html'    => false,
-			) );
+			$avatar = bp_core_fetch_avatar(
+				array(
+					'item_id' => $user->ID,
+					'object'  => 'user',
+					'type'    => 'full',
+					'html'    => false,
+				)
+			);
 		}
 
 		if ( function_exists( 'bp_attachments_get_attachment' ) ) {
-			$cover_photo = bp_attachments_get_attachment( 'url',
+			$cover_photo = bp_attachments_get_attachment(
+				'url',
 				array(
 					'item_id'    => $user->ID,
 					'type'       => 'cover-image',
 					'object_dir' => 'members',
-				) );
+				)
+			);
 		}
 
 		if ( empty( $avatar ) || ! $avatar ) {
@@ -79,8 +83,14 @@ final class BP_Xprofile_Export extends BP_Export {
 			$cover_photo = __( 'N/A', 'buddyboss' );
 		}
 
-		$data[] = array( 'name' => __( 'Avatar', 'buddyboss' ), 'value' => $avatar );
-		$data[] = array( 'name' => __( 'Cover Photo', 'buddyboss' ), 'value' => $cover_photo );
+		$data[] = array(
+			'name'  => __( 'Avatar', 'buddyboss' ),
+			'value' => $avatar,
+		);
+		$data[] = array(
+			'name'  => __( 'Cover Photo', 'buddyboss' ),
+			'value' => $cover_photo,
+		);
 
 		$export_items[] = array(
 			'group_id'    => "{$this->exporter_name}-cover-avatar",
@@ -88,7 +98,6 @@ final class BP_Xprofile_Export extends BP_Export {
 			'item_id'     => "{$this->exporter_name}-assets-{$user->ID}",
 			'data'        => $data,
 		);
-
 
 		/**
 		 * Xprofile Fields
@@ -109,7 +118,10 @@ final class BP_Xprofile_Export extends BP_Export {
 				if ( empty( $val ) ) {
 					$val = __( 'N/A', 'buddyboss' );
 				}
-				$data[] = array( 'name' => $item['name'], 'value' => $val );
+				$data[] = array(
+					'name'  => $item['name'],
+					'value' => $val,
+				);
 			}
 
 			$data = apply_filters( 'buddyboss_bp_gdpr_xprofile_after_data_prepare', $data, $items, $data_items );
@@ -122,7 +134,6 @@ final class BP_Xprofile_Export extends BP_Export {
 			);
 
 		}
-
 
 		$done = true; // on this we are processing everything at once.
 
@@ -162,7 +173,13 @@ final class BP_Xprofile_Export extends BP_Export {
 		bp_core_delete_avatar_on_user_delete( $user->ID );
 
 		// delete cover photo
-		bp_attachments_delete_file( array( 'item_id' => $user->ID, 'object' => 'members', 'type' => 'cover-image' ) );
+		bp_attachments_delete_file(
+			array(
+				'item_id' => $user->ID,
+				'object'  => 'members',
+				'type'    => 'cover-image',
+			)
+		);
 
 		$done = true;
 
@@ -188,12 +205,16 @@ final class BP_Xprofile_Export extends BP_Export {
 
 		$xprofile_groups = bp_xprofile_get_groups();
 
-		$field_table = $bp->profile->global_tables["table_name_fields"];
+		$field_table = $bp->profile->global_tables['table_name_fields'];
 
 		foreach ( $xprofile_groups as $xgroup ) {
 
-			$fields = $wpdb->get_results( $wpdb->prepare( "SELECT *FROM {$field_table} WHERE group_id=%d AND parent_id=0",
-				$xgroup->id ) );
+			$fields = $wpdb->get_results(
+				$wpdb->prepare(
+					"SELECT *FROM {$field_table} WHERE group_id=%d AND parent_id=0",
+					$xgroup->id
+				)
+			);
 
 			foreach ( $fields as $key => $field ) {
 				$field          = (array) $field;

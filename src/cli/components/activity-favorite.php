@@ -156,10 +156,12 @@ class Activity_Favorite extends BuddypressCommand {
 			WP_CLI::error( 'No favorite found for this user.' );
 		}
 
-		$activities = bp_activity_get_specific( array(
-			'activity_ids' => $favorites,
-			'per_page'     => $assoc_args['count'],
-		) );
+		$activities = bp_activity_get_specific(
+			array(
+				'activity_ids' => $favorites,
+				'per_page'     => $assoc_args['count'],
+			)
+		);
 
 		// Sanity check.
 		if ( empty( $activities['activities'] ) ) {

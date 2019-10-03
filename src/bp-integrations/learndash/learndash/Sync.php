@@ -19,8 +19,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class Sync
-{
+class Sync {
+
 	// temporarily hold the synced learndash group id just before delete
 	protected $deletingSyncedBpGroupId;
 
@@ -29,9 +29,8 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		add_action('bp_ld_sync/init', [$this, 'init']);
+	public function __construct() {
+		 add_action( 'bp_ld_sync/init', array( $this, 'init' ) );
 	}
 
 	/**
@@ -39,17 +38,16 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function init()
-	{
-		add_action('bp_ld_sync/learndash_group_updated', [$this, 'onGroupUpdated']);
-		add_action('bp_ld_sync/learndash_group_deleting', [$this, 'onGroupDeleting']);
-		add_action('bp_ld_sync/learndash_group_deleted', [$this, 'onGroupDeleted']);
+	public function init() {
+		add_action( 'bp_ld_sync/learndash_group_updated', array( $this, 'onGroupUpdated' ) );
+		add_action( 'bp_ld_sync/learndash_group_deleting', array( $this, 'onGroupDeleting' ) );
+		add_action( 'bp_ld_sync/learndash_group_deleted', array( $this, 'onGroupDeleted' ) );
 
-		add_action('bp_ld_sync/learndash_group_admin_added', [$this, 'onAdminAdded'], 10, 2);
-		add_action('bp_ld_sync/learndash_group_user_added', [$this, 'onUserAdded'], 10, 2);
+		add_action( 'bp_ld_sync/learndash_group_admin_added', array( $this, 'onAdminAdded' ), 10, 2 );
+		add_action( 'bp_ld_sync/learndash_group_user_added', array( $this, 'onUserAdded' ), 10, 2 );
 
-		add_action('bp_ld_sync/learndash_group_admin_removed', [$this, 'onAdminRemoved'], 10, 2);
-		add_action('bp_ld_sync/learndash_group_user_removed', [$this, 'onUserRemoved'], 10, 2);
+		add_action( 'bp_ld_sync/learndash_group_admin_removed', array( $this, 'onAdminRemoved' ), 10, 2 );
+		add_action( 'bp_ld_sync/learndash_group_user_removed', array( $this, 'onUserRemoved' ), 10, 2 );
 	}
 
 	/**
@@ -57,9 +55,8 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function generator($bpGroupId = null, $ldGroupId = null)
-	{
-		return new SyncGenerator($bpGroupId, $ldGroupId);
+	public function generator( $bpGroupId = null, $ldGroupId = null ) {
+		return new SyncGenerator( $bpGroupId, $ldGroupId );
 	}
 
 	/**
@@ -83,9 +80,9 @@ class Sync
 		}
 
 		// created programmatically
-		//if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
-			//return false;
-		//}
+		// if ( ! bp_ld_sync( 'settings' )->get( 'learndash.default_auto_sync' ) ) {
+			// return false;
+		// }
 
 		$newGroup  = bp_ld_sync()->getRequest( 'bp-ld-sync-id', null );
 		$generator = $this->generator( null, $groupId );
@@ -104,13 +101,12 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function onGroupDeleting($groupId)
-	{
-		if (! $this->preCheck()) {
+	public function onGroupDeleting( $groupId ) {
+		if ( ! $this->preCheck() ) {
 			return false;
 		}
 
-		$this->deletingSyncedBpGroupId = $this->generator(null, $groupId)->getBpGroupId();
+		$this->deletingSyncedBpGroupId = $this->generator( null, $groupId )->getBpGroupId();
 	}
 
 	/**
@@ -118,20 +114,19 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function onGroupDeleted($groupId)
-	{
-		if (! $bpGroupId = $this->deletingSyncedBpGroupId) {
+	public function onGroupDeleted( $groupId ) {
+		if ( ! $bpGroupId = $this->deletingSyncedBpGroupId ) {
 			return;
 		}
 
 		$this->deletingSyncedBpGroupId = null;
 
-		if (! bp_ld_sync('settings')->get('learndash.delete_bp_on_delete')) {
-			$this->generator($bpGroupId)->desyncFromLearndash();
+		if ( ! bp_ld_sync( 'settings' )->get( 'learndash.delete_bp_on_delete' ) ) {
+			$this->generator( $bpGroupId )->desyncFromLearndash();
 			return;
 		}
 
-		$this->generator()->deleteBpGroup($bpGroupId);
+		$this->generator()->deleteBpGroup( $bpGroupId );
 	}
 
 	/**
@@ -139,13 +134,12 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function onAdminAdded($groupId, $userId)
-	{
-		if (! $generator = $this->groupUserEditCheck('admin', $groupId)) {
+	public function onAdminAdded( $groupId, $userId ) {
+		if ( ! $generator = $this->groupUserEditCheck( 'admin', $groupId ) ) {
 			return false;
 		}
 
-		$generator->syncLdAdmin($userId);
+		$generator->syncLdAdmin( $userId );
 	}
 
 	/**
@@ -153,13 +147,12 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function onUserAdded($groupId, $userId)
-	{
-		if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
+	public function onUserAdded( $groupId, $userId ) {
+		if ( ! $generator = $this->groupUserEditCheck( 'user', $groupId ) ) {
 			return false;
 		}
 
-		$generator->syncLdUser($userId);
+		$generator->syncLdUser( $userId );
 	}
 
 	/**
@@ -167,13 +160,12 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function onAdminRemoved($groupId, $userId)
-	{
-		if (! $generator = $this->groupUserEditCheck('admin', $groupId)) {
+	public function onAdminRemoved( $groupId, $userId ) {
+		if ( ! $generator = $this->groupUserEditCheck( 'admin', $groupId ) ) {
 			return false;
 		}
 
-		$generator->syncLdAdmin($userId, true);
+		$generator->syncLdAdmin( $userId, true );
 	}
 
 	/**
@@ -181,13 +173,12 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function onUserRemoved($groupId, $userId)
-	{
-		if (! $generator = $this->groupUserEditCheck('user', $groupId)) {
+	public function onUserRemoved( $groupId, $userId ) {
+		if ( ! $generator = $this->groupUserEditCheck( 'user', $groupId ) ) {
 			return false;
 		}
 
-		$generator->syncLdUser($userId, true);
+		$generator->syncLdUser( $userId, true );
 	}
 
 	/**
@@ -195,19 +186,18 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function groupUserEditCheck($role, $groupId)
-	{
-		if (! $this->preCheck()) {
+	protected function groupUserEditCheck( $role, $groupId ) {
+		if ( ! $this->preCheck() ) {
 			return false;
 		}
 
-		if ('none' == bp_ld_sync('settings')->get("learndash.default_{$role}_sync_to")) {
+		if ( 'none' == bp_ld_sync( 'settings' )->get( "learndash.default_{$role}_sync_to" ) ) {
 			return false;
 		}
 
-		$generator = $this->generator(null, $groupId);
+		$generator = $this->generator( null, $groupId );
 
-		if (! $generator->hasBpGroup()) {
+		if ( ! $generator->hasBpGroup() ) {
 			return false;
 		}
 
@@ -219,15 +209,14 @@ class Sync
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function preCheck()
-	{
-		global $bp_ld_sync__syncing_to_learndash;
+	protected function preCheck() {
+		 global $bp_ld_sync__syncing_to_learndash;
 
 		// if it's group is created from buddypress sync, don't need to sync back
-		if ($bp_ld_sync__syncing_to_learndash) {
+		if ( $bp_ld_sync__syncing_to_learndash ) {
 			return false;
 		}
 
-		return bp_ld_sync('settings')->get('learndash.enabled');
+		return bp_ld_sync( 'settings' )->get( 'learndash.enabled' );
 	}
 }

@@ -760,6 +760,12 @@ function bp_core_no_access_wp_login_error( $errors ) {
 		return $errors;
 	}
 
+	if ( isset( $_REQUEST['redirect_from'] ) && 'private_group' === $_REQUEST['redirect_from'] ) {
+		$bp_error_message = __( 'Please login to access this group.', 'buddyboss' );
+	} else {
+		$bp_error_message = __( 'Please login to access this website.', 'buddyboss' );
+	}
+
 	/**
 	 * Filters the error message for wp-login.php when needing to log in before accessing.
 	 *
@@ -768,7 +774,7 @@ function bp_core_no_access_wp_login_error( $errors ) {
 	 * @param string $value Error message to display.
 	 * @param string $value URL to redirect user to after successful login.
 	 */
-	$message = apply_filters( 'bp_wp_login_error', __( 'Please login to access this website.', 'buddyboss' ), $_REQUEST['redirect_to'] );
+	$message = apply_filters( 'bp_wp_login_error', $bp_error_message, $_REQUEST['redirect_to'] );
 
 	$errors->add( 'bp_no_access', $message );
 
@@ -1132,7 +1138,7 @@ function bp_private_network_template_redirect() {
 			}
 
 			// Redirect to MemberPress custom login page.
-			if ( function_exists( 'is_plugin_active' ) && is_plugin_active('memberpress/memberpress.php' ) ) {
+			if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'memberpress/memberpress.php' ) ) {
 				$mepr_options_array = get_option( MEPR_OPTIONS_SLUG );
 
 				if ( isset( $mepr_options_array['login_page_id'] ) && $id === $mepr_options_array['login_page_id'] ) {
@@ -1172,7 +1178,7 @@ function bp_private_network_template_redirect() {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
-							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
 								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
@@ -1226,7 +1232,7 @@ function bp_private_network_template_redirect() {
 				} else {
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 						if ( $actual_link !== wc_lostpassword_url() ) {
 							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
@@ -1267,7 +1273,7 @@ function bp_private_network_template_redirect() {
 
 				if ( class_exists( 'woocommerce' ) ) {
 
-					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://'. $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
 						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {

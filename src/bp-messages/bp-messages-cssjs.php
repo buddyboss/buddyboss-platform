@@ -57,7 +57,7 @@ add_action( 'wp_head', 'messages_add_autocomplete_css' );
  * @todo Why is this here and not in a properly enqueued file?
  */
 function messages_autocomplete_init_jsblock() {
-?>
+	?>
 
 	<script>
 		jQuery(document).ready(function() {
@@ -70,5 +70,5 @@ function messages_autocomplete_init_jsblock() {
 		});
 	</script>
 
-<?php
+	<?php
 }

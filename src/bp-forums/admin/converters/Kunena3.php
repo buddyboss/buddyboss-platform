@@ -23,22 +23,22 @@ class Kunena3 extends BBP_Converter_Base {
 	 */
 	public function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'kunena_categories',
 			'from_fieldname' => 'id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id'
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'kunena_categories',
-			'from_fieldname'  => 'parent_id',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_forum_parent_id'
+			'from_tablename' => 'kunena_categories',
+			'from_fieldname' => 'parent_id',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -46,7 +46,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'kunena_categories',
 			'from_fieldname' => 'numTopics',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_topic_count'
+			'to_fieldname'   => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -54,23 +54,23 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'kunena_categories',
 			'from_fieldname' => 'numPosts',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_reply_count'
+			'to_fieldname'   => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Includes unpublished topics, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'kunena_categories',
-			'from_fieldname'  => 'numTopics',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_topic_count'
+			'from_tablename' => 'kunena_categories',
+			'from_fieldname' => 'numTopics',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Includes unpublished replies, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'kunena_categories',
-			'from_fieldname'  => 'numPosts',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_reply_count'
+			'from_tablename' => 'kunena_categories',
+			'from_fieldname' => 'numPosts',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -78,7 +78,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'kunena_categories',
 			'from_fieldname' => 'name',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid conflicts)
@@ -87,7 +87,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'alias',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -96,7 +96,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'description',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -104,7 +104,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'kunena_categories',
 			'from_fieldname' => 'ordering',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum type (Category = 0 or Forum = >0, Stored in postmeta)
@@ -113,7 +113,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'parent_id',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_type',
-			'callback_method' => 'callback_forum_type'
+			'callback_method' => 'callback_forum_type',
 		);
 
 		// Forum status (Open = 0 or Closed = 1, Stored in postmeta)
@@ -122,39 +122,39 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'locked',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_status',
-			'callback_method' => 'callback_forum_status'
+			'callback_method' => 'callback_forum_status',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'kunena_topics',
 			'from_fieldname' => 'id',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -163,7 +163,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'posts',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -172,7 +172,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'posts',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -181,7 +181,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'category_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -190,7 +190,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'first_post_userid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic Author ip (Stored in postmeta)
@@ -202,7 +202,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (id)',
 			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_author_ip'
+			'to_fieldname'    => '_bbp_author_ip',
 		);
 
 		// Topic content.
@@ -211,7 +211,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'first_post_message',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic title.
@@ -219,7 +219,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'kunena_topics',
 			'from_fieldname' => 'subject',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -228,7 +228,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'subject',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -237,7 +237,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'category_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic dates.
@@ -246,35 +246,35 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'first_post_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_topics',
 			'from_fieldname'  => 'first_post_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_topics',
 			'from_fieldname'  => 'last_post_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_topics',
 			'from_fieldname'  => 'last_post_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_topics',
 			'from_fieldname'  => 'last_post_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_last_active_time',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// Topic status (Open or Closed, Kunena v3.x 0=open & 1=closed)
@@ -283,23 +283,23 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'locked',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		/**
 		 * Kunena v3.x Forums do not support topic tags out of the box
 		 */
 
-		/** Reply Section ******************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'kunena_messages',
-			'from_fieldname'  => 'id',
-			'to_type'         => 'reply',
-			'to_fieldname'    => '_bbp_post_id'
+			'from_tablename' => 'kunena_messages',
+			'from_fieldname' => 'id',
+			'to_type'        => 'reply',
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -308,7 +308,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'catid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -317,7 +317,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'thread',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author ip (Stored in postmeta)
@@ -325,7 +325,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'kunena_messages',
 			'from_fieldname' => 'ip',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_author_ip'
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Reply author.
@@ -334,16 +334,16 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'userid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
 		$this->field_map[] = array(
-			'from_tablename' => 'kunena_messages',
-			'from_fieldname' => 'subject',
-			'to_type'        => 'reply',
-			'to_fieldname'   => 'post_title',
-			'callback_method' => 'callback_reply_title'
+			'from_tablename'  => 'kunena_messages',
+			'from_fieldname'  => 'subject',
+			'to_type'         => 'reply',
+			'to_fieldname'    => 'post_title',
+			'callback_method' => 'callback_reply_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -352,7 +352,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'subject',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -365,7 +365,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_expression' => 'ON kunena_messages_text.mesid = kunena_messages.id LEFT JOIN jos_kunena_topics AS kunena_topics ON kunena_messages.thread = kunena_topics.id WHERE kunena_messages.parent != 0',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -374,7 +374,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'thread',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -383,40 +383,40 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_messages',
 			'from_fieldname'  => 'time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_messages',
 			'from_fieldname'  => 'time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'kunena_messages',
 			'from_fieldname'  => 'time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
-		//Note: We are importing the Joomla User details and the Kunena v3.x user profile details.
+		// Note: We are importing the Joomla User details and the Kunena v3.x user profile details.
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'users',
 			'from_fieldname' => 'id',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
@@ -425,22 +425,22 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'password',
 			'to_type'         => 'user',
 			'to_fieldname'    => '_bbp_password',
-			'callback_method' => 'callback_savepass'
+			'callback_method' => 'callback_savepass',
 		);
 
 		// Store old User Salt (This is only used for the SELECT row info for the above password save)
-//		$this->field_map[] = array(
-//			'from_tablename' => 'users',
-//			'from_fieldname' => 'salt',
-//			'to_type'        => 'user',
-//			'to_fieldname'   => ''
-//		);
+		// $this->field_map[] = array(
+		// 'from_tablename' => 'users',
+		// 'from_fieldname' => 'salt',
+		// 'to_type'        => 'user',
+		// 'to_fieldname'   => ''
+		// );
 
 		// User password verify class (Stored in usermeta for verifying password)
 		$this->field_map[] = array(
 			'to_type'      => 'users',
 			'to_fieldname' => '_bbp_class',
-			'default'      => 'Kunena3'
+			'default'      => 'Kunena3',
 		);
 
 		// User name.
@@ -448,7 +448,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User nice name.
@@ -456,7 +456,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_nicename'
+			'to_fieldname'   => 'user_nicename',
 		);
 
 		// User email.
@@ -464,7 +464,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User homepage.
@@ -475,7 +475,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => 'user_url'
+			'to_fieldname'    => 'user_url',
 		);
 
 		// User registered.
@@ -484,7 +484,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'registerDate',
 			'to_type'         => 'user',
 			'to_fieldname'    => 'user_registered',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// User display name.
@@ -492,7 +492,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'name',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name'
+			'to_fieldname'   => 'display_name',
 		);
 
 		// User AIM (Stored in usermeta)
@@ -503,7 +503,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => 'aim'
+			'to_fieldname'    => 'aim',
 		);
 
 		// User Yahoo (Stored in usermeta)
@@ -514,7 +514,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => 'yim'
+			'to_fieldname'    => 'yim',
 		);
 
 		// Store Google Tak (Stored in usermeta)
@@ -525,7 +525,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => 'jabber'
+			'to_fieldname'    => 'jabber',
 		);
 
 		// Store ICQ (Stored in usermeta)
@@ -536,7 +536,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_icq'
+			'to_fieldname'    => '_bbp_kunena3_user_icq',
 		);
 
 		// Store MSN (Stored in usermeta)
@@ -547,7 +547,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_msn'
+			'to_fieldname'    => '_bbp_kunena3_user_msn',
 		);
 
 		// Store Skype (Stored in usermeta)
@@ -558,7 +558,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_skype'
+			'to_fieldname'    => '_bbp_kunena3_user_skype',
 		);
 
 		// Store Twitter (Stored in usermeta)
@@ -569,7 +569,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_twitter'
+			'to_fieldname'    => '_bbp_kunena3_user_twitter',
 		);
 
 		// Store Facebook (Stored in usermeta)
@@ -580,7 +580,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_facebook'
+			'to_fieldname'    => '_bbp_kunena3_user_facebook',
 		);
 
 		// Store myspace (Stored in usermeta)
@@ -591,7 +591,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_myspace'
+			'to_fieldname'    => '_bbp_kunena3_user_myspace',
 		);
 
 		// Store linkedin (Stored in usermeta)
@@ -602,7 +602,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_linkedin'
+			'to_fieldname'    => '_bbp_kunena3_user_linkedin',
 		);
 
 		// Store delicious (Stored in usermeta)
@@ -613,7 +613,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_delicious'
+			'to_fieldname'    => '_bbp_kunena3_user_delicious',
 		);
 
 		// Store friendfeed (Stored in usermeta)
@@ -624,7 +624,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_friendfeed'
+			'to_fieldname'    => '_bbp_kunena3_user_friendfeed',
 		);
 
 		// Store digg (Stored in usermeta)
@@ -635,7 +635,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_digg'
+			'to_fieldname'    => '_bbp_kunena3_user_digg',
 		);
 
 		// Store blogspot (Stored in usermeta)
@@ -646,7 +646,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_blogspot'
+			'to_fieldname'    => '_bbp_kunena3_user_blogspot',
 		);
 
 		// Store flickr (Stored in usermeta)
@@ -657,7 +657,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_flickr'
+			'to_fieldname'    => '_bbp_kunena3_user_flickr',
 		);
 
 		// Store bebo (Stored in usermeta)
@@ -668,7 +668,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_bebo'
+			'to_fieldname'    => '_bbp_kunena3_user_bebo',
 		);
 
 		// Store websitename (Stored in usermeta)
@@ -679,7 +679,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_websitename'
+			'to_fieldname'    => '_bbp_kunena3_user_websitename',
 		);
 
 		// Store location (Stored in usermeta)
@@ -690,7 +690,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_kunena3_user_location'
+			'to_fieldname'    => '_bbp_kunena3_user_location',
 		);
 
 		// Store Signature (Stored in usermeta)
@@ -702,7 +702,7 @@ class Kunena3 extends BBP_Converter_Base {
 			'join_expression' => 'ON kunena_users.userid = users.id',
 			'to_type'         => 'user',
 			'to_fieldname'    => '_bbp_kunena3_user_sig',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 	}
 
@@ -710,8 +710,7 @@ class Kunena3 extends BBP_Converter_Base {
 	 * This method allows us to indicates what is or is not converted for each
 	 * converter.
 	 */
-	public function info()
-	{
+	public function info() {
 		return '';
 	}
 
@@ -720,20 +719,21 @@ class Kunena3 extends BBP_Converter_Base {
 	 * way when we authenticate it we can get it out of the database
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
-	public function callback_savepass( $field, $row )
-	{
-		$pass_array = array( 'hash' => $field, 'salt' => $row['salt'] );
-		return $pass_array;
+	public function callback_savepass( $field, $row ) {
+		 $pass_array = array(
+			 'hash' => $field,
+			 'salt' => $row['salt'],
+		 );
+		 return $pass_array;
 	}
 
 	/**
 	 * This method is to take the pass out of the database and compare
 	 * to a pass the user has typed in.
 	 */
-	public function authenticate_pass( $password, $serialized_pass )
-	{
+	public function authenticate_pass( $password, $serialized_pass ) {
 		$pass_array = unserialize( $serialized_pass );
-		return ( $pass_array['hash'] == md5( md5( $password ). $pass_array['salt'] ) );
+		return ( $pass_array['hash'] == md5( md5( $password ) . $pass_array['salt'] ) );
 	}
 
 	/**
@@ -759,12 +759,12 @@ class Kunena3 extends BBP_Converter_Base {
 	 */
 	public function callback_forum_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'open';
 				break;
 		}
@@ -779,12 +779,12 @@ class Kunena3 extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -809,7 +809,7 @@ class Kunena3 extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = !empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
 		return $title;
 	}
 }

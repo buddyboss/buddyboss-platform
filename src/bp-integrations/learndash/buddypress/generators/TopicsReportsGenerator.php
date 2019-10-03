@@ -18,17 +18,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class TopicsReportsGenerator extends ReportsGenerator
-{
+class TopicsReportsGenerator extends ReportsGenerator {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->completed_table_title = __('Completed Topics', 'buddyboss');
-		$this->incompleted_table_title = __('Incomplete Topics', 'buddyboss');
+	public function __construct() {
+		 $this->completed_table_title  = __( 'Completed Topics', 'buddyboss' );
+		$this->incompleted_table_title = __( 'Incomplete Topics', 'buddyboss' );
 
 		parent::__construct();
 	}
@@ -66,9 +65,8 @@ class TopicsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatData($activity)
-	{
-		return [
+	protected function formatData( $activity ) {
+		return array(
 			'user_id'         => $activity->user_id,
 			'user'            => bp_core_get_user_displayname( $activity->user_id ),
 			'course_id'       => $activity->activity_course_id,
@@ -76,8 +74,8 @@ class TopicsReportsGenerator extends ReportsGenerator
 			'topic'           => $activity->post_title,
 			'topic_points'    => ReportsGenerator::coursePointsEarned( $activity ),
 			'start_date'      => $activity->activity_started_formatted,
-			'completion_date' => $this->completionDate($activity),
-			'time_spent'      => $this->timeSpent($activity),
-		];
+			'completion_date' => $this->completionDate( $activity ),
+			'time_spent'      => $this->timeSpent( $activity ),
+		);
 	}
 }

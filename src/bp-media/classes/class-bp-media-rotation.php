@@ -71,27 +71,27 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 
 			// Make sure an error was thrown from this file
 			if ( empty( $error ) || empty( $error['file'] ) || (int) $error['type'] !== 1
-			     || $error['file'] !== __FILE__ ) {
+				 || $error['file'] !== __FILE__ ) {
 				return;
 			}
 
-			@header( "HTTP/1.1 200 OK" );
+			@header( 'HTTP/1.1 200 OK' );
 
 			$aid        = $bp_media_rotation_fix_id;
 			$attachment = get_post( $aid );
 			$name       = $url = null;
 
 			if ( $attachment !== null ) {
-				$name     = $attachment->post_title;
-				$url_nfo  = wp_get_attachment_image_src( $aid );
-				$url      = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
+				$name    = $attachment->post_title;
+				$url_nfo = wp_get_attachment_image_src( $aid );
+				$url     = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
 			}
 
 			$result = array(
 				'status'        => ( $attachment !== null ),
 				'attachment_id' => (int) $aid,
 				'url'           => esc_url( $url ),
-				'name'          => esc_attr( $name )
+				'name'          => esc_attr( $name ),
 			);
 
 			echo htmlspecialchars( json_encode( $result ), ENT_NOQUOTES );
@@ -128,7 +128,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 
 				$sourceImage      = imagecreatefromjpeg( $source );
 				$destinationImage = imagecreatetruecolor( $width, $height );
-				//Specifies the color of the uncovered zone after the rotation
+				// Specifies the color of the uncovered zone after the rotation
 				$bgd_color = imagecolorallocatealpha( $destinationImage, 0, 0, 0, 127 );
 
 				imagecopyresampled( $destinationImage, $sourceImage, 0, 0, 0, 0, $width, $height, $width, $height );

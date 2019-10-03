@@ -13,11 +13,13 @@
  */
 function groups_screen_group_members() {
 
-	if ( ! bp_is_single_item() || ! bp_is_current_action( 'members' ) )
+	if ( ! bp_is_single_item() || ! bp_is_current_action( 'members' ) ) {
 		return false;
+	}
 
-	if ( bp_action_variables() )
+	if ( bp_action_variables() ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
