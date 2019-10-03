@@ -33,12 +33,12 @@ function bp_groups_update_meta_cache( $group_ids = false ) {
 	$bp = buddypress();
 
 	$cache_args = array(
-		'object_ids' 	   => $group_ids,
-		'object_type' 	   => $bp->groups->id,
+		'object_ids'       => $group_ids,
+		'object_type'      => $bp->groups->id,
 		'cache_group'      => 'group_meta',
 		'object_column'    => 'group_id',
-		'meta_table' 	   => $bp->groups->table_name_groupmeta,
-		'cache_key_prefix' => 'bp_groups_groupmeta'
+		'meta_table'       => $bp->groups->table_name_groupmeta,
+		'cache_key_prefix' => 'bp_groups_groupmeta',
 	);
 
 	bp_update_meta_cache( $cache_args );
@@ -54,10 +54,10 @@ function bp_groups_update_meta_cache( $group_ids = false ) {
 function groups_clear_group_object_cache( $group_id ) {
 	wp_cache_delete( 'bp_total_group_count', 'bp' );
 }
-add_action( 'groups_group_deleted',              'groups_clear_group_object_cache' );
-add_action( 'groups_settings_updated',           'groups_clear_group_object_cache' );
-add_action( 'groups_details_updated',            'groups_clear_group_object_cache' );
-add_action( 'groups_group_avatar_updated',       'groups_clear_group_object_cache' );
+add_action( 'groups_group_deleted', 'groups_clear_group_object_cache' );
+add_action( 'groups_settings_updated', 'groups_clear_group_object_cache' );
+add_action( 'groups_details_updated', 'groups_clear_group_object_cache' );
+add_action( 'groups_group_avatar_updated', 'groups_clear_group_object_cache' );
 add_action( 'groups_create_group_step_complete', 'groups_clear_group_object_cache' );
 
 /**
@@ -70,9 +70,9 @@ add_action( 'groups_create_group_step_complete', 'groups_clear_group_object_cach
 function bp_groups_delete_group_cache( $group_id = 0 ) {
 	wp_cache_delete( $group_id, 'bp_groups' );
 }
-add_action( 'groups_delete_group',     'bp_groups_delete_group_cache' );
-add_action( 'groups_update_group',     'bp_groups_delete_group_cache' );
-add_action( 'groups_details_updated',  'bp_groups_delete_group_cache' );
+add_action( 'groups_delete_group', 'bp_groups_delete_group_cache' );
+add_action( 'groups_update_group', 'bp_groups_delete_group_cache' );
+add_action( 'groups_details_updated', 'bp_groups_delete_group_cache' );
 add_action( 'groups_settings_updated', 'bp_groups_delete_group_cache' );
 
 /**
@@ -113,8 +113,9 @@ add_action( 'groups_created_group', 'bp_groups_clear_group_creator_cache', 10, 2
  */
 function bp_groups_clear_group_members_caches( $group_obj, $user_ids ) {
 	// Clears the 'total groups' cache for each member in a group.
-	foreach ( (array) $user_ids as $user_id )
+	foreach ( (array) $user_ids as $user_id ) {
 		groups_clear_group_user_object_cache( $group_obj->id, $user_id );
+	}
 }
 add_action( 'bp_groups_delete_group', 'bp_groups_clear_group_members_caches', 10, 2 );
 
@@ -175,10 +176,10 @@ add_action( 'groups_send_invites', 'bp_groups_clear_invite_count_on_send', 10, 2
 function groups_clear_group_user_object_cache( $group_id, $user_id ) {
 	wp_cache_delete( 'bp_total_groups_for_user_' . $user_id, 'bp' );
 }
-add_action( 'groups_join_group',    'groups_clear_group_user_object_cache', 10, 2 );
-add_action( 'groups_leave_group',   'groups_clear_group_user_object_cache', 10, 2 );
-add_action( 'groups_ban_member',    'groups_clear_group_user_object_cache', 10, 2 );
-add_action( 'groups_unban_member',  'groups_clear_group_user_object_cache', 10, 2 );
+add_action( 'groups_join_group', 'groups_clear_group_user_object_cache', 10, 2 );
+add_action( 'groups_leave_group', 'groups_clear_group_user_object_cache', 10, 2 );
+add_action( 'groups_ban_member', 'groups_clear_group_user_object_cache', 10, 2 );
+add_action( 'groups_unban_member', 'groups_clear_group_user_object_cache', 10, 2 );
 add_action( 'groups_uninvite_user', 'groups_clear_group_user_object_cache', 10, 2 );
 add_action( 'groups_remove_member', 'groups_clear_group_user_object_cache', 10, 2 );
 
@@ -194,8 +195,8 @@ function groups_clear_group_administrator_cache( $group_id ) {
 	wp_cache_delete( $group_id, 'bp_group_mods' );
 }
 add_action( 'groups_promote_member', 'groups_clear_group_administrator_cache' );
-add_action( 'groups_demote_member',  'groups_clear_group_administrator_cache' );
-add_action( 'groups_delete_group',   'groups_clear_group_administrator_cache' );
+add_action( 'groups_demote_member', 'groups_clear_group_administrator_cache' );
+add_action( 'groups_delete_group', 'groups_clear_group_administrator_cache' );
 
 /**
  * Clear group administrator and moderator cache when a group member is saved.
@@ -275,10 +276,10 @@ function bp_groups_reset_cache_incrementor() {
 	return bp_core_reset_incrementor( 'bp_groups' );
 }
 add_action( 'groups_group_after_save', 'bp_groups_reset_cache_incrementor' );
-add_action( 'bp_groups_delete_group',  'bp_groups_reset_cache_incrementor' );
-add_action( 'updated_group_meta',      'bp_groups_reset_cache_incrementor' );
-add_action( 'deleted_group_meta',      'bp_groups_reset_cache_incrementor' );
-add_action( 'added_group_meta',        'bp_groups_reset_cache_incrementor' );
+add_action( 'bp_groups_delete_group', 'bp_groups_reset_cache_incrementor' );
+add_action( 'updated_group_meta', 'bp_groups_reset_cache_incrementor' );
+add_action( 'deleted_group_meta', 'bp_groups_reset_cache_incrementor' );
+add_action( 'added_group_meta', 'bp_groups_reset_cache_incrementor' );
 
 /**
  * Reset cache incrementor for Groups component when a group's taxonomy terms change.
@@ -328,21 +329,21 @@ function bp_groups_reset_cache_incrementor_on_group_term_remove( $object_id, $te
 add_action( 'bp_remove_object_terms', 'bp_groups_reset_cache_incrementor_on_group_term_remove', 10, 3 );
 
 /* List actions to clear super cached pages on, if super cache is installed */
-add_action( 'groups_join_group',                 'bp_core_clear_cache' );
-add_action( 'groups_leave_group',                'bp_core_clear_cache' );
-add_action( 'groups_accept_invite',              'bp_core_clear_cache' );
-add_action( 'groups_reject_invite',              'bp_core_clear_cache' );
-add_action( 'groups_invite_user',                'bp_core_clear_cache' );
-add_action( 'groups_uninvite_user',              'bp_core_clear_cache' );
-add_action( 'groups_details_updated',            'bp_core_clear_cache' );
-add_action( 'groups_settings_updated',           'bp_core_clear_cache' );
-add_action( 'groups_unban_member',               'bp_core_clear_cache' );
-add_action( 'groups_ban_member',                 'bp_core_clear_cache' );
-add_action( 'groups_demote_member',              'bp_core_clear_cache' );
-add_action( 'groups_promote_member',             'bp_core_clear_cache' );
-add_action( 'groups_membership_rejected',        'bp_core_clear_cache' );
-add_action( 'groups_membership_accepted',        'bp_core_clear_cache' );
-add_action( 'groups_membership_requested',       'bp_core_clear_cache' );
+add_action( 'groups_join_group', 'bp_core_clear_cache' );
+add_action( 'groups_leave_group', 'bp_core_clear_cache' );
+add_action( 'groups_accept_invite', 'bp_core_clear_cache' );
+add_action( 'groups_reject_invite', 'bp_core_clear_cache' );
+add_action( 'groups_invite_user', 'bp_core_clear_cache' );
+add_action( 'groups_uninvite_user', 'bp_core_clear_cache' );
+add_action( 'groups_details_updated', 'bp_core_clear_cache' );
+add_action( 'groups_settings_updated', 'bp_core_clear_cache' );
+add_action( 'groups_unban_member', 'bp_core_clear_cache' );
+add_action( 'groups_ban_member', 'bp_core_clear_cache' );
+add_action( 'groups_demote_member', 'bp_core_clear_cache' );
+add_action( 'groups_promote_member', 'bp_core_clear_cache' );
+add_action( 'groups_membership_rejected', 'bp_core_clear_cache' );
+add_action( 'groups_membership_accepted', 'bp_core_clear_cache' );
+add_action( 'groups_membership_requested', 'bp_core_clear_cache' );
 add_action( 'groups_create_group_step_complete', 'bp_core_clear_cache' );
-add_action( 'groups_created_group',              'bp_core_clear_cache' );
-add_action( 'groups_group_avatar_updated',       'bp_core_clear_cache' );
+add_action( 'groups_created_group', 'bp_core_clear_cache' );
+add_action( 'groups_group_avatar_updated', 'bp_core_clear_cache' );

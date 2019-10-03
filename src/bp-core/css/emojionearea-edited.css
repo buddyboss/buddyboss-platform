@@ -280,8 +280,8 @@
 	cursor: pointer;
 	opacity: 0.45;
 	display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
+		display: -ms-flexbox;
+		display: flex;
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
@@ -305,8 +305,8 @@
 }
 
 .emojionearea .emojionearea-picker .emojionearea-filters .emojionearea-filter > img {
-        width: auto;
-        height: auto;
+		width: auto;
+		height: auto;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-search-panel {
@@ -534,7 +534,7 @@
 	display: block;
 	width: 24px;
 	height: 24px;
-        margin: 0;
+		margin: 0;
 }
 
 .emojionearea .emojionearea-picker .emojionearea-scroll-area .emojibtn img.lazy-emoji {

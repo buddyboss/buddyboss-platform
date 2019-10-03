@@ -70,7 +70,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 			 *
 			 * @since BuddyPress 1.9.0
 			 */
-			do_action( 'bp_before_login_widget_loggedin' ); ?>
+			do_action( 'bp_before_login_widget_loggedin' );
+			?>
 
 			<div class="bp-login-widget-user-avatar">
 				<a href="<?php echo bp_loggedin_user_domain(); ?>">
@@ -90,7 +91,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 			 *
 			 * @since BuddyPress 1.9.0
 			 */
-			do_action( 'bp_after_login_widget_loggedin' ); ?>
+			do_action( 'bp_after_login_widget_loggedin' );
+			?>
 
 		<?php else : ?>
 
@@ -101,14 +103,15 @@ class BP_Core_Login_Widget extends WP_Widget {
 			 *
 			 * @since BuddyPress 1.9.0
 			 */
-			do_action( 'bp_before_login_widget_loggedout' ); ?>
+			do_action( 'bp_before_login_widget_loggedout' );
+			?>
 
 			<form name="bp-login-form" id="bp-login-widget-form" class="standard-form" action="<?php echo esc_url( site_url( 'wp-login.php', 'login_post' ) ); ?>" method="post">
 				<label for="bp-login-widget-user-login"><?php _e( 'Username', 'buddyboss' ); ?></label>
 				<input type="text" name="log" id="bp-login-widget-user-login" class="input" value="" />
 
 				<label for="bp-login-widget-user-pass"><?php _e( 'Password', 'buddyboss' ); ?></label>
-				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bp_form_field_attributes( 'password' ) ?> />
+				<input type="password" name="pwd" id="bp-login-widget-user-pass" class="input" value="" <?php bp_form_field_attributes( 'password' ); ?> />
 
 				<div class="forgetmenot"><label for="bp-login-widget-rememberme"><input name="rememberme" type="checkbox" id="bp-login-widget-rememberme" value="forever" /> <?php _e( 'Remember Me', 'buddyboss' ); ?></label></div>
 
@@ -127,7 +130,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 				 *
 				 * @since BuddyPress 2.4.0
 				 */
-				do_action( 'bp_login_widget_form' ); ?>
+				do_action( 'bp_login_widget_form' );
+				?>
 
 			</form>
 
@@ -138,9 +142,11 @@ class BP_Core_Login_Widget extends WP_Widget {
 			 *
 			 * @since BuddyPress 1.9.0
 			 */
-			do_action( 'bp_after_login_widget_loggedout' ); ?>
+			do_action( 'bp_after_login_widget_loggedout' );
+			?>
 
-		<?php endif;
+			<?php
+		endif;
 
 		echo $args['after_widget'];
 	}
@@ -155,8 +161,8 @@ class BP_Core_Login_Widget extends WP_Widget {
 	 * @return array $instance The parsed options to be saved.
 	 */
 	public function update( $new_instance, $old_instance ) {
-		$instance             = $old_instance;
-		$instance['title']    = isset( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '';
+		$instance          = $old_instance;
+		$instance['title'] = isset( $new_instance['title'] ) ? strip_tags( $new_instance['title'] ) : '';
 
 		return $instance;
 	}
@@ -171,9 +177,13 @@ class BP_Core_Login_Widget extends WP_Widget {
 	 */
 	public function form( $instance = array() ) {
 
-		$settings = wp_parse_args( $instance, array(
-			'title' => '',
-		) ); ?>
+		$settings = wp_parse_args(
+			$instance,
+			array(
+				'title' => '',
+			)
+		);
+		?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?>

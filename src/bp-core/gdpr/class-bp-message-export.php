@@ -1,6 +1,6 @@
 <?php
 /**
- *Export API: BP_Message_Export class
+ * Export API: BP_Message_Export class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -53,7 +53,7 @@ final class BP_Message_Export extends BP_Export {
 
 		foreach ( $data_items['items'] as $item ) {
 
-			$group_id    = "bp_messages";
+			$group_id    = 'bp_messages';
 			$group_label = __( 'Message Threads & Replies', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
@@ -73,30 +73,30 @@ final class BP_Message_Export extends BP_Export {
 					$recipients[] = $name;
 				}
 			}
-			$recipients = implode( ", ", $recipients );
+			$recipients = implode( ', ', $recipients );
 
 			$recipients = apply_filters( 'buddyboss_bp_gdpr_bp_message_item_recipients', $recipients, $item, $data_items );
 
 			$data = array(
 				array(
-					'name' => __( 'Message Subject', 'buddyboss' ),
-					'value' => $item->subject
+					'name'  => __( 'Message Subject', 'buddyboss' ),
+					'value' => $item->subject,
 				),
 				array(
-					'name' => __( 'Message Content', 'buddyboss' ),
-					'value' => $item->message
+					'name'  => __( 'Message Content', 'buddyboss' ),
+					'value' => $item->message,
 				),
 				array(
-					'name' => __( 'Created Date (GMT)', 'buddyboss' ),
-					'value' => $item->date_sent
+					'name'  => __( 'Created Date (GMT)', 'buddyboss' ),
+					'value' => $item->date_sent,
 				),
 				array(
-					'name' => __( 'Message Recipients', 'buddyboss' ),
-					'value' => $recipients
+					'name'  => __( 'Message Recipients', 'buddyboss' ),
+					'value' => $recipients,
 				),
 				array(
-					'name' => __( 'Thread URL', 'buddyboss' ),
-					'value' => $permalink
+					'name'  => __( 'Thread URL', 'buddyboss' ),
+					'value' => $permalink,
 				),
 			);
 
@@ -111,7 +111,7 @@ final class BP_Message_Export extends BP_Export {
 
 		}
 
-		$done = $data_items["total"] < $data_items["offset"];
+		$done = $data_items['total'] < $data_items['offset'];
 
 		return $this->response( $export_items, $done );
 	}
@@ -143,19 +143,21 @@ final class BP_Message_Export extends BP_Export {
 
 		$get_data = $this->get_data( $user, $page );
 
-		foreach ( $get_data["items"] as $item ) {
+		foreach ( $get_data['items'] as $item ) {
 
 			$item->subject = wp_privacy_anonymize_data( 'text', $item->subject );
 			$item->message = wp_privacy_anonymize_data( 'longtext', $item->subject );
 
-			$wpdb->update( $table,
+			$wpdb->update(
+				$table,
 				array(
-					"subject" => $item->subject,
-					"message" => $item->message,
+					'subject' => $item->subject,
+					'message' => $item->message,
 				),
-				array( "id" => $item->id ),
+				array( 'id' => $item->id ),
 				array( '%s', '%s', '%d' ),
-				array( '%d' ) );
+				array( '%d' )
+			);
 
 			/**
 			 * @todo add title/description
@@ -168,22 +170,26 @@ final class BP_Message_Export extends BP_Export {
 
 		}
 
-		$done = $get_data["total"] < $get_data["offset"];
+		$done = $get_data['total'] < $get_data['offset'];
 
 		if ( $done ) {
 			// Anonymous user from all recipients
-			$wpdb->update( $table_recipients,
-				array( "user_id" => 0 ),
-				array( "user_id" => $user->ID ),
+			$wpdb->update(
+				$table_recipients,
+				array( 'user_id' => 0 ),
+				array( 'user_id' => $user->ID ),
 				array( '%d' ),
-				array( "%d" ) );
+				array( '%d' )
+			);
 
 			// Anonymous Sender ID from all messages
-			$wpdb->update( $table,
-				array( "sender_id" => 0 ),
-				array( "sender_id" => $user->ID ),
+			$wpdb->update(
+				$table,
+				array( 'sender_id' => 0 ),
+				array( 'sender_id' => $user->ID ),
 				array( '%d' ),
-				array( "%d" ) );
+				array( '%d' )
+			);
 
 		}
 
@@ -217,8 +223,12 @@ final class BP_Message_Export extends BP_Export {
 		$ids_in = array_fill( 0, count( $thread_ids ), '%s' );
 		$ids_in = join( ',', $ids_in );
 
-		$get_results = $wpdb->get_results( $wpdb->prepare( "SELECT *FROM {$table} WHERE thread_id IN ({$ids_in})",
-			$thread_ids ) );
+		$get_results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT *FROM {$table} WHERE thread_id IN ({$ids_in})",
+				$thread_ids
+			)
+		);
 
 		$thread_recipients = array();
 
@@ -258,9 +268,9 @@ final class BP_Message_Export extends BP_Export {
 
 		$table = "{$bp->messages->global_tables["table_name_messages"]} item";
 
-		$query_select       = "item.*";
-		$query_select_count = "COUNT(item.id)";
-		$query_where        = "item.sender_id=%d";
+		$query_select       = 'item.*';
+		$query_select_count = 'COUNT(item.id)';
+		$query_where        = 'item.sender_id=%d';
 
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
@@ -276,9 +286,9 @@ final class BP_Message_Export extends BP_Export {
 		$items = $this->messages_recipients( $items );
 
 		return array(
-			"total"  => $count,
-			"offset" => $offset,
-			"items"  => $items,
+			'total'  => $count,
+			'offset' => $offset,
+			'items'  => $items,
 		);
 
 	}

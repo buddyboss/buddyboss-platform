@@ -53,7 +53,7 @@ return array(
 		'last_name'    => 'Stella',
 		'email'        => 'luna@demos.buddyboss.com',
 	),
-	array(  
+	array(
 		'refer_id'     => 7,
 		'login'        => 'bb-margaret',
 		'display_name' => 'Margaret',

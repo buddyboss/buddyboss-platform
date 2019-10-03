@@ -23,22 +23,22 @@ class PHPWind extends BBP_Converter_Base {
 	 */
 	public function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'bbs_forum',
 			'from_fieldname' => 'fid',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id'
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'bbs_forum',
-			'from_fieldname'  => 'parentid',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_forum_parent_id'
+			'from_tablename' => 'bbs_forum',
+			'from_fieldname' => 'parentid',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -50,7 +50,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (fid)',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_topic_count'
+			'to_fieldname'    => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -62,7 +62,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (fid)',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_reply_count'
+			'to_fieldname'    => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Stored in postmeta)
@@ -74,7 +74,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (fid)',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_topic_count'
+			'to_fieldname'    => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Stored in postmeta)
@@ -86,7 +86,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (fid)',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_reply_count'
+			'to_fieldname'    => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -94,7 +94,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'bbs_forum',
 			'from_fieldname' => 'name',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid conflicts)
@@ -103,7 +103,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'name',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -112,7 +112,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'descrip',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -120,7 +120,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'bbs_forum',
 			'from_fieldname' => 'vieworder',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum type (Category = category or Forum = forum, sub or sub2,  Stored in postmeta)
@@ -129,39 +129,39 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'type',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_type',
-			'callback_method' => 'callback_forum_type'
+			'callback_method' => 'callback_forum_type',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'bbs_forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'bbs_threads',
 			'from_fieldname' => 'tid',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -170,7 +170,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'replies',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -179,7 +179,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'replies',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -188,7 +188,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'fid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -197,15 +197,15 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'created_userid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic Author ip (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'bbs_threads',
-			'from_fieldname'  => 'created_ip',
-			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_author_ip'
+			'from_tablename' => 'bbs_threads',
+			'from_fieldname' => 'created_ip',
+			'to_type'        => 'topic',
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Topic content.
@@ -218,7 +218,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_expression' => 'USING (tid)',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic title.
@@ -226,7 +226,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'bbs_threads',
 			'from_fieldname' => 'subject',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -235,7 +235,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'subject',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -244,7 +244,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'fid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic dates.
@@ -253,35 +253,35 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'created_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_threads',
 			'from_fieldname'  => 'created_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_threads',
 			'from_fieldname'  => 'lastpost_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_threads',
 			'from_fieldname'  => 'lastpost_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_threads',
 			'from_fieldname'  => 'lastpost_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_last_active_time',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// Topic status (Open or Closed, PHPWind v9.x 0=no, 1=closed & 2=open)
@@ -290,23 +290,23 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'tpcstatus',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		/**
 		 * PHPWind v9.x Forums do not support topic tags out of the box
 		 */
 
-		/** Reply Section *****************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'bbs_posts',
 			'from_fieldname' => 'pid',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_post_id'
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -315,7 +315,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'fid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -324,7 +324,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'tid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author ip (Stored in postmeta)
@@ -332,7 +332,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'bbs_posts',
 			'from_fieldname' => 'created_ip',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_author_ip'
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Reply author.
@@ -341,7 +341,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'created_userid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
@@ -353,7 +353,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (tid)',
 			'to_type'         => 'reply',
-			'to_fieldname'    => 'post_title'
+			'to_fieldname'    => 'post_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -366,7 +366,7 @@ class PHPWind extends BBP_Converter_Base {
 			'join_expression' => 'USING (tid)',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -375,7 +375,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'content',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -384,7 +384,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'tid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -393,62 +393,63 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'created_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_posts',
 			'from_fieldname'  => 'created_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_posts',
 			'from_fieldname'  => 'created_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'bbs_posts',
 			'from_fieldname'  => 'created_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'user',
 			'from_fieldname' => 'uid',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
 		$this->field_map[] = array(
-			'from_tablename'  => 'user',
-			'from_fieldname'  => 'password',
-			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_password'
-//			'callback_method' => 'callback_savepass'
+			'from_tablename' => 'user',
+			'from_fieldname' => 'password',
+			'to_type'        => 'user',
+			'to_fieldname'   => '_bbp_password',
+		// 'callback_method' => 'callback_savepass'
 		);
 
 		// Store old User Salt (This is only used for the SELECT row info for the above password save)
-/*		$this->field_map[] = array(
+		/*
+			  $this->field_map[] = array(
 			'from_tablename' => 'user',
 			'from_fieldname' => 'pass',
 			'to_type'        => 'user',
 			'to_fieldname'   => ''
 		);
-*/
+		*/
 		// User password verify class (Stored in usermeta for verifying password)
 		$this->field_map[] = array(
 			'to_type'      => 'user',
 			'to_fieldname' => '_bbp_class',
-			'default'      => 'PHPWind'
+			'default'      => 'PHPWind',
 		);
 
 		// User name.
@@ -456,7 +457,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User nice name.
@@ -464,7 +465,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_nicename'
+			'to_fieldname'   => 'user_nicename',
 		);
 
 		// User email.
@@ -472,7 +473,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User registered.
@@ -481,7 +482,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_fieldname'  => 'regdate',
 			'to_type'         => 'user',
 			'to_fieldname'    => 'user_registered',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// User display name.
@@ -489,7 +490,7 @@ class PHPWind extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'realname',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name'
+			'to_fieldname'   => 'display_name',
 		);
 	}
 
@@ -497,8 +498,7 @@ class PHPWind extends BBP_Converter_Base {
 	 * This method allows us to indicates what is or is not converted for each
 	 * converter.
 	 */
-	public function info()
-	{
+	public function info() {
 		return '';
 	}
 
@@ -507,20 +507,21 @@ class PHPWind extends BBP_Converter_Base {
 	 * way when we authenticate it we can get it out of the database
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
-	public function callback_savepass( $field, $row )
-	{
-		$pass_array = array( 'hash' => $field, 'salt' => $row['salt'] );
-		return $pass_array;
+	public function callback_savepass( $field, $row ) {
+		 $pass_array = array(
+			 'hash' => $field,
+			 'salt' => $row['salt'],
+		 );
+		 return $pass_array;
 	}
 
 	/**
 	 * This method is to take the pass out of the database and compare
 	 * to a pass the user has typed in.
 	 */
-	public function authenticate_pass( $password, $serialized_pass )
-	{
+	public function authenticate_pass( $password, $serialized_pass ) {
 		$pass_array = unserialize( $serialized_pass );
-		return ( $pass_array['hash'] == md5( md5( $password ). $pass_array['salt'] ) );
+		return ( $pass_array['hash'] == md5( md5( $password ) . $pass_array['salt'] ) );
 	}
 
 	/**
@@ -531,20 +532,20 @@ class PHPWind extends BBP_Converter_Base {
 	 */
 	public function callback_forum_type( $status = 1 ) {
 		switch ( $status ) {
-			case 'category' :
+			case 'category':
 				$status = 'category';
 				break;
 
-			case 'sub' :
+			case 'sub':
 				$status = 'forum';
 				break;
 
-			case 'sub2' :
+			case 'sub2':
 				$status = 'forum';
 				break;
 
-			case 'forum' :
-			default :
+			case 'forum':
+			default:
 				$status = 'forum';
 				break;
 		}
@@ -559,12 +560,12 @@ class PHPWind extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 2 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 2  :
-			default :
+			case 2:
+			default:
 				$status = 'publish';
 				break;
 		}

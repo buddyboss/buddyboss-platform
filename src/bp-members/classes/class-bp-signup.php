@@ -88,7 +88,7 @@ class BP_Signup {
 	 * @param integer $signup_id The ID for the signup being queried.
 	 */
 	public function __construct( $signup_id = 0 ) {
-		if ( !empty( $signup_id ) ) {
+		if ( ! empty( $signup_id ) ) {
 			$this->id = $signup_id;
 			$this->populate();
 		}
@@ -142,7 +142,8 @@ class BP_Signup {
 	public static function get( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args( $args,
+		$r = bp_parse_args(
+			$args,
 			array(
 				'offset'         => 0,
 				'number'         => 1,
@@ -164,35 +165,35 @@ class BP_Signup {
 
 		$r['orderby'] = sanitize_title( $r['orderby'] );
 
-		$sql = array();
+		$sql            = array();
 		$signups_table  = buddypress()->members->table_name_signups;
 		$sql['select']  = "SELECT * FROM {$signups_table}";
 		$sql['where']   = array();
-		$sql['where'][] = "active = 0";
+		$sql['where'][] = 'active = 0';
 
 		if ( empty( $r['include'] ) ) {
 
 			// Search terms.
 			if ( ! empty( $r['usersearch'] ) ) {
 				$search_terms_like = '%' . bp_esc_like( $r['usersearch'] ) . '%';
-				$sql['where'][]    = $wpdb->prepare( "( user_login LIKE %s OR user_email LIKE %s OR meta LIKE %s )", $search_terms_like, $search_terms_like, $search_terms_like );
+				$sql['where'][]    = $wpdb->prepare( '( user_login LIKE %s OR user_email LIKE %s OR meta LIKE %s )', $search_terms_like, $search_terms_like, $search_terms_like );
 			}
 
 			// Activation key.
 			if ( ! empty( $r['activation_key'] ) ) {
-				$sql['where'][] = $wpdb->prepare( "activation_key = %s", $r['activation_key'] );
+				$sql['where'][] = $wpdb->prepare( 'activation_key = %s', $r['activation_key'] );
 			}
 
 			// User login.
 			if ( ! empty( $r['user_login'] ) ) {
-				$sql['where'][] = $wpdb->prepare( "user_login = %s", $r['user_login'] );
+				$sql['where'][] = $wpdb->prepare( 'user_login = %s', $r['user_login'] );
 			}
 
 			$sql['orderby'] = "ORDER BY {$r['orderby']}";
-			$sql['order']	= bp_esc_sql_order( $r['order'] );
-			$sql['limit']	= $wpdb->prepare( "LIMIT %d, %d", $r['offset'], $r['number'] );
+			$sql['order']   = bp_esc_sql_order( $r['order'] );
+			$sql['limit']   = $wpdb->prepare( 'LIMIT %d, %d', $r['offset'], $r['number'] );
 		} else {
-			$in = implode( ',', wp_parse_id_list( $r['include'] ) );
+			$in        = implode( ',', wp_parse_id_list( $r['include'] ) );
 			$sql['in'] = "AND signup_id IN ({$in})";
 		}
 
@@ -212,7 +213,10 @@ class BP_Signup {
 		$paged_signups = $wpdb->get_results( apply_filters( 'bp_members_signups_paged_query', join( ' ', $sql ), $sql, $args, $r ) );
 
 		if ( empty( $paged_signups ) ) {
-			return array( 'signups' => false, 'total' => false );
+			return array(
+				'signups' => false,
+				'total'   => false,
+			);
 		}
 
 		// We only want the IDs.
@@ -226,7 +230,7 @@ class BP_Signup {
 
 			foreach ( (array) $paged_signups as $key => $signup ) {
 
-				$signup->id   = intval( $signup->signup_id );
+				$signup->id = intval( $signup->signup_id );
 
 				$signup->meta = ! empty( $signup->meta ) ? maybe_unserialize( $signup->meta ) : false;
 
@@ -242,7 +246,7 @@ class BP_Signup {
 					$signup->date_sent = $signup->registered;
 				}
 
-				$sent_at = mysql2date('U', $signup->date_sent );
+				$sent_at = mysql2date( 'U', $signup->date_sent );
 				$diff    = $now - $sent_at;
 
 				/**
@@ -264,7 +268,7 @@ class BP_Signup {
 		}
 
 		unset( $sql['limit'] );
-		$sql['select'] = preg_replace( "/SELECT.*?FROM/", "SELECT COUNT(*) FROM", $sql['select'] );
+		$sql['select'] = preg_replace( '/SELECT.*?FROM/', 'SELECT COUNT(*) FROM', $sql['select'] );
 
 		/**
 		 * Filters the Signups count query.
@@ -278,7 +282,10 @@ class BP_Signup {
 		 */
 		$total_signups = $wpdb->get_var( apply_filters( 'bp_members_signups_count_query', join( ' ', $sql ), $sql, $args, $r ) );
 
-		return array( 'signups' => $paged_signups, 'total' => $total_signups );
+		return array(
+			'signups' => $paged_signups,
+			'total'   => $total_signups,
+		);
 	}
 
 	/**
@@ -302,7 +309,8 @@ class BP_Signup {
 	public static function add( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args( $args,
+		$r = bp_parse_args(
+			$args,
 			array(
 				'domain'         => '',
 				'path'           => '',
@@ -361,12 +369,14 @@ class BP_Signup {
 	public static function add_backcompat( $user_login = '', $user_password = '', $user_email = '', $usermeta = array() ) {
 		global $wpdb;
 
-		$user_id = wp_insert_user( array(
-			'user_login'   => $user_login,
-			'user_pass'    => $user_password,
-			'display_name' => sanitize_title( $user_login ),
-			'user_email'   => $user_email
-		) );
+		$user_id = wp_insert_user(
+			array(
+				'user_login'   => $user_login,
+				'user_pass'    => $user_password,
+				'display_name' => sanitize_title( $user_login ),
+				'user_email'   => $user_email,
+			)
+		);
 
 		if ( is_wp_error( $user_id ) || empty( $user_id ) ) {
 			return $user_id;
@@ -380,7 +390,7 @@ class BP_Signup {
 		// wp_insert_user(), but we delete them so that inactive
 		// signups don't appear in various user counts.
 		delete_user_option( $user_id, 'capabilities' );
-		delete_user_option( $user_id, 'user_level'   );
+		delete_user_option( $user_id, 'user_level' );
 
 		// Set any profile data.
 		if ( bp_is_active( 'xprofile' ) ) {
@@ -388,11 +398,11 @@ class BP_Signup {
 				$profile_field_ids = explode( ',', $usermeta['profile_field_ids'] );
 
 				foreach ( (array) $profile_field_ids as $field_id ) {
-					if ( empty( $usermeta["field_{$field_id}"] ) ) {
+					if ( empty( $usermeta[ "field_{$field_id}" ] ) ) {
 						continue;
 					}
 
-					$current_field = $usermeta["field_{$field_id}"];
+					$current_field = $usermeta[ "field_{$field_id}" ];
 					xprofile_set_field_data( $field_id, $user_id, $current_field );
 
 					/*
@@ -469,7 +479,7 @@ class BP_Signup {
 			// Signups table.
 			buddypress()->members->table_name_signups,
 			array(
-				'active' => 1,
+				'active'    => 1,
 				'activated' => current_time( 'mysql', true ),
 			),
 			array(
@@ -537,10 +547,11 @@ class BP_Signup {
 	public static function update( $args = array() ) {
 		global $wpdb;
 
-		$r = bp_parse_args( $args,
+		$r = bp_parse_args(
+			$args,
 			array(
-				'signup_id'  => 0,
-				'meta'       => array(),
+				'signup_id' => 0,
+				'meta'      => array(),
 			),
 			'bp_core_signups_update_args'
 		);
@@ -593,9 +604,11 @@ class BP_Signup {
 			return false;
 		}
 
-		$to_resend = self::get( array(
-			'include' => $signup_ids,
-		) );
+		$to_resend = self::get(
+			array(
+				'include' => $signup_ids,
+			)
+		);
 
 		if ( ! $signups = $to_resend['signups'] ) {
 			return false;
@@ -636,17 +649,19 @@ class BP_Signup {
 
 					continue;
 
-				// Send the validation email.
+					// Send the validation email.
 				} else {
 					bp_core_signup_send_validation_email( false, $signup->user_email, $signup->activation_key, $signup->user_login );
 				}
 			}
 
 			// Update metas.
-			$result['resent'][] = self::update( array(
-				'signup_id' => $signup->signup_id,
-				'meta'      => $meta,
-			) );
+			$result['resent'][] = self::update(
+				array(
+					'signup_id' => $signup->signup_id,
+					'meta'      => $meta,
+				)
+			);
 		}
 
 		/**
@@ -682,9 +697,11 @@ class BP_Signup {
 			return false;
 		}
 
-		$to_activate = self::get( array(
-			'include' => $signup_ids,
-		) );
+		$to_activate = self::get(
+			array(
+				'include' => $signup_ids,
+			)
+		);
 
 		if ( ! $signups = $to_activate['signups'] ) {
 			return false;
@@ -721,11 +738,10 @@ class BP_Signup {
 					// Repair signups table.
 					self::validate( $signup->activation_key );
 
-				// We have a user id, account is not active, let's delete it.
+					// We have a user id, account is not active, let's delete it.
 				} else {
 					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, $user->get_error_message() );
 				}
-
 			} else {
 				$result['activated'][] = $user;
 			}
@@ -766,9 +782,11 @@ class BP_Signup {
 			return false;
 		}
 
-		$to_delete = self::get( array(
-			'include' => $signup_ids,
-		) );
+		$to_delete = self::get(
+			array(
+				'include' => $signup_ids,
+			)
+		);
 
 		if ( ! $signups = $to_delete['signups'] ) {
 			return false;
@@ -798,7 +816,7 @@ class BP_Signup {
 					// Repair signups table.
 					self::validate( $signup->activation_key );
 
-				// We have a user id, account is not active, let's delete it.
+					// We have a user id, account is not active, let's delete it.
 				} else {
 					bp_core_delete_account( $user_id );
 				}
@@ -809,9 +827,9 @@ class BP_Signup {
 					// Signups table.
 					buddypress()->members->table_name_signups,
 					// Where.
-					array( 'signup_id' => $signup->signup_id, ),
+					array( 'signup_id' => $signup->signup_id ),
 					// WHERE sanitization format.
-					array( '%d', )
+					array( '%d' )
 				);
 
 				$result['deleted'][] = $signup->signup_id;

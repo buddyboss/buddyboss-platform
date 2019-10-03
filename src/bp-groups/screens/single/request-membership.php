@@ -13,31 +13,35 @@
  */
 function groups_screen_group_request_membership() {
 
-	if ( !is_user_logged_in() )
+	if ( ! is_user_logged_in() ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
-	if ( 'private' != $bp->groups->current_group->status )
+	if ( 'private' != $bp->groups->current_group->status ) {
 		return false;
+	}
 
 	// If the user is already invited, accept invitation.
 	if ( groups_check_user_has_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
-		if ( groups_accept_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) )
+		if ( groups_accept_invite( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
 			bp_core_add_message( __( 'Group invite accepted', 'buddyboss' ) );
-		else
+		} else {
 			bp_core_add_message( __( 'There was an error accepting the group invitation. Please try again.', 'buddyboss' ), 'error' );
+		}
 		bp_core_redirect( bp_get_group_permalink( $bp->groups->current_group ) );
 	}
 
 	// If the user has submitted a request, send it.
-	if ( isset( $_POST['group-request-send']) ) {
+	if ( isset( $_POST['group-request-send'] ) ) {
 
 		// Check the nonce.
-		if ( !check_admin_referer( 'groups_request_membership' ) )
+		if ( ! check_admin_referer( 'groups_request_membership' ) ) {
 			return false;
+		}
 
-		if ( !groups_send_membership_request( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
+		if ( ! groups_send_membership_request( bp_loggedin_user_id(), $bp->groups->current_group->id ) ) {
 			bp_core_add_message( __( 'There was an error sending your group membership request. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Your membership request was sent to the group organizer successfully. You will be notified when the group organizer responds to your request.', 'buddyboss' ) );

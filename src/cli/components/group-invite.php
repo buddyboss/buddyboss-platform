@@ -55,25 +55,30 @@ class Group_Invite extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args( $assoc_args, array(
-			'user-id'       => '',
-			'group-id'      => '',
-			'inviter-id'    => '',
-			'date-modified' => bp_core_current_time(),
-			'is-confirmed'  => 0,
-		) );
+		$r = wp_parse_args(
+			$assoc_args,
+			array(
+				'user-id'       => '',
+				'group-id'      => '',
+				'inviter-id'    => '',
+				'date-modified' => bp_core_current_time(),
+				'is-confirmed'  => 0,
+			)
+		);
 
 		$group_id = $this->get_group_id_from_identifier( $r['group-id'] );
 		$user     = $this->get_user_id_from_identifier( $r['user-id'] );
 		$inviter  = $this->get_user_id_from_identifier( $r['inviter-id'] );
 
-		$invite = groups_invite_user( array(
-			'user_id'       => $user->ID,
-			'group_id'      => $group_id,
-			'inviter_id'    => $inviter->ID,
-			'date_modified' => $assoc_args['date-modified'],
-			'is_confirmed'  => $assoc_args['is-confirmed'],
-		) );
+		$invite = groups_invite_user(
+			array(
+				'user_id'       => $user->ID,
+				'group_id'      => $group_id,
+				'inviter_id'    => $inviter->ID,
+				'date_modified' => $assoc_args['date-modified'],
+				'is_confirmed'  => $assoc_args['is-confirmed'],
+			)
+		);
 
 		groups_send_invites( $inviter->ID, $group_id );
 
@@ -155,10 +160,12 @@ class Group_Invite extends BuddypressCommand {
 		$user_id  = $user->ID;
 
 		if ( $group_id ) {
-			$invite_query = new \BP_Group_Member_Query( array(
-				'is_confirmed' => false,
-				'group_id'     => $group_id,
-			) );
+			$invite_query = new \BP_Group_Member_Query(
+				array(
+					'is_confirmed' => false,
+					'group_id'     => $group_id,
+				)
+			);
 
 			$invites = $invite_query->results;
 
@@ -235,12 +242,15 @@ class Group_Invite extends BuddypressCommand {
 		for ( $i = 0; $i < $assoc_args['count']; $i++ ) {
 
 			$random_group = \BP_Groups_Group::get_random( 1, 1 );
-			$this->add( array(), array(
-				'user-id'    => $this->get_random_user_id(),
-				'group-id'   => $random_group['groups'][0]->slug,
-				'inviter-id' => $this->get_random_user_id(),
-				'silent',
-			) );
+			$this->add(
+				array(),
+				array(
+					'user-id'    => $this->get_random_user_id(),
+					'group-id'   => $random_group['groups'][0]->slug,
+					'inviter-id' => $this->get_random_user_id(),
+					'silent',
+				)
+			);
 
 			$notify->tick();
 		}

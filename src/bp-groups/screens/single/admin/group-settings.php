@@ -13,18 +13,20 @@
  */
 function groups_screen_group_admin_settings() {
 
-	if ( 'group-settings' != bp_get_group_current_admin_tab() )
+	if ( 'group-settings' != bp_get_group_current_admin_tab() ) {
 		return false;
+	}
 
-	if ( ! bp_is_item_admin() )
+	if ( ! bp_is_item_admin() ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
 	// If the edit form has been submitted, save the edited details.
 	if ( isset( $_POST['save'] ) ) {
-		$enable_forum   = ( isset($_POST['group-show-forum'] ) ) ? 1 : 0;
-		$parent_id = ( isset($_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
+		$enable_forum = ( isset( $_POST['group-show-forum'] ) ) ? 1 : 0;
+		$parent_id    = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
@@ -34,26 +36,27 @@ function groups_screen_group_admin_settings() {
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
-		$invite_status	       = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
+		$invite_status         = isset( $_POST['group-invite-status'] ) && in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
-		$activity_feed_status	       = isset( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+		$activity_feed_status         = isset( $_POST['group-activity-feed-status'] ) && in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
-		$media_status	       = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+		$media_status         = isset( $_POST['group-media-status'] ) && in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
 
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-		$album_status	       = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+		$album_status         = isset( $_POST['group-album-status'] ) && in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
 		// Check the nonce.
-		if ( !check_admin_referer( 'groups_edit_group_settings' ) )
+		if ( ! check_admin_referer( 'groups_edit_group_settings' ) ) {
 			return false;
+		}
 
 		/*
 		 * Save group types.
@@ -68,7 +71,7 @@ function groups_screen_group_admin_settings() {
 			// Set group types.
 			bp_groups_set_group_type( bp_get_current_group_id(), $current_types );
 
-		// No group types checked, so this means we want to wipe out all group types.
+			// No group types checked, so this means we want to wipe out all group types.
 		} else {
 			/*
 			 * Passing a blank string will wipe out all types for the group.
@@ -81,7 +84,7 @@ function groups_screen_group_admin_settings() {
 			bp_groups_set_group_type( bp_get_current_group_id(), $current_types );
 		}
 
-		if ( !groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $album_status ) ) {
+		if ( ! groups_edit_group_settings( $_POST['group-id'], $enable_forum, $status, $invite_status, $activity_feed_status, $parent_id, $media_status, $album_status ) ) {
 			bp_core_add_message( __( 'There was an error updating group settings. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Group settings were successfully updated.', 'buddyboss' ) );

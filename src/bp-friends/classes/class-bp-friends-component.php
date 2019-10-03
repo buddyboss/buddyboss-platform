@@ -29,7 +29,7 @@ class BP_Friends_Component extends BP_Component {
 			__( 'Connections', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 60
+				'adminbar_myaccount_order' => 60,
 			)
 		);
 	}
@@ -125,8 +125,8 @@ class BP_Friends_Component extends BP_Component {
 
 		// Global tables for the friends component.
 		$global_tables = array(
-			'table_name'          => $bp->table_prefix . 'bp_friends',
-			'table_name_meta'     => $bp->table_prefix . 'bp_friends_meta',
+			'table_name'      => $bp->table_prefix . 'bp_friends',
+			'table_name_meta' => $bp->table_prefix . 'bp_friends_meta',
 		);
 
 		// All globals for the friends component.
@@ -136,7 +136,7 @@ class BP_Friends_Component extends BP_Component {
 			'has_directory'         => false,
 			'search_string'         => __( 'Search Connections&hellip;', 'buddyboss' ),
 			'notification_callback' => 'friends_format_notifications',
-			'global_tables'         => $global_tables
+			'global_tables'         => $global_tables,
 		);
 
 		parent::setup_globals( $args );
@@ -189,7 +189,7 @@ class BP_Friends_Component extends BP_Component {
 			'position'            => 60,
 			'screen_function'     => 'friends_screen_my_friends',
 			'default_subnav_slug' => 'my-friends',
-			'item_css_id'         => $this->id
+			'item_css_id'         => $this->id,
 		);
 
 		// Add the subnav items to the friends nav item.
@@ -200,7 +200,7 @@ class BP_Friends_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'friends_screen_my_friends',
 			'position'        => 10,
-			'item_css_id'     => 'friends-my-friends'
+			'item_css_id'     => 'friends-my-friends',
 		);
 
 		if ( bp_get_mutual_friendships() ) {
@@ -211,7 +211,7 @@ class BP_Friends_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'friends_screen_mutual_friends',
 				'position'        => 20,
-				'user_has_access' => ! bp_is_my_profile() && bp_loggedin_user_id()
+				'user_has_access' => ! bp_is_my_profile() && bp_loggedin_user_id(),
 			);
 		}
 
@@ -222,7 +222,7 @@ class BP_Friends_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'friends_screen_requests',
 			'position'        => 30,
-			'user_has_access' => $access
+			'user_has_access' => $access,
 		);
 
 		parent::setup_nav( $main_nav, $sub_nav );
@@ -248,7 +248,7 @@ class BP_Friends_Component extends BP_Component {
 
 			// Pending friend requests.
 			$count = count( friends_get_friendship_request_user_ids( bp_loggedin_user_id() ) );
-			if ( !empty( $count ) ) {
+			if ( ! empty( $count ) ) {
 				$title = sprintf(
 					/* translators: %s: Pending friend request count for the current user */
 					__( 'Connections %s', 'buddyboss' ),
@@ -269,7 +269,7 @@ class BP_Friends_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => $title,
-				'href'   => $friends_link
+				'href'   => $friends_link,
 			);
 
 			// My Connections.
@@ -278,7 +278,7 @@ class BP_Friends_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-friendships',
 				'title'    => __( 'My Connections', 'buddyboss' ),
 				'href'     => $friends_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			// Requests.
@@ -287,7 +287,7 @@ class BP_Friends_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-requests',
 				'title'    => $pending,
 				'href'     => trailingslashit( $friends_link . 'requests' ),
-				'position' => 20
+				'position' => 20,
 			);
 		}
 
@@ -308,12 +308,14 @@ class BP_Friends_Component extends BP_Component {
 			if ( bp_is_my_profile() ) {
 				$bp->bp_options_title = __( 'Connections', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-					'item_id' => bp_displayed_user_id(),
-					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
-				) );
-				$bp->bp_options_title = bp_get_displayed_user_fullname();
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
+				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}
 		}
 
@@ -328,11 +330,13 @@ class BP_Friends_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_friends_requests',
-			'bp_friends_friendships', // Individual friendship objects are cached here by ID.
-			'bp_friends_friendships_for_user' // All friendship IDs for a single user.
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'bp_friends_requests',
+				'bp_friends_friendships', // Individual friendship objects are cached here by ID.
+				'bp_friends_friendships_for_user', // All friendship IDs for a single user.
+			)
+		);
 
 		parent::setup_cache_groups();
 	}

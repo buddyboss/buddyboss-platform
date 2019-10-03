@@ -20,8 +20,8 @@
 
 			<?php endif; ?>
 
-			<p class="bbp-user-forum-role"><?php  printf( __( 'Forum Role: %s',      'buddyboss' ), bbp_get_user_display_role()    ); ?></p>
-			<p class="bbp-user-topic-count"><?php printf( __( 'Discussions Started: %s',  'buddyboss' ), bbp_get_user_topic_count_raw() ); ?></p>
+			<p class="bbp-user-forum-role"><?php printf( __( 'Forum Role: %s', 'buddyboss' ), bbp_get_user_display_role() ); ?></p>
+			<p class="bbp-user-topic-count"><?php printf( __( 'Discussions Started: %s', 'buddyboss' ), bbp_get_user_topic_count_raw() ); ?></p>
 			<p class="bbp-user-reply-count"><?php printf( __( 'Replies Created: %s', 'buddyboss' ), bbp_get_user_reply_count_raw() ); ?></p>
 		</div>
 	</div><!-- #bbp-author-topics-started -->

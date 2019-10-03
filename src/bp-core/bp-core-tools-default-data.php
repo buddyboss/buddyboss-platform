@@ -96,21 +96,21 @@ function bp_admin_tools_default_data_save() {
 		}
 		?>
 
-        <div id="message" class="updated fade">
-            <p>
+		<div id="message" class="updated fade">
+			<p>
 				<?php
 				_e( 'Data was successfully imported', 'buddyboss' );
 				if ( count( $imported ) > 0 ) {
 					echo ':<ul class="results"><li>';
 					echo implode( '</li><li>', $imported );
 					echo '</li></ul>';
-				} ?>
-            </p>
-        </div>
+				}
+				?>
+			</p>
+		</div>
 
 		<?php
 	}
-
 
 	if ( bp_is_active( 'forums' ) ) {
 
@@ -128,7 +128,6 @@ function bp_admin_tools_default_data_save() {
 				bbp_update_topic_reply_count( $topic_id );
 			}
 		}
-
 	}
 }
 
@@ -136,7 +135,6 @@ function bp_admin_tools_default_data_save() {
  * Get plugin admin area root page: settings.php for WPMS and tool.php for WP.
  *
  * @since BuddyBoss 1.0.0
- *
  *
  * @return string
  */
@@ -188,8 +186,8 @@ function bp_dd_delete_dummy_members_related_data() {
  */
 function bp_dd_delete_dummy_members() {
 	/*
- * Users and all their data.
- */
+	* Users and all their data.
+	*/
 	$users = bp_get_option( 'bp_dd_imported_user_ids' );
 	if ( ! empty( $users ) ) {
 		$users_str = implode( ',', (array) $users );
@@ -325,7 +323,7 @@ function bp_dd_friends_add_friend_date_fix( $current_time ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $count If you need all, use 0.
+ * @param int    $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
  * @return array|string Default is array.
@@ -376,7 +374,7 @@ function bp_dd_get_random_groups_ids( $count = 1, $output = 'array' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $count If you need all, use 0.
+ * @param int    $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
  * @return array|string Default is array.
@@ -417,7 +415,7 @@ function bp_dd_get_forums_enable_groups_ids( $count, $output = 'array' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $count If you need all, use 0.
+ * @param int    $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
  * @return array|string Default is array.
@@ -458,7 +456,7 @@ function bp_dd_get_random_forums_ids( $count = 1, $output = 'array' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $count If you need all, use 0.
+ * @param int    $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
  * @return array|string Default is array.
@@ -499,7 +497,7 @@ function bp_dd_get_random_topics_ids( $count = 1, $output = 'array' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param int $count If you need all, use 0.
+ * @param int    $count If you need all, use 0.
  * @param string $output What to return: 'array' or 'string'. If string - comma separated.
  *
  * @return array|string Default is array.
@@ -523,9 +521,11 @@ function bp_dd_get_random_users_ids( $count = 1, $output = 'array' ) {
 		}
 	} else {
 		// Get by default (if no users were imported) all currently registered users.
-		$users = get_users( array(
-			'fields' => 'ID',
-		) );
+		$users = get_users(
+			array(
+				'fields' => 'ID',
+			)
+		);
 	}
 
 	/*
@@ -669,29 +669,31 @@ function bp_dd_delete_import_records() {
 function bp_dd_import_users() {
 	$users = array();
 
-	$users_data = require( BP_DEFAULT_DATA_DIR . 'data/users.php' );
+	$users_data = require BP_DEFAULT_DATA_DIR . 'data/users.php';
 
 	$image_url         = BP_DEFAULT_DATA_URL . 'data/images/members/';
 	$cover_image_url   = $image_url . 'cover/';
 	$avatars_image_url = $image_url . 'avatars/';
 
 	foreach ( $users_data as $user ) {
-		$user_id = wp_insert_user( array(
-			'user_login'      => $user['login'],
-			'display_name'    => $user['display_name'],
-			'first_name'      => $user['first_name'],
-			'last_name'       => $user['last_name'],
-			'user_email'      => $user['email'],
-			'user_registered' => bp_dd_get_random_date( 45, 1 ),
-			'user_pass'       => wp_generate_password( 8, false ),
-		) );
+		$user_id = wp_insert_user(
+			array(
+				'user_login'      => $user['login'],
+				'display_name'    => $user['display_name'],
+				'first_name'      => $user['first_name'],
+				'last_name'       => $user['last_name'],
+				'user_email'      => $user['email'],
+				'user_registered' => bp_dd_get_random_date( 45, 1 ),
+				'user_pass'       => wp_generate_password( 8, false ),
+			)
+		);
 
 		if ( bp_is_active( 'xprofile' ) ) {
 			xprofile_set_field_data( 1, $user_id, $user['display_name'] );
 		}
-		//$name = explode( ' ', $user['display_name'] );
-		//update_user_meta( $user_id, 'first_name', $name[0] );
-		//update_user_meta( $user_id, 'last_name', isset( $name[1] ) ? $name[1] : '' );
+		// $name = explode( ' ', $user['display_name'] );
+		// update_user_meta( $user_id, 'first_name', $name[0] );
+		// update_user_meta( $user_id, 'last_name', isset( $name[1] ) ? $name[1] : '' );
 
 		bp_update_user_last_activity( $user_id, bp_dd_get_random_date( 5 ) );
 
@@ -706,7 +708,6 @@ function bp_dd_import_users() {
 		if ( ! empty( $user['cover-image'] ) ) {
 			bp_update_user_meta( $user_id, 'cover-image', $cover_image_url . $user['cover-image'] );
 		}
-
 
 		$users[] = $user_id;
 	}
@@ -735,27 +736,31 @@ function bp_dd_import_users_profile() {
 
 	$data = array();
 
-	$xprofile_structure = require_once( BP_DEFAULT_DATA_DIR . 'data/xprofile_structure.php' );
+	$xprofile_structure = require_once BP_DEFAULT_DATA_DIR . 'data/xprofile_structure.php';
 
 	// Firstly, import profile groups.
 	foreach ( $xprofile_structure as $group_type => $group_data ) {
-		$group_id = xprofile_insert_field_group( array(
-			'name'        => $group_data['name'],
-			'description' => $group_data['desc'],
-		) );
+		$group_id = xprofile_insert_field_group(
+			array(
+				'name'        => $group_data['name'],
+				'description' => $group_data['desc'],
+			)
+		);
 		$groups[] = $group_id;
 
 		// Then import fields.
 		foreach ( $group_data['fields'] as $field_type => $field_data ) {
-			$field_id = xprofile_insert_field( array(
-				'field_group_id' => $group_id,
-				'parent_id'      => 0,
-				'type'           => $field_type,
-				'name'           => $field_data['name'],
-				'description'    => $field_data['desc'],
-				'is_required'    => $field_data['required'],
-				'order_by'       => 'custom',
-			) );
+			$field_id = xprofile_insert_field(
+				array(
+					'field_group_id' => $group_id,
+					'parent_id'      => 0,
+					'type'           => $field_type,
+					'name'           => $field_data['name'],
+					'description'    => $field_data['desc'],
+					'is_required'    => $field_data['required'],
+					'order_by'       => 'custom',
+				)
+			);
 
 			if ( $field_id ) {
 				bp_xprofile_update_field_meta( $field_id, 'default_visibility', $field_data['default-visibility'] );
@@ -767,15 +772,17 @@ function bp_dd_import_users_profile() {
 				// finally import options
 				if ( ! empty( $field_data['options'] ) ) {
 					foreach ( $field_data['options'] as $option ) {
-						$option_id = xprofile_insert_field( array(
-							'field_group_id'    => $group_id,
-							'parent_id'         => $field_id,
-							'type'              => 'option',
-							'name'              => $option['name'],
-							'can_delete'        => true,
-							'is_default_option' => $option['is_default_option'],
-							'option_order'      => $option['option_order'],
-						) );
+						$option_id = xprofile_insert_field(
+							array(
+								'field_group_id'    => $group_id,
+								'parent_id'         => $field_id,
+								'type'              => 'option',
+								'name'              => $option['name'],
+								'can_delete'        => true,
+								'is_default_option' => $option['is_default_option'],
+								'option_order'      => $option['option_order'],
+							)
+						);
 
 						$data[ $field_id ]['options'][ $option_id ] = $option['name'];
 					}
@@ -786,7 +793,7 @@ function bp_dd_import_users_profile() {
 		}
 	}
 
-	$xprofile_data = require_once( BP_DEFAULT_DATA_DIR . 'data/xprofile_data.php' );
+	$xprofile_data = require_once BP_DEFAULT_DATA_DIR . 'data/xprofile_data.php';
 	$users         = bp_dd_get_random_users_ids( 0 );
 
 	// Now import profile fields data for all fields for each user.
@@ -840,9 +847,9 @@ function bp_dd_import_users_messages() {
 
 	/** @var $messages_subjects array */
 	/** @var $messages_content array */
-	require( BP_DEFAULT_DATA_DIR . 'data/messages.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/messages.php';
 
-	$users_data = require( BP_DEFAULT_DATA_DIR . 'data/users.php' );
+	$users_data = require BP_DEFAULT_DATA_DIR . 'data/users.php';
 	$users_data = wp_list_pluck( $users_data, 'login', 'refer_id' );
 	foreach ( $messages as $message ) {
 		$user_object = get_user_by( 'login', $users_data[ $message['sender_refer_id'] ] );
@@ -853,13 +860,15 @@ function bp_dd_import_users_messages() {
 
 		$thread_reply = empty( $message['thread_reply'] ) ? 1 : $message['thread_reply'];
 
-		$message_id = messages_new_message( array(
-			'sender_id'  => $user_id,
-			'recipients' => $recipients,
-			'subject'    => $message['content'],
-			'content'    => $message['content'],
-			'date_sent'  => bp_dd_get_random_date( 29, 16 ),
-		) );
+		$message_id = messages_new_message(
+			array(
+				'sender_id'  => $user_id,
+				'recipients' => $recipients,
+				'subject'    => $message['content'],
+				'content'    => $message['content'],
+				'date_sent'  => bp_dd_get_random_date( 29, 16 ),
+			)
+		);
 
 		$messages[] = $message_id;
 
@@ -870,14 +879,16 @@ function bp_dd_import_users_messages() {
 			$replying_sender_id     = $all_recipients[ array_rand( $all_recipients ) ];
 			$replying_recipients_id = array_diff( $all_recipients, (array) $replying_sender_id );
 
-			$messages[] = messages_new_message( array(
-				'sender_id'  => $replying_sender_id,
-				'recipients' => $replying_recipients_id,
-				'thread_id'  => $message_id,
-				'subject'    => $message['content'],
-				'content'    => $random_thread_reply[ array_rand( $random_thread_reply ) ],
-				'date_sent'  => bp_dd_get_random_date( 15, 1 ),
-			) );
+			$messages[] = messages_new_message(
+				array(
+					'sender_id'  => $replying_sender_id,
+					'recipients' => $replying_recipients_id,
+					'thread_id'  => $message_id,
+					'subject'    => $message['content'],
+					'content'    => $random_thread_reply[ array_rand( $random_thread_reply ) ],
+					'date_sent'  => bp_dd_get_random_date( 15, 1 ),
+				)
+			);
 		}
 	}
 
@@ -906,16 +917,18 @@ function bp_dd_import_users_activity() {
 	$users = bp_dd_get_random_users_ids( 0 );
 
 	/** @var $activity array */
-	require( BP_DEFAULT_DATA_DIR . 'data/activity.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/activity.php';
 
 	for ( $i = 0; $i < 75; $i ++ ) {
 		$user    = $users[ array_rand( $users ) ];
 		$content = $activity[ array_rand( $activity ) ];
 
-		if ( $bp_activity_id = bp_activity_post_update( array(
-			'user_id' => $user,
-			'content' => $content,
-		) )
+		if ( $bp_activity_id = bp_activity_post_update(
+			array(
+				'user_id' => $user,
+				'content' => $content,
+			)
+		)
 		) {
 			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
 			$bp_activity->date_recorded = bp_dd_get_random_date( 44 );
@@ -988,18 +1001,20 @@ function bp_dd_import_groups( $users = false ) {
 	$cover_image_url   = $image_url . 'cover/';
 	$avatars_image_url = $image_url . 'avatars/';
 
-	require( BP_DEFAULT_DATA_DIR . '/data/groups.php' );
+	require BP_DEFAULT_DATA_DIR . '/data/groups.php';
 
 	foreach ( $groups as $group ) {
 		$creator_id = is_object( $users[ array_rand( $users ) ] ) ? $users[ array_rand( $users ) ]->ID : $users[ array_rand( $users ) ];
-		$cur        = groups_create_group( array(
-			'creator_id'   => $creator_id,
-			'name'         => $group['name'],
-			'description'  => $group['description'],
-			'slug'         => groups_check_slug( sanitize_title( esc_attr( $group['name'] ) ) ),
-			'status'       => $group['status'],
-			'date_created' => bp_dd_get_random_date( 30, 5 ),
-		) );
+		$cur        = groups_create_group(
+			array(
+				'creator_id'   => $creator_id,
+				'name'         => $group['name'],
+				'description'  => $group['description'],
+				'slug'         => groups_check_slug( sanitize_title( esc_attr( $group['name'] ) ) ),
+				'status'       => $group['status'],
+				'date_created' => bp_dd_get_random_date( 30, 5 ),
+			)
+		);
 
 		groups_update_groupmeta( $cur, 'last_activity', bp_dd_get_random_date( 10 ) );
 
@@ -1047,7 +1062,7 @@ function bp_dd_import_groups_activity() {
 	$groups = bp_dd_get_random_groups_ids( 0 );
 
 	/** @var $activity array */
-	require( BP_DEFAULT_DATA_DIR . 'data/activity.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/activity.php';
 
 	for ( $i = 0; $i < 150; $i ++ ) {
 		$user_id  = $users[ array_rand( $users ) ];
@@ -1058,11 +1073,13 @@ function bp_dd_import_groups_activity() {
 			continue;
 		}
 
-		if ( $bp_activity_id = groups_post_update( array(
-			'user_id'  => $user_id,
-			'group_id' => $group_id,
-			'content'  => $content,
-		) )
+		if ( $bp_activity_id = groups_post_update(
+			array(
+				'user_id'  => $user_id,
+				'group_id' => $group_id,
+				'content'  => $content,
+			)
+		)
 		) {
 			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
 			$bp_activity->date_recorded = bp_dd_get_random_date( 29 );
@@ -1167,7 +1184,7 @@ function bp_dd_import_forums( $users = false ) {
 		$users = bp_dd_get_random_users_ids( 0 );
 	}
 
-	require( BP_DEFAULT_DATA_DIR . 'data/forums.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/forums.php';
 
 	foreach ( $forums as $forum ) {
 
@@ -1193,7 +1210,7 @@ function bp_dd_import_forums( $users = false ) {
  *
  * @param $topic_data
  * @param $forum_id
- * @param array $users
+ * @param array      $users
  *
  * @return bool|int|WP_Error
  */
@@ -1243,7 +1260,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require( BP_DEFAULT_DATA_DIR . 'data/forums_topics.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/forums_topics.php';
 	foreach ( $forums as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
 		foreach ( $topic as $topic_key ) {
@@ -1273,7 +1290,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
  *
  * @param $reply_data
  * @param $topic_id
- * @param array $users
+ * @param array      $users
  *
  * @return bool|int|WP_Error
  */
@@ -1294,7 +1311,7 @@ function bp_dd_create_forums_topics_replies( $reply_data, $topic_id, $users = ar
 		),
 		array(
 			'topic_id' => $topic_id,
-			'forum_id' => $forum_id
+			'forum_id' => $forum_id,
 		)
 	);
 
@@ -1328,7 +1345,7 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require( BP_DEFAULT_DATA_DIR . 'data/forums_replies.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/forums_replies.php';
 
 	foreach ( $topics as $topic_id ) {
 
@@ -1401,7 +1418,7 @@ function bp_dd_import_forums_in_groups() {
 		bp_update_option( 'bp_dd_imported_forum_ids', array_merge( $forum_ids, bp_get_option( 'bp_dd_imported_forum_ids', array() ) ) );
 	}
 
-	require( BP_DEFAULT_DATA_DIR . 'data/forums_topics.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/forums_topics.php';
 
 	foreach ( $forum_ids as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
@@ -1419,7 +1436,7 @@ function bp_dd_import_forums_in_groups() {
 
 	bp_update_option( 'bp_dd_imported_topic_ids', array_merge( $topics_ids, bp_get_option( 'bp_dd_imported_topic_ids', array() ) ) );
 
-	require( BP_DEFAULT_DATA_DIR . 'data/forums_replies.php' );
+	require BP_DEFAULT_DATA_DIR . 'data/forums_replies.php';
 
 	foreach ( $topics_ids as $topic_id ) {
 		$reply = (array) array_rand( $replies, absint( rand( 1, 7 ) ) );
