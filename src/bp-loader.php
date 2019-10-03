@@ -186,7 +186,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @return BuddyPress|null The one true BuddyPress Instance.
 	 */
-	function buddypress1() {
+	function buddypress() {
 		return BuddyPress::instance();
 	}
 
