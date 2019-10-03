@@ -574,7 +574,7 @@ function bp_nouveau_loop_classes() {
 					$current_value = bp_get_option( 'bp-group-layout-format' );
 				}
 			} elseif ( bp_is_groups_directory() || bp_is_group() ) {
-				if ( ! bp_is_user_groups() ) {
+				if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
 					$current_value = bp_get_option( 'bp-profile-layout-format' );
 				} else {
 					$current_value = bp_get_option( 'bp-group-layout-format' );
@@ -598,7 +598,7 @@ function bp_nouveau_loop_classes() {
 							$default_current_value = bp_group_layout_default_format( 'grid' );
 						}
 					} elseif ( bp_is_groups_directory() || bp_is_group() ) {
-						if ( ! bp_is_user_groups() ) {
+						if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
 							$default_current_value = bp_profile_layout_default_format( 'grid' );
 						} else {
 							$default_current_value = bp_group_layout_default_format( 'grid' );
