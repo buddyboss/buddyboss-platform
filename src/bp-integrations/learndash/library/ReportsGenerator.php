@@ -586,7 +586,7 @@ class ReportsGenerator
 		if ($this->hasArg('length')) {
 			$this->params['per_page'] = $this->args['length'];
 		}
-// print_r($this->params);die();
+		// print_r($this->params);die();
 		$this->params = apply_filters('bp_ld_sync/reports_generator_params', $this->params, $this->args);
 	}
 
@@ -612,7 +612,7 @@ class ReportsGenerator
 	}
 
 	/**
-	 * Format secons to human readable teim spent
+	 * Format seconds to human readable time spent
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
@@ -621,18 +621,14 @@ class ReportsGenerator
 		$seconds = intval($activity->activity_time_spent);
 
 		if ($seconds < 60) {
-			return sprintf('%ds', $seconds);
+			return sprintf('%d sec', $seconds);
 		}
 
 		$minutes = floor($seconds/60);
 		$seconds = $seconds % 60;
 
 		if ($minutes < 60) {
-			return sprintf(
-				'%d%s',
-				$minutes,
-				_n('min', 'mins', $minutes, 'buddyboss')
-			);
+			return sprintf('%d min', $minutes);
 		}
 
 		$hours = floor($minutes / 60 * 10) / 10;
