@@ -106,14 +106,17 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 		$object_directory = 'groups';
 	}
 
-	$r = bp_parse_args( $args, array(
-		'object_id' => $object_id,
-		'object_directory' => $object_directory,
-	), 'cover_image_upload_dir' );
-
+	$r = bp_parse_args(
+		$args,
+		array(
+			'object_id'        => $object_id,
+			'object_directory' => $object_directory,
+		),
+		'cover_image_upload_dir'
+	);
 
 	// Set the subdir.
-	$subdir  = '/' . $r['object_directory'] . '/' . $r['object_id'] . '/cover-image';
+	$subdir = '/' . $r['object_directory'] . '/' . $r['object_id'] . '/cover-image';
 
 	$upload_dir = bp_attachments_uploads_dir_get();
 
@@ -125,14 +128,18 @@ function bp_attachments_cover_image_upload_dir( $args = array() ) {
 	 * @param array $value      Array containing the path, URL, and other helpful settings.
 	 * @param array $upload_dir The original Uploads dir.
 	 */
-	return apply_filters( 'bp_attachments_cover_image_upload_dir', array(
-		'path'    => $upload_dir['basedir'] . $subdir,
-		'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
-		'subdir'  => $subdir,
-		'basedir' => $upload_dir['basedir'],
-		'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
-		'error'   => false,
-	), $upload_dir );
+	return apply_filters(
+		'bp_attachments_cover_image_upload_dir',
+		array(
+			'path'    => $upload_dir['basedir'] . $subdir,
+			'url'     => set_url_scheme( $upload_dir['baseurl'] ) . $subdir,
+			'subdir'  => $subdir,
+			'basedir' => $upload_dir['basedir'],
+			'baseurl' => set_url_scheme( $upload_dir['baseurl'] ),
+			'error'   => false,
+		),
+		$upload_dir
+	);
 }
 
 /**
@@ -186,13 +193,13 @@ function bp_attachments_get_allowed_types( $type = 'avatar' ) {
 		$exts = array();
 
 		switch ( $type ) {
-			case 'video' :
+			case 'video':
 				$exts = wp_get_video_extensions();
-			break;
+				break;
 
-			case 'audio' :
+			case 'audio':
 				$exts = wp_get_video_extensions();
-			break;
+				break;
 
 			default:
 				$allowed_mimes = get_allowed_mime_types();
@@ -212,10 +219,10 @@ function bp_attachments_get_allowed_types( $type = 'avatar' ) {
 
 				// Loop to explode keys using '|'.
 				foreach ( $allowed_types as $allowed_type ) {
-					$t = explode( '|', $allowed_type );
+					$t    = explode( '|', $allowed_type );
 					$exts = array_merge( $exts, (array) $t );
 				}
-			break;
+				break;
 		}
 	}
 
@@ -301,16 +308,20 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 		return false;
 	}
 
-	$r = bp_parse_args( $args, array(
-		'item_id'   => 0,
-		'object'    => 'user',
-		'component' => '',
-		'image'     => '',
-		'crop_w'    => 0,
-		'crop_h'    => 0,
-		'crop_x'    => 0,
-		'crop_y'    => 0
-	), 'create_item_' . $type );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'item_id'   => 0,
+			'object'    => 'user',
+			'component' => '',
+			'image'     => '',
+			'crop_w'    => 0,
+			'crop_h'    => 0,
+			'crop_x'    => 0,
+			'crop_y'    => 0,
+		),
+		'create_item_' . $type
+	);
 
 	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || ! file_exists( $r['image'] ) || ! @getimagesize( $r['image'] ) ) {
 		return false;
@@ -410,24 +421,28 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 
 	// It's an avatar, we need to crop it.
 	if ( 'avatar' === $type ) {
-		$created = bp_core_avatar_handle_crop( array(
-			'object'        => $r['object'],
-			'avatar_dir'    => trim( dirname( $attachment_data['subdir'] ), '/' ),
-			'item_id'       => (int) $r['item_id'],
-			'original_file' => trailingslashit( $attachment_data['subdir'] ) . $image_file_name,
-			'crop_w'        => $r['crop_w'],
-			'crop_h'        => $r['crop_h'],
-			'crop_x'        => $r['crop_x'],
-			'crop_y'        => $r['crop_y']
-		) );
+		$created = bp_core_avatar_handle_crop(
+			array(
+				'object'        => $r['object'],
+				'avatar_dir'    => trim( dirname( $attachment_data['subdir'] ), '/' ),
+				'item_id'       => (int) $r['item_id'],
+				'original_file' => trailingslashit( $attachment_data['subdir'] ) . $image_file_name,
+				'crop_w'        => $r['crop_w'],
+				'crop_h'        => $r['crop_h'],
+				'crop_x'        => $r['crop_x'],
+				'crop_y'        => $r['crop_y'],
+			)
+		);
 
-	// It's a cover photo we need to fit it to feature's dimensions.
+		// It's a cover photo we need to fit it to feature's dimensions.
 	} elseif ( 'cover_image' === $type ) {
-		$cover_image = bp_attachments_cover_image_generate_file( array(
-			'file'            => $image_file_path,
-			'component'       => $r['component'],
-			'cover_image_dir' => $attachment_data['path']
-		) );
+		$cover_image = bp_attachments_cover_image_generate_file(
+			array(
+				'file'            => $image_file_path,
+				'component'       => $r['component'],
+				'cover_image_dir' => $attachment_data['path'],
+			)
+		);
 
 		$created = ! empty( $cover_image['cover_file'] );
 	}
@@ -460,12 +475,16 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	// Default value.
 	$attachment_data = false;
 
-	$r = bp_parse_args( $args, array(
-		'object_dir' => 'members',
-		'item_id'    => bp_loggedin_user_id(),
-		'type'       => 'cover-image',
-		'file'       => '',
-	), 'attachments_get_attachment_src' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'object_dir' => 'members',
+			'item_id'    => bp_loggedin_user_id(),
+			'type'       => 'cover-image',
+			'file'       => '',
+		),
+		'attachments_get_attachment_src'
+	);
 
 	/**
 	 * Filters whether or not to handle fetching a BuddyPress image attachment.
@@ -513,7 +532,6 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 		} else {
 			$attachment_data = trailingslashit( $type_dir ) . $r['file'];
 		}
-
 	} else {
 		$file = false;
 
@@ -597,14 +615,14 @@ function bp_attachments_get_plupload_default_settings() {
 		'runtimes'            => 'html5,flash,silverlight,html4',
 		'file_data_name'      => 'file',
 		'multipart_params'    => array(
-			'action'          => 'bp_upload_attachment',
-			'_wpnonce'        => wp_create_nonce( 'bp-uploader' ),
+			'action'   => 'bp_upload_attachment',
+			'_wpnonce' => wp_create_nonce( 'bp-uploader' ),
 		),
 		'url'                 => admin_url( 'admin-ajax.php', 'relative' ),
 		'flash_swf_url'       => includes_url( 'js/plupload/plupload.flash.swf' ),
 		'silverlight_xap_url' => includes_url( 'js/plupload/plupload.silverlight.xap' ),
-		'filters' => array(
-			'max_file_size'   => $max_upload_size . 'b',
+		'filters'             => array(
+			'max_file_size' => $max_upload_size . 'b',
 		),
 		'multipart'           => true,
 		'urlstream_upload'    => true,
@@ -618,8 +636,8 @@ function bp_attachments_get_plupload_default_settings() {
 	}
 
 	$settings = array(
-		'defaults' => $defaults,
-		'browser'  => array(
+		'defaults'      => $defaults,
+		'browser'       => array(
 			'mobile'    => wp_is_mobile(),
 			'supported' => _device_can_upload(),
 		),
@@ -645,7 +663,9 @@ function bp_attachments_get_plupload_default_settings() {
  */
 function bp_attachments_get_plupload_l10n() {
 	// Localization strings.
-	return apply_filters( 'bp_attachments_get_plupload_l10n', array(
+	return apply_filters(
+		'bp_attachments_get_plupload_l10n',
+		array(
 			'queue_limit_exceeded'      => __( 'You have attempted to queue too many files.', 'buddyboss' ),
 			'file_exceeds_size_limit'   => __( '%s exceeds the maximum upload size for this site.', 'buddyboss' ),
 			'zero_byte_file'            => __( 'This file is empty. Please try another.', 'buddyboss' ),
@@ -668,8 +688,9 @@ function bp_attachments_get_plupload_l10n() {
 			'crunching'                 => __( 'Crunching&hellip;', 'buddyboss' ),
 			'unique_file_warning'       => __( 'Make sure to upload a unique file', 'buddyboss' ),
 			'error_uploading'           => __( '"%s" has failed to upload.', 'buddyboss' ),
-			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss' )
-	) );
+			'has_avatar_warning'        => __( 'If you\'d like to delete the existing profile photo but not upload a new one, please use the delete tab.', 'buddyboss' ),
+		)
+	);
 }
 
 /**
@@ -694,21 +715,25 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 	}
 
 	// Get an instance of the class and get the script data.
-	$attachment = new $class;
-	$script_data  = $attachment->script_data();
+	$attachment  = new $class();
+	$script_data = $attachment->script_data();
 
-	$args = bp_parse_args( $script_data, array(
-		'action'            => '',
-		'file_data_name'    => '',
-		'max_file_size'     => 0,
-		'browse_button'     => 'bp-browse-button',
-		'container'         => 'bp-upload-ui',
-		'drop_element'      => 'drag-drop-area',
-		'bp_params'         => array(),
-		'extra_css'         => array(),
-		'extra_js'          => array(),
-		'feedback_messages' => array(),
-	), 'attachments_enqueue_scripts' );
+	$args = bp_parse_args(
+		$script_data,
+		array(
+			'action'            => '',
+			'file_data_name'    => '',
+			'max_file_size'     => 0,
+			'browse_button'     => 'bp-browse-button',
+			'container'         => 'bp-upload-ui',
+			'drop_element'      => 'drag-drop-area',
+			'bp_params'         => array(),
+			'extra_css'         => array(),
+			'extra_js'          => array(),
+			'feedback_messages' => array(),
+		),
+		'attachments_enqueue_scripts'
+	);
 
 	if ( empty( $args['action'] ) || empty( $args['file_data_name'] ) ) {
 		return new WP_Error( 'missing_parameter' );
@@ -737,12 +762,15 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 	}
 
 	// Merge other arguments.
-	$ui_args = array_intersect_key( $args, array(
-		'file_data_name' => true,
-		'browse_button'  => true,
-		'container'      => true,
-		'drop_element'   => true,
-	) );
+	$ui_args = array_intersect_key(
+		$args,
+		array(
+			'file_data_name' => true,
+			'browse_button'  => true,
+			'container'      => true,
+			'drop_element'   => true,
+		)
+	);
 
 	$defaults = array_merge( $defaults, $ui_args );
 
@@ -755,8 +783,8 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 
 		// Include the cropping informations for avatars.
 		$settings['crop'] = array(
-			'full_h'  => bp_core_avatar_full_height(),
-			'full_w'  => bp_core_avatar_full_width(),
+			'full_h' => bp_core_avatar_full_height(),
+			'full_w' => bp_core_avatar_full_width(),
 		);
 
 		// Avatar only need 1 file and 1 only!
@@ -770,26 +798,39 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 
 		// Init the Avatar nav.
 		$avatar_nav = array(
-			'upload' => array( 'id' => 'upload', 'caption' => __( 'Upload', 'buddyboss' ), 'order' => 0  ),
+			'upload' => array(
+				'id'      => 'upload',
+				'caption' => __( 'Upload', 'buddyboss' ),
+				'order'   => 0,
+			),
 
 			// The delete view will only show if the object has an avatar.
-			'delete' => array( 'id' => 'delete', 'caption' => __( 'Delete', 'buddyboss' ), 'order' => 100, 'hide' => (int) ! $has_avatar ),
+			'delete' => array(
+				'id'      => 'delete',
+				'caption' => __( 'Delete', 'buddyboss' ),
+				'order'   => 100,
+				'hide'    => (int) ! $has_avatar,
+			),
 		);
 
 		// Create the Camera Nav if the WebCam capture feature is enabled.
 		if ( bp_avatar_use_webcam() && 'user' === $object ) {
-			$avatar_nav['camera'] = array( 'id' => 'camera', 'caption' => __( 'Take Photo', 'buddyboss' ), 'order' => 10 );
+			$avatar_nav['camera'] = array(
+				'id'      => 'camera',
+				'caption' => __( 'Take Photo', 'buddyboss' ),
+				'order'   => 10,
+			);
 
 			// Set warning messages.
 			$strings['camera_warnings'] = array(
-				'requesting'  => __( 'Please allow application access to your camera.', 'buddyboss'),
-				'loading'     => __( 'Please wait while your camera connects.', 'buddyboss' ),
-				'loaded'      => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss' ),
-				'noaccess'    => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss' ),
-				'errormsg'    => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss' ),
-				'videoerror'  => __( 'Video error. Please upload a photo instead.', 'buddyboss' ),
-				'ready'       => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss' ),
-				'nocapture'   => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss' ),
+				'requesting' => __( 'Please allow application access to your camera.', 'buddyboss' ),
+				'loading'    => __( 'Please wait while your camera connects.', 'buddyboss' ),
+				'loaded'     => __( 'Camera loaded. Click "Capture" to take a photo.', 'buddyboss' ),
+				'noaccess'   => __( 'Webcam not found or permission was denied. Please upload a photo.', 'buddyboss' ),
+				'errormsg'   => __( 'Your browser is not supported. Please upload a photo instead.', 'buddyboss' ),
+				'videoerror' => __( 'Video error. Please upload a photo instead.', 'buddyboss' ),
+				'ready'      => __( 'Your profile photo is ready. Click "Save" to use this photo.', 'buddyboss' ),
+				'nocapture'  => __( 'No photo captured. Click "Capture" to take your photo.', 'buddyboss' ),
 			);
 		}
 
@@ -812,7 +853,7 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		 */
 		$settings['nav'] = bp_sort_by_key( apply_filters( 'bp_attachments_avatar_nav', $avatar_nav, $object ), 'order', 'num' );
 
-	// Specific to BuddyPress cover photos.
+		// Specific to BuddyPress cover photos.
 	} elseif ( 'bp_cover_image_upload' === $defaults['multipart_params']['action'] ) {
 
 		// cover photos only need 1 file and 1 only!
@@ -834,13 +875,16 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		$cover_dimensions = bp_attachments_get_cover_image_dimensions( $cover_component );
 
 		// Set warning messages.
-		$strings['cover_image_warnings'] = apply_filters( 'bp_attachments_cover_image_ui_warnings', array(
-			'dimensions'  => sprintf(
+		$strings['cover_image_warnings'] = apply_filters(
+			'bp_attachments_cover_image_ui_warnings',
+			array(
+				'dimensions' => sprintf(
 					__( 'For best results, upload an image that is %1$spx by %2$spx or larger.', 'buddyboss' ),
 					(int) $cover_dimensions['width'],
 					(int) $cover_dimensions['height']
 				),
-		) );
+			)
+		);
 	}
 
 	// Set Plupload settings.
@@ -861,8 +905,15 @@ function bp_attachments_enqueue_scripts( $class = '' ) {
 		}
 	}
 
-	wp_enqueue_script ( 'bp-plupload' );
-	wp_localize_script( 'bp-plupload', 'BP_Uploader', array( 'strings' => $strings, 'settings' => $settings ) );
+	wp_enqueue_script( 'bp-plupload' );
+	wp_localize_script(
+		'bp-plupload',
+		'BP_Uploader',
+		array(
+			'strings'  => $strings,
+			'settings' => $settings,
+		)
+	);
 
 	/**
 	 * Enqueue some extra scripts if required
@@ -912,14 +963,14 @@ function bp_attachments_current_user_can( $capability, $args = array() ) {
 				} else {
 					$can = (bool) groups_is_user_admin( bp_loggedin_user_id(), $args['item_id'] ) || bp_current_user_can( 'bp_moderate' );
 				}
-			// User profile photo.
+				// User profile photo.
 			} elseif ( bp_is_active( 'xprofile' ) && 'user' === $args['object'] ) {
 				$can = bp_loggedin_user_id() === (int) $args['item_id'] || bp_current_user_can( 'bp_moderate' );
 			}
-		/**
-		 * No avatar arguments, fallback to bp_user_can_create_groups()
-		 * or bp_is_item_admin()
-		 */
+			/**
+			 * No avatar arguments, fallback to bp_user_can_create_groups()
+			 * or bp_is_item_admin()
+			 */
 		} else {
 			if ( bp_is_group_create() ) {
 				$can = bp_user_can_create_groups();
@@ -952,11 +1003,11 @@ function bp_attachments_json_response( $success, $is_html4 = false, $data = null
 	if ( ! $is_html4 ) {
 		wp_send_json( $response );
 
-	/**
-	 * Send specific json response
-	 * the html4 Plupload handler requires a text/html content-type for older IE.
-	 * See https://core.trac.wordpress.org/ticket/31037
-	 */
+		/**
+		 * Send specific json response
+		 * the html4 Plupload handler requires a text/html content-type for older IE.
+		 * See https://core.trac.wordpress.org/ticket/31037
+		 */
 	} else {
 		echo wp_json_encode( $response );
 
@@ -1026,14 +1077,18 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
 	 *
 	 * @param array $settings The cover photo settings
 	 */
-	$settings = bp_parse_args( $args, array(
-		'components'    => array(),
-		'width'         => 1300,
-		'height'        => 225,
-		'callback'      => '',
-		'theme_handle'  => '',
-		'default_cover' => '',
-	), $component . '_cover_image_settings' );
+	$settings = bp_parse_args(
+		$args,
+		array(
+			'components'    => array(),
+			'width'         => 1300,
+			'height'        => 225,
+			'callback'      => '',
+			'theme_handle'  => '',
+			'default_cover' => '',
+		),
+		$component . '_cover_image_settings'
+	);
 
 	if ( empty( $settings['components'] ) || empty( $settings['callback'] ) || empty( $settings['theme_handle'] ) ) {
 		return false;
@@ -1058,7 +1113,10 @@ function bp_attachments_get_cover_image_settings( $component = 'xprofile' ) {
  */
 function bp_attachments_get_cover_image_dimensions( $component = 'xprofile' ) {
 	// Let's prevent notices when setting the warning strings.
-	$default = array( 'width' => 0, 'height' => 0 );
+	$default = array(
+		'width'  => 0,
+		'height' => 0,
+	);
 
 	$settings = bp_attachments_get_cover_image_settings( $component );
 
@@ -1125,9 +1183,12 @@ function bp_attachments_get_user_has_cover_image( $user_id = 0 ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$cover_src = bp_attachments_get_attachment( 'url', array(
-		'item_id'   => $user_id,
-	) );
+	$cover_src = bp_attachments_get_attachment(
+		'url',
+		array(
+			'item_id' => $user_id,
+		)
+	);
 
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $user_id );
 }
@@ -1145,10 +1206,13 @@ function bp_attachments_get_group_has_cover_image( $group_id = 0 ) {
 		$group_id = bp_get_current_group_id();
 	}
 
-	$cover_src = bp_attachments_get_attachment( 'url', array(
-		'object_dir' => 'groups',
-		'item_id'    => $group_id,
-	) );
+	$cover_src = bp_attachments_get_attachment(
+		'url',
+		array(
+			'object_dir' => 'groups',
+			'item_id'    => $group_id,
+		)
+	);
 
 	return (bool) apply_filters( 'bp_attachments_get_user_has_cover_image', $cover_src, $group_id );
 }
@@ -1232,7 +1296,7 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 	return array(
 		'cover_file'     => $cover_file,
 		'cover_basename' => $cover_basename,
-		'is_too_small'   => $is_too_small
+		'is_too_small'   => $is_too_small,
 	);
 }
 
@@ -1252,16 +1316,20 @@ function bp_attachments_cover_image_ajax_upload() {
 	check_admin_referer( 'bp-uploader' );
 
 	// Sending the json response will be different if the current Plupload runtime is html4.
-	$is_html4 = ! empty( $_POST['html4' ] );
+	$is_html4 = ! empty( $_POST['html4'] );
 
 	if ( empty( $_POST['bp_params'] ) ) {
 		bp_attachments_json_response( false, $is_html4 );
 	}
 
-	$bp_params = bp_parse_args( $_POST['bp_params'], array(
-		'object'  => 'user',
-		'item_id' => bp_loggedin_user_id(),
-	), 'attachments_cover_image_ajax_upload' );
+	$bp_params = bp_parse_args(
+		$_POST['bp_params'],
+		array(
+			'object'  => 'user',
+			'item_id' => bp_loggedin_user_id(),
+		),
+		'attachments_cover_image_ajax_upload'
+	);
 
 	$bp_params['item_id'] = (int) $bp_params['item_id'];
 	$bp_params['object']  = sanitize_text_field( $bp_params['object'] );
@@ -1281,23 +1349,36 @@ function bp_attachments_cover_image_ajax_upload() {
 
 	// Member's cover photo.
 	if ( 'user' === $bp_params['object'] ) {
-		$object_data = array( 'dir' => 'members', 'component' => 'xprofile' );
+		$object_data = array(
+			'dir'       => 'members',
+			'component' => 'xprofile',
+		);
 
 		if ( ! bp_displayed_user_id() && ! empty( $bp_params['item_id'] ) ) {
-			$needs_reset = array( 'key' => 'displayed_user', 'value' => $bp->displayed_user );
+			$needs_reset            = array(
+				'key'   => 'displayed_user',
+				'value' => $bp->displayed_user,
+			);
 			$bp->displayed_user->id = $bp_params['item_id'];
 		}
 
-	// Group's cover photo.
+		// Group's cover photo.
 	} elseif ( 'group' === $bp_params['object'] ) {
-		$object_data = array( 'dir' => 'groups', 'component' => 'groups' );
+		$object_data = array(
+			'dir'       => 'groups',
+			'component' => 'groups',
+		);
 
 		if ( ! bp_get_current_group_id() && ! empty( $bp_params['item_id'] ) ) {
-			$needs_reset = array( 'component' => 'groups', 'key' => 'current_group', 'value' => $bp->groups->current_group );
+			$needs_reset               = array(
+				'component' => 'groups',
+				'key'       => 'current_group',
+				'value'     => $bp->groups->current_group,
+			);
 			$bp->groups->current_group = groups_get_group( $bp_params['item_id'] );
 		}
 
-	// Other object's cover photo.
+		// Other object's cover photo.
 	} else {
 		$object_data = apply_filters( 'bp_attachments_cover_image_object_dir', array(), $bp_params['object'] );
 	}
@@ -1325,7 +1406,7 @@ function bp_attachments_cover_image_ajax_upload() {
 	}
 
 	$cover_image_attachment = new BP_Attachment_Cover_Image();
-	$uploaded = $cover_image_attachment->upload( $_FILES );
+	$uploaded               = $cover_image_attachment->upload( $_FILES );
 
 	// Reset objects.
 	if ( ! empty( $needs_reset ) ) {
@@ -1338,10 +1419,14 @@ function bp_attachments_cover_image_ajax_upload() {
 
 	if ( ! empty( $uploaded['error'] ) ) {
 		// Upload error response.
-		bp_attachments_json_response( false, $is_html4, array(
-			'type'    => 'upload_error',
-			'message' => sprintf( __( 'Upload Error: %s', 'buddyboss' ), $uploaded['error'] ),
-		) );
+		bp_attachments_json_response(
+			false,
+			$is_html4,
+			array(
+				'type'    => 'upload_error',
+				'message' => sprintf( __( 'Upload Error: %s', 'buddyboss' ), $uploaded['error'] ),
+			)
+		);
 	}
 
 	$error_message = __( 'There was a problem uploading the cover photo.', 'buddyboss' );
@@ -1350,10 +1435,14 @@ function bp_attachments_cover_image_ajax_upload() {
 
 	// The BP Attachments Uploads Dir is not set, stop.
 	if ( ! $bp_attachments_uploads_dir ) {
-		bp_attachments_json_response( false, $is_html4, array(
-			'type'    => 'upload_error',
-			'message' => $error_message,
-		) );
+		bp_attachments_json_response(
+			false,
+			$is_html4,
+			array(
+				'type'    => 'upload_error',
+				'message' => $error_message,
+			)
+		);
 	}
 
 	$cover_subdir = $object_data['dir'] . '/' . $bp_params['item_id'] . '/cover-image';
@@ -1361,10 +1450,14 @@ function bp_attachments_cover_image_ajax_upload() {
 
 	if ( 1 === validate_file( $cover_dir ) || ! is_dir( $cover_dir ) ) {
 		// Upload error response.
-		bp_attachments_json_response( false, $is_html4, array(
-			'type'    => 'upload_error',
-			'message' => $error_message,
-		) );
+		bp_attachments_json_response(
+			false,
+			$is_html4,
+			array(
+				'type'    => 'upload_error',
+				'message' => $error_message,
+			)
+		);
 	}
 
 	/*
@@ -1374,17 +1467,24 @@ function bp_attachments_cover_image_ajax_upload() {
 	 * the same Ajax request, as we already instantiated the BP_Attachment_Cover_Image
 	 * class, let's use it.
 	 */
-	$cover = bp_attachments_cover_image_generate_file( array(
-		'file'            => $uploaded['file'],
-		'component'       => $object_data['component'],
-		'cover_image_dir' => $cover_dir
-	), $cover_image_attachment );
+	$cover = bp_attachments_cover_image_generate_file(
+		array(
+			'file'            => $uploaded['file'],
+			'component'       => $object_data['component'],
+			'cover_image_dir' => $cover_dir,
+		),
+		$cover_image_attachment
+	);
 
 	if ( ! $cover ) {
-		bp_attachments_json_response( false, $is_html4, array(
-			'type'    => 'upload_error',
-			'message' => $error_message,
-		) );
+		bp_attachments_json_response(
+			false,
+			$is_html4,
+			array(
+				'type'    => 'upload_error',
+				'message' => $error_message,
+			)
+		);
 	}
 
 	$cover_url = trailingslashit( $bp_attachments_uploads_dir['baseurl'] ) . $cover_subdir . '/' . $cover['cover_basename'];
@@ -1398,9 +1498,9 @@ function bp_attachments_cover_image_ajax_upload() {
 	}
 
 	// Set the name of the file.
-	$name = $_FILES['file']['name'];
+	$name       = $_FILES['file']['name'];
 	$name_parts = pathinfo( $name );
-	$name = trim( substr( $name, 0, - ( 1 + strlen( $name_parts['extension'] ) ) ) );
+	$name       = trim( substr( $name, 0, - ( 1 + strlen( $name_parts['extension'] ) ) ) );
 
 	/**
 	 * Fires if the new cover photo was successfully uploaded.
@@ -1427,11 +1527,15 @@ function bp_attachments_cover_image_ajax_upload() {
 	);
 
 	// Finally return the cover photo url to the UI.
-	bp_attachments_json_response( true, $is_html4, array(
-		'name'          => $name,
-		'url'           => $cover_url,
-		'feedback_code' => $feedback_code,
-	) );
+	bp_attachments_json_response(
+		true,
+		$is_html4,
+		array(
+			'name'          => $name,
+			'url'           => $cover_url,
+			'feedback_code' => $feedback_code,
+		)
+	);
 }
 add_action( 'wp_ajax_bp_cover_image_upload', 'bp_attachments_cover_image_ajax_upload' );
 
@@ -1468,14 +1572,20 @@ function bp_attachments_cover_image_ajax_delete() {
 		$component = 'xprofile';
 		$dir       = 'members';
 
-	// Set it for any other cases.
+		// Set it for any other cases.
 	} else {
 		$component = $args['object'] . 's';
 		$dir       = $component;
 	}
 
 	// Handle delete.
-	if ( bp_attachments_delete_file( array( 'item_id' => $args['item_id'], 'object_dir' => $dir, 'type' => 'cover-image' ) ) ) {
+	if ( bp_attachments_delete_file(
+		array(
+			'item_id'    => $args['item_id'],
+			'object_dir' => $dir,
+			'type'       => 'cover-image',
+		)
+	) ) {
 		/**
 		 * Fires if the cover photo was successfully deleted.
 		 *
@@ -1506,9 +1616,11 @@ function bp_attachments_cover_image_ajax_delete() {
 		wp_send_json_success( $response );
 
 	} else {
-		wp_send_json_error( array(
-			'feedback_code' => 2,
-		) );
+		wp_send_json_error(
+			array(
+				'feedback_code' => 2,
+			)
+		);
 	}
 }
 add_action( 'wp_ajax_bp_cover_image_delete', 'bp_attachments_cover_image_ajax_delete' );

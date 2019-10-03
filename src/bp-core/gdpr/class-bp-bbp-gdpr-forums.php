@@ -2,7 +2,7 @@
 /**
  * BP_Bbp_Gdpr_Forums base class
  *
- * This class 
+ * This class
  *
  * @package BuddyBoss\GDPR
  * @since BuddyBoss 1.0.0
@@ -72,7 +72,7 @@ class BP_Bbp_Gdpr_Forums {
 	 * Export member created forum data.
 	 *
 	 * @param $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -176,7 +176,10 @@ class BP_Bbp_Gdpr_Forums {
 		$the_query = new \WP_Query( $pp_args );
 
 		if ( $the_query->have_posts() ) {
-			return array( 'forums' => $the_query->posts, 'total' => $the_query->post_count );
+			return array(
+				'forums' => $the_query->posts,
+				'total'  => $the_query->post_count,
+			);
 		}
 
 		return false;
@@ -186,7 +189,7 @@ class BP_Bbp_Gdpr_Forums {
 	 * Delete all forums created by member.
 	 *
 	 * @param $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -226,11 +229,13 @@ class BP_Bbp_Gdpr_Forums {
 
 		if ( $total ) {
 			foreach ( (array) $forums as $forum ) {
-				$attachments = get_posts( array(
-					'post_type'      => 'attachment',
-					'posts_per_page' => - 1,
-					'post_parent'    => $forum->ID,
-				) );
+				$attachments = get_posts(
+					array(
+						'post_type'      => 'attachment',
+						'posts_per_page' => - 1,
+						'post_parent'    => $forum->ID,
+					)
+				);
 
 				if ( $attachments ) {
 					foreach ( $attachments as $attachment ) {

@@ -41,16 +41,20 @@ defined( 'ABSPATH' ) || exit;
 function messages_new_message( $args = '' ) {
 
 	// Parse the default arguments.
-	$r = bp_parse_args( $args, array(
-		'sender_id'     => bp_loggedin_user_id(),
-		'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
-		'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
-		'subject'       => false,
-		'content'       => false,
-		'date_sent'     => bp_core_current_time(),
-		'append_thread' => true,
-		'error_type'    => 'bool'
-	), 'messages_new_message' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'sender_id'     => bp_loggedin_user_id(),
+			'thread_id'     => false,   // False for a new message, thread id for a reply to a thread.
+			'recipients'    => array(), // Can be an array of usernames, user_ids or mixed.
+			'subject'       => false,
+			'content'       => false,
+			'date_sent'     => bp_core_current_time(),
+			'append_thread' => true,
+			'error_type'    => 'bool',
+		),
+		'messages_new_message'
+	);
 
 	// Bail if no sender or no content.
 	if ( empty( $r['sender_id'] ) || empty( $r['content'] ) ) {
@@ -71,7 +75,7 @@ function messages_new_message( $args = '' ) {
 	}
 
 	// Create a new message object.
-	$message            = new BP_Messages_Message;
+	$message            = new BP_Messages_Message();
 	$message->thread_id = $r['thread_id'];
 	$message->sender_id = $r['sender_id'];
 	$message->subject   = $r['subject'];
@@ -96,7 +100,7 @@ function messages_new_message( $args = '' ) {
 		if ( empty( $message->subject ) ) {
 			$re = __( 'Re', 'buddyboss' ) . ': ';
 
-			if ( strpos($thread->messages[0]->subject, $re) === 0 ) {
+			if ( strpos( $thread->messages[0]->subject, $re ) === 0 ) {
 				$message->subject = $thread->messages[0]->subject;
 			} else {
 				$message->subject = $re . $thread->messages[0]->subject;
@@ -105,7 +109,7 @@ function messages_new_message( $args = '' ) {
 
 		$new_reply = true;
 
-	// ...otherwise use the recipients passed
+		// ...otherwise use the recipients passed
 	} else {
 
 		// Bail if no recipients.
@@ -184,7 +188,7 @@ function messages_new_message( $args = '' ) {
 
 		// Format this to match existing recipients.
 		foreach ( (array) $recipient_ids as $i => $recipient_id ) {
-			$message->recipients[ $i ]          = new stdClass;
+			$message->recipients[ $i ]          = new stdClass();
 			$message->recipients[ $i ]->user_id = $recipient_id;
 		}
 
@@ -196,7 +200,7 @@ function messages_new_message( $args = '' ) {
 			if ( empty( $message->subject ) ) {
 				$message->subject = sprintf(
 					__( '%s', 'buddyboss' ),
-					wp_trim_words($thread->messages[0]->subject , messages_get_default_subject_length())
+					wp_trim_words( $thread->messages[0]->subject, messages_get_default_subject_length() )
 				);
 			}
 		}
@@ -217,9 +221,9 @@ function messages_new_message( $args = '' ) {
 				if ( 'wp_error' === $r['error_type'] ) {
 					if ( $new_reply && sizeof( $message->recipients ) == 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
-					} else if ( $new_reply && sizeof( $message->recipients ) > 1 ) {
+					} elseif ( $new_reply && sizeof( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_reply'] );
-					} else if ( sizeof( $message->recipients ) > 1 ) {
+					} elseif ( sizeof( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_message'] );
 					} else {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_message'] );
@@ -272,12 +276,12 @@ function messages_new_message( $args = '' ) {
  * @return bool True on success, false on failure.
  */
 function messages_send_notice( $subject, $message ) {
-	if ( !bp_current_user_can( 'bp_moderate' ) || empty( $subject ) || empty( $message ) ) {
+	if ( ! bp_current_user_can( 'bp_moderate' ) || empty( $subject ) || empty( $message ) ) {
 		return false;
 
-	// Has access to send notices, lets do it.
+		// Has access to send notices, lets do it.
 	} else {
-		$notice            = new BP_Messages_Notice;
+		$notice            = new BP_Messages_Notice();
 		$notice->subject   = $subject;
 		$notice->message   = $message;
 		$notice->date_sent = bp_core_current_time();
@@ -336,7 +340,7 @@ function messages_delete_thread( $thread_ids, $user_id = 0 ) {
 	if ( is_array( $thread_ids ) ) {
 		$error = 0;
 		for ( $i = 0, $count = count( $thread_ids ); $i < $count; ++$i ) {
-			if ( ! BP_Messages_Thread::delete( $thread_ids[$i], $user_id ) ) {
+			if ( ! BP_Messages_Thread::delete( $thread_ids[ $i ], $user_id ) ) {
 				$error = 1;
 			}
 		}
@@ -419,8 +423,8 @@ function messages_mark_thread_unread( $thread_id ) {
  */
 function messages_add_callback_values( $recipients, $subject, $content ) {
 	@setcookie( 'bp_messages_send_to', $recipients, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp_messages_subject', $subject,    time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp_messages_content', $content,    time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp_messages_subject', $subject, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp_messages_content', $content, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 }
 
 /**
@@ -498,7 +502,7 @@ function messages_get_message_thread_id( $message_id = 0 ) {
  * @since BuddyBoss 1.0.0
  */
 function messages_get_default_subject_length() {
-	return apply_filters('bp_messages_get_default_subject_length', 30);
+	return apply_filters( 'bp_messages_get_default_subject_length', 30 );
 }
 
 /** Messages Meta *******************************************************/
@@ -675,16 +679,20 @@ function messages_notification_new_message( $raw_args = array() ) {
 			'notification_type' => 'messages-unread',
 		);
 
-		bp_send_email( 'messages-unread', $ud, array(
-			'tokens' => array(
-				'message_id'  => $id,
-				'usermessage' => stripslashes( $message ),
-				'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
-				'sender.name' => $sender_name,
-				'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
-				'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
-			),
-		) );
+		bp_send_email(
+			'messages-unread',
+			$ud,
+			array(
+				'tokens' => array(
+					'message_id'  => $id,
+					'usermessage' => stripslashes( $message ),
+					'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+					'sender.name' => $sender_name,
+					'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			)
+		);
 	}
 
 	/**

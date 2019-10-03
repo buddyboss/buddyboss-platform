@@ -36,9 +36,9 @@ function bp_core_email_from_name_filter() {
  *
  * @since BuddyPress 2.5.0
  *
- * @param mixed $value
- * @param string $property Name of property.
- * @param string $transform Return value transformation. Unused.
+ * @param mixed    $value
+ * @param string   $property Name of property.
+ * @param string   $transform Return value transformation. Unused.
  * @param BP_Email $email Email object reference.
  * @return mixed
  */
@@ -76,7 +76,7 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 	$to_changed     = false;
 
 	if ( $property === 'to' && $original_value ) {
-		$to_changed     = true;
+		$to_changed = true;
 
 		$value          = array_shift( $original_value );
 		$recipient_name = $value->get_name();     // Value - name
@@ -122,7 +122,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'bp_activity_new_comment_notification_message', $value, $tokens['poster.name'], $tokens['content'], $tokens['thread.url'], '' );
 		}
-
 	} elseif ( $email_type === 'activity-comment-author' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -162,7 +161,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'bp_activity_new_comment_notification_comment_author_message', $value, $tokens['poster.name'], $tokens['content'], '', $tokens['thread.url'] );
 		}
-
 	} elseif ( $email_type === 'activity-at-message' || $email_type === 'groups-at-message' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -202,7 +200,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'bp_activity_at_message_notification_message', $value, $tokens['poster.name'], $tokens['content'], $tokens['mentioned.url'], '' );
 		}
-
 	} elseif ( $email_type === 'core-user-registration' ) {
 		// Filters are different according to the WordPress config.
 		if ( is_multisite() ) {
@@ -265,7 +262,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( $registration_filters['content'], $value, $tokens['recipient.username'], $tokens['recipient.email'], $tokens['key'], array() );
 		}
-
 	} elseif ( $email_type === 'core-user-registration-with-blog' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -321,7 +317,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'bp_core_activation_signup_blog_notification_message', $value, $tokens['domain'], $tokens['path'], $tokens['title'], $tokens['recipient.username'], $tokens['recipient.email'], $tokens['key_blog'], array() );
 		}
-
 	} elseif ( $email_type === 'friends-request' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -361,7 +356,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'friends_notification_new_request_message', $value, $tokens['initiator.name'], $tokens['initiator.url'], $tokens['friend-requests.url'], '' );
 		}
-
 	} elseif ( $email_type === 'friends-request-accepted' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -400,7 +394,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'friends_notification_accepted_request_message', $value, $tokens['friend.name'], $tokens['friendship.url'], '' );
 		}
-
 	} elseif ( $email_type === 'groups-details-updated' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -439,7 +432,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters_ref_array( 'groups_notification_group_updated_message', array( $value, &$tokens['group'], $tokens['group.url'], '' ) );
 		}
-
 	} elseif ( $email_type === 'groups-invitation' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -481,7 +473,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters_ref_array( 'groups_notification_group_invites_message', array( $value, &$tokens['group'], $tokens['inviter.name'], $tokens['inviter.url'], $tokens['invites.url'], $tokens['group.url'], '' ) );
 		}
-
 	} elseif ( $email_type === 'groups-member-promoted' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -521,7 +512,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters_ref_array( 'groups_notification_promoted_member_message', array( $value, &$tokens['group'], $tokens['promoted_to'], $tokens['group.url'], '' ) );
 		}
-
 	} elseif ( $email_type === 'groups-membership-request' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -562,7 +552,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters_ref_array( 'groups_notification_new_membership_request_message', array( $value, &$tokens['group'], $tokens['requesting-user.name'], $tokens['profile.url'], $tokens['group-requests.url'], '' ) );
 		}
-
 	} elseif ( $email_type === 'groups-membership-request-accepted' || $email_type === 'groups-membership-request-rejected' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -600,7 +589,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters_ref_array( 'groups_notification_membership_request_completed_message', array( $value, &$tokens['group'], $tokens['group.url'], '' ) );
 		}
-
 	} elseif ( $email_type === 'messages-unread' ) {
 		if ( $property === 'to' ) {
 			/**
@@ -645,7 +633,6 @@ function bp_core_deprecated_email_filters( $value, $property, $transform, $email
 			 */
 			$value = apply_filters( 'messages_notification_new_message_message', $value, $tokens['sender.name'], $tokens['usersubject'], $tokens['content'], $tokens['message.url'], '', false );
 		}
-
 	} elseif ( $email_type === 'settings-verify-email-change' ) {
 		if ( $property === 'content' ) {
 			/**
@@ -680,7 +667,7 @@ add_filter( 'bp_email_get_property', 'bp_core_deprecated_email_filters', 20, 4 )
  *
  * @param bool|WP_Error $delivery_status Bool if the email was sent or not.
  *                                       If a WP_Error, there was a failure.
- * @param BP_Email $email Email object reference.
+ * @param BP_Email      $email Email object reference.
  * @return mixed
  */
 function bp_core_deprecated_email_actions( $delivery_status, $email ) {
@@ -777,7 +764,6 @@ function bp_core_deprecated_email_actions( $delivery_status, $email ) {
 			 */
 			do_action( 'bp_core_sent_user_signup_email', bp_get_option( 'admin_email' ), $email_subject, $email_content, $tokens['recipient.username'], $tokens['recipient.email'], $tokens['key'], array() );
 		}
-
 	} elseif ( $email_type === 'core-user-registration-with-blog' ) {
 		/**
 		 * Fires after the sending of the notification to new users for successful registration with blog.
@@ -911,7 +897,7 @@ function bp_blogs_transition_activity_status( $new_status, $old_status, $comment
  *
  * @deprecated BuddyPress 2.5.0
  *
- * @param int $comment_id ID of the comment being recorded.
+ * @param int         $comment_id ID of the comment being recorded.
  * @param bool|string $is_approved Optional. The $is_approved value passed to
  *        the 'comment_post' action. Default: true.
  * @return bool|object|null Returns false on failure, the comment object on success.

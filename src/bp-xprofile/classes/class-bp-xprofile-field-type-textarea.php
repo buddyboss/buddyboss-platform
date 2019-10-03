@@ -24,8 +24,8 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 	public function __construct() {
 		parent::__construct();
 
-		$this->category = __( 'Single Fields', 'buddyboss' );
-		$this->name     = __( 'Paragraph Text', 'buddyboss' );
+		$this->category          = __( 'Single Fields', 'buddyboss' );
+		$this->name              = __( 'Paragraph Text', 'buddyboss' );
 		$this->supports_richtext = true;
 
 		$this->set_format( '/^.*$/m', 'replace' );
@@ -66,23 +66,27 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			<?php bp_the_profile_field_name(); ?>
 			<?php if ( bp_is_register_page() ) : ?>
 				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
+			<?php else : ?>
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-        
-        <?php if ( bp_get_the_profile_field_description() ) : ?>
+		
+		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
-		<?php endif;
+			<?php
+		endif;
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
 		do_action( bp_get_the_profile_field_errors_action() );
 
 		if ( ! $richtext_enabled ) {
-			$r = wp_parse_args( $raw_properties, array(
-				'cols' => 40,
-				'rows' => 5,
-			) );
+			$r = wp_parse_args(
+				$raw_properties,
+				array(
+					'cols' => 40,
+					'rows' => 5,
+				)
+			);
 
 			?>
 
@@ -109,12 +113,16 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 			 *                        profile edit screen, 'admin' when intended for the Profile Fields
 			 *                        Dashboard panel.
 			 */
-			$editor_args = apply_filters( 'bp_xprofile_field_type_textarea_editor_args', array(
-				'teeny'         => true,
-				'media_buttons' => false,
-				'quicktags'     => true,
-				'textarea_rows' => 10,
-			), 'edit' );
+			$editor_args = apply_filters(
+				'bp_xprofile_field_type_textarea_editor_args',
+				array(
+					'teeny'         => true,
+					'media_buttons' => false,
+					'quicktags'     => true,
+					'textarea_rows' => 10,
+				),
+				'edit'
+			);
 
 			wp_editor(
 				bp_get_the_profile_field_edit_value(),
@@ -139,10 +147,14 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 
 		if ( ! $richtext_enabled ) {
 
-			$r = bp_parse_args( $raw_properties, array(
-				'cols' => 40,
-				'rows' => 5,
-			) ); ?>
+			$r = bp_parse_args(
+				$raw_properties,
+				array(
+					'cols' => 40,
+					'rows' => 5,
+				)
+			);
+			?>
 
 			<textarea <?php echo $this->get_edit_field_html_elements( $r ); ?>></textarea>
 
@@ -150,12 +162,16 @@ class BP_XProfile_Field_Type_Textarea extends BP_XProfile_Field_Type {
 		} else {
 
 			/** This filter is documented in bp-xprofile/classes/class-bp-xprofile-field-type-textarea.php */
-			$editor_args = apply_filters( 'bp_xprofile_field_type_textarea_editor_args', array(
-				'teeny'         => true,
-				'media_buttons' => false,
-				'quicktags'     => true,
-				'textarea_rows' => 1,
-			), 'admin' );
+			$editor_args = apply_filters(
+				'bp_xprofile_field_type_textarea_editor_args',
+				array(
+					'teeny'         => true,
+					'media_buttons' => false,
+					'quicktags'     => true,
+					'textarea_rows' => 1,
+				),
+				'admin'
+			);
 
 			wp_editor(
 				'',

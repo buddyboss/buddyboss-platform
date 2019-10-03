@@ -59,28 +59,32 @@ class BP_XProfile_Field_Type_Number extends BP_XProfile_Field_Type {
 			unset( $raw_properties['user_id'] );
 		}
 
-		$r = bp_parse_args( $raw_properties, array(
-			'type'  => 'number',
-			'value' =>  bp_get_the_profile_field_edit_value()
-		) ); ?>
+		$r = bp_parse_args(
+			$raw_properties,
+			array(
+				'type'  => 'number',
+				'value' => bp_get_the_profile_field_edit_value(),
+			)
+		); ?>
 
 		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
 			<?php bp_the_profile_field_name(); ?>
 			<?php if ( bp_is_register_page() ) : ?>
 				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
+			<?php else : ?>
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-        
-        <?php if ( bp_get_the_profile_field_description() ) : ?>
+		
+		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() ); ?>
+		do_action( bp_get_the_profile_field_errors_action() );
+		?>
 
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
@@ -97,16 +101,22 @@ class BP_XProfile_Field_Type_Number extends BP_XProfile_Field_Type {
 	 * @param array $raw_properties Optional key/value array of permitted attributes that you want to add.
 	 */
 	public function admin_field_html( array $raw_properties = array() ) {
-		$r = bp_parse_args( $raw_properties, array(
-			'type' => 'number'
-		) ); ?>
+		$r = bp_parse_args(
+			$raw_properties,
+			array(
+				'type' => 'number',
+			)
+		);
+		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
-			/* translators: accessibility text */
-			esc_html_e( 'Number field', 'buddyboss' );
-		?></label>
+		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+															 <?php
+																/* translators: accessibility text */
+																esc_html_e( 'Number field', 'buddyboss' );
+																?>
+		</label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
-	<?php
+		<?php
 	}
 
 	/**

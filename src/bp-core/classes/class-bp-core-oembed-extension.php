@@ -187,12 +187,12 @@ abstract class BP_Core_oEmbed_Extension {
 	 * @since BuddyPress 2.6.0
 	 */
 	protected function setup_hooks() {
-		add_action( 'rest_api_init',    array( $this, 'register_route' ) );
+		add_action( 'rest_api_init', array( $this, 'register_route' ) );
 		add_action( 'bp_embed_content', array( $this, 'inject_content' ) );
 
 		add_filter( 'embed_template', array( $this, 'setup_template_parts' ) );
 		add_filter( 'post_embed_url', array( $this, 'filter_embed_url' ) );
-		add_filter( 'embed_html',     array( $this, 'filter_embed_html' ) );
+		add_filter( 'embed_html', array( $this, 'filter_embed_html' ) );
 		add_filter( 'oembed_discovery_links', array( $this, 'add_oembed_discovery_links' ) );
 		add_filter( 'rest_pre_serve_request', array( $this, 'oembed_xml_request' ), 20, 4 );
 	}
@@ -221,19 +221,23 @@ abstract class BP_Core_oEmbed_Extension {
 			'maxwidth' => array(
 				'default'           => $maxwidth,
 				'sanitize_callback' => 'absint',
-			)
+			),
 		);
 
 		// Merge custom arguments here.
 		$args = $args + (array) $this->set_route_args();
 
-		register_rest_route( 'oembed/1.0', "/embed/{$this->slug_endpoint}", array(
+		register_rest_route(
+			'oembed/1.0',
+			"/embed/{$this->slug_endpoint}",
 			array(
-				'methods'  => WP_REST_Server::READABLE,
-				'callback' => array( $this, 'get_item' ),
-				'args'     => $args
-			),
-		) );
+				array(
+					'methods'  => WP_REST_Server::READABLE,
+					'callback' => array( $this, 'get_item' ),
+					'args'     => $args,
+				),
+			)
+		);
 	}
 
 	/**
@@ -252,7 +256,7 @@ abstract class BP_Core_oEmbed_Extension {
 
 		// Set up some BP-specific embed template overrides.
 		add_action( 'get_template_part_embed', array( $this, 'content_buffer_start' ), -999, 2 );
-		add_action( 'get_footer',              array( $this, 'content_buffer_end' ), -999 );
+		add_action( 'get_footer', array( $this, 'content_buffer_end' ), -999 );
 
 		// Return the original WP embed template.
 		return $template;
@@ -338,7 +342,7 @@ abstract class BP_Core_oEmbed_Extension {
 			return $retval;
 		}
 
-		add_filter( 'rest_url' , array( $this, 'filter_rest_url' ) );
+		add_filter( 'rest_url', array( $this, 'filter_rest_url' ) );
 
 		$retval = '<link rel="alternate" type="application/json+oembed" href="' . esc_url( get_oembed_endpoint_url( $permalink ) ) . '" />' . "\n";
 
@@ -346,7 +350,7 @@ abstract class BP_Core_oEmbed_Extension {
 			$retval .= '<link rel="alternate" type="text/xml+oembed" href="' . esc_url( get_oembed_endpoint_url( $permalink, 'xml' ) ) . '" />' . "\n";
 		}
 
-		remove_filter( 'rest_url' , array( $this, 'filter_rest_url' ) );
+		remove_filter( 'rest_url', array( $this, 'filter_rest_url' ) );
 
 		return $retval;
 	}
@@ -365,21 +369,27 @@ abstract class BP_Core_oEmbed_Extension {
 	 * @return array
 	 */
 	protected function get_oembed_response_data( $item, $width ) {
-		$data = wp_parse_args( $item, array(
-			'version'       => '1.0',
-			'provider_name' => get_bloginfo( 'name' ),
-			'provider_url'  => get_home_url(),
-			'author_name'   => get_bloginfo( 'name' ),
-			'author_url'    => get_home_url(),
-			'title'         => ucfirst( $this->slug_endpoint ),
-			'type'          => 'rich',
-		) );
+		$data = wp_parse_args(
+			$item,
+			array(
+				'version'       => '1.0',
+				'provider_name' => get_bloginfo( 'name' ),
+				'provider_url'  => get_home_url(),
+				'author_name'   => get_bloginfo( 'name' ),
+				'author_url'    => get_home_url(),
+				'title'         => ucfirst( $this->slug_endpoint ),
+				'type'          => 'rich',
+			)
+		);
 
 		/** This filter is documented in /wp-includes/embed.php */
-		$min_max_width = apply_filters( 'oembed_min_max_width', array(
-			'min' => 200,
-			'max' => 600
-		) );
+		$min_max_width = apply_filters(
+			'oembed_min_max_width',
+			array(
+				'min' => 200,
+				'max' => 600,
+			)
+		);
 
 		$width  = min( max( $min_max_width['min'], $width ), $min_max_width['max'] );
 		$height = max( ceil( $width / 16 * 9 ), 200 );
@@ -390,7 +400,7 @@ abstract class BP_Core_oEmbed_Extension {
 		// Set 'html' parameter.
 		if ( 'video' === $data['type'] || 'rich' === $data['type'] ) {
 			// Fake a WP post so we can use get_post_embed_html().
-			$post = new stdClass;
+			$post               = new stdClass();
 			$post->post_content = $data['content'];
 			$post->post_title   = $data['title'];
 
@@ -424,7 +434,7 @@ abstract class BP_Core_oEmbed_Extension {
 			// Add markers to tell that we're embedding a single activity.
 			// This is needed for various oEmbed response data filtering.
 			if ( empty( buddypress()->{$this->slug_endpoint} ) ) {
-				buddypress()->{$this->slug_endpoint} = new stdClass;
+				buddypress()->{$this->slug_endpoint} = new stdClass();
 			}
 			buddypress()->{$this->slug_endpoint}->embedurl_in_progress = $url;
 			buddypress()->{$this->slug_endpoint}->embedid_in_progress  = $item_id;
@@ -434,7 +444,7 @@ abstract class BP_Core_oEmbed_Extension {
 			if ( ! empty( $custom_args ) ) {
 				buddypress()->{$this->slug_endpoint}->embedargs_in_progress = array();
 
-				foreach( $custom_args as $arg ) {
+				foreach ( $custom_args as $arg ) {
 					if ( isset( $request[ $arg ] ) ) {
 						buddypress()->{$this->slug_endpoint}->embedargs_in_progress[ $arg ] = $request[ $arg ];
 					}
@@ -533,7 +543,7 @@ abstract class BP_Core_oEmbed_Extension {
 
 			// Add custom route args to iframe.
 			if ( ! empty( buddypress()->{$this->slug_endpoint}->embedargs_in_progress ) ) {
-				foreach( buddypress()->{$this->slug_endpoint}->embedargs_in_progress as $key => $value ) {
+				foreach ( buddypress()->{$this->slug_endpoint}->embedargs_in_progress as $key => $value ) {
 					$url = add_query_arg( $key, $value, $url );
 				}
 			}
@@ -562,7 +572,7 @@ abstract class BP_Core_oEmbed_Extension {
 		// Change 'Embedded WordPress Post' to custom title.
 		$custom_title = $this->set_iframe_title( $item_id );
 		if ( ! empty( $custom_title ) ) {
-			$title_pos = strpos( $retval, 'title=' ) + 7;
+			$title_pos     = strpos( $retval, 'title=' ) + 7;
 			$title_end_pos = strpos( $retval, '"', $title_pos );
 
 			$retval = substr_replace( $retval, esc_attr( $custom_title ), $title_pos, $title_end_pos - $title_pos );

@@ -27,7 +27,7 @@ class BP_Settings_Component extends BP_Component {
 			__( 'Account', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 21
+				'adminbar_myaccount_order' => 21,
 			)
 		);
 	}
@@ -40,10 +40,12 @@ class BP_Settings_Component extends BP_Component {
 	 * @param array $includes Array of values to include. Not used.
 	 */
 	public function includes( $includes = array() ) {
-		parent::includes( array(
-			'template',
-			'functions',
-		) );
+		parent::includes(
+			array(
+				'template',
+				'functions',
+			)
+		);
 	}
 
 	/**
@@ -71,7 +73,7 @@ class BP_Settings_Component extends BP_Component {
 			if ( ! bp_current_action() || bp_is_current_action( 'general' ) ) {
 				require $this->path . 'bp-settings/actions/general.php';
 
-			// Specific to post requests.
+				// Specific to post requests.
 			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) ) {
 				require $this->path . 'bp-settings/actions/' . bp_current_action() . '.php';
 			}
@@ -106,10 +108,12 @@ class BP_Settings_Component extends BP_Component {
 		}
 
 		// All globals for settings component.
-		parent::setup_globals( array(
-			'slug'          => BP_SETTINGS_SLUG,
-			'has_directory' => false,
-		) );
+		parent::setup_globals(
+			array(
+				'slug'          => BP_SETTINGS_SLUG,
+				'has_directory' => false,
+			)
+		);
 	}
 
 	/**
@@ -142,7 +146,7 @@ class BP_Settings_Component extends BP_Component {
 			'position'                => 21,
 			'show_for_displayed_user' => $access,
 			'screen_function'         => 'bp_settings_screen_general',
-			'default_subnav_slug'     => 'general'
+			'default_subnav_slug'     => 'general',
 		);
 
 		// Add General Settings nav item.
@@ -153,7 +157,7 @@ class BP_Settings_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_settings_screen_general',
 			'position'        => 10,
-			'user_has_access' => $access
+			'user_has_access' => $access,
 		);
 
 		// Add Email nav item. Formerly called 'Notifications', we
@@ -165,7 +169,7 @@ class BP_Settings_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_settings_screen_notification',
 			'position'        => 20,
-			'user_has_access' => $access
+			'user_has_access' => $access,
 		);
 
 		$sub_nav[] = array(
@@ -175,7 +179,7 @@ class BP_Settings_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_settings_screen_export_data',
 			'position'        => 80,
-			'user_has_access' => $access
+			'user_has_access' => $access,
 		);
 
 		// Add Spam Account nav item.
@@ -187,7 +191,7 @@ class BP_Settings_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'bp_settings_screen_capabilities',
 				'position'        => 80,
-				'user_has_access' => ! bp_is_my_profile()
+				'user_has_access' => ! bp_is_my_profile(),
 			);
 		}
 
@@ -200,7 +204,7 @@ class BP_Settings_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'bp_settings_screen_delete_account',
 				'position'        => 90,
-				'user_has_access' => ! is_super_admin( bp_displayed_user_id() )
+				'user_has_access' => ! is_super_admin( bp_displayed_user_id() ),
 			);
 		}
 
@@ -227,7 +231,7 @@ class BP_Settings_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Account', 'buddyboss' ),
-				'href'   => $settings_link
+				'href'   => $settings_link,
 			);
 
 			// General Account.
@@ -236,7 +240,7 @@ class BP_Settings_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-general',
 				'title'    => __( 'Login Information', 'buddyboss' ),
 				'href'     => $settings_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			// Notifications - only add the tab when there is something to display there.
@@ -246,26 +250,26 @@ class BP_Settings_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-notifications',
 					'title'    => __( 'Email Preferences', 'buddyboss' ),
 					'href'     => trailingslashit( $settings_link . 'notifications' ),
-					'position' => 20
+					'position' => 20,
 				);
 			}
 
 			$wp_admin_nav[] = array(
-				'parent' => 'my-account-' . $this->id,
-				'id'     => 'my-account-' . $this->id . '-export',
-				'title'  => __( 'Export Data', 'buddyboss' ),
-				'href'   => trailingslashit( $settings_link . 'export/' ),
-				'position' => 50
+				'parent'   => 'my-account-' . $this->id,
+				'id'       => 'my-account-' . $this->id . '-export',
+				'title'    => __( 'Export Data', 'buddyboss' ),
+				'href'     => trailingslashit( $settings_link . 'export/' ),
+				'position' => 50,
 			);
 
 			// Delete Account
-			if ( !bp_current_user_can( 'bp_moderate' ) && ! bp_core_get_root_option( 'bp-disable-account-deletion' ) ) {
+			if ( ! bp_current_user_can( 'bp_moderate' ) && ! bp_core_get_root_option( 'bp-disable-account-deletion' ) ) {
 				$wp_admin_nav[] = array(
 					'parent'   => 'my-account-' . $this->id,
 					'id'       => 'my-account-' . $this->id . '-delete-account',
 					'title'    => __( 'Delete Account', 'buddyboss' ),
 					'href'     => trailingslashit( $settings_link . 'delete-account' ),
-					'position' => 90
+					'position' => 90,
 				);
 			}
 		}

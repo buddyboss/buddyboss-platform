@@ -23,22 +23,22 @@ class XenForo extends BBP_Converter_Base {
 	 */
 	public function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'node',
-			'from_fieldname'  => 'node_id',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_forum_id'
+			'from_tablename' => 'node',
+			'from_fieldname' => 'node_id',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0. Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'node',
-			'from_fieldname'  => 'parent_node_id',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_forum_parent_id'
+			'from_tablename' => 'node',
+			'from_fieldname' => 'parent_node_id',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -50,7 +50,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (node_id) WHERE node.node_type_id = "Category" OR node.node_type_id = "Forum" ',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_topic_count'
+			'to_fieldname'    => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -62,7 +62,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (node_id) WHERE node.node_type_id = "Category" OR node.node_type_id = "Forum" ',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_reply_count'
+			'to_fieldname'    => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Includes unpublished topics, Stored in postmeta)
@@ -74,7 +74,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (node_id) WHERE node.node_type_id = "Category" OR node.node_type_id = "Forum" ',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_topic_count'
+			'to_fieldname'    => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Includes unpublished replies, Stored in postmeta)
@@ -86,7 +86,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (node_id) WHERE node.node_type_id = "Category" OR node.node_type_id = "Forum" ',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_reply_count'
+			'to_fieldname'    => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -94,7 +94,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_tablename' => 'node',
 			'from_fieldname' => 'title',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid confilcts)
@@ -104,7 +104,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'node_name',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -113,7 +113,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'description',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -121,7 +121,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_tablename' => 'node',
 			'from_fieldname' => 'display_order',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum type (Category = Category or Forum = Forum, Stored in postmeta)
@@ -130,7 +130,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'node_type_id',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_type',
-			'callback_method' => 'callback_forum_type'
+			'callback_method' => 'callback_forum_type',
 		);
 
 		// Forum status (Unlocked = 1 or Locked = 0, Stored in postmeta)
@@ -143,39 +143,39 @@ class XenForo extends BBP_Converter_Base {
 			'join_expression' => 'USING (node_id) WHERE node.node_type_id = "Category" OR node.node_type_id = "Forum" ',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_status',
-			'callback_method' => 'callback_forum_status'
+			'callback_method' => 'callback_forum_status',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'thread',
 			'from_fieldname' => 'thread_id',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -184,7 +184,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'reply_count',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -193,7 +193,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'reply_count',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -202,7 +202,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'node_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -211,7 +211,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'user_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic title.
@@ -219,7 +219,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_tablename' => 'thread',
 			'from_fieldname' => 'title',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -228,7 +228,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'title',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic content.
@@ -241,7 +241,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_expression' => 'ON thread.first_post_id = post.post_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic status (Open = 1 or Closed = 0)
@@ -250,7 +250,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'discussion_open',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -259,7 +259,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'node_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Sticky status (Stored in postmeta))
@@ -268,7 +268,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'sticky',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_old_sticky_status',
-			'callback_method' => 'callback_sticky_status'
+			'callback_method' => 'callback_sticky_status',
 		);
 
 		// Topic dates.
@@ -277,51 +277,51 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_date',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'post_date',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'last_post_date',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'last_post_date',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'last_post_date',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_last_active_time',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		/**
 		 * XenForo Forums do not support topic tags out of the box
 		 */
 
-		/** Reply Section *****************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'post',
 			'from_fieldname' => 'post_id',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_post_id'
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -330,7 +330,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'thread_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -339,7 +339,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'thread_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author.
@@ -348,7 +348,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'user_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
@@ -361,7 +361,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_expression' => 'USING (thread_id) WHERE thread.first_post_id != post.post_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_title',
-			'callback_method' => 'callback_reply_title'
+			'callback_method' => 'callback_reply_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -373,7 +373,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (thread_id) WHERE thread.first_post_id != post.post_id',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -382,7 +382,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'message',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -391,7 +391,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'thread_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -400,41 +400,42 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_date',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'post',
 			'from_fieldname'  => 'post_date',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'post',
 			'from_fieldname'  => 'post_date',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'post',
 			'from_fieldname'  => 'post_date',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'user',
 			'from_fieldname' => 'user_id',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
-/*		// User password.
+		/*
+			  // User password.
 		// Note: We join the 'user_authenticate' table because 'user' does not include password.
 		$this->field_map[] = array(
 			'from_tablename'  => 'user_authenticate',
@@ -462,12 +463,12 @@ class XenForo extends BBP_Converter_Base {
 			'to_type'        => 'user',
 			'to_fieldname'   =>   ''
 		);
-*/
+		*/
 		// User password verify class (Stored in usermeta for verifying password)
 		$this->field_map[] = array(
-			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_class',
-			'default'        => 'XenForo'
+			'to_type'      => 'user',
+			'to_fieldname' => '_bbp_class',
+			'default'      => 'XenForo',
 		);
 
 		// User name.
@@ -475,7 +476,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User email.
@@ -483,7 +484,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User homepage.
@@ -495,7 +496,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (user_id)',
 			'to_type'         => 'user',
-			'to_fieldname'    => 'user_url'
+			'to_fieldname'    => 'user_url',
 		);
 
 		// User registered.
@@ -504,7 +505,7 @@ class XenForo extends BBP_Converter_Base {
 			'from_fieldname'  => 'register_date',
 			'to_type'         => 'user',
 			'to_fieldname'    => 'user_registered',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// User display name.
@@ -512,15 +513,15 @@ class XenForo extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name'
+			'to_fieldname'   => 'display_name',
 		);
 
 		// Store Custom Title (Stored in usermeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'user',
-			'from_fieldname'  => 'custom_title',
-			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_xenforo_user_custom_title'
+			'from_tablename' => 'user',
+			'from_fieldname' => 'custom_title',
+			'to_type'        => 'user',
+			'to_fieldname'   => '_bbp_xenforo_user_custom_title',
 		);
 
 		// Store Status (Stored in usermeta)
@@ -532,7 +533,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (user_id)',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_xenforo_user_status'
+			'to_fieldname'    => '_bbp_xenforo_user_status',
 		);
 
 		// Store Signature (Stored in usermeta)
@@ -545,7 +546,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_expression' => 'USING (user_id)',
 			'to_fieldname'    => '_bbp_xenforo_user_sig',
 			'to_type'         => 'user',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Store Location (Stored in usermeta)
@@ -557,7 +558,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (user_id)',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_xenforo_user_location'
+			'to_fieldname'    => '_bbp_xenforo_user_location',
 		);
 
 		// Store Occupation (Stored in usermeta)
@@ -569,7 +570,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (user_id)',
 			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_xenforo_user_occupation'
+			'to_fieldname'    => '_bbp_xenforo_user_occupation',
 		);
 
 		// Store About (Stored in usermeta)
@@ -582,7 +583,7 @@ class XenForo extends BBP_Converter_Base {
 			'join_expression' => 'USING (user_id)',
 			'to_type'         => 'user',
 			'to_fieldname'    => '_bbp_xenforo_user_about',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 	}
 
@@ -597,11 +598,13 @@ class XenForo extends BBP_Converter_Base {
 	/**
 	 * This method is to save the salt and password together.  That
 	 * way when we authenticate it we can get it out of the database
-	 * as one value. Array values are auto sanitized by wordpress.
+	 * as one value. Array values are auto sanitized by WordPress.
 	 */
-	public function translate_savepass( $field, $row )
-	{
-		$pass_array = array( 'hash' => $field, 'salt' => $row['salt'] );
+	public function translate_savepass( $field, $row ) {
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
 		return $pass_array;
 	}
 
@@ -609,11 +612,9 @@ class XenForo extends BBP_Converter_Base {
 	 * This method is to take the pass out of the database and compare
 	 * to a pass the user has typed in.
 	 */
-	public function authenticate_pass( $password, $serialized_pass )
-	{
+	public function authenticate_pass( $password, $serialized_pass ) {
 		$pass_array = unserialize( $serialized_pass );
-		switch( $pass_array['hashFunc'] )
-		{
+		switch ( $pass_array['hashFunc'] ) {
 			case 'sha256':
 				return ( $pass_array['hash'] == hash( 'sha256', hash( 'sha256', $password ) . $pass_array['salt'] ) );
 			case 'sha1':
@@ -629,12 +630,12 @@ class XenForo extends BBP_Converter_Base {
 	 */
 	public function callback_forum_type( $status = 1 ) {
 		switch ( $status ) {
-			case 'Category' :
+			case 'Category':
 				$status = 'category';
 				break;
 
-			case 'Forum' :
-			default :
+			case 'Forum':
+			default:
 				$status = 'forum';
 				break;
 		}
@@ -649,12 +650,12 @@ class XenForo extends BBP_Converter_Base {
 	 */
 	public function callback_forum_status( $status = 1 ) {
 		switch ( $status ) {
-			case 0 :
+			case 0:
 				$status = 'closed';
 				break;
 
-			case 1 :
-			default :
+			case 1:
+			default:
 				$status = 'open';
 				break;
 		}
@@ -669,12 +670,12 @@ class XenForo extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 1 ) {
 		switch ( $status ) {
-			case 0 :
+			case 0:
 				$status = 'closed';
 				break;
 
-			case 1 :
-			default :
+			case 1:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -689,12 +690,12 @@ class XenForo extends BBP_Converter_Base {
 	 */
 	public function callback_sticky_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'sticky';       // XenForo Sticky 'sticky = 1'
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'normal';       // XenForo Normal Topic 'sticky = 0'
 				break;
 		}
@@ -719,7 +720,7 @@ class XenForo extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = !empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
 		return $title;
 	}
 }

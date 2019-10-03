@@ -54,7 +54,7 @@ class BP_Invites_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
-				'search_query_arg' => 'invites_search',
+				'search_query_arg'         => 'invites_search',
 			)
 		);
 
@@ -118,13 +118,13 @@ class BP_Invites_Component extends BP_Component {
 			}
 
 			if ( is_user_logged_in() &&
-			     in_array( bp_current_action(), array( 'revoke-invite' ), true )
+				 in_array( bp_current_action(), array( 'revoke-invite' ), true )
 			) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
 
 			if ( is_user_logged_in() &&
-			     in_array( bp_current_action(), array( 'revoke-invite-admin' ), true )
+				 in_array( bp_current_action(), array( 'revoke-invite-admin' ), true )
 			) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
@@ -165,9 +165,9 @@ class BP_Invites_Component extends BP_Component {
 		// All globals for invites component.
 		// Note that global_tables is included in this array.
 		$args = array(
-			'slug'                  => BP_INVITES_SLUG,
-			'root_slug'             => isset( $bp->pages->invites->slug ) ? $bp->pages->invites->slug : BP_INVITES_SLUG,
-			'has_directory'         => false,
+			'slug'          => BP_INVITES_SLUG,
+			'root_slug'     => isset( $bp->pages->invites->slug ) ? $bp->pages->invites->slug : BP_INVITES_SLUG,
+			'has_directory' => false,
 		);
 
 		parent::setup_globals( $args );
@@ -185,8 +185,6 @@ class BP_Invites_Component extends BP_Component {
 		if ( ! bp_is_invites_component() ) {
 			return;
 		}
-
-
 
 	}
 
@@ -248,7 +246,7 @@ class BP_Invites_Component extends BP_Component {
 							'screen_function' => 'bp_invites_screen_send_invite',
 							'user_has_access' => $access,
 							'position'        => 10,
-							'item_css_id'     => 'invites-send-invite'
+							'item_css_id'     => 'invites-send-invite',
 						);
 
 						// Add the Sent Invites nav item.
@@ -260,7 +258,7 @@ class BP_Invites_Component extends BP_Component {
 							'screen_function' => 'bp_invites_screen_sent_invite',
 							'user_has_access' => $access,
 							'position'        => 30,
-							'item_css_id'     => 'invites-sent-invites'
+							'item_css_id'     => 'invites-sent-invites',
 						);
 
 					}
@@ -298,7 +296,7 @@ class BP_Invites_Component extends BP_Component {
 					'parent' => buddypress()->my_account_menu_id,
 					'id'     => 'my-account-' . $this->id,
 					'title'  => $title,
-					'href'   => $invites_link
+					'href'   => $invites_link,
 				);
 
 				// Invite by Email
@@ -307,7 +305,7 @@ class BP_Invites_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-invites',
 					'title'    => __( 'Send Invites', 'buddyboss' ),
 					'href'     => $invites_link,
-					'position' => 10
+					'position' => 10,
 				);
 
 				// Sent Invites
@@ -316,10 +314,9 @@ class BP_Invites_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-sent',
 					'title'    => __( 'Sent Invites', 'buddyboss' ),
 					'href'     => $invites_link . 'sent-invites',
-					'position' => 20
+					'position' => 20,
 				);
 			}
-
 		}
 
 		parent::setup_admin_bar( $wp_admin_nav );
@@ -335,7 +332,6 @@ class BP_Invites_Component extends BP_Component {
 		if ( bp_is_invites_component() ) {
 			$bp = buddypress();
 
-
 		}
 
 		parent::setup_title();
@@ -344,8 +340,10 @@ class BP_Invites_Component extends BP_Component {
 	public function register_post_types() {
 
 		// Register invite custom post type.
-		register_post_type( bp_get_invite_post_type(),
-			apply_filters( 'bp_invite_post_type',
+		register_post_type(
+			bp_get_invite_post_type(),
+			apply_filters(
+				'bp_invite_post_type',
 				array(
 					'description'        => __( 'BuddyBoss Invites', 'buddyboss' ),
 					'labels'             => bp_get_invite_post_type_labels(),
@@ -357,14 +355,16 @@ class BP_Invites_Component extends BP_Component {
 					'show_in_menu'       => false,
 					'map_meta_cap'       => true,
 					'menu_icon'          => 'dashicons-email',
-					//'menu_position'      => 27,
+					// 'menu_position'      => 27,
 					'show_in_rest'       => true,
 					'capabilities'       => array(
 						'create_posts' => 'do_not_allow', // false < WP 4.5, credit @Ewout
 					),
 					'show_ui'            => bp_current_user_can( 'bp_moderate' ),
 					'supports'           => bp_get_invite_post_type_supports(),
-				) ) );
+				)
+			)
+		);
 
 		parent::register_post_types();
 	}

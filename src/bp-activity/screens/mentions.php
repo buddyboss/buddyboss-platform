@@ -35,10 +35,10 @@ function bp_activity_screen_mentions() {
  * Reset the logged-in user's new mentions data when he visits his mentions screen.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_activity_reset_my_new_mentions() {
-	if ( bp_is_my_profile() )
+	if ( bp_is_my_profile() ) {
 		bp_activity_clear_new_mentions( bp_loggedin_user_id() );
+	}
 }
 add_action( 'bp_activity_screen_mentions', 'bp_activity_reset_my_new_mentions' );

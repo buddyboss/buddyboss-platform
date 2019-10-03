@@ -44,7 +44,7 @@ class BP_Core_BP_Options_Nav_BackCompat extends BP_Core_BP_Nav_BackCompat {
 		if ( empty( $this->backcompat_nav[ $offset ] ) ) {
 			$nav = $this->get_nav( $offset );
 			if ( $nav ) {
-				$subnavs = $this->get_component_nav( $offset )->get_secondary( array( 'parent_slug' => $offset ) );
+				$subnavs      = $this->get_component_nav( $offset )->get_secondary( array( 'parent_slug' => $offset ) );
 				$subnav_keyed = array();
 				if ( $subnavs ) {
 					foreach ( $subnavs as $subnav ) {

@@ -12,8 +12,9 @@
  * @since BuddyBoss 1.1.6
  */
 function bp_activity_screen_following() {
-	if ( !bp_is_activity_follow_active() )
+	if ( ! bp_is_activity_follow_active() ) {
 		return false;
+	}
 
 	bp_update_is_item_admin( bp_current_user_can( 'bp_moderate' ), 'activity' );
 

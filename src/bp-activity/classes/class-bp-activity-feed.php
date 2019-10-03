@@ -56,7 +56,8 @@ class BP_Activity_Feed {
 	 * @param string $key Property to check.
 	 * @return bool Whether or not data variable exists.
 	 */
-	public function __isset( $key ) { return isset( $this->data[$key] ); }
+	public function __isset( $key ) {
+		return isset( $this->data[ $key ] ); }
 
 	/**
 	 * Magic method for getting a certain data variable.
@@ -66,7 +67,8 @@ class BP_Activity_Feed {
 	 * @param string $key Property to get.
 	 * @return mixed Data in variable if available or null.
 	 */
-	public function __get( $key ) { return isset( $this->data[$key] ) ? $this->data[$key] : null; }
+	public function __get( $key ) {
+		return isset( $this->data[ $key ] ) ? $this->data[ $key ] : null; }
 
 	/**
 	 * Magic method for setting a certain data variable.
@@ -76,7 +78,8 @@ class BP_Activity_Feed {
 	 * @param string $key   The property to set.
 	 * @param mixed  $value The value to set.
 	 */
-	public function __set( $key, $value ) { $this->data[$key] = $value; }
+	public function __set( $key, $value ) {
+		$this->data[ $key ] = $value; }
 
 	/**
 	 * Constructor.
@@ -104,40 +107,43 @@ class BP_Activity_Feed {
 		}
 
 		// Setup data.
-		$this->data = wp_parse_args( $args, array(
-			// Internal identifier for the RSS feed - should be alphanumeric only.
-			'id'               => '',
+		$this->data = wp_parse_args(
+			$args,
+			array(
+				// Internal identifier for the RSS feed - should be alphanumeric only.
+				'id'               => '',
 
-			// RSS title - should be plain-text.
-			'title'            => '',
+				// RSS title - should be plain-text.
+				'title'            => '',
 
-			// Relevant link for the RSS feed.
-			'link'             => '',
+				// Relevant link for the RSS feed.
+				'link'             => '',
 
-			// RSS description - should be plain-text.
-			'description'      => '',
+				// RSS description - should be plain-text.
+				'description'      => '',
 
-			// Time-to-live - number of minutes to cache the data before an aggregator
-			// requests it again.  This is only acknowledged if the RSS client supports it
-			//
-			// See: http://www.rssboard.org/rss-profile#element-channel-ttl.
-			// See: http://www.kbcafe.com/rss/rssfeedstate.html#ttl.
-			'ttl'              => '30',
+				// Time-to-live - number of minutes to cache the data before an aggregator
+				// requests it again.  This is only acknowledged if the RSS client supports it
+				//
+				// See: http://www.rssboard.org/rss-profile#element-channel-ttl.
+				// See: http://www.kbcafe.com/rss/rssfeedstate.html#ttl.
+				'ttl'              => '30',
 
-			// Syndication module - similar to ttl, but not really supported by RSS
-			// clients
-			//
-			// See: http://web.resource.org/rss/1.0/modules/syndication/#description.
-			// See: http://www.kbcafe.com/rss/rssfeedstate.html#syndicationmodule.
-			'update_period'    => 'hourly',
-			'update_frequency' => 2,
+				// Syndication module - similar to ttl, but not really supported by RSS
+				// clients
+				//
+				// See: http://web.resource.org/rss/1.0/modules/syndication/#description.
+				// See: http://www.kbcafe.com/rss/rssfeedstate.html#syndicationmodule.
+				'update_period'    => 'hourly',
+				'update_frequency' => 2,
 
-			// Number of items to display.
-			'max'              => 50,
+				// Number of items to display.
+				'max'              => 50,
 
-			// Activity arguments passed to bp_has_activities().
-			'activity_args'    => array()
-		) );
+				// Activity arguments passed to bp_has_activities().
+				'activity_args'    => array(),
+			)
+		);
 
 		/**
 		 * Fires before the feed is setup so plugins can modify.
@@ -192,11 +198,14 @@ class BP_Activity_Feed {
 		$this->update_period    = strip_tags( $this->update_period );
 		$this->update_frequency = (int) $this->update_frequency;
 
-		$this->activity_args    = wp_parse_args( $this->activity_args, array(
-			'max'              => $this->max,
-			'per_page'         => $this->max,
-			'display_comments' => 'stream'
-		) );
+		$this->activity_args = wp_parse_args(
+			$this->activity_args,
+			array(
+				'max'              => $this->max,
+				'per_page'         => $this->max,
+				'display_comments' => 'stream',
+			)
+		);
 
 	}
 
@@ -209,9 +218,9 @@ class BP_Activity_Feed {
 	 * @since BuddyPress 1.8.0
 	 */
 	protected function setup_hooks() {
-		add_action( 'bp_activity_feed_rss_attributes',   array( $this, 'backpat_rss_attributes' ) );
+		add_action( 'bp_activity_feed_rss_attributes', array( $this, 'backpat_rss_attributes' ) );
 		add_action( 'bp_activity_feed_channel_elements', array( $this, 'backpat_channel_elements' ) );
-		add_action( 'bp_activity_feed_item_elements',    array( $this, 'backpat_item_elements' ) );
+		add_action( 'bp_activity_feed_item_elements', array( $this, 'backpat_item_elements' ) );
 	}
 
 	/** BACKPAT HOOKS ********************************************************/
@@ -259,13 +268,13 @@ class BP_Activity_Feed {
 		switch ( $this->id ) {
 
 			// Sitewide and friends feeds use the 'personal' hook.
-			case 'sitewide' :
-			case 'friends' :
+			case 'sitewide':
+			case 'friends':
 				$id = 'personal';
 
 				break;
 
-			default :
+			default:
 				$id = $this->id;
 
 				break;
@@ -294,16 +303,15 @@ class BP_Activity_Feed {
 		switch ( $this->id ) {
 
 			// Also output parent activity item if we're on a specific feed.
-			case 'favorites' :
-			case 'friends' :
-			case 'mentions' :
-			case 'personal' :
-
+			case 'favorites':
+			case 'friends':
+			case 'mentions':
+			case 'personal':
 				if ( 'activity_comment' == bp_get_activity_action_name() ) :
-			?>
-				<strong><?php _e( 'In reply to', 'buddyboss' ) ?></strong> -
-				<?php bp_activity_parent_content() ?>
-			<?php
+					?>
+				<strong><?php _e( 'In reply to', 'buddyboss' ); ?></strong> -
+					<?php bp_activity_parent_content(); ?>
+					<?php
 				endif;
 
 				break;
@@ -342,7 +350,7 @@ class BP_Activity_Feed {
 		@header( 'ETag: ' . '"' . $etag . '"' );
 
 		// First commit of BuddyPress! (Easter egg).
-		@header( 'Expires: Tue, 25 Mar 2008 17:13:55 GMT');
+		@header( 'Expires: Tue, 25 Mar 2008 17:13:55 GMT' );
 
 		// Get ETag from supported user agents.
 		if ( isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) {
@@ -357,7 +365,7 @@ class BP_Activity_Feed {
 				$client_etag = substr( $client_etag, 0, $etag_suffix_pos );
 			}
 
-		// No ETag found.
+			// No ETag found.
 		} else {
 			$client_etag = false;
 		}
@@ -395,50 +403,55 @@ class BP_Activity_Feed {
 	 */
 	protected function output() {
 		$this->http_headers();
-		echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?'.'>';
-	?>
+		echo '<?xml version="1.0" encoding="' . get_option( 'blog_charset' ) . '"?' . '>';
+		?>
 
 <rss version="2.0"
 	xmlns:content="http://purl.org/rss/1.0/modules/content/"
 	xmlns:atom="http://www.w3.org/2005/Atom"
 	xmlns:sy="http://purl.org/rss/1.0/modules/syndication/"
 	xmlns:slash="http://purl.org/rss/1.0/modules/slash/"
-	<?php
+		<?php
 
-	/**
-	 * Fires at the end of the opening RSS tag for feed output so plugins can add extra attributes.
-	 *
-	 * @since BuddyPress 1.8.0
-	 */
-	do_action( 'bp_activity_feed_rss_attributes' ); ?>
+		/**
+		 * Fires at the end of the opening RSS tag for feed output so plugins can add extra attributes.
+		 *
+		 * @since BuddyPress 1.8.0
+		 */
+		do_action( 'bp_activity_feed_rss_attributes' );
+		?>
 >
 
 <channel>
 	<title><?php echo $this->title; ?></title>
 	<link><?php echo $this->link; ?></link>
 	<atom:link href="<?php self_link(); ?>" rel="self" type="application/rss+xml" />
-	<description><?php echo $this->description ?></description>
+	<description><?php echo $this->description; ?></description>
 	<lastBuildDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_activity_get_last_updated(), false ); ?></lastBuildDate>
 	<generator>https://buddypress.org/?v=<?php bp_version(); ?></generator>
 	<language><?php bloginfo_rss( 'language' ); ?></language>
 	<ttl><?php echo $this->ttl; ?></ttl>
 	<sy:updatePeriod><?php echo $this->update_period; ?></sy:updatePeriod>
 	<sy:updateFrequency><?php echo $this->update_frequency; ?></sy:updateFrequency>
-	<?php
+		<?php
 
-	/**
-	 * Fires at the end of channel elements list in RSS feed so plugins can add extra channel elements.
-	 *
-	 * @since BuddyPress 1.8.0
-	 */
-	do_action( 'bp_activity_feed_channel_elements' ); ?>
+		/**
+		 * Fires at the end of channel elements list in RSS feed so plugins can add extra channel elements.
+		 *
+		 * @since BuddyPress 1.8.0
+		 */
+		do_action( 'bp_activity_feed_channel_elements' );
+		?>
 
-	<?php if ( bp_has_activities( $this->activity_args ) ) : ?>
-		<?php while ( bp_activities() ) : bp_the_activity(); ?>
+		<?php if ( bp_has_activities( $this->activity_args ) ) : ?>
+			<?php
+			while ( bp_activities() ) :
+				bp_the_activity();
+				?>
 			<item>
 				<guid isPermaLink="false"><?php bp_activity_feed_item_guid(); ?></guid>
 				<title><?php echo stripslashes( bp_get_activity_feed_item_title() ); ?></title>
-				<link><?php bp_activity_thread_permalink() ?></link>
+				<link><?php bp_activity_thread_permalink(); ?></link>
 				<pubDate><?php echo mysql2date( 'D, d M Y H:i:s O', bp_get_activity_feed_item_date(), false ); ?></pubDate>
 
 				<?php if ( bp_get_activity_feed_item_description() ) : ?>
@@ -456,12 +469,14 @@ class BP_Activity_Feed {
 				 *
 				 * @since BuddyPress 1.8.0
 				 */
-				do_action( 'bp_activity_feed_item_elements' ); ?>
+				do_action( 'bp_activity_feed_item_elements' );
+				?>
 			</item>
 		<?php endwhile; ?>
 
 	<?php endif; ?>
 </channel>
-</rss><?php
+</rss>
+		<?php
 	}
 }

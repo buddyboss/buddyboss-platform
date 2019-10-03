@@ -43,16 +43,16 @@ class Process {
 	/**
 	 * @param string $command Command to execute.
 	 * @param string $cwd Directory to execute the command in.
-	 * @param array $env Environment variables to set when running the command.
+	 * @param array  $env Environment variables to set when running the command.
 	 *
 	 * @return Process
 	 */
 	public static function create( $command, $cwd = null, $env = array() ) {
-		$proc = new self;
+		$proc = new self();
 
 		$proc->command = $command;
-		$proc->cwd = $cwd;
-		$proc->env = $env;
+		$proc->cwd     = $cwd;
+		$proc->env     = $env;
 
 		return $proc;
 	}
@@ -87,15 +87,17 @@ class Process {
 			self::$run_times[ $this->command ][1]++;
 		}
 
-		return new ProcessRun( array(
-			'stdout' => $stdout,
-			'stderr' => $stderr,
-			'return_code' => $return_code,
-			'command' => $this->command,
-			'cwd' => $this->cwd,
-			'env' => $this->env,
-			'run_time' => $run_time,
-		) );
+		return new ProcessRun(
+			array(
+				'stdout'      => $stdout,
+				'stderr'      => $stderr,
+				'return_code' => $return_code,
+				'command'     => $this->command,
+				'cwd'         => $this->cwd,
+				'env'         => $this->env,
+				'run_time'    => $run_time,
+			)
+		);
 	}
 
 	/**
@@ -107,7 +109,7 @@ class Process {
 		$r = $this->run();
 
 		// $r->STDERR is incorrect, but kept incorrect for backwards-compat
-		if ( $r->return_code || !empty( $r->STDERR ) ) {
+		if ( $r->return_code || ! empty( $r->STDERR ) ) {
 			throw new \RuntimeException( $r );
 		}
 

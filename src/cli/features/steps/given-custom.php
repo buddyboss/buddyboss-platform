@@ -1,10 +1,11 @@
 <?php
 
 use Behat\Gherkin\Node\PyStringNode,
-    Behat\Gherkin\Node\TableNode,
-    WP_CLI\Process;
+	Behat\Gherkin\Node\TableNode,
+	WP_CLI\Process;
 
-$steps->Given( '/^a BP install$/',
+$steps->Given(
+	'/^a BP install$/',
 	function ( $world ) {
 		$world->install_wp();
 		$dest_dir = $world->variables['RUN_DIR'] . '/wp-content/plugins/buddypress/';
@@ -25,6 +26,7 @@ $steps->Given( '/^a BP install$/',
 			foreach ( $components as $component ) {
 				$world->proc( "wp bp component activate $component" )->run_check();
 			}
-		} catch ( Exception $e ) {};
+		} catch ( Exception $e ) {
+		};
 	}
 );

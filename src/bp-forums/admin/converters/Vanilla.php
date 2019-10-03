@@ -23,7 +23,7 @@ class Vanilla extends BBP_Converter_Base {
 	 */
 	public function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
@@ -31,7 +31,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'CategoryID',
 			'from_expression' => 'WHERE Category.CategoryID > 0',
 			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_forum_id'
+			'to_fieldname'    => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0. Stored in postmeta)
@@ -40,7 +40,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'ParentCategoryID',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_parent_id',
-			'callback_method' => 'callback_forum_parent'
+			'callback_method' => 'callback_forum_parent',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -48,7 +48,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Category',
 			'from_fieldname' => 'CountDiscussions',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_topic_count'
+			'to_fieldname'   => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -56,7 +56,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Category',
 			'from_fieldname' => 'CountComments',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_reply_count'
+			'to_fieldname'   => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Stored in postmeta)
@@ -64,7 +64,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Category',
 			'from_fieldname' => 'CountDiscussions',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_total_topic_count'
+			'to_fieldname'   => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Stored in postmeta)
@@ -72,7 +72,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Category',
 			'from_fieldname' => 'CountComments',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_total_reply_count'
+			'to_fieldname'   => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -80,7 +80,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Category',
 			'from_fieldname' => 'Name',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid confilcts)
@@ -89,7 +89,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'Name',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -98,7 +98,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'Description',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -106,7 +106,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Category',
 			'from_fieldname' => 'Sort',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum dates.
@@ -135,14 +135,14 @@ class Vanilla extends BBP_Converter_Base {
 			'to_fieldname'   => 'post_modified_gmt',
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'DiscussionID',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -151,7 +151,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'CountComments',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -160,7 +160,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'CountComments',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -169,7 +169,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'CategoryID',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -178,7 +178,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'InsertUserID',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic title.
@@ -186,7 +186,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'Name',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -195,7 +195,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'Name',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic content.
@@ -204,7 +204,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'Body',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic status (Open or Closed)
@@ -213,15 +213,15 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'closed',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
 		// Topic author ip (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'Discussion',
-			'from_fieldname'  => 'InsertIPAddress',
-			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_author_ip'
+			'from_tablename' => 'Discussion',
+			'from_fieldname' => 'InsertIPAddress',
+			'to_type'        => 'topic',
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -230,7 +230,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'CategoryID',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic dates.
@@ -238,34 +238,34 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'DateInserted',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_date'
+			'to_fieldname'   => 'post_date',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'DateInserted',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_date_gmt'
+			'to_fieldname'   => 'post_date_gmt',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'DateUpdated',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_modified'
+			'to_fieldname'   => 'post_modified',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'DateUpdated',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_modified_gmt'
+			'to_fieldname'   => 'post_modified_gmt',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Discussion',
 			'from_fieldname' => 'DateLastComment',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_last_active_time'
+			'to_fieldname'   => '_bbp_last_active_time',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		// Topic id.
 		$this->field_map[] = array(
@@ -273,15 +273,15 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'DiscussionID',
 			'to_type'         => 'tags',
 			'to_fieldname'    => 'objectid',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Taxonomy ID.
 		$this->field_map[] = array(
-			'from_tablename'  => 'TagDiscussion',
-			'from_fieldname'  => 'TagID',
-			'to_type'         => 'tags',
-			'to_fieldname'    => 'taxonomy'
+			'from_tablename' => 'TagDiscussion',
+			'from_fieldname' => 'TagID',
+			'to_type'        => 'tags',
+			'to_fieldname'   => 'taxonomy',
 		);
 
 		// Term text.
@@ -292,17 +292,17 @@ class Vanilla extends BBP_Converter_Base {
 			'join_type'       => 'INNER',
 			'join_expression' => 'USING (tagid)',
 			'to_type'         => 'tags',
-			'to_fieldname'    => 'name'
+			'to_fieldname'    => 'name',
 		);
 
-		/** Reply Section *****************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'Comment',
-			'from_fieldname'  => 'CommentID',
-			'to_type'         => 'reply',
-			'to_fieldname'    => '_bbp_post_id'
+			'from_tablename' => 'Comment',
+			'from_fieldname' => 'CommentID',
+			'to_type'        => 'reply',
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -311,7 +311,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'DiscussionID',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -323,7 +323,7 @@ class Vanilla extends BBP_Converter_Base {
 			'join_expression' => 'USING (DiscussionID)',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply title.
@@ -336,7 +336,7 @@ class Vanilla extends BBP_Converter_Base {
 			'join_expression' => 'USING (DiscussionID)',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_title',
-			'callback_method' => 'callback_reply_title'
+			'callback_method' => 'callback_reply_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -349,7 +349,7 @@ class Vanilla extends BBP_Converter_Base {
 			'join_expression' => 'USING (DiscussionID)',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply author ip (Stored in postmeta)
@@ -357,7 +357,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Comment',
 			'from_fieldname' => 'InsertIPAddress',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_author_ip'
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Reply author.
@@ -366,7 +366,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'InsertUserID',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply content.
@@ -375,7 +375,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'Body',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -384,7 +384,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_fieldname'  => 'DiscussionID',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -392,35 +392,35 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'Comment',
 			'from_fieldname' => 'DateInserted',
 			'to_type'        => 'reply',
-			'to_fieldname'   => 'post_date'
+			'to_fieldname'   => 'post_date',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Comment',
 			'from_fieldname' => 'DateInserted',
 			'to_type'        => 'reply',
-			'to_fieldname'   => 'post_date_gmt'
+			'to_fieldname'   => 'post_date_gmt',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Comment',
 			'from_fieldname' => 'DateUpdated',
 			'to_type'        => 'reply',
-			'to_fieldname'   => 'post_modified'
+			'to_fieldname'   => 'post_modified',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'Comment',
 			'from_fieldname' => 'DateUpdated',
 			'to_type'        => 'reply',
-			'to_fieldname'   => 'post_modified_gmt'
+			'to_fieldname'   => 'post_modified_gmt',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'User',
-			'from_fieldname'  => 'UserID',
-			'to_type'         => 'user',
-			'to_fieldname'    => '_bbp_user_id'
+			'from_tablename' => 'User',
+			'from_fieldname' => 'UserID',
+			'to_type'        => 'user',
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta)
@@ -428,7 +428,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'User',
 			'from_fieldname' => 'Password',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_password'
+			'to_fieldname'   => '_bbp_password',
 		);
 
 		// User name.
@@ -436,7 +436,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'User',
 			'from_fieldname' => 'Name',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User nice name.
@@ -444,7 +444,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'User',
 			'from_fieldname' => 'Name',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_nicename'
+			'to_fieldname'   => 'user_nicename',
 		);
 
 		// User email.
@@ -452,7 +452,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'User',
 			'from_fieldname' => 'Email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User registered.
@@ -460,7 +460,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'User',
 			'from_fieldname' => 'DateInserted',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_registered'
+			'to_fieldname'   => 'user_registered',
 		);
 
 		// Display Name
@@ -468,7 +468,7 @@ class Vanilla extends BBP_Converter_Base {
 			'from_tablename' => 'User',
 			'from_fieldname' => 'Name',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name'
+			'to_fieldname'   => 'display_name',
 		);
 	}
 
@@ -488,12 +488,12 @@ class Vanilla extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -532,7 +532,7 @@ class Vanilla extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = !empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
 		return $title;
 	}
 
@@ -554,11 +554,11 @@ class Vanilla extends BBP_Converter_Base {
 	}
 
 	/**
-	* This callback processes any custom BBCodes with parser.php
-	*/
+	 * This callback processes any custom BBCodes with parser.php
+	 */
 	protected function callback_html( $field ) {
-		require_once( bbpress()->admin->admin_dir . 'parser.php' );
-		$bbcode = BBCode::getInstance();
+		require_once bbpress()->admin->admin_dir . 'parser.php';
+		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
 		return html_entity_decode( $bbcode->Parse( $field ) );

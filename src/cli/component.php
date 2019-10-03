@@ -38,9 +38,11 @@ abstract class BuddypressCommand extends CommandWithDBObject {
 		}
 
 		// Get group object.
-		$group_obj = groups_get_group( array(
-			'group_id' => $group_id,
-		) );
+		$group_obj = groups_get_group(
+			array(
+				'group_id' => $group_id,
+			)
+		);
 
 		if ( empty( $group_obj->id ) ) {
 			WP_CLI::error( 'No group found by that slug or ID.' );
