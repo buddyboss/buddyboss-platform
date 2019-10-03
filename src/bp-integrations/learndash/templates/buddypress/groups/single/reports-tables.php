@@ -1,7 +1,7 @@
 <div class="ld-report-no-data">
 	<aside class="bp-feedback bp-template-notice info">
 		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php _e('Sorry, no data was found.', 'buddyboss'); ?></p>
+		<p><?php _e('Sorry, no report data was found.', 'buddyboss'); ?></p>
 	</aside>
 </div>
 
