@@ -768,7 +768,7 @@ class Reports
 	{
     	$filters = apply_filters('bp_ld_sync/report_filters', [
     		'user' => [
-				'name'     => __('User', 'buddyboss'),
+				'name'     => __('Student', 'buddyboss'),
 				'position' => 10,
 				'options'  => $this->getGroupUsersList()
     		],

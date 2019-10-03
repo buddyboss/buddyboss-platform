@@ -497,7 +497,7 @@ class ReportsGenerator
 				'order_key' => '',
 			],
 			'user' => [
-				'label'     => __( 'User', 'buddyboss' ),
+				'label'     => __( 'Student', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'user_display_name',
 			],
