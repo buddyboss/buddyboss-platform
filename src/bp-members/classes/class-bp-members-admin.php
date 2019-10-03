@@ -2778,11 +2778,5 @@ if ( ! class_exists( 'BP_Members_Admin' ) ) :
 			setcookie( 'reset_group', '1', time() + (86400 * 30), '/' );
 		}
 	}
-
-
-
 }
-			return $value;
-		}
-	}
 endif; // End class_exists check.
