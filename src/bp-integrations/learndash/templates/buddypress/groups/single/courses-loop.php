@@ -152,25 +152,25 @@ if ( ! empty( $course_price ) && ( $course_price_type == 'paynow' || $course_pri
 						<?php echo get_the_excerpt( get_the_ID() ); ?>
 					</div>
 					<?php
-				}
+}
 
 				// Price
-				if ( ! empty( $course_price ) && $course_price_type !== 'closed' ) {
-					?>
+if ( ! empty( $course_price ) && $course_price_type !== 'closed' ) {
+	?>
 					<div class="bb-course-footer bb-course-pay"><span class="course-fee">
-					<?php
-					echo learndash_integration_prepare_price_str(
-						array(
-							'code'  => $paypal_settings['paypal_currency'],
-							'value' => $course_price,
-						)
-					);
-					?>
+	<?php
+	echo learndash_integration_prepare_price_str(
+		array(
+			'code'  => $paypal_settings['paypal_currency'],
+			'value' => $course_price,
+		)
+	);
+	?>
 																							</span></div>
-																									<?php
-				}
+																					<?php
+}
 
-				?>
+?>
 			</div>
 		</div>
 	</div>

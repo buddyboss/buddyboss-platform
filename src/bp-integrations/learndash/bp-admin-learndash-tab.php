@@ -47,13 +47,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function register_fields() {
 
-		$fields = apply_filters( 'bp_integrations_learndash_fields',
+		$fields = apply_filters(
+			'bp_integrations_learndash_fields',
 			array(
 				'buddypress' => [ $this, 'registerBuddypressSettings' ],
 				'learndash'  => [ $this, 'registerLearnDashSettings' ],
 				'reports'    => [ $this, 'registerReportsSettings' ],
 			),
-			$this );
+			$this
+		);
 
 		foreach ( $fields as $key => $callback ) {
 			call_user_func( $callback );
@@ -387,16 +389,16 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		 */
 		$this->add_section(
 			'bp_ld_sync-reports',
-			__('Group Reports', 'buddyboss')
+			__( 'Group Reports', 'buddyboss' )
 		);
 
 		$this->add_checkbox_field(
 			'enabled',
-			__('Group Reports', 'buddyboss'),
+			__( 'Group Reports', 'buddyboss' ),
 			[
-				'input_text' => __('Enable LearnDash group reports', 'buddyboss'),
-				'input_description' => __('For every social group synced to a LearnDash group, enable  reporting of group course progress.', 'buddyboss'),
-				'input_run_js' => 'reports_enabled',
+				'input_text'        => __( 'Enable LearnDash group reports', 'buddyboss' ),
+				'input_description' => __( 'For every social group synced to a LearnDash group, enable  reporting of group course progress.', 'buddyboss' ),
+				'input_run_js'      => 'reports_enabled',
 			]
 		);
 
@@ -412,11 +414,11 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 
 		$this->add_input_field(
 			'per_page',
-			__('Report Results Per Page', 'buddyboss'),
+			__( 'Report Results Per Page', 'buddyboss' ),
 			[
-				'input_type' => 'number',
-				'input_description' => __('', 'buddyboss'),
-				'class' => 'js-show-on-reports_enabled',
+				'input_type'        => 'number',
+				'input_description' => __( '', 'buddyboss' ),
+				'class'             => 'js-show-on-reports_enabled',
 			]
 		);
 	}
@@ -447,16 +449,22 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'member' => __( 'Members', 'buddyboss' ),
 		);
 
-		foreach ($input_options as $key => $value) {
-			$checked = in_array($key, $input_value) ? 'checked' : '';
-			printf('
+		foreach ( $input_options as $key => $value ) {
+			$checked = in_array( $key, $input_value ) ? 'checked' : '';
+			printf(
+				'
     			<input type="checkbox" name="%s[]" value="%s" %s>
     			<label>%s</label>
     			<br /><br />
-        	', $input_name, $key, $checked, $value);
+        	',
+				$input_name,
+				$key,
+				$checked,
+				$value
+			);
 		}
 
-		echo $this->render_input_description(__('Select which group roles can view reports. Organizers and Moderators can view all reports, while Members can only view reports for their own course progress.', 'buddyboss'));
+		echo $this->render_input_description( __( 'Select which group roles can view reports. Organizers and Moderators can view all reports, while Members can only view reports for their own course progress.', 'buddyboss' ) );
 	}
 
 	/**

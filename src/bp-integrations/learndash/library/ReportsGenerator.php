@@ -119,8 +119,7 @@ class ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function fetch()
-	{
+	public function fetch() {
 		global $wpdb;
 
 		add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
@@ -130,10 +129,10 @@ class ReportsGenerator {
 
 		if ( 'IN_PROGRESS' === $this->params['activity_status'] ) {
 			$pending = [];
-			$pager = false;
+			$pager   = false;
 			foreach ( $this->activityQuery['results'] as $result ) {
-				$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $result->user_id, (int) $result->post_id, (int) $result->activity_course_id, 1 ) ); // db call ok; no-cache ok;
-				if ( empty($activity_data ) ) {
+				$activity_data = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d', (int) $result->user_id, (int) $result->post_id, (int) $result->activity_course_id, 1 ) ); // db call ok; no-cache ok;
+				if ( empty( $activity_data ) ) {
 					$pending[] = $result;
 				}
 			}
@@ -146,7 +145,7 @@ class ReportsGenerator {
 				$need_to_add_in_loop                 = array_diff( $get_user_all_pending_lessons_ids, $get_ld_activity_pending_lessons_ids );
 
 				foreach ( $need_to_add_in_loop as $id ) {
-					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
+					$activity_data = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d', (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
 					if ( ! empty( $activity_data ) ) {
 						continue;
 					}
@@ -181,7 +180,7 @@ class ReportsGenerator {
 				$need_to_add_in_loop                = array_diff( $get_user_all_pending_topics_ids, $get_ld_activity_pending_topics_ids );
 
 				foreach ( $need_to_add_in_loop as $id ) {
-					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
+					$activity_data = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d', (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
 					if ( ! empty( $activity_data ) ) {
 						continue;
 					}
@@ -214,12 +213,12 @@ class ReportsGenerator {
 				$get_user_all_pending_quizzes_ids    = wp_list_pluck( $get_user_all_pending_quizzes, 'id' );
 				$get_ld_activity_pending_quizzes_ids = wp_list_pluck( $pending, 'post_id' );
 				$need_to_add_in_loop                 = array_diff( $get_user_all_pending_quizzes_ids, $get_ld_activity_pending_quizzes_ids );
-				$pager = false;
+				$pager                               = false;
 				if ( empty( $pending ) ) {
 					$pager = true;
 				}
 				foreach ( $need_to_add_in_loop as $id ) {
-					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d", (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
+					$activity_data = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d', (int) $this->params['user_ids'], (int) $id, (int) $this->params['course_ids'], 1 ) ); // db call ok; no-cache ok;
 					if ( ! empty( $activity_data ) ) {
 						continue;
 					}
@@ -354,25 +353,27 @@ class ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatDataForDisplay($data, $activity)
-	{
-		return wp_parse_args([
-			'course' => sprintf(
-				'<a href="%s" target="_blank">%s</a>',
-				get_permalink($activity->activity_course_id),
-				$activity->activity_course_title
-			),
-			'quiz' => sprintf(
-				'<a href="%s" target="_blank">%s</a>',
-				get_permalink($activity->post_id),
-				$activity->post_title
-			),
-			'topic' => sprintf(
-				'<a href="%s" target="_blank">%s</a>',
-				get_permalink($activity->post_id),
-				$activity->post_title
-			)
-		], $data);
+	protected function formatDataForDisplay( $data, $activity ) {
+		return wp_parse_args(
+			[
+				'course' => sprintf(
+					'<a href="%s" target="_blank">%s</a>',
+					get_permalink( $activity->activity_course_id ),
+					$activity->activity_course_title
+				),
+				'quiz'   => sprintf(
+					'<a href="%s" target="_blank">%s</a>',
+					get_permalink( $activity->post_id ),
+					$activity->post_title
+				),
+				'topic'  => sprintf(
+					'<a href="%s" target="_blank">%s</a>',
+					get_permalink( $activity->post_id ),
+					$activity->post_title
+				),
+			],
+			$data
+		);
 	}
 
 	/**
@@ -478,35 +479,34 @@ class ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function column($name)
-	{
+	public function column( $name ) {
 		$builtInColumns = [
-			'course_id' => [
+			'course_id'       => [
 				'label'     => __( 'Course ID', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
 			],
-			'course' => [
+			'course'          => [
 				'label'     => __( 'Course', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'activity_course_title',
 			],
-			'user_id' => [
+			'user_id'         => [
 				'label'     => __( 'User ID', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
 			],
-			'user' => [
+			'user'            => [
 				'label'     => __( 'Student', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'user_display_name',
 			],
-			'step' => [
+			'step'            => [
 				'label'     => __( 'Step', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'post_type',
 			],
-			'start_date' => [
+			'start_date'      => [
 				'label'     => __( 'Start Date', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'activity_started',
@@ -516,22 +516,22 @@ class ReportsGenerator {
 				'sortable'  => true,
 				'order_key' => 'activity_completed',
 			],
-			'updated_date' => [
+			'updated_date'    => [
 				'label'     => __( 'Updated Date', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'activity_updated',
 			],
-			'time_spent' => [
+			'time_spent'      => [
 				'label'     => __( 'Time Spent', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'activity_time_spent',
 			],
-			'points' => [
+			'points'          => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
 			],
-			'status' => [
+			'status'          => [
 				'label'     => __( 'Status', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
@@ -555,7 +555,7 @@ class ReportsGenerator {
 			$this->params['date_format'] = $this->args['date_format'] ?: 'Y-m-d';
 		}
 
-		$this->params['course_ids'] = $this->args['course'] ?:learndash_group_enrolled_courses($ldGroupId);
+		$this->params['course_ids'] = $this->args['course'] ?: learndash_group_enrolled_courses( $ldGroupId );
 
 		if ( $this->hasArg( 'step' ) ) {
 			$this->params['post_types'] = $this->args['step'] == 'all' ? $this->allSteps() : $this->args['step'];
@@ -586,7 +586,7 @@ class ReportsGenerator {
 			$this->params['per_page'] = $this->args['length'];
 		}
 		// print_r($this->params);die();
-		$this->params = apply_filters('bp_ld_sync/reports_generator_params', $this->params, $this->args);
+		$this->params = apply_filters( 'bp_ld_sync/reports_generator_params', $this->params, $this->args );
 	}
 
 	/**
@@ -616,15 +616,15 @@ class ReportsGenerator {
 	protected function timeSpent( $activity ) {
 		$seconds = intval( $activity->activity_time_spent );
 
-		if ($seconds < 60) {
-			return sprintf('%d sec', $seconds);
+		if ( $seconds < 60 ) {
+			return sprintf( '%d sec', $seconds );
 		}
 
 		$minutes = floor( $seconds / 60 );
 		$seconds = $seconds % 60;
 
-		if ($minutes < 60) {
-			return sprintf('%d min', $minutes);
+		if ( $minutes < 60 ) {
+			return sprintf( '%d min', $minutes );
 		}
 
 		$hours = floor( $minutes / 60 * 10 ) / 10;
@@ -661,16 +661,15 @@ class ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function coursePointsEarned($activity)
-	{
+	protected function coursePointsEarned( $activity ) {
 
-		$assignments   = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
+		$assignments = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
 		if ( ! empty( $assignments ) ) {
 			foreach ( $assignments as $assignment ) {
 				$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
 				if ( $assignment_points || learndash_is_assignment_approved_by_meta( $assignment->ID ) ) {
 					if ( $assignment_points ) {
-						return sprintf( esc_html__( '%s/%s', 'buddyboss' ), $assignment_points['current'], $assignment_points['max'] );
+						return sprintf( esc_html__( '%1$s/%2$s', 'buddyboss' ), $assignment_points['current'], $assignment_points['max'] );
 					}
 				}
 			}
@@ -678,7 +677,7 @@ class ReportsGenerator {
 
 		$post_settings = learndash_get_setting( $activity->post_id );
 
-		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type  ) ) {
+		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type ) ) {
 
 			if ( 0 === $activity->activity_status ) {
 				return '-';
@@ -689,7 +688,6 @@ class ReportsGenerator {
 			} else {
 				return '-';
 			}
-
 		} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
 
 			if ( 0 === $activity->activity_status ) {
@@ -701,7 +699,6 @@ class ReportsGenerator {
 			} else {
 				return '-';
 			}
-
 		}
 		return '-';
 	}

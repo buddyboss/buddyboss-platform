@@ -2,8 +2,8 @@
 	<?php foreach ( $filters as $name => $filter ) : ?>
 		<span class="bp-learndash-reports-filters">
 			<select name="<?php echo $name; ?>" data-report-filter="<?php echo $name; ?>">
-				<?php foreach ($filter['options'] as $key => $value): ?>
-					<?php $selected = isset($_GET[$name]) && $_GET[$name] == $key? 'selected' : ''; ?>
+				<?php foreach ( $filter['options'] as $key => $value ) : ?>
+					<?php $selected = isset( $_GET[ $name ] ) && $_GET[ $name ] == $key ? 'selected' : ''; ?>
 					<option value="<?php echo $key; ?>" <?php echo $selected; ?>><?php echo ( '' === $key || 'user' != $name ) ? $value : bp_xprofile_get_member_display_name( $key ); ?></option>
 				<?php endforeach; ?>
 			</select>

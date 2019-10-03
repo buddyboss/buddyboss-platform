@@ -37,27 +37,26 @@ class LessonsReportsGenerator extends ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function columns()
-	{
+	protected function columns() {
 		return [
-			'user_id'         => $this->column('user_id'),
-			'user'            => $this->column('user'),
-			'course_id'       => $this->column('course_id'),
-			'course'          => $this->column('course'),
+			'user_id'         => $this->column( 'user_id' ),
+			'user'            => $this->column( 'user' ),
+			'course_id'       => $this->column( 'course_id' ),
+			'course'          => $this->column( 'course' ),
 			'lesson'          => [
 				'label'     => __( 'Lesson', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'post_title',
 			],
-			'lesson_points'     => [
+			'lesson_points'   => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => 'activity_points',
 			],
-			'start_date'      => $this->column('start_date'),
-			'completion_date' => $this->column('completion_date'),
-			'updated_date'    => $this->column('updated_date'),
-			'time_spent'      => $this->column('time_spent'),
+			'start_date'      => $this->column( 'start_date' ),
+			'completion_date' => $this->column( 'completion_date' ),
+			'updated_date'    => $this->column( 'updated_date' ),
+			'time_spent'      => $this->column( 'time_spent' ),
 		];
 	}
 
@@ -75,9 +74,9 @@ class LessonsReportsGenerator extends ReportsGenerator {
 			'lesson'          => $activity->post_title,
 			'start_date'      => $activity->activity_started_formatted,
 			'lesson_points'   => ReportsGenerator::coursePointsEarned( $activity ),
-			'completion_date' => $this->completionDate($activity),
-			'updated_date'    => $this->updatedDate($activity),
-			'time_spent'      => $this->timeSpent($activity)
+			'completion_date' => $this->completionDate( $activity ),
+			'updated_date'    => $this->updatedDate( $activity ),
+			'time_spent'      => $this->timeSpent( $activity ),
 		);
 	}
 

@@ -87,7 +87,7 @@ class QuizzesReportsGenerator extends ReportsGenerator {
 			'completion_date' => $this->completionDate( $activity ),
 			'updated_date'    => $this->updatedDate( $activity ),
 			'score'           => $activity->activity_score,
-			'time_spent'      => $this->timeSpent($activity),
+			'time_spent'      => $this->timeSpent( $activity ),
 			'quiz_points'     => ReportsGenerator::coursePointsEarned( $activity ),
 			'attempts'        => $activity->activity_attemps,
 		);

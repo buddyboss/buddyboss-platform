@@ -88,17 +88,16 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatData($activity)
-	{
+	protected function formatData( $activity ) {
 		return [
-			'user_id'           => $activity->user_id,
-			'user'              => bp_core_get_user_displayname( $activity->user_id ),
-			'course_id'         => $activity->activity_course_id,
-			'course'            => $activity->activity_course_title,
-			'assignment'        => $activity->assignment_title,
-			'completion_date'   => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
-			'updated_date'      => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
-			'score'             => $this->getAssignmentScore( $activity ),
+			'user_id'         => $activity->user_id,
+			'user'            => bp_core_get_user_displayname( $activity->user_id ),
+			'course_id'       => $activity->activity_course_id,
+			'course'          => $activity->activity_course_title,
+			'assignment'      => $activity->assignment_title,
+			'completion_date' => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
+			'updated_date'    => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
+			'score'           => $this->getAssignmentScore( $activity ),
 		];
 	}
 

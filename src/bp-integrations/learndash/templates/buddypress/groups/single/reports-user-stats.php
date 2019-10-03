@@ -23,22 +23,27 @@ if ( $courseId ) : ?>
 		</div>
 		<div class="user-name">
 			<h5 class="list-title member-name"><a href="<?php echo bp_core_get_user_domain( $user->ID ); ?>"><?php echo bp_core_get_user_displayname( $user->ID ); ?></a></h5>
-			<p class="item-meta"><?php echo groups_is_user_admin($user->ID, $group->id)? __('Teacher', 'buddyboss') : __('Student', 'buddyboss'); ?></p>
+			<p class="item-meta"><?php echo groups_is_user_admin( $user->ID, $group->id ) ? __( 'Teacher', 'buddyboss' ) : __( 'Student', 'buddyboss' ); ?></p>
 		</div>
 	</div>
 
 	<?php
-	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) ) {  ?>
+	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) ) {
+		?>
 		<div class="user-info">
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
-			<p><?php printf(
-					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$complete,
-					$total,
-					_n('step', 'steps', $total, 'buddyboss')
-				); ?></p>
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d out of %2$d</b> %3$s completed', 'buddyboss' ),
+				$complete,
+				$total,
+				_n( 'step', 'steps', $total, 'buddyboss' )
+			);
+			?>
+				</p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-courses' === $_GET['step'] ) {
@@ -47,12 +52,16 @@ if ( $courseId ) : ?>
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
-			<p><?php printf(
-					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$complete,
-					$total,
-					_n( LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'courses' ), $total, 'buddyboss')
-				); ?></p>
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d out of %2$d</b> %3$s completed', 'buddyboss' ),
+				$complete,
+				$total,
+				_n( LearnDash_Custom_Label::get_label( 'course' ), LearnDash_Custom_Label::get_label( 'courses' ), $total, 'buddyboss' )
+			);
+			?>
+				</p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-lessons' === $_GET['step'] ) {
@@ -62,12 +71,16 @@ if ( $courseId ) : ?>
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
-			<p><?php printf(
-					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$complete,
-					$total,
-					_n( LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'lessons' ), $total, 'buddyboss')
-				); ?></p>
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d out of %2$d</b> %3$s completed', 'buddyboss' ),
+				$complete,
+				$total,
+				_n( LearnDash_Custom_Label::get_label( 'lesson' ), LearnDash_Custom_Label::get_label( 'lessons' ), $total, 'buddyboss' )
+			);
+			?>
+				</p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-topic' === $_GET['step'] ) {
@@ -77,12 +90,16 @@ if ( $courseId ) : ?>
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
-			<p><?php printf(
-					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$complete,
-					$total,
-					_n( LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'topics' ), $total, 'buddyboss')
-				); ?></p>
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d out of %2$d</b> %3$s completed', 'buddyboss' ),
+				$complete,
+				$total,
+				_n( LearnDash_Custom_Label::get_label( 'topic' ), LearnDash_Custom_Label::get_label( 'topics' ), $total, 'buddyboss' )
+			);
+			?>
+				</p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-quiz' === $_GET['step'] ) {
@@ -91,45 +108,62 @@ if ( $courseId ) : ?>
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
 		</div>
 		<div class="user-steps">
-			<p><?php printf(
-					__('<b>%d out of %d</b> %s completed', 'buddyboss'),
-					$complete,
-					$total,
-					_n( LearnDash_Custom_Label::get_label( 'quiz' ), LearnDash_Custom_Label::get_label( 'quizzes' ), $total, 'buddyboss')
-				); ?></p>
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d out of %2$d</b> %3$s completed', 'buddyboss' ),
+				$complete,
+				$total,
+				_n( LearnDash_Custom_Label::get_label( 'quiz' ), LearnDash_Custom_Label::get_label( 'quizzes' ), $total, 'buddyboss' )
+			);
+			?>
+				</p>
 		</div>
 		<?php
 	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-assignment' === $_GET['step'] ) {
 		?>
 		<div class="user-steps">
-			<p><?php printf(
-					__('<b>%d</b> %s Marked', 'buddyboss'),
-					$total,
-					_n( 'Assignment', 'Assignments', $total, 'buddyboss')
-				); ?></p>
-			<p><?php
-				if ( $unmarked > 0 ) {
-					printf( __( '<b>%d</b> %s Unmarked', 'buddyboss' ),
-						$unmarked,
-						_n( 'Assignment', 'Assignments', $unmarked, 'buddyboss' ) );
-				}
-				?></p>
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d</b> %2$s Marked', 'buddyboss' ),
+				$total,
+				_n( 'Assignment', 'Assignments', $total, 'buddyboss' )
+			);
+			?>
+				</p>
+			<p>
+			<?php
+			if ( $unmarked > 0 ) {
+				printf(
+					__( '<b>%1$d</b> %2$s Unmarked', 'buddyboss' ),
+					$unmarked,
+					_n( 'Assignment', 'Assignments', $unmarked, 'buddyboss' )
+				);
+			}
+			?>
+				</p>
 		</div>
 		<?php
 	}
 
 
-	if ( $points ): ?>
+	if ( $points ) :
+		?>
 		<div class="user-points">
-			<p><?php printf(
-				__('<b>%d</b> %s earned', 'buddyboss'),
+			<p>
+			<?php
+			printf(
+				__( '<b>%1$d</b> %2$s earned', 'buddyboss' ),
 				$points,
-				_n('point', 'points', $points, 'buddyboss')
-			); ?></p>
+				_n( 'point', 'points', $points, 'buddyboss' )
+			);
+			?>
+			</p>
 		</div>
 	<?php endif; ?>
 
-	<?php if (bp_is_active('messages') && $user->ID != bp_loggedin_user_id()): ?>
+	<?php if ( bp_is_active( 'messages' ) && $user->ID != bp_loggedin_user_id() ) : ?>
 		<div class="user-message">
 			<?php
 				$link = apply_filters(

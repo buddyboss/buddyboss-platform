@@ -29,7 +29,7 @@ defined( 'ABSPATH' ) || exit;
 class Reports {
 
 	protected $isRealJoins = false;
-	protected $defaults = [
+	protected $defaults    = [
 		'user'        => null,
 		'step'        => 'all',
 		'course'      => null,
@@ -46,13 +46,12 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
+	public function __construct() {
 		$this->args = apply_filters(
 			'bp_ld_sync/reports_generator_args',
-			wp_parse_args($this->getRequest(), $this->defaults)
+			wp_parse_args( $this->getRequest(), $this->defaults )
 		);
-		add_action('bp_ld_sync/init', [$this, 'init']);
+		add_action( 'bp_ld_sync/init', [ $this, 'init' ] );
 	}
 
 	/**
@@ -60,13 +59,13 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function getRequest($key = '*', $default = null, $type = null) {
-		if ($type) {
-			return $key == '*'? $$type : (isset($$type[$key])? $$type[$key] : $default);
+	public function getRequest( $key = '*', $default = null, $type = null ) {
+		if ( $type ) {
+			return $key == '*' ? $$type : ( isset( $$type[ $key ] ) ? $$type[ $key ] : $default );
 		}
 
-		$merged = array_merge($_GET, $_POST, $_REQUEST);
-		return $key == '*'? $merged : (isset($merged[$key])? $merged[$key] : $default);
+		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+		return $key == '*' ? $merged : ( isset( $merged[ $key ] ) ? $merged[ $key ] : $default );
 	}
 
 	/**
@@ -107,9 +106,8 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function hasArg($key)
-	{
-		return isset($this->args[$key]) && ! is_null($this->args[$key]);
+	protected function hasArg( $key ) {
+		return isset( $this->args[ $key ] ) && ! is_null( $this->args[ $key ] );
 	}
 
 	/**
@@ -127,17 +125,17 @@ class Reports {
 
 		wp_enqueue_script(
 			'bp-ld-reports-progressbar',
-			bp_learndash_url($filePath = '/assets/scripts/bp-ld-reports-progressbar.js'),
-			['jquery'],
-			filemtime(bp_learndash_path($filePath)),
+			bp_learndash_url( $filePath = '/assets/scripts/bp-ld-reports-progressbar.js' ),
+			[ 'jquery' ],
+			filemtime( bp_learndash_path( $filePath ) ),
 			true
 		);
 
 		wp_enqueue_script(
 			'bp-ld-reports',
-			bp_learndash_url($filePath = '/assets/scripts/bp-learndash.js'),
-			['jquery', 'bp-ld-reports-datatable' ],
-			filemtime(bp_learndash_path($filePath)),
+			bp_learndash_url( $filePath = '/assets/scripts/bp-learndash.js' ),
+			[ 'jquery', 'bp-ld-reports-datatable' ],
+			filemtime( bp_learndash_path( $filePath ) ),
 			true
 		);
 
@@ -188,10 +186,9 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalFields($strFields)
-	{
+	public function addAdditionalFields( $strFields ) {
 		global $wpdb;
-		$quizPostType = learndash_get_post_type_slug('quiz');
+		$quizPostType = learndash_get_post_type_slug( 'quiz' );
 
 		$fields = "
 			users.ID as user_id,
@@ -222,8 +219,7 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalJoins($strJoins)
-	{
+	public function addAdditionalJoins( $strJoins ) {
 		global $wpdb;
 
 		$strJoins .= "
@@ -238,14 +234,13 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalOrderBy($strOrder)
-	{
+	public function addAdditionalOrderBy( $strOrder ) {
 		$strOrder = 'GREATEST(assignment_modify_date, assignment_post_date) DESC';
 
-		if ($this->hasArg('order')) {
-			$columns = $this->columns();
+		if ( $this->hasArg( 'order' ) ) {
+			$columns     = $this->columns();
 			$columnIndex = $this->args['order'][0]['column'];
-			$column = $columns[$this->args['columns'][$columnIndex]['name']];
+			$column      = $columns[ $this->args['columns'][ $columnIndex ]['name'] ];
 
 			$strOrder = "{$column['order_key']} {$this->args['order'][0]['dir']}, {$strOrder}";
 		}
@@ -258,18 +253,17 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function showReportUserStats()
-	{
-		global $wpdb;
+	public function showReportUserStats() {
+		 global $wpdb;
 
-		if (empty($_GET['user'])) {
+		if ( empty( $_GET['user'] ) ) {
 			return;
 		}
 
-		$courseId  = bp_ld_sync()->getRequest( 'course' );
-		$course    = $courseId ? get_post( $courseId ) : null;
-		$group     = groups_get_current_group();
-		$user      = get_user_by( 'ID', $_GET['user'] );
+		$courseId = bp_ld_sync()->getRequest( 'course' );
+		$course   = $courseId ? get_post( $courseId ) : null;
+		$group    = groups_get_current_group();
+		$user     = get_user_by( 'ID', $_GET['user'] );
 
 		$points      = 0;
 		$complete    = 0;
@@ -279,72 +273,69 @@ class Reports {
 		$count       = 0;
 		$unmarked    = 0;
 
-
 		if ( isset( $_GET ) && '' !== $_GET['user'] && 'sfwd-assignment' === $_GET['step'] ) {
 
-			if ($this->hasArg('course') && ! $this->args['course']) {
+			if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
 				$courseIds = learndash_group_enrolled_courses(
-					bp_ld_sync('buddypress')->helpers->getLearndashGroupId($this->args['group'])
+					bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $this->args['group'] )
 				);
 			} else {
-				$courseIds = [$this->args['course']];
+				$courseIds = [ $this->args['course'] ];
 			}
 
 			$args = [
 				'posts_per_page' => -1,
-				'post_type'      => learndash_get_post_type_slug('assignment'),
-				'post_status' => 'publish',
-				'meta_query' => [
+				'post_type'      => learndash_get_post_type_slug( 'assignment' ),
+				'post_status'    => 'publish',
+				'meta_query'     => [
 					[
-						'key' => 'course_id',
-						'value' => $courseIds
-					]
-				]
+						'key'   => 'course_id',
+						'value' => $courseIds,
+					],
+				],
 			];
 
 			$args['meta_query'][] = [
-				'key' => 'approval_status',
-				'value' => 1
+				'key'   => 'approval_status',
+				'value' => 1,
 			];
 
 			$args['author'] = $this->args['user'];
 
-			add_filter('posts_fields', [$this, 'addAdditionalFields']);
-			add_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-			add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
-			$approved_query = new \WP_Query($args);
-			remove_filter('posts_fields', [$this, 'addAdditionalFields']);
-			remove_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-			remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+			add_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
+			add_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
+			add_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
+			$approved_query = new \WP_Query( $args );
+			remove_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
+			remove_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
+			remove_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
 
 			$args = [
 				'posts_per_page' => -1,
-				'post_type'      => learndash_get_post_type_slug('assignment'),
-				'post_status' => 'publish',
-				'meta_query' => [
+				'post_type'      => learndash_get_post_type_slug( 'assignment' ),
+				'post_status'    => 'publish',
+				'meta_query'     => [
 					[
-						'key' => 'course_id',
-						'value' => $courseIds
-					]
-				]
+						'key'   => 'course_id',
+						'value' => $courseIds,
+					],
+				],
 			];
 
 			$args['meta_query'][] = [
-				'key' => 'approval_status',
-				'compare' => 'NOT EXISTS'
+				'key'     => 'approval_status',
+				'compare' => 'NOT EXISTS',
 			];
 
 			$args['author'] = $this->args['user'];
 
-			add_filter('posts_fields', [$this, 'addAdditionalFields']);
-			add_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-			add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
-			$un_approved_query = new \WP_Query($args);
-			remove_filter('posts_fields', [$this, 'addAdditionalFields']);
-			remove_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-			remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
-
-
+			add_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
+			add_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
+			add_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
+			$un_approved_query = new \WP_Query( $args );
+			remove_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
+			remove_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
+			remove_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
 
 			$total    = $approved_query->found_posts;
 			$complete = $approved_query->found_posts;
@@ -359,14 +350,15 @@ class Reports {
 
 			if ( $_GET['step'] ) {
 				global $learndash_post_types;
-				$param['post_types'] = $_GET['step'] == 'all' ? array_diff( $learndash_post_types,
-					[ 'groups' ] ) : $_GET['step'];
+				$param['post_types'] = $_GET['step'] == 'all' ? array_diff(
+					$learndash_post_types,
+					[ 'groups' ]
+				) : $_GET['step'];
 			}
 
-			$param['user_ids'] = $_GET['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
+			$param['user_ids']        = $_GET['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
 			$param['activity_status'] = 'COMPLETED';
-			$param['per_page'] = '';
-
+			$param['per_page']        = '';
 
 			add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
 			$data = learndash_reports_get_activity( $param );
@@ -388,11 +380,15 @@ class Reports {
 			$count = 0;
 			if ( ! empty( $incomplete_data ) ) {
 				foreach ( $incomplete_data['results'] as $activity ) {
-					$activity_data = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM " . LDLMS_DB::get_table_name( 'user_activity' ) . " WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d",
-						(int) $activity->user_id,
-						(int) $activity->post_id,
-						(int) $activity->activity_course_id,
-						1 ) ); // db call ok; no-cache ok;
+					$activity_data = $wpdb->get_row(
+						$wpdb->prepare(
+							'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d',
+							(int) $activity->user_id,
+							(int) $activity->post_id,
+							(int) $activity->activity_course_id,
+							1
+						)
+					); // db call ok; no-cache ok;
 					if ( ! empty( $activity_data ) ) {
 						continue;
 					} else {
@@ -412,7 +408,7 @@ class Reports {
 			$percentage = 0;
 		}
 
-		require bp_locate_template('groups/single/reports-user-stats.php', false, false);
+		require bp_locate_template( 'groups/single/reports-user-stats.php', false, false );
 	}
 
 	/**
@@ -420,10 +416,9 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function coursePointsEarned($activity)
-	{
+	protected function coursePointsEarned( $activity ) {
 
-		$assignments   = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
+		$assignments = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
 		if ( ! empty( $assignments ) ) {
 			foreach ( $assignments as $assignment ) {
 				$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
@@ -437,7 +432,7 @@ class Reports {
 
 		$post_settings = learndash_get_setting( $activity->post_id );
 
-		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type  ) ) {
+		if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type ) ) {
 
 			if ( 0 === $activity->activity_status ) {
 				return 0;
@@ -448,7 +443,6 @@ class Reports {
 			} else {
 				return 0;
 			}
-
 		} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
 
 			if ( 0 === $activity->activity_status ) {
@@ -460,7 +454,6 @@ class Reports {
 			} else {
 				return 0;
 			}
-
 		}
 		return 0;
 	}
@@ -725,34 +718,36 @@ class Reports {
 	*
 	* @since BuddyBoss 1.0.0
 	*/
-	public function getGenerators()
-	{
-		return apply_filters('bp_ld_sync/reports_generators', [
-			'all' => [
-				'name'  => __('All Steps', 'buddyboss'),
-				'class' => '\Buddyboss\LearndashIntegration\Buddypress\Generators\AllReportsGenerator'
-			],
-			learndash_get_post_type_slug('course') => [
-				'name'  => __('Courses', 'buddyboss'),
-				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator'
-			],
-			learndash_get_post_type_slug('lesson') => [
-				'name'  => __('Lessons', 'buddyboss'),
-				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator'
-			],
-			learndash_get_post_type_slug('topic') => [
-				'name'  => __('Topics', 'buddyboss'),
-				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator'
-			],
-			learndash_get_post_type_slug('quiz') => [
-				'name'  => __('Quizzes', 'buddyboss'),
-				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator'
-			],
-			learndash_get_post_type_slug('assignment') => [
-				'name'  => __('Assignments', 'buddyboss'),
-				'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\AssignmentsReportsGenerator'
-			],
-		]);
+	public function getGenerators() {
+		return apply_filters(
+			'bp_ld_sync/reports_generators',
+			[
+				'all'                                    => [
+					'name'  => __( 'All Steps', 'buddyboss' ),
+					'class' => '\Buddyboss\LearndashIntegration\Buddypress\Generators\AllReportsGenerator',
+				],
+				learndash_get_post_type_slug( 'course' ) => [
+					'name'  => __( 'Courses', 'buddyboss' ),
+					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator',
+				],
+				learndash_get_post_type_slug( 'lesson' ) => [
+					'name'  => __( 'Lessons', 'buddyboss' ),
+					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator',
+				],
+				learndash_get_post_type_slug( 'topic' )  => [
+					'name'  => __( 'Topics', 'buddyboss' ),
+					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\TopicsReportsGenerator',
+				],
+				learndash_get_post_type_slug( 'quiz' )   => [
+					'name'  => __( 'Quizzes', 'buddyboss' ),
+					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\QuizzesReportsGenerator',
+				],
+				learndash_get_post_type_slug( 'assignment' ) => [
+					'name'  => __( 'Assignments', 'buddyboss' ),
+					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\AssignmentsReportsGenerator',
+				],
+			]
+		);
 	}
 
 	/**
@@ -760,25 +755,27 @@ class Reports {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getReportFilters()
-	{
-    	$filters = apply_filters('bp_ld_sync/report_filters', [
-    		'user' => [
-				'name'     => __('Student', 'buddyboss'),
-				'position' => 10,
-				'options'  => $this->getGroupUsersList()
-    		],
-    		'course' => [
-				'name'     => __('Course', 'buddyboss'),
-				'position' => 20,
-				'options'  => $this->getGroupCoursesList()
-    		],
-    		'step' => [
-				'name'     => __('Step', 'buddyboss'),
-				'position' => 30,
-				'options'  => $this->getStepTypes()
-    		],
-    	]);
+	protected function getReportFilters() {
+		$filters = apply_filters(
+			'bp_ld_sync/report_filters',
+			[
+				'user'   => [
+					'name'     => __( 'Student', 'buddyboss' ),
+					'position' => 10,
+					'options'  => $this->getGroupUsersList(),
+				],
+				'course' => [
+					'name'     => __( 'Course', 'buddyboss' ),
+					'position' => 20,
+					'options'  => $this->getGroupCoursesList(),
+				],
+				'step'   => [
+					'name'     => __( 'Step', 'buddyboss' ),
+					'position' => 30,
+					'options'  => $this->getStepTypes(),
+				],
+			]
+		);
 
 		return wp_list_sort( $filters, 'position', 'ASC', true );
 	}

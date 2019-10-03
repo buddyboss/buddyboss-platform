@@ -37,26 +37,25 @@ class TopicsReportsGenerator extends ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function columns()
-	{
+	protected function columns() {
 		return [
-			'user_id'         => $this->column('user_id'),
-			'user'            => $this->column('user'),
-			'course_id'       => $this->column('course_id'),
-			'course'          => $this->column('course'),
+			'user_id'         => $this->column( 'user_id' ),
+			'user'            => $this->column( 'user' ),
+			'course_id'       => $this->column( 'course_id' ),
+			'course'          => $this->column( 'course' ),
 			'topic'           => [
 				'label'     => __( 'Topic', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'post_title',
 			],
-			'topic_points'     => [
+			'topic_points'    => [
 				'label'     => __( 'Points Earned', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => 'activity_points',
 			],
-			'start_date'      => $this->column('start_date'),
-			'completion_date' => $this->column('completion_date'),
-			'time_spent'      => $this->column('time_spent'),
+			'start_date'      => $this->column( 'start_date' ),
+			'completion_date' => $this->column( 'completion_date' ),
+			'time_spent'      => $this->column( 'time_spent' ),
 		];
 	}
 
