@@ -3921,3 +3921,16 @@ function bp_email_the_salutation( $settings = array() ) {
 		 */
 		return apply_filters( 'bp_email_get_salutation', sprintf( __( '%s', 'buddyboss' ), $token ), $settings, $token );
 	}
+
+/**
+ * Is the current page a group's Messages page?
+ *
+ * Eg http://example.com/groups/mygroup/group-messages/.
+ *
+ * @since BuddyPress 1.1.0
+ *
+ * @return bool True if the current page is a group's Group Messages page.
+ */
+function bp_is_group_messages() {
+	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'group-messages' ) );
+}

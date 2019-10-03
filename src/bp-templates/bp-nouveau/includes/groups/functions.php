@@ -1166,3 +1166,57 @@ function bp_nouveau_groups_notification_filters() {
 		bp_nouveau_notifications_register_filter( $notification );
 	}
 }
+
+/**
+ * Localize the strings needed for the Group's Invite UI
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts
+ *
+ * @return array The same array with specific strings for the Group's Invite UI if needed.
+ */
+function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
+
+
+	$show_pending = bp_group_has_invites( array( 'user_id' => 'any' ) ) && ! bp_is_group_create();
+
+	// Init the Group invites nav
+	$invites_nav = array(
+		'members' => array(
+			'id'      => 'members',
+			'caption' => __( 'All Members', 'buddyboss' ),
+			'order'   => 5,
+		),
+		'invited' => array(
+			'id'      => 'invited',
+			'caption' => __( 'Pending Invites', 'buddyboss' ),
+			'order'   => 90,
+			'hide'    => (int) ! $show_pending,
+		),
+		'invites' => array(
+			'id'      => 'invites',
+			'caption' => __( 'Send Invites', 'buddyboss' ),
+			'order'   => 100,
+			'hide'    => 1,
+			'href'    => '#send-invites-editor',
+		),
+	);
+
+	$params['group_invites'] = array(
+		'nav'                => bp_sort_by_key( $invites_nav, 'order', 'num' ),
+		'loading'            => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'invites_form'       => __( 'Use the "Send" button to send your invite or the "Cancel" button to abort.', 'buddyboss' ),
+		'invites_form_reset' => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'    => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		'removeUserInvite'   => __( 'Cancel invitation %s', 'buddyboss' ),
+		'group_id'           => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
+		'is_group_create'    => bp_is_group_create(),
+		'nonces'             => array(
+			'uninvite'     => wp_create_nonce( 'groups_invite_uninvite_user' ),
+			'send_invites' => wp_create_nonce( 'groups_send_invites' )
+		),
+	);
+
+	return $params;
+}

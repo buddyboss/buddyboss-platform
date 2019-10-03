@@ -1264,6 +1264,8 @@ function bp_nouveau_group_template_part() {
 			$template = 'photos';
 		} elseif ( bp_is_group_albums() ) {
 			$template = 'albums';
+		} elseif ( bp_is_group_messages() ) {
+			$template = 'group-messages';
 		}
 
 		bp_nouveau_group_get_template_part( $template );
@@ -1381,3 +1383,28 @@ function bp_nouveau_add_notify_group_members_checkbox() {
 	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );
+
+/**
+ * Load the Group Messages UI.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @return string HTML Output.
+ */
+function bp_nouveau_group_messages_interface() {
+	/**
+	 * Fires before the Group Messages content.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	do_action( 'bp_before_group_send_messages_content' );
+
+	bp_get_template_part( 'common/js-templates/group-messages/index' );
+
+	/**
+	 * Fires after the Group Messages content.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	do_action( 'bp_after_group_send_messages_content' );
+}

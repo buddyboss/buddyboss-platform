@@ -1615,6 +1615,10 @@ function bp_nouveau_single_item_subnav_classes() {
 			$classes[] = 'bp-invites-nav';
 		}
 
+		if ( ( bp_is_group() && 'group-messages' === bp_current_action() ) ) {
+			$classes[] = 'bp-messages-nav';
+		}
+
 		$class = array_map( 'sanitize_html_class', $classes );
 
 		/**
