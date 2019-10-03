@@ -29,25 +29,24 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class Core
-{
+class Core {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->helpers = new Helpers;
-		$this->courses = new Courses;
-		$this->reports = new Reports;
-		$this->ajax    = new Ajax;
-		$this->sync    = new Sync;
-		$this->hooks   = new Hooks;
-		$this->admin   = new Admin;
-		$this->group   = new Group;
+	public function __construct() {
+		 $this->helpers = new Helpers();
+		$this->courses  = new Courses();
+		$this->reports  = new Reports();
+		$this->ajax     = new Ajax();
+		$this->sync     = new Sync();
+		$this->hooks    = new Hooks();
+		$this->admin    = new Admin();
+		$this->group    = new Group();
 
-		add_action('bp_ld_sync/init', [$this, 'init']);
+		add_action( 'bp_ld_sync/init', array( $this, 'init' ) );
 	}
 
 	/**
@@ -55,8 +54,7 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function init()
-	{
+	public function init() {
 		$this->registerTemplateStack();
 		$this->registerGroupComponent();
 	}
@@ -66,9 +64,8 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function registerTemplateStack()
-	{
-		bp_register_template_stack([$this, 'registerPluginTemplate']);
+	protected function registerTemplateStack() {
+		bp_register_template_stack( array( $this, 'registerPluginTemplate' ) );
 	}
 
 	/**
@@ -76,24 +73,23 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function registerGroupComponent()
-	{
-		if (! bp_is_group() && ! bp_is_group_create()) {
+	protected function registerGroupComponent() {
+		if ( ! bp_is_group() && ! bp_is_group_create() ) {
 			return;
 		}
 
-		if (bp_ld_sync('settings')->get('learndash.enabled')) {
-			require_once bp_ld_sync()->path('/buddypress/components/BpGroupCourses.php');
-			$extension = new BpGroupCourses;
-			add_action('bp_actions', [$extension, '_register'], 8);
-			add_action('admin_init', [$extension, '_register']);
+		if ( bp_ld_sync( 'settings' )->get( 'learndash.enabled' ) ) {
+			require_once bp_ld_sync()->path( '/buddypress/components/BpGroupCourses.php' );
+			$extension = new BpGroupCourses();
+			add_action( 'bp_actions', array( $extension, '_register' ), 8 );
+			add_action( 'admin_init', array( $extension, '_register' ) );
 		}
 
-		if (bp_ld_sync('settings')->get('reports.enabled')) {
-			require_once bp_ld_sync()->path('/buddypress/components/BpGroupReports.php');
-			$extension = new BpGroupReports;
-			add_action('bp_actions', [$extension, '_register'], 8);
-			add_action('admin_init', [$extension, '_register']);
+		if ( bp_ld_sync( 'settings' )->get( 'reports.enabled' ) ) {
+			require_once bp_ld_sync()->path( '/buddypress/components/BpGroupReports.php' );
+			$extension = new BpGroupReports();
+			add_action( 'bp_actions', array( $extension, '_register' ), 8 );
+			add_action( 'admin_init', array( $extension, '_register' ) );
 		}
 	}
 
@@ -102,52 +98,64 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function registerPluginTemplate()
-	{
-		return bp_learndash_path('/templates');
+	public function registerPluginTemplate() {
+		return bp_learndash_path( '/templates' );
 	}
 
-    /**
+	/**
 	 * Get the courses tab's sub menu items in group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function coursesSubMenus()
-    {
-    	return wp_list_sort(apply_filters('bp_ld_sync/courses_group_tab_subnavs', [
-    		'courses' => [
-				'name'     => __('Courses', 'buddyboss'),
-				'slug'     => '',
-				'position' => 10
-    		],
-    	]), 'position', 'ASC', true);
-    }
+	public function coursesSubMenus() {
+		return wp_list_sort(
+			apply_filters(
+				'bp_ld_sync/courses_group_tab_subnavs',
+				array(
+					'courses' => array(
+						'name'     => __( 'Courses', 'buddyboss' ),
+						'slug'     => '',
+						'position' => 10,
+					),
+				)
+			),
+			'position',
+			'ASC',
+			true
+		);
+	}
 
-    /**
+	/**
 	 * Get the reports tab's sub menu items in group
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function reportsSubMenus()
-    {
-    	return wp_list_sort(apply_filters('bp_ld_sync/reports_group_tab_subnavs', [
-    		'reports' => [
-				'name'     => __('Reports', 'buddyboss'),
-				'slug'     => '',
-				'position' => 10
-    		],
-    	]), 'position', 'ASC', true);
-    }
+	public function reportsSubMenus() {
+		return wp_list_sort(
+			apply_filters(
+				'bp_ld_sync/reports_group_tab_subnavs',
+				array(
+					'reports' => array(
+						'name'     => __( 'Reports', 'buddyboss' ),
+						'slug'     => '',
+						'position' => 10,
+					),
+				)
+			),
+			'position',
+			'ASC',
+			true
+		);
+	}
 
-    /**
+	/**
 	 * Returns the link to the selected sub menu
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function subMenuLink($slug)
-    {
-		$groupUrl = untrailingslashit(bp_get_group_permalink(groups_get_current_group()));
+	public function subMenuLink( $slug ) {
+		$groupUrl = untrailingslashit( bp_get_group_permalink( groups_get_current_group() ) );
 		$action   = bp_current_action();
-    	return untrailingslashit("{$groupUrl}/{$action}/{$slug}");
-    }
+		return untrailingslashit( "{$groupUrl}/{$action}/{$slug}" );
+	}
 }

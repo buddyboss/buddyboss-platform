@@ -49,18 +49,21 @@ function bp_get_invite_post_type_labels() {
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
-	return apply_filters( 'bp_get_invite_post_type_labels', array(
-		'add_new_item'          => __( 'Send Invite', 'buddyboss' ),
-		'all_items'             => __( 'Sent Invites', 'buddyboss' ),
-		'edit_item'             => __( 'Edit Sent Invite', 'buddyboss' ),
-		'menu_name'             => __( 'Invites', 'buddyboss' ),
-		'name'                  => __( 'Email Invites', 'buddyboss' ),
-		'new_item'              => __( 'New Sent Invite', 'buddyboss' ),
-		'not_found'             => __( 'No Sent Invites found', 'buddyboss' ),
-		'not_found_in_trash'    => __( 'No Sent Invites found in trash', 'buddyboss' ),
-		'search_items'          => __( 'Search Sent Invites', 'buddyboss' ),
-		'singular_name'         => __( 'Sent Invite', 'buddyboss' ),
-	) );
+	return apply_filters(
+		'bp_get_invite_post_type_labels',
+		array(
+			'add_new_item'       => __( 'Send Invite', 'buddyboss' ),
+			'all_items'          => __( 'Sent Invites', 'buddyboss' ),
+			'edit_item'          => __( 'Edit Sent Invite', 'buddyboss' ),
+			'menu_name'          => __( 'Invites', 'buddyboss' ),
+			'name'               => __( 'Email Invites', 'buddyboss' ),
+			'new_item'           => __( 'New Sent Invite', 'buddyboss' ),
+			'not_found'          => __( 'No Sent Invites found', 'buddyboss' ),
+			'not_found_in_trash' => __( 'No Sent Invites found in trash', 'buddyboss' ),
+			'search_items'       => __( 'Search Sent Invites', 'buddyboss' ),
+			'singular_name'      => __( 'Sent Invite', 'buddyboss' ),
+		)
+	);
 
 }
 
@@ -80,11 +83,14 @@ function bp_get_invite_post_type_supports() {
 	 *
 	 * @param array $value Supported features.
 	 */
-	return apply_filters( 'bp_get_invite_post_type_supports', array(
-		'editor',
-		'page-attributes',
-		'title',
-	) );
+	return apply_filters(
+		'bp_get_invite_post_type_supports',
+		array(
+			'editor',
+			'page-attributes',
+			'title',
+		)
+	);
 }
 
 /**
@@ -108,7 +114,6 @@ function bp_invites_member_invite_invitation_page() {
  * Allows invited users to register even if registration is disabled.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_invites_member_invite_remove_registration_lock() {
 	global $bp;
@@ -131,9 +136,9 @@ function bp_invites_member_invite_remove_registration_lock() {
 	$email = str_replace( ' ', '+', $email );
 
 	$args = array(
-		'post_type'  => bp_get_invite_post_type(),
+		'post_type'      => bp_get_invite_post_type(),
 		'posts_per_page' => -1,
-		'meta_query' => array(
+		'meta_query'     => array(
 			array(
 				'key'     => '_bp_invitee_email',
 				'value'   => $email,
@@ -144,7 +149,7 @@ function bp_invites_member_invite_remove_registration_lock() {
 
 	$bp_get_invitee_email = new WP_Query( $args );
 
-	if ( !$bp_get_invitee_email->have_posts() ) {
+	if ( ! $bp_get_invitee_email->have_posts() ) {
 		bp_core_add_message( __( "We couldn't find any invitations associated with this email address.", 'buddyboss' ), 'error' );
 		return;
 	}
@@ -153,9 +158,9 @@ function bp_invites_member_invite_remove_registration_lock() {
 	// site_options property in some cases
 	if ( is_multisite() ) {
 		$site_options = $bp->site_options;
-		if ( !empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
+		if ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
 			$site_options['registration'] = 'all';
-		} else if ( !empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
+		} elseif ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
 			$site_options['registration'] = 'user';
 		}
 		$bp->site_options = $site_options;
@@ -172,7 +177,6 @@ add_action( 'wp', 'bp_invites_member_invite_remove_registration_lock', 1 );
  * and shows the welcome message on the register page.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_invites_member_invite_register_screen_message() {
 	global $bp;
@@ -189,16 +193,16 @@ function bp_invites_member_invite_register_screen_message() {
 
 	?>
 	<?php if ( empty( $email ) ) : ?>
-		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ) ?></p></div>
+		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
 	<?php endif; ?>
 
 	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
 
-		<?php do_action( 'accept_email_invite_before' ) ?>
+		<?php do_action( 'accept_email_invite_before' ); ?>
 
 		<script>
 			jQuery(document).ready( function() {
-				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ) ?>");
+				jQuery("input#signup_email").val("<?php echo esc_js( str_replace( ' ', '+', $email ) ); ?>");
 			});
 		</script>
 
@@ -222,8 +226,8 @@ function bp_invites_member_invite_register_screen_message() {
 
 		if ( ! empty( $inviters_names ) ) {
 			$message = sprintf( _n( 'Welcome! You\'ve been invited to join the site by the following user: %s. Please fill out the information below to create your account.', 'Welcome! You\'ve been invited to join the site by the following users: %s. Please fill out the information below to create your account.', count( $inviters_names ), 'buddyboss' ), implode( ', ', $inviters_names ) );
-            
-            echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
+
+			echo '<aside class="bp-feedback bp-messages info"><span class="bp-icon" aria-hidden="true"></span><p>' . esc_html( $message ) . '</p></aside>';
 		}
 
 		if ( isset( $_GET['inviter'] ) ) {
@@ -241,9 +245,9 @@ function bp_invites_member_invite_register_screen_message() {
 			);
 
 			$bp_get_invitee_email_new = new WP_Query( $args );
-			$posts = $bp_get_invitee_email_new->posts;
-			$post_id = $posts[0]->ID;
-			$get_invite_profile_type = get_post_meta( $post_id, '_bp_invitee_member_type', true );
+			$posts                    = $bp_get_invitee_email_new->posts;
+			$post_id                  = $posts[0]->ID;
+			$get_invite_profile_type  = get_post_meta( $post_id, '_bp_invitee_member_type', true );
 			if ( isset( $get_invite_profile_type ) && '' !== $get_invite_profile_type ) {
 				$member_type_post_id = bp_member_type_post_by_type( $get_invite_profile_type );
 				?>
@@ -258,7 +262,8 @@ function bp_invites_member_invite_register_screen_message() {
 				<?php
 			}
 		}
-	endif; ?>
+	endif;
+	?>
 	<?php
 }
 add_action( 'bp_before_register_page', 'bp_invites_member_invite_register_screen_message' );
@@ -280,9 +285,9 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 	$email = str_replace( ' ', '+', $email );
 
 	$args = array(
-		'post_type'  => bp_get_invite_post_type(),
+		'post_type'      => bp_get_invite_post_type(),
 		'posts_per_page' => -1,
-		'meta_query' => array(
+		'meta_query'     => array(
 			array(
 				'key'     => '_bp_invitee_email',
 				'value'   => $email,
@@ -306,17 +311,17 @@ function bp_invites_member_invite_get_invitations_by_invited_email( $email ) {
 function bp_get_member_invitation_subject() {
 	global $bp;
 
-	$term = get_term_by('name', 'invites-member-invite', bp_get_email_tax_type() );
+	$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
 
-	$args = array(
+	$args  = array(
 		'post_type' => bp_get_email_post_type(),
 		'tax_query' => array(
 			array(
 				'taxonomy' => bp_get_email_tax_type(),
-				'field' => 'term_id',
-				'terms' => $term->term_id
-			)
-		)
+				'field'    => 'term_id',
+				'terms'    => $term->term_id,
+			),
+		),
 	);
 	$query = new WP_Query( $args );
 
@@ -335,17 +340,17 @@ function bp_get_member_invitation_subject() {
 function bp_get_member_invitation_message() {
 	global $bp;
 
-	$term = get_term_by('name', 'invites-member-invite', bp_get_email_tax_type() );
+	$term = get_term_by( 'name', 'invites-member-invite', bp_get_email_tax_type() );
 
-	$args = array(
+	$args  = array(
 		'post_type' => bp_get_email_post_type(),
 		'tax_query' => array(
 			array(
 				'taxonomy' => bp_get_email_tax_type(),
-				'field' => 'term_id',
-				'terms' => $term->term_id
-			)
-		)
+				'field'    => 'term_id',
+				'terms'    => $term->term_id,
+			),
+		),
 	);
 	$query = new WP_Query( $args );
 
@@ -371,9 +376,9 @@ function bp_get_member_invitation_message() {
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
 	if ( $must_use_wpmail ) {
-		$text =  $query->posts[0]->post_excerpt;
+		$text = $query->posts[0]->post_excerpt;
 	} else {
-		$text =  $query->posts[0]->post_content;
+		$text = $query->posts[0]->post_content;
 	}
 
 	return apply_filters( 'bp_get_member_invitation_message', stripslashes( $text ) );
@@ -410,20 +415,23 @@ function bp_get_member_invites_wildcard_replace( $text, $email = false ) {
 
 	$email = urlencode( $email );
 
-	$accept_link  = add_query_arg( array(
-		'bp-invites' => 'accept-member-invitation',
-		'email'    => $email,
-		'inviter'    => base64_encode( bp_loggedin_user_id() ),
-	), bp_get_root_domain() . '/' . bp_get_signup_slug() . '/' );
-	$accept_link  = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
+	$accept_link = add_query_arg(
+		array(
+			'bp-invites' => 'accept-member-invitation',
+			'email'      => $email,
+			'inviter'    => base64_encode( bp_loggedin_user_id() ),
+		),
+		bp_get_root_domain() . '/' . bp_get_signup_slug() . '/'
+	);
+	$accept_link = apply_filters( 'bp_member_invitation_accept_url', $accept_link );
 
 	/**
 	 * @todo why are we using %% instead of {{ }} or {{{ }}}?
 	 * Also, why are we using all caps, also why aren't we using . as separators?
 	 */
-	
+
 	$text = str_replace( '{{inviter.name}}', $inviter_name, $text );
-	$text = str_replace( '[{{{site.name}}}]', get_bloginfo('name'), $text );
+	$text = str_replace( '[{{{site.name}}}]', get_bloginfo( 'name' ), $text );
 	$text = str_replace( '{{{site.url}}}', site_url(), $text );
 	$text = str_replace( '%%INVITERNAME%%', $inviter_name, $text );
 	$text = str_replace( '%%INVITERURL%%', $inviter_url, $text );
@@ -454,12 +462,12 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 
 	$email = bp_core_get_user_email( $user_id );
 
-	$inviters 	= array();
+	$inviters = array();
 
 	$args = array(
-		'post_type'  => bp_get_invite_post_type(),
+		'post_type'      => bp_get_invite_post_type(),
 		'posts_per_page' => -1,
-		'meta_query' => array(
+		'meta_query'     => array(
 			array(
 				'key'     => '_bp_invitee_email',
 				'value'   => $email,
@@ -476,19 +484,19 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 		while ( $bp_get_invitee_email->have_posts() ) {
 			$bp_get_invitee_email->the_post();
 
-			$inviter_id	= get_the_author_meta( 'ID' );
-			$inviters[] 	= $inviter_id;
+			$inviter_id = get_the_author_meta( 'ID' );
+			$inviters[] = $inviter_id;
 
 			// Mark as accepted
 			update_post_meta( get_the_ID(), '_bp_invitee_status', 1 );
 			update_post_meta( get_the_ID(), '_bp_invitee_registered_date', date( 'Y-m-d H:i:s' ) );
 
 			$member_type = get_post_meta( get_the_ID(), '_bp_invitee_member_type', true );
-			if ( isset( $member_type ) && !empty( $member_type ) ) {
+			if ( isset( $member_type ) && ! empty( $member_type ) ) {
 				bp_set_member_type( $user_id, '' );
 				bp_set_member_type( $user_id, $member_type );
 
-				$member_type_id = bp_member_type_post_by_type( $member_type );
+				$member_type_id                = bp_member_type_post_by_type( $member_type );
 				$selected_member_type_wp_roles = get_post_meta( $member_type_id, '_bp_member_type_wp_roles', true );
 
 				if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
@@ -500,10 +508,8 @@ function bp_invites_member_invite_activate_user( $user_id, $key, $user ) {
 					// Add role
 					$bp_user->add_role( $selected_member_type_wp_roles[0] );
 				}
-
 			}
 		}
-
 	}
 
 }

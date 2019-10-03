@@ -60,11 +60,11 @@ function bp_core_clear_member_count_caches() {
 	wp_cache_delete( 'bp_total_member_count', 'bp' );
 	delete_transient( 'bp_active_member_count' );
 }
-add_action( 'bp_core_activated_user',         'bp_core_clear_member_count_caches' );
+add_action( 'bp_core_activated_user', 'bp_core_clear_member_count_caches' );
 add_action( 'bp_core_process_spammer_status', 'bp_core_clear_member_count_caches' );
-add_action( 'bp_core_deleted_account',        'bp_core_clear_member_count_caches' );
-add_action( 'bp_first_activity_for_member',   'bp_core_clear_member_count_caches' );
-add_action( 'deleted_user',                   'bp_core_clear_member_count_caches' );
+add_action( 'bp_core_deleted_account', 'bp_core_clear_member_count_caches' );
+add_action( 'bp_first_activity_for_member', 'bp_core_clear_member_count_caches' );
+add_action( 'deleted_user', 'bp_core_clear_member_count_caches' );
 
 /**
  * Clear the directory_pages cache when one of the pages is updated.
@@ -129,14 +129,17 @@ function bp_core_clear_root_options_cache( $option ) {
 		add_action( $action, 'bp_core_clear_root_options_cache' );
 	}
 
-	$keys = array_merge( $keys, array(
-		'registration',
-		'avatar_default',
-		'tags_blog_id',
-		'sitewide_tags_blog',
-		'registration',
-		'fileupload_mask',
-	) );
+	$keys = array_merge(
+		$keys,
+		array(
+			'registration',
+			'avatar_default',
+			'tags_blog_id',
+			'sitewide_tags_blog',
+			'registration',
+			'fileupload_mask',
+		)
+	);
 
 	if ( in_array( $option, $keys ) ) {
 		wp_cache_delete( 'root_blog_options', 'bp' );
@@ -200,14 +203,14 @@ function bp_update_meta_cache( $args = array() ) {
 	global $wpdb;
 
 	$defaults = array(
-		'object_ids' 	   => array(), // Comma-separated list or array of item ids.
-		'object_type' 	   => '',      // Canonical component id: groups, members, etc.
+		'object_ids'       => array(), // Comma-separated list or array of item ids.
+		'object_type'      => '',      // Canonical component id: groups, members, etc.
 		'cache_group'      => '',      // Cache group.
-		'meta_table' 	   => '',      // Name of the table containing the metadata.
+		'meta_table'       => '',      // Name of the table containing the metadata.
 		'object_column'    => '',      // DB column for the object ids (group_id, etc).
-		'cache_key_prefix' => ''       // Prefix to use when creating cache key names. Eg 'bp_groups_groupmeta'.
+		'cache_key_prefix' => '',       // Prefix to use when creating cache key names. Eg 'bp_groups_groupmeta'.
 	);
-	$r = wp_parse_args( $args, $defaults );
+	$r        = wp_parse_args( $args, $defaults );
 	extract( $r );
 
 	if ( empty( $object_ids ) || empty( $object_type ) || empty( $meta_table ) || empty( $cache_group ) ) {
@@ -238,18 +241,20 @@ function bp_update_meta_cache( $args = array() ) {
 
 		if ( ! empty( $meta_list ) ) {
 			foreach ( $meta_list as $metarow ) {
-				$mpid = intval( $metarow[$object_column] );
+				$mpid = intval( $metarow[ $object_column ] );
 				$mkey = $metarow['meta_key'];
 				$mval = $metarow['meta_value'];
 
 				// Force subkeys to be array type.
-				if ( !isset( $cache[$mpid] ) || !is_array( $cache[$mpid] ) )
-					$cache[$mpid] = array();
-				if ( !isset( $cache[$mpid][$mkey] ) || !is_array( $cache[$mpid][$mkey] ) )
-					$cache[$mpid][$mkey] = array();
+				if ( ! isset( $cache[ $mpid ] ) || ! is_array( $cache[ $mpid ] ) ) {
+					$cache[ $mpid ] = array();
+				}
+				if ( ! isset( $cache[ $mpid ][ $mkey ] ) || ! is_array( $cache[ $mpid ][ $mkey ] ) ) {
+					$cache[ $mpid ][ $mkey ] = array();
+				}
 
 				// Add a value to the current pid/key.
-				$cache[$mpid][$mkey][] = $mval;
+				$cache[ $mpid ][ $mkey ][] = $mval;
 			}
 		}
 
@@ -337,7 +342,7 @@ function bp_core_delete_incremented_cache( $key, $group ) {
  */
 function bp_core_get_incremented_cache_key( $key, $group ) {
 	$incrementor = bp_core_get_incrementor( $group );
-	$cache_key = md5( $key . $incrementor );
+	$cache_key   = md5( $key . $incrementor );
 	return $cache_key;
 }
 

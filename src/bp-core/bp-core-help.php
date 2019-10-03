@@ -22,10 +22,15 @@ function bp_core_help_bp_docs_link( $attr ) {
 	$slug    = isset( $attr['slug'] ) ? bp_core_dynamically_add_number_in_path( $attr['slug'] ) : '';
 	$text    = isset( $attr['text'] ) ? $attr['text'] : '';
 	$anchors = isset( $attr['anchors'] ) ? '#' . $attr['anchors'] : '';
-	$url     = bp_get_admin_url( add_query_arg( array(
-		'page'    => 'bp-help',
-		'article' => $slug . $anchors
-	), 'admin.php' ) );
+	$url     = bp_get_admin_url(
+		add_query_arg(
+			array(
+				'page'    => 'bp-help',
+				'article' => $slug . $anchors,
+			),
+			'admin.php'
+		)
+	);
 
 	$return = apply_filters( 'bp_core_help_bp_docs_link', $url, $attr );
 
@@ -252,16 +257,14 @@ function bp_core_dynamically_add_number_in_path( $slug ) {
 	$paths = bp_core_get_all_file_from_dir_and_subdir( $docs_path );
 	if ( ! empty( $paths ) ) {
 		foreach ( $paths as $path ) {
-			$file_path = str_replace( $docs_path, "", $path );
+			$file_path = str_replace( $docs_path, '', $path );
 			$path      = bp_core_strip_number_from_slug( $file_path );
 			if ( $path == $new_slug ) {
 				$new_slug = $file_path;
 				break;
 			}
-
 		}
 	}
-
 
 	return $new_slug;
 }
@@ -283,7 +286,7 @@ function bp_core_get_all_file_from_dir_and_subdir( $dir, &$results = array() ) {
 		$path = realpath( $dir . DIRECTORY_SEPARATOR . $value );
 		if ( ! is_dir( $path ) ) {
 			$results[] = $path;
-		} else if ( $value != "." && $value != ".." ) {
+		} elseif ( $value != '.' && $value != '..' ) {
 			bp_core_get_all_file_from_dir_and_subdir( $path, $results );
 			$results[] = $path;
 		}

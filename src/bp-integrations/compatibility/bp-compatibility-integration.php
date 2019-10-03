@@ -20,9 +20,9 @@ class BP_Compatibility_Integration extends BP_Integration {
 			'compatibility',
 			__( 'BuddyPress Plugins', 'buddyboss' ),
 			'compatibility',
-			[
-			'required_plugin' => array(),
-			]
+			array(
+				'required_plugin' => array(),
+			)
 		);
 
 		// Add link to settings page.
@@ -77,11 +77,11 @@ class BP_Compatibility_Integration extends BP_Integration {
 		new BP_Compatibility_Admin_Integration_Tab(
 			"bp-{$this->id}",
 			$this->name,
-			[
+			array(
 				'root_path'       => $this->path,
 				'root_url'        => $this->url,
 				'required_plugin' => $this->required_plugin,
-			]
+			)
 		);
 	}
 }

@@ -36,5 +36,5 @@ function bp_invites_screen_send_invite() {
  * @since BuddyBoss 1.0.0
  */
 function bp_invites_send_invite_screen() {
-	bp_get_template_part( 'members/single/invites');
+	bp_get_template_part( 'members/single/invites' );
 }

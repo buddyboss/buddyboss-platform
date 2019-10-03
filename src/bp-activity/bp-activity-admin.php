@@ -13,11 +13,14 @@
 defined( 'ABSPATH' ) || exit;
 
 // Include WP's list table class.
-if ( !class_exists( 'WP_List_Table' ) ) require( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
 
 // Per_page screen option. Has to be hooked in extremely early.
-if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-activity' == $_REQUEST['page'] )
+if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-activity' == $_REQUEST['page'] ) {
 	add_filter( 'set-screen-option', 'bp_activity_admin_screen_options', 10, 3 );
+}
 
 /**
  * Register the Activity component admin screen.
@@ -72,36 +75,43 @@ function bp_activity_admin_reply() {
 	check_ajax_referer( 'bp-activity-admin-reply', '_ajax_nonce-bp-activity-admin-reply' );
 
 	$parent_id = ! empty( $_REQUEST['parent_id'] ) ? (int) $_REQUEST['parent_id'] : 0;
-	$root_id   = ! empty( $_REQUEST['root_id'] )   ? (int) $_REQUEST['root_id']   : 0;
+	$root_id   = ! empty( $_REQUEST['root_id'] ) ? (int) $_REQUEST['root_id'] : 0;
 
 	// $parent_id is required
-	if ( empty( $parent_id ) )
+	if ( empty( $parent_id ) ) {
 		die( '-1' );
+	}
 
 	// If $root_id not set (e.g. for root items), use $parent_id.
-	if ( empty( $root_id ) )
+	if ( empty( $root_id ) ) {
 		$root_id = $parent_id;
+	}
 
 	// Check that a reply has been entered.
-	if ( empty( $_REQUEST['content'] ) )
+	if ( empty( $_REQUEST['content'] ) ) {
 		die( __( 'ERROR: Please type a reply.', 'buddyboss' ) );
+	}
 
 	// Check parent activity exists.
 	$parent_activity = new BP_Activity_Activity( $parent_id );
-	if ( empty( $parent_activity->component ) )
+	if ( empty( $parent_activity->component ) ) {
 		die( __( 'ERROR: The item you are trying to reply to cannot be found, or it has been deleted.', 'buddyboss' ) );
+	}
 
 	// @todo: Check if user is allowed to create new activity items
 	// if ( ! current_user_can( 'bp_new_activity' ) )
-	if ( ! bp_current_user_can( 'bp_moderate' ) )
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		die( '-1' );
+	}
 
 	// Add new activity comment.
-	$new_activity_id = bp_activity_new_comment( array(
-		'activity_id' => $root_id,              // ID of the root activity item.
-		'content'     => $_REQUEST['content'],
-		'parent_id'   => $parent_id,            // ID of a parent comment.
-	) );
+	$new_activity_id = bp_activity_new_comment(
+		array(
+			'activity_id' => $root_id,              // ID of the root activity item.
+			'content'     => $_REQUEST['content'],
+			'parent_id'   => $parent_id,            // ID of a parent comment.
+		)
+	);
 
 	// Fetch the new activity item, as we need it to create table markup to return.
 	$new_activity = new BP_Activity_Activity( $new_activity_id );
@@ -115,7 +125,7 @@ function bp_activity_admin_reply() {
 	$list_table->single_row( (array) $new_activity );
 
 	// Get table markup.
-	$response =  array(
+	$response = array(
 		'data'     => ob_get_contents(),
 		'id'       => $new_activity_id,
 		'position' => -1,
@@ -143,13 +153,15 @@ add_action( 'wp_ajax_bp-activity-admin-reply', 'bp_activity_admin_reply' );
  * @return string|int Option value. False to abandon update.
  */
 function bp_activity_admin_screen_options( $value, $option, $new_value ) {
-	if ( 'toplevel_page_bp_activity_per_page' != $option && 'toplevel_page_bp_activity_network_per_page' != $option )
+	if ( 'toplevel_page_bp_activity_per_page' != $option && 'toplevel_page_bp_activity_network_per_page' != $option ) {
 		return $value;
+	}
 
 	// Per page.
 	$new_value = (int) $new_value;
-	if ( $new_value < 1 || $new_value > 999 )
+	if ( $new_value < 1 || $new_value > 999 ) {
 		return $value;
+	}
 
 	return $new_value;
 }
@@ -169,7 +181,7 @@ function bp_activity_admin_edit_hidden_metaboxes( $hidden, $screen ) {
 	}
 
 	// Hide the primary link meta box by default.
-	$hidden  = array_merge( (array) $hidden, array( 'bp_activity_itemids', 'bp_activity_link', 'bp_activity_type', 'bp_activity_userid', ) );
+	$hidden = array_merge( (array) $hidden, array( 'bp_activity_itemids', 'bp_activity_link', 'bp_activity_type', 'bp_activity_userid' ) );
 
 	/**
 	 * Filters default hidden metaboxes so plugins can alter list.
@@ -215,25 +227,35 @@ function bp_activity_admin_load() {
 	// Edit screen.
 	if ( 'edit' == $doaction && ! empty( $_GET['aid'] ) ) {
 		// Columns screen option.
-		add_screen_option( 'layout_columns', array( 'default' => 2, 'max' => 2, ) );
+		add_screen_option(
+			'layout_columns',
+			array(
+				'default' => 2,
+				'max'     => 2,
+			)
+		);
 
-		get_current_screen()->add_help_tab( array(
-			'id'      => 'bp-activity-edit-overview',
-			'title'   => __( 'Overview', 'buddyboss' ),
-			'content' =>
-				'<p>' . __( 'You edit activities made on your site similar to the way you edit a comment. This is useful if you need to change which page the activity links to, or when you notice that the author has made a typographical error.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'The two big editing areas for the activity title and content are fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to unhide more boxes (Primary Item/Secondary Item, Link, Type, Author ID) or to choose a 1- or 2-column layout for this screen.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'You can also moderate the activity from this screen using the Status box, where you can also change the timestamp of the activity.', 'buddyboss' ) . '</p>'
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-activity-edit-overview',
+				'title'   => __( 'Overview', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( 'You edit activities made on your site similar to the way you edit a comment. This is useful if you need to change which page the activity links to, or when you notice that the author has made a typographical error.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( 'The two big editing areas for the activity title and content are fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to unhide more boxes (Primary Item/Secondary Item, Link, Type, Author ID) or to choose a 1- or 2-column layout for this screen.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( 'You can also moderate the activity from this screen using the Status box, where you can also change the timestamp of the activity.', 'buddyboss' ) . '</p>',
+			)
+		);
 
-		get_current_screen()->add_help_tab( array(
-			'id'      => 'bp-activity-edit-advanced',
-			'title'   => __( 'Item, Link, Type', 'buddyboss' ),
-			'content' =>
-				'<p>' . __( '<strong>Primary Item/Secondary Item</strong> - These identify the object that created the activity. For example, the fields could reference a comment left on a specific site. Some types of activity may only use one, or none, of these fields.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<strong>Link</strong> - Used by some types of activity (blog posts and comments) to store a link back to the original content.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( '<strong>Type</strong> - Each distinct kind of activity has its own type. For example, <code>created_group</code> is used when a group is created and <code>joined_group</code> is used when a user joins a group.', 'buddyboss' ) . '</p>'
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-activity-edit-advanced',
+				'title'   => __( 'Item, Link, Type', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( '<strong>Primary Item/Secondary Item</strong> - These identify the object that created the activity. For example, the fields could reference a comment left on a specific site. Some types of activity may only use one, or none, of these fields.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( '<strong>Link</strong> - Used by some types of activity (blog posts and comments) to store a link back to the original content.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( '<strong>Type</strong> - Each distinct kind of activity has its own type. For example, <code>created_group</code> is used when a group is created and <code>joined_group</code> is used when a user joins a group.', 'buddyboss' ) . '</p>',
+			)
+		);
 
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
@@ -242,11 +264,11 @@ function bp_activity_admin_load() {
 		);
 
 		// Register metaboxes for the edit screen.
-		add_meta_box( 'submitdiv',           __( 'Status', 'buddyboss' ), 'bp_activity_admin_edit_metabox_status', get_current_screen()->id, 'side', 'core' );
+		add_meta_box( 'submitdiv', __( 'Status', 'buddyboss' ), 'bp_activity_admin_edit_metabox_status', get_current_screen()->id, 'side', 'core' );
 		add_meta_box( 'bp_activity_itemids', __( 'Primary Item/Secondary Item', 'buddyboss' ), 'bp_activity_admin_edit_metabox_itemids', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_activity_link',    __( 'Link', 'buddyboss' ), 'bp_activity_admin_edit_metabox_link', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_activity_type',    __( 'Type', 'buddyboss' ), 'bp_activity_admin_edit_metabox_type', get_current_screen()->id, 'normal', 'core' );
-		add_meta_box( 'bp_activity_userid',  __( 'Author ID', 'buddyboss' ), 'bp_activity_admin_edit_metabox_userid', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_activity_link', __( 'Link', 'buddyboss' ), 'bp_activity_admin_edit_metabox_link', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_activity_type', __( 'Type', 'buddyboss' ), 'bp_activity_admin_edit_metabox_type', get_current_screen()->id, 'normal', 'core' );
+		add_meta_box( 'bp_activity_userid', __( 'Author ID', 'buddyboss' ), 'bp_activity_admin_edit_metabox_userid', get_current_screen()->id, 'normal', 'core' );
 
 		/**
 		 * Fires after the registration of all of the default activity meta boxes.
@@ -260,31 +282,35 @@ function bp_activity_admin_load() {
 		wp_enqueue_script( 'dashboard' );
 		wp_enqueue_script( 'comment' );
 
-	// Index screen.
+		// Index screen.
 	} else {
 		// Create the Activity screen list table.
 		$bp_activity_list_table = new BP_Activity_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => __( 'Activity', 'buddyboss' )) );
+		add_screen_option( 'per_page', array( 'label' => __( 'Activity', 'buddyboss' ) ) );
 
 		// Help panel - overview text.
-		get_current_screen()->add_help_tab( array(
-			'id'      => 'bp-activity-overview',
-			'title'   => __( 'Overview', 'buddyboss' ),
-			'content' =>
-				'<p>' . __( 'You can manage activities made on your site similar to the way you manage comments and other content. This screen is customizable in the same ways as other management screens, and you can act on activities using the on-hover action links or the Bulk Actions.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'There are many different types of activities. Some are generated automatically by BuddyBoss Platform and other plugins, and some are entered directly by a user in the form of status update. To help manage the different activity types, use the filter dropdown box to switch between them.', 'buddyboss' ) . '</p>'
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-activity-overview',
+				'title'   => __( 'Overview', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( 'You can manage activities made on your site similar to the way you manage comments and other content. This screen is customizable in the same ways as other management screens, and you can act on activities using the on-hover action links or the Bulk Actions.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( 'There are many different types of activities. Some are generated automatically by BuddyBoss Platform and other plugins, and some are entered directly by a user in the form of status update. To help manage the different activity types, use the filter dropdown box to switch between them.', 'buddyboss' ) . '</p>',
+			)
+		);
 
 		// Help panel - moderation text.
-		get_current_screen()->add_help_tab( array(
-			'id'		=> 'bp-activity-moderating',
-			'title'		=> __( 'Moderating Activity', 'buddyboss' ),
-			'content'	=>
-				'<p>' . __( 'In the <strong>Activity</strong> column, above each activity it says "Submitted on" followed by the date and time the activity item was generated on your site. Clicking on the date/time link will take you to that activity on your live site. Hovering over any activity gives you options to reply, edit, spam mark, or delete that activity.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( "In the <strong>In Response To</strong> column, if the activity was in reply to another activity, it shows that activity's author's picture and name, and a link to that activity on your live site. If there is a small bubble, the number in it shows how many other activities are related to this one; these are usually comments. Clicking the bubble will filter the activity screen to show only related activity items.", 'buddyboss' ) . '</p>'
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-activity-moderating',
+				'title'   => __( 'Moderating Activity', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( 'In the <strong>Activity</strong> column, above each activity it says "Submitted on" followed by the date and time the activity item was generated on your site. Clicking on the date/time link will take you to that activity on your live site. Hovering over any activity gives you options to reply, edit, spam mark, or delete that activity.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( "In the <strong>In Response To</strong> column, if the activity was in reply to another activity, it shows that activity's author's picture and name, and a link to that activity on your live site. If there is a small bubble, the number in it shows how many other activities are related to this one; these are usually comments. Clicking the bubble will filter the activity screen to show only related activity items.", 'buddyboss' ) . '</p>',
+			)
+		);
 
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
@@ -293,19 +319,25 @@ function bp_activity_admin_load() {
 		);
 
 		// Add accessible hidden heading and text for Activity screen pagination.
-		get_current_screen()->set_screen_reader_content( array(
-			/* translators: accessibility text */
-			'heading_pagination' => __( 'Activity list navigation', 'buddyboss' ),
-		) );
+		get_current_screen()->set_screen_reader_content(
+			array(
+				/* translators: accessibility text */
+				'heading_pagination' => __( 'Activity list navigation', 'buddyboss' ),
+			)
+		);
 
 	}
 
 	// Enqueue CSS and JavaScript.
-	wp_enqueue_script( 'bp_activity_admin_js', $bp->plugin_url . "bp-activity/admin/js/admin{$min}.js",   array( 'jquery', 'wp-ajax-response' ), bp_get_version(), true );
-	wp_localize_script( 'bp_activity_admin_js', 'bp_activity_admin_vars', array(
-		'page' => get_current_screen()->id
-	) );
-	wp_enqueue_style( 'bp_activity_admin_css', $bp->plugin_url . "bp-activity/admin/css/admin{$min}.css", array(),                               bp_get_version()       );
+	wp_enqueue_script( 'bp_activity_admin_js', $bp->plugin_url . "bp-activity/admin/js/admin{$min}.js", array( 'jquery', 'wp-ajax-response' ), bp_get_version(), true );
+	wp_localize_script(
+		'bp_activity_admin_js',
+		'bp_activity_admin_vars',
+		array(
+			'page' => get_current_screen()->id,
+		)
+	);
+	wp_enqueue_style( 'bp_activity_admin_css', $bp->plugin_url . "bp-activity/admin/css/admin{$min}.css", array(), bp_get_version() );
 
 	wp_style_add_data( 'bp_activity_admin_css', 'rtl', true );
 	if ( $min ) {
@@ -320,10 +352,10 @@ function bp_activity_admin_load() {
 	do_action( 'bp_activity_admin_enqueue_scripts' );
 
 	// Handle spam/un-spam/delete of activities.
-	if ( !empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save', ) ) ) {
+	if ( ! empty( $doaction ) && ! in_array( $doaction, array( '-1', 'edit', 'save' ) ) ) {
 
 		// Build redirection URL.
-		$redirect_to = remove_query_arg( array( 'aid', 'deleted', 'error', 'spammed', 'unspammed', ), wp_get_referer() );
+		$redirect_to = remove_query_arg( array( 'aid', 'deleted', 'error', 'spammed', 'unspammed' ), wp_get_referer() );
 		$redirect_to = add_query_arg( 'paged', $bp_activity_list_table->get_pagenum(), $redirect_to );
 
 		// Get activity IDs.
@@ -346,8 +378,8 @@ function bp_activity_admin_load() {
 			// Trim 'bulk_' off the action name to avoid duplicating a ton of code.
 			$doaction = substr( $doaction, 5 );
 
-		// This is a request to delete, spam, or un-spam, a single item.
-		} elseif ( !empty( $_REQUEST['aid'] ) ) {
+			// This is a request to delete, spam, or un-spam, a single item.
+		} elseif ( ! empty( $_REQUEST['aid'] ) ) {
 
 			// Check this is a valid form submission.
 			check_admin_referer( 'spam-activity_' . $activity_ids[0] );
@@ -372,16 +404,17 @@ function bp_activity_admin_load() {
 			}
 
 			switch ( $doaction ) {
-				case 'delete' :
-					if ( 'activity_comment' == $activity->type )
+				case 'delete':
+					if ( 'activity_comment' == $activity->type ) {
 						bp_activity_delete_comment( $activity->item_id, $activity->id );
-					else
+					} else {
 						bp_activity_delete( array( 'id' => $activity->id ) );
+					}
 
 					$deleted++;
 					break;
 
-				case 'ham' :
+				case 'ham':
 					/**
 					 * Remove moderation and blacklist checks in case we want to ham an activity
 					 * which contains one of these listed keys.
@@ -393,21 +426,23 @@ function bp_activity_admin_load() {
 					$result = $activity->save();
 
 					// Check for any error during activity save.
-					if ( ! $result )
+					if ( ! $result ) {
 						$errors[] = $activity->id;
-					else
+					} else {
 						$unspammed++;
+					}
 					break;
 
-				case 'spam' :
+				case 'spam':
 					bp_activity_mark_as_spam( $activity );
 					$result = $activity->save();
 
 					// Check for any error during activity save.
-					if ( ! $result )
+					if ( ! $result ) {
 						$errors[] = $activity->id;
-					else
+					} else {
 						$spammed++;
+					}
 					break;
 
 				default:
@@ -432,18 +467,22 @@ function bp_activity_admin_load() {
 		do_action( 'bp_activity_admin_action_after', array( $spammed, $unspammed, $deleted, $errors ), $redirect_to, $activity_ids );
 
 		// Add arguments to the redirect URL so that on page reload, we can easily display what we've just done.
-		if ( $spammed )
+		if ( $spammed ) {
 			$redirect_to = add_query_arg( 'spammed', $spammed, $redirect_to );
+		}
 
-		if ( $unspammed )
+		if ( $unspammed ) {
 			$redirect_to = add_query_arg( 'unspammed', $unspammed, $redirect_to );
+		}
 
-		if ( $deleted )
+		if ( $deleted ) {
 			$redirect_to = add_query_arg( 'deleted', $deleted, $redirect_to );
+		}
 
 		// If an error occurred, pass back the activity ID that failed.
-		if ( ! empty( $errors ) )
-			$redirect_to = add_query_arg( 'error', implode ( ',', array_map( 'absint', $errors ) ), $redirect_to );
+		if ( ! empty( $errors ) ) {
+			$redirect_to = add_query_arg( 'error', implode( ',', array_map( 'absint', $errors ) ), $redirect_to );
+		}
 
 		/**
 		 * Filters redirect URL after activity spamming/un-spamming/deletion occurs.
@@ -455,11 +494,10 @@ function bp_activity_admin_load() {
 		wp_redirect( apply_filters( 'bp_activity_admin_action_redirect', $redirect_to ) );
 		exit;
 
-
-	// Save the edit.
+		// Save the edit.
 	} elseif ( $doaction && 'save' == $doaction ) {
 		// Build redirection URL.
-		$redirect_to = remove_query_arg( array( 'action', 'aid', 'deleted', 'error', 'spammed', 'unspammed', ), $_SERVER['REQUEST_URI'] );
+		$redirect_to = remove_query_arg( array( 'action', 'aid', 'deleted', 'error', 'spammed', 'unspammed' ), $_SERVER['REQUEST_URI'] );
 
 		// Get activity ID.
 		$activity_id = (int) $_REQUEST['aid'];
@@ -488,28 +526,34 @@ function bp_activity_admin_load() {
 		}
 
 		// Activity action.
-		if ( isset( $_POST['bp-activities-action'] ) )
+		if ( isset( $_POST['bp-activities-action'] ) ) {
 			$activity->action = $_POST['bp-activities-action'];
+		}
 
 		// Activity content.
-		if ( isset( $_POST['bp-activities-content'] ) )
+		if ( isset( $_POST['bp-activities-content'] ) ) {
 			$activity->content = $_POST['bp-activities-content'];
+		}
 
 		// Activity primary link.
-		if ( ! empty( $_POST['bp-activities-link'] ) )
+		if ( ! empty( $_POST['bp-activities-link'] ) ) {
 			$activity->primary_link = $_POST['bp-activities-link'];
+		}
 
 		// Activity user ID.
-		if ( ! empty( $_POST['bp-activities-userid'] ) )
+		if ( ! empty( $_POST['bp-activities-userid'] ) ) {
 			$activity->user_id = (int) $_POST['bp-activities-userid'];
+		}
 
 		// Activity item primary ID.
-		if ( isset( $_POST['bp-activities-primaryid'] ) )
+		if ( isset( $_POST['bp-activities-primaryid'] ) ) {
 			$activity->item_id = (int) $_POST['bp-activities-primaryid'];
+		}
 
 		// Activity item secondary ID.
-		if ( isset( $_POST['bp-activities-secondaryid'] ) )
+		if ( isset( $_POST['bp-activities-secondaryid'] ) ) {
 			$activity->secondary_item_id = (int) $_POST['bp-activities-secondaryid'];
+		}
 
 		// Activity type.
 		if ( ! empty( $_POST['bp-activities-type'] ) ) {
@@ -533,22 +577,23 @@ function bp_activity_admin_load() {
 			$mm = ( $mm <= 0 ) ? date( 'n' ) : $mm;
 			$jj = ( $jj > 31 ) ? 31 : $jj;
 			$jj = ( $jj <= 0 ) ? date( 'j' ) : $jj;
-			$hh = ( $hh > 23 ) ? $hh -24 : $hh;
-			$mn = ( $mn > 59 ) ? $mn -60 : $mn;
-			$ss = ( $ss > 59 ) ? $ss -60 : $ss;
+			$hh = ( $hh > 23 ) ? $hh - 24 : $hh;
+			$mn = ( $mn > 59 ) ? $mn - 60 : $mn;
+			$ss = ( $ss > 59 ) ? $ss - 60 : $ss;
 
 			// Reconstruct the date into a timestamp.
-			$gmt_date = sprintf( "%04d-%02d-%02d %02d:%02d:%02d", $aa, $mm, $jj, $hh, $mn, $ss );
+			$gmt_date = sprintf( '%04d-%02d-%02d %02d:%02d:%02d', $aa, $mm, $jj, $hh, $mn, $ss );
 
 			$activity->date_recorded = $gmt_date;
 		}
 
 		// Has the spam status has changed?
 		if ( $new_spam_status != $prev_spam_status ) {
-			if ( $new_spam_status )
+			if ( $new_spam_status ) {
 				bp_activity_mark_as_spam( $activity );
-			else
+			} else {
 				bp_activity_mark_as_ham( $activity );
+			}
 		}
 
 		// Save.
@@ -558,8 +603,9 @@ function bp_activity_admin_load() {
 		wp_cache_delete( 'bp_activity_sitewide_front', 'bp' );
 
 		// Check for any error during activity save.
-		if ( false === $result )
+		if ( false === $result ) {
 			$error = $activity->id;
+		}
 
 		/**
 		 * Fires before redirect so plugins can do something first on save action.
@@ -571,10 +617,11 @@ function bp_activity_admin_load() {
 		do_action_ref_array( 'bp_activity_admin_edit_after', array( &$activity, $error ) );
 
 		// If an error occurred, pass back the activity ID that failed.
-		if ( $error )
+		if ( $error ) {
 			$redirect_to = add_query_arg( 'error', $error, $redirect_to );
-		else
+		} else {
 			$redirect_to = add_query_arg( 'updated', $activity->id, $redirect_to );
+		}
 
 		/**
 		 * Filters URL to redirect to after saving.
@@ -586,8 +633,7 @@ function bp_activity_admin_load() {
 		wp_redirect( apply_filters( 'bp_activity_admin_edit_redirect', $redirect_to ) );
 		exit;
 
-
-	// If a referrer and a nonce is supplied, but no action, redirect back.
+		// If a referrer and a nonce is supplied, but no action, redirect back.
 	} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
 		wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
 		exit;
@@ -604,12 +650,14 @@ function bp_activity_admin() {
 	$doaction = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
 
 	// Display the single activity edit screen.
-	if ( 'edit' == $doaction && ! empty( $_GET['aid'] ) )
+	if ( 'edit' == $doaction && ! empty( $_GET['aid'] ) ) {
 		bp_activity_admin_edit();
+	}
 
 	// Otherwise, display the Activity index screen.
-	else
+	else {
 		bp_activity_admin_index();
+	}
 }
 
 /**
@@ -621,30 +669,33 @@ function bp_activity_admin_edit() {
 
 	// @todo: Check if user is allowed to edit activity items
 	// if ( ! current_user_can( 'bp_edit_activity' ) )
-	if ( ! is_super_admin() )
+	if ( ! is_super_admin() ) {
 		die( '-1' );
+	}
 
 	// Get the activity from the database.
-	$activity = bp_activity_get( array(
-		'in'               => ! empty( $_REQUEST['aid'] ) ? (int) $_REQUEST['aid'] : 0,
-		'max'              => 1,
-		'show_hidden'      => true,
-		'spam'             => 'all',
-		'display_comments' => 0
-	) );
+	$activity = bp_activity_get(
+		array(
+			'in'               => ! empty( $_REQUEST['aid'] ) ? (int) $_REQUEST['aid'] : 0,
+			'max'              => 1,
+			'show_hidden'      => true,
+			'spam'             => 'all',
+			'display_comments' => 0,
+		)
+	);
 
 	if ( ! empty( $activity['activities'][0] ) ) {
 		$activity = $activity['activities'][0];
 
 		// Workaround to use WP's touch_time() without duplicating that function.
-		$GLOBALS['comment'] = new stdClass;
+		$GLOBALS['comment']               = new stdClass();
 		$GLOBALS['comment']->comment_date = $activity->date_recorded;
 	} else {
 		$activity = '';
 	}
 
 	// Construct URL for form.
-	$form_url = remove_query_arg( array( 'action', 'deleted', 'error', 'spammed', 'unspammed', ), $_SERVER['REQUEST_URI'] );
+	$form_url = remove_query_arg( array( 'action', 'deleted', 'error', 'spammed', 'unspammed' ), $_SERVER['REQUEST_URI'] );
 	$form_url = add_query_arg( 'action', 'save', $form_url );
 
 	/**
@@ -670,22 +721,47 @@ function bp_activity_admin_edit() {
 								<div id="bp_activity_action" class="postbox">
 									<h2><?php _e( 'Action', 'buddyboss' ); ?></h2>
 									<div class="inside">
-										<label for="bp-activities-action" class="screen-reader-text"><?php
+										<label for="bp-activities-action" class="screen-reader-text">
+										<?php
 											/* translators: accessibility text */
 											_e( 'Edit activity action', 'buddyboss' );
-										?></label>
-										<?php wp_editor( stripslashes( $activity->action ), 'bp-activities-action', array( 'media_buttons' => false, 'textarea_rows' => 7, 'teeny' => true, 'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ) ) ); ?>
+										?>
+										</label>
+										<?php
+										wp_editor(
+											stripslashes( $activity->action ),
+											'bp-activities-action',
+											array(
+												'media_buttons' => false,
+												'textarea_rows' => 7,
+												'teeny' => true,
+												'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ),
+											)
+										);
+										?>
 									</div>
 								</div>
 
 								<div id="bp_activity_content" class="postbox">
 									<h2><?php _e( 'Content', 'buddyboss' ); ?></h2>
 									<div class="inside">
-										<label for="bp-activities-content" class="screen-reader-text"><?php
+										<label for="bp-activities-content" class="screen-reader-text">
+										<?php
 											/* translators: accessibility text */
 											_e( 'Edit activity content', 'buddyboss' );
-										?></label>
-										<?php wp_editor( stripslashes( $activity->content ), 'bp-activities-content', array( 'media_buttons' => false, 'teeny' => true, 'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ) ) ); ?>
+										?>
+										</label>
+										<?php
+										wp_editor(
+											stripslashes( $activity->content ),
+											'bp-activities-content',
+											array(
+												'media_buttons' => false,
+												'teeny' => true,
+												'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ),
+											)
+										);
+										?>
 									</div>
 								</div>
 							</div>
@@ -709,20 +785,22 @@ function bp_activity_admin_edit() {
 
 		<?php else : ?>
 
-			<p><?php
+			<p>
+			<?php
 				printf(
 					'%1$s <a href="%2$s">%3$s</a>',
 					__( 'No activity found with this ID.', 'buddyboss' ),
 					esc_url( bp_get_admin_url( 'admin.php?page=bp-activity' ) ),
 					__( 'Go back and try again.', 'buddyboss' )
 				);
-			?></p>
+			?>
+			</p>
 
 		<?php endif; ?>
 
 	</div><!-- .wrap -->
 
-<?php
+	<?php
 }
 
 /**
@@ -733,7 +811,7 @@ function bp_activity_admin_edit() {
  * @param object $item Activity item.
  */
 function bp_activity_admin_edit_metabox_status( $item ) {
-?>
+	?>
 
 	<div class="submitbox" id="submitcomment">
 
@@ -778,7 +856,7 @@ function bp_activity_admin_edit_metabox_status( $item ) {
 
 	</div><!-- #submitcomment -->
 
-<?php
+	<?php
 }
 
 /**
@@ -789,16 +867,18 @@ function bp_activity_admin_edit_metabox_status( $item ) {
  * @param object $item Activity item.
  */
 function bp_activity_admin_edit_metabox_link( $item ) {
-?>
+	?>
 
-	<label class="screen-reader-text" for="bp-activities-link"><?php
+	<label class="screen-reader-text" for="bp-activities-link">
+	<?php
 		/* translators: accessibility text */
 		_e( 'Link', 'buddyboss' );
-	?></label>
+	?>
+	</label>
 	<input type="url" name="bp-activities-link" id="bp-activities-link" value="<?php echo esc_url( $item->primary_link ); ?>" aria-describedby="bp-activities-link-description" />
 	<p id="bp-activities-link-description"><?php _e( 'Activity generated by posts and comments uses the link field for a permalink back to the content item.', 'buddyboss' ); ?></p>
 
-<?php
+	<?php
 }
 
 /**
@@ -809,15 +889,17 @@ function bp_activity_admin_edit_metabox_link( $item ) {
  * @param object $item Activity item.
  */
 function bp_activity_admin_edit_metabox_userid( $item ) {
-?>
+	?>
 
-	<label class="screen-reader-text" for="bp-activities-userid"><?php
+	<label class="screen-reader-text" for="bp-activities-userid">
+	<?php
 		/* translators: accessibility text */
 		_e( 'Author ID', 'buddyboss' );
-	?></label>
+	?>
+	</label>
 	<input type="number" name="bp-activities-userid" id="bp-activities-userid" value="<?php echo esc_attr( $item->user_id ); ?>" min="1" />
 
-<?php
+	<?php
 }
 
 /**
@@ -830,14 +912,14 @@ function bp_activity_admin_edit_metabox_userid( $item ) {
  * @return array $actions
  */
 function bp_activity_admin_get_activity_actions() {
-	$actions  = array();
+	$actions = array();
 
 	// Walk through the registered actions, and build an array of actions/values.
 	foreach ( bp_activity_get_actions() as $action ) {
 		$action = array_values( (array) $action );
 
 		for ( $i = 0, $i_count = count( $action ); $i < $i_count; $i++ ) {
-			$actions[ $action[$i]['key'] ] = $action[$i]['value'];
+			$actions[ $action[ $i ]['key'] ] = $action[ $i ]['value'];
 		}
 	}
 
@@ -867,8 +949,9 @@ function bp_activity_admin_edit_metabox_type( $item ) {
 	foreach ( bp_activity_get_actions() as $action ) {
 		$action = array_values( (array) $action );
 
-		for ( $i = 0, $i_count = count( $action ); $i < $i_count; $i++ )
-			$actions[ $action[$i]['key'] ] = $action[$i]['value'];
+		for ( $i = 0, $i_count = count( $action ); $i < $i_count; $i++ ) {
+			$actions[ $action[ $i ]['key'] ] = $action[ $i ]['value'];
+		}
 	}
 
 	// This was a mis-named activity type from before BP 1.6.
@@ -889,17 +972,19 @@ function bp_activity_admin_edit_metabox_type( $item ) {
 
 	?>
 
-	<label for="bp-activities-type" class="screen-reader-text"><?php
+	<label for="bp-activities-type" class="screen-reader-text">
+	<?php
 		/* translators: accessibility text */
 		esc_html_e( 'Select activity type', 'buddyboss' );
-	?></label>
+	?>
+	</label>
 	<select name="bp-activities-type" id="bp-activities-type">
 		<?php foreach ( $actions as $k => $v ) : ?>
-			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $k,  $selected ); ?>><?php echo esc_html( $v ); ?></option>
+			<option value="<?php echo esc_attr( $k ); ?>" <?php selected( $k, $selected ); ?>><?php echo esc_html( $v ); ?></option>
 		<?php endforeach; ?>
 	</select>
 
-<?php
+	<?php
 }
 
 /**
@@ -910,7 +995,7 @@ function bp_activity_admin_edit_metabox_type( $item ) {
  * @param object $item Activity item.
  */
 function bp_activity_admin_edit_metabox_itemids( $item ) {
-?>
+	?>
 
 	<label for="bp-activities-primaryid"><?php _e( 'Primary Item ID', 'buddyboss' ); ?></label>
 	<input type="number" name="bp-activities-primaryid" id="bp-activities-primaryid" value="<?php echo esc_attr( $item->item_id ); ?>" min="0" />
@@ -921,7 +1006,7 @@ function bp_activity_admin_edit_metabox_itemids( $item ) {
 
 	<p><?php _e( 'These identify the object that created this activity. For example, the fields could reference a pair of site and comment IDs.', 'buddyboss' ); ?></p>
 
-<?php
+	<?php
 }
 
 /**
@@ -939,26 +1024,27 @@ function bp_activity_admin_index() {
 
 	// If the user has just made a change to an activity item, build status messages.
 	if ( ! empty( $_REQUEST['deleted'] ) || ! empty( $_REQUEST['spammed'] ) || ! empty( $_REQUEST['unspammed'] ) || ! empty( $_REQUEST['error'] ) || ! empty( $_REQUEST['updated'] ) ) {
-		$deleted   = ! empty( $_REQUEST['deleted']   ) ? (int) $_REQUEST['deleted']   : 0;
-		$errors    = ! empty( $_REQUEST['error']     ) ? $_REQUEST['error']           : '';
-		$spammed   = ! empty( $_REQUEST['spammed']   ) ? (int) $_REQUEST['spammed']   : 0;
+		$deleted   = ! empty( $_REQUEST['deleted'] ) ? (int) $_REQUEST['deleted'] : 0;
+		$errors    = ! empty( $_REQUEST['error'] ) ? $_REQUEST['error'] : '';
+		$spammed   = ! empty( $_REQUEST['spammed'] ) ? (int) $_REQUEST['spammed'] : 0;
 		$unspammed = ! empty( $_REQUEST['unspammed'] ) ? (int) $_REQUEST['unspammed'] : 0;
-		$updated   = ! empty( $_REQUEST['updated']   ) ? (int) $_REQUEST['updated']   : 0;
+		$updated   = ! empty( $_REQUEST['updated'] ) ? (int) $_REQUEST['updated'] : 0;
 
 		$errors = array_map( 'absint', explode( ',', $errors ) );
 
 		// Make sure we don't get any empty values in $errors.
 		for ( $i = 0, $errors_count = count( $errors ); $i < $errors_count; $i++ ) {
-			if ( 0 === $errors[$i] ) {
-				unset( $errors[$i] );
+			if ( 0 === $errors[ $i ] ) {
+				unset( $errors[ $i ] );
 			}
 		}
 
 		// Reindex array.
 		$errors = array_values( $errors );
 
-		if ( $deleted > 0 )
+		if ( $deleted > 0 ) {
 			$messages[] = sprintf( _n( '%s activity item has been permanently deleted.', '%s activity items have been permanently deleted.', $deleted, 'buddyboss' ), number_format_i18n( $deleted ) );
+		}
 
 		if ( ! empty( $errors ) ) {
 			if ( 1 == count( $errors ) ) {
@@ -974,19 +1060,22 @@ function bp_activity_admin_index() {
 					$error_msg .= '<li>' . sprintf( __( '#%s', 'buddyboss' ), number_format_i18n( $error ) ) . '</li>';
 				}
 
-				$error_msg  .= '</ul>';
+				$error_msg .= '</ul>';
 				$messages[] = $error_msg;
 			}
 		}
 
-		if ( $spammed > 0 )
+		if ( $spammed > 0 ) {
 			$messages[] = sprintf( _n( '%s activity item has been successfully spammed.', '%s activity items have been successfully spammed.', $spammed, 'buddyboss' ), number_format_i18n( $spammed ) );
+		}
 
-		if ( $unspammed > 0 )
+		if ( $unspammed > 0 ) {
 			$messages[] = sprintf( _n( '%s activity item has been successfully unspammed.', '%s activity items have been successfully unspammed.', $unspammed, 'buddyboss' ), number_format_i18n( $unspammed ) );
+		}
 
-		if ( $updated > 0 )
+		if ( $updated > 0 ) {
 			$messages[] = __( 'The activity item has been updated successfully.', 'buddyboss' );
+		}
 	}
 
 	// Prepare the activity items for display.
@@ -999,23 +1088,24 @@ function bp_activity_admin_index() {
 	 *
 	 * @param array $messages Array of messages to display at top of page.
 	 */
-	do_action( 'bp_activity_admin_index', $messages ); ?>
+	do_action( 'bp_activity_admin_index', $messages );
+	?>
 
 	<div class="wrap">
 		<h1>
-			<?php if ( !empty( $_REQUEST['aid'] ) ) : ?>
+			<?php if ( ! empty( $_REQUEST['aid'] ) ) : ?>
 				<?php printf( __( 'Activity related to ID #%s', 'buddyboss' ), number_format_i18n( (int) $_REQUEST['aid'] ) ); ?>
 			<?php else : ?>
 				<?php _e( 'Activity', 'buddyboss' ); ?>
 			<?php endif; ?>
 
-			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
+			<?php if ( ! empty( $_REQUEST['s'] ) ) : ?>
 				<span class="subtitle"><?php printf( __( 'Search results for "%s"', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
 			<?php endif; ?>
 		</h1>
 
 		<?php // If the user has just made a change to an activity item, display the status messages. ?>
-		<?php if ( !empty( $messages ) ) : ?>
+		<?php if ( ! empty( $messages ) ) : ?>
 			<div id="moderated" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>"><p><?php echo implode( "<br/>\n", $messages ); ?></p></div>
 		<?php endif; ?>
 
@@ -1035,11 +1125,24 @@ function bp_activity_admin_index() {
 					<form method="get" action="">
 
 						<h3 id="bp-replyhead"><?php _e( 'Reply to Activity', 'buddyboss' ); ?></h3>
-						<label for="bp-activities" class="screen-reader-text"><?php
+						<label for="bp-activities" class="screen-reader-text">
+						<?php
 							/* translators: accessibility text */
 							_e( 'Reply', 'buddyboss' );
-						?></label>
-						<?php wp_editor( '', 'bp-activities', array( 'dfw' => false, 'media_buttons' => false, 'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ), 'tinymce' => false, ) ); ?>
+						?>
+						</label>
+						<?php
+						wp_editor(
+							'',
+							'bp-activities',
+							array(
+								'dfw'           => false,
+								'media_buttons' => false,
+								'quicktags'     => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ),
+								'tinymce'       => false,
+							)
+						);
+						?>
 
 						<p id="bp-replysubmit" class="submit">
 							<a href="#" class="cancel button-secondary alignleft"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
@@ -1058,5 +1161,5 @@ function bp_activity_admin_index() {
 		</table>
 	</div>
 
-<?php
+	<?php
 }

@@ -61,7 +61,7 @@ class BP_Media_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 100,
-				'search_query_arg' => 'media_search',
+				'search_query_arg'         => 'media_search',
 			)
 		);
 
@@ -82,7 +82,7 @@ class BP_Media_Component extends BP_Component {
 			'template',
 			'functions',
 			'settings',
-			'cache'
+			'cache',
 		);
 
 		if ( class_exists( 'BP_Media_Rotation' ) ) {
@@ -156,25 +156,27 @@ class BP_Media_Component extends BP_Component {
 
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[$this->id];
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for media component.
 		// Note that global_tables is included in this array.
-		parent::setup_globals( array(
-			'slug'                  => 'photos',
-			'root_slug'             => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
-			'has_directory'         => true,
-//			'notification_callback' => 'bp_media_format_notifications',
-			'global_tables'         => $global_tables,
-			'directory_title'       => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-			'search_string'         => __( 'Search Photos&hellip;', 'buddyboss' ),
-		) );
+		parent::setup_globals(
+			array(
+				'slug'                                    => 'photos',
+				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
+				'has_directory'                           => true,
+				// 'notification_callback' => 'bp_media_format_notifications',
+										  'global_tables' => $global_tables,
+				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
+			)
+		);
 
 		/* Single Album Globals **********************************************/
 
 		// Are we viewing a single album?
 		if ( bp_is_media_component() && bp_is_single_album()
-		     && ( $album_id = BP_Media_Album::album_exists( bp_action_variable( 0 ) ) )
+			 && ( $album_id = BP_Media_Album::album_exists( bp_action_variable( 0 ) ) )
 		) {
 			$bp->is_single_item  = true;
 			$this->current_album = albums_get_album( $album_id );
@@ -190,13 +192,13 @@ class BP_Media_Component extends BP_Component {
 	 * Set up the actions.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 *
 	 */
 	public function setup_actions() {
 
 		// Perform a daily tidy up.
-		if ( ! wp_next_scheduled( 'bp_media_delete_orphaned_attachments_hook' ) )
+		if ( ! wp_next_scheduled( 'bp_media_delete_orphaned_attachments_hook' ) ) {
 			wp_schedule_event( time(), 'daily', 'bp_media_delete_orphaned_attachments_hook' );
+		}
 
 		add_action( 'bp_media_delete_orphaned_attachments_hook', 'bp_media_delete_orphaned_attachments' );
 
@@ -234,7 +236,7 @@ class BP_Media_Component extends BP_Component {
 				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
 				$class    = ( 0 === $count ) ? 'no-count' : 'count';
 				$nav_name = sprintf(
-				/* translators: %s: total media count for the current user */
+					/* translators: %s: total media count for the current user */
 					__( 'Photos %s', 'buddyboss' ),
 					sprintf(
 						'<span class="%s">%s</span>',
@@ -253,7 +255,7 @@ class BP_Media_Component extends BP_Component {
 				'position'            => 80,
 				'screen_function'     => 'media_screen',
 				'default_subnav_slug' => 'my-media',
-				'item_css_id'         => $this->id
+				'item_css_id'         => $this->id,
 			);
 
 			// Add the subnav items to the profile.
@@ -264,7 +266,7 @@ class BP_Media_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'media_screen',
 				'position'        => 10,
-				'item_css_id'     => 'media-my-media'
+				'item_css_id'     => 'media-my-media',
 			);
 
 			if ( bp_is_profile_albums_support_enabled() ) {
@@ -279,7 +281,6 @@ class BP_Media_Component extends BP_Component {
 					'position'        => 10,
 				);
 			}
-
 		}
 
 		parent::setup_nav( $main_nav, $sub_nav );
@@ -308,7 +309,7 @@ class BP_Media_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Photos', 'buddyboss' ),
-				'href'   => $media_link
+				'href'   => $media_link,
 			);
 
 			// Media.
@@ -317,7 +318,7 @@ class BP_Media_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-my-media',
 				'title'    => __( 'My Photos', 'buddyboss' ),
 				'href'     => $media_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			if ( bp_is_profile_albums_support_enabled() ) {
@@ -327,7 +328,7 @@ class BP_Media_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-albums',
 					'title'    => __( 'My Albums', 'buddyboss' ),
 					'href'     => trailingslashit( $media_link . 'albums' ),
-					'position' => 20
+					'position' => 20,
 				);
 			}
 		}
@@ -345,16 +346,18 @@ class BP_Media_Component extends BP_Component {
 		if ( bp_is_media_component() ) {
 			$bp = buddypress();
 
-			if ( bp_is_my_profile() && !bp_is_single_album() ) {
+			if ( bp_is_my_profile() && ! bp_is_single_album() ) {
 				$bp->bp_options_title = __( 'My Photos', 'buddyboss' );
 
-			} elseif ( !bp_is_my_profile() && !bp_is_single_album() ) {
-				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-					'item_id' => bp_displayed_user_id(),
-					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
-				) );
-				$bp->bp_options_title = bp_get_displayed_user_fullname();
+			} elseif ( ! bp_is_my_profile() && ! bp_is_single_album() ) {
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
+				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}
 		}
 
@@ -369,10 +372,12 @@ class BP_Media_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_media',
-			'bp_media_albums'
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'bp_media',
+				'bp_media_albums',
+			)
+		);
 
 		parent::setup_cache_groups();
 	}

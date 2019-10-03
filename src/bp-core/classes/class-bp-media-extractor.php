@@ -130,7 +130,6 @@ class BP_Media_Extractor {
 
 		$plaintext = $this->strip_markup( $richtext );
 
-
 		// Extract links.
 		if ( self::LINKS & $what_to_extract ) {
 			$media = array_merge_recursive( $media, $this->extract_links( $richtext, $plaintext, $extra_args ) );
@@ -207,7 +206,10 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_links( $richtext, $plaintext, $extra_args = array() ) {
-		$data = array( 'has' => array( 'links' => 0 ), 'links' => array() );
+		$data = array(
+			'has'   => array( 'links' => 0 ),
+			'links' => array(),
+		);
 
 		// Matches: href="text" and href='text'.
 		if ( stripos( $richtext, 'href=' ) !== false ) {
@@ -267,7 +269,10 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_mentions( $richtext, $plaintext, $extra_args = array() ) {
-		$data     = array( 'has' => array( 'mentions' => 0 ), 'mentions' => array() );
+		$data     = array(
+			'has'      => array( 'mentions' => 0 ),
+			'mentions' => array(),
+		);
 		$mentions = array();
 
 		// If the Activity component is active, use it to parse @mentions.
@@ -277,7 +282,7 @@ class BP_Media_Extractor {
 				$mentions = array();
 			}
 
-		// If the Activity component is disabled, instead do a basic parse.
+			// If the Activity component is disabled, instead do a basic parse.
 		} else {
 			if ( strpos( $plaintext, '@' ) !== false ) {
 				preg_match_all( '/[@]+([A-Za-z0-9-_\.@]+)\b/', $plaintext, $matches );
@@ -341,11 +346,13 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_images( $richtext, $plaintext, $extra_args = array() ) {
-		$media = array( 'has' => array( 'images' => 0 ), 'images' => array() );
+		$media = array(
+			'has'    => array( 'images' => 0 ),
+			'images' => array(),
+		);
 
 		$featured_image = $this->extract_images_from_featured_images( $richtext, $plaintext, $extra_args );
 		$galleries      = $this->extract_images_from_galleries( $richtext, $plaintext, $extra_args );
-
 
 		// `<img src>` tags.
 		if ( stripos( $richtext, 'src=' ) !== false ) {
@@ -419,7 +426,6 @@ class BP_Media_Extractor {
 		// Update image count.
 		$media['has']['images'] = count( $media['images'] );
 
-
 		/**
 		 * Filters images extracted from text.
 		 *
@@ -459,7 +465,10 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_shortcodes( $richtext, $plaintext, $extra_args = array() ) {
-		$data = array( 'has' => array( 'shortcodes' => 0 ), 'shortcodes' => array() );
+		$data = array(
+			'has'        => array( 'shortcodes' => 0 ),
+			'shortcodes' => array(),
+		);
 
 		// Match any registered WordPress shortcodes.
 		if ( strpos( $richtext, '[' ) !== false ) {
@@ -517,13 +526,15 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_embeds( $richtext, $plaintext, $extra_args = array() ) {
-		$data   = array( 'has' => array( 'embeds' => 0 ), 'embeds' => array() );
+		$data   = array(
+			'has'    => array( 'embeds' => 0 ),
+			'embeds' => array(),
+		);
 		$embeds = array();
 
 		if ( ! function_exists( '_wp_oembed_get_object' ) ) {
-			require( ABSPATH . WPINC . '/class-oembed.php' );
+			require ABSPATH . WPINC . '/class-oembed.php';
 		}
-
 
 		// Matches any links on their own lines. They may be oEmbeds.
 		if ( stripos( $richtext, 'http' ) !== false ) {
@@ -598,12 +609,14 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_audio( $richtext, $plaintext, $extra_args = array() ) {
-		$data   = array( 'has' => array( 'audio' => 0 ), 'audio' => array() );
+		$data   = array(
+			'has'   => array( 'audio' => 0 ),
+			'audio' => array(),
+		);
 		$audios = $this->extract_shortcodes( $richtext, $plaintext, $extra_args );
 		$links  = $this->extract_links( $richtext, $plaintext, $extra_args );
 
 		$audio_types = wp_get_audio_extensions();
-
 
 		// [audio]
 		$audios = wp_list_filter( $audios['shortcodes'], array( 'type' => 'audio' ) );
@@ -694,11 +707,13 @@ class BP_Media_Extractor {
 	 * }
 	 */
 	protected function extract_video( $richtext, $plaintext, $extra_args = array() ) {
-		$data   = array( 'has' => array( 'videos' => 0 ), 'videos' => array() );
+		$data   = array(
+			'has'    => array( 'videos' => 0 ),
+			'videos' => array(),
+		);
 		$videos = $this->extract_shortcodes( $richtext, $plaintext, $extra_args );
 
 		$video_types = wp_get_video_extensions();
-
 
 		// [video]
 		$videos = wp_list_filter( $videos['shortcodes'], array( 'type' => 'video' ) );
@@ -786,7 +801,6 @@ class BP_Media_Extractor {
 				} else {
 					$image_size = $extra_args['width'];  // E.g. "thumb", "medium".
 				}
-
 			} else {
 				$image_size = 'full';
 			}
@@ -806,18 +820,20 @@ class BP_Media_Extractor {
 				if ( isset( $gallery['ids'] ) ) {
 					$images = wp_parse_id_list( $gallery['ids'] );
 
-				// Gallery post_parent variant.
+					// Gallery post_parent variant.
 				} elseif ( isset( $extra_args['post'] ) ) {
 					$images = wp_parse_id_list(
-						get_children( array(
-							'fields'         => 'ids',
-							'order'          => 'ASC',
-							'orderby'        => 'menu_order ID',
-							'post_mime_type' => 'image',
-							'post_parent'    => $extra_args['post']->ID,
-							'post_status'    => 'inherit',
-							'post_type'      => 'attachment',
-						) )
+						get_children(
+							array(
+								'fields'         => 'ids',
+								'order'          => 'ASC',
+								'orderby'        => 'menu_order ID',
+								'post_mime_type' => 'image',
+								'post_parent'    => $extra_args['post']->ID,
+								'post_status'    => 'inherit',
+								'post_type'      => 'attachment',
+							)
+						)
 					);
 				}
 
@@ -825,9 +841,9 @@ class BP_Media_Extractor {
 				foreach ( $images as $image_id ) {
 					$image  = wp_get_attachment_image_src( $image_id, $image_size );
 					$data[] = array(
-						'url'    => $image[0],
-						'width'  => $image[1],
-						'height' => $image[2],
+						'url'        => $image[0],
+						'width'      => $image[1],
+						'height'     => $image[2],
 
 						'gallery_id' => 1 + $gallery_id,
 					);

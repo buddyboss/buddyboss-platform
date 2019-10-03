@@ -43,7 +43,7 @@ function bp_blogs_update_meta_cache( $blog_ids = false ) {
  */
 function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
 	if ( ! empty( $user_id ) ) {
-		wp_cache_delete( 'bp_blogs_of_user_'        . $user_id, 'bp' );
+		wp_cache_delete( 'bp_blogs_of_user_' . $user_id, 'bp' );
 		wp_cache_delete( 'bp_total_blogs_for_user_' . $user_id, 'bp' );
 	}
 
@@ -52,16 +52,16 @@ function bp_blogs_clear_blog_object_cache( $blog_id = 0, $user_id = 0 ) {
 
 // List actions to clear object caches on.
 add_action( 'bp_blogs_remove_blog_for_user', 'bp_blogs_clear_blog_object_cache', 10, 2 );
-add_action( 'wpmu_new_blog',                 'bp_blogs_clear_blog_object_cache', 10, 2 );
-add_action( 'bp_blogs_remove_blog',          'bp_blogs_clear_blog_object_cache' );
+add_action( 'wpmu_new_blog', 'bp_blogs_clear_blog_object_cache', 10, 2 );
+add_action( 'bp_blogs_remove_blog', 'bp_blogs_clear_blog_object_cache' );
 
 // List actions to clear super cached pages on, if super cache is installed.
 add_action( 'bp_blogs_remove_data_for_blog', 'bp_core_clear_cache' );
-add_action( 'bp_blogs_remove_comment',       'bp_core_clear_cache' );
-add_action( 'bp_blogs_remove_post',          'bp_core_clear_cache' );
+add_action( 'bp_blogs_remove_comment', 'bp_core_clear_cache' );
+add_action( 'bp_blogs_remove_post', 'bp_core_clear_cache' );
 add_action( 'bp_blogs_remove_blog_for_user', 'bp_core_clear_cache' );
-add_action( 'bp_blogs_remove_blog',          'bp_core_clear_cache' );
-add_action( 'bp_blogs_new_blog_comment',     'bp_core_clear_cache' );
-add_action( 'bp_blogs_new_blog_post',        'bp_core_clear_cache' );
-add_action( 'bp_blogs_new_blog',             'bp_core_clear_cache' );
-add_action( 'bp_blogs_remove_data',          'bp_core_clear_cache' );
+add_action( 'bp_blogs_remove_blog', 'bp_core_clear_cache' );
+add_action( 'bp_blogs_new_blog_comment', 'bp_core_clear_cache' );
+add_action( 'bp_blogs_new_blog_post', 'bp_core_clear_cache' );
+add_action( 'bp_blogs_new_blog', 'bp_core_clear_cache' );
+add_action( 'bp_blogs_remove_data', 'bp_core_clear_cache' );

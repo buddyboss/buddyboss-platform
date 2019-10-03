@@ -29,7 +29,7 @@
 
 				<?php do_action( 'bbp_theme_before_reply_form_notices' ); ?>
 
-				<?php if ( !bbp_is_topic_open() && !bbp_is_reply_edit() ) : ?>
+				<?php if ( ! bbp_is_topic_open() && ! bbp_is_reply_edit() ) : ?>
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -55,7 +55,7 @@
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:','buddyboss' ); ?></label><br />
+							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -74,7 +74,7 @@
 
 					<?php endif; ?>
 
-					<?php if ( bbp_is_subscriptions_active() && !bbp_is_anonymous() && ( !bbp_is_reply_edit() || ( bbp_is_reply_edit() && !bbp_is_reply_anonymous() ) ) ) : ?>
+					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_reply_edit() || ( bbp_is_reply_edit() && ! bbp_is_reply_anonymous() ) ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_reply_form_subscription' ); ?>
 

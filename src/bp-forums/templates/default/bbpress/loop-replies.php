@@ -14,11 +14,11 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-reply-author"><?php  _e( 'Author',  'buddyboss' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-reply-author"><?php _e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-reply-content">
 
-			<?php if ( !bbp_show_lead_topic() ) : ?>
+			<?php if ( ! bbp_show_lead_topic() ) : ?>
 
 				<?php _e( 'Posts', 'buddyboss' ); ?>
 
@@ -44,7 +44,10 @@
 
 		<?php else : ?>
 
-			<?php while ( bbp_replies() ) : bbp_the_reply(); ?>
+			<?php
+			while ( bbp_replies() ) :
+				bbp_the_reply();
+				?>
 
 				<?php bbp_get_template_part( 'loop', 'single-reply' ); ?>
 
@@ -56,11 +59,11 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-reply-author"><?php  _e( 'Author',  'buddyboss' ); ?></div>
+		<div class="bbp-reply-author"><?php _e( 'Author', 'buddyboss' ); ?></div>
 
 		<div class="bbp-reply-content">
 
-			<?php if ( !bbp_show_lead_topic() ) : ?>
+			<?php if ( ! bbp_show_lead_topic() ) : ?>
 
 				<?php _e( 'Posts', 'buddyboss' ); ?>
 

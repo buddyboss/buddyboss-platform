@@ -16,10 +16,11 @@ function friends_screen_requests() {
 		// Check the nonce.
 		check_admin_referer( 'friends_accept_friendship' );
 
-		if ( friends_accept_friendship( bp_action_variable( 1 ) ) )
+		if ( friends_accept_friendship( bp_action_variable( 1 ) ) ) {
 			bp_core_add_message( __( 'Connection accepted', 'buddyboss' ) );
-		else
+		} else {
 			bp_core_add_message( __( 'Connection could not be accepted', 'buddyboss' ), 'error' );
+		}
 
 		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
 
@@ -27,10 +28,11 @@ function friends_screen_requests() {
 		// Check the nonce.
 		check_admin_referer( 'friends_reject_friendship' );
 
-		if ( friends_reject_friendship( bp_action_variable( 1 ) ) )
+		if ( friends_reject_friendship( bp_action_variable( 1 ) ) ) {
 			bp_core_add_message( __( 'Connection rejected', 'buddyboss' ) );
-		else
+		} else {
 			bp_core_add_message( __( 'Connection could not be rejected', 'buddyboss' ), 'error' );
+		}
 
 		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
 
@@ -38,10 +40,11 @@ function friends_screen_requests() {
 		// Check the nonce.
 		check_admin_referer( 'friends_withdraw_friendship' );
 
-		if ( friends_withdraw_friendship( bp_loggedin_user_id(), bp_action_variable( 1 ) ) )
+		if ( friends_withdraw_friendship( bp_loggedin_user_id(), bp_action_variable( 1 ) ) ) {
 			bp_core_add_message( __( 'Connection request withdrawn', 'buddyboss' ) );
-		else
+		} else {
 			bp_core_add_message( __( 'Connection request could not be withdrawn', 'buddyboss' ), 'error' );
+		}
 
 		bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_current_component() . '/' . bp_current_action() ) );
 	}

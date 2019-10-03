@@ -46,9 +46,9 @@ class BP_Registration_Theme_Compat {
 		bp_update_is_directory( false, 'register' );
 
 		// Setup actions.
-		add_filter( 'bp_get_buddypress_template',                array( $this, 'template_hierarchy' ) );
-		add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'dummy_post'    ) );
-		add_filter( 'bp_replace_the_content',                    array( $this, 'dummy_content' ) );
+		add_filter( 'bp_get_buddypress_template', array( $this, 'template_hierarchy' ) );
+		add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'dummy_post' ) );
+		add_filter( 'bp_replace_the_content', array( $this, 'dummy_content' ) );
 	}
 
 	/** Template ***********************************************************/
@@ -77,9 +77,12 @@ class BP_Registration_Theme_Compat {
 		 *
 		 * @param array $value Array of template paths to add to hierarchy.
 		 */
-		$new_templates = apply_filters( "bp_template_hierarchy_{$component}", array(
-			"members/index-{$component}.php"
-		) );
+		$new_templates = apply_filters(
+			"bp_template_hierarchy_{$component}",
+			array(
+				"members/index-{$component}.php",
+			)
+		);
 
 		// Merge new templates with existing stack
 		// @see bp_get_theme_compat_templates().
@@ -102,7 +105,7 @@ class BP_Registration_Theme_Compat {
 				$title = __( 'We\'re almost there!', 'buddyboss' );
 			}
 
-		// Activation page.
+			// Activation page.
 		} else {
 			$title = __( 'Activate Your Account', 'buddyboss' );
 
@@ -111,17 +114,19 @@ class BP_Registration_Theme_Compat {
 			}
 		}
 
-		bp_theme_compat_reset_post( array(
-			'ID'             => 0,
-			'post_title'     => $title,
-			'post_author'    => 0,
-			'post_date'      => 0,
-			'post_content'   => '',
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'is_page'        => true,
-			'comment_status' => 'closed'
-		) );
+		bp_theme_compat_reset_post(
+			array(
+				'ID'             => 0,
+				'post_title'     => $title,
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'is_page'        => true,
+				'comment_status' => 'closed',
+			)
+		);
 	}
 
 	/**

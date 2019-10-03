@@ -56,10 +56,10 @@ final class BP_Activity_Export extends BP_Export {
 
 		$data_items = $this->get_data( $user, $page );
 
-		foreach ( $data_items["items"] as $item ) {
+		foreach ( $data_items['items'] as $item ) {
 
-			$group_id    = "bp_activities";
-			$group_label = __( "Activities & Comments", 'buddyboss' );
+			$group_id    = 'bp_activities';
+			$group_label = __( 'Activities & Comments', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$activity_type = __( 'Profile Update', 'buddyboss' );
@@ -108,7 +108,7 @@ final class BP_Activity_Export extends BP_Export {
 			);
 		}
 
-		$done = $data_items["total"] < $data_items["offset"];
+		$done = $data_items['total'] < $data_items['offset'];
 
 		return $this->response( $export_items, $done );
 	}
@@ -159,15 +159,15 @@ final class BP_Activity_Export extends BP_Export {
 	 *
 	 * @return array
 	 */
-	function get_data( $user, $page, $mode = "erase" ) {
+	function get_data( $user, $page, $mode = 'erase' ) {
 		global $wpdb;
 		global $bp;
 
 		$wpdb->show_errors( false );
 
-		$table              = bp_core_get_table_prefix(). "bp_activity item";
-		$query_select       = "item.*";
-		$query_select_count = "COUNT(item.id)";
+		$table              = bp_core_get_table_prefix() . 'bp_activity item';
+		$query_select       = 'item.*';
+		$query_select_count = 'COUNT(item.id)';
 
 		$query_where = "item.user_id=%d AND item.type IN ('activity_update','activity_comment') && is_spam=0";
 

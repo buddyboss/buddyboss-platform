@@ -13,18 +13,20 @@
  */
 function groups_screen_group_admin_delete_group() {
 
-	if ( 'delete-group' != bp_get_group_current_admin_tab() )
+	if ( 'delete-group' != bp_get_group_current_admin_tab() ) {
 		return false;
+	}
 
-	if ( ! bp_is_item_admin() && !bp_current_user_can( 'bp_moderate' ) )
+	if ( ! bp_is_item_admin() && ! bp_current_user_can( 'bp_moderate' ) ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
 	if ( isset( $_REQUEST['delete-group-button'] ) && isset( $_REQUEST['delete-group-understand'] ) ) {
 
 		// Check the nonce first.
-		if ( !check_admin_referer( 'groups_delete_group' ) ) {
+		if ( ! check_admin_referer( 'groups_delete_group' ) ) {
 			return false;
 		}
 
@@ -46,7 +48,7 @@ function groups_screen_group_admin_delete_group() {
 		}
 
 		// Group admin has deleted the group, now do it.
-		if ( !groups_delete_group( $bp->groups->current_group->id ) ) {
+		if ( ! groups_delete_group( $bp->groups->current_group->id ) ) {
 			bp_core_add_message( __( 'There was an error deleting the group. Please try again.', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'The group was deleted successfully.', 'buddyboss' ) );

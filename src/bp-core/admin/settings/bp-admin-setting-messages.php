@@ -23,15 +23,15 @@ class BP_Admin_Setting_Messages extends BP_Admin_Setting_tab {
 		$this->tab_order = 40;
 	}
 
-	//Check if messages are enabled
+	// Check if messages are enabled
 	public function is_active() {
 		return bp_is_active( 'messages' );
 	}
 
-	//Register setting fields
+	// Register setting fields
 	public function register_fields() {
 		$this->add_section( 'bp_messages', __( 'Messages Settings', 'buddyboss' ) );
 	}
 }
 
-return new BP_Admin_Setting_Messages;
+return new BP_Admin_Setting_Messages();

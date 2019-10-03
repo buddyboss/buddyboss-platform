@@ -74,11 +74,14 @@ class Message extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args( $assoc_args, array(
-			'to'        => '',
-			'thread-id' => false,
-			'date-sent' => bp_core_current_time(),
-		) );
+		$r = wp_parse_args(
+			$assoc_args,
+			array(
+				'to'        => '',
+				'thread-id' => false,
+				'date-sent' => bp_core_current_time(),
+			)
+		);
 
 		$user = $this->get_user_id_from_identifier( $assoc_args['from'] );
 
@@ -90,14 +93,16 @@ class Message extends BuddypressCommand {
 		// Existing thread recipients will be assumed.
 		$recipient = ( ! empty( $r['thread_id'] ) ) ? array() : array( $recipient->ID );
 
-		$thread_id = messages_new_message( array(
-			'sender_id'  => $user->ID,
-			'thread_id'  => $r['thread-id'],
-			'recipients' => $recipient,
-			'subject'    => $assoc_args['subject'],
-			'content'    => $assoc_args['content'],
-			'date_sent'  => $r['date-sent'],
-		) );
+		$thread_id = messages_new_message(
+			array(
+				'sender_id'  => $user->ID,
+				'thread_id'  => $r['thread-id'],
+				'recipients' => $recipient,
+				'subject'    => $assoc_args['subject'],
+				'content'    => $assoc_args['content'],
+				'date_sent'  => $r['date-sent'],
+			)
+		);
 
 		// Silent it before it errors.
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'silent' ) ) {
@@ -148,20 +153,24 @@ class Message extends BuddypressCommand {
 
 		WP_CLI::confirm( 'Are you sure you want to delete this thread(s)?', $assoc_args );
 
-		parent::_delete( array( $thread_id ), $assoc_args, function( $thread_id ) {
+		parent::_delete(
+			array( $thread_id ),
+			$assoc_args,
+			function( $thread_id ) {
 
-			// Check if it is a valid thread before deleting.
-			if ( ! messages_is_valid_thread( $thread_id ) ) {
-				WP_CLI::error( 'This is not a valid thread ID.' );
-			}
+				// Check if it is a valid thread before deleting.
+				if ( ! messages_is_valid_thread( $thread_id ) ) {
+					WP_CLI::error( 'This is not a valid thread ID.' );
+				}
 
-			// Actually, delete it.
-			if ( messages_delete_thread( $thread_id, $user->ID ) ) {
-				return array( 'success', 'Thread successfully deleted.' );
-			} else {
-				return array( 'error', 'Could not delete the thread.' );
+				// Actually, delete it.
+				if ( messages_delete_thread( $thread_id, $user->ID ) ) {
+					return array( 'success', 'Thread successfully deleted.' );
+				} else {
+					return array( 'error', 'Could not delete the thread.' );
+				}
 			}
-		} );
+		);
 	}
 
 	/**
@@ -250,24 +259,29 @@ class Message extends BuddypressCommand {
 	public function _list( $_, $assoc_args ) {
 		$formatter = $this->get_formatter( $assoc_args );
 
-		$r = wp_parse_args( $assoc_args, array(
-			'box'    => 'sentbox',
-			'type'   => 'all',
-			'search' => '',
-			'count'  => 10,
-		) );
+		$r = wp_parse_args(
+			$assoc_args,
+			array(
+				'box'    => 'sentbox',
+				'type'   => 'all',
+				'search' => '',
+				'count'  => 10,
+			)
+		);
 
 		$user = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 		$type = ( ! in_array( $r['type'], $this->message_types(), true ) ) ? 'all' : $r['type'];
 		$box  = ( ! in_array( $r['box'], $this->message_boxes(), true ) ) ? 'sentbox' : $r['box'];
 
-		$inbox = new \BP_Messages_Box_Template( array(
-			'user_id'      => $user->ID,
-			'box'          => $box,
-			'type'         => $type,
-			'max'          => $r['count'],
-			'search_terms' => $r['search'],
-		) );
+		$inbox = new \BP_Messages_Box_Template(
+			array(
+				'user_id'      => $user->ID,
+				'box'          => $box,
+				'type'         => $type,
+				'max'          => $r['count'],
+				'search_terms' => $r['search'],
+			)
+		);
 
 		if ( ! $inbox->has_threads() ) {
 			WP_CLI::error( 'No messages found.' );
@@ -310,13 +324,16 @@ class Message extends BuddypressCommand {
 		$notify = WP_CLI\Utils\make_progress_bar( 'Generating messages', $assoc_args['count'] );
 
 		for ( $i = 0; $i < $assoc_args['count']; $i++ ) {
-			$this->create( array(), array(
-				'from'      => $this->get_random_user_id(),
-				'to'        => $this->get_random_user_id(),
-				'subject'   => sprintf( 'Message Subject - #%d', $i ),
-				'thread-id' => $assoc_args['thread-id'],
-				'silent',
-			) );
+			$this->create(
+				array(),
+				array(
+					'from'      => $this->get_random_user_id(),
+					'to'        => $this->get_random_user_id(),
+					'subject'   => sprintf( 'Message Subject - #%d', $i ),
+					'thread-id' => $assoc_args['thread-id'],
+					'silent',
+				)
+			);
 
 			$notify->tick();
 		}

@@ -15,24 +15,25 @@ add_filter( 'the_content', 'bp_search_search_page_content', 9 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_search_page_content( $content ){
-    /**
-     * Reportedly, on some installations, the remove_filter call below, doesn't work and this filter is called over and over again.
-     * Possibly due to some other plugin/theme.
-     *
-     * Lets add another precautionary measure, a global flag.
-     * @since BuddyPress 1.1.3
-     */
-    global $bpgs_main_content_filter_has_run;
+function bp_search_search_page_content( $content ) {
+	/**
+	 * Reportedly, on some installations, the remove_filter call below, doesn't work and this filter is called over and over again.
+	 * Possibly due to some other plugin/theme.
+	 *
+	 * Lets add another precautionary measure, a global flag.
+	 *
+	 * @since BuddyPress 1.1.3
+	 */
+	global $bpgs_main_content_filter_has_run;
 
-	if(  bp_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ){
+	if ( bp_search_is_search() && 'yes' != $bpgs_main_content_filter_has_run ) {
 			remove_filter( 'the_content', 'bp_search_search_page_content', 9 );
 			remove_filter( 'the_content', 'wpautop' );
-            $bpgs_main_content_filter_has_run = 'yes';
-			//setup search resutls and all..
+			$bpgs_main_content_filter_has_run = 'yes';
+			// setup search resutls and all..
 			BP_Search::instance()->prepare_search_page();
 			ob_start();
-			bp_get_template_part('search/results-page');
+			bp_get_template_part( 'search/results-page' );
 			$content .= ob_get_clean();
 	}
 
@@ -44,10 +45,10 @@ function bp_search_search_page_content( $content ){
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_load_template( $template, $variation=false ){
+function bp_search_load_template( $template, $variation = false ) {
 	$file = $template;
 
-	if( $variation ){
+	if ( $variation ) {
 		$file .= '-' . $variation;
 	}
 
@@ -59,7 +60,7 @@ function bp_search_load_template( $template, $variation=false ){
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_buffer_template_part( $template, $variation='', $echo=true ){
+function bp_search_buffer_template_part( $template, $variation = '', $echo = true ) {
 	ob_start();
 
 	bp_search_load_template( $template, $variation );
@@ -79,7 +80,7 @@ function bp_search_buffer_template_part( $template, $variation='', $echo=true ){
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_filters(){
+function bp_search_filters() {
 	BP_Search::instance()->print_tabs();
 }
 
@@ -88,6 +89,6 @@ function bp_search_filters(){
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_search_results(){
+function bp_search_results() {
 	BP_Search::instance()->print_results();
 }
