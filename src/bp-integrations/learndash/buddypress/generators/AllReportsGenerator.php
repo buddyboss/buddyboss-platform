@@ -64,7 +64,7 @@ class AllReportsGenerator extends ReportsGenerator {
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'step'            => $activity->post_title,
-			'start_date'      => $activity->activity_started_formatted,
+			'start_date'      => date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_started_formatted ) ),
 			'completion_date' => $this->completionDate( $activity ),
 			'updated_date'    => $this->updatedDate( $activity ),
 			'time_spent'      => $this->timeSpent( $activity ),

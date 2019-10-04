@@ -72,7 +72,7 @@ class LessonsReportsGenerator extends ReportsGenerator {
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'lesson'          => $activity->post_title,
-			'start_date'      => $activity->activity_started_formatted,
+			'start_date'      => date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_started_formatted ) ),
 			'lesson_points'   => ReportsGenerator::coursePointsEarned( $activity ),
 			'completion_date' => $this->completionDate( $activity ),
 			'updated_date'    => $this->updatedDate( $activity ),

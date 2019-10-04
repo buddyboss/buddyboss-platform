@@ -567,9 +567,7 @@ class ReportsGenerator {
 
 		if ( $this->args['user'] ) {
 			$this->params['user_ids'] = $this->args['user'];
-		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $this->args['group'] ) ) {
-			$this->params['user_ids'] = learndash_get_groups_user_ids( $ldGroupId );
-		} elseif ( groups_is_user_admin( bp_loggedin_user_id(), $this->args['group'] ) ) {
+		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $this->args['group'] ) || groups_is_user_admin( bp_loggedin_user_id(), $this->args['group'] ) ) {
 			$this->params['user_ids'] = learndash_get_groups_user_ids( $ldGroupId );
 		} else {
 			$this->params['user_ids'] = array( bp_loggedin_user_id() );
@@ -637,7 +635,7 @@ class ReportsGenerator {
 		$seconds = $seconds % 60;
 
 		if ( $minutes < 60 ) {
-			return sprintf( '%d min', $minutes );
+			return sprintf( '%d min %d seconds', $minutes, $seconds );
 		}
 
 		$hours = floor( $minutes / 60 * 10 ) / 10;
@@ -649,6 +647,8 @@ class ReportsGenerator {
 				_n( 'hr', 'hrs', $hours, 'buddyboss' )
 			);
 		}
+
+		return '-';
 	}
 
 	/**
@@ -657,7 +657,7 @@ class ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function completionDate( $activity ) {
-		return $activity->activity_completed ? $activity->activity_completed_formatted : '-';
+		return $activity->activity_completed ? date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_completed_formatted ) ) : '-';
 	}
 
 	/**
@@ -666,7 +666,7 @@ class ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function updatedDate( $activity ) {
-		return $activity->activity_completed ? '-' : $activity->activity_updated_formatted;
+		return $activity->activity_completed ? '-' : date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_updated_formatted ) );
 	}
 
 	/**

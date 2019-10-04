@@ -72,7 +72,7 @@ class TopicsReportsGenerator extends ReportsGenerator {
 			'course'          => $activity->activity_course_title,
 			'topic'           => $activity->post_title,
 			'topic_points'    => ReportsGenerator::coursePointsEarned( $activity ),
-			'start_date'      => $activity->activity_started_formatted,
+			'start_date'      => date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_started_formatted ) ),
 			'completion_date' => $this->completionDate( $activity ),
 			'time_spent'      => $this->timeSpent( $activity ),
 		);
