@@ -10,6 +10,24 @@
 			this.fetch_table_data();
 
 			$( '.bp-ld-reports-progress-bar' ).loading();
+
+			var dropDownUser = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="user"]');
+			var dropDownStep = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="step"]');
+			if  ( dropDownUser.length ) {
+				if ( ''  === dropDownUser.val() ) {
+					dropDownStep.prop( 'disabled', true );
+				}
+				$( dropDownUser ).on( 'change', function() {
+					if ( ''  === $(this).val() ) {
+						dropDownStep.prop( 'disabled', true );
+						dropDownStep.prop( 'disabled', true );
+						dropDownStep.val( 'all' );
+					} else {
+						dropDownStep.prop( 'disabled', false );
+					}
+
+				});
+			}
 		},
 
 		fetch_table_data: function() {
