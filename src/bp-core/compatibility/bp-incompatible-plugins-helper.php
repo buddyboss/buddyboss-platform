@@ -55,7 +55,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Rank Math SEO
 	 */
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
-		require buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php';
+		require buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
 	}
 
 	/**

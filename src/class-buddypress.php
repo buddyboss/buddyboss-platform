@@ -413,8 +413,11 @@ class BuddyPress {
 		$this->integration_dir = $this->plugin_dir . 'bp-integrations';
 		$this->integration_url = $this->plugin_url . 'bp-integrations';
 
-		/** Theme Compat */
+		// Path to add support for third party plugin
+		$this->compatibility_dir = $this->plugin_dir . 'bp-core/compatibility/';
+		$this->compatibility_url = $this->plugin_url . 'bp-core/compatibility/';
 
+		/** Theme Compat */
 		$this->theme_compat = new stdClass(); // Base theme compatibility class
 		$this->filters      = new stdClass(); // Used when adding/removing filters
 
@@ -511,7 +514,7 @@ class BuddyPress {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
 		// Load the compatibility helpers for third party plugins.
-		require $this->plugin_dir . '/bp-core/compatibility/bp-incompatible-plugins-helper.php';
+		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 
 		// Load the WP abstraction file so BuddyPress can run on all WordPress setups.
 		require $this->plugin_dir . 'bp-core/bp-core-wpabstraction.php';
