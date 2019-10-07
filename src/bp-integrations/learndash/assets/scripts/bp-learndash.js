@@ -11,6 +11,12 @@
 
 			$( '.bp-ld-reports-progress-bar' ).loading();
 
+			$( '.admin-show-all' ).DataTable({
+				searching    : false,
+				lengthChange : false,
+				info         : false
+			});
+
 			var dropDownUser = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="user"]');
 			var dropDownStep = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="step"]');
 			if  ( dropDownUser.length ) {

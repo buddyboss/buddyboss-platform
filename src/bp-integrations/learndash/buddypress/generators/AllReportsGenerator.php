@@ -26,7 +26,8 @@ class AllReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		 $this->completed_table_title  = __( 'Completed Steps', 'buddyboss' );
+
+		$this->completed_table_title   = __( 'Completed Steps', 'buddyboss' );
 		$this->incompleted_table_title = __( 'Incomplete Steps', 'buddyboss' );
 
 		parent::__construct();
@@ -43,10 +44,10 @@ class AllReportsGenerator extends ReportsGenerator {
 			'user'            => $this->column( 'user' ),
 			'course_id'       => $this->column( 'course_id' ),
 			'course'          => $this->column( 'course' ),
-			'step'            => $this->column( 'step' ),
+		//	'step'            => $this->column( 'step' ),
 			'start_date'      => $this->column( 'start_date' ),
 			'completion_date' => $this->column( 'completion_date' ),
-			'updated_date'    => $this->column( 'updated_date' ),
+		//	'updated_date'    => $this->column( 'updated_date' ),
 			'time_spent'      => $this->column( 'time_spent' ),
 			'points'          => $this->column( 'points' ),
 		);
@@ -60,13 +61,13 @@ class AllReportsGenerator extends ReportsGenerator {
 	protected function formatData( $activity ) {
 		return array(
 			'user_id'         => $activity->user_id,
-			'user'            => bp_core_get_user_displayname( $activity->user_id ),
+			'user'            =>  bp_core_get_user_displayname( $activity->user_id ),
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
-			'step'            => $activity->post_title,
+		//	'step'            => $activity->post_title,
 			'start_date'      => date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_started_formatted ) ),
 			'completion_date' => $this->completionDate( $activity ),
-			'updated_date'    => $this->updatedDate( $activity ),
+		//	'updated_date'    => $this->updatedDate( $activity ),
 			'time_spent'      => $this->timeSpent( $activity ),
 			'points'          => $this->coursePointsEarned( $activity ),
 		);

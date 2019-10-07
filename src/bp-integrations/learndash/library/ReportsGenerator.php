@@ -558,7 +558,11 @@ class ReportsGenerator {
 		$this->params['course_ids'] = $this->args['course'] ?: learndash_group_enrolled_courses( $ldGroupId );
 
 		if ( $this->hasArg( 'step' ) ) {
-			$this->params['post_types'] = $this->args['step'] == 'all' ? $this->allSteps() : $this->args['step'];
+			if ( $this->hasArg('user' ) && '' === $this->args['user'] ) {
+				$this->params['post_types'] = $this->args['step'] == 'all' ? array( 'sfwd-courses' ) : $this->args['step'];
+			} else {
+				$this->params['post_types'] = $this->args['step'] == 'all' ? array( 'sfwd-courses' ) : $this->args['step'];
+			}
 		}
 
 		// if ($this->hasArg('user')) {
@@ -567,7 +571,7 @@ class ReportsGenerator {
 
 		if ( $this->args['user'] ) {
 			$this->params['user_ids'] = $this->args['user'];
-		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $this->args['group'] ) || groups_is_user_admin( bp_loggedin_user_id(), $this->args['group'] ) ) {
+		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $this->args['group'] ) || groups_is_user_admin( bp_loggedin_user_id(), $this->args['group'] ) || bp_current_user_can( 'bp_moderate' ) ) {
 			$this->params['user_ids'] = learndash_get_groups_user_ids( $ldGroupId );
 		} else {
 			$this->params['user_ids'] = array( bp_loggedin_user_id() );

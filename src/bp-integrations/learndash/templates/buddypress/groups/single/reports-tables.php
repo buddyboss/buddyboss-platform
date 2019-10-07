@@ -5,16 +5,20 @@
 	</aside>
 </div>
 
-<div class="ld-report-user-stats">
-	<div class="user-info">
-		<div class="user-avatar">
-			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/mystery-group.png' ); ?>" class="avatar avatar-300 photo" width="300" height="300" alt="">
-		</div>
-		<div class="user-name">
-			<h5 class="list-title member-name"><?php echo __( 'All Students', 'buddyboss' ); ?></h5>
-		</div>
-	</div>
-</div>
+<?php
+	if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
+		<div class="ld-report-user-stats">
+			<div class="user-info">
+				<div class="user-avatar">
+					<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/mystery-group.png' ); ?>" class="avatar avatar-300 photo" width="300" height="300" alt="">
+				</div>
+				<div class="user-name">
+					<h5 class="list-title member-name"><?php echo __( 'All Students', 'buddyboss' ); ?></h5>
+				</div>
+			</div>
+		</div> <?php
+	}
+?>
 
 <div class="bp_ld_report_table_wrapper">
 	<h2><?php echo $completed_table_title; ?></h2>

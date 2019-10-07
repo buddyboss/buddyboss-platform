@@ -512,7 +512,14 @@ class Reports {
 		$generator               = $this->getCurrentGenerator();
 		$completed_table_title   = $generator->completed_table_title ?: __( 'Completed', 'buddyboss' );
 		$incompleted_table_title = $generator->incompleted_table_title ?: __( 'Incomplete', 'buddyboss' );
-		require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+		if ( empty( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
+			require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
+		} elseif ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
+			require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
+		} else {
+			require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+		}
+		//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 	}
 
 	/**

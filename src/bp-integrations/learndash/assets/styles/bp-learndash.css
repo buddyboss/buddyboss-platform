@@ -145,6 +145,54 @@
 	background-color: #4b86db;
 }
 
+.bp_ld_report_table_wrapper .admin-show-all {
+	border: 0;
+	border-collapse: collapse;
+	border-radius: 4px;
+	overflow: hidden;
+	box-shadow: 0 0 0 1px #E7EAEC;
+	width: 100% !important;
+}
+.bp_ld_report_table_wrapper .admin-show-all thead tr {
+	background: #fff;
+	border-bottom: 1px solid #E7E9EC;
+}
+.bp_ld_report_table_wrapper .admin-show-all thead th {
+	border-bottom: 0;
+	font-size: 13px;
+	outline: none;
+	font-weight: normal;
+	text-transform: uppercase;
+	color: #A3A5A9;
+}
+.bp_ld_report_table_wrapper .admin-show-all th,
+.bp_ld_report_table_wrapper .admin-show-all td {
+	border: 0;
+	font-size: 14px;
+	padding: 12px 20px;
+}
+
+table.dataTable.no-footer.admin-show-all {
+	border-bottom: 0;
+}
+
+table.dataTable tbody tr, table.dataTable.display tbody tr.odd>.sorting_1, table.dataTable.order-column.stripe tbody tr.odd>.sorting_1, table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
+	background-color: #ffffff !important;
+}
+
+table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+	border-top: 0px solid #ddd;
+}
+
+.bp_ld_report_table_wrapper >h2 {
+	//margin: 0 0 0 0;
+}
+
+.bp_ld_report_table_wrapper h2 {
+	margin: 1.6875rem 0 1.6875rem 0 !important;
+}
+
+
 @keyframes
 toggle {  0% {
 	opacity: 0;
