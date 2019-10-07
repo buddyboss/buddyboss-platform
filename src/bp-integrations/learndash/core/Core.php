@@ -32,7 +32,7 @@ class Core {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		 $this->registerAutoloader();
+		$this->registerAutoloader();
 
 		$this->admin        = new Admin();
 		$this->dependencies = new Dependencies();
@@ -44,6 +44,224 @@ class Core {
 		$this->pluginName = __( 'BuddyBoss LearnDash', 'buddyboss' );
 
 		add_action( 'bp_ld_sync/requirements_checked', array( $this, 'init' ) );
+
+		$this->course->name                  = \LearnDash_Custom_Label::get_label( 'courses' );
+		$this->course->my_courses_name       = sprintf( __( 'My %s', 'buddyboss' ), $this->course->name );
+		$this->course->create_courses_name   = sprintf( __( 'Create a %s', 'buddypress-learndash' ), $this->course->name );
+		$this->course->create_courses_slug   = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
+		$this->course->slug                  = apply_filters( 'bp_learndash_profile_courses_slug', 'courses' );
+		$this->course->my_courses_slug       = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
+		$this->course->access                = bp_core_can_edit_settings();
+		$this->course->badges_tab_name       = apply_filters( 'bp_learndash_profile_badges_tab_name', __( 'Badges', 'buddyboss' ) );
+		$this->course->badges_tab_slug       = apply_filters( 'bp_learndash_profile_badges_slug', 'badges' );
+		$this->course->certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
+		$this->course->certificates_tab_slug = apply_filters( 'bp_learndash_profile_certificates_slug', 'certificates' );
+		$this->registerCourseComponent();
+	}
+
+	/**
+	 * Add Course tab in profile menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
+	public function registerCourseComponent() {
+		if ( $this->settings->get( 'course.courses_visibility' ) ) {
+			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
+			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 900 );
+		}
+	}
+
+	/**
+	 * Add Course tab in profile menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
+	public function setup_nav() {
+		bp_core_new_nav_item( array(
+			'name'                    => $this->course->name,
+			'slug'                    => $this->course->slug,
+			'screen_function'         => array( $this, 'course_page' ),
+			'position'                => 80,
+			'default_subnav_slug'     => $this->course->slug,
+			'show_for_displayed_user' => $this->course->access,
+		) );
+
+		$all_subnav_items = array(
+			array(
+				'name'            => $this->course->my_courses_name,
+				'slug'            => $this->course->my_courses_slug,
+				'parent_url'      => $this->get_nav_link( $this->course->slug ),
+				'parent_slug'     => $this->course->slug,
+				'screen_function' => array( $this, 'course_page' ),
+				'position'        => 80,
+				'user_has_access' => $this->course->access,
+			),
+			array(
+				'name'            => $this->course->badges_tab_name,
+				'slug'            => $this->course->badges_tab_slug,
+				'parent_url'      => $this->get_nav_link( $this->course->slug ),
+				'parent_slug'     => $this->course->slug,
+				'screen_function' => array( $this, 'badges_page' ),
+				'user_has_access' => $this->course->access,
+			),
+			array(
+				'name'            => $this->course->certificates_tab_name,
+				'slug'            => $this->course->certificates_tab_slug,
+				'parent_url'      => $this->get_nav_link( $this->course->slug ),
+				'parent_slug'     => $this->course->slug,
+				'screen_function' => array( $this, 'certificates_page' ),
+				'user_has_access' => $this->course->access,
+			)
+		);
+
+		foreach ( $all_subnav_items as $all_subnav_item ) {
+			bp_core_new_subnav_item( $all_subnav_item );
+		}
+	}
+
+	/**
+	 * Add Course tab in admin menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
+	public function setup_admin_bar() {
+		$all_post_types = array(
+			array(
+				'name'     => $this->course->name,
+				'slug'     => $this->course->slug,
+				'parent'   => 'buddypress',
+				'nav_link' => $this->adminbar_nav_link( $this->course->slug ),
+			),
+			array(
+				'name'     => $this->course->my_courses_name,
+				'slug'     => $this->course->my_courses_slug,
+				'parent'   => $this->course->slug,
+				'nav_link' => $this->adminbar_nav_link( $this->course->slug ),
+			),
+			array(
+				'name'     => $this->course->badges_tab_name,
+				'slug'     => $this->course->badges_tab_slug,
+				'parent'   => $this->course->slug,
+				'nav_link' => $this->adminbar_nav_link( $this->course->badges_tab_slug, $this->course->slug ),
+			),
+			array(
+				'name'     => $this->course->certificates_tab_name,
+				'slug'     => $this->course->certificates_tab_slug,
+				'parent'   => $this->course->slug,
+				'nav_link' => $this->adminbar_nav_link( $this->course->certificates_tab_slug, $this->course->slug ),
+			),
+		);
+		if ( current_user_can( 'manage_options' ) ) {
+			$all_post_types[] =
+				array(
+					'name'     => $this->course->create_courses_name,
+					'slug'     => $this->course->create_courses_slug,
+					'parent'   => $this->course->slug,
+					'nav_link' => admin_url() . 'post-new.php?post_type=sfwd-courses'
+				);
+		}
+		global $wp_admin_bar;
+		foreach ( $all_post_types as $single ) {
+			$wp_admin_bar->add_menu( array(
+				'parent' => 'my-account-' . $single['parent'],
+				'id'     => 'my-account-' . $single['slug'],
+				'title'  => $single['name'],
+				'href'   => $single['nav_link']
+			) );
+		}
+	}
+
+	public function get_nav_link( $slug, $parent_slug = '' ) {
+		$displayed_user_id = bp_displayed_user_id();
+		$user_domain       = ( ! empty( $displayed_user_id ) ) ? bp_displayed_user_domain() : bp_loggedin_user_domain();
+		if ( ! empty( $parent_slug ) ) {
+			$nav_link = trailingslashit( $user_domain . $parent_slug . '/' . $slug );
+		} else {
+			$nav_link = trailingslashit( $user_domain . $slug );
+		}
+
+		return $nav_link;
+	}
+
+	public function adminbar_nav_link( $slug, $parent_slug = '' ) {
+		$user_domain = bp_loggedin_user_domain();
+		if ( ! empty( $parent_slug ) ) {
+			$nav_link = trailingslashit( $user_domain . $parent_slug . '/' . $slug );
+		} else {
+			$nav_link = trailingslashit( $user_domain . $slug );
+		}
+
+		return $nav_link;
+	}
+
+	/**
+	 * Display Certificates Page Content in Profile course menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
+	public function certificates_page() {
+		add_action( 'bp_template_content', array( $this, 'certificates_page_content' ) );
+		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
+	}
+
+	function certificates_page_content() {
+		do_action( 'template_notices' );
+		do_action( 'bp_learndash_before_certificates_page_content' );
+		bp_core_load_template( 'members/single/courses/certificates' );
+	}
+
+	/**
+	 * Display Badges Page Content in Profile course menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
+	public function badges_page() {
+		add_action( 'bp_template_content', array( $this, 'badges_page_content' ) );
+		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
+	}
+
+	function badges_page_content() {
+		do_action( 'template_notices' );
+		do_action( 'bp_learndash_before_badges_page_content' );
+		bp_core_load_template( 'members/single/courses/badges' );
+	}
+
+	/**
+	 * Display Course Page Content in Profile course menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
+	public function course_page() {
+
+		add_action( 'bp_template_title', array( $this, 'courses_expand' ) );
+		add_action( 'bp_template_title', array( $this, 'courses_page_title' ) );
+		add_action( 'bp_template_content', array( $this, 'courses_page_content' ) );
+		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
+	}
+
+	function courses_expand() {
+		?>
+        <div class="expand_collapse">
+            <a href="#" onClick="return flip_expand_all('#course_list');"><?php _e( 'Expand All', 'buddyboss' ); ?></a>
+            <span class="sep"><?php _e( '/', 'buddypress-learndash' ); ?></span>
+            <a href="#"
+               onClick="return flip_collapse_all('#course_list');"><?php _e( 'Collapse All', 'buddyboss' ); ?></a>
+        </div>
+		<?php
+	}
+
+	function courses_page_title() {
+		$title = sprintf( __( 'Registered %s', 'buddypress-learndash' ), $this->course->name );
+		echo apply_filters( 'courses_page_title', $title );
+	}
+
+	function courses_page_content() {
+
+		do_action( 'template_notices' );
+
+		do_action( 'bp_learndash_before_courses_page_content' );
+
+		bp_get_template_part( 'members/single/courses/courses' );
 	}
 
 	/**
@@ -93,6 +311,7 @@ class Core {
 		}
 
 		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+
 		return $key == '*' ? $merged : ( isset( $merged[ $key ] ) ? $merged[ $key ] : $default );
 	}
 
@@ -107,6 +326,7 @@ class Core {
 		}
 
 		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+
 		return isset( $merged[ $key ] );
 	}
 
@@ -117,14 +337,14 @@ class Core {
 	 */
 	public function registerAutoloader() {
 		spl_autoload_register(
-			function( $class ) {
+			function ( $class ) {
 				$psr4 = array(
-					'Buddyboss\LearndashIntegration\Core' => 'core',
-					'Buddyboss\LearndashIntegration\Library' => 'library',
-					'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
+					'Buddyboss\LearndashIntegration\Core'                  => 'core',
+					'Buddyboss\LearndashIntegration\Library'               => 'library',
+					'Buddyboss\LearndashIntegration\Buddypress'            => 'buddypress',
 					'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
 					'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
-					'Buddyboss\LearndashIntegration\Learndash' => 'learndash',
+					'Buddyboss\LearndashIntegration\Learndash'             => 'learndash',
 				);
 
 				$segments  = explode( '\\', $class );
@@ -355,6 +575,7 @@ class Core {
 
 				$lession_list = learndash_get_lesson_list( $course_id );
 				$url          = bp_ld_sync()->bp_ld_custom_continue_url_arr( $course_id, $lession_list );
+
 				return $url;
 			}
 		}
@@ -367,7 +588,7 @@ class Core {
 	 *
 	 * @param $course_id
 	 * @param $lession_list
-	 * @param string       $course_quizzes_list
+	 * @param string $course_quizzes_list
 	 *
 	 * @return array | string
 	 */
@@ -451,6 +672,7 @@ class Core {
 		if ( '' !== $key && isset( $navigation_urls[ $key ] ) ) {
 			return $navigation_urls[ $key ]['url'];
 		}
+
 		return '';
 	}
 
