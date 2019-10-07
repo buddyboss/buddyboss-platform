@@ -5,6 +5,18 @@
 	</aside>
 </div>
 
+<?php if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) { ?>
+<div class="ld-report-user-stats">
+	<div class="user-info">
+		<div class="user-avatar">
+			<img src="<?php echo esc_url( buddypress()->plugin_url . 'bp-core/images/mystery-group.png' ); ?>" class="avatar avatar-300 photo" width="300" height="300" alt="">
+		</div>
+		<div class="user-name">
+			<h5 class="list-title member-name"><?php echo __( 'All Students', 'buddyboss' ); ?></h5>
+		</div>
+	</div>
+</div>
+<?php } ?>
 
 <div class="bp_ld_report_table_wrapper">
 	<?php
