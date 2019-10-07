@@ -28,7 +28,7 @@ if ( $courseId ) : ?>
 	</div>
 
 	<?php
-	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) ) {
+	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) && (int) $total > 0 && (int) $complete > 0 ) {
 		?>
 		<div class="user-info">
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
@@ -46,7 +46,7 @@ if ( $courseId ) : ?>
 				</p>
 		</div>
 		<?php
-	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-courses' === $_GET['step'] ) {
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-courses' === $_GET['step'] && (int) $total > 0 && (int) $complete > 0 ) {
 		?>
 		<div class="user-info">
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
@@ -64,7 +64,7 @@ if ( $courseId ) : ?>
 				</p>
 		</div>
 		<?php
-	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-lessons' === $_GET['step'] ) {
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-lessons' === $_GET['step'] && (int) $total > 0 && (int) $complete > 0 ) {
 		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
@@ -83,7 +83,7 @@ if ( $courseId ) : ?>
 				</p>
 		</div>
 		<?php
-	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-topic' === $_GET['step'] ) {
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-topic' === $_GET['step'] && (int) $total > 0 && (int) $complete > 0 ) {
 		$data = bp_get_user_course_lesson_data( $_GET['course'], $user->ID );
 		?>
 		<div class="user-info">
@@ -102,7 +102,7 @@ if ( $courseId ) : ?>
 				</p>
 		</div>
 		<?php
-	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-quiz' === $_GET['step'] ) {
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-quiz' === $_GET['step'] && (int) $total > 0 && (int) $complete > 0 ) {
 		?>
 		<div class="user-info">
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
@@ -120,7 +120,7 @@ if ( $courseId ) : ?>
 				</p>
 		</div>
 		<?php
-	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-assignment' === $_GET['step'] ) {
+	} elseif ( isset( $_GET ) && isset( $_GET['step'] ) && 'sfwd-assignment' === $_GET['step'] && (int) $total > 0 && (int) $complete > 0 ) {
 		?>
 		<div class="user-steps">
 			<p>

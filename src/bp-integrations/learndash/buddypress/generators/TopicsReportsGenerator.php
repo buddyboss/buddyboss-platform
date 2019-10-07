@@ -38,25 +38,47 @@ class TopicsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function columns() {
-		return [
-			'user_id'         => $this->column( 'user_id' ),
-			'user'            => $this->column( 'user' ),
-			'course_id'       => $this->column( 'course_id' ),
-			'course'          => $this->column( 'course' ),
-			'topic'           => [
-				'label'     => __( 'Topic', 'buddyboss' ),
-				'sortable'  => true,
-				'order_key' => 'post_title',
-			],
-			'topic_points'    => [
-				'label'     => __( 'Points Earned', 'buddyboss' ),
-				'sortable'  => false,
-				'order_key' => 'activity_points',
-			],
-			'start_date'      => $this->column( 'start_date' ),
-			'completion_date' => $this->column( 'completion_date' ),
-			'time_spent'      => $this->column( 'time_spent' ),
-		];
+		if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return [
+				'user_id'         => $this->column( 'user_id' ),
+				'user'            => $this->column( 'user' ),
+				'course_id'       => $this->column( 'course_id' ),
+				'course'          => $this->column( 'course' ),
+				'topic'           => [
+					'label'     => __( 'Topic', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'post_title',
+				],
+				'topic_points'    => [
+					'label'     => __( 'Points Earned', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => 'activity_points',
+				],
+				'start_date'      => $this->column( 'start_date' ),
+				'completion_date' => $this->column( 'completion_date' ),
+				'time_spent'      => $this->column( 'time_spent' ),
+			];
+		}  else {
+			return [
+				'user_id'         => $this->column( 'user_id' ),
+				//'user'            => $this->column( 'user' ),
+				'course_id'       => $this->column( 'course_id' ),
+				'course'          => $this->column( 'course' ),
+				'topic'           => [
+					'label'     => __( 'Topic', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'post_title',
+				],
+				'topic_points'    => [
+					'label'     => __( 'Points Earned', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => 'activity_points',
+				],
+				'start_date'      => $this->column( 'start_date' ),
+				'completion_date' => $this->column( 'completion_date' ),
+				'time_spent'      => $this->column( 'time_spent' ),
+			];
+		}
 	}
 
 	/**
@@ -65,16 +87,32 @@ class TopicsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatData( $activity ) {
-		return array(
-			'user_id'         => $activity->user_id,
-			'user'            => bp_core_get_user_displayname( $activity->user_id ),
-			'course_id'       => $activity->activity_course_id,
-			'course'          => $activity->activity_course_title,
-			'topic'           => $activity->post_title,
-			'topic_points'    => ReportsGenerator::coursePointsEarned( $activity ),
-			'start_date'      => date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_started_formatted ) ),
-			'completion_date' => $this->completionDate( $activity ),
-			'time_spent'      => $this->timeSpent( $activity ),
-		);
+		if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return array(
+				'user_id'         => $activity->user_id,
+				'user'            => bp_core_get_user_displayname( $activity->user_id ),
+				'course_id'       => $activity->activity_course_id,
+				'course'          => $activity->activity_course_title,
+				'topic'           => $activity->post_title,
+				'topic_points'    => ReportsGenerator::coursePointsEarned( $activity ),
+				'start_date'      => date_i18n( bp_get_option( 'date_format' ),
+					strtotime( $activity->activity_started_formatted ) ),
+				'completion_date' => $this->completionDate( $activity ),
+				'time_spent'      => $this->timeSpent( $activity ),
+			);
+		} else {
+			return array(
+				'user_id'         => $activity->user_id,
+				//'user'            => bp_core_get_user_displayname( $activity->user_id ),
+				'course_id'       => $activity->activity_course_id,
+				'course'          => $activity->activity_course_title,
+				'topic'           => $activity->post_title,
+				'topic_points'    => ReportsGenerator::coursePointsEarned( $activity ),
+				'start_date'      => date_i18n( bp_get_option( 'date_format' ),
+					strtotime( $activity->activity_started_formatted ) ),
+				'completion_date' => $this->completionDate( $activity ),
+				'time_spent'      => $this->timeSpent( $activity ),
+			);
+		}
 	}
 }

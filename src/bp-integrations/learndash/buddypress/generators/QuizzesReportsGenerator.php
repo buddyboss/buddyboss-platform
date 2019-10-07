@@ -41,35 +41,67 @@ class QuizzesReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function columns() {
-		return array(
-			'user_id'         => $this->column( 'user_id' ),
-			'user'            => $this->column( 'user' ),
-			'course_id'       => $this->column( 'course_id' ),
-			'course'          => $this->column( 'course' ),
-			'quiz'            => array(
-				'label'     => __( 'Quiz', 'buddyboss' ),
-				'sortable'  => true,
-				'order_key' => 'post_title',
-			),
-			'completion_date' => $this->column( 'completion_date' ),
-			'updated_date'    => $this->column( 'updated_date' ),
-			'score'           => array(
-				'label'     => __( 'Score', 'buddyboss' ),
-				'sortable'  => true,
-				'order_key' => 'activity_score',
-			),
-			'time_spent'      => $this->column( 'time_spent' ),
-			'quiz_points'     => array(
-				'label'     => __( 'Points Earned', 'buddyboss' ),
-				'sortable'  => false,
-				'order_key' => 'activity_points',
-			),
-			'attempts'        => array(
-				'label'     => __( 'Attempts', 'buddyboss' ),
-				'sortable'  => false,
-				'order_key' => 'post_title',
-			),
-		);
+		if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return array(
+				'user_id'         => $this->column( 'user_id' ),
+				'user'            => $this->column( 'user' ),
+				'course_id'       => $this->column( 'course_id' ),
+				'course'          => $this->column( 'course' ),
+				'quiz'            => array(
+					'label'     => __( 'Quiz', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'post_title',
+				),
+				'completion_date' => $this->column( 'completion_date' ),
+				'updated_date'    => $this->column( 'updated_date' ),
+				'score'           => array(
+					'label'     => __( 'Score', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'activity_score',
+				),
+				'time_spent'      => $this->column( 'time_spent' ),
+				'quiz_points'     => array(
+					'label'     => __( 'Points Earned', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => 'activity_points',
+				),
+				'attempts'        => array(
+					'label'     => __( 'Attempts', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => 'post_title',
+				),
+			);
+		} else {
+			return array(
+				'user_id'         => $this->column( 'user_id' ),
+				//'user'            => $this->column( 'user' ),
+				'course_id'       => $this->column( 'course_id' ),
+				'course'          => $this->column( 'course' ),
+				'quiz'            => array(
+					'label'     => __( 'Quiz', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'post_title',
+				),
+				'completion_date' => $this->column( 'completion_date' ),
+				'updated_date'    => $this->column( 'updated_date' ),
+				'score'           => array(
+					'label'     => __( 'Score', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'activity_score',
+				),
+				'time_spent'      => $this->column( 'time_spent' ),
+				'quiz_points'     => array(
+					'label'     => __( 'Points Earned', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => 'activity_points',
+				),
+				'attempts'        => array(
+					'label'     => __( 'Attempts', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => 'post_title',
+				),
+			);
+		}
 	}
 
 	/**
@@ -78,19 +110,35 @@ class QuizzesReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatData( $activity ) {
-		return array(
-			'user_id'         => $activity->user_id,
-			'user'            => bp_core_get_user_displayname( $activity->user_id ),
-			'course_id'       => $activity->activity_course_id,
-			'course'          => $activity->activity_course_title,
-			'quiz'            => $activity->post_title,
-			'completion_date' => $this->completionDate( $activity ),
-			'updated_date'    => $this->updatedDate( $activity ),
-			'score'           => $activity->activity_score,
-			'time_spent'      => $this->timeSpent( $activity ),
-			'quiz_points'     => ReportsGenerator::coursePointsEarned( $activity ),
-			'attempts'        => $activity->activity_attemps,
-		);
+		if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return array(
+				'user_id'         => $activity->user_id,
+				'user'            => bp_core_get_user_displayname( $activity->user_id ),
+				'course_id'       => $activity->activity_course_id,
+				'course'          => $activity->activity_course_title,
+				'quiz'            => $activity->post_title,
+				'completion_date' => $this->completionDate( $activity ),
+				'updated_date'    => $this->updatedDate( $activity ),
+				'score'           => $activity->activity_score,
+				'time_spent'      => $this->timeSpent( $activity ),
+				'quiz_points'     => ReportsGenerator::coursePointsEarned( $activity ),
+				'attempts'        => $activity->activity_attemps,
+			);
+		} else {
+			return array(
+				'user_id'         => $activity->user_id,
+				//'user'            => bp_core_get_user_displayname( $activity->user_id ),
+				'course_id'       => $activity->activity_course_id,
+				'course'          => $activity->activity_course_title,
+				'quiz'            => $activity->post_title,
+				'completion_date' => $this->completionDate( $activity ),
+				'updated_date'    => $this->updatedDate( $activity ),
+				'score'           => $activity->activity_score,
+				'time_spent'      => $this->timeSpent( $activity ),
+				'quiz_points'     => ReportsGenerator::coursePointsEarned( $activity ),
+				'attempts'        => $activity->activity_attemps,
+			);
+		}
 	}
 
 	/**

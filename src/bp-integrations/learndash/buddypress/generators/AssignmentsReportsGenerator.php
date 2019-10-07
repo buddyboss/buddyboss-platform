@@ -55,32 +55,61 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function columns() {
-		return array(
-			'user_id'         => $this->column( 'user_id' ),
-			'user'            => $this->column( 'user' ),
-			'course_id'       => $this->column( 'course_id' ),
-			'course'          => $this->column( 'course' ),
-			'assignment'      => array(
-				'label'     => __( 'Assignment', 'buddyboss' ),
-				'sortable'  => false,
-				'order_key' => '',
-			),
-			'completion_date' => array(
-				'label'     => __( 'Graded Date', 'buddyboss' ),
-				'sortable'  => true,
-				'order_key' => 'assignment_modify_date',
-			),
-			'updated_date'    => array(
-				'label'     => __( 'Uploaded Date', 'buddyboss' ),
-				'sortable'  => true,
-				'order_key' => 'assignment_post_date',
-			),
-			'score'           => array(
-				'label'     => __( 'Score', 'buddyboss' ),
-				'sortable'  => false,
-				'order_key' => '',
-			),
-		);
+		if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return array(
+				'user_id'         => $this->column( 'user_id' ),
+				'user'            => $this->column( 'user' ),
+				'course_id'       => $this->column( 'course_id' ),
+				'course'          => $this->column( 'course' ),
+				'assignment'      => array(
+					'label'     => __( 'Assignment', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => '',
+				),
+				'completion_date' => array(
+					'label'     => __( 'Graded Date', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'assignment_modify_date',
+				),
+				'updated_date'    => array(
+					'label'     => __( 'Uploaded Date', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'assignment_post_date',
+				),
+				'score'           => array(
+					'label'     => __( 'Score', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => '',
+				),
+			);
+		} else {
+			return array(
+				'user_id'         => $this->column( 'user_id' ),
+				//'user'            => $this->column( 'user' ),
+				'course_id'       => $this->column( 'course_id' ),
+				'course'          => $this->column( 'course' ),
+				'assignment'      => array(
+					'label'     => __( 'Assignment', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => '',
+				),
+				'completion_date' => array(
+					'label'     => __( 'Graded Date', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'assignment_modify_date',
+				),
+				'updated_date'    => array(
+					'label'     => __( 'Uploaded Date', 'buddyboss' ),
+					'sortable'  => true,
+					'order_key' => 'assignment_post_date',
+				),
+				'score'           => array(
+					'label'     => __( 'Score', 'buddyboss' ),
+					'sortable'  => false,
+					'order_key' => '',
+				),
+			);
+		}
 	}
 
 	/**
@@ -89,16 +118,29 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatData( $activity ) {
-		return [
-			'user_id'         => $activity->user_id,
-			'user'            => bp_core_get_user_displayname( $activity->user_id ),
-			'course_id'       => $activity->activity_course_id,
-			'course'          => $activity->activity_course_title,
-			'assignment'      => $activity->assignment_title,
-			'completion_date' => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
-			'updated_date'    => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
-			'score'           => $this->getAssignmentScore( $activity ),
-		];
+		if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+			return [
+				'user_id'         => $activity->user_id,
+				'user'            => bp_core_get_user_displayname( $activity->user_id ),
+				'course_id'       => $activity->activity_course_id,
+				'course'          => $activity->activity_course_title,
+				'assignment'      => $activity->assignment_title,
+				'completion_date' => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
+				'updated_date'    => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
+				'score'           => $this->getAssignmentScore( $activity ),
+			];
+		}  else {
+			return [
+				'user_id'         => $activity->user_id,
+				//'user'            => bp_core_get_user_displayname( $activity->user_id ),
+				'course_id'       => $activity->activity_course_id,
+				'course'          => $activity->activity_course_title,
+				'assignment'      => $activity->assignment_title,
+				'completion_date' => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
+				'updated_date'    => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
+				'score'           => $this->getAssignmentScore( $activity ),
+			];
+		}
 	}
 
 	/**
@@ -142,6 +184,8 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 
 		if ( $this->hasArg( 'user' ) && $this->args['user'] ) {
 			$args['author'] = $this->args['user'];
+		} elseif ( ! groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || ! groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) ) {
+			$args['author'] = bp_loggedin_user_id();
 		}
 
 		$this->registerQueryHooks();
@@ -160,6 +204,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 		add_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
 		add_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
 		add_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
+		add_filter( 'posts_clauses', array( $this, 'addAdditionalClauses' ) );
 	}
 
 	/**
@@ -168,9 +213,10 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function unregisterQueryHooks() {
-		 remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
+		remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
 		remove_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
 		remove_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
+		remove_filter( 'posts_clauses', array( $this, 'addAdditionalClauses' ) );
 	}
 
 	/**
@@ -194,7 +240,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 				SELECT meta_value
 				FROM {$wpdb->postmeta} as course_meta
 				WHERE course_meta.post_id = {$wpdb->posts}.ID
-				AND course_meta.meta_key = 'course_id'
+				AND course_meta.meta_key = course_id
 			) as activity_course_id,
 			(
 				SELECT post_title
@@ -206,6 +252,12 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 		return $fields;
 	}
 
+	public function addAdditionalClauses( $pieces ) {
+
+
+		return $pieces;
+	}
+
 	/**
 	 * Add additional joins sql statement
 	 *
@@ -214,9 +266,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	public function addAdditionalJoins( $strJoins ) {
 		global $wpdb;
 
-		$strJoins .= "
-			INNER JOIN {$wpdb->users} as users ON users.ID = {$wpdb->posts}.post_author
-		";
+		$strJoins .= "INNER JOIN {$wpdb->users} as users ON users.ID = {$wpdb->posts}.post_author";
 
 		return $strJoins;
 	}
@@ -227,7 +277,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function addAdditionalOrderBy( $strOrder ) {
-		$strOrder = 'GREATEST(assignment_modify_date, assignment_post_date) DESC';
+		$strOrder = "GREATEST(assignment_modify_date, assignment_post_date) DESC";
 
 		if ( $this->hasArg( 'order' ) ) {
 			$columns     = $this->columns();

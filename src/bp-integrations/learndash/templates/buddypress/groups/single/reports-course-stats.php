@@ -6,6 +6,7 @@
 </h3>
 
 <div class="ld-report-course-stats">
+	<?php if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) { ?>
 	<div class="course-completed">
 		<p>
 		<?php
@@ -18,6 +19,7 @@
 		?>
 		</p>
 	</div>
+	<?php } ?>
 
 	<?php if ( $courseHasPoints ) : ?>
 		<div class="course-average-points">

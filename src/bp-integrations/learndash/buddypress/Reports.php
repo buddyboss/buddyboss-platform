@@ -273,7 +273,7 @@ class Reports {
 		$count       = 0;
 		$unmarked    = 0;
 
-		if ( isset( $_GET ) && '' !== $_GET['user'] && 'sfwd-assignment' === $_GET['step'] ) {
+		if ( isset( $_GET ) && isset( $_GET['user'] ) && isset( $_GET['step'] ) && '' !== $_GET['user'] && 'sfwd-assignment' === $_GET['step'] ) {
 
 			if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
 				$courseIds = learndash_group_enrolled_courses(
@@ -348,7 +348,7 @@ class Reports {
 
 			$param['course_ids'] = $_GET['course'] ?: learndash_group_enrolled_courses( $ldGroupId );
 
-			if ( $_GET['step'] ) {
+			if ( isset( $_GET['step'] ) && $_GET['step'] ) {
 				global $learndash_post_types;
 				$param['post_types'] = $_GET['step'] == 'all' ? array_diff(
 					$learndash_post_types,
@@ -512,15 +512,21 @@ class Reports {
 		$generator               = $this->getCurrentGenerator();
 		$completed_table_title   = $generator->completed_table_title ?: __( 'Completed', 'buddyboss' );
 		$incompleted_table_title = $generator->incompleted_table_title ?: __( 'Incomplete', 'buddyboss' );
-		if ( empty( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
-			//require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
-		} elseif ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
-			//require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
+		if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) {
+
+			if ( empty( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
+				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
+			} elseif ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
+				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
+				//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+			} else {
+				require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+			}
 			//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 		} else {
-			//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+			require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 		}
-		require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+
 	}
 
 	/**

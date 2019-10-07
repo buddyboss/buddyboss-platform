@@ -259,6 +259,7 @@ function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
 	$course_id              = $couser_id;
 	$data                   = [];
 	$topics                 = [];
+	$lesson_topics          = [];
 	foreach ( $lessons_list as $lesson ) {
 		$lessons[ $lesson_order ] = [
 			'name'   => $lesson['post']->post_title,
@@ -267,7 +268,7 @@ function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
 		];
 
 		$course_quiz_list[] = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
-		$lesson_topics      = learndash_get_topic_list( $lesson['post']->ID, $course_id );
+		$lesson_topics      = learndash_get_topic_list( $lesson['post']->ID, $course_id )?:[];
 
 		foreach ( $lesson_topics as $topic ) {
 
@@ -398,4 +399,83 @@ function bp_get_user_course_quiz_data( $course_id, $user_id ) {
 	$data['percentage']  = $percentage;
 
 	return $data;
+}
+
+function bp_ld_time_spent( $seconds = 0 ) {
+
+	if ( $seconds < 60 ) {
+		if ( 0 === $seconds ){
+			return '-';
+		}
+
+		return sprintf( '%d %s', $seconds, _n( 'second', 'seconds', $seconds, 'buddyboss' ) );
+	}
+
+	$minutes = floor( $seconds / 60 );
+	$seconds = $seconds % 60;
+
+	if ( $minutes < 60 ) {
+		if ( $seconds > 0 ) {
+			return sprintf( '%d %s %d %s', $minutes, _n( 'minute', 'minutes', $minutes, 'buddyboss' ) , $seconds, _n( 'second', 'seconds', $seconds, 'buddyboss' ) );
+		} else  {
+			return sprintf( '%d min', $minutes );
+		}
+
+	}
+
+	$hours = floor( $minutes / 60 * 10 ) / 10;
+
+	if ( $hours < 24 ) {
+		return sprintf(
+			'%d %s %d %s',
+			$hours,
+			_n( 'hr', 'hrs', $hours, 'buddyboss' ),
+			$minutes,
+			_n( 'minute', 'minutes', $minutes, 'buddyboss' )
+		);
+	}
+
+	return '-';
+}
+
+function bp_ld_course_points_earned( $activity ) {
+
+	$assignments = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
+	if ( ! empty( $assignments ) ) {
+		foreach ( $assignments as $assignment ) {
+			$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
+			if ( $assignment_points || learndash_is_assignment_approved_by_meta( $assignment->ID ) ) {
+				if ( $assignment_points ) {
+					return (int) $assignment_points['current'];
+				}
+			}
+		}
+	}
+
+	$post_settings = learndash_get_setting( $activity->post_id );
+
+	if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type ) ) {
+
+		if ( 0 === $activity->activity_status ) {
+			return 0;
+		}
+
+		if ( isset( $post_settings['lesson_assignment_points_enabled'] ) && 'on' === $post_settings['lesson_assignment_points_enabled'] && isset( $post_settings['lesson_assignment_points_amount'] ) && $post_settings['lesson_assignment_points_amount'] > 0 ) {
+			return (int) $post_settings['lesson_assignment_points_amount'];
+		} else {
+			return 0;
+		}
+	} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
+
+		if ( 0 === $activity->activity_status ) {
+			return 0;
+		}
+
+		if ( isset( $post_settings['course_points_enabled'] ) && 'on' === $post_settings['course_points_enabled'] && isset( $post_settings['course_points'] ) && $post_settings['course_points'] > 0 ) {
+			return (int) $post_settings['course_points'];
+		} else {
+			return 0;
+		}
+	}
+	return 0;
 }
