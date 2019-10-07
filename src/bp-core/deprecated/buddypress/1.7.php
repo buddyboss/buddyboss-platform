@@ -25,9 +25,9 @@ function bp_maintenance_mode() {
 	 * @deprecated BuddyPress 1.7.0
 	 * @return string The BuddyPress maintenance mode
 	 */
-	function bp_get_maintenance_mode() {
-		return buddypress()->maintenance_mode;
-	}
+function bp_get_maintenance_mode() {
+	return buddypress()->maintenance_mode;
+}
 
 /**
  * xprofile_get_profile()
@@ -58,8 +58,9 @@ function bp_get_profile_header() {
  */
 function bp_exists( $component_name ) {
 	_deprecated_function( __FUNCTION__, '1.7' );
-	if ( function_exists( $component_name . '_install' ) )
+	if ( function_exists( $component_name . '_install' ) ) {
 		return true;
+	}
 
 	return false;
 }
@@ -86,14 +87,17 @@ function bp_get_plugin_sidebar() {
 function bp_core_allow_default_theme( $themes ) {
 	_deprecated_function( __FUNCTION__, '1.7' );
 
-	if ( !bp_current_user_can( 'bp_moderate' ) )
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		return $themes;
+	}
 
-	if ( bp_get_root_blog_id() != get_current_blog_id() )
+	if ( bp_get_root_blog_id() != get_current_blog_id() ) {
 		return $themes;
+	}
 
-	if ( isset( $themes['bp-default'] ) )
+	if ( isset( $themes['bp-default'] ) ) {
 		return $themes;
+	}
 
 	$themes['bp-default'] = true;
 
@@ -110,11 +114,13 @@ function bp_core_allow_default_theme( $themes ) {
 function bp_is_page( $page = '' ) {
 	_deprecated_function( __FUNCTION__, '1.7' );
 
-	if ( !bp_is_user() && bp_is_current_component( $page )  )
+	if ( ! bp_is_user() && bp_is_current_component( $page ) ) {
 		return true;
+	}
 
-	if ( 'home' == $page )
+	if ( 'home' == $page ) {
 		return is_front_page();
+	}
 
 	return false;
 }
@@ -151,7 +157,7 @@ function bp_update_db_stuff() {
 	}
 
 	// On first installation - record all existing blogs in the system.
-	if ( !(int) $bp->site_options['bp-blogs-first-install'] ) {
+	if ( ! (int) $bp->site_options['bp-blogs-first-install'] ) {
 		bp_blogs_record_existing_blogs();
 		bp_update_option( 'bp-blogs-first-install', 1 );
 	}

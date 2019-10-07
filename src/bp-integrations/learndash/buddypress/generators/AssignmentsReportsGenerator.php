@@ -19,17 +19,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class AssignmentsReportsGenerator extends ReportsGenerator
-{
+class AssignmentsReportsGenerator extends ReportsGenerator {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->completed_table_title = __('Marked Assignments', 'buddyboss');
-		$this->incompleted_table_title = __('Unmarked Assignments', 'buddyboss');
+	public function __construct() {
+		 $this->completed_table_title  = __( 'Marked Assignments', 'buddyboss' );
+		$this->incompleted_table_title = __( 'Unmarked Assignments', 'buddyboss' );
 
 		parent::__construct();
 	}
@@ -39,16 +38,15 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function fetch()
-	{
-		$assignmentQuery = $this->getGroupAssignments($this->args);
-// print_r($assignmentQuery->request);die();
+	public function fetch() {
+		$assignmentQuery = $this->getGroupAssignments( $this->args );
+		// print_r($assignmentQuery->request);die();
 		$this->results = $assignmentQuery->posts;
-		$this->pager = [
+		$this->pager   = array(
 			'total_items' => $assignmentQuery->found_posts,
 			'per_page'    => $assignmentQuery->query_vars['posts_per_page'],
-			'total_pages' => $assignmentQuery->max_num_pages
-		];
+			'total_pages' => $assignmentQuery->max_num_pages,
+		);
 	}
 
 	/**
@@ -56,34 +54,33 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function columns()
-	{
-		return [
-			'user_id'         => $this->column('user_id'),
-			'user'            => $this->column('user'),
-			'course_id'       => $this->column('course_id'),
-			'course'          => $this->column('course'),
-			'assignment'            => [
+	protected function columns() {
+		return array(
+			'user_id'         => $this->column( 'user_id' ),
+			'user'            => $this->column( 'user' ),
+			'course_id'       => $this->column( 'course_id' ),
+			'course'          => $this->column( 'course' ),
+			'assignment'      => array(
 				'label'     => __( 'Assignment', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
-			],
-			'completion_date' => [
+			),
+			'completion_date' => array(
 				'label'     => __( 'Graded Date', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'assignment_modify_date',
-			],
-			'updated_date' => [
+			),
+			'updated_date'    => array(
 				'label'     => __( 'Uploaded Date', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'assignment_post_date',
-			],
-			'score'           => [
+			),
+			'score'           => array(
 				'label'     => __( 'Score', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
-			],
-		];
+			),
+		);
 	}
 
 	/**
@@ -91,18 +88,17 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatData($activity)
-	{
-		return [
+	protected function formatData( $activity ) {
+		return array(
 			'user_id'         => $activity->user_id,
 			'user'            => $activity->user_display_name,
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'assignment'      => $activity->assignment_title,
-			'completion_date' => get_date_from_gmt($activity->assignment_modify_date, $this->args['date_format']),
-			'updated_date'    => get_date_from_gmt($activity->assignment_post_date, $this->args['date_format']),
-			'score'           => $this->getAssignmentScore($activity)
-		];
+			'completion_date' => get_date_from_gmt( $activity->assignment_modify_date, $this->args['date_format'] ),
+			'updated_date'    => get_date_from_gmt( $activity->assignment_post_date, $this->args['date_format'] ),
+			'score'           => $this->getAssignmentScore( $activity ),
+		);
 	}
 
 	/**
@@ -110,47 +106,46 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getGroupAssignments()
-	{
-		if ($this->hasArg('course') && ! $this->args['course']) {
+	protected function getGroupAssignments() {
+		if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
 			$courseIds = learndash_group_enrolled_courses(
-				bp_ld_sync('buddypress')->helpers->getLearndashGroupId($this->args['group'])
+				bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $this->args['group'] )
 			);
 		} else {
-			$courseIds = [$this->args['course']];
+			$courseIds = array( $this->args['course'] );
 		}
 
-		$args = [
+		$args = array(
 			'posts_per_page' => $this->args['length'],
 			'page'           => $this->args['start'] / $this->args['length'] + 1,
-			'post_type'      => learndash_get_post_type_slug('assignment'),
-			'post_status' => 'publish',
-			'meta_query' => [
-				[
-					'key' => 'course_id',
-					'value' => $courseIds
-				]
-			]
-		];
+			'post_type'      => learndash_get_post_type_slug( 'assignment' ),
+			'post_status'    => 'publish',
+			'meta_query'     => array(
+				array(
+					'key'   => 'course_id',
+					'value' => $courseIds,
+				),
+			),
+		);
 
-		if ($this->args['completed']) {
-			$args['meta_query'][] = [
-				'key' => 'approval_status',
-				'value' => 1
-			];
+		if ( $this->args['completed'] ) {
+			$args['meta_query'][] = array(
+				'key'   => 'approval_status',
+				'value' => 1,
+			);
 		} else {
-			$args['meta_query'][] = [
-				'key' => 'approval_status',
-				'compare' => 'NOT EXISTS'
-			];
+			$args['meta_query'][] = array(
+				'key'     => 'approval_status',
+				'compare' => 'NOT EXISTS',
+			);
 		}
 
-		if ($this->hasArg('user') && $this->args['user']) {
+		if ( $this->hasArg( 'user' ) && $this->args['user'] ) {
 			$args['author'] = $this->args['user'];
 		}
 
 		$this->registerQueryHooks();
-		$query = new WP_Query($args);
+		$query = new WP_Query( $args );
 		$this->unregisterQueryHooks();
 
 		return $query;
@@ -161,11 +156,10 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function registerQueryHooks()
-	{
-		add_filter('posts_fields', [$this, 'addAdditionalFields']);
-		add_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-		add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+	protected function registerQueryHooks() {
+		add_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
+		add_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
+		add_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 	}
 
 	/**
@@ -173,11 +167,10 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function unregisterQueryHooks()
-	{
-		remove_filter('posts_fields', [$this, 'addAdditionalFields']);
-		remove_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-		remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+	protected function unregisterQueryHooks() {
+		 remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
+		remove_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
+		remove_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 	}
 
 	/**
@@ -185,10 +178,9 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalFields($strFields)
-	{
+	public function addAdditionalFields( $strFields ) {
 		global $wpdb;
-		$quizPostType = learndash_get_post_type_slug('quiz');
+		$quizPostType = learndash_get_post_type_slug( 'quiz' );
 
 		$fields = "
 			users.ID as user_id,
@@ -219,8 +211,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalJoins($strJoins)
-	{
+	public function addAdditionalJoins( $strJoins ) {
 		global $wpdb;
 
 		$strJoins .= "
@@ -235,14 +226,13 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalOrderBy($strOrder)
-	{
+	public function addAdditionalOrderBy( $strOrder ) {
 		$strOrder = 'GREATEST(assignment_modify_date, assignment_post_date) DESC';
 
-		if ($this->hasArg('order')) {
-			$columns = $this->columns();
+		if ( $this->hasArg( 'order' ) ) {
+			$columns     = $this->columns();
 			$columnIndex = $this->args['order'][0]['column'];
-			$column = $columns[$this->args['columns'][$columnIndex]['name']];
+			$column      = $columns[ $this->args['columns'][ $columnIndex ]['name'] ];
 
 			$strOrder = "{$column['order_key']} {$this->args['order'][0]['dir']}, {$strOrder}";
 		}
@@ -255,21 +245,20 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getAssignmentScore($activity)
-	{
+	protected function getAssignmentScore( $activity ) {
 		$postId = $activity->assignment_id;
 
-		if (! get_post_meta($postId, 'approval_status', true)) {
+		if ( ! get_post_meta( $postId, 'approval_status', true ) ) {
 			return '-';
 		}
 
 		$assignmentSettingId = intval( get_post_meta( $postId, 'lesson_id', true ) );
 
-		if (empty($assignmentSettingId)) {
+		if ( empty( $assignmentSettingId ) ) {
 			return '-';
 		}
 
-		$maxPoints = learndash_get_setting($assignmentSettingId, 'lesson_assignment_points_amount');
+		$maxPoints = learndash_get_setting( $assignmentSettingId, 'lesson_assignment_points_amount' );
 
 		return sprintf(
 			_x(
@@ -277,7 +266,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator
 				'placeholders: current points / maximum point',
 				'buddyboss'
 			),
-			get_post_meta($postId, 'points', true),
+			get_post_meta( $postId, 'points', true ),
 			$maxPoints
 		);
 	}

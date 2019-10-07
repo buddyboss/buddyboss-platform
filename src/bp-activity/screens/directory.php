@@ -10,7 +10,6 @@
  * Load the Activity directory.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_activity_screen_index() {
 	if ( bp_is_activity_directory() ) {

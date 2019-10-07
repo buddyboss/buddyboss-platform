@@ -13,7 +13,6 @@
  * example.com/members/andy/profile/change-avatar/ [delete-avatar]
  *
  * @since BuddyPress 1.0.0
- *
  */
 function xprofile_action_delete_avatar() {
 

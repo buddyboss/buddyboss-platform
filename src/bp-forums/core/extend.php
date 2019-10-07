@@ -22,13 +22,17 @@ defined( 'ABSPATH' ) || exit;
 function bbp_setup_akismet() {
 
 	// Bail if no akismet
-	if ( !defined( 'AKISMET_VERSION' ) ) return;
+	if ( ! defined( 'AKISMET_VERSION' ) ) {
+		return;
+	}
 
 	// Bail if Akismet is turned off
-	if ( !bbp_is_akismet_active() ) return;
+	if ( ! bbp_is_akismet_active() ) {
+		return;
+	}
 
 	// Include the Akismet Component
-	require( bbpress()->includes_dir . 'extend/akismet.php' );
+	require bbpress()->includes_dir . 'extend/akismet.php';
 
 	// Instantiate Akismet for Forums
 	bbpress()->extend->akismet = new BBP_Akismet();

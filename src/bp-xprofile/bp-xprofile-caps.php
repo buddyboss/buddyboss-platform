@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 	switch ( $cap ) {
-		case 'bp_xprofile_change_field_visibility' :
+		case 'bp_xprofile_change_field_visibility':
 			$caps = array( 'exist' );
 
 			// You may pass args manually: $field_id, $profile_user_id.
@@ -49,7 +49,7 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 			}
 
 			// Connections don't edit each other's visibility.
-			if ( $profile_user_id != bp_displayed_user_id() && !bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $profile_user_id != bp_displayed_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}

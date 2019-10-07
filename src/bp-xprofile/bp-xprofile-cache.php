@@ -67,7 +67,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 	$uncached_object_ids = array(
 		'group',
 		'field',
-		'data'
+		'data',
 	);
 
 	// Define the cache groups for the 3 types of XProfile metadata.
@@ -128,7 +128,7 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
 	}
 
 	// Setup the WHERE query part.
-	$where_sql = implode( " OR ", $where_conditions );
+	$where_sql = implode( ' OR ', $where_conditions );
 
 	// Attempt to query meta values.
 	$meta_list = $wpdb->get_results( "SELECT object_id, object_type, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE {$where_sql}" );
@@ -182,11 +182,11 @@ function bp_xprofile_update_meta_cache( $object_ids = array() ) {
  * @param object $group_obj Groub object to clear.
  */
 function xprofile_clear_profile_groups_object_cache( $group_obj ) {
-	wp_cache_delete( 'all',          'bp_xprofile_groups' );
+	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $group_obj->id, 'bp_xprofile_groups' );
 }
 add_action( 'xprofile_group_after_delete', 'xprofile_clear_profile_groups_object_cache' );
-add_action( 'xprofile_group_after_save',   'xprofile_clear_profile_groups_object_cache' );
+add_action( 'xprofile_group_after_save', 'xprofile_clear_profile_groups_object_cache' );
 
 /**
  * Clear caches when a field object is modified.
@@ -203,10 +203,10 @@ function xprofile_clear_profile_field_object_cache( $field_obj ) {
 	// Modified fields can alter parent group status, in particular when
 	// the group goes from empty to non-empty. Bust its cache, as well as
 	// the global 'all' cache.
-	wp_cache_delete( 'all',                'bp_xprofile_groups' );
+	wp_cache_delete( 'all', 'bp_xprofile_groups' );
 	wp_cache_delete( $field_obj->group_id, 'bp_xprofile_groups' );
 }
-add_action( 'xprofile_fields_saved_field',   'xprofile_clear_profile_field_object_cache' );
+add_action( 'xprofile_fields_saved_field', 'xprofile_clear_profile_field_object_cache' );
 add_action( 'xprofile_fields_deleted_field', 'xprofile_clear_profile_field_object_cache' );
 
 /**
@@ -229,7 +229,7 @@ add_action( 'bp_xprofile_field_set_member_type', 'bp_xprofile_clear_member_type_
 function xprofile_clear_profiledata_object_cache( $data_obj ) {
 	wp_cache_delete( "{$data_obj->user_id}:{$data_obj->field_id}", 'bp_xprofile_data' );
 }
-add_action( 'xprofile_data_after_save',   'xprofile_clear_profiledata_object_cache' );
+add_action( 'xprofile_data_after_save', 'xprofile_clear_profiledata_object_cache' );
 add_action( 'xprofile_data_after_delete', 'xprofile_clear_profiledata_object_cache' );
 
 /**

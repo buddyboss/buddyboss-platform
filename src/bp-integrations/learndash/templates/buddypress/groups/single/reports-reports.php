@@ -1,2 +1,1 @@
-
-<?php do_action('bp_ld_sync/reports'); ?>
+<?php do_action( 'bp_ld_sync/reports' );

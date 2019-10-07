@@ -37,10 +37,10 @@ class BP_Messages_Notices_Admin {
 
 
 	/**
-     * Create a new instance or access the current instance of this class.
-     *
-     * @since BuddyPress 3.0.0
-     */
+	 * Create a new instance or access the current instance of this class.
+	 *
+	 * @since BuddyPress 3.0.0
+	 */
 	public static function register_notices_admin() {
 
 		if ( ! is_admin() || ! bp_is_active( 'messages' ) || ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -50,7 +50,7 @@ class BP_Messages_Notices_Admin {
 		$bp = buddypress();
 
 		if ( empty( $bp->messages->admin ) ) {
-			$bp->messages->admin = new self;
+			$bp->messages->admin = new self();
 		}
 
 		return $bp->messages->admin;
@@ -121,15 +121,18 @@ class BP_Messages_Notices_Admin {
 
 			check_admin_referer( 'new-notice', 'ns-nonce' );
 
-			$notice = wp_parse_args( $_POST['bp_notice'], array(
-				'subject' => '',
-				'content' => ''
-			) );
+			$notice = wp_parse_args(
+				$_POST['bp_notice'],
+				array(
+					'subject' => '',
+					'content' => '',
+				)
+			);
 
 			if ( messages_send_notice( $notice['subject'], $notice['content'] ) ) {
 				$redirect_to = add_query_arg( 'success', 'create', $this->url );
 
-			// Notice could not be sent.
+				// Notice could not be sent.
 			} else {
 				$redirect_to = add_query_arg( 'error', 'create', $this->url );
 			}
@@ -144,26 +147,25 @@ class BP_Messages_Notices_Admin {
 			$success = false;
 			switch ( $_GET['notice_action'] ) {
 				case 'activate':
-					$notice = new BP_Messages_Notice( $notice_id );
+					$notice  = new BP_Messages_Notice( $notice_id );
 					$success = $notice->activate();
 					break;
 				case 'deactivate':
-					$notice = new BP_Messages_Notice( $notice_id );
+					$notice  = new BP_Messages_Notice( $notice_id );
 					$success = $notice->deactivate();
 					break;
 				case 'delete':
-					$notice = new BP_Messages_Notice( $notice_id );
+					$notice  = new BP_Messages_Notice( $notice_id );
 					$success = $notice->delete();
 					break;
 			}
 			if ( $success ) {
 				$redirect_to = add_query_arg( 'success', 'update', $this->url );
 
-			// Notice could not be updated.
+				// Notice could not be updated.
 			} else {
 				$redirect_to = add_query_arg( 'error', 'update', $this->url );
 			}
-
 		}
 
 		if ( $redirect_to ) {
@@ -228,7 +230,7 @@ class BP_Messages_Notices_Admin {
 							} else {
 								esc_html_e( 'Notice was not updated. Please try again.', 'buddyboss' );
 							}
-						 } else {
+						} else {
 							if ( 'create' === $_GET['success'] ) {
 								esc_html_e( 'Notice successfully created.', 'buddyboss' );
 							} else {

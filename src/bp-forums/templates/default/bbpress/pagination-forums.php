@@ -21,7 +21,7 @@
 
 	<div class="bbp-pagination-links">
 
-		<?php bbp_forum_index_pagination_links() ?>
+		<?php bbp_forum_index_pagination_links(); ?>
 
 	</div>
 </div>

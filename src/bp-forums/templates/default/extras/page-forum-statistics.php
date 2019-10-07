@@ -12,7 +12,10 @@ get_header(); ?>
 
 	<?php do_action( 'bbp_template_notices' ); ?>
 
-	<?php while ( have_posts() ) : the_post(); ?>
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
 
 		<div id="bbp-statistics" class="bbp-statistics">
 			<h1 class="entry-title"><?php the_title(); ?></h1>
@@ -34,7 +37,7 @@ get_header(); ?>
 
 						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
-						<?php bbp_get_template_part( 'loop',       'topics' ); ?>
+						<?php bbp_get_template_part( 'loop', 'topics' ); ?>
 
 						<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
@@ -54,4 +57,5 @@ get_header(); ?>
 
 <?php get_sidebar(); ?>
 
-<?php get_footer();
+<?php
+get_footer();

@@ -18,19 +18,19 @@ defined( 'ABSPATH' ) || exit;
 
 class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 
-	//Initialize class
+	// Initialize class
 	public function initialize() {
 		$this->tab_label = __( 'Groups', 'buddyboss' );
 		$this->tab_name  = 'bp-groups';
 		$this->tab_order = 20;
 	}
 
-	//Check if groups are enabled
+	// Check if groups are enabled
 	public function is_active() {
 		return bp_is_active( 'groups' );
 	}
 
-	//Register setting fields
+	// Register setting fields
 	public function register_fields() {
 		$this->add_section( 'bp_groups', __( 'Group Settings', 'buddyboss' ) );
 
@@ -46,7 +46,7 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		}
 
 		// Group Settings Tutorial
-		$this->add_field( 'bp-group-setting-tutorial','', 'bp_group_setting_tutorial' );
+		$this->add_field( 'bp-group-setting-tutorial', '', 'bp_group_setting_tutorial' );
 
 		// Register Group Types sections.
 		$this->add_section( 'bp_groups_types', __( 'Group Types', 'buddyboss' ) );
@@ -58,24 +58,24 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-enable-group-auto-join', __( 'Auto Membership Approval', 'buddyboss' ), 'bp_admin_setting_callback_group_auto_join', 'intval' );
 
 		// Group Types Tutorial
-		$this->add_field( 'bp-group-types-tutorial','', 'bp_group_types_tutorial' );
+		$this->add_field( 'bp-group-types-tutorial', '', 'bp_group_types_tutorial' );
 
 		// Register Group Hierarchies sections.
 		$this->add_section( 'bp_groups_hierarchies', __( 'Group Hierarchies', 'buddyboss' ) );
 
 		// enable or disable group hierarchies.
-		$type = array();
+		$type          = array();
 		$type['class'] = 'bp-enable-group-hierarchies';
 		$this->add_field( 'bp-enable-group-hierarchies', __( 'Hierarchies', 'buddyboss' ), 'bp_admin_setting_callback_group_hierarchies', 'intval', $type );
 
 		// enable or disable restrict invites to members who already in specific parent group.
-		$type = array();
+		$type          = array();
 		$type['class'] = 'bp-enable-group-restrict-invites';
 		$this->add_field( 'bp-enable-group-restrict-invites', __( 'Restrict Invitations', 'buddyboss' ), 'bp_admin_setting_callback_group_restrict_invites', 'intval', $type );
 
 		// Group Hierarchies Tutorial
-		$this->add_field( 'bp-group-hierarchies-tutorial','', 'bp_group_hierarchies_tutorial' );
+		$this->add_field( 'bp-group-hierarchies-tutorial', '', 'bp_group_hierarchies_tutorial' );
 	}
 }
 
-return new BP_Admin_Setting_Groups;
+return new BP_Admin_Setting_Groups();

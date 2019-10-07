@@ -23,17 +23,17 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 			continue;
 		}
 
-		$index_file  = glob( $sub_directories . "/0-*.md" );
-		$directories = array_diff( glob( $sub_directories . "/*" ), $index_file );
+		$index_file  = glob( $sub_directories . '/0-*.md' );
+		$directories = array_diff( glob( $sub_directories . '/*' ), $index_file );
 
 		// converting array into string.
 		$index_file = current( $index_file );
 		?>
-        <div class="bp-help-card bp-help-menu-wrap">
-            <div class="inside">
+		<div class="bp-help-card bp-help-menu-wrap">
+			<div class="inside">
 				<?php
 
-				$url = add_query_arg( 'article', str_replace( $docs_path, "", $index_file ) );
+				$url = add_query_arg( 'article', str_replace( $docs_path, '', $index_file ) );
 
 				// print the title of the section
 				printf( '<h2><a href="%s">%s</a></h2>', $url, bp_core_admin_help_get_file_title( $index_file ) );
@@ -47,11 +47,11 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 					echo $content_array[1];
 				} else {
 					$content = bp_core_stripe_header_tags( $content );
-					echo wp_trim_words( $content, 30, NULL );
-                }
+					echo wp_trim_words( $content, 30, null );
+				}
 				?>
-            </div>
-        </div>
+			</div>
+		</div>
 		<?php
 	}
 }
@@ -70,13 +70,12 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 	$article_path = $docs_path . $article;
 
 	if ( empty( $show_as_heading ) ) {
-		$ul_classed = $times > $level_hide ? 'hidden' : '';
+		$ul_classed  = $times > $level_hide ? 'hidden' : '';
 		$ul_classed .= ' loop-' . $times;
 		?>
-        <ul class="<?php echo $ul_classed; ?> ">
+		<ul class="<?php echo $ul_classed; ?> ">
 		<?php
 	}
-
 
 	do_action( 'bp_core_admin_help_sub_menu_before', $directories, $times, $docs_path, $level_hide, $show_as_heading, $hide_parent );
 
@@ -96,11 +95,11 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 		$is_dir         = is_dir( $directory );
 		if ( $is_dir ) {
 			// the the main file from the directory
-			$dir_index_file = glob( $directory . "/0-*.md" );
+			$dir_index_file = glob( $directory . '/0-*.md' );
 			$loop_dir       = array_diff( glob( $directory . '/*' ), $dir_index_file );
 
 			$dir_index_file = current( $dir_index_file );
-			$url            = add_query_arg( 'article', str_replace( $docs_path, "", $dir_index_file ) );
+			$url            = add_query_arg( 'article', str_replace( $docs_path, '', $dir_index_file ) );
 		}
 
 		// check condition on file deleted
@@ -109,10 +108,10 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 			continue;
 		}
 
-		$selected = $dir_index_file == $article_path ? 'selected main' : 'main';
+		$selected  = $dir_index_file == $article_path ? 'selected main' : 'main';
 		$selected .= ' level-' . $times . ' ' . $slug;
 		?>
-    <li class="<?php echo $selected; ?>">
+	<li class="<?php echo $selected; ?>">
 		<?php
 		// check if it's has directory
 		if ( $is_dir ) {
@@ -135,20 +134,20 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 				}
 				if ( ! empty( $show_as_heading ) ) {
 					?>
-                    </li>
+					</li>
 					<?php
 				}
 				bp_core_admin_help_sub_menu( $loop_dir, $times + 1, $docs_path, $level_hide, $show_as_heading );
-			} else if ( empty( $hide_parent ) ) {
+			} elseif ( empty( $hide_parent ) ) {
 				printf( '<a href="%s" class="dir">%s</a>', $url, bp_core_admin_help_get_file_title( $dir_index_file ) );
 			}
 		} elseif ( empty( $hide_parent ) ) {
-			$url = add_query_arg( 'article', str_replace( $docs_path, "", $directory ) );
+			$url = add_query_arg( 'article', str_replace( $docs_path, '', $directory ) );
 			// print the title if it's a .md file
 			printf( '<a href="%s" class="file">%s</a>', $url, bp_core_admin_help_get_file_title( $directory ) );
 		}
 		?>
-        </li>
+		</li>
 		<?php
 	}
 
@@ -156,7 +155,7 @@ function bp_core_admin_help_sub_menu( $directories, $times, $docs_path, $level_h
 
 	if ( empty( $show_as_heading ) ) {
 		?>
-        </ul>
+		</ul>
 		<?php
 	}
 }
@@ -207,17 +206,17 @@ function bp_core_admin_help_main_page() {
 	if ( ! empty( $main_directories ) ) {
 		if ( empty( $article_value ) ) {
 			?>
-            <div class="bp-help-main-menu-wrap">
+			<div class="bp-help-main-menu-wrap">
 				<?php
 				bp_core_admin_help_main_menu( $main_directories, $docs_path );
 				?>
-            </div>
+			</div>
 			<?php
 		} else {
 			/**
 			 * Sidebar main dir path
 			 */
-			$article_dir_array = explode( "/", $article_value );
+			$article_dir_array = explode( '/', $article_value );
 			$content_main_dir  = $docs_path . $article_dir_array[0];
 
 			/**
@@ -226,28 +225,28 @@ function bp_core_admin_help_main_page() {
 			$sidebar = false !== strpos( $article_value, 'miscellaneous' ) ? false : true;
 			?>
 
-            <div class="bp-help-content-wrap">
+			<div class="bp-help-content-wrap">
 
 				<?php
 				if ( $sidebar ) {
 					?>
-                    <div class="bp-help-sidebar">
+					<div class="bp-help-sidebar">
 						<?php
 						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
 						?>
-                    </div>
+					</div>
 					<?php
 				}
 				?>
 
-                <div class="bp-help-content">
-                    <ul class="bp-help-menu">
+				<div class="bp-help-content">
+					<ul class="bp-help-menu">
 						<?php
 						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
 						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
 						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10 );
 						?>
-                    </ul>
+					</ul>
 
 
 					<?php
@@ -255,25 +254,24 @@ function bp_core_admin_help_main_page() {
 					// print file content
 					echo bp_core_admin_help_display_content( $docs_path . $article_value );
 
-
 					// print submenu
 					if ( bp_core_admin_help_had_more_directory( $docs_path . $article_value ) ) {
 						unset( $article_dir_array[ ( count( $article_dir_array ) - 1 ) ] );
 						$article_dir_array  = implode( '/', $article_dir_array );
 						$current_doc_path[] = $docs_path . $article_dir_array;
 						?>
-                        <div class="article-child well">
+						<div class="article-child well">
 							<?php
 							printf( '<h3>%s</h3>', __( 'Articles', 'buddyboss' ) );
 							bp_core_admin_help_sub_menu( $current_doc_path, '1', $docs_path, 3, false, true );
 							?>
-                        </div>
+						</div>
 						<?php
 					}
 					?>
-                </div>
+				</div>
 
-            </div>
+			</div>
 			<?php
 		}
 	}
@@ -307,23 +305,23 @@ function bp_core_admin_help_had_more_directory( $path ) {
  */
 function bp_core_admin_help() {
 	?>
-    <div class="wrap">
-        <h2 class="nav-tab-wrapper">
+	<div class="wrap">
+		<h2 class="nav-tab-wrapper">
 			<?php bp_core_admin_tabs( __( 'Help', 'buddyboss' ) ); ?>
-        </h2>
-    </div>
-    <div class="wrap">
-    <h1>
+		</h2>
+	</div>
+	<div class="wrap">
+	<h1>
 		<?php _e( 'Documentation', 'buddyboss' ); ?>
-        <a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"
-           target="_blank"><?php _e( 'Online Resources', 'buddyboss' ); ?></a>
-    </h1>
+		<a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"
+		   target="_blank"><?php _e( 'Online Resources', 'buddyboss' ); ?></a>
+	</h1>
 
-    <div class="wp-list-table widefat bp-help-card-grid">
+	<div class="wp-list-table widefat bp-help-card-grid">
 		<?php
 		bp_core_admin_help_main_page();
 		?>
-    </div>
+	</div>
 	<?php
 }
 

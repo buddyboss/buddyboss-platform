@@ -34,7 +34,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		 *
 		 * @since BuddyPress 2.0.0
 		 *
-		 * @param BP_XProfile_Field_Type_URL $this Current instance of 
+		 * @param BP_XProfile_Field_Type_URL $this Current instance of
 		 * the field type URL.
 		 */
 		do_action( 'bp_xprofile_field_type_url', $this );
@@ -59,29 +59,33 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 			unset( $raw_properties['user_id'] );
 		}
 
-		$r = bp_parse_args( $raw_properties, array(
-			'type'      => 'text',
-			'inputmode' => 'url',
-			'value'     => esc_url( bp_get_the_profile_field_edit_value() ),
-		) ); ?>
+		$r = bp_parse_args(
+			$raw_properties,
+			array(
+				'type'      => 'text',
+				'inputmode' => 'url',
+				'value'     => esc_url( bp_get_the_profile_field_edit_value() ),
+			)
+		); ?>
 
 		<legend id="<?php bp_the_profile_field_input_name(); ?>-1">
 			<?php bp_the_profile_field_name(); ?>
 			<?php if ( bp_is_register_page() ) : ?>
 				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
+			<?php else : ?>
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-        
-        <?php if ( bp_get_the_profile_field_description() ) : ?>
+		
+		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() ); ?>
+		do_action( bp_get_the_profile_field_errors_action() );
+		?>
 
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
@@ -100,14 +104,20 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 	 */
 	public function admin_field_html( array $raw_properties = array() ) {
 
-		$r = bp_parse_args( $raw_properties, array(
-			'type' => 'url'
-		) ); ?>
+		$r = bp_parse_args(
+			$raw_properties,
+			array(
+				'type' => 'url',
+			)
+		);
+		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
-			/* translators: accessibility text */
-			esc_html_e( 'Website', 'buddyboss' );
-		?></label>
+		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+															 <?php
+																/* translators: accessibility text */
+																esc_html_e( 'Website', 'buddyboss' );
+																?>
+		</label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 
 		<?php
@@ -151,7 +161,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		}
 
 		// Run some checks on the submitted value.
-		if ( false === strpos( $submitted_value, ':'  ) &&
+		if ( false === strpos( $submitted_value, ':' ) &&
 			substr( $submitted_value, 0, 1 ) !== '/' &&
 			substr( $submitted_value, 0, 1 ) !== '#' &&
 			! preg_match( '/^[a-z0-9-]+?\.php/i', $submitted_value )
@@ -167,8 +177,8 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 	 *
 	 * @since BuddyPress 2.1.0
 	 * @since BuddyPress 2.4.0 Added the `$field_id` parameter.
-     * @since BuddyBoss 1.0.0 
-     * Added target="_blank" attribute to anchor tag and consequently added noopener to rel attribute
+	 * @since BuddyBoss 1.0.0
+	 * Added target="_blank" attribute to anchor tag and consequently added noopener to rel attribute
 	 *
 	 * @param string     $field_value The URL value, as saved in the database.
 	 * @param string|int $field_id    Optional. ID of the field.
