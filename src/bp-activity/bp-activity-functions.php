@@ -214,9 +214,9 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
 
 	switch ( $action ) {
 		case 'delete':
-			$key = array_search( $activity_id, $new_mentions );
+			$key = array_search( (int) $activity_id, $new_mentions, true );
 
-			if ( $key !== false ) {
+			if ( false !== $key ) {
 				unset( $new_mentions[ $key ] );
 			}
 
@@ -224,7 +224,7 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
 
 		case 'add':
 		default:
-			if ( ! in_array( $activity_id, $new_mentions ) ) {
+			if ( ! in_array( (int) $activity_id, $new_mentions, true ) ) {
 				$new_mentions[] = (int) $activity_id;
 			}
 
