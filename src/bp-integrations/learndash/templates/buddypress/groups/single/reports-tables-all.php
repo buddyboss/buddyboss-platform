@@ -28,6 +28,9 @@
 	 */
 	$courses = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 	if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
+		if ( isset( $_GET ) && isset( $_GET['course'] ) && '' !==  $_GET['course'] ) {
+			$courses = array( get_post( $_GET['course'] ) );
+		}
 		foreach ( $courses as $course ) {
 			//learndash_get_user_course_attempts_time_spent()
 			$course_users = learndash_get_groups_user_ids( $group_id );

@@ -500,7 +500,7 @@ class Reports {
 		$courseHasPoints       = ! ! $coursePoints = get_post_meta( $course->ID, 'course_points', true );
 		$averagePoints         = $courseHasPoints ? count( $ldGroupUsersCompleted ) * $coursePoints : 0;
 
-		require bp_locate_template( 'groups/single/reports-course-stats.php', false, false );
+		//require bp_locate_template( 'groups/single/reports-course-stats.php', false, false );
 	}
 
 	/**
