@@ -1,12 +1,7 @@
-<div class="ld-report-no-data">
-	<aside class="bp-feedback bp-template-notice info">
-		<span class="bp-icon" aria-hidden="true"></span>
-		<p><?php _e( 'Sorry, no report data was found.', 'buddyboss' ); ?></p>
-	</aside>
-</div>
+
 
 <?php
-	if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
+	if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) && isset( $_GET ) && isset( $_GET['user'] ) && '' === $_GET['user'] ) { ?>
 		<div class="ld-report-user-stats">
 			<div class="user-info">
 				<div class="user-avatar">
@@ -17,8 +12,32 @@
 				</div>
 			</div>
 		</div> <?php
+	} else { ?>
+		<?php if ( ! bp_current_user_can( 'bp_moderate' ) || ! groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
+			<?php if ( ! bp_current_user_can( 'bp_moderate' ) ) { ?>
+			<div class="ld-report-user-stats">
+				<div class="user-info">
+					<div class="user-avatar">
+						<a href="<?php echo bp_core_get_user_domain( bp_loggedin_user_id() ); ?>"><?php echo bp_core_fetch_avatar( array( 'item_id' => bp_loggedin_user_id() ) ); ?></a>
+					</div>
+					<div class="user-name">
+						<h5 class="list-title member-name"><a href="<?php echo bp_core_get_user_domain( bp_loggedin_user_id() ); ?>"><?php echo bp_core_get_user_displayname( bp_loggedin_user_id() ); ?></a></h5>
+						<p class="item-meta"><?php echo __( 'Student', 'buddyboss' ); ?></p>
+					</div>
+				</div>
+			</div>
+		<?php } ?>
+		<?php } ?>
+		<?php
 	}
 ?>
+
+<div class="ld-report-no-data">
+	<aside class="bp-feedback bp-template-notice info">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p><?php _e( 'Sorry, no report data was found.', 'buddyboss' ); ?></p>
+	</aside>
+</div>
 
 <div class="bp_ld_report_table_wrapper">
 	<h2><?php echo $completed_table_title; ?></h2>
