@@ -440,7 +440,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			'courses_visibility',
 			__('Visibility', 'buddyboss'),
 			[
-				'input_text' => __(' Display Profile > Course content publicly', 'buddyboss'),
+				'input_text' => __(' Display Profile > Course content', 'buddyboss'),
 			]
 		);
 	}
