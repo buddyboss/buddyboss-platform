@@ -124,8 +124,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			 */
 			add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active', 10000 );
 			add_action( 'pre_current_active_plugins', 'bp_core_unset_bbpress_buddypress_active', 10000 );
-			add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 			add_action( 'all_admin_notices', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+
+			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
+			    add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+            }
 
 			/**
 			 * Add this so the spoofing plugin does get loaded by WordPress
