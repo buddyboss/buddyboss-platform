@@ -1,6 +1,6 @@
 <?php
 $user_id = bp_displayed_user_id();
-$certificates  = buddyboss_theme()->learndash_helper()->get_certificates( $user_id );
+$certificates  = bp_learndash_get_users_certificates( $user_id );
 ?>
 
 <div id="bb-learndash-profile" class="bb-certificates-wrapper">
