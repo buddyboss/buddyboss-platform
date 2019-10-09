@@ -68,7 +68,43 @@ class Core {
 		if ( $this->settings->get( 'course.courses_visibility' ) ) {
 			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
 			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 900 );
+			add_action( 'buddyboss_theme_after_bb_profile_menu', array( $this, 'setup_user_profile_bar' ), 900 );
 		}
+	}
+
+	/**
+	 * Add Menu in Profile section.
+	 *
+	 * @since BuddyBoss 1.9.10
+	 *
+	 * @param $menus
+	 */
+	function setup_user_profile_bar() {
+		?>
+        <li id="wp-admin-bar-my-account-<?php echo $this->course_slug; ?>" class="menupop">
+            <a class="ab-item" aria-haspopup="true"
+               href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>">
+                <span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo $this->course_name; ?>
+            </a>
+
+            <div class="ab-sub-wrapper">
+                <ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
+                    <li id="wp-admin-bar-my-account-<?php echo $this->my_courses_slug; ?>">
+                        <a class="ab-item"
+                           href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo $this->my_courses_name; ?></a>
+                    </li>
+                    <li id="wp-admin-bar-my-account-<?php echo $this->badges_tab_slug; ?>">
+                        <a class="ab-item"
+                           href="<?php echo $this->adminbar_nav_link( $this->badges_tab_slug, $this->course_slug ); ?>"><?php echo $this->badges_tab_name; ?></a>
+                    </li>
+                    <li id="wp-admin-bar-my-account-<?php echo $this->certificates_tab_slug; ?>">
+                        <a class="ab-item"
+                           href="<?php echo $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ); ?>"><?php echo $this->certificates_tab_name; ?></a>
+                    </li>
+                </ul>
+            </div>
+        </li>
+		<?php
 	}
 
 	/**
@@ -151,6 +187,7 @@ class Core {
 				'nav_link' => $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ),
 			),
 		);
+
 		if ( current_user_can( 'manage_options' ) ) {
 			$all_post_types[] =
 				array(
