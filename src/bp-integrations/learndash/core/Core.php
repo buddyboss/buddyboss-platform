@@ -207,7 +207,7 @@ class Core {
 	function certificates_page_content() {
 		do_action( 'template_notices' );
 		do_action( 'bp_learndash_before_certificates_page_content' );
-		bp_core_load_template( 'members/single/courses/certificates' );
+		bp_get_template_part( 'members/single/courses/certificates' );
 	}
 
 	/**
@@ -223,7 +223,7 @@ class Core {
 	function badges_page_content() {
 		do_action( 'template_notices' );
 		do_action( 'bp_learndash_before_badges_page_content' );
-		bp_core_load_template( 'members/single/courses/badges' );
+		bp_get_template_part( 'members/single/courses/badges' );
 	}
 
 	/**

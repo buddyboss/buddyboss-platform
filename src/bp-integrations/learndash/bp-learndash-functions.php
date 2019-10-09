@@ -34,6 +34,7 @@ function bp_learndash_url( $path = '' ) {
  */
 function bp_ld_sync( $component = null ) {
 	global $bp_ld_sync;
+
 	return $component ? $bp_ld_sync->$component : $bp_ld_sync;
 }
 
@@ -245,4 +246,180 @@ function learndash_integration_prepare_price_str( $price ) {
 	}
 
 	return '';
+}
+
+
+function bp_learndash_get_users_badges( $user_id = '' ) {
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	$badges = array();
+
+	if ( class_exists( 'BadgeOS' ) && class_exists( 'BadgeOS_LearnDash' ) ) { // don't load if badgeos learndash is not enabled.
+
+		$type = badgeos_get_achievement_types_slugs();
+		// Drop steps from our list of "all" achievements
+		$step_key = array_search( 'step', $type );
+		if ( $step_key ) {
+			unset( $type[ $step_key ] );
+		}
+
+		$earned_ids = badgeos_get_user_earned_achievement_ids( $user_id, $type );
+		if ( empty( $earned_ids ) ) {
+			$earned_ids = array( 0 );
+		}
+
+		$args = array(
+			'post_type'   => $type,
+			'post_status' => 'publish',
+			'post__in'    => $earned_ids
+		);
+
+		// Loop Achievements
+		$achievement_posts = new \WP_Query( $args );
+
+		if ( $achievement_posts->have_posts() ) {
+			foreach ( $achievement_posts->posts as $achievement ) {
+
+				$badge          = new \stdClass();
+				$badge->ID      = $achievement->ID;
+				$badge->title   = get_the_title( $achievement->ID );
+				$badge->link    = get_permalink( $achievement->ID );
+				$badge->content = ! empty( $achievement->post_excerpt ) ? $achievement->post_excerpt : $achievement->post_content;
+				$badge->points  = get_post_meta( $achievement->ID, '_badgeos_points', true );
+				$badge->image   = badgeos_get_achievement_post_thumbnail_url( $achievement->ID );
+				$badges[]       = $badge;
+			}
+		}
+	}
+
+	return $badges;
+
+}
+
+
+function bp_learndash_get_users_certificates( $user_id = '' ) {
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	/**
+	 * Course Certificate
+	 **/
+	$user_courses = ld_get_mycourses( $user_id, array() );
+	$certificates = array();
+	foreach ( $user_courses as $course_id ) {
+
+		$certificateLink = learndash_get_course_certificate_link( $course_id, $user_id );
+		$filename        = "Certificate.pdf";
+		$course_title    = get_the_title( $course_id );
+		$certificate_id  = learndash_get_setting( $course_id, 'certificate' );
+		$image           = '';
+
+		if ( ! empty( $certificate_id ) ) {
+			$certificate_data = get_post( $certificate_id );
+			$filename         = sanitize_file_name( $course_title ) . "-" . sanitize_file_name( $certificate_data->post_title ) . ".pdf";
+			$image            = wp_get_attachment_url( get_post_thumbnail_id( $certificate_id ) );
+		}
+
+		$date = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
+
+		if ( ! empty( $certificateLink ) ) {
+			$certificate           = new \stdClass();
+			$certificate->ID       = $course_id;
+			$certificate->link     = $certificateLink;
+			$certificate->title    = get_the_title( $course_id );
+			$certificate->image    = $image;
+			$certificate->content  = ! empty( $certificate_data->post_excerpt ) ? $certificate_data->post_excerpt : $certificate_data->post_content;
+			$certificate->filename = $filename;
+			$certificate->date     = date_i18n( "Y-m-d h:i:s", $date );
+			$certificate->time     = $date;
+			$certificate->type     = 'course';
+			$certificates[]        = $certificate;
+		}
+	}
+
+	/**
+	 * Quiz Certificate
+	 **/
+	$quizzes  = get_user_meta( $user_id, '_sfwd-quizzes', true );
+	$quiz_ids = wp_list_pluck( $quizzes, 'quiz' );
+	if ( ! empty( $quiz_ids ) ) {
+		$quiz_total_query_args = array(
+			'post_type' => 'sfwd-quiz',
+			'fields'    => 'ids',
+			'orderby'   => 'title', //$atts['quiz_orderby'],
+			'order'     => 'ASC', //$atts['quiz_order'],
+			'nopaging'  => true,
+			'post__in'  => $quiz_ids
+		);
+		$quiz_query            = new \WP_Query( $quiz_total_query_args );
+		$quizzes_tmp           = array();
+		foreach ( $quiz_query->posts as $post_idx => $quiz_id ) {
+			foreach ( $quizzes as $quiz_idx => $quiz_attempt ) {
+				if ( $quiz_attempt['quiz'] == $quiz_id ) {
+					$quiz_key                 = $quiz_attempt['time'] . '-' . $quiz_attempt['quiz'];
+					$quizzes_tmp[ $quiz_key ] = $quiz_attempt;
+					unset( $quizzes[ $quiz_idx ] );
+				}
+			}
+		}
+		$quizzes = $quizzes_tmp;
+		krsort( $quizzes );
+		if ( ! empty( $quizzes ) ) {
+			foreach ( $quizzes as $quizdata ) {
+				if ( ! in_array( $quizdata['quiz'], wp_list_pluck( $certificates, 'ID' ) ) ) {
+					$quiz_settings         = learndash_get_setting( $quizdata['quiz'] );
+					$certificate_post_id   = intval( $quiz_settings['certificate'] );
+					$certificate_post_data = get_post( $certificate_post_id );
+					$certificate_data      = learndash_certificate_details( $quizdata['quiz'], $user_id );
+					if ( ! empty( $certificate_data['certificateLink'] ) && $certificate_data['certificate_threshold'] <= $quizdata['percentage'] / 100 ) {
+						$filename              = sanitize_file_name( get_the_title( $quizdata['quiz'] ) ) . "-" . sanitize_file_name( get_the_title( $certificate_post_id ) ) . ".pdf";
+						$certificate           = new \stdClass();
+						$certificate->ID       = $quizdata['quiz'];
+						$certificate->link     = $certificate_data['certificateLink'];
+						$certificate->title    = get_the_title( $quizdata['quiz'] );
+						$certificate->image    = wp_get_attachment_url( get_post_thumbnail_id( $certificate_post_id ) );
+						$certificate->content  = ! empty( $certificate_post_data->post_excerpt ) ? $certificate_post_data->post_excerpt : $certificate_post_data->post_content;
+						$certificate->filename = $filename;
+						$certificate->date     = date_i18n( "Y-m-d h:i:s", $quizdata['time'] );
+						$certificate->time     = $quizdata['time'];
+						$certificate->type     = 'quiz';
+						$certificates[]        = $certificate;
+					}
+				}
+
+			}
+		}
+	}
+
+	usort( $certificates, function ( $a, $b ) {
+		return strcmp( $b->time, $a->time );
+	} );
+
+	return $certificates;
+}
+
+
+function badgeos_get_achievement_post_thumbnail_url( $post_id = 0, $image_size = 'badgeos-achievement', $class = 'badgeos-item-thumbnail' ) {
+	// Get our badge thumbnail
+	$image_url = get_the_post_thumbnail_url( $post_id, $image_size );
+	// If we don't have an image...
+	if ( ! $image_url ) {
+
+		// Grab our achievement type's post thumbnail
+		$achievement = get_page_by_path( get_post_type( $post_id ), OBJECT, 'achievement-type' );
+		$image       = is_object( $achievement ) ? get_the_post_thumbnail_url( $achievement->ID, $image_size ) : false;
+
+		// If we still have no image, use one from Credly
+		if ( ! $image ) {
+			// Available filter: 'badgeos_default_achievement_post_thumbnail'
+			$image_url = apply_filters( 'badgeos_default_achievement_post_thumbnail', 'https://credlyapp.s3.amazonaws.com/badges/af2e834c1e23ab30f1d672579d61c25a_15.png' );
+
+		}
+	}
+
+	// Finally, return our image tag
+	return $image_url;
 }

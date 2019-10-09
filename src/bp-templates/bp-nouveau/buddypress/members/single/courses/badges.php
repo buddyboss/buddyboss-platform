@@ -1,6 +1,6 @@
 <?php
 $user_id = bp_displayed_user_id();
-$badges  = buddyboss_theme()->learndash_helper()->get_badges( $user_id );
+$badges  = bp_learndash_get_users_badges( $user_id );
 ?>
 
 <div id="bb-learndash-profile" class="bb-badges-wrapper">
