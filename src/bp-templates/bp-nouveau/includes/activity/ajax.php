@@ -71,6 +71,12 @@ add_action( 'admin_init', function() {
 				'nopriv'   => false,
 			),
 		),
+		array(
+			'activity_update_privacy' => array(
+				'function' => 'bp_nouveau_ajax_activity_update_privacy',
+				'nopriv'   => false,
+			),
+		),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -664,4 +670,42 @@ function bp_nouveau_ajax_spam_activity() {
 
 	// Send the json reply
 	wp_send_json_success( $response );
+}
+
+/**
+ * Update activity privacy via a POST request.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @return string JSON reply
+ */
+function bp_nouveau_ajax_activity_update_privacy() {
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error();
+	}
+
+	// Nonce check!
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_activity' ) ) {
+		wp_send_json_error();
+	}
+
+	if ( empty( $_POST['privacy'] ) ) {
+		wp_send_json_error();
+	}
+
+	if ( ! in_array( $_POST['privacy'], array( 'public', 'loggedin', 'onlyme', 'friends' ) ) ) {
+		wp_send_json_error();
+	}
+
+	$activity = new BP_Activity_Activity( (int) $_POST['id'] );
+
+	if ( bp_activity_user_can_delete( $activity ) ) {
+
+		$activity->privacy = $_POST['privacy'];
+		$activity->save();
+
+		wp_send_json_success( array() );
+	} else {
+		wp_send_json_error();
+	}
 }

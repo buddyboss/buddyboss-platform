@@ -955,3 +955,25 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 
 		return $return;
 	}
+
+/**
+ * Output the privacy option inside an Activity Loop.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ */
+function bp_nouveau_activity_privacy() {
+    if ( bp_activity_user_can_delete() ) {
+	    $privacy = bp_get_activity_privacy();
+	    ?>
+        <p>
+            <select class="activity-privacy" name="activity-privacy">
+                <option value="public" <?php echo 'public' === $privacy ? 'selected' : ''; ?>><?php _e( 'Everyone', 'buddyboss' ); ?></option>
+                <option value="loggedin" <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>><?php _e( 'Logged In Users', 'buddyboss' ); ?></option>
+                <option value="onlyme" <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>><?php _e( 'Only Me', 'buddyboss' ); ?></option>
+                <option value="friends" <?php echo 'friends' === $privacy ? 'selected' : ''; ?>><?php _e( 'My Connections', 'buddyboss' ); ?></option>
+            </select>
+        </p>
+	    <?php
+    }
+}
