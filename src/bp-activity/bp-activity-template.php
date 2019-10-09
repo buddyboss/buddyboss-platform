@@ -1480,6 +1480,38 @@ function bp_get_activity_content() {
 }
 
 /**
+ * Output the activity privacy.
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_activity_privacy() {
+	echo bp_get_activity_privacy();
+}
+
+/**
+ * Return the activity privacy.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @return string The activity privacy.
+ */
+function bp_get_activity_privacy() {
+	global $activities_template;
+
+	/**
+	 * Filters the activity privacy.
+	 *
+	 * @since BuddyBoss1.2.0
+	 *
+	 * @param string $privacy  Content body.
+	 * @param object $activity Activity object. Passed by reference.
+	 */
+	return apply_filters_ref_array( 'bp_get_activity_privacy', array( $activities_template->activity->privacy, &$activities_template->activity ) );
+}
+
+/**
  * Attach metadata about an activity item to the activity content.
  *
  * This metadata includes the time since the item was posted (which will appear

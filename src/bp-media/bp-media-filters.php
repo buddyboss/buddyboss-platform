@@ -21,6 +21,7 @@ add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
 add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
 
 // Forums
 add_action( 'bbp_template_after_single_topic', 'bp_media_add_theatre_template' );
@@ -1037,4 +1038,33 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+}
+
+/**
+ * Update media privacy when activity is updated.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param BP_Activity_Activity $activity Activity object.
+ */
+function bp_media_activity_update_media_privacy( $activity ) {
+	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+
+	if ( ! empty( $media_ids ) ) {
+		$media_ids = explode( ',', $media_ids );
+
+		foreach( $media_ids as $media_id ) {
+		    $media = new BP_Media( $media_id );
+		    $media->privacy = $activity->privacy;
+		    $media->save();
+
+		    remove_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
+
+		    $activity = new BP_Activity_Activity( $media->activity_id );
+		    $activity->privacy = $media->privacy;
+		    $activity->save();
+
+			add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
+        }
+    }
 }
