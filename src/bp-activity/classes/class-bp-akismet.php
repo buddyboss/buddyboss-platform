@@ -45,8 +45,8 @@ class BP_Akismet {
 		add_action( 'bp_activity_entry_comments', array( $this, 'add_activity_stream_nonce' ) );
 
 		// Add a "mark as spam" button to individual activity items.
-		add_action( 'bp_activity_entry_meta', array( $this, 'add_activity_spam_button' ) );
-		add_action( 'bp_activity_comment_options', array( $this, 'add_activity_comment_spam_button' ) );
+		//add_action( 'bp_activity_entry_meta',      array( $this, 'add_activity_spam_button' ) );
+		//add_action( 'bp_activity_comment_options', array( $this, 'add_activity_comment_spam_button' ) );
 
 		// Check activity for spam.
 		add_action( 'bp_activity_before_save', array( $this, 'check_activity' ), 4, 1 );
