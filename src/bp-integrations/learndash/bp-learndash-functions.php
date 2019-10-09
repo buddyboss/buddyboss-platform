@@ -438,7 +438,16 @@ function bp_ld_time_spent( $seconds = 0 ) {
 	return '-';
 }
 
-function bp_ld_course_points_earned( $activity ) {
+function bp_ld_remove_post_ids_param( $query_args ) {
+	if ( isset( $query_args['post_ids'] ) ) {
+		unset( $query_args['post_ids'] );
+	}
+
+	return $query_args;
+
+}
+
+function bpLdCoursePointsEarned( $activity ) {
 
 	$assignments = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
 	if ( ! empty( $assignments ) ) {
@@ -478,4 +487,31 @@ function bp_ld_course_points_earned( $activity ) {
 		}
 	}
 	return 0;
+}
+
+function bp_ld_course_points_earned( $course, $user ) {
+	global $learndash_post_types;
+	$param     = [];
+	$param['course_ids'] = $course;
+	$param['post_types'] = $learndash_post_types;
+	$param['user_ids']        = $user;
+	$param['activity_status'] = 'COMPLETED';
+	$param['per_page']        = '';
+
+	add_filter( 'learndash_get_activity_query_args', 'bp_ld_remove_post_ids_param', 10, 1 );
+	$data = learndash_reports_get_activity( $param );
+	remove_filter( 'learndash_get_activity_query_args', 'bp_ld_remove_post_ids_param', 10 );
+	$points = 0;
+	if ( ! empty( $data ) ) {
+		foreach ( $data['results'] as $activity ) {
+			$points = $points + bpLdCoursePointsEarned( $activity );
+		}
+	}
+
+	if ( $points > 0 ) {
+		return $points;
+	} else {
+		return '-';
+	}
+
 }

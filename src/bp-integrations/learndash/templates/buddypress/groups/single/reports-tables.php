@@ -30,6 +30,20 @@
 	}
 ?>
 
+<?php
+/**
+ * @todo Should we be labeling Teacher and Student here?
+ */
+if ( $courseId ) { ?>
+	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
+	<?php
+} elseif ( isset( $_GET ) && isset( $_GET['course'] ) && '' !== $_GET['course'] && ! groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) && ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) && ! bp_current_user_can( 'bp_moderate' )) {
+	$course = get_post( (int) $_GET['course'] );
+	?>
+	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
+	<?php
+} ?>
+
 <div class="ld-report-no-data">
 	<aside class="bp-feedback bp-template-notice info">
 		<span class="bp-icon" aria-hidden="true"></span>

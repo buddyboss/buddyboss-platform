@@ -535,20 +535,16 @@ class Reports {
 		$completed_table_title   = $generator->completed_table_title ?: __( 'Completed', 'buddyboss' );
 		$incompleted_table_title = $generator->incompleted_table_title ?: __( 'Incomplete', 'buddyboss' );
 		if ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) {
-
 			if ( empty( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
 				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
 			} elseif ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
 				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
-				//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 			} else {
 				require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 			}
-			//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 		} else {
 			require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 		}
-
 	}
 
 	/**

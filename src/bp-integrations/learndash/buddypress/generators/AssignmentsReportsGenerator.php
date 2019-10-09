@@ -203,7 +203,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	protected function registerQueryHooks() {
 		add_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
 		add_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
-		add_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
+		//add_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 		add_filter( 'posts_clauses', array( $this, 'addAdditionalClauses' ) );
 	}
 
@@ -215,7 +215,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	protected function unregisterQueryHooks() {
 		remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
 		remove_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
-		remove_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
+		//remove_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 		remove_filter( 'posts_clauses', array( $this, 'addAdditionalClauses' ) );
 	}
 
@@ -240,7 +240,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 				SELECT meta_value
 				FROM {$wpdb->postmeta} as course_meta
 				WHERE course_meta.post_id = {$wpdb->posts}.ID
-				AND course_meta.meta_key = course_id
+				AND course_meta.meta_key = 'course_id'
 			) as activity_course_id,
 			(
 				SELECT post_title

@@ -102,7 +102,7 @@
 						<td><?php echo $start_date; ?></td>
 						<td><?php echo $completed_date; ?></td>
 						<td><?php echo $time_spent; ?></td>
-						<td><?php echo ''; ?></td>
+						<td><?php echo bp_ld_course_points_earned( $course->ID, $user ); ?></td>
 					</tr>
 					<?php
 				}
