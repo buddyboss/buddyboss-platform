@@ -115,12 +115,12 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 
 			//forums
-			$( '.bbpress,.buddypress' ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
-			$( '.bbpress,.buddypress' ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
-			$( '.bbpress form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
-			$( '.bbpress form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
-			$( '.bbpress form #whats-new-attachments .forums-attached-gif-container .gif-search-results, .forum form #whats-new-attachments .forums-attached-gif-container .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
-			$( '.bbpress form #whats-new-attachments .forums-attached-gif-container, .forum form #whats-new-attachments .forums-attached-gif-container' ).on( 'click', '.gif-image-remove', this.removeSelectedGif.bind( this ) );
+			$( document ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
+			$( document ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
+			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
+			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
+			$( document ).find( 'form #whats-new-attachments .forums-attached-gif-container .gif-search-results, .forum form #whats-new-attachments .forums-attached-gif-container .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
+			$( document ).find( 'form #whats-new-attachments .forums-attached-gif-container, .forum form #whats-new-attachments .forums-attached-gif-container' ).on( 'click', '.gif-image-remove', this.removeSelectedGif.bind( this ) );
 
 			$(document).on('click', '.gif-image-container', this.playVideo.bind( this ) );
 			// Gifs autoplay
