@@ -248,7 +248,15 @@ function learndash_integration_prepare_price_str( $price ) {
 	return '';
 }
 
-
+/**
+ * Function to get list of badges the user has
+ *
+ * @since 1.9.10
+ *
+ * @param string $user_id
+ *
+ * @return array|bool
+ */
 function bp_learndash_get_users_badges( $user_id = '' ) {
 	if ( empty( $user_id ) ) {
 		return false;
@@ -298,7 +306,15 @@ function bp_learndash_get_users_badges( $user_id = '' ) {
 
 }
 
-
+/**
+ * Function to get list of certificates the user has
+ *
+ * @since 1.9.10
+ *
+ * @param string $user_id
+ *
+ * @return array|bool
+ */
 function bp_learndash_get_users_certificates( $user_id = '' ) {
 	if ( empty( $user_id ) ) {
 		return false;
@@ -401,7 +417,17 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 	return $certificates;
 }
 
-
+/**
+ * Get the badges icon
+ *
+ * @since 1.9.10
+ *
+ * @param int $post_id
+ * @param string $image_size
+ * @param string $class
+ *
+ * @return bool|false|mixed|string|void
+ */
 function badgeos_get_achievement_post_thumbnail_url( $post_id = 0, $image_size = 'badgeos-achievement', $class = 'badgeos-item-thumbnail' ) {
 	// Get our badge thumbnail
 	$image_url = get_the_post_thumbnail_url( $post_id, $image_size );
