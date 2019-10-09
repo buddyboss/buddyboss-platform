@@ -127,13 +127,17 @@ class ReportsGenerator {
 		remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
 		// print_r($this->activityQuery);die();
 
-		if ( 'IN_PROGRESS' === $this->params['activity_status'] ) {
+		//if ( isset( $this->params['activity_status'] ) && 'IN_PROGRESS' === $this->params['activity_status'] ) {
 			$pending = [];
 			$pager   = false;
 			foreach ( $this->activityQuery['results'] as $result ) {
-				$activity_data = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d', (int) $result->user_id, (int) $result->post_id, (int) $result->activity_course_id, 1 ) ); // db call ok; no-cache ok;
-				if ( empty( $activity_data ) ) {
+				if ( $result->activity_status == '1' ) {
 					$pending[] = $result;
+				} else {
+					$activity_data = $wpdb->get_row( $wpdb->prepare( 'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d', (int) $result->user_id, (int) $result->post_id, (int) $result->activity_course_id, 1 ) ); // db call ok; no-cache ok;
+					if ( empty( $activity_data ) ) {
+						$pending[] = $result;
+					}
 				}
 			}
 			if ( 'sfwd-lessons' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
@@ -257,10 +261,10 @@ class ReportsGenerator {
 			}
 			$this->results = $pending;
 			$this->pager   = ( true === $pager ) ? $this->pager : $this->activityQuery['pager'];
-		} else {
-			$this->results = $this->activityQuery['results'];
-			$this->pager   = $this->activityQuery['pager'];
-		}
+		//} else {
+			//$this->results = $this->activityQuery['results'];
+			//$this->pager   = $this->activityQuery['pager'];
+		//}
 
 	}
 
@@ -354,20 +358,26 @@ class ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatDataForDisplay( $data, $activity ) {
+		$circle = '';
+		if ( $activity->activity_status == '1' ) {
+			$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+		} else {
+			$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+		}
 		return wp_parse_args(
 			[
 				'course' => sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					$circle . '<a href="%s" target="_blank">%s</a>',
 					get_permalink( $activity->activity_course_id ),
 					$activity->activity_course_title
 				),
 				'quiz'   => sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					$circle . '<a href="%s" target="_blank">%s</a>',
 					get_permalink( $activity->post_id ),
 					$activity->post_title
 				),
 				'topic'  => sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					$circle . '<a href="%s" target="_blank">%s</a>',
 					get_permalink( $activity->post_id ),
 					$activity->post_title
 				),
@@ -578,7 +588,7 @@ class ReportsGenerator {
 		}
 
 		if ( $this->hasArg( 'completed' ) ) {
-			$this->params['activity_status'] = $this->args['completed'] ? 'COMPLETED' : 'IN_PROGRESS';
+			$this->params['activity_status'] = 'COMPLETED,IN_PROGRESS';
 		}
 
 		if ( $this->hasArg( 'order' ) ) {

@@ -740,10 +740,10 @@ class Reports {
 					'name'  => __( 'All Steps', 'buddyboss' ),
 					'class' => '\Buddyboss\LearndashIntegration\Buddypress\Generators\AllReportsGenerator',
 				],
-				learndash_get_post_type_slug( 'course' ) => [
-					'name'  => __( 'Courses', 'buddyboss' ),
-					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator',
-				],
+//				learndash_get_post_type_slug( 'course' ) => [
+//					'name'  => __( 'Courses', 'buddyboss' ),
+//					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator',
+//				],
 				learndash_get_post_type_slug( 'lesson' ) => [
 					'name'  => __( 'Lessons', 'buddyboss' ),
 					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator',

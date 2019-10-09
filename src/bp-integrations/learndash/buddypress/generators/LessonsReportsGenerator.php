@@ -137,10 +137,16 @@ class LessonsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatDataForDisplay( $data, $activity ) {
+		$circle = '';
+		if ( $activity->activity_status == '1') {
+			$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+		} else {
+			$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+		}
 		$data = wp_parse_args(
 			array(
 				'lesson' => sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					$circle . ' <a href="%s" target="_blank">%s</a>',
 					get_permalink( $activity->post_id ),
 					$activity->post_title
 				),
