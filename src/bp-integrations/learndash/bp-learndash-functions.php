@@ -449,3 +449,26 @@ function badgeos_get_achievement_post_thumbnail_url( $post_id = 0, $image_size =
 	// Finally, return our image tag
 	return $image_url;
 }
+
+/**
+ * Get the course style view
+ *
+ * @return string
+ */
+function bp_learndash_page_display() {
+
+	if ( empty( $_COOKIE['courseview'] ) || $_COOKIE['courseview'] == '' ) {
+
+		if ( function_exists( 'bp_get_view' ) ):
+			$view = bp_get_view();
+		else:
+			$view = 'grid';
+		endif;
+
+	} else {
+
+		$view = $_COOKIE['courseview'];
+	}
+
+	return $view;
+}
