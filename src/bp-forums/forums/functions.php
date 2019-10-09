@@ -128,9 +128,12 @@ function bbp_new_forum_handler( $action = '' ) {
 	}
 
 	// Define local variable(s)
-	$view_all        = $anonymous_data = false;
-	$forum_parent_id = $forum_author = 0;
-	$forum_title     = $forum_content = '';
+	$view_all        = false;
+	$anonymous_data  = false;
+	$forum_parent_id = 0;
+	$forum_author    = 0;
+	$forum_title     = '';
+	$forum_content   = '';
 
 	/** Forum Author */
 
@@ -285,7 +288,7 @@ function bbp_new_forum_handler( $action = '' ) {
 
 		// If the forum is trash, or the forum_status is switched to
 		// trash, trash it properly
-		if ( ( get_post_field( 'post_status', $forum_id ) === bbp_get_trash_status_id() ) || ( $forum_data['post_status'] === bbp_get_trash_status_id() ) ) {
+		if ( ( bbp_get_trash_status_id() === get_post_field( 'post_status', $forum_id ) ) || ( bbp_get_trash_status_id() === $forum_data['post_status'] ) ) {
 
 			// Trash the reply
 			wp_trash_post( $forum_id );
@@ -297,7 +300,7 @@ function bbp_new_forum_handler( $action = '' ) {
 		/** Spam Check */
 
 		// If reply or forum are spam, officially spam this reply
-		if ( $forum_data['post_status'] === bbp_get_spam_status_id() ) {
+		if ( bbp_get_spam_status_id() === $forum_data['post_status'] ) {
 			add_post_meta( $forum_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
 
 			// Force view=all
@@ -359,7 +362,7 @@ function bbp_new_forum_handler( $action = '' ) {
 		// Errors
 	} else {
 		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:' . $append_error, 'buddyboss' ) );
+		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:', 'buddyboss' ) . $append_error );
 	}
 }
 
@@ -404,9 +407,13 @@ function bbp_edit_forum_handler( $action = '' ) {
 	}
 
 	// Define local variable(s)
-	$anonymous_data = array();
-	$forum          = $forum_id = $forum_parent_id = 0;
-	$forum_title    = $forum_content = $forum_edit_reason = '';
+	$anonymous_data    = array();
+	$forum             = 0;
+	$forum_id          = 0;
+	$forum_parent_id   = 0;
+	$forum_title       = '';
+	$forum_content     = '';
+	$forum_edit_reason = '';
 
 	/** Forum */
 
@@ -621,7 +628,7 @@ function bbp_edit_forum_handler( $action = '' ) {
 
 	} else {
 		$append_error = ( is_wp_error( $forum_id ) && $forum_id->get_error_message() ) ? $forum_id->get_error_message() . ' ' : '';
-		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:' . $append_error . 'Please try again.', 'buddyboss' ) );
+		bbp_add_error( 'bbp_forum_error', __( '<strong>ERROR</strong>: The following problem(s) have been found with your forum:', 'buddyboss' ) . $append_error . __( 'Please try again.', 'buddyboss' ) );
 	}
 }
 
@@ -1723,11 +1730,15 @@ function bbp_has_forum_thumbnail( $forum_id = null ) {
  * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = null ) {
-	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+	$thumbnail_id = get_post_thumbnail_id( $forum_id );
+
+	if ( ! empty( $thumbnail_id ) ) {
 		return wp_get_attachment_image_url( $thumbnail_id, $size );
 	}
 
-	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+	if ( ! empty( $group_ids ) ) {
 		$group_id = $group_ids[0];
 
 		$group_avatar_url = bp_core_fetch_avatar(
@@ -1740,9 +1751,15 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
 			)
 		);
 
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
+		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar(
+			'',
+			array(
+				'object' => 'group',
+				'type'   => $type,
+			)
+		) : '';
 
-		if ( $group_avatar_url != $group_default_avatar ) {
+		if ( $group_avatar_url !== $group_default_avatar ) {
 			return $group_avatar_url;
 		}
 	}
@@ -1756,11 +1773,15 @@ function bbp_get_forum_thumbnail_src( $forum_id = null, $size = null, $type = nu
  * @since BuddyBoss 1.0.0
  */
 function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = null ) {
-	if ( $thumbnail_id = get_post_thumbnail_id( $forum_id ) ) {
+	$thumbnail_id = get_post_thumbnail_id( $forum_id );
+
+	if ( ! empty( $thumbnail_id ) ) {
 		return wp_get_attachment_image( $thumbnail_id, $size );
 	}
 
-	if ( $group_ids = bbp_get_forum_group_ids( $forum_id ) ) {
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+	if ( ! empty( $group_ids ) ) {
 		$group_id = $group_ids[0];
 
 		$group_avatar_url = bp_core_fetch_avatar(
@@ -1773,9 +1794,15 @@ function bbp_get_forum_thumbnail_image( $forum_id = null, $size = null, $type = 
 			)
 		);
 
-		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar( '', [ 'object' => 'group', 'type' => $type ] ) : '';
+		$group_default_avatar = ( bp_is_active( 'groups' ) ) ? bp_groups_default_avatar(
+			'',
+			array(
+				'object' => 'group',
+				'type'   => $type,
+			)
+		) : '';
 
-		if ( $group_avatar_url != $group_default_avatar ) {
+		if ( $group_avatar_url !== $group_default_avatar ) {
 			return bp_core_fetch_avatar(
 				array(
 					'item_id'       => $group_id,
@@ -1843,7 +1870,10 @@ function bbp_get_private_forum_ids() {
 function bbp_exclude_forum_ids( $type = 'string' ) {
 
 	// Setup arrays
-	$private = $hidden = $meta_query = $forum_ids = array();
+	$private    = array();
+	$hidden     = array();
+	$meta_query = array();
+	$forum_ids  = array();
 
 	// Default return value
 	switch ( $type ) {
@@ -1953,47 +1983,47 @@ function bbp_pre_get_posts_normalize_forum_visibility( $posts_query = null ) {
 		/** Default */
 
 		// Get any existing post status
-		$post_stati = $posts_query->get( 'post_status' );
+		$post_status = $posts_query->get( 'post_status' );
 
 		// Default to public status
-		if ( empty( $post_stati ) ) {
-			$post_stati = array( bbp_get_public_status_id() );
+		if ( empty( $post_status ) ) {
+			$post_status = array( bbp_get_public_status_id() );
 
 			// Split the status string
-		} elseif ( is_string( $post_stati ) ) {
-			$post_stati = explode( ',', $post_stati );
+		} elseif ( is_string( $post_status ) ) {
+			$post_status = explode( ',', $post_status );
 		}
 
 		/** Private */
 
 		// Remove bbp_get_private_status_id() if user is not capable
 		if ( ! current_user_can( 'read_private_forums' ) ) {
-			$key = array_search( bbp_get_private_status_id(), $post_stati );
+			$key = array_search( bbp_get_private_status_id(), $post_status );
 			if ( ! empty( $key ) ) {
-				unset( $post_stati[ $key ] );
+				unset( $post_status[ $key ] );
 			}
 
 			// ...or add it if they are
 		} else {
-			$post_stati[] = bbp_get_private_status_id();
+			$post_status[] = bbp_get_private_status_id();
 		}
 
 		/** Hidden */
 
 		// Remove bbp_get_hidden_status_id() if user is not capable
 		if ( ! current_user_can( 'read_hidden_forums' ) ) {
-			$key = array_search( bbp_get_hidden_status_id(), $post_stati );
+			$key = array_search( bbp_get_hidden_status_id(), $post_status );
 			if ( ! empty( $key ) ) {
-				unset( $post_stati[ $key ] );
+				unset( $post_status[ $key ] );
 			}
 
 			// ...or add it if they are
 		} else {
-			$post_stati[] = bbp_get_hidden_status_id();
+			$post_status[] = bbp_get_hidden_status_id();
 		}
 
 		// Add the statuses
-		$posts_query->set( 'post_status', array_unique( array_filter( $post_stati ) ) );
+		$posts_query->set( 'post_status', array_unique( array_filter( $post_status ) ) );
 	}
 
 	// Topics Or Replies
