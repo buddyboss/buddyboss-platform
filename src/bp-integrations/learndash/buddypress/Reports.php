@@ -76,6 +76,8 @@ class Reports {
 	public function init() {
 		add_action( 'bp_enqueue_scripts', array( $this, 'registerReportsScript' ) );
 
+		add_action( 'wp_head', array( $this, 'bp_ld_reports_inline_css' ) );
+
 		// add plugable templates to report actions
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportFilters' ), 10 );
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportUserStats' ), 20 );
@@ -108,6 +110,26 @@ class Reports {
 	 */
 	protected function hasArg( $key ) {
 		return isset( $this->args[ $key ] ) && ! is_null( $this->args[ $key ] );
+	}
+
+	public function bp_ld_reports_inline_css() {
+		if ( function_exists( 'buddyboss_theme_get_option' ) ) {
+			?>
+			<style type="text/css">
+			table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc {
+				color: <?php echo buddyboss_theme_get_option( 'alternate_link_active' ); ?>;
+			}
+		</style>
+			<?php
+		} else {
+			?>
+			<style type="text/css">
+			table.dataTable thead .sorting_desc, table.dataTable thead .sorting_asc {
+				color: #000;
+			}
+		</style>
+			<?php
+		}
 	}
 
 	/**

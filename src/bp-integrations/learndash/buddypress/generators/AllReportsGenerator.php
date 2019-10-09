@@ -45,7 +45,7 @@ class AllReportsGenerator extends ReportsGenerator {
 				'user'            => $this->column( 'user' ),
 				'course_id'       => $this->column( 'course_id' ),
 				'course'          => $this->column( 'course' ),
-				//	'step'            => $this->column( 'step' ),
+				'step'            => $this->column( 'step' ),
 				'start_date'      => $this->column( 'start_date' ),
 				'completion_date' => $this->column( 'completion_date' ),
 				//	'updated_date'    => $this->column( 'updated_date' ),
@@ -58,7 +58,7 @@ class AllReportsGenerator extends ReportsGenerator {
 				//'user'            => $this->column( 'user' ),
 				'course_id'       => $this->column( 'course_id' ),
 				'course'          => $this->column( 'course' ),
-				//	'step'            => $this->column( 'step' ),
+				'step'            => $this->column( 'step' ),
 				'start_date'      => $this->column( 'start_date' ),
 				'completion_date' => $this->column( 'completion_date' ),
 				//	'updated_date'    => $this->column( 'updated_date' ),
@@ -80,9 +80,8 @@ class AllReportsGenerator extends ReportsGenerator {
 				'user'            => bp_core_get_user_displayname( $activity->user_id ),
 				'course_id'       => $activity->activity_course_id,
 				'course'          => $activity->activity_course_title,
-				//	'step'            => $activity->post_title,
-				'start_date'      => date_i18n( bp_get_option( 'date_format' ),
-					strtotime( $activity->activity_started_formatted ) ),
+				'step'            => $activity->post_title,
+				'start_date'      => date_i18n( bp_get_option( 'date_format' ), strtotime( $activity->activity_started_formatted ) ),
 				'completion_date' => $this->completionDate( $activity ),
 				//	'updated_date'    => $this->updatedDate( $activity ),
 				'time_spent'      => $this->timeSpent( $activity ),
@@ -94,7 +93,7 @@ class AllReportsGenerator extends ReportsGenerator {
 				//'user'            => bp_core_get_user_displayname( $activity->user_id ),
 				'course_id'       => $activity->activity_course_id,
 				'course'          => $activity->activity_course_title,
-				//	'step'            => $activity->post_title,
+				'step'            => $activity->post_title,
 				'start_date'      => date_i18n( bp_get_option( 'date_format' ),
 					strtotime( $activity->activity_started_formatted ) ),
 				'completion_date' => $this->completionDate( $activity ),
@@ -111,10 +110,16 @@ class AllReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function formatDataForDisplay( $data, $activity ) {
+		$circle = '';
+		if ( $activity->activity_status == '1') {
+			$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+		} else {
+			$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+		}
 		return wp_parse_args(
 			array(
 				'step' => sprintf(
-					'<a href="%s" target="_blank">%s</a>',
+					$circle . '<a href="%s" target="_blank">%s</a>',
 					get_permalink( $activity->post_id ),
 					$activity->post_title
 				),

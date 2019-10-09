@@ -97,7 +97,7 @@
 					}
 					?>
 					<tr>
-						<td> <span><?php echo get_avatar( $user, 35 ); ?></span><span><a href="<?php echo bp_get_group_permalink() . 'reports/?user=' . $user .'&course=' . $course->ID . 'step=all'; ?>"><?php echo bp_core_get_user_displayname( $user ); ?></a></span></td>
+						<td> <span><?php echo get_avatar( $user, 35 ); ?></span><span><a href="<?php echo bp_get_group_permalink() . 'reports/?user=' . $user .'&course=&step=all'; ?>"><?php echo bp_core_get_user_displayname( $user ); ?></a></span></td>
 						<td><?php printf( esc_html_x( '%s%% Complete', 'Percentage of course complete', 'buddyboss' ), $progress['percentage'] ); ?></td>
 						<td><?php echo $start_date; ?></td>
 						<td><?php echo $completed_date; ?></td>

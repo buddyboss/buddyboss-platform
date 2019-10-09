@@ -1,5 +1,3 @@
-
-
 <?php
 	if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) && isset( $_GET ) && isset( $_GET['user'] ) && '' === $_GET['user'] ) { ?>
 		<div class="ld-report-user-stats">
@@ -40,7 +38,6 @@
 </div>
 
 <div class="bp_ld_report_table_wrapper">
-	<h2><?php echo $completed_table_title; ?></h2>
 	<table class="bp_ld_report_table" data-completed="true"></table>
 </div>
 

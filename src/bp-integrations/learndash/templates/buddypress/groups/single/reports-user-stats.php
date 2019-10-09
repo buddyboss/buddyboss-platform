@@ -9,12 +9,17 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
- * @todo Should we be labeling Teacher and Student here?
- */
-if ( $courseId ) : ?>
-	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
-<?php endif; ?>
+if ( ! groups_is_user_mod( bp_loggedin_user_id(), $group->id ) && ! groups_is_user_admin( bp_loggedin_user_id(), $group->id ) && ! bp_current_user_can( 'bp_moderate' ) ) {
+	if ( isset( $_GET ) && isset( $_GET['user'] ) && '' !== $_GET['user'] && (int) $_GET['user'] !== bp_loggedin_user_id() ) {
+		?>
+		<script>
+            // Simulate an HTTP redirect:
+            window.location.replace('<?php echo bp_get_group_permalink(); ?>');
+		</script>
+		<?php
+	}
+}
+?>
 
 <div class="ld-report-user-stats">
 	<div class="user-info">
@@ -183,3 +188,10 @@ if ( $courseId ) : ?>
 		</div>
 	<?php endif; ?>
 </div>
+<?php
+	/**
+	* @todo Should we be labeling Teacher and Student here?
+	*/
+	if ( $courseId ) : ?>
+	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
+<?php endif; ?>

@@ -569,9 +569,9 @@ class ReportsGenerator {
 
 		if ( $this->hasArg( 'step' ) ) {
 			if ( $this->hasArg('user' ) && '' === $this->args['user'] ) {
-				$this->params['post_types'] = $this->args['step'] == 'all' ? array( 'sfwd-courses' ) : $this->args['step'];
+				$this->params['post_types'] = $this->args['step'] == 'all' ? $this->allSteps() : $this->args['step'];
 			} else {
-				$this->params['post_types'] = $this->args['step'] == 'all' ? array( 'sfwd-courses' ) : $this->args['step'];
+				$this->params['post_types'] = $this->args['step'] == 'all' ? $this->allSteps() : $this->args['step'];
 			}
 		}
 
