@@ -47,7 +47,7 @@ class Core {
 
 		$this->course->name                  = \LearnDash_Custom_Label::get_label( 'courses' );
 		$this->course->my_courses_name       = sprintf( __( 'My %s', 'buddyboss' ), $this->course->name );
-		$this->course->create_courses_name   = sprintf( __( 'Create a %s', 'buddypress-learndash' ), $this->course->name );
+		$this->course->create_courses_name   = sprintf( __( 'Create a %s', 'buddyboss' ), $this->course->name );
 		$this->course->create_courses_slug   = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
 		$this->course->slug                  = apply_filters( 'bp_learndash_profile_courses_slug', 'courses' );
 		$this->course->my_courses_slug       = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
@@ -171,6 +171,16 @@ class Core {
 		}
 	}
 
+	/**
+	 * Add Menu and Sub menu navigation link for profile menu
+     *
+	 * @since BuddyBoss 1.9.10
+     *
+	 * @param $slug
+	 * @param string $parent_slug
+	 *
+	 * @return string
+	 */
 	public function get_nav_link( $slug, $parent_slug = '' ) {
 		$displayed_user_id = bp_displayed_user_id();
 		$user_domain       = ( ! empty( $displayed_user_id ) ) ? bp_displayed_user_domain() : bp_loggedin_user_domain();
@@ -183,6 +193,16 @@ class Core {
 		return $nav_link;
 	}
 
+	/**
+	 * Add Menu and Sub menu navigation link for admin menu
+	 *
+	 * @since BuddyBoss 1.9.10
+	 *
+	 * @param $slug
+	 * @param string $parent_slug
+	 *
+	 * @return string
+	 */
 	public function adminbar_nav_link( $slug, $parent_slug = '' ) {
 		$user_domain = bp_loggedin_user_domain();
 		if ( ! empty( $parent_slug ) ) {
@@ -204,6 +224,11 @@ class Core {
 		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
 	}
 
+	/**
+	 * Display Certificates Page Content
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
 	function certificates_page_content() {
 		do_action( 'template_notices' );
 		do_action( 'bp_learndash_before_certificates_page_content' );
@@ -220,6 +245,11 @@ class Core {
 		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
 	}
 
+	/**
+	 * Display Badges Page Content
+     *
+	 * @since BuddyBoss 1.9.10
+	 */
 	function badges_page_content() {
 		do_action( 'template_notices' );
 		do_action( 'bp_learndash_before_badges_page_content' );
@@ -232,29 +262,26 @@ class Core {
 	 * @since BuddyBoss 1.9.10
 	 */
 	public function course_page() {
-
-		add_action( 'bp_template_title', array( $this, 'courses_expand' ) );
 		add_action( 'bp_template_title', array( $this, 'courses_page_title' ) );
 		add_action( 'bp_template_content', array( $this, 'courses_page_content' ) );
 		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
 	}
 
-	function courses_expand() {
-		?>
-        <div class="expand_collapse">
-            <a href="#" onClick="return flip_expand_all('#course_list');"><?php _e( 'Expand All', 'buddyboss' ); ?></a>
-            <span class="sep"><?php _e( '/', 'buddypress-learndash' ); ?></span>
-            <a href="#"
-               onClick="return flip_collapse_all('#course_list');"><?php _e( 'Collapse All', 'buddyboss' ); ?></a>
-        </div>
-		<?php
-	}
-
+	/**
+	 * Display Page title on Profile my Course Page
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
 	function courses_page_title() {
-		$title = sprintf( __( 'Registered %s', 'buddypress-learndash' ), $this->course->name );
+		$title = sprintf( __( 'Registered %s', 'buddyboss' ), $this->course->name );
 		echo apply_filters( 'courses_page_title', $title );
 	}
 
+	/**
+	 * Display Courses in My Course Profile Page
+	 *
+	 * @since BuddyBoss 1.9.10
+	 */
 	function courses_page_content() {
 
 		do_action( 'template_notices' );
