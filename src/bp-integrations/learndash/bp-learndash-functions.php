@@ -360,7 +360,7 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 	 * Quiz Certificate
 	 **/
 	$quizzes  = get_user_meta( $user_id, '_sfwd-quizzes', true );
-	$quiz_ids = wp_list_pluck( $quizzes, 'quiz' );
+	$quiz_ids = empty( $quizzes ) ? array() :  wp_list_pluck( $quizzes, 'quiz' );
 	if ( ! empty( $quiz_ids ) ) {
 		$quiz_total_query_args = array(
 			'post_type' => 'sfwd-quiz',
