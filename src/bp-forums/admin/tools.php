@@ -23,7 +23,7 @@ defined( 'ABSPATH' ) || exit;
  * @uses wp_nonce_field() To add a hidden nonce field
  */
 function bbp_admin_repair() {
-?>
+	?>
 
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
@@ -37,14 +37,14 @@ function bbp_admin_repair() {
 
 		<div class="bp-admin-card section-repair_forums">
 
-			<h2><?php esc_html_e( 'Repair Forums', 'buddyboss' ) ?></h2>
+			<h2><?php esc_html_e( 'Repair Forums', 'buddyboss' ); ?></h2>
 
 			<p><?php esc_html_e( 'BuddyBoss keeps track of relationships between forums, discussions, replies, and discussion tags, and users. Occasionally these relationships become out of sync, most often after an import or migration. Use the tools below to manually recalculate these relationships.', 'buddyboss' ); ?></p>
 
 			<form class="settings" method="post" action="">
 
 				<fieldset>
-					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ) ?></legend>
+					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ); ?></legend>
 					<div class="checkbox">
 					<?php foreach ( bbp_admin_repair_list() as $item ) : ?>
 						<label for="<?php echo esc_html( $item[0] ); ?>"><input type="checkbox" class="checkbox" name="<?php echo esc_attr( $item[0] ) . '" id="' . esc_attr( str_replace( '_', '-', $item[0] ) ); ?>" value="<?php echo esc_attr( $item[0] ); ?>" /> <?php echo esc_html( $item[1] ); ?></label>
@@ -59,7 +59,7 @@ function bbp_admin_repair() {
 		</div>
 	</div>
 
-<?php
+	<?php
 }
 
 /**
@@ -74,8 +74,9 @@ function bbp_admin_repair() {
  */
 function bbp_admin_repair_handler() {
 
-	if ( ! bbp_is_post_request() )
+	if ( ! bbp_is_post_request() ) {
 		return;
+	}
 
 	check_admin_referer( 'bbpress-do-counts' );
 
@@ -85,7 +86,7 @@ function bbp_admin_repair_handler() {
 	wp_cache_flush();
 
 	foreach ( (array) bbp_admin_repair_list() as $item ) {
-		if ( isset( $item[2] ) && isset( $_POST[$item[0]] ) && 1 === absint( $_POST[$item[0]] ) && is_callable( $item[2] ) ) {
+		if ( isset( $item[2] ) && isset( $_POST[ $item[0] ] ) && 1 === absint( $_POST[ $item[0] ] ) && is_callable( $item[2] ) ) {
 			$messages[] = call_user_func( $item[2] );
 		}
 	}
@@ -103,7 +104,7 @@ function bbp_admin_repair_handler() {
  * @since bbPress (r2613)
  *
  * @param string|WP_Error $message A message to be displayed or {@link WP_Error}
- * @param string $class Optional. A class to be added to the message div
+ * @param string          $class Optional. A class to be added to the message div
  * @uses WP_Error::get_error_messages() To get the error messages of $message
  * @uses add_action() Adds the admin notice action with the message HTML
  * @return string The message HTML
@@ -111,7 +112,7 @@ function bbp_admin_repair_handler() {
 function bbp_admin_tools_feedback( $message, $class = false ) {
 	if ( is_string( $message ) ) {
 		$message = '<p>' . $message . '</p>';
-		$class = $class ? $class : 'updated';
+		$class   = $class ? $class : 'updated';
 	} elseif ( is_wp_error( $message ) ) {
 		$errors = $message->get_error_messages();
 
@@ -153,25 +154,25 @@ function bbp_admin_tools_feedback( $message, $class = false ) {
  */
 function bbp_admin_repair_list() {
 	$repair_list = array(
-		0  => array( 'bbp-sync-topic-meta',          __( 'Recalculate the parent discussion for each post',        'buddyboss' ), 'bbp_admin_repair_topic_meta'               ),
-		5  => array( 'bbp-sync-forum-meta',          __( 'Recalculate the parent forum for each post',        'buddyboss' ), 'bbp_admin_repair_forum_meta'               ),
-		10 => array( 'bbp-sync-forum-visibility',    __( 'Recalculate private and hidden forums',             'buddyboss' ), 'bbp_admin_repair_forum_visibility'         ),
-		15 => array( 'bbp-sync-all-topics-forums',   __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness'                ),
-		20 => array( 'bbp-sync-all-topics-sticky',   __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky'                   ),
-		25 => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply',            'buddyboss' ), 'bbp_admin_repair_reply_menu_order'         ),
-		30 => array( 'bbp-group-forums',             __( 'Repair social group forum relationships',       'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
-		35 => array( 'bbp-forum-topics',             __( 'Count discussions in each forum',                        'buddyboss' ), 'bbp_admin_repair_forum_topic_count'        ),
-		40 => array( 'bbp-forum-replies',            __( 'Count replies in each forum',                       'buddyboss' ), 'bbp_admin_repair_forum_reply_count'        ),
-		45 => array( 'bbp-topic-replies',            __( 'Count replies in each discussion',                       'buddyboss' ), 'bbp_admin_repair_topic_reply_count'        ),
-		50 => array( 'bbp-topic-members',             __( 'Count members in each discussion',                        'buddyboss' ), 'bbp_admin_repair_topic_voice_count'        ),
-		55 => array( 'bbp-topic-hidden-replies',     __( 'Count spammed & trashed replies in each discussion',     'buddyboss' ), 'bbp_admin_repair_topic_hidden_reply_count' ),
-		60 => array( 'bbp-user-topics',              __( 'Count discussions for each user',                        'buddyboss' ), 'bbp_admin_repair_user_topic_count'         ),
-		65 => array( 'bbp-user-replies',             __( 'Count replies for each user',                       'buddyboss' ), 'bbp_admin_repair_user_reply_count'         ),
-		70 => array( 'bbp-user-favorites',           __( 'Remove trashed discussions from user favorites',         'buddyboss' ), 'bbp_admin_repair_user_favorites'           ),
-		75 => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions',     'buddyboss' ), 'bbp_admin_repair_user_topic_subscriptions' ),
-		80 => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions',     'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
-		85 => array( 'bbp-user-role-map',            __( 'Remap existing users to default forum roles',       'buddyboss' ), 'bbp_admin_repair_user_roles'               ),
-		90 => array( 'bbp-wp-role-restore',          __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' )
+		0  => array( 'bbp-sync-topic-meta', __( 'Recalculate the parent discussion for each post', 'buddyboss' ), 'bbp_admin_repair_topic_meta' ),
+		5  => array( 'bbp-sync-forum-meta', __( 'Recalculate the parent forum for each post', 'buddyboss' ), 'bbp_admin_repair_forum_meta' ),
+		10 => array( 'bbp-sync-forum-visibility', __( 'Recalculate private and hidden forums', 'buddyboss' ), 'bbp_admin_repair_forum_visibility' ),
+		15 => array( 'bbp-sync-all-topics-forums', __( 'Recalculate last activity in each discussion and forum', 'buddyboss' ), 'bbp_admin_repair_freshness' ),
+		20 => array( 'bbp-sync-all-topics-sticky', __( 'Recalculate the sticky relationship of each discussion', 'buddyboss' ), 'bbp_admin_repair_sticky' ),
+		25 => array( 'bbp-sync-all-reply-positions', __( 'Recalculate the position of each reply', 'buddyboss' ), 'bbp_admin_repair_reply_menu_order' ),
+		30 => array( 'bbp-group-forums', __( 'Repair social group forum relationships', 'buddyboss' ), 'bbp_admin_repair_group_forum_relationship' ),
+		35 => array( 'bbp-forum-topics', __( 'Count discussions in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_topic_count' ),
+		40 => array( 'bbp-forum-replies', __( 'Count replies in each forum', 'buddyboss' ), 'bbp_admin_repair_forum_reply_count' ),
+		45 => array( 'bbp-topic-replies', __( 'Count replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_reply_count' ),
+		50 => array( 'bbp-topic-members', __( 'Count members in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_voice_count' ),
+		55 => array( 'bbp-topic-hidden-replies', __( 'Count spammed & trashed replies in each discussion', 'buddyboss' ), 'bbp_admin_repair_topic_hidden_reply_count' ),
+		60 => array( 'bbp-user-topics', __( 'Count discussions for each user', 'buddyboss' ), 'bbp_admin_repair_user_topic_count' ),
+		65 => array( 'bbp-user-replies', __( 'Count replies for each user', 'buddyboss' ), 'bbp_admin_repair_user_reply_count' ),
+		70 => array( 'bbp-user-favorites', __( 'Remove trashed discussions from user favorites', 'buddyboss' ), 'bbp_admin_repair_user_favorites' ),
+		75 => array( 'bbp-user-topic-subscriptions', __( 'Remove trashed discussions from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_topic_subscriptions' ),
+		80 => array( 'bbp-user-forum-subscriptions', __( 'Remove trashed forums from user subscriptions', 'buddyboss' ), 'bbp_admin_repair_user_forum_subscriptions' ),
+		85 => array( 'bbp-user-role-map', __( 'Remap existing users to default forum roles', 'buddyboss' ), 'bbp_admin_repair_user_roles' ),
+		90 => array( 'bbp-wp-role-restore', __( 'Remove and restore Wordpress default role capabilities', 'buddyboss' ), 'bbp_restore_caps_from_wp_roles' ),
 	);
 	ksort( $repair_list );
 
@@ -207,7 +208,12 @@ function bbp_admin_repair_topic_reply_count() {
 						AND `postmeta`.`meta_key` = '_bbp_reply_count'";
 
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	// Recalculate the meta key _bbp_reply_count for each topic
@@ -223,10 +229,20 @@ function bbp_admin_repair_topic_reply_count() {
 				GROUP BY `topics`.`ID`);";
 
 	if ( is_wp_error( $wpdb->query( $sql ) ) ) {
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -246,8 +262,14 @@ function bbp_admin_repair_topic_voice_count() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM `{$wpdb->postmeta}` WHERE `meta_key` = '_bbp_voice_count';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Post types and status
 	$tpt = bbp_get_topic_post_type();
@@ -266,10 +288,21 @@ function bbp_admin_repair_topic_voice_count() {
 					AND `posts`.`post_author` != '0'
 				GROUP BY `postmeta`.`meta_value`);";
 
-	if ( is_wp_error( $wpdb->query( $sql ) ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql ) ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -288,14 +321,31 @@ function bbp_admin_repair_topic_hidden_reply_count() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM `{$wpdb->postmeta}` WHERE `meta_key` = '_bbp_reply_count_hidden';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$sql = "INSERT INTO `{$wpdb->postmeta}` (`post_id`, `meta_key`, `meta_value`) (SELECT `post_parent`, '_bbp_reply_count_hidden', COUNT(`post_status`) as `meta_value` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_reply_post_type() . "' AND `post_status` IN ( '" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "') GROUP BY `post_parent`);";
-	if ( is_wp_error( $wpdb->query( $sql ) ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql ) ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -310,9 +360,9 @@ function bbp_admin_repair_group_forum_relationship() {
 	global $wpdb;
 
 	$statement = __( 'Repairing BuddyBoss group-forum relationships&hellip; %s', 'buddyboss' );
-	$g_count     = 0;
-	$f_count     = 0;
-	$s_count     = 0;
+	$g_count   = 0;
+	$f_count   = 0;
+	$s_count   = 0;
 
 	// Copy the BuddyBoss filter here, incase BuddyBoss is not active
 	$prefix            = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
@@ -320,17 +370,25 @@ function bbp_admin_repair_group_forum_relationship() {
 	$groups_meta_table = $prefix . 'bp_groups_groupmeta';
 
 	// Get the converted forum IDs
-	$forum_ids = $wpdb->query( "SELECT `forum`.`ID`, `forummeta`.`meta_value`
+	$forum_ids = $wpdb->query(
+		"SELECT `forum`.`ID`, `forummeta`.`meta_value`
 								FROM `{$wpdb->posts}` AS `forum`
 									LEFT JOIN `{$wpdb->postmeta}` AS `forummeta`
 										ON `forum`.`ID` = `forummeta`.`post_id`
 										AND `forummeta`.`meta_key` = '_bbp_old_forum_id'
 								WHERE `forum`.`post_type` = 'forum'
-								GROUP BY `forum`.`ID`;" );
+								GROUP BY `forum`.`ID`;"
+	);
 
 	// Bail if forum IDs returned an error
-	if ( is_wp_error( $forum_ids ) || empty( $wpdb->last_result ) )
-		return array( 2, sprintf( $statement, __( 'Failed!', 'buddyboss' ) ), 'status' => 0, 'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ) );
+	if ( is_wp_error( $forum_ids ) || empty( $wpdb->last_result ) ) {
+		return array(
+			2,
+			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			'status'  => 0,
+			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+		);
+	}
 
 	// Stash the last results
 	$results = $wpdb->last_result;
@@ -339,20 +397,21 @@ function bbp_admin_repair_group_forum_relationship() {
 	foreach ( $results as $group_forums ) {
 
 		// Only update if is a converted forum
-		if ( ! isset( $group_forums->meta_value ) )
+		if ( ! isset( $group_forums->meta_value ) ) {
 			continue;
+		}
 
 		// Attempt to update group meta
 		$updated = $wpdb->query( "UPDATE `{$groups_meta_table}` SET `meta_value` = '{$group_forums->ID}' WHERE `meta_key` = 'forum_id' AND `meta_value` = '{$group_forums->meta_value}';" );
 
 		// Bump the count
-		if ( !empty( $updated ) && ! is_wp_error( $updated ) ) {
+		if ( ! empty( $updated ) && ! is_wp_error( $updated ) ) {
 			++$g_count;
 		}
 
 		// Update group to forum relationship data
 		$group_id = (int) $wpdb->get_var( "SELECT `group_id` FROM `{$groups_meta_table}` WHERE `meta_key` = 'forum_id' AND `meta_value` = '{$group_forums->ID}';" );
-		if ( !empty( $group_id ) ) {
+		if ( ! empty( $group_id ) ) {
 
 			// Update the group to forum meta connection in forums
 			update_post_meta( $group_forums->ID, '_bbp_group_ids', array( $group_id ) );
@@ -364,7 +423,7 @@ function bbp_admin_repair_group_forum_relationship() {
 			switch ( $group_status ) {
 
 				// Public groups have public forums
-				case 'public' :
+				case 'public':
 					bbp_publicize_forum( $group_forums->ID );
 
 					// Bump the count for output later
@@ -372,8 +431,8 @@ function bbp_admin_repair_group_forum_relationship() {
 					break;
 
 				// Private/hidden groups have hidden forums
-				case 'private' :
-				case 'hidden'  :
+				case 'private':
+				case 'hidden':
 					bbp_hide_forum( $group_forums->ID );
 
 					// Bump the count for output later
@@ -396,23 +455,27 @@ function bbp_admin_repair_group_forum_relationship() {
 	}
 
 	// Try to get the group root forum
-	$posts = get_posts( array(
-		'post_type'   => bbp_get_forum_post_type(),
-		'meta_key'    => '_bbp_old_forum_id',
-		'meta_value'  => $old_default_forum_id,
-		'numberposts' => 1
-	) );
+	$posts = get_posts(
+		array(
+			'post_type'   => bbp_get_forum_post_type(),
+			'meta_key'    => '_bbp_old_forum_id',
+			'meta_value'  => $old_default_forum_id,
+			'numberposts' => 1,
+		)
+	);
 
 	// Found the group root forum
 	if ( ! empty( $posts ) ) {
 
 		// Rename 'Default Forum'  since it's now visible in sitewide forums
 		if ( 'Default Forum' === $posts[0]->post_title ) {
-			wp_update_post( array(
-				'ID'         => $posts[0]->ID,
-				'post_title' => __( 'Group Forums', 'buddyboss' ),
-				'post_name'  => __( 'group-forums', 'buddyboss' ),
-			) );
+			wp_update_post(
+				array(
+					'ID'         => $posts[0]->ID,
+					'post_title' => __( 'Group Forums', 'buddyboss' ),
+					'post_name'  => __( 'group-forums', 'buddyboss' ),
+				)
+			);
 		}
 
 		// Update the group forums root metadata
@@ -420,15 +483,20 @@ function bbp_admin_repair_group_forum_relationship() {
 	}
 
 	// Remove old bbPress 1.1 roles (BuddyBoss)
-	remove_role( 'member'    );
-	remove_role( 'inactive'  );
-	remove_role( 'blocked'   );
+	remove_role( 'member' );
+	remove_role( 'inactive' );
+	remove_role( 'blocked' );
 	remove_role( 'moderator' );
 	remove_role( 'keymaster' );
 
 	// Complete results
-	$result = sprintf( __( 'Complete! %s groups updated; %s forums updated; %s forum statuses synced.', 'buddyboss' ), bbp_number_format( $g_count ), bbp_number_format( $f_count ), bbp_number_format( $s_count ) );
-	return array( 0, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+	$result = sprintf( __( 'Complete! %1$s groups updated; %2$s forums updated; %3$s forum statuses synced.', 'buddyboss' ), bbp_number_format( $g_count ), bbp_number_format( $f_count ), bbp_number_format( $s_count ) );
+	return array(
+		0,
+		sprintf( $statement, $result ),
+		'status'  => 1,
+		'message' => sprintf( $statement, $result ),
+	);
 }
 
 /**
@@ -450,19 +518,40 @@ function bbp_admin_repair_forum_topic_count() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	$sql_delete = "DELETE FROM {$wpdb->postmeta} WHERE meta_key IN ( '_bbp_topic_count', '_bbp_total_topic_count' );";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
-	$forums = get_posts( array( 'post_type' => bbp_get_forum_post_type(), 'numberposts' => -1 ) );
-	if ( !empty( $forums ) ) {
+	$forums = get_posts(
+		array(
+			'post_type'   => bbp_get_forum_post_type(),
+			'numberposts' => -1,
+		)
+	);
+	if ( ! empty( $forums ) ) {
 		foreach ( $forums as $forum ) {
 			bbp_update_forum_topic_count( $forum->ID );
 		}
 	} else {
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -494,20 +583,40 @@ function bbp_admin_repair_forum_reply_count() {
 						OR `postmeta`.`meta_key` = '_bbp_total_reply_count'";
 
 	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
- 		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	// Recalculate the metas key _bbp_reply_count and _bbp_total_reply_count for each forum
-	$forums = get_posts( array( 'post_type' => bbp_get_forum_post_type(), 'numberposts' => -1 ) );
-	if ( !empty( $forums ) ) {
+	$forums = get_posts(
+		array(
+			'post_type'   => bbp_get_forum_post_type(),
+			'numberposts' => -1,
+		)
+	);
+	if ( ! empty( $forums ) ) {
 		foreach ( $forums as $forum ) {
 			bbp_update_forum_reply_count( $forum->ID );
 		}
 	} else {
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -528,31 +637,60 @@ function bbp_admin_repair_user_topic_count() {
 	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
 	$insert_rows = $wpdb->get_results( $sql_select );
 
-	if ( is_wp_error( $insert_rows ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $insert_rows ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$key           = $wpdb->prefix . '_bbp_topic_count';
 	$insert_values = array();
-	foreach ( $insert_rows as $insert_row )
+	foreach ( $insert_rows as $insert_row ) {
 		$insert_values[] = "('{$insert_row->post_author}', '{$key}', '{$insert_row->_count}')";
+	}
 
-	if ( !count( $insert_values ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( ! count( $insert_values ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$sql_delete = "DELETE FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 3, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			3,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	foreach ( array_chunk( $insert_values, 10000 ) as $chunk ) {
-		$chunk = "\n" . implode( ",\n", $chunk );
+		$chunk      = "\n" . implode( ",\n", $chunk );
 		$sql_insert = "INSERT INTO `{$wpdb->usermeta}` (`user_id`, `meta_key`, `meta_value`) VALUES $chunk;";
 
 		if ( is_wp_error( $wpdb->query( $sql_insert ) ) ) {
-			return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			return array(
+				4,
+				sprintf( $statement, $result ),
+				'status'  => 0,
+				'message' => sprintf( $statement, $result ),
+			);
 		}
 	}
 
-	return array( 0, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, $result ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -573,31 +711,60 @@ function bbp_admin_repair_user_reply_count() {
 	$sql_select  = "SELECT `post_author`, COUNT(DISTINCT `ID`) as `_count` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_reply_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "' GROUP BY `post_author`;";
 	$insert_rows = $wpdb->get_results( $sql_select );
 
-	if ( is_wp_error( $insert_rows ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $insert_rows ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$key           = $wpdb->prefix . '_bbp_reply_count';
 	$insert_values = array();
-	foreach ( $insert_rows as $insert_row )
+	foreach ( $insert_rows as $insert_row ) {
 		$insert_values[] = "('{$insert_row->post_author}', '{$key}', '{$insert_row->_count}')";
+	}
 
-	if ( !count( $insert_values ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( ! count( $insert_values ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$sql_delete = "DELETE FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 3, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			3,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	foreach ( array_chunk( $insert_values, 10000 ) as $chunk ) {
-		$chunk = "\n" . implode( ",\n", $chunk );
+		$chunk      = "\n" . implode( ",\n", $chunk );
 		$sql_insert = "INSERT INTO `{$wpdb->usermeta}` (`user_id`, `meta_key`, `meta_value`) VALUES $chunk;";
 
 		if ( is_wp_error( $wpdb->query( $sql_insert ) ) ) {
-			return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			return array(
+				4,
+				sprintf( $statement, $result ),
+				'status'  => 0,
+				'message' => sprintf( $statement, $result ),
+			);
 		}
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -618,22 +785,36 @@ function bbp_admin_repair_user_favorites() {
 	$key       = $wpdb->prefix . '_bbp_favorites';
 	$users     = $wpdb->get_results( "SELECT `user_id`, `meta_value` AS `favorites` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';" );
 
-	if ( is_wp_error( $users ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $users ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$topics = $wpdb->get_col( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "';" );
 
-	if ( is_wp_error( $topics ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $topics ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$values = array();
 	foreach ( $users as $user ) {
-		if ( empty( $user->favorites ) || !is_string( $user->favorites ) )
+		if ( empty( $user->favorites ) || ! is_string( $user->favorites ) ) {
 			continue;
+		}
 
 		$favorites = array_intersect( $topics, explode( ',', $user->favorites ) );
-		if ( empty( $favorites ) || !is_array( $favorites ) )
+		if ( empty( $favorites ) || ! is_array( $favorites ) ) {
 			continue;
+		}
 
 		$favorites_joined = implode( ',', $favorites );
 		$values[]         = "('{$user->user_id}', '{$key}, '{$favorites_joined}')";
@@ -642,24 +823,45 @@ function bbp_admin_repair_user_favorites() {
 		unset( $favorites, $favorites_joined );
 	}
 
-	if ( !count( $values ) ) {
+	if ( ! count( $values ) ) {
 		$result = __( 'Nothing to remove!', 'buddyboss' );
-		return array( 0, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+		return array(
+			0,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	$sql_delete = "DELETE FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			4,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	foreach ( array_chunk( $values, 10000 ) as $chunk ) {
-		$chunk = "\n" . implode( ",\n", $chunk );
+		$chunk      = "\n" . implode( ",\n", $chunk );
 		$sql_insert = "INSERT INTO `$wpdb->usermeta` (`user_id`, `meta_key`, `meta_value`) VALUES $chunk;";
 		if ( is_wp_error( $wpdb->query( $sql_insert ) ) ) {
-			return array( 5, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			return array(
+				5,
+				sprintf( $statement, $result ),
+				'status'  => 0,
+				'message' => sprintf( $statement, $result ),
+			);
 		}
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -680,21 +882,35 @@ function bbp_admin_repair_user_topic_subscriptions() {
 	$key       = $wpdb->prefix . '_bbp_subscriptions';
 	$users     = $wpdb->get_results( "SELECT `user_id`, `meta_value` AS `subscriptions` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';" );
 
-	if ( is_wp_error( $users ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $users ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$topics = $wpdb->get_col( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_topic_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "';" );
-	if ( is_wp_error( $topics ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $topics ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$values = array();
 	foreach ( $users as $user ) {
-		if ( empty( $user->subscriptions ) || !is_string( $user->subscriptions ) )
+		if ( empty( $user->subscriptions ) || ! is_string( $user->subscriptions ) ) {
 			continue;
+		}
 
 		$subscriptions = array_intersect( $topics, explode( ',', $user->subscriptions ) );
-		if ( empty( $subscriptions ) || !is_array( $subscriptions ) )
+		if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {
 			continue;
+		}
 
 		$subscriptions_joined = implode( ',', $subscriptions );
 		$values[]             = "('{$user->user_id}', '{$key}', '{$subscriptions_joined}')";
@@ -703,24 +919,45 @@ function bbp_admin_repair_user_topic_subscriptions() {
 		unset( $subscriptions, $subscriptions_joined );
 	}
 
-	if ( !count( $values ) ) {
+	if ( ! count( $values ) ) {
 		$result = __( 'Nothing to remove!', 'buddyboss' );
-		return array( 0, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+		return array(
+			0,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	$sql_delete = "DELETE FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			4,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	foreach ( array_chunk( $values, 10000 ) as $chunk ) {
-		$chunk = "\n" . implode( ",\n", $chunk );
+		$chunk      = "\n" . implode( ",\n", $chunk );
 		$sql_insert = "INSERT INTO `{$wpdb->usermeta}` (`user_id`, `meta_key`, `meta_value`) VALUES $chunk;";
 		if ( is_wp_error( $wpdb->query( $sql_insert ) ) ) {
-			return array( 5, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			return array(
+				5,
+				sprintf( $statement, $result ),
+				'status'  => 0,
+				'message' => sprintf( $statement, $result ),
+			);
 		}
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -741,21 +978,35 @@ function bbp_admin_repair_user_forum_subscriptions() {
 	$key       = $wpdb->prefix . '_bbp_forum_subscriptions';
 	$users     = $wpdb->get_results( "SELECT `user_id`, `meta_value` AS `subscriptions` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';" );
 
-	if ( is_wp_error( $users ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $users ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$forums = $wpdb->get_col( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` = '" . bbp_get_forum_post_type() . "' AND `post_status` = '" . bbp_get_public_status_id() . "';" );
-	if ( is_wp_error( $forums ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $forums ) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	$values = array();
 	foreach ( $users as $user ) {
-		if ( empty( $user->subscriptions ) || !is_string( $user->subscriptions ) )
+		if ( empty( $user->subscriptions ) || ! is_string( $user->subscriptions ) ) {
 			continue;
+		}
 
 		$subscriptions = array_intersect( $forums, explode( ',', $user->subscriptions ) );
-		if ( empty( $subscriptions ) || !is_array( $subscriptions ) )
+		if ( empty( $subscriptions ) || ! is_array( $subscriptions ) ) {
 			continue;
+		}
 
 		$subscriptions_joined = implode( ',', $subscriptions );
 		$values[]             = "('{$user->user_id}', '{$key}', '{$subscriptions_joined}')";
@@ -764,24 +1015,45 @@ function bbp_admin_repair_user_forum_subscriptions() {
 		unset( $subscriptions, $subscriptions_joined );
 	}
 
-	if ( !count( $values ) ) {
+	if ( ! count( $values ) ) {
 		$result = __( 'Nothing to remove!', 'buddyboss' );
-		return array( 0, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+		return array(
+			0,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	$sql_delete = "DELETE FROM `{$wpdb->usermeta}` WHERE `meta_key` = '{$key}';";
-	if ( is_wp_error( $wpdb->query( $sql_delete ) ) )
-		return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( $sql_delete ) ) ) {
+		return array(
+			4,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	foreach ( array_chunk( $values, 10000 ) as $chunk ) {
-		$chunk = "\n" . implode( ",\n", $chunk );
+		$chunk      = "\n" . implode( ",\n", $chunk );
 		$sql_insert = "INSERT INTO `{$wpdb->usermeta}` (`user_id`, `meta_key`, `meta_value`) VALUES $chunk;";
 		if ( is_wp_error( $wpdb->query( $sql_insert ) ) ) {
-			return array( 5, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			return array(
+				5,
+				sprintf( $statement, $result ),
+				'status'  => 0,
+				'message' => sprintf( $statement, $result ),
+			);
 		}
 	}
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -804,8 +1076,14 @@ function bbp_admin_repair_user_roles() {
 	$default_role = bbp_get_default_role();
 
 	// Bail if no role map exists
-	if ( empty( $role_map ) )
-		return array( 1, sprintf( $statement, __( 'Failed!', 'buddyboss' ) ), 'status' => 0, 'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ) );
+	if ( empty( $role_map ) ) {
+		return array(
+			1,
+			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			'status'  => 0,
+			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+		);
+	}
 
 	// Iterate through each role...
 	foreach ( array_keys( bbp_get_blog_roles() ) as $role ) {
@@ -814,15 +1092,17 @@ function bbp_admin_repair_user_roles() {
 		$offset = 0;
 
 		// If no role map exists, give the default forum role (bbp-participant)
-		$new_role = isset( $role_map[$role] ) ? $role_map[$role] : $default_role;
+		$new_role = isset( $role_map[ $role ] ) ? $role_map[ $role ] : $default_role;
 
 		// Get users of this site, limited to 1000
-		while ( $users = get_users( array(
+		while ( $users = get_users(
+			array(
 				'role'   => $role,
 				'fields' => 'ID',
 				'number' => 1000,
-				'offset' => $offset
-			) ) ) {
+				'offset' => $offset,
+			)
+		) ) {
 
 			// Iterate through each user of $role and try to set it
 			foreach ( (array) $users as $user_id ) {
@@ -837,7 +1117,12 @@ function bbp_admin_repair_user_roles() {
 	}
 
 	$result = sprintf( __( 'Complete! %s users updated.', 'buddyboss' ), bbp_number_format( $changed ) );
-	return array( 0, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+	return array(
+		0,
+		sprintf( $statement, $result ),
+		'status'  => 1,
+		'message' => sprintf( $statement, $result ),
+	);
 }
 
 /**
@@ -856,81 +1141,173 @@ function bbp_admin_repair_freshness() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// First, delete everything.
-	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` IN ( '_bbp_last_reply_id', '_bbp_last_topic_id', '_bbp_last_active_id', '_bbp_last_active_time' );" ) ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` IN ( '_bbp_last_reply_id', '_bbp_last_topic_id', '_bbp_last_active_id', '_bbp_last_active_time' );" ) ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Next, give all the topics with replies the ID their last reply.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_last_reply_id', MAX( `reply`.`ID` )
 			FROM `$wpdb->posts` AS `topic` INNER JOIN `$wpdb->posts` AS `reply` ON `topic`.`ID` = `reply`.`post_parent`
 			WHERE `reply`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
-			GROUP BY `topic`.`ID` );" ) ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `topic`.`ID` );"
+		)
+	) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// For any remaining topics, give a reply ID of 0.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `ID`, '_bbp_last_reply_id', 0
 			FROM `$wpdb->posts` AS `topic` LEFT JOIN `$wpdb->postmeta` AS `reply`
 			ON `topic`.`ID` = `reply`.`post_id` AND `reply`.`meta_key` = '_bbp_last_reply_id'
-			WHERE `reply`.`meta_id` IS NULL AND `topic`.`post_type` = 'topic' );" ) ) )
-		return array( 3, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			WHERE `reply`.`meta_id` IS NULL AND `topic`.`post_type` = 'topic' );"
+		)
+	) ) {
+		return array(
+			3,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Now we give all the forums with topics the ID their last topic.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `forum`.`ID`, '_bbp_last_topic_id', `topic`.`ID`
 			FROM `$wpdb->posts` AS `forum` INNER JOIN `$wpdb->posts` AS `topic` ON `forum`.`ID` = `topic`.`post_parent`
 			WHERE `topic`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `forum`.`post_type` = 'forum' AND `topic`.`post_type` = 'topic'
-			GROUP BY `forum`.`ID` );" ) ) )
-		return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `forum`.`ID` );"
+		)
+	) ) {
+		return array(
+			4,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// For any remaining forums, give a topic ID of 0.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `ID`, '_bbp_last_topic_id', 0
 			FROM `$wpdb->posts` AS `forum` LEFT JOIN `$wpdb->postmeta` AS `topic`
 			ON `forum`.`ID` = `topic`.`post_id` AND `topic`.`meta_key` = '_bbp_last_topic_id'
-			WHERE `topic`.`meta_id` IS NULL AND `forum`.`post_type` = 'forum' );" ) ) )
-		return array( 5, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			WHERE `topic`.`meta_id` IS NULL AND `forum`.`post_type` = 'forum' );"
+		)
+	) ) {
+		return array(
+			5,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// After that, we give all the topics with replies the ID their last reply (again, this time for a different reason).
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_last_active_id', MAX( `reply`.`ID` )
 			FROM `$wpdb->posts` AS `topic` INNER JOIN `$wpdb->posts` AS `reply` ON `topic`.`ID` = `reply`.`post_parent`
 			WHERE `reply`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
-			GROUP BY `topic`.`ID` );" ) ) )
-		return array( 6, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `topic`.`ID` );"
+		)
+	) ) {
+		return array(
+			6,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// For any remaining topics, give a reply ID of themself.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `ID`, '_bbp_last_active_id', `ID`
 			FROM `$wpdb->posts` AS `topic` LEFT JOIN `$wpdb->postmeta` AS `reply`
 			ON `topic`.`ID` = `reply`.`post_id` AND `reply`.`meta_key` = '_bbp_last_active_id'
-			WHERE `reply`.`meta_id` IS NULL AND `topic`.`post_type` = 'topic' );" ) ) )
-		return array( 7, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			WHERE `reply`.`meta_id` IS NULL AND `topic`.`post_type` = 'topic' );"
+		)
+	) ) {
+		return array(
+			7,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Give topics with replies their last update time.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_last_active_time', MAX( `reply`.`post_date` )
 			FROM `$wpdb->posts` AS `topic` INNER JOIN `$wpdb->posts` AS `reply` ON `topic`.`ID` = `reply`.`post_parent`
 			WHERE `reply`.`post_status` IN ( '" . bbp_get_public_status_id() . "' ) AND `topic`.`post_type` = 'topic' AND `reply`.`post_type` = 'reply'
-			GROUP BY `topic`.`ID` );" ) ) )
-		return array( 8, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `topic`.`ID` );"
+		)
+	) ) {
+		return array(
+			8,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Give topics without replies their last update time.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `ID`, '_bbp_last_active_time', `post_date`
 			FROM `$wpdb->posts` AS `topic` LEFT JOIN `$wpdb->postmeta` AS `reply`
 			ON `topic`.`ID` = `reply`.`post_id` AND `reply`.`meta_key` = '_bbp_last_active_time'
-			WHERE `reply`.`meta_id` IS NULL AND `topic`.`post_type` = 'topic' );" ) ) )
-		return array( 9, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			WHERE `reply`.`meta_id` IS NULL AND `topic`.`post_type` = 'topic' );"
+		)
+	) ) {
+		return array(
+			9,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Forums need to know what their last active item is as well. Now it gets a bit more complex to do in the database.
 	$forums = $wpdb->get_col( "SELECT `ID` FROM `$wpdb->posts` WHERE `post_type` = 'forum' and `post_status` != 'auto-draft';" );
-	if ( is_wp_error( $forums ) )
-		return array( 10, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $forums ) ) {
+		return array(
+			10,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
- 	// Loop through forums
- 	foreach ( $forums as $forum_id ) {
-		if ( !bbp_is_forum_category( $forum_id ) ) {
+	// Loop through forums
+	foreach ( $forums as $forum_id ) {
+		if ( ! bbp_is_forum_category( $forum_id ) ) {
 			bbp_update_forum( array( 'forum_id' => $forum_id ) );
 		}
 	}
@@ -943,7 +1320,12 @@ function bbp_admin_repair_freshness() {
 	}
 
 	// Complete results
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -963,12 +1345,18 @@ function bbp_admin_repair_sticky() {
 	$forums    = $wpdb->get_col( "SELECT ID FROM `{$wpdb->posts}` WHERE `post_type` = 'forum';" );
 
 	// Bail if no forums found
-	if ( empty( $forums ) || is_wp_error( $forums ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+	if ( empty( $forums ) || is_wp_error( $forums ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Loop through forums and get their sticky topics
 	foreach ( $forums as $forum ) {
-		$forum_stickies[$forum] = get_post_meta( $forum, '_bbp_sticky_topics', true );
+		$forum_stickies[ $forum ] = get_post_meta( $forum, '_bbp_sticky_topics', true );
 	}
 
 	// Cleanup
@@ -988,19 +1376,24 @@ function bbp_admin_repair_sticky() {
 			// If the topic is not a super sticky, and the forum ID does not
 			// match the topic's forum ID, unset the forum's sticky meta.
 			if ( ! bbp_is_topic_super_sticky( $topic_id ) && $forum_id !== bbp_get_topic_forum_id( $topic_id ) ) {
-				unset( $forum_stickies[$forum_id][$id] );
+				unset( $forum_stickies[ $forum_id ][ $id ] );
 			}
 		}
 
 		// Get sticky topic ID's, or use empty string
-		$stickers = empty( $forum_stickies[$forum_id] ) ? '' : array_values( $forum_stickies[$forum_id] );
+		$stickers = empty( $forum_stickies[ $forum_id ] ) ? '' : array_values( $forum_stickies[ $forum_id ] );
 
 		// Update the forum's sticky topics meta
 		update_post_meta( $forum_id, '_bbp_sticky_topics', $stickers );
 	}
 
 	// Complete results
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -1019,11 +1412,21 @@ function bbp_admin_repair_forum_visibility() {
 
 	// Bail if queries returned errors
 	if ( ! bbp_repair_forum_visibility() ) {
-		return array( 2, sprintf( $statement, __( 'Failed!',   'buddyboss' ) ), 'status' => 0, 'message' => sprintf( $statement, __( 'Failed!',   'buddyboss' ) ) );
+		return array(
+			2,
+			sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+			'status'  => 0,
+			'message' => sprintf( $statement, __( 'Failed!', 'buddyboss' ) ),
+		);
 
-	// Complete results
+		// Complete results
 	} else {
-		return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+		return array(
+			0,
+			sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+			'status'  => 1,
+			'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		);
 	}
 }
 
@@ -1043,29 +1446,57 @@ function bbp_admin_repair_forum_meta() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// First, delete everything.
-	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` = '_bbp_forum_id';" ) ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` = '_bbp_forum_id';" ) ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Next, give all the topics with replies the ID their last reply.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `forum`.`ID`, '_bbp_forum_id', `forum`.`post_parent`
 			FROM `$wpdb->posts`
 				AS `forum`
 			WHERE `forum`.`post_type` = 'forum'
-			GROUP BY `forum`.`ID` );" ) ) )
-		return array( 2, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `forum`.`ID` );"
+		)
+	) ) {
+		return array(
+			2,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Next, give all the topics with replies the ID their last reply.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_forum_id', `topic`.`post_parent`
 			FROM `$wpdb->posts`
 				AS `topic`
 			WHERE `topic`.`post_type` = 'topic'
-			GROUP BY `topic`.`ID` );" ) ) )
-		return array( 3, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `topic`.`ID` );"
+		)
+	) ) {
+		return array(
+			3,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Next, give all the topics with replies the ID their last reply.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `reply`.`ID`, '_bbp_forum_id', `topic`.`post_parent`
 			FROM `$wpdb->posts`
 				AS `reply`
@@ -1074,11 +1505,24 @@ function bbp_admin_repair_forum_meta() {
 				ON `reply`.`post_parent` = `topic`.`ID`
 			WHERE `topic`.`post_type` = 'topic'
 				AND `reply`.`post_type` = 'reply'
-			GROUP BY `reply`.`ID` );" ) ) )
-		return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `reply`.`ID` );"
+		)
+	) ) {
+		return array(
+			4,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Complete results
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -1097,20 +1541,38 @@ function bbp_admin_repair_topic_meta() {
 	$result    = __( 'Failed!', 'buddyboss' );
 
 	// First, delete everything.
-	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` = '_bbp_topic_id';" ) ) )
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` = '_bbp_topic_id';" ) ) ) {
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Next, give all the topics with replies the ID their last reply.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `topic`.`ID`, '_bbp_topic_id', `topic`.`ID`
 			FROM `$wpdb->posts`
 				AS `topic`
 			WHERE `topic`.`post_type` = 'topic'
-			GROUP BY `topic`.`ID` );" ) ) )
-		return array( 3, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `topic`.`ID` );"
+		)
+	) ) {
+		return array(
+			3,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Next, give all the topics with replies the ID their last reply.
-	if ( is_wp_error( $wpdb->query( "INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
+	if ( is_wp_error(
+		$wpdb->query(
+			"INSERT INTO `$wpdb->postmeta` (`post_id`, `meta_key`, `meta_value`)
 			( SELECT `reply`.`ID`, '_bbp_topic_id', `topic`.`ID`
 			FROM `$wpdb->posts`
 				AS `reply`
@@ -1119,11 +1581,24 @@ function bbp_admin_repair_topic_meta() {
 				ON `reply`.`post_parent` = `topic`.`ID`
 			WHERE `topic`.`post_type` = 'topic'
 				AND `reply`.`post_type` = 'reply'
-			GROUP BY `reply`.`ID` );" ) ) )
-		return array( 4, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+			GROUP BY `reply`.`ID` );"
+		)
+	) ) {
+		return array(
+			4,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
+	}
 
 	// Complete results
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /**
@@ -1141,18 +1616,24 @@ function bbp_admin_repair_reply_menu_order() {
 	global $wpdb;
 
 	$statement = __( 'Recalculating reply menu order &hellip; %s', 'buddyboss' );
-	$result    = __( 'No reply positions to recalculate!',         'buddyboss' );
+	$result    = __( 'No reply positions to recalculate!', 'buddyboss' );
 
 	// Delete cases where `_bbp_reply_to` was accidentally set to itself
 	if ( is_wp_error( $wpdb->query( "DELETE FROM `{$wpdb->postmeta}` WHERE `meta_key` = '_bbp_reply_to' AND `post_id` = `meta_value`;" ) ) ) {
-		return array( 1, sprintf( $statement, $result ), 'status' => 0, 'message' => sprintf( $statement, $result ) );
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 0,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	// Post type
 	$rpt = bbp_get_reply_post_type();
 
 	// Get an array of reply id's to update the menu oder for each reply
-	$replies = $wpdb->get_results( "SELECT `a`.`ID` FROM `{$wpdb->posts}` AS `a`
+	$replies = $wpdb->get_results(
+		"SELECT `a`.`ID` FROM `{$wpdb->posts}` AS `a`
 										INNER JOIN (
 											SELECT `menu_order`, `post_parent`
 											FROM `{$wpdb->posts}`
@@ -1161,11 +1642,18 @@ function bbp_admin_repair_reply_menu_order() {
 										)`b`
 										ON `a`.`menu_order` = `b`.`menu_order`
 										AND `a`.`post_parent` = `b`.`post_parent`
-										WHERE `post_type` = '{$rpt}';", OBJECT_K );
+										WHERE `post_type` = '{$rpt}';",
+		OBJECT_K
+	);
 
 	// Bail if no replies returned
 	if ( empty( $replies ) ) {
-		return array( 1, sprintf( $statement, $result ), 'status' => 1, 'message' => sprintf( $statement, $result ) );
+		return array(
+			1,
+			sprintf( $statement, $result ),
+			'status'  => 1,
+			'message' => sprintf( $statement, $result ),
+		);
 	}
 
 	// Recalculate the menu order position for each reply
@@ -1179,7 +1667,12 @@ function bbp_admin_repair_reply_menu_order() {
 	// Flush the cache; things are about to get ugly.
 	wp_cache_flush();
 
-	return array( 0, sprintf( $statement, __( 'Complete!', 'buddyboss' ) ), 'status' => 1, 'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ) );
+	return array(
+		0,
+		sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+		'status'  => 1,
+		'message' => sprintf( $statement, __( 'Complete!', 'buddyboss' ) ),
+	);
 }
 
 /** Reset ********************************************************************/
@@ -1194,7 +1687,7 @@ function bbp_admin_repair_reply_menu_order() {
  * @uses wp_nonce_field() To add a hidden nonce field
  */
 function bbp_admin_reset() {
-?>
+	?>
 
 	<div class="wrap">
 		<h2 class="nav-tab-wrapper"><?php bp_core_admin_tabs( __( 'Tools', 'buddyboss' ) ); ?></h2>
@@ -1213,17 +1706,17 @@ function bbp_admin_reset() {
 			<table class="form-table">
 				<tbody>
 					<tr valign="top">
-						<th scope="row"><?php esc_html_e( 'The following data will be removed:', 'buddyboss' ) ?></th>
+						<th scope="row"><?php esc_html_e( 'The following data will be removed:', 'buddyboss' ); ?></th>
 						<td>
-							<?php esc_html_e( 'Forums',					'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Discussions',			'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Replies',				'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Discussion Tags',		'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Related Meta Data',		'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum Settings',			'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum Activity',			'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Forum User Roles',		'buddyboss' ); ?><br />
-							<?php esc_html_e( 'Importer Helper Data',	'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forums', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Discussions', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Replies', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Discussion Tags', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Related Meta Data', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forum Settings', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forum Activity', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Forum User Roles', 'buddyboss' ); ?><br />
+							<?php esc_html_e( 'Importer Helper Data', 'buddyboss' ); ?><br />
 						</td>
 					</tr>
 					<tr valign="top">
@@ -1256,7 +1749,7 @@ function bbp_admin_reset() {
 		</form>
 	</div>
 
-<?php
+	<?php
 }
 
 /**
@@ -1270,12 +1763,14 @@ function bbp_admin_reset() {
 function bbp_admin_reset_handler() {
 
 	// Bail if not resetting
-	if ( ! bbp_is_post_request() || empty( $_POST['bbpress-are-you-sure'] ) )
+	if ( ! bbp_is_post_request() || empty( $_POST['bbpress-are-you-sure'] ) ) {
 		return;
+	}
 
 	// Only keymasters can proceed
-	if ( ! bbp_is_user_keymaster() )
+	if ( ! bbp_is_user_keymaster() ) {
 		return;
+	}
 
 	check_admin_referer( 'bbpress-reset' );
 
@@ -1283,13 +1778,13 @@ function bbp_admin_reset_handler() {
 
 	// Stores messages
 	$messages = array();
-	$failed   = __( 'Failed',   'buddyboss' );
+	$failed   = __( 'Failed', 'buddyboss' );
 	$success  = __( 'Success!', 'buddyboss' );
 
 	// Flush the cache; things are about to get ugly.
 	wp_cache_flush();
 
-	/** Posts *****************************************************************/
+	/** Posts */
 
 	$statement  = __( 'Deleting Posts&hellip; %s', 'buddyboss' );
 	$sql_posts  = $wpdb->get_results( "SELECT `ID` FROM `{$wpdb->posts}` WHERE `post_type` IN ('forum', 'topic', 'reply')", OBJECT_K );
@@ -1297,9 +1792,9 @@ function bbp_admin_reset_handler() {
 	$result     = is_wp_error( $wpdb->query( $sql_delete ) ) ? $failed : $success;
 	$messages[] = sprintf( $statement, $result );
 
-	/** Post Meta *************************************************************/
+	/** Post Meta */
 
-	if ( !empty( $sql_posts ) ) {
+	if ( ! empty( $sql_posts ) ) {
 		$sql_meta = array();
 		foreach ( $sql_posts as $key => $value ) {
 			$sql_meta[] = $key;
@@ -1311,19 +1806,19 @@ function bbp_admin_reset_handler() {
 		$messages[] = sprintf( $statement, $result );
 	}
 
-	/** Topic Tags ************************************************************/
+	/** Topic Tags */
 
 	$statement  = __( 'Deleting Discussions Tags&hellip; %s', 'buddyboss' );
 	$sql_delete = "DELETE a,b,c FROM `{$wpdb->terms}` AS a LEFT JOIN `{$wpdb->term_taxonomy}` AS c ON a.term_id = c.term_id LEFT JOIN `{$wpdb->term_relationships}` AS b ON b.term_taxonomy_id = c.term_taxonomy_id WHERE c.taxonomy = 'topic-tag';";
 	$result     = is_wp_error( $wpdb->query( $sql_delete ) ) ? $failed : $success;
 	$messages[] = sprintf( $statement, $result );
 
-	/** User ******************************************************************/
+	/** User */
 
 	// Delete users
-	if ( !empty( $_POST['bbpress-delete-imported-users'] ) ) {
-		$sql_users  = $wpdb->get_results( "SELECT `user_id` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '_bbp_user_id'", OBJECT_K );
-		if ( !empty( $sql_users ) ) {
+	if ( ! empty( $_POST['bbpress-delete-imported-users'] ) ) {
+		$sql_users = $wpdb->get_results( "SELECT `user_id` FROM `{$wpdb->usermeta}` WHERE `meta_key` = '_bbp_user_id'", OBJECT_K );
+		if ( ! empty( $sql_users ) ) {
 			$sql_meta = array();
 			foreach ( $sql_users as $key => $value ) {
 				$sql_meta[] = $key;
@@ -1339,7 +1834,7 @@ function bbp_admin_reset_handler() {
 			$messages[] = sprintf( $statement, $result );
 		}
 
-	// Delete imported user metadata
+		// Delete imported user metadata
 	} else {
 		$statement  = __( 'Deleting User Meta&hellip; %s', 'buddyboss' );
 		$sql_delete = "DELETE FROM `{$wpdb->usermeta}` WHERE `meta_key` LIKE '%%_bbp_%%';";
@@ -1347,7 +1842,7 @@ function bbp_admin_reset_handler() {
 		$messages[] = sprintf( $statement, $result );
 	}
 
-	/** Converter *************************************************************/
+	/** Converter */
 
 	$statement  = __( 'Deleting Conversion Table&hellip; %s', 'buddyboss' );
 	$table_name = $wpdb->prefix . 'bbp_converter_translator';
@@ -1359,21 +1854,21 @@ function bbp_admin_reset_handler() {
 	}
 	$messages[] = sprintf( $statement, $result );
 
-	/** Options ***************************************************************/
+	/** Options */
 
-	$statement  = __( 'Deleting Settings&hellip; %s', 'buddyboss' );
+	$statement = __( 'Deleting Settings&hellip; %s', 'buddyboss' );
 	bbp_delete_options();
 	$messages[] = sprintf( $statement, $success );
 
-	/** Roles *****************************************************************/
+	/** Roles */
 
-	$statement  = __( 'Deleting Roles and Capabilities&hellip; %s', 'buddyboss' );
+	$statement = __( 'Deleting Roles and Capabilities&hellip; %s', 'buddyboss' );
 	remove_role( bbp_get_moderator_role() );
 	remove_role( bbp_get_participant_role() );
 	bbp_remove_caps();
 	$messages[] = sprintf( $statement, $success );
 
-	/** Output ****************************************************************/
+	/** Output */
 
 	if ( count( $messages ) ) {
 		foreach ( $messages as $message ) {

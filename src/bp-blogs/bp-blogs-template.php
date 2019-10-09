@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Output the blogs component slug.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_blogs_slug() {
 	echo bp_get_blogs_slug();
@@ -25,23 +24,22 @@ function bp_blogs_slug() {
 	 *
 	 * @return string The 'blogs' slug.
 	 */
-	function bp_get_blogs_slug() {
+function bp_get_blogs_slug() {
 
-		/**
-		 * Filters the blogs component slug.
-		 *
-		 * @since BuddyPress 1.5.0
-		 *
-		 * @param string $slug Slug for the blogs component.
-		 */
-		return apply_filters( 'bp_get_blogs_slug', buddypress()->blogs->slug );
-	}
+	/**
+	 * Filters the blogs component slug.
+	 *
+	 * @since BuddyPress 1.5.0
+	 *
+	 * @param string $slug Slug for the blogs component.
+	 */
+	return apply_filters( 'bp_get_blogs_slug', buddypress()->blogs->slug );
+}
 
 /**
  * Output the blogs component root slug.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_blogs_root_slug() {
 	echo bp_get_blogs_root_slug();
@@ -53,23 +51,22 @@ function bp_blogs_root_slug() {
 	 *
 	 * @return string The 'blogs' root slug.
 	 */
-	function bp_get_blogs_root_slug() {
+function bp_get_blogs_root_slug() {
 
-		/**
-		 * Filters the blogs component root slug.
-		 *
-		 * @since BuddyPress 1.5.0
-		 *
-		 * @param string $root_slug Root slug for the blogs component.
-		 */
-		return apply_filters( 'bp_get_blogs_root_slug', buddypress()->blogs->root_slug );
-	}
+	/**
+	 * Filters the blogs component root slug.
+	 *
+	 * @since BuddyPress 1.5.0
+	 *
+	 * @param string $root_slug Root slug for the blogs component.
+	 */
+	return apply_filters( 'bp_get_blogs_root_slug', buddypress()->blogs->root_slug );
+}
 
 /**
  * Output blog directory permalink.
  *
  * @since BuddyPress 1.5.0
- *
  */
 function bp_blogs_directory_permalink() {
 	echo esc_url( bp_get_blogs_directory_permalink() );
@@ -81,17 +78,17 @@ function bp_blogs_directory_permalink() {
 	 *
 	 * @return string The URL of the Blogs directory.
 	 */
-	function bp_get_blogs_directory_permalink() {
+function bp_get_blogs_directory_permalink() {
 
-		/**
-		 * Filters the blog directory permalink.
-		 *
-		 * @since BuddyPress 1.5.0
-		 *
-		 * @param string $value Permalink URL for the blog directory.
-		 */
-		return apply_filters( 'bp_get_blogs_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_blogs_root_slug() ) );
-	}
+	/**
+	 * Filters the blog directory permalink.
+	 *
+	 * @since BuddyPress 1.5.0
+	 *
+	 * @param string $value Permalink URL for the blog directory.
+	 */
+	return apply_filters( 'bp_get_blogs_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_blogs_root_slug() ) );
+}
 
 /**
  * Rewind the blogs and reset blog index.
@@ -145,7 +142,7 @@ function bp_has_blogs( $args = '' ) {
 
 	// Check for and use search terms.
 	$search_terms_default = false;
-	$search_query_arg = bp_core_get_component_search_query_arg( 'blogs' );
+	$search_query_arg     = bp_core_get_component_search_query_arg( 'blogs' );
 	if ( ! empty( $_REQUEST[ $search_query_arg ] ) ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	} elseif ( ! empty( $_REQUEST['s'] ) ) {
@@ -153,17 +150,21 @@ function bp_has_blogs( $args = '' ) {
 	}
 
 	// Parse arguments.
-	$r = bp_parse_args( $args, array(
-		'type'              => 'active',
-		'page_arg'          => 'bpage', // See https://buddypress.trac.wordpress.org/ticket/3679.
-		'page'              => 1,
-		'per_page'          => 20,
-		'max'               => false,
-		'user_id'           => bp_displayed_user_id(), // Pass a user_id to limit to only blogs this user is a member of.
-		'include_blog_ids'  => false,
-		'search_terms'      => $search_terms_default,
-		'update_meta_cache' => true
-	), 'has_blogs' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'type'              => 'active',
+			'page_arg'          => 'bpage', // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'page'              => 1,
+			'per_page'          => 20,
+			'max'               => false,
+			'user_id'           => bp_displayed_user_id(), // Pass a user_id to limit to only blogs this user is a member of.
+			'include_blog_ids'  => false,
+			'search_terms'      => $search_terms_default,
+			'update_meta_cache' => true,
+		),
+		'has_blogs'
+	);
 
 	// Set per_page to maximum if max is enforced.
 	if ( ! empty( $r['max'] ) && ( (int) $r['per_page'] > (int) $r['max'] ) ) {
@@ -265,18 +266,18 @@ function bp_blogs_pagination_links() {
 	 *
 	 * @return string HTML pagination links.
 	 */
-	function bp_get_blogs_pagination_links() {
-		global $blogs_template;
+function bp_get_blogs_pagination_links() {
+	global $blogs_template;
 
-		/**
-		 * Filters the blogs pagination links.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $pag_links HTML pagination links.
-		 */
-		return apply_filters( 'bp_get_blogs_pagination_links', $blogs_template->pag_links );
-	}
+	/**
+	 * Filters the blogs pagination links.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $pag_links HTML pagination links.
+	 */
+	return apply_filters( 'bp_get_blogs_pagination_links', $blogs_template->pag_links );
+}
 
 /**
  * Output a blog's avatar.
@@ -313,19 +314,21 @@ function bp_blog_avatar( $args = '' ) {
 	 * }
 	 * @return string User avatar string.
 	 */
-	function bp_get_blog_avatar( $args = '' ) {
-		global $blogs_template;
+function bp_get_blog_avatar( $args = '' ) {
+	global $blogs_template;
 
-		// Bail if avatars are turned off
-		// @todo Should we maybe still filter this?
-		if ( ! buddypress()->avatar->show_avatars ) {
-			return false;
-		}
+	// Bail if avatars are turned off
+	// @todo Should we maybe still filter this?
+	if ( ! buddypress()->avatar->show_avatars ) {
+		return false;
+	}
 
-		$author_displayname = bp_core_get_user_displayname( $blogs_template->blog->admin_user_id );
+	$author_displayname = bp_core_get_user_displayname( $blogs_template->blog->admin_user_id );
 
-		// Parse the arguments.
-		$r = bp_parse_args( $args, array(
+	// Parse the arguments.
+	$r = bp_parse_args(
+		$args,
+		array(
 			'type'    => 'full',
 			'width'   => false,
 			'height'  => false,
@@ -333,127 +336,132 @@ function bp_blog_avatar( $args = '' ) {
 			'id'      => false,
 			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
-		) );
+		)
+	);
 
-		// Use site icon if available.
-		$avatar = '';
-		if ( bp_is_active( 'blogs', 'site-icon' ) && function_exists( 'has_site_icon' ) ) {
-			$site_icon = bp_blogs_get_blogmeta( bp_get_blog_id(), "site_icon_url_{$r['type']}" );
+	// Use site icon if available.
+	$avatar = '';
+	if ( bp_is_active( 'blogs', 'site-icon' ) && function_exists( 'has_site_icon' ) ) {
+		$site_icon = bp_blogs_get_blogmeta( bp_get_blog_id(), "site_icon_url_{$r['type']}" );
 
-			// Never attempted to fetch site icon before; do it now!
-			if ( '' === $site_icon ) {
-				switch_to_blog( bp_get_blog_id() );
+		// Never attempted to fetch site icon before; do it now!
+		if ( '' === $site_icon ) {
+			switch_to_blog( bp_get_blog_id() );
 
-				// Fetch the other size first.
-				if ( 'full' === $r['type'] ) {
-					$size      = bp_core_avatar_thumb_width();
-					$save_size = 'thumb';
-				} else {
-					$size      = bp_core_avatar_full_width();
-					$save_size = 'full';
-				}
+			// Fetch the other size first.
+			if ( 'full' === $r['type'] ) {
+				$size      = bp_core_avatar_thumb_width();
+				$save_size = 'thumb';
+			} else {
+				$size      = bp_core_avatar_full_width();
+				$save_size = 'full';
+			}
 
+			$site_icon = get_site_icon_url( $size );
+			// Empty site icons get saved as integer 0.
+			if ( empty( $site_icon ) ) {
+				$site_icon = 0;
+			}
+
+			// Sync site icon for other size to blogmeta.
+			bp_blogs_update_blogmeta( bp_get_blog_id(), "site_icon_url_{$save_size}", $site_icon );
+
+			// Now, fetch the size we want.
+			if ( 0 !== $site_icon ) {
+				$size      = 'full' === $r['type'] ? bp_core_avatar_full_width() : bp_core_avatar_thumb_width();
 				$site_icon = get_site_icon_url( $size );
-				// Empty site icons get saved as integer 0.
-				if ( empty( $site_icon ) ) {
-					$site_icon = 0;
-				}
-
-				// Sync site icon for other size to blogmeta.
-				bp_blogs_update_blogmeta( bp_get_blog_id(), "site_icon_url_{$save_size}", $site_icon );
-
-				// Now, fetch the size we want.
-				if ( 0 !== $site_icon ) {
-					$size      = 'full' === $r['type'] ? bp_core_avatar_full_width() : bp_core_avatar_thumb_width();
-					$site_icon = get_site_icon_url( $size );
-				}
-
-				// Sync site icon to blogmeta.
-				bp_blogs_update_blogmeta( bp_get_blog_id(), "site_icon_url_{$r['type']}", $site_icon );
-
-				restore_current_blog();
 			}
 
-			// We have a site icon.
-			if ( ! is_numeric( $site_icon ) ) {
-				if ( empty( $r['width'] ) && ! isset( $size ) ) {
-					$size = 'full' === $r['type'] ? bp_core_avatar_full_width() : bp_core_avatar_thumb_width();
-				} else {
-					$size = (int) $r['width'];
-				}
+			// Sync site icon to blogmeta.
+			bp_blogs_update_blogmeta( bp_get_blog_id(), "site_icon_url_{$r['type']}", $site_icon );
 
-				$avatar = sprintf( '<img src="%1$s" class="%2$s" width="%3$s" height="%3$s" alt="%4$s" />',
-					esc_url( $site_icon ),
-					esc_attr( "{$r['class']} avatar-{$size}" ),
-					esc_attr( $size ),
-					sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
-				);
-			}
+			restore_current_blog();
 		}
 
-		// Fallback to user ID avatar.
-		if ( '' === $avatar ) {
-			$avatar = bp_core_fetch_avatar( array(
-				'item_id'    => $blogs_template->blog->admin_user_id,
+		// We have a site icon.
+		if ( ! is_numeric( $site_icon ) ) {
+			if ( empty( $r['width'] ) && ! isset( $size ) ) {
+				$size = 'full' === $r['type'] ? bp_core_avatar_full_width() : bp_core_avatar_thumb_width();
+			} else {
+				$size = (int) $r['width'];
+			}
+
+			$avatar = sprintf(
+				'<img src="%1$s" class="%2$s" width="%3$s" height="%3$s" alt="%4$s" />',
+				esc_url( $site_icon ),
+				esc_attr( "{$r['class']} avatar-{$size}" ),
+				esc_attr( $size ),
+				sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
+			);
+		}
+	}
+
+	// Fallback to user ID avatar.
+	if ( '' === $avatar ) {
+		$avatar = bp_core_fetch_avatar(
+			array(
+				'item_id' => $blogs_template->blog->admin_user_id,
 				// 'avatar_dir' => 'blog-avatars',
 				// 'object'     => 'blog',
-				'type'       => $r['type'],
-				'alt'        => $r['alt'],
-				'css_id'     => $r['id'],
-				'class'      => $r['class'],
-				'width'      => $r['width'],
-				'height'     => $r['height']
-			) );
-		}
-
-		/**
-		 * In future BuddyPress versions you will be able to set the avatar for a blog.
-		 * Right now you can use a filter with the ID of the blog to change it if you wish.
-		 * By default it will return the avatar for the primary blog admin.
-		 *
-		 * This filter is deprecated as of BuddyPress 1.5 and may be removed in a future version.
-		 * Use the 'bp_get_blog_avatar' filter instead.
-		 */
-		$avatar = apply_filters( 'bp_get_blog_avatar_' . $blogs_template->blog->blog_id, $avatar );
-
-		/**
-		 * Filters a blog's avatar.
-		 *
-		 * @since BuddyPress 1.5.0
-		 *
-		 * @param string $avatar  Formatted HTML <img> element, or raw avatar
-		 *                        URL based on $html arg.
-		 * @param int    $blog_id ID of the blog whose avatar is being displayed.
-		 * @param array  $r       Array of arguments used when fetching avatar.
-		 */
-		return apply_filters( 'bp_get_blog_avatar', $avatar, $blogs_template->blog->blog_id, $r );
+				'type'    => $r['type'],
+				'alt'     => $r['alt'],
+				'css_id'  => $r['id'],
+				'class'   => $r['class'],
+				'width'   => $r['width'],
+				'height'  => $r['height'],
+			)
+		);
 	}
+
+	/**
+	 * In future BuddyPress versions you will be able to set the avatar for a blog.
+	 * Right now you can use a filter with the ID of the blog to change it if you wish.
+	 * By default it will return the avatar for the primary blog admin.
+	 *
+	 * This filter is deprecated as of BuddyPress 1.5 and may be removed in a future version.
+	 * Use the 'bp_get_blog_avatar' filter instead.
+	 */
+	$avatar = apply_filters( 'bp_get_blog_avatar_' . $blogs_template->blog->blog_id, $avatar );
+
+	/**
+	 * Filters a blog's avatar.
+	 *
+	 * @since BuddyPress 1.5.0
+	 *
+	 * @param string $avatar  Formatted HTML <img> element, or raw avatar
+	 *                        URL based on $html arg.
+	 * @param int    $blog_id ID of the blog whose avatar is being displayed.
+	 * @param array  $r       Array of arguments used when fetching avatar.
+	 */
+	return apply_filters( 'bp_get_blog_avatar', $avatar, $blogs_template->blog->blog_id, $r );
+}
 
 function bp_blog_permalink() {
 	echo bp_get_blog_permalink();
 }
-	function bp_get_blog_permalink() {
-		global $blogs_template;
+function bp_get_blog_permalink() {
+	global $blogs_template;
 
-		if ( empty( $blogs_template->blog->domain ) )
-			$permalink = bp_get_root_domain() . $blogs_template->blog->path;
-		else {
-			$protocol = 'http://';
-			if ( is_ssl() )
-				$protocol = 'https://';
-
-			$permalink = $protocol . $blogs_template->blog->domain . $blogs_template->blog->path;
+	if ( empty( $blogs_template->blog->domain ) ) {
+		$permalink = bp_get_root_domain() . $blogs_template->blog->path;
+	} else {
+		$protocol = 'http://';
+		if ( is_ssl() ) {
+			$protocol = 'https://';
 		}
 
-		/**
-		 * Filters the blog permalink.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $permalink Permalink URL for the blog.
-		 */
-		return apply_filters( 'bp_get_blog_permalink', $permalink );
+		$permalink = $protocol . $blogs_template->blog->domain . $blogs_template->blog->path;
 	}
+
+	/**
+	 * Filters the blog permalink.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $permalink Permalink URL for the blog.
+	 */
+	return apply_filters( 'bp_get_blog_permalink', $permalink );
+}
 
 /**
  * Output the name of the current blog in the loop.
@@ -466,18 +474,18 @@ function bp_blog_name() {
 	 *
 	 * @return string The name of the current blog in the loop.
 	 */
-	function bp_get_blog_name() {
-		global $blogs_template;
+function bp_get_blog_name() {
+	global $blogs_template;
 
-		/**
-		 * Filters the name of the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.2.0
-		 *
-		 * @param string $name Name of the current blog in the loop.
-		 */
-		return apply_filters( 'bp_get_blog_name', $blogs_template->blog->name );
-	}
+	/**
+	 * Filters the name of the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param string $name Name of the current blog in the loop.
+	 */
+	return apply_filters( 'bp_get_blog_name', $blogs_template->blog->name );
+}
 
 /**
  * Output the ID of the current blog in the loop.
@@ -494,18 +502,18 @@ function bp_blog_id() {
 	 *
 	 * @return int ID of the current blog in the loop.
 	 */
-	function bp_get_blog_id() {
-		global $blogs_template;
+function bp_get_blog_id() {
+	global $blogs_template;
 
-		/**
-		 * Filters the ID of the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param int $blog_id ID of the current blog in the loop.
-		 */
-		return apply_filters( 'bp_get_blog_id', $blogs_template->blog->blog_id );
-	}
+	/**
+	 * Filters the ID of the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.7.0
+	 *
+	 * @param int $blog_id ID of the current blog in the loop.
+	 */
+	return apply_filters( 'bp_get_blog_id', $blogs_template->blog->blog_id );
+}
 
 /**
  * Output the description of the current blog in the loop.
@@ -526,18 +534,18 @@ function bp_blog_description() {
 	 *
 	 * @return string Description of the current blog in the loop.
 	 */
-	function bp_get_blog_description() {
-		global $blogs_template;
+function bp_get_blog_description() {
+	global $blogs_template;
 
-		/**
-		 * Filters the description of the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $value Description of the current blog in the loop.
-		 */
-		return apply_filters( 'bp_get_blog_description', $blogs_template->blog->description );
-	}
+	/**
+	 * Filters the description of the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $value Description of the current blog in the loop.
+	 */
+	return apply_filters( 'bp_get_blog_description', $blogs_template->blog->description );
+}
 
 /**
  * Output the row class of the current blog in the loop.
@@ -559,32 +567,32 @@ function bp_blog_class( $classes = array() ) {
 	 * @param array $classes Array of custom classes.
 	 * @return string Row class of the site.
 	 */
-	function bp_get_blog_class( $classes = array() ) {
-		global $blogs_template;
+function bp_get_blog_class( $classes = array() ) {
+	global $blogs_template;
 
-		// Add even/odd classes, but only if there's more than 1 group.
-		if ( $blogs_template->blog_count > 1 ) {
-			$pos_in_loop = (int) $blogs_template->current_blog;
-			$classes[]   = ( $pos_in_loop % 2 ) ? 'even' : 'odd';
+	// Add even/odd classes, but only if there's more than 1 group.
+	if ( $blogs_template->blog_count > 1 ) {
+		$pos_in_loop = (int) $blogs_template->current_blog;
+		$classes[]   = ( $pos_in_loop % 2 ) ? 'even' : 'odd';
 
 		// If we've only one site in the loop, don't bother with odd and even.
-		} else {
-			$classes[] = 'bp-single-blog';
-		}
-
-		/**
-		 * Filters the row class of the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param array $classes Array of classes to be applied to row.
-		 */
-		$classes = apply_filters( 'bp_get_blog_class', $classes );
-		$classes = array_merge( $classes, array() );
-		$retval  = 'class="' . join( ' ', $classes ) . '"';
-
-		return $retval;
+	} else {
+		$classes[] = 'bp-single-blog';
 	}
+
+	/**
+	 * Filters the row class of the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.7.0
+	 *
+	 * @param array $classes Array of classes to be applied to row.
+	 */
+	$classes = apply_filters( 'bp_get_blog_class', $classes );
+	$classes = array_merge( $classes, array() );
+	$retval  = 'class="' . join( ' ', $classes ) . '"';
+
+	return $retval;
+}
 
 /**
  * Output the last active date of the current blog in the loop.
@@ -605,42 +613,45 @@ function bp_blog_last_active( $args = array() ) {
 	 * }
 	 * @return string Last active date.
 	 */
-	function bp_get_blog_last_active( $args = array() ) {
-		global $blogs_template;
+function bp_get_blog_last_active( $args = array() ) {
+	global $blogs_template;
 
-		// Parse the activity format.
-		$r = bp_parse_args( $args, array(
-			'active_format' => true
-		) );
+	// Parse the activity format.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'active_format' => true,
+		)
+	);
 
-		// Backwards compatibility for anyone forcing a 'true' active_format.
-		if ( true === $r['active_format'] ) {
-			$r['active_format'] = __( 'active %s', 'buddyboss' );
-		}
+	// Backwards compatibility for anyone forcing a 'true' active_format.
+	if ( true === $r['active_format'] ) {
+		$r['active_format'] = __( 'active %s', 'buddyboss' );
+	}
 
-		// Blog has been posted to at least once.
-		if ( isset( $blogs_template->blog->last_activity ) ) {
+	// Blog has been posted to at least once.
+	if ( isset( $blogs_template->blog->last_activity ) ) {
 
-			// Backwards compatibility for pre 1.5 'ago' strings.
-			$last_activity = ! empty( $r['active_format'] )
-				? bp_core_get_last_activity( $blogs_template->blog->last_activity, $r['active_format'] )
-				: bp_core_time_since( $blogs_template->blog->last_activity );
+		// Backwards compatibility for pre 1.5 'ago' strings.
+		$last_activity = ! empty( $r['active_format'] )
+			? bp_core_get_last_activity( $blogs_template->blog->last_activity, $r['active_format'] )
+			: bp_core_time_since( $blogs_template->blog->last_activity );
 
 		// Blog has never been posted to.
-		} else {
-			$last_activity = __( 'Never active', 'buddyboss' );
-		}
-
-		/**
-		 * Filters the last active date of the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.2.0
-		 *
-		 * @param string $last_activity Last active date.
-		 * @param array  $r             Array of parsed args used to determine formatting.
-		 */
-		return apply_filters( 'bp_blog_last_active', $last_activity, $r );
+	} else {
+		$last_activity = __( 'Never active', 'buddyboss' );
 	}
+
+	/**
+	 * Filters the last active date of the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param string $last_activity Last active date.
+	 * @param array  $r             Array of parsed args used to determine formatting.
+	 */
+	return apply_filters( 'bp_blog_last_active', $last_activity, $r );
+}
 
 /**
  * Output the latest post from the current blog in the loop.
@@ -661,44 +672,47 @@ function bp_blog_latest_post( $args = array() ) {
 	 * }
 	 * @return string $retval String of the form 'Latest Post: [link to post]'.
 	 */
-	function bp_get_blog_latest_post( $args = array() ) {
-		global $blogs_template;
+function bp_get_blog_latest_post( $args = array() ) {
+	global $blogs_template;
 
-		$r = wp_parse_args( $args, array(
+	$r = wp_parse_args(
+		$args,
+		array(
 			'latest_format' => true,
-		) );
+		)
+	);
 
-		$retval = bp_get_blog_latest_post_title();
+	$retval = bp_get_blog_latest_post_title();
 
-		if ( ! empty( $retval ) ) {
-			if ( ! empty( $r['latest_format'] ) ) {
+	if ( ! empty( $retval ) ) {
+		if ( ! empty( $r['latest_format'] ) ) {
 
-				/**
-				 * Filters the title text of the latest post for the current blog in loop.
-				 *
-				 * @since BuddyPress 1.0.0
-				 *
-				 * @param string $retval Title of the latest post.
-				 */
-				$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>' );
-			} else {
+			/**
+			 * Filters the title text of the latest post for the current blog in loop.
+			 *
+			 * @since BuddyPress 1.0.0
+			 *
+			 * @param string $retval Title of the latest post.
+			 */
+			$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>' );
+		} else {
 
-				/** This filter is documented in bp-blogs/bp-blogs-template.php */
-				$retval = '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>';
-			}
+			/** This filter is documented in bp-blogs/bp-blogs-template.php */
+			$retval = '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>';
 		}
-
-		/**
-		 * Filters the HTML markup result for the latest blog post in loop.
-		 *
-		 * @since BuddyPress 1.2.0
-		 * @since BuddyPress 2.6.0 Added the `$r` parameter.
-		 *
-		 * @param string $retval HTML markup for the latest post.
-		 * @param array  $r      Array of parsed arguments.
-		 */
-		return apply_filters( 'bp_get_blog_latest_post', $retval, $r );
 	}
+
+	/**
+	 * Filters the HTML markup result for the latest blog post in loop.
+	 *
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 2.6.0 Added the `$r` parameter.
+	 *
+	 * @param string $retval HTML markup for the latest post.
+	 * @param array  $r      Array of parsed arguments.
+	 */
+	return apply_filters( 'bp_get_blog_latest_post', $retval, $r );
+}
 
 /**
  * Output the title of the latest post on the current blog in the loop.
@@ -719,23 +733,24 @@ function bp_blog_latest_post_title() {
 	 *
 	 * @return string Post title.
 	 */
-	function bp_get_blog_latest_post_title() {
-		global $blogs_template;
+function bp_get_blog_latest_post_title() {
+	global $blogs_template;
 
-		$retval = '';
+	$retval = '';
 
-		if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->post_title ) )
-			$retval = $blogs_template->blog->latest_post->post_title;
-
-		/**
-		 * Filters the title text of the latest post on the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param string $retval Title text for the latest post.
-		 */
-		return apply_filters( 'bp_get_blog_latest_post_title', $retval );
+	if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->post_title ) ) {
+		$retval = $blogs_template->blog->latest_post->post_title;
 	}
+
+	/**
+	 * Filters the title text of the latest post on the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.7.0
+	 *
+	 * @param string $retval Title text for the latest post.
+	 */
+	return apply_filters( 'bp_get_blog_latest_post_title', $retval );
+}
 
 /**
  * Output the permalink of the latest post on the current blog in the loop.
@@ -756,29 +771,29 @@ function bp_blog_latest_post_permalink() {
 	 *
 	 * @return string URL of the blog's latest post.
 	 */
-	function bp_get_blog_latest_post_permalink() {
-		global $blogs_template;
+function bp_get_blog_latest_post_permalink() {
+	global $blogs_template;
 
-		$retval = '';
+	$retval = '';
 
-		if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->ID ) )
-			$retval = add_query_arg( 'p', $blogs_template->blog->latest_post->ID, bp_get_blog_permalink() );
-
-		/**
-		 * Filters the permalink of the latest post on the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param string $retval Permalink URL of the latest post.
-		 */
-		return apply_filters( 'bp_get_blog_latest_post_permalink', $retval );
+	if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->ID ) ) {
+		$retval = add_query_arg( 'p', $blogs_template->blog->latest_post->ID, bp_get_blog_permalink() );
 	}
+
+	/**
+	 * Filters the permalink of the latest post on the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.7.0
+	 *
+	 * @param string $retval Permalink URL of the latest post.
+	 */
+	return apply_filters( 'bp_get_blog_latest_post_permalink', $retval );
+}
 
 /**
  * Output the content of the latest post on the current blog in the loop.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_blog_latest_post_content() {
 	echo bp_get_blog_latest_post_content();
@@ -792,23 +807,24 @@ function bp_blog_latest_post_content() {
 	 *
 	 * @return string Content of the blog's latest post.
 	 */
-	function bp_get_blog_latest_post_content() {
-		global $blogs_template;
+function bp_get_blog_latest_post_content() {
+	global $blogs_template;
 
-		$retval = '';
+	$retval = '';
 
-		if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->post_content ) )
-			$retval = $blogs_template->blog->latest_post->post_content;
-
-		/**
-		 * Filters the content of the latest post on the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param string $retval Content of the latest post on the current blog in the loop.
-		 */
-		return apply_filters( 'bp_get_blog_latest_post_content', $retval );
+	if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->post_content ) ) {
+		$retval = $blogs_template->blog->latest_post->post_content;
 	}
+
+	/**
+	 * Filters the content of the latest post on the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.7.0
+	 *
+	 * @param string $retval Content of the latest post on the current blog in the loop.
+	 */
+	return apply_filters( 'bp_get_blog_latest_post_content', $retval );
+}
 
 /**
  * Output the featured image of the latest post on the current blog in the loop.
@@ -833,23 +849,24 @@ function bp_blog_latest_post_featured_image( $size = 'thumbnail' ) {
 	 *                     'large', or 'post-thumbnail'. Default: 'thumbnail'.
 	 * @return string URL of the image.
 	 */
-	function bp_get_blog_latest_post_featured_image( $size = 'thumbnail' ) {
-		global $blogs_template;
+function bp_get_blog_latest_post_featured_image( $size = 'thumbnail' ) {
+	global $blogs_template;
 
-		$retval = '';
+	$retval = '';
 
-		if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->images[$size] ) )
-			$retval = $blogs_template->blog->latest_post->images[$size];
-
-		/**
-		 * Filters the featured image of the latest post on the current blog in the loop.
-		 *
-		 * @since BuddyPress 1.7.0
-		 *
-		 * @param string $retval The featured image of the latest post on the current blog in the loop.
-		 */
-		return apply_filters( 'bp_get_blog_latest_post_featured_image', $retval );
+	if ( ! empty( $blogs_template->blog->latest_post ) && ! empty( $blogs_template->blog->latest_post->images[ $size ] ) ) {
+		$retval = $blogs_template->blog->latest_post->images[ $size ];
 	}
+
+	/**
+	 * Filters the featured image of the latest post on the current blog in the loop.
+	 *
+	 * @since BuddyPress 1.7.0
+	 *
+	 * @param string $retval The featured image of the latest post on the current blog in the loop.
+	 */
+	return apply_filters( 'bp_get_blog_latest_post_featured_image', $retval );
+}
 
 /**
  * Does the latest blog post have a featured image?
@@ -862,7 +879,7 @@ function bp_blog_latest_post_featured_image( $size = 'thumbnail' ) {
  *              featured image of the given size.
  */
 function bp_blog_latest_post_has_featured_image( $thumbnail = 'thumbnail' ) {
-	$image  = bp_get_blog_latest_post_featured_image( $thumbnail );
+	$image = bp_get_blog_latest_post_featured_image( $thumbnail );
 
 	/**
 	 * Filters whether or not the latest blog post has a featured image.
@@ -884,14 +901,17 @@ function bp_blog_latest_post_has_featured_image( $thumbnail = 'thumbnail' ) {
  * hidden fields.
  */
 function bp_blog_hidden_fields() {
-	if ( isset( $_REQUEST['s'] ) )
-		echo '<input type="hidden" id="search_terms" value="' . esc_attr( $_REQUEST['s'] ). '" name="search_terms" />';
+	if ( isset( $_REQUEST['s'] ) ) {
+		echo '<input type="hidden" id="search_terms" value="' . esc_attr( $_REQUEST['s'] ) . '" name="search_terms" />';
+	}
 
-	if ( isset( $_REQUEST['letter'] ) )
+	if ( isset( $_REQUEST['letter'] ) ) {
 		echo '<input type="hidden" id="selected_letter" value="' . esc_attr( $_REQUEST['letter'] ) . '" name="selected_letter" />';
+	}
 
-	if ( isset( $_REQUEST['blogs_search'] ) )
+	if ( isset( $_REQUEST['blogs_search'] ) ) {
 		echo '<input type="hidden" id="search_terms" value="' . esc_attr( $_REQUEST['blogs_search'] ) . '" name="search_terms" />';
+	}
 }
 
 /**
@@ -905,17 +925,17 @@ function bp_total_blog_count() {
 	 *
 	 * @return int Total number of blogs.
 	 */
-	function bp_get_total_blog_count() {
+function bp_get_total_blog_count() {
 
-		/**
-		 * Filters the total number of blogs on the site.
-		 *
-		 * @since BuddyPress 1.2.0
-		 *
-		 * @param int $value Total number of blogs on the site.
-		 */
-		return apply_filters( 'bp_get_total_blog_count', bp_blogs_total_blogs() );
-	}
+	/**
+	 * Filters the total number of blogs on the site.
+	 *
+	 * @since BuddyPress 1.2.0
+	 *
+	 * @param int $value Total number of blogs on the site.
+	 */
+	return apply_filters( 'bp_get_total_blog_count', bp_blogs_total_blogs() );
+}
 	add_filter( 'bp_get_total_blog_count', 'bp_core_number_format' );
 
 /**
@@ -932,19 +952,19 @@ function bp_total_blog_count_for_user( $user_id = 0 ) {
 	 * @param int $user_id ID of the user.
 	 * @return int Total number of blogs for the user.
 	 */
-	function bp_get_total_blog_count_for_user( $user_id = 0 ) {
+function bp_get_total_blog_count_for_user( $user_id = 0 ) {
 
-		/**
-		 * Filters the total number of blogs for a given user.
-		 *
-		 * @since BuddyPress 1.2.0
-		 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
-		 *
-		 * @param int $value   Total number of blogs for a given user.
-		 * @param int $user_id ID of the queried user.
-		 */
-		return apply_filters( 'bp_get_total_blog_count_for_user', bp_blogs_total_blogs_for_user( $user_id ), $user_id );
-	}
+	/**
+	 * Filters the total number of blogs for a given user.
+	 *
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 2.6.0 Added the `$user_id` parameter.
+	 *
+	 * @param int $value   Total number of blogs for a given user.
+	 * @param int $user_id ID of the queried user.
+	 */
+	return apply_filters( 'bp_get_total_blog_count_for_user', bp_blogs_total_blogs_for_user( $user_id ), $user_id );
+}
 	add_filter( 'bp_get_total_blog_count_for_user', 'bp_core_number_format' );
 
 
@@ -976,8 +996,9 @@ function bp_blog_signup_enabled() {
 	 */
 	$active_signup = apply_filters( 'wpmu_active_signup', $active_signup );
 
-	if ( 'none' == $active_signup || 'user' == $active_signup )
+	if ( 'none' == $active_signup || 'user' == $active_signup ) {
 		return false;
+	}
 
 	return true;
 }
@@ -990,13 +1011,13 @@ function bp_blog_signup_enabled() {
  * @param string|WP_Error $errors     Optional. The WP_Error object returned by a previous
  *                                    submission attempt.
  */
-function bp_show_blog_signup_form($blogname = '', $blog_title = '', $errors = '') {
+function bp_show_blog_signup_form( $blogname = '', $blog_title = '', $errors = '' ) {
 	global $current_user;
 
-	if ( isset($_POST['submit']) ) {
+	if ( isset( $_POST['submit'] ) ) {
 		bp_blogs_validate_blog_signup();
 	} else {
-		if ( ! is_wp_error($errors) ) {
+		if ( ! is_wp_error( $errors ) ) {
 			$errors = new WP_Error();
 		}
 
@@ -1011,18 +1032,25 @@ function bp_show_blog_signup_form($blogname = '', $blog_title = '', $errors = ''
 		 *      WP_Error $errors     WP_Error object.
 		 * }
 		 */
-		$filtered_results = apply_filters('signup_another_blog_init', array('blogname' => $blogname, 'blog_title' => $blog_title, 'errors' => $errors ));
-		$blogname = $filtered_results['blogname'];
-		$blog_title = $filtered_results['blog_title'];
-		$errors = $filtered_results['errors'];
+		$filtered_results = apply_filters(
+			'signup_another_blog_init',
+			array(
+				'blogname'   => $blogname,
+				'blog_title' => $blog_title,
+				'errors'     => $errors,
+			)
+		);
+		$blogname         = $filtered_results['blogname'];
+		$blog_title       = $filtered_results['blog_title'];
+		$errors           = $filtered_results['errors'];
 
 		if ( $errors->get_error_code() ) {
-			echo "<p>" . __('There was a problem; please correct the form below and try again.', 'buddyboss') . "</p>";
+			echo '<p>' . __( 'There was a problem; please correct the form below and try again.', 'buddyboss' ) . '</p>';
 		}
 		?>
-		<p><?php printf(__("By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss'), $current_user->data->display_name) ?></p>
+		<p><?php printf( __( "By filling out the form below, you can <strong>add a site to your account</strong>. There is no limit to the number of sites that you can have, so create to your heart's content, but blog responsibly!", 'buddyboss' ), $current_user->data->display_name ); ?></p>
 
-		<p><?php _e("If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss') ?></p>
+		<p><?php _e( "If you\'re not going to use a great domain, leave it for a new user. Now have at it!", 'buddyboss' ); ?></p>
 
 		<form class="standard-form" id="setupform" method="post" action="">
 
@@ -1034,14 +1062,15 @@ function bp_show_blog_signup_form($blogname = '', $blog_title = '', $errors = ''
 			 *
 			 * @since BuddyPress 1.0.0
 			 */
-			do_action( 'signup_hidden_fields' ); ?>
+			do_action( 'signup_hidden_fields' );
+			?>
 
-			<?php bp_blogs_signup_blog($blogname, $blog_title, $errors); ?>
+			<?php bp_blogs_signup_blog( $blogname, $blog_title, $errors ); ?>
 			<p>
-				<input id="submit" type="submit" name="submit" class="submit" value="<?php esc_attr_e('Create Site', 'buddyboss') ?>" />
+				<input id="submit" type="submit" name="submit" class="submit" value="<?php esc_attr_e( 'Create Site', 'buddyboss' ); ?>" />
 			</p>
 
-			<?php wp_nonce_field( 'bp_blog_signup_form' ) ?>
+			<?php wp_nonce_field( 'bp_blog_signup_form' ); ?>
 		</form>
 		<?php
 	}
@@ -1059,57 +1088,70 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	global $current_site;
 
 	// Blog name.
-	if( !is_subdomain_install() )
-		echo '<label for="blogname">' . __('Site Name:', 'buddyboss') . '</label>';
-	else
-		echo '<label for="blogname">' . __('Site Domain:', 'buddyboss') . '</label>';
+	if ( ! is_subdomain_install() ) {
+		echo '<label for="blogname">' . __( 'Site Name:', 'buddyboss' ) . '</label>';
+	} else {
+		echo '<label for="blogname">' . __( 'Site Domain:', 'buddyboss' ) . '</label>';
+	}
 
-	if ( $errmsg = $errors->get_error_message('blogname') ) { ?>
+	if ( $errmsg = $errors->get_error_message( 'blogname' ) ) {
+		?>
 
-		<p class="error"><?php echo $errmsg ?></p>
+		<p class="error"><?php echo $errmsg; ?></p>
 
-	<?php }
+		<?php
+	}
 
-	if ( !is_subdomain_install() )
-		echo '<span class="prefix_address">' . $current_site->domain . $current_site->path . '</span> <input name="blogname" type="text" id="blogname" value="'.$blogname.'" maxlength="63" /><br />';
-	else
-		echo '<input name="blogname" type="text" id="blogname" value="'.$blogname.'" maxlength="63" ' . bp_get_form_field_attributes( 'blogname' ) . '/> <span class="suffix_address">.' . bp_signup_get_subdomain_base() . '</span><br />';
+	if ( ! is_subdomain_install() ) {
+		echo '<span class="prefix_address">' . $current_site->domain . $current_site->path . '</span> <input name="blogname" type="text" id="blogname" value="' . $blogname . '" maxlength="63" /><br />';
+	} else {
+		echo '<input name="blogname" type="text" id="blogname" value="' . $blogname . '" maxlength="63" ' . bp_get_form_field_attributes( 'blogname' ) . '/> <span class="suffix_address">.' . bp_signup_get_subdomain_base() . '</span><br />';
+	}
 
-	if ( !is_user_logged_in() ) {
-		print '(<strong>' . __( 'Your address will be ' , 'buddyboss');
+	if ( ! is_user_logged_in() ) {
+		print '(<strong>' . __( 'Your address will be ', 'buddyboss' );
 
-		if ( !is_subdomain_install() ) {
-			print $current_site->domain . $current_site->path . __( 'blogname' , 'buddyboss');
+		if ( ! is_subdomain_install() ) {
+			print $current_site->domain . $current_site->path . __( 'blogname', 'buddyboss' );
 		} else {
-			print __( 'domain.' , 'buddyboss') . $current_site->domain . $current_site->path;
+			print __( 'domain.', 'buddyboss' ) . $current_site->domain . $current_site->path;
 		}
 
-		echo '.</strong> ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)' , 'buddyboss') . '</p>';
+		echo '.</strong> ' . __( 'Must be at least 4 characters, letters and numbers only. It cannot be changed so choose carefully!)', 'buddyboss' ) . '</p>';
 	}
 
 	// Blog Title.
 	?>
 
-	<label for="blog_title"><?php _e('Site Title:', 'buddyboss') ?></label>
+	<label for="blog_title"><?php _e( 'Site Title:', 'buddyboss' ); ?></label>
 
-	<?php if ( $errmsg = $errors->get_error_message('blog_title') ) { ?>
+	<?php if ( $errmsg = $errors->get_error_message( 'blog_title' ) ) { ?>
 
-		<p class="error"><?php echo $errmsg ?></p>
+		<p class="error"><?php echo $errmsg; ?></p>
 
-	<?php }
-	echo '<input name="blog_title" type="text" id="blog_title" value="'.esc_html($blog_title, 1).'" /></p>';
+		<?php
+	}
+	echo '<input name="blog_title" type="text" id="blog_title" value="' . esc_html( $blog_title, 1 ) . '" /></p>';
 	?>
 
 	<fieldset class="create-site">
-		<legend class="label"><?php _e('Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss') ?></legend>
+		<legend class="label"><?php _e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss' ); ?></legend>
 
 		<label class="checkbox" for="blog_public_on">
-			<input type="radio" id="blog_public_on" name="blog_public" value="1" <?php if( !isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) { ?>checked="checked"<?php } ?> />
-			<strong><?php _e( 'Yes' , 'buddyboss'); ?></strong>
+			<input type="radio" id="blog_public_on" name="blog_public" value="1" 
+			<?php
+			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) {
+				?>
+				checked="checked"<?php } ?> />
+			<strong><?php _e( 'Yes', 'buddyboss' ); ?></strong>
 		</label>
 		<label class="checkbox" for="blog_public_off">
-			<input type="radio" id="blog_public_off" name="blog_public" value="0" <?php if( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) { ?>checked="checked"<?php } ?> />
-			<strong><?php _e( 'No' , 'buddyboss'); ?></strong>
+			<input type="radio" id="blog_public_off" name="blog_public" value="0" 
+			<?php
+			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) {
+				?>
+				checked="checked"<?php } ?> />
+			<strong><?php _e( 'No', 'buddyboss' ); ?></strong>
 		</label>
 	</fieldset>
 
@@ -1122,7 +1164,7 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 	 *
 	 * @param WP_Error $errors WP_Error object if any present.
 	 */
-	do_action('signup_blogform', $errors);
+	do_action( 'signup_blogform', $errors );
 }
 
 /**
@@ -1135,19 +1177,21 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 function bp_blogs_validate_blog_signup() {
 	global $wpdb, $current_user, $blogname, $blog_title, $errors, $domain, $path, $current_site;
 
-	if ( !check_admin_referer( 'bp_blog_signup_form' ) )
+	if ( ! check_admin_referer( 'bp_blog_signup_form' ) ) {
 		return false;
+	}
 
 	$current_user = wp_get_current_user();
 
-	if( !is_user_logged_in() )
+	if ( ! is_user_logged_in() ) {
 		die();
+	}
 
 	$result = bp_blogs_validate_blog_form();
-	extract($result);
+	extract( $result );
 
 	if ( $errors->get_error_code() ) {
-		unset($_POST['submit']);
+		unset( $_POST['submit'] );
 		bp_show_blog_signup_form( $blogname, $blog_title, $errors );
 		return false;
 	}
@@ -1155,7 +1199,13 @@ function bp_blogs_validate_blog_signup() {
 	$public = (int) $_POST['blog_public'];
 
 	// Depreciated.
-	$meta = apply_filters( 'signup_create_blog_meta', array( 'lang_id' => 1, 'public' => $public ) );
+	$meta = apply_filters(
+		'signup_create_blog_meta',
+		array(
+			'lang_id' => 1,
+			'public'  => $public,
+		)
+	);
 
 	/**
 	 * Filters the default values for Blog meta.
@@ -1170,8 +1220,9 @@ function bp_blogs_validate_blog_signup() {
 	$meta = apply_filters( 'add_signup_meta', $meta );
 
 	// If this is a subdomain install, set up the site inside the root domain.
-	if ( is_subdomain_install() )
+	if ( is_subdomain_install() ) {
 		$domain = $blogname . '.' . preg_replace( '|^www\.|', '', $current_site->domain );
+	}
 
 	$blog_id = wpmu_create_blog( $domain, $path, $blog_title, $current_user->ID, $meta, $wpdb->siteid );
 	bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $current_user->user_login, $current_user->user_email, $meta, $blog_id );
@@ -1187,10 +1238,11 @@ function bp_blogs_validate_blog_signup() {
  */
 function bp_blogs_validate_blog_form() {
 	$user = '';
-	if ( is_user_logged_in() )
+	if ( is_user_logged_in() ) {
 		$user = wp_get_current_user();
+	}
 
-	return wpmu_validate_blog_signup($_POST['blogname'], $_POST['blog_title'], $user);
+	return wpmu_validate_blog_signup( $_POST['blogname'], $_POST['blog_title'], $user );
 }
 
 /**
@@ -1213,9 +1265,10 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 	restore_current_blog();
 
 	?>
-	<p><?php _e( 'Congratulations! You have successfully registered a new site.', 'buddyboss' ) ?></p>
+	<p><?php _e( 'Congratulations! You have successfully registered a new site.', 'buddyboss' ); ?></p>
 	<p>
-		<?php printf(
+		<?php
+		printf(
 			'%s %s',
 			sprintf(
 				__( '%s is your new site.', 'buddyboss' ),
@@ -1227,17 +1280,18 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 				esc_url( $login_url ),
 				esc_html( $user_name )
 			)
-		); ?>
+		);
+		?>
 	</p>
 
-<?php
+	<?php
 
 	/**
 	 * Fires after the default successful blog registration message markup.
 	 *
 	 * @since BuddyPress 1.0.0
 	 */
-	do_action('signup_finished');
+	do_action( 'signup_finished' );
 }
 
 /**
@@ -1273,15 +1327,28 @@ function bp_blogs_blog_tabs() {
 	// Don't show these tabs on a user's own profile.
 	if ( bp_is_my_profile() ) {
 		return false;
-	} ?>
+	}
+	?>
 
 	<ul class="content-header-nav">
-		<li<?php if ( bp_is_current_action( 'my-blogs'        ) || !bp_current_action() ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs'        ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ),           bp_get_displayed_user_fullname() ); ?></a></li>
-		<li<?php if ( bp_is_current_action( 'recent-posts'    )                         ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts'    ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ),    bp_get_displayed_user_fullname() ); ?></a></li>
-		<li<?php if ( bp_is_current_action( 'recent-comments' )                         ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+		<li
+		<?php
+		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
+			?>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+		<li
+		<?php
+		if ( bp_is_current_action( 'recent-posts' ) ) :
+			?>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+		<li
+		<?php
+		if ( bp_is_current_action( 'recent-comments' ) ) :
+			?>
+			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 	</ul>
 
-<?php
+	<?php
 
 	/**
 	 * Fires after the markup for the navigation tabs for a user Blogs page.
@@ -1305,7 +1372,7 @@ function bp_directory_blogs_search_form() {
 	}
 
 	$search_form_html = '<form action="" method="get" id="search-blogs-form">
-		<label for="blogs_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="blogs_search" placeholder="'. esc_attr( $search_value ) .'" /></label>
+		<label for="blogs_search"><input type="text" name="' . esc_attr( $query_arg ) . '" id="blogs_search" placeholder="' . esc_attr( $search_value ) . '" /></label>
 		<input type="submit" id="blogs_search_submit" name="blogs_search_submit" value="' . __( 'Search', 'buddyboss' ) . '" />
 	</form>';
 
@@ -1334,34 +1401,34 @@ function bp_blog_create_button() {
 	 *
 	 * @return false|string
 	 */
-	function bp_get_blog_create_button() {
-		if ( ! is_user_logged_in() ) {
-			return false;
-		}
-
-		if ( ! bp_blog_signup_enabled() ) {
-			return false;
-		}
-
-		$button_args = array(
-			'id'         => 'create_blog',
-			'component'  => 'blogs',
-			'link_text'  => __( 'Create a Site', 'buddyboss' ),
-			'link_class' => 'blog-create no-ajax',
-			'link_href'  => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
-			'wrapper'    => false,
-			'block_self' => false,
-		);
-
-		/**
-		 * Filters the Create a Site button.
-		 *
-		 * @since BuddyPress 2.0.0
-		 *
-		 * @param array $button_args Array of arguments to be used for the Create a Site button.
-		 */
-		return bp_get_button( apply_filters( 'bp_get_blog_create_button', $button_args ) );
+function bp_get_blog_create_button() {
+	if ( ! is_user_logged_in() ) {
+		return false;
 	}
+
+	if ( ! bp_blog_signup_enabled() ) {
+		return false;
+	}
+
+	$button_args = array(
+		'id'         => 'create_blog',
+		'component'  => 'blogs',
+		'link_text'  => __( 'Create a Site', 'buddyboss' ),
+		'link_class' => 'blog-create no-ajax',
+		'link_href'  => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
+		'wrapper'    => false,
+		'block_self' => false,
+	);
+
+	/**
+	 * Filters the Create a Site button.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param array $button_args Array of arguments to be used for the Create a Site button.
+	 */
+	return bp_get_button( apply_filters( 'bp_get_blog_create_button', $button_args ) );
+}
 
 /**
  * Output the Create a Site nav item.
@@ -1379,26 +1446,26 @@ function bp_blog_create_nav_item() {
 	 *
 	 * @return string
 	 */
-	function bp_get_blog_create_nav_item() {
-		// Get the create a site button.
-		$create_blog_button = bp_get_blog_create_button();
+function bp_get_blog_create_nav_item() {
+	// Get the create a site button.
+	$create_blog_button = bp_get_blog_create_button();
 
-		// Make sure the button is available.
-		if ( empty( $create_blog_button ) ) {
-			return;
-		}
-
-		$output = '<li id="blog-create-nav">' . $create_blog_button . '</li>';
-
-		/**
-		 * Filters the Create A Site nav item output.
-		 *
-		 * @since BuddyPress 2.2.0
-		 *
-		 * @param string $output Nav item output.
-		 */
-		return apply_filters( 'bp_get_blog_create_nav_item', $output );
+	// Make sure the button is available.
+	if ( empty( $create_blog_button ) ) {
+		return;
 	}
+
+	$output = '<li id="blog-create-nav">' . $create_blog_button . '</li>';
+
+	/**
+	 * Filters the Create A Site nav item output.
+	 *
+	 * @since BuddyPress 2.2.0
+	 *
+	 * @param string $output Nav item output.
+	 */
+	return apply_filters( 'bp_get_blog_create_nav_item', $output );
+}
 
 /**
  * Checks if a specific theme is still filtering the Blogs directory title
@@ -1448,29 +1515,29 @@ function bp_blogs_visit_blog_button( $args = '' ) {
 	 * }
 	 * @return string The HTML for the Visit button.
 	 */
-	function bp_get_blogs_visit_blog_button( $args = '' ) {
-		$defaults = array(
-			'id'                => 'visit_blog',
-			'component'         => 'blogs',
-			'must_be_logged_in' => false,
-			'block_self'        => false,
-			'wrapper_class'     => 'blog-button visit',
-			'link_href'         => bp_get_blog_permalink(),
-			'link_class'        => 'blog-button visit',
-			'link_text'         => __( 'Visit Site', 'buddyboss' ),
-		);
+function bp_get_blogs_visit_blog_button( $args = '' ) {
+	$defaults = array(
+		'id'                => 'visit_blog',
+		'component'         => 'blogs',
+		'must_be_logged_in' => false,
+		'block_self'        => false,
+		'wrapper_class'     => 'blog-button visit',
+		'link_href'         => bp_get_blog_permalink(),
+		'link_class'        => 'blog-button visit',
+		'link_text'         => __( 'Visit Site', 'buddyboss' ),
+	);
 
-		$button = wp_parse_args( $args, $defaults );
+	$button = wp_parse_args( $args, $defaults );
 
-		/**
-		 * Filters the button for visiting a blog in a loop.
-		 *
-		 * @since BuddyPress 1.2.10
-		 *
-		 * @param array $button Array of arguments to be used for the button to visit a blog.
-		 */
-		return bp_get_button( apply_filters( 'bp_get_blogs_visit_blog_button', $button ) );
-	}
+	/**
+	 * Filters the button for visiting a blog in a loop.
+	 *
+	 * @since BuddyPress 1.2.10
+	 *
+	 * @param array $button Array of arguments to be used for the button to visit a blog.
+	 */
+	return bp_get_button( apply_filters( 'bp_get_blogs_visit_blog_button', $button ) );
+}
 
 /** Stats **********************************************************************/
 
@@ -1497,13 +1564,17 @@ add_action( 'bp_members_admin_user_stats', 'bp_blogs_profile_stats', 9, 1 );
 function bp_blogs_get_profile_stats( $args = '' ) {
 
 	// Parse the args.
-	$r = bp_parse_args( $args, array(
-		'before'  => '<li class="bp-blogs-profile-stats">',
-		'after'   => '</li>',
-		'user_id' => bp_displayed_user_id(),
-		'blogs'   => 0,
-		'output'  => ''
-	), 'blogs_get_profile_stats' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'before'  => '<li class="bp-blogs-profile-stats">',
+			'after'   => '</li>',
+			'user_id' => bp_displayed_user_id(),
+			'blogs'   => 0,
+			'output'  => '',
+		),
+		'blogs_get_profile_stats'
+	);
 
 	// Allow completely overloaded output.
 	if ( is_multisite() && empty( $r['output'] ) ) {

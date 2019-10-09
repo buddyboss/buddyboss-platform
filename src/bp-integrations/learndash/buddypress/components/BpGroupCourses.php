@@ -18,16 +18,15 @@ use BP_Group_Extension;
  *
  * @since BuddyBoss 1.0.0
  */
-class BpGroupCourses extends BP_Group_Extension
-{
+class BpGroupCourses extends BP_Group_Extension {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-        parent::init($this->prepareComponentOptions());
+	public function __construct() {
+		 parent::init( $this->prepareComponentOptions() );
 	}
 
 	/**
@@ -35,159 +34,154 @@ class BpGroupCourses extends BP_Group_Extension
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function settings_screen($groupId = null)
-	{
+	public function settings_screen( $groupId = null ) {
 		$groupId    = $groupId ?: bp_get_new_group_id();
-		$hasLdGroup = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
-		$ldGroupId  = $hasLdGroup? bp_ld_sync('buddypress')->sync->generator($groupId)->getLdGroupId() : 0;
+		$hasLdGroup = bp_ld_sync( 'buddypress' )->sync->generator( $groupId )->hasLdGroup();
+		$ldGroupId  = $hasLdGroup ? bp_ld_sync( 'buddypress' )->sync->generator( $groupId )->getLdGroupId() : 0;
 
-		require bp_locate_template('groups/single/admin/edit-courses.php', false);
-    }
+		require bp_locate_template( 'groups/single/admin/edit-courses.php', false );
+	}
 
-    /**
+	/**
 	 * Saving the settings for all views
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function settings_screen_save($groupId = null)
-    {
-    	$generator = bp_ld_sync('buddypress')->sync->generator($groupId);
+	public function settings_screen_save( $groupId = null ) {
+		$generator = bp_ld_sync( 'buddypress' )->sync->generator( $groupId );
 
-    	if (! bp_ld_sync()->getRequest('bp-ld-sync-enable')) {
-    		return $generator->desyncFromLearndash();
-    	}
+		if ( ! bp_ld_sync()->getRequest( 'bp-ld-sync-enable' ) ) {
+			return $generator->desyncFromLearndash();
+		}
 
-    	$generator->associateToLearndash()->syncBpAdmins();
-    }
+		$generator->associateToLearndash()->syncBpAdmins();
+	}
 
-    /**
+	/**
 	 * Display the tab content based on the selected sub tab
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function display($groupId = null)
-	{
-		$this->loadSubMenuTemplate($groupId);
+	public function display( $groupId = null ) {
+		$this->loadSubMenuTemplate( $groupId );
 
 		$action = bp_action_variable() ?: 'courses';
 
-		if (! $location = bp_locate_template("groups/single/courses-{$action}.php", true)) {
-			bp_locate_template('groups/single/courses-404.php', true);
+		if ( ! $location = bp_locate_template( "groups/single/courses-{$action}.php", true ) ) {
+			bp_locate_template( 'groups/single/courses-404.php', true );
 		}
-    }
+	}
 
-    /**
+	/**
 	 * Display the tab sub menu before the tab content
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function loadSubMenuTemplate($groupId)
-    {
+	protected function loadSubMenuTemplate( $groupId ) {
 		$groupId     = $groupId ?: bp_get_new_group_id();
-		$hasLdGroup  = bp_ld_sync('buddypress')->sync->generator($groupId)->hasLdGroup();
+		$hasLdGroup  = bp_ld_sync( 'buddypress' )->sync->generator( $groupId )->hasLdGroup();
 		$currentMenu = bp_action_variable();
-		$subMenus    = array_map(function($menu) {
-			$menu['url'] = bp_ld_sync('buddypress')->subMenuLink($menu['slug']);
-			return $menu;
-		}, bp_ld_sync('buddypress')->coursesSubMenus());
+		$subMenus    = array_map(
+			function( $menu ) {
+				$menu['url'] = bp_ld_sync( 'buddypress' )->subMenuLink( $menu['slug'] );
+				return $menu;
+			},
+			bp_ld_sync( 'buddypress' )->coursesSubMenus()
+		);
 
-		require bp_locate_template('groups/single/courses-nav.php', false, false);
-    }
+		require bp_locate_template( 'groups/single/courses-nav.php', false, false );
+	}
 
-    /**
+	/**
 	 * Arguments to pass into the buddypress group extension class
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function prepareComponentOptions()
-    {
-		$tabName     = apply_filters('bp_ld_sync/courses_group_tab_name', $this->tabLabel());
-		$tabSlug     = apply_filters('bp_ld_sync/courses_group_tab_slug', 'courses');
-		$tabPosition = apply_filters('bp_ld_sync/courses_group_tab_position', 15);
+	protected function prepareComponentOptions() {
+		$tabName     = apply_filters( 'bp_ld_sync/courses_group_tab_name', $this->tabLabel() );
+		$tabSlug     = apply_filters( 'bp_ld_sync/courses_group_tab_slug', 'courses' );
+		$tabPosition = apply_filters( 'bp_ld_sync/courses_group_tab_position', 15 );
 		// learndash_is_group_leader_user
 
-    	return [
-			'name' => $tabName,
-			'slug' => $tabSlug,
+		return array(
+			'name'              => $tabName,
+			'slug'              => $tabSlug,
 			'nav_item_position' => $tabPosition,
-			'access' => apply_filters('bp_ld_sync/courses_group_tab_enabled', $this->showTabOnView()),
+			'access'            => apply_filters( 'bp_ld_sync/courses_group_tab_enabled', $this->showTabOnView() ),
 
-			'screens' => [
-				'create' => [
-					'enabled'         => apply_filters('bp_ld_sync/courses_group_tab_enabled/screen=create', $this->showTabOnCreate()),
-					'name'            => apply_filters('bp_ld_sync/courses_group_tab_name/screen=create', $tabName),
-					'slug'            => apply_filters('bp_ld_sync/courses_group_tab_slug/screen=create', $tabSlug),
-					'position'        => apply_filters('bp_ld_sync/courses_group_tab_position/screen=create', $tabPosition),
+			'screens'           => array(
+				'create' => array(
+					'enabled'  => apply_filters( 'bp_ld_sync/courses_group_tab_enabled/screen=create', $this->showTabOnCreate() ),
+					'name'     => apply_filters( 'bp_ld_sync/courses_group_tab_name/screen=create', $tabName ),
+					'slug'     => apply_filters( 'bp_ld_sync/courses_group_tab_slug/screen=create', $tabSlug ),
+					'position' => apply_filters( 'bp_ld_sync/courses_group_tab_position/screen=create', $tabPosition ),
 					// 'screen_callback' => '',
 					// 'save_callback'   => '', // ??
-				],
+				),
 
-				'edit' => [
-					'enabled'         => apply_filters('bp_ld_sync/courses_group_tab_enabled/screen=edit', true),
-					'name'            => apply_filters('bp_ld_sync/courses_group_tab_name/screen=edit', $tabName),
-					'slug'            => apply_filters('bp_ld_sync/courses_group_tab_slug/screen=edit', $tabSlug),
-					'position'        => apply_filters('bp_ld_sync/courses_group_tab_position/screen=edit', $tabPosition),
+				'edit'   => array(
+					'enabled'  => apply_filters( 'bp_ld_sync/courses_group_tab_enabled/screen=edit', true ),
+					'name'     => apply_filters( 'bp_ld_sync/courses_group_tab_name/screen=edit', $tabName ),
+					'slug'     => apply_filters( 'bp_ld_sync/courses_group_tab_slug/screen=edit', $tabSlug ),
+					'position' => apply_filters( 'bp_ld_sync/courses_group_tab_position/screen=edit', $tabPosition ),
 					// 'screen_callback' => '',
 					// 'save_callback'   => '', // ??
 					// 'submit_text' => ''
-				],
+				),
 
 				'admin'  => array(
 					'metabox_context'  => 'normal',
 					'metabox_priority' => 'core',
 				),
-			]
-		];
-    }
+			),
+		);
+	}
 
-    /**
+	/**
 	 * Return the tab label with proper nonce
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function tabLabel()
-    {
-    	$default = __('Courses', 'buddyboss');
+	protected function tabLabel() {
+		$default = __( 'Courses', 'buddyboss' );
 
-    	if (! $currentGroup = groups_get_current_group()) {
-    		return $default;
-    	}
+		if ( ! $currentGroup = groups_get_current_group() ) {
+			return $default;
+		}
 
-    	$coursesCount = count(bp_learndash_get_group_courses($currentGroup->id));
+		$coursesCount = count( bp_learndash_get_group_courses( $currentGroup->id ) );
 
-    	return _nx('Course', 'Courses', $coursesCount, 'bp group tab name', 'buddyboss');
-    }
+		return _nx( 'Course', 'Courses', $coursesCount, 'bp group tab name', 'buddyboss' );
+	}
 
-    /**
+	/**
 	 * Determine who can see the tab
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function showTabOnView()
-    {
-    	if (! $currentGroup = groups_get_current_group()) {
-    		return 'noone';
-    	}
+	protected function showTabOnView() {
+		if ( ! $currentGroup = groups_get_current_group() ) {
+			return 'noone';
+		}
 
-    	$generator = bp_ld_sync('buddypress')->sync->generator($currentGroup->id);
-    	if (! $generator->hasLdGroup()) {
-    		return 'noone';
-    	}
+		$generator = bp_ld_sync( 'buddypress' )->sync->generator( $currentGroup->id );
+		if ( ! $generator->hasLdGroup() ) {
+			return 'noone';
+		}
 
-    	if (! learndash_group_enrolled_courses($generator->getLdGroupId())) {
-    		return 'noone';
-    	}
+		if ( ! learndash_group_enrolled_courses( $generator->getLdGroupId() ) ) {
+			return 'noone';
+		}
 
-    	return bp_ld_sync('settings')->get('buddypress.tab_access', true);
-    }
+		return bp_ld_sync( 'settings' )->get( 'buddypress.tab_access', true );
+	}
 
-    /**
+	/**
 	 * Should tha tab be shown on the group create screen
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function showTabOnCreate()
-    {
-    	return bp_ld_sync('settings')->get('buddypress.show_in_bp_create', true);
-    }
+	protected function showTabOnCreate() {
+		return bp_ld_sync( 'settings' )->get( 'buddypress.show_in_bp_create', true );
+	}
 }

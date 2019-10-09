@@ -127,7 +127,7 @@ class BP_Groups_Template {
 	 *     @type int $page Default: 1.
 	 * }
 	 */
-	function __construct( $args = array() ){
+	function __construct( $args = array() ) {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
@@ -179,8 +179,8 @@ class BP_Groups_Template {
 		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page']     );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $r['per_page'] );
+		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		if ( bp_current_user_can( 'bp_moderate' ) || ( is_user_logged_in() && $user_id == bp_loggedin_user_id() ) ) {
 			$show_hidden = true;
@@ -210,26 +210,28 @@ class BP_Groups_Template {
 			$this->groups = array( $group );
 
 		} else {
-			$this->groups = groups_get_groups( array(
-				'type'               => $type,
-				'order'              => $order,
-				'orderby'            => $orderby,
-				'per_page'           => $this->pag_num,
-				'page'               => $this->pag_page,
-				'user_id'            => $user_id,
-				'search_terms'       => $search_terms,
-				'search_columns'     => $search_columns,
-				'meta_query'         => $meta_query,
-				'group_type'         => $group_type,
-				'group_type__in'     => $group_type__in,
-				'group_type__not_in' => $group_type__not_in,
-				'include'            => $include,
-				'exclude'            => $exclude,
-				'parent_id'          => $parent_id,
-				'update_meta_cache'  => $update_meta_cache,
-				'update_admin_cache' => $update_admin_cache,
-				'show_hidden'        => $show_hidden,
-			) );
+			$this->groups = groups_get_groups(
+				array(
+					'type'               => $type,
+					'order'              => $order,
+					'orderby'            => $orderby,
+					'per_page'           => $this->pag_num,
+					'page'               => $this->pag_page,
+					'user_id'            => $user_id,
+					'search_terms'       => $search_terms,
+					'search_columns'     => $search_columns,
+					'meta_query'         => $meta_query,
+					'group_type'         => $group_type,
+					'group_type__in'     => $group_type__in,
+					'group_type__not_in' => $group_type__not_in,
+					'include'            => $include,
+					'exclude'            => $exclude,
+					'parent_id'          => $parent_id,
+					'update_meta_cache'  => $update_meta_cache,
+					'update_admin_cache' => $update_admin_cache,
+					'show_hidden'        => $show_hidden,
+				)
+			);
 		}
 
 		if ( 'invites' == $type ) {
@@ -253,7 +255,7 @@ class BP_Groups_Template {
 
 			$this->groups = $this->groups['groups'];
 
-			if ( !empty( $max ) ) {
+			if ( ! empty( $max ) ) {
 				if ( $max >= count( $this->groups ) ) {
 					$this->group_count = count( $this->groups );
 				} else {
@@ -267,7 +269,7 @@ class BP_Groups_Template {
 		// Build pagination links.
 		if ( (int) $this->total_group_count && (int) $this->pag_num ) {
 			$pag_args = array(
-				$this->pag_arg => '%#%'
+				$this->pag_arg => '%#%',
 			);
 
 			if ( defined( 'DOING_AJAX' ) && true === (bool) DOING_AJAX ) {
@@ -277,26 +279,28 @@ class BP_Groups_Template {
 			}
 
 			$add_args = array(
-				'num'     => $this->pag_num,
-				'sortby'  => $this->sort_by,
-				'order'   => $this->order,
+				'num'    => $this->pag_num,
+				'sortby' => $this->sort_by,
+				'order'  => $this->order,
 			);
 
 			if ( ! empty( $search_terms ) ) {
-				$query_arg = bp_core_get_component_search_query_arg( 'groups' );
+				$query_arg              = bp_core_get_component_search_query_arg( 'groups' );
 				$add_args[ $query_arg ] = urlencode( $search_terms );
 			}
 
-			$this->pag_links = paginate_links( array(
-				'base'      => add_query_arg( $pag_args, $base ),
-				'format'    => '',
-				'total'     => ceil( (int) $this->total_group_count / (int) $this->pag_num ),
-				'current'   => $this->pag_page,
-				'prev_text' => __( '&larr;', 'buddyboss' ),
-				'next_text' => __( '&rarr;', 'buddyboss' ),
-				'mid_size'  => 1,
-				'add_args'  => $add_args,
-			) );
+			$this->pag_links = paginate_links(
+				array(
+					'base'      => add_query_arg( $pag_args, $base ),
+					'format'    => '',
+					'total'     => ceil( (int) $this->total_group_count / (int) $this->pag_num ),
+					'current'   => $this->pag_page,
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'mid_size'  => 1,
+					'add_args'  => $add_args,
+				)
+			);
 		}
 	}
 
@@ -326,7 +330,7 @@ class BP_Groups_Template {
 	 */
 	function next_group() {
 		$this->current_group++;
-		$this->group = $this->groups[$this->current_group];
+		$this->group = $this->groups[ $this->current_group ];
 
 		return $this->group;
 	}
@@ -366,7 +370,7 @@ class BP_Groups_Template {
 			 *
 			 * @since BuddyPress 1.5.0
 			 */
-			do_action('group_loop_end');
+			do_action( 'group_loop_end' );
 			// Do some cleaning up after the loop.
 			$this->rewind_groups();
 		}

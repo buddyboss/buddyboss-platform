@@ -21,17 +21,16 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class EssaysReportsGenerator extends ReportsGenerator
-{
+class EssaysReportsGenerator extends ReportsGenerator {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->completed_table_title = __('Marked Essays', 'buddyboss');
-		$this->incompleted_table_title = __('Unmarked Essays', 'buddyboss');
+	public function __construct() {
+		 $this->completed_table_title  = __( 'Marked Essays', 'buddyboss' );
+		$this->incompleted_table_title = __( 'Unmarked Essays', 'buddyboss' );
 
 		parent::__construct();
 	}
@@ -41,16 +40,15 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function fetch()
-	{
-		$essayQuery = $this->getGroupEssays($this->args);
+	public function fetch() {
+		$essayQuery = $this->getGroupEssays( $this->args );
 
 		$this->results = $essayQuery->posts;
-		$this->pager = [
+		$this->pager   = array(
 			'total_items' => $essayQuery->found_posts,
 			'per_page'    => $essayQuery->query_vars['posts_per_page'],
-			'total_pages' => $essayQuery->max_num_pages
-		];
+			'total_pages' => $essayQuery->max_num_pages,
+		);
 	}
 
 	/**
@@ -58,39 +56,38 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function columns()
-	{
-		return [
-			'user_id'         => $this->column('user_id'),
-			'user'            => $this->column('user'),
-			'course_id'       => $this->column('course_id'),
-			'course'          => $this->column('course'),
-			'quiz'            => [
+	protected function columns() {
+		return array(
+			'user_id'         => $this->column( 'user_id' ),
+			'user'            => $this->column( 'user' ),
+			'course_id'       => $this->column( 'course_id' ),
+			'course'          => $this->column( 'course' ),
+			'quiz'            => array(
 				'label'     => __( 'Quizzes', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'quiz_title',
-			],
-			'essay'            => [
+			),
+			'essay'           => array(
 				'label'     => __( 'Essays', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'essay_title',
-			],
-			'completion_date' => [
+			),
+			'completion_date' => array(
 				'label'     => __( 'Graded Date', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'essay_modify_date',
-			],
-			'updated_date' => [
+			),
+			'updated_date'    => array(
 				'label'     => __( 'Completion Date', 'buddyboss' ),
 				'sortable'  => true,
 				'order_key' => 'essay_post_date',
-			],
-			'score'           => [
+			),
+			'score'           => array(
 				'label'     => __( 'Score', 'buddyboss' ),
 				'sortable'  => false,
 				'order_key' => '',
-			],
-		];
+			),
+		);
 	}
 
 	/**
@@ -98,19 +95,18 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function formatData($activity)
-	{
-		return [
+	protected function formatData( $activity ) {
+		return array(
 			'user_id'         => $activity->user_id,
 			'user'            => $activity->user_display_name,
 			'course_id'       => $activity->activity_course_id,
 			'course'          => $activity->activity_course_title,
 			'quiz'            => $activity->quiz_title,
 			'essay'           => $activity->essay_title,
-			'completion_date' => get_date_from_gmt($activity->essay_modify_date, $this->args['date_format']),
-			'updated_date'    => get_date_from_gmt($activity->essay_post_date, $this->args['date_format']),
-			'score'           => $this->getEssayScore($activity)
-		];
+			'completion_date' => get_date_from_gmt( $activity->essay_modify_date, $this->args['date_format'] ),
+			'updated_date'    => get_date_from_gmt( $activity->essay_post_date, $this->args['date_format'] ),
+			'score'           => $this->getEssayScore( $activity ),
+		);
 	}
 
 	/**
@@ -118,35 +114,34 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getGroupEssays()
-	{
-		if ($this->hasArg('course') && ! $this->args['course']) {
+	protected function getGroupEssays() {
+		if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
 			$courseIds = learndash_group_enrolled_courses(
-				bp_ld_sync('buddypress')->helpers->getLearndashGroupId($this->args['group'])
+				bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $this->args['group'] )
 			);
 		} else {
-			$courseIds = [$this->args['course']];
+			$courseIds = array( $this->args['course'] );
 		}
 
-		$args = [
+		$args = array(
 			'posts_per_page' => $this->args['length'],
 			'page'           => $this->args['start'] / $this->args['length'] + 1,
-			'post_type'      => learndash_get_post_type_slug('essays'),
-			'post_status' => $this->args['completed']? 'graded' : 'not_graded',
-			'meta_query' => [
-				[
-					'key' => 'course_id',
-					'value' => $courseIds
-				]
-			]
-		];
+			'post_type'      => learndash_get_post_type_slug( 'essays' ),
+			'post_status'    => $this->args['completed'] ? 'graded' : 'not_graded',
+			'meta_query'     => array(
+				array(
+					'key'   => 'course_id',
+					'value' => $courseIds,
+				),
+			),
+		);
 
-		if ($this->hasArg('user') && $this->args['user']) {
+		if ( $this->hasArg( 'user' ) && $this->args['user'] ) {
 			$args['author'] = $this->args['user'];
 		}
 
 		$this->registerQueryHooks();
-		$query = new WP_Query($args);
+		$query = new WP_Query( $args );
 		$this->unregisterQueryHooks();
 
 		return $query;
@@ -157,11 +152,10 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function registerQueryHooks()
-	{
-		add_filter('posts_fields', [$this, 'addAdditionalFields']);
-		add_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-		add_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+	protected function registerQueryHooks() {
+		add_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
+		add_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
+		add_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 	}
 
 	/**
@@ -169,11 +163,10 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function unregisterQueryHooks()
-	{
-		remove_filter('posts_fields', [$this, 'addAdditionalFields']);
-		remove_filter('posts_join_paged', [$this, 'addAdditionalJoins']);
-		remove_filter('posts_orderby', [$this, 'addAdditionalOrderBy']);
+	protected function unregisterQueryHooks() {
+		 remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
+		remove_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
+		remove_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 	}
 
 	/**
@@ -181,10 +174,9 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalFields($strFields)
-	{
+	public function addAdditionalFields( $strFields ) {
 		global $wpdb;
-		$quizPostType = learndash_get_post_type_slug('quiz');
+		$quizPostType = learndash_get_post_type_slug( 'quiz' );
 
 		$fields = "
 			users.ID as user_id,
@@ -236,8 +228,7 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalJoins($strJoins)
-	{
+	public function addAdditionalJoins( $strJoins ) {
 		global $wpdb;
 
 		$strJoins .= "
@@ -252,14 +243,13 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function addAdditionalOrderBy($strOrder)
-	{
+	public function addAdditionalOrderBy( $strOrder ) {
 		$strOrder = 'GREATEST(essay_modify_date, essay_post_date) DESC';
 
-		if ($this->hasArg('order')) {
-			$columns = $this->columns();
+		if ( $this->hasArg( 'order' ) ) {
+			$columns     = $this->columns();
 			$columnIndex = $this->args['order'][0]['column'];
-			$column = $columns[$this->args['columns'][$columnIndex]['name']];
+			$column      = $columns[ $this->args['columns'][ $columnIndex ]['name'] ];
 
 			$strOrder = "{$column['order_key']} {$this->args['order'][0]['dir']}, {$strOrder}";
 		}
@@ -272,34 +262,35 @@ class EssaysReportsGenerator extends ReportsGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getEssayScore($activity)
-	{
-		if (! $activity->activity_completed) {
+	protected function getEssayScore( $activity ) {
+		if ( ! $activity->activity_completed ) {
 			return '-';
 		}
 
 		$essayId    = $activity->essay_id;
-		$essay      = get_post($essayId);
-		$quizId     = get_post_meta($essayId, 'quiz_id', true);
-		$questionId = get_post_meta($essayId, 'question_id', true);
+		$essay      = get_post( $essayId );
+		$quizId     = get_post_meta( $essayId, 'quiz_id', true );
+		$questionId = get_post_meta( $essayId, 'question_id', true );
 
 		$questionMapper = new WpProQuiz_Model_QuestionMapper();
-		$question       = $questionMapper->fetchById(intval($questionId), null);
+		$question       = $questionMapper->fetchById( intval( $questionId ), null );
 
 		if ( ! $question instanceof WpProQuiz_Model_Question ) {
 			return '-';
 		}
 
-		$maxPoints = $question->getPoints();
-		$essayData = learndash_get_submitted_essay_data($quizId, $questionId, $essay);
-		$currentPoints = $essayData['points_awarded']? intval($essayData['points_awarded']) : 0;
+		$maxPoints     = $question->getPoints();
+		$essayData     = learndash_get_submitted_essay_data( $quizId, $questionId, $essay );
+		$currentPoints = $essayData['points_awarded'] ? intval( $essayData['points_awarded'] ) : 0;
 
 		return sprintf(
 			_x(
 				'%1$s / %2$s',
 				'placeholders: current points / maximum point',
 				'buddyboss'
-			), $currentPoints, $maxPoints
+			),
+			$currentPoints,
+			$maxPoints
 		);
 	}
 }

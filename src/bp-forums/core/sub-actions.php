@@ -264,7 +264,7 @@ function bbp_login_form_login() {
  *
  * @since bbPress (r4304)
  *
- * @param int $user_id ID of user being edited
+ * @param int   $user_id ID of user being edited
  * @param array $old_user_data The old, unmodified user data
  * @uses do_action() Calls 'bbp_profile_update'
  */
@@ -349,19 +349,21 @@ function bbp_after_setup_theme() {
 function bbp_post_request() {
 
 	// Bail if not a POST action
-	if ( ! bbp_is_post_request() )
+	if ( ! bbp_is_post_request() ) {
 		return;
+	}
 
 	// Bail if no action
-	if ( empty( $_POST['action'] ) )
+	if ( empty( $_POST['action'] ) ) {
 		return;
+	}
 
 	// This dynamic action is probably the one you want to use. It narrows down
 	// the scope of the 'action' without needing to check it in your function.
 	do_action( 'bbp_post_request_' . $_POST['action'] );
 
 	// Use this static action if you don't mind checking the 'action' yourself.
-	do_action( 'bbp_post_request',   $_POST['action'] );
+	do_action( 'bbp_post_request', $_POST['action'] );
 }
 
 /**
@@ -373,19 +375,21 @@ function bbp_post_request() {
 function bbp_get_request() {
 
 	// Bail if not a POST action
-	if ( ! bbp_is_get_request() )
+	if ( ! bbp_is_get_request() ) {
 		return;
+	}
 
 	// Bail if no action
-	if ( empty( $_GET['action'] ) )
+	if ( empty( $_GET['action'] ) ) {
 		return;
+	}
 
 	// This dynamic action is probably the one you want to use. It narrows down
 	// the scope of the 'action' without needing to check it in your function.
 	do_action( 'bbp_get_request_' . $_GET['action'] );
 
 	// Use this static action if you don't mind checking the 'action' yourself.
-	do_action( 'bbp_get_request',   $_GET['action'] );
+	do_action( 'bbp_get_request', $_GET['action'] );
 }
 
 /** Filters *******************************************************************/
@@ -453,10 +457,10 @@ function bbp_allowed_themes( $themes ) {
  *
  * @since bbPress (r2593)
  *
- * @param array $caps Capabilities for meta capability
+ * @param array  $caps Capabilities for meta capability
  * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param int    $user_id User id
+ * @param mixed  $args Arguments
  */
 function bbp_map_meta_caps( $caps = array(), $cap = '', $user_id = 0, $args = array() ) {
 	return apply_filters( 'bbp_map_meta_caps', $caps, $cap, $user_id, $args );

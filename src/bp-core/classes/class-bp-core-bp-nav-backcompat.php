@@ -101,12 +101,12 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 			'2.6.0'
 		);
 
-//		if ( ! isset( $this->backcompat_nav[ $offset ] ) ) {
+		// if ( ! isset( $this->backcompat_nav[ $offset ] ) ) {
 			$nav = $this->get_nav( $offset );
-			if ( $nav && isset( $nav[ $offset ] ) ) {
-				$this->backcompat_nav[ $offset ] = new self( $nav[ $offset ] );
-			}
-//		}
+		if ( $nav && isset( $nav[ $offset ] ) ) {
+			$this->backcompat_nav[ $offset ] = new self( $nav[ $offset ] );
+		}
+		// }
 
 		return $this->backcompat_nav[ $offset ];
 	}

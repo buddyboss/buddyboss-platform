@@ -111,23 +111,27 @@ class BP_Groups_Group_Members_Template {
 			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 		}
 
-		$r = bp_parse_args( $args, array(
-			'group_id'            => bp_get_current_group_id(),
-			'page'                => 1,
-			'per_page'            => 20,
-			'page_arg'            => 'mlpage',
-			'max'                 => false,
-			'exclude'             => false,
-			'exclude_admins_mods' => 1,
-			'exclude_banned'      => 1,
-			'group_role'          => false,
-			'search_terms'        => false,
-			'type'                => 'last_joined',
-		), 'group_members_template' );
+		$r = bp_parse_args(
+			$args,
+			array(
+				'group_id'            => bp_get_current_group_id(),
+				'page'                => 1,
+				'per_page'            => 20,
+				'page_arg'            => 'mlpage',
+				'max'                 => false,
+				'exclude'             => false,
+				'exclude_admins_mods' => 1,
+				'exclude_banned'      => 1,
+				'group_role'          => false,
+				'search_terms'        => false,
+				'type'                => 'last_joined',
+			),
+			'group_members_template'
+		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page']     );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $r['per_page'] );
+		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
 		/**
 		 * Check the current group is the same as the supplied group ID.
@@ -167,16 +171,18 @@ class BP_Groups_Group_Members_Template {
 			$this->member_count = (int) $r['max'];
 		}
 
-		$this->pag_links = paginate_links( array(
-			'base'      => add_query_arg( array( $this->pag_arg => '%#%' ), $base_url ),
-			'format'    => '',
-			'total'     => ! empty( $this->pag_num ) ? ceil( $this->total_member_count / $this->pag_num ) : $this->total_member_count,
-			'current'   => $this->pag_page,
-			'prev_text' => '&larr;',
-			'next_text' => '&rarr;',
-			'mid_size'  => 1,
-			'add_args'  => array(),
-		) );
+		$this->pag_links = paginate_links(
+			array(
+				'base'      => add_query_arg( array( $this->pag_arg => '%#%' ), $base_url ),
+				'format'    => '',
+				'total'     => ! empty( $this->pag_num ) ? ceil( $this->total_member_count / $this->pag_num ) : $this->total_member_count,
+				'current'   => $this->pag_page,
+				'prev_text' => '&larr;',
+				'next_text' => '&rarr;',
+				'mid_size'  => 1,
+				'add_args'  => array(),
+			)
+		);
 	}
 
 	/**

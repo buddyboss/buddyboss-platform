@@ -20,17 +20,21 @@ defined( 'ABSPATH' ) || exit;
 function bp_xprofile_get_settings_fields( $args = '' ) {
 
 	// Parse the possible arguments.
-	$r = bp_parse_args( $args, array(
-		'user_id'                => bp_displayed_user_id(),
-		'profile_group_id'       => false,
-		'hide_empty_groups'      => false,
-		'hide_empty_fields'      => false,
-		'fetch_fields'           => true,
-		'fetch_field_data'       => false,
-		'fetch_visibility_level' => true,
-		'exclude_groups'         => false,
-		'exclude_fields'         => false
-	), 'xprofile_get_settings_fields' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'                => bp_displayed_user_id(),
+			'profile_group_id'       => false,
+			'hide_empty_groups'      => false,
+			'hide_empty_fields'      => false,
+			'fetch_fields'           => true,
+			'fetch_field_data'       => false,
+			'fetch_visibility_level' => true,
+			'exclude_groups'         => false,
+			'exclude_fields'         => false,
+		),
+		'xprofile_get_settings_fields'
+	);
 
 	return bp_has_profile( $r );
 }
@@ -39,13 +43,12 @@ function bp_xprofile_get_settings_fields( $args = '' ) {
  * Adds feedback messages when successfully saving profile field settings.
  *
  * @since BuddyPress 2.0.0
- *
  */
 function bp_xprofile_settings_add_feedback_message() {
 
 	// Default message type is success.
 	$type    = 'success';
-	$message = __( 'Your profile settings have been saved.',        'buddyboss' );
+	$message = __( 'Your profile settings have been saved.', 'buddyboss' );
 
 	// Community moderator editing another user's settings.
 	if ( ! bp_is_my_profile() && bp_core_can_edit_settings() ) {

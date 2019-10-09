@@ -15,7 +15,6 @@ defined( 'ABSPATH' ) || exit;
  * Output the BuddyPress version.
  *
  * @since BuddyPress 1.6.0
- *
  */
 function bp_version() {
 	echo bp_get_version();
@@ -27,15 +26,14 @@ function bp_version() {
 	 *
 	 * @return string The BuddyPress version.
 	 */
-	function bp_get_version() {
-		return buddypress()->version;
-	}
+function bp_get_version() {
+	return buddypress()->version;
+}
 
 /**
  * Output the BuddyPress database version.
  *
  * @since BuddyPress 1.6.0
- *
  */
 function bp_db_version() {
 	echo bp_get_db_version();
@@ -47,15 +45,14 @@ function bp_db_version() {
 	 *
 	 * @return string The BuddyPress database version.
 	 */
-	function bp_get_db_version() {
-		return buddypress()->db_version;
-	}
+function bp_get_db_version() {
+	return buddypress()->db_version;
+}
 
 /**
  * Output the BuddyPress database version.
  *
  * @since BuddyPress 1.6.0
- *
  */
 function bp_db_version_raw() {
 	echo bp_get_db_version_raw();
@@ -67,10 +64,10 @@ function bp_db_version_raw() {
 	 *
 	 * @return string The BuddyPress version direct from the database.
 	 */
-	function bp_get_db_version_raw() {
-		$bp = buddypress();
-		return !empty( $bp->db_version_raw ) ? $bp->db_version_raw : 0;
-	}
+function bp_get_db_version_raw() {
+	$bp = buddypress();
+	return ! empty( $bp->db_version_raw ) ? $bp->db_version_raw : 0;
+}
 
 /** Functions *****************************************************************/
 
@@ -120,7 +117,10 @@ function bp_core_get_table_prefix() {
  */
 function bp_sort_by_key( $items, $key, $type = 'alpha', $preserve_keys = false ) {
 	$callback = function( $a, $b ) use ( $key, $type ) {
-		$values = array( 0 => false, 1 => false );
+		$values = array(
+			0 => false,
+			1 => false,
+		);
 		foreach ( func_get_args() as $indexi => $index ) {
 			if ( isset( $index->{$key} ) ) {
 				$values[ $indexi ] = $index->{$key};
@@ -242,9 +242,9 @@ function bp_core_number_format( $number = 0, $decimals = false ) {
 function bp_core_parse_args_array( $old_args_keys, $func_args ) {
 	$new_args = array();
 
-	foreach( $old_args_keys as $arg_num => $arg_key ) {
-		if ( isset( $func_args[$arg_num] ) ) {
-			$new_args[$arg_key] = $func_args[$arg_num];
+	foreach ( $old_args_keys as $arg_num => $arg_key ) {
+		if ( isset( $func_args[ $arg_num ] ) ) {
+			$new_args[ $arg_key ] = $func_args[ $arg_num ];
 		}
 	}
 
@@ -279,7 +279,7 @@ function bp_parse_args( $args, $defaults = array(), $filter_key = '' ) {
 	}
 
 	// Passively filter the args before the parse.
-	if ( !empty( $filter_key ) ) {
+	if ( ! empty( $filter_key ) ) {
 
 		/**
 		 * Filters the arguments key before parsing if filter key provided.
@@ -294,12 +294,12 @@ function bp_parse_args( $args, $defaults = array(), $filter_key = '' ) {
 	}
 
 	// Parse.
-	if ( is_array( $defaults ) && !empty( $defaults ) ) {
+	if ( is_array( $defaults ) && ! empty( $defaults ) ) {
 		$r = array_merge( $defaults, $r );
 	}
 
 	// Aggressively filter the args after the parse.
-	if ( !empty( $filter_key ) ) {
+	if ( ! empty( $filter_key ) ) {
 
 		/**
 		 * Filters the arguments key after parsing if filter key provided.
@@ -429,7 +429,7 @@ function bp_use_wp_admin_bar() {
 	if ( defined( 'BP_USE_WP_ADMIN_BAR' ) ) {
 		$use_admin_bar = (bool) BP_USE_WP_ADMIN_BAR;
 
-	// ...or is the old BuddyBar being forced back into use?
+		// ...or is the old BuddyBar being forced back into use?
 	} elseif ( bp_force_buddybar( false ) ) {
 		$use_admin_bar = false;
 	}
@@ -486,7 +486,7 @@ function bp_core_get_packaged_component_ids() {
 		'messages',
 		'settings',
 		'notifications',
-		'search'
+		'search',
 	);
 
 	return $components;
@@ -597,11 +597,11 @@ function bp_core_get_directory_pages() {
 	if ( false === $pages ) {
 
 		// Set pages as standard class.
-		$pages = new stdClass;
+		$pages = new stdClass();
 
 		// Get pages and IDs.
 		$page_ids = bp_core_get_directory_page_ids();
-		if ( !empty( $page_ids ) ) {
+		if ( ! empty( $page_ids ) ) {
 
 			// Always get page data from the root blog, except on multiblog mode, when it comes
 			// from the current blog.
@@ -612,8 +612,8 @@ function bp_core_get_directory_pages() {
 			foreach ( (array) $page_ids as $component_id => $page_id ) {
 				foreach ( (array) $page_names as $page_name ) {
 					if ( $page_name->ID == $page_id ) {
-						if ( !isset( $pages->{$component_id} ) || !is_object( $pages->{$component_id} ) ) {
-							$pages->{$component_id} = new stdClass;
+						if ( ! isset( $pages->{$component_id} ) || ! is_object( $pages->{$component_id} ) ) {
+							$pages->{$component_id} = new stdClass();
 						}
 
 						$pages->{$component_id}->name  = $page_name->post_name;
@@ -705,15 +705,15 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		}
 	}
 
-	//check for privacy page if already exists in WP settings > privacy
+	// check for privacy page if already exists in WP settings > privacy
 	$policy_page_id = (int) get_option( 'wp_page_for_privacy_policy' );
-	$static_pages = array( 'terms' );
+	$static_pages   = array( 'terms' );
 
 	if ( empty( $policy_page_id ) ) {
 		$static_pages[] = 'privacy';
-    } else {
-		$pages_to_create[ 'privacy' ] = $page_titles[ 'privacy' ];
-    }
+	} else {
+		$pages_to_create['privacy'] = $page_titles['privacy'];
+	}
 
 	// Create terms and privacy pages
 	foreach ( $static_pages as $slug ) {
@@ -740,13 +740,15 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 		if ( ! empty( $exists ) ) {
 			$pages[ $component_name ] = $exists->ID;
 		} else {
-			$pages[ $component_name ] = wp_insert_post( array(
-				'comment_status' => 'closed',
-				'ping_status'    => 'closed',
-				'post_status'    => 'publish',
-				'post_title'     => $page_name,
-				'post_type'      => 'page',
-			) );
+			$pages[ $component_name ] = wp_insert_post(
+				array(
+					'comment_status' => 'closed',
+					'ping_status'    => 'closed',
+					'post_status'    => 'publish',
+					'post_title'     => $page_name,
+					'post_type'      => 'page',
+				)
+			);
 		}
 	}
 
@@ -769,17 +771,17 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
  */
 function bp_core_get_directory_page_default_titles() {
 	$page_default_titles = array(
-		'activity'          => __( 'News Feed', 'buddyboss' ),
-		'groups'            => __( 'Groups', 'buddyboss' ),
-		'blogs'             => __( 'Sites', 'buddyboss' ),
-		'members'           => __( 'Members', 'buddyboss' ),
-		'media'             => __( 'Photos', 'buddyboss' ),
-		'activate'          => __( 'Activate', 'buddyboss' ),
-		'register'          => __( 'Register', 'buddyboss' ),
-		//'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
-		'new_forums_page'   => __( 'Forums', 'buddyboss' ),
-		'terms'             => __( 'Terms of Service', 'buddyboss' ),
-		'privacy'           => __( 'Privacy Policy', 'buddyboss' ),
+		'activity'        => __( 'News Feed', 'buddyboss' ),
+		'groups'          => __( 'Groups', 'buddyboss' ),
+		'blogs'           => __( 'Sites', 'buddyboss' ),
+		'members'         => __( 'Members', 'buddyboss' ),
+		'media'           => __( 'Photos', 'buddyboss' ),
+		'activate'        => __( 'Activate', 'buddyboss' ),
+		'register'        => __( 'Register', 'buddyboss' ),
+		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
+		'new_forums_page' => __( 'Forums', 'buddyboss' ),
+		'terms'           => __( 'Terms of Service', 'buddyboss' ),
+		'privacy'         => __( 'Privacy Policy', 'buddyboss' ),
 	);
 
 	/**
@@ -901,8 +903,8 @@ function bp_core_add_root_component( $slug ) {
 
 	// Make sure that this component is registered as requiring a top-level directory.
 	if ( isset( $bp->{$slug} ) ) {
-		$bp->loaded_components[$bp->{$slug}->slug] = $bp->{$slug}->id;
-		$bp->{$slug}->has_directory = true;
+		$bp->loaded_components[ $bp->{$slug}->slug ] = $bp->{$slug}->id;
+		$bp->{$slug}->has_directory                  = true;
 	}
 }
 
@@ -919,13 +921,15 @@ function bp_core_create_root_component_page() {
 	$new_page_ids = array();
 
 	foreach ( (array) $bp->add_root as $slug ) {
-		$new_page_ids[ $slug ] = wp_insert_post( array(
-			'comment_status' => 'closed',
-			'ping_status'    => 'closed',
-			'post_title'     => ucwords( $slug ),
-			'post_status'    => 'publish',
-			'post_type'      => 'page'
-		) );
+		$new_page_ids[ $slug ] = wp_insert_post(
+			array(
+				'comment_status' => 'closed',
+				'ping_status'    => 'closed',
+				'post_title'     => ucwords( $slug ),
+				'post_status'    => 'publish',
+				'post_type'      => 'page',
+			)
+		);
 	}
 
 	$page_ids = array_merge( $new_page_ids, bp_core_get_directory_page_ids( 'all' ) );
@@ -1080,7 +1084,7 @@ function bp_core_get_site_path() {
 			unset( $site_path[1] );
 			unset( $site_path[2] );
 
-			if ( !count( $site_path ) ) {
+			if ( ! count( $site_path ) ) {
 				$site_path = '/';
 			} else {
 				$site_path = '/' . implode( '/', $site_path ) . '/';
@@ -1170,7 +1174,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$unknown_text   = apply_filters( 'bp_core_time_since_unknown_text',   __( 'sometime',  'buddyboss' ) );
+	$unknown_text = apply_filters( 'bp_core_time_since_unknown_text', __( 'sometime', 'buddyboss' ) );
 
 	/**
 	 * Filters the value to use if the time since is right now.
@@ -1188,7 +1192,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 *
 	 * @param string $value String representing the time since the older date.
 	 */
-	$ago_text       = apply_filters( 'bp_core_time_since_ago_text',       __( '%s ago',    'buddyboss' ) );
+	$ago_text = apply_filters( 'bp_core_time_since_ago_text', __( '%s ago', 'buddyboss' ) );
 
 	// Array of time period chunks.
 	$chunks = array(
@@ -1198,10 +1202,10 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		DAY_IN_SECONDS,
 		HOUR_IN_SECONDS,
 		MINUTE_IN_SECONDS,
-		1
+		1,
 	);
 
-	if ( !empty( $older_date ) && !is_numeric( $older_date ) ) {
+	if ( ! empty( $older_date ) && ! is_numeric( $older_date ) ) {
 		$time_chunks = explode( ':', str_replace( ' ', ':', $older_date ) );
 		$date_chunks = explode( '-', str_replace( ' ', '-', $older_date ) );
 		$older_date  = gmmktime( (int) $time_chunks[1], (int) $time_chunks[2], (int) $time_chunks[3], (int) $date_chunks[1], (int) $date_chunks[2], (int) $date_chunks[0] );
@@ -1212,7 +1216,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 * a date and the current time. $newer_date will have a value if we want to
 	 * work out time elapsed between two known dates.
 	 */
-	$newer_date = ( !$newer_date ) ? bp_core_current_time( true, 'timestamp' ) : $newer_date;
+	$newer_date = ( ! $newer_date ) ? bp_core_current_time( true, 'timestamp' ) : $newer_date;
 
 	// Difference in seconds.
 	$since = $newer_date - $older_date;
@@ -1221,17 +1225,17 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	if ( 0 > $since ) {
 		$output = $unknown_text;
 
-	/**
-	 * We only want to output two chunks of time here, eg:
-	 * x years, xx months
-	 * x days, xx hours
-	 * so there's only two bits of calculation below:
-	 */
+		/**
+		 * We only want to output two chunks of time here, eg:
+		 * x years, xx months
+		 * x days, xx hours
+		 * so there's only two bits of calculation below:
+		 */
 	} else {
 
 		// Step one: the first chunk.
 		for ( $i = 0, $j = count( $chunks ); $i < $j; ++$i ) {
-			$seconds = $chunks[$i];
+			$seconds = $chunks[ $i ];
 
 			// Finding the biggest chunk (if the chunk fits, break).
 			$count = floor( $since / $seconds );
@@ -1241,29 +1245,29 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 		}
 
 		// If $i iterates all the way to $j, then the event happened 0 seconds ago.
-		if ( !isset( $chunks[$i] ) ) {
+		if ( ! isset( $chunks[ $i ] ) ) {
 			$output = $right_now_text;
 
 		} else {
 
 			// Set output var.
 			switch ( $seconds ) {
-				case YEAR_IN_SECONDS :
-					$output = sprintf( _n( '%s year',   '%s years',   $count, 'buddyboss' ), $count );
+				case YEAR_IN_SECONDS:
+					$output = sprintf( _n( '%s year', '%s years', $count, 'buddyboss' ), $count );
 					break;
-				case 30 * DAY_IN_SECONDS :
-					$output = sprintf( _n( '%s month',  '%s months',  $count, 'buddyboss' ), $count );
+				case 30 * DAY_IN_SECONDS:
+					$output = sprintf( _n( '%s month', '%s months', $count, 'buddyboss' ), $count );
 					break;
-				case WEEK_IN_SECONDS :
-					$output = sprintf( _n( '%s week',   '%s weeks',   $count, 'buddyboss' ), $count );
+				case WEEK_IN_SECONDS:
+					$output = sprintf( _n( '%s week', '%s weeks', $count, 'buddyboss' ), $count );
 					break;
-				case DAY_IN_SECONDS :
-					$output = sprintf( _n( '%s day',    '%s days',    $count, 'buddyboss' ), $count );
+				case DAY_IN_SECONDS:
+					$output = sprintf( _n( '%s day', '%s days', $count, 'buddyboss' ), $count );
 					break;
-				case HOUR_IN_SECONDS :
-					$output = sprintf( _n( '%s hour',   '%s hours',   $count, 'buddyboss' ), $count );
+				case HOUR_IN_SECONDS:
+					$output = sprintf( _n( '%s hour', '%s hours', $count, 'buddyboss' ), $count );
 					break;
-				case MINUTE_IN_SECONDS :
+				case MINUTE_IN_SECONDS:
 					$output = sprintf( _n( '%s minute', '%s minutes', $count, 'buddyboss' ), $count );
 					break;
 				default:
@@ -1277,7 +1281,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 			// minute are not a useful piece of information for our
 			// purposes.
 			if ( $i + 2 < $j ) {
-				$seconds2 = $chunks[$i + 1];
+				$seconds2 = $chunks[ $i + 1 ];
 				$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
 
 				// Add to output var.
@@ -1285,19 +1289,19 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 					$output .= _x( ',', 'Separator in time since', 'buddyboss' ) . ' ';
 
 					switch ( $seconds2 ) {
-						case 30 * DAY_IN_SECONDS :
-							$output .= sprintf( _n( '%s month',  '%s months',  $count2, 'buddyboss' ), $count2 );
+						case 30 * DAY_IN_SECONDS:
+							$output .= sprintf( _n( '%s month', '%s months', $count2, 'buddyboss' ), $count2 );
 							break;
-						case WEEK_IN_SECONDS :
-							$output .= sprintf( _n( '%s week',   '%s weeks',   $count2, 'buddyboss' ), $count2 );
+						case WEEK_IN_SECONDS:
+							$output .= sprintf( _n( '%s week', '%s weeks', $count2, 'buddyboss' ), $count2 );
 							break;
-						case DAY_IN_SECONDS :
-							$output .= sprintf( _n( '%s day',    '%s days',    $count2, 'buddyboss' ), $count2 );
+						case DAY_IN_SECONDS:
+							$output .= sprintf( _n( '%s day', '%s days', $count2, 'buddyboss' ), $count2 );
 							break;
-						case HOUR_IN_SECONDS :
-							$output .= sprintf( _n( '%s hour',   '%s hours',   $count2, 'buddyboss' ), $count2 );
+						case HOUR_IN_SECONDS:
+							$output .= sprintf( _n( '%s hour', '%s hours', $count2, 'buddyboss' ), $count2 );
 							break;
-						case MINUTE_IN_SECONDS :
+						case MINUTE_IN_SECONDS:
 							$output .= sprintf( _n( '%s minute', '%s minutes', $count2, 'buddyboss' ), $count2 );
 							break;
 						default:
@@ -1338,7 +1342,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
  * @param string String of date to convert. Timezone should be UTC before using this.
  * @return string|null
  */
- function bp_core_iso8601_date( $timestamp = '' ) {
+function bp_core_iso8601_date( $timestamp = '' ) {
 	echo bp_core_get_iso8601_date( $timestamp );
 }
 	/**
@@ -1349,21 +1353,21 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	 * @param string String of date to convert. Timezone should be UTC before using this.
 	 * @return string
 	 */
-	 function bp_core_get_iso8601_date( $timestamp = '' ) {
-		if ( ! $timestamp ) {
+function bp_core_get_iso8601_date( $timestamp = '' ) {
+	if ( ! $timestamp ) {
 			return '';
-		}
+	}
 
-		try {
-			$date = new DateTime( $timestamp, new DateTimeZone( 'UTC' ) );
+	try {
+		$date = new DateTime( $timestamp, new DateTimeZone( 'UTC' ) );
 
 		// Not a valid date, so return blank string.
-		} catch( Exception $e ) {
-			return '';
-		}
-
-		return $date->format( DateTime::ISO8601 );
+	} catch ( Exception $e ) {
+			 return '';
 	}
+
+		 return $date->format( DateTime::ISO8601 );
+}
 
 /**
  * Output formatted date from a date string.
@@ -1388,15 +1392,15 @@ function bp_core_format_date( $date = '', $format = '' ) {
  * @return string
  */
 function bp_core_get_format_date( $date = '', $format = '' ) {
-    if ( ! $date ) {
-        return '';
-    }
+	if ( ! $date ) {
+		return '';
+	}
 
-    if ( empty( $format ) ) {
-        $format = bp_core_date_format();
-    }
+	if ( empty( $format ) ) {
+		$format = bp_core_date_format();
+	}
 
-    return date_i18n( $format, $date );
+	return date_i18n( $format, $date );
 }
 
 
@@ -1419,8 +1423,8 @@ function bp_core_add_message( $message, $type = '' ) {
 	}
 
 	// Send the values to the cookie for page reload display.
-	@setcookie( 'bp-message',      $message, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp-message-type', $type,    time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message', $message, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message-type', $type, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
 
 	// Get BuddyPress.
 	$bp = buddypress();
@@ -1444,7 +1448,6 @@ function bp_core_add_message( $message, $type = '' ) {
  * so that the message is not shown to the user multiple times.
  *
  * @since BuddyPress 1.1.0
- *
  */
 function bp_core_setup_message() {
 
@@ -1484,8 +1487,8 @@ function bp_core_render_message() {
 	// Get BuddyPress.
 	$bp = buddypress();
 
-	if ( !empty( $bp->template_message ) ) :
-		$type    = ( 'success' === $bp->template_message_type ) ? 'updated' : 'error';
+	if ( ! empty( $bp->template_message ) ) :
+		$type = ( 'success' === $bp->template_message_type ) ? 'updated' : 'error';
 
 		/**
 		 * Filters the 'template_notices' feedback message content.
@@ -1504,7 +1507,7 @@ function bp_core_render_message() {
 
 		</div>
 
-	<?php
+		<?php
 
 		/**
 		 * Fires after the display of any template_notices feedback messages.
@@ -1747,7 +1750,7 @@ function bp_use_embed_in_activity() {
 	 *
 	 * @param bool $value Whether or not oEmbeds are allowed.
 	 */
-	return apply_filters( 'bp_use_oembed_in_activity', !defined( 'BP_EMBED_DISABLE_ACTIVITY' ) || !BP_EMBED_DISABLE_ACTIVITY );
+	return apply_filters( 'bp_use_oembed_in_activity', ! defined( 'BP_EMBED_DISABLE_ACTIVITY' ) || ! BP_EMBED_DISABLE_ACTIVITY );
 }
 
 /**
@@ -1767,7 +1770,7 @@ function bp_use_embed_in_activity_replies() {
 	 *
 	 * @param bool $value Whether or not oEmbeds are allowed.
 	 */
-	return apply_filters( 'bp_use_embed_in_activity_replies', !defined( 'BP_EMBED_DISABLE_ACTIVITY_REPLIES' ) || !BP_EMBED_DISABLE_ACTIVITY_REPLIES );
+	return apply_filters( 'bp_use_embed_in_activity_replies', ! defined( 'BP_EMBED_DISABLE_ACTIVITY_REPLIES' ) || ! BP_EMBED_DISABLE_ACTIVITY_REPLIES );
 }
 
 /**
@@ -1787,7 +1790,7 @@ function bp_use_embed_in_private_messages() {
 	 *
 	 * @param bool $value Whether or not oEmbeds are allowed.
 	 */
-	return apply_filters( 'bp_use_embed_in_private_messages', !defined( 'BP_EMBED_DISABLE_PRIVATE_MESSAGES' ) || !BP_EMBED_DISABLE_PRIVATE_MESSAGES );
+	return apply_filters( 'bp_use_embed_in_private_messages', ! defined( 'BP_EMBED_DISABLE_PRIVATE_MESSAGES' ) || ! BP_EMBED_DISABLE_PRIVATE_MESSAGES );
 }
 
 /**
@@ -1802,7 +1805,7 @@ function bp_use_embed_in_private_messages() {
  */
 function bp_core_extract_media_from_content( $content = '', $type = 'all' ) {
 	if ( is_string( $type ) ) {
-		$class = new ReflectionClass( 'BP_Media_Extractor' );
+		$class   = new ReflectionClass( 'BP_Media_Extractor' );
 		$bitmask = $class->getConstant( strtoupper( $type ) );
 	} else {
 		$bitmask = (int) $type;
@@ -1813,7 +1816,7 @@ function bp_core_extract_media_from_content( $content = '', $type = 'all' ) {
 		return false;
 	}
 
-	$x = new BP_Media_Extractor;
+	$x     = new BP_Media_Extractor();
 	$media = $x->extract( $content, $bitmask );
 
 	unset( $media['has'] );
@@ -1849,19 +1852,19 @@ function bp_admin_url( $path = '', $scheme = 'admin' ) {
 	 *                       or 'https' can be passed to force those schemes.
 	 * @return string Admin url link with optional path appended.
 	 */
-	function bp_get_admin_url( $path = '', $scheme = 'admin' ) {
+function bp_get_admin_url( $path = '', $scheme = 'admin' ) {
 
-		// Links belong in network admin.
-		if ( bp_core_do_network_admin() ) {
-			$url = network_admin_url( $path, $scheme );
+	// Links belong in network admin.
+	if ( bp_core_do_network_admin() ) {
+		$url = network_admin_url( $path, $scheme );
 
 		// Links belong in site admin.
-		} else {
-			$url = admin_url( $path, $scheme );
-		}
-
-		return $url;
+	} else {
+		$url = admin_url( $path, $scheme );
 	}
+
+	return $url;
+}
 
 /**
  * Should BuddyPress appear in network admin (vs a single site Dashboard)?
@@ -2019,7 +2022,7 @@ function bp_is_multiblog_mode() {
 	if ( $is_multisite && $network_active && $is_multiblog ) {
 		$retval = true;
 
-	// Multisite, but not network activated.
+		// Multisite, but not network activated.
 	} elseif ( $is_multisite && ! $network_active ) {
 		$retval = true;
 	}
@@ -2049,7 +2052,7 @@ function bp_is_multiblog_mode() {
 function bp_is_network_activated() {
 
 	// Default to is_multisite().
-	$retval  = is_multisite();
+	$retval = is_multisite();
 
 	// Check the sitewide plugins array.
 	$base    = buddypress()->basename;
@@ -2240,7 +2243,7 @@ function bp_verify_nonce_request( $action = '', $query_arg = '_wpnonce' ) {
 	$matched_url = apply_filters( 'bp_verify_nonce_request_url', $requested_url );
 
 	// Check the nonce.
-	$result = isset( $_REQUEST[$query_arg] ) ? wp_verify_nonce( $_REQUEST[$query_arg], $action ) : false;
+	$result = isset( $_REQUEST[ $query_arg ] ) ? wp_verify_nonce( $_REQUEST[ $query_arg ], $action ) : false;
 
 	// Nonce check failed.
 	if ( empty( $result ) || empty( $action ) || ( strpos( $matched_url, $home_url ) !== 0 ) ) {
@@ -2315,10 +2318,13 @@ function bp_core_load_buddypress_textdomain() {
 	 *
 	 * @param array $value Array of directories to check for language files in.
 	 */
-	$locations = apply_filters( 'buddypress_locale_locations', array(
-		trailingslashit( WP_LANG_DIR . '/' . $domain  ),
-		trailingslashit( WP_LANG_DIR ),
-	) );
+	$locations = apply_filters(
+		'buddypress_locale_locations',
+		array(
+			trailingslashit( WP_LANG_DIR . '/' . $domain ),
+			trailingslashit( WP_LANG_DIR ),
+		)
+	);
 
 	// Try custom locations in WP_LANG_DIR.
 	foreach ( $locations as $location ) {
@@ -2351,7 +2357,7 @@ function bp_core_action_search_site( $slug = '' ) {
 	}
 
 	$search_terms = stripslashes( $_POST['search-terms'] );
-	$search_which = !empty( $_POST['search-which'] ) ? $_POST['search-which'] : '';
+	$search_which = ! empty( $_POST['search-which'] ) ? $_POST['search-which'] : '';
 	$query_string = '/?s=';
 
 	if ( empty( $slug ) ) {
@@ -2364,7 +2370,7 @@ function bp_core_action_search_site( $slug = '' ) {
 				if ( 'page' == get_option( 'show_on_front' ) ) {
 					$page = get_post( get_option( 'page_for_posts' ) );
 
-					if ( !is_wp_error( $page ) && !empty( $page->post_name ) ) {
+					if ( ! is_wp_error( $page ) && ! empty( $page->post_name ) ) {
 						$slug = $page->post_name;
 						$var  = '?s=';
 					}
@@ -2372,7 +2378,7 @@ function bp_core_action_search_site( $slug = '' ) {
 				break;
 
 			case 'blogs':
-				$slug = bp_is_active( 'blogs' )  ? bp_get_blogs_root_slug()  : '';
+				$slug = bp_is_active( 'blogs' ) ? bp_get_blogs_root_slug() : '';
 				break;
 
 			case 'groups':
@@ -2432,7 +2438,7 @@ add_action( 'bp_init', 'bp_remove_adjacent_posts_rel_link' );
  */
 function _bp_strip_spans_from_title( $title_part = '' ) {
 	$title = $title_part;
-	$span = strpos( $title, '<span' );
+	$span  = strpos( $title, '<span' );
 	if ( false !== $span ) {
 		$title = substr( $title, 0, $span - 1 );
 	}
@@ -2462,9 +2468,17 @@ function bp_core_get_minified_asset_suffix() {
 function bp_core_get_components( $type = 'all' ) {
 
 	$required_components = array(
-		'members' => array(
+		'members'  => array(
 			'title'       => __( 'Member Profiles', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-xprofile' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-xprofile',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Everything in a community website revolves around its members. All website users are given member profiles.', 'buddyboss' ),
 		),
 		'xprofile' => array(
@@ -2476,7 +2490,7 @@ function bp_core_get_components( $type = 'all' ) {
 	);
 
 	$optional_components = array(
-		'settings' => array(
+		'settings'      => array(
 			'title'       => __( 'Account Settings', 'buddyboss' ),
 			'description' => __( 'Allow members to modify their account and notification settings from within their profile.', 'buddyboss' ),
 			'default'     => true,
@@ -2486,58 +2500,114 @@ function bp_core_get_components( $type = 'all' ) {
 			'description' => __( 'Notify members of relevant activity with a toolbar bubble and/or via email and allow them to customize their notification settings.', 'buddyboss' ),
 			'default'     => true,
 		),
-		'groups'   => array(
+		'groups'        => array(
 			'title'       => __( 'Social Groups', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-groups' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-groups',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Allow members to organize themselves into public, private or hidden social groups with separate activity feeds and member listings.', 'buddyboss' ),
-            'default'     => false,
+			'default'     => false,
 		),
-		'forums'   => array(
+		'forums'        => array(
 			'title'       => __( 'Forum Discussions', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-forums' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-forums',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Allow members to have discussions using Q&A style message boards. Forums can be standalone or connected to social groups.', 'buddyboss' ),
-            'default'     => false,
+			'default'     => false,
 		),
-		'activity' => array(
+		'activity'      => array(
 			'title'       => __( 'Activity Feeds', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-activity' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-activity',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Global, personal, and group activity feeds with threaded commenting, direct posting, and @mentions, with email notification support.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'media'   => array(
+		'media'         => array(
 			'title'       => __( 'Media Uploading', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-media' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'messages' => array(
+		'messages'      => array(
 			'title'       => __( 'Private Messaging', 'buddyboss' ),
 			'description' => __( 'Allow members to send private messages. Messages can be sent to one member or a group of members.', 'buddyboss' ),
-            'default'     => false,
+			'default'     => false,
 		),
-		'friends'  => array(
+		'friends'       => array(
 			'title'       => __( 'Member Connections', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-friends' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-friends',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Allow members to make connections with one another and focus on those they care about most.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'invites'  => array(
+		'invites'       => array(
 			'title'       => __( 'Email Invites', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-invites' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-invites',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Allow members to send email invitations to non-members to join the network.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'search'   => array(
+		'search'        => array(
 			'title'       => __( 'Network Search', 'buddyboss' ),
-			'settings'    => bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings', 'tab' => 'bp-search' ) , 'admin.php' ) ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-search',
+					),
+					'admin.php'
+				)
+			),
 			'description' => __( 'Allow members to search the entire network, along with custom post types of your choice, all in one unified search bar.', 'buddyboss' ),
 			'default'     => false,
 		),
-		'blogs'    => array(
+		'blogs'         => array(
 			'title'       => __( 'Blog Feeds', 'buddyboss' ),
 			'description' => __( 'Have new blog posts and comments appear in site activity feeds. Make sure to enable Activity Feeds first.', 'buddyboss' ),
-            'default'     => false,
-		)
+			'default'     => false,
+		),
 	);
 
 	// Add blogs tracking if multisite.
@@ -2546,24 +2616,24 @@ function bp_core_get_components( $type = 'all' ) {
 	}
 
 	$default_components = array();
-	foreach( array_merge( $required_components, $optional_components ) as $key => $component ) {
-	    if ( isset( $component['default'] ) && true === $component['default'] ) {
-		    $default_components[ $key ] = $component;
-        }
-    }
+	foreach ( array_merge( $required_components, $optional_components ) as $key => $component ) {
+		if ( isset( $component['default'] ) && true === $component['default'] ) {
+			$default_components[ $key ] = $component;
+		}
+	}
 
 	switch ( $type ) {
-		case 'required' :
+		case 'required':
 			$components = $required_components;
 			break;
-		case 'optional' :
+		case 'optional':
 			$components = $optional_components;
 			break;
-		case 'default' :
+		case 'default':
 			$components = $default_components;
 			break;
-		case 'all' :
-		default :
+		case 'all':
+		default:
 			$components = array_merge( $required_components, $optional_components );
 			break;
 	}
@@ -2639,12 +2709,12 @@ function bp_nav_menu_get_loggedin_pages() {
 			'post_type'      => 'page',
 			'post_status'    => 'publish',
 			'comment_status' => 'closed',
-			'guid'           => $bp_item['link']
+			'guid'           => $bp_item['link'],
 		);
 	}
 
 	if ( empty( buddypress()->wp_nav_menu_items ) ) {
-		buddypress()->wp_nav_menu_items = new stdClass;
+		buddypress()->wp_nav_menu_items = new stdClass();
 	}
 
 	buddypress()->wp_nav_menu_items->loggedin = $page_args;
@@ -2687,8 +2757,8 @@ function bp_nav_menu_get_loggedout_pages() {
 	// registration is disabled).
 	$bp_directory_page_ids = bp_core_get_directory_page_ids();
 
-	if( ! empty( $bp_directory_page_ids['register'] ) ) {
-		$register_page = get_post( $bp_directory_page_ids['register'] );
+	if ( ! empty( $bp_directory_page_ids['register'] ) ) {
+		$register_page   = get_post( $bp_directory_page_ids['register'] );
 		$bp_menu_items[] = array(
 			'name' => $register_page->post_title,
 			'slug' => 'register',
@@ -2713,12 +2783,12 @@ function bp_nav_menu_get_loggedout_pages() {
 			'post_type'      => 'page',
 			'post_status'    => 'publish',
 			'comment_status' => 'closed',
-			'guid'           => $bp_item['link']
+			'guid'           => $bp_item['link'],
 		);
 	}
 
 	if ( empty( buddypress()->wp_nav_menu_items ) ) {
-		buddypress()->wp_nav_menu_items = new stdClass;
+		buddypress()->wp_nav_menu_items = new stdClass();
 	}
 
 	buddypress()->wp_nav_menu_items->loggedout = $page_args;
@@ -2778,7 +2848,6 @@ function bp_core_get_suggestions( $args ) {
 		if ( isset( $args['group_id'] ) ) {
 			$class = 'BP_Groups_Member_Suggestions';
 		}
-
 	} else {
 
 		/**
@@ -2798,7 +2867,6 @@ function bp_core_get_suggestions( $args ) {
 	if ( ! $class || ! class_exists( $class ) ) {
 		return new WP_Error( 'missing_parameter' );
 	}
-
 
 	$suggestions = new $class( $args );
 	$validation  = $suggestions->validate();
@@ -2881,17 +2949,17 @@ function bp_email_post_type() {
 	 *
 	 * @return string The name of the email post type.
 	 */
-	function bp_get_email_post_type() {
+function bp_get_email_post_type() {
 
-		/**
-		 * Filters the name of the email post type.
-		 *
-		 * @since BuddyPress 2.5.0
-		 *
-		 * @param string $value Email post type name.
-		 */
-		return apply_filters( 'bp_get_email_post_type', buddypress()->email_post_type );
-	}
+	/**
+	 * Filters the name of the email post type.
+	 *
+	 * @since BuddyPress 2.5.0
+	 *
+	 * @param string $value Email post type name.
+	 */
+	return apply_filters( 'bp_get_email_post_type', buddypress()->email_post_type );
+}
 
 /**
  * Return labels used by the email post type.
@@ -2909,24 +2977,27 @@ function bp_get_email_post_type_labels() {
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
-	return apply_filters( 'bp_get_email_post_type_labels', array(
-		'add_new'               => __( 'New Email', 'buddyboss' ),
-		'add_new_item'          => __( 'Add New Email', 'buddyboss' ),
-		'all_items'             => __( 'All Emails', 'buddyboss' ),
-		'edit_item'             => __( 'Edit Email', 'buddyboss' ),
-		'filter_items_list'     => __( 'Filter email list', 'buddyboss' ),
-		'items_list'            => __( 'Email list', 'buddyboss' ),
-		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
-		'menu_name'             => __( 'Emails', 'buddyboss' ),
-		'name'                  => __( 'Email Templates', 'buddyboss' ),
-		'new_item'              => __( 'New Email', 'buddyboss' ),
-		'not_found'             => __( 'No emails found', 'buddyboss' ),
-		'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
-		'search_items'          => __( 'Search Emails', 'buddyboss' ),
-		'singular_name'         => __( 'Email', 'buddyboss' ),
-		'uploaded_to_this_item' => __( 'Uploaded to this email', 'buddyboss' ),
-		'view_item'             => __( 'View Email', 'buddyboss' ),
-	) );
+	return apply_filters(
+		'bp_get_email_post_type_labels',
+		array(
+			'add_new'               => __( 'New Email', 'buddyboss' ),
+			'add_new_item'          => __( 'Add New Email', 'buddyboss' ),
+			'all_items'             => __( 'All Emails', 'buddyboss' ),
+			'edit_item'             => __( 'Edit Email', 'buddyboss' ),
+			'filter_items_list'     => __( 'Filter email list', 'buddyboss' ),
+			'items_list'            => __( 'Email list', 'buddyboss' ),
+			'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
+			'menu_name'             => __( 'Emails', 'buddyboss' ),
+			'name'                  => __( 'Email Templates', 'buddyboss' ),
+			'new_item'              => __( 'New Email', 'buddyboss' ),
+			'not_found'             => __( 'No emails found', 'buddyboss' ),
+			'not_found_in_trash'    => __( 'No emails found in trash', 'buddyboss' ),
+			'search_items'          => __( 'Search Emails', 'buddyboss' ),
+			'singular_name'         => __( 'Email', 'buddyboss' ),
+			'uploaded_to_this_item' => __( 'Uploaded to this email', 'buddyboss' ),
+			'view_item'             => __( 'View Email', 'buddyboss' ),
+		)
+	);
 }
 
 /**
@@ -2945,13 +3016,16 @@ function bp_get_email_post_type_supports() {
 	 *
 	 * @param array $value Supported features.
 	 */
-	return apply_filters( 'bp_get_email_post_type_supports', array(
-		'custom-fields',
-		'editor',
-		'excerpt',
-		'revisions',
-		'title',
-	) );
+	return apply_filters(
+		'bp_get_email_post_type_supports',
+		array(
+			'custom-fields',
+			'editor',
+			'excerpt',
+			'revisions',
+			'title',
+		)
+	);
 }
 
 
@@ -2972,17 +3046,17 @@ function bp_email_tax_type() {
 	 *
 	 * @return string The unique email taxonomy type ID.
 	 */
-	function bp_get_email_tax_type() {
+function bp_get_email_tax_type() {
 
-		/**
-		 * Filters the name of the email type taxonomy.
-		 *
-		 * @since BuddyPress 2.5.0
-		 *
-		 * @param string $value Email type taxonomy name.
-		 */
-		return apply_filters( 'bp_get_email_tax_type', buddypress()->email_taxonomy_type );
-	}
+	/**
+	 * Filters the name of the email type taxonomy.
+	 *
+	 * @since BuddyPress 2.5.0
+	 *
+	 * @param string $value Email type taxonomy name.
+	 */
+	return apply_filters( 'bp_get_email_tax_type', buddypress()->email_taxonomy_type );
+}
 
 /**
  * Return labels used by the email type taxonomy.
@@ -3000,23 +3074,26 @@ function bp_get_email_tax_type_labels() {
 	 *
 	 * @param array $value Associative array (name => label).
 	 */
-	return apply_filters( 'bp_get_email_tax_type_labels', array(
-		'add_new_item'          => __( 'New Email Situation', 'buddyboss' ),
-		'all_items'             => __( 'All Email Situations', 'buddyboss' ),
-		'edit_item'             => __( 'Edit Email Situations', 'buddyboss' ),
-		'items_list'            => __( 'Email list', 'buddyboss' ),
-		'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
-		'menu_name'             => __( 'Situations', 'buddyboss' ),
-		'name'                  => __( 'Situation', 'buddyboss' ),
-		'new_item_name'         => __( 'New email situation name', 'buddyboss' ),
-		'not_found'             => __( 'No email situations found', 'buddyboss' ),
-		'no_terms'              => __( 'No email situations', 'buddyboss' ),
-		'popular_items'         => __( 'Popular Email Situation', 'buddyboss' ),
-		'search_items'          => __( 'Search Emails', 'buddyboss' ),
-		'singular_name'         => __( 'Email', 'buddyboss' ),
-		'update_item'           => __( 'Update Email Situation', 'buddyboss' ),
-		'view_item'             => __( 'View Email Situation', 'buddyboss' ),
-	) );
+	return apply_filters(
+		'bp_get_email_tax_type_labels',
+		array(
+			'add_new_item'          => __( 'New Email Situation', 'buddyboss' ),
+			'all_items'             => __( 'All Email Situations', 'buddyboss' ),
+			'edit_item'             => __( 'Edit Email Situations', 'buddyboss' ),
+			'items_list'            => __( 'Email list', 'buddyboss' ),
+			'items_list_navigation' => __( 'Email list navigation', 'buddyboss' ),
+			'menu_name'             => __( 'Situations', 'buddyboss' ),
+			'name'                  => __( 'Situation', 'buddyboss' ),
+			'new_item_name'         => __( 'New email situation name', 'buddyboss' ),
+			'not_found'             => __( 'No email situations found', 'buddyboss' ),
+			'no_terms'              => __( 'No email situations', 'buddyboss' ),
+			'popular_items'         => __( 'Popular Email Situation', 'buddyboss' ),
+			'search_items'          => __( 'Search Emails', 'buddyboss' ),
+			'singular_name'         => __( 'Email', 'buddyboss' ),
+			'update_item'           => __( 'Update Email Situation', 'buddyboss' ),
+			'view_item'             => __( 'View Email Situation', 'buddyboss' ),
+		)
+	);
 }
 
 
@@ -3054,7 +3131,7 @@ function bp_get_email( $email_type ) {
 				'field'    => 'slug',
 				'taxonomy' => bp_get_email_tax_type(),
 				'terms'    => $email_type,
-			)
+			),
 		),
 	);
 
@@ -3088,7 +3165,6 @@ function bp_get_email( $email_type ) {
 	 */
 	$post  = apply_filters( 'bp_get_email_post', $post[0], $email_type, $args, $post );
 	$email = new BP_Email( $email_type );
-
 
 	/*
 	 * Set some email properties for convenience.
@@ -3157,10 +3233,13 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		}
 	}
 
-	$args = bp_parse_args( $args, array(
-		'tokens' => array(),
-	), 'send_email' );
-
+	$args = bp_parse_args(
+		$args,
+		array(
+			'tokens' => array(),
+		),
+		'send_email'
+	);
 
 	/*
 	 * Build the email.
@@ -3184,7 +3263,7 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 * @param string                   $email_type Type of email being sent.
 	 * @param string|array|int|WP_User $to         Either an email address, user ID, WP_User object,
 	 *                                             or an array containg the address and name.
-     * @param array                    $args {
+	 * @param array                    $args {
 	 *     Optional. Array of extra parameters.
 	 *
 	 *     @type array $tokens Optional. Assocative arrays of string replacements for the email.
@@ -3218,7 +3297,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			$email->get( 'content_plaintext', 'replace-tokens' )
 		);
 	}
-
 
 	/*
 	 * Send the email.
@@ -3288,26 +3366,26 @@ function bp_send_email( $email_type, $to, $args = array() ) {
  */
 function bp_email_get_appearance_settings() {
 	$default_args = array(
-		'body_bg'           => '#FFFFFF',
-		'quote_bg'          => '#F7FAFE',
-		'body_border_color' => '#E7E9EC',
-		'body_text_color'   => '#7F868F',
+		'body_bg'                   => '#FFFFFF',
+		'quote_bg'                  => '#F7FAFE',
+		'body_border_color'         => '#E7E9EC',
+		'body_text_color'           => '#7F868F',
 		'body_secondary_text_color' => '#122B46',
-		'body_text_size'    => 16,
-		'email_bg'          => '#FAFBFD',
-		'footer_text_color' => '#7F868F',
-		'footer_text_size'  => 12,
-		'highlight_color'   => '#007CFF',
-        'site_title_logo_size'  => 	150,
-		'site_title_text_color' => '#122B46',
-		'site_title_text_size'  => 	20,
-		'recipient_text_color'	=> '#7F868F',
-		'recipient_text_size'	=> 	14,
-		'direction'				=> is_rtl() ? 'right' : 'left',
+		'body_text_size'            => 16,
+		'email_bg'                  => '#FAFBFD',
+		'footer_text_color'         => '#7F868F',
+		'footer_text_size'          => 12,
+		'highlight_color'           => '#007CFF',
+		'site_title_logo_size'      => 150,
+		'site_title_text_color'     => '#122B46',
+		'site_title_text_size'      => 20,
+		'recipient_text_color'      => '#7F868F',
+		'recipient_text_size'       => 14,
+		'direction'                 => is_rtl() ? 'right' : 'left',
 
-		'footer_text' => sprintf(
+		'footer_text'               => sprintf(
 			/* translators: email disclaimer, e.g. "© 2016 Site Name". */
-			__( '&copy; %s %s', 'buddyboss' ),
+			__( '&copy; %1$s %2$s', 'buddyboss' ),
 			date_i18n( 'Y' ),
 			bp_get_option( 'blogname' )
 		),
@@ -3346,12 +3424,16 @@ function bp_email_get_template( WP_Post $object ) {
 	 * @param array   $value  Array of possible template paths.
 	 * @param WP_Post $object WP_Post object.
 	 */
-	return apply_filters( 'bp_email_get_template', array(
-		"assets/emails/{$single}-{$object->post_name}.php",
-		"{$single}-{$object->post_name}.php",
-		"{$single}.php",
-		"assets/emails/{$single}.php",
-	), $object );
+	return apply_filters(
+		'bp_email_get_template',
+		array(
+			"assets/emails/{$single}-{$object->post_name}.php",
+			"{$single}-{$object->post_name}.php",
+			"{$single}.php",
+			"assets/emails/{$single}.php",
+		),
+		$object
+	);
 }
 
 /**
@@ -3406,7 +3488,7 @@ function bp_core_replace_tokens_in_text( $text, $tokens ) {
  */
 function bp_email_get_schema() {
 	return array(
-		'activity-comment' => array(
+		'activity-comment'                   => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your updates', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3414,7 +3496,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} replied to one of your updates:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
-		'activity-comment-author' => array(
+		'activity-comment-author'            => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your comments', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3422,7 +3504,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} replied to one of your comments:\n\n{{{activity_reply}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{thread.url}}}", 'buddyboss' ),
 		),
-		'activity-at-message' => array(
+		'activity-at-message'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a status update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3430,7 +3512,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} mentioned you in a status update:\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
-		'groups-at-message' => array(
+		'groups-at-message'                  => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} mentioned you in a group update', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3438,15 +3520,15 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n\n{{{status_update}}}\n\nGo to the discussion to reply or catch up on the conversation: {{{mentioned.url}}}", 'buddyboss' ),
 		),
-		'core-user-registration' => array(
+		'core-user-registration'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Activate your account', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_content' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: <a href=\"{{{activate.url}}}\">{{{activate.url}}}</a>", 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' )
+			'post_excerpt' => __( "Thanks for registering!\n\nTo complete the activation of your account, go to the following link: {{{activate.url}}}", 'buddyboss' ),
 		),
-		'core-user-registration-with-blog' => array(
+		'core-user-registration-with-blog'   => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Activate {{{user-site.url}}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3457,7 +3539,7 @@ function bp_email_get_schema() {
 				'multisite' => true,
 			),
 		),
-		'friends-request' => array(
+		'friends-request'                    => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] New request to connect from {{initiator.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3465,7 +3547,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{initiator.name}} wants to add you as a connection.\n\nTo accept this request and manage all of your pending requests, visit: {{{friend-requests.url}}}\n\nTo view {{initiator.name}}'s profile, visit: {{{initiator.url}}}", 'buddyboss' ),
 		),
-		'friends-request-accepted' => array(
+		'friends-request-accepted'           => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{friend.name}} accepted your request to connect', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3473,7 +3555,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{friend.name}} accepted your friend request.\n\nTo learn more about them, visit their profile: {{{friendship.url}}}", 'buddyboss' ),
 		),
-		'groups-details-updated' => array(
+		'groups-details-updated'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Group details updated', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3481,7 +3563,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "Group details for the group \"{{group.name}}\" were updated:\n\n{{changed_text}}\n\nTo view the group, visit: {{{group.url}}}", 'buddyboss' ),
 		),
-		'groups-invitation' => array(
+		'groups-invitation'                  => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] You have an invitation to the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3489,7 +3571,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n\n{{{group.invite_message}}}\n\nTo accept your invitation, visit: {{{invites.url}}}\n\nTo learn more about the group, visit: {{{group.url}}}.\nTo view {{inviter.name}}'s profile, visit: {{{inviter.url}}}", 'buddyboss' ),
 		),
-		'groups-member-promoted' => array(
+		'groups-member-promoted'             => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] You have been promoted in the group: "{{group.name}}"', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3497,7 +3579,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n\nTo visit the group, go to: {{{group.url}}}", 'buddyboss' ),
 		),
-		'groups-membership-request' => array(
+		'groups-membership-request'          => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Membership request for group: {{group.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3505,7 +3587,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you are the organizer of this group, you must either accept or reject the membership request.\n\nTo manage this and all other pending requests, visit: {{{group-requests.url}}}\n\nTo view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}", 'buddyboss' ),
 		),
-		'messages-unread' => array(
+		'messages-unread'                    => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] New message from {{sender.name}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3513,7 +3595,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{sender.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
 		),
-		'settings-verify-email-change' => array(
+		'settings-verify-email-change'       => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] Verify your new email address', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3537,7 +3619,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "Your membership request for the group \"{{group.name}}\" has been rejected.\n\nTo request membership again, visit: {{{group.url}}}", 'buddyboss' ),
 		),
-		'bbp-new-forum-topic' => array(
+		'bbp-new-forum-topic'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] New discussion: {{discussion.title}}', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3545,7 +3627,7 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} started a new discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{discussion.content}}}\n\nDiscussion Link: {{discussion.url}}", 'buddyboss' ),
 		),
-		'bbp-new-forum-reply' => array(
+		'bbp-new-forum-reply'                => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( '[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
@@ -3553,13 +3635,13 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( "{{poster.name}} replied to the discussion {{discussion.title}} in the forum {{forum.title}}:\n\n{{{reply.content}}}\n\nPost Link: {{reply.url}}", 'buddyboss' ),
 		),
-		'invites-member-invite' => array(
+		'invites-member-invite'              => array(
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_title'   => __( 'An invitation from {{inviter.name}} to join [{{{site.name}}}]', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_content' => __( "You have been invited by {{inviter.name}} to join the <a href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community.", 'buddyboss' ),
+			'post_content' => __( 'You have been invited by {{inviter.name}} to join the <a href="{{{site.url}}}">[{{{site.name}}}]</a> community.', 'buddyboss' ),
 			/* translators: do not remove {} brackets or translate its contents. */
-			'post_excerpt' => __( "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.", 'buddyboss' ),
+			'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
 	);
 }
@@ -3585,143 +3667,143 @@ function bp_email_get_schema() {
  */
 function bp_email_get_type_schema( $field = 'description' ) {
 	$activity_comment = array(
-		'description'	=> __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_activity_new_reply',
-			'message'	=> __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
-			),
+		'description' => __( 'A member has replied to an activity update that the recipient posted.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_activity_new_reply',
+			'message'  => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+		),
 	);
 
 	$activity_comment_author = array(
-		'description'	=> __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_activity_new_reply',
-			'message'	=> __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
-			),
+		'description' => __( 'A member has replied to a comment on an activity update that the recipient posted.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_activity_new_reply',
+			'message'  => __( 'You will no longer receive emails when someone replies to an update or comment you posted.', 'buddyboss' ),
+		),
 	);
 
 	$activity_at_message = array(
-		'description'	=> __( 'Recipient was mentioned in an activity update.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_activity_new_mention',
-			'message'	=> __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+		'description' => __( 'Recipient was mentioned in an activity update.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_activity_new_mention',
+			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$groups_at_message = array(
-		'description'	=> __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_activity_new_mention',
-			'message'	=> __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
+		'description' => __( 'Recipient was mentioned in a group activity update.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_activity_new_mention',
+			'message'  => __( 'You will no longer receive emails when someone mentions you in an update.', 'buddyboss' ),
 		),
 	);
 
 	$core_user_registration = array(
-		'description'	=> __( 'Recipient has registered for an account.', 'buddyboss' ),
-		'unsubscribe'	=> false,
+		'description' => __( 'Recipient has registered for an account.', 'buddyboss' ),
+		'unsubscribe' => false,
 	);
 
 	$core_user_registration_with_blog = array(
-		'description'	=> __( 'Recipient has registered for an account and site.', 'buddyboss' ),
-		'unsubscribe'	=> false,
+		'description' => __( 'Recipient has registered for an account and site.', 'buddyboss' ),
+		'unsubscribe' => false,
 	);
 
 	$friends_request = array(
-		'description'	=> __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_friends_friendship_request',
-			'message'	=> __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
+		'description' => __( 'A member has sent an invitation to connect to the recipient.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_friends_friendship_request',
+			'message'  => __( 'You will no longer receive emails when someone sends you an invitation to connect.', 'buddyboss' ),
 		),
 	);
 
 	$friends_request_accepted = array(
-		'description'	=> __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_friends_friendship_accepted',
-			'message'	=> __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
+		'description' => __( 'Recipient has had an invitation to connect accepted by a member.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_friends_friendship_accepted',
+			'message'  => __( 'You will no longer receive emails when someone accepts your invitation to connect.', 'buddyboss' ),
 		),
 	);
 
 	$groups_details_updated = array(
-		'description'	=> __( "A group's details were updated.", 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_groups_group_updated',
-			'message'	=> __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
+		'description' => __( "A group's details were updated.", 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_groups_group_updated',
+			'message'  => __( 'You will no longer receive emails when one of your groups is updated.', 'buddyboss' ),
 		),
 	);
 
 	$groups_invitation = array(
-		'description'	=> __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_groups_invite',
-			'message'	=> __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
+		'description' => __( 'A member has sent a group invitation to the recipient.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_groups_invite',
+			'message'  => __( 'You will no longer receive emails when you are invited to join a group.', 'buddyboss' ),
 		),
 	);
 
 	$groups_member_promoted = array(
-		'description'	=> __( "Recipient's status within a group has changed.", 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_groups_admin_promotion',
-			'message'	=> __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
+		'description' => __( "Recipient's status within a group has changed.", 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_groups_admin_promotion',
+			'message'  => __( 'You will no longer receive emails when you have been promoted in a group.', 'buddyboss' ),
 		),
 	);
 
 	$groups_membership_request = array(
-		'description'	=> __( 'A member has requested permission to join a group.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_groups_membership_request',
-			'message'	=> __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
+		'description' => __( 'A member has requested permission to join a group.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_groups_membership_request',
+			'message'  => __( 'You will no longer receive emails when someone requests to be a member of your group.', 'buddyboss' ),
 		),
 	);
 
 	$messages_unread = array(
-		'description'	=> __( 'Recipient has received a private message.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_messages_new_message',
-			'message'	=> __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
+		'description' => __( 'Recipient has received a private message.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_messages_new_message',
+			'message'  => __( 'You will no longer receive emails when someone sends you a message.', 'buddyboss' ),
 		),
 	);
 
 	$settings_verify_email_change = array(
-		'description'	=> __( 'Recipient has changed their email address.', 'buddyboss' ),
-		'unsubscribe'	=> false,
+		'description' => __( 'Recipient has changed their email address.', 'buddyboss' ),
+		'unsubscribe' => false,
 	);
 
 	$groups_membership_request_accepted = array(
-		'description'	=> __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_membership_request_completed',
-			'message'	=> __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+		'description' => __( 'Recipient had requested to join a group, which was accepted.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_membership_request_completed',
+			'message'  => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 		),
 	);
 
 	$groups_membership_request_rejected = array(
-		'description'	=> __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_membership_request_completed',
-			'message'	=> __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
+		'description' => __( 'Recipient had requested to join a group, which was rejected.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_membership_request_completed',
+			'message'  => __( 'You will no longer receive emails when your request to join a group has been accepted or denied.', 'buddyboss' ),
 		),
 	);
 
 	$bbp_new_forum_topic = array(
-		'description'	=> __( 'A member has created a new forum discussion.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_bbp_new_forum_topic',
-			'message'	=> __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
+		'description' => __( 'A member has created a new forum discussion.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_bbp_new_forum_topic',
+			'message'  => __( 'You will no longer receive emails when a member will create a new forum discussion.', 'buddyboss' ),
 		),
 	);
 
 	$bbp_new_forum_reply = array(
-		'description'	=> __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
-		'unsubscribe'	=> array(
-			'meta_key'	=> 'notification_bbp_new_forum_reply',
-			'message'	=> __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
+		'description' => __( 'A member has replied to a forum discussion that the participant is following.', 'buddyboss' ),
+		'unsubscribe' => array(
+			'meta_key' => 'notification_bbp_new_forum_reply',
+			'message'  => __( 'You will no longer receive emails when a member will reply to one of your forum discussions.', 'buddyboss' ),
 		),
 	);
 
 	$invites_member_invite = array(
-		'description'	=> __( 'Recipient has been invited by a member to join the website.', 'buddyboss' ),
-		'unsubscribe'	=> false,
+		'description' => __( 'Recipient has been invited by a member to join the website.', 'buddyboss' ),
+		'unsubscribe' => false,
 	);
 
 	$types = array(
@@ -3771,16 +3853,16 @@ function bp_email_unsubscribe_handler() {
 		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
 		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 
-	// Check valid hash.
+		// Check valid hash.
 	} elseif ( ! hash_equals( $new_hash, $raw_hash ) ) {
 		$redirect_to = wp_login_url();
 		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
 		$unsub_msg   = __( 'Please log in and go to your settings to unsubscribe from notification emails.', 'buddyboss' );
 
-	// Don't let authenticated users unsubscribe other users' email notifications.
+		// Don't let authenticated users unsubscribe other users' email notifications.
 	} elseif ( is_user_logged_in() && get_current_user_id() !== $raw_user_id ) {
-		$result_msg  = __( 'Something has gone wrong.', 'buddyboss' );
-		$unsub_msg   = __( 'Please go to your notifications settings to unsubscribe from emails.', 'buddyboss' );
+		$result_msg = __( 'Something has gone wrong.', 'buddyboss' );
+		$unsub_msg  = __( 'Please go to your notifications settings to unsubscribe from emails.', 'buddyboss' );
 
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -3791,7 +3873,6 @@ function bp_email_unsubscribe_handler() {
 		} else {
 			$redirect_to = bp_core_get_user_domain( get_current_user_id() );
 		}
-
 	} else {
 		if ( bp_is_active( 'settings' ) ) {
 			$redirect_to = sprintf(
@@ -3830,8 +3911,8 @@ function bp_email_unsubscribe_handler() {
  * @since BuddyPress 2.7.0
  *
  * @param string $redirect_to The URL to which the unsubscribe query string is appended.
- * @param array $args {
- *    Used to build unsubscribe query string.
+ * @param array  $args {
+ *     Used to build unsubscribe query string.
  *
  *    @type string $notification_type Which notification type is being sent.
  *    @type string $user_id           The ID of the user to whom the notification is sent.
@@ -3918,44 +3999,46 @@ function bp_email_get_unsubscribe_type_schema() {
 function bp_get_allowedtags() {
 	global $allowedtags;
 
-	return array_merge_recursive( $allowedtags, array(
-		'a'       => array(
-			'aria-label'      => array(),
-			'class'           => array(),
-			'data-bp-tooltip' => array(),
-			'id'              => array(),
-			'rel'             => array(),
-		),
-		'img'     => array(
-			'src'    => array(),
-			'alt'    => array(),
-			'width'  => array(),
-			'height' => array(),
-			'class'  => array(),
-			'id'     => array(),
-		),
-		'span'    => array(
-			'class'          => array(),
-			'data-livestamp' => array(),
-			'id'             => array(),
-		),
-		'ul'      => array(),
-		'ol'      => array(),
-		'li'      => array(),
-		'p'       => array(
-			'class' => array(),
-			'id'    => array(),
-			'style' => array(),
-		),
-		'abbr'    => array( 'title' => true ),
-		'acronym' => array( 'title' => true ),
-		'b'       => array(),
-		'u'       => array(),
-		'i'       => array(),
-		'br'      => array(),
+	return array_merge_recursive(
+		$allowedtags,
+		array(
+			'a'       => array(
+				'aria-label'      => array(),
+				'class'           => array(),
+				'data-bp-tooltip' => array(),
+				'id'              => array(),
+				'rel'             => array(),
+			),
+			'img'     => array(
+				'src'    => array(),
+				'alt'    => array(),
+				'width'  => array(),
+				'height' => array(),
+				'class'  => array(),
+				'id'     => array(),
+			),
+			'span'    => array(
+				'class'          => array(),
+				'data-livestamp' => array(),
+				'id'             => array(),
+			),
+			'ul'      => array(),
+			'ol'      => array(),
+			'li'      => array(),
+			'p'       => array(
+				'class' => array(),
+				'id'    => array(),
+				'style' => array(),
+			),
+			'abbr'    => array( 'title' => true ),
+			'acronym' => array( 'title' => true ),
+			'b'       => array(),
+			'u'       => array(),
+			'i'       => array(),
+			'br'      => array(),
 
-
-	) );
+		)
+	);
 }
 
 /**
@@ -3985,17 +4068,17 @@ function bp_check_member_send_invites_tab_member_type_allowed() {
 		// Check BuddyBoss > Settings > Email Invites > Allow users to select profile type of invitee.
 		if ( true === bp_disable_invite_member_type() ) {
 			$current_user = bp_loggedin_user_id();
-			$member_type = bp_get_member_type( $current_user );
+			$member_type  = bp_get_member_type( $current_user );
 			// If current user don't have any profile type then we are not allow.
 			if ( false === $member_type ) {
 				$allowed = false;
 			} else {
 				$member_type_post_id = bp_member_type_post_by_type( $member_type );
-				$meta = get_post_custom( $member_type_post_id );
-				$enable_invite = isset( $meta[ '_bp_member_type_enable_invite' ] ) ? intval( $meta[ '_bp_member_type_enable_invite' ][ 0 ] ) : 1; //enabled by default
+				$meta                = get_post_custom( $member_type_post_id );
+				$enable_invite       = isset( $meta['_bp_member_type_enable_invite'] ) ? intval( $meta['_bp_member_type_enable_invite'][0] ) : 1; // enabled by default
 				if ( 1 === $enable_invite ) {
 					$get_all_registered_member_types = bp_get_active_member_types();
-					if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+					if ( isset( $get_all_registered_member_types ) && ! empty( $get_all_registered_member_types ) ) {
 						$allowed = true;
 					}
 				}
@@ -4063,7 +4146,7 @@ function bp_get_widget_max_count_limit( $widget_class = '' ) {
 function bp_core_get_active_custom_post_type_feed() {
 
 	// Get site-wide all the CPT array.
-	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array());
+	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
 
 	$cpt_arr = array();
 	foreach ( $custom_post_types as $single_post ) {
@@ -4072,10 +4155,9 @@ function bp_core_get_active_custom_post_type_feed() {
 		$enabled = bp_is_post_type_feed_enable( $single_post );
 
 		// If enabled put in $cpt_arr
-		if ( $enabled  ) {
+		if ( $enabled ) {
 			$cpt_arr[] = $single_post;
 		}
-
 	}
 
 	return $cpt_arr;
@@ -4085,49 +4167,52 @@ function bp_core_get_active_custom_post_type_feed() {
  * Return all the default activity of platform.
  *
  * @since BuddyBoss 1.0.0
- * 
+ *
  * @return array
  */
 function bp_platform_default_activity_types() {
 
-	$activity_type = apply_filters( 'bp_platform_default_activity_types', array(
-		'0' => array(
-			'activity_name' => 'new_avatar',
-			'activity_label' => __( 'Member changes their profile photo', 'buddyboss' )
-		),
-		'1' => array(
-			'activity_name' => 'updated_profile',
-			'activity_label' => __( 'Member updates their profile details', 'buddyboss' )
-		),
-		'2' => array(
-			'activity_name' => 'new_member',
-			'activity_label' => __( 'Member registers to the site', 'buddyboss' )
-		),
-		'3' => array(
-			'activity_name' => 'friendship_created',
-			'activity_label' => __( 'Two members become connected', 'buddyboss' )
-		),
-		'4' => array(
-			'activity_name' => 'created_group',
-			'activity_label' => __( 'Member creates a group', 'buddyboss' )
-		),
-		'5' => array(
-			'activity_name' => 'joined_group',
-			'activity_label' => __( 'Member joins a group', 'buddyboss' )
-		),
-		'6' => array(
-			'activity_name' => 'group_details_updated',
-			'activity_label' => __( 'Group details are updated', 'buddyboss' )
-		),
-		'7' => array(
-			'activity_name' => 'bbp_topic_create',
-			'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' )
-		),
-		'8' => array(
-			'activity_name' => 'bbp_reply_create',
-			'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' )
+	$activity_type = apply_filters(
+		'bp_platform_default_activity_types',
+		array(
+			'0' => array(
+				'activity_name'  => 'new_avatar',
+				'activity_label' => __( 'Member changes their profile photo', 'buddyboss' ),
+			),
+			'1' => array(
+				'activity_name'  => 'updated_profile',
+				'activity_label' => __( 'Member updates their profile details', 'buddyboss' ),
+			),
+			'2' => array(
+				'activity_name'  => 'new_member',
+				'activity_label' => __( 'Member registers to the site', 'buddyboss' ),
+			),
+			'3' => array(
+				'activity_name'  => 'friendship_created',
+				'activity_label' => __( 'Two members become connected', 'buddyboss' ),
+			),
+			'4' => array(
+				'activity_name'  => 'created_group',
+				'activity_label' => __( 'Member creates a group', 'buddyboss' ),
+			),
+			'5' => array(
+				'activity_name'  => 'joined_group',
+				'activity_label' => __( 'Member joins a group', 'buddyboss' ),
+			),
+			'6' => array(
+				'activity_name'  => 'group_details_updated',
+				'activity_label' => __( 'Group details are updated', 'buddyboss' ),
+			),
+			'7' => array(
+				'activity_name'  => 'bbp_topic_create',
+				'activity_label' => __( 'Member creates a forum discussion', 'buddyboss' ),
+			),
+			'8' => array(
+				'activity_name'  => 'bbp_reply_create',
+				'activity_label' => __( 'Member replies to a forum discussion', 'buddyboss' ),
+			),
 		)
-	));
+	);
 
 	return $activity_type;
 }

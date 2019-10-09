@@ -58,7 +58,7 @@ class BP_Email_Recipient {
 	 *
 	 * @param string|array|int|WP_User $email_or_user Either an email address, user ID, WP_User object,
 	 *                                                or an array containing any combination of the above.
-	 * @param string $name Optional. If $email_or_user is a string, this is the recipient's name.
+	 * @param string                   $name Optional. If $email_or_user is a string, this is the recipient's name.
 	 */
 	public function __construct( $email_or_user, $name = '' ) {
 		$name = sanitize_text_field( $name );
@@ -69,7 +69,7 @@ class BP_Email_Recipient {
 			if ( is_object( $email_or_user ) ) {
 				$this->user_object = $email_or_user;
 
-			// Query for WP user by user ID.
+				// Query for WP user by user ID.
 			} elseif ( is_int( $email_or_user ) ) {
 				$this->user_object = get_user_by( 'id', $email_or_user );
 			}
@@ -79,7 +79,7 @@ class BP_Email_Recipient {
 				$address = $email_or_user;
 			}
 
-		// Array or miscellaneous string.
+			// Array or miscellaneous string.
 		} else {
 			if ( ! is_array( $email_or_user ) ) {
 				$email_or_user = array( $email_or_user => $name );
@@ -111,10 +111,12 @@ class BP_Email_Recipient {
 
 			$this->address = $this->user_object->user_email;
 			$this->name    = sanitize_text_field( $wp_name );
-			$this->avatar  = bp_core_fetch_avatar( array(
-				'item_id' => $this->user_object->ID,
-				'html'    => false
-			) );
+			$this->avatar  = bp_core_fetch_avatar(
+				array(
+					'item_id' => $this->user_object->ID,
+					'html'    => false,
+				)
+			);
 		}
 
 		// Custom name override.
