@@ -31,6 +31,8 @@ global $is_bb_active;
 global $bb_plugin_file;
 global $bp_sitewide_plugins;
 global $bp_plugins;
+global $is_multisite;
+$is_multisite            = is_multisite();
 $bp_incompatible_plugins = array();
 $is_bp_active            = false;
 $bp_plugin_file          = 'buddypress/bp-loader.php';
@@ -39,7 +41,7 @@ $is_bb_active        = false;
 $bb_plugin_file      = 'bbpress/bbpress.php';
 $bp_sitewide_plugins = array();
 
-if ( is_multisite() ) {
+if ( $is_multisite ) {
 	// get network-activated plugins
 	foreach ( get_site_option( 'active_sitewide_plugins', array() ) as $key => $value ) {
 		$bp_sitewide_plugins[] = $key;
@@ -86,7 +88,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.1.10
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
-		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10 );
+		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 	}
 
 	/**
@@ -95,7 +97,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.1.10
 	 */
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 	}
 
 	/**
@@ -154,20 +156,20 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 
-	if ( is_multisite() ) {
+	if ( $is_multisite ) {
 		/**
 		 * Load Plugin after plugin is been loaded
 		 */
 		function bp_core_plugins_loaded_callback() {
 
 			// Filter for setting the spoofing of BuddyPress.
-			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 		}
 
 		add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
 	} else {
 
-		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 10, 2 );
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 		// Filter for setting the spoofing of BuddyPress.
 	}
 	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
@@ -275,10 +277,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		global $is_bp_active;
 		global $is_bb_active;
 		global $bp_plugins;
+		global $is_multisite;
 
 		// Disable BuddyPress message
 		if ( $is_bp_active ) {
-			if ( is_multisite() && ( is_network_admin() && ! in_array( $bp_plugin_file, $bp_sitewide_plugins ) || in_array( $bp_plugin_file, $bp_plugins ) ) ) {
+			if ( $is_multisite && ( is_network_admin() && ! in_array( $bp_plugin_file, $bp_sitewide_plugins ) || in_array( $bp_plugin_file, $bp_plugins ) ) ) {
 				return;
 			}
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
@@ -296,7 +299,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		// Disable bbPress message
 		if ( $is_bb_active ) {
 
-			if ( is_multisite() && ( is_network_admin() && ! in_array( $bb_plugin_file, $bp_sitewide_plugins ) || in_array( $bb_plugin_file, $bp_plugins ) ) ) {
+			if ( $is_multisite && ( is_network_admin() && ! in_array( $bb_plugin_file, $bp_sitewide_plugins ) || in_array( $bb_plugin_file, $bp_plugins ) ) ) {
 				return;
 			}
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
