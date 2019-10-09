@@ -16,9 +16,6 @@
  * PHP supported by WordPress.
  */
 
-
-var_dump( "buddyboss platform 1" );
-
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
@@ -35,8 +32,7 @@ global $bb_plugin_file;
 global $bp_sitewide_plugins;
 global $bp_plugins;
 global $is_multisite;
-$is_multisite = is_multisite();
-
+$is_multisite            = is_multisite();
 $bp_incompatible_plugins = array();
 $is_bp_active            = false;
 $bp_plugin_file          = 'buddypress/bp-loader.php';
@@ -93,7 +89,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
 		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
-		remove_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 	}
 
 	/**
@@ -103,7 +98,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 	}
 
 	/**
@@ -130,13 +124,15 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			 */
 			add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active', 10000 );
 			add_action( 'pre_current_active_plugins', 'bp_core_unset_bbpress_buddypress_active', 10000 );
-			add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 			add_action( 'all_admin_notices', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+
+			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
+				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+			}
 
 			/**
 			 * Add this so the spoofing plugin does get loaded by WordPress
 			 */
-			add_action( 'network_plugin_loaded', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 			add_action( 'plugin_loaded', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 			add_action( 'admin_notices', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 		}
@@ -164,9 +160,21 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 
 	if ( $is_multisite ) {
-        add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-    }
-    add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		/**
+		 * Load Plugin after plugin is been loaded
+		 */
+		function bp_core_plugins_loaded_callback() {
+
+			// Filter for setting the spoofing of BuddyPress.
+			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		}
+
+		add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
+	} else {
+
+		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		// Filter for setting the spoofing of BuddyPress.
+	}
 	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
 
 
@@ -260,7 +268,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @return void
 	 */
 	function bp_duplicate_notice() {
-		global $is_multisite;
 
 		if ( ! current_user_can( 'activate_plugins' ) ) {
 			return;
@@ -273,6 +280,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		global $is_bp_active;
 		global $is_bb_active;
 		global $bp_plugins;
+		global $is_multisite;
 
 		// Disable BuddyPress message
 		if ( $is_bp_active ) {
