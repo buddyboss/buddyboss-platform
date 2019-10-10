@@ -545,7 +545,7 @@ class Reports {
 				require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 			}
 		} else {
-			if ( empty( $_REQUEST ) ) {
+			if ( empty( $_REQUEST['course'] ) && empty( $_REQUEST['step'] ) ) {
 				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
 			} else {
 				if ( isset( $_REQUEST['step'] ) && 'all' != $_REQUEST['step'] && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] ) {

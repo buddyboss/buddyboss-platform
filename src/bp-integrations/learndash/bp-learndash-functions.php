@@ -407,17 +407,35 @@ function bp_ld_time_spent( $course_activity ) {
 	$course_time_end   = 0;
 	$header_output     = '';
 
-	if ( ( property_exists( $course_activity, 'activity_started' ) ) || ( !empty( $course_activity->activity_started ) ) ) {
-		$course_time_begin = $course_activity->activity_started;
-	}
+	if ( is_object( $course_activity ) ) {
+		if ( ( property_exists( $course_activity, 'activity_started' ) ) || ( ! empty( $course_activity->activity_started ) ) ) {
+			$course_time_begin = $course_activity->activity_started;
+		}
 
-	if ( ( property_exists( $course_activity, 'activity_updated' ) ) || ( !empty( $course_activity->activity_updated ) ) ) {
-		$course_time_end = $course_activity->activity_updated;
-	}
 
-	if ( property_exists( $course_activity, 'activity_status' ) ) {
-		if ( $course_activity->activity_status == true ) {
-			if ( ( property_exists( $course_activity, 'activity_completed' ) ) || ( !empty( $course_activity->activity_completed ) ) ) {
+		if ( ( property_exists( $course_activity, 'activity_updated' ) ) || ( ! empty( $course_activity->activity_updated ) ) ) {
+			$course_time_end = $course_activity->activity_updated;
+		}
+
+		if ( property_exists( $course_activity, 'activity_status' ) ) {
+			if ( $course_activity->activity_status == true ) {
+				if ( ( property_exists( $course_activity, 'activity_completed' ) ) || ( ! empty( $course_activity->activity_completed ) ) ) {
+					//$course_time_end = learndash_adjust_date_time_display( $activity->activity_completed, 'Y-m-d' );
+					$course_time_end = $course_activity->activity_completed;
+				}
+			}
+		}
+	} else {
+		if ( ! empty( $course_activity['activity_started'] ) ) {
+			$course_time_begin = $course_activity['activity_started'];
+		}
+
+		if ( ! empty( $course_activity['activity_updated'] ) ) {
+			$course_time_end = $course_activity['activity_updated'];
+		}
+
+		if ( ! empty( $course_activity['activity_status'] ) && $course_activity['activity_status'] == '1' ) {
+			if ( ! empty( $course_activity['activity_completed'] ) ) {
 				//$course_time_end = learndash_adjust_date_time_display( $activity->activity_completed, 'Y-m-d' );
 				$course_time_end = $course_activity->activity_completed;
 			}
