@@ -920,7 +920,7 @@ function bbp_is_shortcode() {
 	$retval = false;
 
 	// Check query name
-	if ( empty( $retval ) && bbp_is_query_name( 'bbp_shortcodes' ) ) {
+	if ( empty( $retval ) && 'bbp_shortcodes' === get_query_var( '_bbp_shortcode_query' ) ) {
 		$retval = true;
 	}
 

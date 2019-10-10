@@ -152,7 +152,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			bbp_set_query_name( $query_name );
 
 			// Set shortcode query name
-			bbp_set_query_name( 'bbp_shortcodes' );
+			set_query_var( '_bbp_shortcode_query', 'bbp_shortcodes' );
 
 			//call the enqueue script for shortcodes
 			do_action( 'bbp_enqueue_scripts' );
