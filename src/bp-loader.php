@@ -92,8 +92,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.1.10
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
+		global $is_multisite;
 		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
-		remove_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+
+		if ( $is_multisite ) {
+			remove_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+		}
 	}
 
 	/**
@@ -102,8 +106,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.1.10
 	 */
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
+		global $is_multisite;
+
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		if ( $is_multisite ) {
+			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		}
 	}
 
 	/**
@@ -115,7 +123,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.0.0
 	 * @return mixed
 	 */
-	function bp_core_set_bbpress_buddypress_active( $value, $option ) {
+	function bp_core_set_bbpress_buddypress_active( $value = array(), $option ) {
 
 		global $bp_plugin_file, $bb_plugin_file, $is_multisite, $buddyboss_platform_plugin_file;
 
@@ -146,9 +154,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		if ( $is_multisite ) {
 			// Check if Forum Component is enabled if so then add
 			if ( bp_is_active( 'forums' ) ) {
-				$value[ $bb_plugin_file ] = '';
+				$value[ $bb_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 			}
-			$value[ $bp_plugin_file ] = '';
+			$value[ $bp_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 		} else {
 			// Check if Forum Component is enabled if so then add
 			if ( bp_is_active( 'forums' ) ) {
@@ -189,12 +197,14 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	if ( ! is_network_admin() ) {
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 	}
-	add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-
 	// Filter for setting the spoofing of BuddyPress.
 	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
-	add_filter( 'pre_add_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
-	add_filter( 'pre_update_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
+
+	if ( $is_multisite ) {
+		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
+		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
+	}
 
 
 	// Required PHP version.
