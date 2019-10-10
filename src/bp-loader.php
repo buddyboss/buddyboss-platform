@@ -25,6 +25,7 @@ if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
 }
 
 global $bp_incompatible_plugins;
+global $buddyboss_platform_plugin_file;
 global $is_bp_active;
 global $bp_plugin_file;
 global $is_bb_active;
@@ -32,14 +33,18 @@ global $bb_plugin_file;
 global $bp_sitewide_plugins;
 global $bp_plugins;
 global $is_multisite;
+
+$is_bp_active   = false;
+$bp_plugin_file = 'buddypress/bp-loader.php';
+
+$is_bb_active   = false;
+$bb_plugin_file = 'bbpress/bbpress.php';
+
+$buddyboss_platform_plugin_file = 'buddyboss-platform/bp-loader.php';
+
+$bp_sitewide_plugins     = array();
 $is_multisite            = is_multisite();
 $bp_incompatible_plugins = array();
-$is_bp_active            = false;
-$bp_plugin_file          = 'buddypress/bp-loader.php';
-
-$is_bb_active        = false;
-$bb_plugin_file      = 'bbpress/bbpress.php';
-$bp_sitewide_plugins = array();
 
 if ( $is_multisite ) {
 	// get network-activated plugins
@@ -47,7 +52,6 @@ if ( $is_multisite ) {
 		$bp_sitewide_plugins[] = $key;
 	}
 }
-
 $bp_plugins   = array_merge( $bp_sitewide_plugins, get_option( 'active_plugins' ) );
 $bp_plugins[] = isset( $_REQUEST['plugin'] ) ? $_REQUEST['plugin'] : array();
 
@@ -89,6 +93,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
 		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
+		remove_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 	}
 
 	/**
@@ -98,6 +103,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 	}
 
 	/**
@@ -111,7 +117,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	function bp_core_set_bbpress_buddypress_active( $value, $option ) {
 
-		global $bp_plugin_file, $bb_plugin_file;
+		global $bp_plugin_file, $bb_plugin_file, $is_multisite, $buddyboss_platform_plugin_file;
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 		if ( is_network_admin()
@@ -137,11 +143,19 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			add_action( 'admin_notices', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 		}
 
-		// Check if Forum Component is enabled if so then add
-		if ( bp_is_active( 'forums' ) ) {
-			array_push( $value, $bb_plugin_file );
+		if ( $is_multisite ) {
+			// Check if Forum Component is enabled if so then add
+			if ( bp_is_active( 'forums' ) ) {
+				$value[ $bb_plugin_file ] = '';
+			}
+			$value[ $bp_plugin_file ] = '';
+		} else {
+			// Check if Forum Component is enabled if so then add
+			if ( bp_is_active( 'forums' ) ) {
+				array_push( $value, $bb_plugin_file );
+			}
+			array_push( $value, $bp_plugin_file );
 		}
-		array_push( $value, $bp_plugin_file );
 
 		return $value;
 	}
@@ -152,30 +166,35 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.1.10
 	 */
 	function pre_update_option_active_plugins( $value ) {
-		global $bp_plugin_file, $bb_plugin_file;
-		$value = array_diff( $value, array( $bp_plugin_file, $bb_plugin_file ) );
+		global $bp_plugin_file, $bb_plugin_file, $is_multisite;
+		if ( $is_multisite ) {
+			if ( isset( $value[ $bb_plugin_file ] ) ) {
+				unset( $value[ $bb_plugin_file ] );
+			}
+			if ( isset( $value[ $bp_plugin_file ] ) ) {
+				unset( $value[ $bp_plugin_file ] );
+			}
+		} else {
+			$value = array_diff( $value, array( $bp_plugin_file, $bb_plugin_file ) );
+		}
+
+		/**
+		 * Remove empty value from array
+		 */
+		$value = array_filter( $value );
 
 		return $value;
 	}
 
-
-	if ( $is_multisite ) {
-		/**
-		 * Load Plugin after plugin is been loaded
-		 */
-		function bp_core_plugins_loaded_callback() {
-
-			// Filter for setting the spoofing of BuddyPress.
-			add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		}
-
-		add_action( 'bp_init', 'bp_core_plugins_loaded_callback', 100 );
-	} else {
-
+	if ( ! is_network_admin() ) {
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		// Filter for setting the spoofing of BuddyPress.
 	}
+	add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
+
+	// Filter for setting the spoofing of BuddyPress.
 	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
+	add_filter( 'pre_add_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
+	add_filter( 'pre_update_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
 
 
 	// Required PHP version.
