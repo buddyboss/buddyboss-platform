@@ -68,7 +68,7 @@ class Core {
 		if ( $this->settings->get( 'course.courses_visibility' ) ) {
 			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
 			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 900 );
-			add_action( 'buddyboss_theme_after_bb_profile_menu', array( $this, 'setup_user_profile_bar' ), 900 );
+			add_action( 'buddyboss_theme_after_bb_profile_menu', array( $this, 'setup_user_profile_bar' ), 10 );
 		}
 	}
 
