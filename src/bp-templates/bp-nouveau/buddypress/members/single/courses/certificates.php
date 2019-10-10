@@ -4,11 +4,11 @@ $certificates  = bp_learndash_get_users_certificates( $user_id );
 ?>
 
 <div id="bb-learndash-profile" class="bb-certificates-wrapper">
-	<ul id="certificate_list" class="bb-grid">
-		<?php
-		if ( ! empty( $certificates ) ) {
-			foreach ( $certificates as $certificate ) {
-				?>
+	<?php if ( ! empty( $certificates ) ) { ?>
+		
+		<ul id="certificate_list" class="bb-grid">
+			<?php foreach ( $certificates as $certificate ) { ?>
+				
 				<li class="sm-grid-1-1">
 					<div class="bb-certificate-wrap">
 						<div class="bb-certificate-content">
@@ -23,14 +23,19 @@ $certificates  = bp_learndash_get_users_certificates( $user_id );
 							</a>
 						<?php } ?>
 					</div>
-                </li>
-			<?php }
-		} else { ?>
-			<li class="no-certificate-msg sm-grid-1-1">
-					<div class="bb-certificate-wrap no-certificate-msg">
-						<strong><?php printf( __( 'No %s found.', 'buddyboss' ), __( 'Certificate', 'buddyboss' ) ); ?></strong>
-					</div>
-			</li><?php
-		} ?>
-    </ul>
+	            </li>
+
+	        ?>
+        </ul>
+        
+    <?php } } else { ?>
+
+		<aside class="bp-feedback bp-messages info">
+			
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php _e( 'Sorry, no certificates were found.', 'buddyboss' ); ?></p>
+			
+		</aside>
+
+	<?php } ?>
 </div>
