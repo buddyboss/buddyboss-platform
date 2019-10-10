@@ -677,13 +677,13 @@ class ReportsGenerator {
 
 				if ( $course_time_diff > 60 ) {
 					if ( !empty( $header_output ) ) $header_output .= ' ';
-					$header_output .= sprintf( '%d %s', floor( $course_time_diff / 60 ), _n( 'min', 'mins', floor( $course_time_diff / 60 ), 'buddyboss' ) );
+					$header_output .= sprintf( '%d %s', floor( $course_time_diff / 60 ), _n( 'min', 'min', floor( $course_time_diff / 60 ), 'buddyboss' ) );
 					$course_time_diff %= 60;
 				}
 
 				if ( $course_time_diff > 0 ) {
 					if ( !empty( $header_output ) ) $header_output .= ' ';
-					$header_output .= sprintf( '%d %s', $course_time_diff, _n( 'sec', 'secs', $course_time_diff, 'buddyboss' ) );
+					$header_output .= sprintf( '%d %s', $course_time_diff, _n( 'sec', 'sec', $course_time_diff, 'buddyboss' ) );
 				}
 			} else {
 				$header_output = 0;
