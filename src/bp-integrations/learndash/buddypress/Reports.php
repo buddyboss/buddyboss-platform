@@ -539,11 +539,24 @@ class Reports {
 				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
 			} elseif ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
 				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
+			} elseif ( empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
+				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
 			} else {
 				require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 			}
 		} else {
-			require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+			if ( empty( $_REQUEST ) ) {
+				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
+			} else {
+				if ( isset( $_REQUEST['step'] ) && 'all' != $_REQUEST['step'] && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] ) {
+					require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
+				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' !== $_REQUEST['course'] ) {
+					require bp_locate_template( 'groups/single/reports-single-user-single-courses.php', false, false );
+					//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+				} else {
+					require bp_locate_template( 'groups/single/reports-tables.php', false, false );
+				}
+			}
 		}
 	}
 

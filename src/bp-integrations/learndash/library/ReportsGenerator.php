@@ -140,7 +140,8 @@ class ReportsGenerator {
 					}
 				}
 			}
-			if ( 'sfwd-lessons' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
+
+			if ( ( 'sfwd-lessons' === $this->params['post_types'] || ( is_array( $this->params['post_types'] ) && in_array( 'sfwd-lessons', $this->params['post_types'] ) ) ) && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
 
 				$get_user_all_lessons                = bp_get_user_course_lesson_data( $this->params['course_ids'], $this->params['user_ids'] );
 				$get_user_all_pending_lessons        = wp_list_filter( $get_user_all_lessons['all_lesson'], array( 'status' => 0 ) );
@@ -175,7 +176,7 @@ class ReportsGenerator {
 						'activity_meta'                => array(),
 					];
 				}
-			} elseif ( 'sfwd-topic' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
+			} elseif ( ( 'sfwd-topic' === $this->params['post_types'] || ( is_array( $this->params['post_types'] ) && in_array( 'sfwd-topic', $this->params['post_types'] ) ) ) && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
 
 				$get_user_all_topics                = bp_get_user_course_lesson_data( $this->params['course_ids'], $this->params['user_ids'] );
 				$get_user_all_pending_topics        = wp_list_filter( $get_user_all_topics['topics']['all_topics'], array( 'status' => 0 ) );
@@ -210,7 +211,7 @@ class ReportsGenerator {
 						'activity_meta'                => array(),
 					];
 				}
-			} elseif ( 'sfwd-quiz' === $this->params['post_types'] && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
+			} elseif ( ( 'sfwd-quiz' === $this->params['post_types'] || ( is_array( $this->params['post_types'] ) && in_array( 'sfwd-quiz', $this->params['post_types'] ) ) ) && 'string' === gettype( $this->params['user_ids'] ) && 'string' === gettype( $this->params['course_ids'] ) ) {
 
 				$get_user_all_quizzes                = bp_get_user_course_quiz_data( $this->params['course_ids'], $this->params['user_ids'] );
 				$get_user_all_pending_quizzes        = wp_list_filter( $get_user_all_quizzes['all_quizzes'], array( 'status' => 0 ) );
@@ -259,6 +260,7 @@ class ReportsGenerator {
 					'total_pages' => 1,
 				];
 			}
+
 			$this->results = $pending;
 			$this->pager   = ( true === $pager ) ? $this->pager : $this->activityQuery['pager'];
 		//} else {
@@ -588,7 +590,7 @@ class ReportsGenerator {
 		}
 
 		if ( $this->hasArg( 'completed' ) ) {
-			$this->params['activity_status'] = 'COMPLETED,IN_PROGRESS';
+			$this->params['activity_status'] = 'COMPLETED,IN_PROGRESS,NOT_STARTED';
 		}
 
 		if ( $this->hasArg( 'order' ) ) {
