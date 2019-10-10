@@ -73,7 +73,6 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 					/** Replies */
 
-					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Reply form
 					'bbp-single-reply' => array( $this, 'display_reply' ), // Specific reply - pass an 'id' attribute
 
 					/** Views */
@@ -84,12 +83,6 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 					'bbp-search-form'  => array( $this, 'display_search_form' ), // Search form
 					'bbp-search'       => array( $this, 'display_search' ), // Search
-
-					/** Account */
-
-					'bbp-login'        => array( $this, 'display_login' ), // Login
-					'bbp-register'     => array( $this, 'display_register' ), // Register
-					'bbp-lost-pass'    => array( $this, 'display_lost_pass' ), // Lost Password
 
 					/** Others */
 
@@ -496,26 +489,6 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			return $this->end();
 		}
 
-		/**
-		 * Display the reply form in an output buffer and return to ensure
-		 * post/page contents are displayed first.
-		 *
-		 * @since bbPress (r3031)
-		 *
-		 * @uses get_template_part()
-		 */
-		public function display_reply_form() {
-
-			// Start output buffer
-			$this->start( 'bbp_reply_form' );
-
-			// Output templates
-			bbp_get_template_part( 'form', 'reply' );
-
-			// Return contents of output buffer
-			return $this->end();
-		}
-
 		/** Topic Tags ************************************************************/
 
 		/**
@@ -725,86 +698,6 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 
 			// Output template
 			bbp_get_template_part( 'content', 'search' );
-
-			// Return contents of output buffer
-			return $this->end();
-		}
-
-		/** Account ***************************************************************/
-
-		/**
-		 * Display a login form
-		 *
-		 * @since bbPress (r3302)
-		 *
-		 * @return string
-		 */
-		public function display_login() {
-
-			// Unset globals
-			$this->unset_globals();
-
-			// Start output buffer
-			$this->start( 'bbp_login' );
-
-			// Output templates
-			if ( ! is_user_logged_in() ) {
-				bbp_get_template_part( 'form', 'user-login' );
-			} else {
-				bbp_get_template_part( 'feedback', 'logged-in' );
-			}
-
-			// Return contents of output buffer
-			return $this->end();
-		}
-
-		/**
-		 * Display a register form
-		 *
-		 * @since bbPress (r3302)
-		 *
-		 * @return string
-		 */
-		public function display_register() {
-
-			// Unset globals
-			$this->unset_globals();
-
-			// Start output buffer
-			$this->start( 'bbp_register' );
-
-			// Output templates
-			if ( ! is_user_logged_in() ) {
-				bbp_get_template_part( 'form', 'user-register' );
-			} else {
-				bbp_get_template_part( 'feedback', 'logged-in' );
-			}
-
-			// Return contents of output buffer
-			return $this->end();
-		}
-
-		/**
-		 * Display a lost password form
-		 *
-		 * @since bbPress (r3302)
-		 *
-		 * @return string
-		 */
-		public function display_lost_pass() {
-
-			// Unset globals
-			$this->unset_globals();
-
-			// Start output buffer
-			$this->start( 'bbp_lost_pass' );
-
-			// Output templates
-			if ( ! is_user_logged_in() ) {
-				bbp_get_template_part( 'form', 'user-lost-pass' );
-			} else {
-				bbp_get_template_part( 'feedback', 'logged-in' );
-			}
 
 			// Return contents of output buffer
 			return $this->end();
