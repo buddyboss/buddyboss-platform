@@ -240,9 +240,13 @@ if ( ! empty( $quiz_attempts_meta ) ) {
                 </div>
 			<?php }
 		} else { ?>
-            <p class="no-lesson-msg">
-            <strong><?php printf( __( 'No %s found.', 'buddyboss' ), LearnDash_Custom_Label::label_to_lower( 'courses' ) ); ?></strong>
-            </p><?php
+	        <aside class="bp-feedback bp-messages info">
+				
+				<span class="bp-icon" aria-hidden="true"></span>
+				<p><?php printf( __( 'Sorry, no %s were found.', 'buddyboss' ), LearnDash_Custom_Label::label_to_lower( 'courses' ) ); ?></p>
+				
+			</aside>
+            <?php
 		} ?>
     </div>
 </div>
