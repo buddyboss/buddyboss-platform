@@ -78,33 +78,15 @@
 					}
 
 					$completed_date    = learndash_user_get_course_completed_date( $user, $course->ID )? date_i18n( bp_get_option( 'date_format' ), learndash_user_get_course_completed_date( $user, $course->ID ) ) : '-';
-
 					$time_spent = '';
-					if ( ( ! empty( $course_activity ) ) && ( is_object( $course_activity ) ) ) {
-						if ( ( property_exists( $course_activity, 'activity_completed' ) ) && ( ! empty( $course_activity->activity_completed ) ) && ( property_exists( $course_activity, 'activity_started' ) ) && ( ! empty( $course_activity->activity_started ) ) ) {
-							//  activity_completed - activity_started
-							$complete = (int) $course_activity->activity_completed;
-							$started = (int) $course_activity->activity_started;
-							$time_spent = $complete - $started;
-							if ( $time_spent > 0 ) {
-								$time_spent = bp_ld_time_spent( $time_spent );
-							} else {
-								$time_spent        = '-';
-							}
-						}
-					} else {
-						$time_spent        = '-';
-					}
-					if ( '' === $time_spent ){
-						$time_spent        = '-';
-					}
+					$time_spent = bp_ld_time_spent( $course_activity );
 					?>
 					<tr>
 						<td> <span><?php echo get_avatar( $user, 35 ); ?></span><span><a href="<?php echo bp_get_group_permalink() . 'reports/?user=' . $user .'&course=&step=all'; ?>"><?php echo bp_core_get_user_displayname( $user ); ?></a></span></td>
 						<td><?php printf( esc_html_x( '%s%% Complete', 'Percentage of course complete', 'buddyboss' ), $progress['percentage'] ); ?></td>
 						<td><?php echo $start_date; ?></td>
 						<td><?php echo $completed_date; ?></td>
-						<td class="<?php echo $time_spent; ?>"><?php echo $time_spent; ?></td>
+						<td><?php echo $time_spent; ?></td>
 						<td><?php echo bp_ld_course_points_earned( $course->ID, $user ); ?></td>
 					</tr>
 					<?php

@@ -635,34 +635,66 @@ class ReportsGenerator {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function timeSpent( $activity ) {
-		$seconds = intval( $activity->activity_time_spent );
+	protected function timeSpent( $course_activity ) {
+		$course_time_begin = 0;
+		$course_time_end   = 0;
+		$header_output     = '';
 
-		if ( $seconds < 60 ) {
-			if ( 0 === $seconds ){
-				return '-';
+		if ( ( property_exists( $course_activity, 'activity_started' ) ) || ( !empty( $course_activity->activity_started ) ) ) {
+			$course_time_begin = $course_activity->activity_started;
+		}
+
+		if ( ( property_exists( $course_activity, 'activity_updated' ) ) || ( !empty( $course_activity->activity_updated ) ) ) {
+			$course_time_end = $course_activity->activity_updated;
+		}
+
+		if ( property_exists( $course_activity, 'activity_status' ) ) {
+			if ( $course_activity->activity_status == true ) {
+				if ( ( property_exists( $course_activity, 'activity_completed' ) ) || ( !empty( $course_activity->activity_completed ) ) ) {
+					//$course_time_end = learndash_adjust_date_time_display( $activity->activity_completed, 'Y-m-d' );
+					$course_time_end = $course_activity->activity_completed;
+				}
 			}
-			return sprintf( '%d sec', $seconds );
 		}
 
-		$minutes = floor( $seconds / 60 );
-		$seconds = $seconds % 60;
+		if ( ( !empty( $course_time_begin ) ) && ( !empty( $course_time_end ) ) ) {
+			$course_time_diff = $course_time_end - $course_time_begin;
+			if ( $course_time_diff > 0) {
 
-		if ( $minutes < 60 ) {
-			return sprintf( '%d min %d seconds', $minutes, $seconds );
+				if ( $course_time_diff > 86400 ) {
+					if ( !empty( $header_output ) ) $header_output .= ' ';
+					$header_output .= sprintf( '%d %s', floor($course_time_diff / 86400), _n( 'day', 'days', floor($course_time_diff / 86400), 'buddyboss' ) );
+					$course_time_diff %= 86400;
+				}
+
+				if ( $course_time_diff > 3600 ) {
+					if ( !empty( $header_output ) ) $header_output .= ' ';
+					$header_output .= sprintf( '%d %s', floor( $course_time_diff / 3600 ), _n( 'hr', 'hrs', floor( $course_time_diff / 3600 ), 'buddyboss' ) );
+					$course_time_diff %= 3600;
+				}
+
+				if ( $course_time_diff > 60 ) {
+					if ( !empty( $header_output ) ) $header_output .= ' ';
+					$header_output .= sprintf( '%d %s', floor( $course_time_diff / 60 ), _n( 'min', 'mins', floor( $course_time_diff / 60 ), 'buddyboss' ) );
+					$course_time_diff %= 60;
+				}
+
+				if ( $course_time_diff > 0 ) {
+					if ( !empty( $header_output ) ) $header_output .= ' ';
+					$header_output .= sprintf( '%d %s', $course_time_diff, _n( 'sec', 'secs', $course_time_diff, 'buddyboss' ) );
+				}
+			} else {
+				$header_output = 0;
+			}
+
+			if ( $header_output ===  0 ) {
+				$header_output = '-';
+			}
+		} else {
+			$header_output = '-';
 		}
 
-		$hours = floor( $minutes / 60 * 10 ) / 10;
-
-		if ( $hours < 24 ) {
-			return sprintf(
-				'%d %s',
-				$hours,
-				_n( 'hr', 'hrs', $hours, 'buddyboss' )
-			);
-		}
-
-		return '-';
+		return $header_output;
 	}
 
 	/**
