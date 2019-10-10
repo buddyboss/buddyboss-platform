@@ -303,19 +303,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		global $bp_incompatible_plugins;
-		global $bp_plugin_file;
-		global $bb_plugin_file;
-		global $bp_sitewide_plugins;
 		global $is_bp_active;
 		global $is_bb_active;
-		global $bp_plugins;
-		global $is_multisite;
 
 		// Disable BuddyPress message
 		if ( $is_bp_active ) {
-			if ( $is_multisite && ( is_network_admin() && ! in_array( $bp_plugin_file, $bp_sitewide_plugins ) || in_array( $bp_plugin_file, $bp_plugins ) ) ) {
-				return;
-			}
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
@@ -330,10 +322,6 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		// Disable bbPress message
 		if ( $is_bb_active ) {
-
-			if ( $is_multisite && ( is_network_admin() && ! in_array( $bb_plugin_file, $bp_sitewide_plugins ) || in_array( $bb_plugin_file, $bp_plugins ) ) ) {
-				return;
-			}
 			$bp_plugins_url = is_network_admin() ? network_admin_url( 'plugins.php' ) : admin_url( 'plugins.php' );
 			$link_plugins   = sprintf( "<a href='%s'>%s</a>", $bp_plugins_url, __( 'deactivate', 'buddyboss' ) );
 			?>
