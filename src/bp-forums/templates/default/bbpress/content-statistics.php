@@ -13,12 +13,12 @@ $stats = bbp_get_statistics(); ?>
 
 	<?php do_action( 'bbp_before_statistics' ); ?>
 
-	<dt><?php _e( 'Registered Users', 'buddyboss' ); ?></dt>
+	<dt><?php _e( 'Registered Members', 'buddyboss' ); ?></dt>
 	<dd>
 		<strong><?php echo esc_html( $stats['user_count'] ); ?></strong>
 	</dd>
 
-	<dt><?php _e( 'Forums', 'buddyboss' ); ?></dt>
+	<dt><?php _e( 'Public Forums', 'buddyboss' ); ?></dt>
 	<dd>
 		<strong><?php echo esc_html( $stats['forum_count'] ); ?></strong>
 	</dd>

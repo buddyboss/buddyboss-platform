@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-07 14:33:58+00:00\n"
+"POT-Creation-Date: 2019-10-10 01:08:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -391,7 +391,7 @@ msgstr ""
 
 #: bp-activity/bp-activity-admin.php:839
 #: bp-activity/classes/class-bp-activity-list-table.php:666
-#: bp-forums/common/template.php:2360 bp-forums/forums/template.php:54
+#: bp-forums/common/template.php:2385 bp-forums/forums/template.php:54
 #: bp-forums/replies/template.php:54 bp-forums/replies/template.php:1972
 #: bp-forums/topics/template.php:54 bp-forums/topics/template.php:2565
 #: bp-groups/classes/class-bp-groups-list-table.php:565
@@ -1390,7 +1390,7 @@ msgstr ""
 #: bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
-#: bp-forums/common/template.php:2479 bp-forums/search/template.php:228
+#: bp-forums/common/template.php:2504 bp-forums/search/template.php:228
 #: bp-forums/templates/default/bbpress/form-search.php:16
 #: bp-groups/bp-groups-template.php:6083
 #: bp-members/bp-members-template.php:1232
@@ -1762,7 +1762,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1238
 #: bp-search/bp-search-settings.php:412 bp-search/bp-search-settings.php:426
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:14
-#: bp-templates/bp-nouveau/includes/media/functions.php:122
+#: bp-templates/bp-nouveau/includes/media/functions.php:119
 msgid "Select All"
 msgstr ""
 
@@ -2397,7 +2397,6 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:276
 #: bp-forums/classes/class-bp-forums-component.php:327
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-forums/templates/default/bbpress/content-statistics.php:21
 #: bp-media/bp-media-filters.php:913 bp-media/bp-media-settings.php:157
 #: bp-media/bp-media-settings.php:164 bp-media/bp-media-settings.php:171
 #: bp-search/bp-search-functions.php:369
@@ -3320,7 +3319,7 @@ msgstr ""
 #: bp-core/bp-core-adminbar.php:219 bp-core/bp-core-functions.php:2686
 #: bp-core/classes/class-bp-core-login-widget.php:84
 #: bp-core/deprecated/buddypress/1.5.php:325
-#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2657
+#: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2682
 #: bp-members/bp-members-template.php:1325
 msgid "Log Out"
 msgstr ""
@@ -3423,7 +3422,7 @@ msgstr ""
 
 #: bp-core/bp-core-attachments.php:803
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
-#: bp-templates/bp-nouveau/includes/media/functions.php:125
+#: bp-templates/bp-nouveau/includes/media/functions.php:122
 msgid "Upload"
 msgstr ""
 
@@ -5969,7 +5968,7 @@ msgstr ""
 msgid "Blog Authors"
 msgstr ""
 
-#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2794
+#: bp-core/deprecated/buddypress/2.1.php:506 bp-forums/common/template.php:2819
 msgid "Edit %s's Profile"
 msgstr ""
 
@@ -9044,90 +9043,90 @@ msgstr ""
 msgid "Blocked"
 msgstr ""
 
-#: bp-forums/common/template.php:1531
+#: bp-forums/common/template.php:1556
 msgid "No discussions available"
 msgstr ""
 
-#: bp-forums/common/template.php:1536
+#: bp-forums/common/template.php:1561
 msgid "No forums available"
 msgstr ""
 
-#: bp-forums/common/template.php:1541
+#: bp-forums/common/template.php:1566
 msgid "None available"
 msgstr ""
 
-#: bp-forums/common/template.php:2282
+#: bp-forums/common/template.php:2307
 msgid "Home"
 msgstr ""
 
-#: bp-forums/common/template.php:2352
+#: bp-forums/common/template.php:2377
 msgid "(Edit)"
 msgstr ""
 
-#: bp-forums/common/template.php:2356 bp-forums/common/template.php:2475
-#: bp-forums/common/template.php:2747 bp-forums/core/theme-compat.php:774
+#: bp-forums/common/template.php:2381 bp-forums/common/template.php:2500
+#: bp-forums/common/template.php:2772 bp-forums/core/theme-compat.php:774
 #: bp-forums/templates/default/extras/taxonomy-topic-tag-edit.php:16
 #: bp-forums/templates/default/extras/taxonomy-topic-tag.php:16
 msgid "Discussion Tag: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2379
+#: bp-forums/common/template.php:2404
 msgid "&lsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2379
+#: bp-forums/common/template.php:2404
 msgid "&rsaquo;"
 msgstr ""
 
-#: bp-forums/common/template.php:2711
+#: bp-forums/common/template.php:2736
 msgid "Forum Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2716
+#: bp-forums/common/template.php:2741
 msgid "Discussion Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2721
+#: bp-forums/common/template.php:2746
 msgid "Reply Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2726
+#: bp-forums/common/template.php:2751
 msgid "Discussion Tag Edit: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2733
+#: bp-forums/common/template.php:2758
 msgid "Forum: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2738
+#: bp-forums/common/template.php:2763
 msgid "Discussion: %s"
 msgstr ""
 
-#: bp-forums/common/template.php:2765
+#: bp-forums/common/template.php:2790
 msgid "%s Discussions"
 msgstr ""
 
-#: bp-forums/common/template.php:2769
+#: bp-forums/common/template.php:2794
 msgid "%s Replies"
 msgstr ""
 
-#: bp-forums/common/template.php:2773
+#: bp-forums/common/template.php:2798
 msgid "%s Saved"
 msgstr ""
 
-#: bp-forums/common/template.php:2777
+#: bp-forums/common/template.php:2802
 msgid "%s Subscriptions"
 msgstr ""
 
-#: bp-forums/common/template.php:2781
+#: bp-forums/common/template.php:2806
 msgid "%s Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2789
+#: bp-forums/common/template.php:2814
 msgid "Edit Your Profile"
 msgstr ""
 
-#: bp-forums/common/template.php:2802
+#: bp-forums/common/template.php:2827
 msgid "View: %s"
 msgstr ""
 
@@ -9895,7 +9894,11 @@ msgstr[0] ""
 msgstr[1] ""
 
 #: bp-forums/templates/default/bbpress/content-statistics.php:16
-msgid "Registered Users"
+msgid "Registered Members"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/content-statistics.php:21
+msgid "Public Forums"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/content-statistics.php:43
@@ -13443,7 +13446,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:319
 #: bp-media/classes/class-bp-media-component.php:350
-#: bp-templates/bp-nouveau/includes/media/functions.php:161
+#: bp-templates/bp-nouveau/includes/media/functions.php:158
 msgid "My Photos"
 msgstr ""
 
@@ -14496,7 +14499,7 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:22
-#: bp-templates/bp-nouveau/includes/media/functions.php:120
+#: bp-templates/bp-nouveau/includes/media/functions.php:117
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -16812,37 +16815,37 @@ msgstr ""
 msgid "Please provide attachment id to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:121
+#: bp-templates/bp-nouveau/includes/media/functions.php:118
 msgid "Unselect"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:123
+#: bp-templates/bp-nouveau/includes/media/functions.php:120
 msgid "Unselect All"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:124
+#: bp-templates/bp-nouveau/includes/media/functions.php:121
 msgid "Sorry, no photos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:126
+#: bp-templates/bp-nouveau/includes/media/functions.php:123
 msgid "Uploading"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:127
+#: bp-templates/bp-nouveau/includes/media/functions.php:124
 msgid "%d out of %d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:128
+#: bp-templates/bp-nouveau/includes/media/functions.php:125
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:129
+#: bp-templates/bp-nouveau/includes/media/functions.php:126
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:150
+#: bp-templates/bp-nouveau/includes/media/functions.php:147
 msgid "All Photos"
 msgstr ""
 
@@ -17848,12 +17851,12 @@ msgctxt "ui"
 msgid "Payments"
 msgstr ""
 
-#: bp-forums/common/template.php:2756
+#: bp-forums/common/template.php:2781
 msgctxt "User viewing his/her own profile"
 msgid "Your"
 msgstr ""
 
-#: bp-forums/common/template.php:2760
+#: bp-forums/common/template.php:2785
 msgctxt "User viewing another users profile"
 msgid "%s's"
 msgstr ""
