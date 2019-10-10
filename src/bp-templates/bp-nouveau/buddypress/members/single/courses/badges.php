@@ -3,12 +3,12 @@ $user_id = bp_displayed_user_id();
 $badges  = bp_learndash_get_users_badges( $user_id );
 ?>
 
-<div id="bb-learndash-profile" class="bb-badges-wrapper">
-    <ul id="badge_list" class="bb-grid">
-		<?php
-		if ( ! empty( $badges ) ) {
-			foreach ( $badges as $badge ) {
-				?>
+<div id="bb-learndash-profile" class="bb-certificates-wrapper">
+	<?php if ( ! empty( $badges ) ) { ?>
+		
+		<ul id="badge_list" class="bb-grid">
+			<?php foreach ( $badges as $badge ) { ?>
+				
                 <li class="sm-grid-1-1 md-grid-1-2 lg-grid-1-2">
 					<div class="bb-badge-wrap">
 						<?php if( !empty($badge->image) ) { ?>
@@ -23,13 +23,18 @@ $badges  = bp_learndash_get_users_badges( $user_id );
 						</div>
 					</div>
                 </li>
-			<?php }
-		} else { ?>
-            <li class="no-badge-msg sm-grid-1-1">
-				<div class="bb-badge-wrap no-badge-msg">
-					<strong><?php printf( __( 'No %s found.', 'buddyboss' ), __( 'Badge', 'buddyboss' ) ); ?></strong>
-				</div>
-            </li><?php
-		} ?>
-    </ul>
+
+	        ?>
+        </ul>
+        
+    <?php } } else { ?>
+
+		<aside class="bp-feedback bp-messages info">
+			
+			<span class="bp-icon" aria-hidden="true"></span>
+			<p><?php _e( 'Sorry, no badges were found.', 'buddyboss' ); ?></p>
+			
+		</aside>
+
+	<?php } ?>
 </div>
