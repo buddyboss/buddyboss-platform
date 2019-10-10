@@ -225,12 +225,12 @@ TABLE OF CONTENTS:
 
 @media screen and (max-width: 782px) {
   #bp-admin-component-form .wp-list-table.plugins .plugin-title {
-	display: block;
-	width: auto;
+    display: block;
+    width: auto;
   }
   #bp-admin-component-form .subsubsub {
-	margin-bottom: 0;
-	padding-bottom: 35px;
+    margin-bottom: 0;
+    padding-bottom: 35px;
   }
 }
 
@@ -640,7 +640,7 @@ form#bp-groups-form .fixed .column-comment {
  */
 @media only screen and (min-width: 700px) {
   #poststuff #bbp_reply_attributes select {
-	min-width: 70%;
+    min-width: 70%;
   }
 }
 
@@ -807,27 +807,27 @@ body.post-type-reply #edit-slug-box {
 
 @media screen and (max-width: 782px) {
   .bp-new-notice-panel {
-	margin-bottom: 1.5em;
+    margin-bottom: 1.5em;
   }
   .bp-new-notice-panel input,
   .bp-new-notice-panel textarea {
-	margin-right: 0;
-	width: 100%;
+    margin-right: 0;
+    width: 100%;
   }
   .bp-new-notice-panel .button-primary {
-	margin-right: 0;
-	width: auto;
+    margin-right: 0;
+    width: auto;
   }
   .bp-new-notice-panel .button {
-	max-width: 45%;
-	word-wrap: break-word;
+    max-width: 45%;
+    word-wrap: break-word;
   }
   .bp-notice-about {
-	margin-top: 0;
-	margin-bottom: 1em;
+    margin-top: 0;
+    margin-bottom: 1em;
   }
   .bp-new-notice {
-	margin-bottom: 0.5em;
+    margin-bottom: 0.5em;
   }
 }
 
@@ -930,17 +930,17 @@ body.post-type-bp-email .categorydiv label {
 @media screen and (max-width: 782px) {
   .buddyboss_page_bp-repair-community p,
   .buddyboss_page_bbp-repair p {
-	line-height: 1.5;
+    line-height: 1.5;
   }
   .buddyboss_page_bp-repair-community label,
   .buddyboss_page_bbp-repair label {
-	margin-bottom: 1em;
-	padding-left: 25px;
-	text-indent: -33px;
+    margin-bottom: 1em;
+    padding-left: 25px;
+    text-indent: -33px;
   }
   .buddyboss_page_bp-repair-community .checkbox,
   .buddyboss_page_bbp-repair .checkbox {
-	padding: 0 30px 0 0;
+    padding: 0 30px 0 0;
   }
 }
 
@@ -1145,6 +1145,10 @@ body.post-type-bp-email .categorydiv label {
   border-bottom: 1px solid #eaeaea;
 }
 
+.bp-help-content th:first-child {
+  width: 40%;
+}
+
 .bp-help-content th,
 .bp-help-content td {
   padding: 10px 12px;
@@ -1169,49 +1173,49 @@ body.post-type-bp-email .categorydiv label {
 
 @media screen and (min-width: 782px) {
   .bp-help-sidebar {
-	background: #f9f9f9;
-	padding: 2.5em;
-	border-left: 1px solid #eaeaea;
-	border-radius: 0 6px 6px 0;
-	-webkit-box-flex: 0;
-	-ms-flex: 0 0 200px;
-	flex: 0 0 200px;
-	min-width: 0;
-	overflow: initial;
-	width: 100%;
-	min-height: 60vh;
+    background: #f9f9f9;
+    padding: 2.5em;
+    border-left: 1px solid #eaeaea;
+    border-radius: 0 6px 6px 0;
+    -webkit-box-flex: 0;
+    -ms-flex: 0 0 200px;
+    flex: 0 0 200px;
+    min-width: 0;
+    overflow: initial;
+    width: 100%;
+    min-height: 60vh;
   }
   .bp-help-content {
-	padding: 2.5em 3em;
-	-webkit-box-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-	min-width: 0;
+    padding: 2.5em 3em;
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+    flex: 1;
+    min-width: 0;
   }
 }
 
 @media screen and (max-width: 781px) {
   .bp-help-card-grid .bp-help-card {
-	flex: 0 0 calc(50% - 20px);
-	min-width: 0;
+    flex: 0 0 calc(50% - 20px);
+    min-width: 0;
   }
   .bp-help-sidebar {
-	background: #f9f9f9;
-	padding: 2.5em;
-	width: 100%;
-	min-height: auto;
-	border-bottom: 1px solid #eaeaea;
-	border-radius: 6px 6px 0 0;
+    background: #f9f9f9;
+    padding: 2.5em;
+    width: 100%;
+    min-height: auto;
+    border-bottom: 1px solid #eaeaea;
+    border-radius: 6px 6px 0 0;
   }
   .bp-help-content {
-	padding: 2.5em;
-	width: 100%;
+    padding: 2.5em;
+    width: 100%;
   }
 }
 
 @media screen and (max-width: 550px) {
   .bp-help-card-grid .bp-help-card {
-	flex: 0 0 calc(100% - 20px);
+    flex: 0 0 calc(100% - 20px);
   }
 }
 
@@ -1609,10 +1613,10 @@ td label.platform-activity {
 
 @keyframes spin {
   0% {
-	transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-	transform: rotate(-360deg);
+    transform: rotate(-360deg);
   }
 }
 
@@ -1626,9 +1630,9 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 @media screen and (max-width: 782px) {
   .bb-nickname-hide-last-name {
-	margin-top: -2px;
+    margin-top: -2px;
   }
   .bb-nickname-hide-first-name {
-	margin-top: 0;
+    margin-top: 0;
   }
 }
