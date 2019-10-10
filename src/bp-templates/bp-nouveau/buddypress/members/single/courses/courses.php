@@ -31,18 +31,6 @@ if ( ! empty( $filepath ) ) {
 //LD_QuizPro::showModalWindow();
 add_action( 'wp_footer', array( 'LD_QuizPro', 'showModalWindow' ), 20 );
 ?>
-<style type="text/css">
-    #wpProQuiz_user_content table {
-        display: table;
-        width: 100%;
-    }
-
-    #wpProQuiz_user_content table th,
-    #wpProQuiz_user_content table td {
-        padding: 5px;
-        box-sizing: border-box;
-    }
-</style>
 
 <?php
 $user_id            = bp_displayed_user_id();
