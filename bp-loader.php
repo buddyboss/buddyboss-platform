@@ -1,6 +1,6 @@
 <?php
 /**
- * Plugin Name: BuddyBoss Platform
+ * Plugin Name: BuddyBoss Platform GIT
  * Plugin URI:  https://buddyboss.com/
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
