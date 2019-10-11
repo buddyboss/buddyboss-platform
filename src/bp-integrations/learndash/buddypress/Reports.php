@@ -317,7 +317,28 @@ class Reports {
 		}
 
 		foreach ( $courseIds as $course ) {
-			//$points = $points + learndash_get_user_course_points( $_GET['user'] );
+			$sql_str = $wpdb->prepare(
+				'SELECT postmeta.post_id as post_id, postmeta.meta_value as points
+			FROM ' . $wpdb->postmeta . " as postmeta 
+			WHERE postmeta.post_id IN 
+			(
+				SELECT DISTINCT REPLACE(user_meta.meta_key, 'course_completed_', '') as course_id 
+				FROM " . $wpdb->usermeta . " as user_meta 
+				WHERE user_meta.meta_key LIKE %s 
+					AND user_meta.user_id = %d and user_meta.meta_value != ''
+			) 
+			AND postmeta.meta_key=%s 
+			AND postmeta.meta_value != ''", 'course_completed_%', $_GET['user'], 'course_points'
+			);
+			$course_points_results = $wpdb->get_results( $sql_str );
+			if ( $course_points_results ) {
+				foreach ( $course_points_results as $single_course ) {
+					if ( (int) $single_course->post_id === (int) $course ) {
+						$points = $points + (int) $single_course->points;
+					}
+				}
+			}
+
 			$data  = bp_ld_get_course_all_steps( $course, $_GET['user'], $step );
 			$steps = $data['steps'];
 			$total = $total + count( $steps );
