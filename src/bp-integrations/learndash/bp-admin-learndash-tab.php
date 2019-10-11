@@ -428,7 +428,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	/**
 	 * Register BuddyPress for LearnDash related settings
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function registerCourseTab() {
 		$this->current_section = 'course';
