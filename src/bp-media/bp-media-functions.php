@@ -514,8 +514,8 @@ function bp_media_add_handler( $medias = array() ) {
 			$media_id = bp_media_add( array(
 				'attachment_id' => $media['id'],
 				'title'         => $media['name'],
-				'album_id'      => $media['album_id'],
-				'group_id'      => $media['group_id'],
+				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
+				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
 				'privacy'       => $privacy,
 			) );
 

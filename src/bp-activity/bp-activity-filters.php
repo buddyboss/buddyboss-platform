@@ -1224,7 +1224,7 @@ function bp_activity_media_add( $media ) {
  */
 function bp_activity_create_parent_media_activity( $media_ids ) {
 
-	if ( ! empty( $media_ids ) ) {
+	if ( ! empty( $media_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
 
 		$added_media_ids = $media_ids;
 		$content         = false;
