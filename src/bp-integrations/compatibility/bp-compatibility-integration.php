@@ -36,7 +36,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 	 * @param $link
 	 * @param $file
 	 *
-	 * @param 1.1.10
+	 @since BuddyBoss 1.2.0
 	 *
 	 * @return array
 	 */

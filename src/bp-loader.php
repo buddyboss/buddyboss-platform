@@ -89,7 +89,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Action for removing the spoofing of BuddyPress and bbPress.
 	 *
-	 * @since BuddyBoss 1.1.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
 		global $is_multisite;
@@ -103,7 +103,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Again set the spoofing of BuddyPress and bbPress on Admin Notices
 	 *
-	 * @since BuddyBoss 1.1.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
 		global $is_multisite;
@@ -171,7 +171,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
 	 * Removing the spoofing of BuddyPress and bbPress when option updated.
 	 *
-	 * @since BuddyBoss 1.1.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function pre_update_option_active_plugins( $value ) {
 		global $bp_plugin_file, $bb_plugin_file, $is_multisite;
