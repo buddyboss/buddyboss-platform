@@ -66,8 +66,8 @@ class Core {
 	 */
 	public function registerCourseComponent() {
 		if ( $this->settings->get( 'course.courses_visibility' ) ) {
-			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
 			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 900 );
+			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
 			add_action( 'buddyboss_theme_after_bb_profile_menu', array( $this, 'setup_user_profile_bar' ), 10 );
 		}
 	}
@@ -91,7 +91,7 @@ class Core {
                 <ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
                     <li id="wp-admin-bar-my-account-<?php echo $this->my_courses_slug; ?>">
                         <a class="ab-item"
-                           href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo $this->my_courses_name; ?></a>
+                           href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo empty( $this->user_same ) ? $this->course_name : $this->my_courses_name; ?></a>
                     </li>
                     <li id="wp-admin-bar-my-account-<?php echo $this->badges_tab_slug; ?>">
                         <a class="ab-item"
@@ -113,18 +113,22 @@ class Core {
 	 * @since BuddyBoss 1.9.10
 	 */
 	public function setup_nav() {
+		$this->bp_displayed_user_id = bp_displayed_user_id();
+		$this->bp_loggedin_user_id = bp_loggedin_user_id();
+		$this->user_same = ( $this->bp_displayed_user_id == $this->bp_loggedin_user_id ? true : false );
+
 		bp_core_new_nav_item( array(
 			'name'                    => $this->course_name,
 			'slug'                    => $this->course_slug,
 			'screen_function'         => array( $this, 'course_page' ),
 			'position'                => 80,
-			'default_subnav_slug'     => $this->course_slug,
+			'default_subnav_slug'     => $this->my_courses_slug,
 			'show_for_displayed_user' => $this->course_access,
 		) );
 
 		$all_subnav_items = array(
 			array(
-				'name'            => $this->my_courses_name,
+				'name'            => empty( $this->user_same ) ? $this->course_name : $this->my_courses_name,
 				'slug'            => $this->my_courses_slug,
 				'parent_url'      => $this->get_nav_link( $this->course_slug ),
 				'parent_slug'     => $this->course_slug,
@@ -161,6 +165,7 @@ class Core {
 	 * @since BuddyBoss 1.9.10
 	 */
 	public function setup_admin_bar() {
+
 		$all_post_types = array(
 			array(
 				'name'     => $this->course_name,
@@ -310,8 +315,14 @@ class Core {
 	 * @since BuddyBoss 1.9.10
 	 */
 	function courses_page_title() {
-		$title = sprintf( __( 'Registered %s', 'buddyboss' ), $this->course_name );
-		echo apply_filters( 'courses_page_title', $title );
+		$user_id            = bp_displayed_user_id();
+		$atts               = apply_filters( 'bp_learndash_user_courses_atts', array() );
+		$user_courses       = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $user_id, $atts ) );
+		if ( ! empty( $user_courses ) ) {
+            $title = sprintf( __( 'Registered %s', 'buddyboss' ), $this->course_name );
+            echo apply_filters( 'courses_page_title', $title );
+        }
+
 	}
 
 	/**
