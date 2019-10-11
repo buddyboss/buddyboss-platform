@@ -317,14 +317,14 @@ class Reports {
 		}
 
 		foreach ( $courseIds as $course ) {
-			$points = $points + learndash_get_user_course_points( $_GET['user'] );
+			//$points = $points + learndash_get_user_course_points( $_GET['user'] );
 			$data  = bp_ld_get_course_all_steps( $course, $_GET['user'], $step );
 			$steps = $data['steps'];
 			$total = $total + count( $steps );
 			foreach ( $steps as $single ) {
 				if ( !empty( $single['activity'] ) ) {
-					$points     = $points + bpLdCoursePointsEarned( $step['activity'] );
-					if ( isset( $step['activity']->activity_completed ) ) {
+					$points     = $points + bpLdCoursePointsEarned( $single['activity'] );
+					if ( isset( $single['activity']->activity_status )  && '1' === $single['activity']->activity_status ) {
 						$complete = $complete + 1;
 					} else {
 						$in_complete = $in_complete + 1;
