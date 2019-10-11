@@ -1659,6 +1659,57 @@ function bp_activity_user_can_delete( $activity = false ) {
 }
 
 /**
+ * Determine if the current user can edit an activity item.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $activities_template {@link BP_Activity_Template}
+ *
+ * @param false|BP_Activity_Activity $activity Optional. Falls back on the current item in the loop.
+ * @return bool True if can edit, false otherwise.
+ */
+function bp_activity_user_can_edit( $activity = false ) {
+	global $activities_template;
+
+	// Try to use current activity if none was passed.
+	if ( empty( $activity ) && ! empty( $activities_template->activity ) ) {
+		$activity = $activities_template->activity;
+	}
+
+	// If current_comment is set, we'll use that in place of the main activity.
+	if ( isset( $activity->current_comment ) ) {
+		$activity = $activity->current_comment;
+	}
+
+	// Assume the user cannot edit the activity item.
+	$can_edit = false;
+
+	// Only logged in users can edit activity and Activity must be of type 'activity_update', 'activity_comment'
+	if ( is_user_logged_in() && in_array( $activity->type, array( 'activity_update', 'activity_comment' ) ) ) {
+
+		// Users are allowed to edit their own activity.
+		if ( isset( $activity->user_id ) && ( bp_loggedin_user_id() === $activity->user_id ) ) {
+			$can_edit = true;
+		}
+
+		// Viewing a single item, and this user is an admin of that item.
+		if ( bp_is_single_item() && bp_is_item_admin() ) {
+			$can_edit = true;
+		}
+	}
+
+	/**
+	 * Filters whether the current user can edit an activity item.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param bool   $can_edit Whether the user can edit the item.
+	 * @param object $activity   Current activity item object.
+	 */
+	return (bool) apply_filters( 'bp_activity_user_can_edit', $can_edit, $activity );
+}
+
+/**
  * Output the activity parent content.
  *
  * @since BuddyPress 1.2.0
