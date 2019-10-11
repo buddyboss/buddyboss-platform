@@ -641,6 +641,7 @@ class ReportsGenerator {
 		$course_time_begin = 0;
 		$course_time_end   = 0;
 		$header_output     = '';
+		$display_flag      = 0;
 
 		if ( ( property_exists( $course_activity, 'activity_started' ) ) || ( ! empty( $course_activity->activity_started ) ) ) {
 			$course_time_begin = $course_activity->activity_started;
@@ -668,6 +669,9 @@ class ReportsGenerator {
 						$header_output .= ' ';
 					}
 					$header_output    .= sprintf( '%d %s', floor( $course_time_diff / 86400 ), _n( 'day', 'days', floor( $course_time_diff / 86400 ), 'buddyboss' ) );
+					if ( '' !== trim( $header_output ) ) {
+						$display_flag =  $display_flag +  1;
+					}
 					$course_time_diff %= 86400;
 				}
 
@@ -676,6 +680,9 @@ class ReportsGenerator {
 						$header_output .= ' ';
 					}
 					$header_output    .= sprintf( '%d %s', floor( $course_time_diff / 3600 ), _n( 'hr', 'hrs', floor( $course_time_diff / 3600 ), 'buddyboss' ) );
+					if ( '' !== trim( $header_output ) ) {
+						$display_flag =  $display_flag +  1;
+					}
 					$course_time_diff %= 3600;
 				}
 
@@ -683,7 +690,14 @@ class ReportsGenerator {
 					if ( ! empty( $header_output ) ) {
 						$header_output .= ' ';
 					}
-					$header_output    .= sprintf( '%d %s', floor( $course_time_diff / 60 ), _n( 'min', 'min', floor( $course_time_diff / 60 ), 'buddyboss' ) );
+					if ( $display_flag < 2 ) {
+						$header_output .= sprintf( '%d %s',
+							floor( $course_time_diff / 60 ),
+							_n( 'min', 'min', floor( $course_time_diff / 60 ), 'buddyboss' ) );
+					}
+					if ( '' !== trim( $header_output ) ) {
+						$display_flag =  $display_flag +  1;
+					}
 					$course_time_diff %= 60;
 				}
 
@@ -691,7 +705,11 @@ class ReportsGenerator {
 					if ( ! empty( $header_output ) ) {
 						$header_output .= ' ';
 					}
-					$header_output .= sprintf( '%d %s', $course_time_diff, _n( 'sec', 'sec', $course_time_diff, 'buddyboss' ) );
+					if ( $display_flag < 2 ) {
+						$header_output .= sprintf( '%d %s',
+							$course_time_diff,
+							_n( 'sec', 'sec', $course_time_diff, 'buddyboss' ) );
+					}
 				}
 			} else {
 				$header_output = 0;
