@@ -9,8 +9,10 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				<h5 class="list-title member-name"><?php echo __( 'All Students', 'buddyboss' ); ?></h5>
 			</div>
 		</div>
-	</div> <?php
-} else { ?>
+	</div> 
+	<?php
+} else {
+	?>
 	<?php if ( ! bp_current_user_can( 'bp_moderate' ) || ! groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
 		<?php if ( ! bp_current_user_can( 'bp_moderate' ) ) { ?>
 		<div class="ld-report-user-stats">
@@ -31,7 +33,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 ?>
 <div class="bp_ld_report_table_wrapper">
 	<?php
-	$group_id  = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
+	$group_id = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
 	if ( isset( $_REQUEST['course'] ) && '' !== $_REQUEST['course'] ) {
 		$courseIds = array( $_REQUEST['course'] );
 	} else {
@@ -40,14 +42,14 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 
 	$user = ( isset( $_REQUEST ) && isset( $_REQUEST['user'] ) && '' !== $_REQUEST['user'] ) ? $_REQUEST['user'] : bp_loggedin_user_id();
 
-	$label = 'STEP';
+	$label   = 'STEP';
 	$courses = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 	foreach ( $courses as $course ) {
 		$course_users = learndash_get_groups_user_ids( $group_id );
-			if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
-				$label = 'STEP';
-				?>
+		if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
+			$label = 'STEP';
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -59,51 +61,52 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo '<a href=" ' . get_the_permalink( $step['id'] ) . ' ">' . $step['title'] . '</a>'; ?></td>
-							<?php
-							if ( is_null( $step['activity'] ) ) {
-								?>
+						<?php
+						if ( is_null( $step['activity'] ) ) {
+							?>
 								<td><?php echo '-'; ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
 								<?php
+						} else {
+
+							$time_spent = bp_ld_time_spent( $step['activity'] );
+							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
+							$points     = bpLdCoursePointsEarned( $step['activity'] );
+
+							if ( is_null( $step['activity'] ) ) {
+								$end_date = '';
 							} else {
+								$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
+							}
 
-								$time_spent = bp_ld_time_spent( $step['activity'] );
-								$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
-								$points     = bpLdCoursePointsEarned( $step['activity'] );
-
-								if ( is_null( $step['activity'] ) ) {
-									$end_date = '';
-								} else {
-									$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
-								}
-
-								?>
+							?>
 								<td><?php echo $start_date; ?></td>
 								<td><?php echo $end_date; ?></td>
 								<td><?php echo $time_spent; ?></td>
 								<td><?php echo $points; ?></td>
 								<?php
-							}
-							?>
+						}
+						?>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			} elseif ( isset( $_REQUEST ) && isset($_REQUEST['course'] ) && isset($_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
-				$label = 'STEP';
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
-				?>
+				</table> 
+				<?php
+		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
+			$label = 'STEP';
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -115,51 +118,52 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo '<a href=" ' . get_the_permalink( $step['id'] ) . ' ">' . $step['title'] . '</a>'; ?></td>
-							<?php
-							if ( is_null( $step['activity'] ) ) {
-								?>
+						<?php
+						if ( is_null( $step['activity'] ) ) {
+							?>
 								<td><?php echo '-'; ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
 								<?php
+						} else {
+
+							$time_spent = bp_ld_time_spent( $step['activity'] );
+							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
+							$points     = bpLdCoursePointsEarned( $step['activity'] );
+
+							if ( is_null( $step['activity'] ) ) {
+								$end_date = '';
 							} else {
+								$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
+							}
 
-								$time_spent = bp_ld_time_spent( $step['activity'] );
-								$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
-								$points     = bpLdCoursePointsEarned( $step['activity'] );
-
-								if ( is_null( $step['activity'] ) ) {
-									$end_date = '';
-								} else {
-									$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
-								}
-
-								?>
+							?>
 								<td><?php echo $start_date; ?></td>
 								<td><?php echo $end_date; ?></td>
 								<td><?php echo $time_spent; ?></td>
 								<td><?php echo $points; ?></td>
 								<?php
-							}
-							?>
+						}
+						?>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			} elseif ( isset( $_REQUEST ) && isset($_REQUEST['course'] ) && isset($_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
-				$label = LearnDash_Custom_Label::get_label( 'lesson' );
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'lesson' );
-				?>
+				</table> 
+				<?php
+		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
+			$label = LearnDash_Custom_Label::get_label( 'lesson' );
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'lesson' );
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -171,51 +175,52 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo '<a href=" ' . get_the_permalink( $step['id'] ) . ' ">' . $step['title'] . '</a>'; ?></td>
-							<?php
-							if ( is_null( $step['activity'] ) ) {
-								?>
+						<?php
+						if ( is_null( $step['activity'] ) ) {
+							?>
 								<td><?php echo '-'; ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
 								<?php
+						} else {
+
+							$time_spent = bp_ld_time_spent( $step['activity'] );
+							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
+							$points     = bpLdCoursePointsEarned( $step['activity'] );
+
+							if ( is_null( $step['activity'] ) ) {
+								$end_date = '';
 							} else {
+								$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
+							}
 
-								$time_spent = bp_ld_time_spent( $step['activity'] );
-								$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
-								$points     = bpLdCoursePointsEarned( $step['activity'] );
-
-								if ( is_null( $step['activity'] ) ) {
-									$end_date = '';
-								} else {
-									$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
-								}
-
-								?>
+							?>
 								<td><?php echo $start_date; ?></td>
 								<td><?php echo $end_date; ?></td>
 								<td><?php echo $time_spent; ?></td>
 								<td><?php echo $points; ?></td>
 								<?php
-							}
-							?>
+						}
+						?>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			} elseif ( isset( $_REQUEST ) && isset($_REQUEST['course'] ) && isset($_REQUEST['step'] ) && 'sfwd-topic' === $_REQUEST['step'] ) {
-				$label = LearnDash_Custom_Label::get_label( 'topic' );
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'topic' );
-				?>
+				</table> 
+				<?php
+		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-topic' === $_REQUEST['step'] ) {
+			$label = LearnDash_Custom_Label::get_label( 'topic' );
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'topic' );
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -227,51 +232,52 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo '<a href=" ' . get_the_permalink( $step['id'] ) . ' ">' . $step['title'] . '</a>'; ?></td>
-							<?php
-							if ( is_null( $step['activity'] ) ) {
-								?>
+						<?php
+						if ( is_null( $step['activity'] ) ) {
+							?>
 								<td><?php echo '-'; ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
 								<?php
+						} else {
+
+							$time_spent = bp_ld_time_spent( $step['activity'] );
+							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
+							$points     = bpLdCoursePointsEarned( $step['activity'] );
+
+							if ( is_null( $step['activity'] ) ) {
+								$end_date = '';
 							} else {
+								$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
+							}
 
-								$time_spent = bp_ld_time_spent( $step['activity'] );
-								$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
-								$points     = bpLdCoursePointsEarned( $step['activity'] );
-
-								if ( is_null( $step['activity'] ) ) {
-									$end_date = '';
-								} else {
-									$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
-								}
-
-								?>
+							?>
 								<td><?php echo $start_date; ?></td>
 								<td><?php echo $end_date; ?></td>
 								<td><?php echo $time_spent; ?></td>
 								<td><?php echo $points; ?></td>
 								<?php
-							}
-							?>
+						}
+						?>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			} elseif ( isset( $_REQUEST ) && isset($_REQUEST['course'] ) && isset($_REQUEST['step'] ) && 'sfwd-quiz' === $_REQUEST['step'] ) {
-				$label = LearnDash_Custom_Label::get_label( 'quiz' );
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'quiz' );
-				?>
+				</table> 
+				<?php
+		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-quiz' === $_REQUEST['step'] ) {
+			$label = LearnDash_Custom_Label::get_label( 'quiz' );
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'quiz' );
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -285,35 +291,35 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo '<a href=" ' . get_the_permalink( $step['id'] ) . ' ">' . $step['title'] . '</a>'; ?></td>
-							<?php
-							if ( is_null( $step['activity'] ) ) {
-								?>
+						<?php
+						if ( is_null( $step['activity'] ) ) {
+							?>
 								<td><?php echo '-'; ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo $step['score'] ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo $step['score']; ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
 								<td><?php echo $step['attempt']; ?></td>
 								<?php
+						} else {
+
+							$time_spent = bp_ld_time_spent( $step['activity'] );
+							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
+							$points     = bpLdCoursePointsEarned( $step['activity'] );
+
+							if ( is_null( $step['activity'] ) ) {
+								$end_date = '';
 							} else {
+								$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
+							}
 
-								$time_spent = bp_ld_time_spent( $step['activity'] );
-								$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
-								$points     = bpLdCoursePointsEarned( $step['activity'] );
-
-								if ( is_null( $step['activity'] ) ) {
-									$end_date = '';
-								} else {
-									$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
-								}
-
-								?>
+							?>
 								<td><?php echo $start_date; ?></td>
 								<td><?php echo $end_date; ?></td>
 								<td><?php echo $step['score']; ?></td>
@@ -321,19 +327,20 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 								<td><?php echo $points; ?></td>
 								<td><?php echo $step['attempt']; ?></td>
 								<?php
-							}
-							?>
+						}
+						?>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			} elseif ( isset( $_REQUEST ) && isset($_REQUEST['course'] ) && isset($_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
-				$label = 'ASSIGNMENT';
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'assignment' );
-				?>
+				</table> 
+				<?php
+		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
+			$label = 'ASSIGNMENT';
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'assignment' );
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -343,25 +350,26 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo $step['title']; ?></td>
 							<td><?php echo $step['graded']; ?></td>
 							<td><?php echo $step['score']; ?></td>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			} else {
-				$label = 'STEP';
-				$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
-				?>
+				</table> 
+				<?php
+		} else {
+			$label = 'STEP';
+			$steps = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
+			?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
 					<tr>
@@ -373,49 +381,50 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</tr>
 					</thead>
 					<tbody>
-					<?php
-					foreach ( $steps as $step ) {
+				<?php
+				foreach ( $steps as $step ) {
 
-						?>
+					?>
 						<tr>
 							<td><?php echo '<a href=" ' . get_the_permalink( $step['id'] ) . ' ">' . $step['title'] . '</a>'; ?></td>
-							<?php
-							if ( is_null( $step['activity'] ) ) {
-								?>
+						<?php
+						if ( is_null( $step['activity'] ) ) {
+							?>
 								<td><?php echo '-'; ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
-								<td><?php echo '-' ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
+								<td><?php echo '-'; ?></td>
 								<?php
+						} else {
+
+							$time_spent = bp_ld_time_spent( $step['activity'] );
+							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
+							$points     = bpLdCoursePointsEarned( $step['activity'] );
+
+							if ( is_null( $step['activity'] ) ) {
+								$end_date = '';
 							} else {
+								$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
+							}
 
-								$time_spent = bp_ld_time_spent( $step['activity'] );
-								$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_started ) );
-								$points     = bpLdCoursePointsEarned( $step['activity'] );
-
-								if ( is_null( $step['activity'] ) ) {
-									$end_date = '';
-								} else {
-									$end_date = ( $step['activity']->activity_completed ) ? date_i18n( bp_get_option( 'date_format' ), intval( $step['activity']->activity_completed ) ) : '-';
-								}
-
-								?>
+							?>
 								<td><?php echo $start_date; ?></td>
 								<td><?php echo $end_date; ?></td>
 								<td><?php echo $time_spent; ?></td>
 								<td><?php echo $points; ?></td>
 								<?php
-							}
-							?>
+						}
+						?>
 						</tr>
 						<?php
-					}
-					?>
+				}
+				?>
 					</tbody>
 
-				</table> <?php
-			}
+				</table> 
+				<?php
 		}
+	}
 	?>
 </div>
 

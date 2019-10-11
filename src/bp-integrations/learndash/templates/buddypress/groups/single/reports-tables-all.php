@@ -28,7 +28,7 @@
 	 */
 	$courses = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 	if ( groups_is_user_mod( bp_loggedin_user_id(), groups_get_current_group()->id ) || groups_is_user_admin( bp_loggedin_user_id(), groups_get_current_group()->id ) || bp_current_user_can( 'bp_moderate' ) ) {
-		if ( isset( $_GET ) && isset( $_GET['course'] ) && '' !==  $_GET['course'] ) {
+		if ( isset( $_GET ) && isset( $_GET['course'] ) && '' !== $_GET['course'] ) {
 			$courses = array( get_post( $_GET['course'] ) );
 		}
 		foreach ( $courses as $course ) {
@@ -54,17 +54,19 @@
 					//learndash_user_get_course_completed_date();
 					//$user = $user;
 
-					$progress = learndash_course_progress( array(
-						'user_id'   => $user,
-						'course_id' => $course->ID,
-						'array'     => true
-					) );
+					$progress = learndash_course_progress(
+						array(
+							'user_id'   => $user,
+							'course_id' => $course->ID,
+							'array'     => true,
+						)
+					);
 
 					$course_activity_args = array(
-						'course_id'        => $course->ID,
-						'user_id'          => $user,
-						'post_id'          => $course->ID,
-						'activity_type'    => 'course',
+						'course_id'     => $course->ID,
+						'user_id'       => $user,
+						'post_id'       => $course->ID,
+						'activity_type' => 'course',
 					);
 
 					$course_activity = learndash_get_user_activity( $course_activity_args );
@@ -74,15 +76,15 @@
 							$start_date = date_i18n( bp_get_option( 'date_format' ), intval( $course_activity->activity_started ) );
 						}
 					} else {
-						$start_date        = '-';
+						$start_date = '-';
 					}
 
-					$completed_date    = learndash_user_get_course_completed_date( $user, $course->ID )? date_i18n( bp_get_option( 'date_format' ), learndash_user_get_course_completed_date( $user, $course->ID ) ) : '-';
-					$time_spent = '';
-					$time_spent = bp_ld_time_spent( $course_activity );
+					$completed_date = learndash_user_get_course_completed_date( $user, $course->ID ) ? date_i18n( bp_get_option( 'date_format' ), learndash_user_get_course_completed_date( $user, $course->ID ) ) : '-';
+					$time_spent     = '';
+					$time_spent     = bp_ld_time_spent( $course_activity );
 					?>
 					<tr>
-						<td> <span><?php echo get_avatar( $user, 35 ); ?></span><span><a href="<?php echo bp_get_group_permalink() . 'reports/?user=' . $user .'&course=&step=all'; ?>"><?php echo bp_core_get_user_displayname( $user ); ?></a></span></td>
+						<td> <span><?php echo get_avatar( $user, 35 ); ?></span><span><a href="<?php echo bp_get_group_permalink() . 'reports/?user=' . $user . '&course=&step=all'; ?>"><?php echo bp_core_get_user_displayname( $user ); ?></a></span></td>
 						<td><?php printf( esc_html_x( '%s%% Complete', 'Percentage of course complete', 'buddyboss' ), $progress['percentage'] ); ?></td>
 						<td><?php echo $start_date; ?></td>
 						<td><?php echo $completed_date; ?></td>
@@ -94,7 +96,8 @@
 				?>
 				</tbody>
 
-			</table> <?php
+			</table> 
+			<?php
 		}
 	}
 	?>

@@ -83,7 +83,7 @@ class Reports {
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportUserStats' ), 20 );
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportCourseStats' ), 20 );
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportTables' ), 30 );
-		add_action( 'bp_ld_sync/reports', array( $this, 'showReportExport' ), 40 );
+		//add_action( 'bp_ld_sync/reports', array( $this, 'showReportExport' ), 40 );
 
 		//add_filter('bp_ld_sync/reports_generator_params', [$this, 'forceOwnReportResults'], 99);
 		//add_filter('bp_ld_sync/reports_generator_params', [$this, 'courseReportResults'], 99);
@@ -541,7 +541,7 @@ class Reports {
 				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
 			} elseif ( empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
-			} elseif ( !empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) ) {
+			} elseif ( ! empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) ) {
 				require bp_locate_template( 'groups/single/reports-single-admin-single-courses.php', false, false );
 			} elseif ( empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) ) {
 				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
@@ -779,10 +779,10 @@ class Reports {
 					'name'  => __( 'All Steps', 'buddyboss' ),
 					'class' => '\Buddyboss\LearndashIntegration\Buddypress\Generators\AllReportsGenerator',
 				],
-//				learndash_get_post_type_slug( 'course' ) => [
-//					'name'  => __( 'Courses', 'buddyboss' ),
-//					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator',
-//				],
+				//              learndash_get_post_type_slug( 'course' ) => [
+				//                  'name'  => __( 'Courses', 'buddyboss' ),
+				//                  'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\CoursesReportsGenerator',
+				//              ],
 				learndash_get_post_type_slug( 'lesson' ) => [
 					'name'  => __( 'Lessons', 'buddyboss' ),
 					'class' => 'Buddyboss\LearndashIntegration\Buddypress\Generators\LessonsReportsGenerator',

@@ -1,5 +1,5 @@
 <?php
-	if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) && isset( $_GET ) && isset( $_GET['user'] ) && '' === $_GET['user'] ) { ?>
+if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) && isset( $_GET ) && isset( $_GET['user'] ) && '' === $_GET['user'] ) { ?>
 		<div class="ld-report-user-stats">
 			<div class="user-info">
 				<div class="user-avatar">
@@ -9,8 +9,10 @@
 					<h5 class="list-title member-name"><?php echo __( 'All Students', 'buddyboss' ); ?></h5>
 				</div>
 			</div>
-		</div> <?php
-	} else { ?>
+		</div> 
+		<?php
+} else {
+	?>
 		<?php if ( ! bp_current_user_can( 'bp_moderate' ) || ! groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) ) { ?>
 			<?php if ( ! bp_current_user_can( 'bp_moderate' ) ) { ?>
 			<div class="ld-report-user-stats">
@@ -27,22 +29,24 @@
 		<?php } ?>
 		<?php } ?>
 		<?php
-	}
+}
 ?>
 
 <?php
 /**
  * @todo Should we be labeling Teacher and Student here?
  */
-if ( $courseId ) { ?>
+if ( $courseId ) {
+	?>
 	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
 	<?php
-} elseif ( isset( $_GET ) && isset( $_GET['course'] ) && '' !== $_GET['course'] && ! groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) && ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) && ! bp_current_user_can( 'bp_moderate' )) {
+} elseif ( isset( $_GET ) && isset( $_GET['course'] ) && '' !== $_GET['course'] && ! groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) && ! groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) && ! bp_current_user_can( 'bp_moderate' ) ) {
 	$course = get_post( (int) $_GET['course'] );
 	?>
 	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
 	<?php
-} ?>
+}
+?>
 
 <div class="ld-report-no-data">
 	<aside class="bp-feedback bp-template-notice info">

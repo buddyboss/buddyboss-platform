@@ -13,8 +13,8 @@ if ( ! groups_is_user_mod( bp_loggedin_user_id(), $group->id ) && ! groups_is_us
 	if ( isset( $_GET ) && isset( $_GET['user'] ) && '' !== $_GET['user'] && (int) $_GET['user'] !== bp_loggedin_user_id() ) {
 		?>
 		<script>
-            // Simulate an HTTP redirect:
-            window.location.replace('<?php echo bp_get_group_permalink(); ?>');
+			// Simulate an HTTP redirect:
+			window.location.replace('<?php echo bp_get_group_permalink(); ?>');
 		</script>
 		<?php
 	}
@@ -192,6 +192,7 @@ if ( ! groups_is_user_mod( bp_loggedin_user_id(), $group->id ) && ! groups_is_us
 	/**
 	* @todo Should we be labeling Teacher and Student here?
 	*/
-	if ( $courseId ) : ?>
+if ( $courseId ) :
+	?>
 	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
 <?php endif; ?>

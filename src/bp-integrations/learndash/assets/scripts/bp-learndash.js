@@ -11,28 +11,33 @@
 
 			$( '.bp-ld-reports-progress-bar' ).loading();
 
-			$( '.admin-show-all' ).DataTable({
-				searching    : false,
-				lengthChange : false,
-				info         : false
-			});
+			$( '.admin-show-all' ).DataTable(
+				{
+					searching    : false,
+					lengthChange : false,
+					info         : false
+				}
+			);
 
-			var dropDownUser = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="user"]');
-			var dropDownStep = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="step"]');
-			if  ( dropDownUser.length ) {
-				if ( ''  === dropDownUser.val() ) {
+			var dropDownUser = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="user"]' );
+			var dropDownStep = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="step"]' );
+			if ( dropDownUser.length ) {
+				if ( '' === dropDownUser.val() ) {
 					dropDownStep.prop( 'disabled', true );
 				}
-				$( dropDownUser ).on( 'change', function() {
-					if ( ''  === $(this).val() ) {
-						dropDownStep.prop( 'disabled', true );
-						dropDownStep.prop( 'disabled', true );
-						dropDownStep.val( 'all' );
-					} else {
-						dropDownStep.prop( 'disabled', false );
-					}
+				$( dropDownUser ).on(
+					'change',
+					function() {
+						if ( '' === $( this ).val() ) {
+							dropDownStep.prop( 'disabled', true );
+							dropDownStep.prop( 'disabled', true );
+							dropDownStep.val( 'all' );
+						} else {
+							dropDownStep.prop( 'disabled', false );
+						}
 
-				});
+					}
+				);
 			}
 		},
 
@@ -202,7 +207,7 @@
 		function() {
 			BP_LD_Report.init();
 			$( '.ld-report-export-csv' ).on( 'click', BP_LD_Report.prepareExport );
-			window.history.replaceState(null, null, window.location.pathname);
+			window.history.replaceState( null, null, window.location.pathname );
 		}
 	);
 })( jQuery );
