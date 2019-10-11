@@ -301,10 +301,13 @@ class Friend extends BuddypressCommand {
 				$friend = $this->get_random_user_id();
 			}
 
-			$this->create( array( $member, $friend ), array(
-				'silent',
-				'force-accept',
-			) );
+			$this->create(
+				array( $member, $friend ),
+				array(
+					'silent',
+					'force-accept',
+				)
+			);
 
 			$notify->tick();
 		}

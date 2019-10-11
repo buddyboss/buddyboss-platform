@@ -113,7 +113,7 @@ class BP_Core_Nav {
 				$return = $this->nav[ $this->object_id ][ $key ];
 			}
 
-		// Return all nav item items.
+			// Return all nav item items.
 		} else {
 			$return = $this->nav[ $this->object_id ];
 		}
@@ -139,7 +139,7 @@ class BP_Core_Nav {
 			$slug              = $args['parent_slug'] . '/' . $args['slug'];
 			$args['secondary'] = true;
 
-		// This is a parent.
+			// This is a parent.
 		} else {
 			$slug            = $args['slug'];
 			$args['primary'] = true;
@@ -174,15 +174,21 @@ class BP_Core_Nav {
 				return false;
 			}
 
-			$nav_item = reset( $nav_items );
+			$nav_item                               = reset( $nav_items );
 			$this->nav[ $this->object_id ][ $slug ] = new BP_Core_Nav_Item( wp_parse_args( $args, (array) $nav_item ) );
 
 			// Return the edited object.
 			return $this->nav[ $this->object_id ][ $slug ];
 
-		// We're editing a child.
+			// We're editing a child.
 		} else {
-			$sub_items = $this->get_secondary( array( 'parent_slug' => $parent_slug, 'slug' => $slug ), false );
+			$sub_items = $this->get_secondary(
+				array(
+					'parent_slug' => $parent_slug,
+					'slug'        => $slug,
+				),
+				false
+			);
 
 			if ( ! $sub_items ) {
 				return false;
@@ -224,7 +230,13 @@ class BP_Core_Nav {
 		if ( ! empty( $parent_slug ) ) {
 
 			// Validate the subnav
-			$sub_items = $this->get_secondary( array( 'parent_slug' => $parent_slug, 'slug' => $slug ), false );
+			$sub_items = $this->get_secondary(
+				array(
+					'parent_slug' => $parent_slug,
+					'slug'        => $slug,
+				),
+				false
+			);
 
 			if ( ! $sub_items ) {
 				return false;
@@ -242,7 +254,7 @@ class BP_Core_Nav {
 			// Return the deleted item's screen function
 			return array( $sub_item->screen_function );
 
-		// We're deleting a parent
+			// We're deleting a parent
 		} else {
 			// Validate the nav
 			$nav_items = $this->get_primary( array( 'slug' => $slug ), false );
@@ -385,12 +397,17 @@ class BP_Core_Nav {
 		$primary_nav_items = $this->get_primary( array( 'show_for_displayed_user' => true ) );
 
 		if ( $primary_nav_items ) {
-			foreach( $primary_nav_items as $key_nav => $primary_nav ) {
+			foreach ( $primary_nav_items as $key_nav => $primary_nav ) {
 				// Try to get the children.
-				$children = $this->get_secondary( array( 'parent_slug' => $primary_nav->slug, 'user_has_access' => true ) );
+				$children = $this->get_secondary(
+					array(
+						'parent_slug'     => $primary_nav->slug,
+						'user_has_access' => true,
+					)
+				);
 
 				if ( $children ) {
-					$primary_nav_items[ $key_nav ] = clone $primary_nav;
+					$primary_nav_items[ $key_nav ]           = clone $primary_nav;
 					$primary_nav_items[ $key_nav ]->children = $children;
 				}
 			}

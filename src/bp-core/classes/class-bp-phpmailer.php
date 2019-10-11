@@ -46,7 +46,6 @@ class BP_PHPMailer implements BP_Email_Delivery {
 			$phpmailer = new PHPMailer( true );
 		}
 
-
 		/*
 		 * Resets.
 		 */
@@ -57,14 +56,12 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		$phpmailer->clearReplyTos();
 		$phpmailer->Sender = '';
 
-
 		/*
 		 * Set up.
 		 */
 
 		$phpmailer->IsMail();
 		$phpmailer->CharSet = bp_get_option( 'blog_charset' );
-
 
 		/*
 		 * Content.
@@ -122,7 +119,6 @@ class BP_PHPMailer implements BP_Email_Delivery {
 		foreach ( $headers as $name => $content ) {
 			$phpmailer->AddCustomHeader( $name, $content );
 		}
-
 
 		/**
 		 * Fires after PHPMailer is initialised.

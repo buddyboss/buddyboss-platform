@@ -32,12 +32,14 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 */
 	public function __construct() {
 		// Define singular and plural labels, as well as whether we support AJAX.
-		parent::__construct( array(
-			'ajax'     => false,
-			'plural'   => 'signups',
-			'singular' => 'signup',
-			'screen'   => get_current_screen()->id,
-		) );
+		parent::__construct(
+			array(
+				'ajax'     => false,
+				'plural'   => 'signups',
+				'singular' => 'signup',
+				'screen'   => get_current_screen()->id,
+			)
+		);
 	}
 
 	/**
@@ -60,7 +62,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			'number'     => $signups_per_page,
 			'usersearch' => $usersearch,
 			'orderby'    => 'signup_id',
-			'order'      => 'DESC'
+			'order'      => 'DESC',
 		);
 
 		if ( isset( $_REQUEST['orderby'] ) ) {
@@ -77,10 +79,12 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 		$this->items         = $signups['signups'];
 		$this->signup_counts = $signups['total'];
 
-		$this->set_pagination_args( array(
-			'total_items' => $this->signup_counts,
-			'per_page'    => $signups_per_page,
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => $this->signup_counts,
+				'per_page'    => $signups_per_page,
+			)
+		);
 	}
 
 	/**
@@ -131,15 +135,18 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 		 *
 		 * @param array $value Array of columns to display.
 		 */
-		return apply_filters( 'bp_members_ms_signup_columns', array(
-			'cb'         => '<input type="checkbox" />',
-			'username'   => __( 'Username',    'buddyboss' ),
-			'name'       => __( 'Name',        'buddyboss' ),
-			'email'      => __( 'Email',       'buddyboss' ),
-			'registered' => __( 'Registered',  'buddyboss' ),
-			'date_sent'  => __( 'Last Sent',   'buddyboss' ),
-			'count_sent' => __( 'Emails Sent', 'buddyboss' )
-		) );
+		return apply_filters(
+			'bp_members_ms_signup_columns',
+			array(
+				'cb'         => '<input type="checkbox" />',
+				'username'   => __( 'Username', 'buddyboss' ),
+				'name'       => __( 'Name', 'buddyboss' ),
+				'email'      => __( 'Email', 'buddyboss' ),
+				'registered' => __( 'Registered', 'buddyboss' ),
+				'date_sent'  => __( 'Last Sent', 'buddyboss' ),
+				'count_sent' => __( 'Emails Sent', 'buddyboss' ),
+			)
+		);
 	}
 
 	/**
@@ -251,12 +258,17 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 * @param object|null $signup_object The signup data object.
 	 */
 	public function column_cb( $signup_object = null ) {
-	?>
-		<label class="screen-reader-text" for="signup_<?php echo intval( $signup_object->id ); ?>"><?php printf(
-			/* translators: accessibility text */
-			esc_html__( 'Select user: %s', 'buddyboss' ), $signup_object->user_login );
-		?></label>
-		<input type="checkbox" id="signup_<?php echo intval( $signup_object->id ) ?>" name="allsignups[]" value="<?php echo esc_attr( $signup_object->id ) ?>" />
+		?>
+		<label class="screen-reader-text" for="signup_<?php echo intval( $signup_object->id ); ?>">
+																 <?php
+																	printf(
+																		/* translators: accessibility text */
+																		esc_html__( 'Select user: %s', 'buddyboss' ),
+																		$signup_object->user_login
+																	);
+																	?>
+		</label>
+		<input type="checkbox" id="signup_<?php echo intval( $signup_object->id ); ?>" name="allsignups[]" value="<?php echo esc_attr( $signup_object->id ); ?>" />
 		<?php
 	}
 
@@ -268,12 +280,12 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	 * @param object|null $signup_object The signup data object.
 	 */
 	public function column_username( $signup_object = null ) {
-		$avatar	= get_avatar( $signup_object->user_email, 32 );
+		$avatar = get_avatar( $signup_object->user_email, 32 );
 
 		// Activation email link.
 		$email_link = add_query_arg(
 			array(
-				'page'	    => 'bp-signups',
+				'page'      => 'bp-signups',
 				'signup_id' => $signup_object->id,
 				'action'    => 'resend',
 			),
@@ -305,7 +317,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 		$actions = array();
 
 		$actions['activate'] = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $activate_link ), __( 'Activate', 'buddyboss' ) );
-		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link    ), __( 'Email',    'buddyboss' ) );
+		$actions['resend']   = sprintf( '<a href="%1$s">%2$s</a>', esc_url( $email_link ), __( 'Email', 'buddyboss' ) );
 
 		if ( current_user_can( 'delete_users' ) ) {
 			$actions['delete'] = sprintf( '<a href="%1$s" class="delete">%2$s</a>', esc_url( $delete_link ), __( 'Delete', 'buddyboss' ) );
@@ -355,7 +367,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 			$date = 'Y/m/d \<\b\r \/\> g:i:s a';
 		}
 
-		echo mysql2date( $date, $signup_object->registered ) . "</td>";
+		echo mysql2date( $date, $signup_object->registered ) . '</td>';
 	}
 
 	/**

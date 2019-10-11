@@ -13,7 +13,6 @@ defined( 'ABSPATH' ) || exit;
  * Register the 'new member' activity type.
  *
  * @since BuddyPress 2.2.0
- *
  */
 function bp_members_register_activity_actions() {
 
@@ -87,10 +86,12 @@ function bp_core_new_user_activity( $user ) {
 		return false;
 	}
 
-	bp_activity_add( array(
-		'user_id'   => $user_id,
-		'component' => buddypress()->members->id,
-		'type'      => 'new_member'
-	) );
+	bp_activity_add(
+		array(
+			'user_id'   => $user_id,
+			'component' => buddypress()->members->id,
+			'type'      => 'new_member',
+		)
+	);
 }
 add_action( 'bp_core_activated_user', 'bp_core_new_user_activity' );

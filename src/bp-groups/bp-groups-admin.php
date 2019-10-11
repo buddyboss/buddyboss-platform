@@ -13,17 +13,19 @@
 defined( 'ABSPATH' ) || exit;
 
 // Include WP's list table class.
-if ( !class_exists( 'WP_List_Table' ) ) require( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
 
 // The per_page screen option. Has to be hooked in extremely early.
-if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-groups' == $_REQUEST['page'] )
+if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-groups' == $_REQUEST['page'] ) {
 	add_filter( 'set-screen-option', 'bp_groups_admin_screen_options', 10, 3 );
+}
 
 /**
  * Register the Groups component in BuddyBoss > Groups admin screen.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_groups_add_admin_menu() {
 
@@ -92,8 +94,8 @@ function bp_groups_admin_load() {
 	// Build redirection URL.
 	$redirect_to = remove_query_arg( array( 'action', 'action2', 'gid', 'deleted', 'error', 'updated', 'success_new', 'error_new', 'success_modified', 'error_modified' ), $_SERVER['REQUEST_URI'] );
 
-	$doaction   = bp_admin_list_table_current_bulk_action();
-	$min        = bp_core_get_minified_asset_suffix();
+	$doaction = bp_admin_list_table_current_bulk_action();
+	$min      = bp_core_get_minified_asset_suffix();
 
 	/**
 	 * Fires at top of groups admin page.
@@ -135,15 +137,23 @@ function bp_groups_admin_load() {
 
 	} elseif ( 'edit' == $doaction && ! empty( $_GET['gid'] ) ) {
 		// Columns screen option.
-		add_screen_option( 'layout_columns', array( 'default' => 2, 'max' => 2, ) );
+		add_screen_option(
+			'layout_columns',
+			array(
+				'default' => 2,
+				'max'     => 2,
+			)
+		);
 
-		get_current_screen()->add_help_tab( array(
-			'id'      => 'bp-group-edit-overview',
-			'title'   => __( 'Overview', 'buddyboss' ),
-			'content' =>
-				'<p>' . __( 'This page is a convenient way to edit the details associated with one of your groups.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'The Name and Description box is fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to hide or unhide, or to choose a 1- or 2-column layout for this screen.', 'buddyboss' ) . '</p>'
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-group-edit-overview',
+				'title'   => __( 'Overview', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( 'This page is a convenient way to edit the details associated with one of your groups.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( 'The Name and Description box is fixed in place, but you can reposition all the other boxes using drag and drop, and can minimize or expand them by clicking the title bar of each box. Use the Screen Options tab to hide or unhide, or to choose a 1- or 2-column layout for this screen.', 'buddyboss' ) . '</p>',
+			)
+		);
 
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
@@ -170,7 +180,6 @@ function bp_groups_admin_load() {
 			);
 		}
 
-
 		if ( bp_enable_group_hierarchies() ) {
 			add_meta_box(
 				'bp_groups_admin_group_parent',
@@ -193,30 +202,34 @@ function bp_groups_admin_load() {
 		wp_enqueue_script( 'postbox' );
 		wp_enqueue_script( 'dashboard' );
 
-	// Index screen.
+		// Index screen.
 	} else {
 		// Create the Groups screen list table.
 		$bp_groups_list_table = new BP_Groups_List_Table();
 
 		// The per_page screen option.
-		add_screen_option( 'per_page', array( 'label' => __( 'Groups', 'buddyboss' )) );
+		add_screen_option( 'per_page', array( 'label' => __( 'Groups', 'buddyboss' ) ) );
 
 		// Help panel - overview text.
-		get_current_screen()->add_help_tab( array(
-			'id'      => 'bp-groups-overview',
-			'title'   => __( 'Overview', 'buddyboss' ),
-			'content' =>
-				'<p>' . __( 'You can manage groups much like you can manage comments and other content. This screen is customizable in the same ways as other management screens, and you can act on groups by using the on-hover action links or the Bulk Actions.', 'buddyboss' ) . '</p>',
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-groups-overview',
+				'title'   => __( 'Overview', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( 'You can manage groups much like you can manage comments and other content. This screen is customizable in the same ways as other management screens, and you can act on groups by using the on-hover action links or the Bulk Actions.', 'buddyboss' ) . '</p>',
+			)
+		);
 
-		get_current_screen()->add_help_tab( array(
-			'id'      => 'bp-groups-overview-actions',
-			'title'   => __( 'Group Actions', 'buddyboss' ),
-			'content' =>
-				'<p>' . __( 'Clicking "Visit" will take you to the group\'s public page. Use this link to see what the group looks like on the front end of your site.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'Clicking "Edit" will take you to a Dashboard panel where you can manage various details about the group, such as its name and description, its members, and other settings.', 'buddyboss' ) . '</p>' .
-				'<p>' . __( 'If you click "Delete" under a specific group, or select a number of groups and then choose Delete from the Bulk Actions menu, you will be led to a page where you\'ll be asked to confirm the permanent deletion of the group(s).', 'buddyboss' ) . '</p>',
-		) );
+		get_current_screen()->add_help_tab(
+			array(
+				'id'      => 'bp-groups-overview-actions',
+				'title'   => __( 'Group Actions', 'buddyboss' ),
+				'content' =>
+					'<p>' . __( 'Clicking "Visit" will take you to the group\'s public page. Use this link to see what the group looks like on the front end of your site.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( 'Clicking "Edit" will take you to a Dashboard panel where you can manage various details about the group, such as its name and description, its members, and other settings.', 'buddyboss' ) . '</p>' .
+					'<p>' . __( 'If you click "Delete" under a specific group, or select a number of groups and then choose Delete from the Bulk Actions menu, you will be led to a page where you\'ll be asked to confirm the permanent deletion of the group(s).', 'buddyboss' ) . '</p>',
+			)
+		);
 
 		// Help panel - sidebar links.
 		get_current_screen()->set_help_sidebar(
@@ -225,20 +238,26 @@ function bp_groups_admin_load() {
 		);
 
 		// Add accessible hidden heading and text for Groups screen pagination.
-		get_current_screen()->set_screen_reader_content( array(
-			/* translators: accessibility text */
-			'heading_pagination' => __( 'Groups list navigation', 'buddyboss' ),
-		) );
+		get_current_screen()->set_screen_reader_content(
+			array(
+				/* translators: accessibility text */
+				'heading_pagination' => __( 'Groups list navigation', 'buddyboss' ),
+			)
+		);
 	}
 
 	$bp = buddypress();
 
 	// Enqueue CSS and JavaScript.
 	wp_enqueue_script( 'bp_groups_admin_js', $bp->plugin_url . "bp-groups/admin/js/admin{$min}.js", array( 'jquery', 'wp-ajax-response', 'jquery-ui-autocomplete' ), bp_get_version(), true );
-	wp_localize_script( 'bp_groups_admin_js', 'BP_Group_Admin', array(
-		'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
-		'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
-	) );
+	wp_localize_script(
+		'bp_groups_admin_js',
+		'BP_Group_Admin',
+		array(
+			'add_member_placeholder' => __( 'Start typing a username to add a new member.', 'buddyboss' ),
+			'warn_on_leave'          => __( 'If you leave this page, you will lose any unsaved changes you have made to the group.', 'buddyboss' ),
+		)
+	);
 	wp_enqueue_style( 'bp_groups_admin_css', $bp->plugin_url . "bp-groups/admin/css/admin{$min}.css", array(), bp_get_version() );
 
 	wp_style_add_data( 'bp_groups_admin_css', 'rtl', true );
@@ -246,15 +265,17 @@ function bp_groups_admin_load() {
 		wp_style_add_data( 'bp_groups_admin_css', 'suffix', $min );
 	}
 
-
 	if ( $doaction && 'save' == $doaction ) {
 		// Get group ID.
 		$group_id = isset( $_REQUEST['gid'] ) ? (int) $_REQUEST['gid'] : '';
 
-		$redirect_to = add_query_arg( array(
-			'gid'    => (int) $group_id,
-			'action' => 'edit'
-		), $redirect_to );
+		$redirect_to = add_query_arg(
+			array(
+				'gid'    => (int) $group_id,
+				'action' => 'edit',
+			),
+			$redirect_to
+		);
 
 		// Check this is a valid form submission.
 		check_admin_referer( 'edit-group_' . $group_id );
@@ -270,7 +291,7 @@ function bp_groups_admin_load() {
 
 		// Check the form for the updated properties.
 		// Store errors.
-		$error = 0;
+		$error       = 0;
 		$success_new = $error_new = $success_modified = $error_modified = array();
 
 		// Name, description and slug must not be empty.
@@ -286,19 +307,21 @@ function bp_groups_admin_load() {
 		 * Group name, slug, and description are handled with
 		 * groups_edit_base_group_details().
 		 */
-		if ( ! $error && ! groups_edit_base_group_details( array(
+		if ( ! $error && ! groups_edit_base_group_details(
+			array(
 				'group_id'       => $group_id,
 				'name'           => $_POST['bp-groups-name'],
 				'slug'           => $_POST['bp-groups-slug'],
 				'description'    => $_POST['bp-groups-description'],
 				'parent_id'      => isset( $_POST['bp-groups-parent'] ) ? $_POST['bp-groups-parent'] : 0,
 				'notify_members' => false,
-			) ) ) {
+			)
+		) ) {
 			$error = $group_id;
 		}
 
 		// Enable discussion forum.
-		$enable_forum   = ( isset( $_POST['group-show-forum'] ) ) ? 1 : 0;
+		$enable_forum = ( isset( $_POST['group-show-forum'] ) ) ? 1 : 0;
 
 		/**
 		 * Filters the allowed status values for the group.
@@ -318,7 +341,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed invite statuses.
 		 */
 		$allowed_invite_status = apply_filters( 'groups_allowed_invite_status', array( 'members', 'mods', 'admins' ) );
-		$invite_status	       = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
+		$invite_status         = in_array( $_POST['group-invite-status'], (array) $allowed_invite_status ) ? $_POST['group-invite-status'] : 'members';
 
 		/**
 		 * Filters the allowed activity feed status values for the group.
@@ -328,7 +351,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed activity feed statuses.
 		 */
 		$allowed_activity_feed_status = apply_filters( 'groups_allowed_activity_feed_status', array( 'members', 'mods', 'admins' ) );
-		$activity_feed_status	       = in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
+		$activity_feed_status         = in_array( $_POST['group-activity-feed-status'], (array) $allowed_activity_feed_status ) ? $_POST['group-activity-feed-status'] : 'members';
 
 		/**
 		 * Filters the allowed media status values for the group.
@@ -338,7 +361,7 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed media statuses.
 		 */
 		$allowed_media_status = apply_filters( 'groups_allowed_media_status', array( 'members', 'mods', 'admins' ) );
-		$media_status	       = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
+		$media_status         = in_array( $_POST['group-media-status'], (array) $allowed_media_status ) ? $_POST['group-media-status'] : 'members';
 
 		/**
 		 * Filters the allowed album status values for the group.
@@ -348,9 +371,9 @@ function bp_groups_admin_load() {
 		 * @param array $value Array of allowed album statuses.
 		 */
 		$allowed_album_status = apply_filters( 'groups_allowed_album_status', array( 'members', 'mods', 'admins' ) );
-		$album_status	       = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
+		$album_status         = in_array( $_POST['group-album-status'], (array) $allowed_album_status ) ? $_POST['group-album-status'] : 'members';
 
-		if ( !groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $album_status ) ) {
+		if ( ! groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_status, $activity_feed_status, false, $media_status, $album_status ) ) {
 			$error = $group_id;
 		}
 
@@ -363,7 +386,7 @@ function bp_groups_admin_load() {
 
 		if ( ! empty( $user_names ) ) {
 
-			foreach( array_values( $user_names ) as $user_name ) {
+			foreach ( array_values( $user_names ) as $user_name ) {
 				$un = trim( $user_name );
 
 				// Make sure the user exists before attempting
@@ -374,7 +397,7 @@ function bp_groups_admin_load() {
 					$error_new[] = $un;
 				} else {
 					if ( ! groups_join_group( $group_id, $user->ID ) ) {
-						$error_new[]   = $un;
+						$error_new[] = $un;
 					} else {
 						$success_new[] = $un;
 					}
@@ -398,7 +421,7 @@ function bp_groups_admin_load() {
 			if ( ! $admin_count ) {
 
 				$redirect_to = add_query_arg( 'no_admins', 1, $redirect_to );
-				$error = $group_id;
+				$error       = $group_id;
 
 			} else {
 
@@ -406,20 +429,20 @@ function bp_groups_admin_load() {
 				foreach ( (array) $_POST['bp-groups-role'] as $user_id => $new_role ) {
 					$user_id = (int) $user_id;
 
-					$existing_role = isset( $_POST['bp-groups-existing-role'][$user_id] ) ? $_POST['bp-groups-existing-role'][$user_id] : '';
+					$existing_role = isset( $_POST['bp-groups-existing-role'][ $user_id ] ) ? $_POST['bp-groups-existing-role'][ $user_id ] : '';
 
 					if ( $existing_role != $new_role ) {
 						$result = false;
 
 						switch ( $new_role ) {
-							case 'mod' :
+							case 'mod':
 								// Admin to mod is a demotion. Demote to
 								// member, then fall through.
 								if ( 'admin' == $existing_role ) {
 									groups_demote_member( $user_id, $group_id );
 								}
 
-							case 'admin' :
+							case 'admin':
 								// If the user was banned, we must
 								// unban first.
 								if ( 'banned' == $existing_role ) {
@@ -432,8 +455,7 @@ function bp_groups_admin_load() {
 
 								break;
 
-							case 'member' :
-
+							case 'member':
 								if ( 'admin' == $existing_role || 'mod' == $existing_role ) {
 									$result = groups_demote_member( $user_id, $group_id );
 								} elseif ( 'banned' == $existing_role ) {
@@ -442,14 +464,12 @@ function bp_groups_admin_load() {
 
 								break;
 
-							case 'banned' :
-
+							case 'banned':
 								$result = groups_ban_member( $user_id, $group_id );
 
 								break;
 
-							case 'remove' :
-
+							case 'remove':
 								$result = groups_remove_member( $user_id, $group_id );
 
 								break;
@@ -459,7 +479,7 @@ function bp_groups_admin_load() {
 						if ( $result ) {
 							$success_modified[] = $user_id;
 						} else {
-							$error_modified[]   = $user_id;
+							$error_modified[] = $user_id;
 						}
 					}
 				}
@@ -484,24 +504,24 @@ function bp_groups_admin_load() {
 			$redirect_to = add_query_arg( 'updated', 1, $redirect_to );
 		}
 
-		if ( !empty( $success_new ) ) {
+		if ( ! empty( $success_new ) ) {
 			$success_new = implode( ',', array_filter( $success_new, 'urlencode' ) );
 			$redirect_to = add_query_arg( 'success_new', $success_new, $redirect_to );
 		}
 
-		if ( !empty( $error_new ) ) {
-			$error_new = implode( ',', array_filter( $error_new, 'urlencode' ) );
+		if ( ! empty( $error_new ) ) {
+			$error_new   = implode( ',', array_filter( $error_new, 'urlencode' ) );
 			$redirect_to = add_query_arg( 'error_new', $error_new, $redirect_to );
 		}
 
-		if ( !empty( $success_modified ) ) {
+		if ( ! empty( $success_modified ) ) {
 			$success_modified = implode( ',', array_filter( $success_modified, 'urlencode' ) );
-			$redirect_to = add_query_arg( 'success_modified', $success_modified, $redirect_to );
+			$redirect_to      = add_query_arg( 'success_modified', $success_modified, $redirect_to );
 		}
 
-		if ( !empty( $error_modified ) ) {
+		if ( ! empty( $error_modified ) ) {
 			$error_modified = implode( ',', array_filter( $error_modified, 'urlencode' ) );
-			$redirect_to = add_query_arg( 'error_modified', $error_modified, $redirect_to );
+			$redirect_to    = add_query_arg( 'error_modified', $error_modified, $redirect_to );
 		}
 
 		/**
@@ -514,8 +534,7 @@ function bp_groups_admin_load() {
 		wp_redirect( apply_filters( 'bp_group_admin_edit_redirect', $redirect_to ) );
 		exit;
 
-
-	// If a referrer and a nonce is supplied, but no action, redirect back.
+		// If a referrer and a nonce is supplied, but no action, redirect back.
 	} elseif ( ! empty( $_GET['_wp_http_referer'] ) ) {
 		wp_redirect( remove_query_arg( array( '_wp_http_referer', '_wpnonce' ), stripslashes( $_SERVER['REQUEST_URI'] ) ) );
 		exit;
@@ -533,13 +552,15 @@ function bp_groups_admin_load() {
  * @return string|int Option value. False to abandon update.
  */
 function bp_groups_admin_screen_options( $value, $option, $new_value ) {
-	if ( 'toplevel_page_bp_groups_per_page' != $option && 'toplevel_page_bp_groups_network_per_page' != $option )
+	if ( 'toplevel_page_bp_groups_per_page' != $option && 'toplevel_page_bp_groups_network_per_page' != $option ) {
 		return $value;
+	}
 
 	// Per page.
 	$new_value = (int) $new_value;
-	if ( $new_value < 1 || $new_value > 999 )
+	if ( $new_value < 1 || $new_value > 999 ) {
 		return $value;
+	}
 
 	return $new_value;
 }
@@ -565,15 +586,15 @@ function bp_groups_admin() {
 	if ( 'edit' == $doaction && ! empty( $_GET['gid'] ) ) {
 		bp_groups_admin_edit();
 
-	// Create the group from admin
+		// Create the group from admin
 	} elseif ( 'edit' == $doaction && ! empty( $_GET['create'] ) ) {
 		bp_groups_admin_create();
 
-	// Display the group deletion confirmation screen.
+		// Display the group deletion confirmation screen.
 	} elseif ( 'delete' == $doaction && ! empty( $_GET['gid'] ) ) {
 		bp_groups_admin_delete();
 
-	// Otherwise, display the groups index screen.
+		// Otherwise, display the groups index screen.
 	} else {
 		bp_groups_admin_index();
 	}
@@ -586,19 +607,20 @@ function bp_groups_admin() {
  */
 function bp_groups_admin_edit() {
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) )
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		die( '-1' );
+	}
 
 	$messages = array();
 
 	// If the user has just made a change to a group, build status messages.
-	if ( !empty( $_REQUEST['no_admins'] ) || ! empty( $_REQUEST['error'] ) || ! empty( $_REQUEST['updated'] ) || ! empty( $_REQUEST['error_new'] ) || ! empty( $_REQUEST['success_new'] ) || ! empty( $_REQUEST['error_modified'] ) || ! empty( $_REQUEST['success_modified'] ) ) {
-		$no_admins        = ! empty( $_REQUEST['no_admins']        ) ? 1                                             : 0;
-		$errors           = ! empty( $_REQUEST['error']            ) ? $_REQUEST['error']                            : '';
-		$updated          = ! empty( $_REQUEST['updated']          ) ? $_REQUEST['updated']                          : '';
-		$error_new        = ! empty( $_REQUEST['error_new']        ) ? explode( ',', $_REQUEST['error_new'] )        : array();
-		$success_new      = ! empty( $_REQUEST['success_new']      ) ? explode( ',', $_REQUEST['success_new'] )      : array();
-		$error_modified   = ! empty( $_REQUEST['error_modified']   ) ? explode( ',', $_REQUEST['error_modified'] )   : array();
+	if ( ! empty( $_REQUEST['no_admins'] ) || ! empty( $_REQUEST['error'] ) || ! empty( $_REQUEST['updated'] ) || ! empty( $_REQUEST['error_new'] ) || ! empty( $_REQUEST['success_new'] ) || ! empty( $_REQUEST['error_modified'] ) || ! empty( $_REQUEST['success_modified'] ) ) {
+		$no_admins        = ! empty( $_REQUEST['no_admins'] ) ? 1 : 0;
+		$errors           = ! empty( $_REQUEST['error'] ) ? $_REQUEST['error'] : '';
+		$updated          = ! empty( $_REQUEST['updated'] ) ? $_REQUEST['updated'] : '';
+		$error_new        = ! empty( $_REQUEST['error_new'] ) ? explode( ',', $_REQUEST['error_new'] ) : array();
+		$success_new      = ! empty( $_REQUEST['success_new'] ) ? explode( ',', $_REQUEST['success_new'] ) : array();
+		$error_modified   = ! empty( $_REQUEST['error_modified'] ) ? explode( ',', $_REQUEST['error_modified'] ) : array();
 		$success_modified = ! empty( $_REQUEST['success_modified'] ) ? explode( ',', $_REQUEST['success_modified'] ) : array();
 
 		if ( ! empty( $no_admins ) ) {
@@ -611,7 +633,6 @@ function bp_groups_admin_edit() {
 			} else {
 				$messages[] = __( 'An error occurred when trying to update your group details.', 'buddyboss' );
 			}
-
 		} elseif ( ! empty( $updated ) ) {
 			$messages[] = __( 'The group has been updated successfully.', 'buddyboss' );
 		}
@@ -626,19 +647,19 @@ function bp_groups_admin_edit() {
 
 		if ( ! empty( $error_modified ) ) {
 			$error_modified = bp_groups_admin_get_usernames_from_ids( $error_modified );
-			$messages[] = sprintf( __( 'An error occurred when trying to modify the following members: %s', 'buddyboss' ), '<em>' . esc_html( implode( ', ', $error_modified ) ) . '</em>' );
+			$messages[]     = sprintf( __( 'An error occurred when trying to modify the following members: %s', 'buddyboss' ), '<em>' . esc_html( implode( ', ', $error_modified ) ) . '</em>' );
 		}
 
 		if ( ! empty( $success_modified ) ) {
 			$success_modified = bp_groups_admin_get_usernames_from_ids( $success_modified );
-			$messages[] = sprintf( __( 'The following members were successfully modified: %s', 'buddyboss' ), '<em>' . esc_html( implode( ', ', $success_modified ) ) . '</em>' );
+			$messages[]       = sprintf( __( 'The following members were successfully modified: %s', 'buddyboss' ), '<em>' . esc_html( implode( ', ', $success_modified ) ) . '</em>' );
 		}
 	}
 
 	$is_error = ! empty( $no_admins ) || ! empty( $errors ) || ! empty( $error_new ) || ! empty( $error_modified );
 
 	// Get the group from the database.
-	$group      = groups_get_group( (int) $_GET['gid'] );
+	$group = groups_get_group( (int) $_GET['gid'] );
 
 	$group_name = isset( $group->name ) ? bp_get_group_name( $group ) : '';
 
@@ -655,7 +676,8 @@ function bp_groups_admin_edit() {
 	 *
 	 * @param BP_Groups_Group $this Instance of the current group being edited. Passed by reference.
 	 */
-	do_action_ref_array( 'bp_groups_admin_edit', array( &$group ) ); ?>
+	do_action_ref_array( 'bp_groups_admin_edit', array( &$group ) );
+	?>
 
 	<div class="wrap">
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
@@ -663,7 +685,20 @@ function bp_groups_admin_edit() {
 			<h1 class="wp-heading-inline"><?php _e( 'Edit Group', 'buddyboss' ); ?></h1>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="page-title-action" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+				<a class="page-title-action" href="
+				<?php
+				echo esc_url(
+					add_query_arg(
+						array(
+							'page'   => 'bp-groups',
+							'create' => 'create-from-admin',
+							'action' => 'edit',
+						),
+						admin_url( 'admin.php' )
+					)
+				);
+				?>
+				"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
 			<hr class="wp-header-end">
@@ -673,7 +708,20 @@ function bp_groups_admin_edit() {
 			<h1><?php _e( 'Edit Group', 'buddyboss' ); ?>
 
 				<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-					<a class="add-new-h2" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+					<a class="add-new-h2" href="
+					<?php
+					echo esc_url(
+						add_query_arg(
+							array(
+								'page'   => 'bp-groups',
+								'create' => 'create-from-admin',
+								'action' => 'edit',
+							),
+							admin_url( 'admin.php' )
+						)
+					);
+					?>
+					"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 				<?php endif; ?>
 
 			</h1>
@@ -681,8 +729,8 @@ function bp_groups_admin_edit() {
 		<?php endif; ?>
 
 		<?php // If the user has just made a change to an group, display the status messages. ?>
-		<?php if ( !empty( $messages ) ) : ?>
-			<div id="moderated" class="<?php echo ( $is_error ) ? 'error' : 'updated'; ?>"><p><?php echo implode( "</p><p>", $messages ); ?></p></div>
+		<?php if ( ! empty( $messages ) ) : ?>
+			<div id="moderated" class="<?php echo ( $is_error ) ? 'error' : 'updated'; ?>"><p><?php echo implode( '</p><p>', $messages ); ?></p></div>
 		<?php endif; ?>
 
 		<?php if ( $group->id ) : ?>
@@ -696,24 +744,39 @@ function bp_groups_admin_edit() {
 								<div id="bp_groups_name" class="postbox">
 									<h2><?php _e( 'Name and Description', 'buddyboss' ); ?></h2>
 									<div class="inside">
-										<label for="bp-groups-name" class="screen-reader-text"><?php
+										<label for="bp-groups-name" class="screen-reader-text">
+										<?php
 											/* translators: accessibility text */
 											_e( 'Group Name', 'buddyboss' );
-										?></label>
-										<input type="text" name="bp-groups-name" id="bp-groups-name" value="<?php echo esc_attr( stripslashes( $group_name ) ) ?>" />
+										?>
+										</label>
+										<input type="text" name="bp-groups-name" id="bp-groups-name" value="<?php echo esc_attr( stripslashes( $group_name ) ); ?>" />
 										<div id="bp-groups-permalink-box">
-											<strong><?php esc_html_e( 'Permalink:', 'buddyboss' ) ?></strong>
+											<strong><?php esc_html_e( 'Permalink:', 'buddyboss' ); ?></strong>
 											<span id="bp-groups-permalink">
 												<?php bp_groups_directory_permalink(); ?> <input type="text" id="bp-groups-slug" name="bp-groups-slug" value="<?php bp_group_slug( $group ); ?>" autocomplete="off"> /
 											</span>
-											<a href="<?php echo bp_group_permalink( $group ) ?>" class="button button-small" id="bp-groups-visit-group"><?php esc_html_e( 'Visit Group', 'buddyboss' ) ?></a>
+											<a href="<?php echo bp_group_permalink( $group ); ?>" class="button button-small" id="bp-groups-visit-group"><?php esc_html_e( 'Visit Group', 'buddyboss' ); ?></a>
 										</div>
 
-										<label for="bp-groups-description" class="screen-reader-text"><?php
+										<label for="bp-groups-description" class="screen-reader-text">
+										<?php
 											/* translators: accessibility text */
 											_e( 'Group Description', 'buddyboss' );
-										?></label>
-										<?php wp_editor( stripslashes( $group->description ), 'bp-groups-description', array( 'media_buttons' => false, 'teeny' => true, 'textarea_rows' => 5, 'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ) ) ); ?>
+										?>
+										</label>
+										<?php
+										wp_editor(
+											stripslashes( $group->description ),
+											'bp-groups-description',
+											array(
+												'media_buttons' => false,
+												'teeny' => true,
+												'textarea_rows' => 5,
+												'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ),
+											)
+										);
+										?>
 									</div>
 								</div>
 							</div>
@@ -737,20 +800,22 @@ function bp_groups_admin_edit() {
 
 		<?php else : ?>
 
-			<p><?php
+			<p>
+			<?php
 				printf(
 					'%1$s <a href="%2$s">%3$s</a>',
 					__( 'No group found with this ID.', 'buddyboss' ),
 					esc_url( bp_get_admin_url( 'admin.php?page=bp-groups' ) ),
 					__( 'Go back and try again.', 'buddyboss' )
 				);
-			?></p>
+			?>
+			</p>
 
 		<?php endif; ?>
 
 	</div><!-- .wrap -->
 
-<?php
+	<?php
 }
 
 /**
@@ -760,8 +825,9 @@ function bp_groups_admin_edit() {
  */
 function bp_groups_admin_create() {
 
-	if ( ! bp_current_user_can( 'bp_moderate' ) )
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		die( '-1' );
+	}
 
 	?>
 
@@ -787,18 +853,33 @@ function bp_groups_admin_create() {
 							<div id="bp_groups_name" class="postbox">
 								<h2><?php _e( 'Name and Description', 'buddyboss' ); ?></h2>
 								<div class="inside">
-									<label for="bp-groups-name" class="screen-reader-text"><?php
+									<label for="bp-groups-name" class="screen-reader-text">
+									<?php
 										/* translators: accessibility text */
 										_e( 'Group Name', 'buddyboss' );
-										?></label>
+									?>
+										</label>
 									<input required type="text" name="bp-groups-name" id="bp-groups-name" value="" />
 
 
-									<label for="bp-groups-description" class="screen-reader-text"><?php
+									<label for="bp-groups-description" class="screen-reader-text">
+									<?php
 										/* translators: accessibility text */
 										_e( 'Group Description', 'buddyboss' );
-										?></label>
-									<?php wp_editor( '', 'bp-groups-description', array( 'media_buttons' => false, 'teeny' => true, 'textarea_rows' => 5, 'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ) ) ); ?>
+									?>
+										</label>
+									<?php
+									wp_editor(
+										'',
+										'bp-groups-description',
+										array(
+											'media_buttons' => false,
+											'teeny'     => true,
+											'textarea_rows' => 5,
+											'quicktags' => array( 'buttons' => 'strong,em,link,block,del,ins,img,code,spell,close' ),
+										)
+									);
+									?>
 								</div>
 							</div>
 						</div>
@@ -809,12 +890,12 @@ function bp_groups_admin_create() {
 
 					<div id="postbox-container-1" class="postbox-container">
 						<div id="submitdiv" class="postbox">
-							<h2 class="hndle ui-sortable-handle"><span><?php esc_html_e('Publish', 'buddyboss' );?></span></h2>
+							<h2 class="hndle ui-sortable-handle"><span><?php esc_html_e( 'Publish', 'buddyboss' ); ?></span></h2>
 							<div class="inside">
 								<div id="submitcomment" class="submitbox">
 									<div id="major-publishing-actions">
 										<div id="publishing-action">
-											<input type="submit" name="save" id="save" class="button button-primary" value="<?php esc_attr_e('Publish', 'buddyboss' );?>">			</div>
+											<input type="submit" name="save" id="save" class="button button-primary" value="<?php esc_attr_e( 'Publish', 'buddyboss' ); ?>">			</div>
 										<div class="clear"></div>
 									</div><!-- #major-publishing-actions -->
 								</div><!-- #submitcomment -->
@@ -842,23 +923,36 @@ add_action( 'admin_post_bp_create_group_admin', 'bp_process_create_group_admin' 
  * Saving the data of newly create group from the backend.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_process_create_group_admin() {
 
-	if ( !current_user_can( 'manage_options' ) ) {
+	if ( ! current_user_can( 'manage_options' ) ) {
 		wp_die( 'You are not allowed to be on this page.' );
 	}
 	// Check that nonce field
 	check_admin_referer( 'bp_create_group_form_nonce' );
 
-	$new_group_id = groups_create_group( array( 'group_id' => 0, 'name' => $_POST['bp-groups-name'], 'description' => $_POST['bp-groups-description'], 'slug' => groups_check_slug( sanitize_title( esc_attr( $_POST['bp-groups-name'] ) ) ), 'date_created' => bp_core_current_time(), 'status' => 'public' ) );
+	$new_group_id = groups_create_group(
+		array(
+			'group_id'     => 0,
+			'name'         => $_POST['bp-groups-name'],
+			'description'  => $_POST['bp-groups-description'],
+			'slug'         => groups_check_slug( sanitize_title( esc_attr( $_POST['bp-groups-name'] ) ) ),
+			'date_created' => bp_core_current_time(),
+			'status'       => 'public',
+		)
+	);
 
-	wp_safe_redirect( add_query_arg([
-		'page' => 'bp-groups',
-		'gid' => $new_group_id,
-		'action' => 'edit',
-	], admin_url( 'admin.php' ) ));
+	wp_safe_redirect(
+		add_query_arg(
+			array(
+				'page'   => 'bp-groups',
+				'gid'    => $new_group_id,
+				'action' => 'edit',
+			),
+			admin_url( 'admin.php' )
+		)
+	);
 	exit();
 }
 
@@ -881,11 +975,13 @@ function bp_groups_admin_delete() {
 		$group_ids = explode( ',', $group_ids );
 	}
 	$group_ids = wp_parse_id_list( $group_ids );
-	$groups    = groups_get_groups( array(
-		'include'     => $group_ids,
-		'show_hidden' => true,
-		'per_page'    => null, // Return all results.
-	) );
+	$groups    = groups_get_groups(
+		array(
+			'include'     => $group_ids,
+			'show_hidden' => true,
+			'per_page'    => null, // Return all results.
+		)
+	);
 
 	// Create a new list of group ids, based on those that actually exist.
 	$gids = array();
@@ -893,19 +989,20 @@ function bp_groups_admin_delete() {
 		$gids[] = $group->id;
 	}
 
-	$base_url  = remove_query_arg( array( 'action', 'action2', 'paged', 's', '_wpnonce', 'gid' ), $_SERVER['REQUEST_URI'] ); ?>
+	$base_url = remove_query_arg( array( 'action', 'action2', 'paged', 's', '_wpnonce', 'gid' ), $_SERVER['REQUEST_URI'] );
+	?>
 
 	<div class="wrap">
-		<h1><?php _e( 'Delete Groups', 'buddyboss' ) ?></h1>
-		<p><?php _e( 'You are about to delete the following groups:', 'buddyboss' ) ?></p>
+		<h1><?php _e( 'Delete Groups', 'buddyboss' ); ?></h1>
+		<p><?php _e( 'You are about to delete the following groups:', 'buddyboss' ); ?></p>
 
 		<ul class="bp-group-delete-list">
 		<?php foreach ( $groups['groups'] as $group ) : ?>
 			<li>
 				<?php echo esc_html( bp_get_group_name( $group ) ); ?>
-				<?php if (  bp_is_active('forums') && bbp_get_group_forum_ids( $group->id ) ): ?>
-					<label for="delete-group-forum-<?php echo $group->id ?>" class="delete-forum-label">
-						<input type="checkbox" name="delete_group_forum" id="delete-group-forum-<?php echo $group->id ?>" value="<?php echo $group->id ?>" checked/>
+				<?php if ( bp_is_active( 'forums' ) && bbp_get_group_forum_ids( $group->id ) ) : ?>
+					<label for="delete-group-forum-<?php echo $group->id; ?>" class="delete-forum-label">
+						<input type="checkbox" name="delete_group_forum" id="delete-group-forum-<?php echo $group->id; ?>" value="<?php echo $group->id; ?>" checked/>
 						<?php esc_html_e( 'Permanently delete the group discussion forum', 'buddyboss' ); ?>
 					</label>
 				<?php endif; ?>
@@ -913,19 +1010,31 @@ function bp_groups_admin_delete() {
 		<?php endforeach; ?>
 		</ul>
 
-		<p><strong><?php _e( 'This action cannot be undone.', 'buddyboss' ) ?></strong></p>
+		<p><strong><?php _e( 'This action cannot be undone.', 'buddyboss' ); ?></strong></p>
 
 		<a
 			class="button-primary"
 			id="delete-groups-submit"
-			href="<?php echo esc_url( wp_nonce_url( add_query_arg( array(
-				'action' => 'do_delete',
-				'gid'    => implode( ',', $gids )
-			), $base_url ), 'bp-groups-delete' ) ); ?>"
+			href="
+			<?php
+			echo esc_url(
+				wp_nonce_url(
+					add_query_arg(
+						array(
+							'action' => 'do_delete',
+							'gid'    => implode( ',', $gids ),
+						),
+						$base_url
+					),
+					'bp-groups-delete'
+				)
+			);
+			?>
+			"
 		>
-			<?php _e( 'Delete Permanently', 'buddyboss' ) ?>
+			<?php _e( 'Delete Permanently', 'buddyboss' ); ?>
 		</a>
-		<a class="button" href="<?php echo esc_attr( $base_url ); ?>"><?php _e( 'Cancel', 'buddyboss' ) ?></a>
+		<a class="button" href="<?php echo esc_attr( $base_url ); ?>"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
 	</div>
 
 	<?php
@@ -948,7 +1057,7 @@ function bp_groups_admin_index() {
 
 	// If the user has just made a change to a group, build status messages.
 	if ( ! empty( $_REQUEST['deleted'] ) ) {
-		$deleted  = ! empty( $_REQUEST['deleted'] ) ? (int) $_REQUEST['deleted'] : 0;
+		$deleted = ! empty( $_REQUEST['deleted'] ) ? (int) $_REQUEST['deleted'] : 0;
 
 		if ( $deleted > 0 ) {
 			$messages[] = sprintf( _n( '%s group has been permanently deleted.', '%s groups have been permanently deleted.', $deleted, 'buddyboss' ), number_format_i18n( $deleted ) );
@@ -967,7 +1076,8 @@ function bp_groups_admin_index() {
 	 *
 	 * @param array $messages Array of messages to be displayed.
 	 */
-	do_action( 'bp_groups_admin_index', $messages ); ?>
+	do_action( 'bp_groups_admin_index', $messages );
+	?>
 
 	<div class="wrap">
 		<?php if ( version_compare( $GLOBALS['wp_version'], '4.8', '>=' ) ) : ?>
@@ -975,10 +1085,23 @@ function bp_groups_admin_index() {
 			<h1 class="wp-heading-inline"><?php _e( 'Groups', 'buddyboss' ); ?></h1>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="page-title-action" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+				<a class="page-title-action" href="
+				<?php
+				echo esc_url(
+					add_query_arg(
+						array(
+							'page'   => 'bp-groups',
+							'create' => 'create-from-admin',
+							'action' => 'edit',
+						),
+						admin_url( 'admin.php' )
+					)
+				);
+				?>
+				"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
-			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
+			<?php if ( ! empty( $_REQUEST['s'] ) ) : ?>
 				<span class="subtitle"><?php printf( __( 'Search results for "%s"', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
 			<?php endif; ?>
 
@@ -990,10 +1113,23 @@ function bp_groups_admin_index() {
 			<?php _e( 'Groups', 'buddyboss' ); ?>
 
 			<?php if ( is_user_logged_in() && bp_user_can_create_groups() ) : ?>
-				<a class="add-new-h2" href="<?php echo esc_url( add_query_arg([ 'page' => 'bp-groups', 'create' => 'create-from-admin', 'action' => 'edit', ], admin_url( 'admin.php' ) ) ); ?>"><?php _e( 'New Group', 'buddyboss' ); ?></a>
+				<a class="add-new-h2" href="
+				<?php
+				echo esc_url(
+					add_query_arg(
+						array(
+							'page'   => 'bp-groups',
+							'create' => 'create-from-admin',
+							'action' => 'edit',
+						),
+						admin_url( 'admin.php' )
+					)
+				);
+				?>
+				"><?php _e( 'New Group', 'buddyboss' ); ?></a>
 			<?php endif; ?>
 
-			<?php if ( !empty( $_REQUEST['s'] ) ) : ?>
+			<?php if ( ! empty( $_REQUEST['s'] ) ) : ?>
 				<span class="subtitle"><?php printf( __( 'Search results for "%s"', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
 			<?php endif; ?>
 		</h1>
@@ -1001,7 +1137,7 @@ function bp_groups_admin_index() {
 		<?php endif; ?>
 
 		<?php // If the user has just made a change to an group, display the status messages. ?>
-		<?php if ( !empty( $messages ) ) : ?>
+		<?php if ( ! empty( $messages ) ) : ?>
 			<div id="moderated" class="<?php echo ( ! empty( $_REQUEST['error'] ) ) ? 'error' : 'updated'; ?>"><p><?php echo implode( "<br/>\n", $messages ); ?></p></div>
 		<?php endif; ?>
 
@@ -1016,7 +1152,7 @@ function bp_groups_admin_index() {
 
 	</div>
 
-<?php
+	<?php
 }
 
 /**
@@ -1031,15 +1167,16 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 	$invite_status        = bp_group_get_invite_status( $item->id );
 	$activity_feed_status = bp_group_get_activity_feed_status( $item->id );
 	$media_status         = bp_group_get_media_status( $item->id );
-	$album_status         = bp_group_get_album_status( $item->id ); ?>
+	$album_status         = bp_group_get_album_status( $item->id );
+	?>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-status">
 		<fieldset>
 			<legend><?php _e( 'Group Privacy', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-status-public"><input type="radio" name="group-status" id="bp-group-status-public" value="public" <?php checked( $item->status, 'public' ) ?> /><?php _e( 'Public', 'buddyboss' ) ?></label>
-			<label for="bp-group-status-private"><input type="radio" name="group-status" id="bp-group-status-private" value="private" <?php checked( $item->status, 'private' ) ?> /><?php _e( 'Private', 'buddyboss' ) ?></label>
-			<label for="bp-group-status-hidden"><input type="radio" name="group-status" id="bp-group-status-hidden" value="hidden" <?php checked( $item->status, 'hidden' ) ?> /><?php _e( 'Hidden', 'buddyboss' ) ?></label>
+			<label for="bp-group-status-public"><input type="radio" name="group-status" id="bp-group-status-public" value="public" <?php checked( $item->status, 'public' ); ?> /><?php _e( 'Public', 'buddyboss' ); ?></label>
+			<label for="bp-group-status-private"><input type="radio" name="group-status" id="bp-group-status-private" value="private" <?php checked( $item->status, 'private' ); ?> /><?php _e( 'Private', 'buddyboss' ); ?></label>
+			<label for="bp-group-status-hidden"><input type="radio" name="group-status" id="bp-group-status-hidden" value="hidden" <?php checked( $item->status, 'hidden' ); ?> /><?php _e( 'Hidden', 'buddyboss' ); ?></label>
 		</fieldset>
 	</div>
 
@@ -1047,47 +1184,47 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 		<fieldset>
 			<legend><?php _e( 'Who can invite others to join this group?', 'buddyboss' ); ?></legend>
 
-			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ) ?> /><?php _e( 'All Members', 'buddyboss' ) ?></label>
-			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ) ?></label>
-			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ) ?> /><?php _e( 'Organizers', 'buddyboss' ) ?></label>
+			<label for="bp-group-invite-status-members"><input type="radio" name="group-invite-status" id="bp-group-invite-status-members" value="members" <?php checked( $invite_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
+			<label for="bp-group-invite-status-mods"><input type="radio" name="group-invite-status" id="bp-group-invite-status-mods" value="mods" <?php checked( $invite_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+			<label for="bp-group-invite-status-admins"><input type="radio" name="group-invite-status" id="bp-group-invite-status-admins" value="admins" <?php checked( $invite_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
 		</fieldset>
 	</div>
 
-    <div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
-        <fieldset>
-            <legend><?php _e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
+	<div class="bp-groups-settings-section" id="bp-groups-settings-section-activity-feed-status">
+		<fieldset>
+			<legend><?php _e( 'Who can post into this group?', 'buddyboss' ); ?></legend>
 
-            <label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ) ?> /><?php _e( 'All group members', 'buddyboss' ) ?></label>
-            <label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators only', 'buddyboss' ) ?></label>
-            <label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ) ?> /><?php _e( 'Organizers only', 'buddyboss' ) ?></label>
-        </fieldset>
-    </div>
+			<label for="bp-group-activity-feed-status-members"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-members" value="members" <?php checked( $activity_feed_status, 'members' ); ?> /><?php _e( 'All group members', 'buddyboss' ); ?></label>
+			<label for="bp-group-activity-feed-status-mods"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-mods" value="mods" <?php checked( $activity_feed_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators only', 'buddyboss' ); ?></label>
+			<label for="bp-group-activity-feed-status-admins"><input type="radio" name="group-activity-feed-status" id="bp-group-activity-feed-status-admins" value="admins" <?php checked( $activity_feed_status, 'admins' ); ?> /><?php _e( 'Organizers only', 'buddyboss' ); ?></label>
+		</fieldset>
+	</div>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
-        <div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
-            <fieldset>
-                <legend><?php _e( 'Who can manage media in this group?', 'buddyboss' ); ?></legend>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
+			<fieldset>
+				<legend><?php _e( 'Who can manage media in this group?', 'buddyboss' ); ?></legend>
 
-                <label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ) ?> /><?php _e( 'All Members', 'buddyboss' ) ?></label>
-                <label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ) ?></label>
-                <label for="bp-group-media-status-admins"><input type="radio" name="group-media-status" id="bp-group-media-status-admins" value="admins" <?php checked( $media_status, 'admins' ) ?> /><?php _e( 'Organizers', 'buddyboss' ) ?></label>
-            </fieldset>
-        </div>
+				<label for="bp-group-media-status-members"><input type="radio" name="group-media-status" id="bp-group-media-status-members" value="members" <?php checked( $media_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-media-status-mods"><input type="radio" name="group-media-status" id="bp-group-media-status-mods" value="mods" <?php checked( $media_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-media-status-admins"><input type="radio" name="group-media-status" id="bp-group-media-status-admins" value="admins" <?php checked( $media_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
 	<?php endif; ?>
 
-    <?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
-        <div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
-            <fieldset>
-                <legend><?php _e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
+	<?php if ( bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() ) : ?>
+		<div class="bp-groups-settings-section" id="bp-groups-settings-section-album-status">
+			<fieldset>
+				<legend><?php _e( 'Who can manage albums in this group?', 'buddyboss' ); ?></legend>
 
-                <label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ) ?> /><?php _e( 'All Members', 'buddyboss' ) ?></label>
-                <label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ) ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ) ?></label>
-                <label for="bp-group-album-status-admins"><input type="radio" name="group-album-status" id="bp-group-album-status-admins" value="admins" <?php checked( $album_status, 'admins' ) ?> /><?php _e( 'Organizers', 'buddyboss' ) ?></label>
-            </fieldset>
-        </div>
-    <?php endif; ?>
+				<label for="bp-group-album-status-members"><input type="radio" name="group-album-status" id="bp-group-album-status-members" value="members" <?php checked( $album_status, 'members' ); ?> /><?php _e( 'All Members', 'buddyboss' ); ?></label>
+				<label for="bp-group-album-status-mods"><input type="radio" name="group-album-status" id="bp-group-album-status-mods" value="mods" <?php checked( $album_status, 'mods' ); ?> /><?php _e( 'Organizers and Moderators', 'buddyboss' ); ?></label>
+				<label for="bp-group-album-status-admins"><input type="radio" name="group-album-status" id="bp-group-album-status-admins" value="admins" <?php checked( $album_status, 'admins' ); ?> /><?php _e( 'Organizers', 'buddyboss' ); ?></label>
+			</fieldset>
+		</div>
+	<?php endif; ?>
 
-<?php
+	<?php
 }
 
 /**
@@ -1100,7 +1237,8 @@ function bp_groups_admin_edit_metabox_settings( $item ) {
 function bp_groups_admin_edit_metabox_group_parent( $item ) {
 
 	$current_parent_group_id = bp_get_parent_group_id( $item->id );
-	$possible_parent_groups  = bp_get_possible_parent_groups( $item->id, bp_loggedin_user_id() ); ?>
+	$possible_parent_groups  = bp_get_possible_parent_groups( $item->id, bp_loggedin_user_id() );
+	?>
 
 	<div class="bp-groups-settings-section" id="bp-groups-settings-section-group-hierarchy">
 		<select id="bp-groups-parent" name="bp-groups-parent" autocomplete="off">
@@ -1133,11 +1271,13 @@ function bp_groups_admin_edit_metabox_group_parent( $item ) {
 function bp_groups_admin_edit_metabox_add_new_members( $item ) {
 	?>
 
-	<label for="bp-groups-new-members" class="screen-reader-text"><?php
+	<label for="bp-groups-new-members" class="screen-reader-text">
+	<?php
 		/* translators: accessibility text */
 		_e( 'Add new members', 'buddyboss' );
-	?></label>
-	<input name="bp-groups-new-members" type="text" id="bp-groups-new-members" class="bp-suggest-user" placeholder="<?php esc_attr_e( 'Enter a comma-separated list of user logins.', 'buddyboss' ) ?>" />
+	?>
+	</label>
+	<input name="bp-groups-new-members" type="text" id="bp-groups-new-members" class="bp-suggest-user" placeholder="<?php esc_attr_e( 'Enter a comma-separated list of user logins.', 'buddyboss' ); ?>" />
 	<ul id="bp-groups-new-members-list"></ul>
 	<?php
 }
@@ -1171,21 +1311,23 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 	foreach ( $members as $type => &$member_type_users ) {
 		$page_qs_key       = $type . '_page';
 		$current_type_page = isset( $_GET[ $page_qs_key ] ) ? absint( $_GET[ $page_qs_key ] ) : 1;
-		$member_type_query = new BP_Group_Member_Query( array(
-			'group_id'   => $item->id,
-			'group_role' => array( $type ),
-			'type'       => 'alphabetical',
-			/**
-			 * Filters the admin members type per page value.
-			 *
-			 * @since BuddyPress 2.8.0
-			 *
-			 * @param int    $value profile types per page. Default 10.
-			 * @param string $type  profile type.
-			 */
-			'per_page'   => apply_filters( 'bp_groups_admin_members_type_per_page', 10, $type ),
-			'page'       => $current_type_page,
-		) );
+		$member_type_query = new BP_Group_Member_Query(
+			array(
+				'group_id'   => $item->id,
+				'group_role' => array( $type ),
+				'type'       => 'alphabetical',
+				/**
+				 * Filters the admin members type per page value.
+				 *
+				 * @since BuddyPress 2.8.0
+				 *
+				 * @param int    $value profile types per page. Default 10.
+				 * @param string $type  profile type.
+				 */
+				'per_page'   => apply_filters( 'bp_groups_admin_members_type_per_page', 10, $type ),
+				'page'       => $current_type_page,
+			)
+		);
 
 		$member_type_users   = $member_type_query->results;
 		$pagination[ $type ] = bp_groups_admin_create_pagination_links( $member_type_query, $type );
@@ -1195,22 +1337,35 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 	echo '<script>var group_id = "' . esc_js( $item->id ) . '";</script>';
 
 	// Loop through each profile type.
-	foreach ( $members as $member_type => $type_users ) : ?>
+	foreach ( $members as $member_type => $type_users ) :
+		?>
 
-		<div class="bp-groups-member-type" id="bp-groups-member-type-<?php echo esc_attr( $member_type ) ?>">
+		<div class="bp-groups-member-type" id="bp-groups-member-type-<?php echo esc_attr( $member_type ); ?>">
 
-			<h3><?php switch ( $member_type ) :
-					case 'admin'  : esc_html_e( 'Organizers', 'buddyboss' ); break;
-					case 'mod'    : esc_html_e( 'Moderators',     'buddyboss' ); break;
-					case 'member' : esc_html_e( 'Members',        'buddyboss' ); break;
-					case 'banned' : esc_html_e( 'Banned Members', 'buddyboss' ); break;
-			endswitch; ?></h3>
+			<h3>
+			<?php
+			switch ( $member_type ) :
+				case 'admin':
+							  esc_html_e( 'Organizers', 'buddyboss' );
+					break;
+				case 'mod':
+							  esc_html_e( 'Moderators', 'buddyboss' );
+					break;
+				case 'member':
+							  esc_html_e( 'Members', 'buddyboss' );
+					break;
+				case 'banned':
+							  esc_html_e( 'Banned Members', 'buddyboss' );
+					break;
+			endswitch;
+			?>
+			</h3>
 
 			<div class="bp-group-admin-pagination table-top">
-				<?php echo $pagination[ $member_type ] ?>
+				<?php echo $pagination[ $member_type ]; ?>
 			</div>
 
-		<?php if ( !empty( $type_users ) ) : ?>
+		<?php if ( ! empty( $type_users ) ) : ?>
 
 			<table class="widefat bp-group-members">
 				<thead>
@@ -1228,27 +1383,35 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 						<th scope="row" class="uid-column"><?php echo esc_html( $type_user->ID ); ?></th>
 
 						<td class="uname-column">
-							<a style="float: left;" href="<?php echo bp_core_get_user_domain( $type_user->ID ); ?>"><?php echo bp_core_fetch_avatar( array(
-								'item_id' => $type_user->ID,
-								'width'   => '32',
-								'height'  => '32'
-							) ); ?></a>
+							<a style="float: left;" href="<?php echo bp_core_get_user_domain( $type_user->ID ); ?>">
+																	 <?php
+																		echo bp_core_fetch_avatar(
+																			array(
+																				'item_id' => $type_user->ID,
+																				'width'   => '32',
+																				'height'  => '32',
+																			)
+																		);
+																		?>
+							</a>
 
 							<span style="margin: 8px; float: left;"><?php echo bp_core_get_userlink( $type_user->ID ); ?></span>
 						</td>
 
 						<td class="urole-column">
-							<label for="bp-groups-role-<?php echo esc_attr( $type_user->ID ); ?>" class="screen-reader-text"><?php
-								/* translators: accessibility text */
-								_e( 'Select group role for member', 'buddyboss' );
-							?></label>
+							<label for="bp-groups-role-<?php echo esc_attr( $type_user->ID ); ?>" class="screen-reader-text">
+																  <?php
+																	/* translators: accessibility text */
+																	_e( 'Select group role for member', 'buddyboss' );
+																	?>
+							</label>
 							<select class="bp-groups-role" id="bp-groups-role-<?php echo esc_attr( $type_user->ID ); ?>" name="bp-groups-role[<?php echo esc_attr( $type_user->ID ); ?>]">
 								<optgroup label="<?php esc_attr_e( 'Roles', 'buddyboss' ); ?>">
-									<option class="admin"  value="admin"  <?php selected( 'admin',  $member_type ); ?>><?php esc_html_e( 'Organizer', 'buddyboss' ); ?></option>
-									<option class="mod"    value="mod"    <?php selected( 'mod',    $member_type ); ?>><?php esc_html_e( 'Moderator',     'buddyboss' ); ?></option>
-									<option class="member" value="member" <?php selected( 'member', $member_type ); ?>><?php esc_html_e( 'Member',        'buddyboss' ); ?></option>
+									<option class="admin"  value="admin"  <?php selected( 'admin', $member_type ); ?>><?php esc_html_e( 'Organizer', 'buddyboss' ); ?></option>
+									<option class="mod"    value="mod"    <?php selected( 'mod', $member_type ); ?>><?php esc_html_e( 'Moderator', 'buddyboss' ); ?></option>
+									<option class="member" value="member" <?php selected( 'member', $member_type ); ?>><?php esc_html_e( 'Member', 'buddyboss' ); ?></option>
 									<?php if ( 'banned' === $member_type ) : ?>
-									<option class="banned" value="banned" <?php selected( 'banned', $member_type ); ?>><?php esc_html_e( 'Banned',        'buddyboss' ); ?></option>
+									<option class="banned" value="banned" <?php selected( 'banned', $member_type ); ?>><?php esc_html_e( 'Banned', 'buddyboss' ); ?></option>
 									<?php endif; ?>
 								</optgroup>
 								<optgroup label="<?php esc_attr_e( 'Actions', 'buddyboss' ); ?>">
@@ -1284,7 +1447,8 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 								 * @param int             $ID   ID of the user being rendered.
 								 * @param BP_Groups_Group $item Object for the current group.
 								 */
-								do_action( 'bp_groups_admin_manage_member_row', $type_user->ID, $item ); ?>
+								do_action( 'bp_groups_admin_manage_member_row', $type_user->ID, $item );
+								?>
 							</td>
 						</tr>
 					<?php endif; ?>
@@ -1302,7 +1466,8 @@ function bp_groups_admin_edit_metabox_members( $item ) {
 
 		</div><!-- .bp-groups-member-type -->
 
-	<?php endforeach;
+		<?php
+	endforeach;
 }
 
 /**
@@ -1313,15 +1478,19 @@ function bp_groups_admin_edit_metabox_members( $item ) {
  * @param object $item Information about the currently displayed group.
  */
 function bp_groups_admin_edit_metabox_status( $item ) {
-	$base_url = add_query_arg( array(
-		'page' => 'bp-groups',
-		'gid'  => $item->id
-	), bp_get_admin_url( 'admin.php' ) ); ?>
+	$base_url = add_query_arg(
+		array(
+			'page' => 'bp-groups',
+			'gid'  => $item->id,
+		),
+		bp_get_admin_url( 'admin.php' )
+	);
+	?>
 
 	<div id="submitcomment" class="submitbox">
 		<div id="major-publishing-actions">
 			<div id="delete-action">
-				<a class="submitdelete deletion" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $base_url ), 'bp-groups-delete' ) ); ?>"><?php _e( 'Delete Group', 'buddyboss' ) ?></a>
+				<a class="submitdelete deletion" href="<?php echo esc_url( wp_nonce_url( add_query_arg( 'action', 'delete', $base_url ), 'bp-groups-delete' ) ); ?>"><?php _e( 'Delete Group', 'buddyboss' ); ?></a>
 			</div>
 
 			<div id="publishing-action">
@@ -1331,7 +1500,7 @@ function bp_groups_admin_edit_metabox_status( $item ) {
 		</div><!-- #major-publishing-actions -->
 	</div><!-- #submitcomment -->
 
-<?php
+	<?php
 }
 
 /**
@@ -1358,10 +1527,9 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 			<option value="" <?php selected( '', $current_types[0] ); ?>><?php _e( 'Select Group Type', 'buddyboss' ); ?></option>
 			<?php
 
-
 			foreach ( $types as $type ) :
 				?>
-				<option value="<?php echo esc_attr( $type->name ) ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+				<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 				<?php
 			endforeach;
 
@@ -1450,14 +1618,16 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 	$current_page_start = ( ( $page - 1 ) * $per_page ) + 1;
 	$current_page_end   = $page * $per_page > intval( $query->total_users ) ? $query->total_users : $page * $per_page;
 
-	$pag_links = paginate_links( array(
-		'base'      => add_query_arg( $qs_key, '%#%', $url_base ),
-		'format'    => '',
-		'prev_text' => __( '&laquo;', 'buddyboss' ),
-		'next_text' => __( '&raquo;', 'buddyboss' ),
-		'total'     => ceil( $query->total_users / $per_page ),
-		'current'   => $page,
-	) );
+	$pag_links = paginate_links(
+		array(
+			'base'      => add_query_arg( $qs_key, '%#%', $url_base ),
+			'format'    => '',
+			'prev_text' => __( '&laquo;', 'buddyboss' ),
+			'next_text' => __( '&raquo;', 'buddyboss' ),
+			'total'     => ceil( $query->total_users / $per_page ),
+			'current'   => $page,
+		)
+	);
 
 	$viewing_text = sprintf(
 		_n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $query->total_users, 'buddyboss' ),
@@ -1483,7 +1653,12 @@ function bp_groups_admin_create_pagination_links( BP_Group_Member_Query $query, 
 function bp_groups_admin_get_usernames_from_ids( $user_ids = array() ) {
 
 	$usernames = array();
-	$users     = new WP_User_Query( array( 'blog_id' => 0, 'include' => $user_ids ) );
+	$users     = new WP_User_Query(
+		array(
+			'blog_id' => 0,
+			'include' => $user_ids,
+		)
+	);
 
 	foreach ( (array) $users->results as $user ) {
 		$usernames[] = $user->user_login;
@@ -1504,19 +1679,21 @@ function bp_groups_admin_autocomplete_handler() {
 		wp_die( -1 );
 	}
 
-	$term     = isset( $_GET['term'] )     ? sanitize_text_field( $_GET['term'] ) : '';
-	$group_id = isset( $_GET['group_id'] ) ? absint( $_GET['group_id'] )          : 0;
+	$term     = isset( $_GET['term'] ) ? sanitize_text_field( $_GET['term'] ) : '';
+	$group_id = isset( $_GET['group_id'] ) ? absint( $_GET['group_id'] ) : 0;
 
 	if ( ! $term || ! $group_id ) {
 		wp_die( -1 );
 	}
 
-	$suggestions = bp_core_get_suggestions( array(
-		'group_id' => -$group_id,  // A negative value will exclude this group's members from the suggestions.
-		'limit'    => 10,
-		'term'     => $term,
-		'type'     => 'members',
-	) );
+	$suggestions = bp_core_get_suggestions(
+		array(
+			'group_id' => -$group_id,  // A negative value will exclude this group's members from the suggestions.
+			'limit'    => 10,
+			'term'     => $term,
+			'type'     => 'members',
+		)
+	);
 
 	$matches = array();
 
@@ -1554,7 +1731,7 @@ function bp_groups_admin_process_group_type_bulk_changes( $doaction ) {
 	// Bail if nonce check fails.
 	check_admin_referer( 'bp-bulk-groups-change-type-' . bp_loggedin_user_id(), 'bp-bulk-groups-change-type-nonce' );
 
-	if ( ! bp_current_user_can( 'bp_moderate' )  ) {
+	if ( ! bp_current_user_can( 'bp_moderate' ) ) {
 		return;
 	}
 
@@ -1651,16 +1828,16 @@ function bp_register_group_type_sections_filters_actions() {
 		// Action for register meta boxes for group type post type.
 		add_action( 'add_meta_boxes_' . bp_get_group_type_post_type(), 'bp_group_type_custom_meta_boxes' );
 
-		//add column
+		// add column
 		add_filter( 'manage_' . bp_get_group_type_post_type() . '_posts_columns', 'bp_group_type_add_column' );
 
 		// action for adding a sortable column name.
 		add_action( 'manage_' . bp_get_group_type_post_type() . '_posts_custom_column', 'bp_group_type_show_data', 10, 2 );
 
-		//sortable columns
+		// sortable columns
 		add_filter( 'manage_edit-' . bp_get_group_type_post_type() . '_sortable_columns', 'bp_group_type_add_sortable_columns' );
 
-		//hide quick edit link on the custom post type list screen
+		// hide quick edit link on the custom post type list screen
 		add_filter( 'post_row_actions', 'bp_group_type_hide_quick_edit', 10, 2 );
 
 		// action for saving meta boxes data of group type post data.
@@ -1677,7 +1854,7 @@ function bp_register_group_type_sections_filters_actions() {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_group_type_show_correct_current_menu(){
+function bp_group_type_show_correct_current_menu() {
 	$screen = get_current_screen();
 	if ( isset( $screen->id ) ) {
 		if ( $screen->id == 'bp-group-type' || $screen->id == 'edit-bp-group-type' ) {
@@ -1702,7 +1879,7 @@ function bp_group_type_custom_meta_boxes() {
 	$screen = get_current_screen();
 	add_meta_box( 'bp-group-type-label-box', __( 'Labels', 'buddyboss' ), 'bp_group_type_labels_meta_box', null, 'normal', 'high' );
 	add_meta_box( 'bp-group-type-permissions', __( 'Permissions', 'buddyboss' ), 'bp_group_type_permissions_meta_box', null, 'normal', 'high' );
-	if( 'add' != $screen->action ){
+	if ( 'add' != $screen->action ) {
 		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
 	}
 
@@ -1719,9 +1896,9 @@ function bp_group_type_custom_meta_boxes() {
 function bp_group_type_labels_meta_box( $post ) {
 
 	/* Group Type Labels */
-	$meta = get_post_custom( $post->ID );
-	$label_name = isset( $meta[ '_bp_group_type_label_name' ] ) ? $meta[ '_bp_group_type_label_name' ][ 0 ] : '';
-	$label_singular_name = isset( $meta[ '_bp_group_type_label_singular_name' ] ) ? $meta[ '_bp_group_type_label_singular_name' ][ 0 ] : '';
+	$meta                = get_post_custom( $post->ID );
+	$label_name          = isset( $meta['_bp_group_type_label_name'] ) ? $meta['_bp_group_type_label_name'][0] : '';
+	$label_singular_name = isset( $meta['_bp_group_type_label_singular_name'] ) ? $meta['_bp_group_type_label_singular_name'][0] : '';
 	?>
 
 	<table class="widefat bp-postbox-table">
@@ -1755,7 +1932,7 @@ function bp_group_type_labels_meta_box( $post ) {
 
 	<?php
 	/* Group Role Labels */
-	$group_type_roles   = get_post_meta( $post->ID, '_bp_group_type_role_labels', true ) ?: [];
+	$group_type_roles   = get_post_meta( $post->ID, '_bp_group_type_role_labels', true ) ?: array();
 	$organizer_plural   = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : '';
 	$moderator_plural   = ( isset( $group_type_roles['moderator_plural_label_name'] ) && $group_type_roles['moderator_plural_label_name'] ) ? $group_type_roles['moderator_plural_label_name'] : '';
 	$members_plural     = ( isset( $group_type_roles['member_plural_label_name'] ) && $group_type_roles['member_plural_label_name'] ) ? $group_type_roles['member_plural_label_name'] : '';
@@ -1869,7 +2046,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 	$meta = get_post_custom( $post->ID );
 	?>
 	<?php
-	$enable_filter = isset( $meta[ '_bp_group_type_enable_filter' ] ) ? $meta[ '_bp_group_type_enable_filter' ][ 0 ] : 0; //disabled by default
+	$enable_filter = isset( $meta['_bp_group_type_enable_filter'] ) ? $meta['_bp_group_type_enable_filter'][0] : 0; // disabled by default
 	?>
 
 	<table class="widefat bp-postbox-table">
@@ -1890,7 +2067,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 			<tr>
 				<td colspan="2">
 					<?php
-					$enable_remove = isset( $meta[ '_bp_group_type_enable_remove' ] ) ? $meta[ '_bp_group_type_enable_remove' ][ 0 ] : 0; //enabled by default
+					$enable_remove = isset( $meta['_bp_group_type_enable_remove'] ) ? $meta['_bp_group_type_enable_remove'][0] : 0; // enabled by default
 					?>
 					<input type='checkbox' name='bp-group-type[enable_remove]' value='1' <?php checked( $enable_remove, 1 ); ?> />
 					<?php _e( 'Hide all groups of this type from Groups Directory', 'buddyboss' ); ?>
@@ -1902,7 +2079,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 	<?php
 	$meta = get_post_custom( $post->ID );
 
-	$get_restrict_invites_same_group_types = isset( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ] ) ? intval( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ][ 0 ] ) : 0; //disabled by default
+	$get_restrict_invites_same_group_types = isset( $meta['_bp_group_type_restrict_invites_user_same_group_type'] ) ? intval( $meta['_bp_group_type_restrict_invites_user_same_group_type'][0] ) : 0; // disabled by default
 	?>
 
 	<table class="widefat bp-postbox-table">
@@ -1923,13 +2100,14 @@ function bp_group_type_permissions_meta_box( $post ) {
 		</tbody>
 	</table>
 
-	<?php	// Register following sections only if "profile types" are enabled.
+	<?php
+	// Register following sections only if "profile types" are enabled.
 	if ( true === bp_member_type_enable_disable() ) {
 
-	$get_all_registered_member_types = bp_get_active_member_types();
-	if ( isset( $get_all_registered_member_types ) && !empty( $get_all_registered_member_types ) ) {
+		$get_all_registered_member_types = bp_get_active_member_types();
+		if ( isset( $get_all_registered_member_types ) && ! empty( $get_all_registered_member_types ) ) {
 
-	?>
+			?>
 
 		<table class="widefat bp-postbox-table">
 			<thead>
@@ -1950,12 +2128,12 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 			$get_all_registered_member_types = bp_get_active_member_types();
 
-			$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_group_invites', true ) ?: [];
+			$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_group_invites', true ) ?: array();
 
 			foreach ( $get_all_registered_member_types as $member_type ) {
 
-			$member_type_key = bp_get_member_type_key( $member_type );
-			?>
+				$member_type_key = bp_get_member_type_key( $member_type );
+				?>
 
 				<tr>
 					<td colspan="2">
@@ -1988,12 +2166,12 @@ function bp_group_type_permissions_meta_box( $post ) {
 
 			$get_all_registered_member_types = bp_get_active_member_types();
 
-			$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true ) ?: [];
+			$get_selected_member_types = get_post_meta( $post->ID, '_bp_group_type_enabled_member_type_join', true ) ?: array();
 
 			foreach ( $get_all_registered_member_types as $member_type ) {
 
-			$member_type_key = bp_get_member_type_key( $member_type );
-			?>
+				$member_type_key = bp_get_member_type_key( $member_type );
+				?>
 				<tr>
 					<td colspan="2">
 						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
@@ -2001,12 +2179,12 @@ function bp_group_type_permissions_meta_box( $post ) {
 					</td>
 				</tr>
 
-			<?php }?>
+			<?php } ?>
 
 			</tbody>
 		</table>
 
-	<?php
+			<?php
 		}
 	}
 }
@@ -2024,8 +2202,8 @@ function bp_group_shortcode_meta_box( $post ) {
 	?>
 
 		<p><?php _e( 'To display all groups with this group type on a dedicated page, add this shortcode to any WordPress page.', 'buddyboss' ); ?></p>
-		<code id="group-type-shortcode"><?php echo '[group type="'. $key .'"]' ?></code>
-		<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e('Copy to clipboard', 'buddyboss' ) ?></button>
+		<code id="group-type-shortcode"><?php echo '[group type="' . $key . '"]'; ?></code>
+		<button class="copy-to-clipboard button"  data-clipboard-target="#group-type-shortcode"><?php _e( 'Copy to clipboard', 'buddyboss' ); ?></button>
 
 	<?php
 }
@@ -2040,11 +2218,11 @@ function bp_group_shortcode_meta_box( $post ) {
  */
 function bp_group_type_add_column( $columns ) {
 
-	$columns['title'] = __( 'Group Type', 'buddyboss' );
-	$columns['group_type'] = __( 'Label', 'buddyboss' );
+	$columns['title']         = __( 'Group Type', 'buddyboss' );
+	$columns['group_type']    = __( 'Label', 'buddyboss' );
 	$columns['enable_filter'] = __( 'Groups Filter', 'buddyboss' );
 	$columns['enable_remove'] = __( 'Groups Directory', 'buddyboss' );
-	$columns['total_groups'] = __( 'Groups', 'buddyboss' );
+	$columns['total_groups']  = __( 'Groups', 'buddyboss' );
 
 	unset( $columns['date'] );
 
@@ -2059,40 +2237,39 @@ function bp_group_type_add_column( $columns ) {
  * @param $column
  * @param $post_id
  */
-function bp_group_type_show_data( $column, $post_id  ) {
+function bp_group_type_show_data( $column, $post_id ) {
 
-	switch( $column ) {
+	switch ( $column ) {
 
 		case 'group_type':
-
-			echo '<code>'. get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ).'</code>';
+			echo '<code>' . get_post_meta( $post_id, '_bp_group_type_label_singular_name', true ) . '</code>';
 			break;
 
 		case 'enable_filter':
-
-			if( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) )
+			if ( get_post_meta( $post_id, '_bp_group_type_enable_filter', true ) ) {
 				_e( 'Show', 'buddyboss' );
-			else
+			} else {
 				_e( 'Hide', 'buddyboss' );
+			}
 
 			break;
 
 		case 'enable_remove':
-
-			if( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) )
+			if ( get_post_meta( $post_id, '_bp_group_type_enable_remove', true ) ) {
 				_e( 'Hide', 'buddyboss' );
-			else
+			} else {
 				_e( 'Show', 'buddyboss' );
+			}
 
 			break;
 
 		case 'total_groups':
-
-			$group_key = bp_get_group_type_key( $post_id );
-			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
+			$group_key      = bp_get_group_type_key( $post_id );
+			$group_type_url = admin_url() . 'admin.php?page=bp-groups&bp-group-type=' . $group_key;
 			printf(
-				__( '<a href="%s">%s</a>', 'buddyboss' ),
-				esc_url( $group_type_url ), bp_get_total_count_by_group_types( $group_key )
+				__( '<a href="%1$s">%2$s</a>', 'buddyboss' ),
+				esc_url( $group_type_url ),
+				bp_get_total_count_by_group_types( $group_key )
 			);
 
 			break;
@@ -2112,10 +2289,10 @@ function bp_group_type_show_data( $column, $post_id  ) {
  */
 function bp_group_type_add_sortable_columns( $columns ) {
 
-	$columns['total_groups']	= 'total_groups';
-	$columns['enable_filter']	= 'enable_filter';
-	$columns['enable_remove']	= 'enable_remove';
-	$columns['group_type']		= 'group_type';
+	$columns['total_groups']  = 'total_groups';
+	$columns['enable_filter'] = 'enable_filter';
+	$columns['enable_remove'] = 'enable_remove';
+	$columns['group_type']    = 'group_type';
 
 	return $columns;
 }
@@ -2124,7 +2301,6 @@ function bp_group_type_add_sortable_columns( $columns ) {
  * Adds a filter to group type sort items.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_group_type_add_request_filter() {
 
@@ -2142,25 +2318,25 @@ function bp_group_type_add_request_filter() {
  */
 function bp_group_type_sort_items( $qv ) {
 
-	if( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_group_type_post_type() )
+	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_group_type_post_type() ) {
 		return $qv;
+	}
 
-	if( ! isset( $qv['orderby'] ) )
+	if ( ! isset( $qv['orderby'] ) ) {
 		return $qv;
+	}
 
-	switch( $qv['orderby'] ) {
+	switch ( $qv['orderby'] ) {
 
 		case 'group_type':
-
 			$qv['meta_key'] = '_bp_group_type_name';
-			$qv['orderby'] = 'meta_value';
+			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'enable_filter':
-
 			$qv['meta_key'] = '_bp_group_type_enable_filter';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby']  = 'meta_value_num';
 
 			break;
 
@@ -2184,14 +2360,16 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
 		global $post;
 	}
 
-	if ( bp_get_group_type_post_type() == $post->post_type )
+	if ( bp_get_group_type_post_type() == $post->post_type ) {
 		unset( $actions['inline hide-if-no-js'] );
+	}
 
 	return $actions;
 }
 
 /**
  * Save group type post data.
+ *
  * @param $post_id
  *
  * @since BuddyBoss 1.0.0
@@ -2199,54 +2377,59 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
 function bp_save_group_type_post_meta_box_data( $post_id ) {
 	global $wpdb, $error;
 
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
+	}
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_group_type_post_type() )
+	if ( $post->post_type !== bp_get_group_type_post_type() ) {
 		return;
+	}
 
-	if ( ! isset( $_POST[ '_bp-group-type-nonce' ] ) )
+	if ( ! isset( $_POST['_bp-group-type-nonce'] ) ) {
 		return;
+	}
 
-	//verify nonce
-	if ( ! wp_verify_nonce( $_POST[ '_bp-group-type-nonce' ], 'bp-group-type-edit-group-type' ) )
+	// verify nonce
+	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
 		return;
+	}
 
-	//Save data
-	$data = isset( $_POST[ 'bp-group-type' ] ) ? $_POST[ 'bp-group-type' ] : array();
+	// Save data
+	$data = isset( $_POST['bp-group-type'] ) ? $_POST['bp-group-type'] : array();
 
-	if ( empty( $data ) )
+	if ( empty( $data ) ) {
 		return;
+	}
 
 	$error = false;
 
-	$post_title = wp_kses( $_POST[ 'post_title' ], wp_kses_allowed_html( 'strip' ) );
+	$post_title = wp_kses( $_POST['post_title'], wp_kses_allowed_html( 'strip' ) );
 
 	// key
 	$key = get_post_field( 'post_name', $post_id );
 
-	//for label
-	$label_name = isset( $data[ 'label_name' ] ) ? wp_kses( $data[ 'label_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
-	$singular_name = isset( $data[ 'label_singular_name' ] ) ? wp_kses( $data[ 'label_singular_name' ], wp_kses_allowed_html( 'strip' ) ) : $post_title;
+	// for label
+	$label_name    = isset( $data['label_name'] ) ? wp_kses( $data['label_name'], wp_kses_allowed_html( 'strip' ) ) : $post_title;
+	$singular_name = isset( $data['label_singular_name'] ) ? wp_kses( $data['label_singular_name'], wp_kses_allowed_html( 'strip' ) ) : $post_title;
 
-	//Remove space
-	$label_name     = trim( $label_name );
-	$singular_name  = trim( $singular_name );
+	// Remove space
+	$label_name    = trim( $label_name );
+	$singular_name = trim( $singular_name );
 
-	$enable_filter = isset( $data[ 'enable_filter' ] ) ? absint( $data[ 'enable_filter' ] ) : 0; //default inactive
-	$enable_remove = isset( $data[ 'enable_remove' ] ) ? absint( $data[ 'enable_remove' ] ) : 0; //default inactive
+	$enable_filter = isset( $data['enable_filter'] ) ? absint( $data['enable_filter'] ) : 0; // default inactive
+	$enable_remove = isset( $data['enable_remove'] ) ? absint( $data['enable_remove'] ) : 0; // default inactive
 
-	$member_type = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
-	$member_type_group_invites = $_POST['bp-member-type-group-invites'];
+	$member_type                           = ( isset( $_POST['bp-member-type'] ) ) ? $_POST['bp-member-type'] : '';
+	$member_type_group_invites             = $_POST['bp-member-type-group-invites'];
 	$get_restrict_invites_same_group_types = isset( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) ? absint( $_POST['bp-group-type-restrict-invites-user-same-group-type'] ) : 0;
 
 	$term = term_exists( sanitize_key( $key ), 'bp_group_type' );
 	if ( 0 !== $term && null !== $term ) {
 		$digits = 3;
-		$unique = rand(pow(10, $digits-1), pow(10, $digits)-1);
-		$key = $key.$unique;
+		$unique = rand( pow( 10, $digits - 1 ), pow( 10, $digits ) - 1 );
+		$key    = $key . $unique;
 	}
 
 	$get_existing = get_post_meta( $post_id, '_bp_group_type_key', true );
@@ -2261,31 +2444,35 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 	update_post_meta( $post_id, '_bp_group_type_restrict_invites_user_same_group_type', $get_restrict_invites_same_group_types );
 }
 
-function bp_save_group_type_role_labels_post_meta_box_data( $post_id ){
+function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
 
-	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+	if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 		return;
+	}
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_group_type_post_type() )
+	if ( $post->post_type !== bp_get_group_type_post_type() ) {
 		return;
+	}
 
-	if ( ! isset( $_POST[ '_bp-group-type-nonce' ] ) )
+	if ( ! isset( $_POST['_bp-group-type-nonce'] ) ) {
 		return;
+	}
 
-	//verify nonce
-	if ( ! wp_verify_nonce( $_POST[ '_bp-group-type-nonce' ], 'bp-group-type-edit-group-type' ) )
+	// verify nonce
+	if ( ! wp_verify_nonce( $_POST['_bp-group-type-nonce'], 'bp-group-type-edit-group-type' ) ) {
 		return;
+	}
 
-	//Save data
+	// Save data
 	$bp_group_roles_labels = filter_input( INPUT_POST, 'bp-group-type-role', FILTER_DEFAULT, FILTER_REQUIRE_ARRAY );
 
 	$data = isset( $bp_group_roles_labels ) ? $bp_group_roles_labels : array();
 
-	if ( empty( $data ) )
+	if ( empty( $data ) ) {
 		return;
-
+	}
 
 	update_post_meta( $post_id, '_bp_group_type_role_labels', $data );
 }
@@ -2294,24 +2481,22 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ){
  * Added Navigation tab on top of the page BuddyBoss > Group Types
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_groups_admin_group_type_listing_add_groups_tab() {
 	global $pagenow ,$post;
 
 	if ( true === bp_disable_group_type_creation() ) {
 
-		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS['wp_list_table']->screen->post_type ) && $GLOBALS['wp_list_table']->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
 				<h2 class="nav-tab-wrapper"><?php bp_core_admin_groups_tabs( __( 'Group Types', 'buddyboss' ) ); ?></h2>
 			</div>
 			<?php
 		}
-
 	}
 }
-add_action('admin_notices','bp_groups_admin_group_type_listing_add_groups_tab');
+add_action( 'admin_notices', 'bp_groups_admin_group_type_listing_add_groups_tab' );
 
 add_filter( 'parent_file', 'bp_group_type_set_platform_tab_submenu_active' );
 /**
@@ -2325,7 +2510,7 @@ function bp_group_type_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
 	if ( true === bp_disable_group_type_creation() ) {
-		if ( ( isset( $GLOBALS["wp_list_table"]->screen->post_type ) && $GLOBALS["wp_list_table"]->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
+		if ( ( isset( $GLOBALS['wp_list_table']->screen->post_type ) && $GLOBALS['wp_list_table']->screen->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp-group-type' && $pagenow == 'post.php' ) ) {
 			$parent_file = 'buddyboss-platform';
 		}
 	}

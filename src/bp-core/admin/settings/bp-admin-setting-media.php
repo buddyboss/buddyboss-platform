@@ -41,7 +41,7 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 			}
 
 			$section_title    = ! empty( $section['title'] ) ? $section['title'] : '';
-			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false ;
+			$section_callback = ! empty( $section['callback'] ) ? $section['callback'] : false;
 
 			// Add the section
 			$this->add_section( $section_id, $section_title, $section_callback );
@@ -52,7 +52,7 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 				$field['args'] = isset( $field['args'] ) ? $field['args'] : array();
 
 				if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
-					$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : [];
+					$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : array();
 					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $field['args'] );
 				}
 			}
@@ -61,4 +61,4 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 
 }
 
-return new BP_Admin_Setting_Media;
+return new BP_Admin_Setting_Media();

@@ -226,14 +226,17 @@ class BP_Messages_Notice {
 	public static function get_notices( $args = array() ) {
 		global $wpdb;
 
-		$r = wp_parse_args( $args, array(
-			'pag_num'  => 20, // Number of notices per page.
-			'pag_page' => 1   // Page number.
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'pag_num'  => 20, // Number of notices per page.
+				'pag_page' => 1,   // Page number.
+			)
+		);
 
 		$limit_sql = '';
 		if ( (int) $r['pag_num'] >= 0 ) {
-			$limit_sql = $wpdb->prepare( "LIMIT %d, %d", (int) ( ( $r['pag_page'] - 1 ) * $r['pag_num'] ), (int) $r['pag_num'] );
+			$limit_sql = $wpdb->prepare( 'LIMIT %d, %d', (int) ( ( $r['pag_page'] - 1 ) * $r['pag_num'] ), (int) $r['pag_num'] );
 		}
 
 		$bp = buddypress();

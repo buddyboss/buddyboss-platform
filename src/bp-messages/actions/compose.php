@@ -30,7 +30,7 @@ function bp_messages_action_create_message() {
 
 	// Missing subject or content.
 	if ( empty( $_POST['subject'] ) || empty( $_POST['content'] ) ) {
-		$success  = false;
+		$success = false;
 
 		if ( empty( $_POST['subject'] ) ) {
 			$feedback = __( 'Your message was not sent. Please enter a subject line.', 'buddyboss' );
@@ -38,7 +38,7 @@ function bp_messages_action_create_message() {
 			$feedback = __( 'Your message was not sent. Please enter some content.', 'buddyboss' );
 		}
 
-	// Subject and content present.
+		// Subject and content present.
 	} else {
 
 		// Setup the link to the logged-in user's messages.
@@ -53,17 +53,17 @@ function bp_messages_action_create_message() {
 				$feedback    = __( 'Notice successfully created.', 'buddyboss' );
 				$redirect_to = trailingslashit( $member_messages . 'notices' );
 
-			// Notice could not be sent.
+				// Notice could not be sent.
 			} else {
 				$success  = false;
 				$feedback = __( 'Notice was not created. Please try again.', 'buddyboss' );
 			}
 
-		// Private conversation.
+			// Private conversation.
 		} else {
 
 			// Filter recipients into the format we need - array( 'username/userid', 'username/userid' ).
-			$autocomplete_recipients = (array) explode( ',', $_POST['send-to-input']     );
+			$autocomplete_recipients = (array) explode( ',', $_POST['send-to-input'] );
 			$typed_recipients        = (array) explode( ' ', $_POST['send_to_usernames'] );
 			$recipients              = array_merge( $autocomplete_recipients, $typed_recipients );
 
@@ -77,12 +77,14 @@ function bp_messages_action_create_message() {
 			$recipients = apply_filters( 'bp_messages_recipients', $recipients );
 
 			// Attempt to send the message.
-			$send = messages_new_message( array(
-				'recipients' => $recipients,
-				'subject'    => $_POST['subject'],
-				'content'    => $_POST['content'],
-				'error_type' => 'wp_error'
-			) );
+			$send = messages_new_message(
+				array(
+					'recipients' => $recipients,
+					'subject'    => $_POST['subject'],
+					'content'    => $_POST['content'],
+					'error_type' => 'wp_error',
+				)
+			);
 
 			// Send the message and redirect to it.
 			if ( true === is_int( $send ) ) {
@@ -91,7 +93,7 @@ function bp_messages_action_create_message() {
 				$view        = trailingslashit( $member_messages . 'view' );
 				$redirect_to = trailingslashit( $view . $send );
 
-			// Message could not be sent.
+				// Message could not be sent.
 			} else {
 				$success  = false;
 				$feedback = $send->get_error_message();

@@ -68,19 +68,20 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 			<?php bp_the_profile_field_name(); ?>
 			<?php if ( bp_is_register_page() ) : ?>
 				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
+			<?php else : ?>
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-        
-        <?php if ( bp_get_the_profile_field_description() ) : ?>
+		
+		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() ); ?>
+		do_action( bp_get_the_profile_field_errors_action() );
+		?>
 
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
@@ -110,8 +111,8 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		$options = $this->field_obj->get_children();
 		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
 
-		if ( empty( $original_option_values ) && !empty( $_POST['field_' . $this->field_obj->id] ) ) {
-			$original_option_values = sanitize_text_field(  $_POST['field_' . $this->field_obj->id] );
+		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
@@ -120,17 +121,17 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
-			foreach( $option_values as $i => $option_value ) {
-				if ( isset( $_POST['field_' . $this->field_obj->id] ) && $_POST['field_' . $this->field_obj->id] != $option_value ) {
-					if ( ! empty( $_POST['field_' . $this->field_obj->id] ) ) {
-						$option_values[$i] = sanitize_text_field( $_POST['field_' . $this->field_obj->id] );
+			foreach ( $option_values as $i => $option_value ) {
+				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] != $option_value ) {
+					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+						$option_values[ $i ] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 					}
 				}
 			}
 
 			// Run the allowed option name through the before_save filter, so
 			// we'll be sure to get a match.
-			$allowed_options = xprofile_sanitize_data_value_before_save( $options[$k]->name, false, false );
+			$allowed_options = xprofile_sanitize_data_value_before_save( $options[ $k ]->name, false, false );
 
 			// First, check to see whether the user-entered value matches.
 			if ( in_array( $allowed_options, $option_values ) ) {
@@ -138,7 +139,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 			}
 
 			// Then, if the user has not provided a value, check for defaults.
-			if ( ! is_array( $original_option_values ) && empty( $option_values ) && $options[$k]->is_default_option ) {
+			if ( ! is_array( $original_option_values ) && empty( $option_values ) && $options[ $k ]->is_default_option ) {
 				$selected = ' selected="selected"';
 			}
 
@@ -153,7 +154,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 			 * @param string $selected Current selected value.
 			 * @param string $k        Current index in the foreach loop.
 			 */
-			$html .= apply_filters( 'bp_get_the_profile_field_options_select', '<option' . $selected . ' value="' . esc_attr( stripslashes( $options[$k]->name ) ) . '">' . esc_html( stripslashes( $options[$k]->name ) ) . '</option>', $options[$k], $this->field_obj->id, $selected, $k );
+			$html .= apply_filters( 'bp_get_the_profile_field_options_select', '<option' . $selected . ' value="' . esc_attr( stripslashes( $options[ $k ]->name ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
 		echo $html;
@@ -171,10 +172,12 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
-			/* translators: accessibility text */
-			esc_html_e( 'Select', 'buddyboss' );
-		?></label>
+		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+															 <?php
+																/* translators: accessibility text */
+																esc_html_e( 'Select', 'buddyboss' );
+																?>
+		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>

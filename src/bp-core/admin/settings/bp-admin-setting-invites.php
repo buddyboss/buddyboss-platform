@@ -23,12 +23,12 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 		$this->tab_order = 70;
 	}
 
-	//Check if invites are enabled
+	// Check if invites are enabled
 	public function is_active() {
 		return bp_is_active( 'invites' );
 	}
 
-	//Register setting fields
+	// Register setting fields
 	public function register_fields() {
 		$this->add_section( 'bp_invites', __( 'Email Invites Settings', 'buddyboss' ) );
 
@@ -41,7 +41,7 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 		if ( true === bp_member_type_enable_disable() ) {
 
 			// Allow members to invite profile type.
-			$this->add_field( 'bp-disable-invite-member-type',__( 'Set Profile Type', 'buddyboss' ),'bp_admin_setting_callback_member_invite_member_type','intval' );
+			$this->add_field( 'bp-disable-invite-member-type', __( 'Set Profile Type', 'buddyboss' ), 'bp_admin_setting_callback_member_invite_member_type', 'intval' );
 
 			// Allowed Profile Types to Send Invites.
 			$member_types = bp_get_active_member_types();
@@ -58,17 +58,16 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 					$type['class']            = $class;
 					$type['description']      = ( true === $is_first ) ? true : false;
 
-					$this->add_field( 'bp-enable-send-invite-member-type-'.$type_name, ( true === $is_first ) ? __( 'Allowed Profile Type', 'buddyboss' ) : '','bp_admin_setting_callback_enable_send_invite_member_type','intval', $type );
+					$this->add_field( 'bp-enable-send-invite-member-type-' . $type_name, ( true === $is_first ) ? __( 'Allowed Profile Type', 'buddyboss' ) : '', 'bp_admin_setting_callback_enable_send_invite_member_type', 'intval', $type );
 					$is_first = false;
 
 				}
-
 			}
 		}
 
 		// Email Invites tutorial
-		$this->add_field( 'bp-email-invites-tutorial','', 'bp_email_invites_tutorial' );
+		$this->add_field( 'bp-email-invites-tutorial', '', 'bp_email_invites_tutorial' );
 	}
 }
 
-return new BP_Admin_Setting_Invites;
+return new BP_Admin_Setting_Invites();

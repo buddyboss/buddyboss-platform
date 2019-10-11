@@ -66,8 +66,8 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 		}
 
 		// BP_XProfile_Query sets 'object_type' = '' by default.
-		if ( isset( $qv[ 'object_type' ] ) && ( '' !== $qv[ 'object_type' ] ) && ( ! is_array( $qv[ 'object_type' ] ) || $qv[ 'object_type' ] ) ) {
-			$meta_query[0]['object'] = $qv[ 'object_type' ];
+		if ( isset( $qv['object_type'] ) && ( '' !== $qv['object_type'] ) && ( ! is_array( $qv['object_type'] ) || $qv['object_type'] ) ) {
+			$meta_query[0]['object'] = $qv['object_type'];
 		}
 
 		$existing_meta_query = isset( $qv['meta_query'] ) && is_array( $qv['meta_query'] ) ? $qv['meta_query'] : array();
@@ -177,14 +177,28 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 			$clause['compare'] = isset( $clause['value'] ) && is_array( $clause['value'] ) ? 'IN' : '=';
 		}
 
-		if ( ! in_array( $clause['compare'], array(
-			'=', '!=', '>', '>=', '<', '<=',
-			'LIKE', 'NOT LIKE',
-			'IN', 'NOT IN',
-			'BETWEEN', 'NOT BETWEEN',
-			'EXISTS', 'NOT EXISTS',
-			'REGEXP', 'NOT REGEXP', 'RLIKE'
-		) ) ) {
+		if ( ! in_array(
+			$clause['compare'],
+			array(
+				'=',
+				'!=',
+				'>',
+				'>=',
+				'<',
+				'<=',
+				'LIKE',
+				'NOT LIKE',
+				'IN',
+				'NOT IN',
+				'BETWEEN',
+				'NOT BETWEEN',
+				'EXISTS',
+				'NOT EXISTS',
+				'REGEXP',
+				'NOT REGEXP',
+				'RLIKE',
+			)
+		) ) {
 			$clause['compare'] = '=';
 		}
 
@@ -196,7 +210,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 		// We prefer to avoid joins if possible. Look for an existing join compatible with this clause.
 		$alias = $this->find_compatible_table_alias( $clause, $parent_query );
 		if ( false === $alias ) {
-			$i = count( $this->table_aliases );
+			$i     = count( $this->table_aliases );
 			$alias = $i ? 'mt' . $i : $this->meta_table;
 
 			// JOIN clauses for NOT EXISTS have their own syntax.
@@ -205,7 +219,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 				$join .= $i ? " AS $alias" : '';
 				$join .= $wpdb->prepare( " ON ($this->primary_table.$this->primary_id_column = $alias.$this->meta_id_column AND $alias.meta_key = %s )", $clause['key'] );
 
-			// All other JOIN clauses.
+				// All other JOIN clauses.
 			} else {
 				$join .= " INNER JOIN $this->meta_table";
 				$join .= $i ? " AS $alias" : '';
@@ -230,7 +244,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 		}
 
 		// Ensure unique clause keys, so none are overwritten.
-		$iterator = 1;
+		$iterator        = 1;
 		$clause_key_base = $clause_key;
 		while ( isset( $this->clauses[ $clause_key ] ) ) {
 			$clause_key = $clause_key_base . '-' . $iterator;
@@ -263,36 +277,36 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 			}
 
 			switch ( $meta_compare ) {
-				case 'IN' :
-				case 'NOT IN' :
+				case 'IN':
+				case 'NOT IN':
 					$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $meta_value ) ), 1 ) . ')';
-					$where = $wpdb->prepare( $meta_compare_string, $meta_value );
+					$where               = $wpdb->prepare( $meta_compare_string, $meta_value );
 					break;
 
-				case 'BETWEEN' :
-				case 'NOT BETWEEN' :
+				case 'BETWEEN':
+				case 'NOT BETWEEN':
 					$meta_value = array_slice( $meta_value, 0, 2 );
-					$where = $wpdb->prepare( '%s AND %s', $meta_value );
+					$where      = $wpdb->prepare( '%s AND %s', $meta_value );
 					break;
 
-				case 'LIKE' :
-				case 'NOT LIKE' :
+				case 'LIKE':
+				case 'NOT LIKE':
 					$meta_value = '%' . $wpdb->esc_like( $meta_value ) . '%';
-					$where = $wpdb->prepare( '%s', $meta_value );
+					$where      = $wpdb->prepare( '%s', $meta_value );
 					break;
 
 				// EXISTS with a value is interpreted as '='.
-				case 'EXISTS' :
+				case 'EXISTS':
 					$meta_compare = '=';
-					$where = $wpdb->prepare( '%s', $meta_value );
+					$where        = $wpdb->prepare( '%s', $meta_value );
 					break;
 
 				// 'value' is ignored for NOT EXISTS.
-				case 'NOT EXISTS' :
+				case 'NOT EXISTS':
 					$where = '';
 					break;
 
-				default :
+				default:
 					$where = $wpdb->prepare( '%s', $meta_value );
 					break;
 
@@ -316,30 +330,30 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 			}
 
 			switch ( $meta_compare ) {
-				case 'IN' :
-				case 'NOT IN' :
+				case 'IN':
+				case 'NOT IN':
 					$meta_compare_string = '(' . substr( str_repeat( ',%s', count( $object_type ) ), 1 ) . ')';
 					$object_where        = $wpdb->prepare( $meta_compare_string, $object_type );
 					break;
 
-				case 'LIKE' :
-				case 'NOT LIKE' :
+				case 'LIKE':
+				case 'NOT LIKE':
 					$object_type  = '%' . $wpdb->esc_like( $object_type ) . '%';
 					$object_where = $wpdb->prepare( '%s', $object_type );
 					break;
 
 				// EXISTS with a value is interpreted as '='.
-				case 'EXISTS' :
+				case 'EXISTS':
 					$meta_compare = '=';
 					$object_where = $wpdb->prepare( '%s', $object_type );
 					break;
 
 				// 'value' is ignored for NOT EXISTS.
-				case 'NOT EXISTS' :
+				case 'NOT EXISTS':
 					$object_where = '';
 					break;
 
-				default :
+				default:
 					$object_where = $wpdb->prepare( '%s', $object_type );
 					break;
 			}

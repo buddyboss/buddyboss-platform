@@ -11,11 +11,11 @@ defined( 'ABSPATH' ) || exit;
 
 // Include WP's list table class.
 if ( ! class_exists( 'WP_List_Table' ) ) {
-	require( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+	require ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
 }
 
 class BP_Messages_Notices_List_Table extends WP_List_Table {
-	
+
 	/**
 	 * Constructor
 	 *
@@ -53,15 +53,19 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 		$page     = $this->get_pagenum();
 		$per_page = $this->get_items_per_page( 'bp_notices_per_page' );
 
-		$this->items = BP_Messages_Notice::get_notices( array(
-			'pag_num'  => $per_page,
-			'pag_page' => $page
-		) );
+		$this->items = BP_Messages_Notice::get_notices(
+			array(
+				'pag_num'  => $per_page,
+				'pag_page' => $page,
+			)
+		);
 
-		$this->set_pagination_args( array(
-			'total_items' => BP_Messages_Notice::get_total_notice_count(),
-			'per_page' => $per_page,
-		) );
+		$this->set_pagination_args(
+			array(
+				'total_items' => BP_Messages_Notice::get_total_notice_count(),
+				'per_page'    => $per_page,
+			)
+		);
 	}
 
 	/**
@@ -73,11 +77,14 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 * @return array
 	 */
 	public function get_columns() {
-		return apply_filters( 'bp_notices_list_table_get_columns', array(
-			'subject'   => __( 'Subject', 'buddyboss' ),
-			'message'   => __( 'Content', 'buddyboss' ),
-			'date_sent' => __( 'Created', 'buddyboss' ),
-		) );
+		return apply_filters(
+			'bp_notices_list_table_get_columns',
+			array(
+				'subject'   => __( 'Subject', 'buddyboss' ),
+				'message'   => __( 'Content', 'buddyboss' ),
+				'date_sent' => __( 'Created', 'buddyboss' ),
+			)
+		);
 	}
 
 	/**
@@ -108,34 +115,64 @@ class BP_Messages_Notices_List_Table extends WP_List_Table {
 	 */
 	public function column_subject( $item ) {
 		$actions = array(
-			'activate_deactivate' => sprintf( '<a href="%s" data-bp-notice-id="%d" data-bp-action="activate">%s</a>', 
-				esc_url( wp_nonce_url( add_query_arg( array(
-					'page'          => 'bp-notices',
-					'notice_action' => 'activate',
-					'notice_id'     => $item->id
-				), bp_get_admin_url( 'admin.php' ) ), 'messages-activate-notice-' . $item->id ) ),
+			'activate_deactivate' => sprintf(
+				'<a href="%s" data-bp-notice-id="%d" data-bp-action="activate">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'page'          => 'bp-notices',
+								'notice_action' => 'activate',
+								'notice_id'     => $item->id,
+							),
+							bp_get_admin_url( 'admin.php' )
+						),
+						'messages-activate-notice-' . $item->id
+					)
+				),
 				(int) $item->id,
-				esc_html__( 'Activate Notice', 'buddyboss' ) ),
-			'delete' => sprintf( '<a href="%s" data-bp-notice-id="%d" data-bp-action="delete">%s</a>', 
-				esc_url( wp_nonce_url( add_query_arg( array(
-					'page'          => 'bp-notices',
-					'notice_action' => 'delete',
-					'notice_id'     => $item->id
-				), bp_get_admin_url( 'admin.php' ) ), 'messages-delete-notice-' . $item->id ) ),
+				esc_html__( 'Activate Notice', 'buddyboss' )
+			),
+			'delete'              => sprintf(
+				'<a href="%s" data-bp-notice-id="%d" data-bp-action="delete">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'page'          => 'bp-notices',
+								'notice_action' => 'delete',
+								'notice_id'     => $item->id,
+							),
+							bp_get_admin_url( 'admin.php' )
+						),
+						'messages-delete-notice-' . $item->id
+					)
+				),
 				(int) $item->id,
-				esc_html__( 'Delete Notice', 'buddyboss' ) )
+				esc_html__( 'Delete Notice', 'buddyboss' )
+			),
 		);
 
 		if ( ! empty( $item->is_active ) ) {
-			$item->subject = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss' ), $item->subject );
-			$actions['activate_deactivate'] = sprintf( '<a href="%s" data-bp-notice-id="%d" data-bp-action="deactivate">%s</a>', 
-				esc_url( wp_nonce_url( add_query_arg( array(
-					'page'          => 'bp-notices',
-					'notice_action' => 'deactivate',
-					'notice_id'     => $item->id
-				), bp_get_admin_url( 'admin.php' ) ), 'messages-deactivate-notice-' . $item->id ) ),
+			$item->subject                  = sprintf( _x( 'Active: %s', 'Tag prepended to active site-wide notice titles on WP Admin notices list table', 'buddyboss' ), $item->subject );
+			$actions['activate_deactivate'] = sprintf(
+				'<a href="%s" data-bp-notice-id="%d" data-bp-action="deactivate">%s</a>',
+				esc_url(
+					wp_nonce_url(
+						add_query_arg(
+							array(
+								'page'          => 'bp-notices',
+								'notice_action' => 'deactivate',
+								'notice_id'     => $item->id,
+							),
+							bp_get_admin_url( 'admin.php' )
+						),
+						'messages-deactivate-notice-' . $item->id
+					)
+				),
 				(int) $item->id,
-				esc_html__( 'Deactivate Notice', 'buddyboss' ) );
+				esc_html__( 'Deactivate Notice', 'buddyboss' )
+			);
 		}
 
 		echo '<strong>' . apply_filters( 'bp_get_message_notice_subject', $item->subject ) . '</strong> ' . $this->row_actions( $actions );

@@ -43,21 +43,31 @@
 								<input type="text" id="bbp_topic_split_destination_title" value="<?php printf( __( 'Split: %s', 'buddyboss' ), bbp_get_topic_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 							</div>
 
-							<?php if ( bbp_has_topics( array( 'show_stickies' => false, 'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ), 'post__not_in' => array( bbp_get_topic_id() ) ) ) ) : ?>
+							<?php
+							if ( bbp_has_topics(
+								array(
+									'show_stickies' => false,
+									'post_parent'   => bbp_get_topic_forum_id( bbp_get_topic_id() ),
+									'post__not_in'  => array( bbp_get_topic_id() ),
+								)
+							) ) :
+								?>
 
 								<div>
 									<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" type="radio" value="existing" tabindex="<?php bbp_tab_index(); ?>" />
 									<label for="bbp_topic_split_option_existing"><?php _e( 'Use an existing discussion in this forum:', 'buddyboss' ); ?></label>
 
-									<?php
-										bbp_dropdown( array(
-											'post_type'   => bbp_get_topic_post_type(),
-											'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
-											'selected'    => -1,
-											'exclude'     => bbp_get_topic_id(),
-											'select_id'   => 'bbp_destination_topic'
-										) );
-									?>
+																										<?php
+																										bbp_dropdown(
+																											array(
+																												'post_type'   => bbp_get_topic_post_type(),
+																												'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
+																												'selected'    => -1,
+																												'exclude'     => bbp_get_topic_id(),
+																												'select_id'   => 'bbp_destination_topic',
+																											)
+																										);
+																										?>
 
 								</div>
 

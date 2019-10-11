@@ -538,12 +538,13 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'class'           => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 					'id'              => 'activity_make_spam_' . $activity_id,
-					'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
+					//'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
 					'data-bp-tooltip-pos' => 'up',
 					),
 				'link_text'  => sprintf(
 					/** @todo: use a specific css rule for this *************************************************************/
-					'<span class="dashicons dashicons-flag" style="color:#a00;vertical-align:baseline;width:18px;height:18px" aria-hidden="true"></span><span class="bp-screen-reader-text">%s</span>',
+					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+					esc_html__( 'Spam', 'buddyboss' ),
 					esc_html__( 'Spam', 'buddyboss' )
 				),
 			);

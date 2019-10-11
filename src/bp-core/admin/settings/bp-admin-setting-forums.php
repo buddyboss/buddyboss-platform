@@ -34,7 +34,7 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 			$fields = bbp_admin_get_settings_fields_for_section( $section_id );
 
 			foreach ( (array) $fields as $field_id => $field ) {
-				$value = isset( $_POST[$field_id] ) ? $_POST[$field_id] : '';
+				$value = isset( $_POST[ $field_id ] ) ? $_POST[ $field_id ] : '';
 
 				if ( is_callable( $field['sanitize_callback'] ) ) {
 					$value = $field['sanitize_callback']($value);
@@ -49,14 +49,14 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 
 	public function settings_saved() {
 
-		$url = bp_core_admin_setting_url( $this->tab_name, [ 'edited' => 'true' ] );
+		$url = bp_core_admin_setting_url( $this->tab_name, array( 'edited' => 'true' ) );
 		bp_core_redirect( $url );
 
 	}
 
 	public function register_fields() {
 		$sections = bbp_admin_get_settings_sections();
-		$fields = bbp_admin_get_settings_fields();
+		$fields   = bbp_admin_get_settings_fields();
 
 		foreach ( (array) $sections as $section_id => $section ) {
 			// Only proceed if current user can see this section
@@ -75,7 +75,7 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 
 			// Loop through fields for this section
 			foreach ( (array) $fields as $field_id => $field ) {
-				if ( ! empty( $field['callback'] ) && !empty( $field['title'] ) ) {
+				if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
 					$this->add_field( $field_id, $field['title'], $field['callback'], $field['sanitize_callback'], $field['args'] );
 				}
 			}
@@ -83,4 +83,4 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 	}
 }
 
-return new BP_Admin_Setting_Forums;
+return new BP_Admin_Setting_Forums();

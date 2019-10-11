@@ -49,8 +49,7 @@ abstract class BP_Suggestions {
 	 * @since BuddyPress 2.1.0
 	 * @var array
 	 */
-	protected $args = array(
-	);
+	protected $args = array();
 
 
 	/**
@@ -104,7 +103,7 @@ abstract class BP_Suggestions {
 		 * @param BP_Suggestions $value Arguments to be validated.
 		 * @param BP_Suggestions $this  Current BP_Suggestions instance.
 		 */
-		$this->args          = apply_filters( 'bp_suggestions_args', $this->args, $this );
+		$this->args = apply_filters( 'bp_suggestions_args', $this->args, $this );
 
 		// Check for invalid or missing mandatory parameters.
 		if ( ! $this->args['limit'] || ! $this->args['term'] ) {
