@@ -22,7 +22,8 @@ $template_parts = apply_filters( 'bp_messages_js_template_parts', [
 	'parts/bp-activity-target-item',
 	'parts/bp-gif-media-search-dropdown',
 	'parts/bp-gif-result-item',
-	'parts/bp-whats-new-toolbar'
+	'parts/bp-whats-new-toolbar',
+	'parts/bp-activity-post-form-privacy',
 ] );
 
 foreach ( $template_parts as $template_part ) {
