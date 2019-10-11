@@ -62,7 +62,7 @@ class Core {
 	/**
 	 * Add Course tab in profile menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function registerCourseComponent() {
 		if ( $this->settings->get( 'course.courses_visibility' ) ) {
@@ -75,7 +75,7 @@ class Core {
 	/**
 	 * Add Menu in Profile section.
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param $menus
 	 */
@@ -110,7 +110,7 @@ class Core {
 	/**
 	 * Add Course tab in profile menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function setup_nav() {
 		$this->bp_displayed_user_id = bp_displayed_user_id();
@@ -162,7 +162,7 @@ class Core {
 	/**
 	 * Add Course tab in admin menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function setup_admin_bar() {
 
@@ -216,7 +216,7 @@ class Core {
 	/**
 	 * Add Menu and Sub menu navigation link for profile menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param $slug
 	 * @param string $parent_slug
@@ -238,7 +238,7 @@ class Core {
 	/**
 	 * Add Menu and Sub menu navigation link for admin menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @param $slug
 	 * @param string $parent_slug
@@ -259,7 +259,7 @@ class Core {
 	/**
 	 * Display Certificates Page Content in Profile course menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function certificates_page() {
 		add_action( 'bp_template_content', array( $this, 'certificates_page_content' ) );
@@ -269,7 +269,7 @@ class Core {
 	/**
 	 * Display Certificates Page Content
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function certificates_page_content() {
 		do_action( 'template_notices' );
@@ -280,7 +280,7 @@ class Core {
 	/**
 	 * Display Badges Page Content in Profile course menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function badges_page() {
 		add_action( 'bp_template_content', array( $this, 'badges_page_content' ) );
@@ -290,7 +290,7 @@ class Core {
 	/**
 	 * Display Badges Page Content
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function badges_page_content() {
 		do_action( 'template_notices' );
@@ -301,7 +301,7 @@ class Core {
 	/**
 	 * Display Course Page Content in Profile course menu
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	public function course_page() {
 		add_action( 'bp_template_title', array( $this, 'courses_page_title' ) );
@@ -312,7 +312,7 @@ class Core {
 	/**
 	 * Display Page title on Profile my Course Page
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function courses_page_title() {
 		$user_id            = bp_displayed_user_id();
@@ -328,7 +328,7 @@ class Core {
 	/**
 	 * Display Courses in My Course Profile Page
 	 *
-	 * @since BuddyBoss 1.9.10
+	 * @since BuddyBoss 1.2.0
 	 */
 	function courses_page_content() {
 
