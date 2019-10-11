@@ -251,7 +251,7 @@ function learndash_integration_prepare_price_str( $price ) {
 /**
  * Function to get list of badges the user has
  *
- * @since 1.9.10
+ * @since 1.2.0
  *
  * @param string $user_id
  *
@@ -309,7 +309,7 @@ function bp_learndash_get_users_badges( $user_id = '' ) {
 /**
  * Function to get list of certificates the user has
  *
- * @since 1.9.10
+ * @since 1.2.0
  *
  * @param string $user_id
  *
@@ -420,7 +420,7 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 /**
  * Get the badges icon
  *
- * @since 1.9.10
+ * @since 1.2.0
  *
  * @param int $post_id
  * @param string $image_size
