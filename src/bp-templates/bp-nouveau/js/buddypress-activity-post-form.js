@@ -844,6 +844,24 @@ window.bp = window.bp || {};
 		}
 	} );
 
+	bp.Views.ActivityPrivacy = bp.View.extend( {
+		tagName:   'div',
+		id:        'activity-post-form-privacy',
+		template : bp.template( 'activity-post-form-privacy' ),
+
+		events: {
+			'change #bp-activity-privacy': 'change',
+		},
+
+		initialize: function() {
+			this.model = new Backbone.Model();
+		},
+
+		change: function() {
+			this.model.set( { 'selected': this.el.value } );
+		}
+	} );
+
 	bp.Views.Item = bp.View.extend( {
 		tagName:   'li',
 		className: 'bp-activity-object',
@@ -988,6 +1006,9 @@ window.bp = window.bp || {};
 			select.model.on( 'change', this.attachAutocomplete, this );
 			bp.Nouveau.Activity.postForm.ActivityObjects.on( 'change:selected', this.postIn, this );
 
+			var privacy = new bp.Views.ActivityPrivacy();
+			this.views.add( privacy );
+
 			this.toggleMultiMediaOptions();
 		},
 
@@ -1040,8 +1061,12 @@ window.bp = window.bp || {};
 		updateDisplay: function() {
 			if ( 'user' !== this.model.get( 'object' ) ) {
 				this.$el.removeClass( );
+
+				$('#activity-post-form-privacy').hide();
 			} else if ( ! this.$el.hasClass( 'in-profile' ) ) {
 				this.$el.addClass( 'in-profile' );
+
+				$('#activity-post-form-privacy').show();
 			}
 		},
 
