@@ -550,6 +550,10 @@ class Reports {
 			} else {
 				if ( isset( $_REQUEST['step'] ) && 'all' != $_REQUEST['step'] && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] ) {
 					require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
+				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] && '' === $_REQUEST['step'] ) {
+					require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
+				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] && 'all' === $_REQUEST['step'] ) {
+					require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
 				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' !== $_REQUEST['course'] ) {
 					require bp_locate_template( 'groups/single/reports-single-user-single-courses.php', false, false );
 					//require bp_locate_template( 'groups/single/reports-tables.php', false, false );
@@ -894,7 +898,7 @@ class Reports {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function getCurrentGenerator() {
-		$step      = bp_ld_sync()->getRequest( 'step', 'all' );
+		$step      = ( bp_ld_sync()->getRequest( 'step', 'all' ) ) ? bp_ld_sync()->getRequest( 'step', 'all' ) : 'all';
 		$generator = $this->getGenerators()[ $step ];
 		return new $generator['class']();
 	}
