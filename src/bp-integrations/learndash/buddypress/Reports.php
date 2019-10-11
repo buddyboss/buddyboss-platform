@@ -541,6 +541,10 @@ class Reports {
 				require bp_locate_template( 'groups/single/reports-tables-all.php', false, false );
 			} elseif ( empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
+			} elseif ( !empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) ) {
+				require bp_locate_template( 'groups/single/reports-single-admin-single-courses.php', false, false );
+			} elseif ( empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) ) {
+				require bp_locate_template( 'groups/single/reports-single-user-all-courses.php', false, false );
 			} else {
 				require bp_locate_template( 'groups/single/reports-tables.php', false, false );
 			}

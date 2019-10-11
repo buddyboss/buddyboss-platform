@@ -38,10 +38,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 	foreach ( $courses as $course ) {
 			//learndash_get_user_course_attempts_time_spent()
 			$course_users = learndash_get_groups_user_ids( $group_id );
-			if ( isset( $_GET ) && isset( $_GET['user'] ) ) {
-				$steps = bp_ld_get_course_all_steps( $course->ID, $_GET['user'], 'all' );
-				$label = 'STEP';
-			} else {
+
 				if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
 					$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 					$label = 'STEP';
@@ -65,7 +62,6 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					$label = 'STEP';
 				}
 
-			}
 			?>
 			<h2><?php echo $course->post_title; ?></h2>
 			<table id="admin-show-all" class="admin-show-all display" style="width:100%">

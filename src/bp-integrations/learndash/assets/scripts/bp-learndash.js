@@ -202,6 +202,7 @@
 		function() {
 			BP_LD_Report.init();
 			$( '.ld-report-export-csv' ).on( 'click', BP_LD_Report.prepareExport );
+			window.history.replaceState(null, null, window.location.pathname);
 		}
 	);
 })( jQuery );
