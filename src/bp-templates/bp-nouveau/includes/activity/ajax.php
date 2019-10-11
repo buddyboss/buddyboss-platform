@@ -532,6 +532,11 @@ function bp_nouveau_ajax_post_update() {
 		$status  = groups_get_current_group()->status;
 	}
 
+	$privacy = 'public';
+	if ( ! empty( $_POST['bp-activity-privacy'] ) && in_array( $_POST['bp-activity-privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ) ) ) {
+		$privacy = $_POST['bp-activity-privacy'];
+	}
+
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
 		$content = $_POST['content'];
 
@@ -539,7 +544,7 @@ function bp_nouveau_ajax_post_update() {
 			$content = sprintf('@%s %s', bp_get_displayed_user_mentionname(), $content);
         }
 
-        $activity_id = bp_activity_post_update( array( 'content' => $content ) );
+        $activity_id = bp_activity_post_update( array( 'content' => $content, 'privacy' => $privacy ) );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {

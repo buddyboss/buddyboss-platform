@@ -968,9 +968,9 @@ function bp_nouveau_activity_privacy() {
 	    ?>
         <p>
             <select class="activity-privacy" name="activity-privacy">
-                <option value="public" <?php echo 'public' === $privacy ? 'selected' : ''; ?>><?php _e( 'Everyone', 'buddyboss' ); ?></option>
-                <option value="loggedin" <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>><?php _e( 'Logged In Users', 'buddyboss' ); ?></option>
+                <option value="public" <?php echo 'public' === $privacy ? 'selected' : ''; ?>><?php _e( 'Public', 'buddyboss' ); ?></option>
                 <option value="onlyme" <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>><?php _e( 'Only Me', 'buddyboss' ); ?></option>
+                <option value="loggedin" <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>><?php _e( 'All Members', 'buddyboss' ); ?></option>
                 <option value="friends" <?php echo 'friends' === $privacy ? 'selected' : ''; ?>><?php _e( 'My Connections', 'buddyboss' ); ?></option>
             </select>
         </p>
