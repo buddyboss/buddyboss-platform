@@ -536,6 +536,10 @@ function bp_ld_remove_post_ids_param( $query_args ) {
 
 function bpLdCoursePointsEarned( $activity ) {
 
+	if ( is_null( $activity ) ) {
+		return 0;
+	}
+
 	$assignments = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
 	if ( ! empty( $assignments ) ) {
 		foreach ( $assignments as $assignment ) {
@@ -608,10 +612,13 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 
 	global $wpdb;
 
-	$lesson_list = learndash_get_lesson_list( $course_id );
-
-	$steps  = array();
-	$circle = '';
+	$lesson_list    = learndash_get_lesson_list( $course_id );
+	$steps          = array();
+	$circle         = '';
+	$total_steps    = 0;
+	$finished_steps = 0;
+	$pending_steps  = 0;
+	$total_points   = 0;
 
 	foreach ( $lesson_list as $lesson ) {
 
@@ -638,11 +645,15 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 
 		if ( $activity ) {
 			$activity->post_type = get_post_type( $lesson->ID );
+			$activity->post_id = $lesson->ID;
+			$activity->user_id = $user_id;
 		}
 
 		if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+			//$finished_steps = $finished_steps + 1;
 			$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
 		} else {
+			//$pending_steps = $pending_steps + 1;
 			$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
 		}
 
@@ -651,7 +662,10 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 				'id'       => $lesson->ID,
 				'title'    => $circle . $lesson->post_title,
 				'activity' => $activity,
+				'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
 			);
+			//$total_steps  = $total_steps + 1;
+			//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
 		}
 
 		$lesson_topics = learndash_get_topic_list( $lesson->ID, $course_id );
@@ -682,11 +696,15 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 
 				if ( $activity ) {
 					$activity->post_type = get_post_type( $lesson_topic->ID );
+					$activity->post_id   = $lesson_topic->ID;
+					$activity->user_id   = $user_id;
 				}
 
 				if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+					//$finished_steps = $finished_steps + 1;
 					$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
 				} else {
+					//$pending_steps = $pending_steps + 1;
 					$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
 				}
 
@@ -695,7 +713,10 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 						'id'       => $lesson_topic->ID,
 						'title'    => $circle . $lesson_topic->post_title,
 						'activity' => $activity,
+						'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
 					);
+					//$total_steps  = $total_steps + 1;
+					//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
 				}
 			}
 		}
@@ -728,12 +749,16 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 
 				if ( $activity ) {
 					$activity->post_type = get_post_type( $lesson_quiz['post']->ID );
+					$activity->post_id   = $lesson_quiz['post']->ID;
+					$activity->user_id   = $user_id;
 				}
 
 				if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+					//$finished_steps = $finished_steps + 1;
 					$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
 				} else {
 					$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+					//$pending_steps = $pending_steps + 1;
 				}
 
 				$attempt = learndash_get_user_quiz_attempts_count( $user_id, $lesson_quiz['post']->ID );
@@ -744,8 +769,11 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 						'title'    => $circle . $lesson_quiz['post']->post_title,
 						'activity' => $activity,
 						'attempt'  => ( $attempt ) ? $attempt : '-',
+						'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
 
 					);
+					//$total_steps  = $total_steps + 1;
+					//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
 				}
 			}
 		}
@@ -778,14 +806,18 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 			}
 
 			if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+				//$finished_steps = $finished_steps + 1;
 				$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
 			} else {
+				//$pending_steps = $pending_steps + 1;
 				$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
 			}
 
 			$score = '-';
 			if ( $activity ) {
 				$activity->post_type = get_post_type( $course_quiz['post']->ID );
+				$activity->post_id   = $course_quiz['post']->ID;
+				$activity->user_id   = $user_id;
 				$activity_fields     = learndash_get_activity_meta_fields( $activity->activity_id );
 				$score               = bp_ld_quiz_activity_points_percentage( $activity_fields );
 			}
@@ -799,7 +831,10 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 					'activity' => $activity,
 					'attempt'  => ( $attempt ) ? $attempt : '-',
 					'score'    => $score,
+					'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
 				);
+				//$total_steps  = $total_steps + 1;
+				//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
 			}
 		}
 	}
@@ -858,7 +893,14 @@ function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
 		}
 	}
 
-	return $steps;
+	$data                   = array();
+	$data['steps']          = $steps;
+//	$data['total_points']   = $total_steps;
+//	$data['total_steps']    = $total_points;
+//	$data['pending_steps']  = $pending_steps;
+//	$data['finished_steps'] = $finished_steps;
+
+	return $data;
 
 }
 

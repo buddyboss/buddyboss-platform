@@ -33,7 +33,7 @@ if ( ! groups_is_user_mod( bp_loggedin_user_id(), $group->id ) && ! groups_is_us
 	</div>
 
 	<?php
-	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) && (int) $total > 0 && (int) $complete > 0 ) {
+	if ( $courseId && isset( $_GET ) && isset( $_GET['step'] ) && (int) $total > 0 ) {
 		?>
 		<div class="user-info">
 			<div class="bp-ld-reports-progress-bar" data-percent="<?php echo $percentage; ?>" data-duration="1000" data-color="#BCE3A9,#60AF37"></div>
@@ -193,6 +193,7 @@ if ( ! groups_is_user_mod( bp_loggedin_user_id(), $group->id ) && ! groups_is_us
 	* @todo Should we be labeling Teacher and Student here?
 	*/
 if ( $courseId ) :
+	$course = get_post( $courseId );
 	?>
 	<h3 class="ld-report-course-name"><?php echo $course->post_title; ?></h3>
 <?php endif; ?>

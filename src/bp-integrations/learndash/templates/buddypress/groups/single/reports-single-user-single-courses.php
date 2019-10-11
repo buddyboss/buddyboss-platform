@@ -1,4 +1,9 @@
 <?php
+$group_id       = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
+$courseIds      = array( $_REQUEST['course'] );
+$label          = 'STEP';
+$courses        = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
+
 if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) && isset( $_GET ) && isset( $_GET['user'] ) && '' === $_GET['user'] ) { ?>
 	<div class="ld-report-user-stats">
 		<div class="user-info">
@@ -9,7 +14,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				<h5 class="list-title member-name"><?php echo __( 'All Students', 'buddyboss' ); ?></h5>
 			</div>
 		</div>
-	</div> 
+	</div>
 	<?php
 } else {
 	?>
@@ -33,10 +38,6 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 ?>
 <div class="bp_ld_report_table_wrapper">
 	<?php
-	$group_id  = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
-	$courseIds = array( $_REQUEST['course'] );
-	$label     = 'STEP';
-	$courses   = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 	foreach ( $courses as $course ) {
 
 		?>
@@ -44,7 +45,8 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		<?php
 		$course_users = learndash_get_groups_user_ids( $group_id );
 		if ( isset( $_GET ) && isset( $_GET['user'] ) ) {
-			$steps = bp_ld_get_course_all_steps( $course->ID, $_GET['user'], 'all' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $_GET['user'], 'all' );
+			$steps = $data['steps'];
 			$label = 'STEP';
 			?>
 			<table id="admin-show-all" class="admin-show-all display" style="width:100%">
@@ -98,11 +100,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				?>
 				</tbody>
 
-			</table> 
+			</table>
 			<?php
 		} else {
 			if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+				$steps = $data['steps'];
 				$label = 'STEP';
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
@@ -156,11 +159,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 				$label = 'STEP';
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+				$steps = $data['steps'];
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -213,11 +217,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
 				$label = LearnDash_Custom_Label::get_label( 'lesson' );
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'lesson' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'lesson' );
+				$steps = $data['steps'];
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -270,11 +275,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-topic' === $_REQUEST['step'] ) {
 				$label = LearnDash_Custom_Label::get_label( 'topic' );
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'topic' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'topic' );
+				$steps = $data['steps'];
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -327,11 +333,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-quiz' === $_REQUEST['step'] ) {
 				$label = LearnDash_Custom_Label::get_label( 'quiz' );
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'quiz' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'quiz' );
+				$steps = $data['steps'];
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -390,11 +397,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
 				$label = 'ASSIGNMENT';
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'assignment' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'assignment' );
+				$steps = $data['steps'];
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -419,11 +427,12 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			} else {
 				$label = 'STEP';
-				$steps = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+				$steps = $data['steps'];
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -476,7 +485,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					?>
 					</tbody>
 
-				</table> 
+				</table>
 				<?php
 			}
 		}

@@ -282,11 +282,9 @@ class Reports {
 			return;
 		}
 
-		$courseId = bp_ld_sync()->getRequest( 'course' );
-		$course   = $courseId ? get_post( $courseId ) : null;
-		$group    = groups_get_current_group();
-		$user     = get_user_by( 'ID', $_GET['user'] );
-
+		$group       = groups_get_current_group();
+		$user        = get_user_by( 'ID', $_GET['user'] );
+		$courseId    = '';
 		$points      = 0;
 		$complete    = 0;
 		$in_complete = 0;
@@ -294,134 +292,49 @@ class Reports {
 		$percentage  = 0;
 		$count       = 0;
 		$unmarked    = 0;
+		$course = '';
 
-		if ( isset( $_GET ) && isset( $_GET['user'] ) && isset( $_GET['step'] ) && '' !== $_GET['user'] && 'sfwd-assignment' === $_GET['step'] ) {
-
-			if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
-				$courseIds = learndash_group_enrolled_courses(
-					bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $this->args['group'] )
-				);
-			} else {
-				$courseIds = [ $this->args['course'] ];
-			}
-
-			$args = [
-				'posts_per_page' => -1,
-				'post_type'      => learndash_get_post_type_slug( 'assignment' ),
-				'post_status'    => 'publish',
-				'meta_query'     => [
-					[
-						'key'   => 'course_id',
-						'value' => $courseIds,
-					],
-				],
-			];
-
-			$args['meta_query'][] = [
-				'key'   => 'approval_status',
-				'value' => 1,
-			];
-
-			$args['author'] = $this->args['user'];
-
-			add_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
-			add_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
-			add_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
-			$approved_query = new \WP_Query( $args );
-			remove_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
-			remove_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
-			remove_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
-
-			$args = [
-				'posts_per_page' => -1,
-				'post_type'      => learndash_get_post_type_slug( 'assignment' ),
-				'post_status'    => 'publish',
-				'meta_query'     => [
-					[
-						'key'   => 'course_id',
-						'value' => $courseIds,
-					],
-				],
-			];
-
-			$args['meta_query'][] = [
-				'key'     => 'approval_status',
-				'compare' => 'NOT EXISTS',
-			];
-
-			$args['author'] = $this->args['user'];
-
-			add_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
-			add_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
-			add_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
-			$un_approved_query = new \WP_Query( $args );
-			remove_filter( 'posts_fields', [ $this, 'addAdditionalFields' ] );
-			remove_filter( 'posts_join_paged', [ $this, 'addAdditionalJoins' ] );
-			remove_filter( 'posts_orderby', [ $this, 'addAdditionalOrderBy' ] );
-
-			$total    = $approved_query->found_posts;
-			$complete = $approved_query->found_posts;
-			$unmarked = $un_approved_query->found_posts;
-
+		if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
+			$courseIds = learndash_group_enrolled_courses( bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $group->id ) );
 		} else {
+			$courseIds = array( $this->args['course'] );
+			$courseId = $this->args['course'];
+			$course = get_post( $courseId );
+		}
 
-			$ldGroupId = bp_ld_sync( 'buddypress' )->sync->generator( bp_get_current_group_id() )->getLdGroupId();
-			$param     = [];
+		if ( $this->hasArg( 'step' ) && ! $this->args['step'] ) {
+			$step = 'all';
+		} else if ( 'all' === $this->args['step'] ) {
+			$step = 'all';
+		} elseif ( 'sfwd-topic' === $this->args['step'] ) {
+			$step = 'topic';
+		} elseif ( 'sfwd-lessons' === $this->args['step'] ) {
+			$step = 'lesson';
+		} elseif ( 'sfwd-quiz' === $this->args['step'] ) {
+			$step = 'quiz';
+		} elseif ( 'sfwd-assignment' === $this->args['step'] ) {
+			$step = 'assignment';
+		}
 
-			$param['course_ids'] = $_GET['course'] ?: learndash_group_enrolled_courses( $ldGroupId );
-
-			if ( isset( $_GET['step'] ) && $_GET['step'] ) {
-				global $learndash_post_types;
-				$param['post_types'] = $_GET['step'] == 'all' ? array_diff(
-					$learndash_post_types,
-					[ 'groups' ]
-				) : $_GET['step'];
-			}
-
-			$param['user_ids']        = $_GET['user'] ?: learndash_get_groups_user_ids( $ldGroupId );
-			$param['activity_status'] = 'COMPLETED';
-			$param['per_page']        = '';
-
-			add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
-			$data = learndash_reports_get_activity( $param );
-			remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
-
-			if ( ! empty( $data ) ) {
-				foreach ( $data['results'] as $activity ) {
-					$points = $points + $this->coursePointsEarned( $activity );
-				}
-				$complete = (int) count( $data['results'] );
-			}
-
-			$param['activity_status'] = 'IN_PROGRESS';
-
-			add_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10, 1 );
-			$incomplete_data = learndash_reports_get_activity( $param );
-			remove_filter( 'learndash_get_activity_query_args', array( $this, 'remove_post_ids_param' ), 10 );
-
-			$count = 0;
-			if ( ! empty( $incomplete_data ) ) {
-				foreach ( $incomplete_data['results'] as $activity ) {
-					$activity_data = $wpdb->get_row(
-						$wpdb->prepare(
-							'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE `user_id` = %d AND `post_id` = %d AND `course_id` = %d AND `activity_status` = %d',
-							(int) $activity->user_id,
-							(int) $activity->post_id,
-							(int) $activity->activity_course_id,
-							1
-						)
-					); // db call ok; no-cache ok;
-					if ( ! empty( $activity_data ) ) {
-						continue;
+		foreach ( $courseIds as $course ) {
+			$points = $points + learndash_get_user_course_points( $_GET['user'] );
+			$data  = bp_ld_get_course_all_steps( $course, $_GET['user'], $step );
+			$steps = $data['steps'];
+			$total = $total + count( $steps );
+			foreach ( $steps as $single ) {
+				if ( !empty( $single['activity'] ) ) {
+					$points     = $points + bpLdCoursePointsEarned( $step['activity'] );
+					if ( isset( $step['activity']->activity_completed ) ) {
+						$complete = $complete + 1;
 					} else {
-						$count ++;
+						$in_complete = $in_complete + 1;
 					}
+				} else  {
+					$in_complete = $in_complete + 1;
 				}
 			}
 		}
 
-		$in_complete = $count;
-		$total       = $complete + $in_complete;
 
 		if ( $total > 0 ) {
 			$percentage = intval( $complete * 100 / $total );
@@ -429,6 +342,8 @@ class Reports {
 		} else {
 			$percentage = 0;
 		}
+
+
 
 		require bp_locate_template( 'groups/single/reports-user-stats.php', false, false );
 	}
