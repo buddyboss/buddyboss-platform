@@ -192,7 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups', 'group-messages' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups', 'messages' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -741,14 +741,14 @@ class BP_Groups_Component extends BP_Component {
 				}
 			}
 
-			if ( bp_is_active( 'messages' ) && bp_groups_user_can_send_invites() ) {
+			if ( bp_is_active( 'messages' ) ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Group Messages', 'buddyboss' ),
-					'slug'            => 'group-messages',
+					'slug'            => 'messages',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_messages',
-					'item_css_id'     => 'group-messages',
+					'item_css_id'     => 'messages',
 					'position'        => 70,
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
