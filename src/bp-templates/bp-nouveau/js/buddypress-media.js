@@ -395,9 +395,14 @@ window.bp = window.bp || {};
 		resetForumsGifComponent: function() {
 			$('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
 			$('#whats-new-toolbar #forums-gif-button').removeClass('active');
-			$('#whats-new-attachments .forums-attached-gif-container').addClass('closed');
-			$('#whats-new-attachments .forums-attached-gif-container').find('.gif-image-container img').attr('src','');
-			$('#whats-new-attachments .forums-attached-gif-container')[0].style = '';
+
+			var $forums_attached_gif_container = $('#whats-new-attachments .forums-attached-gif-container');
+			if ( $forums_attached_gif_container ) {
+				$forums_attached_gif_container.addClass('closed');
+				$forums_attached_gif_container.find('.gif-image-container img').attr('src', '');
+				$forums_attached_gif_container[0].style = '';
+			}
+
 			if( $('#bbp_media_gif').length ) {
 				$('#bbp_media_gif').val('');
 			}
@@ -826,11 +831,11 @@ window.bp = window.bp || {};
 
 							// Prepend the activity.
 							bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
-							
+
 							for( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
 							}
-							
+
 							self.closeUploader(event);
 
 							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
