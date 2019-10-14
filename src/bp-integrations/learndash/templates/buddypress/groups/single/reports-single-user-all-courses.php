@@ -46,11 +46,11 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 			$steps = $data['steps'];
-			$label = 'STEP';
+			$label = __( 'STEP', 'buddyboss' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 			$steps = $data['steps'];
-			$label = 'STEP';
+			$label = __( 'STEP', 'buddyboss' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'lesson' );
 			$steps = $data['steps'];
@@ -66,11 +66,11 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'assignment' );
 			$steps = $data['steps'];
-			$label = 'ASSIGNMENT';
+			$label = __( 'ASSIGNMENT', 'buddyboss' );
 		} else {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 			$steps = $data['steps'];
-			$label = 'STEP';
+			$label = __( 'STEP', 'buddyboss' );
 		}
 
 		?>

@@ -47,7 +47,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		if ( isset( $_GET ) && isset( $_GET['user'] ) ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, $_GET['user'], 'all' );
 			$steps = $data['steps'];
-			$label = 'STEP';
+			$label = __( 'STEP', 'buddyboss' );
 			?>
 			<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 				<thead>
@@ -106,7 +106,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 			if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
 				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 				$steps = $data['steps'];
-				$label = 'STEP';
+				$label = __( 'STEP', 'buddyboss' );
 				?>
 				<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 					<thead>
@@ -162,7 +162,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
-				$label = 'STEP';
+				$label = __( 'STEP', 'buddyboss' );
 				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 				$steps = $data['steps'];
 				?>
@@ -400,7 +400,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				</table>
 				<?php
 			} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
-				$label = 'ASSIGNMENT';
+				$label = __( 'ASSIGNMENT', 'buddyboss' );
 				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'assignment' );
 				$steps = $data['steps'];
 				?>
@@ -430,7 +430,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				</table>
 				<?php
 			} else {
-				$label = 'STEP';
+				$label = __( 'STEP', 'buddyboss' );
 				$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 				$steps = $data['steps'];
 				?>

@@ -292,7 +292,7 @@ class Reports {
 		$percentage  = 0;
 		$count       = 0;
 		$unmarked    = 0;
-		$course = '';
+		$course      = '';
 
 		if ( $this->hasArg( 'course' ) && ! $this->args['course'] ) {
 			$courseIds = learndash_group_enrolled_courses( bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $group->id ) );
