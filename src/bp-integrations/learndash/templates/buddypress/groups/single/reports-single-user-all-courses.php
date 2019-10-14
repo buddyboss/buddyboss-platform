@@ -95,10 +95,10 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 						<?php
 						if ( is_null( $step['activity'] ) ) {
 							?>
-							<td><?php echo '-'; ?></td>
-							<td><?php echo '-'; ?></td>
-							<td><?php echo '-'; ?></td>
-							<td><?php echo '-'; ?></td>
+							<td><?php echo __( '-', 'buddyboss' ); ?></td>
+							<td><?php echo __( '-', 'buddyboss' ); ?></td>
+							<td><?php echo __( '-', 'buddyboss' ); ?></td>
+							<td><?php echo __( '-', 'buddyboss' ); ?></td>
 							<?php
 						} else {
 
