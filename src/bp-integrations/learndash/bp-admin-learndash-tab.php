@@ -412,15 +412,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			)
 		);
 
-		$this->add_input_field(
-			'per_page',
-			__( 'Report Results Per Page', 'buddyboss' ),
-			[
-				'input_type'        => 'number',
-				'input_description' => __( '', 'buddyboss' ),
-				'class'             => 'js-show-on-reports_enabled',
-			]
-		);
+//		$this->add_input_field(
+//			'per_page',
+//			__( 'Report Results Per Page', 'buddyboss' ),
+//			[
+//				'input_type'        => 'number',
+//				'input_description' => __( '', 'buddyboss' ),
+//				'class'             => 'js-show-on-reports_enabled',
+//			]
+//		);
 	}
 
 	/**
