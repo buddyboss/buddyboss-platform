@@ -9,6 +9,8 @@ jQuery( document ).ready(
 			placeholder: $tagsSelect.attr('placeholder'),
 			minimumInputLength: 1,
 			tags: true,
+                        dropdownCssClass: 'bb-select-dropdown',
+                        containerCssClass: 'bb-select-container',
 			tokenSeparators: [',', ' '],
 			ajax: {
 				url: bbpCommonJsData.ajax_url,

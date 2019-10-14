@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-10 17:28:56+00:00\n"
+"POT-Creation-Date: 2019-10-14 16:52:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2505,7 +2505,7 @@ msgstr ""
 #: bp-forums/admin.php:222 bp-forums/admin.php:286
 #: bp-forums/forums/template.php:2635 bp-forums/groups.php:49
 #: bp-forums/groups.php:50
-#: bp-forums/templates/default/bbpress/content-statistics.php:26
+#: bp-forums/templates/default/bbpress/content-statistics.php:27
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
@@ -2520,7 +2520,7 @@ msgstr ""
 #: bp-forums/admin.php:242 bp-forums/admin.php:305
 #: bp-forums/core/theme-compat.php:673 bp-forums/forums/template.php:2703
 #: bp-forums/replies/template.php:48 bp-forums/replies/template.php:49
-#: bp-forums/templates/default/bbpress/content-statistics.php:31
+#: bp-forums/templates/default/bbpress/content-statistics.php:32
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
@@ -8433,7 +8433,7 @@ msgstr ""
 
 #: bp-forums/admin/tools.php:1714 bp-forums/admin.php:236
 #: bp-forums/admin.php:324
-#: bp-forums/templates/default/bbpress/content-statistics.php:36
+#: bp-forums/templates/default/bbpress/content-statistics.php:37
 #: bp-forums/topics/template.php:3463
 msgid "Discussion Tags"
 msgstr ""
@@ -9893,11 +9893,11 @@ msgid_plural "Viewing %2$s - %3$s of %4$s results"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-forums/templates/default/bbpress/content-statistics.php:16
+#: bp-forums/templates/default/bbpress/content-statistics.php:17
 msgid "Registered Members"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/content-statistics.php:21
+#: bp-forums/templates/default/bbpress/content-statistics.php:22
 msgid "Public Forums"
 msgstr ""
 
@@ -9905,11 +9905,11 @@ msgstr ""
 msgid "Empty Discussion Tags"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/content-statistics.php:52
+#: bp-forums/templates/default/bbpress/content-statistics.php:50
 msgid "Hidden Discussions"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/content-statistics.php:63
+#: bp-forums/templates/default/bbpress/content-statistics.php:57
 msgid "Hidden Replies"
 msgstr ""
 
