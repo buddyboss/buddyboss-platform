@@ -17,10 +17,8 @@ add_action( 'admin_init', function() {
 		array( 'groups_accept_invite'               => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
 		array( 'groups_reject_invite'               => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
 		array( 'groups_request_membership'          => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_get_group_potential_messages' => array( 'function' => 'bp_nouveau_ajax_get_users_to_invite', 'nopriv' => false ) ),
 		array( 'groups_get_group_potential_invites' => array( 'function' => 'bp_nouveau_ajax_get_users_to_invite', 'nopriv' => false ) ),
 		array( 'groups_send_group_invites'          => array( 'function' => 'bp_nouveau_ajax_send_group_invites', 'nopriv' => false ) ),
-		array( 'groups_send_group_invites'          => array( 'function' => 'groups_send_group_messages', 'nopriv' => false ) ),
 		array( 'groups_delete_group_invite'         => array( 'function' => 'bp_nouveau_ajax_remove_group_invite', 'nopriv' => false ) ),
 	);
 

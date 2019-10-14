@@ -49,11 +49,6 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 			'footer'       => true,
 		),
-		'bp-nouveau-group-messages' => array(
-			'file'         => 'js/buddypress-group-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
-			'footer'       => true,
-		),
 	) );
 }
 
@@ -72,8 +67,6 @@ function bp_nouveau_groups_enqueue_scripts() {
 			}
 		' );
 	}
-
-	wp_enqueue_script( 'bp-nouveau-group-messages' );
 
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
 		return;

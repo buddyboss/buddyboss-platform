@@ -3950,3 +3950,20 @@ function bp_email_get_salutation( $settings = array() ) {
 	 */
 	return apply_filters( 'bp_email_get_salutation', sprintf( __( '%s', 'buddyboss' ), $token ), $settings, $token );
 }
+
+/**
+ * Is the current page a group's activity page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's activity page.
+ */
+function bp_is_messages() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
