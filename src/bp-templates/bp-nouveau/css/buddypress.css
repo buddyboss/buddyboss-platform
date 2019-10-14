@@ -11218,3 +11218,34 @@ img.emojioneemoji {
   width: 30px;
   margin: 0 auto 10px;
 }
+
+/*
+*-----------------------------------------
+* @section 16.0 - Group Messages
+*-----------------------------------------
+*/
+#group-messages-container {
+  background: #fff;
+  border: 1px solid #E7E9EC;
+  border-radius: 4px;
+  margin-bottom: 20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.bb-groups-messages-right {
+  flex: 1;
+  padding: 20px;
+}
+
+.bb-groups-messages-left {
+  max-width: 253px;
+  padding: 20px;
+  border-right: 1px solid #E7E9EC;
+}
+
+#group-messages-container .bb-groups-messages-left .group-messages-search {
+  display: none;
+  margin-top: 20px;
+}
