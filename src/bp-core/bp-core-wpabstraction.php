@@ -33,13 +33,13 @@ function bp_get_major_wp_version() {
 /*
  * Only add MS-specific abstraction functions if WordPress is not in multisite mode.
  */
-if ( !is_multisite() ) {
+if ( ! is_multisite() ) {
 	global $wpdb;
 
 	$wpdb->base_prefix = $wpdb->prefix;
 	$wpdb->blogid      = BP_ROOT_BLOG;
 
-	if ( !function_exists( 'get_blog_option' ) ) {
+	if ( ! function_exists( 'get_blog_option' ) ) {
 
 		/**
 		 * Retrieve blog option.
@@ -77,7 +77,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'update_blog_option' ) ) {
+	if ( ! function_exists( 'update_blog_option' ) ) {
 
 		/**
 		 * Update blog option.
@@ -96,7 +96,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'delete_blog_option' ) ) {
+	if ( ! function_exists( 'delete_blog_option' ) ) {
 
 		/**
 		 * Delete blog option.
@@ -114,7 +114,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'switch_to_blog' ) ) {
+	if ( ! function_exists( 'switch_to_blog' ) ) {
 
 		/**
 		 * Switch to specified blog.
@@ -132,7 +132,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'restore_current_blog' ) ) {
+	if ( ! function_exists( 'restore_current_blog' ) ) {
 
 		/**
 		 * Restore current blog.
@@ -148,7 +148,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'get_blogs_of_user' ) ) {
+	if ( ! function_exists( 'get_blogs_of_user' ) ) {
 
 		/**
 		 * Retrive blogs associated with user.
@@ -166,7 +166,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'update_blog_status' ) ) {
+	if ( ! function_exists( 'update_blog_status' ) ) {
 
 		/**
 		 * Whether or not to update blog status.
@@ -186,7 +186,7 @@ if ( !is_multisite() ) {
 		}
 	}
 
-	if ( !function_exists( 'is_subdomain_install' ) ) {
+	if ( ! function_exists( 'is_subdomain_install' ) ) {
 
 		/**
 		 * Whether or not if subdomain install.
@@ -198,8 +198,9 @@ if ( !is_multisite() ) {
 		 * @return bool
 		 */
 		function is_subdomain_install() {
-			if ( ( defined( 'VHOST' ) && 'yes' == VHOST ) || ( defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ) )
+			if ( ( defined( 'VHOST' ) && 'yes' == VHOST ) || ( defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ) ) {
 				return true;
+			}
 
 			return false;
 		}
@@ -216,10 +217,11 @@ if ( !is_multisite() ) {
  * @return string SQL chunk.
  */
 function bp_core_get_status_sql( $prefix = false ) {
-	if ( !is_multisite() )
+	if ( ! is_multisite() ) {
 		return "{$prefix}user_status = 0";
-	else
+	} else {
 		return "{$prefix}spam = 0 AND {$prefix}deleted = 0 AND {$prefix}user_status = 0";
+	}
 }
 
 /**
@@ -230,7 +232,7 @@ function bp_core_get_status_sql( $prefix = false ) {
  *
  * Borrowed from MediaWiki, under the GPLv2. Thanks!
  */
-if ( !function_exists( 'mb_strlen' ) ) {
+if ( ! function_exists( 'mb_strlen' ) ) {
 
 	/**
 	 * Fallback implementation of mb_strlen(), hardcoded to UTF-8.
@@ -241,22 +243,22 @@ if ( !function_exists( 'mb_strlen' ) ) {
 	 */
 	function mb_strlen( $str, $enc = '' ) {
 		$counts = count_chars( $str );
-		$total = 0;
+		$total  = 0;
 
 		// Count ASCII bytes.
-		for( $i = 0; $i < 0x80; $i++ ) {
-			$total += $counts[$i];
+		for ( $i = 0; $i < 0x80; $i++ ) {
+			$total += $counts[ $i ];
 		}
 
 		// Count multibyte sequence heads.
-		for( $i = 0xc0; $i < 0xff; $i++ ) {
-			$total += $counts[$i];
+		for ( $i = 0xc0; $i < 0xff; $i++ ) {
+			$total += $counts[ $i ];
 		}
 		return $total;
 	}
 }
 
-if ( !function_exists( 'mb_strpos' ) ) {
+if ( ! function_exists( 'mb_strpos' ) ) {
 
 	/**
 	 * Fallback implementation of mb_strpos(), hardcoded to UTF-8.
@@ -273,7 +275,7 @@ if ( !function_exists( 'mb_strpos' ) ) {
 		$ar = array();
 		preg_match( '/' . $needle . '/u', $haystack, $ar, PREG_OFFSET_CAPTURE, $offset );
 
-		if( isset( $ar[0][1] ) ) {
+		if ( isset( $ar[0][1] ) ) {
 			return $ar[0][1];
 		} else {
 			return false;
@@ -281,7 +283,7 @@ if ( !function_exists( 'mb_strpos' ) ) {
 	}
 }
 
-if ( !function_exists( 'mb_strrpos' ) ) {
+if ( ! function_exists( 'mb_strrpos' ) ) {
 
 	/**
 	 * Fallback implementation of mb_strrpos(), hardcoded to UTF-8.
@@ -298,9 +300,9 @@ if ( !function_exists( 'mb_strrpos' ) ) {
 		$ar = array();
 		preg_match_all( '/' . $needle . '/u', $haystack, $ar, PREG_OFFSET_CAPTURE, $offset );
 
-		if( isset( $ar[0] ) && count( $ar[0] ) > 0 &&
-			isset( $ar[0][count( $ar[0] ) - 1][1] ) ) {
-			return $ar[0][count( $ar[0] ) - 1][1];
+		if ( isset( $ar[0] ) && count( $ar[0] ) > 0 &&
+			isset( $ar[0][ count( $ar[0] ) - 1 ][1] ) ) {
+			return $ar[0][ count( $ar[0] ) - 1 ][1];
 		} else {
 			return false;
 		}

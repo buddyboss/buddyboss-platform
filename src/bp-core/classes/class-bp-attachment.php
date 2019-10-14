@@ -86,15 +86,15 @@ abstract class BP_Attachment {
 			if ( 'upload_error_strings' === $key ) {
 				$this->{$key} = $this->set_upload_error_strings( $param );
 
-			// Sanitize the base dir.
+				// Sanitize the base dir.
 			} elseif ( 'base_dir' === $key ) {
 				$this->{$key} = sanitize_title( $param );
 
-			// Sanitize the upload dir filter arg to pass.
+				// Sanitize the upload dir filter arg to pass.
 			} elseif ( 'upload_dir_filter_args' === $key ) {
 				$this->{$key} = (int) $param;
 
-			// Action & File input are already set and sanitized.
+				// Action & File input are already set and sanitized.
 			} elseif ( 'action' !== $key && 'file_input' !== $key ) {
 				$this->{$key} = $param;
 			}
@@ -108,11 +108,10 @@ abstract class BP_Attachment {
 	 * Set upload path and url for the component.
 	 *
 	 * @since BuddyPress 2.3.0
-	 *
 	 */
 	public function set_upload_dir() {
 		// Set the directory, path, & url variables.
-		$this->upload_dir  = bp_upload_dir();
+		$this->upload_dir = bp_upload_dir();
 
 		if ( empty( $this->upload_dir ) ) {
 			return false;
@@ -133,7 +132,7 @@ abstract class BP_Attachment {
 		 */
 		if ( ! empty( $this->base_dir ) ) {
 			$this->upload_path = trailingslashit( $this->upload_path ) . $this->base_dir;
-			$this->url         = trailingslashit( $this->url  ) . $this->base_dir;
+			$this->url         = trailingslashit( $this->url ) . $this->base_dir;
 
 			// Finally create the base dir.
 			$this->create_dir();
@@ -187,7 +186,7 @@ abstract class BP_Attachment {
 				continue;
 			}
 
-			require_once( ABSPATH . "/wp-admin/includes/{$wp_file}.php" );
+			require_once ABSPATH . "/wp-admin/includes/{$wp_file}.php";
 		}
 	}
 
@@ -249,6 +248,7 @@ abstract class BP_Attachment {
 		 * If the $base_dir was set when constructing the class,
 		 * and no specific filter has been requested, use a default
 		 * filter to create the specific $base dir
+		 *
 		 * @see  BP_Attachment->upload_dir_filter()
 		 */
 		if ( empty( $upload_dir_filter ) && ! empty( $this->base_dir ) ) {
@@ -290,7 +290,7 @@ abstract class BP_Attachment {
 		if ( function_exists( 'transliterator_transliterate' ) && seems_utf8( $retval ) ) {
 			$retval = transliterator_transliterate( 'Any-Latin; Latin-ASCII; [\u0080-\u7fff] remove', $retval );
 
-		// Older.
+			// Older.
 		} else {
 			// Use WP's built-in function to convert accents to their ASCII equivalent.
 			$retval = remove_accents( $retval );
@@ -313,17 +313,16 @@ abstract class BP_Attachment {
 	 * @see check_upload_mimes()
 	 *
 	 * @since BuddyPress 2.3.0
-	 *
 	 */
 	protected function validate_mime_types() {
-		$wp_mimes = get_allowed_mime_types();
+		$wp_mimes    = get_allowed_mime_types();
 		$valid_mimes = array();
 
 		// Set the allowed mimes for the upload.
 		foreach ( (array) $this->allowed_mime_types as $ext ) {
 			foreach ( $wp_mimes as $ext_pattern => $mime ) {
 				if ( $ext !== '' && strpos( $ext_pattern, $ext ) !== false ) {
-					$valid_mimes[$ext_pattern] = $mime;
+					$valid_mimes[ $ext_pattern ] = $mime;
 				}
 			}
 		}
@@ -380,14 +379,18 @@ abstract class BP_Attachment {
 		 * @param array $value          Array containing the path, URL, and other helpful settings.
 		 * @param array $upload_dir     The original Uploads dir.
 		 */
-		return apply_filters( 'bp_attachment_upload_dir', array(
-			'path'    => $this->upload_path,
-			'url'     => $this->url,
-			'subdir'  => false,
-			'basedir' => $this->upload_path,
-			'baseurl' => $this->url,
-			'error'   => false
-		), $upload_dir );
+		return apply_filters(
+			'bp_attachment_upload_dir',
+			array(
+				'path'    => $this->upload_path,
+				'url'     => $this->url,
+				'subdir'  => false,
+				'basedir' => $this->upload_path,
+				'baseurl' => $this->url,
+				'error'   => false,
+			),
+			$upload_dir
+		);
 	}
 
 	/**
@@ -397,7 +400,6 @@ abstract class BP_Attachment {
 	 * (eg: add an .htaccess file)
 	 *
 	 * @since BuddyPress 2.3.0
-	 *
 	 */
 	public function create_dir() {
 		// Bail if no specific base dir is set.
@@ -440,17 +442,21 @@ abstract class BP_Attachment {
 	public function crop( $args = array() ) {
 		$wp_error = new WP_Error();
 
-		$r = bp_parse_args( $args, array(
-			'original_file' => '',
-			'crop_x'        => 0,
-			'crop_y'        => 0,
-			'crop_w'        => 0,
-			'crop_h'        => 0,
-			'dst_w'         => 0,
-			'dst_h'         => 0,
-			'src_abs'       => false,
-			'dst_file'      => false,
-		), 'bp_attachment_crop_args' );
+		$r = bp_parse_args(
+			$args,
+			array(
+				'original_file' => '',
+				'crop_x'        => 0,
+				'crop_y'        => 0,
+				'crop_w'        => 0,
+				'crop_h'        => 0,
+				'dst_w'         => 0,
+				'dst_h'         => 0,
+				'src_abs'       => false,
+				'dst_file'      => false,
+			),
+			'bp_attachment_crop_args'
+		);
 
 		if ( empty( $r['original_file'] ) || ! file_exists( $r['original_file'] ) ) {
 			$wp_error->add( 'crop_error', __( 'Cropping the file failed: missing source file.', 'buddyboss' ) );
@@ -477,13 +483,22 @@ abstract class BP_Attachment {
 		}
 
 		// Check image file types.
-		$check_types = array( 'src_file' => array( 'file' => $r['original_file'], 'error' => __( 'source file', 'buddyboss' ) ) );
+		$check_types = array(
+			'src_file' => array(
+				'file'  => $r['original_file'],
+				'error' => __( 'source file', 'buddyboss' ),
+			),
+		);
 		if ( ! empty( $r['dst_file'] ) ) {
-			$check_types['dst_file'] = array( 'file' => $r['dst_file'], 'error' => __( 'destination file', 'buddyboss' ) );
+			$check_types['dst_file'] = array(
+				'file'  => $r['dst_file'],
+				'error' => __( 'destination file', 'buddyboss' ),
+			);
 		}
 
 		/**
 		 * WordPress image supported types.
+		 *
 		 * @see wp_attachment_is()
 		 */
 		$supported_image_types = array(
@@ -495,8 +510,8 @@ abstract class BP_Attachment {
 		);
 
 		foreach ( $check_types as $file ) {
-			$is_image      = wp_check_filetype( $file['file'] );
-			$ext           = $is_image['ext'];
+			$is_image = wp_check_filetype( $file['file'] );
+			$ext      = $is_image['ext'];
 
 			if ( empty( $ext ) || empty( $supported_image_types[ $ext ] ) ) {
 				$wp_error->add( 'crop_error', sprintf( __( 'Cropping the file failed: %s is not a supported image file.', 'buddyboss' ), $file['error'] ) );
@@ -569,7 +584,7 @@ abstract class BP_Attachment {
 		 * or if WordPress < 3.9 (New Avatar UI is not available in this case)
 		 */
 		if ( ! function_exists( 'wp_read_image_metadata' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/image.php' );
+			require_once ABSPATH . 'wp-admin/includes/image.php';
 		}
 
 		// Now try to get image's meta data.
@@ -611,15 +626,19 @@ abstract class BP_Attachment {
 			return new WP_Error( 'missing_parameter' );
 		}
 
-		$r = bp_parse_args( $args, array(
-			'file'   => '',
-			'max_w'   => 0,
-			'max_h'   => 0,
-			'crop'    => false,
-			'rotate'  => 0,
-			'quality' => 90,
-			'save'    => true,
-		), 'attachment_' . $attachment_type . '_edit_image' );
+		$r = bp_parse_args(
+			$args,
+			array(
+				'file'    => '',
+				'max_w'   => 0,
+				'max_h'   => 0,
+				'crop'    => false,
+				'rotate'  => 0,
+				'quality' => 90,
+				'save'    => true,
+			),
+			'attachment_' . $attachment_type . '_edit_image'
+		);
 
 		// Make sure we have to edit the image.
 		if ( empty( $r['max_w'] ) && empty( $r['max_h'] ) && empty( $r['rotate'] ) && empty( $r['file'] ) ) {
@@ -657,7 +676,7 @@ abstract class BP_Attachment {
 		if ( true === $r['save'] ) {
 			return $editor->save( $editor->generate_filename() );
 
-		// Need to do some other edit actions or use a specific method to save file.
+			// Need to do some other edit actions or use a specific method to save file.
 		} else {
 			return $editor;
 		}

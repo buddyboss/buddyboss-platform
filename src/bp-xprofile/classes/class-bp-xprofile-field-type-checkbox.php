@@ -68,11 +68,11 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 
 			<legend>
 				<?php bp_the_profile_field_name(); ?>
-                <?php if ( bp_is_register_page() ) : ?>
-				    <?php bp_the_profile_field_optional_label(); ?>
-                <?php else: ?>
-			        <?php bp_the_profile_field_required_label(); ?>
-			    <?php endif; ?>
+				<?php if ( bp_is_register_page() ) : ?>
+					<?php bp_the_profile_field_optional_label(); ?>
+				<?php else : ?>
+					<?php bp_the_profile_field_required_label(); ?>
+				<?php endif; ?>
 			</legend>
 
 			<?php if ( bp_get_the_profile_field_description() ) : ?>
@@ -82,11 +82,16 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 			<?php
 
 			/** This action is documented in bp-xprofile/bp-xprofile-classes */
-			do_action( bp_get_the_profile_field_errors_action() ); ?>
+			do_action( bp_get_the_profile_field_errors_action() );
+			?>
 
-			<?php bp_the_profile_field_options( array(
-				'user_id' => $user_id
-			) ); ?>
+			<?php
+			bp_the_profile_field_options(
+				array(
+					'user_id' => $user_id,
+				)
+			);
+			?>
 
 		<?php
 	}
@@ -130,9 +135,9 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 
 		// Check for updated posted values, but errors preventing them from
 		// being saved first time.
-		if ( isset( $_POST['field_' . $this->field_obj->id] ) && $option_values != maybe_serialize( $_POST['field_' . $this->field_obj->id] ) ) {
-			if ( ! empty( $_POST['field_' . $this->field_obj->id] ) ) {
-				$option_values = array_map( 'sanitize_text_field', $_POST['field_' . $this->field_obj->id] );
+		if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $option_values != maybe_serialize( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+			if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+				$option_values = array_map( 'sanitize_text_field', $_POST[ 'field_' . $this->field_obj->id ] );
 			}
 		}
 
@@ -144,9 +149,9 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 
 				// Run the allowed option name through the before_save filter,
 				// so we'll be sure to get a match.
-				$allowed_options = xprofile_sanitize_data_value_before_save( $options[$k]->name, false, false );
+				$allowed_options = xprofile_sanitize_data_value_before_save( $options[ $k ]->name, false, false );
 
-				if ( $option_values[$j] === $allowed_options || in_array( $allowed_options, $option_values ) ) {
+				if ( $option_values[ $j ] === $allowed_options || in_array( $allowed_options, $option_values ) ) {
 					$selected = ' checked="checked"';
 					break;
 				}
@@ -154,16 +159,17 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 
 			// If the user has not yet supplied a value for this field, check to
 			// see whether there is a default value available.
-			if ( empty( $selected ) && $select_default_option && ! empty( $options[$k]->is_default_option ) ) {
+			if ( empty( $selected ) && $select_default_option && ! empty( $options[ $k ]->is_default_option ) ) {
 				$selected = ' checked="checked"';
 			}
 
-			$new_html = sprintf( '<label for="%3$s" class="option-label"><input %1$s type="checkbox" name="%2$s" id="%3$s" value="%4$s">%5$s</label>',
+			$new_html = sprintf(
+				'<label for="%3$s" class="option-label"><input %1$s type="checkbox" name="%2$s" id="%3$s" value="%4$s">%5$s</label>',
 				$selected,
 				esc_attr( bp_get_the_profile_field_input_name() . '[]' ),
 				esc_attr( "field_{$options[$k]->id}_{$k}" ),
-				esc_attr( stripslashes( $options[$k]->name ) ),
-				esc_html( stripslashes( $options[$k]->name ) )
+				esc_attr( stripslashes( $options[ $k ]->name ) ),
+				esc_html( stripslashes( $options[ $k ]->name ) )
 			);
 
 			/**
@@ -177,10 +183,11 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 			 * @param string $selected Current selected value.
 			 * @param string $k        Current index in the foreach loop.
 			 */
-			$html .= apply_filters( 'bp_get_the_profile_field_options_checkbox', $new_html, $options[$k], $this->field_obj->id, $selected, $k );
+			$html .= apply_filters( 'bp_get_the_profile_field_options_checkbox', $new_html, $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
-		printf( '<div id="%1$s" class="input-options checkbox-options">%2$s</div>',
+		printf(
+			'<div id="%1$s" class="input-options checkbox-options">%2$s</div>',
 			esc_attr( 'field_' . $this->field_obj->id ),
 			$html
 		);

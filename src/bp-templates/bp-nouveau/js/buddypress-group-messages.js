@@ -28,6 +28,8 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function() {
+
+
 			this.scope    = null;
 			this.views    = new Backbone.Collection();
 			this.navItems = new Backbone.Collection();
@@ -39,15 +41,15 @@ window.bp = window.bp || {};
 			this.setupLoops();
 			this.displayFeedback( BP_Nouveau.group_messages.loading, 'loading' );
 
-			// Add an invite when a user is selected
-			this.users.on( 'change:selected', this.addInvite, this );
+			// Add an message when a user is selected
+			this.users.on( 'change:selected', this.addMessage, this );
 
-			// Add an invite when a user is selected
-			this.messages.on( 'change:selected', this.manageInvite, this );
+			// Add an message when a user is selected
+			this.messages.on( 'change:selected', this.manageMessage, this );
 
 			// And display the messages nav
 			this.messages.on( 'add', this.messagesNav, this );
-			this.messages.on( 'reset', this.hideInviteNav, this );
+			this.messages.on( 'reset', this.hideMessageNav, this );
 		},
 
 		setupNav: function() {
@@ -105,7 +107,7 @@ window.bp = window.bp || {};
 			this.scope = scope;
 
 			// Create the loop view
-			users = new bp.Views.inviteUsers( { collection: this.users, scope: scope } );
+			users = new bp.Views.messageUsers( { collection: this.users, scope: scope } );
 
 			this.views.add( { id: 'users', view: users } );
 
@@ -126,7 +128,7 @@ window.bp = window.bp || {};
 			} );
 
 			// Use it in the filters viex
-			filters_view = new bp.Views.inviteFilters( { model: this.filters, users: collection } );
+			filters_view = new bp.Views.messageFilters( { model: this.filters, users: collection } );
 
 			this.views.add( { id: 'filters', view: filters_view } );
 
@@ -163,28 +165,28 @@ window.bp = window.bp || {};
 			feedback.inject( '.bp-messages-feedback' );
 		},
 
-		addInvite: function( user ) {
+		addMessage: function( user ) {
 			if ( true === user.get( 'selected' ) ) {
 				this.messages.add( user );
 			} else {
-				var invite = this.messages.get( user.get( 'id' ) );
+				var message = this.messages.get( user.get( 'id' ) );
 
-				if ( true === invite.get( 'selected' ) ) {
-					this.messages.remove( invite );
+				if ( true === message.get( 'selected' ) ) {
+					this.messages.remove( message );
 				}
 			}
 		},
 
-		manageInvite: function( invite ) {
-			var user = this.users.get( invite.get( 'id' ) );
+		manageMessage: function( message ) {
+			var user = this.users.get( message.get( 'id' ) );
 
 			// Update the user
 			if ( user ) {
 				user.set( 'selected', false );
 			}
 
-			// remove the invite
-			this.messages.remove( invite );
+			// remove the message
+			this.messages.remove( message );
 
 			// No more messages, reset the collection
 			if ( ! this.messages.length  ) {
@@ -196,7 +198,7 @@ window.bp = window.bp || {};
 			this.navItems.get( 'messages' ).set( { active: 0, hide: 0 } );
 		},
 
-		hideInviteNav: function() {
+		hideMessageNav: function() {
 			this.navItems.get( 'messages' ).set( { active: 0, hide: 1 } );
 		},
 
@@ -280,8 +282,8 @@ window.bp = window.bp || {};
 
 			if ( 'delete' === method ) {
 				options.data = _.extend( options.data, {
-					action   : 'groups_delete_group_invite',
-					_wpnonce : BP_Nouveau.group_messages.nonces.uninvite
+					action   : 'groups_delete_group_message',
+					_wpnonce : BP_Nouveau.group_messages.nonces.unmessage
 				} );
 
 				if ( model ) {
@@ -440,7 +442,7 @@ window.bp = window.bp || {};
 				this.el.className += ' dynamic';
 			}
 
-			if ( 'invited' === this.model.get( 'id' ) ) {
+			if ( 'messaged' === this.model.get( 'id' ) ) {
 				this.el.className += ' pending';
 			}
 
@@ -451,12 +453,12 @@ window.bp = window.bp || {};
 			bp.Nouveau.GroupMessages.messages.on( 'remove', this.updateCount, this );
 		},
 
-		updateCount: function( user, invite ) {
+		updateCount: function( user, message ) {
 			if ( 'messages' !== this.model.get( 'id' ) ) {
 				return;
 			}
 
-			var span_count = _.isUndefined( invite ) ? this.model.get( 'messages_count' ) : invite.models.length;
+			var span_count = _.isUndefined( message ) ? this.model.get( 'messages_count' ) : message.models.length;
 
 			if ( $( this.el ).find( 'span' ).length ) {
 				$( this.el ).find( 'span' ).html( span_count );
@@ -480,7 +482,7 @@ window.bp = window.bp || {};
 		template  :  bp.template( 'bp-messages-paginate' )
 	} );
 
-	bp.Views.inviteFilters = bp.Nouveau.GroupMessages.View.extend( {
+	bp.Views.messageFilters = bp.Nouveau.GroupMessages.View.extend( {
 		tagName: 'div',
 		template:  bp.template( 'bp-messages-filters' ),
 
@@ -492,6 +494,7 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
+			console.log(this);
 			this.model.on( 'change', this.filterUsers, this );
 			this.options.users.on( 'sync', this.addPaginatation, this );
 		},
@@ -560,7 +563,7 @@ window.bp = window.bp || {};
 		}
 	} );
 
-	bp.Views.inviteUsers = bp.Nouveau.GroupMessages.View.extend( {
+	bp.Views.messageUsers = bp.Nouveau.GroupMessages.View.extend( {
 		tagName   : 'ul',
 		className : 'item-list bp-list',
 		id        : 'members-list',
@@ -600,23 +603,23 @@ window.bp = window.bp || {};
 		},
 
 		addUser: function( user ) {
-			this.views.add( new bp.Views.inviteUser( { model: user } ) );
+			this.views.add( new bp.Views.messageUser( { model: user } ) );
 		}
 	} );
 
-	bp.Views.inviteUser = bp.Nouveau.GroupMessages.View.extend( {
+	bp.Views.messageUser = bp.Nouveau.GroupMessages.View.extend( {
 		tagName  : 'li',
 		template : bp.template( 'bp-messages-users' ),
 
 		events: {
-			'click .group-add-remove-invite-button'    : 'toggleUser',
-			'click .group-remove-invite-button'        : 'removeInvite'
+			'click .group-add-remove-message-button'    : 'toggleUser',
+			'click .group-remove-message-button'        : 'removeMessage'
 		},
 
 		initialize: function() {
-			var invite = bp.Nouveau.GroupMessages.messages.get( this.model.get( 'id' ) );
+			var message = bp.Nouveau.GroupMessages.messages.get( this.model.get( 'id' ) );
 
-			if ( invite ) {
+			if ( message ) {
 				this.model.set( 'selected', true, { silent: true } );
 			}
 		},
@@ -650,7 +653,7 @@ window.bp = window.bp || {};
 			this.render();
 		},
 
-		removeInvite: function( event ) {
+		removeMessage: function( event ) {
 			event.preventDefault();
 
 			var collection = this.model.collection;
@@ -660,12 +663,12 @@ window.bp = window.bp || {};
 			}
 
 			collection.sync( 'delete', this.model.get( 'id' ), {
-				success : _.bind( this.inviteRemoved, this ),
-				error   : _.bind( this.uninviteError, this )
+				success : _.bind( this.messageRemoved, this ),
+				error   : _.bind( this.unmessageError, this )
 			} );
 		},
 
-		inviteRemoved: function( response ) {
+		messageRemoved: function( response ) {
 			var collection = this.model.collection;
 
 			if ( ! collection.length ) {
@@ -680,12 +683,12 @@ window.bp = window.bp || {};
 			if ( false === response.has_messages ) {
 				bp.Nouveau.GroupMessages.displayFeedback( response.feedback, 'success' );
 
-				// Hide the invited nav
-				bp.Nouveau.GroupMessages.navItems.get( 'invited' ).set( { active: 0, hide: 1 } );
+				// Hide the messaged nav
+				bp.Nouveau.GroupMessages.navItems.get( 'messaged' ).set( { active: 0, hide: 1 } );
 			}
 		},
 
-		uninviteError: function( response ) {
+		unmessageError: function( response ) {
 			bp.Nouveau.GroupMessages.displayFeedback( response.feedback, 'error' );
 		}
 	} );
@@ -728,8 +731,8 @@ window.bp = window.bp || {};
 			bp.Nouveau.GroupMessages.displayFeedback( response.feedback, 'success' );
 
 			// Display the pending messages
-			if ( 1 === bp.Nouveau.GroupMessages.navItems.get( 'invited' ).get( 'hide' ) && ! BP_Nouveau.group_messages.is_group_create ) {
-				bp.Nouveau.GroupMessages.navItems.get( 'invited' ).set( { active: 0, hide: 0 } );
+			if ( 1 === bp.Nouveau.GroupMessages.navItems.get( 'messaged' ).get( 'hide' ) && ! BP_Nouveau.group_messages.is_group_create ) {
+				bp.Nouveau.GroupMessages.navItems.get( 'messaged' ).set( { active: 0, hide: 0 } );
 			}
 		},
 
@@ -742,14 +745,14 @@ window.bp = window.bp || {};
 
 			if ( ! _.isUndefined( response.users ) ) {
 				// Display the pending messages
-				if ( 1 === bp.Nouveau.GroupMessages.navItems.get( 'invited' ).get( 'hide' ) && response.users.length < this.collection.length ) {
-					bp.Nouveau.GroupMessages.navItems.get( 'invited' ).set( { active: 0, hide: 0 } );
+				if ( 1 === bp.Nouveau.GroupMessages.navItems.get( 'messaged' ).get( 'hide' ) && response.users.length < this.collection.length ) {
+					bp.Nouveau.GroupMessages.navItems.get( 'messaged' ).set( { active: 0, hide: 0 } );
 				}
 
-				_.each( this.collection.models, function( invite ) {
+				_.each( this.collection.models, function( message ) {
 					// If not an error, remove from the selection
-					if ( -1 === _.indexOf( response.users, invite.get( 'id' ) ) ) {
-						invite.set( 'selected', false );
+					if ( -1 === _.indexOf( response.users, message.get( 'id' ) ) ) {
+						message.set( 'selected', false );
 					}
 				}, this );
 			}
@@ -782,8 +785,8 @@ window.bp = window.bp || {};
 		initialize: function() {
 			this.cleanContent();
 
-			_.each( this.collection.models, function( invite ) {
-				this.views.add( new bp.Views.selectedUser( { model: invite } ) );
+			_.each( this.collection.models, function( message ) {
+				this.views.add( new bp.Views.selectedUser( { model: message } ) );
 			}, this );
 		},
 
@@ -806,14 +809,14 @@ window.bp = window.bp || {};
 			this.model.on( 'change:selected', this.removeView, this );
 
 			// Build the BP Tooltip.
-			if ( ! this.model.get( 'uninviteTooltip' ) ) {
-				this.model.set( 'uninviteTooltip',
-					BP_Nouveau.group_messages.removeUserInvite.replace( '%s', this.model.get( 'name' ) ),
+			if ( ! this.model.get( 'unmessageTooltip' ) ) {
+				this.model.set( 'unmessageTooltip',
+					BP_Nouveau.group_messages.removeUserMessage.replace( '%s', this.model.get( 'name' ) ),
 					{ silent: true }
 				);
 			}
 
-			this.el.id = 'uninvite-user-' + this.model.get( 'id' );
+			this.el.id = 'unmessage-user-' + this.model.get( 'id' );
 		},
 
 		removeSelection: function( event ) {

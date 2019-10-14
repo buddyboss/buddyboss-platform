@@ -23,14 +23,14 @@ class vBulletin3 extends BBP_Converter_Base {
 	 */
 	private function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'forum',
 			'from_fieldname' => 'forumid',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id'
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0. Stored in postmeta)
@@ -38,7 +38,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'forum',
 			'from_fieldname' => 'parentid',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_parent_id'
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -46,7 +46,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'forum',
 			'from_fieldname' => 'threadcount',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_topic_count'
+			'to_fieldname'   => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -54,23 +54,23 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'forum',
 			'from_fieldname' => 'replycount',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_reply_count'
+			'to_fieldname'   => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Includes unpublished topics, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum',
-			'from_fieldname'  => 'threadcount',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_topic_count'
+			'from_tablename' => 'forum',
+			'from_fieldname' => 'threadcount',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Includes unpublished replies, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum',
-			'from_fieldname'  => 'replycount',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_total_reply_count'
+			'from_tablename' => 'forum',
+			'from_fieldname' => 'replycount',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -78,7 +78,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'forum',
 			'from_fieldname' => 'title',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid confilcts)
@@ -87,7 +87,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'title_clean',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -96,7 +96,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'description',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -104,7 +104,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'forum',
 			'from_fieldname' => 'displayorder',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum type (Category = -1 or Forum > 0, Stored in postmeta)
@@ -113,39 +113,39 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'parentid',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_type',
-			'callback_method' => 'callback_forum_type'
+			'callback_method' => 'callback_forum_type',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date( 'Y-m-d H:i:s' )
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
-		$this->field_map[]	 = array(
+		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date( 'Y-m-d H:i:s' )
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
-		$this->field_map[]	 = array(
+		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date( 'Y-m-d H:i:s' )
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
-		$this->field_map[]	 = array(
+		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date( 'Y-m-d H:i:s' )
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'thread',
 			'from_fieldname' => 'threadid',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -154,7 +154,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'forumid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -163,7 +163,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'replycount',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -172,7 +172,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'replycount',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic author.
@@ -181,7 +181,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'postuserid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic Author ip (Stored in postmeta)
@@ -193,7 +193,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_type'       => 'INNER',
 			'join_expression' => 'USING (threadid) WHERE post.parentid = 0',
 			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_author_ip'
+			'to_fieldname'    => '_bbp_author_ip',
 		);
 
 		// Topic title.
@@ -201,7 +201,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'thread',
 			'from_fieldname' => 'title',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -210,7 +210,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'title',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -219,7 +219,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'forumid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic content.
@@ -232,7 +232,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_expression' => 'USING (threadid) WHERE post.parentid = 0',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic status (Open or Closed)
@@ -241,7 +241,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'open',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
 		// Sticky status (Stored in postmeta))
@@ -250,7 +250,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'sticky',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_old_sticky_status',
-			'callback_method' => 'callback_sticky_status'
+			'callback_method' => 'callback_sticky_status',
 		);
 
 		// Topic dates.
@@ -259,38 +259,38 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
-			'from_tablename' => 'thread',
-			'from_fieldname' => 'lastpost',
-			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_last_active_time',
-			'callback_method' => 'callback_datetime'
+			'from_tablename'  => 'thread',
+			'from_fieldname'  => 'lastpost',
+			'to_type'         => 'topic',
+			'to_fieldname'    => '_bbp_last_active_time',
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		// Topic id.
 		$this->field_map[] = array(
@@ -298,15 +298,15 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'threadid',
 			'to_type'         => 'tags',
 			'to_fieldname'    => 'objectid',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Taxonomy ID.
 		$this->field_map[] = array(
-			'from_tablename'  => 'tagthread',
-			'from_fieldname'  => 'tagid',
-			'to_type'         => 'tags',
-			'to_fieldname'    => 'taxonomy'
+			'from_tablename' => 'tagthread',
+			'from_fieldname' => 'tagid',
+			'to_type'        => 'tags',
+			'to_fieldname'   => 'taxonomy',
 		);
 
 		// Term text.
@@ -317,7 +317,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_type'       => 'INNER',
 			'join_expression' => 'USING (tagid)',
 			'to_type'         => 'tags',
-			'to_fieldname'    => 'name'
+			'to_fieldname'    => 'name',
 		);
 
 		// Term slug.
@@ -329,17 +329,17 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_expression' => 'USING (tagid)',
 			'to_type'         => 'tags',
 			'to_fieldname'    => 'slug',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
-		/** Reply Section *****************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'post',
-			'from_fieldname'  => 'postid',
-			'to_type'         => 'reply',
-			'to_fieldname'    => '_bbp_post_id'
+			'from_tablename' => 'post',
+			'from_fieldname' => 'postid',
+			'to_type'        => 'reply',
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -352,7 +352,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_expression' => 'USING (threadid) WHERE post.parentid != 0',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -361,7 +361,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'threadid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author ip (Stored in postmeta)
@@ -369,7 +369,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'post',
 			'from_fieldname' => 'ipaddress',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_author_ip'
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Reply author.
@@ -378,7 +378,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'userid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
@@ -391,12 +391,12 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_expression' => 'USING (threadid) WHERE post.parentid != 0',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_title',
-			'callback_method' => 'callback_reply_title'
+			'callback_method' => 'callback_reply_title',
 		);
 
-        // Reply slug (Clean name to avoid conflicts)
-        // Note: We join the 'thread' table because 'post' table does not include reply slug.
-        $this->field_map[] = array(
+		// Reply slug (Clean name to avoid conflicts)
+		// Note: We join the 'thread' table because 'post' table does not include reply slug.
+		$this->field_map[] = array(
 			'from_tablename'  => 'thread',
 			'from_fieldname'  => 'title',
 			'join_tablename'  => 'post',
@@ -404,7 +404,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'join_expression' => 'USING (threadid) WHERE post.parentid != 0',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -413,7 +413,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'pagetext',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -422,7 +422,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'threadid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -431,38 +431,38 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'post',
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'post',
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
-		$this->field_map[]	 = array(
+		$this->field_map[] = array(
 			'from_tablename'  => 'post',
 			'from_fieldname'  => 'dateline',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'user',
 			'from_fieldname' => 'userid',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
@@ -471,7 +471,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'password',
 			'to_type'         => 'user',
 			'to_fieldname'    => '_bbp_password',
-			'callback_method' => 'callback_savepass'
+			'callback_method' => 'callback_savepass',
 		);
 
 		// Store old User Salt (This is only used for the SELECT row info for the above password save)
@@ -479,14 +479,14 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'salt',
 			'to_type'        => 'user',
-			'to_fieldname'   => ''
+			'to_fieldname'   => '',
 		);
 
 		// User password verify class (Stored in usermeta for verifying password)
 		$this->field_map[] = array(
 			'to_type'      => 'user',
 			'to_fieldname' => '_bbp_class',
-			'default'      => 'vBulletin3'
+			'default'      => 'vBulletin3',
 		);
 
 		// User name.
@@ -494,7 +494,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User email.
@@ -502,7 +502,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User homepage.
@@ -510,7 +510,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'homepage',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_url'
+			'to_fieldname'   => 'user_url',
 		);
 
 		// User registered.
@@ -519,7 +519,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_fieldname'  => 'joindate',
 			'to_type'         => 'user',
 			'to_fieldname'    => 'user_registered',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// User AIM (Stored in usermeta)
@@ -527,7 +527,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'aim',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'aim'
+			'to_fieldname'   => 'aim',
 		);
 
 		// User Yahoo (Stored in usermeta)
@@ -535,7 +535,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'yahoo',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'yim'
+			'to_fieldname'   => 'yim',
 		);
 
 		// User ICQ (Stored in usermeta)
@@ -543,7 +543,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'icq',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_vbulletin3_user_icq'
+			'to_fieldname'   => '_bbp_vbulletin3_user_icq',
 		);
 
 		// User MSN (Stored in usermeta)
@@ -551,7 +551,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'msn',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_vbulletin3_user_msn'
+			'to_fieldname'   => '_bbp_vbulletin3_user_msn',
 		);
 
 		// User Skype (Stored in usermeta)
@@ -559,7 +559,7 @@ class vBulletin3 extends BBP_Converter_Base {
 			'from_tablename' => 'user',
 			'from_fieldname' => 'skype',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_vbulletin3_user_skype'
+			'to_fieldname'   => '_bbp_vbulletin3_user_skype',
 		);
 	}
 
@@ -578,7 +578,10 @@ class vBulletin3 extends BBP_Converter_Base {
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
 	public function callback_savepass( $field, $row ) {
-		$pass_array = array( 'hash'	 => $field, 'salt'	 => $row['salt'] );
+		$pass_array = array(
+			'hash' => $field,
+			'salt' => $row['salt'],
+		);
 		return $pass_array;
 	}
 
@@ -619,12 +622,12 @@ class vBulletin3 extends BBP_Converter_Base {
 	 */
 	public function callback_sticky_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'sticky';       // vBulletin Sticky 'topic_sticky = 1'
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'normal';       // vBulletin Normal Topic 'topic_sticky = 0'
 				break;
 		}
@@ -649,7 +652,7 @@ class vBulletin3 extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = !empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
 		return $title;
 	}
 
@@ -661,12 +664,12 @@ class vBulletin3 extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 1 ) {
 		switch ( $status ) {
-			case 0 :
+			case 0:
 				$status = 'closed';
 				break;
 
-			case 1  :
-			default :
+			case 1:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -685,7 +688,7 @@ class vBulletin3 extends BBP_Converter_Base {
 		// Replace '[QUOTE]' with '<blockquote>'
 		$vbulletin_markup = preg_replace( '/\[QUOTE\]/', '<blockquote>', $vbulletin_markup );
 		// Replace '[QUOTE=User Name($1);PostID($2)]' with '<em>@$1 $2 wrote:</em><blockquote>"
-		$vbulletin_markup = preg_replace( '/\[QUOTE=(.*?);(.*?)\]/' , '<em>@$1 $2 wrote:</em><blockquote>', $vbulletin_markup );
+		$vbulletin_markup = preg_replace( '/\[QUOTE=(.*?);(.*?)\]/', '<em>@$1 $2 wrote:</em><blockquote>', $vbulletin_markup );
 		// Replace '[/QUOTE]' with '</blockquote>'
 		$vbulletin_markup = preg_replace( '/\[\/QUOTE\]/', '</blockquote>', $vbulletin_markup );
 		// Replace '[MENTION=###($1)]User Name($2)[/MENTION]' with '@$2"
@@ -698,8 +701,8 @@ class vBulletin3 extends BBP_Converter_Base {
 		$field = $vbulletin_markup;
 
 		// Parse out any bbCodes in $field with the BBCode 'parser.php'
-		require_once( bbpress()->admin->admin_dir . 'parser.php' );
-		$bbcode = BBCode::getInstance();
+		require_once bbpress()->admin->admin_dir . 'parser.php';
+		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
 		return html_entity_decode( $bbcode->Parse( $field ) );

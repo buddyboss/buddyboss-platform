@@ -12,15 +12,16 @@
  * @since BuddyPress 1.0.0
  */
 function groups_screen_group_invites() {
-	$group_id = (int)bp_action_variable( 1 );
+	$group_id = (int) bp_action_variable( 1 );
 
 	if ( bp_is_action_variable( 'accept' ) && is_numeric( $group_id ) ) {
 		// Check the nonce.
-		if ( !check_admin_referer( 'groups_accept_invite' ) )
+		if ( ! check_admin_referer( 'groups_accept_invite' ) ) {
 			return false;
+		}
 
-		if ( !groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
-			bp_core_add_message( __('Group invite could not be accepted', 'buddyboss'), 'error' );
+		if ( ! groups_accept_invite( bp_loggedin_user_id(), $group_id ) ) {
+			bp_core_add_message( __( 'Group invite could not be accepted', 'buddyboss' ), 'error' );
 		} else {
 			// Record this in activity feeds.
 			$group = groups_get_group( $group_id );
@@ -28,10 +29,12 @@ function groups_screen_group_invites() {
 			bp_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddyboss' ), bp_get_group_link( $group ) ) );
 
 			if ( bp_is_active( 'activity' ) ) {
-				groups_record_activity( array(
-					'type'    => 'joined_group',
-					'item_id' => $group->id
-				) );
+				groups_record_activity(
+					array(
+						'type'    => 'joined_group',
+						'item_id' => $group->id,
+					)
+				);
 			}
 		}
 
@@ -45,10 +48,11 @@ function groups_screen_group_invites() {
 
 	} elseif ( bp_is_action_variable( 'reject' ) && is_numeric( $group_id ) ) {
 		// Check the nonce.
-		if ( !check_admin_referer( 'groups_reject_invite' ) )
+		if ( ! check_admin_referer( 'groups_reject_invite' ) ) {
 			return false;
+		}
 
-		if ( !groups_reject_invite( bp_loggedin_user_id(), $group_id ) ) {
+		if ( ! groups_reject_invite( bp_loggedin_user_id(), $group_id ) ) {
 			bp_core_add_message( __( 'Group invite could not be rejected', 'buddyboss' ), 'error' );
 		} else {
 			bp_core_add_message( __( 'Group invite rejected', 'buddyboss' ) );

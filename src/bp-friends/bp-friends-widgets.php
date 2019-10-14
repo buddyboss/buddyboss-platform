@@ -26,7 +26,12 @@ function bp_friends_register_widgets() {
 		return;
 	}
 
-	add_action( 'widgets_init', function() { register_widget( 'BP_Core_Friends_Widget' ); } );
+	add_action(
+		'widgets_init',
+		function() {
+			register_widget( 'BP_Core_Friends_Widget' );
+		}
+	);
 }
 add_action( 'bp_register_widgets', 'bp_friends_register_widgets' );
 
@@ -64,7 +69,10 @@ function bp_core_ajax_widget_friends() {
 
 	if ( bp_has_members( $members_args ) ) : ?>
 		<?php echo '0[[SPLIT]]'; // Return valid result. TODO: remove this. ?>
-		<?php while ( bp_members() ) : bp_the_member(); ?>
+		<?php
+		while ( bp_members() ) :
+			bp_the_member();
+			?>
 			<li class="vcard">
 				<div class="item-avatar">
 					<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar(); ?></a>
@@ -83,11 +91,12 @@ function bp_core_ajax_widget_friends() {
 			</li>
 		<?php endwhile; ?>
 
-	<?php else: ?>
-		<?php echo "-1[[SPLIT]]<li>"; ?>
+	<?php else : ?>
+		<?php echo '-1[[SPLIT]]<li>'; ?>
 		<?php _e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
-		<?php echo "</li>"; ?>
-	<?php endif;
+		<?php echo '</li>'; ?>
+		<?php
+	endif;
 }
 add_action( 'wp_ajax_widget_friends', 'bp_core_ajax_widget_friends' );
 add_action( 'wp_ajax_nopriv_widget_friends', 'bp_core_ajax_widget_friends' );

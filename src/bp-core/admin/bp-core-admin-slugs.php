@@ -17,18 +17,18 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function bp_core_admin_get_directory_pages() {
-	$bp = buddypress();
+	$bp              = buddypress();
 	$directory_pages = array();
 
 	// Loop through loaded components and collect directories.
 	if ( is_array( $bp->loaded_components ) ) {
-		foreach( $bp->loaded_components as $component_slug => $component_id ) {
+		foreach ( $bp->loaded_components as $component_slug => $component_id ) {
 
 			// Only components that need directories should be listed here.
-			if ( isset( $bp->{$component_id} ) && !empty( $bp->{$component_id}->has_directory ) ) {
+			if ( isset( $bp->{$component_id} ) && ! empty( $bp->{$component_id}->has_directory ) ) {
 
 				// The component->name property was introduced in BP 1.5, so we must provide a fallback.
-				$directory_pages[$component_id] = !empty( $bp->{$component_id}->name ) ? $bp->{$component_id}->name : ucwords( $component_id );
+				$directory_pages[ $component_id ] = ! empty( $bp->{$component_id}->name ) ? $bp->{$component_id}->name : ucwords( $component_id );
 			}
 		}
 	}
@@ -49,7 +49,7 @@ function bp_core_admin_get_directory_pages() {
 		}
 	}
 
-	/** Directory Display *****************************************************/
+	/** Directory Display */
 
 	/**
 	 * Filters the loaded components needing directory page association to a WordPress page.
@@ -65,16 +65,16 @@ function bp_core_admin_get_directory_pages() {
  * Insert a value or key/value pair after a specific key in an array.  If key doesn't exist, value is appended
  * to the end of the array.
  *
- * @param array $array
+ * @param array  $array
  * @param string $key
- * @param array $new
+ * @param array  $new
  *
  * @return array
  */
 function array_insert_after( array $array, $key, array $new ) {
-	$keys = array_keys( $array );
+	$keys  = array_keys( $array );
 	$index = array_search( $key, $keys );
-	$pos = false === $index ? count( $array ) : $index + 1;
+	$pos   = false === $index ? count( $array ) : $index + 1;
 	return array_merge( array_slice( $array, 0, $pos ), $new, array_slice( $array, $pos ) );
 }
 
@@ -113,26 +113,26 @@ function bp_core_admin_get_static_pages() {
  */
 // function bp_core_admin_slugs_setup_handler() {
 
-// 	if ( isset( $_POST['bp-admin-pages-submit'] ) ) {
-// 		if ( !check_admin_referer( 'bp-admin-pages-setup' ) )
-// 			return false;
+// if ( isset( $_POST['bp-admin-pages-submit'] ) ) {
+// if ( !check_admin_referer( 'bp-admin-pages-setup' ) )
+// return false;
 
-// 		// Then, update the directory pages.
-// 		if ( isset( $_POST['bp_pages'] ) ) {
-// 			$valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
+// Then, update the directory pages.
+// if ( isset( $_POST['bp_pages'] ) ) {
+// $valid_pages = array_merge( bp_core_admin_get_directory_pages(), bp_core_admin_get_static_pages() );
 
-// 			$new_directory_pages = array();
-// 			foreach ( (array) $_POST['bp_pages'] as $key => $value ) {
-// 				if ( isset( $valid_pages[ $key ] ) ) {
-// 					$new_directory_pages[ $key ] = (int) $value;
-// 				}
-// 			}
-// 			bp_core_update_directory_page_ids( $new_directory_pages );
-// 		}
+// $new_directory_pages = array();
+// foreach ( (array) $_POST['bp_pages'] as $key => $value ) {
+// if ( isset( $valid_pages[ $key ] ) ) {
+// $new_directory_pages[ $key ] = (int) $value;
+// }
+// }
+// bp_core_update_directory_page_ids( $new_directory_pages );
+// }
 
-// 		$base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings', 'updated' => 'true' ), 'admin.php' ) );
+// $base_url = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-page-settings', 'updated' => 'true' ), 'admin.php' ) );
 
-// 		wp_redirect( $base_url );
-// 	}
+// wp_redirect( $base_url );
+// }
 // }
 // add_action( 'bp_admin_init', 'bp_core_admin_slugs_setup_handler' );

@@ -49,6 +49,11 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 			'footer'       => true,
 		),
+		'bp-nouveau-group-messages' => array(
+			'file'         => 'js/buddypress-group-messages%s.js',
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
+			'footer'       => true,
+		),
 	) );
 }
 
@@ -67,6 +72,8 @@ function bp_nouveau_groups_enqueue_scripts() {
 			}
 		' );
 	}
+
+	wp_enqueue_script( 'bp-nouveau-group-messages' );
 
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
 		return;
@@ -1188,22 +1195,22 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 			'caption' => __( 'All Members', 'buddyboss' ),
 			'order'   => 5,
 		),
-		'invited' => array(
-			'id'      => 'invited',
-			'caption' => __( 'Pending Invites', 'buddyboss' ),
+		'messaged' => array(
+			'id'      => 'messaged',
+			'caption' => __( 'Pending Messages', 'buddyboss' ),
 			'order'   => 90,
 			'hide'    => (int) ! $show_pending,
 		),
-		'invites' => array(
-			'id'      => 'invites',
-			'caption' => __( 'Send Invites', 'buddyboss' ),
+		'messages' => array(
+			'id'      => 'messages',
+			'caption' => __( 'Send Messages', 'buddyboss' ),
 			'order'   => 100,
 			'hide'    => 1,
-			'href'    => '#send-invites-editor',
+			'href'    => '#send-messages-editor',
 		),
 	);
 
-	$params['group_invites'] = array(
+	$params['group_messages'] = array(
 		'nav'                => bp_sort_by_key( $invites_nav, 'order', 'num' ),
 		'loading'            => __( 'Loading members. Please wait.', 'buddyboss' ),
 		'invites_form'       => __( 'Use the "Send" button to send your invite or the "Cancel" button to abort.', 'buddyboss' ),
@@ -1213,8 +1220,8 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'group_id'           => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
 		'is_group_create'    => bp_is_group_create(),
 		'nonces'             => array(
-			'uninvite'     => wp_create_nonce( 'groups_invite_uninvite_user' ),
-			'send_invites' => wp_create_nonce( 'groups_send_invites' )
+			'uninvite'     => wp_create_nonce( 'groups_message_unmessage_user' ),
+			'send_invites' => wp_create_nonce( 'groups_send_messages' )
 		),
 	);
 

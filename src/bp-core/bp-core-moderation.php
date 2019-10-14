@@ -25,7 +25,7 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_check_for_flood( $user_id = 0 ) {
 
 	// Option disabled. No flood checks.
-	if ( !$throttle_time = bp_get_option( '_bp_throttle_time' ) ) {
+	if ( ! $throttle_time = bp_get_option( '_bp_throttle_time' ) ) {
 		return true;
 	}
 
@@ -35,7 +35,7 @@ function bp_core_check_for_flood( $user_id = 0 ) {
 	}
 
 	$last_posted = get_user_meta( $user_id, '_bp_last_posted', true );
-	if ( isset( $last_posted ) && ( time() < ( $last_posted + $throttle_time ) ) && !current_user_can( 'throttle' ) ) {
+	if ( isset( $last_posted ) && ( time() < ( $last_posted + $throttle_time ) ) && ! current_user_can( 'throttle' ) ) {
 		return false;
 	}
 
@@ -270,7 +270,8 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 		$word = trim( $word );
 
 		// Skip empty lines.
-		if ( empty( $word ) ) { continue; }
+		if ( empty( $word ) ) {
+			continue; }
 
 		// Do some escaping magic so that '#' chars in the
 		// spam words don't break things.
@@ -278,7 +279,7 @@ function bp_core_check_for_blacklist( $user_id = 0, $title = '', $content = '', 
 		$pattern = "#$word#i";
 
 		// Loop through post data.
-		foreach( $_post as $post_data ) {
+		foreach ( $_post as $post_data ) {
 
 			// Check each user data for current word.
 			if ( preg_match( $pattern, $post_data ) ) {

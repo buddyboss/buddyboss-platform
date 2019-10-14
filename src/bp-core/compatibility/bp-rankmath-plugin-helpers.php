@@ -25,7 +25,7 @@ class BP_RankMath_Title implements IPaper {
 	public function title() {
 		if ( bp_is_user() ) {
 			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
-			if ( empty( $title )) {
+			if ( empty( $title ) ) {
 				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
 			}
 		} else {

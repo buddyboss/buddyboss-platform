@@ -124,7 +124,7 @@ class BP_Notifications_Notification {
 		 */
 		do_action_ref_array( 'bp_notification_before_save', array( &$this ) );
 
-		$data = array(
+		$data        = array(
 			'user_id'           => $this->user_id,
 			'item_id'           => $this->item_id,
 			'secondary_item_id' => $this->secondary_item_id,
@@ -139,7 +139,7 @@ class BP_Notifications_Notification {
 		if ( ! empty( $this->id ) ) {
 			$result = self::_update( $data, array( 'ID' => $this->id ), $data_format, array( '%d' ) );
 
-		// Insert.
+			// Insert.
 		} else {
 			$result = self::_insert( $data, $data_format );
 		}
@@ -284,25 +284,25 @@ class BP_Notifications_Notification {
 
 		// The id.
 		if ( ! empty( $args['id'] ) ) {
-			$id_in = implode( ',', wp_parse_id_list( $args['id'] ) );
+			$id_in                  = implode( ',', wp_parse_id_list( $args['id'] ) );
 			$where_conditions['id'] = "id IN ({$id_in})";
 		}
 
 		// The user_id.
 		if ( ! empty( $args['user_id'] ) ) {
-			$user_id_in = implode( ',', wp_parse_id_list( $args['user_id'] ) );
+			$user_id_in                  = implode( ',', wp_parse_id_list( $args['user_id'] ) );
 			$where_conditions['user_id'] = "user_id IN ({$user_id_in})";
 		}
 
 		// The item_id.
 		if ( ! empty( $args['item_id'] ) ) {
-			$item_id_in = implode( ',', wp_parse_id_list( $args['item_id'] ) );
+			$item_id_in                  = implode( ',', wp_parse_id_list( $args['item_id'] ) );
 			$where_conditions['item_id'] = "item_id IN ({$item_id_in})";
 		}
 
 		// The secondary_item_id.
 		if ( ! empty( $args['secondary_item_id'] ) ) {
-			$secondary_item_id_in = implode( ',', wp_parse_id_list( $args['secondary_item_id'] ) );
+			$secondary_item_id_in                  = implode( ',', wp_parse_id_list( $args['secondary_item_id'] ) );
 			$where_conditions['secondary_item_id'] = "secondary_item_id IN ({$secondary_item_id_in})";
 		}
 
@@ -319,7 +319,7 @@ class BP_Notifications_Notification {
 				$cn_clean[] = $wpdb->prepare( '%s', $cn );
 			}
 
-			$cn_in = implode( ',', $cn_clean );
+			$cn_in                              = implode( ',', $cn_clean );
 			$where_conditions['component_name'] = "component_name IN ({$cn_in})";
 		}
 
@@ -336,21 +336,21 @@ class BP_Notifications_Notification {
 				$ca_clean[] = $wpdb->prepare( '%s', $ca );
 			}
 
-			$ca_in = implode( ',', $ca_clean );
+			$ca_in                                = implode( ',', $ca_clean );
 			$where_conditions['component_action'] = "component_action IN ({$ca_in})";
 		}
 
 		// If is_new.
 		if ( ! empty( $args['is_new'] ) && 'both' !== $args['is_new'] ) {
-			$where_conditions['is_new'] = "is_new = 1";
+			$where_conditions['is_new'] = 'is_new = 1';
 		} elseif ( isset( $args['is_new'] ) && ( 0 === $args['is_new'] || false === $args['is_new'] ) ) {
-			$where_conditions['is_new'] = "is_new = 0";
+			$where_conditions['is_new'] = 'is_new = 0';
 		}
 
 		// The search_terms.
 		if ( ! empty( $args['search_terms'] ) ) {
-			$search_terms_like = '%' . bp_esc_like( $args['search_terms'] ) . '%';
-			$where_conditions['search_terms'] = $wpdb->prepare( "( component_name LIKE %s OR component_action LIKE %s )", $search_terms_like, $search_terms_like );
+			$search_terms_like                = '%' . bp_esc_like( $args['search_terms'] ) . '%';
+			$where_conditions['search_terms'] = $wpdb->prepare( '( component_name LIKE %s OR component_action LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
 		// The date query.
@@ -442,10 +442,10 @@ class BP_Notifications_Notification {
 
 		// Custom LIMIT.
 		if ( ! empty( $args['page'] ) && ! empty( $args['per_page'] ) ) {
-			$page     = absint( $args['page']     );
+			$page     = absint( $args['page'] );
 			$per_page = absint( $args['per_page'] );
 			$offset   = $per_page * ( $page - 1 );
-			$retval   = $wpdb->prepare( "LIMIT %d, %d", $offset, $per_page );
+			$retval   = $wpdb->prepare( 'LIMIT %d, %d', $offset, $per_page );
 		}
 
 		return $retval;
@@ -501,43 +501,43 @@ class BP_Notifications_Notification {
 		// The id.
 		if ( ! empty( $args['id'] ) ) {
 			$where_clauses['data']['id'] = absint( $args['id'] );
-			$where_clauses['format'][] = '%d';
+			$where_clauses['format'][]   = '%d';
 		}
 
 		// The user_id.
 		if ( ! empty( $args['user_id'] ) ) {
 			$where_clauses['data']['user_id'] = absint( $args['user_id'] );
-			$where_clauses['format'][] = '%d';
+			$where_clauses['format'][]        = '%d';
 		}
 
 		// The item_id.
 		if ( ! empty( $args['item_id'] ) ) {
 			$where_clauses['data']['item_id'] = absint( $args['item_id'] );
-			$where_clauses['format'][] = '%d';
+			$where_clauses['format'][]        = '%d';
 		}
 
 		// The secondary_item_id.
 		if ( ! empty( $args['secondary_item_id'] ) ) {
 			$where_clauses['data']['secondary_item_id'] = absint( $args['secondary_item_id'] );
-			$where_clauses['format'][] = '%d';
+			$where_clauses['format'][]                  = '%d';
 		}
 
 		// The component_name.
 		if ( ! empty( $args['component_name'] ) ) {
 			$where_clauses['data']['component_name'] = $args['component_name'];
-			$where_clauses['format'][] = '%s';
+			$where_clauses['format'][]               = '%s';
 		}
 
 		// The component_action.
 		if ( ! empty( $args['component_action'] ) ) {
 			$where_clauses['data']['component_action'] = $args['component_action'];
-			$where_clauses['format'][] = '%s';
+			$where_clauses['format'][]                 = '%s';
 		}
 
 		// If is_new.
 		if ( isset( $args['is_new'] ) ) {
 			$where_clauses['data']['is_new'] = ! empty( $args['is_new'] ) ? 1 : 0;
-			$where_clauses['format'][] = '%d';
+			$where_clauses['format'][]       = '%d';
 		}
 
 		return $where_clauses;
@@ -572,23 +572,26 @@ class BP_Notifications_Notification {
 	 * @return array
 	 */
 	public static function parse_args( $args = '' ) {
-		return wp_parse_args( $args, array(
-			'id'                => false,
-			'user_id'           => false,
-			'item_id'           => false,
-			'secondary_item_id' => false,
-			'component_name'    => bp_notifications_get_registered_components(),
-			'component_action'  => false,
-			'is_new'            => true,
-			'search_terms'      => '',
-			'order_by'          => false,
-			'sort_order'        => false,
-			'page'              => false,
-			'per_page'          => false,
-			'meta_query'        => false,
-			'date_query'        => false,
-			'update_meta_cache' => true
-		) );
+		return wp_parse_args(
+			$args,
+			array(
+				'id'                => false,
+				'user_id'           => false,
+				'item_id'           => false,
+				'secondary_item_id' => false,
+				'component_name'    => bp_notifications_get_registered_components(),
+				'component_action'  => false,
+				'is_new'            => true,
+				'search_terms'      => '',
+				'order_by'          => false,
+				'sort_order'        => false,
+				'page'              => false,
+				'per_page'          => false,
+				'meta_query'        => false,
+				'date_query'        => false,
+				'update_meta_cache' => true,
+			)
+		);
 	}
 
 	/**
@@ -645,38 +648,48 @@ class BP_Notifications_Notification {
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
 
 		// SELECT.
-		$select_sql = "SELECT *";
+		$select_sql = 'SELECT *';
 
 		// FROM.
-		$from_sql   = "FROM {$bp->notifications->table_name} n ";
+		$from_sql = "FROM {$bp->notifications->table_name} n ";
 
 		// JOIN.
-		$join_sql   = $meta_query_sql['join'];
+		$join_sql = $meta_query_sql['join'];
 
 		// WHERE.
-		$where_sql  = self::get_where_sql( array(
-			'id'                => $r['id'],
-			'user_id'           => $r['user_id'],
-			'item_id'           => $r['item_id'],
-			'secondary_item_id' => $r['secondary_item_id'],
-			'component_name'    => $r['component_name'],
-			'component_action'  => $r['component_action'],
-			'is_new'            => $r['is_new'],
-			'search_terms'      => $r['search_terms'],
-			'date_query'        => $r['date_query']
-		), $select_sql, $from_sql, $join_sql, $meta_query_sql );
+		$where_sql = self::get_where_sql(
+			array(
+				'id'                => $r['id'],
+				'user_id'           => $r['user_id'],
+				'item_id'           => $r['item_id'],
+				'secondary_item_id' => $r['secondary_item_id'],
+				'component_name'    => $r['component_name'],
+				'component_action'  => $r['component_action'],
+				'is_new'            => $r['is_new'],
+				'search_terms'      => $r['search_terms'],
+				'date_query'        => $r['date_query'],
+			),
+			$select_sql,
+			$from_sql,
+			$join_sql,
+			$meta_query_sql
+		);
 
 		// ORDER BY.
-		$order_sql  = self::get_order_by_sql( array(
-			'order_by'   => $r['order_by'],
-			'sort_order' => $r['sort_order']
-		) );
+		$order_sql = self::get_order_by_sql(
+			array(
+				'order_by'   => $r['order_by'],
+				'sort_order' => $r['sort_order'],
+			)
+		);
 
 		// LIMIT %d, %d.
-		$pag_sql    = self::get_paged_sql( array(
-			'page'     => $r['page'],
-			'per_page' => $r['per_page']
-		) );
+		$pag_sql = self::get_paged_sql(
+			array(
+				'page'     => $r['page'],
+				'per_page' => $r['per_page'],
+			)
+		);
 
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql} {$order_sql} {$pag_sql}";
@@ -685,11 +698,11 @@ class BP_Notifications_Notification {
 
 		// Integer casting.
 		foreach ( $results as $key => $result ) {
-			$results[$key]->id                = (int) $results[$key]->id;
-			$results[$key]->user_id           = (int) $results[$key]->user_id;
-			$results[$key]->item_id           = (int) $results[$key]->item_id;
-			$results[$key]->secondary_item_id = (int) $results[$key]->secondary_item_id;
-			$results[$key]->is_new            = (int) $results[$key]->is_new;
+			$results[ $key ]->id                = (int) $results[ $key ]->id;
+			$results[ $key ]->user_id           = (int) $results[ $key ]->user_id;
+			$results[ $key ]->item_id           = (int) $results[ $key ]->item_id;
+			$results[ $key ]->secondary_item_id = (int) $results[ $key ]->secondary_item_id;
+			$results[ $key ]->is_new            = (int) $results[ $key ]->is_new;
 		}
 
 		// Update meta cache.
@@ -723,26 +736,32 @@ class BP_Notifications_Notification {
 		$meta_query_sql = self::get_meta_query_sql( $r['meta_query'] );
 
 		// SELECT.
-		$select_sql = "SELECT COUNT(*)";
+		$select_sql = 'SELECT COUNT(*)';
 
 		// FROM.
-		$from_sql   = "FROM {$bp->notifications->table_name} n ";
+		$from_sql = "FROM {$bp->notifications->table_name} n ";
 
 		// JOIN.
-		$join_sql   = $meta_query_sql['join'];
+		$join_sql = $meta_query_sql['join'];
 
 		// WHERE.
-		$where_sql  = self::get_where_sql( array(
-			'id'                => $r['id'],
-			'user_id'           => $r['user_id'],
-			'item_id'           => $r['item_id'],
-			'secondary_item_id' => $r['secondary_item_id'],
-			'component_name'    => $r['component_name'],
-			'component_action'  => $r['component_action'],
-			'is_new'            => $r['is_new'],
-			'search_terms'      => $r['search_terms'],
-			'date_query'        => $r['date_query']
-		), $select_sql, $from_sql, $join_sql, $meta_query_sql );
+		$where_sql = self::get_where_sql(
+			array(
+				'id'                => $r['id'],
+				'user_id'           => $r['user_id'],
+				'item_id'           => $r['item_id'],
+				'secondary_item_id' => $r['secondary_item_id'],
+				'component_name'    => $r['component_name'],
+				'component_action'  => $r['component_action'],
+				'is_new'            => $r['is_new'],
+				'search_terms'      => $r['search_terms'],
+				'date_query'        => $r['date_query'],
+			),
+			$select_sql,
+			$from_sql,
+			$join_sql,
+			$meta_query_sql
+		);
 
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$join_sql} {$where_sql}";
@@ -839,7 +858,7 @@ class BP_Notifications_Notification {
 	 */
 	public static function update( $update_args = array(), $where_args = array() ) {
 		$update = self::get_query_clauses( $update_args );
-		$where  = self::get_query_clauses( $where_args  );
+		$where  = self::get_query_clauses( $where_args );
 
 		/**
 		 * Fires before the update of a notification item.
@@ -903,9 +922,11 @@ class BP_Notifications_Notification {
 	 * @return int|false True on success, false on failure.
 	 */
 	public static function delete_by_id( $id ) {
-		return self::delete( array(
-			'id' => $id,
-		) );
+		return self::delete(
+			array(
+				'id' => $id,
+			)
+		);
 	}
 
 	/**
@@ -920,10 +941,12 @@ class BP_Notifications_Notification {
 	 * @return array Associative array of notification items.
 	 */
 	public static function get_all_for_user( $user_id, $status = 'is_new' ) {
-		return self::get( array(
-			'user_id' => $user_id,
-			'is_new'  => 'is_new' === $status,
-		) );
+		return self::get(
+			array(
+				'user_id' => $user_id,
+				'is_new'  => 'is_new' === $status,
+			)
+		);
 	}
 
 	/**
@@ -936,10 +959,12 @@ class BP_Notifications_Notification {
 	 * @return array Associative array of unread notification items.
 	 */
 	public static function get_unread_for_user( $user_id = 0 ) {
-		return self::get( array(
-			'user_id' => $user_id,
-			'is_new'  => true,
-		) );
+		return self::get(
+			array(
+				'user_id' => $user_id,
+				'is_new'  => true,
+			)
+		);
 	}
 
 	/**
@@ -952,10 +977,12 @@ class BP_Notifications_Notification {
 	 * @return array Associative array of unread notification items.
 	 */
 	public static function get_read_for_user( $user_id = 0 ) {
-		return self::get( array(
-			'user_id' => $user_id,
-			'is_new'  => false,
-		) );
+		return self::get(
+			array(
+				'user_id' => $user_id,
+				'is_new'  => false,
+			)
+		);
 	}
 
 	/**
@@ -982,13 +1009,16 @@ class BP_Notifications_Notification {
 	 * }
 	 */
 	public static function get_current_notifications_for_user( $args = array() ) {
-		$r = wp_parse_args( $args, array(
-			'user_id'      => bp_loggedin_user_id(),
-			'is_new'       => true,
-			'page'         => 1,
-			'per_page'     => 25,
-			'search_terms' => '',
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'user_id'      => bp_loggedin_user_id(),
+				'is_new'       => true,
+				'page'         => 1,
+				'per_page'     => 25,
+				'search_terms' => '',
+			)
+		);
 
 		$notifications = self::get( $r );
 
@@ -999,7 +1029,10 @@ class BP_Notifications_Notification {
 
 		$total_count = self::get_total_count( $r );
 
-		return array( 'notifications' => &$notifications, 'total' => $total_count );
+		return array(
+			'notifications' => &$notifications,
+			'total'         => $total_count,
+		);
 	}
 
 	/** Mark ******************************************************************/
@@ -1152,23 +1185,27 @@ class BP_Notifications_Notification {
 		$bp = buddypress();
 
 		// SELECT.
-		$select_sql = "SELECT id, user_id, item_id, secondary_item_id, component_name, component_action, date_notified, is_new, COUNT(id) as total_count ";
+		$select_sql = 'SELECT id, user_id, item_id, secondary_item_id, component_name, component_action, date_notified, is_new, COUNT(id) as total_count ';
 
 		// FROM.
 		$from_sql = "FROM {$bp->notifications->table_name} n ";
 
 		// WHERE.
-		$where_sql = self::get_where_sql( array(
-			'user_id'        => $user_id,
-			'is_new'         => 1,
-			'component_name' => bp_notifications_get_registered_components(),
-		), $select_sql, $from_sql );
+		$where_sql = self::get_where_sql(
+			array(
+				'user_id'        => $user_id,
+				'is_new'         => 1,
+				'component_name' => bp_notifications_get_registered_components(),
+			),
+			$select_sql,
+			$from_sql
+		);
 
 		// GROUP
-		$group_sql = "GROUP BY user_id, component_name, component_action";
+		$group_sql = 'GROUP BY user_id, component_name, component_action';
 
 		// SORT
-		$order_sql = "ORDER BY date_notified desc";
+		$order_sql = 'ORDER BY date_notified desc';
 
 		// Concatenate query parts.
 		$sql = "{$select_sql} {$from_sql} {$where_sql} {$group_sql} {$order_sql}";

@@ -65,7 +65,7 @@ function bp_add_caps() {
 	}
 
 	// Loop through available roles and add them.
-	foreach( $wp_roles->role_objects as $role ) {
+	foreach ( $wp_roles->role_objects as $role ) {
 		foreach ( bp_get_caps_for_role( $role->name ) as $cap ) {
 			$role->add_cap( $cap );
 		}
@@ -97,7 +97,7 @@ function bp_remove_caps() {
 	}
 
 	// Loop through available roles and remove them.
-	foreach( $wp_roles->role_objects as $role ) {
+	foreach ( $wp_roles->role_objects as $role ) {
 		foreach ( bp_get_caps_for_role( $role->name ) as $cap ) {
 			$role->remove_cap( $cap );
 		}
@@ -179,7 +179,7 @@ function bp_get_caps_for_role( $role = '' ) {
 	switch ( $role ) {
 
 		// Administrator.
-		case 'administrator' :
+		case 'administrator':
 			$caps = array(
 				// Misc.
 				'bp_moderate',
@@ -188,11 +188,11 @@ function bp_get_caps_for_role( $role = '' ) {
 			break;
 
 		// All other default WordPress blog roles.
-		case 'editor'      :
-		case 'author'      :
-		case 'contributor' :
-		case 'subscriber'  :
-		default            :
+		case 'editor':
+		case 'author':
+		case 'contributor':
+		case 'subscriber':
+		default:
 			$caps = array();
 			break;
 	}
@@ -256,11 +256,11 @@ function bp_set_current_user_default_role() {
 function bp_current_user_can( $capability, $args = array() ) {
 	// Backward compatibility for older $blog_id parameter.
 	if ( is_int( $args ) ) {
-		$site_id = $args;
-		$args = array();
+		$site_id         = $args;
+		$args            = array();
 		$args['site_id'] = $site_id;
 
-	// New format for second parameter.
+		// New format for second parameter.
 	} elseif ( is_array( $args ) && isset( $args['blog_id'] ) ) {
 		// Get the blog ID if set, but don't pass along to `current_user_can_for_blog()`.
 		$args['site_id'] = (int) $args['blog_id'];

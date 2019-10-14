@@ -33,7 +33,7 @@ function bbp_get_caps_for_role( $role = '' ) {
 	switch ( $role ) {
 
 		// Keymaster
-		case bbp_get_keymaster_role() :
+		case bbp_get_keymaster_role():
 			$caps = array(
 
 				// Keymasters only
@@ -75,13 +75,13 @@ function bbp_get_caps_for_role( $role = '' ) {
 				'manage_topic_tags'     => true,
 				'edit_topic_tags'       => true,
 				'delete_topic_tags'     => true,
-				'assign_topic_tags'     => true
+				'assign_topic_tags'     => true,
 			);
 
 			break;
 
 		// Moderator
-		case bbp_get_moderator_role() :
+		case bbp_get_moderator_role():
 			$caps = array(
 
 				// Primary caps
@@ -123,17 +123,17 @@ function bbp_get_caps_for_role( $role = '' ) {
 			break;
 
 		// Spectators can only read
-		case bbp_get_spectator_role()   :
+		case bbp_get_spectator_role():
 			$caps = array(
 
 				// Primary caps
-				'spectate'              => true,
+				'spectate' => true,
 			);
 
 			break;
 
 		// Explicitly blocked
-		case bbp_get_blocked_role() :
+		case bbp_get_blocked_role():
 			$caps = array(
 
 				// Primary caps
@@ -178,27 +178,27 @@ function bbp_get_caps_for_role( $role = '' ) {
 			break;
 
 		// Participant/Default
-		case bbp_get_participant_role() :
-		default :
+		case bbp_get_participant_role():
+		default:
 			$caps = array(
 
 				// Primary caps
-				'spectate'              => true,
-				'participate'           => true,
+				'spectate'            => true,
+				'participate'         => true,
 
 				// Forum caps
-				'read_private_forums'   => true,
+				'read_private_forums' => true,
 
 				// Topic caps
-				'publish_topics'        => true,
-				'edit_topics'           => true,
+				'publish_topics'      => true,
+				'edit_topics'         => true,
 
 				// Reply caps
-				'publish_replies'       => true,
-				'edit_replies'          => true,
+				'publish_replies'     => true,
+				'edit_replies'        => true,
 
 				// Topic tag caps
-				'assign_topic_tags'     => true,
+				'assign_topic_tags'   => true,
 			);
 
 			break;
@@ -253,8 +253,9 @@ function bbp_get_wp_roles() {
 	global $wp_roles;
 
 	// Load roles if not set
-	if ( ! isset( $wp_roles ) )
+	if ( ! isset( $wp_roles ) ) {
 		$wp_roles = new WP_Roles();
+	}
 
 	return $wp_roles;
 }
@@ -270,7 +271,7 @@ function bbp_get_wp_roles() {
 function bbp_get_blog_roles() {
 
 	// Get WordPress's roles (returns $wp_roles global)
-	$wp_roles  = bbp_get_wp_roles();
+	$wp_roles = bbp_get_wp_roles();
 
 	// Apply the WordPress 'editable_roles' filter to let plugins ride along.
 	//
@@ -306,9 +307,9 @@ function bbp_add_forums_roles( $wp_roles = null ) {
 
 	// Loop through dynamic roles and add them to the $wp_roles array
 	foreach ( bbp_get_dynamic_roles() as $role_id => $details ) {
-		$wp_roles->roles[$role_id]        = $details;
-		$wp_roles->role_objects[$role_id] = new WP_Role( $role_id, $details['capabilities'] );
-		$wp_roles->role_names[$role_id]   = $details['name'];
+		$wp_roles->roles[ $role_id ]        = $details;
+		$wp_roles->role_objects[ $role_id ] = new WP_Role( $role_id, $details['capabilities'] );
+		$wp_roles->role_names[ $role_id ]   = $details['name'];
 	}
 
 	// Return the modified $wp_roles array
@@ -357,7 +358,7 @@ function bbp_filter_user_roles_option() {
  */
 function _bbp_reinit_dynamic_roles( $roles = array() ) {
 	foreach ( bbp_get_dynamic_roles() as $role_id => $details ) {
-		$roles[$role_id] = $details;
+		$roles[ $role_id ] = $details;
 	}
 	return $roles;
 }
@@ -380,38 +381,41 @@ function _bbp_reinit_dynamic_roles( $roles = array() ) {
  * @return array
  */
 function bbp_get_dynamic_roles() {
-	return (array) apply_filters( 'bbp_get_dynamic_roles', array(
+	return (array) apply_filters(
+		'bbp_get_dynamic_roles',
+		array(
 
-		// Keymaster
-		bbp_get_keymaster_role() => array(
-			'name'         => 'Keymaster',
-			'capabilities' => bbp_get_caps_for_role( bbp_get_keymaster_role() )
-		),
+			// Keymaster
+			bbp_get_keymaster_role()   => array(
+				'name'         => 'Keymaster',
+				'capabilities' => bbp_get_caps_for_role( bbp_get_keymaster_role() ),
+			),
 
-		// Moderator
-		bbp_get_moderator_role() => array(
-			'name'         => 'Moderator',
-			'capabilities' => bbp_get_caps_for_role( bbp_get_moderator_role() )
-		),
+			// Moderator
+			bbp_get_moderator_role()   => array(
+				'name'         => 'Moderator',
+				'capabilities' => bbp_get_caps_for_role( bbp_get_moderator_role() ),
+			),
 
-		// Participant
-		bbp_get_participant_role() => array(
-			'name'         => 'Participant',
-			'capabilities' => bbp_get_caps_for_role( bbp_get_participant_role() )
-		),
+			// Participant
+			bbp_get_participant_role() => array(
+				'name'         => 'Participant',
+				'capabilities' => bbp_get_caps_for_role( bbp_get_participant_role() ),
+			),
 
-		// Spectator
-		bbp_get_spectator_role() => array(
-			'name'         => 'Spectator',
-			'capabilities' => bbp_get_caps_for_role( bbp_get_spectator_role() )
-		),
+			// Spectator
+			bbp_get_spectator_role()   => array(
+				'name'         => 'Spectator',
+				'capabilities' => bbp_get_caps_for_role( bbp_get_spectator_role() ),
+			),
 
-		// Blocked
-		bbp_get_blocked_role() => array(
-			'name'         => 'Blocked',
-			'capabilities' => bbp_get_caps_for_role( bbp_get_blocked_role() )
+			// Blocked
+			bbp_get_blocked_role()     => array(
+				'name'         => 'Blocked',
+				'capabilities' => bbp_get_caps_for_role( bbp_get_blocked_role() ),
+			),
 		)
-	) );
+	);
 }
 
 /**
@@ -424,7 +428,7 @@ function bbp_get_dynamic_roles() {
  */
 function bbp_get_dynamic_role_name( $role_id = '' ) {
 	$roles = bbp_get_dynamic_roles();
-	$role  = isset( $roles[$role_id] ) ? bbp_translate_user_role( $roles[$role_id]['name'] ) : '';
+	$role  = isset( $roles[ $role_id ] ) ? bbp_translate_user_role( $roles[ $role_id ]['name'] ) : '';
 
 	return apply_filters( 'bbp_get_dynamic_role_name', $role, $role_id, $roles );
 }
@@ -450,7 +454,7 @@ function bbp_filter_blog_editable_roles( $all_roles = array() ) {
 
 			// If keys match, unset
 			if ( $wp_role === $bbp_role ) {
-				unset( $all_roles[$wp_role] );
+				unset( $all_roles[ $wp_role ] );
 			}
 		}
 	}
@@ -554,21 +558,22 @@ function bbp_remove_roles() {
  * @since  BuddyBoss 1.0.0
  */
 function bbp_map_caps_to_wp_roles() {
-	$wp_bbp_role_map = [
+	$wp_bbp_role_map = array(
 		'administrator' => 'bbp_keymaster',
 		'editor'        => 'bbp_moderator',
-	];
+	);
 
 	foreach ( $wp_bbp_role_map as $wp_role => $bbp_role ) {
 		$wp_role_object = get_role( $wp_role );
 
-		if ( empty( $wp_role_object ) ) // check if role exists if not then continue
+		if ( empty( $wp_role_object ) ) { // check if role exists if not then continue
 			continue;
+		}
 
 		$bbp_caps = bbp_get_caps_for_role( $bbp_role );
 
-		foreach ( array_keys( $bbp_caps ) as $cap) {
-			$wp_role_object->add_cap($cap);
+		foreach ( array_keys( $bbp_caps ) as $cap ) {
+			$wp_role_object->add_cap( $cap );
 		}
 	}
 }
@@ -579,23 +584,27 @@ function bbp_map_caps_to_wp_roles() {
  * @since  BuddyBoss 1.0.0
  */
 function bbp_restore_caps_from_wp_roles() {
-	$wp_bbp_role_map = [
+	$wp_bbp_role_map = array(
 		'administrator' => 'bbp_keymaster',
 		'editor'        => 'bbp_moderator',
-	];
+	);
 
 	foreach ( $wp_bbp_role_map as $wp_role => $bbp_role ) {
 		$wp_role_object = get_role( $wp_role );
 
-		if ( empty( $wp_role_object ) ) // check if role exists if not then continue
+		if ( empty( $wp_role_object ) ) { // check if role exists if not then continue
 			continue;
+		}
 
 		$bbp_caps = bbp_get_caps_for_role( $bbp_role );
 
-		foreach ( array_keys( $bbp_caps ) as $cap) {
-			$wp_role_object->remove_cap($cap);
+		foreach ( array_keys( $bbp_caps ) as $cap ) {
+			$wp_role_object->remove_cap( $cap );
 		}
 	}
 
-	return array( 'status' => 1 , 'message' => __( 'Complete!', 'buddyboss' ) );
+	return array(
+		'status'  => 1,
+		'message' => __( 'Complete!', 'buddyboss' ),
+	);
 }

@@ -10,7 +10,10 @@
  */
 class BP_Walker_Category_Checklist extends Walker {
 	public $tree_type = 'category';
-	public $db_fields = array( 'parent' => 'parent', 'id' => 'term_id' );
+	public $db_fields = array(
+		'parent' => 'parent',
+		'id'     => 'term_id',
+	);
 
 	/**
 	 * Starts the list before the elements are added.
@@ -36,7 +39,7 @@ class BP_Walker_Category_Checklist extends Walker {
 	 * @param array  $args   An array of arguments.
 	 */
 	public function end_lvl( &$output, $depth = 0, $args = array() ) {
-		$indent = str_repeat( "\t", $depth );
+		$indent  = str_repeat( "\t", $depth );
 		$output .= "$indent</ul>\n";
 	}
 
@@ -63,13 +66,13 @@ class BP_Walker_Category_Checklist extends Walker {
 		}
 
 		$args['popular_cats'] = empty( $args['popular_cats'] ) ? array() : $args['popular_cats'];
-		$class = in_array( $category->term_id, $args['popular_cats'] ) ? ' class="popular-category"' : '';
+		$class                = in_array( $category->term_id, $args['popular_cats'] ) ? ' class="popular-category"' : '';
 
 		$args['selected_cats'] = empty( $args['selected_cats'] ) ? array() : $args['selected_cats'];
 
 		if ( ! empty( $args['list_only'] ) ) {
 			$aria_cheched = 'false';
-			$inner_class = 'category';
+			$inner_class  = 'category';
 
 			if ( in_array( $category->term_id, $args['selected_cats'] ) ) {
 				$inner_class .= ' selected';
@@ -84,7 +87,7 @@ class BP_Walker_Category_Checklist extends Walker {
 		} else {
 			/** This filter is documented in wp-includes/category-template.php */
 			$output .= "\n<li id='{$taxonomy}-{$category->term_id}'$class>" .
-				'<label for="in-'.$taxonomy.'-' . $category->term_id . '" class="selectit"><input value="' . $category->slug . '" type="checkbox" name="'.$name.'[]" id="in-'.$taxonomy.'-' . $category->term_id . '"' .
+				'<label for="in-' . $taxonomy . '-' . $category->term_id . '" class="selectit"><input value="' . $category->slug . '" type="checkbox" name="' . $name . '[]" id="in-' . $taxonomy . '-' . $category->term_id . '"' .
 				checked( in_array( $category->term_id, $args['selected_cats'] ), true, false ) .
 				disabled( empty( $args['disabled'] ), false, false ) . ' /> ' .
 				esc_html( apply_filters( 'the_category', $category->description ) ) . '</label>';

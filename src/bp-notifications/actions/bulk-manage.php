@@ -21,9 +21,9 @@ function bp_notifications_action_bulk_manage() {
 	}
 
 	// Get the action.
-	$action = !empty( $_POST['notification_bulk_action'] ) ? $_POST['notification_bulk_action'] : '';
-	$nonce  = !empty( $_POST['notifications_bulk_nonce'] ) ? $_POST['notifications_bulk_nonce'] : '';
-	$notifications = !empty( $_POST['notifications'] ) ? $_POST['notifications'] : '';
+	$action        = ! empty( $_POST['notification_bulk_action'] ) ? $_POST['notification_bulk_action'] : '';
+	$nonce         = ! empty( $_POST['notifications_bulk_nonce'] ) ? $_POST['notifications_bulk_nonce'] : '';
+	$notifications = ! empty( $_POST['notifications'] ) ? $_POST['notifications'] : '';
 
 	// Bail if no action or no IDs.
 	if ( ( ! in_array( $action, array( 'delete', 'read', 'unread' ) ) ) || empty( $notifications ) || empty( $nonce ) ) {
@@ -40,26 +40,26 @@ function bp_notifications_action_bulk_manage() {
 
 	// Delete, mark as read or unread depending on the user 'action'.
 	switch ( $action ) {
-		case 'delete' :
+		case 'delete':
 			foreach ( $notifications as $notification ) {
 				bp_notifications_delete_notification( $notification );
 			}
 			bp_core_add_message( __( 'Notifications deleted.', 'buddyboss' ) );
-		break;
+			break;
 
-		case 'read' :
+		case 'read':
 			foreach ( $notifications as $notification ) {
 				bp_notifications_mark_notification( $notification, false );
 			}
 			bp_core_add_message( __( 'Notifications marked as read', 'buddyboss' ) );
-		break;
+			break;
 
-		case 'unread' :
+		case 'unread':
 			foreach ( $notifications as $notification ) {
 				bp_notifications_mark_notification( $notification, true );
 			}
 			bp_core_add_message( __( 'Notifications marked as unread.', 'buddyboss' ) );
-		break;
+			break;
 	}
 
 	// Redirect.

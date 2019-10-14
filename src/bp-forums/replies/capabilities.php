@@ -17,14 +17,17 @@
  * @return array Reply capabilities
  */
 function bbp_get_reply_caps() {
-	return apply_filters( 'bbp_get_reply_caps', array (
-		'edit_posts'          => 'edit_replies',
-		'edit_others_posts'   => 'edit_others_replies',
-		'publish_posts'       => 'publish_replies',
-		'read_private_posts'  => 'read_private_replies',
-		'delete_posts'        => 'delete_replies',
-		'delete_others_posts' => 'delete_others_replies'
-	) );
+	return apply_filters(
+		'bbp_get_reply_caps',
+		array(
+			'edit_posts'          => 'edit_replies',
+			'edit_others_posts'   => 'edit_others_replies',
+			'publish_posts'       => 'publish_replies',
+			'read_private_posts'  => 'read_private_replies',
+			'delete_posts'        => 'delete_replies',
+			'delete_others_posts' => 'delete_others_replies',
+		)
+	);
 }
 
 /**
@@ -32,10 +35,10 @@ function bbp_get_reply_caps() {
  *
  * @since bbPress (r4242)
  *
- * @param array $caps Capabilities for meta capability
+ * @param array  $caps Capabilities for meta capability
  * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param int    $user_id User id
+ * @param mixed  $args Arguments
  * @uses get_post() To get the post
  * @uses get_post_type_object() To get the post type object
  * @uses apply_filters() Filter mapped results
@@ -46,20 +49,19 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 	// What capability is being checked?
 	switch ( $cap ) {
 
-		/** Reading ***********************************************************/
+		/** Reading */
 
-		case 'read_reply' :
-
+		case 'read_reply':
 			// User cannot spectate
 			if ( ! user_can( $user_id, 'spectate' ) ) {
 				$caps = array( 'do_not_allow' );
 
-			// Do some post ID based logic
+				// Do some post ID based logic
 			} else {
 
 				// Get the post
 				$_post = get_post( $args[0] );
-				if ( !empty( $_post ) ) {
+				if ( ! empty( $_post ) ) {
 
 					// Get caps for post type object
 					$post_type = get_post_type_object( $_post->post_type );
@@ -68,11 +70,11 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 					if ( bbp_get_public_status_id() === $_post->post_status ) {
 						$caps = array( 'spectate' );
 
-					// User is author so allow read
+						// User is author so allow read
 					} elseif ( (int) $user_id === (int) $_post->post_author ) {
 						$caps = array( 'spectate' );
 
-					// Unknown so map to private posts
+						// Unknown so map to private posts
 					} else {
 						$caps = array( $post_type->cap->read_private_posts );
 					}
@@ -81,10 +83,9 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Publishing ********************************************************/
+		/** Publishing */
 
-		case 'publish_replies' :
-
+		case 'publish_replies':
 			// Moderators can always publish
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
@@ -92,17 +93,16 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Editing ***********************************************************/
+		/** Editing */
 
 		// Used primarily in wp-admin
-		case 'edit_replies'        :
-		case 'edit_others_replies' :
-
+		case 'edit_replies':
+		case 'edit_others_replies':
 			// Moderators can always edit
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
 
-			// Otherwise, block
+				// Otherwise, block
 			} else {
 				$caps = array( 'do_not_allow' );
 			}
@@ -110,11 +110,10 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 			break;
 
 		// Used everywhere
-		case 'edit_reply' :
-
+		case 'edit_reply':
 			// Get the post
 			$_post = get_post( $args[0] );
-			if ( !empty( $_post ) ) {
+			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
 				$post_type = get_post_type_object( $_post->post_type );
@@ -124,11 +123,11 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				if ( bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
-				// User is author so allow edit if not in admin
-				} elseif ( !is_admin() && ( (int) $user_id === (int) $_post->post_author ) ) {
+					// User is author so allow edit if not in admin
+				} elseif ( ! is_admin() && ( (int) $user_id === (int) $_post->post_author ) ) {
 					$caps[] = $post_type->cap->edit_posts;
 
-				// Unknown, so map to edit_others_posts
+					// Unknown, so map to edit_others_posts
 				} else {
 					$caps[] = $post_type->cap->edit_others_posts;
 				}
@@ -136,13 +135,12 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Deleting **********************************************************/
+		/** Deleting */
 
-		case 'delete_reply' :
-
+		case 'delete_reply':
 			// Get the post
 			$_post = get_post( $args[0] );
-			if ( !empty( $_post ) ) {
+			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
 				$post_type = get_post_type_object( $_post->post_type );
@@ -152,11 +150,11 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				if ( bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
-				// Moderators can always edit forum content
+					// Moderators can always edit forum content
 				} elseif ( user_can( $user_id, 'moderate' ) ) {
 					$caps[] = 'moderate';
 
-				// Unknown so map to delete_others_posts
+					// Unknown so map to delete_others_posts
 				} else {
 					$caps[] = $post_type->cap->delete_others_posts;
 				}
@@ -165,9 +163,8 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 			break;
 
 		// Moderation override
-		case 'delete_replies'        :
-		case 'delete_others_replies' :
-
+		case 'delete_replies':
+		case 'delete_others_replies':
 			// Moderators can always delete
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
@@ -175,9 +172,9 @@ function bbp_map_reply_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Admin *************************************************************/
+		/** Admin */
 
-		case 'bbp_replies_admin' :
+		case 'bbp_replies_admin':
 			$caps = array( 'moderate' );
 			break;
 	}
