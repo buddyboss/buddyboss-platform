@@ -153,13 +153,13 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		if ( $bp_is_multisite ) {
 			// Check if Forum Component is enabled if so then add
-			if ( bp_is_active( 'forums' ) ) {
+			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 				$value[ $bb_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 			}
 			$value[ $bp_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
 		} else {
 			// Check if Forum Component is enabled if so then add
-			if ( bp_is_active( 'forums' ) ) {
+			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'forums' ) ) {
 				array_push( $value, $bb_plugin_file );
 			}
 			array_push( $value, $bp_plugin_file );
