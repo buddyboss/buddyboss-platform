@@ -32,7 +32,7 @@ global $is_bb_active;
 global $bb_plugin_file;
 global $bp_sitewide_plugins;
 global $bp_plugins;
-global $is_multisite;
+global $bp_is_multisite;
 
 $is_bp_active   = false;
 $bp_plugin_file = 'buddypress/bp-loader.php';
@@ -43,10 +43,10 @@ $bb_plugin_file = 'bbpress/bbpress.php';
 $buddyboss_platform_plugin_file = 'buddyboss-platform/bp-loader.php';
 
 $bp_sitewide_plugins     = array();
-$is_multisite            = is_multisite();
+$bp_is_multisite         = is_multisite();
 $bp_incompatible_plugins = array();
 
-if ( $is_multisite ) {
+if ( $bp_is_multisite ) {
 	// get network-activated plugins
 	foreach ( get_site_option( 'active_sitewide_plugins', array() ) as $key => $value ) {
 		$bp_sitewide_plugins[] = $key;
@@ -92,10 +92,10 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.2.0
 	 */
 	function bp_core_unset_bbpress_buddypress_active() {
-		global $is_multisite;
+		global $bp_is_multisite;
 		remove_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 
-		if ( $is_multisite ) {
+		if ( $bp_is_multisite ) {
 			remove_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0 );
 		}
 	}
@@ -106,10 +106,10 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.2.0
 	 */
 	function bp_core_set_bbpress_buddypress_on_admin_notices() {
-		global $is_multisite;
+		global $bp_is_multisite;
 
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		if ( $is_multisite ) {
+		if ( $bp_is_multisite ) {
 			add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 		}
 	}
@@ -125,7 +125,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 */
 	function bp_core_set_bbpress_buddypress_active( $value = array(), $option ) {
 
-		global $bp_plugin_file, $bb_plugin_file, $is_multisite, $buddyboss_platform_plugin_file;
+		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 		if ( is_network_admin()
@@ -151,7 +151,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			add_action( 'admin_notices', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 		}
 
-		if ( $is_multisite ) {
+		if ( $bp_is_multisite ) {
 			// Check if Forum Component is enabled if so then add
 			if ( bp_is_active( 'forums' ) ) {
 				$value[ $bb_plugin_file ] = empty( $value[ $buddyboss_platform_plugin_file ] ) ? '' : $value[ $buddyboss_platform_plugin_file ];
@@ -174,8 +174,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 * @since BuddyBoss 1.2.0
 	 */
 	function pre_update_option_active_plugins( $value ) {
-		global $bp_plugin_file, $bb_plugin_file, $is_multisite;
-		if ( $is_multisite ) {
+		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite;
+		if ( $bp_is_multisite ) {
 			if ( isset( $value[ $bb_plugin_file ] ) ) {
 				unset( $value[ $bb_plugin_file ] );
 			}
@@ -200,7 +200,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	// Filter for setting the spoofing of BuddyPress.
 	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
 
-	if ( $is_multisite ) {
+	if ( $bp_is_multisite ) {
 		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
 		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
