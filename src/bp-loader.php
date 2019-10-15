@@ -136,9 +136,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			/**
 			 * Add this so the spoofing plugin does not get loaded by WordPress
 			 */
-			add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active', 10000 );
 			add_action( 'pre_current_active_plugins', 'bp_core_unset_bbpress_buddypress_active', 10000 );
 			add_action( 'all_admin_notices', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+			if ( empty( $bp_is_multisite ) ) {
+				add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active', 10000 );
+			}
 
 			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
