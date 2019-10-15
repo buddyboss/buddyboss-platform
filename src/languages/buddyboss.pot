@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-11 08:52:35+00:00\n"
+"POT-Creation-Date: 2019-10-15 11:02:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -8957,8 +8957,8 @@ msgid "weeks"
 msgstr ""
 
 #: bp-forums/common/functions.php:122
-#: bp-integrations/learndash/bp-learndash-functions.php:465
-#: bp-integrations/learndash/library/ReportsGenerator.php:670
+#: bp-integrations/learndash/bp-learndash-functions.php:466
+#: bp-integrations/learndash/library/ReportsGenerator.php:671
 msgid "day"
 msgstr ""
 
@@ -12671,10 +12671,6 @@ msgstr ""
 msgid "Report Access"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:417
-msgid "Report Results Per Page"
-msgstr ""
-
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:433
 msgid "Control the setting for social group's reports."
 msgstr ""
@@ -12686,22 +12682,22 @@ msgid ""
 "progress."
 msgstr ""
 
-#: bp-integrations/learndash/bp-learndash-functions.php:477
-#: bp-integrations/learndash/library/ReportsGenerator.php:678
+#: bp-integrations/learndash/bp-learndash-functions.php:481
+#: bp-integrations/learndash/library/ReportsGenerator.php:682
 msgid "hr"
 msgid_plural "hrs"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-integrations/learndash/bp-learndash-functions.php:489
-#: bp-integrations/learndash/library/ReportsGenerator.php:686
+#: bp-integrations/learndash/bp-learndash-functions.php:496
+#: bp-integrations/learndash/library/ReportsGenerator.php:696
 msgid "min"
 msgid_plural "min"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-integrations/learndash/bp-learndash-functions.php:501
-#: bp-integrations/learndash/library/ReportsGenerator.php:694
+#: bp-integrations/learndash/bp-learndash-functions.php:511
+#: bp-integrations/learndash/library/ReportsGenerator.php:711
 msgid "sec"
 msgid_plural "sec"
 msgstr[0] ""
@@ -12770,67 +12766,67 @@ msgstr ""
 msgid "Export is ready."
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:535
+#: bp-integrations/learndash/buddypress/Reports.php:471
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-progress.php:4
 msgid "Completed"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:536
+#: bp-integrations/learndash/buddypress/Reports.php:472
 msgid "Incomplete"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:779
+#: bp-integrations/learndash/buddypress/Reports.php:715
 msgid "All Steps"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:787
+#: bp-integrations/learndash/buddypress/Reports.php:723
 msgid "Lessons"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:791
+#: bp-integrations/learndash/buddypress/Reports.php:727
 msgid "Topics"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:795
+#: bp-integrations/learndash/buddypress/Reports.php:731
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:66
 msgid "Quizzes"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:799
+#: bp-integrations/learndash/buddypress/Reports.php:735
 msgid "Assignments"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:816
+#: bp-integrations/learndash/buddypress/Reports.php:752
 #: bp-integrations/learndash/library/ReportsGenerator.php:512
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:25
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:25
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:25
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:36
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:31
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:30
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:43
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables.php:25
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-user-stats.php:31
 msgid "Student"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:821
+#: bp-integrations/learndash/buddypress/Reports.php:757
 #: bp-integrations/learndash/library/ReportsGenerator.php:502
 msgid "Course"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:826
+#: bp-integrations/learndash/buddypress/Reports.php:762
 #: bp-integrations/learndash/library/ReportsGenerator.php:517
 msgid "Step"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:849
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:9
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:9
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:9
+#: bp-integrations/learndash/buddypress/Reports.php:785
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:20
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:15
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:14
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:15
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables.php:9
 msgid "All Students"
 msgstr ""
 
-#: bp-integrations/learndash/buddypress/Reports.php:874
+#: bp-integrations/learndash/buddypress/Reports.php:810
 msgid "All Courses"
 msgstr ""
 
@@ -12858,8 +12854,8 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/AssignmentsReportsGenerator.php:69
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:76
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:348
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:403
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:354
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:411
 msgid "Graded Date"
 msgstr ""
 
@@ -12870,10 +12866,10 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/generators/AssignmentsReportsGenerator.php:79
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:86
 #: bp-integrations/learndash/buddypress/generators/QuizzesReportsGenerator.php:57
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:287
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:349
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:342
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:404
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:292
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:355
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:349
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:412
 msgid "Score"
 msgstr ""
 
@@ -12899,20 +12895,20 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:81
 #: bp-integrations/learndash/library/ReportsGenerator.php:527
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:58
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:115
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:172
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:229
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:286
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:378
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:74
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:55
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:113
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:170
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:227
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:284
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:341
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:433
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:59
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:117
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:175
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:233
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:291
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:385
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:83
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:57
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:116
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:174
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:232
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:290
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:348
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:442
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:46
 msgid "Completion Date"
 msgstr ""
@@ -12943,27 +12939,27 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/QuizzesReportsGenerator.php:63
 #: bp-integrations/learndash/library/ReportsGenerator.php:542
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:60
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:117
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:174
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:231
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:289
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:380
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:76
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:57
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:115
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:172
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:229
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:286
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:344
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:435
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:61
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:119
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:177
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:235
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:294
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:387
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:85
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:59
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:118
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:176
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:234
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:292
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:351
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:444
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:48
 msgid "Points Earned"
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/generators/QuizzesReportsGenerator.php:68
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:290
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:345
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:295
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:352
 msgid "Attempts"
 msgstr ""
 
@@ -13022,25 +13018,25 @@ msgid "Updated Date"
 msgstr ""
 
 #: bp-integrations/learndash/library/ReportsGenerator.php:537
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:59
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:116
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:173
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:230
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:288
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:379
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:75
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:56
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:114
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:171
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:228
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:285
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:343
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:434
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:60
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:118
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:176
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:234
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:293
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:386
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:84
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:58
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:117
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:175
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:233
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:291
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:350
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:443
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:47
 msgid "Time Spent"
 msgstr ""
 
-#: bp-integrations/learndash/library/ReportsGenerator.php:741
+#: bp-integrations/learndash/library/ReportsGenerator.php:759
 msgid "%1$s/%2$s"
 msgstr ""
 
@@ -13159,22 +13155,100 @@ msgstr ""
 msgid "Group reports menu"
 msgstr ""
 
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:57
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:114
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:171
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:228
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:285
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:377
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:52
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:108
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:376
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:49
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:53
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:73
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:54
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:112
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:169
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:226
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:283
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:340
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:432
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:50
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:109
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:165
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:433
+msgid "STEP"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:58
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:116
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:174
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:232
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:290
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:384
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:82
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:56
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:115
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:173
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:231
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:289
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:347
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:441
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:45
 msgid "Start  Date"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:74
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:75
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:76
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:77
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:132
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:133
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:134
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:135
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:190
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:191
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:192
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:193
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:248
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:249
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:250
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:251
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:308
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:309
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:311
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:312
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:400
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:401
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:402
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:403
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:98
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:99
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:100
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:101
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:72
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:73
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:74
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:75
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:131
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:132
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:133
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:134
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:189
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:190
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:191
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:192
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:247
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:248
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:249
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:250
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:305
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:306
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:307
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:308
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:365
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:366
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:368
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:369
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:457
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:458
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:459
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:460
+msgid "-"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:346
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:69
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:403
+msgid "ASSIGNMENT"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-tables-all.php:4

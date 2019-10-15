@@ -1,3 +1,18 @@
+table.dataTable th,
+table.dataTable td {
+	vertical-align: middle;
+}
+
+table.dataTable a {
+	display: inline-flex;
+	align-items: center;
+	font-weight: 500;
+}
+
+table.dataTable a .i-progress {
+	margin-right: 10px;
+}
+
 .bp-learndash-reports-filters-form {
 	text-align: right;
 }
@@ -8,10 +23,6 @@
 
 .bp_ld_report_table_wrapper.no-data {
 	display: none !important;
-}
-
-.dataTables_paginate {
-
 }
 
 .dataTables_paginate .button {
@@ -162,7 +173,7 @@
 	font-size: 13px;
 	outline: none;
 	font-weight: normal;
-	text-transform: uppercase;
+	/*text-transform: uppercase;*/
 	color: #A3A5A9;
 }
 .bp_ld_report_table_wrapper .admin-show-all th,
@@ -185,19 +196,16 @@ table.dataTable tbody tr, table.dataTable.display tbody tr.odd>.sorting_1, table
 	margin-right: 10px;
 }
 
-.bp_ld_report_table_wrapper >h2 {
-	//margin: 0 0 0 0;
-}
-
 .bp_ld_report_table_wrapper h2 {
 	margin: 1.6875rem 0 1.6875rem 0 !important;
 }
 
+@keyframes toggle {
 
-@keyframes
-toggle {  0% {
-	opacity: 0;
-}
+	0% {
+		opacity: 0;
+	}
+
 	100% {
 		opacity: 1;
 	}
