@@ -2,7 +2,7 @@
 $user           = ( isset( $_REQUEST ) && isset( $_REQUEST['user'] ) && '' !== $_REQUEST['user'] ) ? $_REQUEST['user'] : bp_loggedin_user_id();
 $group_id       = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( groups_get_current_group()->id );
 $courseIds      = learndash_group_enrolled_courses( $group_id );
-$label          = 'STEP';
+$label          = 'Step';
 $courses        = array_map( 'get_post', apply_filters( 'bp_ld_learndash_group_enrolled_courses', $courseIds, $group_id ) );
 
 if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) || groups_is_user_admin( bp_loggedin_user_id(), bp_get_current_group_id() ) || bp_current_user_can( 'bp_moderate' ) ) && isset( $_GET ) && isset( $_GET['user'] ) && '' === $_GET['user'] ) { ?>
@@ -46,11 +46,11 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 			$steps = $data['steps'];
-			$label = __( 'STEP', 'buddyboss' );
+			$label = __( 'Step', 'buddyboss' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 			$steps = $data['steps'];
-			$label = __( 'STEP', 'buddyboss' );
+			$label = __( 'Step', 'buddyboss' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'lesson' );
 			$steps = $data['steps'];
@@ -70,7 +70,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		} else {
 			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
 			$steps = $data['steps'];
-			$label = __( 'STEP', 'buddyboss' );
+			$label = __( 'Step', 'buddyboss' );
 		}
 
 		?>

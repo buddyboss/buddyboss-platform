@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-15 11:02:13+00:00\n"
+"POT-Creation-Date: 2019-10-15 11:11:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12814,6 +12814,16 @@ msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:762
 #: bp-integrations/learndash/library/ReportsGenerator.php:517
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:52
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:108
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:376
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:49
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:53
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:73
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:50
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:109
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:165
+#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:433
 msgid "Step"
 msgstr ""
 
@@ -13153,19 +13163,6 @@ msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-nav.php:19
 msgid "Group reports menu"
-msgstr ""
-
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:52
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:108
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:376
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:49
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:53
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-all-courses.php:73
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:50
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:109
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:165
-#: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-user-single-courses.php:433
-msgid "STEP"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-single-admin-single-courses.php:58
