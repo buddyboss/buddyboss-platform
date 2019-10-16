@@ -49,6 +49,11 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 			'footer'       => true,
 		),
+		'bp-nouveau-group-messages' => array(
+			'file'         => 'js/buddypress-group-messages%s.js',
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
+			'footer'       => true,
+		),
 	) );
 }
 
@@ -1178,45 +1183,45 @@ function bp_nouveau_groups_notification_filters() {
  */
 function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 
-
-	$show_pending = bp_group_has_invites( array( 'user_id' => 'any' ) ) && ! bp_is_group_create();
-
-	// Init the Group invites nav
-	$invites_nav = array(
-		'members' => array(
-			'id'      => 'members',
-			'caption' => __( 'All Members', 'buddyboss' ),
-			'order'   => 5,
-		),
-		'messaged' => array(
-			'id'      => 'messaged',
-			'caption' => __( 'Pending Messages', 'buddyboss' ),
-			'order'   => 90,
-			'hide'    => (int) ! $show_pending,
-		),
-		'messages' => array(
-			'id'      => 'messages',
-			'caption' => __( 'Send Messages', 'buddyboss' ),
-			'order'   => 100,
-			'hide'    => 1,
-			'href'    => '#send-messages-editor',
-		),
-	);
+	if ( ! bp_is_group_messages() ) {
+		return $params;
+	}
 
 	$params['group_messages'] = array(
-		'nav'                => bp_sort_by_key( $invites_nav, 'order', 'num' ),
-		'loading'            => __( 'Loading members. Please wait.', 'buddyboss' ),
-		'invites_form'       => __( 'Use the "Send" button to send your invite or the "Cancel" button to abort.', 'buddyboss' ),
-		'invites_form_reset' => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
-		'invites_sending'    => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
-		'removeUserInvite'   => __( 'Cancel invitation %s', 'buddyboss' ),
-		'group_id'           => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
-		'is_group_create'    => bp_is_group_create(),
-		'nonces'             => array(
-			'uninvite'     => wp_create_nonce( 'groups_message_unmessage_user' ),
-			'send_invites' => wp_create_nonce( 'groups_send_messages' )
+		'page'                  => 1,
+		'type_message'          => __( 'Type the message here.', 'buddyboss' ),
+		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'invites_form_all'      => __( 'This message will be delivered to all members of this group.', 'buddyboss' ),
+		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss' ),
+		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
+		'group_id'              => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
+		'is_group_create'       => bp_is_group_create(),
+		'nonces'                => array(
+			'unmessage'              => wp_create_nonce( 'groups_message_unmessage_user' ),
+			'send_messages'          => wp_create_nonce( 'groups_send_messages' ),
+			'retrieve_group_members' => wp_create_nonce( 'retrieve_group_members' ),
 		),
 	);
 
 	return $params;
+}
+
+/**
+ * Enqueue the groups scripts
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_groups_messages_enqueue_scripts() {
+
+	if ( ! bp_is_group_messages() ) {
+		return;
+	}
+
+	wp_enqueue_script( 'bp-select2' );
+	wp_enqueue_script( 'bp-medium-editor' );
+	wp_enqueue_style( 'bp-medium-editor' );
+	wp_enqueue_style( 'bp-medium-editor-beagle' );
+	wp_enqueue_script( 'bp-nouveau-group-messages' );
 }

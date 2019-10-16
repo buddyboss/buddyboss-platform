@@ -3958,7 +3958,7 @@ function bp_email_get_salutation( $settings = array() ) {
  *
  * @return bool True if the current page is a group's activity page.
  */
-function bp_is_messages() {
+function bp_is_group_messages() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {

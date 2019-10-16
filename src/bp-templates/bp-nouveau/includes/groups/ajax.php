@@ -7,19 +7,24 @@
  */
 
 // Exit if accessed directly.
+use function Clue\StreamFilter\fun;
+
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'admin_init', function() {
+
 	$ajax_actions = array(
-		array( 'groups_filter'                      => array( 'function' => 'bp_nouveau_ajax_object_template_loader', 'nopriv' => true  ) ),
-		array( 'groups_join_group'                  => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_leave_group'                 => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_accept_invite'               => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_reject_invite'               => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_request_membership'          => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
-		array( 'groups_get_group_potential_invites' => array( 'function' => 'bp_nouveau_ajax_get_users_to_invite', 'nopriv' => false ) ),
-		array( 'groups_send_group_invites'          => array( 'function' => 'bp_nouveau_ajax_send_group_invites', 'nopriv' => false ) ),
-		array( 'groups_delete_group_invite'         => array( 'function' => 'bp_nouveau_ajax_remove_group_invite', 'nopriv' => false ) ),
+		array( 'groups_filter'                                 => array( 'function' => 'bp_nouveau_ajax_object_template_loader', 'nopriv' => true  ) ),
+		array( 'groups_join_group'                             => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
+		array( 'groups_leave_group'                            => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
+		array( 'groups_accept_invite'                          => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
+		array( 'groups_reject_invite'                          => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
+		array( 'groups_request_membership'                     => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
+		array( 'groups_get_group_potential_invites'            => array( 'function' => 'bp_nouveau_ajax_get_users_to_invite', 'nopriv' => false ) ),
+		array( 'groups_get_group_potential_user_send_messages' => array( 'function' => 'bp_nouveau_ajax_group_get_users_to_send_message', 'nopriv' => false ) ),
+		array( 'groups_get_group_members_listing'              => array( 'function' => 'bp_nouveau_ajax_groups_get_group_members_listing', 'nopriv' => false ) ),
+		array( 'groups_send_group_invites'                     => array( 'function' => 'bp_nouveau_ajax_send_group_invites', 'nopriv' => false ) ),
+		array( 'groups_delete_group_invite'                    => array( 'function' => 'bp_nouveau_ajax_remove_group_invite', 'nopriv' => false ) ),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -563,4 +568,124 @@ function bp_nouveau_ajax_remove_group_invite() {
 			'has_invites' => bp_group_has_invites( array( 'user_id' => 'any' ) ),
 		)
 	);
+}
+
+/**
+ * AJAX load recipient list.
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_ajax_group_get_users_to_send_message() {
+
+	if ( empty( $_GET['action'] ) ) {
+		wp_send_json_error();
+	}
+
+	$response = array(
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'type'     => 'error',
+	);
+
+	if ( false === bp_is_active( 'messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'retrieve_group_members' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args          = array(
+		'per_page'     => 99999999999,
+		'group_id'     => $_GET['group'],
+		'search_terms' => $_GET['term'],
+	);
+	$group_members = groups_get_group_members( $args );
+
+	$result = array();
+
+	if ( empty( $group_members['members'] ) ) {
+		wp_send_json_success( [
+			'results' => array_map( function ( $result ) {
+				return [
+					'id'   => "@{$result->ID}",
+					'text' => $result->name,
+				];
+			},
+				$result ),
+		] );
+	} else {
+		foreach ( $group_members['members'] as $member ) {
+			$result[] = (object) array(
+				'id'   => $member->ID,
+				'name' => bp_core_get_user_displayname( $member->ID ),
+			);
+		}
+		$results = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message', $result );
+		wp_send_json_success( [
+			'results' => array_map( function ( $result ) {
+				return [
+					'id'   => "@{$result->ID}",
+					'text' => $result->name,
+				];
+			},
+				$results ),
+		] );
+	}
+}
+function bp_nouveau_ajax_groups_get_group_members_listing() {
+
+	if ( empty( $_POST['action'] ) ) {
+		wp_send_json_error();
+	}
+
+	$response = array(
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'type'     => 'error',
+	);
+
+	if ( false === bp_is_active( 'messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'retrieve_group_members' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	$args          = array(
+		'page'         => $_POST['page'],
+		'per_page'     => 10,
+		'group_id'     => $_POST['group'],
+	);
+	$group_members = groups_get_group_members( $args );
+
+	$result = array();
+
+	if ( empty( $group_members['members'] ) ) {
+		wp_send_json_success( [
+			'results' => array_map( function ( $result ) {
+				return [
+					'id'   => "@{$result->ID}",
+					'text' => $result->name,
+				];
+			},
+				$result ),
+		] );
+	} else {
+		foreach ( $group_members['members'] as $member ) {
+			$result[] = (object) array(
+				'id'   => $member->ID,
+				'name' => bp_core_get_user_displayname( $member->ID ),
+			);
+		}
+		$results = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message', $result );
+		wp_send_json_success( [
+			'results' => array_map( function ( $result ) {
+				return [
+					'id'   => "@{$result->ID}",
+					'text' => $result->name,
+				];
+			},
+				$results ),
+		] );
+	}
 }
