@@ -1370,6 +1370,25 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 }
 
 /**
+ * Return the Default date format
+ *
+ * @param bool $date
+ * @param bool $time
+ * @param string $symbol
+ *
+ * @return mixed
+ */
+function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
+
+	$format = $date ? get_option( 'date_format' ) : '';
+
+	if ( $time ) {
+		$format .= empty( $format ) ? get_option( 'time_format' ) : $symbol . get_option( 'time_format' );
+	}
+	return $format;
+}
+
+/**
  * Output formatted date from a date string.
  *
  * @since BuddyBoss 1.0.0
@@ -4260,4 +4279,19 @@ function bp_core_get_post_slug_by_index( $dir_index_file ) {
 	$index_file     = bp_core_help_remove_file_extension_from_slug( end( $dir_file_array ) );
 
 	return bp_core_help_remove_file_number_from_slug( $index_file );
+}
+
+/**
+ * Remove H1 tag from Content
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $content
+ *
+ * @return mixed|null|string|string[]
+ */
+function bp_core_strip_header_tags( $content ) {
+	$content = preg_replace( '/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $content );
+
+	return $content;
 }

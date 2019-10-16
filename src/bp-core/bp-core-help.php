@@ -111,21 +111,6 @@ function bp_core_help_get_docs_link( $slug = '', $text = '', $anchors = '' ) {
 }
 
 /**
- * Remove H1 tag from Content
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $content
- *
- * @return mixed|null|string|string[]
- */
-function bp_core_stripe_header_tags( $content ) {
-	$content = preg_replace( '/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $content );
-
-	return $content;
-}
-
-/**
  * Wrap the content via the_content filter
  *
  * @since BuddyBoss 1.0.0
@@ -220,7 +205,7 @@ function bp_core_help_dynamically_add_number_in_path( $slug ) {
 	$base_path = buddypress()->plugin_dir . 'bp-help';
 	$docs_path = $base_path . '/docs/';
 
-	$paths = bp_core_get_all_file_from_dir_and_subdir( $docs_path );
+	$paths = bp_core_help_get_all_file_from_dir_and_subdir( $docs_path );
 	if ( ! empty( $paths ) ) {
 		foreach ( $paths as $path ) {
 			$file_path = str_replace( $docs_path, '', $path );
@@ -245,7 +230,7 @@ function bp_core_help_dynamically_add_number_in_path( $slug ) {
  *
  * @return array
  */
-function bp_core_get_all_file_from_dir_and_subdir( $dir, &$results = array() ) {
+function bp_core_help_get_all_file_from_dir_and_subdir( $dir, &$results = array() ) {
 	$files = scandir( $dir );
 
 	foreach ( $files as $key => $value ) {
@@ -253,28 +238,10 @@ function bp_core_get_all_file_from_dir_and_subdir( $dir, &$results = array() ) {
 		if ( ! is_dir( $path ) ) {
 			$results[] = $path;
 		} elseif ( $value != '.' && $value != '..' ) {
-			bp_core_get_all_file_from_dir_and_subdir( $path, $results );
+			bp_core_help_get_all_file_from_dir_and_subdir( $path, $results );
 			$results[] = $path;
 		}
 	}
 
 	return $results;
-}
-
-/**
- * Return the Default data format
- *
- * @param bool $date
- * @param bool $time
- *
- * @return mixed
- */
-function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
-
-	$format = $date ? get_option( 'date_format' ) : '';
-
-	if ( $time ) {
-		$format .= empty( $format ) ? get_option( 'time_format' ) : $symbol . get_option( 'time_format' );
-	}
-	return $format;
 }

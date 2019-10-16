@@ -46,7 +46,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 				if ( ! empty( $content_array[1] ) ) {
 					echo $content_array[1];
 				} else {
-					$content = bp_core_stripe_header_tags( $content );
+					$content = bp_core_strip_header_tags( $content );
 					echo wp_trim_words( $content, 30, null );
 				}
 				?>
