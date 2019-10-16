@@ -827,11 +827,11 @@ window.bp = window.bp || {};
 
 							// Prepend the activity.
 							bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
-							
+
 							for( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
 							}
-							
+
 							self.closeUploader(event);
 
 							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
@@ -1244,6 +1244,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-prev-media',            this.previous.bind( this ) );
 			$( document ).on( 'click', '.bb-next-media',            this.next.bind( this ) );
 			$( document ).on( 'bp_activity_ajax_delete_request',    this.activityDeleted.bind( this ) );
+			$( document ).on( 'change', '#bb-media-privacy', 		this.mediaPrivacyChange.bind( this ) );
 
 		},
 
@@ -1327,6 +1328,8 @@ window.bp = window.bp || {};
 							id: media_element.data('id'),
 							attachment: media_element.data('attachment-full'),
 							activity_id: media_element.data('activity-id'),
+							privacy: media_element.data('privacy'),
+							parent_activity_id: media_element.data('parent-activity-id'),
 							is_forum: false
 						};
 
@@ -1353,7 +1356,27 @@ window.bp = window.bp || {};
 
 		showMedia: function() {
 			var self = this;
+
+			if ( typeof self.current_media === 'undefined' ) {
+				return false;
+			}
+
+			//refresh img
 			$('.bb-media-model-wrapper .bb-media-section').find('img').attr('src',self.current_media.attachment+'?'+new Date().getTime());
+
+			//privacy
+			$('.bb-media-section #bb-media-privacy').show();
+			$('.bb-media-section #bb-media-privacy').val(self.current_media.privacy);
+
+			// hide privacy setting of media if activity is present
+			if ( typeof BP_Nouveau.activity !== 'undefined' &&
+				typeof self.current_media.activity_id !== 'undefined' &&
+				self.current_media.activity_id != 0
+			) {
+				$('.bb-media-section #bb-media-privacy').hide();
+			}
+
+			//update navigation
 			self.navigationCommands();
 		},
 
@@ -1471,7 +1494,24 @@ window.bp = window.bp || {};
 					self.next(event);
 				}
 			}
-		}
+		},
+
+		mediaPrivacyChange: function( event ) {
+			var target = $( event.target ), self = this;
+
+			event.preventDefault();
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: {
+					action: 'media_update_privacy',
+					id: self.current_media.id,
+					_wpnonce: BP_Nouveau.nonces.media,
+					privacy: target.val(),
+				}
+			});
+		},
 	};
 
 	// Launch BP Nouveau Media

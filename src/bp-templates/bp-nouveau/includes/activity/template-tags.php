@@ -964,22 +964,38 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  */
 function bp_nouveau_activity_privacy() {
     if ( bp_activity_user_can_edit() ) {
-	    $privacy = bp_get_activity_privacy();
+	    $privacy                   = bp_get_activity_privacy();
+	    $media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
+	    $parent_activity_id        = false;
+	    $parent_activity_permalink = false;
 
-	    // Return if activity is media activity
-	    if ( 'media' === $privacy ) {
-	    	return;
+	    // Get media privacy to show
+	    if ( $media_activity && bp_is_active( 'media' ) ) {
+		    $media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
+		    $media    = new BP_Media( $media_id );
+
+		    if ( ! empty( $media ) ) {
+			    $privacy = $media->privacy;
+
+			    $parent_activity_id = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
+			    $parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+		    }
 	    }
 
-	    ?>
-        <p>
-            <select class="activity-privacy" name="activity-privacy">
-                <option value="public" <?php echo 'public' === $privacy ? 'selected' : ''; ?>><?php _e( 'Public', 'buddyboss' ); ?></option>
-                <option value="onlyme" <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>><?php _e( 'Only Me', 'buddyboss' ); ?></option>
-                <option value="loggedin" <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>><?php _e( 'All Members', 'buddyboss' ); ?></option>
-                <option value="friends" <?php echo 'friends' === $privacy ? 'selected' : ''; ?>><?php _e( 'My Connections', 'buddyboss' ); ?></option>
-            </select>
-        </p>
-	    <?php
+	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
+	    	?>
+		    <span><?php echo $privacy; ?></span>
+		    <a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+		    <?php
+	    } else {
+		    ?>
+		    <select class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>" name="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
+			    <option value="public" <?php echo 'public' === $privacy ? 'selected' : ''; ?>><?php _e( 'Public', 'buddyboss' ); ?></option>
+			    <option value="onlyme" <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>><?php _e( 'Only Me', 'buddyboss' ); ?></option>
+			    <option value="loggedin" <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>><?php _e( 'All Members', 'buddyboss' ); ?></option>
+			    <option value="friends" <?php echo 'friends' === $privacy ? 'selected' : ''; ?>><?php _e( 'My Connections', 'buddyboss' ); ?></option>
+		    </select>
+		    <?php
+	    }
     }
 }
