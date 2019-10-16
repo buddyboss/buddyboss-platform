@@ -31,7 +31,7 @@
 	<div class="bb-groups-messages-right">
 		<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
 			<div class="bb-groups-messages-right-top">
-				<h2 class="bb-title"><?php _e( 'New Group Messages', 'buddyboss' ); ?></h2>
+				<h2 class="bb-title"><?php _e( 'New Group Message', 'buddyboss' ); ?></h2>
 				<div class="bp-messages-feedback bp-messages-feedback-hide">
 					<div class="bp-feedback">
 						<span class="bp-icon" aria-hidden="true"></span>
