@@ -10,42 +10,42 @@ To get the required post ID for `$forum_id`, `$topic_id`, `$tag_id`, and `$reply
 
 |Shortcode|Description|
 |---|---|
-|`bbp-forum-index`|Display all of your forums.|
-|`bbp-forum-form`|Display the 'Create New Forum' form.|
-|`bbp-single-forum id=$forum_id`|Display a specific forum's discussions, replacing `$forum_id` with the forum's post ID.|
+|`[bbp-forum-index]`|Display all of your forums.|
+|`[bbp-forum-form]`|Display the 'Create New Forum' form.|
+|`[bbp-single-forum id=$forum_id]`|Display a specific forum's discussions, replacing `$forum_id` with the forum's post ID.|
 
 ##Discussions
 
 |Shortcode|Description|
 |---|---|
-|`bbp-topic-index`|Display the most recent discussions across all your forums.|
-|`bbp-single-view id='popular'`|Display popular discussions, ordered by number of replies|
-|`bbp-single-view id='no-replies'`|Display all discussions that have no replies|
-|`bbp-topic-form`|Display the 'New Discussion' form where you can choose from a dropdown the forum to associate with the discussion.|
-|`bbp-topic-form forum_id=$forum_id`|Display the 'New Discussion' form for replying to a specific forum, replacing `$forum_id` with the forum's post ID.|
-|`bbp-single-topic id=$topic_id`|Display a specific discussion, replacing `$topic_id` with the discussion's post ID.|
+|`[bbp-topic-index]`|Display the most recent discussions across all your forums.|
+|`[bbp-single-view id='popular']`|Display popular discussions, ordered by number of replies|
+|`[bbp-single-view id='no-replies']`|Display all discussions that have no replies|
+|`[bbp-topic-form]`|Display the 'New Discussion' form where you can choose from a dropdown the forum to associate with the discussion.|
+|`[bbp-topic-form forum_id=$forum_id]`|Display the 'New Discussion' form for replying to a specific forum, replacing `$forum_id` with the forum's post ID.|
+|`[bbp-single-topic id=$topic_id]`|Display a specific discussion, replacing `$topic_id` with the discussion's post ID.|
 
 ##Discussion Tags
 
 |Shortcode|Description|
 |---|---|
-|`bbp-topic-tags`|Display a tag cloud of all discussion tags.|
-|`bbp-single-tag id=$tag_id`|Display all discussions with a specific tag, replacing `$tag_id` with the discussion tag's post ID.|
+|`[bbp-topic-tags]`|Display a tag cloud of all discussion tags.|
+|`[bbp-single-tag id=$tag_id]`|Display all discussions with a specific tag, replacing `$tag_id` with the discussion tag's post ID.|
 
 ##Replies
 
 |Shortcode|Description|
 |---|---|
-|`bbp-single-reply id=$reply_id`|Display a specific discussion reply, replacing `$reply_id` with the reply's post ID.|
+|`[bbp-single-reply id=$reply_id]`|Display a specific discussion reply, replacing `$reply_id` with the reply's post ID.|
 
 ##Search
 
 |Shortcode|Description|
 |---|---|
-|`bbp-search`|Display the 'Search Forums' input.|
+|`[bbp-search]`|Display the 'Search Forums' input.|
 
 ##Statistics
 
 |Shortcode|Description|
 |---|---|
-|`bbp-stats`|Display the forum statistics.|
+|`[bbp-stats]`|Display the forum statistics.|
