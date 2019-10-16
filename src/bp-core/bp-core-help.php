@@ -180,6 +180,17 @@ function bp_core_stripe_header_tags( $content ) {
  * @return html
  */
 function bp_core_rap_the_content_filter( $content ) {
+	global $shortcode_tags;
+
+	// Remove shortcodes rendering except bp-help's shortcodes
+	if ( ! empty( $shortcode_tags ) ) {
+		foreach ( $shortcode_tags as $tag => $shortcode_tag ) {
+			if ( ! in_array( $tag, array( 'bp_docs_link', 'bp_embed' ) ) ) {
+				remove_shortcode( $tag );
+			}
+		}
+	}
+
 	return apply_filters( 'the_content', $content );
 }
 
