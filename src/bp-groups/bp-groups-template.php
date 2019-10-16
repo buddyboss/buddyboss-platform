@@ -4563,12 +4563,12 @@ function bp_group_member_section_title() {
 	 */
 function bp_get_group_member_section_title() {
 	static $last_user_group_role_title = null;
-	$user_id                           = bp_get_group_member_id();
-	$group_id                          = bp_get_current_group_id();
-	$user_group_role_title             = bp_get_user_group_role_title( $user_id, $group_id );
-	$group_admin                       = groups_get_group_admins( $group_id );
-	$group_mode                        = groups_get_group_mods( $group_id );
-	$group_member                      = groups_get_group_members( $group_id );
+	$user_id               = bp_get_group_member_id();
+	$group_id              = bp_get_current_group_id();
+	$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
+	$group_admin           = groups_get_group_admins( $group_id );
+	$group_mode            = groups_get_group_mods( $group_id );
+	$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
 
 	ob_start();
 
