@@ -1007,9 +1007,6 @@ window.bp = window.bp || {};
 			select.model.on( 'change', this.attachAutocomplete, this );
 			bp.Nouveau.Activity.postForm.ActivityObjects.on( 'change:selected', this.postIn, this );
 
-			var privacy = new bp.Views.ActivityPrivacy();
-			this.views.add( privacy );
-
 			this.toggleMultiMediaOptions();
 		},
 
@@ -1413,6 +1410,12 @@ window.bp = window.bp || {};
 			// Select box for the object
 			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
 				this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
+			}
+
+			// activity privacy dropdown for profile
+			if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
+				var privacy = new bp.Views.ActivityPrivacy();
+				this.views.add(privacy);
 			}
 
 			$('#whats-new-form').addClass('focus-in'); // add some class to form so that DOM knows about focus
