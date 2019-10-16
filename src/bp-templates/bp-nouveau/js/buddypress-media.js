@@ -1231,6 +1231,7 @@ window.bp = window.bp || {};
 			this.nextLink = $('.bb-next-media');
 			this.previousLink = $('.bb-prev-media');
 			this.activity_ajax = false;
+			this.group_id = typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 
 		},
 
@@ -1369,9 +1370,10 @@ window.bp = window.bp || {};
 			$('.bb-media-section #bb-media-privacy').val(self.current_media.privacy);
 
 			// hide privacy setting of media if activity is present
-			if ( typeof BP_Nouveau.activity !== 'undefined' &&
+			if ( ( typeof BP_Nouveau.activity !== 'undefined' &&
 				typeof self.current_media.activity_id !== 'undefined' &&
-				self.current_media.activity_id != 0
+				self.current_media.activity_id != 0 ) ||
+				self.group_id
 			) {
 				$('.bb-media-section #bb-media-privacy').hide();
 			}

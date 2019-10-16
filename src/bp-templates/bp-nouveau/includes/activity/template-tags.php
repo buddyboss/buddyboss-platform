@@ -963,7 +963,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  *
  */
 function bp_nouveau_activity_privacy() {
-    if ( bp_activity_user_can_edit() ) {
+    if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
 	    $privacy                   = bp_get_activity_privacy();
 	    $media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
 	    $parent_activity_id        = false;
