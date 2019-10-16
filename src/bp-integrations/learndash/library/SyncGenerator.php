@@ -18,9 +18,9 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class SyncGenerator
-{
-	protected $syncingToLearndash = false;
+class SyncGenerator {
+
+	protected $syncingToLearndash  = false;
 	protected $syncingToBuddypress = false;
 	protected $bpGroupId;
 	protected $ldGroupId;
@@ -31,8 +31,7 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct($bpGroupId = null, $ldGroupId = null)
-	{
+	public function __construct( $bpGroupId = null, $ldGroupId = null ) {
 		$this->bpGroupId = $bpGroupId;
 		$this->ldGroupId = $ldGroupId;
 
@@ -45,9 +44,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function hasLdGroup()
-	{
-		return !! $this->ldGroupId;
+	public function hasLdGroup() {
+		return ! ! $this->ldGroupId;
 	}
 
 	/**
@@ -55,9 +53,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function hasBpGroup()
-	{
-		return !! $this->bpGroupId;
+	public function hasBpGroup() {
+		return ! ! $this->bpGroupId;
 	}
 
 	/**
@@ -65,8 +62,7 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function getLdGroupId()
-	{
+	public function getLdGroupId() {
 		return $this->ldGroupId;
 	}
 
@@ -75,8 +71,7 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function getBpGroupId()
-	{
+	public function getBpGroupId() {
 		return $this->bpGroupId;
 	}
 
@@ -85,24 +80,25 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function associateToLearndash($ldGroupId = null)
-	{
-		if ($this->ldGroupId && ! $ldGroupId) {
+	public function associateToLearndash( $ldGroupId = null ) {
+		if ( $this->ldGroupId && ! $ldGroupId ) {
 			return $this;
 		}
 
-		$this->syncingToLearndash(function() use ($ldGroupId) {
-			$ldGroup = get_post($ldGroupId);
+		$this->syncingToLearndash(
+			function() use ( $ldGroupId ) {
+				$ldGroup = get_post( $ldGroupId );
 
-			if (! $ldGroupId || ! $ldGroup) {
-				$this->createLearndashGroup();
-			} else {
-				$this->unsetBpGroupMeta(false)->unsetLdGroupMeta(false);
-				$this->ldGroupId = $ldGroupId;
+				if ( ! $ldGroupId || ! $ldGroup ) {
+					$this->createLearndashGroup();
+				} else {
+					$this->unsetBpGroupMeta( false )->unsetLdGroupMeta( false );
+					$this->ldGroupId = $ldGroupId;
+				}
+
+				$this->setSyncGropuIds();
 			}
-
-    		$this->setSyncGropuIds();
-		});
+		);
 
 		return $this;
 	}
@@ -112,9 +108,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function desyncFromLearndash()
-	{
-		if (! $this->ldGroupId) {
+	public function desyncFromLearndash() {
+		if ( ! $this->ldGroupId ) {
 			return $this;
 		}
 
@@ -128,11 +123,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function deleteBpGroup($bpGroupId)
-	{
-		$this->syncingToBuddypress(function() use ($bpGroupId) {
-			groups_delete_group($bpGroupId);
-		});
+	public function deleteBpGroup( $bpGroupId ) {
+		$this->syncingToBuddypress(
+			function() use ( $bpGroupId ) {
+				groups_delete_group( $bpGroupId );
+			}
+		);
 	}
 
 	/**
@@ -140,11 +136,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function deleteLdGroup($ldGroupId)
-	{
-		$this->syncingToLearndash(function() use ($ldGroupId) {
-			wp_delete_post($ldGroupId, true);
-		});
+	public function deleteLdGroup( $ldGroupId ) {
+		$this->syncingToLearndash(
+			function() use ( $ldGroupId ) {
+				wp_delete_post( $ldGroupId, true );
+			}
+		);
 	}
 
 	/**
@@ -152,24 +149,25 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function associateToBuddypress($bpGroupId = null)
-	{
-		if ($this->bpGroupId && ! $bpGroupId) {
+	public function associateToBuddypress( $bpGroupId = null ) {
+		if ( $this->bpGroupId && ! $bpGroupId ) {
 			return $this;
 		}
 
-		$this->syncingToBuddypress(function() use ($bpGroupId) {
-			$bpGroup = groups_get_group($bpGroupId);
+		$this->syncingToBuddypress(
+			function() use ( $bpGroupId ) {
+				$bpGroup = groups_get_group( $bpGroupId );
 
-			if (! $bpGroupId || ! $bpGroup->id) {
-				$this->createBuddypressGroup();
-			} else {
-				$this->unsetBpGroupMeta(false)->unsetLdGroupMeta(false);
-				$this->bpGroupId = $bpGroupId;
+				if ( ! $bpGroupId || ! $bpGroup->id ) {
+					$this->createBuddypressGroup();
+				} else {
+					$this->unsetBpGroupMeta( false )->unsetLdGroupMeta( false );
+					$this->bpGroupId = $bpGroupId;
+				}
+
+				$this->setSyncGropuIds();
 			}
-
-    		$this->setSyncGropuIds();
-		});
+		);
 
 		return $this;
 	}
@@ -179,9 +177,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function desyncFromBuddypress()
-	{
-		if (! $this->bpGroupId) {
+	public function desyncFromBuddypress() {
+		if ( ! $this->bpGroupId ) {
 			return $this;
 		}
 
@@ -195,16 +192,15 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function fullSyncToLearndash()
-	{
-		$lastSynced = groups_get_groupmeta($this->bpGroupId, '_last_sync', true) ?: 0;
+	public function fullSyncToLearndash() {
+		 $lastSynced = groups_get_groupmeta( $this->bpGroupId, '_last_sync', true ) ?: 0;
 
-		if ($lastSynced > $this->getLastSyncTimestamp('bp')) {
+		if ( $lastSynced > $this->getLastSyncTimestamp( 'bp' ) ) {
 			return;
 		}
 
 		$this->syncBpUsers()->syncBpMods()->syncBpAdmins();
-		groups_update_groupmeta($this->bpGroupId, '_last_sync', time());
+		groups_update_groupmeta( $this->bpGroupId, '_last_sync', time() );
 	}
 
 	/**
@@ -212,16 +208,15 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function fullSyncToBuddypress()
-	{
-		$lastSynced = groups_get_groupmeta($this->ldGroupId, '_last_sync', true) ?: 0;
+	public function fullSyncToBuddypress() {
+		$lastSynced = groups_get_groupmeta( $this->ldGroupId, '_last_sync', true ) ?: 0;
 
-		if ($lastSynced > $this->getLastSyncTimestamp('ld')) {
+		if ( $lastSynced > $this->getLastSyncTimestamp( 'ld' ) ) {
 			return;
 		}
 
 		$this->syncLdAdmins()->syncLdUsers();
-		update_post_meta($this->ldGroupId, '_last_sync', time());
+		update_post_meta( $this->ldGroupId, '_last_sync', time() );
 	}
 
 	/**
@@ -229,15 +224,16 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncBpAdmins()
-	{
-		$this->syncingToLearndash(function() {
-			$adminIds = groups_get_group_admins($this->bpGroupId);
+	public function syncBpAdmins() {
+		$this->syncingToLearndash(
+			function() {
+				$adminIds = groups_get_group_admins( $this->bpGroupId );
 
-			foreach ($adminIds as $admin) {
-				$this->syncBpAdmin($admin->user_id, false, false);
+				foreach ( $adminIds as $admin ) {
+					$this->syncBpAdmin( $admin->user_id, false, false );
+				}
 			}
-		});
+		);
 
 		$this->clearLdGroupCache();
 
@@ -249,15 +245,16 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncBpMods()
-	{
-		$this->syncingToLearndash(function() {
-			$modIds = groups_get_group_mods($this->bpGroupId);
+	public function syncBpMods() {
+		$this->syncingToLearndash(
+			function() {
+				$modIds = groups_get_group_mods( $this->bpGroupId );
 
-			foreach ($modIds as $mod) {
-				$this->syncBpMod($mod->user_id, false, false);
+				foreach ( $modIds as $mod ) {
+					$this->syncBpMod( $mod->user_id, false, false );
+				}
 			}
-		});
+		);
 
 		$this->clearLdGroupCache();
 
@@ -269,19 +266,22 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncBpUsers()
-	{
-		$this->syncingToLearndash(function() {
-			$members = groups_get_group_members([
-				'group_id' => $this->bpGroupId
-			]);
+	public function syncBpUsers() {
+		$this->syncingToLearndash(
+			function() {
+				$members = groups_get_group_members(
+					array(
+						'group_id' => $this->bpGroupId,
+					)
+				);
 
-			$members = $members['members'];
+				$members = $members['members'];
 
-			foreach ($members as $member) {
-				$this->syncBpMember($member->ID, false, false);
+				foreach ( $members as $member ) {
+					$this->syncBpMember( $member->ID, false, false );
+				}
 			}
-		});
+		);
 
 		$this->clearLdGroupCache();
 
@@ -293,15 +293,16 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncLdAdmins()
-	{
-		$this->syncingToBuddypress(function() {
-			$adminIds = learndash_get_groups_administrator_ids($this->ldGroupId);
+	public function syncLdAdmins() {
+		$this->syncingToBuddypress(
+			function() {
+				$adminIds = learndash_get_groups_administrator_ids( $this->ldGroupId );
 
-			foreach ($adminIds as $adminId) {
-				$this->syncLdAdmin($adminId);
+				foreach ( $adminIds as $adminId ) {
+					$this->syncLdAdmin( $adminId );
+				}
 			}
-		});
+		);
 
 		return $this;
 	}
@@ -311,15 +312,16 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncLdUsers()
-	{
-		$this->syncingToBuddypress(function() {
-			$userIds = learndash_get_groups_user_ids($this->ldGroupId);
+	public function syncLdUsers() {
+		$this->syncingToBuddypress(
+			function() {
+				$userIds = learndash_get_groups_user_ids( $this->ldGroupId );
 
-			foreach ($userIds as $userId) {
-				$this->syncLdUser($userId);
+				foreach ( $userIds as $userId ) {
+					$this->syncLdUser( $userId );
+				}
 			}
-		});
+		);
 
 		return $this;
 	}
@@ -329,14 +331,15 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncBpAdmin($userId, $remove = false, $clearCache = true)
-	{
-		$this->syncingToLearndash(function() use ($userId, $remove) {
-			call_user_func_array($this->getBpSyncFunction('admin'), [$userId, $this->ldGroupId, $remove]);
-			$this->maybeRemoveAsLdUser('admin', $userId);
-		});
+	public function syncBpAdmin( $userId, $remove = false, $clearCache = true ) {
+		$this->syncingToLearndash(
+			function() use ( $userId, $remove ) {
+				call_user_func_array( $this->getBpSyncFunction( 'admin' ), array( $userId, $this->ldGroupId, $remove ) );
+				$this->maybeRemoveAsLdUser( 'admin', $userId );
+			}
+		);
 
-		if ($clearCache) {
+		if ( $clearCache ) {
 			$this->clearLdGroupCache();
 		}
 
@@ -348,14 +351,15 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncBpMod($userId, $remove = false, $clearCache = true)
-	{
-		$this->syncingToLearndash(function() use ($userId, $remove) {
-			call_user_func_array($this->getBpSyncFunction('mod'), [$userId, $this->ldGroupId, $remove]);
-			$this->maybeRemoveAsLdUser('mod', $userId);
-		});
+	public function syncBpMod( $userId, $remove = false, $clearCache = true ) {
+		$this->syncingToLearndash(
+			function() use ( $userId, $remove ) {
+				call_user_func_array( $this->getBpSyncFunction( 'mod' ), array( $userId, $this->ldGroupId, $remove ) );
+				$this->maybeRemoveAsLdUser( 'mod', $userId );
+			}
+		);
 
-		if ($clearCache) {
+		if ( $clearCache ) {
 			$this->clearLdGroupCache();
 		}
 
@@ -367,18 +371,19 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncBpMember($userId, $remove = false, $clearCache = true)
-	{
-		$this->syncingToLearndash(function() use ($userId, $remove) {
-			call_user_func_array($this->getBpSyncFunction('user'), [$userId, $this->ldGroupId, $remove]);
+	public function syncBpMember( $userId, $remove = false, $clearCache = true ) {
+		$this->syncingToLearndash(
+			function() use ( $userId, $remove ) {
+				call_user_func_array( $this->getBpSyncFunction( 'user' ), array( $userId, $this->ldGroupId, $remove ) );
 
-			// if sync to user, we need to remove previous admin
-			if ('user' == $this->getBpSyncToRole('user')) {
-				call_user_func_array('ld_update_leader_group_access', [$userId, $this->ldGroupId, true]);
+				// if sync to user, we need to remove previous admin
+				if ( 'user' == $this->getBpSyncToRole( 'user' ) ) {
+					call_user_func_array( 'ld_update_leader_group_access', array( $userId, $this->ldGroupId, true ) );
+				}
 			}
-		});
+		);
 
-		if ($clearCache) {
+		if ( $clearCache ) {
 			$this->clearLdGroupCache();
 		}
 
@@ -390,11 +395,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncLdAdmin($userId, $remove = false)
-	{
-		$this->syncingToBuddypress(function() use ($userId, $remove) {
-			$this->addUserToBpGroup($userId, 'admin', $remove);
-		});
+	public function syncLdAdmin( $userId, $remove = false ) {
+		$this->syncingToBuddypress(
+			function() use ( $userId, $remove ) {
+				$this->addUserToBpGroup( $userId, 'admin', $remove );
+			}
+		);
 
 		return $this;
 	}
@@ -404,18 +410,19 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function syncLdUser($userId, $remove = false)
-	{
-		$ldGroupAdmins = learndash_get_groups_administrator_ids($this->ldGroupid);
+	public function syncLdUser( $userId, $remove = false ) {
+		$ldGroupAdmins = learndash_get_groups_administrator_ids( $this->ldGroupid );
 
 		// if this user is learndash leader, we don't want to downgrad them (bp only allow 1 user)
-		if (in_array($userId, $ldGroupAdmins)) {
+		if ( in_array( $userId, $ldGroupAdmins ) ) {
 			return $this;
 		}
 
-		$this->syncingToBuddypress(function() use ($userId, $remove) {
-			$this->addUserToBpGroup($userId, 'user', $remove);
-		});
+		$this->syncingToBuddypress(
+			function() use ( $userId, $remove ) {
+				$this->addUserToBpGroup( $userId, 'user', $remove );
+			}
+		);
 
 		return $this;
 	}
@@ -425,13 +432,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function verifyInputs()
-	{
-		if ($this->bpGroupId && ! groups_get_group($this->bpGroupId)->id) {
+	protected function verifyInputs() {
+		if ( $this->bpGroupId && ! groups_get_group( $this->bpGroupId )->id ) {
 			$this->unsetBpGroupMeta();
 		}
 
-		if ($this->ldGroupId && ! get_post($this->ldGroupId)) {
+		if ( $this->ldGroupId && ! get_post( $this->ldGroupId ) ) {
 			$this->unsetLdGroupMeta();
 		}
 	}
@@ -441,13 +447,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function populateData()
-	{
-		if (! $this->bpGroupId) {
+	protected function populateData() {
+		if ( ! $this->bpGroupId ) {
 			$this->bpGroupId = $this->loadBpGroupId();
 		}
 
-		if (! $this->ldGroupId) {
+		if ( ! $this->ldGroupId ) {
 			$this->ldGroupId = $this->loadLdGroupId();
 		}
 	}
@@ -457,9 +462,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function loadBpGroupId()
-	{
-		return get_post_meta($this->ldGroupId, $this->syncMetaKey, true) ?: null;
+	protected function loadBpGroupId() {
+		return get_post_meta( $this->ldGroupId, $this->syncMetaKey, true ) ?: null;
 	}
 
 	/**
@@ -467,9 +471,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function loadLdGroupId()
-	{
-		return groups_get_groupmeta($this->bpGroupId, $this->syncMetaKey, true) ?: null;
+	protected function loadLdGroupId() {
+		return groups_get_groupmeta( $this->bpGroupId, $this->syncMetaKey, true ) ?: null;
 	}
 
 	/**
@@ -477,9 +480,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function setBpGroupId()
-	{
-		update_post_meta($this->ldGroupId, $this->syncMetaKey, $this->bpGroupId);
+	protected function setBpGroupId() {
+		 update_post_meta( $this->ldGroupId, $this->syncMetaKey, $this->bpGroupId );
 		return $this;
 	}
 
@@ -488,9 +490,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function setLdGroupId()
-	{
-		groups_update_groupmeta($this->bpGroupId, $this->syncMetaKey, $this->ldGroupId);
+	protected function setLdGroupId() {
+		 groups_update_groupmeta( $this->bpGroupId, $this->syncMetaKey, $this->ldGroupId );
 		return $this;
 	}
 
@@ -499,8 +500,7 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function setSyncGropuIds()
-	{
+	protected function setSyncGropuIds() {
 		return $this->setLdGroupId()->setBpGroupId();
 	}
 
@@ -509,13 +509,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function unsetBpGroupMeta($removeProp = true)
-	{
-		if ($removeProp) {
+	protected function unsetBpGroupMeta( $removeProp = true ) {
+		if ( $removeProp ) {
 			$this->bpGroupId = null;
 		}
 
-		delete_post_meta($this->ldGroupId, $this->syncMetaKey);
+		delete_post_meta( $this->ldGroupId, $this->syncMetaKey );
 		return $this;
 	}
 
@@ -524,13 +523,12 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function unsetLdGroupMeta($removeProp = true)
-	{
-		if ($removeProp) {
+	protected function unsetLdGroupMeta( $removeProp = true ) {
+		if ( $removeProp ) {
 			$this->ldGroupId = null;
 		}
 
-		groups_delete_groupmeta($this->bpGroupId, $this->syncMetaKey);
+		groups_delete_groupmeta( $this->bpGroupId, $this->syncMetaKey );
 		return $this;
 	}
 
@@ -539,9 +537,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function unsetSyncGropuIds()
-	{
-		$this->unsetBpGroupMeta(false)->unsetLdGroupMeta(false);
+	protected function unsetSyncGropuIds() {
+		$this->unsetBpGroupMeta( false )->unsetLdGroupMeta( false );
 		$this->bpGroupId = $this->ldGroupId = null;
 		return $this;
 	}
@@ -551,17 +548,18 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function createLearndashGroup()
-	{
-		$bpGroup = groups_get_group($this->bpGroupId);
+	protected function createLearndashGroup() {
+		 $bpGroup = groups_get_group( $this->bpGroupId );
 
-    	$this->ldGroupId = wp_insert_post([
-			'post_title'   => $bpGroup->name,
-			'post_author'  => $bpGroup->creator_id,
-			'post_content' => $bpGroup->description,
-			'post_status'  => 'publish',
-			'post_type'    => learndash_get_post_type_slug('group')
-    	]);
+		$this->ldGroupId = wp_insert_post(
+			array(
+				'post_title'   => $bpGroup->name,
+				'post_author'  => $bpGroup->creator_id,
+				'post_content' => $bpGroup->description,
+				'post_status'  => 'publish',
+				'post_type'    => learndash_get_post_type_slug( 'group' ),
+			)
+		);
 	}
 
 	/**
@@ -569,19 +567,20 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function createBuddypressGroup()
-	{
-		$ldGroup = get_post($this->ldGroupId);
-		$settings = bp_ld_sync('settings');
+	protected function createBuddypressGroup() {
+		$ldGroup  = get_post( $this->ldGroupId );
+		$settings = bp_ld_sync( 'settings' );
 
-    	$this->bpGroupId = groups_create_group([
-			'name'   => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
-			'status' => $settings->get('learndash.default_bp_privacy'),
-		]);
+		$this->bpGroupId = groups_create_group(
+			array(
+				'name'   => $ldGroup->post_title ?: "For Social Group: {$this->ldGroupId}",
+				'status' => $settings->get( 'learndash.default_bp_privacy' ),
+			)
+		);
 
-		groups_update_groupmeta($this->bpGroupId, 'invite_status', $settings->get('learndash.default_bp_invite_status'));
+		groups_update_groupmeta( $this->bpGroupId, 'invite_status', $settings->get( 'learndash.default_bp_invite_status' ) );
 
-    	$this->setSyncGropuIds();
+		$this->setSyncGropuIds();
 	}
 
 	/**
@@ -589,14 +588,13 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function maybeRemoveAsLdUser($type, $userId)
-	{
-		if ('user' == $this->getBpSyncToRole($type)) {
+	protected function maybeRemoveAsLdUser( $type, $userId ) {
+		if ( 'user' == $this->getBpSyncToRole( $type ) ) {
 			return;
 		}
 
 		// remove them as user, cause they are leader now
-		ld_update_group_access($userId, $this->ldGroupId, true);
+		ld_update_group_access( $userId, $this->ldGroupId, true );
 	}
 
 	/**
@@ -604,9 +602,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getBpSyncToRole($type)
-	{
-		return bp_ld_sync('settings')->get("buddypress.default_{$type}_sync_to");
+	protected function getBpSyncToRole( $type ) {
+		return bp_ld_sync( 'settings' )->get( "buddypress.default_{$type}_sync_to" );
 	}
 
 	/**
@@ -614,9 +611,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getBpSyncFunction($type)
-	{
-		switch ($this->getBpSyncToRole($type)) {
+	protected function getBpSyncFunction( $type ) {
+		switch ( $this->getBpSyncToRole( $type ) ) {
 			case 'admin':
 				return 'ld_update_leader_group_access';
 			default:
@@ -629,9 +625,8 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getLdSyncToRole($type)
-	{
-		return bp_ld_sync('settings')->get("learndash.default_{$type}_sync_to");
+	protected function getLdSyncToRole( $type ) {
+		return bp_ld_sync( 'settings' )->get( "learndash.default_{$type}_sync_to" );
 	}
 
 	/**
@@ -639,12 +634,11 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function addUserToBpGroup($userId, $type, $remove)
-	{
-		$groupMember = new BP_Groups_Member($userId, $this->bpGroupId);
-		$syncTo = $this->getLdSyncToRole($type);
+	protected function addUserToBpGroup( $userId, $type, $remove ) {
+		$groupMember = new BP_Groups_Member( $userId, $this->bpGroupId );
+		$syncTo      = $this->getLdSyncToRole( $type );
 
-		if ($remove) {
+		if ( $remove ) {
 			return $groupMember->remove();
 		}
 
@@ -655,8 +649,8 @@ class SyncGenerator
 		$groupMember->is_confirmed  = 1;
 		$groupMember->date_modified = bp_core_current_time();
 
-		if ('user' != $syncTo) {
-			$var = "is_{$syncTo}";
+		if ( 'user' != $syncTo ) {
+			$var               = "is_{$syncTo}";
 			$groupMember->$var = 1;
 		}
 
@@ -668,10 +662,9 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function clearLdGroupCache()
-	{
-		delete_transient("learndash_group_leaders_{$this->ldGroupId}");
-		delete_transient("learndash_group_users_{$this->ldGroupId}");
+	protected function clearLdGroupCache() {
+		delete_transient( "learndash_group_leaders_{$this->ldGroupId}" );
+		delete_transient( "learndash_group_users_{$this->ldGroupId}" );
 	}
 
 	/**
@@ -679,8 +672,7 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function syncingToLearndash($callback)
-	{
+	protected function syncingToLearndash( $callback ) {
 		global $bp_ld_sync__syncing_to_learndash;
 
 		$bp_ld_sync__syncing_to_learndash = true;
@@ -695,8 +687,7 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function syncingToBuddypress($callback)
-	{
+	protected function syncingToBuddypress( $callback ) {
 		global $bp_ld_sync__syncing_to_buddypress;
 
 		$bp_ld_sync__syncing_to_buddypress = true;
@@ -711,11 +702,10 @@ class SyncGenerator
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	protected function getLastSyncTimestamp($type = 'bp')
-	{
-		if (! $lastSync = bp_get_option("bp_ld_sync/{$type}_last_synced")) {
+	protected function getLastSyncTimestamp( $type = 'bp' ) {
+		if ( ! $lastSync = bp_get_option( "bp_ld_sync/{$type}_last_synced" ) ) {
 			$lastSync = time();
-			bp_update_option("bp_ld_sync/{$type}_last_synced", $lastSync);
+			bp_update_option( "bp_ld_sync/{$type}_last_synced", $lastSync );
 		}
 
 		return $lastSync;

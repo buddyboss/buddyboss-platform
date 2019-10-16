@@ -8,15 +8,21 @@
  */
 
 (function( $ ) {
-	$( window ).on( 'load', function() {
-		/**
-		 * <range> element: update label when value changes.
-		 *
-		 * @since BuddyPress 2.5.0
-		 */
-		$( '.customize-control-range input' ).on( 'input', function() {
-			var $this = $( this );
-			$this.siblings( 'output' ).text( $this.val() );
-		});
-	});
+	$( window ).on(
+		'load',
+		function() {
+			/**
+			 * <range> element: update label when value changes.
+			 *
+			 * @since BuddyPress 2.5.0
+			 */
+			$( '.customize-control-range input' ).on(
+				'input',
+				function() {
+					var $this = $( this );
+					$this.siblings( 'output' ).text( $this.val() );
+				}
+			);
+		}
+	);
 })( jQuery );

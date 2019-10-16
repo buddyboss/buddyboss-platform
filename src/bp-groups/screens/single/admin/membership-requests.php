@@ -25,29 +25,32 @@ function groups_screen_group_admin_requests() {
 	$request_action = (string) bp_action_variable( 1 );
 	$membership_id  = (int) bp_action_variable( 2 );
 
-	if ( !empty( $request_action ) && !empty( $membership_id ) ) {
+	if ( ! empty( $request_action ) && ! empty( $membership_id ) ) {
 		if ( 'accept' == $request_action && is_numeric( $membership_id ) ) {
 
 			// Check the nonce first.
-			if ( !check_admin_referer( 'groups_accept_membership_request' ) )
+			if ( ! check_admin_referer( 'groups_accept_membership_request' ) ) {
 				return false;
+			}
 
 			// Accept the membership request.
-			if ( !groups_accept_membership_request( $membership_id ) )
+			if ( ! groups_accept_membership_request( $membership_id ) ) {
 				bp_core_add_message( __( 'There was an error accepting the membership request. Please try again.', 'buddyboss' ), 'error' );
-			else
+			} else {
 				bp_core_add_message( __( 'Group membership request accepted', 'buddyboss' ) );
-
+			}
 		} elseif ( 'reject' == $request_action && is_numeric( $membership_id ) ) {
 			/* Check the nonce first. */
-			if ( !check_admin_referer( 'groups_reject_membership_request' ) )
+			if ( ! check_admin_referer( 'groups_reject_membership_request' ) ) {
 				return false;
+			}
 
 			// Reject the membership request.
-			if ( !groups_reject_membership_request( $membership_id ) )
+			if ( ! groups_reject_membership_request( $membership_id ) ) {
 				bp_core_add_message( __( 'There was an error rejecting the membership request. Please try again.', 'buddyboss' ), 'error' );
-			else
+			} else {
 				bp_core_add_message( __( 'Group membership request rejected', 'buddyboss' ) );
+			}
 		}
 
 		/**

@@ -30,8 +30,8 @@ class BP_Blogs_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 30,
-				'search_query_arg' => 'sites_search',
-				'features' => array( 'site-icon' )
+				'search_query_arg'         => 'sites_search',
+				'features'                 => array( 'site-icon' ),
 			)
 		);
 	}
@@ -52,7 +52,7 @@ class BP_Blogs_Component extends BP_Component {
 		$bp = buddypress();
 
 		if ( ! defined( 'BP_BLOGS_SLUG' ) ) {
-			define ( 'BP_BLOGS_SLUG', $this->id );
+			define( 'BP_BLOGS_SLUG', $this->id );
 		}
 
 		// Global tables for messaging component.
@@ -67,7 +67,7 @@ class BP_Blogs_Component extends BP_Component {
 
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[$this->id];
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for blogs component.
 		$args = array(
@@ -232,7 +232,7 @@ class BP_Blogs_Component extends BP_Component {
 			'position'            => 30,
 			'screen_function'     => 'bp_blogs_screen_my_blogs',
 			'default_subnav_slug' => 'my-sites',
-			'item_css_id'         => $this->id
+			'item_css_id'         => $this->id,
 		);
 
 		$sub_nav[] = array(
@@ -241,7 +241,7 @@ class BP_Blogs_Component extends BP_Component {
 			'parent_url'      => $parent_url,
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_blogs_screen_my_blogs',
-			'position'        => 10
+			'position'        => 10,
 		);
 
 		// Setup navigation.
@@ -281,7 +281,7 @@ class BP_Blogs_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Sites', 'buddyboss' ),
-				'href'   => $blogs_link
+				'href'   => $blogs_link,
 			);
 
 			// My Sites.
@@ -290,7 +290,7 @@ class BP_Blogs_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-my-sites',
 				'title'    => __( 'My Sites', 'buddyboss' ),
 				'href'     => $blogs_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			// Create a Site.
@@ -300,7 +300,7 @@ class BP_Blogs_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-create',
 					'title'    => __( 'Create a Site', 'buddyboss' ),
 					'href'     => trailingslashit( bp_get_blogs_directory_permalink() . 'create' ),
-					'position' => 99
+					'position' => 99,
 				);
 			}
 		}
@@ -322,15 +322,17 @@ class BP_Blogs_Component extends BP_Component {
 					$bp->bp_options_title = __( 'My Sites', 'buddyboss' );
 				}
 
-			// If we are not viewing the logged in user, set up the current
-			// users avatar and name.
+				// If we are not viewing the logged in user, set up the current
+				// users avatar and name.
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-					'item_id' => bp_displayed_user_id(),
-					'type'    => 'thumb',
-					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
-				) );
-				$bp->bp_options_title = bp_get_displayed_user_fullname();
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
+				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}
 		}
 
@@ -345,9 +347,11 @@ class BP_Blogs_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'blog_meta'
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'blog_meta',
+			)
+		);
 
 		parent::setup_cache_groups();
 	}

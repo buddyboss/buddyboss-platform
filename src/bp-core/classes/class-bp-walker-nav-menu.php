@@ -22,7 +22,10 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 	 * @since BuddyPress 1.7.0
 	 * @var array
 	 */
-	var $db_fields = array( 'id' => 'css_id', 'parent' => 'parent' );
+	var $db_fields = array(
+		'id'     => 'css_id',
+		'parent' => 'parent',
+	);
 
 	/**
 	 * Tree type.
@@ -57,11 +60,13 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 		$args   = array_slice( func_get_args(), 2 );
 		$output = '';
 
-		if ( $max_depth < -1 ) // Invalid parameter.
+		if ( $max_depth < -1 ) { // Invalid parameter.
 			return $output;
+		}
 
-		if ( empty( $elements ) ) // Nothing to walk.
+		if ( empty( $elements ) ) { // Nothing to walk.
 			return $output;
+		}
 
 		$parent_field = $this->db_fields['parent'];
 
@@ -69,8 +74,9 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 		if ( -1 == $max_depth ) {
 
 			$empty_array = array();
-			foreach ( $elements as $e )
+			foreach ( $elements as $e ) {
 				$this->display_element( $e, $empty_array, 1, 0, $args, $output );
+			}
 
 			return $output;
 		}
@@ -86,10 +92,11 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 
 		foreach ( $elements as $e ) {
 			// BuddyPress: changed '==' to '==='. This is the only change from version in Walker::walk().
-			if ( 0 === $e->$parent_field )
+			if ( 0 === $e->$parent_field ) {
 				$top_level_elements[] = $e;
-			else
-				$children_elements[$e->$parent_field][] = $e;
+			} else {
+				$children_elements[ $e->$parent_field ][] = $e;
+			}
 		}
 
 		/*
@@ -104,15 +111,17 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 			$children_elements  = array();
 
 			foreach ( $elements as $e ) {
-				if ( $root->$parent_field == $e->$parent_field )
+				if ( $root->$parent_field == $e->$parent_field ) {
 					$top_level_elements[] = $e;
-				else
-					$children_elements[$e->$parent_field][] = $e;
+				} else {
+					$children_elements[ $e->$parent_field ][] = $e;
+				}
 			}
 		}
 
-		foreach ( $top_level_elements as $e )
+		foreach ( $top_level_elements as $e ) {
 			$this->display_element( $e, $children_elements, $max_depth, 0, $args, $output );
+		}
 
 		/*
 		 * If we are displaying all levels, and remaining children_elements is not empty,
@@ -121,10 +130,12 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 		if ( ( $max_depth == 0 ) && count( $children_elements ) > 0 ) {
 			$empty_array = array();
 
-			foreach ( $children_elements as $orphans )
-				foreach ( $orphans as $op )
+			foreach ( $children_elements as $orphans ) {
+				foreach ( $orphans as $op ) {
 					$this->display_element( $op, $empty_array, 1, 0, $args, $output );
-		 }
+				}
+			}
+		}
 
 		 return $output;
 	}
@@ -182,7 +193,7 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 		$attributes = ! empty( $item->link ) ? ' href="' . esc_url( $item->link ) . '"' : '';
 
 		// Construct the link.
-		$item_output = $args->before;
+		$item_output  = $args->before;
 		$item_output .= '<a' . $attributes . '>';
 
 		/**

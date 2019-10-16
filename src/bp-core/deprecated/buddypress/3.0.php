@@ -87,10 +87,10 @@ function bp_group_new_topic_button( $group = false ) {
 	 *
 	 * @return false
 	 */
-	function bp_get_group_new_topic_button( $group = false ) {
-		_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
-		return false;
-	}
+function bp_get_group_new_topic_button( $group = false ) {
+	_deprecated_function( __FUNCTION__, '3.0', 'legacy forum support removed' );
+	return false;
+}
 
 /**
  * Catch a "Mark as Spammer/Not Spammer" click from the toolbar.
@@ -117,8 +117,9 @@ function bp_core_action_set_spammer_status( $user_id = 0 ) {
 	}
 
 	// Use displayed user if it's not yourself.
-	if ( empty( $user_id ) )
+	if ( empty( $user_id ) ) {
 		$user_id = bp_displayed_user_id();
+	}
 
 	if ( bp_is_current_component( 'admin' ) && ( in_array( bp_current_action(), array( 'mark-spammer', 'unmark-spammer' ) ) ) ) {
 
@@ -159,8 +160,9 @@ function bp_core_action_set_spammer_status( $user_id = 0 ) {
 function bp_core_action_delete_user() {
 	_deprecated_function( __FUNCTION__, '3.0' );
 
-	if ( !bp_current_user_can( 'bp_moderate' ) || bp_is_my_profile() || !bp_displayed_user_id() )
+	if ( ! bp_current_user_can( 'bp_moderate' ) || bp_is_my_profile() || ! bp_displayed_user_id() ) {
 		return false;
+	}
 
 	if ( bp_is_current_component( 'admin' ) && bp_is_current_action( 'delete-user' ) ) {
 
@@ -179,9 +181,10 @@ function bp_core_action_delete_user() {
 
 		do_action( 'bp_core_action_delete_user', $errors );
 
-		if ( $errors )
+		if ( $errors ) {
 			bp_core_redirect( bp_displayed_user_domain() );
-		else
+		} else {
 			bp_core_redirect( bp_loggedin_user_domain() );
+		}
 	}
 }

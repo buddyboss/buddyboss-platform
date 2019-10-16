@@ -99,24 +99,26 @@ class BP_Blogs_Template {
 	public function __construct( $type, $page, $per_page, $max, $user_id, $search_terms, $page_arg = 'bpage', $update_meta_cache = true, $include_blog_ids = false ) {
 
 		$this->pag_arg  = sanitize_key( $page_arg );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $page     );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $per_page );
+		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $page );
+		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $per_page );
 
 		// Backwards compatibility support for blogs by first letter.
 		if ( ! empty( $_REQUEST['letter'] ) ) {
 			$this->blogs = BP_Blogs_Blog::get_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page );
 
-		// Typical blogs query.
+			// Typical blogs query.
 		} else {
-			$this->blogs = bp_blogs_get_blogs( array(
-				'type'              => $type,
-				'per_page'          => $this->pag_num,
-				'page'              => $this->pag_page,
-				'user_id'           => $user_id,
-				'search_terms'      => $search_terms,
-				'update_meta_cache' => $update_meta_cache,
-				'include_blog_ids'  => $include_blog_ids,
-			) );
+			$this->blogs = bp_blogs_get_blogs(
+				array(
+					'type'              => $type,
+					'per_page'          => $this->pag_num,
+					'page'              => $this->pag_page,
+					'user_id'           => $user_id,
+					'search_terms'      => $search_terms,
+					'update_meta_cache' => $update_meta_cache,
+					'include_blog_ids'  => $include_blog_ids,
+				)
+			);
 		}
 
 		// Set the total blog count.
@@ -141,16 +143,18 @@ class BP_Blogs_Template {
 
 		// Build pagination links based on total blogs and current page number.
 		if ( ! empty( $this->total_blog_count ) && ! empty( $this->pag_num ) ) {
-			$this->pag_links = paginate_links( array(
-				'base'      => add_query_arg( $this->pag_arg, '%#%' ),
-				'format'    => '',
-				'total'     => ceil( (int) $this->total_blog_count / (int) $this->pag_num ),
-				'current'   => (int) $this->pag_page,
-				'prev_text' => __( '&larr;', 'buddyboss' ),
-				'next_text' => __( '&rarr;', 'buddyboss' ),
-				'mid_size'  => 1,
-				'add_args'  => array(),
-			) );
+			$this->pag_links = paginate_links(
+				array(
+					'base'      => add_query_arg( $this->pag_arg, '%#%' ),
+					'format'    => '',
+					'total'     => ceil( (int) $this->total_blog_count / (int) $this->pag_num ),
+					'current'   => (int) $this->pag_page,
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'mid_size'  => 1,
+					'add_args'  => array(),
+				)
+			);
 		}
 	}
 

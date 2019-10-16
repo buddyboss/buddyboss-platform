@@ -43,15 +43,17 @@ function bp_core_add_notification( $item_id, $user_id, $component_name, $compone
 	}
 
 	// Add the notification
-	return bp_notifications_add_notification( array(
-		'item_id'           => $item_id,
-		'user_id'           => $user_id,
-		'component_name'    => $component_name,
-		'component_action'  => $component_action,
-		'secondary_item_id' => $secondary_item_id,
-		'date_notified'     => $date_notified,
-		'is_new'            => $is_new
-	) );
+	return bp_notifications_add_notification(
+		array(
+			'item_id'           => $item_id,
+			'user_id'           => $user_id,
+			'component_name'    => $component_name,
+			'component_action'  => $component_action,
+			'secondary_item_id' => $secondary_item_id,
+			'date_notified'     => $date_notified,
+			'is_new'            => $is_new,
+		)
+	);
 }
 
 /**
@@ -108,7 +110,7 @@ function bp_core_get_notification( $id ) {
  *             bp_notifications_get_notifications_for_user() instead.
  *
  * @since BuddyPress 1.0.0
- * @param int $user_id ID of user.
+ * @param int    $user_id ID of user.
  * @param string $format
  * @return boolean Object or array on success, false on failure.
  */
@@ -137,7 +139,7 @@ function bp_core_get_notifications_for_user( $user_id, $format = 'string' ) {
  *             bp_notifications_delete_notifications_by_type() instead.
  *
  * @since BuddyPress 1.0.0
- * @param int $user_id
+ * @param int    $user_id
  * @param string $component_name
  * @param string $component_action
  * @return false|int True on success, false on failure.
@@ -166,7 +168,7 @@ function bp_core_delete_notifications_by_type( $user_id, $component_name, $compo
  *
  * @since BuddyPress 1.0.0
  *
- * @param int $user_id
+ * @param int    $user_id
  * @param string $component_name
  * @param string $component_action
  * @return false|int True on success, false on failure.
@@ -219,7 +221,7 @@ function bp_core_delete_all_notifications_by_type( $item_id, $component_name, $c
  *             bp_notifications_delete_notifications_from_user() instead.
  *
  * @since BuddyPress 1.0.0
- * @param int $user_id
+ * @param int    $user_id
  * @param string $component_name
  * @param string $component_action
  * @return false|int True on success, false on failure.

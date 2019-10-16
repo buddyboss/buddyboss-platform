@@ -23,22 +23,22 @@ class AEF extends BBP_Converter_Base {
 	 */
 	public function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'fid',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id'
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0, Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'forums',
-			'from_fieldname'  => 'par_board_id',
-			'to_type'         => 'forum',
-			'to_fieldname'    => '_bbp_forum_parent_id'
+			'from_tablename' => 'forums',
+			'from_fieldname' => 'par_board_id',
+			'to_type'        => 'forum',
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -46,7 +46,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'ntopic',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_topic_count'
+			'to_fieldname'   => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -54,7 +54,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'nposts',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_reply_count'
+			'to_fieldname'   => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Stored in postmeta)
@@ -62,7 +62,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'ntopic',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_total_topic_count'
+			'to_fieldname'   => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Stored in postmeta)
@@ -70,7 +70,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'nposts',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_total_reply_count'
+			'to_fieldname'   => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -78,7 +78,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'fname',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid conflicts)
@@ -87,7 +87,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'fname',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -96,7 +96,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'description',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -104,7 +104,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_order',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum status (Unlocked = 1 or Locked = 0, Stored in postmeta)
@@ -113,39 +113,39 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'status',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_status',
-			'callback_method' => 'callback_forum_status'
+			'callback_method' => 'callback_forum_status',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date_i18n('Y-m-d H:i:s')
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'topics',
 			'from_fieldname' => 'tid',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -154,7 +154,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'n_posts',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -163,7 +163,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'n_posts',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic parent forum id (If no parent, then 0, Stored in postmeta)
@@ -172,7 +172,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 't_bid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -185,7 +185,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic Author ip (Stored in postmeta)
@@ -197,7 +197,7 @@ class AEF extends BBP_Converter_Base {
 			'join_type'       => 'INNER',
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_author_ip'
+			'to_fieldname'    => '_bbp_author_ip',
 		);
 
 		// Topic content.
@@ -210,7 +210,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic title.
@@ -218,7 +218,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'topics',
 			'from_fieldname' => 'topic',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -227,7 +227,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -236,7 +236,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 't_bid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Sticky status (Stored in postmeta))
@@ -245,7 +245,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 't_sticky',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_old_sticky_status',
-			'callback_method' => 'callback_sticky_status'
+			'callback_method' => 'callback_sticky_status',
 		);
 
 		// Topic dates.
@@ -258,7 +258,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
@@ -268,7 +268,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
@@ -278,7 +278,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
@@ -288,7 +288,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
@@ -298,7 +298,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.first_post_id = posts.pid',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_last_active_time',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// Topic status (Open = 1 or Closed = 0, AEF v1.0.9)
@@ -307,23 +307,23 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 't_status',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		/**
 		 * AEF v1.0.9 Forums do not support topic tags out of the box
 		 */
 
-		/** Reply Section *****************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
-			'from_tablename'  => 'posts',
-			'from_fieldname'  => 'pid',
-			'to_type'         => 'reply',
-			'to_fieldname'    => '_bbp_post_id'
+			'from_tablename' => 'posts',
+			'from_fieldname' => 'pid',
+			'to_type'        => 'reply',
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Reply parent forum id (If no parent, then 0, Stored in postmeta)
@@ -332,7 +332,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_fid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0, Stored in postmeta)
@@ -341,7 +341,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_tid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author ip (Stored in postmeta)
@@ -349,7 +349,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'posts',
 			'from_fieldname' => 'poster_ip',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_author_ip'
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Reply author.
@@ -358,7 +358,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'poster_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
@@ -371,7 +371,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.tid = posts.post_tid WHERE topics.first_post_id != posts.pid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_title',
-			'callback_method' => 'callback_reply_title'
+			'callback_method' => 'callback_reply_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -384,7 +384,7 @@ class AEF extends BBP_Converter_Base {
 			'join_expression' => 'ON topics.tid = posts.post_tid WHERE topics.first_post_id != posts.pid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -393,7 +393,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'post',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -402,7 +402,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_tid',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -411,38 +411,38 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'ptime',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
 			'from_fieldname'  => 'ptime',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
 			'from_fieldname'  => 'ptime',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
 			'from_fieldname'  => 'ptime',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'users',
 			'from_fieldname' => 'id',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
@@ -451,7 +451,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'password',
 			'to_type'         => 'user',
 			'to_fieldname'    => '_bbp_password',
-			'callback_method' => 'callback_savepass'
+			'callback_method' => 'callback_savepass',
 		);
 
 		// Store old User Salt (This is only used for the SELECT row info for the above password save)
@@ -459,14 +459,14 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'salt',
 			'to_type'        => 'user',
-			'to_fieldname'   => ''
+			'to_fieldname'   => '',
 		);
 
 		// User password verify class (Stored in usermeta for verifying password)
 		$this->field_map[] = array(
 			'to_type'      => 'users',
 			'to_fieldname' => '_bbp_class',
-			'default'      => 'AEF'
+			'default'      => 'AEF',
 		);
 
 		// User name.
@@ -474,7 +474,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User nice name.
@@ -482,7 +482,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_nicename'
+			'to_fieldname'   => 'user_nicename',
 		);
 
 		// User email.
@@ -490,7 +490,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User homepage.
@@ -498,7 +498,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'www',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_url'
+			'to_fieldname'   => 'user_url',
 		);
 
 		// User registered.
@@ -507,7 +507,7 @@ class AEF extends BBP_Converter_Base {
 			'from_fieldname'  => 'r_time',
 			'to_type'         => 'user',
 			'to_fieldname'    => 'user_registered',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// User AIM (Stored in usermeta)
@@ -515,7 +515,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'aim',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'aim'
+			'to_fieldname'   => 'aim',
 		);
 
 		// User Yahoo (Stored in usermeta)
@@ -523,7 +523,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'yim',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'yim'
+			'to_fieldname'   => 'yim',
 		);
 
 		// Store ICQ (Stored in usermeta)
@@ -531,7 +531,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'icq',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_aef_user_icq'
+			'to_fieldname'   => '_bbp_aef_user_icq',
 		);
 
 		// Store MSN (Stored in usermeta)
@@ -539,7 +539,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'msn',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_aef_user_msn'
+			'to_fieldname'   => '_bbp_aef_user_msn',
 		);
 
 		// Store Gmail (Stored in usermeta)
@@ -547,16 +547,16 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'gmail',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_aef_user_gmail'
+			'to_fieldname'   => '_bbp_aef_user_gmail',
 		);
 
 		// Store Signature (Stored in usermeta)
 		$this->field_map[] = array(
-			'from_tablename' => 'users',
-			'from_fieldname' => 'sig',
-			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_aef_user_sig',
-			'callback_method' => 'callback_html'
+			'from_tablename'  => 'users',
+			'from_fieldname'  => 'sig',
+			'to_type'         => 'user',
+			'to_fieldname'    => '_bbp_aef_user_sig',
+			'callback_method' => 'callback_html',
 		);
 
 		// Store Location (Stored in usermeta)
@@ -564,7 +564,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'location',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_aef_user_location'
+			'to_fieldname'   => '_bbp_aef_user_location',
 		);
 
 		// Store PrivateText (Stored in usermeta)
@@ -572,7 +572,7 @@ class AEF extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'users_text',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_aef_user_private_text'
+			'to_fieldname'   => '_bbp_aef_user_private_text',
 		);
 
 	}
@@ -581,8 +581,7 @@ class AEF extends BBP_Converter_Base {
 	 * This method allows us to indicates what is or is not converted for each
 	 * converter.
 	 */
-	public function info()
-	{
+	public function info() {
 		return '';
 	}
 
@@ -591,20 +590,21 @@ class AEF extends BBP_Converter_Base {
 	 * way when we authenticate it we can get it out of the database
 	 * as one value. Array values are auto sanitized by WordPress.
 	 */
-	public function callback_savepass( $field, $row )
-	{
-		$pass_array = array( 'hash' => $field, 'salt' => $row['salt'] );
-		return $pass_array;
+	public function callback_savepass( $field, $row ) {
+		 $pass_array = array(
+			 'hash' => $field,
+			 'salt' => $row['salt'],
+		 );
+		 return $pass_array;
 	}
 
 	/**
 	 * This method is to take the pass out of the database and compare
 	 * to a pass the user has typed in.
 	 */
-	public function authenticate_pass( $password, $serialized_pass )
-	{
+	public function authenticate_pass( $password, $serialized_pass ) {
 		$pass_array = unserialize( $serialized_pass );
-		return ( $pass_array['hash'] == md5( md5( $password ). $pass_array['salt'] ) );
+		return ( $pass_array['hash'] == md5( md5( $password ) . $pass_array['salt'] ) );
 	}
 
 	/**
@@ -615,12 +615,12 @@ class AEF extends BBP_Converter_Base {
 	 */
 	public function callback_forum_status( $status = 1 ) {
 		switch ( $status ) {
-			case 0 :
+			case 0:
 				$status = 'closed';
 				break;
 
-			case 1 :
-			default :
+			case 1:
+			default:
 				$status = 'open';
 				break;
 		}
@@ -635,12 +635,12 @@ class AEF extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 1 ) {
 		switch ( $status ) {
-			case 0 :
+			case 0:
 				$status = 'closed';
 				break;
 
-			case 1  :
-			default :
+			case 1:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -655,12 +655,12 @@ class AEF extends BBP_Converter_Base {
 	 */
 	public function callback_sticky_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'sticky';       // AEF Sticky 't_sticky = 1'
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'normal';       // AEF normal topic 't_sticky = 0'
 				break;
 		}
@@ -685,7 +685,7 @@ class AEF extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = !empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
 		return $title;
 	}
 }

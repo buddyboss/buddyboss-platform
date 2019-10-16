@@ -27,29 +27,29 @@ class BP_Core_Gdpr {
 	 */
 	function load_on_bp_dependency() {
 
-		if ( bp_is_active( "xprofile" ) ) {
+		if ( bp_is_active( 'xprofile' ) ) {
 			BP_Xprofile_Export::instance();
 		}
-		if ( bp_is_active( "activity" ) ) {
+		if ( bp_is_active( 'activity' ) ) {
 			BP_Activity_Export::instance();
 		}
-		if ( bp_is_active( "notifications" ) ) {
+		if ( bp_is_active( 'notifications' ) ) {
 			BP_Notification_Export::instance();
 		}
-		if ( bp_is_active( "messages" ) ) {
+		if ( bp_is_active( 'messages' ) ) {
 			BP_Message_Export::instance();
 		}
-		if ( bp_is_active( "groups" ) ) {
+		if ( bp_is_active( 'groups' ) ) {
 			BP_Group_Export::instance();
 			BP_Group_Membership_Export::instance();
 		}
 		if ( bp_is_active( 'friends' ) ) {
 			BP_Friendship_Export::instance();
 		}
-		if ( bp_is_active( "settings" ) ) {
+		if ( bp_is_active( 'settings' ) ) {
 			BP_Settings_Export::instance();
 		}
-		if ( bp_is_active( "forums" ) ) {
+		if ( bp_is_active( 'forums' ) ) {
 			new BP_Bbp_Gdpr_Forums();
 			new BP_Bbp_Gdpr_Replies();
 			new BP_Bbp_Gdpr_Topics();

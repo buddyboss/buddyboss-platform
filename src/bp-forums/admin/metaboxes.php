@@ -46,11 +46,11 @@ function bbp_dashboard_widget_right_now() {
 				<?php
 					$num  = $r['forum_count'];
 					$text = _n( 'Forum', 'Forums', $r['forum_count'], 'buddyboss' );
-					if ( current_user_can( 'publish_forums' ) ) {
-						$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), get_admin_url( null, 'edit.php' ) );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
-						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-					}
+				if ( current_user_can( 'publish_forums' ) ) {
+					$link = add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), get_admin_url( null, 'edit.php' ) );
+					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
+					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+				}
 				?>
 
 				<td class="first b b-forums"><?php echo $num; ?></td>
@@ -63,11 +63,11 @@ function bbp_dashboard_widget_right_now() {
 				<?php
 					$num  = $r['topic_count'];
 					$text = _n( 'Discussion', 'Discussions', $r['topic_count'], 'buddyboss' );
-					if ( current_user_can( 'publish_topics' ) ) {
-						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), get_admin_url( null, 'edit.php' ) );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
-						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-					}
+				if ( current_user_can( 'publish_topics' ) ) {
+					$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), get_admin_url( null, 'edit.php' ) );
+					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
+					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+				}
 				?>
 
 				<td class="first b b-topics"><?php echo $num; ?></td>
@@ -82,11 +82,17 @@ function bbp_dashboard_widget_right_now() {
 					<?php
 						$num  = $r['topic_tag_count'];
 						$text = _n( 'Discussion Tag', 'Discussion Tags', $r['topic_tag_count'], 'buddyboss' );
-						if ( current_user_can( 'manage_topic_tags' ) ) {
-							$link = add_query_arg( array( 'taxonomy' => bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), get_admin_url( null, 'edit-tags.php' ) );
-							$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
-							$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-						}
+					if ( current_user_can( 'manage_topic_tags' ) ) {
+						$link = add_query_arg(
+							array(
+								'taxonomy'  => bbp_get_topic_tag_tax_id(),
+								'post_type' => bbp_get_topic_post_type(),
+							),
+							get_admin_url( null, 'edit-tags.php' )
+						);
+						$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
+						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+					}
 					?>
 
 					<td class="first b b-topic_tags"><span class="total-count"><?php echo $num; ?></span></td>
@@ -101,11 +107,11 @@ function bbp_dashboard_widget_right_now() {
 				<?php
 					$num  = $r['reply_count'];
 					$text = _n( 'Reply', 'Replies', $r['reply_count'], 'buddyboss' );
-					if ( current_user_can( 'publish_replies' ) ) {
-						$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), get_admin_url( null, 'edit.php' ) );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
-						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-					}
+				if ( current_user_can( 'publish_replies' ) ) {
+					$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), get_admin_url( null, 'edit.php' ) );
+					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
+					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+				}
 				?>
 
 				<td class="first b b-replies"><?php echo $num; ?></td>
@@ -131,11 +137,11 @@ function bbp_dashboard_widget_right_now() {
 				<?php
 					$num  = $r['user_count'];
 					$text = _n( 'User', 'Users', $r['user_count'], 'buddyboss' );
-					if ( current_user_can( 'edit_users' ) ) {
-						$link = get_admin_url( null, 'users.php' );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
-						$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
-					}
+				if ( current_user_can( 'edit_users' ) ) {
+					$link = get_admin_url( null, 'users.php' );
+					$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
+					$text = '<a href="' . esc_url( $link ) . '">' . $text . '</a>';
+				}
 				?>
 
 				<td class="b b-users"><span class="total-count"><?php echo $num; ?></span></td>
@@ -151,10 +157,10 @@ function bbp_dashboard_widget_right_now() {
 						$num  = $r['topic_count_hidden'];
 						$text = _n( 'Hidden Discussion', 'Hidden Discussions', $r['topic_count_hidden'], 'buddyboss' );
 						$link = add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), get_admin_url( null, 'edit.php' ) );
-						if ( '0' !== $num ) {
-							$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
-						}
-                        $num  = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $num  . '</a>';
+					if ( '0' !== $num ) {
+						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
+					}
+						$num  = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $num . '</a>';
 						$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_topic_title'] ) . '">' . $text . '</a>';
 					?>
 
@@ -173,10 +179,10 @@ function bbp_dashboard_widget_right_now() {
 						$num  = $r['reply_count_hidden'];
 						$text = _n( 'Hidden Reply', 'Hidden Replies', $r['reply_count_hidden'], 'buddyboss' );
 						$link = add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), get_admin_url( null, 'edit.php' ) );
-						if ( '0' !== $num ) {
-							$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
-						}
-                        $num  = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $num  . '</a>';
+					if ( '0' !== $num ) {
+						$link = add_query_arg( array( 'post_status' => bbp_get_spam_status_id() ), $link );
+					}
+						$num  = '<a href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $num . '</a>';
 						$text = '<a class="waiting" href="' . esc_url( $link ) . '" title="' . esc_attr( $r['hidden_reply_title'] ) . '">' . $text . '</a>';
 					?>
 
@@ -194,8 +200,14 @@ function bbp_dashboard_widget_right_now() {
 					<?php
 						$num  = $r['empty_topic_tag_count'];
 						$text = _n( 'Empty Discussion Tag', 'Empty Discussion Tags', $r['empty_topic_tag_count'], 'buddyboss' );
-						$link = add_query_arg( array( 'taxonomy' => bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), get_admin_url( null, 'edit-tags.php' ) );
-						$num  = '<a href="' . esc_url( $link ) . '">' . $num  . '</a>';
+						$link = add_query_arg(
+							array(
+								'taxonomy'  => bbp_get_topic_tag_tax_id(),
+								'post_type' => bbp_get_topic_post_type(),
+							),
+							get_admin_url( null, 'edit-tags.php' )
+						);
+						$num  = '<a href="' . esc_url( $link ) . '">' . $num . '</a>';
 						$text = '<a class="waiting" href="' . esc_url( $link ) . '">' . $text . '</a>';
 					?>
 
@@ -240,16 +252,16 @@ function bbp_forum_metabox() {
 
 	// Post ID
 	$post_id     = get_the_ID();
-	$post_parent = bbp_get_global_post_field( 'post_parent', 'raw'  );
-	$menu_order  = bbp_get_global_post_field( 'menu_order',  'edit' );
+	$post_parent = bbp_get_global_post_field( 'post_parent', 'raw' );
+	$menu_order  = bbp_get_global_post_field( 'menu_order', 'edit' );
 
-	/** Type ******************************************************************/
+	/** Type */
 
 	?>
 
 	<p>
 		<strong class="label"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></strong>
-		<label class="screen-reader-text" for="bbp_forum_type_select"><?php esc_html_e( 'Type:', 'buddyboss' ) ?></label>
+		<label class="screen-reader-text" for="bbp_forum_type_select"><?php esc_html_e( 'Type:', 'buddyboss' ); ?></label>
 		<?php bbp_form_forum_type_dropdown( array( 'forum_id' => $post_id ) ); ?>
 	</p>
 
@@ -261,7 +273,7 @@ function bbp_forum_metabox() {
 
 	<p>
 		<strong class="label"><?php esc_html_e( 'Status:', 'buddyboss' ); ?></strong>
-		<label class="screen-reader-text" for="bbp_forum_status_select"><?php esc_html_e( 'Status:', 'buddyboss' ) ?></label>
+		<label class="screen-reader-text" for="bbp_forum_status_select"><?php esc_html_e( 'Status:', 'buddyboss' ); ?></label>
 		<?php bbp_form_forum_status_dropdown( array( 'forum_id' => $post_id ) ); ?>
 	</p>
 
@@ -273,7 +285,7 @@ function bbp_forum_metabox() {
 
 	<p>
 		<strong class="label"><?php esc_html_e( 'Visibility:', 'buddyboss' ); ?></strong>
-		<label class="screen-reader-text" for="bbp_forum_visibility_select"><?php esc_html_e( 'Visibility:', 'buddyboss' ) ?></label>
+		<label class="screen-reader-text" for="bbp_forum_visibility_select"><?php esc_html_e( 'Visibility:', 'buddyboss' ); ?></label>
 		<?php bbp_form_forum_visibility_dropdown( array( 'forum_id' => $post_id ) ); ?>
 	</p>
 
@@ -288,23 +300,27 @@ function bbp_forum_metabox() {
 	<p>
 		<strong class="label"><?php esc_html_e( 'Parent:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="parent_id"><?php esc_html_e( 'Forum Parent', 'buddyboss' ); ?></label>
-		<?php bbp_dropdown( array(
-			'post_type'          => bbp_get_forum_post_type(),
-			'selected'           => $post_parent,
-			'numberposts'        => -1,
-			'orderby'            => 'title',
-			'order'              => 'ASC',
-			'walker'             => '',
-			'exclude'            => $post_id,
+		<?php
+		bbp_dropdown(
+			array(
+				'post_type'          => bbp_get_forum_post_type(),
+				'selected'           => $post_parent,
+				'numberposts'        => -1,
+				'orderby'            => 'title',
+				'order'              => 'ASC',
+				'walker'             => '',
+				'exclude'            => $post_id,
 
-			// Output-related
-			'select_id'          => 'parent_id',
-			'tab'                => bbp_get_tab_index(),
-			'options_only'       => false,
-			'show_none'          => __( '- Select Forum -', 'buddyboss' ),
-			'disable_categories' => false,
-			'disabled'           => ''
-		) ); ?>
+				// Output-related
+				'select_id'          => 'parent_id',
+				'tab'                => bbp_get_tab_index(),
+				'options_only'       => false,
+				'show_none'          => __( '- Select Forum -', 'buddyboss' ),
+				'disable_categories' => false,
+				'disabled'           => '',
+			)
+		);
+		?>
 	</p>
 
 	<p>
@@ -337,7 +353,7 @@ function bbp_topic_metabox() {
 	// Post ID
 	$post_id = get_the_ID();
 
-	/** Type ******************************************************************/
+	/** Type */
 
 	?>
 
@@ -356,7 +372,14 @@ function bbp_topic_metabox() {
 	<p>
 		<strong class="label"><?php esc_html_e( 'Status:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="bbp_open_close_topic"><?php esc_html_e( 'Select whether to open or close the discussion.', 'buddyboss' ); ?></label>
-		<?php bbp_form_topic_status_dropdown( array( 'select_id' => 'post_status', 'topic_id' => $post_id ) ); ?>
+		<?php
+		bbp_form_topic_status_dropdown(
+			array(
+				'select_id' => 'post_status',
+				'topic_id'  => $post_id,
+			)
+		);
+		?>
 	</p>
 
 	<?php
@@ -368,23 +391,27 @@ function bbp_topic_metabox() {
 	<p>
 		<strong class="label"><?php esc_html_e( 'Forum:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="parent_id"><?php esc_html_e( 'Forum', 'buddyboss' ); ?></label>
-		<?php bbp_dropdown( array(
-			'post_type'          => bbp_get_forum_post_type(),
-			'selected'           => bbp_get_topic_forum_id( $post_id ),
-			'numberposts'        => -1,
-			'orderby'            => 'title',
-			'order'              => 'ASC',
-			'walker'             => '',
-			'exclude'            => '',
+		<?php
+		bbp_dropdown(
+			array(
+				'post_type'          => bbp_get_forum_post_type(),
+				'selected'           => bbp_get_topic_forum_id( $post_id ),
+				'numberposts'        => -1,
+				'orderby'            => 'title',
+				'order'              => 'ASC',
+				'walker'             => '',
+				'exclude'            => '',
 
-			// Output-related
-			'select_id'          => 'parent_id',
-			'tab'                => bbp_get_tab_index(),
-			'options_only'       => false,
-			'show_none'          => __( '- Select Forum -', 'buddyboss' ),
-			'disable_categories' => current_user_can( 'edit_forums' ),
-			'disabled'           => ''
-		) ); ?>
+				// Output-related
+				'select_id'          => 'parent_id',
+				'tab'                => bbp_get_tab_index(),
+				'options_only'       => false,
+				'show_none'          => __( '- Select Forum -', 'buddyboss' ),
+				'disable_categories' => current_user_can( 'edit_forums' ),
+				'disabled'           => '',
+			)
+		);
+		?>
 	</p>
 
 	<input name="ping_status" type="hidden" id="ping_status" value="open" />
@@ -414,31 +441,36 @@ function bbp_reply_metabox() {
 	// Get some meta
 	$reply_topic_id = bbp_get_reply_topic_id( $post_id );
 	$reply_forum_id = bbp_get_reply_forum_id( $post_id );
-	$reply_to       = bbp_get_reply_to(       $post_id );
+	$reply_to       = bbp_get_reply_to( $post_id );
 
 	// Allow individual manipulation of reply forum
-	if ( current_user_can( 'edit_others_replies' ) || current_user_can( 'moderate' ) ) : ?>
+	if ( current_user_can( 'edit_others_replies' ) || current_user_can( 'moderate' ) ) :
+		?>
 
 		<p>
 			<strong class="label"><?php esc_html_e( 'Forum:', 'buddyboss' ); ?></strong>
 			<label class="screen-reader-text" for="bbp_forum_id"><?php esc_html_e( 'Forum', 'buddyboss' ); ?></label>
-			<?php bbp_dropdown( array(
-				'post_type'             => bbp_get_forum_post_type(),
-				'selected'              => $reply_forum_id,
-				'numberposts'           => - 1,
-				'orderby'               => 'title',
-				'order'                 => 'ASC',
-				'walker'                => '',
-				'exclude'               => '',
+			<?php
+			bbp_dropdown(
+				array(
+					'post_type'          => bbp_get_forum_post_type(),
+					'selected'           => $reply_forum_id,
+					'numberposts'        => - 1,
+					'orderby'            => 'title',
+					'order'              => 'ASC',
+					'walker'             => '',
+					'exclude'            => '',
 
-				// Output-related
-				'select_id'             => 'bbp_forum_id',
-				'tab'                   => bbp_get_tab_index(),
-				'options_only'          => false,
-				'show_none'             => __( '- Select Forum -', 'buddyboss' ),
-				'disable_categories'    => current_user_can( 'edit_forums' ),
-				'disabled'              => '',
-			) ); ?>
+					// Output-related
+					'select_id'          => 'bbp_forum_id',
+					'tab'                => bbp_get_tab_index(),
+					'options_only'       => false,
+					'show_none'          => __( '- Select Forum -', 'buddyboss' ),
+					'disable_categories' => current_user_can( 'edit_forums' ),
+					'disabled'           => '',
+				)
+			);
+			?>
 		</p>
 
 	<?php endif; ?>
@@ -447,54 +479,58 @@ function bbp_reply_metabox() {
 		<strong class="label"><?php esc_html_e( 'Discussion:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="parent_id"><?php esc_html_e( 'Discussion', 'buddyboss' ); ?></label>
 		<?php
-		bbp_dropdown( array(
-			'post_type'             => bbp_get_topic_post_type(),
-			'selected'              => $reply_topic_id,
-			'post_parent'           => $reply_forum_id,
-			'numberposts'           => - 1,
-			'orderby'               => 'title',
-			'order'                 => 'ASC',
-			'walker'                => '',
-			'exclude'               => '',
+		bbp_dropdown(
+			array(
+				'post_type'             => bbp_get_topic_post_type(),
+				'selected'              => $reply_topic_id,
+				'post_parent'           => $reply_forum_id,
+				'numberposts'           => - 1,
+				'orderby'               => 'title',
+				'order'                 => 'ASC',
+				'walker'                => '',
+				'exclude'               => '',
 
-			// Output-related
-			'select_id'             => 'parent_id',
-			'tab'                   => bbp_get_tab_index(),
-			'options_only'          => false,
-			'show_none'             => __( '- Select Discussion -', 'buddyboss' ),
-			'show_none_default_val' => 0,
-			'disable_categories'    => current_user_can( 'edit_forums' ),
-			'disabled'              => '',
-		) );
+				// Output-related
+				'select_id'             => 'parent_id',
+				'tab'                   => bbp_get_tab_index(),
+				'options_only'          => false,
+				'show_none'             => __( '- Select Discussion -', 'buddyboss' ),
+				'show_none_default_val' => 0,
+				'disable_categories'    => current_user_can( 'edit_forums' ),
+				'disabled'              => '',
+			)
+		);
 		?>
-<!--		<input name="parent_id" id="bbp_topic_id" type="text" value="--><?php //echo esc_attr( $reply_topic_id ); ?><!--" data-ajax-url="--><?php //echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'bbp_suggest_topic' ), admin_url( 'admin-ajax.php', 'relative' ) ) ), 'bbp_suggest_topic_nonce' ); ?><!--" />-->
+<!--		<input name="parent_id" id="bbp_topic_id" type="text" value="--><?php // echo esc_attr( $reply_topic_id ); ?><!--" data-ajax-url="--><?php // echo esc_url( wp_nonce_url( add_query_arg( array( 'action' => 'bbp_suggest_topic' ), admin_url( 'admin-ajax.php', 'relative' ) ) ), 'bbp_suggest_topic_nonce' ); ?><!--" />-->
 	</p>
 
 	<p>
 		<strong class="label"><?php esc_html_e( 'Reply To:', 'buddyboss' ); ?></strong>
 		<label class="screen-reader-text" for="bbp_reply_to"><?php esc_html_e( 'Reply To', 'buddyboss' ); ?></label>
 		<?php
-		bbp_dropdown( array(
-			'post_type'             => bbp_get_reply_post_type(),
-			'selected'              => $reply_to,
-			'post_parent'           => $reply_topic_id,
-			'numberposts'           => - 1,
-			'orderby'               => 'title',
-			'order'                 => 'ASC',
-			'walker'                => '',
-			'exclude'               => '',
+		bbp_dropdown(
+			array(
+				'post_type'             => bbp_get_reply_post_type(),
+				'selected'              => $reply_to,
+				'post_parent'           => $reply_topic_id,
+				'numberposts'           => - 1,
+				'orderby'               => 'title',
+				'order'                 => 'ASC',
+				'walker'                => '',
+				'exclude'               => '',
 
-			// Output-related
-			'select_id'             => 'bbp_reply_to',
-			'tab'                   => bbp_get_tab_index(),
-			'options_only'          => false,
-			'show_none'             => __( '- Select Reply -', 'buddyboss' ),
-			'show_none_default_val' => 0,
-			'disable_categories'    => current_user_can( 'edit_forums' ),
-			'disabled'              => '',
-		) );
+				// Output-related
+				'select_id'             => 'bbp_reply_to',
+				'tab'                   => bbp_get_tab_index(),
+				'options_only'          => false,
+				'show_none'             => __( '- Select Reply -', 'buddyboss' ),
+				'show_none_default_val' => 0,
+				'disable_categories'    => current_user_can( 'edit_forums' ),
+				'disabled'              => '',
+			)
+		);
 		?>
-<!--		<input name="bbp_reply_to" id="bbp_reply_to" type="text" value="--><?php //echo esc_attr( $reply_to ); ?><!--" />-->
+<!--		<input name="bbp_reply_to" id="bbp_reply_to" type="text" value="--><?php // echo esc_attr( $reply_to ); ?><!--" />-->
 	</p>
 
 	<input name="ping_status" type="hidden" id="ping_status" value="open" />
@@ -522,7 +558,8 @@ function bbp_author_metabox() {
 	$post_id = get_the_ID();
 
 	// Show extra bits if topic/reply is anonymous
-	if ( bbp_is_reply_anonymous( $post_id ) || bbp_is_topic_anonymous( $post_id ) ) : ?>
+	if ( bbp_is_reply_anonymous( $post_id ) || bbp_is_topic_anonymous( $post_id ) ) :
+		?>
 
 		<p>
 			<strong class="label"><?php esc_html_e( 'Name:', 'buddyboss' ); ?></strong>

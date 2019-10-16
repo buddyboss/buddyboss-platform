@@ -153,24 +153,27 @@ class BP_Notifications_Template {
 	public function __construct( $args = array() ) {
 
 		// Parse arguments.
-		$r = wp_parse_args( $args, array(
-			'id'                => false,
-			'user_id'           => 0,
-			'item_id'           => false,
-			'secondary_item_id' => false,
-			'component_name'    => bp_notifications_get_registered_components(),
-			'component_action'  => false,
-			'is_new'            => true,
-			'search_terms'      => '',
-			'order_by'          => 'date_notified',
-			'sort_order'        => 'DESC',
-			'page_arg'          => 'npage',
-			'page'              => 1,
-			'per_page'          => 25,
-			'max'               => null,
-			'meta_query'        => false,
-			'date_query'        => false
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'id'                => false,
+				'user_id'           => 0,
+				'item_id'           => false,
+				'secondary_item_id' => false,
+				'component_name'    => bp_notifications_get_registered_components(),
+				'component_action'  => false,
+				'is_new'            => true,
+				'search_terms'      => '',
+				'order_by'          => 'date_notified',
+				'sort_order'        => 'DESC',
+				'page_arg'          => 'npage',
+				'page'              => 1,
+				'per_page'          => 25,
+				'max'               => null,
+				'meta_query'        => false,
+				'date_query'        => false,
+			)
+		);
 
 		// Sort order direction.
 		$orders = array( 'ASC', 'DESC' );
@@ -182,8 +185,8 @@ class BP_Notifications_Template {
 
 		// Setup variables.
 		$this->pag_arg      = sanitize_key( $r['page_arg'] );
-		$this->pag_page     = bp_sanitize_pagination_arg( $this->pag_arg, $r['page']     );
-		$this->pag_num      = bp_sanitize_pagination_arg( 'num',          $r['per_page'] );
+		$this->pag_page     = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num      = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 		$this->user_id      = $r['user_id'];
 		$this->is_new       = $r['is_new'];
 		$this->search_terms = $r['search_terms'];
@@ -231,16 +234,18 @@ class BP_Notifications_Template {
 				'sort_order' => $this->sort_order,
 			);
 
-			$this->pag_links = paginate_links( array(
-				'base'      => add_query_arg( $this->pag_arg, '%#%' ),
-				'format'    => '',
-				'total'     => ceil( (int) $this->total_notification_count / (int) $this->pag_num ),
-				'current'   => $this->pag_page,
-				'prev_text' => __( '&larr;', 'buddyboss' ),
-				'next_text' => __( '&rarr;', 'buddyboss' ),
-				'mid_size'  => 1,
-				'add_args'  => $add_args,
-			) );
+			$this->pag_links = paginate_links(
+				array(
+					'base'      => add_query_arg( $this->pag_arg, '%#%' ),
+					'format'    => '',
+					'total'     => ceil( (int) $this->total_notification_count / (int) $this->pag_num ),
+					'current'   => $this->pag_page,
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'mid_size'  => 1,
+					'add_args'  => $add_args,
+				)
+			);
 		}
 	}
 
@@ -317,7 +322,7 @@ class BP_Notifications_Template {
 			 *
 			 * @since BuddyPress 1.9.0
 			 */
-			do_action( 'notifications_loop_end');
+			do_action( 'notifications_loop_end' );
 
 			$this->rewind_notifications();
 		}

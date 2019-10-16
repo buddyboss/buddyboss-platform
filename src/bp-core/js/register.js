@@ -9,7 +9,7 @@ jQuery( document ).ready( function() {
 	// Add new hidden field for keep existing field to add again in change profile type action.
 	var hiddenField  = jQuery('<input type="hidden" class="onloadfields" value="" />');
 	var existsField  = jQuery('<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="" />');
-	var prevField  = jQuery('<input type="hidden" name="signup_profile_field_id_prev" id="signup_profile_field_id_prev" value="" />');
+	var prevField  	= jQuery('<input type="hidden" name="signup_profile_field_id_prev" id="signup_profile_field_id_prev" value="" />');
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
