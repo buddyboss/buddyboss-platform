@@ -8,10 +8,10 @@
 <div id="bp-media-uploader" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-            <div class="modal-wrapper bb-large">
+            <div class="modal-wrapper">
                 <div class="modal-container">
 
-                    <header class="bb-model-header bg-white">
+                    <header class="bb-model-header">
                         <a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
 
                         <?php if ( bp_is_single_album() ) : ?>
@@ -27,13 +27,16 @@
 
                     <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
                         <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
-                        <div class="media-uploader-post-content">
-                            <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about your photos.', 'buddyboss' ); ?>"></textarea>
-                        </div>
+							<div class="media-uploader-post-content">
+								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about your photos.', 'buddyboss' ); ?>"></textarea>
+							</div>
                         <?php endif; ?>
-                        <div class="media-uploader-wrapper">
-                            <div class="dropzone" id="media-uploader"></div>
-                        </div>
+
+						<div class="bb-field-wrap">
+							<div class="media-uploader-wrapper">
+								<div class="dropzone" id="media-uploader"></div>
+							</div>
+						</div>
                     </div>
 
 	                <?php if ( bp_is_single_album() ) : ?>
@@ -69,8 +72,8 @@
                         </div>
 	                <?php endif; ?>
 
-                    <footer class="flex align-items-center bb-model-footer">
-                        <a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php _e( 'Add More Media', 'buddyboss' ); ?></a>
+                    <footer class="bb-model-footer">
+                        <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
 
 	                    <?php if ( ! bp_is_group() ) : ?>
                             <div class="bb-dropdown-wrap">
