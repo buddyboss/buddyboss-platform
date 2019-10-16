@@ -26,7 +26,7 @@
 
 	            <div class="bb-dropdown-wrap">
 		            <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
-		            <select id="bb-media-privacy">
+		            <select id="bb-media-theatre-privacy">
 			            <?php foreach ( $privacy_options as $k => $option ) {
 				            ?>
 				            <option value="<?php echo $k; ?>"><?php echo $option; ?></option>

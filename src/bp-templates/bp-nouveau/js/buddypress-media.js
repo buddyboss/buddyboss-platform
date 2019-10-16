@@ -1240,12 +1240,12 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function() {
 
-			$( document ).on( 'click', '.bb-open-media-theatre',    this.openTheatre.bind( this ) );
-			$( document ).on( 'click', '.bb-close-media-theatre',   this.closeTheatre.bind( this ) );
-			$( document ).on( 'click', '.bb-prev-media',            this.previous.bind( this ) );
-			$( document ).on( 'click', '.bb-next-media',            this.next.bind( this ) );
-			$( document ).on( 'bp_activity_ajax_delete_request',    this.activityDeleted.bind( this ) );
-			$( document ).on( 'change', '#bb-media-privacy', 		this.mediaPrivacyChange.bind( this ) );
+			$(document).on('click', '.bb-open-media-theatre', this.openTheatre.bind(this));
+			$(document).on('click', '.bb-close-media-theatre', this.closeTheatre.bind(this));
+			$(document).on('click', '.bb-prev-media', this.previous.bind(this));
+			$(document).on('click', '.bb-next-media', this.next.bind(this));
+			$(document).on('bp_activity_ajax_delete_request', this.activityDeleted.bind(this));
+			$(document).on('change', '#bb-media-theatre-privacy', this.mediaPrivacyChange.bind(this));
 
 		},
 
