@@ -965,6 +965,12 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 function bp_nouveau_activity_privacy() {
     if ( bp_activity_user_can_edit() ) {
 	    $privacy = bp_get_activity_privacy();
+
+	    // Return if activity is media activity
+	    if ( 'media' === $privacy ) {
+	    	return;
+	    }
+
 	    ?>
         <p>
             <select class="activity-privacy" name="activity-privacy">
