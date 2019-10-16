@@ -23,6 +23,18 @@
                 <figure class="">
                     <img src="" alt="" />
                 </figure>
+
+	            <div class="bb-dropdown-wrap">
+		            <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+		            <select id="bb-media-privacy">
+			            <?php foreach ( $privacy_options as $k => $option ) {
+				            ?>
+				            <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
+				            <?php
+			            } ?>
+		            </select>
+	            </div>
+
             </div>
             <div class="bb-media-info-section">
                 <ul class="activity-list item-list bp-list"><span><i class="bb-icon-spin5 animate-spin"></i></span></ul>

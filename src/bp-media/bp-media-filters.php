@@ -4,8 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'bp_media_album_after_save',                        'bp_media_update_media_privacy'                     );
-add_action( 'delete_attachment',                                     'bp_media_delete_attachment_media', 0          );
+add_action( 'bp_media_album_after_save', 'bp_media_update_media_privacy' );
+add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
@@ -186,6 +186,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 	$_POST['medias'] = $_POST['media'];
 	$_POST['bp_activity_update'] = true;
+	$_POST['bp_activity_id'] = $activity_id;
 
 	remove_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
 	remove_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
