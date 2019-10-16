@@ -1374,8 +1374,8 @@ window.bp = window.bp || {};
 			$('.bb-media-model-wrapper .bb-media-section').find('img').attr('src',self.current_media.attachment+'?'+new Date().getTime());
 
 			//privacy
-			$('.bb-media-section #bb-media-privacy').show();
-			$('.bb-media-section #bb-media-privacy').val(self.current_media.privacy);
+			$('.bb-media-section #bb-media-theatre-privacy').show();
+			$('.bb-media-section #bb-media-theatre-privacy').val(self.current_media.privacy);
 
 			// hide privacy setting of media if activity is present
 			if ( ( typeof BP_Nouveau.activity !== 'undefined' &&
@@ -1383,7 +1383,7 @@ window.bp = window.bp || {};
 				self.current_media.activity_id != 0 ) ||
 				self.group_id
 			) {
-				$('.bb-media-section #bb-media-privacy').hide();
+				$('.bb-media-section #bb-media-theatre-privacy').hide();
 			}
 
 			//update navigation
