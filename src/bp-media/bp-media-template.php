@@ -896,6 +896,68 @@ function bp_get_media_directory_permalink() {
 	return apply_filters( 'bp_get_media_directory_permalink', trailingslashit( bp_get_root_domain() . '/' . bp_get_media_root_slug() ) );
 }
 
+/**
+ * Output the media privacy.
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_media_privacy() {
+	echo bp_get_media_privacy();
+}
+
+/**
+ * Return the media privacy.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return string The media privacy.
+ */
+function bp_get_media_privacy() {
+	global $media_template;
+
+	/**
+	 * Filters the media privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param string $id The media privacy.
+	 */
+	return apply_filters( 'bp_get_media_privacy', $media_template->media->privacy );
+}
+
+/**
+ * Output the media parent activity id.
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_media_parent_activity_id() {
+	echo bp_get_media_parent_activity_id();
+}
+
+/**
+ * Return the media parent activity id.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media parent activity id.
+ */
+function bp_get_media_parent_activity_id() {
+	global $media_template;
+
+	/**
+	 * Filters the media parent activity id.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param int $id The media parent activity id.
+	 */
+	return apply_filters( 'bp_get_media_privacy', get_post_meta( $media_template->media->attachment_id, 'bp_media_parent_activity_id', true ) );
+}
+
 // ****************************** Media Albums *********************************//
 
 /**

@@ -71,6 +71,12 @@ add_action( 'admin_init', function() {
 				'nopriv'   => true,
 			),
 		),
+		array(
+			'media_update_privacy' => array(
+				'function' => 'bp_nouveau_ajax_media_update_privacy',
+				'nopriv'   => true,
+			),
+		),
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -632,6 +638,61 @@ function bp_nouveau_ajax_media_delete_attachment() {
 	if ( ! $deleted ) {
 		wp_send_json_error( $response );
 	}
+
+	wp_send_json_success();
+}
+
+/**
+ * Update media privacy
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_nouveau_ajax_media_update_privacy() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback bp-messages error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem displaying the content. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Nonce check!
+	if ( empty( $_POST['_wpnonce'] ) || ! wp_verify_nonce( $_POST['_wpnonce'], 'bp_nouveau_media' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide media id to update.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['privacy'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide privacy to update.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	$privacy = $_POST['privacy'];
+	if ( ! in_array( $privacy, array_keys( BP_Media_Privacy::instance()->get_visibility_options() ) ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Privacy option is not valid.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	$media_id = $_POST['id'];
+
+	$media = new BP_Media( $media_id );
+	$media->privacy = $privacy;
+	$media->save();
 
 	wp_send_json_success();
 }

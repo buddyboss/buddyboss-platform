@@ -1209,6 +1209,11 @@ function bp_activity_media_add( $media ) {
 
 			// save attachment meta for activity
 			update_post_meta( $media->attachment_id, 'bp_media_activity_id', $activity_id );
+
+			if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
+				//save parent activity id in attachment meta
+				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $_POST['bp_activity_id'] );
+			}
 		}
 	}
 }
