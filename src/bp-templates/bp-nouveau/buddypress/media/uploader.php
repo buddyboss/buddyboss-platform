@@ -26,7 +26,7 @@
                     </header>
 
                     <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-                        <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
+                        <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() && bp_is_active( 'activity' ) ) : ?>
 							<div class="media-uploader-post-content">
 								<textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php _e( 'Write something about your photos.', 'buddyboss' ); ?>"></textarea>
 							</div>
@@ -75,7 +75,7 @@
                     <footer class="bb-model-footer">
                         <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
 
-	                    <?php if ( ! bp_is_group() ) : ?>
+	                    <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
                             <div class="bb-dropdown-wrap">
 			                    <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
                                 <select id="bb-media-privacy">
