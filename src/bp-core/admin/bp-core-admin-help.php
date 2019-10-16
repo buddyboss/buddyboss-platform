@@ -186,7 +186,7 @@ function bp_core_admin_help_display_content( $docs_path ) {
 	$Parsedown = new Parsedown();
 	$text      = file_get_contents( $docs_path );
 
-	return bp_core_rap_the_content_filter( $Parsedown->text( $text ) );
+	return bp_core_help_wrap_the_content_filter( $Parsedown->text( $text ) );
 }
 
 /**

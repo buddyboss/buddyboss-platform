@@ -4216,3 +4216,48 @@ function bp_platform_default_activity_types() {
 
 	return $activity_type;
 }
+
+if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
+	/**
+	 * Get Post id by Post SLUG
+	 *
+	 * @param $slug
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return array
+	 */
+	function bp_core_get_post_id_by_slug( $slug ) {
+		$post_id = array();
+		$args    = array(
+			'posts_per_page' => 1,
+			'post_type'      => 'docs',
+			'name'           => $slug,
+			'post_parent'    => 0,
+		);
+		$docs    = get_posts( $args );
+		if ( ! empty( $docs ) ) {
+			foreach ( $docs as $doc ) {
+				$post_id[] = $doc->ID;
+			}
+		}
+
+		return $post_id;
+	}
+}
+
+/**
+ * Generate post slug by files name
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $dir_index_file
+ *
+ * @return string
+ */
+function bp_core_get_post_slug_by_index( $dir_index_file ) {
+	$dir_file_array = explode( '/', $dir_index_file );
+	$index_file     = bp_core_help_remove_file_extension_from_slug( end( $dir_file_array ) );
+
+	return bp_core_help_remove_file_number_from_slug( $index_file );
+}

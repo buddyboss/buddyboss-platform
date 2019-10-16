@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  * @return mixed
  */
 function bp_core_help_bp_docs_link( $attr ) {
-	$slug    = isset( $attr['slug'] ) ? bp_core_dynamically_add_number_in_path( $attr['slug'] ) : '';
+	$slug    = isset( $attr['slug'] ) ? bp_core_help_dynamically_add_number_in_path( $attr['slug'] ) : '';
 	$text    = isset( $attr['text'] ) ? $attr['text'] : '';
 	$anchors = isset( $attr['anchors'] ) ? '#' . $attr['anchors'] : '';
 	$url     = bp_get_admin_url(
@@ -110,51 +110,6 @@ function bp_core_help_get_docs_link( $slug = '', $text = '', $anchors = '' ) {
 	echo bp_core_help_docs_link( $slug, $text, $anchors );
 }
 
-if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
-	/**
-	 * Get Post id by Post SLUG
-	 *
-	 * @param $slug
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @return array
-	 */
-	function bp_core_get_post_id_by_slug( $slug ) {
-		$post_id = array();
-		$args    = array(
-			'posts_per_page' => 1,
-			'post_type'      => 'docs',
-			'name'           => $slug,
-			'post_parent'    => 0,
-		);
-		$docs    = get_posts( $args );
-		if ( ! empty( $docs ) ) {
-			foreach ( $docs as $doc ) {
-				$post_id[] = $doc->ID;
-			}
-		}
-
-		return $post_id;
-	}
-}
-
-/**
- * Generate post slug by files name
- *
- * @since BuddyBoss 1.0.0
- *
- * @param $dir_index_file
- *
- * @return string
- */
-function bp_core_get_post_slug_by_index( $dir_index_file ) {
-	$dir_file_array = explode( '/', $dir_index_file );
-	$index_file     = db_core_remove_file_extension_from_slug( end( $dir_file_array ) );
-
-	return db_core_remove_file_number_from_slug( $index_file );
-}
-
 /**
  * Remove H1 tag from Content
  *
@@ -179,7 +134,7 @@ function bp_core_stripe_header_tags( $content ) {
  *
  * @return html
  */
-function bp_core_rap_the_content_filter( $content ) {
+function bp_core_help_wrap_the_content_filter( $content ) {
 	global $shortcode_tags;
 
 	// Remove shortcodes rendering except bp-help's shortcodes
@@ -204,7 +159,7 @@ function bp_core_rap_the_content_filter( $content ) {
  *
  * @return mixed
  */
-function db_core_remove_file_extension_from_slug( $slug, $file_type = '.md' ) {
+function bp_core_help_remove_file_extension_from_slug( $slug, $file_type = '.md' ) {
 	return str_replace( $file_type, '', $slug );
 }
 
@@ -217,7 +172,7 @@ function db_core_remove_file_extension_from_slug( $slug, $file_type = '.md' ) {
  *
  * @return mixed
  */
-function db_core_remove_file_number_from_slug( $index_file ) {
+function bp_core_help_remove_file_number_from_slug( $index_file ) {
 	$index_file = explode( '-', $index_file );
 
 	if ( ( absint( $index_file[0] ) > 0 || '0' == $index_file[0] ) && count( $index_file ) > 1 ) {
@@ -236,12 +191,12 @@ function db_core_remove_file_number_from_slug( $index_file ) {
  *
  * @return string $path
  */
-function bp_core_strip_number_from_slug( $path ) {
+function bp_core_help_strip_number_from_slug( $path ) {
 	$new_path = '';
 
 	foreach ( explode( '/', $path ) as $current_path ) {
-		$current_path = db_core_remove_file_extension_from_slug( $current_path );
-		$current_path = db_core_remove_file_number_from_slug( $current_path );
+		$current_path = bp_core_help_remove_file_extension_from_slug( $current_path );
+		$current_path = bp_core_help_remove_file_number_from_slug( $current_path );
 
 		$new_path .= empty( $new_path ) ? $current_path : '/' . $current_path;
 	}
@@ -259,8 +214,8 @@ function bp_core_strip_number_from_slug( $path ) {
  *
  * @return mixed
  */
-function bp_core_dynamically_add_number_in_path( $slug ) {
-	$new_slug = bp_core_strip_number_from_slug( $slug );
+function bp_core_help_dynamically_add_number_in_path( $slug ) {
+	$new_slug = bp_core_help_strip_number_from_slug( $slug );
 
 	$base_path = buddypress()->plugin_dir . 'bp-help';
 	$docs_path = $base_path . '/docs/';
@@ -269,7 +224,7 @@ function bp_core_dynamically_add_number_in_path( $slug ) {
 	if ( ! empty( $paths ) ) {
 		foreach ( $paths as $path ) {
 			$file_path = str_replace( $docs_path, '', $path );
-			$path      = bp_core_strip_number_from_slug( $file_path );
+			$path      = bp_core_help_strip_number_from_slug( $file_path );
 			if ( $path == $new_slug ) {
 				$new_slug = $file_path;
 				break;
