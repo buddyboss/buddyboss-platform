@@ -434,13 +434,14 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		$this->current_section = 'course';
 		$this->add_section(
 			'bp_ld_course_tab-buddypress',
-			__('BuddyBoss Platform <span>&rarr; LearnDash</span>', 'buddyboss')
+			__('Profiles', 'buddyboss')
 		);
 		$this->add_checkbox_field(
 			'courses_visibility',
-			__('Visibility', 'buddyboss'),
+			__('Courses Tab', 'buddyboss'),
 			[
-				'input_text' => __(' Display Profile > Course content', 'buddyboss'),
+				'input_text' => __('Display "Courses" tab in profiles', 'buddyboss'),
+				'input_description' => __( 'Adds a tab to each member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates each member has earned.', 'buddyboss' ),
 			]
 		);
 	}
