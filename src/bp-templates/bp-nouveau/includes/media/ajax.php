@@ -457,7 +457,6 @@ function bp_nouveau_ajax_media_album_save() {
 	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
-	$medias   = ! empty( $_POST['medias'] ) && is_array( $_POST['medias'] ) ? $_POST['medias'] : array();
 
 	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
 
