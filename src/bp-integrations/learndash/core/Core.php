@@ -91,7 +91,7 @@ class Core {
                 <ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
                     <li id="wp-admin-bar-my-account-<?php echo $this->my_courses_slug; ?>">
                         <a class="ab-item"
-                           href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo empty( $this->user_same ) ? $this->course_name : $this->my_courses_name; ?></a>
+                           href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo $this->my_courses_name; ?></a>
                     </li>
                     <li id="wp-admin-bar-my-account-<?php echo $this->badges_tab_slug; ?>">
                         <a class="ab-item"
