@@ -247,7 +247,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					array(
 						'description' => __( 'Description', 'buddyboss' ),
 						'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
-						'type_topic'  => __( 'Type your topic here', 'buddyboss' ),
+						'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
 					)
 				);
 			}
