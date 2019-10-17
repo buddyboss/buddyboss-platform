@@ -263,25 +263,8 @@ class Core {
 	 * @since BuddyBoss 1.2.0
 	 */
 	public function course_page() {
-		add_action( 'bp_template_title', array( $this, 'courses_page_title' ) );
 		add_action( 'bp_template_content', array( $this, 'courses_page_content' ) );
 		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
-	}
-
-	/**
-	 * Display Page title on Profile my Course Page
-	 *
-	 * @since BuddyBoss 1.2.0
-	 */
-	function courses_page_title() {
-		$user_id            = bp_displayed_user_id();
-		$atts               = apply_filters( 'bp_learndash_user_courses_atts', array() );
-		$user_courses       = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $user_id, $atts ) );
-		if ( ! empty( $user_courses ) ) {
-            $title = sprintf( __( 'Registered %s', 'buddyboss' ), $this->course_name );
-            echo apply_filters( 'courses_page_title', $title );
-        }
-
 	}
 
 	/**
