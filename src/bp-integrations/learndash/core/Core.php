@@ -52,6 +52,8 @@ class Core {
 		$this->course_slug           = apply_filters( 'bp_learndash_profile_courses_slug', 'courses' );
 		$this->my_courses_slug       = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
 		$this->course_access         = bp_core_can_edit_settings();
+		$this->certificates_enables  = bp_core_learndash_certificates_enables();
+		$this->my_certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'My Certificates', 'buddyboss' ) );
 		$this->certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
 		$this->certificates_tab_slug = apply_filters( 'bp_learndash_profile_certificates_slug', 'certificates' );
 		$this->registerCourseComponent();
@@ -91,10 +93,16 @@ class Core {
                         <a class="ab-item"
                            href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo $this->my_courses_name; ?></a>
                     </li>
-                    <li id="wp-admin-bar-my-account-<?php echo $this->certificates_tab_slug; ?>">
-                        <a class="ab-item"
-                           href="<?php echo $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ); ?>"><?php echo $this->certificates_tab_name; ?></a>
-                    </li>
+					<?php
+					if ( $this->certificates_enables ) {
+						?>
+                        <li id="wp-admin-bar-my-account-<?php echo $this->certificates_tab_slug; ?>">
+                            <a class="ab-item"
+                               href="<?php echo $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ); ?>"><?php echo $this->my_certificates_tab_name; ?></a>
+                        </li>
+						<?php
+					}
+					?>
                 </ul>
             </div>
         </li>
@@ -108,8 +116,8 @@ class Core {
 	 */
 	public function setup_nav() {
 		$this->bp_displayed_user_id = bp_displayed_user_id();
-		$this->bp_loggedin_user_id = bp_loggedin_user_id();
-		$this->user_same = ( $this->bp_displayed_user_id == $this->bp_loggedin_user_id ? true : false );
+		$this->bp_loggedin_user_id  = bp_loggedin_user_id();
+		$this->user_same            = ( $this->bp_displayed_user_id == $this->bp_loggedin_user_id ? true : false );
 
 		bp_core_new_nav_item( array(
 			'name'                    => $this->course_name,
@@ -130,19 +138,23 @@ class Core {
 				'position'        => 80,
 				'user_has_access' => $this->course_access,
 			),
-			array(
-				'name'            => $this->certificates_tab_name,
+		);
+
+		if ( $this->certificates_enables ) {
+			$all_subnav_items[] = array(
+				'name'            => empty( $this->user_same ) ? $this->certificates_tab_name : $this->my_certificates_tab_name,
 				'slug'            => $this->certificates_tab_slug,
 				'parent_url'      => $this->get_nav_link( $this->course_slug ),
 				'parent_slug'     => $this->course_slug,
 				'screen_function' => array( $this, 'certificates_page' ),
 				'user_has_access' => $this->course_access,
-			)
-		);
+			);
+		}
 
 		foreach ( $all_subnav_items as $all_subnav_item ) {
 			bp_core_new_subnav_item( $all_subnav_item );
 		}
+
 	}
 
 	/**
@@ -165,23 +177,17 @@ class Core {
 				'parent'   => $this->course_slug,
 				'nav_link' => $this->adminbar_nav_link( $this->course_slug ),
 			),
-			array(
-				'name'     => $this->certificates_tab_name,
+		);
+
+		if ( $this->certificates_enables ) {
+			$all_post_types[] = array(
+				'name'     => $this->my_certificates_tab_name,
 				'slug'     => $this->certificates_tab_slug,
 				'parent'   => $this->course_slug,
 				'nav_link' => $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ),
-			),
-		);
-
-		if ( current_user_can( 'manage_options' ) ) {
-			$all_post_types[] =
-				array(
-					'name'     => $this->create_courses_name,
-					'slug'     => $this->create_courses_slug,
-					'parent'   => $this->course_slug,
-					'nav_link' => admin_url() . 'post-new.php?post_type=sfwd-courses'
-				);
+			);
 		}
+
 		global $wp_admin_bar;
 		foreach ( $all_post_types as $single ) {
 			$wp_admin_bar->add_menu( array(

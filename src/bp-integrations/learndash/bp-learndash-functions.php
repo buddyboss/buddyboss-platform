@@ -381,3 +381,25 @@ function bp_learndash_page_display() {
 
 	return $view;
 }
+
+/**
+ * Check if there is any certificated created by the admin and if so then show the certificate tab or else hide the tab
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @return $value bool
+ */
+function bp_core_learndash_certificates_enables() {
+
+	$value = false;
+	$query = array(
+		'post_type' => 'sfwd-certificates',
+	);
+	$query = new \WP_Query( $query );
+
+	if ( $query->have_posts() ) {
+		$value = true;
+	}
+
+	return $value;
+}
