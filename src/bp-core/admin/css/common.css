@@ -389,10 +389,6 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/search.svg);
 }
 
-.bp-admin-card.section-bp_profile_list_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
-}
-
 /* Activity */
 .bp-admin-card.section-bp_activity h2:before {
   background-image: url(../../images/admin/icons/buddyboss/activity.svg);
@@ -423,10 +419,6 @@ tr.bp-search-parent-field label {
 
 .bp-admin-card.section-bp_groups_hierarchies h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/layer-group.svg);
-}
-
-.bp-admin-card.section-bp_group_list_settings h2:before {
-  background-image: url(../../images/admin/icons/fontawesome/solid/list-alt.svg);
 }
 
 /* Connections */
@@ -511,7 +503,8 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_ld-integration h2:before,
 .bp-admin-card.section-bp_ld_sync-buddypress h2:before,
 .bp-admin-card.section-bp_ld_sync-learndash h2:before,
-.bp-admin-card.section-bp_ld_sync-reports h2:before {
+.bp-admin-card.section-bp_ld_sync-reports h2:before,
+.bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
   background-image: url(../../images/admin/icons/logos/learndash.png);
   background-size: 100% 100%;
 }
@@ -1196,9 +1189,6 @@ body.post-type-bp-email .categorydiv label {
     flex: 1;
     min-width: 0;
   }
-  .bp-help-content th:first-child {
-    width: 40%;
-  }
 }
 
 @media screen and (max-width: 781px) {
@@ -1217,9 +1207,6 @@ body.post-type-bp-email .categorydiv label {
   .bp-help-content {
     padding: 2.5em;
     width: 100%;
-  }
-  .bp-help-content th:last-child {
-    display: none;
   }
 }
 
