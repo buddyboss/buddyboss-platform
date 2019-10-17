@@ -249,67 +249,9 @@ function learndash_integration_prepare_price_str( $price ) {
 }
 
 /**
- * Function to get list of badges the user has
- *
- * @since 1.2.0
- *
- * @param string $user_id
- *
- * @return array|bool
- */
-function bp_learndash_get_users_badges( $user_id = '' ) {
-	if ( empty( $user_id ) ) {
-		return false;
-	}
-
-	$badges = array();
-
-	if ( class_exists( 'BadgeOS' ) && class_exists( 'BadgeOS_LearnDash' ) ) { // don't load if badgeos learndash is not enabled.
-
-		$type = badgeos_get_achievement_types_slugs();
-		// Drop steps from our list of "all" achievements
-		$step_key = array_search( 'step', $type );
-		if ( $step_key ) {
-			unset( $type[ $step_key ] );
-		}
-
-		$earned_ids = badgeos_get_user_earned_achievement_ids( $user_id, $type );
-		if ( empty( $earned_ids ) ) {
-			$earned_ids = array( 0 );
-		}
-
-		$args = array(
-			'post_type'   => $type,
-			'post_status' => 'publish',
-			'post__in'    => $earned_ids
-		);
-
-		// Loop Achievements
-		$achievement_posts = new \WP_Query( $args );
-
-		if ( $achievement_posts->have_posts() ) {
-			foreach ( $achievement_posts->posts as $achievement ) {
-
-				$badge          = new \stdClass();
-				$badge->ID      = $achievement->ID;
-				$badge->title   = get_the_title( $achievement->ID );
-				$badge->link    = get_permalink( $achievement->ID );
-				$badge->content = ! empty( $achievement->post_excerpt ) ? $achievement->post_excerpt : $achievement->post_content;
-				$badge->points  = get_post_meta( $achievement->ID, '_badgeos_points', true );
-				$badge->image   = badgeos_get_achievement_post_thumbnail_url( $achievement->ID );
-				$badges[]       = $badge;
-			}
-		}
-	}
-
-	return $badges;
-
-}
-
-/**
  * Function to get list of certificates the user has
  *
- * @since 1.2.0
+ * @since BuddyBoss 1.2.0
  *
  * @param string $user_id
  *
@@ -360,7 +302,7 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 	 * Quiz Certificate
 	 **/
 	$quizzes  = get_user_meta( $user_id, '_sfwd-quizzes', true );
-	$quiz_ids = empty( $quizzes ) ? array() :  wp_list_pluck( $quizzes, 'quiz' );
+	$quiz_ids = empty( $quizzes ) ? array() : wp_list_pluck( $quizzes, 'quiz' );
 	if ( ! empty( $quiz_ids ) ) {
 		$quiz_total_query_args = array(
 			'post_type' => 'sfwd-quiz',
@@ -418,40 +360,9 @@ function bp_learndash_get_users_certificates( $user_id = '' ) {
 }
 
 /**
- * Get the badges icon
- *
- * @since 1.2.0
- *
- * @param int $post_id
- * @param string $image_size
- * @param string $class
- *
- * @return bool|false|mixed|string|void
- */
-function badgeos_get_achievement_post_thumbnail_url( $post_id = 0, $image_size = 'badgeos-achievement', $class = 'badgeos-item-thumbnail' ) {
-	// Get our badge thumbnail
-	$image_url = get_the_post_thumbnail_url( $post_id, $image_size );
-	// If we don't have an image...
-	if ( ! $image_url ) {
-
-		// Grab our achievement type's post thumbnail
-		$achievement = get_page_by_path( get_post_type( $post_id ), OBJECT, 'achievement-type' );
-		$image       = is_object( $achievement ) ? get_the_post_thumbnail_url( $achievement->ID, $image_size ) : false;
-
-		// If we still have no image, use one from Credly
-		if ( ! $image ) {
-			// Available filter: 'badgeos_default_achievement_post_thumbnail'
-			$image_url = apply_filters( 'badgeos_default_achievement_post_thumbnail', 'https://credlyapp.s3.amazonaws.com/badges/af2e834c1e23ab30f1d672579d61c25a_15.png' );
-
-		}
-	}
-
-	// Finally, return our image tag
-	return $image_url;
-}
-
-/**
  * Get the course style view
+ *
+ * @since BuddyBoss 1.2.0
  *
  * @return string
  */
@@ -464,9 +375,7 @@ function bp_learndash_page_display() {
 		else:
 			$view = 'grid';
 		endif;
-
 	} else {
-
 		$view = $_COOKIE['courseview'];
 	}
 

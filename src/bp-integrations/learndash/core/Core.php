@@ -52,8 +52,6 @@ class Core {
 		$this->course_slug           = apply_filters( 'bp_learndash_profile_courses_slug', 'courses' );
 		$this->my_courses_slug       = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
 		$this->course_access         = bp_core_can_edit_settings();
-		$this->badges_tab_name       = apply_filters( 'bp_learndash_profile_badges_tab_name', __( 'Badges', 'buddyboss' ) );
-		$this->badges_tab_slug       = apply_filters( 'bp_learndash_profile_badges_slug', 'badges' );
 		$this->certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
 		$this->certificates_tab_slug = apply_filters( 'bp_learndash_profile_certificates_slug', 'certificates' );
 		$this->registerCourseComponent();
@@ -92,10 +90,6 @@ class Core {
                     <li id="wp-admin-bar-my-account-<?php echo $this->my_courses_slug; ?>">
                         <a class="ab-item"
                            href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo $this->my_courses_name; ?></a>
-                    </li>
-                    <li id="wp-admin-bar-my-account-<?php echo $this->badges_tab_slug; ?>">
-                        <a class="ab-item"
-                           href="<?php echo $this->adminbar_nav_link( $this->badges_tab_slug, $this->course_slug ); ?>"><?php echo $this->badges_tab_name; ?></a>
                     </li>
                     <li id="wp-admin-bar-my-account-<?php echo $this->certificates_tab_slug; ?>">
                         <a class="ab-item"
@@ -137,14 +131,6 @@ class Core {
 				'user_has_access' => $this->course_access,
 			),
 			array(
-				'name'            => $this->badges_tab_name,
-				'slug'            => $this->badges_tab_slug,
-				'parent_url'      => $this->get_nav_link( $this->course_slug ),
-				'parent_slug'     => $this->course_slug,
-				'screen_function' => array( $this, 'badges_page' ),
-				'user_has_access' => $this->course_access,
-			),
-			array(
 				'name'            => $this->certificates_tab_name,
 				'slug'            => $this->certificates_tab_slug,
 				'parent_url'      => $this->get_nav_link( $this->course_slug ),
@@ -178,12 +164,6 @@ class Core {
 				'slug'     => $this->my_courses_slug,
 				'parent'   => $this->course_slug,
 				'nav_link' => $this->adminbar_nav_link( $this->course_slug ),
-			),
-			array(
-				'name'     => $this->badges_tab_name,
-				'slug'     => $this->badges_tab_slug,
-				'parent'   => $this->course_slug,
-				'nav_link' => $this->adminbar_nav_link( $this->badges_tab_slug, $this->course_slug ),
 			),
 			array(
 				'name'     => $this->certificates_tab_name,
@@ -275,27 +255,6 @@ class Core {
 		do_action( 'template_notices' );
 		do_action( 'bp_learndash_before_certificates_page_content' );
 		bp_get_template_part( 'members/single/courses/certificates' );
-	}
-
-	/**
-	 * Display Badges Page Content in Profile course menu
-	 *
-	 * @since BuddyBoss 1.2.0
-	 */
-	public function badges_page() {
-		add_action( 'bp_template_content', array( $this, 'badges_page_content' ) );
-		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
-	}
-
-	/**
-	 * Display Badges Page Content
-	 *
-	 * @since BuddyBoss 1.2.0
-	 */
-	function badges_page_content() {
-		do_action( 'template_notices' );
-		do_action( 'bp_learndash_before_badges_page_content' );
-		bp_get_template_part( 'members/single/courses/badges' );
 	}
 
 	/**
