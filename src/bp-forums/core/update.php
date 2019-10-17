@@ -66,7 +66,7 @@ function bbp_is_activation( $basename = '' ) {
 	}
 
 	// Bail if not activating
-	if ( empty( $action ) || !in_array( $action, array( 'activate', 'activate-selected' ) ) ) {
+	if ( empty( $action ) || ! in_array( $action, array( 'activate', 'activate-selected' ) ) ) {
 		return false;
 	}
 
@@ -78,7 +78,7 @@ function bbp_is_activation( $basename = '' ) {
 	}
 
 	// Set basename if empty
-	if ( empty( $basename ) && !empty( $bbp->basename ) ) {
+	if ( empty( $basename ) && ! empty( $bbp->basename ) ) {
 		$basename = $bbp->basename;
 	}
 
@@ -115,7 +115,7 @@ function bbp_is_deactivation( $basename = '' ) {
 	}
 
 	// Bail if not deactivating
-	if ( empty( $action ) || !in_array( $action, array( 'deactivate', 'deactivate-selected' ) ) ) {
+	if ( empty( $action ) || ! in_array( $action, array( 'deactivate', 'deactivate-selected' ) ) ) {
 		return false;
 	}
 
@@ -127,7 +127,7 @@ function bbp_is_deactivation( $basename = '' ) {
 	}
 
 	// Set basename if empty
-	if ( empty( $basename ) && !empty( $bbp->basename ) ) {
+	if ( empty( $basename ) && ! empty( $bbp->basename ) ) {
 		$basename = $bbp->basename;
 	}
 
@@ -163,8 +163,9 @@ function bbp_version_bump() {
 function bbp_setup_updater() {
 
 	// Bail if no update needed
-	if ( ! bbp_is_update() )
+	if ( ! bbp_is_update() ) {
 		return;
+	}
 
 	// Call the automated updater
 	bbp_version_updater();
@@ -179,33 +180,39 @@ function bbp_setup_updater() {
 function bbp_create_initial_content( $args = array() ) {
 
 	// Parse arguments against default values
-	$r = bbp_parse_args( $args, array(
-		'forum_parent'  => 0,
-		'forum_status'  => 'publish',
-		'forum_title'   => __( 'General',                                  'buddyboss' ),
-		'forum_content' => __( 'General chit-chat',                        'buddyboss' ),
-		'topic_title'   => __( 'Hello World!',                             'buddyboss' ),
-		'topic_content' => __( 'I am the first discussion in your new forums.', 'buddyboss' ),
-		'reply_title'   => __( 'Re: Hello World!',                         'buddyboss' ),
-		'reply_content' => __( 'Oh, and this is what a reply looks like.', 'buddyboss' ),
-	), 'create_initial_content' );
+	$r = bbp_parse_args(
+		$args,
+		array(
+			'forum_parent'  => 0,
+			'forum_status'  => 'publish',
+			'forum_title'   => __( 'General', 'buddyboss' ),
+			'forum_content' => __( 'General chit-chat', 'buddyboss' ),
+			'topic_title'   => __( 'Hello World!', 'buddyboss' ),
+			'topic_content' => __( 'I am the first discussion in your new forums.', 'buddyboss' ),
+			'reply_title'   => __( 'Re: Hello World!', 'buddyboss' ),
+			'reply_content' => __( 'Oh, and this is what a reply looks like.', 'buddyboss' ),
+		),
+		'create_initial_content'
+	);
 
 	// Create the initial forum
-	$forum_id = bbp_insert_forum( array(
-		'post_parent'  => $r['forum_parent'],
-		'post_status'  => $r['forum_status'],
-		'post_title'   => $r['forum_title'],
-		'post_content' => $r['forum_content']
-	) );
+	$forum_id = bbp_insert_forum(
+		array(
+			'post_parent'  => $r['forum_parent'],
+			'post_status'  => $r['forum_status'],
+			'post_title'   => $r['forum_title'],
+			'post_content' => $r['forum_content'],
+		)
+	);
 
 	// Create the initial topic
 	$topic_id = bbp_insert_topic(
 		array(
 			'post_parent'  => $forum_id,
 			'post_title'   => $r['topic_title'],
-			'post_content' => $r['topic_content']
+			'post_content' => $r['topic_content'],
 		),
-		array( 'forum_id'  => $forum_id )
+		array( 'forum_id' => $forum_id )
 	);
 
 	// Create the initial reply
@@ -213,18 +220,18 @@ function bbp_create_initial_content( $args = array() ) {
 		array(
 			'post_parent'  => $topic_id,
 			'post_title'   => $r['reply_title'],
-			'post_content' => $r['reply_content']
+			'post_content' => $r['reply_content'],
 		),
 		array(
-			'forum_id'     => $forum_id,
-			'topic_id'     => $topic_id
+			'forum_id' => $forum_id,
+			'topic_id' => $topic_id,
 		)
 	);
 
 	return array(
 		'forum_id' => $forum_id,
 		'topic_id' => $topic_id,
-		'reply_id' => $reply_id
+		'reply_id' => $reply_id,
 	);
 }
 
@@ -242,14 +249,14 @@ function bbp_version_updater() {
 	// Get the raw database version
 	$raw_db_version = (int) bbp_get_db_version_raw();
 
-	/** 2.0 Branch ************************************************************/
+	/** 2.0 Branch */
 
 	// 2.0, 2.0.1, 2.0.2, 2.0.3
 	if ( $raw_db_version < 200 ) {
 		// No changes
 	}
 
-	/** 2.1 Branch ************************************************************/
+	/** 2.1 Branch */
 
 	// 2.1, 2.1.1
 	if ( $raw_db_version < 211 ) {
@@ -262,7 +269,7 @@ function bbp_version_updater() {
 		bbp_admin_repair_forum_visibility();
 	}
 
-	/** 2.2 Branch ************************************************************/
+	/** 2.2 Branch */
 
 	// 2.2
 	if ( $raw_db_version < 220 ) {
@@ -277,14 +284,14 @@ function bbp_version_updater() {
 		bbp_remove_caps();
 	}
 
-	/** 2.3 Branch ************************************************************/
+	/** 2.3 Branch */
 
 	// 2.3
 	if ( $raw_db_version < 230 ) {
 		// No changes
 	}
 
-	/** All done! *************************************************************/
+	/** All done! */
 
 	// Bump the version
 	bbp_version_bump();

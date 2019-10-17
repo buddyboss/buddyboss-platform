@@ -16,8 +16,8 @@ defined( 'ABSPATH' ) || exit;
  */
 abstract class BP_Export {
 
-	protected $exporter_name = '';
-	protected $exporter_label = '';
+	protected $exporter_name   = '';
+	protected $exporter_label  = '';
 	protected $items_per_batch = 50;
 
 	/**
@@ -82,7 +82,7 @@ abstract class BP_Export {
 
 		$erasers[ $this->exporter_name ] = array(
 			'eraser_friendly_name' => $this->exporter_label,
-			'callback'             => array( $this, "process_eraser_callback" ),
+			'callback'             => array( $this, 'process_eraser_callback' ),
 		);
 
 		return $erasers;
@@ -92,7 +92,7 @@ abstract class BP_Export {
 	 * Process export callback.
 	 *
 	 * @param     $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -116,7 +116,7 @@ abstract class BP_Export {
 	 * Process delete callback
 	 *
 	 * @param     $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -171,7 +171,7 @@ abstract class BP_Export {
 	 * Export data response.
 	 *
 	 * @param array $export_data
-	 * @param bool $done
+	 * @param bool  $done
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -187,10 +187,10 @@ abstract class BP_Export {
 	/**
 	 * Delete data response.
 	 *
-	 * @param bool $item_removed
-	 * @param bool $done
+	 * @param bool  $item_removed
+	 * @param bool  $done
 	 * @param array $messages
-	 * @param bool $items_retained
+	 * @param bool  $items_retained
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *

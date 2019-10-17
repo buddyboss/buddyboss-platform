@@ -31,12 +31,12 @@ function bp_core_register_common_scripts() {
 	if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
 		$moment_locale_url = $url . "vendor/moment-js/locale/{$locale}{$min}.js";
 
-	/*
-	 * Try to find the short-form locale.
-	 *
-	 * eg. French (France) locale for WP is fr_FR. Here, we try to find fr.js
-	 *     (this exists).
-	 */
+		/*
+		* Try to find the short-form locale.
+		*
+		* eg. French (France) locale for WP is fr_FR. Here, we try to find fr.js
+		*     (this exists).
+		*/
 	} else {
 		$locale = substr( $locale, 0, strpos( $locale, '-' ) );
 		if ( file_exists( buddypress()->core->path . "bp-core/js/vendor/moment-js/locale/{$locale}{$min}.js" ) ) {
@@ -47,54 +47,146 @@ function bp_core_register_common_scripts() {
 	// Set up default scripts to register.
 	$scripts = array(
 		// Legacy.
-		'bp-confirm'        => array( 'file' => "{$url}confirm{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false ),
-		'bp-widget-members' => array( 'file' => "{$url}widget-members{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false ),
-		'bp-jquery-query'   => array( 'file' => "{$url}jquery-query{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false ),
-		'bp-jquery-cookie'  => array( 'file' => "{$url}vendor/jquery-cookie{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false ),
-		'bp-jquery-scroll-to' => array( 'file' => "{$url}vendor/jquery-scroll-to{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false ),
+		'bp-confirm'          => array(
+			'file'         => "{$url}confirm{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		),
+		'bp-widget-members'   => array(
+			'file'         => "{$url}widget-members{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		),
+		'bp-jquery-query'     => array(
+			'file'         => "{$url}jquery-query{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		),
+		'bp-jquery-cookie'    => array(
+			'file'         => "{$url}vendor/jquery-cookie{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		),
+		'bp-jquery-scroll-to' => array(
+			'file'         => "{$url}vendor/jquery-scroll-to{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		),
 
 		// Version 2.1.
-		'jquery-caret' => array( 'file' => "{$url}vendor/jquery.caret{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
-		'jquery-atwho' => array( 'file' => "{$url}vendor/jquery.atwho{$min}.js", 'dependencies' => array( 'jquery', 'jquery-caret' ), 'footer' => true ),
+		'jquery-caret'        => array(
+			'file'         => "{$url}vendor/jquery.caret{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
+		),
+		'jquery-atwho'        => array(
+			'file'         => "{$url}vendor/jquery.atwho{$min}.js",
+			'dependencies' => array( 'jquery', 'jquery-caret' ),
+			'footer'       => true,
+		),
 
 		// Version 2.3.
-		'bp-plupload' => array( 'file' => "{$url}bp-plupload{$min}.js", 'dependencies' => array( 'plupload', 'jquery', 'json2', 'wp-backbone' ), 'footer' => true ),
-		'bp-avatar'   => array( 'file' => "{$url}avatar{$min}.js", 'dependencies' => array( 'jcrop' ), 'footer' => true ),
-		'bp-webcam'   => array( 'file' => "{$url}webcam{$min}.js", 'dependencies' => array( 'bp-avatar' ), 'footer' => true ),
+		'bp-plupload'         => array(
+			'file'         => "{$url}bp-plupload{$min}.js",
+			'dependencies' => array( 'plupload', 'jquery', 'json2', 'wp-backbone' ),
+			'footer'       => true,
+		),
+		'bp-avatar'           => array(
+			'file'         => "{$url}avatar{$min}.js",
+			'dependencies' => array( 'jcrop' ),
+			'footer'       => true,
+		),
+		'bp-webcam'           => array(
+			'file'         => "{$url}webcam{$min}.js",
+			'dependencies' => array( 'bp-avatar' ),
+			'footer'       => true,
+		),
 
 		// Version 2.4.
-		'bp-cover-image' => array( 'file' => "{$url}cover-image{$min}.js", 'dependencies' => array(), 'footer' => true ),
+		'bp-cover-image'      => array(
+			'file'         => "{$url}cover-image{$min}.js",
+			'dependencies' => array(),
+			'footer'       => true,
+		),
 
 		// Version 2.7.
-		'bp-moment'    => array( 'file' => "{$url}vendor/moment-js/moment{$min}.js", 'dependencies' => array(), 'footer' => true ),
-		'bp-livestamp' => array( 'file' => "{$url}vendor/livestamp{$min}.js", 'dependencies' => array( 'jquery', 'bp-moment' ), 'footer' => true ),
+		'bp-moment'           => array(
+			'file'         => "{$url}vendor/moment-js/moment{$min}.js",
+			'dependencies' => array(),
+			'footer'       => true,
+		),
+		'bp-livestamp'        => array(
+			'file'         => "{$url}vendor/livestamp{$min}.js",
+			'dependencies' => array( 'jquery', 'bp-moment' ),
+			'footer'       => true,
+		),
 
 		// Version 3.1.1
-		'bp-jquery-validate' => array( 'file' => "{$url}vendor/jquery.validate{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
-        'jquery-mask'        => array( 'file' => "{$url}vendor/jquery.mask{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => true ),
+		'bp-jquery-validate'  => array(
+			'file'         => "{$url}vendor/jquery.validate{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
+		),
+		'jquery-mask'         => array(
+			'file'         => "{$url}vendor/jquery.mask{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
+		),
 
-        'giphy'        => array( 'file' => "{$url}vendor/giphy{$min}.js", 'dependencies' => array(), 'footer' => true ),
+		'giphy'               => array(
+			'file'         => "{$url}vendor/giphy{$min}.js",
+			'dependencies' => array(),
+			'footer'       => true,
+		),
 
-		'emojione'     => array( 'file' => "{$url}emojione-edited.js", 'dependencies' => array(), 'footer' => true ),
-		'emojionearea' => array( 'file' => "{$url}emojionearea-edited.js", 'dependencies' => array( 'emojione' ), 'footer' => true ),
-		'bp-exif' => array( 'file' => "{$url}vendor/exif.js" ),
+		'emojione'            => array(
+			'file'         => "{$url}emojione-edited.js",
+			'dependencies' => array(),
+			'footer'       => true,
+		),
+		'emojionearea'        => array(
+			'file'         => "{$url}emojionearea-edited.js",
+			'dependencies' => array( 'emojione' ),
+			'footer'       => true,
+		),
+		'bp-exif'             => array( 'file' => "{$url}vendor/exif.js" ),
 
-        'bp-media-dropzone'        => array( 'file' => "{$url}vendor/dropzone.min.js", 'dependencies' => array(), 'footer' => false ),
-        'bp-medium-editor'        => array( 'file' => "{$url}vendor/medium-editor{$min}.js", 'dependencies' => array(), 'footer' => false ),
+		'bp-media-dropzone'   => array(
+			'file'         => "{$url}vendor/dropzone.min.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+		'bp-medium-editor'    => array(
+			'file'         => "{$url}vendor/medium-editor{$min}.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
+        'bp-select2'        => array( 'file' => "{$url}vendor/select2.min.js", 'dependencies' => array(), 'footer' => false ),
 
-		'isInViewport'        => array( 'file' => "{$url}vendor/isInViewport{$min}.js", 'dependencies' => array(), 'footer' => true ),
-		'bp-tagify'        => array( 'file' => "{$url}vendor/tagify{$min}.js", 'dependencies' => array(), 'footer' => false ),
+		'isInViewport'        => array(
+			'file'         => "{$url}vendor/isInViewport{$min}.js",
+			'dependencies' => array(),
+			'footer'       => true,
+		),
 
 	);
 
 	// Add the "register.js" file if it's a register page and Profile Type field
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
-		$scripts[ 'bp-register-page' ] = array( 'file' => "{$url}register{$min}.js", 'dependencies' => array( 'jquery' ), 'footer' => false );
+		$scripts['bp-register-page'] = array(
+			'file'         => "{$url}register{$min}.js",
+			'dependencies' => array( 'jquery' ),
+			'footer'       => false,
+		);
 	}
 
 	// Version 2.7 - Add Moment.js locale to our $scripts array if we found one.
 	if ( isset( $moment_locale_url ) ) {
-		$scripts['bp-moment-locale'] = array( 'file' => esc_url( $moment_locale_url ), 'dependencies' => array( 'bp-moment' ), 'footer' => true );
+		$scripts['bp-moment-locale'] = array(
+			'file'         => esc_url( $moment_locale_url ),
+			'dependencies' => array( 'bp-moment' ),
+			'footer'       => true,
+		);
 	}
 
 	/**
@@ -113,7 +205,6 @@ function bp_core_register_common_scripts() {
 	 */
 	$scripts = apply_filters( 'bp_core_register_common_scripts', $scripts );
 
-
 	$version = bp_get_version();
 	foreach ( $scripts as $id => $script ) {
 		$dependencies = isset( $script['dependencies'] ) ? $script['dependencies'] : array();
@@ -121,7 +212,7 @@ function bp_core_register_common_scripts() {
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
 }
-add_action( 'bp_enqueue_scripts',       'bp_core_register_common_scripts', 1 );
+add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 
 /**
@@ -149,28 +240,35 @@ function bp_core_register_common_styles() {
 	 *
 	 * @param array $value Array of stylesheet file information to register.
 	 */
-	$styles = apply_filters( 'bp_core_register_common_styles', array(
-		'bp-admin-bar' => array(
-			'file'         => $admin_bar_file,
-			'dependencies' => array( 'admin-bar' )
-		),
-		'bp-avatar' => array(
-			'file'         => "{$url}avatar{$min}.css",
-			'dependencies' => array( 'jcrop' )
-		),
-		'emojionearea' => array(
-			'file'         => "{$url}emojionearea-edited{$min}.css",
-			'dependencies' => array()
-		),
-		'bp-medium-editor' => array(
-			'file'         => "{$url}medium-editor{$min}.css",
-			'dependencies' => array()
-		),
-		'bp-medium-editor-beagle' => array(
-			'file'         => "{$url}medium-editor-beagle{$min}.css",
-			'dependencies' => array()
-		),
-	) );
+	$styles = apply_filters(
+		'bp_core_register_common_styles',
+		array(
+			'bp-admin-bar'            => array(
+				'file'         => $admin_bar_file,
+				'dependencies' => array( 'admin-bar' ),
+			),
+			'bp-avatar'               => array(
+				'file'         => "{$url}avatar{$min}.css",
+				'dependencies' => array( 'jcrop' ),
+			),
+			'emojionearea'            => array(
+				'file'         => "{$url}emojionearea-edited{$min}.css",
+				'dependencies' => array(),
+			),
+			'bp-medium-editor'        => array(
+				'file'         => "{$url}medium-editor{$min}.css",
+				'dependencies' => array(),
+			),
+			'bp-medium-editor-beagle' => array(
+				'file'         => "{$url}medium-editor-beagle{$min}.css",
+				'dependencies' => array(),
+			),
+			'bp-select2' => array(
+				'file'         => "{$url}select2.min.css",
+				'dependencies' => array()
+			),
+		)
+	);
 
 	foreach ( $styles as $id => $style ) {
 		wp_register_style( $id, $style['file'], $style['dependencies'], bp_get_version() );
@@ -181,7 +279,7 @@ function bp_core_register_common_styles() {
 		}
 	}
 }
-add_action( 'bp_enqueue_scripts',       'bp_core_register_common_styles', 1 );
+add_action( 'bp_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_styles', 1 );
 
 /**
@@ -196,12 +294,16 @@ function bp_core_confirmation_js() {
 
 	wp_enqueue_script( 'bp-confirm' );
 
-	wp_localize_script( 'bp-confirm', 'BP_Confirm', array(
-		'are_you_sure' => __( 'Are you sure?', 'buddyboss' ),
-	) );
+	wp_localize_script(
+		'bp-confirm',
+		'BP_Confirm',
+		array(
+			'are_you_sure' => __( 'Are you sure?', 'buddyboss' ),
+		)
+	);
 
 }
-add_action( 'bp_enqueue_scripts',       'bp_core_confirmation_js' );
+add_action( 'bp_enqueue_scripts', 'bp_core_confirmation_js' );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_confirmation_js' );
 
 /**
@@ -219,8 +321,8 @@ function bp_core_avatar_scripts() {
 
 	// Add Some actions for Theme backcompat.
 	add_action( 'bp_after_profile_avatar_upload_content', 'bp_avatar_template_check' );
-	add_action( 'bp_after_group_admin_content',           'bp_avatar_template_check' );
-	add_action( 'bp_after_group_avatar_creation_step',    'bp_avatar_template_check' );
+	add_action( 'bp_after_group_admin_content', 'bp_avatar_template_check' );
+	add_action( 'bp_after_group_avatar_creation_step', 'bp_avatar_template_check' );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_avatar_scripts' );
 
@@ -275,7 +377,7 @@ function bp_core_add_cropper_inline_js() {
 	$full_width  = bp_core_avatar_full_width();
 
 	// Calculate Aspect Ratio.
-	if ( !empty( $full_height ) && ( $full_width != $full_height ) ) {
+	if ( ! empty( $full_height ) && ( $full_width != $full_height ) ) {
 		$aspect_ratio = $full_width / $full_height;
 	} else {
 		$aspect_ratio = 1;
@@ -287,13 +389,13 @@ function bp_core_add_cropper_inline_js() {
 		$crop_left  = 0;
 		$crop_right = $image[0];
 
-	// Less than 2x full-width: cropper defaults to full-width.
+		// Less than 2x full-width: cropper defaults to full-width.
 	} elseif ( $image[0] < ( $full_width * 2 ) ) {
 		$padding_w  = round( ( $image[0] - $full_width ) / 2 );
 		$crop_left  = $padding_w;
 		$crop_right = $image[0] - $padding_w;
 
-	// Larger than 2x full-width: cropper defaults to 1/2 image width.
+		// Larger than 2x full-width: cropper defaults to 1/2 image width.
 	} else {
 		$crop_left  = round( $image[0] / 4 );
 		$crop_right = $image[0] - $crop_left;
@@ -304,13 +406,13 @@ function bp_core_add_cropper_inline_js() {
 		$crop_top    = 0;
 		$crop_bottom = $image[1];
 
-	// Less than double full-height: cropper defaults to full-height.
+		// Less than double full-height: cropper defaults to full-height.
 	} elseif ( $image[1] < ( $full_height * 2 ) ) {
 		$padding_h   = round( ( $image[1] - $full_height ) / 2 );
 		$crop_top    = $padding_h;
 		$crop_bottom = $image[1] - $padding_h;
 
-	// Larger than 2x full-height: cropper defaults to 1/2 image height.
+		// Larger than 2x full-height: cropper defaults to 1/2 image height.
 	} else {
 		$crop_top    = round( $image[1] / 4 );
 		$crop_bottom = $image[1] - $crop_top;
@@ -352,7 +454,7 @@ function bp_core_add_cropper_inline_js() {
 		}
 	</script>
 
-<?php
+	<?php
 }
 
 /**
@@ -361,11 +463,11 @@ function bp_core_add_cropper_inline_js() {
  * @since BuddyPress 1.1.0
  */
 function bp_core_add_cropper_inline_css() {
-?>
+	?>
 
 	<style>
 		.jcrop-holder { float: left; margin: 0 20px 20px 0; text-align: left; }
-		#avatar-crop-pane { width: <?php echo bp_core_avatar_full_width() ?>px; height: <?php echo bp_core_avatar_full_height() ?>px; overflow: hidden; }
+		#avatar-crop-pane { width: <?php echo bp_core_avatar_full_width(); ?>px; height: <?php echo bp_core_avatar_full_height(); ?>px; overflow: hidden; }
 		#avatar-crop-submit { margin: 20px 0; }
 		.jcrop-holder img,
 		#avatar-crop-pane img,
@@ -374,7 +476,7 @@ function bp_core_add_cropper_inline_css() {
 		#group-settings-form img { border: none !important; max-width: none !important; }
 	</style>
 
-<?php
+	<?php
 }
 
 /**
@@ -383,11 +485,11 @@ function bp_core_add_cropper_inline_css() {
  * @since BuddyPress 1.1.0
  */
 function bp_core_add_ajax_url_js() {
-?>
+	?>
 
 	<script>var ajaxurl = '<?php echo bp_core_ajax_url(); ?>';</script>
 
-<?php
+	<?php
 }
 add_action( 'wp_head', 'bp_core_add_ajax_url_js' );
 
@@ -429,16 +531,19 @@ function bp_core_get_js_dependencies() {
 	 *
 	 * @param array $value Array of javascript dependencies for buddypress.js.
 	 */
-	return apply_filters( 'bp_core_get_js_dependencies', array(
-		'jquery',
-		'bp-confirm',
-		'bp-widget-members',
-		'bp-jquery-query',
-		'bp-jquery-cookie',
-		'bp-jquery-scroll-to',
-		'wp-util',
-		'wp-i18n',
-	) );
+	return apply_filters(
+		'bp_core_get_js_dependencies',
+		array(
+			'jquery',
+			'bp-confirm',
+			'bp-widget-members',
+			'bp-jquery-query',
+			'bp-jquery-cookie',
+			'bp-jquery-scroll-to',
+			'wp-util',
+			'wp-i18n',
+		)
+	);
 }
 
 /**
@@ -464,7 +569,7 @@ function bp_add_cover_image_inline_css( $return = false ) {
 
 		$cover_image_object = array(
 			'component' => 'xprofile',
-			'object' => $bp->displayed_user
+			'object'    => $bp->displayed_user,
 		);
 	} elseif ( bp_is_group() ) {
 
@@ -475,8 +580,8 @@ function bp_add_cover_image_inline_css( $return = false ) {
 		}
 
 		$cover_image_object = array(
-			'component' =>'groups',
-			'object' => $bp->groups->current_group
+			'component' => 'groups',
+			'object'    => $bp->groups->current_group,
 		);
 	} else {
 		$cover_image_object = apply_filters( 'bp_current_cover_image_object_inline_css', array() );
@@ -504,10 +609,13 @@ function bp_add_cover_image_inline_css( $return = false ) {
 			$object_dir = 'members';
 		}
 
-		$cover_image = bp_attachments_get_attachment( 'url', array(
-			'object_dir' => $object_dir,
-			'item_id'    => $cover_image_object['object']->id,
-		) );
+		$cover_image = bp_attachments_get_attachment(
+			'url',
+			array(
+				'object_dir' => $object_dir,
+				'item_id'    => $cover_image_object['object']->id,
+			)
+		);
 
 		if ( empty( $cover_image ) ) {
 			if ( ! empty( $params['default_cover'] ) ) {
@@ -515,13 +623,18 @@ function bp_add_cover_image_inline_css( $return = false ) {
 			}
 		}
 
-		$inline_css = call_user_func_array( $params['callback'], array( array(
-			'cover_image' => esc_url_raw( $cover_image ),
-			'component'   => sanitize_key( $cover_image_object['component'] ),
-			'object_id'   => (int) $cover_image_object['object']->id,
-			'width'       => (int) $params['width'],
-			'height'      => (int) $params['height'],
-		) ) );
+		$inline_css = call_user_func_array(
+			$params['callback'],
+			array(
+				array(
+					'cover_image' => esc_url_raw( $cover_image ),
+					'component'   => sanitize_key( $cover_image_object['component'] ),
+					'object_id'   => (int) $cover_image_object['object']->id,
+					'width'       => (int) $params['width'],
+					'height'      => (int) $params['height'],
+				),
+			)
+		);
 
 		// Finally add the inline css to the handle.
 		if ( ! empty( $inline_css ) ) {
@@ -575,7 +688,7 @@ function bp_core_enqueue_livestamp() {
 		wp_enqueue_script( 'bp-moment-locale' );
 
 		if ( function_exists( 'wp_add_inline_script' ) ) {
-			wp_add_inline_script ( 'bp-livestamp', bp_core_moment_js_config() );
+			wp_add_inline_script( 'bp-livestamp', bp_core_moment_js_config() );
 		} else {
 			add_action( 'wp_footer', '_bp_core_moment_js_config_footer', 20 );
 		}
@@ -630,9 +743,8 @@ function _bp_core_moment_js_config_footer() {
  */
 function bp_core_jquery_validate_scripts() {
 
-	//wp_enqueue_script( 'bp-jquery-validate' );
-	//add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
-
+	// wp_enqueue_script( 'bp-jquery-validate' );
+	// add_action( 'wp_head', 'bp_core_add_jquery_validate_inline_js' );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_jquery_validate_scripts' );
 
@@ -655,7 +767,7 @@ function bp_core_add_jquery_validate_inline_js() {
 		});
 	</script>
 
-<?php
+	<?php
 }
 
 /**
@@ -668,9 +780,9 @@ function bp_core_add_jquery_mask() {
 		return;
 	}
 
-    if ( 'profile' != bp_current_component() || 'edit' != bp_current_action() ) {
-        return;//we need this script only on profile edit screens
-    }
+	if ( 'profile' != bp_current_component() || 'edit' != bp_current_action() ) {
+		return;// we need this script only on profile edit screens
+	}
 
 	if ( wp_script_is( 'jquery-mask' ) ) {
 		return;
@@ -678,7 +790,7 @@ function bp_core_add_jquery_mask() {
 
 	wp_enqueue_script( 'jquery-mask' );
 
-    add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
+	add_action( 'wp_footer', 'bp_core_add_jquery_mask_inline_js' );
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
 
@@ -687,24 +799,24 @@ add_action( 'bp_enqueue_scripts', 'bp_core_add_jquery_mask' );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_core_add_jquery_mask_inline_js () {
-    ?>
+function bp_core_add_jquery_mask_inline_js() {
+	?>
 
-    <script>
-        jQuery(document).ready(function(){
-            jQuery(".field_type_telephone").each(function(){
-                var $this = jQuery(this),
-                    field_id = $this.find('.input_mask_details').data('field_id'),
-                    pmask = $this.find('.input_mask_details').data('val');
+	<script>
+		jQuery(document).ready(function(){
+			jQuery(".field_type_telephone").each(function(){
+				var $this = jQuery(this),
+					field_id = $this.find('.input_mask_details').data('field_id'),
+					pmask = $this.find('.input_mask_details').data('val');
 
-                if ( field_id && pmask ) {
-                    jQuery( '#' + field_id ).mask( pmask ).bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
-                }
-            });
-        });
-    </script>
+				if ( field_id && pmask ) {
+					jQuery( '#' + field_id ).mask( pmask ).bind('keypress', function(e){if(e.which == 13){jQuery(this).blur();} } );
+				}
+			});
+		});
+	</script>
 
-    <?php
+	<?php
 }
 
 /**
@@ -718,9 +830,11 @@ function bp_core_register_page_js() {
 		wp_enqueue_script( 'bp-register-page' );
 
 		$data = array(
-			'ajaxurl'  => bp_core_ajax_url(),
-			'field_id' => 'field_' . bp_get_xprofile_member_type_field_id(),
-			'nonce'    => wp_create_nonce( 'bp-core-register-page-js' ),
+			'ajaxurl'        => bp_core_ajax_url(),
+			'field_id'       => 'field_' . bp_get_xprofile_member_type_field_id(),
+			'nonce'          => wp_create_nonce( 'bp-core-register-page-js' ),
+			'mismatch_email' => __( 'Mismatch', 'buddyboss' ),
+			'valid_email'    => __( 'Enter valid email', 'buddyboss' ),
 		);
 
 		wp_localize_script( 'bp-register-page', 'BP_Register', apply_filters( 'bp_core_register_js_settings', $data ) );
@@ -732,17 +846,17 @@ add_action( 'bp_enqueue_scripts', 'bp_core_register_page_js' );
 
 function bp_core_enqueue_isInViewPort() {
 	if ( bp_is_user_media() ||
-	     bp_is_single_album() ||
-	     bp_is_media_directory() ||
-	     bp_is_activity_component() ||
-	     bp_is_group_activity() ||
-	     bp_is_group_media() ||
-	     bp_is_group_albums() ||
-	     bp_is_messages_component() ||
-	     ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
-	     ( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
-	     ( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
-	     ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
+		 bp_is_single_album() ||
+		 bp_is_media_directory() ||
+		 bp_is_activity_component() ||
+		 bp_is_group_activity() ||
+		 bp_is_group_media() ||
+		 bp_is_group_albums() ||
+		 bp_is_messages_component() ||
+		 ( function_exists( 'bp_is_profile_media_support_enabled' ) && bp_is_profile_media_support_enabled() ) ||
+		 ( function_exists( 'bp_is_group_media_support_enabled' ) && bp_is_group_media_support_enabled() ) ||
+		 ( function_exists( 'bp_is_group_albums_support_enabled' ) && bp_is_group_albums_support_enabled() ) ||
+		 ( function_exists( 'bp_is_messages_media_support_enabled' ) && bp_is_messages_media_support_enabled() )
 	) {
 		wp_enqueue_script( 'isInViewport' );
 	}

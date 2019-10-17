@@ -20,25 +20,32 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_register_default_taxonomies() {
 	// Profile Type.
-	register_taxonomy( bp_get_member_type_tax_name(), 'user', array(
-		'public' => false,
-	) );
+	register_taxonomy(
+		bp_get_member_type_tax_name(),
+		'user',
+		array(
+			'public' => false,
+		)
+	);
 
 	// Email type.
 	register_taxonomy(
 		bp_get_email_tax_type(),
 		bp_get_email_post_type(),
-		apply_filters( 'bp_register_email_tax_type', array(
-			'description'   => __( 'BuddyBoss email types', 'buddyboss' ),
-			'labels'        => bp_get_email_tax_type_labels(),
-			'meta_box_cb'   => 'bp_email_tax_type_metabox',
-			'public'        => false,
-			'query_var'     => false,
-			'rewrite'       => false,
-			'show_in_menu'  => false,
-			'show_tagcloud' => false,
-			'show_ui'       => bp_is_root_blog() && bp_current_user_can( 'bp_moderate' ),
-		) )
+		apply_filters(
+			'bp_register_email_tax_type',
+			array(
+				'description'   => __( 'BuddyBoss email types', 'buddyboss' ),
+				'labels'        => bp_get_email_tax_type_labels(),
+				'meta_box_cb'   => 'bp_email_tax_type_metabox',
+				'public'        => false,
+				'query_var'     => false,
+				'rewrite'       => false,
+				'show_in_menu'  => false,
+				'show_tagcloud' => false,
+				'show_ui'       => bp_is_root_blog() && bp_current_user_can( 'bp_moderate' ),
+			)
+		)
 	);
 }
 add_action( 'bp_register_taxonomies', 'bp_register_default_taxonomies' );
@@ -127,7 +134,7 @@ function bp_get_object_terms( $object_ids, $taxonomies, $args = array() ) {
 	// Different taxonomies must be stored on different sites.
 	$taxonomy_site_map = array();
 	foreach ( (array) $taxonomies as $taxonomy ) {
-		$taxonomy_site_id = bp_get_taxonomy_term_site_id( $taxonomy );
+		$taxonomy_site_id                         = bp_get_taxonomy_term_site_id( $taxonomy );
 		$taxonomy_site_map[ $taxonomy_site_id ][] = $taxonomy;
 	}
 
@@ -215,7 +222,7 @@ function bp_get_objects_in_term( $term_ids, $taxonomies, $args = array() ) {
 	// Different taxonomies may be stored on different sites.
 	$taxonomy_site_map = array();
 	foreach ( (array) $taxonomies as $taxonomy ) {
-		$taxonomy_site_id = bp_get_taxonomy_term_site_id( $taxonomy );
+		$taxonomy_site_id                         = bp_get_taxonomy_term_site_id( $taxonomy );
 		$taxonomy_site_map[ $taxonomy_site_id ][] = $taxonomy;
 	}
 

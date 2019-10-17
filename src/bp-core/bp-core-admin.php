@@ -13,12 +13,10 @@ defined( 'ABSPATH' ) || exit;
  * Setup BuddyPress Admin.
  *
  * @since BuddyPress 1.6.0
- *
  */
 function bp_admin() {
 	buddypress()->admin = new BP_Admin();
 	return;
-
 
 	// These are strings we may use to describe maintenance/security releases, where we aim for no new strings.
 	_n_noop( 'Maintenance Release', 'Maintenance Releases', 'buddyboss' );

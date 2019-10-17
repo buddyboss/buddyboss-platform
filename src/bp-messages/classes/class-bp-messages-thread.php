@@ -151,7 +151,7 @@ class BP_Messages_Thread {
 	 */
 	public function populate( $thread_id = 0, $order = 'DESC', $args = array() ) {
 
-		if ( 'ASC' !== $order || 'DESC' !== $order ) {
+		if ( 'ASC' !== $order && 'DESC' !== $order ) {
 			$order = 'DESC';
 		}
 
@@ -161,12 +161,15 @@ class BP_Messages_Thread {
 			bp_loggedin_user_id();
 
 		// Merge $args with our defaults.
-		$r = wp_parse_args( $args, array(
-			'user_id'           => $user_id,
-			'update_meta_cache' => true,
-			'per_page'          => apply_filters('bp_messages_default_per_page', 10),
-			'before'   => null
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'user_id'           => $user_id,
+				'update_meta_cache' => true,
+				'per_page'          => apply_filters( 'bp_messages_default_per_page', 10 ),
+				'before'            => null,
+			)
+		);
 
 		$this->messages_order   = $order;
 		$this->messages_perpage = $r['per_page'];
@@ -191,7 +194,7 @@ class BP_Messages_Thread {
 		$this->last_message_subject = $this->last_message->subject;
 		$this->last_message_content = $this->last_message->message;
 
-		$this->first_message_date   = self::get_messages_started( $this->thread_id );;
+		$this->first_message_date = self::get_messages_started( $this->thread_id );
 
 		foreach ( (array) $this->messages as $key => $message ) {
 			$this->sender_ids[ $message->sender_id ] = $message->sender_id;
@@ -228,7 +231,7 @@ class BP_Messages_Thread {
 	 * @see BP_Messages_Thread::mark_as_read()
 	 */
 	public function mark_read() {
-		BP_Messages_Thread::mark_as_read( $this->thread_id );
+		self::mark_as_read( $this->thread_id );
 	}
 
 	/**
@@ -239,7 +242,7 @@ class BP_Messages_Thread {
 	 * @see BP_Messages_Thread::mark_as_unread()
 	 */
 	public function mark_unread() {
-		BP_Messages_Thread::mark_as_unread( $this->thread_id );
+		self::mark_as_unread( $this->thread_id );
 	}
 
 	/**
@@ -305,15 +308,18 @@ class BP_Messages_Thread {
 
 		$recipients = static::get_recipients_for_thread( $thread_id );
 
-		$deleted_recipients = array_filter($recipients, function( $recipient ) {
-			return $recipient->is_deleted;
-		});
+		$deleted_recipients = array_filter(
+			$recipients,
+			function( $recipient ) {
+				return $recipient->is_deleted;
+			}
+		);
 
-		return [
+		return array(
 			'thread_id'          => $thread_id,
 			'deleted_recipients' => $deleted_recipients,
-			'last_message'       => static::get_last_message( $thread_id )
-		];
+			'last_message'       => static::get_last_message( $thread_id ),
+		);
 	}
 
 	/**
@@ -342,12 +348,18 @@ class BP_Messages_Thread {
 		global $wpdb;
 		$bp = buddypress();
 
-		$wpdb->query( $wpdb->prepare( "
+		$wpdb->query(
+			$wpdb->prepare(
+				"
 			UPDATE {$bp->messages->table_name_recipients}
 			SET is_deleted = 0
 			WHERE thread_id = %d
 			AND user_id IN (%s)
-		", $thread_id, implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) ) ) );
+		",
+				$thread_id,
+				implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) )
+			)
+		);
 	}
 
 	/**
@@ -362,14 +374,19 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		$messages = $wpdb->get_results( $wpdb->prepare( "
+		$messages = $wpdb->get_results(
+			$wpdb->prepare(
+				"
 			SELECT * FROM {$bp->messages->table_name_messages}
 			WHERE thread_id = %d
 			ORDER BY date_sent DESC, id DESC
 			LIMIT 1
-		", $thread_id ) );
+		",
+				$thread_id
+			)
+		);
 
-		return $messages? (object) $messages[0] : null;
+		return $messages ? (object) $messages[0] : null;
 	}
 
 	/**
@@ -389,14 +406,14 @@ class BP_Messages_Thread {
 		if ( false === $messages || static::$noCache ) {
 			// if current user isn't the recpient, then return empty array
 			if ( ! static::is_thread_recipient( $thread_id ) ) {
-				wp_cache_set( $cache_key, [], 'bp_messages_threads' );
-				return [];
+				wp_cache_set( $cache_key, array(), 'bp_messages_threads' );
+				return array();
 			}
 
 			global $wpdb;
-			$bp = buddypress();
-			$last_deleted_id = static::$last_deleted_message ? static::$last_deleted_message->id : 0;
-			$last_deleted_timestamp = static::$last_deleted_message? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
+			$bp                     = buddypress();
+			$last_deleted_id        = static::$last_deleted_message ? static::$last_deleted_message->id : 0;
+			$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
 			if ( ! $before ) {
 				$before = bp_core_current_time();
@@ -404,15 +421,23 @@ class BP_Messages_Thread {
 			}
 
 			// Always sort by DESC by default.
-			$messages = $wpdb->get_results( $sql =  $wpdb->prepare(
-				"SELECT * FROM {$bp->messages->table_name_messages}
+			$messages = $wpdb->get_results(
+				$sql  = $wpdb->prepare(
+					"SELECT * FROM {$bp->messages->table_name_messages}
 				WHERE thread_id = %d
 				AND id > %d
 				AND date_sent > %s
 				AND date_sent <= %s
 				ORDER BY date_sent DESC, id DESC
 				LIMIT %d
-			", $thread_id, $last_deleted_id, $last_deleted_timestamp, $before, $perpage ) );
+			",
+					$thread_id,
+					$last_deleted_id,
+					$last_deleted_timestamp,
+					$before,
+					$perpage
+				)
+			);
 
 			wp_cache_set( $cache_key, (array) $messages, 'bp_messages_threads' );
 		}
@@ -437,20 +462,25 @@ class BP_Messages_Thread {
 	public static function get_messages_count( $thread_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
 		$thread_id = (int) $thread_id;
 
 		if ( ! static::is_thread_recipient( $thread_id ) ) {
 			return 0;
 		}
 
-		$last_deleted_timestamp = static::$last_deleted_message? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
+		$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
-		$results = $wpdb->get_col( $sql = $wpdb->prepare(
-			"SELECT COUNT(*) FROM {$bp->messages->table_name_messages}
+		$results = $wpdb->get_col(
+			$sql = $wpdb->prepare(
+				"SELECT COUNT(*) FROM {$bp->messages->table_name_messages}
 			WHERE thread_id = %d
 			AND date_sent > %s
-		", $thread_id, $last_deleted_timestamp ) );
+		",
+				$thread_id,
+				$last_deleted_timestamp
+			)
+		);
 
 		return intval( $results[0] );
 	}
@@ -466,18 +496,23 @@ class BP_Messages_Thread {
 	public static function get_messages_started( $thread_id ) {
 		global $wpdb;
 
-		$bp = buddypress();
+		$bp        = buddypress();
 		$thread_id = (int) $thread_id;
 
-		$last_deleted_timestamp = static::$last_deleted_message? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
+		$last_deleted_timestamp = static::$last_deleted_message ? static::$last_deleted_message->date_sent : '0000-00-00 00:00:00';
 
-		$results = $wpdb->get_col( $sql = $wpdb->prepare(
-			"SELECT date_sent FROM {$bp->messages->table_name_messages}
+		$results = $wpdb->get_col(
+			$sql = $wpdb->prepare(
+				"SELECT date_sent FROM {$bp->messages->table_name_messages}
 			WHERE thread_id = %d
 			AND date_sent > %s
 			ORDER BY date_sent ASC, id ASC
 			LIMIT 1
-		", $thread_id, $last_deleted_timestamp ) );
+		",
+				$thread_id,
+				$last_deleted_timestamp
+			)
+		);
 
 		return $results[0];
 	}
@@ -493,8 +528,9 @@ class BP_Messages_Thread {
 		global $wpdb;
 		$bp = buddypress();
 
-		$results = $wpdb->get_results( $wpdb->prepare(
-			"SELECT m.* FROM {$bp->messages->table_name_messages} m
+		$results = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT m.* FROM {$bp->messages->table_name_messages} m
 			LEFT JOIN {$bp->messages->table_name_meta} mm ON m.id = mm.message_id
 			WHERE m.thread_id = %d
 			AND (
@@ -502,7 +538,11 @@ class BP_Messages_Thread {
 			)
 			ORDER BY m.date_sent DESC, m.id DESC
 			LIMIT 1
-		", $thread_id, bp_loggedin_user_id() ) );
+		",
+				$thread_id,
+				bp_loggedin_user_id()
+			)
+		);
 
 		if ( ! empty( $results ) ) {
 			static::$last_deleted_message = (object) $results[0];
@@ -530,19 +570,22 @@ class BP_Messages_Thread {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param  int $thread_id
-	 * @param  mix  $user_id
+	 * @param  mix $user_id
 	 */
 	public static function is_thread_recipient( $thread_id = 0, $user_id = null ) {
 		if ( ! $user_id = $user_id ?: bp_loggedin_user_id() ) {
 			return true;
 		}
 
-		$recipients = self::get_recipients_for_thread( $thread_id );
-		$active_recipients = array_filter( $recipients, function ( $recipient ) {
-			return ! $recipient->is_deleted;
-		});
+		$recipients        = self::get_recipients_for_thread( $thread_id );
+		$active_recipients = array_filter(
+			$recipients,
+			function ( $recipient ) {
+				return ! $recipient->is_deleted;
+			}
+		);
 
-		return in_array( $user_id, wp_list_pluck( $active_recipients, 'user_id' ));
+		return in_array( $user_id, wp_list_pluck( $active_recipients, 'user_id' ) );
 	}
 
 	/**
@@ -565,7 +608,7 @@ class BP_Messages_Thread {
 		global $wpdb;
 
 		$thread_id = (int) $thread_id;
-		$user_id = (int) $user_id;
+		$user_id   = (int) $user_id;
 
 		if ( empty( $user_id ) ) {
 			$user_id = bp_loggedin_user_id();
@@ -655,62 +698,78 @@ class BP_Messages_Thread {
 			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 		}
 
-		$r = bp_parse_args( $args, array(
-			'user_id'      => false,
-			'box'          => 'inbox',
-			'type'         => 'all',
-			'limit'        => null,
-			'page'         => null,
-			'search_terms' => '',
-			'include'      => false,
-			'meta_query'   => array()
-		) );
+		$r = bp_parse_args(
+			$args,
+			array(
+				'user_id'      => false,
+				'box'          => 'inbox',
+				'type'         => 'all',
+				'limit'        => null,
+				'page'         => null,
+				'search_terms' => '',
+				'include'      => false,
+				'meta_query'   => array(),
+			)
+		);
 
-		$pag_sql = $type_sql = $search_sql = $user_id_sql = $sender_sql = $having_sql = '';
-		$current_user_participants_ids = [];
-		$meta_query_sql = array(
+		$pag_sql                       = $type_sql = $search_sql = $user_id_sql = $sender_sql = $having_sql = '';
+		$current_user_participants_ids = array();
+		$meta_query_sql                = array(
 			'join'  => '',
-			'where' => ''
+			'where' => '',
 		);
 
 		if ( $r['limit'] && $r['page'] ) {
-			$pag_sql = $wpdb->prepare( " LIMIT %d, %d", intval( ( $r['page'] - 1 ) * $r['limit'] ), intval( $r['limit'] ) );
+			$pag_sql = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['limit'] ), intval( $r['limit'] ) );
 		}
 
 		$r['user_id'] = (int) $r['user_id'];
-		$where_sql = '1 = 1';
+		$where_sql    = '1 = 1';
 
 		if ( ! empty( $r['include'] ) ) {
 			$user_threads_query = $r['include'];
 		} else {
-			$user_threads_query = $wpdb->prepare( "
+			$user_threads_query = $wpdb->prepare(
+				"
 			SELECT DISTINCT(thread_id)
 			FROM {$bp->messages->table_name_recipients}
 			WHERE user_id = %d
 			AND is_deleted = 0
-		", $r['user_id'] );
+		",
+				$r['user_id']
+			);
 		}
 
 		if ( ! empty( $r['search_terms'] ) ) {
 			$search_terms_like = '%' . bp_esc_like( $r['search_terms'] ) . '%';
-			$where_sql = $wpdb->prepare( "m.message LIKE %s", $search_terms_like );
+			$where_sql         = $wpdb->prepare( 'm.message LIKE %s', $search_terms_like );
 
-			$current_user_participants = $wpdb->get_results( $q = $wpdb->prepare( "
+			$current_user_participants = $wpdb->get_results(
+				$q                     = $wpdb->prepare(
+					"
 				SELECT DISTINCT(r.user_id), u.display_name
 				FROM {$bp->messages->table_name_recipients} r
 				LEFT JOIN {$wpdb->users} u ON r.user_id = u.ID
 				WHERE r.thread_id IN ($user_threads_query) AND
 				( u.display_name LIKE %s OR u.user_login LIKE %s OR u.user_nicename LIKE %s )
-			", $search_terms_like, $search_terms_like, $search_terms_like ) );
+			",
+					$search_terms_like,
+					$search_terms_like,
+					$search_terms_like
+				)
+			);
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
-			$current_user_participants_ids = array_diff( $current_user_participants_ids, [ bp_loggedin_user_id() ] );
+			$current_user_participants_ids = array_diff( $current_user_participants_ids, array( bp_loggedin_user_id() ) );
 
-			if( $current_user_participants_ids ) {
-				$user_ids = implode(',', array_unique($current_user_participants_ids));
-				$where_sql = $wpdb->prepare( "
+			if ( $current_user_participants_ids ) {
+				$user_ids  = implode( ',', array_unique( $current_user_participants_ids ) );
+				$where_sql = $wpdb->prepare(
+					"
 					(m.message LIKE %s OR r.user_id IN ({$user_ids}))
-				", $search_terms_like );
+				",
+					$search_terms_like
+				);
 			}
 		}
 
@@ -726,7 +785,7 @@ class BP_Messages_Thread {
 		}
 
 		// Set up SQL array.
-		$sql = array();
+		$sql           = array();
 		$sql['select'] = 'SELECT m.thread_id, MAX(m.date_sent) AS date_sent, GROUP_CONCAT(DISTINCT r.user_id ORDER BY r.user_id separator \',\' ) as recipient_list';
 		$sql['from']   = "FROM {$bp->messages->table_name_recipients} r INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id {$meta_query_sql['join']}";
 		$sql['where']  = "WHERE {$where_sql} {$meta_query_sql['where']}";
@@ -745,7 +804,7 @@ class BP_Messages_Thread {
 		$total_threads = $wpdb->get_var( implode( ' ', $sql ) );
 
 		// Sort threads by date_sent.
-		foreach( (array) $thread_ids as $thread ) {
+		foreach ( (array) $thread_ids as $thread ) {
 			$sorted_threads[ $thread->thread_id ] = strtotime( $thread->date_sent );
 		}
 
@@ -753,9 +812,13 @@ class BP_Messages_Thread {
 
 		$threads = array();
 		foreach ( (array) $sorted_threads as $thread_id => $date_sent ) {
-			$threads[] = new BP_Messages_Thread( $thread_id, 'ASC', array(
-				'update_meta_cache' => false
-			) );
+			$threads[] = new BP_Messages_Thread(
+				$thread_id,
+				'ASC',
+				array(
+					'update_meta_cache' => false,
+				)
+			);
 		}
 
 		/**
@@ -768,10 +831,13 @@ class BP_Messages_Thread {
 		 *     @type int   $total_threads Number of threads found by the query.
 		 * }
 		 */
-		return apply_filters( 'bp_messages_thread_current_threads', array(
-			'threads' => &$threads,
-			'total'   => (int) $total_threads
-		) );
+		return apply_filters(
+			'bp_messages_thread_current_threads',
+			array(
+				'threads' => &$threads,
+				'total'   => (int) $total_threads,
+			)
+		);
 	}
 
 	/**
@@ -1089,7 +1155,7 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		foreach( (array) $threads as $thread ) {
+		foreach ( (array) $threads as $thread ) {
 			$message_ids = maybe_unserialize( $thread->message_ids );
 
 			if ( ! empty( $message_ids ) ) {

@@ -38,7 +38,7 @@ $stats = bbp_get_statistics(); ?>
 		<strong><?php echo esc_html( $stats['topic_tag_count'] ); ?></strong>
 	</dd>
 
-	<?php if ( !empty( $stats['empty_topic_tag_count'] ) ) : ?>
+	<?php if ( ! empty( $stats['empty_topic_tag_count'] ) ) : ?>
 
 		<dt><?php _e( 'Empty Discussion Tags', 'buddyboss' ); ?></dt>
 		<dd>
@@ -47,7 +47,7 @@ $stats = bbp_get_statistics(); ?>
 
 	<?php endif; ?>
 
-	<?php if ( !empty( $stats['topic_count_hidden'] ) ) : ?>
+	<?php if ( ! empty( $stats['topic_count_hidden'] ) ) : ?>
 
 		<dt><?php _e( 'Hidden Discussions', 'buddyboss' ); ?></dt>
 		<dd>
@@ -58,7 +58,7 @@ $stats = bbp_get_statistics(); ?>
 
 	<?php endif; ?>
 
-	<?php if ( !empty( $stats['reply_count_hidden'] ) ) : ?>
+	<?php if ( ! empty( $stats['reply_count_hidden'] ) ) : ?>
 
 		<dt><?php _e( 'Hidden Replies', 'buddyboss' ); ?></dt>
 		<dd>
@@ -73,4 +73,5 @@ $stats = bbp_get_statistics(); ?>
 
 </dl>
 
-<?php unset( $stats );
+<?php
+unset( $stats );

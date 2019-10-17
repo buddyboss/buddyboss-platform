@@ -166,7 +166,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name&hellip;', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}
@@ -256,7 +256,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'My Likes', 'buddyboss' ),
+				'text'      => __( 'Likes', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 10,
 			);
@@ -271,7 +271,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 					'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array( 'dynamic' ),
 					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-					'text'      => __( 'My Connections', 'buddyboss' ),
+					'text'      => __( 'Connections', 'buddyboss' ),
 					'count'     => false,
 					'position'  => 15,
 				);
@@ -284,7 +284,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 					'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array( 'dynamic' ),
 					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
-					'text'      => __( 'My Groups', 'buddyboss' ),
+					'text'      => __( 'Groups', 'buddyboss' ),
 					'count'     => false,
 					'position'  => 25,
 				);

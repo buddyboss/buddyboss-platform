@@ -112,9 +112,13 @@ class Email extends BuddypressCommand {
 			// Situation description.
 			if ( ! is_wp_error( $tt_ids ) && ! empty( $assoc_args['type-description'] ) ) {
 				$term = get_term_by( 'term_taxonomy_id', (int) $tt_ids[0], bp_get_email_tax_type() );
-				wp_update_term( (int) $term->term_id, bp_get_email_tax_type(), array(
-					'description' => $assoc_args['type-description'],
-				) );
+				wp_update_term(
+					(int) $term->term_id,
+					bp_get_email_tax_type(),
+					array(
+						'description' => $assoc_args['type-description'],
+					)
+				);
 			}
 
 			if ( true === $switched ) {

@@ -51,7 +51,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		$data_items = $this->get_data( $user, $page );
 
-		foreach ( $data_items["items"] as $item ) {
+		foreach ( $data_items['items'] as $item ) {
 
 			$group = groups_get_group( $item->group_id );
 
@@ -64,7 +64,7 @@ final class BP_Group_Membership_Export extends BP_Export {
 			$membership_type = false;
 
 			if ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
-				$group_label     = __( 'Group Pending Requests', "buddyboss" );
+				$group_label     = __( 'Group Pending Requests', 'buddyboss' );
 				$membership_type = 'pending_request';
 			} elseif ( $item->user_id === $user->ID && '0' === $item->is_confirmed && '0' === $item->inviter_id ) {
 				$group_label     = __( 'Group Pending Received Invitation Requests', 'buddyboss' );
@@ -117,11 +117,13 @@ final class BP_Group_Membership_Export extends BP_Export {
 				);
 			}
 
-			$data = apply_filters( 'buddyboss_bp_gdpr_group_membership_after_data_prepare',
+			$data = apply_filters(
+				'buddyboss_bp_gdpr_group_membership_after_data_prepare',
 				$data,
 				$item,
 				$data_items,
-				$membership_type );
+				$membership_type
+			);
 
 			$export_items[] = array(
 				'group_id'    => $group_id,
@@ -156,9 +158,9 @@ final class BP_Group_Membership_Export extends BP_Export {
 
 		$table = "{$group_table} item";
 
-		$query_select       = "item.*";
-		$query_select_count = "COUNT(item.id)";
-		$query_where        = "item.user_id=%d OR item.inviter_id=%d";
+		$query_select       = 'item.*';
+		$query_select_count = 'COUNT(item.id)';
+		$query_where        = 'item.user_id=%d OR item.inviter_id=%d';
 
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";

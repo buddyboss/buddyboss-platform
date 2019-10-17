@@ -1,7 +1,7 @@
 <?php
 /**
  * LearnDash integration group sync helpers
- * 
+ *
  * @package BuddyBoss\LearnDash
  * @since BuddyBoss 1.0.0
  */
@@ -14,8 +14,8 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_learndash_path($path = '') {
-    return trailingslashit( buddypress()->integrations['learndash']->path ) . trim($path, '/\\');
+function bp_learndash_path( $path = '' ) {
+	return trailingslashit( buddypress()->integrations['learndash']->path ) . trim( $path, '/\\' );
 }
 
 /**
@@ -23,8 +23,8 @@ function bp_learndash_path($path = '') {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_learndash_url($path = '') {
-    return trailingslashit( buddypress()->integrations['learndash']->url ) . trim($path, '/\\');
+function bp_learndash_url( $path = '' ) {
+	return trailingslashit( buddypress()->integrations['learndash']->url ) . trim( $path, '/\\' );
 }
 
 /**
@@ -32,7 +32,7 @@ function bp_learndash_url($path = '') {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_ld_sync($component = null) {
+function bp_ld_sync( $component = null ) {
 	global $bp_ld_sync;
 	return $component ? $bp_ld_sync->$component : $bp_ld_sync;
 }
@@ -42,25 +42,25 @@ function bp_ld_sync($component = null) {
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_learndash_get_group_courses($bpGroupId) {
-	$generator = bp_ld_sync('buddypress')->sync->generator($bpGroupId);
+function bp_learndash_get_group_courses( $bpGroupId ) {
+	$generator = bp_ld_sync( 'buddypress' )->sync->generator( $bpGroupId );
 
-	if (! $generator->hasLdGroup()) {
-		return [];
+	if ( ! $generator->hasLdGroup() ) {
+		return array();
 	}
 
-	return learndash_group_enrolled_courses($generator->getLdGroupId());
+	return learndash_group_enrolled_courses( $generator->getLdGroupId() );
 }
 
 // forward compatibility
-if (! function_exists('learndash_get_post_type_slug')) {
+if ( ! function_exists( 'learndash_get_post_type_slug' ) ) {
 	/**
 	 * Returns array of slugs used by LearnDash integration.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	function learndash_get_post_type_slug($type) {
-		$postTypes = [
+	function learndash_get_post_type_slug( $type ) {
+		$postTypes = array(
 			'course'       => 'sfwd-courses',
 			'lesson'       => 'sfwd-lessons',
 			'topic'        => 'sfwd-topic',
@@ -71,9 +71,9 @@ if (! function_exists('learndash_get_post_type_slug')) {
 			'assignment'   => 'sfwd-assignment',
 			'essays'       => 'sfwd-essays',
 			'certificates' => 'sfwd-certificates',
-		];
+		);
 
-		return $postTypes[$type];
+		return $postTypes[ $type ];
 	}
 }
 
@@ -165,7 +165,7 @@ function learndash_integration_prepare_price_str( $price ) {
 			'LTL' => '&#76;&#116;',
 			'LVL' => '&#76;&#115;',
 			'LYD' => '&#1604;.&#1583;', // ?
-			'MAD' => '&#1583;.&#1605;.', //?
+			'MAD' => '&#1583;.&#1605;.', // ?
 			'MDL' => '&#76;',
 			'MGA' => '&#65;&#114;', // ?
 			'MKD' => '&#1076;&#1077;&#1085;',

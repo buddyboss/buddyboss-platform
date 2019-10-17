@@ -10,7 +10,6 @@
  * Handles the uploading and cropping of a user avatar. Displays the change avatar page.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function xprofile_screen_change_avatar() {
 
@@ -33,7 +32,7 @@ function xprofile_screen_change_avatar() {
 
 	$bp->avatar_admin->step = 'upload-image';
 
-	if ( !empty( $_FILES ) ) {
+	if ( ! empty( $_FILES ) ) {
 
 		// Check the nonce.
 		check_admin_referer( 'bp_avatar_upload' );
@@ -59,7 +58,7 @@ function xprofile_screen_change_avatar() {
 			'crop_x'        => $_POST['x'],
 			'crop_y'        => $_POST['y'],
 			'crop_w'        => $_POST['w'],
-			'crop_h'        => $_POST['h']
+			'crop_h'        => $_POST['h'],
 		);
 
 		if ( ! bp_core_avatar_handle_crop( $args ) ) {

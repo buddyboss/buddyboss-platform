@@ -23,14 +23,14 @@ class phpBB extends BBP_Converter_Base {
 	 */
 	public function setup_globals() {
 
-		/** Forum Section *****************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id'
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0, Stored in postmeta)
@@ -38,7 +38,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'parent_id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_parent_id'
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum topic count (Stored in postmeta)
@@ -46,7 +46,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_topics',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_topic_count'
+			'to_fieldname'   => '_bbp_topic_count',
 		);
 
 		// Forum reply count (Stored in postmeta)
@@ -54,7 +54,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_posts',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_reply_count'
+			'to_fieldname'   => '_bbp_reply_count',
 		);
 
 		// Forum total topic count (Includes unpublished topics, Stored in postmeta)
@@ -62,7 +62,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_topics_real',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_total_topic_count'
+			'to_fieldname'   => '_bbp_total_topic_count',
 		);
 
 		// Forum total reply count (Includes unpublished replies, Stored in postmeta)
@@ -70,7 +70,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_posts',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_total_reply_count'
+			'to_fieldname'   => '_bbp_total_reply_count',
 		);
 
 		// Forum title.
@@ -78,7 +78,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'forum_name',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid conflicts)
@@ -87,7 +87,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_name',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Forum description.
@@ -96,7 +96,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_desc',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -104,7 +104,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'forums',
 			'from_fieldname' => 'left_id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum type (Category = 0 or Forum = 1, Stored in postmeta)
@@ -113,7 +113,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_type',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_forum_type',
-			'callback_method' => 'callback_forum_type'
+			'callback_method' => 'callback_forum_type',
 		);
 
 		// Forum status (Unlocked = 0 or Locked = 1, Stored in postmeta)
@@ -122,39 +122,39 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_status',
 			'to_type'         => 'forum',
 			'to_fieldname'    => '_bbp_status',
-			'callback_method' => 'callback_forum_status'
+			'callback_method' => 'callback_forum_status',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_date_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
 			'to_type'      => 'forum',
 			'to_fieldname' => 'post_modified_gmt',
-			'default'      => date('Y-m-d H:i:s')
+			'default'      => date( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section *****************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'topics',
 			'from_fieldname' => 'topic_id',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic reply count (Stored in postmeta)
@@ -163,7 +163,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_replies',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic total reply count (Includes unpublished replies, Stored in postmeta)
@@ -172,7 +172,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_replies_real',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_total_reply_count',
-			'callback_method' => 'callback_topic_reply_count'
+			'callback_method' => 'callback_topic_reply_count',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -181,7 +181,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -190,7 +190,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_poster',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic Author ip (Stored in postmeta)
@@ -201,7 +201,7 @@ class phpBB extends BBP_Converter_Base {
 			'join_type'       => 'INNER',
 			'join_expression' => 'USING (topic_id) WHERE posts.post_id = topics.topic_first_post_id',
 			'to_type'         => 'topic',
-			'to_fieldname'    => '_bbp_author_ip'
+			'to_fieldname'    => '_bbp_author_ip',
 		);
 
 		// Topic content.
@@ -214,7 +214,7 @@ class phpBB extends BBP_Converter_Base {
 			'join_expression' => 'USING (topic_id) WHERE posts.post_id = topics.topic_first_post_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Topic title.
@@ -222,7 +222,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'topics',
 			'from_fieldname' => 'topic_title',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -231,7 +231,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_title',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic status (Open or Closed)
@@ -240,7 +240,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_status',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -249,7 +249,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Sticky status (Stored in postmeta))
@@ -258,7 +258,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_type',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_old_sticky_status',
-			'callback_method' => 'callback_sticky_status'
+			'callback_method' => 'callback_sticky_status',
 		);
 
 		// Topic dates.
@@ -267,51 +267,51 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'topics',
 			'from_fieldname'  => 'topic_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'topics',
 			'from_fieldname'  => 'topic_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'topics',
 			'from_fieldname'  => 'topic_time',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
-			'from_tablename' => 'topics',
-			'from_fieldname' => 'topic_last_post_time',
-			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_last_active_time',
-			'callback_method' => 'callback_datetime'
+			'from_tablename'  => 'topics',
+			'from_fieldname'  => 'topic_last_post_time',
+			'to_type'         => 'topic',
+			'to_fieldname'    => '_bbp_last_active_time',
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		/**
 		 * phpBB Forums do not support topic tags
 		 */
 
-		/** Reply Section *****************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'posts',
 			'from_fieldname' => 'post_id',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_post_id'
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Setup reply section table joins
@@ -321,7 +321,7 @@ class phpBB extends BBP_Converter_Base {
 			'join_tablename'  => 'posts',
 			'join_type'       => 'LEFT',
 			'join_expression' => 'USING (topic_id) WHERE posts.post_id != topics.topic_first_post_id',
-			'to_type'         => 'reply'
+			'to_type'         => 'reply',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -330,7 +330,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'forum_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -339,7 +339,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author ip (Stored in postmeta)
@@ -347,7 +347,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'posts',
 			'from_fieldname' => 'poster_ip',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_author_ip'
+			'to_fieldname'   => '_bbp_author_ip',
 		);
 
 		// Reply author.
@@ -356,7 +356,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'poster_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
@@ -365,7 +365,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_subject',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_title',
-			'callback_method' => 'callback_reply_title'
+			'callback_method' => 'callback_reply_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -374,7 +374,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_subject',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -383,7 +383,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_text',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -392,7 +392,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'topic_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
@@ -401,38 +401,38 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'post_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
 			'from_fieldname'  => 'post_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_date_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
 			'from_fieldname'  => 'post_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 		$this->field_map[] = array(
 			'from_tablename'  => 'posts',
 			'from_fieldname'  => 'post_time',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_modified_gmt',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_id',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta serialized with salt)
@@ -441,7 +441,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'user_password',
 			'to_type'         => 'user',
 			'to_fieldname'    => '_bbp_password',
-			'callback_method' => 'callback_savepass'
+			'callback_method' => 'callback_savepass',
 		);
 
 		// Store old User Salt (This is only used for the SELECT row info for the above password save)
@@ -449,14 +449,14 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_form_salt',
 			'to_type'        => 'user',
-			'to_fieldname'   => ''
+			'to_fieldname'   => '',
 		);
 
 		// User password verify class (Stored in usermeta for verifying password)
 		$this->field_map[] = array(
 			'to_type'      => 'user',
 			'to_fieldname' => '_bbp_class',
-			'default'      => 'phpBB'
+			'default'      => 'phpBB',
 		);
 
 		// User name.
@@ -464,7 +464,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'username',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User email.
@@ -472,7 +472,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User homepage.
@@ -480,7 +480,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_website',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_url'
+			'to_fieldname'   => 'user_url',
 		);
 
 		// User registered.
@@ -489,7 +489,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_fieldname'  => 'user_regdate',
 			'to_type'         => 'user',
 			'to_fieldname'    => 'user_registered',
-			'callback_method' => 'callback_datetime'
+			'callback_method' => 'callback_datetime',
 		);
 
 		// User AIM (Stored in usermeta)
@@ -497,7 +497,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_aim',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'aim'
+			'to_fieldname'   => 'aim',
 		);
 
 		// User Yahoo (Stored in usermeta)
@@ -505,7 +505,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_yim',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'yim'
+			'to_fieldname'   => 'yim',
 		);
 
 		// Store ICQ (Stored in usermeta)
@@ -513,7 +513,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_icq',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_icq'
+			'to_fieldname'   => '_bbp_phpbb_user_icq',
 		);
 
 		// Store MSN (Stored in usermeta)
@@ -521,7 +521,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_msnm',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_msnm'
+			'to_fieldname'   => '_bbp_phpbb_user_msnm',
 		);
 
 		// Store Jabber
@@ -529,7 +529,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_jabber',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'jabber'
+			'to_fieldname'   => 'jabber',
 		);
 
 		// Store Occupation (Stored in usermeta)
@@ -537,7 +537,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_occ',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_occ'
+			'to_fieldname'   => '_bbp_phpbb_user_occ',
 		);
 
 		// Store Interests (Stored in usermeta)
@@ -545,16 +545,16 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_interests',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_interests'
+			'to_fieldname'   => '_bbp_phpbb_user_interests',
 		);
 
 		// Store Signature (Stored in usermeta)
 		$this->field_map[] = array(
-			'from_tablename' => 'users',
-			'from_fieldname' => 'user_sig',
-			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_sig',
-			'callback_method' => 'callback_html'
+			'from_tablename'  => 'users',
+			'from_fieldname'  => 'user_sig',
+			'to_type'         => 'user',
+			'to_fieldname'    => '_bbp_phpbb_user_sig',
+			'callback_method' => 'callback_html',
 		);
 
 		// Store Location (Stored in usermeta)
@@ -562,7 +562,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_from',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_from'
+			'to_fieldname'   => '_bbp_phpbb_user_from',
 		);
 
 		// Store Avatar Filename (Stored in usermeta)
@@ -570,7 +570,7 @@ class phpBB extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_avatar',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_phpbb_user_avatar'
+			'to_fieldname'   => '_bbp_phpbb_user_avatar',
 		);
 
 		// Store old role (Stored in usermeta)
@@ -592,7 +592,7 @@ class phpBB extends BBP_Converter_Base {
 	public function callback_savepass( $field, $row ) {
 		return array(
 			'hash' => $field,
-			'salt' => $row['salt']
+			'salt' => $row['salt'],
 		);
 	}
 
@@ -608,7 +608,7 @@ class phpBB extends BBP_Converter_Base {
 	 * @return bool Returns true if the password is correct, false if not.
 	 */
 	public function authenticate_pass( $password, $serialized_pass ) {
-		$itoa64 = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+		$itoa64     = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
 		$pass_array = unserialize( $serialized_pass );
 		if ( strlen( $pass_array['hash'] ) == 34 ) {
 			return ( $this->_hash_crypt_private( $password, $pass_array['hash'], $itoa64 ) === $pass_array['hash'] ) ? true : false;
@@ -651,21 +651,18 @@ class phpBB extends BBP_Converter_Base {
 		 */
 		if ( floatval( phpversion() ) >= 5 ) {
 			$hash = md5( $salt . $password, true );
-			do
-			{
+			do {
 				$hash = md5( $hash . $password, true );
-			}
-			while ( --$count );
+			} while ( --$count );
 		} else {
 			$hash = pack( 'H*', md5( $salt . $password ) );
 			do {
 				$hash = pack( 'H*', md5( $hash . $password ) );
-			}
-			while ( --$count );
+			} while ( --$count );
 		}
 
-		$output = substr($setting, 0, 12);
-		$output .= $this->_hash_encode64($hash, 16, $itoa64);
+		$output  = substr( $setting, 0, 12 );
+		$output .= $this->_hash_encode64( $hash, 16, $itoa64 );
 
 		return $output;
 	}
@@ -675,33 +672,33 @@ class phpBB extends BBP_Converter_Base {
 	 */
 	private function _hash_encode64( $input, $count, &$itoa64 ) {
 		$output = '';
-		$i = 0;
+		$i      = 0;
 
 		do {
-			$value = ord( $input[$i++] );
-			$output .= $itoa64[$value & 0x3f];
+			$value   = ord( $input[ $i++ ] );
+			$output .= $itoa64[ $value & 0x3f ];
 
-			if ($i < $count) {
-				$value |= ord( $input[$i] ) << 8;
+			if ( $i < $count ) {
+				$value |= ord( $input[ $i ] ) << 8;
 			}
 
-			$output .= $itoa64[( $value >> 6 ) & 0x3f];
+			$output .= $itoa64[ ( $value >> 6 ) & 0x3f ];
 
 			if ( $i++ >= $count ) {
 				break;
 			}
 
 			if ( $i < $count ) {
-				$value |= ord( $input[$i] ) << 16;
+				$value |= ord( $input[ $i ] ) << 16;
 			}
 
-			$output .= $itoa64[( $value >> 12 ) & 0x3f];
+			$output .= $itoa64[ ( $value >> 12 ) & 0x3f ];
 
 			if ( $i++ >= $count ) {
 				break;
 			}
 
-			$output .= $itoa64[($value >> 18) & 0x3f];
+			$output .= $itoa64[ ( $value >> 18 ) & 0x3f ];
 		} while ( $i < $count );
 
 		return $output;
@@ -715,12 +712,12 @@ class phpBB extends BBP_Converter_Base {
 	 */
 	public function callback_forum_type( $status = 1 ) {
 		switch ( $status ) {
-			case 0 :
+			case 0:
 				$status = 'category';
 				break;
 
-			case 1  :
-			default :
+			case 1:
+			default:
 				$status = 'forum';
 				break;
 		}
@@ -735,12 +732,12 @@ class phpBB extends BBP_Converter_Base {
 	 */
 	public function callback_forum_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'open';
 				break;
 		}
@@ -755,12 +752,12 @@ class phpBB extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 0 :
-			default :
+			case 0:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -775,20 +772,20 @@ class phpBB extends BBP_Converter_Base {
 	 */
 	public function callback_sticky_status( $status = 0 ) {
 		switch ( $status ) {
-			case 3 :
+			case 3:
 				$status = 'super-sticky'; // phpBB Global Sticky 'topic_type = 3'
 				break;
 
-			case 2 :
+			case 2:
 				$status = 'super-sticky'; // phpBB Announcement Sticky 'topic_type = 2'
 				break;
 
-			case 1 :
+			case 1:
 				$status = 'sticky';       // phpBB Sticky 'topic_type = 1'
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'normal';       // phpBB normal topic 'topic_type = 0'
 				break;
 		}
@@ -813,7 +810,7 @@ class phpBB extends BBP_Converter_Base {
 	 * @return string Prefixed topic title, or empty string
 	 */
 	public function callback_reply_title( $title = '' ) {
-		$title = !empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
+		$title = ! empty( $title ) ? __( 'Re: ', 'buddyboss' ) . html_entity_decode( $title ) : '';
 		return $title;
 	}
 
@@ -827,31 +824,31 @@ class phpBB extends BBP_Converter_Base {
 		$phpbb_uid = html_entity_decode( $phpbb_uid );
 
 		// Replace '[b:XXXXXXX]' with '<strong>'
-		$phpbb_uid = preg_replace( '/\[b:(.*?)\]/',   '<strong>',  $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[b:(.*?)\]/', '<strong>', $phpbb_uid );
 		// Replace '[/b:XXXXXXX]' with '</strong>'
 		$phpbb_uid = preg_replace( '/\[\/b:(.*?)\]/', '</strong>', $phpbb_uid );
 
 		// Replace '[i:XXXXXXX]' with '<em>'
-		$phpbb_uid = preg_replace( '/\[i:(.*?)\]/',   '<em>',      $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[i:(.*?)\]/', '<em>', $phpbb_uid );
 		// Replace '[/i:XXXXXXX]' with '</em>'
-		$phpbb_uid = preg_replace( '/\[\/i:(.*?)\]/', '</em>',     $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/i:(.*?)\]/', '</em>', $phpbb_uid );
 
 		// Replace '[u:XXXXXXX]' with '<u>'
-		$phpbb_uid = preg_replace( '/\[u:(.*?)\]/',   '<u>',       $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[u:(.*?)\]/', '<u>', $phpbb_uid );
 		// Replace '[/u:XXXXXXX]' with '</u>'
-		$phpbb_uid = preg_replace( '/\[\/u:(.*?)\]/', '</u>',      $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/u:(.*?)\]/', '</u>', $phpbb_uid );
 
 		// Replace '[quote:XXXXXXX]' with '<blockquote>'
-		$phpbb_uid = preg_replace( '/\[quote:(.*?)\]/',          '<blockquote>',                   $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[quote:(.*?)\]/', '<blockquote>', $phpbb_uid );
 		// Replace '[quote="$1"]' with '<em>$1 wrote:</em><blockquote>"
 		$phpbb_uid = preg_replace( '/\[quote="(.*?)":(.*?)\]/', '<em>@$1 wrote:</em><blockquote>', $phpbb_uid );
 		// Replace '[/quote:XXXXXXX]' with '</blockquote>'
-		$phpbb_uid = preg_replace( '/\[\/quote:(.*?)\]/',       '</blockquote>',                   $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/quote:(.*?)\]/', '</blockquote>', $phpbb_uid );
 
 		// Replace '[img:XXXXXXX]' with '<img src="'
-		$phpbb_uid = preg_replace( '/\[img:(.*?)\]/',   '<img src="', $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[img:(.*?)\]/', '<img src="', $phpbb_uid );
 		// Replace '[/img:XXXXXXX]' with ' alt="">'
-		$phpbb_uid = preg_replace( '/\[\/img:(.*?)\]/', '" alt="">',  $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/img:(.*?)\]/', '" alt="">', $phpbb_uid );
 
 		// Replace '<!-- s$1 --><img src=\"{SMILIES_PATH}$2 -->' with '$1'
 		$phpbb_uid = preg_replace( '/<!-- s(.*?) --><img src=\"{SMILIES_PATH}(.*?)-->/', '$1', $phpbb_uid );
@@ -860,9 +857,9 @@ class phpBB extends BBP_Converter_Base {
 		$phpbb_uid = preg_replace( '/\<!-- m --\>\<a class="postlink" href="([^\[]+?)"\>([^\[]+?)\<\/a\>\<!-- m --\>/', '$1', $phpbb_uid );
 
 		// Replace '[url:XXXXXXX]$1[/url:XXXXXXX]' with '<a href="http://$1">$1</a>'
-		$phpbb_uid = preg_replace( '/\[url:(?:[^\]]+)\]([^\[]+?)\[\/url:(?:[^\]]+)\]/',       '<a href="http://$1">$1</a>',  $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[url:(?:[^\]]+)\]([^\[]+?)\[\/url:(?:[^\]]+)\]/', '<a href="http://$1">$1</a>', $phpbb_uid );
 		// Replace '[url=http://$1:XXXXXXX]$3[/url:XXXXXXX]' with '<a href="http://$1">$3</a>'
-		$phpbb_uid = preg_replace( '/\[url\=http\:\/\/(.*?)\:(.*?)\](.*?)\[\/url:(.*?)\]/i',  '<a href="http://$1">$3</a>',  $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[url\=http\:\/\/(.*?)\:(.*?)\](.*?)\[\/url:(.*?)\]/i', '<a href="http://$1">$3</a>', $phpbb_uid );
 		// Replace '[url=https://$1:XXXXXXX]$3[/url:XXXXXXX]' with '<a href="http://$1">$3</a>'
 		$phpbb_uid = preg_replace( '/\[url\=https\:\/\/(.*?)\:(.*?)\](.*?)\[\/url:(.*?)\]/i', '<a href="https://$1">$3</a>', $phpbb_uid );
 
@@ -872,41 +869,41 @@ class phpBB extends BBP_Converter_Base {
 		$phpbb_uid = preg_replace( '/\<!-- e --\>(.*?)\<!-- e --\>/', '$1', $phpbb_uid );
 
 		// Replace '[code:XXXXXXX]' with '<pre><code>'
-		$phpbb_uid = preg_replace( '/\[code:(.*?)\]/',   '<pre><code>',   $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[code:(.*?)\]/', '<pre><code>', $phpbb_uid );
 		// Replace '[/code:XXXXXXX]' with '</code></pre>'
 		$phpbb_uid = preg_replace( '/\[\/code:(.*?)\]/', '</code></pre>', $phpbb_uid );
 
 		// Replace '[color=$1:XXXXXXXX]' with '<span style="color:$1">'
 		$phpbb_uid = preg_replace( '/\[color=(.*?)\:(.*?)\]/', '<span style="color: $1">', $phpbb_uid );
 		// Replace '[/color:XXXXXXX]' with '</span>'
-		$phpbb_uid = preg_replace( '/\[\/color:(.*?)\]/',      '</span>',                  $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/color:(.*?)\]/', '</span>', $phpbb_uid );
 
 		// Replace '[size=$1:XXXXXXXX]' with '<span style="font-size:$1%;">$3</span>'
 		$phpbb_uid = preg_replace( '/\[size=(.*?):(.*?)\]/', '<span style="font-size:$1%;">', $phpbb_uid );
 		// Replace '[/size:XXXXXXX]' with ''
-		$phpbb_uid = preg_replace( '/\[\/size:(.*?)\]/',     '</span>',                       $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/size:(.*?)\]/', '</span>', $phpbb_uid );
 
 		// Replace '[list:XXXXXXX]' with '<ul>'
-		$phpbb_uid = preg_replace( '/\[list:(.*?)\]/',     '<ul>',          $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[list:(.*?)\]/', '<ul>', $phpbb_uid );
 		// Replace '[list=a:XXXXXXX]' with '<ol type="a">'
-		$phpbb_uid = preg_replace( '/\[list=a:(.*?)\]/',   '<ol type="a">', $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[list=a:(.*?)\]/', '<ol type="a">', $phpbb_uid );
 		// Replace '[list=1:XXXXXXX]' with '<ol>'
-		$phpbb_uid = preg_replace( '/\[list=1:(.*?)\]/',   '<ol>',          $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[list=1:(.*?)\]/', '<ol>', $phpbb_uid );
 		// Replace '[*:XXXXXXX]' with '<li>'
-		$phpbb_uid = preg_replace( '/\[\*:(.*?)\]/',       '<li>',          $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\*:(.*?)\]/', '<li>', $phpbb_uid );
 		// Replace '[/*:m:XXXXXXX]' with '</li>'
-		$phpbb_uid = preg_replace( '/\[\/\*:m:(.*?)\]/',   '</li>',         $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/\*:m:(.*?)\]/', '</li>', $phpbb_uid );
 		// Replace '[/list:u:XXXXXXX]' with '</ul>'
-		$phpbb_uid = preg_replace( '/\[\/list:u:(.*?)\]/', '</ul>',         $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/list:u:(.*?)\]/', '</ul>', $phpbb_uid );
 		// Replace '[/list:o:XXXXXXX]' with '</ol>'
-		$phpbb_uid = preg_replace( '/\[\/list:o:(.*?)\]/', '</ol>',         $phpbb_uid );
+		$phpbb_uid = preg_replace( '/\[\/list:o:(.*?)\]/', '</ol>', $phpbb_uid );
 
 		// Now that phpBB's 'magic_url' and 'bbcode_uid' have been stripped put the cleaned HTML back in $field
 		$field = $phpbb_uid;
 
 		// Parse out any bbCodes in $field with the BBCode 'parser.php'
-		require_once( bbpress()->admin->admin_dir . 'parser.php' );
-		$bbcode = BBCode::getInstance();
+		require_once bbpress()->admin->admin_dir . 'parser.php';
+		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
 		return html_entity_decode( $bbcode->Parse( $field ) );

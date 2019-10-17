@@ -52,7 +52,7 @@ window.bp = window.bp || {};
 			bp.Avatar.views.add( { id: 'camera', view: cameraView } );
 
 			// Display it
-	        cameraView.inject( '.bp-avatar' );
+			cameraView.inject( '.bp-avatar' );
 		},
 
 		removeView: function() {
@@ -66,7 +66,7 @@ window.bp = window.bp || {};
 		},
 
 		gotStream: function( stream ) {
-			var video = bp.WebCam.params.video;
+			var video                    = bp.WebCam.params.video;
 			bp.WebCam.params.videoStream = stream;
 
 			// User Feedback
@@ -107,7 +107,7 @@ window.bp = window.bp || {};
 					bp.WebCam.params.videoStream.msStop();
 				}
 				bp.WebCam.params.videoStream.onended = null;
-				bp.WebCam.params.videoStream = null;
+				bp.WebCam.params.videoStream         = null;
 			}
 			if ( bp.WebCam.params.video ) {
 				bp.WebCam.params.video.onerror = null;
@@ -148,172 +148,189 @@ window.bp = window.bp || {};
 		displayWarning: function( code ) {
 			this.removeWarning();
 
-			this.params.warning = new bp.Views.uploaderWarning( {
-				value: BP_Uploader.strings.camera_warnings[code]
-			} );
+			this.params.warning = new bp.Views.uploaderWarning(
+				{
+					value: BP_Uploader.strings.camera_warnings[code]
+				}
+			);
 
 			this.params.warning.inject( '.bp-avatar-status' );
 		}
 	};
 
 	// BuddyPress WebCam view
-	bp.Views.WebCamAvatar = bp.View.extend( {
-		tagName: 'div',
-		id: 'bp-webcam-avatar',
-		template: bp.template( 'bp-avatar-webcam' ),
+	bp.Views.WebCamAvatar = bp.View.extend(
+		{
+			tagName: 'div',
+			id: 'bp-webcam-avatar',
+			template: bp.template( 'bp-avatar-webcam' ),
 
-		events: {
-			'click .avatar-webcam-capture': 'captureStream',
-			'click .avatar-webcam-save': 'saveCapture'
-		},
+			events: {
+				'click .avatar-webcam-capture': 'captureStream',
+				'click .avatar-webcam-save': 'saveCapture'
+			},
 
-		initialize: function() {
-			var params;
+			initialize: function() {
+				var params;
 
-			// Standardize getUserMedia browser call.
-			navigator.getUserMedia = (
-				navigator.getUserMedia ||
-				navigator.webkitGetUserMedia ||
-				navigator.mozGetUserMedia ||
-				navigator.msGetUserMedia ||
-				navigator.oGetUserMedia
-			);
-
-			if ( typeof navigator.getUserMedia !== 'undefined' ) {
-				// We need to add some cropping stuff to use bp.Avatar.setAvatar()
-				params = _.extend( _.pick( BP_Uploader.settings.defaults.multipart_params.bp_params,
-					'object',
-					'item_id',
-					'nonces'
-					), {
-						user_media:  true,
-						w: BP_Uploader.settings.crop.full_w,
-						h: BP_Uploader.settings.crop.full_h,
-						x: 0,
-						y: 0,
-						type: 'camera'
-					}
+				// Standardize getUserMedia browser call.
+				navigator.getUserMedia = (
+					navigator.getUserMedia ||
+					navigator.webkitGetUserMedia ||
+					navigator.mozGetUserMedia ||
+					navigator.msGetUserMedia ||
+					navigator.oGetUserMedia
 				);
 
-				this.model.set( params );
-			}
+				if ( typeof navigator.getUserMedia !== 'undefined' ) {
+					// We need to add some cropping stuff to use bp.Avatar.setAvatar()
+					params = _.extend(
+						_.pick(
+							BP_Uploader.settings.defaults.multipart_params.bp_params,
+							'object',
+							'item_id',
+							'nonces'
+						),
+						{
+							user_media:  true,
+							w: BP_Uploader.settings.crop.full_w,
+							h: BP_Uploader.settings.crop.full_h,
+							x: 0,
+							y: 0,
+							type: 'camera'
+							}
+					);
 
-			this.on( 'ready', this.useStream, this );
-		},
+						this.model.set( params );
+				}
 
-		useStream:function() {
-			// No support for user media... Stop!
-			if ( ! this.model.get( 'user_media' ) ) {
-				return;
-			}
+					this.on( 'ready', this.useStream, this );
+			},
 
-			this.options.video = new bp.Views.WebCamVideo();
-			this.options.canvas = new bp.Views.WebCamCanvas();
+			useStream:function() {
+				// No support for user media... Stop!
+				if ( ! this.model.get( 'user_media' ) ) {
+					return;
+				}
 
-			this.$el.find( '#avatar-to-crop' ).append( this.options.video.el );
-			this.$el.find( '#avatar-crop-pane' ).append( this.options.canvas.el );
+				this.options.video  = new bp.Views.WebCamVideo();
+				this.options.canvas = new bp.Views.WebCamCanvas();
 
-			bp.WebCam.params.video = this.options.video.el;
-			bp.WebCam.params.canvas = this.options.canvas.el;
+				this.$el.find( '#avatar-to-crop' ).append( this.options.video.el );
+				this.$el.find( '#avatar-crop-pane' ).append( this.options.canvas.el );
 
-			// User Feedback
-			bp.WebCam.displayWarning( 'requesting' );
+				bp.WebCam.params.video  = this.options.video.el;
+				bp.WebCam.params.canvas = this.options.canvas.el;
 
-			// Use deprecated getUserMedia call for browsers that require it.
-			if ( typeof navigator.mediaDevices.getUserMedia === 'undefined' ) {
-				navigator.getUserMedia({
-					audio: false,
-					video: true
-				}, bp.WebCam.gotStream, bp.WebCam.noStream);
+				// User Feedback
+				bp.WebCam.displayWarning( 'requesting' );
 
-			// Teh new hotness!
-			} else {
-				navigator.mediaDevices.getUserMedia({
-					audio: false,
-					video: true
-				}).then(bp.WebCam.gotStream, bp.WebCam.noStream)
-				// ES3 compatibility.
-				['catch'](function() {
+				// Use deprecated getUserMedia call for browsers that require it.
+				if ( typeof navigator.mediaDevices.getUserMedia === 'undefined' ) {
+					navigator.getUserMedia(
+						{
+							audio: false,
+							video: true
+							},
+						bp.WebCam.gotStream,
+						bp.WebCam.noStream
+					);
+
+					// Teh new hotness!
+				} else {
+					navigator.mediaDevices.getUserMedia(
+						{
+							audio: false,
+							video: true
+							}
+					).then( bp.WebCam.gotStream, bp.WebCam.noStream )
+					// ES3 compatibility.
+					['catch'](function() {
+						// User Feedback
+						bp.WebCam.displayWarning( 'errormsg' );
+					});
+				}
+			},
+
+			captureStream: function( event ) {
+				var sx, sc;
+				event.preventDefault();
+
+				if ( ! bp.WebCam.params.capture_enable ) {
 					// User Feedback
-					bp.WebCam.displayWarning( 'errormsg' );
-				});
-			}
-		},
+					bp.WebCam.displayWarning( 'loading' );
+					return;
+				}
 
-		captureStream: function( event ) {
-			var sx, sc;
-			event.preventDefault();
+				if ( this.model.get( 'h' ) > this.options.video.el.videoHeight || this.model.get( 'w' ) > this.options.video.el.videoWidth ) {
+					bp.WebCam.displayWarning( 'videoerror' );
+					return;
+				}
 
-			if ( ! bp.WebCam.params.capture_enable ) {
+				// Set the offset
+				sc = this.options.video.el.videoHeight;
+				sx = ( this.options.video.el.videoWidth - sc ) / 2;
+
+				// Flip only once.
+				if ( ! bp.WebCam.params.flipped ) {
+					this.options.canvas.el.getContext( '2d' ).translate( this.model.get( 'w' ), 0 );
+					this.options.canvas.el.getContext( '2d' ).scale( -1, 1 );
+					bp.WebCam.params.flipped = true;
+				}
+
+				this.options.canvas.el.getContext( '2d' ).drawImage( this.options.video.el, sx, 0, sc, sc, 0, 0, this.model.get( 'w' ), this.model.get( 'h' ) );
+				bp.WebCam.params.capture = this.options.canvas.el.toDataURL( 'image/png' );
+				this.model.set( 'url', bp.WebCam.params.capture );
+
 				// User Feedback
-				bp.WebCam.displayWarning( 'loading' );
-				return;
+				bp.WebCam.displayWarning( 'ready' );
+			},
+
+			saveCapture: function( event ) {
+				event.preventDefault();
+
+				if ( ! bp.WebCam.params.capture ) {
+					// User Feedback
+					bp.WebCam.displayWarning( 'nocapture' );
+					return;
+				}
+
+				bp.WebCam.stop();
+				bp.WebCam.setAvatar( this.model );
 			}
-
-			if ( this.model.get( 'h' ) > this.options.video.el.videoHeight || this.model.get( 'w' ) > this.options.video.el.videoWidth ) {
-				bp.WebCam.displayWarning( 'videoerror' );
-				return;
-			}
-
-			// Set the offset
-			sc = this.options.video.el.videoHeight;
-			sx = ( this.options.video.el.videoWidth - sc ) / 2;
-
-			// Flip only once.
-			if ( ! bp.WebCam.params.flipped ) {
-				this.options.canvas.el.getContext( '2d' ).translate( this.model.get( 'w' ), 0 );
-				this.options.canvas.el.getContext( '2d' ).scale( -1, 1 );
-				bp.WebCam.params.flipped = true;
-			}
-
-			this.options.canvas.el.getContext( '2d' ).drawImage( this.options.video.el, sx, 0, sc, sc, 0, 0, this.model.get( 'w' ), this.model.get( 'h' ) );
-			bp.WebCam.params.capture = this.options.canvas.el.toDataURL( 'image/png' );
-			this.model.set( 'url', bp.WebCam.params.capture );
-
-			// User Feedback
-			bp.WebCam.displayWarning( 'ready' );
-		},
-
-		saveCapture: function( event ) {
-			event.preventDefault();
-
-			if ( ! bp.WebCam.params.capture ) {
-				// User Feedback
-				bp.WebCam.displayWarning( 'nocapture' );
-				return;
-			}
-
-			bp.WebCam.stop();
-			bp.WebCam.setAvatar( this.model );
 		}
-	} );
+	);
 
 	// BuddyPress Video stream view
-	bp.Views.WebCamVideo = bp.View.extend( {
-		tagName: 'video',
-		id: 'bp-webcam-video',
-		attributes: {
-			autoplay: 'autoplay'
-		}
-	} );
-
-	// BuddyPress Canvas (capture) view
-	bp.Views.WebCamCanvas = bp.View.extend( {
-		tagName: 'canvas',
-		id: 'bp-webcam-canvas',
-		attributes: {
-			width:  150,
-			height: 150
-		},
-
-		initialize: function() {
-			// Make sure to take in account bp_core_avatar_full_height or bp_core_avatar_full_width php filters
-			if ( ! _.isUndefined( BP_Uploader.settings.crop.full_h ) && ! _.isUndefined( BP_Uploader.settings.crop.full_w ) ) {
-				this.el.attributes.width.value  = BP_Uploader.settings.crop.full_w;
-				this.el.attributes.height.value = BP_Uploader.settings.crop.full_h;
+	bp.Views.WebCamVideo = bp.View.extend(
+		{
+			tagName: 'video',
+			id: 'bp-webcam-video',
+			attributes: {
+				autoplay: 'autoplay'
 			}
 		}
-	} );
+	);
+
+	// BuddyPress Canvas (capture) view
+	bp.Views.WebCamCanvas = bp.View.extend(
+		{
+			tagName: 'canvas',
+			id: 'bp-webcam-canvas',
+			attributes: {
+				width:  150,
+				height: 150
+			},
+
+			initialize: function() {
+				// Make sure to take in account bp_core_avatar_full_height or bp_core_avatar_full_width php filters
+				if ( ! _.isUndefined( BP_Uploader.settings.crop.full_h ) && ! _.isUndefined( BP_Uploader.settings.crop.full_w ) ) {
+					this.el.attributes.width.value  = BP_Uploader.settings.crop.full_w;
+					this.el.attributes.height.value = BP_Uploader.settings.crop.full_h;
+				}
+			}
+		}
+	);
 
 	bp.WebCam.start();
 

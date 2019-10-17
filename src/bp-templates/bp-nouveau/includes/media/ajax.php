@@ -225,108 +225,13 @@ function bp_nouveau_ajax_media_save() {
 		wp_send_json_error( $response );
 	}
 
-//	if ( empty( $_POST['content'] ) ) {
-//		$response['feedback'] = sprintf(
-//			'<div class="bp-feedback error">%s</div>',
-//			esc_html__( 'Please write something about media.', 'buddyboss' )
-//		);
-//
-//		wp_send_json_error( $response );
-//	}
-
-	$main_activity_id = false;
-	// make an activity
-	if ( bp_is_active( 'activity' ) ) {
-
-		/**
-		 * Filters the content provided in the activity input field.
-		 *
-		 * @since BuddyPress 1.2.0
-		 *
-		 * @param string $value Activity message being posted.
-		 */
-		$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
-
-		if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) ) {
-			$main_activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $_POST['group_id'] ) );
-        } else {
-			$main_activity_id = bp_activity_post_update( array( 'content' => $content ) );
-        }
-	}
-
-	$album_privacy = 'public';
-	$medias        = $_POST['medias'];
-	$media_ids     = array();
-
-	// save media
-	foreach( $medias as $media ) {
-
-		$activity_id = false;
-		// make an activity for the media
-		if ( bp_is_active( 'activity' ) ) {
-			$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
-			if ( $activity_id ) {
-				// update activity meta
-				bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
-			}
-		}
-
-		if ( ! empty( $media['album_id'] ) ) {
-			$albums        = bp_album_get_specific( array( 'album_ids' => array( $media['album_id'] ) ) );
-			if ( ! empty( $albums['albums'] ) ) {
-				$album         = array_pop( $albums['albums'] );
-				$album_privacy = $album->privacy;
-			}
-		}
-
-		$media_id = bp_media_add( array(
-			'attachment_id' => $media['id'],
-			'title'         => $media['name'],
-			'activity_id'   => $activity_id,
-			'album_id'      => $media['album_id'],
-			'group_id'      => $media['group_id'],
-			'privacy'       => $album_privacy,
-			'error_type'    => 'wp_error'
-		) );
-
-		if ( is_wp_error( $media_id ) ) {
-			$response['feedback'] = sprintf(
-				'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-				esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
-			);
-
-			wp_send_json_error( $response );
-		}
-
-		//save media is saved in attahchment
-        update_post_meta( $media['id'], 'bp_media_saved', true );
-
-		//save media meta for activity
-		if ( ! empty( $main_activity_id ) ) {
-			update_post_meta( $media['id'], 'bp_media_parent_activity_id', $main_activity_id );
-			update_post_meta( $media['id'], 'bp_media_activity_id', $activity_id );
-		}
-
-		$media_ids[] = $media_id;
-	}
+	// handle media uploaded.
+	$media_ids = bp_media_add_handler();
 
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
-		$media_ids = implode( ',', $media_ids );
-
-		//save media meta for activity
-		if ( ! empty( $main_activity_id ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
-
-			$main_activity = new BP_Activity_Activity( $main_activity_id );
-			if ( ! empty( $main_activity ) ) {
-				$main_activity->privacy = $album_privacy;
-				$main_activity->save();
-			}
-		}
-
 		ob_start();
-		if ( bp_has_media( array( 'include' => $media_ids ) ) ) {
+		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ) ) ) ) {
 			while ( bp_media() ) {
 				bp_the_media();
 				bp_get_template_part( 'media/entry' );
@@ -336,9 +241,7 @@ function bp_nouveau_ajax_media_save() {
 		ob_end_clean();
 	}
 
-	wp_send_json_success( array(
-		'media' => $media,
-	) );
+	wp_send_json_success( array( 'media' => $media ) );
 }
 
 /**
@@ -388,12 +291,13 @@ function bp_nouveau_ajax_media_delete() {
 	$media_ids = array();
 	foreach( $media as $media_id ) {
 
-		// delete media
-		$m_id = bp_media_delete( $media_id );
+	    if ( bp_media_user_can_delete( $media_id ) ) {
 
-		if ( $media_id ) {
-			$media_ids[] = $m_id;
-		}
+		    // delete media
+		    if ( bp_media_delete( array( 'id' => $media_id ) ) ) {
+			    $media_ids[] = $media_id;
+		    }
+	    }
 	}
 
 	if ( count( $media_ids ) != count( $media ) ) {
@@ -461,9 +365,8 @@ function bp_nouveau_ajax_media_move_to_album() {
 	}
 
 	$album_privacy = 'public';
-	$albums = bp_album_get_specific( array( 'album_ids' => array( $_POST['album_id'] ) ) );
-	if ( ! empty( $albums['albums'] ) ) {
-		$album = array_pop( $albums['albums'] );
+	$album = new BP_Media_Album( $_POST['album_id'] );
+	if ( ! empty( $album ) ) {
 		$album_privacy = $album->privacy;
 	}
 
@@ -554,7 +457,6 @@ function bp_nouveau_ajax_media_album_save() {
 	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
-	$medias   = ! empty( $_POST['medias'] ) && is_array( $_POST['medias'] ) ? $_POST['medias'] : array();
 
 	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
 
@@ -566,74 +468,8 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
-	$main_activity_id = false;
-	// make an activity
-	if ( bp_is_active( 'activity' ) ) {
-		$main_activity_id = bp_activity_post_update();
-	}
-
-	$media_ids     = array();
-
-	// save media
-	if ( ! empty( $medias ) ) {
-
-		foreach ( $medias as $media ) {
-			$activity_id = false;
-			// make an activity for the media
-			if ( bp_is_active( 'activity' ) ) {
-				$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
-
-				if ( $activity_id ) {
-					// update activity meta
-					bp_activity_update_meta( $activity_id, 'bp_media_activity', '1' );
-				}
-			}
-
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'activity_id'   => $activity_id,
-				'album_id'      => $album_id,
-				'group_id'      => $group_id,
-				'privacy'       => $privacy,
-				'error_type'    => 'wp_error'
-			) );
-
-			if ( is_wp_error( $media_id ) ) {
-				$response['feedback'] = sprintf(
-					'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-					esc_html__( 'There was a problem when trying to add the media.', 'buddyboss' )
-				);
-				wp_send_json_error( $response );
-			}
-
-			//save media is saved in attachment
-			update_post_meta( $media['id'], 'bp_media_saved', true );
-
-			//save media meta for activity
-			if ( ! empty( $main_activity_id ) ) {
-				update_post_meta( $media['id'], 'bp_media_parent_activity_id', $main_activity_id );
-				update_post_meta( $media['id'], 'bp_media_activity_id', $activity_id );
-			}
-
-			$media_ids[] = $media_id;
-		}
-	}
-
-	if ( ! empty( $media_ids ) && bp_is_active( 'activity' ) ) {
-		$media_ids = implode( ',', $media_ids );
-
-		//save media meta for activity
-		if ( ! empty( $main_activity_id ) ) {
-			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
-
-			$main_activity = new BP_Activity_Activity( $main_activity_id );
-			if ( ! empty( $main_activity ) ) {
-				$main_activity->privacy = $privacy;
-				$main_activity->save();
-			}
-		}
-	}
+	// save all media uploaded
+	bp_media_add_handler();
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -687,8 +523,17 @@ function bp_nouveau_ajax_media_album_delete() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! bp_album_user_can_delete( $_POST['album_id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this album.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
 	// delete album
-	$album_id = bp_album_delete( $_POST['album_id'] );
+	$album_id = bp_album_delete( array( 'id' => $_POST['album_id'] ) );
 
 	if ( ! $album_id ) {
 		wp_send_json_error( $response );
@@ -818,7 +663,20 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = 'all';
+	$querystring['scope'] = array();
+
+	if ( bp_is_active( 'friends' ) ) {
+		$querystring['scope'][] = 'friends';
+	}
+
+	if ( bp_is_active( 'groups' ) ) {
+		$querystring['scope'][] = 'groups';
+	}
+
+	if ( is_user_logged_in() ) {
+		$querystring['scope'][] = 'personal';
+	}
+
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = 0;
@@ -838,6 +696,14 @@ function bp_nouveau_object_template_results_media_personal_scope( $querystring )
 	$querystring['page'] = 1;
 	$querystring['per_page'] = '1';
 	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+
+	$privacy  = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+		$privacy[] = 'onlyme';
+	}
+
+	$querystring['privacy'] = $privacy;
 	$querystring['count_total'] = true;
 	return http_build_query( $querystring );
 }

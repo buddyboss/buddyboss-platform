@@ -28,11 +28,15 @@ class BP_Core_Members_Widget extends WP_Widget {
 		$description = __( 'A dynamic list of recently active, popular, and newest members', 'buddyboss' );
 
 		// Call WP_Widget constructor.
-		parent::__construct( false, $name, array(
-			'description'                 => $description,
-			'classname'                   => 'widget_bp_core_members_widget buddypress widget',
-			'customize_selective_refresh' => true,
-		) );
+		parent::__construct(
+			false,
+			$name,
+			array(
+				'description'                 => $description,
+				'classname'                   => 'widget_bp_core_members_widget buddypress widget',
+				'customize_selective_refresh' => true,
+			)
+		);
 
 		if ( is_customize_preview() || is_active_widget( false, false, $this->id_base ) ) {
 			add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) );
@@ -97,11 +101,12 @@ class BP_Core_Members_Widget extends WP_Widget {
 			'max'             => $settings['max_members'],
 			'populate_extras' => true,
 			'search_terms'    => false,
+			'exclude'         => ( function_exists( 'bp_get_users_of_removed_member_types' ) && ! empty( bp_get_users_of_removed_member_types() ) ) ? bp_get_users_of_removed_member_types() : '',
 		);
-        
-        if ( empty($members_args['max']) ) {
-            $members_args['max'] = 5;
-        }
+
+		if ( empty( $members_args['max'] ) ) {
+			$members_args['max'] = 5;
+		}
 
 		// Back up the global.
 		$old_members_template = $members_template;
@@ -111,13 +116,25 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 
 			<div class="item-options" id="members-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-members" <?php if ( 'newest' === $settings['member_default'] ) : ?>class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-members" 
+																 <?php
+																	if ( 'newest' === $settings['member_default'] ) :
+																		?>
+					class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members" <?php if ( 'active' === $settings['member_default'] ) : ?>class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members" 
+																 <?php
+																	if ( 'active' === $settings['member_default'] ) :
+																		?>
+					class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 					<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-					<a href="<?php bp_members_directory_permalink(); ?>" id="popular-members" <?php if ( 'popular' === $settings['member_default'] ) : ?>class="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
+					<a href="<?php bp_members_directory_permalink(); ?>" id="popular-members" 
+																	 <?php
+																		if ( 'popular' === $settings['member_default'] ) :
+																			?>
+						class="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
 
 				<?php endif; ?>
 
@@ -125,16 +142,20 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 			<ul id="members-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 
-				<?php while ( bp_members() ) : bp_the_member(); ?>
+				<?php
+				while ( bp_members() ) :
+					bp_the_member();
+					?>
 
 					<li class="vcard">
 						<div class="item-avatar">
-							<a href="<?php bp_member_permalink() ?>">
+							<a href="<?php bp_member_permalink(); ?>">
 								<?php bp_member_avatar(); ?>
 								<?php
 								$current_time = current_time( 'mysql', 1 );
-								$diff =  strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
-								if ( $diff < 300 ) { // 5 minutes  =  5 * 60 ?>
+								$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
+								if ( $diff < 300 ) { // 5 minutes  =  5 * 60
+									?>
 									<span class="member-status online"></span>
 								<?php } ?>
 							</a>
@@ -161,10 +182,10 @@ class BP_Core_Members_Widget extends WP_Widget {
 			<?php wp_nonce_field( 'bp_core_widget_members', '_wpnonce-members', false ); ?>
 
 			<input type="hidden" name="members_widget_max" id="members_widget_max" value="<?php echo esc_attr( $settings['max_members'] ); ?>" />
-            
-            <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 
-		<?php else: ?>
+			<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+
+		<?php else : ?>
 
 			<div class="widget-error">
 				<?php esc_html_e( 'No one has signed up yet!', 'buddyboss' ); ?>
@@ -172,7 +193,8 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 		<?php endif; ?>
 
-		<?php echo $args['after_widget'];
+		<?php
+		echo $args['after_widget'];
 
 		// Restore the global.
 		$members_template = $old_members_template;
@@ -193,7 +215,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 		$instance['title']          = strip_tags( $new_instance['title'] );
 		$instance['max_members']    = strip_tags( $new_instance['max_members'] );
 		$instance['member_default'] = strip_tags( $new_instance['member_default'] );
-		$instance['link_title']	    = ( $new_instance['link_title'] ) ? (bool) $new_instance['link_title'] : false;
+		$instance['link_title']     = ( $new_instance['link_title'] ) ? (bool) $new_instance['link_title'] : false;
 
 		return $instance;
 	}
@@ -213,7 +235,8 @@ class BP_Core_Members_Widget extends WP_Widget {
 		$title          = strip_tags( $settings['title'] );
 		$max_members    = strip_tags( $settings['max_members'] );
 		$member_default = strip_tags( $settings['member_default'] );
-		$link_title     = (bool) $settings['link_title']; ?>
+		$link_title     = (bool) $settings['link_title'];
+		?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
@@ -223,8 +246,8 @@ class BP_Core_Members_Widget extends WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'link_title' ) ?>">
-				<input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ) ?>" id="<?php echo $this->get_field_id( 'link_title' ) ?>" value="1" <?php checked( $link_title ) ?> />
+			<label for="<?php echo $this->get_field_id( 'link_title' ); ?>">
+				<input type="checkbox" name="<?php echo $this->get_field_name( 'link_title' ); ?>" id="<?php echo $this->get_field_id( 'link_title' ); ?>" value="1" <?php checked( $link_title ); ?> />
 				<?php esc_html_e( 'Link widget title to Members directory', 'buddyboss' ); ?>
 			</label>
 		</p>
@@ -237,15 +260,27 @@ class BP_Core_Members_Widget extends WP_Widget {
 		</p>
 
 		<p>
-			<label for="<?php echo $this->get_field_id( 'member_default' ) ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
-			<select name="<?php echo $this->get_field_name( 'member_default' ) ?>" id="<?php echo $this->get_field_id( 'member_default' ) ?>">
-				<option value="newest"  <?php if ( 'newest'  === $member_default ) : ?>selected="selected"<?php endif; ?>><?php esc_html_e( 'Newest',  'buddyboss' ); ?></option>
-				<option value="active"  <?php if ( 'active'  === $member_default ) : ?>selected="selected"<?php endif; ?>><?php esc_html_e( 'Active',  'buddyboss' ); ?></option>
-				<option value="popular" <?php if ( 'popular' === $member_default ) : ?>selected="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></option>
+			<label for="<?php echo $this->get_field_id( 'member_default' ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
+			<select name="<?php echo $this->get_field_name( 'member_default' ); ?>" id="<?php echo $this->get_field_id( 'member_default' ); ?>">
+				<option value="newest"  
+				<?php
+				if ( 'newest' === $member_default ) :
+					?>
+					selected="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
+				<option value="active"  
+				<?php
+				if ( 'active' === $member_default ) :
+					?>
+					selected="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></option>
+				<option value="popular" 
+				<?php
+				if ( 'popular' === $member_default ) :
+					?>
+					selected="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></option>
 			</select>
 		</p>
 
-	<?php
+		<?php
 	}
 
 	/**
@@ -257,11 +292,15 @@ class BP_Core_Members_Widget extends WP_Widget {
 	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
-		return bp_parse_args( $instance, array(
-			'title' 	     => __( 'Members', 'buddyboss' ),
-			'max_members' 	 => 5,
-			'member_default' => 'active',
-			'link_title' 	 => false
-		), 'members_widget_settings' );
+		return bp_parse_args(
+			$instance,
+			array(
+				'title'          => __( 'Members', 'buddyboss' ),
+				'max_members'    => 5,
+				'member_default' => 'active',
+				'link_title'     => false,
+			),
+			'members_widget_settings'
+		);
 	}
 }

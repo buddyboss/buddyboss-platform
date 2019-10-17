@@ -13,7 +13,8 @@ use Buddyboss\LearndashIntegration\Core\Admin;
 use Buddyboss\LearndashIntegration\Core\Dependencies;
 use Buddyboss\LearndashIntegration\Core\Requirements;
 use Buddyboss\LearndashIntegration\Core\Settings;
-use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;;
+use Buddyboss\LearndashIntegration\Learndash\Core as LearndashCore;
+
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
@@ -23,27 +24,26 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class Core
-{
+class Core {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->registerAutoloader();
+	public function __construct() {
+		 $this->registerAutoloader();
 
-		$this->admin        = new Admin;
-		$this->dependencies = new Dependencies;
-		$this->requirements = new Requirements;
-		$this->buddypress   = new BuddypressCore;
-		$this->learndash    = new LearndashCore;
-		$this->settings     = new Settings;
+		$this->admin        = new Admin();
+		$this->dependencies = new Dependencies();
+		$this->requirements = new Requirements();
+		$this->buddypress   = new BuddypressCore();
+		$this->learndash    = new LearndashCore();
+		$this->settings     = new Settings();
 
-		$this->pluginName = __('BuddyBoss LearnDash', 'buddyboss');
+		$this->pluginName = __( 'BuddyBoss LearnDash', 'buddyboss' );
 
-		add_action('bp_ld_sync/requirements_checked', [$this, 'init']);
+		add_action( 'bp_ld_sync/requirements_checked', array( $this, 'init' ) );
 	}
 
 	/**
@@ -51,53 +51,49 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function init()
-	{
-		do_action('bp_ld_sync/init');
+	public function init() {
+		do_action( 'bp_ld_sync/init' );
 	}
 
-    /**
+	/**
 	 * Get absolute path from the integration folder
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function path($path = '')
-    {
-        return bp_learndash_path(trim($path, '/\\'));
-    }
+	public function path( $path = '' ) {
+		return bp_learndash_path( trim( $path, '/\\' ) );
+	}
 
-    /**
+	/**
 	 * Get url path from the integration folder
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function url($uri = '')
-    {
-        return bp_learndash_url(trim($uri, '/\\'));
-    }
+	public function url( $uri = '' ) {
+		return bp_learndash_url( trim( $uri, '/\\' ) );
+	}
 
-    /**
+	/**
 	 * Load template from the integration folder
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function template($path = '')
-    {
-        return bp_learndash_path('templates/' . trim($path, '/\\'));
-    }
+	public function template( $path = '' ) {
+		return bp_learndash_path( 'templates/' . trim( $path, '/\\' ) );
+	}
 
-    /**
+	/**
 	 * Get the request from $_POST, $_GET, or $_REQUEST with default fallback
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function getRequest($key = '*', $default = null, $type = null) {
-		if ($type) {
-			return $key == '*'? $$type : (isset($$type[$key])? $$type[$key] : $default);
+	public function getRequest( $key = '*', $default = null, $type = null ) {
+		if ( $type ) {
+			return $key == '*' ? $$type : ( isset( $$type[ $key ] ) ? $$type[ $key ] : $default );
 		}
 
-		$merged = array_merge($_GET, $_POST, $_REQUEST);
-		return $key == '*'? $merged : (isset($merged[$key])? $merged[$key] : $default);
+		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+		return $key == '*' ? $merged : ( isset( $merged[ $key ] ) ? $merged[ $key ] : $default );
 	}
 
 	/**
@@ -106,12 +102,12 @@ class Core
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function isRequestExists( $key, $default = null, $type = null ) {
-		if ($type) {
-			return isset($$type[$key]);
+		if ( $type ) {
+			return isset( $$type[ $key ] );
 		}
 
-		$merged = array_merge($_GET, $_POST, $_REQUEST);
-		return isset($merged[$key]);
+		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+		return isset( $merged[ $key ] );
 	}
 
 	/**
@@ -119,26 +115,27 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function registerAutoloader()
-	{
-		spl_autoload_register(function($class) {
-			$psr4 = [
-				'Buddyboss\LearndashIntegration\Core'       => 'core',
-				'Buddyboss\LearndashIntegration\Library'    => 'library',
-				'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
-				'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
-				'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
-				'Buddyboss\LearndashIntegration\Learndash'  => 'learndash',
-			];
+	public function registerAutoloader() {
+		spl_autoload_register(
+			function( $class ) {
+				$psr4 = array(
+					'Buddyboss\LearndashIntegration\Core' => 'core',
+					'Buddyboss\LearndashIntegration\Library' => 'library',
+					'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
+					'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
+					'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
+					'Buddyboss\LearndashIntegration\Learndash' => 'learndash',
+				);
 
-			$segments  = explode('\\', $class);
-			$className = array_pop($segments);
-			$namespace = implode('\\', $segments);
+				$segments  = explode( '\\', $class );
+				$className = array_pop( $segments );
+				$namespace = implode( '\\', $segments );
 
-		    if (array_key_exists($namespace, $psr4)) {
-		    	require_once $this->path("/{$psr4[$namespace]}/{$className}.php");
-		    }
-		});
+				if ( array_key_exists( $namespace, $psr4 ) ) {
+					require_once $this->path( "/{$psr4[$namespace]}/{$className}.php" );
+				}
+			}
+		);
 	}
 
 	public function bp_get_course_members( $course_id ) {
@@ -172,37 +169,37 @@ class Core
 		return $result;
 	}
 
-	public function bp_get_courses_progress ( $user_id, $sort_order = 'desc' ) {
+	public function bp_get_courses_progress( $user_id, $sort_order = 'desc' ) {
 		$course_completion_percentage = array();
 
-		if ( ! $course_completion_percentage = wp_cache_get ( $user_id, 'ld_courses_progress' ) ) {
+		if ( ! $course_completion_percentage = wp_cache_get( $user_id, 'ld_courses_progress' ) ) {
 			$course_progress = get_user_meta( $user_id, '_sfwd-course_progress', true );
 
 			if ( ! empty( $course_progress ) ) {
 
 				foreach ( $course_progress as $course_id => $coursep ) {
 					// We take default progress value as 1 % rather than 0%
-					$course_completion_percentage[ $course_id ] = 1;//
-
+					$course_completion_percentage[ $course_id ] = 1;
 					if ( $coursep['total'] == 0 ) {
 						continue;
 					}
 
-					$course_steps_count = learndash_get_course_steps_count( $course_id );
+					$course_steps_count     = learndash_get_course_steps_count( $course_id );
 					$course_steps_completed = learndash_course_get_completed_steps( $user_id, $course_id, $coursep );
 
 					$completed_on = get_user_meta( $user_id, 'course_completed_' . $course_id, true );
-					if ( !empty( $completed_on ) ) {
+					if ( ! empty( $completed_on ) ) {
 
 						$coursep['completed'] = $course_steps_count;
-						$coursep['total'] = $course_steps_count;
+						$coursep['total']     = $course_steps_count;
 
 					} else {
-						$coursep['total'] = $course_steps_count;
+						$coursep['total']     = $course_steps_count;
 						$coursep['completed'] = $course_steps_completed;
 
-						if ( $coursep['completed'] > $coursep['total'] )
+						if ( $coursep['completed'] > $coursep['total'] ) {
 							$coursep['completed'] = $coursep['total'];
+						}
 					}
 
 					// cannot divide by 0
@@ -214,15 +211,15 @@ class Core
 				}
 			}
 
-			//Avoid running the queries multiple times if user's course progress is empty
-			$course_completion_percentage = !empty( $course_completion_percentage ) ? $course_completion_percentage : 'empty';
+			// Avoid running the queries multiple times if user's course progress is empty
+			$course_completion_percentage = ! empty( $course_completion_percentage ) ? $course_completion_percentage : 'empty';
 
 			wp_cache_set( $user_id, $course_completion_percentage, 'ld_courses_progress' );
 		}
 
 		$course_completion_percentage = 'empty' !== $course_completion_percentage ? $course_completion_percentage : array();
 
-		if ( !empty( $course_completion_percentage ) ) {
+		if ( ! empty( $course_completion_percentage ) ) {
 			// Sort.
 			if ( 'asc' == $sort_order ) {
 				asort( $course_completion_percentage );
@@ -300,11 +297,11 @@ class Core
 				$step_course_id = $course_id;
 				$course         = get_post( $step_course_id );
 
-				$lession_list       = learndash_get_lesson_list( $course_id );
-				$url = bp_ld_sync()->bp_ld_custom_continue_url_arr( $course_id, $lession_list );
+				$lession_list = learndash_get_lesson_list( $course_id );
+				$url          = bp_ld_sync()->bp_ld_custom_continue_url_arr( $course_id, $lession_list );
 
 				if ( isset( $course ) && 'sfwd-courses' === $course->post_type ) {
-					//$last_know_step = get_user_meta( $user->ID, 'learndash_last_known_course_' . $step_course_id, true );
+					// $last_know_step = get_user_meta( $user->ID, 'learndash_last_known_course_' . $step_course_id, true );
 					$last_know_step = '';
 
 					// User has not hit a LD module yet
@@ -317,7 +314,7 @@ class Core
 						}
 					}
 
-					//$step_course_id = 0;
+					// $step_course_id = 0;
 					// Sanity Check
 					if ( absint( $last_know_step ) ) {
 						$step_id = $last_know_step;
@@ -353,11 +350,11 @@ class Core
 				}
 			}
 		} else {
-			$course_price_type   = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
+			$course_price_type = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
 			if ( $course_price_type == 'open' ) {
 
-				$lession_list       = learndash_get_lesson_list( $course_id );
-				$url = bp_ld_sync()->bp_ld_custom_continue_url_arr( $course_id, $lession_list );
+				$lession_list = learndash_get_lesson_list( $course_id );
+				$url          = bp_ld_sync()->bp_ld_custom_continue_url_arr( $course_id, $lession_list );
 				return $url;
 			}
 		}
@@ -367,21 +364,22 @@ class Core
 
 	/**
 	 * Get all the URLs of current course ( lesson, topic, quiz )
+	 *
 	 * @param $course_id
 	 * @param $lession_list
-	 * @param string $course_quizzes_list
+	 * @param string       $course_quizzes_list
 	 *
 	 * @return array | string
 	 */
 	public function bp_ld_custom_continue_url_arr( $course_id, $lession_list, $course_quizzes_list = '' ) {
 		global $post;
 
-		$course_price_type   = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
+		$course_price_type = learndash_get_course_meta_setting( $course_id, 'course_price_type' );
 		if ( $course_price_type == 'closed' ) {
-			$courses_progress    = bp_ld_sync()->bp_get_courses_progress( get_current_user_id() );
-			$user_courses = learndash_user_get_enrolled_courses( get_current_user_id() );
-			$course_progress     = isset( $courses_progress[ $course_id ] ) ? $courses_progress[ $course_id ] : null;
-			if ( $course_progress <= 0 && ! in_array( $course_id, $user_courses) ) {
+			$courses_progress = bp_ld_sync()->bp_get_courses_progress( get_current_user_id() );
+			$user_courses     = learndash_user_get_enrolled_courses( get_current_user_id() );
+			$course_progress  = isset( $courses_progress[ $course_id ] ) ? $courses_progress[ $course_id ] : null;
+			if ( $course_progress <= 0 && ! in_array( $course_id, $user_courses ) ) {
 				return get_the_permalink( $course_id );
 			}
 		}
@@ -389,7 +387,7 @@ class Core
 		$navigation_urls = array();
 		if ( ! empty( $lession_list ) ) :
 
-			foreach( $lession_list as $lesson ) {
+			foreach ( $lession_list as $lesson ) {
 
 				$lesson_topics = learndash_get_topic_list( $lesson->ID );
 
@@ -401,8 +399,8 @@ class Core
 					'complete' => $completed ? 'yes' : 'no',
 				);
 
-				if( ! empty( $lesson_topics ) ) :
-					foreach( $lesson_topics as $lesson_topic ) {
+				if ( ! empty( $lesson_topics ) ) :
+					foreach ( $lesson_topics as $lesson_topic ) {
 
 						$completed = ! empty( $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ] ) && 1 === $course_progress[ $course_id ]['topics'][ $lesson->ID ][ $lesson_topic->ID ];
 
@@ -413,11 +411,11 @@ class Core
 
 						$topic_quizzes = learndash_get_lesson_quiz_list( $lesson_topic->ID );
 
-						if( ! empty( $topic_quizzes ) ) :
-							foreach( $topic_quizzes as $topic_quiz ) {
+						if ( ! empty( $topic_quizzes ) ) :
+							foreach ( $topic_quizzes as $topic_quiz ) {
 								$navigation_urls[] = array(
 									'url'      => get_permalink( $topic_quiz['post']->ID ),
-									'complete' => learndash_is_quiz_complete( get_current_user_id(), $topic_quiz['post']->ID ) ? 'yes' : 'no'
+									'complete' => learndash_is_quiz_complete( get_current_user_id(), $topic_quiz['post']->ID ) ? 'yes' : 'no',
 								);
 							}
 						endif;
@@ -427,11 +425,11 @@ class Core
 
 				$lesson_quizzes = learndash_get_lesson_quiz_list( $lesson->ID );
 
-				if( ! empty( $lesson_quizzes ) ) :
-					foreach( $lesson_quizzes as $lesson_quiz ) {
+				if ( ! empty( $lesson_quizzes ) ) :
+					foreach ( $lesson_quizzes as $lesson_quiz ) {
 						$navigation_urls[] = array(
 							'url'      => get_permalink( $lesson_quiz['post']->ID ),
-							'complete' => learndash_is_quiz_complete( get_current_user_id(), $lesson_quiz['post']->ID) ? 'yes' : 'no'
+							'complete' => learndash_is_quiz_complete( get_current_user_id(), $lesson_quiz['post']->ID ) ? 'yes' : 'no',
 						);
 					}
 				endif;
@@ -441,17 +439,17 @@ class Core
 
 		$course_quizzes = learndash_get_course_quiz_list( $course_id );
 		if ( ! empty( $course_quizzes ) ) :
-			foreach( $course_quizzes as $course_quiz ) {
+			foreach ( $course_quizzes as $course_quiz ) {
 				$navigation_urls[] = array(
 					'url'      => get_permalink( $course_quiz['post']->ID ),
-					'complete' => learndash_is_quiz_complete( get_current_user_id(), $course_quiz['post']->ID) ? 'yes' : 'no'
+					'complete' => learndash_is_quiz_complete( get_current_user_id(), $course_quiz['post']->ID ) ? 'yes' : 'no',
 				);
 			}
 		endif;
 
-		$key = array_search('no', array_column( $navigation_urls, 'complete') );
-		if ( '' !== $key && isset( $navigation_urls[$key] )) {
-			return $navigation_urls[$key]['url'];
+		$key = array_search( 'no', array_column( $navigation_urls, 'complete' ) );
+		if ( '' !== $key && isset( $navigation_urls[ $key ] ) ) {
+			return $navigation_urls[ $key ]['url'];
 		}
 		return '';
 	}
@@ -544,7 +542,7 @@ class Core
 				'LTL' => '&#76;&#116;',
 				'LVL' => '&#76;&#115;',
 				'LYD' => '&#1604;.&#1583;', // ?
-				'MAD' => '&#1583;.&#1605;.', //?
+				'MAD' => '&#1583;.&#1605;.', // ?
 				'MDL' => '&#76;',
 				'MGA' => '&#65;&#114;', // ?
 				'MKD' => '&#1076;&#1077;&#1085;',
@@ -630,4 +628,4 @@ class Core
 
 
 global $bp_ld_sync;
-$bp_ld_sync = new Core;
+$bp_ld_sync = new Core();
