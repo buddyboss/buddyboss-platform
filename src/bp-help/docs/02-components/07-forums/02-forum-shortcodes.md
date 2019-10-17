@@ -1,6 +1,6 @@
 #Forum Shortcodes
 
-Site admins can use shortcodes to display various types of forum content within WordPress. To use the shortcodes below, make sure the Forums component is enabled, and then copy and paste the shortcode onto any WordPress page, making sure to add an opening `[` and closing `]` bracket to each shortcode.
+Site admins can use shortcodes to display various types of forum content within WordPress. To use the shortcodes below, make sure the Forums component is enabled, and then copy and paste the shortcode onto any WordPress page, making sure to include the opening `[` and closing `]` brackets with each shortcode.
 
 To get the required post ID for `$forum_id`, `$topic_id`, `$tag_id`, and `$reply_id` as required by certain shortcodes, you will need to log into the WordPress admin, and go into BuddyBoss > Forums and then find the post content you are looking to reference. Hover over the post and then click the 'Edit' link. Once the edit page loads you can copy the ID from the URL of the post, eg. `/wp-admin/post.php?post=47` where **47** is the ID.
 
