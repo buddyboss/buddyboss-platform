@@ -1226,7 +1226,7 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 	padding: 2px 5px;
 }
 
-.bb-select-dropdown li.select2-selection__choice {
+.bb-select-container li.select2-selection__choice {
 	background-color: #4D5C6D !important;
 	border-color: #4D5C6D !important;
 	font-size: 14px;
@@ -1245,13 +1245,13 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 	margin: 0;
 }
 
-.bb-select-dropdown span.select2-selection__choice__remove {
+.bb-select-container span.select2-selection__choice__remove {
 	font-size: 0;
 	line-height: 1;
 	margin: 0 0 0 8px;
 }
 
-.bb-select-dropdown span.select2-selection__choice__remove:before {
+.bb-select-container span.select2-selection__choice__remove:before {
 	content: '\E828';
 	font-family: "bb-icons";
 	font-size: 13px;
@@ -1273,4 +1273,43 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 	text-indent: 0px;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
+}
+
+.bbp-forum-form #bbp_editor_forum_content {
+	min-height: 120px;
+}
+
+.bbp-forum-form label {
+	color: inherit;
+        display: inline-block;
+	font-size: 15px;
+	letter-spacing: -0.24px;
+	margin-bottom: 5px;
+}
+
+.bp-forum-settings {
+	display: flex;
+	flex-flow: row wrap;
+	margin: 0 -10px;
+}
+
+.bp-forum-settings > p {
+	flex: 1;
+	padding: 0 10px;
+
+        @media( max-width: 900px ) {
+		flex: 0 0 50%;
+        }
+
+        @media( max-width: 500px ) {
+		flex: 0 0 100%;
+        }
+}
+
+h2.bbp-form-title.entry-title {
+	margin-bottom: 25px;
+}
+
+.bbp-forum-title-label span {
+	opacity: 0.6;
 }
