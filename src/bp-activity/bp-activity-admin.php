@@ -18,7 +18,7 @@ if ( ! class_exists( 'WP_List_Table' ) ) {
 }
 
 // Per_page screen option. Has to be hooked in extremely early.
-if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-activity' == $_REQUEST['page'] ) {
+if ( is_admin() && ! empty( $_REQUEST['page'] ) && 'bp-activity' === $_REQUEST['page'] ) {
 	add_filter( 'set-screen-option', 'bp_activity_admin_screen_options', 10, 3 );
 }
 
@@ -153,7 +153,7 @@ add_action( 'wp_ajax_bp-activity-admin-reply', 'bp_activity_admin_reply' );
  * @return string|int Option value. False to abandon update.
  */
 function bp_activity_admin_screen_options( $value, $option, $new_value ) {
-	if ( 'toplevel_page_bp_activity_per_page' != $option && 'toplevel_page_bp_activity_network_per_page' != $option ) {
+	if ( 'toplevel_page_bp_activity_per_page' !== $option && 'toplevel_page_bp_activity_network_per_page' !== $option ) {
 		return $value;
 	}
 
@@ -225,7 +225,7 @@ function bp_activity_admin_load() {
 	do_action( 'bp_activity_admin_load', $doaction );
 
 	// Edit screen.
-	if ( 'edit' == $doaction && ! empty( $_GET['aid'] ) ) {
+	if ( 'edit' === $doaction && ! empty( $_GET['aid'] ) ) {
 		// Columns screen option.
 		add_screen_option(
 			'layout_columns',
@@ -371,7 +371,7 @@ function bp_activity_admin_load() {
 		$activity_ids = apply_filters( 'bp_activity_admin_action_activity_ids', $activity_ids );
 
 		// Is this a bulk request?
-		if ( 'bulk_' == substr( $doaction, 0, 5 ) && ! empty( $_REQUEST['aid'] ) ) {
+		if ( 'bulk_' === substr( $doaction, 0, 5 ) && ! empty( $_REQUEST['aid'] ) ) {
 			// Check this is a valid form submission.
 			check_admin_referer( 'bulk-activities' );
 
@@ -386,7 +386,9 @@ function bp_activity_admin_load() {
 		}
 
 		// Initialise counters for how many of each type of item we perform an action on.
-		$deleted = $spammed = $unspammed = 0;
+		$deleted   = 0;
+		$spammed   = 0;
+		$unspammed = 0;
 
 		// Store any errors that occurs when updating the database items.
 		$errors = array();
@@ -405,7 +407,7 @@ function bp_activity_admin_load() {
 
 			switch ( $doaction ) {
 				case 'delete':
-					if ( 'activity_comment' == $activity->type ) {
+					if ( 'activity_comment' === $activity->type ) {
 						bp_activity_delete_comment( $activity->item_id, $activity->id );
 					} else {
 						bp_activity_delete( array( 'id' => $activity->id ) );
@@ -495,7 +497,7 @@ function bp_activity_admin_load() {
 		exit;
 
 		// Save the edit.
-	} elseif ( $doaction && 'save' == $doaction ) {
+	} elseif ( $doaction && 'save' === $doaction ) {
 		// Build redirection URL.
 		$redirect_to = remove_query_arg( array( 'action', 'aid', 'deleted', 'error', 'spammed', 'unspammed' ), $_SERVER['REQUEST_URI'] );
 
@@ -519,10 +521,11 @@ function bp_activity_admin_load() {
 		$error = 0;
 
 		// Activity spam status.
-		$prev_spam_status = $new_spam_status = false;
+		$prev_spam_status = false;
+		$new_spam_status  = false;
 		if ( ! empty( $_POST['activity_status'] ) ) {
 			$prev_spam_status = $activity->is_spam;
-			$new_spam_status  = ( 'spam' == $_POST['activity_status'] ) ? true : false;
+			$new_spam_status  = ( 'spam' === $_POST['activity_status'] ) ? true : false;
 		}
 
 		// Activity action.
@@ -588,7 +591,7 @@ function bp_activity_admin_load() {
 		}
 
 		// Has the spam status has changed?
-		if ( $new_spam_status != $prev_spam_status ) {
+		if ( $new_spam_status !== $prev_spam_status ) {
 			if ( $new_spam_status ) {
 				bp_activity_mark_as_spam( $activity );
 			} else {
@@ -650,12 +653,11 @@ function bp_activity_admin() {
 	$doaction = ! empty( $_REQUEST['action'] ) ? $_REQUEST['action'] : '';
 
 	// Display the single activity edit screen.
-	if ( 'edit' == $doaction && ! empty( $_GET['aid'] ) ) {
+	if ( 'edit' === $doaction && ! empty( $_GET['aid'] ) ) {
 		bp_activity_admin_edit();
-	}
 
-	// Otherwise, display the Activity index screen.
-	else {
+		// Otherwise, display the Activity index screen.
+	} else {
 		bp_activity_admin_index();
 	}
 }
@@ -708,6 +710,7 @@ function bp_activity_admin_edit() {
 	do_action_ref_array( 'bp_activity_admin_edit', array( &$activity ) ); ?>
 
 	<div class="wrap">
+		<?php /* translators: %s: Activity ID */ ?>
 		<h1><?php printf( __( 'Editing Activity (ID #%s)', 'buddyboss' ), number_format_i18n( (int) $_REQUEST['aid'] ) ); ?></h1>
 
 		<?php if ( ! empty( $activity ) ) : ?>
@@ -715,7 +718,7 @@ function bp_activity_admin_edit() {
 			<form action="<?php echo esc_url( $form_url ); ?>" id="bp-activities-edit-form" method="post">
 				<div id="poststuff">
 
-					<div id="post-body" class="metabox-holder columns-<?php echo 1 == get_current_screen()->get_columns() ? '1' : '2'; ?>">
+					<div id="post-body" class="metabox-holder columns-<?php echo 1 === get_current_screen()->get_columns() ? '1' : '2'; ?>">
 						<div id="post-body-content">
 							<div id="postdiv">
 								<div id="bp_activity_action" class="postbox">
@@ -836,6 +839,7 @@ function bp_activity_admin_edit_metabox_status( $item ) {
 					$datef = __( 'M j, Y @ G:i', 'buddyboss' );
 					$date  = date_i18n( $datef, strtotime( $item->date_recorded ) );
 					?>
+					<?php /* translators: %s: Date of submission */ ?>
 					<span id="timestamp"><?php printf( __( 'Submitted on: %s', 'buddyboss' ), '<strong>' . $date . '</strong>' ); ?></span>&nbsp;<a href="#edit_timestamp" class="edit-timestamp hide-if-no-js" tabindex='4'><?php _e( 'Edit', 'buddyboss' ); ?></a>
 
 					<div id='timestampdiv' class='hide-if-js'>
@@ -966,6 +970,7 @@ function bp_activity_admin_edit_metabox_type( $item ) {
 	 * of the list.
 	 */
 	if ( ! isset( $actions[ $selected ] ) ) {
+		/* translators: %s: Selected activity action or type */
 		_doing_it_wrong( __FUNCTION__, sprintf( __( 'This activity item has a type (%s) that is not registered using bp_activity_set_action(), so no label is available.', 'buddyboss' ), $selected ), '2.0.0' );
 		$actions[ $selected ] = $selected;
 	}
@@ -1043,11 +1048,13 @@ function bp_activity_admin_index() {
 		$errors = array_values( $errors );
 
 		if ( $deleted > 0 ) {
+			/* translators: %s: Number of activity items deleted */
 			$messages[] = sprintf( _n( '%s activity item has been permanently deleted.', '%s activity items have been permanently deleted.', $deleted, 'buddyboss' ), number_format_i18n( $deleted ) );
 		}
 
 		if ( ! empty( $errors ) ) {
-			if ( 1 == count( $errors ) ) {
+			if ( 1 === count( $errors ) ) {
+				/* translators: %s: Activity ID */
 				$messages[] = sprintf( __( 'An error occurred when trying to update activity ID #%s.', 'buddyboss' ), number_format_i18n( $errors[0] ) );
 
 			} else {
@@ -1066,10 +1073,12 @@ function bp_activity_admin_index() {
 		}
 
 		if ( $spammed > 0 ) {
+			/* translators: %s: Number of activity items spammed */
 			$messages[] = sprintf( _n( '%s activity item has been successfully spammed.', '%s activity items have been successfully spammed.', $spammed, 'buddyboss' ), number_format_i18n( $spammed ) );
 		}
 
 		if ( $unspammed > 0 ) {
+			/* translators: %s: Number of activity items unspammed */
 			$messages[] = sprintf( _n( '%s activity item has been successfully unspammed.', '%s activity items have been successfully unspammed.', $unspammed, 'buddyboss' ), number_format_i18n( $unspammed ) );
 		}
 
@@ -1094,12 +1103,14 @@ function bp_activity_admin_index() {
 	<div class="wrap">
 		<h1>
 			<?php if ( ! empty( $_REQUEST['aid'] ) ) : ?>
+				<?php /* translators: %s: Activity ID */ ?>
 				<?php printf( __( 'Activity related to ID #%s', 'buddyboss' ), number_format_i18n( (int) $_REQUEST['aid'] ) ); ?>
 			<?php else : ?>
 				<?php _e( 'Activity', 'buddyboss' ); ?>
 			<?php endif; ?>
 
 			<?php if ( ! empty( $_REQUEST['s'] ) ) : ?>
+				<?php /* translators: %s: Search term */ ?>
 				<span class="subtitle"><?php printf( __( 'Search results for "%s"', 'buddyboss' ), wp_html_excerpt( esc_html( stripslashes( $_REQUEST['s'] ) ), 50 ) ); ?></span>
 			<?php endif; ?>
 		</h1>
