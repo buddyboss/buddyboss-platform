@@ -44,6 +44,8 @@ window.bp = window.bp || {};
 			var page = 1;
 			var selected  = [];
 
+
+
 			// Activate bp_mentions
 			this.addSelect2( $group_messages_select );
 			this.activateTinyMce();
@@ -53,6 +55,14 @@ window.bp = window.bp || {};
 			var feedbackSelectorLeft 	 		 = $( '#group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback' );
 			var feedbackParagraphTagSelectorLeft = $( '#group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback .bp-feedback p' );
 
+			// Remove element into the Arrdata array.
+			$group_messages_select.on('select2:unselect', function(e) {
+				var data = e.params.data;
+				$( '#group-messages-send-to-input option[value="' + data.id + '"]' ).each(function() {
+					$(this).remove();
+				});
+				$( '#item-body #group-messages-container .bb-groups-messages-left #members-list li.' + data.id ).removeClass( 'selected' );
+			});
 
 			$('.group-messages-select-members-dropdown').on('change', function () {
 
