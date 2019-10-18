@@ -42,9 +42,6 @@ window.bp = window.bp || {};
 
 			var $group_messages_select = $( 'body' ).find( '#group-messages-send-to-input' );
 			var page = 1;
-			var selected  = [];
-
-
 
 			// Activate bp_mentions
 			this.addSelect2( $group_messages_select );
@@ -55,7 +52,6 @@ window.bp = window.bp || {};
 			var feedbackSelectorLeft 	 		 = $( '#group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback' );
 			var feedbackParagraphTagSelectorLeft = $( '#group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback .bp-feedback p' );
 
-			// Remove element into the Arrdata array.
 			$group_messages_select.on('select2:unselect', function(e) {
 				var data = e.params.data;
 				$( '#group-messages-send-to-input option[value="' + data.id + '"]' ).each(function() {
@@ -142,8 +138,8 @@ window.bp = window.bp || {};
 					$( this ).closest( 'li' ).removeClass( 'selected' );
 
 					var newArray = [];
-					let newData = $.grep( $group_messages_select.select2('data'), function (value) {
-						return value['id'] != userId;
+					var newData = $.grep( $group_messages_select.select2('data'), function (value) {
+						return value['id'] != userId; // jshint ignore:line
 					});
 
 					newData.forEach(function(data) {
@@ -158,7 +154,7 @@ window.bp = window.bp || {};
 
 				} else {
 					$( this ).closest( 'li' ).addClass( 'selected' );
-					if ( ! $group_messages_select.find( "option[value='" + data.id + "']" ).length ) {
+					if ( ! $group_messages_select.find( "option[value='" + data.id + "']" ).length ) { // jshint ignore:line
 						var newOption = new Option(data.text, data.id, true, true);
 						$group_messages_select.append(newOption).trigger('change');
 					}
@@ -331,7 +327,7 @@ window.bp = window.bp || {};
 		activateTinyMce: function() {
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-				var editor = new window.MediumEditor('#group_message_content',{
+				new window.MediumEditor('#group_message_content',{
 					placeholder: {
 						text: '',
 						hideOnClick: true
@@ -368,7 +364,7 @@ window.bp = window.bp || {};
 				}
 
 			} else if ( typeof tinymce !== 'undefined' ) {
-				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' );
+				tinymce.EditorManager.execCommand( 'mceAddEditor', true, 'message_content' ); // jshint ignore:line
 			}
 		},
 

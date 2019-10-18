@@ -11579,3 +11579,17 @@ div#bp-group-message-content {
   border-bottom-right-radius: 3px;
   border-bottom: 1px solid #E7E9EC;
 }
+
+.buddypress-wrap ul.item-list li .group-remove-invite-button span.icons:before, .buddypress-wrap ul.item-list li.selected .invite-button span.icons:before {
+  content: "\e8f7";
+  font-family: 'bb-icons';
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+  list-style: none;
+  -webkit-font-smoothing: antialiased;
+  color: #939597;
+}
