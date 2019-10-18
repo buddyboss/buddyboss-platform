@@ -13,7 +13,7 @@
 }
 
 .bb-groups-messages-left {
-	max-width: 253px;
+	max-width: 350px;
 	padding: 20px;
 	border-right: 1px solid #E7E9EC;
 }
@@ -216,4 +216,158 @@ div#bp-group-message-content {
 
 #group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback-hide {
 	display: none;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .item-list > li {
+	border-color: #ebe9e6;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .item-list > li:first-child {
+	border-top-left-radius: 3px;
+	border-top-right-radius: 3px;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .item-list > li {
+	background-color: #fff;
+	border: 1px solid #E7E9EC;
+	border-bottom: 0;
+	margin-bottom: -1px;
+	display: -webkit-box;
+	display: -ms-flexbox;
+	display: flex;
+	-ms-flex-flow: row wrap;
+	flex-flow: row wrap;
+	padding: 15px 20px;
+	position: relative;
+	-webkit-box-align: center;
+	-ms-flex-align: center;
+	align-items: center;
+	border-radius: 0;
+	width: 100%;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .list-title {
+	color: #393e41;
+	font-size: 15px;
+	margin: 0 auto;
+	width: 100%;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .action {
+	-webkit-box-flex: 1;
+	-ms-flex: 1;
+	flex: 1;
+	-webkit-box-pack: end;
+	-ms-flex-pack: end;
+	justify-content: flex-end;
+	position: static;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .action button {
+	height: auto;
+	min-height: 10px;
+	padding: 0;
+	min-width: 40px;
+	border: 0;
+	color: inherit;
+	background: transparent;
+	box-shadow: none;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .last {
+	text-align: center;
+	float: right;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .bp-group-messages-filters .button.group-message-button {
+	background-color: transparent;
+	border: 0;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left #group-group-messages-container .button.group-message-button {
+	min-height: 34px;
+	padding: 5px 16px;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .button.group-message-button {
+	min-height: 26px;
+	padding: 0;
+	background: transparent;
+	border: 0;
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .bp-group-messages-filters .button.group-message-button .dashicons-arrow-left:before {
+	content: "\e87a";
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-message-button .dashicons-arrow-left:before {
+	content: "\e87a" !important;
+}
+#item-body #group-invites-container .bp-invites-filters .button.invite-button .dashicons-arrow-left:before {
+	content: "\e87a";
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .bp-group-messages-filters .button.group-message-button .dashicons-arrow-right:before,
+#item-body #group-messages-container .bb-groups-messages-left .bp-group-messages-filters .button.group-message-button .dashicons-arrow-left:before {
+	content: "\e87b";
+	font-family: 'bb-icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	list-style: none;
+	-webkit-font-smoothing: antialiased;
+	color: #939597;
+}
+
+
+
+#item-body #group-messages-container .bb-groups-messages-left .group-message-button .dashicons-arrow-right:before,
+#item-body #group-messages-container .bb-groups-messages-left .group-message-button .dashicons-arrow-left:before {
+	content: "\e87b";
+	font-family: 'bb-icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	list-style: none;
+	-webkit-font-smoothing: antialiased;
+	color: #939597;
+}
+
+
+
+#item-body #group-messages-container .bb-groups-messages-left .dashicons-arrow-right:before {
+	content: "\f139";
+}
+
+#item-body #group-messages-container .bb-groups-messages-left  .dashicons-arrow-left:before {
+	content: "\f141";
+}
+
+#item-body #group-messages-container .bb-groups-messages-left .group-messages-members-listing .item-list > li:last-child {
+	border-bottom-left-radius: 3px;
+	border-bottom-right-radius: 3px;
+	border-bottom: 1px solid #E7E9EC;
+
+}
+
+.buddypress-wrap ul.item-list li .group-remove-invite-button span.icons:before, .buddypress-wrap ul.item-list li.selected .invite-button span.icons:before {
+	content: "\e8f7";
+	font-family: 'bb-icons';
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	font-variant: normal;
+	text-transform: none;
+	line-height: 1;
+	list-style: none;
+	-webkit-font-smoothing: antialiased;
+	color: #939597;
 }

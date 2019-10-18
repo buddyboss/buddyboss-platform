@@ -651,41 +651,103 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		wp_send_json_error( $response );
 	}
 
-	$args          = array(
-		'page'         => $_POST['page'],
-		'per_page'     => 10,
-		'group_id'     => $_POST['group'],
-	);
-	$group_members = groups_get_group_members( $args );
+	$per_page = 5;
+	$page     = (int) $_POST['page'];
+	if ( isset( $_POST['term'] ) && '' !== $_POST['term'] ) {
+		$args = array(
+			'per_page'     => 99999999999999,
+			'group_id'     => $_POST['group'],
+			'search_terms' => $_POST['term'],
+		);
+	} else {
+		$args          = array(
+			'page'         => $page,
+			'per_page'     => $per_page,
+			'group_id'     => $_POST['group'],
+		);
+	}
 
-	$result = array();
+	$group_members = groups_get_group_members( $args );
+	$html          = '';
+	$paginate      = '';
+	$result        = array();
+	$total_page    = 0;
 
 	if ( empty( $group_members['members'] ) ) {
 		wp_send_json_success( [
-			'results' => array_map( function ( $result ) {
-				return [
-					'id'   => "@{$result->ID}",
-					'text' => $result->name,
-				];
-			},
-				$result ),
+			'results'    => 'no_member',
 		] );
 	} else {
+		$total_page = (int) ceil( (int) $group_members['count'] / $per_page );
+		ob_start();
 		foreach ( $group_members['members'] as $member ) {
-			$result[] = (object) array(
-				'id'   => $member->ID,
-				'name' => bp_core_get_user_displayname( $member->ID ),
-			);
+
+			$image  = htmlspecialchars_decode( bp_core_fetch_avatar( array(
+				'item_id' => $member->ID,
+				'object'  => 'user',
+				'width'   => 40,
+				'height'  => 40,
+				'class'   => '',
+			) ) );
+
+			$name = bp_core_get_user_displayname( $member->ID );
+			?>
+			<li class="<?php echo $member->ID; ?>">
+
+				<div class="item-avatar">
+					<?php echo $image; ?>
+				</div>
+				<div class="item">
+					<div class="list-title member-name">
+						<?php echo $name; ?>
+					</div>
+				</div>
+				<div class="action">
+					<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>">
+						<span class="icons" aria-hidden="true"></span>
+						<span class="bp-screen-reader-text">
+							<?php esc_html_e( 'Select', 'buddyboss' ); ?>
+						</span>
+					</button>
+				</div>
+			</li>
+			<?php
 		}
+		$html = ob_get_contents();
+		ob_clean();
+
+		if ( empty( $_POST['term'] ) ) {
+
+			ob_start();
+
+			if ( 1 !== (int) $_POST['page'] ) { ?>
+				<a href="javascript:void(0);" id="bp-group-messages-prev-page" class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page',
+					'buddyboss' ); ?>"> <span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+			<?php }
+
+			if ( $total_page !== (int) $_POST['page'] ) {
+				$page = $page + 1;
+				?>
+				<a href="javascript:void(0);" id="bp-group-messages-next-page" class="button group-message-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page',
+					'buddyboss' ); ?>"> <span class="bp-screen-reader-text"><?php esc_html_e( 'Next page',
+							'buddyboss' ); ?></span>
+					<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
+			<?php }
+
+			$paginate = ob_get_contents();
+			ob_clean();
+
+		}
+
 		$results = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message', $result );
+
 		wp_send_json_success( [
-			'results' => array_map( function ( $result ) {
-				return [
-					'id'   => "@{$result->ID}",
-					'text' => $result->name,
-				];
-			},
-				$results ),
+			'results'    => $html,
+			'total_page' => $total_page,
+			'page'       => $page,
+			'pagination' => $paginate,
 		] );
+
 	}
 }

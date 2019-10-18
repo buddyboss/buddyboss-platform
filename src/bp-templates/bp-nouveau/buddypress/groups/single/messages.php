@@ -23,6 +23,9 @@
 					<p></p>
 				</div>
 			</div>
+			<div class="last">
+
+			</div>
 			<ul id="members-list" class="item-list bp-list">
 
 			</ul>
