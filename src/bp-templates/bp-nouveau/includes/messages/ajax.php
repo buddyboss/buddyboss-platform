@@ -409,10 +409,38 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) : bp_message_thread();
 		$last_message_id = (int) $messages_template->thread->last_message_id;
 
+		$group_id = bp_messages_get_meta( $last_message_id, 'group_id', true );
+
+		$group_name   = '';
+		$group_avatar = '';
+		$group_link   = '';
+
+		if ( !empty( $group_id ) ) {
+			$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+			$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+			$group_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $group_id,
+					'object'     => 'group',
+					'type'       => 'thumb',
+					'avatar_dir' => 'group-avatars',
+					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+					'width'      => '32',
+					'height'     => '32',
+					'title'      => $group_name,
+					'html'       => false,
+				)
+			);
+		}
+
+
 		$threads->threads[ $i ] = array(
 			'id'            => bp_get_message_thread_id(),
 			'message_id'    => (int) $last_message_id,
 			'subject'       => strip_tags( bp_get_message_thread_subject() ),
+			'group_avatar'  => $group_avatar,
+			'group_name'    => $group_name,
+			'group_link'    => $group_link,
 			'excerpt'       => strip_tags( bp_get_message_thread_excerpt() ),
 			'content'       => do_shortcode( bp_get_message_thread_content() ),
 			'unread'        => bp_message_thread_has_unread(),

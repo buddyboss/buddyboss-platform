@@ -48,6 +48,7 @@
 			<div class="bb-groups-messages-right-bottom">
 				<div id="bp-group-message-content">
 					<div id="group_message_content" name="group_message_content" tabindex="3"></div>
+					<input type="hidden" id="group_message_content_hidden" name="group_message_content_hidden" value="">
 					<div id="whats-new-attachments">
 						<?php if ( bp_is_active( 'media' ) ) : ?>
 							<div class="dropzone closed" id="forums-post-media-uploader"></div>

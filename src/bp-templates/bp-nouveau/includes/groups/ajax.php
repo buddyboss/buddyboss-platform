@@ -23,6 +23,7 @@ add_action( 'admin_init', function() {
 		array( 'groups_get_group_potential_invites'            => array( 'function' => 'bp_nouveau_ajax_get_users_to_invite', 'nopriv' => false ) ),
 		array( 'groups_get_group_potential_user_send_messages' => array( 'function' => 'bp_nouveau_ajax_group_get_users_to_send_message', 'nopriv' => false ) ),
 		array( 'groups_get_group_members_listing'              => array( 'function' => 'bp_nouveau_ajax_groups_get_group_members_listing', 'nopriv' => false ) ),
+		array( 'groups_get_group_members_send_message'         => array( 'function' => 'bp_nouveau_ajax_groups_get_group_members_send_message', 'nopriv' => false ) ),
 		array( 'groups_send_group_invites'                     => array( 'function' => 'bp_nouveau_ajax_send_group_invites', 'nopriv' => false ) ),
 		array( 'groups_delete_group_invite'                    => array( 'function' => 'bp_nouveau_ajax_remove_group_invite', 'nopriv' => false ) ),
 	);
@@ -750,4 +751,47 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		] );
 
 	}
+}
+
+function bp_nouveau_ajax_groups_get_group_members_send_message() {
+
+	if ( empty( $_POST['action'] ) ) {
+		wp_send_json_error();
+	}
+
+	$response = array(
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'type'     => 'error',
+	);
+
+	if ( false === bp_is_active( 'messages' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'send_messages_users' ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( isset( $_POST['users'] ) && 'all' === $_POST['users'] ) {
+
+		$args = array(
+			'per_page'     => 99999999999999,
+			'group'     => $_POST['group'],
+		);
+
+		$group_members = groups_get_group_members( $args );
+		$members            = wp_list_pluck( $group_members['members'], 'ID' );
+	} elseif ( isset( $_POST['nonce'] ) && 'all' === $_POST['nonce'] ) {
+		$members            = 26;
+	}
+
+	// Attempt to send the message.
+	$send = messages_new_message( array(
+		'recipients' => $members,
+		'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
+		'content'    => $_POST['content'],
+		'error_type' => 'wp_error',
+	) );
+
+
 }

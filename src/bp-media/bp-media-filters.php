@@ -39,6 +39,7 @@ add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 999, 2 );
 // Messages
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
+add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 );
 
 // Core tools
@@ -306,7 +307,7 @@ function bp_media_delete_activity_media( $activities ) {
                     bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
-            
+
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 	}
@@ -1037,4 +1038,18 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+}
+
+/**
+ * Save gif data into messages meta key "_gif_data"
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $message
+ */
+function bp_media_messages_save_group_data( &$message ) {
+
+	$group = $_POST['group'];
+
+	bp_messages_update_meta( $message->id, 'group_id', $group );
 }

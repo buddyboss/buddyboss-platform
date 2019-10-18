@@ -18,16 +18,26 @@
 
 	<a class="bp-message-link" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
-			<# if ( other_recipients.length > 1 ) { #>
-			<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
+
+			<# if ( data.group_avatar.length > 1 ) { #>
+				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>
-			<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
-			<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+				<# if ( other_recipients.length > 1 ) { #>
+					<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
+				<# } else { #>
+					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
+					<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+				<# } #>
 			<# } #>
 		</div>
 
 		<div class="thread-content" data-thread-id="{{data.id}}">
 			<div class="thread-to">
+
+				<# if ( data.group_name.length > 1 ) { #>
+					<span class="user-name">{{data.group_name}}</span>
+				<# } else { #>
+
 					<# for ( i in first_three ) { #>
 						<span class="user-name">
 							{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
@@ -41,6 +51,8 @@
 					<# if ( data.toOthers ) { #>
 						<span class="num-name">{{data.toOthers}}</span>
 					<# } #>
+
+				<# } #>
 			</div>
 
 			<div class="thread-subject">

@@ -259,6 +259,38 @@ window.bp = window.bp || {};
 				});
 			});
 
+			$( document ).on( 'click', '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #send_group_message_button', function( e ) {
+				e.preventDefault();
+				var user;
+				if ( 'all' === $( '.group-messages-select-members-dropdown :selected' ).val() ) {
+					user = 'all';
+				} else {
+					user = '';
+				}
+
+				var data = {
+					'action'  : 'groups_get_group_members_send_message',
+					'nonce'   : BP_Nouveau.group_messages.nonces.send_messages_users,
+					'group'   : BP_Nouveau.group_messages.group_id,
+					'content' : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #group_message_content_hidden' ).val(),
+					'media'   : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media' ).val(),
+					'users'   : user,
+					'gif'     : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media_gif' ).val()
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+						} else {
+						}
+					}
+				});
+
+			});
+
 			$( document ).on( 'click', '#item-body #group-messages-container .bb-groups-messages-left #group_messages_search_submit', function( e ) {
 				e.preventDefault();
 				$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback').show();
@@ -290,7 +322,6 @@ window.bp = window.bp || {};
 							$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
 							feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 						}
-
 					}
 				});
 			});
@@ -327,7 +358,7 @@ window.bp = window.bp || {};
 		activateTinyMce: function() {
 			if ( !_.isUndefined(window.MediumEditor) ) {
 
-				new window.MediumEditor('#group_message_content',{
+				window.group_messages_editor = new window.MediumEditor('#group_message_content',{
 					placeholder: {
 						text: '',
 						hideOnClick: true
@@ -336,6 +367,13 @@ window.bp = window.bp || {};
 						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
 					}
 				});
+
+				window.group_messages_editor.subscribe(
+					'editableInput',
+					function () {
+						$( '#group_message_content_hidden' ).val( window.group_messages_editor.getContent() );
+					}
+				);
 
 				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
 

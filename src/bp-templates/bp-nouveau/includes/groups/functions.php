@@ -1205,6 +1205,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 			'unmessage'              => wp_create_nonce( 'groups_message_unmessage_user' ),
 			'send_messages'          => wp_create_nonce( 'groups_send_messages' ),
 			'retrieve_group_members' => wp_create_nonce( 'retrieve_group_members' ),
+			'send_messages_users' => wp_create_nonce( 'send_messages_users' ),
 		),
 	);
 
