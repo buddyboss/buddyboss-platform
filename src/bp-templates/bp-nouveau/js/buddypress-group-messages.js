@@ -127,47 +127,32 @@ window.bp = window.bp || {};
 					text: userName
 				};
 
-
-
-
-				// selected = $group_messages_select.select2( 'data' );
-				//
-				// var found = jQuery.inArray( userId, selected );
-				// if (found >= 0) {
-				// 	// Element was found, remove it.
-				// 	selected.splice( found, 1 );
-				// } else {
-				// 	var newOption = new Option(data.text, data.id, false, false);
-				// 	$group_messages_select.append(newOption).trigger('change');
-				// 	selected.push( userId );
-				// }
-
 				if ( $( this ).closest( 'li' ).hasClass( 'selected' ) ) {
 
 					$( this ).closest( 'li' ).removeClass( 'selected' );
 
-
-					var new_data = $.grep( $group_messages_select.select2('data'), function ( value ) {
+					var newArray = [];
+					let newData = $.grep( $group_messages_select.select2('data'), function (value) {
 						return value['id'] != userId;
 					});
-					console.log( new_data );
 
-					$group_messages_select.val( null ).trigger( 'change' );
-					$group_messages_select.select2('data', new_data);
+					newData.forEach(function(data) {
+						newArray.push(+data.id);
+					});
+
+					$group_messages_select.val(newArray).trigger('change');
+
+					$( '#group-messages-send-to-input option[value="' + userId + '"]' ).each(function() {
+						$(this).remove();
+					});
 
 				} else {
 					$( this ).closest( 'li' ).addClass( 'selected' );
-					// Set the value, creating a new option if necessary
 					if ( ! $group_messages_select.find( "option[value='" + data.id + "']" ).length ) {
-						// Create a DOM Option and pre-select by default
 						var newOption = new Option(data.text, data.id, true, true);
-						// Append it to the select
 						$group_messages_select.append(newOption).trigger('change');
-						console.log('add');
-						console.log(data.id);
 					}
 				}
-
 
 
 			});
