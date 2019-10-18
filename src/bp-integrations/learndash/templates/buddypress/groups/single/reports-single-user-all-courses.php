@@ -44,31 +44,31 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 			$course_users = learndash_get_groups_user_ids( $group_id );
 
 		if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
 			$steps = $data['steps'];
 			$label = __( 'Step', 'buddyboss' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
 			$steps = $data['steps'];
 			$label = __( 'Step', 'buddyboss' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'lesson' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'lesson' );
 			$steps = $data['steps'];
 			$label = LearnDash_Custom_Label::get_label( 'lesson' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-topic' === $_REQUEST['step'] ) {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'topic' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'topic' );
 			$steps = $data['steps'];
 			$label = LearnDash_Custom_Label::get_label( 'topic' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-quiz' === $_REQUEST['step'] ) {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'quiz' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'quiz' );
 			$steps = $data['steps'];
 			$label = LearnDash_Custom_Label::get_label( 'quiz' );
 		} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'assignment' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'assignment' );
 			$steps = $data['steps'];
 			$label = __( 'ASSIGNMENT', 'buddyboss' );
 		} else {
-			$data  = bp_ld_get_course_all_steps( $course->ID, bp_loggedin_user_id(), 'all' );
+			$data  = bp_ld_get_course_all_steps( $course->ID, $user, 'all' );
 			$steps = $data['steps'];
 			$label = __( 'Step', 'buddyboss' );
 		}
