@@ -775,6 +775,9 @@ window.bp = window.bp || {};
 			$(event.currentTarget).closest('#bp-media-uploader').find('.bp-media-upload-tab').removeClass('selected');
 			$(event.currentTarget).addClass('selected');
 			this.toggleSubmitMediaButton();
+
+			//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+			jQuery(window).scroll();
 		},
 
 		openCreateAlbumModal: function(event){
