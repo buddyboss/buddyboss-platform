@@ -1050,19 +1050,20 @@ function bp_get_activity_avatar( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	if ( ! isset( $height ) && ! isset( $width ) ) {
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->height ) || isset( $bp->avatar->thumb->height ) ) {
-			$height = ( 'full' === $r['type'] ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
+			$height = ( 'full' === $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
 		} else {
 			$height = 20;
 		}
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->width ) || isset( $bp->avatar->thumb->width ) ) {
-			$width = ( 'full' === $r['type'] ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
+			$width = ( 'full' === $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
 		} else {
 			$width = 20;
 		}
@@ -1109,9 +1110,9 @@ function bp_get_activity_avatar( $args = '' ) {
 			array(
 				'item_id' => $item_id,
 				'object'  => $object,
-				'type'    => $r['type'],
-				'alt'     => $r['alt'],
-				'class'   => $r['class'],
+				'type'    => $type,
+				'alt'     => $alt,
+				'class'   => $class,
 				'width'   => $width,
 				'height'  => $height,
 				'email'   => $email,
@@ -1169,6 +1170,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			'email'      => false,
 		)
 	);
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
@@ -1267,12 +1269,12 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 		array(
 			'item_id' => $item_id,
 			'object'  => $object,
-			'type'    => $r['type'],
+			'type'    => $type,
 			'alt'     => $alt,
-			'class'   => $r['class'],
-			'width'   => $r['width'],
-			'height'  => $r['height'],
-			'email'   => isset( $email ) ? $email : $r['email'],
+			'class'   => $class,
+			'width'   => $width,
+			'height'  => $height,
+			'email'   => $email,
 		)
 	);
 
@@ -1300,7 +1302,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 		return sprintf(
 			'<a href="%s" class="%s">%s</a>',
 			$link,
-			$r['link_class'],
+			$link_class,
 			$avatar
 		);
 	}
