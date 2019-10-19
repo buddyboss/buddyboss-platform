@@ -238,7 +238,8 @@ function bp_get_blogs_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $blogs_template->pag_num - 1 ) > $blogs_template->total_blog_count ) ? $blogs_template->total_blog_count : $start_num + ( $blogs_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $blogs_template->total_blog_count );
 
-	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total );
+	/* translators: Viewing [From Number] - [To Number] of [Total Blog Count] sites */
+	$message = sprintf( _n( 'Viewing 1 site', 'Viewing %1$s - %2$s of %3$s sites', $blogs_template->total_blog_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n
 
 	/**
 	 * Filters the "Viewing x-y of z blogs" pagination message.
@@ -334,6 +335,8 @@ function bp_get_blog_avatar( $args = '' ) {
 			'height'  => false,
 			'class'   => 'avatar',
 			'id'      => false,
+
+			/* translators: Profile photo of site author [Author display name] */
 			'alt'     => sprintf( __( 'Profile photo of site author %s', 'buddyboss' ), esc_attr( $author_displayname ) ),
 			'no_grav' => true,
 		)
@@ -391,6 +394,7 @@ function bp_get_blog_avatar( $args = '' ) {
 				esc_url( $site_icon ),
 				esc_attr( "{$r['class']} avatar-{$size}" ),
 				esc_attr( $size ),
+				/* translators: Site icon for [Blog name] */
 				sprintf( esc_attr__( 'Site icon for %s', 'buddyboss' ), bp_get_blog_name() )
 			);
 		}
@@ -626,6 +630,7 @@ function bp_get_blog_last_active( $args = array() ) {
 
 	// Backwards compatibility for anyone forcing a 'true' active_format.
 	if ( true === $r['active_format'] ) {
+		/* translators: active [Time since] */
 		$r['active_format'] = __( 'active %s', 'buddyboss' );
 	}
 
@@ -694,6 +699,7 @@ function bp_get_blog_latest_post( $args = array() ) {
 			 *
 			 * @param string $retval Title of the latest post.
 			 */
+			/* translators: Latest Post: [Post link] */
 			$retval = sprintf( __( 'Latest Post: %s', 'buddyboss' ), '<a href="' . $blogs_template->blog->latest_post->guid . '">' . apply_filters( 'the_title', $retval ) . '</a>' );
 		} else {
 
@@ -996,7 +1002,7 @@ function bp_blog_signup_enabled() {
 	 */
 	$active_signup = apply_filters( 'wpmu_active_signup', $active_signup );
 
-	if ( 'none' == $active_signup || 'user' == $active_signup ) {
+	if ( 'none' === $active_signup || 'user' === $active_signup ) {
 		return false;
 	}
 
@@ -1094,7 +1100,8 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 		echo '<label for="blogname">' . __( 'Site Domain:', 'buddyboss' ) . '</label>';
 	}
 
-	if ( $errmsg = $errors->get_error_message( 'blogname' ) ) {
+	$errmsg = $errors->get_error_message( 'blogname' );
+	if ( $errmsg ) {
 		?>
 
 		<p class="error"><?php echo $errmsg; ?></p>
@@ -1125,7 +1132,8 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 
 	<label for="blog_title"><?php _e( 'Site Title:', 'buddyboss' ); ?></label>
 
-	<?php if ( $errmsg = $errors->get_error_message( 'blog_title' ) ) { ?>
+	<?php $errmsg = $errors->get_error_message( 'blog_title' ); ?>
+	<?php if ( $errmsg ) { ?>
 
 		<p class="error"><?php echo $errmsg; ?></p>
 
@@ -1138,17 +1146,17 @@ function bp_blogs_signup_blog( $blogname = '', $blog_title = '', $errors = '' ) 
 		<legend class="label"><?php _e( 'Privacy: I would like my site to appear in search engines, and in public listings around this network', 'buddyboss' ); ?></legend>
 
 		<label class="checkbox" for="blog_public_on">
-			<input type="radio" id="blog_public_on" name="blog_public" value="1" 
+			<input type="radio" id="blog_public_on" name="blog_public" value="1"
 			<?php
-			if ( ! isset( $_POST['blog_public'] ) || '1' == $_POST['blog_public'] ) {
+			if ( ! isset( $_POST['blog_public'] ) || '1' === $_POST['blog_public'] ) {
 				?>
 				checked="checked"<?php } ?> />
 			<strong><?php _e( 'Yes', 'buddyboss' ); ?></strong>
 		</label>
 		<label class="checkbox" for="blog_public_off">
-			<input type="radio" id="blog_public_off" name="blog_public" value="0" 
+			<input type="radio" id="blog_public_off" name="blog_public" value="0"
 			<?php
-			if ( isset( $_POST['blog_public'] ) && '0' == $_POST['blog_public'] ) {
+			if ( isset( $_POST['blog_public'] ) && '0' === $_POST['blog_public'] ) {
 				?>
 				checked="checked"<?php } ?> />
 			<strong><?php _e( 'No', 'buddyboss' ); ?></strong>
@@ -1188,7 +1196,7 @@ function bp_blogs_validate_blog_signup() {
 	}
 
 	$result = bp_blogs_validate_blog_form();
-	extract( $result );
+	extract( $result ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	if ( $errors->get_error_code() ) {
 		unset( $_POST['submit'] );
@@ -1271,6 +1279,7 @@ function bp_blogs_confirm_blog_signup( $domain, $path, $blog_title, $user_name, 
 		printf(
 			'%s %s',
 			sprintf(
+				/* translators: [Blog link] is your new site. */
 				__( '%s is your new site.', 'buddyboss' ),
 				sprintf( '<a href="%s">%s</a>', esc_url( $blog_url ), esc_url( $blog_url ) )
 			),
@@ -1335,17 +1344,20 @@ function bp_blogs_blog_tabs() {
 		<?php
 		if ( bp_is_current_action( 'my-blogs' ) || ! bp_current_action() ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			<?php /* translators: [User Display name]'s Sites */ ?>
+			class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/my-blogs' ); ?>"><?php printf( __( "%s's Sites", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-posts' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			<?php /* translators: [User Display name]'s Recent Posts */ ?>
+			class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-posts' ); ?>"><?php printf( __( "%s's Recent Posts", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 		<li
 		<?php
 		if ( bp_is_current_action( 'recent-comments' ) ) :
 			?>
-			 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
+			<?php /* translators: [User Display name]'s Recent Comments */ ?>
+			class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_blogs_slug() . '/recent-comments' ); ?>"><?php printf( __( "%s's Recent Comments", 'buddyboss' ), bp_get_displayed_user_fullname() ); ?></a></li>
 	</ul>
 
 	<?php
@@ -1588,6 +1600,7 @@ function bp_blogs_get_profile_stats( $args = '' ) {
 			}
 
 			// If blogs exist, show some formatted output.
+			/* translators: [Blog/site count] site, [Blog/site count] sites */
 			$r['output'] = $r['before'] . sprintf( _n( '%s site', '%s sites', $r['blogs'], 'buddyboss' ), '<strong>' . $r['blogs'] . '</strong>' ) . $r['after'];
 		}
 	}
