@@ -186,6 +186,7 @@ class BP_Activity_Template {
 			'update_meta_cache' => true,
 		);
 		$r        = wp_parse_args( $args, $defaults );
+		extract( $r ); //phpcs:ignore WordPress.PHP.DontExtract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
@@ -202,15 +203,15 @@ class BP_Activity_Template {
 			$this->activities = bp_activity_get_specific(
 				array(
 					'activity_ids'      => explode( ',', $include ),
-					'max'               => $r['max'],
-					'count_total'       => $r['count_total'],
+					'max'               => $max,
+					'count_total'       => $count_total,
 					'page'              => $this->pag_page,
 					'per_page'          => $this->pag_num,
-					'sort'              => $r['sort'],
-					'display_comments'  => $r['display_comments'],
-					'show_hidden'       => $r['show_hidden'],
-					'spam'              => $r['spam'],
-					'update_meta_cache' => $r['update_meta_cache'],
+					'sort'              => $sort,
+					'display_comments'  => $display_comments,
+					'show_hidden'       => $show_hidden,
+					'spam'              => $spam,
+					'update_meta_cache' => $update_meta_cache,
 				)
 			);
 
@@ -218,24 +219,24 @@ class BP_Activity_Template {
 		} else {
 			$this->activities = bp_activity_get(
 				array(
-					'display_comments'  => $r['display_comments'],
-					'max'               => $r['max'],
-					'count_total'       => $r['count_total'],
+					'display_comments'  => $display_comments,
+					'max'               => $max,
+					'count_total'       => $count_total,
 					'per_page'          => $this->pag_num,
 					'page'              => $this->pag_page,
-					'sort'              => $r['sort'],
-					'search_terms'      => $r['$search_terms'],
-					'privacy'           => $r['privacy'],
-					'meta_query'        => $r['meta_query'],
-					'date_query'        => $r['date_query'],
-					'filter_query'      => $r['filter_query'],
-					'filter'            => $r['filter'],
-					'scope'             => $r['scope'],
-					'show_hidden'       => $r['show_hidden'],
-					'exclude'           => $r['exclude'],
-					'in'                => $r['in'],
-					'spam'              => $r['spam'],
-					'update_meta_cache' => $r['update_meta_cache'],
+					'sort'              => $sort,
+					'search_terms'      => $search_terms,
+					'privacy'           => $privacy,
+					'meta_query'        => $meta_query,
+					'date_query'        => $date_query,
+					'filter_query'      => $filter_query,
+					'filter'            => $filter,
+					'scope'             => $scope,
+					'show_hidden'       => $show_hidden,
+					'exclude'           => $exclude,
+					'in'                => $in,
+					'spam'              => $spam,
+					'update_meta_cache' => $update_meta_cache,
 				)
 			);
 		}
