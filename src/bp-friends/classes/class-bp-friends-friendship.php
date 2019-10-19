@@ -144,7 +144,7 @@ class BP_Friends_Friendship {
 		$this->date_created      = $friendship->date_created;
 
 		if ( ! empty( $this->populate_friend_details ) ) {
-			if ( $this->friend_user_id == bp_displayed_user_id() ) {
+			if ( bp_displayed_user_id() === $this->friend_user_id ) {
 				$this->friend = new BP_Core_User( $this->initiator_user_id );
 			} else {
 				$this->friend = new BP_Core_User( $this->friend_user_id );
@@ -309,17 +309,16 @@ class BP_Friends_Friendship {
 			}
 
 			// We need to support the same operators as wp_list_filter().
-			if ( 'OR' == $operator || 'NOT' == $operator ) {
+			if ( 'OR' === $operator || 'NOT' === $operator ) {
 				$matched = 0;
 
 				foreach ( $filters as $filter_name => $filter_value ) {
-					if ( isset( $friendship->{$filter_name} ) && $filter_value == $friendship->{$filter_name} ) {
+					if ( isset( $friendship->{$filter_name} ) && $filter_value === $friendship->{$filter_name} ) {
 						$matched++;
 					}
 				}
 
-				if ( ( 'OR' == $operator && $matched > 0 )
-				  || ( 'NOT' == $operator && 0 == $matched ) ) {
+				if ( ( 'OR' === $operator && $matched > 0 ) || ( 'NOT' === $operator && 0 === $matched ) ) {
 					$friendships[ $friendship->id ] = $friendship;
 				}
 			} else {
@@ -328,7 +327,7 @@ class BP_Friends_Friendship {
 				 * If any of the filters miss, we move on.
 				 */
 				foreach ( $filters as $filter_name => $filter_value ) {
-					if ( ! isset( $friendship->{$filter_name} ) || $filter_value != $friendship->{$filter_name} ) {
+					if ( ! isset( $friendship->{$filter_name} ) || $filter_value !== $friendship->{$filter_name} ) {
 						continue 2;
 					}
 				}
@@ -406,9 +405,9 @@ class BP_Friends_Friendship {
 		$fids = array();
 		foreach ( $friendships as $friendship ) {
 			if ( ! empty( $assoc_arr ) ) {
-				$fids[] = array( 'user_id' => ( $friendship->friend_user_id == $user_id ) ? $friendship->initiator_user_id : $friendship->friend_user_id );
+				$fids[] = array( 'user_id' => ( $friendship->friend_user_id === $user_id ) ? $friendship->initiator_user_id : $friendship->friend_user_id );
 			} else {
-				$fids[] = ( $friendship->friend_user_id == $user_id ) ? $friendship->initiator_user_id : $friendship->friend_user_id;
+				$fids[] = ( $friendship->friend_user_id === $user_id ) ? $friendship->initiator_user_id : $friendship->friend_user_id;
 			}
 		}
 
@@ -428,7 +427,7 @@ class BP_Friends_Friendship {
 		$friendship_id = null;
 
 		// Can't friend yourself.
-		if ( $user_id == $friend_id ) {
+		if ( $user_id === $friend_id ) {
 			return $friendship_id;
 		}
 
@@ -548,7 +547,8 @@ class BP_Friends_Friendship {
 			$pag_sql = $wpdb->prepare( ' LIMIT %d, %d', intval( ( $page - 1 ) * $limit ), intval( $limit ) );
 		}
 
-		if ( ! $friend_ids = self::get_friend_user_ids( $user_id ) ) {
+		$friend_ids = self::get_friend_user_ids( $user_id );
+		if ( ! $friend_ids ) {
 			return false;
 		}
 
@@ -608,7 +608,7 @@ class BP_Friends_Friendship {
 		}
 
 		// Can't friend yourself.
-		if ( $initiator_userid == $possible_friend_userid ) {
+		if ( $initiator_userid === $possible_friend_userid ) {
 			return 'not_friends';
 		}
 
@@ -656,7 +656,8 @@ class BP_Friends_Friendship {
 			$initiator_user_id = (int) $friendship->initiator_user_id;
 			$friend_user_id    = (int) $friendship->friend_user_id;
 			if ( 1 === (int) $friendship->is_confirmed ) {
-				$status_initiator = $status_friend = 'is_friend';
+				$status_initiator = 'is_friend';
+				$status_friend    = 'is_friend';
 			} else {
 				$status_initiator = 'pending';
 				$status_friend    = 'awaiting_response';
@@ -696,7 +697,7 @@ class BP_Friends_Friendship {
 		usort(
 			$last_activities,
 			function( $a, $b ) {
-				if ( $a['date_recorded'] == $b['date_recorded'] ) {
+				if ( $a['date_recorded'] === $b['date_recorded'] ) {
 					return 0;
 				}
 
@@ -893,7 +894,7 @@ class BP_Friends_Friendship {
 		$results = $wpdb->get_results( $sql );
 
 		for ( $i = 0, $count = count( $results ); $i < $count; ++$i ) {
-			$fids[] = ( $results[ $i ]->friend_user_id == $user_id ) ? $results[ $i ]->initiator_user_id : $results[ $i ]->friend_user_id;
+			$fids[] = ( $results[ $i ]->friend_user_id === $user_id ) ? $results[ $i ]->initiator_user_id : $results[ $i ]->friend_user_id;
 		}
 
 		// Remove duplicates.
@@ -1009,7 +1010,7 @@ class BP_Friends_Friendship {
 		foreach ( $friendships as $friendship ) {
 			$friendship_ids[] = $friendship->id;
 			if ( $friendship->is_confirmed ) {
-				$friend_ids[] = ( $friendship->friend_user_id == $user_id ) ? $friendship->initiator_user_id : $friendship->friend_user_id;
+				$friend_ids[] = ( $friendship->friend_user_id === $user_id ) ? $friendship->initiator_user_id : $friendship->friend_user_id;
 			}
 		}
 
