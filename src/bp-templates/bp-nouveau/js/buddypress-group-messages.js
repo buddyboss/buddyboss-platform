@@ -60,6 +60,8 @@ window.bp = window.bp || {};
 				$( '#item-body #group-messages-container .bb-groups-messages-left #members-list li.' + data.id ).removeClass( 'selected' );
 			});
 
+			$group_messages_select.select2().prop( 'disabled', true );
+
 			$('.group-messages-select-members-dropdown').on('change', function () {
 
 				// Reset select2
@@ -71,6 +73,14 @@ window.bp = window.bp || {};
 					feedbackSelectorLeft.addClass( 'bp-messages-feedback-hide' );
 					feedbackParagraphTagSelector.html( '' );
 					if ( 'all' === valueSelected ) {
+						$( '#group-messages-send-to-input option' ).each(function() {
+							$(this).remove();
+						});
+						if ( ! $group_messages_select.find( "option[value='all']" ).length ) { // jshint ignore:line
+							var newOption = new Option( BP_Nouveau.group_messages.select_default_text, BP_Nouveau.group_messages.select_default_value, true, true);
+							$group_messages_select.append(newOption).trigger('change');
+						}
+						$group_messages_select.select2().prop( 'disabled', true );
 						feedbackSelector.removeClass( 'bp-messages-feedback-hide' );
 						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'info' );
 						feedbackParagraphTagSelector.html( BP_Nouveau.group_messages.invites_form_all );
@@ -80,6 +90,10 @@ window.bp = window.bp || {};
 						$group_messages_select.val('all').trigger( 'change' );
 						return 1;
 					} else {
+						$( '#group-messages-send-to-input option[value="all"]' ).each(function() {
+							$(this).remove();
+						});
+						$group_messages_select.select2().prop( 'disabled', false );
 						feedbackSelector.removeClass( 'bp-messages-feedback-hide' );
 						feedbackSelectorLeft.removeClass( 'bp-messages-feedback-hide' );
 						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'info' );
