@@ -72,7 +72,7 @@
                         </div>
 	                <?php endif; ?>
 
-                    <footer class="bb-model-footer">
+                    <footer class="bb-model-footer flex align-items-center">
                         <!--<a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php //_e( 'Add More Media', 'buddyboss' ); ?></a>-->
 
 	                    <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
