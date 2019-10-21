@@ -10601,6 +10601,10 @@ ul.bb-albums-list .bb-more-photos strong {
   margin-bottom: 20px;
 }
 
+.bb-model-footer.flex .bb-dropdown-wrap {
+  margin-bottom: 0;
+}
+
 .bp-media-upload-tab {
   margin-right: 15px;
 }
@@ -10898,6 +10902,7 @@ img.emojioneemoji {
 .dropzone .dz-preview.dz-error:hover .dz-error-message {
   opacity: 1;
   pointer-events: auto;
+  line-height: 1.35;
 }
 
 .dropzone .dz-preview .dz-error-message {
@@ -10919,7 +10924,8 @@ img.emojioneemoji {
   width: 140px;
   background: #be2626;
   background: linear-gradient(to bottom, #be2626, #a92222);
-  padding: 0.5em 1.2em;
+  padding: 7px 10px;
+  font-size: 12px;
   color: #fff;
   word-wrap: break-word;
 }
