@@ -652,6 +652,29 @@ function bp_nouveau_ajax_get_thread_messages() {
 		}
 	}
 
+	$group_id     = bp_messages_get_meta( $thread_template->thread->messages[0]->id, 'group_id', true );
+	$group_name   = '';
+	$group_avatar = '';
+	$group_link   = '';
+
+	if ( !empty( $group_id ) ) {
+		$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+		$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+		$group_avatar = bp_core_fetch_avatar(
+			array(
+				'item_id'    => $group_id,
+				'object'     => 'group',
+				'type'       => 'thumb',
+				'avatar_dir' => 'group-avatars',
+				'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+				'width'      => '32',
+				'height'     => '32',
+				'title'      => $group_name,
+				'html'       => false,
+			)
+		);
+	}
+
 	// Simulate the loop.
 
 	$args = [
@@ -668,13 +691,15 @@ function bp_nouveau_ajax_get_thread_messages() {
 	}
 
 	if ( empty( $_POST['js_thread'] ) ) {
+
 		$thread->thread = array(
-			'id'      => bp_get_the_thread_id(),
-			'subject' => strip_tags( bp_get_the_thread_subject() ),
-			'started_date' => date_i18n(
-				get_option('date_format'),
-				strtotime($thread_template->thread->first_message_date)
-			)
+			'id'           => bp_get_the_thread_id(),
+			'subject'      => strip_tags( bp_get_the_thread_subject() ),
+			'started_date' => date_i18n( get_option( 'date_format' ), strtotime( $thread_template->thread->first_message_date ) ),
+			'group_id'     => $group_id,
+			'group_name'   => $group_name,
+			'group_avatar' => $group_avatar,
+			'group_link'   => $group_link,
 		);
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
@@ -702,24 +727,71 @@ function bp_nouveau_ajax_get_thread_messages() {
 	$i = 0;
 
 	while ( bp_thread_messages() ) : bp_thread_the_message();
-		$thread->messages[ $i ] = array(
-			'id'            => bp_get_the_thread_message_id(),
-			'content'       => do_shortcode( bp_get_the_thread_message_content() ),
-			'sender_id'     => bp_get_the_thread_message_sender_id(),
-			'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
-			'sender_link'   => bp_get_the_thread_message_sender_link(),
-			'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-			'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
-				'item_id' => bp_get_the_thread_message_sender_id(),
-				'object'  => 'user',
-				'type'    => 'thumb',
-				'width'   => 32,
-				'height'  => 32,
-				'html'    => false,
-			) ) ),
-			'date'          => bp_get_the_thread_message_date_sent() * 1000,
-			'display_date'  => bp_get_the_thread_message_time_since(),
-		);
+
+		$group_id                  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_id', true );
+		$group_message_fresh       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_fresh', true );
+		$group_message_thread_type = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_thread_type', true );
+
+		if ( $group_id && $group_message_fresh && $group_message_thread_type && 'new' === $group_message_thread_type && 'yes' === $group_message_fresh ) {
+
+			$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
+			$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
+			$group_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id'    => $group_id,
+					'object'     => 'group',
+					'type'       => 'thumb',
+					'avatar_dir' => 'group-avatars',
+					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
+					'width'      => '32',
+					'height'     => '32',
+					'title'      => $group_name,
+					'html'       => false,
+				)
+			);
+
+			$thread->messages[ $i ] = array(
+				'group_name'    => $group_name,
+				'group_link'    => $group_link,
+				'group_avatar'  => $group_avatar,
+				'group_text'    => sprintf( __( 'Sent from group <a href="%s">%s</a> to all group members.', 'buddyboss' ), $group_link, $group_name ),
+				'id'            => bp_get_the_thread_message_id(),
+				'content'       => do_shortcode( bp_get_the_thread_message_content() ),
+				'sender_id'     => bp_get_the_thread_message_sender_id(),
+				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_link'   => bp_get_the_thread_message_sender_link(),
+				'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+				'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
+					'item_id' => bp_get_the_thread_message_sender_id(),
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 32,
+					'height'  => 32,
+					'html'    => false,
+				) ) ),
+				'date'          => bp_get_the_thread_message_date_sent() * 1000,
+				'display_date'  => bp_get_the_thread_message_time_since(),
+			);
+		} else {
+			$thread->messages[ $i ] = array(
+				'id'            => bp_get_the_thread_message_id(),
+				'content'       => do_shortcode( bp_get_the_thread_message_content() ),
+				'sender_id'     => bp_get_the_thread_message_sender_id(),
+				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
+				'sender_link'   => bp_get_the_thread_message_sender_link(),
+				'sender_is_you' => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
+				'sender_avatar' => esc_url( bp_core_fetch_avatar( array(
+					'item_id' => bp_get_the_thread_message_sender_id(),
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 32,
+					'height'  => 32,
+					'html'    => false,
+				) ) ),
+				'date'          => bp_get_the_thread_message_date_sent() * 1000,
+				'display_date'  => bp_get_the_thread_message_time_since(),
+			);
+		}
 
 		if ( bp_is_active( 'messages', 'star' ) ) {
 			$star_link = bp_get_the_message_star_action_link( array(

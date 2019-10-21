@@ -772,6 +772,14 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 		wp_send_json_error( $response );
 	}
 
+	if ( isset( $_POST['gif'] ) && '' !== $_POST['gif'] ) {
+		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $_POST[ 'gif' ] ), true );
+	}
+
+	if ( isset( $_POST['media'] ) && '' !== $_POST['media'] ) {
+		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST[ 'media' ] ), true );
+	}
+
 	if ( isset( $_POST['users'] ) && 'all' === $_POST['users'] ) {
 
 		$args = array(
@@ -785,13 +793,49 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 		$members            = 26;
 	}
 
-	// Attempt to send the message.
-	$send = messages_new_message( array(
-		'recipients' => $members,
-		'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
-		'content'    => $_POST['content'],
-		'error_type' => 'wp_error',
-	) );
+	$meta = array(
+		array(
+			'key'   => 'group_id',
+			'value' => $_POST['group'],
+		),
+		array(
+			'key'   => 'group_message_users',
+			'value' => $_POST['users'],
+		),
+		array(
+			'key'   => 'group_message_type',
+			'value' => $_POST['type'],
+		),
+	);
+	if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
 
+		$thread_id                    = 0;
+		$_POST['message_thread_type'] = 'reply';
+
+		while ( bp_message_threads() ) :
+			bp_message_thread();
+			$thread_id = bp_get_message_thread_id();
+			break;
+		endwhile;
+
+		$new_reply = messages_new_message( array(
+			'thread_id' => $thread_id,
+			'subject'   => ! empty( $_POST['content'] ) ? $_POST['content'] : false,
+			'content'   => $_POST['content'],
+			'date_sent' => $date_sent = bp_core_current_time(),
+			'error_type' => 'wp_error',
+		) );
+	} else  {
+
+		$_POST['message_thread_type'] = 'new';
+
+		// Attempt to send the message.
+		$send = messages_new_message( array(
+			'recipients' => $members,
+			'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
+			'content'    => $_POST['content'],
+			'error_type' => 'wp_error',
+		) );
+	}
 
 }

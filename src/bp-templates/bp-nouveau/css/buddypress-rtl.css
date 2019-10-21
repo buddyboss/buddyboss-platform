@@ -11593,3 +11593,10 @@ div#bp-group-message-content {
   -webkit-font-smoothing: antialiased;
   color: #939597;
 }
+
+.bp-single-message-wrap.group-messages-highlight {
+  background: #ffff001f;
+  padding: 5px;
+  border: 1px solid #E7E9EC;
+  border-radius: 3px;
+}

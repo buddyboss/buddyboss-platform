@@ -13,6 +13,8 @@
 	if (other_recipients.length == 0) {
 	include_you = true;
 	}
+
+
 	#>
 
 	<header class="single-message-thread-header">
@@ -20,14 +22,19 @@
 		<# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
-				<# for ( i in other_recipients ) { #>
-				<span class="participants-name">
-              <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
-            </span>
-				<# } #>
+				<# if ( data.group_name.length > 1 ) { #>
+					<span class="user-name">{{data.group_name}}</span>
+				<# } else { #>
+					<# for ( i in other_recipients ) { #>
+						<span class="participants-name">
+		                    <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
+		                </span>
+					<# } #>
 
-				<# if ( include_you ) { #>
-				<span class="participants-name"><a href="{{current_user.user_link}}"><?php esc_html_e( 'You', 'buddyboss' ); ?></a></span>
+					<# if ( include_you ) { #>
+						<span class="participants-name"><a href="{{current_user.user_link}}"><?php esc_html_e( 'You', 'buddyboss' ); ?></a></span>
+					<# } #>
+
 				<# } #>
 			</dt>
 			<dd>

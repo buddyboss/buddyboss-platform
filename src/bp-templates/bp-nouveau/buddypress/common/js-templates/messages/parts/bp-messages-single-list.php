@@ -1,5 +1,10 @@
 <script type="text/html" id="tmpl-bp-messages-single-list">
+	<# if ( data.group_name ) { #>
+	<div class="bp-single-message-wrap group-messages-highlight">
+	<# } else { #>
 	<div class="bp-single-message-wrap">
+	<# } #>
+
 		<div class="bp-avatar-wrap">
 			<a href="{{data.sender_link}}" class="bp-user-avatar">
 				<img class="avatar" src="{{data.sender_avatar}}" alt="" />
@@ -68,6 +73,9 @@
 			<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>
 			<# } #>
 
+			<# if ( data.group_text ) { #>
+				<p>{{{data.group_text}}}</p>
+			<# } #>
 		</div>
 	</div>
 </script>

@@ -1049,7 +1049,52 @@ function bp_media_delete_attachment_media( $attachment_id ) {
  */
 function bp_media_messages_save_group_data( &$message ) {
 
-	$group = $_POST['group'];
+	$group         = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : '';
+	$message_users = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : '';
+	$message_type  = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : '';
+	$thread_type   = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : '';
 
-	bp_messages_update_meta( $message->id, 'group_id', $group );
+	if ( isset( $group ) &&  '' !== $group ) {
+		$thread_key =   'group_message_thread_id_' . $message->thread_id;
+		bp_messages_update_meta( $message->id, 'group_id', $group );
+		bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+		bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
+		bp_messages_update_meta( $message->id, $thread_key, $group );
+	} else {
+
+		$args = [
+			'thread_id' => $message->thread_id,
+			'per_page' => 99999999999999,
+		];
+
+		if ( bp_thread_has_messages( $args ) ) {
+			while ( bp_thread_messages() ) : bp_thread_the_message();
+
+				$message_id    = bp_get_the_thread_message_id();
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true );
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
+
+				if ( $group ) {
+					break;
+				}
+			endwhile;
+		}
+
+		if ( $group ) {
+
+			$thread_key =   'group_message_thread_id_' . $message->thread_id;
+			bp_messages_update_meta( $message->id, 'group_id', $group );
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+			bp_messages_update_meta( $message->id, $thread_key, $group );
+		}
+
+
+	}
+
 }

@@ -101,9 +101,9 @@
 							<div class="post-elements-buttons-item post-emoji bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Insert an emoji', 'buddyboss' ); ?>"></div>
 						<?php endif; ?>
 						<div id="group-messages-new-submit" class="submit">
-							<select name="group-messages-type">
+							<select name="group-messages-type" class="group-messages-type">
 								<option value="open"><?php _e( 'Open Thread', 'buddyboss' ); ?></option>
-								<option value="rivate"><?php _e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
+								<option value="private"><?php _e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
 							</select>
 							<input type="submit" name="send_group_message_button" value="Send Message" id="send_group_message_button" class="small">
 						</div>

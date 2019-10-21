@@ -261,11 +261,17 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #send_group_message_button', function( e ) {
 				e.preventDefault();
-				var user;
+				var user, type;
 				if ( 'all' === $( '.group-messages-select-members-dropdown :selected' ).val() ) {
 					user = 'all';
 				} else {
-					user = '';
+					user = 'individual';
+				}
+
+				if ( 'open' === $( '.group-messages-type :selected' ).val() ) {
+					type = 'open';
+				} else {
+					type = 'private';
 				}
 
 				var data = {
@@ -275,6 +281,7 @@ window.bp = window.bp || {};
 					'content' : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #group_message_content_hidden' ).val(),
 					'media'   : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media' ).val(),
 					'users'   : user,
+					'type'    : type,
 					'gif'     : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media_gif' ).val()
 				};
 
