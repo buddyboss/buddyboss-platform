@@ -276,10 +276,19 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #send_group_message_button', function( e ) {
 				e.preventDefault();
 				var user, type;
+				var users_list = [];
 				if ( 'all' === $( '.group-messages-select-members-dropdown :selected' ).val() ) {
-					user = 'all';
+					user 	   = 'all';
+					users_list = [];
 				} else {
-					user = 'individual';
+					user       = 'individual';
+					var newData = $.grep( $group_messages_select.select2('data'), function (value) {
+						return value['id'] != 0; // jshint ignore:line
+					});
+
+					newData.forEach(function(data) {
+						users_list.push(+data.id);
+					});
 				}
 
 				if ( 'open' === $( '.group-messages-type :selected' ).val() ) {
@@ -289,14 +298,15 @@ window.bp = window.bp || {};
 				}
 
 				var data = {
-					'action'  : 'groups_get_group_members_send_message',
-					'nonce'   : BP_Nouveau.group_messages.nonces.send_messages_users,
-					'group'   : BP_Nouveau.group_messages.group_id,
-					'content' : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #group_message_content_hidden' ).val(),
-					'media'   : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media' ).val(),
-					'users'   : user,
-					'type'    : type,
-					'gif'     : $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media_gif' ).val()
+					'action'  	 	: 'groups_get_group_members_send_message',
+					'nonce'   	 	: BP_Nouveau.group_messages.nonces.send_messages_users,
+					'group'   	 	: BP_Nouveau.group_messages.group_id,
+					'content' 	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #group_message_content_hidden' ).val(),
+					'media'   	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media' ).val(),
+					'users'   		: user,
+					'users_list'    : users_list,
+					'type'    		: type,
+					'gif'     	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media_gif' ).val()
 				};
 
 				$.ajax({

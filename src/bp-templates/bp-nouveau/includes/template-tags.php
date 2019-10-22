@@ -1235,7 +1235,8 @@ function bp_nouveau_nav_has_count() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_nav_count() {
-	echo esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+	$count  = ( is_numeric( bp_nouveau_get_nav_count() ) ) ? bp_nouveau_get_nav_count() : 0;
+	echo esc_html( number_format_i18n( $count ) );
 }
 
 	/**

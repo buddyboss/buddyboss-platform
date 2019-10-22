@@ -22,7 +22,7 @@
 		<# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
-				<# if ( data.group_name.length > 1 ) { #>
+				<# if ( data.group_name.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 					<# for ( i in other_recipients ) { #>

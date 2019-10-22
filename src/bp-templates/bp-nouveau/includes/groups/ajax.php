@@ -789,8 +789,8 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 
 		$group_members = groups_get_group_members( $args );
 		$members            = wp_list_pluck( $group_members['members'], 'ID' );
-	} elseif ( isset( $_POST['nonce'] ) && 'all' === $_POST['nonce'] ) {
-		$members            = 26;
+	} elseif ( isset( $_POST['users'] ) && 'individual' === $_POST['users'] ) {
+		$members            = $_POST['users_list'];
 	}
 
 	$meta = array(

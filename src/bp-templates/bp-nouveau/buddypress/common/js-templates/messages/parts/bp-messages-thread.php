@@ -19,8 +19,8 @@
 	<a class="bp-message-link" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
 
-			<# if ( data.group_avatar.length > 1 ) { #>
-				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
+			<# if ( data.group_avatar.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
+				<img class="avatar chetan" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
 					<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
@@ -34,7 +34,7 @@
 		<div class="thread-content" data-thread-id="{{data.id}}">
 			<div class="thread-to">
 
-				<# if ( data.group_name.length > 1 ) { #>
+				<# if ( data.group_name.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 
