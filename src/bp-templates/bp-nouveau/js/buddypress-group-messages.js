@@ -297,16 +297,45 @@ window.bp = window.bp || {};
 					type = 'private';
 				}
 
+				var content = '';
+				var editor = '';
+				if ( typeof window.group_messages_editor !== 'undefined' ) {
+					editor = window.group_messages_editor;
+				}
+
+				content = editor.getContent();
+				if ( editor && $.trim( editor.getContent().replace('<p><br></p>','') ) === '' ) {
+					content = '';
+				} else if ( ! editor && $.trim( $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form'  ).find('#group_message_content').val() ) === '' ) {
+					content = '';
+				}
+
+				var media   	 = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
+				var gif     	 = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_gif' ).val();
+				var contentError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-content-no-error' );
+
+				if  ( '' === content && '' === media && '' === gif ) {
+					if ( ! contentError.length ) {
+						var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + BP_Nouveau.group_messages.no_content + ' </p></div>';
+						$('#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback').append(feedbackHtml);
+						return false;
+					}
+				} else {
+					if ( contentError.length ) {
+						contentError.remove();
+					}
+				}
+
 				var data = {
 					'action'  	 	: 'groups_get_group_members_send_message',
 					'nonce'   	 	: BP_Nouveau.group_messages.nonces.send_messages_users,
 					'group'   	 	: BP_Nouveau.group_messages.group_id,
 					'content' 	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #group_message_content_hidden' ).val(),
-					'media'   	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media' ).val(),
+					'media'   	 	: media,
 					'users'   		: user,
 					'users_list'    : users_list,
 					'type'    		: type,
-					'gif'     	 	: $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bbp_media_gif' ).val()
+					'gif'     	 	: gif
 				};
 
 				$.ajax({

@@ -1191,9 +1191,10 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'page'                  => 1,
 		'type_message'          => __( 'Type the message here.', 'buddyboss' ),
 		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
-		'select_default_text'               => __( 'All Group Members', 'buddyboss' ),
-		'select_default_value'               => __( 'all', 'buddyboss' ),
-		'no_member'               => __( 'No members were found. Try another filter.', 'buddyboss' ),
+		'no_content'            => __( 'Please add some content to your message.', 'buddyboss' ),
+		'select_default_text'   => __( 'All Group Members', 'buddyboss' ),
+		'select_default_value'  => __( 'all', 'buddyboss' ),
+		'no_member'             => __( 'No members were found. Try another filter.', 'buddyboss' ),
 		'invites_form_all'      => __( 'This message will be delivered to all members of this group.', 'buddyboss' ),
 		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss' ),
 		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
@@ -1205,7 +1206,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 			'unmessage'              => wp_create_nonce( 'groups_message_unmessage_user' ),
 			'send_messages'          => wp_create_nonce( 'groups_send_messages' ),
 			'retrieve_group_members' => wp_create_nonce( 'retrieve_group_members' ),
-			'send_messages_users' => wp_create_nonce( 'send_messages_users' ),
+			'send_messages_users'    => wp_create_nonce( 'send_messages_users' ),
 		),
 	);
 
