@@ -188,12 +188,7 @@ function bbp_new_forum_handler( $action = '' ) {
 	// Filter and sanitize
 	$forum_parent_id = apply_filters( 'bbp_new_forum_pre_parent_id', $forum_parent_id );
 
-	// No forum parent was passed (should never happen)
-	if ( empty( $forum_parent_id ) ) {
-		bbp_add_error( 'bbp_new_forum_missing_parent', __( 'Your forum must have a parent forum.', 'buddyboss' ) );
-
-		// Forum exists
-	} elseif ( ! empty( $forum_parent_id ) ) {
+	if ( ! empty( $forum_parent_id ) ) {
 
 		// Forum is a category
 		if ( bbp_is_forum_category( $forum_parent_id ) ) {
