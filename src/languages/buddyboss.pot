@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-21 14:32:21+00:00\n"
+"POT-Creation-Date: 2019-10-22 07:45:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -856,9 +856,9 @@ msgstr ""
 #: bp-activity/bp-activity-template.php:1192
 #: bp-groups/bp-groups-template.php:891
 #: bp-groups/classes/class-bp-groups-list-table.php:593
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:427
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:669
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:745
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:433
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:672
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:748
 msgid "Group logo of %s"
 msgstr ""
 
@@ -9218,7 +9218,7 @@ msgstr ""
 
 #: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5299
 #: bp-notifications/bp-notifications-template.php:1002
-#: bp-templates/bp-nouveau/includes/template-tags.php:2095
+#: bp-templates/bp-nouveau/includes/template-tags.php:2096
 msgid "Order By:"
 msgstr ""
 
@@ -14302,7 +14302,7 @@ msgid "Messages marked as read"
 msgstr ""
 
 #: bp-messages/actions/bulk-manage.php:67
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1039
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1040
 msgid "Messages marked as unread."
 msgstr ""
 
@@ -16667,7 +16667,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:586
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:643
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:763
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1129
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1130
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
 
@@ -16978,51 +16978,51 @@ msgstr ""
 msgid "Sorry, no more messages can be loaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:757
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:764
 msgid "Sent from group <a href=\"%s\">%s</a> to all group members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:873
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:874
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:896
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:897
 msgid "Messages deleted"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:914
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:915
 msgid "There was a problem starring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:916
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:917
 msgid "There was a problem unstarring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:990
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:991
 msgid "Messages successfully starred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:992
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:993
 msgid "Messages successfully unstarred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1015
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1016
 msgid "There was a problem marking your messages as read. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1021
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1022
 msgid "There was a problem marking your messages as unread. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1041
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1042
 msgid "Messages marked as read."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1078
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1079
 msgid "There was a problem dismissing the notice. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1112
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1113
 msgid "Sitewide notice dismissed"
 msgstr ""
 
@@ -17094,49 +17094,49 @@ msgstr ""
 msgid "Loading Suggestions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2098
+#: bp-templates/bp-nouveau/includes/template-tags.php:2099
 msgid "Show:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2307
+#: bp-templates/bp-nouveau/includes/template-tags.php:2308
 #. translators: Do not translate placeholders. 2 = form field name, 3 =
 #. "(required)".
 msgid "<label for=\"%1$s\">%2$s %3$s</label>"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2326
+#: bp-templates/bp-nouveau/includes/template-tags.php:2327
 msgid ""
 "I would like my site to appear in search engines, and in public listings "
 "around this network."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2488
+#: bp-templates/bp-nouveau/includes/template-tags.php:2489
 msgid ""
 "terms-modalBy creating an account you are agreeing to the <a "
 "class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%s</a>."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2496
-#: bp-templates/bp-nouveau/includes/template-tags.php:2512
-#: bp-templates/bp-nouveau/includes/template-tags.php:2528
-#: bp-templates/bp-nouveau/includes/template-tags.php:2536
+#: bp-templates/bp-nouveau/includes/template-tags.php:2497
+#: bp-templates/bp-nouveau/includes/template-tags.php:2513
+#: bp-templates/bp-nouveau/includes/template-tags.php:2529
+#: bp-templates/bp-nouveau/includes/template-tags.php:2537
 msgid "Close (Esc)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2496
-#: bp-templates/bp-nouveau/includes/template-tags.php:2512
-#: bp-templates/bp-nouveau/includes/template-tags.php:2528
-#: bp-templates/bp-nouveau/includes/template-tags.php:2536
+#: bp-templates/bp-nouveau/includes/template-tags.php:2497
+#: bp-templates/bp-nouveau/includes/template-tags.php:2513
+#: bp-templates/bp-nouveau/includes/template-tags.php:2529
+#: bp-templates/bp-nouveau/includes/template-tags.php:2537
 msgid "×"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2504
+#: bp-templates/bp-nouveau/includes/template-tags.php:2505
 msgid ""
 "By creating an account you are agreeing to the <a "
 "class=\"popup-modal-register popup-privacy\" href=\"#privacy-modal\">%s</a>."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/template-tags.php:2520
+#: bp-templates/bp-nouveau/includes/template-tags.php:2521
 msgid ""
 "By creating an account you are agreeing to the <a "
 "class=\"popup-modal-register popup-terms\" href=\"#terms-modal\">%s</a> and "

@@ -383,3 +383,16 @@ div#bp-group-message-content {
 	background-color: transparent !important;
 	cursor: default;
 }
+
+#item-body #group-messages-container div#group-messages-new-submit {
+	margin-left: auto;
+	display: flex;
+}
+
+#item-body #group-messages-container select.group-messages-type {
+	margin-right: 10px;
+}
+
+#item-body #group-messages-container form#send_group_message_form {
+	margin-bottom: 0px;
+}
