@@ -190,7 +190,7 @@ function bp_admin_setting_callback_heartbeat() {
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 	?>
 
-	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" 
+	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1"
 	<?php
 	if ( '1' != $heartbeat_disabled ) {
 		checked( bp_is_activity_heartbeat_active( true ) );
@@ -1020,5 +1020,17 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 	<input id="register-confirm-password" name="register-confirm-password" type="checkbox" value="1" <?php checked( bp_register_confirm_password( false ) ); ?> />
 	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
+	<?php
+}
+
+/**
+ * 'Enable group cover photos' field markup.
+ *
+ * @since BuddyPress 2.4.0
+ */
+function bp_admin_setting_callback_group_messages() {
+	?>
+	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
+	<label for="bp-disable-group-messages"><?php _e( 'Allow group organizers & moderator to send group messages', 'buddyboss' ); ?></label>
 	<?php
 }

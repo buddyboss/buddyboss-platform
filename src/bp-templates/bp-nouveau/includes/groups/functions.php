@@ -43,18 +43,30 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-group-invites' => array(
-			'file'         => 'js/buddypress-group-invites%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
-			'footer'       => true,
-		),
-		'bp-nouveau-group-messages' => array(
-			'file'         => 'js/buddypress-group-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
-			'footer'       => true,
-		),
-	) );
+	if ( false === bp_disable_group_messages() ) {
+		return array_merge( $scripts, array(
+			'bp-nouveau-group-invites' => array(
+				'file'         => 'js/buddypress-group-invites%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
+				'footer'       => true,
+			)
+		) );
+	} else {
+		return array_merge( $scripts, array(
+			'bp-nouveau-group-invites' => array(
+				'file'         => 'js/buddypress-group-invites%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
+				'footer'       => true,
+			),
+			'bp-nouveau-group-messages' => array(
+				'file'         => 'js/buddypress-group-messages%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
+				'footer'       => true,
+			),
+		) );
+	}
+
+
 }
 
 /**
@@ -1183,7 +1195,7 @@ function bp_nouveau_groups_notification_filters() {
  */
 function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 
-	if ( ! bp_is_group_messages() ) {
+	if ( false === bp_disable_group_messages() ) {
 		return $params;
 	}
 
@@ -1221,7 +1233,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
  */
 function bp_nouveau_groups_messages_enqueue_scripts() {
 
-	if ( ! bp_is_group_messages() ) {
+	if ( false === bp_disable_group_messages() ) {
 		return;
 	}
 

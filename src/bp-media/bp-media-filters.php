@@ -1051,6 +1051,10 @@ function bp_media_delete_attachment_media( $attachment_id ) {
  */
 function bp_media_messages_save_group_data( &$message ) {
 
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
 	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : '';
 	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : '';
 	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : '';
@@ -1107,6 +1111,10 @@ function bp_media_messages_save_group_data( &$message ) {
 }
 
 function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
 
 	if ( ! empty( $message_ids ) ) {
 		foreach ( $message_ids as $message_id ) {

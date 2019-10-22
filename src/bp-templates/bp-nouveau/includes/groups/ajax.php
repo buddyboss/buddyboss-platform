@@ -7,8 +7,6 @@
  */
 
 // Exit if accessed directly.
-use function Clue\StreamFilter\fun;
-
 defined( 'ABSPATH' ) || exit;
 
 add_action( 'admin_init', function() {
@@ -578,6 +576,10 @@ function bp_nouveau_ajax_remove_group_invite() {
  */
 function bp_nouveau_ajax_group_get_users_to_send_message() {
 
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
 	if ( empty( $_GET['action'] ) ) {
 		wp_send_json_error();
 	}
@@ -634,6 +636,10 @@ function bp_nouveau_ajax_group_get_users_to_send_message() {
 	}
 }
 function bp_nouveau_ajax_groups_get_group_members_listing() {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
 
 	if ( empty( $_POST['action'] ) ) {
 		wp_send_json_error();
@@ -756,6 +762,10 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 }
 
 function bp_nouveau_ajax_groups_get_group_members_send_message() {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
 
 	if ( empty( $_POST['action'] ) ) {
 		wp_send_json_error();
