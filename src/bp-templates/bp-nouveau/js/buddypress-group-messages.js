@@ -313,16 +313,29 @@ window.bp = window.bp || {};
 				var media   	 = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_media' ).val();
 				var gif     	 = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-bottom #bp_group_messages_gif' ).val();
 				var contentError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-content-no-error' );
+				var recipientError = $( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback .bp-feedback-recipient-no-error' );
 
 				if  ( '' === content && '' === media && '' === gif ) {
 					if ( ! contentError.length ) {
 						var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + BP_Nouveau.group_messages.no_content + ' </p></div>';
 						$('#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback').append(feedbackHtml);
-						return false;
 					}
+					return false;
 				} else {
 					if ( contentError.length ) {
 						contentError.remove();
+					}
+				}
+
+				if ( 'all' !== $( '.group-messages-select-members-dropdown :selected' ).val() && 0 === users_list.length ) {
+					if ( ! recipientError.length ) {
+						var recipientHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + BP_Nouveau.group_messages.no_recipient + ' </p></div>';
+						$('#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .bp-messages-feedback').append(recipientHtml);
+					}
+					return false;
+				}  else {
+					if ( recipientError.length ) {
+						recipientError.remove();
 					}
 				}
 

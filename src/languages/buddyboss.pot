@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-22 07:45:47+00:00\n"
+"POT-Creation-Date: 2019-10-22 14:51:57+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -857,8 +857,8 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:891
 #: bp-groups/classes/class-bp-groups-list-table.php:593
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:433
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:672
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:748
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:674
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:752
 msgid "Group logo of %s"
 msgstr ""
 
@@ -1686,7 +1686,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:479
 #: bp-core/classes/class-bp-admin.php:480 bp-forums/admin/settings.php:1425
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:863
+#: bp-media/bp-media-filters.php:865
 msgid "Tools"
 msgstr ""
 
@@ -1991,7 +1991,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2335
-#: bp-media/bp-media-filters.php:962
+#: bp-media/bp-media-filters.php:964
 msgid "Run Migration"
 msgstr ""
 
@@ -2403,7 +2403,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:327
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
 #: bp-forums/templates/default/bbpress/content-statistics.php:21
-#: bp-media/bp-media-filters.php:914 bp-media/bp-media-settings.php:157
+#: bp-media/bp-media-filters.php:916 bp-media/bp-media-settings.php:157
 #: bp-media/bp-media-settings.php:164 bp-media/bp-media-settings.php:171
 #: bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
@@ -2515,7 +2515,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
-#: bp-media/bp-media-filters.php:920
+#: bp-media/bp-media-filters.php:922
 #: bp-templates/bp-nouveau/includes/groups/classes.php:263
 msgid "Discussions"
 msgstr ""
@@ -2531,7 +2531,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:926
+#: bp-media/bp-media-filters.php:928
 msgid "Replies"
 msgstr ""
 
@@ -2912,7 +2912,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:908
+#: bp-media/bp-media-filters.php:910
 msgid "Media"
 msgstr ""
 
@@ -12159,7 +12159,7 @@ msgid "Send Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:731
-#: bp-media/bp-media-filters.php:902
+#: bp-media/bp-media-filters.php:904
 #: bp-media/classes/class-bp-media-component.php:276
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 msgid "Albums"
@@ -13289,43 +13289,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:805 bp-media/bp-media-filters.php:821
-#: bp-media/bp-media-filters.php:822 bp-media/bp-media-filters.php:875
-#: bp-media/bp-media-filters.php:1010
+#: bp-media/bp-media-filters.php:807 bp-media/bp-media-filters.php:823
+#: bp-media/bp-media-filters.php:824 bp-media/bp-media-filters.php:877
+#: bp-media/bp-media-filters.php:1012
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:880
+#: bp-media/bp-media-filters.php:882
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:897
+#: bp-media/bp-media-filters.php:899
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:899
+#: bp-media/bp-media-filters.php:901
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:904 bp-media/bp-media-filters.php:910
-#: bp-media/bp-media-filters.php:916 bp-media/bp-media-filters.php:922
-#: bp-media/bp-media-filters.php:928
+#: bp-media/bp-media-filters.php:906 bp-media/bp-media-filters.php:912
+#: bp-media/bp-media-filters.php:918 bp-media/bp-media-filters.php:924
+#: bp-media/bp-media-filters.php:930
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:940 bp-media/bp-media-filters.php:954
+#: bp-media/bp-media-filters.php:942 bp-media/bp-media-filters.php:956
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:949 bp-media/bp-media-functions.php:2017
+#: bp-media/bp-media-filters.php:951 bp-media/bp-media-functions.php:2017
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:961
+#: bp-media/bp-media-filters.php:963
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -13333,7 +13333,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1008
+#: bp-media/bp-media-filters.php:1010
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -14302,7 +14302,7 @@ msgid "Messages marked as read"
 msgstr ""
 
 #: bp-messages/actions/bulk-manage.php:67
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1040
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1055
 msgid "Messages marked as unread."
 msgstr ""
 
@@ -14514,8 +14514,8 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:22
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:707
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:710
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:709
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:712
 #: bp-templates/bp-nouveau/includes/media/functions.php:121
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
@@ -15114,14 +15114,14 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:11
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-paginate.php:5
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-paginate.php:12
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:725
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:727
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:729
 msgid "Previous page"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-paginate.php:10
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:733
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:734
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:735
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:736
 msgid "Next page"
 msgstr ""
 
@@ -15546,7 +15546,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:4
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:45
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1194
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1196
 msgid "All Group Members"
 msgstr ""
 
@@ -16618,7 +16618,7 @@ msgid "You can view the group's pending invitations from this screen."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:400
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1196
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1198
 msgid "No members were found. Try another filter."
 msgstr ""
 
@@ -16666,9 +16666,14 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:586
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:643
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:763
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1130
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:765
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1145
 msgid "There was a problem loading recipients. Please try again."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:843
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:876
+msgid "Your message sent successfully."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:128
@@ -16687,19 +16692,19 @@ msgid ""
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:157
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1199
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1201
 msgid ""
 "Group invitations cleared. Please use one of the available tabs to select "
 "members to invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:158
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1200
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1202
 msgid "Sending group invitations. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:159
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1201
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1203
 msgid "Cancel invitation %s"
 msgstr ""
 
@@ -16771,15 +16776,27 @@ msgstr ""
 msgid "Type the message here."
 msgstr ""
 
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1194
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:217
+#: bp-templates/bp-nouveau/includes/messages/functions.php:100
+msgid "Please add some content to your message."
+msgstr ""
+
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1195
-msgid "all"
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:66
+#: bp-templates/bp-nouveau/includes/messages/functions.php:99
+msgid "Please add at least one recipient."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1197
+msgid "all"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1199
 msgid "This message will be delivered to all members of this group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1198
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1200
 msgid ""
 "Select group members to message by clicking the + button next to each "
 "member. Once you've made a selection, click \"Send Message\" to create a "
@@ -16941,16 +16958,6 @@ msgstr ""
 msgid "Your message could not be sent. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:66
-#: bp-templates/bp-nouveau/includes/messages/functions.php:99
-msgid "Please add at least one recipient."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:217
-#: bp-templates/bp-nouveau/includes/messages/functions.php:100
-msgid "Please add some content to your message."
-msgstr ""
-
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:366
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:602
 msgid "Unauthorized request."
@@ -16978,51 +16985,63 @@ msgstr ""
 msgid "Sorry, no more messages can be loaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:764
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:761
 msgid "Sent from group <a href=\"%s\">%s</a> to all group members."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:874
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:763
+msgid "Sent from group <a href=\"%s\">%s</a> to the people in this conversation."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:765
+msgid "Sent from group <a href=\"%s\">%s</a> individually to all group members."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:767
+msgid "Sent from group <a href=\"%s\">%s</a> to individual members."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:889
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:897
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:912
 msgid "Messages deleted"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:915
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:930
 msgid "There was a problem starring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:917
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:932
 msgid "There was a problem unstarring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:991
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1006
 msgid "Messages successfully starred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:993
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1008
 msgid "Messages successfully unstarred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1016
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1031
 msgid "There was a problem marking your messages as read. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1022
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1037
 msgid "There was a problem marking your messages as unread. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1042
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1057
 msgid "Messages marked as read."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1079
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1094
 msgid "There was a problem dismissing the notice. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1113
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1128
 msgid "Sitewide notice dismissed"
 msgstr ""
 

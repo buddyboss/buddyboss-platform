@@ -661,12 +661,14 @@ function bp_nouveau_ajax_get_thread_messages() {
 	$group_message_type        = '';
 	$group_message_thread_type = '';
 	$group_message_fresh       = '';
+	$message_from              = '';
 
 	if ( !empty( $group_id ) ) {
 		$group_message_users       = bp_messages_get_meta( $last_message_id, 'group_message_users', true );
 		$group_message_type        = bp_messages_get_meta( $last_message_id, 'group_message_type', true );
 		$group_message_thread_type = bp_messages_get_meta( $last_message_id, 'group_message_thread_type', true );
 		$group_message_fresh       = bp_messages_get_meta( $last_message_id, 'group_message_fresh', true );
+		$message_from              = bp_messages_get_meta( $last_message_id, 'message_from', true );
 		$group_name                = bp_get_group_name( groups_get_group( $group_id ) );
 		$group_link                = bp_get_group_permalink( groups_get_group( $group_id ) );
 		$group_avatar              = bp_core_fetch_avatar( array( 'item_id'    => $group_id, 'object'     => 'group', 'type'       => 'thumb', 'avatar_dir' => 'group-avatars', 'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ), 'width'      => '32', 'height'     => '32', 'title'      => $group_name, 'html'       => false, ) );
@@ -701,6 +703,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			'group_message_type'        => $group_message_type,
 			'group_message_thread_type' => $group_message_thread_type,
 			'group_message_fresh'       => $group_message_fresh,
+			'message_from'              => $message_from,
 		);
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
@@ -734,8 +737,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$group_message_type        = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_type', true );
 		$group_message_thread_type = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_thread_type', true );
 		$group_message_fresh       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_fresh', true );
+		$message_from              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'message_from', true );
 
-		if ( $group_id && $group_message_fresh && $group_message_thread_type && 'new' === $group_message_thread_type && 'yes' === $group_message_fresh ) {
+		if ( $group_id && $message_from && 'group' === $message_from) {
 
 			$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
 			$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -753,6 +757,16 @@ function bp_nouveau_ajax_get_thread_messages() {
 				)
 			);
 
+			if ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'open' === $group_message_type ) {
+				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> to all group members.', 'buddyboss' ), $group_link, $group_name );
+			} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'open' === $group_message_type ) {
+				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> to the people in this conversation.', 'buddyboss' ), $group_link, $group_name );
+			} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
+				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> individually to all group members.', 'buddyboss' ), $group_link, $group_name );
+			} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
+				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> to individual members.', 'buddyboss' ), $group_link, $group_name );
+			}
+
 			$thread->messages[ $i ] = array(
 				'group_name'                => $group_name,
 				'group_link'                => $group_link,
@@ -761,7 +775,8 @@ function bp_nouveau_ajax_get_thread_messages() {
 				'group_message_type'        => $group_message_type,
 				'group_message_thread_type' => $group_message_thread_type,
 				'group_message_fresh'       => $group_message_fresh,
-				'group_text'                => sprintf( __( 'Sent from group <a href="%s">%s</a> to all group members.', 'buddyboss' ), $group_link, $group_name ),
+				'message_from'              => $message_from,
+				'group_text'                => $group_text,
 				'id'                        => bp_get_the_thread_message_id(),
 				'content'                   => do_shortcode( bp_get_the_thread_message_content() ),
 				'sender_id'                 => bp_get_the_thread_message_sender_id(),

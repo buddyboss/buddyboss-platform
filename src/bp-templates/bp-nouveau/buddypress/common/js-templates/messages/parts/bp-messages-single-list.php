@@ -1,5 +1,5 @@
 <script type="text/html" id="tmpl-bp-messages-single-list">
-	<# if ( data.group_name ) { #>
+	<# if ( data.message_from && 'group' === data.message_from ) { #>
 	<div class="bp-single-message-wrap group-messages-highlight">
 	<# } else { #>
 	<div class="bp-single-message-wrap">
@@ -73,7 +73,7 @@
 			<div class="bp-messages-hook after-message-content">{{{data.afterContent}}}</div>
 			<# } #>
 
-			<# if ( data.group_text ) { #>
+			<# if ( data.group_text && data.message_from && 'group' === data.message_from ) { #>
 				<p>{{{data.group_text}}}</p>
 			<# } #>
 		</div>

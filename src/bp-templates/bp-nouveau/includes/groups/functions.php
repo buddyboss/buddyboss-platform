@@ -1192,6 +1192,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 		'type_message'          => __( 'Type the message here.', 'buddyboss' ),
 		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
 		'no_content'            => __( 'Please add some content to your message.', 'buddyboss' ),
+		'no_recipient'          => __( 'Please add at least one recipient.', 'buddyboss' ),
 		'select_default_text'   => __( 'All Group Members', 'buddyboss' ),
 		'select_default_value'  => __( 'all', 'buddyboss' ),
 		'no_member'             => __( 'No members were found. Try another filter.', 'buddyboss' ),

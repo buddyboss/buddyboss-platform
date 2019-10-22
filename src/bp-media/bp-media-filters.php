@@ -41,6 +41,7 @@ add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 );
+add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );
 
 // Core tools
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
@@ -648,6 +649,7 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
     }
 }
 
+
 /**
  * Save gif data into messages meta key "_gif_data"
  *
@@ -1049,10 +1051,11 @@ function bp_media_delete_attachment_media( $attachment_id ) {
  */
 function bp_media_messages_save_group_data( &$message ) {
 
-	$group         = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : '';
-	$message_users = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : '';
-	$message_type  = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : '';
-	$thread_type   = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : '';
+	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : '';
+	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : '';
+	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : '';
+	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : '';
+	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : '';
 
 	if ( isset( $group ) &&  '' !== $group ) {
 		$thread_key =   'group_message_thread_id_' . $message->thread_id;
@@ -1062,6 +1065,9 @@ function bp_media_messages_save_group_data( &$message ) {
 		bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
 		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
 		bp_messages_update_meta( $message->id, $thread_key, $group );
+		bp_messages_update_meta( $message->id, 'message_from', 'group' );
+		bp_messages_update_meta( $message->id, 'message_from', 'group' );
+		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
 	} else {
 
 		$args = [
@@ -1092,9 +1098,20 @@ function bp_media_messages_save_group_data( &$message ) {
 			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
 			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
 			bp_messages_update_meta( $message->id, $thread_key, $group );
+			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
 		}
 
 
+	}
+
+}
+
+function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
+
+	if ( ! empty( $message_ids ) ) {
+		foreach ( $message_ids as $message_id ) {
+			bp_messages_delete_meta( $message_id );
+		}
 	}
 
 }
