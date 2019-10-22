@@ -1259,9 +1259,9 @@ function bp_nouveau_nav_count() {
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav &&  'subgroups' === $nav_item->slug  ) {
 			$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug  ) {
-			$count = count( bp_media_get_total_group_media_count() );
+			$count = bp_media_get_total_group_media_count();
 		}  elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug  ) {
-			$count = count( bp_media_get_total_group_album_count() );
+			$count = bp_media_get_total_group_album_count();
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
 			$group  = groups_get_current_group();
 			$admins = groups_get_group_admins( $group->id );
