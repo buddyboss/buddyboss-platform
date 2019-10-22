@@ -162,21 +162,20 @@ class BP_Media_Component extends BP_Component {
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                                    => 'photos',
-				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
-				'has_directory'                           => true,
+				'slug'            => 'photos',
+				'root_slug'       => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
+				'has_directory'   => true,
 				// 'notification_callback' => 'bp_media_format_notifications',
-										  'global_tables' => $global_tables,
-				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
-				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
+				'global_tables'   => $global_tables,
+				'directory_title' => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
+				'search_string'   => __( 'Search Photos&hellip;', 'buddyboss' ),
 			)
 		);
 
 		/* Single Album Globals **********************************************/
 
 		// Are we viewing a single album?
-		if ( bp_is_media_component() && bp_is_single_album()
-			 && ( $album_id = BP_Media_Album::album_exists( bp_action_variable( 0 ) ) )
+		if ( bp_is_media_component() && bp_is_single_album() && ( $album_id = BP_Media_Album::album_exists( bp_action_variable( 0 ) ) ) // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 		) {
 			$bp->is_single_item  = true;
 			$this->current_album = albums_get_album( $album_id );

@@ -70,25 +70,25 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 			$error = error_get_last();
 
 			// Make sure an error was thrown from this file
-			if ( empty( $error ) || empty( $error['file'] ) || (int) $error['type'] !== 1
-				 || $error['file'] !== __FILE__ ) {
+			if ( empty( $error ) || empty( $error['file'] ) || 1 !== (int) $error['type'] || __FILE__ !== $error['file'] ) {
 				return;
 			}
 
-			@header( 'HTTP/1.1 200 OK' );
+			@header( 'HTTP/1.1 200 OK' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 			$aid        = $bp_media_rotation_fix_id;
 			$attachment = get_post( $aid );
-			$name       = $url = null;
+			$name       = null;
+			$url        = null;
 
-			if ( $attachment !== null ) {
+			if ( null !== $attachment ) {
 				$name    = $attachment->post_title;
 				$url_nfo = wp_get_attachment_image_src( $aid );
 				$url     = is_array( $url_nfo ) && ! empty( $url_nfo ) ? $url_nfo[0] : null;
 			}
 
 			$result = array(
-				'status'        => ( $attachment !== null ),
+				'status'        => ( null !== $attachment ),
 				'attachment_id' => (int) $aid,
 				'url'           => esc_url( $url ),
 				'name'          => esc_attr( $name ),
@@ -115,7 +115,7 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 			$ort  = 0;
 
 			if ( function_exists( 'exif_read_data' ) ) {
-				$exif = @exif_read_data( $source );
+				$exif = @exif_read_data( $source ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 				$ort  = isset( $exif['Orientation'] ) ? $exif['Orientation'] : 0;
 			}
 
@@ -126,40 +126,40 @@ if ( ! class_exists( 'BP_Media_Rotation' ) ) {
 				$width  = $size[0];
 				$height = $size[1];
 
-				$sourceImage      = imagecreatefromjpeg( $source );
-				$destinationImage = imagecreatetruecolor( $width, $height );
+				$source_image      = imagecreatefromjpeg( $source );
+				$destination_image = imagecreatetruecolor( $width, $height );
 				// Specifies the color of the uncovered zone after the rotation
-				$bgd_color = imagecolorallocatealpha( $destinationImage, 0, 0, 0, 127 );
+				$bgd_color = imagecolorallocatealpha( $destination_image, 0, 0, 0, 127 );
 
-				imagecopyresampled( $destinationImage, $sourceImage, 0, 0, 0, 0, $width, $height, $width, $height );
+				imagecopyresampled( $destination_image, $source_image, 0, 0, 0, 0, $width, $height, $width, $height );
 
 				switch ( $ort ) {
 					case 2:
 						$this->flip_image( $dimg );
 						break;
 					case 3:
-						$destinationImage = imagerotate( $destinationImage, 180, $bgd_color );
+						$destination_image = imagerotate( $destination_image, 180, $bgd_color );
 						break;
 					case 4:
 						$this->flip_image( $dimg );
 						break;
 					case 5:
-						$this->flip_image( $destinationImage );
-						$destinationImage = imagerotate( $destinationImage, - 90, $bgd_color );
+						$this->flip_image( $destination_image );
+						$destination_image = imagerotate( $destination_image, - 90, $bgd_color );
 						break;
 					case 6:
-						$destinationImage = imagerotate( $destinationImage, - 90, $bgd_color );
+						$destination_image = imagerotate( $destination_image, - 90, $bgd_color );
 						break;
 					case 7:
-						$this->flip_image( $destinationImage );
-						$destinationImage = imagerotate( $destinationImage, - 90, $bgd_color );
+						$this->flip_image( $destination_image );
+						$destination_image = imagerotate( $destination_image, - 90, $bgd_color );
 						break;
 					case 8:
-						$destinationImage = imagerotate( $destinationImage, 90, $bgd_color );
+						$destination_image = imagerotate( $destination_image, 90, $bgd_color );
 						break;
 				}
 
-				return imagejpeg( $destinationImage, $destination, 100 );
+				return imagejpeg( $destination_image, $destination, 100 );
 			}
 		}
 

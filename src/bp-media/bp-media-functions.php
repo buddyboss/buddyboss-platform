@@ -160,17 +160,17 @@ function bp_media_upload_handler( $file_id = 'file' ) {
  */
 function bp_media_compress_image( $source, $destination, $quality = 90 ) {
 
-	$info = @getimagesize( $source );
+	$info = @getimagesize( $source ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
-	if ( $info['mime'] == 'image/jpeg' ) {
-		$image = @imagecreatefromjpeg( $source );
-	} elseif ( $info['mime'] == 'image/gif' ) {
-		$image = @imagecreatefromgif( $source );
-	} elseif ( $info['mime'] == 'image/png' ) {
-		$image = @imagecreatefrompng( $source );
+	if ( 'image/jpeg' === $info['mime'] ) {
+		$image = @imagecreatefromjpeg( $source ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+	} elseif ( 'image/gif' === $info['mime'] ) {
+		$image = @imagecreatefromgif( $source ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+	} elseif ( 'image/png' === $info['mime'] ) {
+		$image = @imagecreatefrompng( $source ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 	}
 
-	@imagejpeg( $image, $destination, $quality );
+	@imagejpeg( $image, $destination, $quality ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 	return $destination;
 }
@@ -189,7 +189,7 @@ function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) 
 
 	if ( $max_size < 0 ) {
 		// Start with post_max_size.
-		$size = @ini_get( 'post_max_size' );
+		$size = @ini_get( 'post_max_size' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
 		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
 		if ( $unit ) {
@@ -204,7 +204,7 @@ function bp_media_file_upload_max_size( $post_string = false, $type = 'bytes' ) 
 
 		// If upload_max_size is less, then reduce. Except if upload_max_size is
 		// zero, which indicates no limit.
-		$size = @ini_get( 'upload_max_filesize' );
+		$size = @ini_get( 'upload_max_filesize' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 		$unit = preg_replace( '/[^bkmgtpezy]/i', '', $size ); // Remove the non-unit characters from the size.
 		$size = preg_replace( '/[^0-9\.]/', '', $size ); // Remove the non-numeric characters from the size.
 		if ( $unit ) {
@@ -250,7 +250,7 @@ function bp_media_format_size_units( $bytes, $post_string = false, $type = 'byte
 		$bytes = ( $bytes / 1024 ) . ( $post_string ? ' KB' : '' );
 	} elseif ( $bytes > 1 ) {
 		$bytes = $bytes . ( $post_string ? ' bytes' : '' );
-	} elseif ( $bytes == 1 ) {
+	} elseif ( 1 === $bytes ) {
 		$bytes = $bytes . ( $post_string ? ' byte' : '' );
 	} else {
 		$bytes = '0' . ( $post_string ? ' bytes' : '' );
@@ -458,9 +458,9 @@ function bp_media_add( $args = '' ) {
 	if ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
 
-	// album privacy is media privacy
-	} else if ( ! empty( $media->album_id ) ) {
-		$album        = new BP_Media_Album( $media->album_id );
+		// album privacy is media privacy
+	} elseif ( ! empty( $media->album_id ) ) {
+		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
 			$media->privacy = $album->privacy;
 		}
@@ -509,12 +509,14 @@ function bp_media_add_handler( $medias = array() ) {
 		// save media
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-			) );
+			$media_id = bp_media_add(
+				array(
+					'attachment_id' => $media['id'],
+					'title'         => $media['name'],
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
+					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+				)
+			);
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
@@ -551,18 +553,21 @@ function bp_media_add_handler( $medias = array() ) {
 function bp_media_delete( $args = '', $from = false ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'blog_id'       => false,
-		'attachment_id' => false,
-		'user_id'       => false,
-		'title'         => false,
-		'album_id'      => false,
-		'activity_id'   => false,
-		'group_id'      => false,
-		'privacy'       => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'            => false,
+			'blog_id'       => false,
+			'attachment_id' => false,
+			'user_id'       => false,
+			'title'         => false,
+			'album_id'      => false,
+			'activity_id'   => false,
+			'group_id'      => false,
+			'privacy'       => false,
+			'date_created'  => false,
+		)
+	);
 
 	/**
 	 * Fires before an media item proceeds to be deleted.
@@ -627,8 +632,8 @@ function bp_media_remove_all_user_data( $user_id = 0 ) {
 	 */
 	do_action( 'bp_media_remove_all_user_data', $user_id );
 }
-add_action( 'wpmu_delete_user',  'bp_media_remove_all_user_data' );
-add_action( 'delete_user',       'bp_media_remove_all_user_data' );
+add_action( 'wpmu_delete_user', 'bp_media_remove_all_user_data' );
+add_action( 'delete_user', 'bp_media_remove_all_user_data' );
 
 /**
  * Return the media activity.
@@ -1012,12 +1017,15 @@ function bp_album_add( $args = '' ) {
 function bp_album_delete( $args ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'user_id'       => false,
-		'group_id'      => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'           => false,
+			'user_id'      => false,
+			'group_id'     => false,
+			'date_created' => false,
+		)
+	);
 
 	/**
 	 * Fires before an album item proceeds to be deleted.
@@ -1098,19 +1106,19 @@ function albums_check_album_access( $album_id ) {
 
 	if ( ! empty( $album->privacy ) ) {
 
-		if ( 'public' == $album->privacy ) {
+		if ( 'public' === $album->privacy ) {
 			return true;
 		}
 
-		if ( 'loggedin' == $album->privacy && is_user_logged_in() ) {
+		if ( 'loggedin' === $album->privacy && is_user_logged_in() ) {
 			return true;
 		}
 
-		if ( is_user_logged_in() && 'friends' == $album->privacy && friends_check_friendship( get_current_user_id(), $album->user_id ) ) {
+		if ( is_user_logged_in() && 'friends' === $album->privacy && friends_check_friendship( get_current_user_id(), $album->user_id ) ) {
 			return true;
 		}
 
-		if ( bp_is_my_profile() && $album->user_id == bp_loggedin_user_domain() && 'onlyme' == $album->privacy ) {
+		if ( bp_is_my_profile() && bp_loggedin_user_domain() === $album->user_id && 'onlyme' === $album->privacy ) {
 			return true;
 		}
 	}
@@ -1142,7 +1150,7 @@ function bp_media_delete_orphaned_attachments() {
 	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
 
 	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach( $orphaned_attachment_query->posts as $a_id ) {
+		foreach ( $orphaned_attachment_query->posts as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
@@ -1213,7 +1221,8 @@ function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 	$overrides = array( 'test_form' => false );
 
 	$time = current_time( 'mysql' );
-	if ( $post = get_post() ) {
+	$post = get_post();
+	if ( $post ) {
 		if ( substr( $post->post_date, 0, 4 ) > 0 ) {
 			$time = $post->post_date;
 		}
@@ -1231,7 +1240,8 @@ function bp_media_handle_sideload( $file_array, $post_data = array() ) {
 	$content = '';
 
 	// Use image exif/iptc data for title and caption defaults if possible.
-	if ( $image_meta = @wp_read_image_metadata( $file ) ) {
+	$image_meta = @wp_read_image_metadata( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+	if ( $image_meta ) {
 		if ( trim( $image_meta['title'] ) && ! is_numeric( sanitize_title( $image_meta['title'] ) ) ) {
 			$title = $image_meta['title'];
 		}
@@ -1288,8 +1298,8 @@ function bp_media_import_buddyboss_media_tables() {
 	update_option( 'bp_media_import_total_media', $total_media );
 	update_option( 'bp_media_import_total_albums', $total_albums );
 
-	$albums_done      = get_option( 'bp_media_import_albums_done', 0 );
-	$run_albums_query = $albums_done != $total_albums;
+	$albums_done      = (int) get_option( 'bp_media_import_albums_done', 0 );
+	$run_albums_query = $albums_done !== $total_albums;
 
 	if ( $run_albums_query ) {
 
@@ -1315,9 +1325,9 @@ function bp_media_import_buddyboss_media_tables() {
 				);
 
 				if ( ! empty( $album->privacy ) ) {
-					if ( 'private' == $album->privacy ) {
+					if ( 'private' === $album->privacy ) {
 						$privacy = 'onlyme';
-					} elseif ( 'members' == $album->privacy ) {
+					} elseif ( 'members' === $album->privacy ) {
 						$privacy = 'loggedin';
 					} else {
 						$privacy = $album->privacy;
@@ -1382,9 +1392,9 @@ function bp_media_import_buddyboss_media_tables() {
 					}
 				}
 
-				if ( ! empty( $media->upload_date ) && '0000-00-00 00:00:00' != $media->upload_date ) {
+				if ( ! empty( $media->upload_date ) && '0000-00-00 00:00:00' !== $media->upload_date ) {
 					$date_created = $media->upload_date;
-				} elseif ( ! empty( $media->upload_date ) && '0000-00-00 00:00:00' == $media->upload_date && ! empty( $attachment_id ) ) {
+				} elseif ( ! empty( $media->upload_date ) && '0000-00-00 00:00:00' === $media->upload_date && ! empty( $attachment_id ) ) {
 					$date_created = get_the_date( $attachment_id );
 				} else {
 					$date_created = bp_core_current_time();
@@ -1393,9 +1403,9 @@ function bp_media_import_buddyboss_media_tables() {
 				$media_args['date_created'] = $date_created;
 
 				if ( ! empty( $media->privacy ) ) {
-					if ( 'private' == $media->privacy ) {
+					if ( 'private' === $media->privacy ) {
 						$privacy = 'onlyme';
-					} elseif ( 'members' == $media->privacy ) {
+					} elseif ( 'members' === $media->privacy ) {
 						$privacy = 'loggedin';
 					} else {
 						$privacy = $media->privacy;
@@ -1425,7 +1435,7 @@ function bp_media_import_buddyboss_media_tables() {
 
 							$activity_args['recorded_time'] = $activity->date_recorded;
 
-							if ( 'groups' == $activity->component ) {
+							if ( 'groups' === $activity->component ) {
 								$media_args['group_id'] = $activity->item_id;
 
 								$activity_args['component'] = buddypress()->groups->id;
@@ -1775,7 +1785,7 @@ function bp_media_import_reset_media_albums() {
 							do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 							// Deleting an activity comment.
-							if ( 'activity_comment' == $activity->type ) {
+							if ( 'activity_comment' === $activity->type ) {
 								if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 									/** This action is documented in bp-activity/bp-activity-actions.php */
 									do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -1844,7 +1854,7 @@ function bp_media_import_reset_media() {
 				do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 				// Deleting an activity comment.
-				if ( 'activity_comment' == $activity->type ) {
+				if ( 'activity_comment' === $activity->type ) {
 					if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 						/** This action is documented in bp-activity/bp-activity-actions.php */
 						do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
@@ -1980,19 +1990,19 @@ function bp_media_import_status_request() {
 
 	$import_status = get_option( 'bp_media_import_status' );
 
-	if ( 'reset_albums' == $import_status ) {
+	if ( 'reset_albums' === $import_status ) {
 		bp_media_import_reset_media_albums();
-	} elseif ( 'reset_media' == $import_status ) {
+	} elseif ( 'reset_media' === $import_status ) {
 		bp_media_import_reset_media();
-	} elseif ( 'reset_forum' == $import_status ) {
+	} elseif ( 'reset_forum' === $import_status ) {
 		bp_media_import_reset_forum_media();
-	} elseif ( 'reset_topic' == $import_status ) {
+	} elseif ( 'reset_topic' === $import_status ) {
 		bp_media_import_reset_topic_media();
-	} elseif ( 'reset_reply' == $import_status ) {
+	} elseif ( 'reset_reply' === $import_status ) {
 		bp_media_import_reset_reply_media();
-	} elseif ( 'reset_options' == $import_status ) {
+	} elseif ( 'reset_options' === $import_status ) {
 		bp_media_import_reset_options();
-	} elseif ( 'start' == $import_status ) {
+	} elseif ( 'start' === $import_status ) {
 
 		update_option( 'bp_media_import_status', 'importing' );
 
@@ -2002,35 +2012,35 @@ function bp_media_import_status_request() {
 		bp_media_import_buddyboss_reply_media();
 	} else {
 
-		$total_media   = get_option( 'bp_media_import_total_media', 0 );
-		$total_albums  = get_option( 'bp_media_import_total_albums', 0 );
-		$albums_done   = get_option( 'bp_media_import_albums_done', 0 );
-		$media_done    = get_option( 'bp_media_import_media_done', 0 );
-		$forums_done   = get_option( 'bp_media_import_forums_done', 0 );
-		$forums_total  = get_option( 'bp_media_import_forums_total', 0 );
-		$topics_done   = get_option( 'bp_media_import_topics_done', 0 );
-		$topics_total  = get_option( 'bp_media_import_topics_total', 0 );
-		$replies_done  = get_option( 'bp_media_import_replies_done', 0 );
-		$replies_total = get_option( 'bp_media_import_replies_total', 0 );
+		$total_media   = (int) get_option( 'bp_media_import_total_media', 0 );
+		$total_albums  = (int) get_option( 'bp_media_import_total_albums', 0 );
+		$albums_done   = (int) get_option( 'bp_media_import_albums_done', 0 );
+		$media_done    = (int) get_option( 'bp_media_import_media_done', 0 );
+		$forums_done   = (int) get_option( 'bp_media_import_forums_done', 0 );
+		$forums_total  = (int) get_option( 'bp_media_import_forums_total', 0 );
+		$topics_done   = (int) get_option( 'bp_media_import_topics_done', 0 );
+		$topics_total  = (int) get_option( 'bp_media_import_topics_total', 0 );
+		$replies_done  = (int) get_option( 'bp_media_import_replies_done', 0 );
+		$replies_total = (int) get_option( 'bp_media_import_replies_total', 0 );
 
 		$importing = false;
-		if ( $albums_done != $total_albums || $media_done != $total_media ) {
+		if ( $albums_done !== $total_albums || $media_done !== $total_media ) {
 			bp_media_import_buddyboss_media_tables();
 			$importing = true;
 		}
 
 		if ( bp_is_active( 'forums' ) ) {
-			if ( $forums_done != $forums_total ) {
+			if ( $forums_done !== $forums_total ) {
 				bp_media_import_buddyboss_forum_media();
 				$importing = true;
 			}
 
-			if ( $topics_done != $topics_total ) {
+			if ( $topics_done !== $topics_total ) {
 				bp_media_import_buddyboss_topic_media();
 				$importing = true;
 			}
 
-			if ( $replies_done != $replies_total ) {
+			if ( $replies_done !== $replies_total ) {
 				bp_media_import_buddyboss_reply_media();
 				$importing = true;
 			}

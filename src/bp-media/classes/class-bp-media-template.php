@@ -154,7 +154,7 @@ class BP_Media_Template {
 			'privacy'      => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
-		extract( $r );
+		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
@@ -300,7 +300,7 @@ class BP_Media_Template {
 	public function user_medias() {
 		if ( ( $this->current_media + 1 ) < $this->media_count ) {
 			return true;
-		} elseif ( ( $this->current_media + 1 ) == $this->media_count ) {
+		} elseif ( ( $this->current_media + 1 ) === $this->media_count ) {
 
 			/**
 			 * Fires right before the rewinding of media posts.
@@ -339,7 +339,7 @@ class BP_Media_Template {
 		}
 
 		// Loop has just started.
-		if ( $this->current_media == 0 ) {
+		if ( 0 === $this->current_media ) {
 
 			/**
 			 * Fires if the current media item is the first in the activity loop.
