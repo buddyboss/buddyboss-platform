@@ -357,7 +357,13 @@ window.bp = window.bp || {};
 					data: data,
 					success: function (response) {
 						if ( response.success ) {
+							$( '#item-body #group-messages-container .bb-groups-messages-right' ).html('');
+							var feedbackHtml = '<div class="bp-feedback success bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + ' </p></div>';
+							$('#item-body #group-messages-container .bb-groups-messages-right').append(feedbackHtml);
 						} else {
+							$( '#item-body #group-messages-container .bb-groups-messages-right' ).html('');
+							var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + ' </p></div>';
+							$('#item-body #group-messages-container .bb-groups-messages-right').append(feedbackHtml);
 						}
 					}
 				});

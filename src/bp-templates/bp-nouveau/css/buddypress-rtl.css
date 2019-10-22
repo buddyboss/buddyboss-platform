@@ -11618,3 +11618,7 @@ div#bp-group-message-content {
 #item-body #group-messages-container form#send_group_message_form {
   margin-bottom: 0px;
 }
+
+#item-body #group-messages-container .bb-groups-messages-right.bp-feedback {
+  margin: 20px 20px 0 20px;
+}
