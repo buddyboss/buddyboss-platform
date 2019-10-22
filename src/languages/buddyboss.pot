@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-18 16:50:40+00:00\n"
+"POT-Creation-Date: 2019-10-22 03:02:17+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1525,7 +1525,6 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:376
 #: bp-core/profile-search/bps-admin.php:85
 #: bp-forums/templates/default/bbpress/form-forum.php:63
-#: bp-forums/templates/default/bbpress-functions.php:248
 #: bp-groups/classes/class-bp-groups-list-table.php:432
 msgid "Description"
 msgstr ""
@@ -9373,29 +9372,27 @@ msgid "<strong>ERROR</strong>: Your forum description cannot be empty."
 msgstr ""
 
 #: bp-forums/forums/functions.php:193
-msgid "<strong>ERROR</strong>: Your forum must have a parent."
+msgid "Your forum must have a parent forum."
 msgstr ""
 
 #: bp-forums/forums/functions.php:200
-msgid ""
-"<strong>ERROR</strong>: This forum is a category. No forums can be created "
-"in this forum."
+msgid "This forum is a category. No forums can be created in this forum."
 msgstr ""
 
-#: bp-forums/forums/functions.php:205 bp-forums/forums/functions.php:462
-msgid "<strong>ERROR</strong>: This forum has been closed to new forums."
+#: bp-forums/forums/functions.php:205
+msgid "This forum has been closed to new forums."
 msgstr ""
 
-#: bp-forums/forums/functions.php:210 bp-forums/forums/functions.php:467
+#: bp-forums/forums/functions.php:210
 msgid ""
-"<strong>ERROR</strong>: This forum is private and you do not have the "
-"capability to read or create new forums in it."
+"This forum is private and you do not have the capability to read or create "
+"new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:215 bp-forums/forums/functions.php:472
+#: bp-forums/forums/functions.php:215
 msgid ""
-"<strong>ERROR</strong>: This forum is hidden and you do not have the "
-"capability to read or create new forums in it."
+"This forum is hidden and you do not have the capability to read or create "
+"new forums in it."
 msgstr ""
 
 #: bp-forums/forums/functions.php:222 bp-forums/replies/functions.php:295
@@ -9421,6 +9418,22 @@ msgstr ""
 
 #: bp-forums/forums/functions.php:436
 msgid "<strong>ERROR</strong>: You do not have permission to edit that forum."
+msgstr ""
+
+#: bp-forums/forums/functions.php:462
+msgid "<strong>ERROR</strong>: This forum has been closed to new forums."
+msgstr ""
+
+#: bp-forums/forums/functions.php:467
+msgid ""
+"<strong>ERROR</strong>: This forum is private and you do not have the "
+"capability to read or create new forums in it."
+msgstr ""
+
+#: bp-forums/forums/functions.php:472
+msgid ""
+"<strong>ERROR</strong>: This forum is hidden and you do not have the "
+"capability to read or create new forums in it."
 msgstr ""
 
 #: bp-forums/forums/functions.php:507
@@ -10455,6 +10468,10 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress-functions.php:215
 msgid "Add Tags:"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress-functions.php:248
+msgid "Explain what the forum is about"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress-functions.php:249
