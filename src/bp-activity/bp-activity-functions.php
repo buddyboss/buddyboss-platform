@@ -1737,32 +1737,26 @@ function bp_activity_generate_action_string( $activity ) {
  * @return string $action
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
-	if ( bp_activity_do_mentions() ) {
-		$usernames = bp_activity_find_mentions( $activity->content );
+	if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
+		$mentioned_users = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
 
-		if ( ! empty( $usernames ) ) {
-			$mentioned_users = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+		$mentioned_users_link = array_map(
+			function( $mentioned_user ) {
+				return bp_core_get_userlink( $mentioned_user->ID );
+			},
+			$mentioned_users
+		);
 
-			$mentioned_users_link = array_map(
-				function ( $mentioned_user ) {
-					return bp_core_get_userlink( $mentioned_user->ID );
-				},
-				$mentioned_users
-			);
+		$last_user_link = array_pop( $mentioned_users_link );
 
-			$last_user_link = array_pop( $mentioned_users_link );
-
-			$action = sprintf(
-				/* translators: Mentioned activity */
-				__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss' ),
-				bp_core_get_userlink( $activity->user_id ),
-				$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
-				$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
-				$last_user_link
-			);
-		}
+		$action = sprintf(
+			__( '%1$s <span class="activity-to">to</span> %2$s%3$s%4$s', 'buddyboss' ),
+			bp_core_get_userlink( $activity->user_id ),
+			$mentioned_users_link ? implode( ', ', $mentioned_users_link ) : '',
+			$mentioned_users_link ? __( ' and ', 'buddyboss' ) : '',
+			$last_user_link
+		);
 	} else {
-		/* translators: %s: User link */
 		$action = sprintf( __( '%s posted an update', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ) );
 	}
 
