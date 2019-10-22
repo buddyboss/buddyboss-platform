@@ -113,7 +113,7 @@ class BP_Invites_Component extends BP_Component {
 				require $this->path . 'bp-invites/actions/invites.php';
 
 				// Specific to post requests.
-			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) ) {
+			} elseif ( bp_is_post_request() && in_array( bp_current_action(), $actions, true ) && file_exists( $this->path . 'bp-invites/actions/' . bp_current_action() . '.php' ) ) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
 
