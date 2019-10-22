@@ -17,6 +17,7 @@
     <rule ref="WordPress-Core">
         <exclude name="WordPress.PHP.StrictInArray" />
         <exclude name="WordPress.DB.PreparedSQL" />
+        <exclude name="WordPress.WP.I18n" />
     </rule>
 
     <rule ref="WordPress.WP.I18n">

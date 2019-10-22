@@ -330,7 +330,7 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			$group = groups_get_group( $group_id );
 
 			// If the check is for the logged-in user, use the BP_Groups_Group property.
-			if ( $user_id === bp_loggedin_user_id() ) {
+			if ( bp_loggedin_user_id() === $user_id ) {
 				$retval = $group->user_has_access;
 
 				/*
@@ -351,7 +351,7 @@ function bp_groups_user_can_filter( $retval, $user_id, $capability, $site_id, $a
 			$group = groups_get_group( $group_id );
 
 			// If the check is for the logged-in user, use the BP_Groups_Group property.
-			if ( $user_id === bp_loggedin_user_id() ) {
+			if ( bp_loggedin_user_id() === $user_id ) {
 				$retval = $group->is_visible;
 
 				/*
@@ -382,13 +382,10 @@ add_filter( 'bp_user_can', 'bp_groups_user_can_filter', 10, 5 );
 function bp_groups_allow_mods_to_delete_activity( $can_delete, $activity ) {
 
 	// Allow Mods to delete activity of group
-	if ( ! $can_delete && is_user_logged_in() && 'groups' == $activity->component ) {
+	if ( ! $can_delete && is_user_logged_in() && 'groups' === $activity->component ) {
 		$group = groups_get_group( $activity->item_id );
 
-		if ( ! empty( $group ) &&
-			 ! groups_is_user_admin( $activity->user_id, $activity->item_id ) &&
-			 groups_is_user_mod( apply_filters( 'bp_loggedin_user_id', get_current_user_id() ), $activity->item_id )
-		) {
+		if ( ! empty( $group ) && ! groups_is_user_admin( $activity->user_id, $activity->item_id ) && groups_is_user_mod( apply_filters( 'bp_loggedin_user_id', get_current_user_id() ), $activity->item_id ) ) {
 			$can_delete = true;
 		}
 	}
