@@ -245,7 +245,7 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 					'bbpress-editor',
 					'bbpEditorJsStrs',
 					array(
-						'description' => __( 'Description', 'buddyboss' ),
+						'description' => __( 'Explain what the forum is about', 'buddyboss' ),
 						'type_reply'  => __( 'Type your reply here', 'buddyboss' ),
 						'type_topic'  => __( 'Type your discussion content here', 'buddyboss' ),
 					)
