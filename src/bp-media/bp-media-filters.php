@@ -1126,7 +1126,9 @@ function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
 
 	if ( ! empty( $message_ids ) ) {
 		foreach ( $message_ids as $message_id ) {
-			bp_messages_delete_meta( $message_id );
+			if ( bp_loggedin_user_id() === messages_get_message_sender( $message_id ) ) {
+				bp_messages_delete_meta( $message_id );
+			}
 		}
 	}
 
