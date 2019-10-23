@@ -1031,6 +1031,6 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 function bp_admin_setting_callback_group_messages() {
 	?>
 	<input id="bp-disable-group-messages" name="bp-disable-group-messages" type="checkbox" value="1" <?php checked( bp_disable_group_messages() ); ?> />
-	<label for="bp-disable-group-messages"><?php _e( 'Allow group organizers & moderator to send group messages', 'buddyboss' ); ?></label>
+	<label for="bp-disable-group-messages"><?php _e( 'Allow group organizers and moderators to send group messages', 'buddyboss' ); ?></label>
 	<?php
 }
