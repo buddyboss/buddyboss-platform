@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-23 02:52:12+00:00\n"
+"POT-Creation-Date: 2019-10-23 03:04:45+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2090,8 +2090,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:403
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:238
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:373
-#: bp-media/bp-media-settings.php:456 bp-media/bp-media-settings.php:599
-#: bp-media/bp-media-settings.php:781 bp-search/bp-search-settings.php:397
+#: bp-media/bp-media-settings.php:462 bp-media/bp-media-settings.php:611
+#: bp-media/bp-media-settings.php:799 bp-search/bp-search-settings.php:397
 msgid "View Tutorial"
 msgstr ""
 
@@ -13385,7 +13385,7 @@ msgstr ""
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:83 bp-media/bp-media-settings.php:616
+#: bp-media/bp-media-settings.php:83 bp-media/bp-media-settings.php:628
 msgid "GIPHY API Key"
 msgstr ""
 
@@ -13411,31 +13411,43 @@ msgstr ""
 msgid "Allow members to upload photos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:397
+#: bp-media/bp-media-settings.php:399
+msgid ""
+"Allow members to upload photos in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:401
 msgid "Allow members to upload photos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:429
+#: bp-media/bp-media-settings.php:435
 msgid "Allow members to upload photos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:476
+#: bp-media/bp-media-settings.php:482
 msgid "Allow members to use emoji in <strong>profile activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:495
+#: bp-media/bp-media-settings.php:501
 msgid "Allow members to use emoji in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:514
+#: bp-media/bp-media-settings.php:522
+msgid ""
+"Allow members to use emoji in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:524
 msgid "Allow members to use emoji in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:533
+#: bp-media/bp-media-settings.php:545
 msgid "Allow members to use emoji in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:619
+#: bp-media/bp-media-settings.php:631
 msgid ""
 "This feature requires an account at <a "
 "href=\"https://developers.giphy.com/\">GIPHY</a>. Create your account, and "
@@ -13443,21 +13455,27 @@ msgid ""
 "above."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:658
+#: bp-media/bp-media-settings.php:670
 msgid ""
 "Allow members to use animated GIFs in <strong>profile activity "
 "posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:677
+#: bp-media/bp-media-settings.php:689
 msgid "Allow members to use animated GIFs in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:696
+#: bp-media/bp-media-settings.php:710
+msgid ""
+"Allow members to use animated GIFs in <strong>private messages</strong> and "
+"<strong>group messages</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:712
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:715
+#: bp-media/bp-media-settings.php:733
 msgid "Allow members to use animated GIFs in <strong>forum discussions</strong>"
 msgstr ""
 
