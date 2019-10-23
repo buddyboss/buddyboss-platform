@@ -102,7 +102,7 @@
 						<?php endif; ?>
 						<div id="group-messages-new-submit" class="submit">
 							<select name="group-messages-type" class="group-messages-type">
-								<option value="open"><?php _e( 'Open Thread', 'buddyboss' ); ?></option>
+								<option value="open"><?php _e( 'Group Thread', 'buddyboss' ); ?></option>
 								<option value="private"><?php _e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
 							</select>
 							<input type="submit" name="send_group_message_button" value="Send Message" id="send_group_message_button" class="small">
