@@ -662,17 +662,19 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 	$page     = (int) $_POST['page'];
 	if ( isset( $_POST['term'] ) && '' !== $_POST['term'] ) {
 		$args = array(
-			'per_page'     => 99999999999999,
-			'group_id'     => $_POST['group'],
-			'search_terms' => $_POST['term'],
-			'exclude'      => array( bp_loggedin_user_id() ),
+			'per_page'            => 99999999999999,
+			'group_id'            => $_POST['group'],
+			'search_terms'        => $_POST['term'],
+			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude_admins_mods' => false,
 		);
 	} else {
-		$args          = array(
-			'page'         => $page,
-			'per_page'     => $per_page,
-			'group_id'     => $_POST['group'],
-			'exclude'      => array( bp_loggedin_user_id() ),
+		$args = array(
+			'page'                => $page,
+			'per_page'            => $per_page,
+			'group_id'            => $_POST['group'],
+			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude_admins_mods' => false,
 		);
 	}
 
