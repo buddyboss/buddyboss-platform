@@ -749,7 +749,7 @@ class BP_Groups_Component extends BP_Component {
 
 			if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) ) {
 				$sub_nav[] = array(
-					'name'            => __( 'Group Messages', 'buddyboss' ),
+					'name'            => __( 'Group Message', 'buddyboss' ),
 					'slug'            => 'messages',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
