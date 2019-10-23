@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-23 03:04:45+00:00\n"
+"POT-Creation-Date: 2019-10-23 03:08:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13413,7 +13413,7 @@ msgstr ""
 
 #: bp-media/bp-media-settings.php:399
 msgid ""
-"Allow members to upload photos in <strong>private messages</strong> and "
+"Allow members to upload photos in <strong>private</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
@@ -13435,8 +13435,8 @@ msgstr ""
 
 #: bp-media/bp-media-settings.php:522
 msgid ""
-"Allow members to use emoji in <strong>private messages</strong> and "
-"<strong>group messages</strong>"
+"Allow members to use emoji in <strong>private</strong> and <strong>group "
+"messages</strong>"
 msgstr ""
 
 #: bp-media/bp-media-settings.php:524
@@ -13467,7 +13467,7 @@ msgstr ""
 
 #: bp-media/bp-media-settings.php:710
 msgid ""
-"Allow members to use animated GIFs in <strong>private messages</strong> and "
+"Allow members to use animated GIFs in <strong>private</strong> and "
 "<strong>group messages</strong>"
 msgstr ""
 
