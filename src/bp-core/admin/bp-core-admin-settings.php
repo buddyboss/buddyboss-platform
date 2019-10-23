@@ -1024,9 +1024,9 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 }
 
 /**
- * 'Enable group cover photos' field markup.
+ * Enable group messages field markup.
  *
- * @since BuddyPress 2.4.0
+ * @since BuddyBoss 1.2.0
  */
 function bp_admin_setting_callback_group_messages() {
 	?>

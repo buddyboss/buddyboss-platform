@@ -1185,13 +1185,13 @@ function bp_nouveau_groups_notification_filters() {
 }
 
 /**
- * Localize the strings needed for the Group's Invite UI
+ * Localize the strings needed for the Group's Message UI
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.2.0
  *
  * @param array $params Associative array containing the JS Strings needed by scripts
  *
- * @return array The same array with specific strings for the Group's Invite UI if needed.
+ * @return array The same array with specific strings for the Group's Message UI if needed.
  */
 function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 
@@ -1229,7 +1229,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 /**
  * Enqueue the groups scripts
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.2.0
  */
 function bp_nouveau_groups_messages_enqueue_scripts() {
 

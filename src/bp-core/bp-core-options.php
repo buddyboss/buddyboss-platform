@@ -1430,22 +1430,22 @@ function bp_register_confirm_password( $default = false ) {
 }
 
 /**
- * Are group cover photos disabled?
+ * Are group messages disabled?
  *
- * @since BuddyPress 2.4.0
+ * @since BuddyBoss 1.2.0
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
- * @return bool True if group cover photo uploads are disabled, otherwise false.
+ * @return bool True if group message are disabled, otherwise false.
  */
 function bp_disable_group_messages( $default = false ) {
 
 	/**
-	 * Filters whether or not members are able to upload group cover photos.
+	 * Filters whether or not group organizer and moderator allowed to send group message.
 	 *
 	 * @since BuddyPress 2.4.0
 	 *
-	 * @param bool $value Whether or not members are able to upload thier groups cover photos.
+	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
 	 */
 	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
 }

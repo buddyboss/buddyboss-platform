@@ -3952,11 +3952,11 @@ function bp_email_get_salutation( $settings = array() ) {
 }
 
 /**
- * Is the current page a group's activity page?
+ * Is the current page a group's message page?
  *
- * @since BuddyPress 1.2.1
+ * @since BuddyBoss 1.2.0
  *
- * @return bool True if the current page is a group's activity page.
+ * @return bool True if the current page is a group's message page.
  */
 function bp_is_group_messages() {
 	$retval = false;

@@ -570,9 +570,9 @@ function bp_nouveau_ajax_remove_group_invite() {
 }
 
 /**
- * AJAX load recipient list.
+ * Send Group Messages to group members
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.2.0
  */
 function bp_nouveau_ajax_group_get_users_to_send_message() {
 
@@ -635,6 +635,12 @@ function bp_nouveau_ajax_group_get_users_to_send_message() {
 		] );
 	}
 }
+
+/**
+ * Retrieve the possible members list to send group message.
+ *
+ * @since BuddyBoss 1.2.0
+ */
 function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 	if ( false === bp_disable_group_messages() ) {
@@ -763,6 +769,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 	}
 }
 
+/**
+ * Send group message to group members.
+ *
+ * @since BuddyBoss 1.2.0
+ */
 function bp_nouveau_ajax_groups_get_group_members_send_message() {
 
 	if ( false === bp_disable_group_messages() ) {
@@ -894,7 +905,5 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 			wp_send_json_success( $response );
 		}
 	}
-
-
 
 }

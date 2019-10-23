@@ -1043,9 +1043,9 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 }
 
 /**
- * Save gif data into messages meta key "_gif_data"
+ * Save group message meta
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.0
  *
  * @param $message
  */
@@ -1070,7 +1070,7 @@ function bp_media_messages_save_group_data( &$message ) {
 		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
 		bp_messages_update_meta( $message->id, $thread_key, $group );
 		bp_messages_update_meta( $message->id, 'message_from', 'group' );
-		bp_messages_update_meta( $message->id, 'message_from', 'group' );
+		bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
 		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
 	} else {
 
@@ -1110,6 +1110,14 @@ function bp_media_messages_save_group_data( &$message ) {
 
 }
 
+/**
+ * Remove the mete if thread is deleted.
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param $thread_id
+ * @param $message_ids
+ */
 function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
 
 	if ( false === bp_disable_group_messages() ) {
