@@ -853,8 +853,9 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 			$response['feedback'] = $new_reply->get_error_message();
 			wp_send_json_error( $response );
 		}  elseif ( !empty( $new_reply ) ) {
-			$response['feedback'] = __( 'Your message was sent successfully.', 'buddyboss' );
-			$response['type']     = 'success';
+			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+			$response['redirect_link'] = bp_loggedin_user_domain() . bp_get_messages_slug();
+			$response['type']          = 'success';
 			wp_send_json_success( $response );
 		}
 
@@ -886,8 +887,10 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 			$response['feedback'] = $send->get_error_message();
 			wp_send_json_error( $response );
 		}  elseif ( !empty( $send ) ) {
-			$response['feedback'] = __( 'Your message was sent successfully.', 'buddyboss' );
-			$response['type']     = 'success';
+			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+			$response['redirect_link'] = bp_loggedin_user_domain() . bp_get_messages_slug();
+			$response['type']          = 'success';
+
 			wp_send_json_success( $response );
 		}
 	}

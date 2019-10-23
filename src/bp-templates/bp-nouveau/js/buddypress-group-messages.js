@@ -361,6 +361,9 @@ window.bp = window.bp || {};
 							$( '#item-body #group-messages-container .bb-groups-messages-right' ).html('');
 							var feedbackHtml = '<div class="bp-feedback success bp-feedback-content-no-error"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + ' </p></div>';
 							$('#item-body #group-messages-container .bb-groups-messages-right').append(feedbackHtml);
+							if ( response.data.redirect_link ) {
+								window.location.href = response.data.redirect_link;
+							}
 						} else {
 							$( '#item-body #group-messages-container .bb-groups-messages-left' ).hide();
 							$( '#item-body #group-messages-container .bb-groups-messages-right' ).html('');
