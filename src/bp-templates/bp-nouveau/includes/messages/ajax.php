@@ -694,7 +694,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			'subject'                   => strip_tags( bp_get_the_thread_subject() ),
 			'started_date'              => date_i18n( get_option( 'date_format' ), strtotime( $thread_template->thread->first_message_date ) ),
 			'group_id'                  => $group_id,
-			'group_name'                => $group_name,
+			'group_name'                => ucwords( $group_name ),
 			'group_avatar'              => $group_avatar,
 			'group_link'                => $group_link,
 			'group_message_users'       => $group_message_users,
