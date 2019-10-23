@@ -307,3 +307,20 @@ function bp_core_learndash_bbpress_notices() {
 		<?php
 	}
 }
+
+/**
+ * Fix PHP notices in WooCommerce status Menu
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param $tabs
+ *
+ * @return mixed
+ */
+function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
+	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) {
+		bp_core_unset_bbpress_buddypress_active();
+	}
+	return $tabs;
+}
+add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
