@@ -11595,10 +11595,10 @@ div#bp-group-message-content {
 }
 
 .bp-single-message-wrap.group-messages-highlight {
-  background: #ffff001f;
-  padding: 5px;
+  background: #FFFFEA;
+  padding: 15px;
   border: 1px solid #E7E9EC;
-  border-radius: 3px;
+  border-radius: 5px;
 }
 
 #item-body #group-messages-container .select2-container--default.select2-container--disabled .select2-selection--multiple {

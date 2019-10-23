@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-22 16:21:56+00:00\n"
+"POT-Creation-Date: 2019-10-23 01:11:22+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2383,7 +2383,7 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1034
-msgid "Allow group organizers & moderator to send group messages"
+msgid "Allow group organizers and moderators to send group messages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -2873,7 +2873,6 @@ msgid "Group Cover Images"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:49
-#: bp-groups/classes/class-bp-groups-component.php:752
 msgid "Group Messages"
 msgstr ""
 
@@ -12174,6 +12173,10 @@ msgstr ""
 msgid "Albums"
 msgstr ""
 
+#: bp-groups/classes/class-bp-groups-component.php:752
+msgid "Group Message"
+msgstr ""
+
 #: bp-groups/classes/class-bp-groups-component.php:767
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 msgid "Manage"
@@ -15564,7 +15567,7 @@ msgid "New Group Message"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:105
-msgid "Open Thread"
+msgid "Group Thread"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:106
@@ -16678,7 +16681,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:854
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:887
-msgid "Your message sent successfully."
+msgid "Your message was sent successfully."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:140
@@ -17003,7 +17006,7 @@ msgid "Sent from group <a href=\"%s\">%s</a> individually to all group members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:767
-msgid "Sent from group <a href=\"%s\">%s</a> to individual members."
+msgid "Sent from group <a href=\"%s\">%s</a> to specific members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/messages/ajax.php:889
