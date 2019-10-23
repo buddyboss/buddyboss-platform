@@ -80,6 +80,81 @@ add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_
 // media scope filter
 add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
 
+add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
+add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_accepted', 10, 2 );
+
+add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
+add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
+
+function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id ) {
+
+	global $wpdb, $bp, $messages_template;
+
+	$sql     = "SELECT * FROM " . $bp->messages->table_name_meta . " WHERE `meta_key` = 'group_id' AND `meta_value` = %s";
+	$sql     = $wpdb->prepare( $sql, $group_id );
+	$results = $wpdb->get_results( $sql );
+
+	foreach ( $results as $result ) {
+
+		$message_id              = $result->message_id;
+		$group                   = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
+		$message_users           = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
+		$message_type            = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
+		$thread_type             = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
+		$message_users_ids       = bp_messages_get_meta( $message_id, 'message_users_ids', true ); // users list
+		$message_from            = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+		$group_message_thread_id = bp_messages_get_meta( $message_id, 'group_message_thread_id', true ); // group
+
+		if ( $message_from &&
+		     $thread_type &&
+		     $message_type &&
+		     $message_users &&
+		     $group &&
+		     $message_users_ids &&
+		     (int) $group === (int) $group_id &&
+		     'all' === $message_users &&
+		     'open' === $message_type &&
+		     'new' === $thread_type &&
+		     'group' === $message_from ) {
+
+
+			$message_users_ids = explode( ',', $message_users_ids );
+			$group_name        = bp_get_group_name( groups_get_group( $group ) );
+			$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
+
+			if ((  $key = array_search( $user_id, $message_users_ids ) ) !== false ) {
+				unset( $message_users_ids[$key] );
+			}
+
+			bp_messages_update_meta( $message_id, 'message_users_ids', implode( ',', $message_users_ids ) );
+
+			$new_reply = messages_new_message( array(
+				'sender_id' => $user_id,
+				'thread_id' => $group_message_thread_id,
+				'subject'   => '',
+				'content'   => '<p class="member-group-message-joined">' .$text . '</p>',
+				'date_sent' => $date_sent = bp_core_current_time(),
+				'error_type' => 'wp_error',
+			) );
+
+			if ( true === is_int( $new_reply ) ) {
+				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+					while ( bp_message_threads() ) {
+						bp_message_thread();
+						$last_message_id = (int) $messages_template->thread->last_message_id;
+						bp_messages_update_meta( $last_message_id, 'group_message_group_left', 'yes' );
+					}
+				}
+			}
+
+			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_message_thread_id ) );
+
+		}
+	}
+}
+
+
+
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -545,4 +620,126 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	);
 
 	return $retval;
+}
+
+function bp_group_messages_groups_membership_accepted( $group_id, $user_id ) {
+
+	global $wpdb, $bp, $messages_template;
+
+	$sql     = "SELECT * FROM " . $bp->messages->table_name_meta . " WHERE `meta_key` = 'group_id' AND `meta_value` = %s";
+	$sql     = $wpdb->prepare( $sql, $group_id );
+	$results = $wpdb->get_results( $sql );
+
+	foreach ( $results as $result ) {
+
+		$message_id              = $result->message_id;
+		$group                   = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
+		$message_users           = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
+		$message_type            = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
+		$thread_type             = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
+		$message_users_ids       = bp_messages_get_meta( $message_id, 'message_users_ids', true ); // users list
+		$message_from            = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+		$group_message_thread_id = bp_messages_get_meta( $message_id, 'group_message_thread_id', true ); // group
+
+		if ( $message_from &&
+		     $thread_type &&
+		     $message_type &&
+		     $message_users &&
+		     $group &&
+		     $message_users_ids &&
+		     (int) $group === (int) $group_id &&
+		     'all' === $message_users &&
+		     'open' === $message_type &&
+		     'new' === $thread_type &&
+		     'group' === $message_from ) {
+
+			$message_users_ids = explode( ',', $message_users_ids );
+			array_push( $message_users_ids, $user_id );
+			$group_name        = bp_get_group_name( groups_get_group( $group ) );
+			$text              = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
+
+			bp_messages_update_meta( $message_id, 'message_users_ids', implode( ',', $message_users_ids ) );
+
+			$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_message_thread_id ) );
+
+			$new_reply = messages_new_message( array(
+				'thread_id' => $group_message_thread_id,
+				'subject'   => '',
+				'content'   => '<p class="member-group-message-joined">' .$text . '</p>',
+				'date_sent' => $date_sent = bp_core_current_time(),
+				'error_type' => 'wp_error',
+			) );
+
+			if ( true === is_int( $new_reply ) ) {
+				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+					while ( bp_message_threads() ) {
+						bp_message_thread();
+						$last_message_id = (int) $messages_template->thread->last_message_id;
+						bp_messages_update_meta( $last_message_id, 'group_message_group_joined', 'yes' );
+					}
+				}
+			}
+		}
+	}
+}
+
+function bp_group_messages_join_new_member( $group_id, $user_id ) {
+
+	global $wpdb, $bp, $messages_template;
+
+	$sql     = "SELECT * FROM " . $bp->messages->table_name_meta . " WHERE `meta_key` = 'group_id' AND `meta_value` = %s";
+	$sql     = $wpdb->prepare( $sql, $group_id );
+	$results = $wpdb->get_results( $sql );
+
+	foreach ( $results as $result ) {
+
+		$message_id              = $result->message_id;
+		$group                   = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
+		$message_users           = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
+		$message_type            = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
+		$thread_type             = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
+		$message_users_ids       = bp_messages_get_meta( $message_id, 'message_users_ids', true ); // users list
+		$message_from            = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+		$group_message_thread_id = bp_messages_get_meta( $message_id, 'group_message_thread_id', true ); // group
+
+		if ( $message_from &&
+		     $thread_type &&
+		     $message_type &&
+		     $message_users &&
+		     $group &&
+		     $message_users_ids &&
+		     (int) $group === (int) $group_id &&
+		     'all' === $message_users &&
+		     'open' === $message_type &&
+		     'new' === $thread_type &&
+		     'group' === $message_from ) {
+
+			$message_users_ids = explode( ',', $message_users_ids );
+			array_push( $message_users_ids, $user_id );
+			$group_name        = bp_get_group_name( groups_get_group( $group ) );
+			$text              = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
+
+			bp_messages_update_meta( $message_id, 'message_users_ids', implode( ',', $message_users_ids ) );
+
+			$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_message_thread_id ) );
+
+			$new_reply = messages_new_message( array(
+				'thread_id' => $group_message_thread_id,
+				'subject'   => '',
+				'content'   => '<p class="member-group-message-joined">' .$text . '</p>',
+				'date_sent' => $date_sent = bp_core_current_time(),
+				'error_type' => 'wp_error',
+			) );
+
+			if ( true === is_int( $new_reply ) ) {
+				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+					while ( bp_message_threads() ) {
+						bp_message_thread();
+						$last_message_id = (int) $messages_template->thread->last_message_id;
+						bp_messages_update_meta( $last_message_id, 'group_message_group_joined', 'yes' );
+					}
+				}
+			}
+		}
+	}
 }
