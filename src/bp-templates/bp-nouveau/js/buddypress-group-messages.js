@@ -441,7 +441,7 @@ window.bp = window.bp || {};
 
 				window.group_messages_editor = new window.MediumEditor('#group_message_content',{
 					placeholder: {
-						text: '',
+						text: BP_Nouveau.group_messages.type_message,
 						hideOnClick: true
 					},
 					toolbar: {
