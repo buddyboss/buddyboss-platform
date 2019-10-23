@@ -428,11 +428,9 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			$group_avatar              = bp_core_fetch_avatar( array(
 					'item_id'    => $group_id,
 					'object'     => 'group',
-					'type'       => 'thumb',
+					'type'       => 'full',
 					'avatar_dir' => 'group-avatars',
 					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
-					'width'      => '32',
-					'height'     => '32',
 					'title'      => $group_name,
 					'html'       => false,
 				) );
@@ -671,7 +669,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$message_from              = bp_messages_get_meta( $last_message_id, 'message_from', true );
 		$group_name                = bp_get_group_name( groups_get_group( $group_id ) );
 		$group_link                = bp_get_group_permalink( groups_get_group( $group_id ) );
-		$group_avatar              = bp_core_fetch_avatar( array( 'item_id'    => $group_id, 'object'     => 'group', 'type'       => 'thumb', 'avatar_dir' => 'group-avatars', 'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ), 'width'      => '32', 'height'     => '32', 'title'      => $group_name, 'html'       => false, ) );
+		$group_avatar              = bp_core_fetch_avatar( array( 'item_id'    => $group_id, 'object'     => 'group', 'type'       => 'full', 'avatar_dir' => 'group-avatars', 'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ), 'title'      => $group_name, 'html'       => false, ) );
 	}
 
 	// Simulate the loop.
@@ -747,11 +745,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 				array(
 					'item_id'    => $group_id,
 					'object'     => 'group',
-					'type'       => 'thumb',
+					'type'       => 'full',
 					'avatar_dir' => 'group-avatars',
 					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
-					'width'      => '32',
-					'height'     => '32',
 					'title'      => $group_name,
 					'html'       => false,
 				)

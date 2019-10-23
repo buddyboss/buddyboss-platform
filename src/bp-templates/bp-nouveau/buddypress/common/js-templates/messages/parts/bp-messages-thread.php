@@ -20,7 +20,7 @@
 		<div class="thread-avatar">
 
 			<# if ( data.group_avatar.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
-				<img class="avatar chetan" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
+				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
 					<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
