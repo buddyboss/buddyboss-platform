@@ -159,7 +159,7 @@ class BP_Signup {
 		);
 
 		// @todo whitelist sanitization
-		if ( $r['orderby'] !== 'signup_id' ) {
+		if ( 'signup_id' !== $r['orderby'] ) {
 			$r['orderby'] = 'user_' . $r['orderby'];
 		}
 
@@ -610,7 +610,8 @@ class BP_Signup {
 			)
 		);
 
-		if ( ! $signups = $to_resend['signups'] ) {
+		$signups = $to_resend['signups'];
+		if ( ! $signups ) {
 			return false;
 		}
 
@@ -639,7 +640,7 @@ class BP_Signup {
 				// Check user status before sending email.
 				$user_id = email_exists( $signup->user_email );
 
-				if ( ! empty( $user_id ) && 2 != self::check_user_status( $user_id ) ) {
+				if ( ! empty( $user_id ) && 2 !== self::check_user_status( $user_id ) ) {
 
 					// Status is not 2, so user's account has been activated.
 					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss' ) );
@@ -703,7 +704,8 @@ class BP_Signup {
 			)
 		);
 
-		if ( ! $signups = $to_activate['signups'] ) {
+		$signups = $to_activate['signups'];
+		if ( ! $signups ) {
 			return false;
 		}
 
@@ -788,7 +790,8 @@ class BP_Signup {
 			)
 		);
 
-		if ( ! $signups = $to_delete['signups'] ) {
+		$signups = $to_delete['signups'];
+		if ( ! $signups ) {
 			return false;
 		}
 
@@ -806,9 +809,9 @@ class BP_Signup {
 		foreach ( $signups as $signup ) {
 			$user_id = username_exists( $signup->user_login );
 
-			if ( ! empty( $user_id ) && $signup->activation_key === bp_get_user_meta( $user_id, 'activation_key', true ) ) {
+			if ( ! empty( $user_id ) && bp_get_user_meta( $user_id, 'activation_key', true ) === $signup->activation_key ) {
 
-				if ( 2 != self::check_user_status( $user_id ) ) {
+				if ( 2 !== self::check_user_status( $user_id ) ) {
 
 					// Status is not 2, so user's account has been activated.
 					$result['errors'][ $signup->signup_id ] = array( $signup->user_login, esc_html__( 'the sign-up has already been activated.', 'buddyboss' ) );
