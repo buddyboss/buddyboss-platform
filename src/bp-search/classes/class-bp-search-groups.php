@@ -49,7 +49,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			/*
-			 an example UNION query :-
+			 * an example UNION query :-
 			-----------------------------------------------------
 			(
 				SELECT
@@ -93,7 +93,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 			/** LOCATION AUTOCOMPLETE SEARCH */
 
-			if ( function_exists( 'bp_bpla' ) && 'yes' == bp_bpla()->option( 'enable-for-groups' ) ) {
+			if ( function_exists( 'bp_bpla' ) && 'yes' === bp_bpla()->option( 'enable-for-groups' ) ) {
 
 					$split_search_term = explode( ' ', $search_term );
 
@@ -101,7 +101,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 
 				foreach ( $split_search_term as $k => $sterm ) {
 
-					if ( $k == 0 ) {
+					if ( 0 === $k ) {
 						$sql                .= 'meta_value LIKE %s';
 						$query_placeholder[] = '%' . $wpdb->esc_like( $sterm ) . '%';
 					} else {
@@ -143,7 +143,7 @@ if ( ! class_exists( 'Bp_Search_Groups' ) ) :
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'Bp_Search_Groups_sql',
+				'bp_search_groups_sql',
 				$sql,
 				array(
 					'search_term'         => $search_term,
