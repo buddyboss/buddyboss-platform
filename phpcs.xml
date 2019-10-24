@@ -9,6 +9,7 @@
     <exclude-pattern>*.min.*</exclude-pattern>
     <exclude-pattern>*/deprecated/*</exclude-pattern>
     <exclude-pattern>*/bp-integrations/*</exclude-pattern>
+    <exclude-pattern>*/js/autocomplete/*</exclude-pattern>
 
     <!-- Configs -->
     <config name="minimum_supported_wp_version" value="4.7" />
