@@ -24,9 +24,6 @@ if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
 	define( 'BP_PLATFORM_VERSION', '1.1.9' );
 }
 
-
-error_log( print_r( $_REQUEST, true ) . "\n", 3, WP_CONTENT_DIR . '/debug_new.log' );
-
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
 global $is_bp_active;
