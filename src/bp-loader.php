@@ -180,6 +180,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	/**
      * Remove the BuddyPress and bbPress Spoofing
      *
+	 * @since BuddyBoss 1.2.0
+     *
 	 * @param $plugins
 	 *
 	 * @return mixed
