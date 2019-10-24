@@ -315,7 +315,7 @@ class BP_Notifications_Template {
 		if ( $this->current_notification + 1 < $this->notification_count ) {
 			return true;
 
-		} elseif ( $this->current_notification + 1 == $this->notification_count ) {
+		} elseif ( $this->current_notification + 1 === $this->notification_count ) {
 
 			/**
 			 * Fires right before the rewinding of notification posts.
