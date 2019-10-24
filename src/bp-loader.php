@@ -24,6 +24,9 @@ if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
 	define( 'BP_PLATFORM_VERSION', '1.1.9' );
 }
 
+
+error_log( print_r( $_REQUEST, true ) . "\n", 3, WP_CONTENT_DIR . '/debug_new.log' );
+
 global $bp_incompatible_plugins;
 global $buddyboss_platform_plugin_file;
 global $is_bp_active;
@@ -144,6 +147,9 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+				apply_filters( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
+
+				add_action( 'load-plugins.php', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
 			}
 
 			/**
@@ -168,6 +174,19 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		return $value;
+	}
+
+	/**
+     * Remove the BuddyPress and bbPress Spoofing
+     *
+	 * @param $plugins
+	 *
+	 * @return mixed
+	 */
+	function bp_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
+		bp_core_unset_bbpress_buddypress_active();
+
+		return $plugins;
 	}
 
 	/**
