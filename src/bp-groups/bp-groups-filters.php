@@ -86,10 +86,6 @@ add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_a
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 
-
-
-
-
 /**
  * Filter output of Group Description through WordPress's KSES API.
  *
@@ -605,7 +601,7 @@ function bp_group_messages_groups_membership_accepted( $group_id, $user_id ) {
 				'error_type' => 'wp_error',
 			) );
 
-			if ( true === is_int( $new_reply ) ) {
+			if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
 				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
 					while ( bp_message_threads() ) {
 						bp_message_thread();
@@ -667,7 +663,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 				'error_type' => 'wp_error',
 			) );
 
-			if ( true === is_int( $new_reply ) ) {
+			if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
 				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
 					while ( bp_message_threads() ) {
 						bp_message_thread();
@@ -727,7 +723,7 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 				'date_sent' => $date_sent = bp_core_current_time(),
 				'error_type' => 'wp_error',
 			) );
-			if ( true === is_int( $new_reply ) ) {
+			if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
 				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
 					while ( bp_message_threads() ) {
 						bp_message_thread();

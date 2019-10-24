@@ -408,6 +408,23 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 	while ( bp_message_threads() ) : bp_message_thread();
 
+		if ( '' === trim( strip_tags( do_shortcode( bp_get_message_thread_content() ) ) ) ) {
+			foreach ( $messages_template->thread->messages as $message ) {
+				$content = trim( strip_tags( do_shortcode( $message->message ) ) );
+				if ( '' !== $content ) {
+
+					$messages_template->thread->last_message_id      = $message->id;
+					$messages_template->thread->thread_id            = $message->thread_id;
+					$messages_template->thread->last_message_subject = $message->subject;
+					$messages_template->thread->last_message_content = $message->message;
+					$messages_template->thread->last_sender_id       = $message->sender_id;
+					$messages_template->thread->last_message_date    = $message->date_sent;
+
+					break;
+				}
+			}
+		}
+
 		$last_message_id           = (int) $messages_template->thread->last_message_id;
 		$group_id                  = bp_messages_get_meta( $last_message_id, 'group_id', true );
 		$group_name                = '';
@@ -736,8 +753,10 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$group_message_thread_type = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_thread_type', true );
 		$group_message_fresh       = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_fresh', true );
 		$message_from              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'message_from', true );
+		$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
+		$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
 
-		if ( $group_id && $message_from && 'group' === $message_from) {
+		if ( $group_id && $message_from && 'group' === $message_from ) {
 
 			$group_name   = bp_get_group_name( groups_get_group( $group_id ) );
 			$group_link   = bp_get_group_permalink( groups_get_group( $group_id ) );
@@ -763,6 +782,15 @@ function bp_nouveau_ajax_get_thread_messages() {
 				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> to specific members.', 'buddyboss' ), $group_link, $group_name );
 			}
 
+			$content  = '';
+			if ( $message_left && 'yes' === $message_left ) {
+				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} else {
+				$content = do_shortcode( bp_get_the_thread_message_content() );
+			}
+
 			$thread->messages[ $i ] = array(
 				'group_name'                => $group_name,
 				'group_link'                => $group_link,
@@ -774,7 +802,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 				'message_from'              => $message_from,
 				'group_text'                => $group_text,
 				'id'                        => bp_get_the_thread_message_id(),
-				'content'                   => do_shortcode( bp_get_the_thread_message_content() ),
+				'content'                   => $content,
 				'sender_id'                 => bp_get_the_thread_message_sender_id(),
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
@@ -785,9 +813,22 @@ function bp_nouveau_ajax_get_thread_messages() {
 			);
 
 		} else {
+
+			$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
+			$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
+
+			$content  = '';
+			if ( $message_left && 'yes' === $message_left ) {
+				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_joined && 'yes' === $message_joined ) {
+				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} else {
+				$content = do_shortcode( bp_get_the_thread_message_content() );
+			}
+
 			$thread->messages[ $i ] = array(
 				'id'            => bp_get_the_thread_message_id(),
-				'content'       => do_shortcode( bp_get_the_thread_message_content() ),
+				'content'       => $content,
 				'sender_id'     => bp_get_the_thread_message_sender_id(),
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'   => bp_get_the_thread_message_sender_link(),

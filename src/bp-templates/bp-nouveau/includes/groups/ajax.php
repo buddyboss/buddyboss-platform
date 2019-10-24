@@ -664,11 +664,13 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		wp_send_json_error( $response );
 	}
 
-	$per_page = 25;
-	$page     = (int) $_POST['page'];
+	$per_page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_per_page', 10 );
+	$search_per_page = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_search_per_page', 99999999999999 );
+	$page            = (int) $_POST['page'];
+
 	if ( isset( $_POST['term'] ) && '' !== $_POST['term'] ) {
 		$args = array(
-			'per_page'            => 99999999999999,
+			'per_page'            => $search_per_page,
 			'group_id'            => $_POST['group'],
 			'search_terms'        => $_POST['term'],
 			'exclude'             => array( bp_loggedin_user_id() ),
@@ -719,14 +721,21 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 						<?php echo $name; ?>
 					</div>
 				</div>
-				<div class="action">
-					<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select', 'buddyboss' ); ?>">
-						<span class="icons" aria-hidden="true"></span>
-						<span class="bp-screen-reader-text">
+
+				<?php
+				if ( 'all' !== $_POST['type'] ) {
+					?>
+					<div class="action">
+						<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select',
+							'buddyboss' ); ?>">
+							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
 							<?php esc_html_e( 'Select', 'buddyboss' ); ?>
 						</span>
-					</button>
-				</div>
+						</button>
+					</div>
+					<?php
+				}
+				?>
 			</li>
 			<?php
 		}
@@ -757,13 +766,18 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 		}
 
-		$results = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message', $result );
+		$html        = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_html', $html );
+		$total_page  = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_total_page', $total_page );
+		$page        = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_page', $page );
+		$paginate    = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_paginate', $paginate );
+		$total_count = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_total', $group_members['count'] );
 
 		wp_send_json_success( [
-			'results'    => $html,
-			'total_page' => $total_page,
-			'page'       => $page,
-			'pagination' => $paginate,
+			'results'     => $html,
+			'total_page'  => $total_page,
+			'page'        => $page,
+			'pagination'  => $paginate,
+			'total_count' => sprintf( __( 'Members(%s)', 'buddyboss' ), $total_count ),
 		] );
 
 	}

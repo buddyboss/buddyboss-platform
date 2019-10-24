@@ -26,7 +26,8 @@
 			<div class="last">
 
 			</div>
-			<ul id="members-list" class="item-list bp-list">
+			<span class="total-members-text"></span>
+			<ul id="members-list" class="item-list bp-list all-members">
 
 			</ul>
 		</div>
