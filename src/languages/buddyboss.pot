@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-22 03:02:17+00:00\n"
+"POT-Creation-Date: 2019-10-24 09:13:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -7009,7 +7009,7 @@ msgid "Re: "
 msgstr ""
 
 #: bp-forums/admin/forums.php:124 bp-forums/classes/class-bbpress.php:596
-#: bp-forums/forums/functions.php:1706 bp-groups/bp-groups-admin.php:1179
+#: bp-forums/forums/functions.php:1701 bp-groups/bp-groups-admin.php:1179
 #: bp-groups/bp-groups-template.php:719 bp-groups/bp-groups-template.php:720
 #: bp-groups/classes/class-bp-groups-list-table.php:647
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:296
@@ -7201,7 +7201,7 @@ msgstr ""
 #: bp-forums/admin/forums.php:481 bp-forums/admin/metaboxes.php:48
 #: bp-forums/admin/metaboxes.php:393 bp-forums/admin/metaboxes.php:452
 #: bp-forums/admin/replies.php:623 bp-forums/admin/settings.php:297
-#: bp-forums/admin/topics.php:677 bp-forums/forums/functions.php:1687
+#: bp-forums/admin/topics.php:677 bp-forums/forums/functions.php:1682
 #: bp-forums/forums/template.php:50
 #: bp-forums/templates/default/bbpress/loop-forums.php:18
 msgid "Forum"
@@ -8784,7 +8784,7 @@ msgstr ""
 msgid "Open this discussion"
 msgstr ""
 
-#: bp-forums/admin/topics.php:849 bp-forums/forums/functions.php:1670
+#: bp-forums/admin/topics.php:849 bp-forums/forums/functions.php:1665
 #: bp-forums/topics/functions.php:2062 bp-forums/topics/template.php:2809
 msgid "Open"
 msgstr ""
@@ -8877,7 +8877,7 @@ msgstr ""
 msgid "Forums Default"
 msgstr ""
 
-#: bp-forums/classes/class-bbpress.php:550 bp-forums/forums/functions.php:1671
+#: bp-forums/classes/class-bbpress.php:550 bp-forums/forums/functions.php:1666
 #: bp-forums/topics/functions.php:2063
 msgid "Closed"
 msgstr ""
@@ -9347,7 +9347,7 @@ msgstr ""
 msgid "No recorded history. Akismet has not checked this post."
 msgstr ""
 
-#: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:426
+#: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:421
 #: bp-forums/groups.php:340 bp-forums/groups.php:520
 #: bp-forums/notifications.php:182 bp-forums/replies/functions.php:124
 #: bp-forums/replies/functions.php:543 bp-forums/replies/functions.php:1301
@@ -9363,88 +9363,84 @@ msgstr ""
 msgid "<strong>ERROR</strong>: You do not have permission to create new forums."
 msgstr ""
 
-#: bp-forums/forums/functions.php:164 bp-forums/forums/functions.php:487
+#: bp-forums/forums/functions.php:164 bp-forums/forums/functions.php:482
 msgid "<strong>ERROR</strong>: Your forum needs a title."
 msgstr ""
 
-#: bp-forums/forums/functions.php:178 bp-forums/forums/functions.php:501
+#: bp-forums/forums/functions.php:178 bp-forums/forums/functions.php:496
 msgid "<strong>ERROR</strong>: Your forum description cannot be empty."
 msgstr ""
 
-#: bp-forums/forums/functions.php:193
-msgid "Your forum must have a parent forum."
-msgstr ""
-
-#: bp-forums/forums/functions.php:200
+#: bp-forums/forums/functions.php:195
 msgid "This forum is a category. No forums can be created in this forum."
 msgstr ""
 
-#: bp-forums/forums/functions.php:205
+#: bp-forums/forums/functions.php:200
 msgid "This forum has been closed to new forums."
 msgstr ""
 
-#: bp-forums/forums/functions.php:210
+#: bp-forums/forums/functions.php:205
 msgid ""
 "This forum is private and you do not have the capability to read or create "
 "new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:215
+#: bp-forums/forums/functions.php:210
 msgid ""
 "This forum is hidden and you do not have the capability to read or create "
 "new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:222 bp-forums/replies/functions.php:295
+#: bp-forums/forums/functions.php:217 bp-forums/replies/functions.php:295
 #: bp-forums/topics/functions.php:273
 msgid "<strong>ERROR</strong>: Slow down; you move too fast."
 msgstr ""
 
-#: bp-forums/forums/functions.php:235
+#: bp-forums/forums/functions.php:230
 msgid "<strong>ERROR</strong>: This forum already exists."
 msgstr ""
 
-#: bp-forums/forums/functions.php:241
+#: bp-forums/forums/functions.php:236
 msgid "<strong>ERROR</strong>: Your forum cannot be created at this time."
 msgstr ""
 
-#: bp-forums/forums/functions.php:415
+#: bp-forums/forums/functions.php:410
 msgid "<strong>ERROR</strong>: Forum ID not found."
 msgstr ""
 
-#: bp-forums/forums/functions.php:431
+#: bp-forums/forums/functions.php:426
 msgid "<strong>ERROR</strong>: The forum you want to edit was not found."
 msgstr ""
 
-#: bp-forums/forums/functions.php:436
+#: bp-forums/forums/functions.php:431
 msgid "<strong>ERROR</strong>: You do not have permission to edit that forum."
 msgstr ""
 
-#: bp-forums/forums/functions.php:462
+#: bp-forums/forums/functions.php:457
 msgid "<strong>ERROR</strong>: This forum has been closed to new forums."
 msgstr ""
 
-#: bp-forums/forums/functions.php:467
+#: bp-forums/forums/functions.php:462
 msgid ""
 "<strong>ERROR</strong>: This forum is private and you do not have the "
 "capability to read or create new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:472
+#: bp-forums/forums/functions.php:467
 msgid ""
 "<strong>ERROR</strong>: This forum is hidden and you do not have the "
 "capability to read or create new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:507
+#: bp-forums/forums/functions.php:502
 msgid "<strong>ERROR</strong>: Your forum cannot be edited at this time."
 msgstr ""
 
-#: bp-forums/forums/functions.php:1688
+#: bp-forums/forums/functions.php:1683
 msgid "Category"
 msgstr ""
 
-#: bp-forums/forums/functions.php:1704 bp-groups/bp-groups-admin.php:1177
+#: bp-forums/forums/functions.php:1699 bp-groups/bp-groups-admin.php:1177
 #: bp-groups/bp-groups-template.php:714 bp-groups/bp-groups-template.php:715
 #: bp-groups/bp-groups-template.php:1392
 #: bp-groups/classes/class-bp-groups-list-table.php:641
@@ -9453,7 +9449,7 @@ msgstr ""
 msgid "Public"
 msgstr ""
 
-#: bp-forums/forums/functions.php:1705
+#: bp-forums/forums/functions.php:1700
 #: bp-forums/templates/default/bbpress/feedback-no-access.php:12
 #: bp-groups/bp-groups-admin.php:1178 bp-groups/bp-groups-template.php:724
 #: bp-groups/bp-groups-template.php:725 bp-groups/bp-groups-template.php:1394
