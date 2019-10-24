@@ -86,7 +86,7 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 
 			if ( ! empty( $results ) && ! is_wp_error( $results ) ) {
 				foreach ( $results as $row ) {
-					if ( $row['clone_number'] == $i ) {
+					if ( $row['clone_number'] === $i ) {
 						$clone_id = $row['object_id'];
 						break;
 					}
@@ -159,7 +159,7 @@ function bp_profile_repeaters_update_field_data( $user_id, $posted_field_ids, $e
 
 	$field_group_id = $wpdb->get_var( $wpdb->prepare( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = %d", $posted_field_ids[0] ) );
 
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $field_group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( ! $is_repeater_enabled ) {
 		return;
 	}
@@ -277,7 +277,7 @@ function bp_profile_repeater_is_data_valid_for_template_fields( $validated, $val
 	$field_id = $bp_profile_repeater_last_field->id;
 
 	$field_group_id      = $bp_profile_repeater_last_field->group_id;
-	$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
 	if ( ! $is_repeater_enabled ) {
 		$bp_profile_repeater_last_field = false;// reset
@@ -544,9 +544,9 @@ function xprofile_update_clone_positions_on_template_position_update( $template_
 
 	$update_field_orders = false;
 
-	if ( $old_group_id != $template_field_group_id ) {
+	if ( $old_group_id !== $template_field_group_id ) {
 		// tempalte field has been moved to a new field group
-		$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $template_field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+		$is_repeater_enabled = 'on' === bp_xprofile_get_meta( $template_field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
 		if ( $is_repeater_enabled ) {
 			// update group id for all clone fields
@@ -607,11 +607,12 @@ function bp_xprofile_repeater_field_get_children( $children, $for_editing, $fiel
 	}
 
 	$template_field = xprofile_get_field( $template_field_id );
-	if ( $template_field == null ) {
+	if ( null === $template_field ) {
 		return $children;
 	}
 
-	if ( ! ( $template_children = wp_cache_get( $template_field_id, 'field_children_options' ) ) ) {
+	$template_children = wp_cache_get( $template_field_id, 'field_children_options' );
+	if ( ! $template_children ) {
 		// This is done here so we don't have problems with sql injection.
 		if ( empty( $for_editing ) && ( 'asc' === $template_field->order_by ) ) {
 			$sort_sql = 'ORDER BY name ASC';
@@ -691,7 +692,7 @@ function bp_print_add_repeater_set_button() {
 	}
 
 	$group_id            = bp_get_current_profile_group_id();
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		echo "<button id='btn_add_repeater_set' class='button outline' data-nonce='" . wp_create_nonce( 'bp_xprofile_add_repeater_set' ) . "' data-group='{$group_id}'>";
 		echo '<span class="dashicons dashicons-plus-alt"></span>';
@@ -740,7 +741,7 @@ add_action( 'bp_before_profile_field_html', 'bp_profile_repeaters_print_group_ht
  */
 function bp_profile_repeaters_print_group_html_start() {
 	$group_id            = bp_get_current_profile_group_id();
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		global $first_xpfield_in_repeater;
 		$current_field_id   = bp_get_the_profile_field_id();
@@ -757,7 +758,7 @@ function bp_profile_repeaters_print_group_html_start() {
 			?>
 			<div class="repeater_sets_sortable">
 			<div class="repeater_group_outer" data-set_no="<?php echo $current_set_number; ?>">
-				
+
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
 					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
@@ -770,7 +771,7 @@ function bp_profile_repeaters_print_group_html_start() {
 						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
 							<i class="dashicons dashicons-trash"></i>
 							<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
-						</a> 
+						</a>
 						<?php
 					}
 					?>
@@ -780,7 +781,7 @@ function bp_profile_repeaters_print_group_html_start() {
 
 			<?php
 		} else {
-			if ( $first_xpfield_in_repeater == $template_field_id ) {
+			if ( $first_xpfield_in_repeater === $template_field_id ) {
 				// start of a new set
 				?>
 				</div>
@@ -799,7 +800,7 @@ function bp_profile_repeaters_print_group_html_start() {
 					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-trash"></i>
 						<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
-					</a> 
+					</a>
 					<?php
 				}
 				?>
@@ -840,7 +841,7 @@ add_action( 'bp_before_profile_field_item', 'bp_view_profile_repeaters_print_gro
  */
 function bp_view_profile_repeaters_print_group_html_start() {
 	$group_id            = bp_get_the_profile_group_id();
-	$is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 	if ( $is_repeater_enabled ) {
 		global $repeater_set_being_displayed;
 
@@ -849,7 +850,7 @@ function bp_view_profile_repeaters_print_group_html_start() {
 
 		if ( empty( $repeater_set_being_displayed ) ) {
 			// start of first set
-		} elseif ( $repeater_set_being_displayed != $current_set_number ) {
+		} elseif ( $repeater_set_being_displayed !== $current_set_number ) {
 			// end of previous set
 			echo "<tr class='repeater-separator'><td colspan='2'></td></tr>";
 		}
@@ -890,7 +891,7 @@ function bp_profile_repeaters_search_change_filter( $f ) {
 	$bp = buddypress();
 
 	$field_group_id      = $wpdb->get_var( "SELECT group_id FROM {$bp->profile->table_name_fields} WHERE id = {$field_id} AND type != 'option' " );
-	$is_repeater_enabled = 'on' == bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
+	$is_repeater_enabled = 'on' === bp_xprofile_get_meta( $field_group_id, 'group', 'is_repeater_enabled' ) ? true : false;
 
 	if ( ! $is_repeater_enabled ) {
 		return $f;

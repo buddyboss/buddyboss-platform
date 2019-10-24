@@ -76,7 +76,7 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-		
+
 		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
@@ -113,10 +113,10 @@ class BP_XProfile_Field_Type_URL extends BP_XProfile_Field_Type {
 		?>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
-															 <?php
-																/* translators: accessibility text */
-																esc_html_e( 'Website', 'buddyboss' );
-																?>
+			<?php
+				/* translators: accessibility text */
+				esc_html_e( 'Website', 'buddyboss' );
+			?>
 		</label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 

@@ -38,7 +38,7 @@ function bp_xprofile_get_groups( $args = array() ) {
 		$repeater_show_main_fields_only = true;
 
 		// If on a user profile
-		if ( 'profile' == bp_current_component() ) {
+		if ( 'profile' === bp_current_component() ) {
 			$repeater_show_main_fields_only = false;
 		}
 
@@ -407,7 +407,7 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 			$data[] = apply_filters( 'xprofile_get_field_data', $value, $field_id, $user_id );
 		}
 
-		if ( 'comma' == $multi_format ) {
+		if ( 'comma' === $multi_format ) {
 			$data = implode( ', ', $data );
 		}
 	} else {
@@ -460,7 +460,7 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	$value = apply_filters( 'bp_xprofile_set_field_data_pre_validate', $value, $field, $field_type_obj );
 
 	// Special-case support for integer 0 for the number field type.
-	if ( $is_required && ! is_integer( $value ) && $value !== '0' && ( empty( $value ) || ! is_array( $value ) && ! strlen( trim( $value ) ) ) ) {
+	if ( $is_required && ! is_integer( $value ) && '0' !== $value && ( empty( $value ) || ! is_array( $value ) && ! strlen( trim( $value ) ) ) ) {
 		return false;
 	}
 
@@ -470,13 +470,13 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	 *
 	 * Special-case support for integer 0 for the number field type
 	 */
-	if ( empty( $value ) && ! is_integer( $value ) && $value !== '0' && $field_type_obj->accepts_null_value ) {
+	if ( empty( $value ) && ! is_integer( $value ) && '0' !== $value && $field_type_obj->accepts_null_value ) {
 		$value = array();
 	}
 
 	// If the value is empty, then delete any field data that exists, unless the field is of a type
 	// where null values are semantically meaningful.
-	if ( empty( $value ) && ! is_integer( $value ) && $value !== '0' && ! $field_type_obj->accepts_null_value ) {
+	if ( empty( $value ) && ! is_integer( $value ) && '0' !== $value && ! $field_type_obj->accepts_null_value ) {
 		xprofile_delete_field_data( $field_id, $user_id );
 		return true;
 	}
@@ -622,8 +622,8 @@ function xprofile_check_is_required_field( $field_id ) {
  *
  * @since BuddyBoss 1.0.0
  */
-function xprofile_validate_field( $field_id, $value, $UserId ) {
-	return apply_filters( 'xprofile_validate_field', '', $field_id, $value, $UserId );
+function xprofile_validate_field( $field_id, $value, $user_id ) {
+	return apply_filters( 'xprofile_validate_field', '', $field_id, $value, $user_id );
 }
 
 /**
@@ -692,7 +692,7 @@ function xprofile_format_profile_field( $field_type, $field_value ) {
 
 	$field_value = bp_unserialize_profile_field( $field_value );
 
-	if ( 'datebox' != $field_type ) {
+	if ( 'datebox' !== $field_type ) {
 		$content     = $field_value;
 		$field_value = str_replace( ']]>', ']]&gt;', $content );
 	}
@@ -812,10 +812,10 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	$search_terms_clean = bp_esc_like( wp_kses_normalize_entities( $query->query_vars['search_terms'] ) );
 
-	if ( $query->query_vars['search_wildcard'] === 'left' ) {
+	if ( 'left' === $query->query_vars['search_wildcard'] ) {
 		$search_terms_nospace = '%' . $search_terms_clean;
 		$search_terms_space   = '%' . $search_terms_clean . ' %';
-	} elseif ( $query->query_vars['search_wildcard'] === 'right' ) {
+	} elseif ( 'right' === $query->query_vars['search_wildcard'] ) {
 		$search_terms_nospace = $search_terms_clean . '%';
 		$search_terms_space   = '% ' . $search_terms_clean . '%';
 	} else {
@@ -846,12 +846,14 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		foreach ( $matched_user_data as $key => $user ) {
 			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
 			if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
+				$key = array_search( $user->user_id, $matched_user_ids );
+				if ( false !== $key ) {
 					unset( $matched_user_ids[ $key ] );
 				}
 			}
 			if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
-				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
+				$key = array_search( $user->user_id, $matched_user_ids );
+				if ( false !== $key ) {
 					unset( $matched_user_ids[ $key ] );
 				}
 			}
@@ -896,17 +898,17 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 	$lastname_id  = bp_xprofile_lastname_field_id();
 	$nickname_id  = bp_xprofile_nickname_field_id();
 
-	if ( ! $field_id || $field_id == $firstname_id ) {
+	if ( ! $field_id || $field_id === $firstname_id ) {
 		$firstname = xprofile_get_field_data( bp_xprofile_firstname_field_id(), $user_id );
 		bp_update_user_meta( $user_id, 'first_name', $firstname );
 	}
 
-	if ( ! $field_id || $field_id == $lastname_id ) {
+	if ( ! $field_id || $field_id === $lastname_id ) {
 		$lastname = xprofile_get_field_data( bp_xprofile_lastname_field_id(), $user_id );
 		bp_update_user_meta( $user_id, 'last_name', $lastname );
 	}
 
-	if ( ! $field_id || $field_id == $nickname_id ) {
+	if ( ! $field_id || $field_id === $nickname_id ) {
 		$nickname = xprofile_get_field_data( bp_xprofile_nickname_field_id(), $user_id );
 		bp_update_user_meta( $user_id, 'nickname', $nickname );
 	}
@@ -1326,7 +1328,8 @@ function bp_xprofile_fullname_field_name() {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	if ( $nickname_field_id = bp_xprofile_nickname_field_id( true ) ) {
+	$nickname_field_id = bp_xprofile_nickname_field_id( true );
+	if ( $nickname_field_id ) {
 		$field_name = xprofile_get_field( $nickname_field_id )->name;
 	}
 
@@ -1462,7 +1465,7 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 
 		// Nothing's private when viewing your own profile, or when the
 		// current user is an admin.
-		if ( $displayed_user_id == $current_user_id || bp_current_user_can( 'bp_moderate' ) ) {
+		if ( $displayed_user_id === $current_user_id || bp_current_user_can( 'bp_moderate' ) ) {
 			$hidden_levels = array();
 
 			// If the current user and displayed user are friends, show all.
@@ -1517,7 +1520,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
-		if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
+		if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' === $defaults['allow_custom'] ) {
 			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 		}
 	}
@@ -1554,7 +1557,8 @@ function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
 			$date_value = $_POST[ 'field_' . $field_id . '_day' ] . ' ' . $_POST[ 'field_' . $field_id . '_month' ] . ' ' . $_POST[ 'field_' . $field_id . '_year' ];
 
 			// Check that the concatenated value can be turned into a timestamp.
-			if ( $timestamp = strtotime( $date_value ) ) {
+			$timestamp = strtotime( $date_value );
+			if ( $timestamp ) {
 				// Add the timestamp to the global $_POST that should contain the datebox data.
 				$_POST[ 'field_' . $field_id ] = date( 'Y-m-d H:i:s', $timestamp );
 			}
@@ -1732,7 +1736,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 
 	$original_option_values = array();
 
-	$user = ( $user_id !== null && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
+	$user = ( null !== $user_id && $user_id > 0 ) ? $user_id : bp_displayed_user_id();
 
 	if ( $social_networks_id > 0 ) {
 		$providers = bp_xprofile_social_network_provider();
@@ -1750,7 +1754,7 @@ function bp_get_user_social_networks_urls( $user_id = null ) {
 		}
 	}
 
-	if ( $html !== '' ) {
+	if ( '' !== $html ) {
 		$level = xprofile_get_field_visibility_level( $social_networks_id, bp_displayed_user_id() );
 
 		if ( bp_displayed_user_id() === bp_loggedin_user_id() ) {

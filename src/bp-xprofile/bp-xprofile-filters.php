@@ -437,7 +437,8 @@ function xprofile_filter_comments( $comments, $post_id = 0 ) {
 	}
 
 	// Pull up the xprofile fullname of each commenter.
-	if ( $fullnames = bp_core_get_user_displaynames( $user_ids ) ) {
+	$fullnames = bp_core_get_user_displaynames( $user_ids );
+	if ( $fullnames ) {
 		foreach ( (array) $fullnames as $user_id => $user_fullname ) {
 			$users[ $user_id ] = trim( stripslashes( $user_fullname ) );
 		}
@@ -637,7 +638,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
 
 	$current_field = false;
 
-	if ( bp_is_profile_component() && 'edit' == bp_current_action() ) {
+	if ( bp_is_profile_component() && 'edit' === bp_current_action() ) {
 		// we are on profile > edit screens, we should display alternate name, if available, instead of main name.
 		$is_field_edit_mode = true;
 
@@ -682,7 +683,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * @return $retval
  */
 function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_id = null ) {
-	if ( $field_id != bp_xprofile_nickname_field_id() ) {
+	if ( bp_xprofile_nickname_field_id() !== $field_id ) {
 		return $retval;
 	}
 
@@ -740,7 +741,8 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		implode( ' AND ', $where )
 	);
 
-	if ( $asdf = $wpdb->get_var( $sql ) > 0 ) {
+	$asdf = $wpdb->get_var( $sql );
+	if ( $asdf > 0 ) {
 		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 	}
 
@@ -833,7 +835,7 @@ function bp_xprofile_adjust_current_user_display_name() {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
-	if ( $meta_key != 'display_name' ) {
+	if ( 'display_name' !== $meta_key ) {
 		return $null;
 	}
 
