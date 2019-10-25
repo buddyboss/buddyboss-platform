@@ -252,7 +252,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Override bp_current_action().
 	$bp->current_action = 'view';
 
-	bp_thread_has_messages( array( 'thread_id' => $thread_id ) );
+	bp_thread_has_messages( array( 'thread_id' => $thread_id, 'before' => $date_sent ) );
 
 	// Set current message to current key.
 	$thread_template->current_message = -1;
@@ -343,20 +343,14 @@ function bp_nouveau_ajax_messages_send_reply() {
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
 
-	$today = array(
-		'date_separator' =>  'Today'
-	);
+	//  $today = $reply;
+	//$today['date_separator'] = 'Today';
 
 	// set a flag
 	$reply['is_new'] = true;
 
-	$new = array();
-	$new[]  = $reply;
-	$new[]  = $today;
-
-
 	wp_send_json_success( array(
-		'messages' => $new,
+		'messages' => $reply,
 		'thread_id' => $thread_id,
 		'feedback' => __( 'Your reply was sent successfully', 'buddyboss' ),
 		'type'     => 'success',
@@ -824,7 +818,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 			$thread->messages[ $i ] = array(
 				'group_name'                => $group_name,
-				'separator'    => $date,
+				'separator'                 => $date,
 				'group_link'                => $group_link,
 				'group_avatar'              => $group_avatar,
 				'group_message_users'       => $group_message_users,
@@ -839,7 +833,14 @@ function bp_nouveau_ajax_get_thread_messages() {
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
 				'sender_is_you'             => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-				'sender_avatar'             => esc_url( bp_core_fetch_avatar( array( 'item_id' => bp_get_the_thread_message_sender_id(), 'object'  => 'user', 'type'    => 'thumb', 'width'   => 32, 'height'  => 32, 'html'    => false, ) ) ),
+				'sender_avatar'             => esc_url( bp_core_fetch_avatar( array(
+					'item_id' => bp_get_the_thread_message_sender_id(),
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 32,
+					'height'  => 32,
+					'html'    => false,
+				) ) ),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
 				'display_date'              => date_i18n( 'g:i A', strtotime( $thread_template->message->date_sent ) ),
 			);
@@ -860,7 +861,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 			$thread->messages[ $i ] = array(
 				'id'            => bp_get_the_thread_message_id(),
-				'separator'    => $date,
+				'separator'     => $date,
 				'content'       => $content,
 				'sender_id'     => bp_get_the_thread_message_sender_id(),
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
@@ -875,7 +876,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 					'html'    => false,
 				) ) ),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => date_i18n('g:i A', strtotime( $thread_template->message->date_sent ) ),
+				'display_date'  => date_i18n( 'g:i A', strtotime( $thread_template->message->date_sent ) ),
 			);
 		}
 
@@ -936,43 +937,36 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$i += 1;
 	endwhile;
 
-	$message_date_separator = array();
-	$temp_date              = '';
-	$i = 0;
-	foreach ( $thread->messages as  $message )  {
-		if ( $message['separator'] !== $temp_date ) {
-			$message_date_separator[$message['separator']][] = array(
-				'date_separator' =>  $message['separator'],
-//				'content' =>  '',
-//				'display_date' =>  '',
-//				'id' =>  0,
-//				'is_starred' =>  '',
-//				'sender_avatar' =>  '',
-//				'sender_id' =>  0,
-//				'sender_link' =>  '',
-//				'sender_name' =>  '',
-//				'star_link' =>  '',
-			);
-			$i++;
-		}
-		$message_date_separator[$message['separator']][]= $message;
+//	$message_date_separator = array();
+//	$temp_date              = '';
+//	$i = 0;
+//	foreach ( $thread->messages as  $message )  {
+//		if ( $message['separator'] !== $temp_date ) {
+//			$message_date_separator[$message['separator']][] = array(
+//				'date_separator' =>  $message['separator'],
+//			);
+//			$i++;
+//		}
+//		$message_date_separator[$message['separator']][]= $message;
+//
+//		$temp_date = $message['separator'];
+//	}
+//
+//	$new_temp = array();
+//	foreach ( $message_date_separator as $single_item ) {
+//		$first_element = reset($single_item );
+//
+//		// Deleting first array item
+//		array_shift($single_item );
+//
+//		array_push($single_item, $first_element );
+//
+//		$new_temp[] = $single_item;
+//	}
 
-		$temp_date = $message['separator'];
-	}
+	$thread->messages = array_filter( $thread->messages );
 
-	$new_temp = array();
-	foreach ( $message_date_separator as $single_item ) {
-		$first_element = reset($single_item );
-
-		// Deleting first array item
-		array_shift($single_item );
-
-		array_push($single_item, $first_element );
-
-		$new_temp[] = $single_item;
-	}
-
-	$thread->messages = call_user_func_array('array_merge', $new_temp );
+	//$thread->messages = call_user_func_array('array_merge', $thread->messages );
 
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
