@@ -351,9 +351,9 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$reply['is_new'] = true;
 
 	$new = array();
-
-	$new[]  = $today;
 	$new[]  = $reply;
+	$new[]  = $today;
+
 
 	wp_send_json_success( array(
 		'messages' => $new,

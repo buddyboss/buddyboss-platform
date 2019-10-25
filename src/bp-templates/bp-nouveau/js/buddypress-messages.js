@@ -1719,28 +1719,7 @@ window.bp = window.bp || {};
 				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
 			});
 
-			// $('#bp-message-thread-list li').each(function () {
-			// 	$(this).removeClass( 'divider' );
-			// 	$(this).removeAttr( 'data-divider' );
-			// });
-			//
-			// $('#bp-message-thread-list li').each(function () {
-			// 	if ( $( this ).find( 'hr').length ) {
-			// 		$(this).addClass('divider');
-			// 		var divider = $( this ).find( 'hr').attr('data-content');
-			// 		$(this).attr('data-divider', divider );
-			// 	}
-			// });
-			//
-			// var seen = {};
-			// $('#bp-message-thread-list li.divider').each(function () {
-			// 	var txt = $(this).attr('data-divider');
-			// 	if (seen[txt]) {
-			// 		$(this).remove();
-			// 	} else {
-			// 		seen[txt] = true;
-			// 	}
-			// });
+
 
 		}
 	} );
@@ -1971,6 +1950,31 @@ window.bp = window.bp || {};
 			if ( ! this.views.get( '#bp-message-thread-header' ) ) {
 				this.views.add( '#bp-message-thread-header', new bp.Views.userMessagesHeader( { model: this.options.thread } ) );
 			}
+
+			$('#bp-message-thread-list li').each(function () {
+				$(this).removeClass( 'divider' );
+				$(this).removeAttr( 'data-divider' );
+			});
+
+			$('#bp-message-thread-list li').each(function () {
+				if ( $( this ).find( 'hr').length ) {
+					if ( ! $( this ).hasClass( 'divider' ) ) {
+						$(this).addClass('divider');
+						var divider = $(this).find('hr').attr('data-content');
+						$(this).attr('data-divider', divider);
+					}
+				}
+			});
+
+			var seen = {};
+			$('#bp-message-thread-list li.divider').each(function () {
+				var txt = $(this).attr('data-divider');
+				if (seen[txt]) {
+					$(this).remove();
+				} else {
+					seen[txt] = true;
+				}
+			});
 		},
 
 		messages_scrolled: function( event ) {
