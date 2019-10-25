@@ -11636,3 +11636,38 @@ div#bp-group-message-content {
   font-style: italic;
   font-weight: bold;
 }
+
+.hr-text {
+  line-height: 1em;
+  position: relative;
+  outline: 0;
+  border: 0;
+  color: black;
+  text-align: center;
+  height: 1.5em;
+  opacity: .5;
+  width: 100%;
+  background: transparent;
+  margin: 0;
+}
+
+.hr-text:before {
+  content: '';
+  background: #818078;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  height: 1px;
+}
+
+.hr-text:after {
+  content: attr(data-content);
+  position: relative;
+  display: inline-block;
+  color: black;
+  padding: 0 .5em;
+  line-height: 1.5em;
+  color: #818078;
+  background-color: #FFFFFF;
+}

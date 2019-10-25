@@ -189,7 +189,7 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
-			
+
 			//show compose message screen
 			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
@@ -1718,6 +1718,30 @@ window.bp = window.bp || {};
 				success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
 			});
+
+			// $('#bp-message-thread-list li').each(function () {
+			// 	$(this).removeClass( 'divider' );
+			// 	$(this).removeAttr( 'data-divider' );
+			// });
+			//
+			// $('#bp-message-thread-list li').each(function () {
+			// 	if ( $( this ).find( 'hr').length ) {
+			// 		$(this).addClass('divider');
+			// 		var divider = $( this ).find( 'hr').attr('data-content');
+			// 		$(this).attr('data-divider', divider );
+			// 	}
+			// });
+			//
+			// var seen = {};
+			// $('#bp-message-thread-list li.divider').each(function () {
+			// 	var txt = $(this).attr('data-divider');
+			// 	if (seen[txt]) {
+			// 		$(this).remove();
+			// 	} else {
+			// 		seen[txt] = true;
+			// 	}
+			// });
+
 		}
 	} );
 
@@ -2053,6 +2077,14 @@ window.bp = window.bp || {};
 		},
 
 		replySent: function( response ) {
+			//$( '.bp-messages-user-threads .bp-message-link.bp-message-link-' + response.thread_id ).parent().removeClass( 'current' );
+			//$( '.bp-messages-user-threads .bp-message-link.bp-message-link-' + response.thread_id ).removeClass( 'current' );
+			//$( '.bp-messages-user-threads .bp-message-link.bp-message-link-48' ).trigger( 'click' );
+			//$( '.bp-messages-user-threads .bp-message-link.bp-message-link-47' ).trigger( 'click' );
+			// bp.Nouveau.Messages.router.navigate(
+			// 	'view/' + target.data( 'thread-id' ) + '/',
+			// 	{ trigger: true }
+			// );
 			var reply = this.collection.parse( response );
 
 			// Reset the form
@@ -2085,6 +2117,8 @@ window.bp = window.bp || {};
 			$('#send_reply_button').prop('disabled',false).removeClass('loading');
 
 			$('#bp-message-thread-list').animate({ scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 0);
+			//$( document ).find( '.bp-message-link-' + response.thread_id ).trigger( 'click' );
+			//$( '#bp-messages-threads-list .bp-messages-user-threads #message-threads .thread-item .bp-message-link-' + response.thread_id ).trigger( 'click' );
 		},
 
 		replyError: function( response ) {

@@ -16,7 +16,7 @@
 	}
 	#>
 
-	<a class="bp-message-link" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
+	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
 
 			<# if ( data.group_avatar.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
