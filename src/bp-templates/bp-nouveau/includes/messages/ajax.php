@@ -942,7 +942,16 @@ function bp_nouveau_ajax_get_thread_messages() {
 	foreach ( $thread->messages as  $message )  {
 		if ( $message['separator'] !== $temp_date ) {
 			$message_date_separator[$message['separator']][] = array(
-				'date_separator' =>  $message['separator']
+				'date_separator' =>  $message['separator'],
+//				'content' =>  '',
+//				'display_date' =>  '',
+//				'id' =>  0,
+//				'is_starred' =>  '',
+//				'sender_avatar' =>  '',
+//				'sender_id' =>  0,
+//				'sender_link' =>  '',
+//				'sender_name' =>  '',
+//				'star_link' =>  '',
 			);
 			$i++;
 		}

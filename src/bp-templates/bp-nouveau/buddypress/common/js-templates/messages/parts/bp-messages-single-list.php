@@ -1,5 +1,4 @@
 <script type="text/html" id="tmpl-bp-messages-single-list">
-	AAAA
 	<# console.log(data); #>
 	<# if ( data.date_separator && '' !== data.date_separator ) { #>
 	<hr class="hr-text" data-content="{{{data.date_separator}}}"></hr>
