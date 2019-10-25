@@ -1,5 +1,4 @@
-<?php
-
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Forums Cache Helpers
  *
