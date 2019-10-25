@@ -1522,7 +1522,7 @@ function bbp_update_forum_topic_count_hidden( $forum_id = 0, $topic_count = 0 ) 
 		// Get topics of forum
 		if ( empty( $topic_count ) ) {
 			$post_status = "'" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "'";
-			$topic_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $forum_id, bbp_get_topic_post_type() ) );
+			$topic_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $forum_id, bbp_get_topic_post_type() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 		}
 
 		// Update the count
@@ -1571,7 +1571,7 @@ function bbp_update_forum_reply_count( $forum_id = 0 ) {
 	$topic_ids = bbp_forum_query_topic_ids( $forum_id );
 	if ( ! empty( $topic_ids ) ) {
 		$topic_ids   = implode( ',', wp_parse_id_list( $topic_ids ) );
-		$reply_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent IN ( {$topic_ids} ) AND post_status = '%s' AND post_type = '%s';", bbp_get_public_status_id(), bbp_get_reply_post_type() ) );
+		$reply_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent IN ( {$topic_ids} ) AND post_status = '%s' AND post_type = '%s';", bbp_get_public_status_id(), bbp_get_reply_post_type() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 	} else {
 		$reply_count = 0;
 	}
@@ -2131,7 +2131,7 @@ function bbp_forum_query_last_reply_id( $forum_id, $topic_ids = 0 ) {
 
 		if ( ! empty( $topic_ids ) ) {
 			$topic_ids = implode( ',', wp_parse_id_list( $topic_ids ) );
-			$reply_id  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent IN ( {$topic_ids} ) AND post_status = '%s' AND post_type = '%s' ORDER BY ID DESC LIMIT 1;", bbp_get_public_status_id(), bbp_get_reply_post_type() ) );
+			$reply_id  = (int) $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent IN ( {$topic_ids} ) AND post_status = '%s' AND post_type = '%s' ORDER BY ID DESC LIMIT 1;", bbp_get_public_status_id(), bbp_get_reply_post_type() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 			wp_cache_set( $cache_id, $reply_id, 'bbpress_posts' ); // May be (int) 0
 		} else {
 			wp_cache_set( $cache_id, '0', 'bbpress_posts' );
