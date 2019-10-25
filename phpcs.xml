@@ -7,9 +7,12 @@
     <exclude-pattern>*/vendor/*</exclude-pattern>
     <exclude-pattern>*/lib/*</exclude-pattern>
     <exclude-pattern>*.min.*</exclude-pattern>
+    <exclude-pattern>*.css</exclude-pattern>
     <exclude-pattern>*/deprecated/*</exclude-pattern>
     <exclude-pattern>*/bp-integrations/*</exclude-pattern>
     <exclude-pattern>*/js/autocomplete/*</exclude-pattern>
+    <exclude-pattern>*/js-templates/*</exclude-pattern>
+    <exclude-pattern>awpcp_ad_listing-ajax.php</exclude-pattern>
 
     <!-- Configs -->
     <config name="minimum_supported_wp_version" value="4.7" />

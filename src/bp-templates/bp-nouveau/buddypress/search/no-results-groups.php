@@ -1,1 +1,1 @@
-<?php _e( 'No groups found!', 'buddyboss' ); ?>
+<?php _e( 'No groups found!', 'buddyboss' );

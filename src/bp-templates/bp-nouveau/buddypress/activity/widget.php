@@ -14,7 +14,7 @@
 		<?php
 		while ( bp_activities() ) :
 			bp_the_activity();
-		?>
+			?>
 
 		<div class="activity-update">
 
