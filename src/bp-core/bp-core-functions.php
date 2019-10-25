@@ -4147,6 +4147,11 @@ function bp_get_widget_max_count_limit( $widget_class = '' ) {
  */
 function bp_core_get_active_custom_post_type_feed() {
 
+	// phpunit test case fix to support blogs as default
+	if ( function_exists( 'tests_add_filter' ) ) {
+		return array( 'post' => 'post' );
+	}
+
 	// Get site-wide all the CPT array.
 	$custom_post_types = bp_get_option( 'bp_core_admin_get_active_custom_post_type_feed', array() );
 
