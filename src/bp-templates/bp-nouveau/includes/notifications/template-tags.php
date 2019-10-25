@@ -25,45 +25,47 @@ function bp_nouveau_notifications_filters() {
 	 *
 	 * @return string HTML output.
 	 */
-	function bp_nouveau_get_notifications_filters() {
-		$output   = '';
-		$filters  = bp_nouveau_notifications_sort( bp_nouveau_notifications_get_filters() );
-		$selected = 0;
+function bp_nouveau_get_notifications_filters() {
+	$output   = '';
+	$filters  = bp_nouveau_notifications_sort( bp_nouveau_notifications_get_filters() );
+	$selected = 0;
 
-		if ( ! empty( $_REQUEST['type'] ) ) {
-			$selected = sanitize_key( $_REQUEST['type'] );
-		}
-
-		foreach ( $filters as $filter ) {
-			if ( empty( $filter['id'] ) || empty( $filter['label'] ) ) {
-				continue;
-			}
-
-			$output .= sprintf( '<option value="%1$s" %2$s>%3$s</option>',
-				esc_attr( sanitize_key( $filter['id'] ) ),
-				selected( $selected, $filter['id'], false ),
-				esc_html( $filter['label'] )
-			) . "\n";
-		}
-
-		if ( $output ) {
-			$output = sprintf( '<option value="%1$s" %2$s>%3$s</option>',
-				0,
-				selected( $selected, 0, false ),
-				esc_html__( '- View All -', 'buddyboss' )
-			) . "\n" . $output;
-		}
-
-		/**
-		 * Filter to edit the options output.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string $output  The options output.
-		 * @param array  $filters The sorted notifications filters.
-		 */
-		return apply_filters( 'bp_nouveau_get_notifications_filters', $output, $filters );
+	if ( ! empty( $_REQUEST['type'] ) ) {
+		$selected = sanitize_key( $_REQUEST['type'] );
 	}
+
+	foreach ( $filters as $filter ) {
+		if ( empty( $filter['id'] ) || empty( $filter['label'] ) ) {
+			continue;
+		}
+
+		$output .= sprintf(
+			'<option value="%1$s" %2$s>%3$s</option>',
+			esc_attr( sanitize_key( $filter['id'] ) ),
+			selected( $selected, $filter['id'], false ),
+			esc_html( $filter['label'] )
+		) . "\n";
+	}
+
+	if ( $output ) {
+		$output = sprintf(
+			'<option value="%1$s" %2$s>%3$s</option>',
+			0,
+			selected( $selected, 0, false ),
+			esc_html__( '- View All -', 'buddyboss' )
+		) . "\n" . $output;
+	}
+
+	/**
+	 * Filter to edit the options output.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string $output  The options output.
+	 * @param array  $filters The sorted notifications filters.
+	 */
+	return apply_filters( 'bp_nouveau_get_notifications_filters', $output, $filters );
+}
 
 /**
  * Outputs the order action links.
@@ -95,13 +97,15 @@ function bp_nouveau_notifications_sort_order_links() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_notifications_bulk_management_dropdown() {
-?>
+	?>
 
 	<div class="select-wrap">
 
-		<label class="bp-screen-reader-text" for="notification-select"><?php
+		<label class="bp-screen-reader-text" for="notification-select">
+		<?php
 			esc_html_e( 'Select Bulk Action', 'buddyboss' );
-		?></label>
+		?>
+		</label>
 
 		<select name="notification_bulk_action" id="notification-select">
 			<option value="" selected="selected"><?php esc_html_e( 'Bulk Actions', 'buddyboss' ); ?></option>

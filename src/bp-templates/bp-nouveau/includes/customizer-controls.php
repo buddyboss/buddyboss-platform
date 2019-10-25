@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Customizer controls
  *
@@ -43,21 +43,23 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 			$slug = array();
 			$type = 'group';
 
-			if ( isset( $_GET['url'] ) && !empty( $_GET['url'] ) ) {
+			if ( isset( $_GET['url'] ) && ! empty( $_GET['url'] ) ) {
 				$parse_url = parse_url( $_GET['url'] );
-				$path_arr = explode( '/', $parse_url['path'] );
+				$path_arr  = explode( '/', $parse_url['path'] );
 				if ( 'groups' === $path_arr[1] && '' !== $path_arr[2] ) {
 					$slug = array( $path_arr[2] );
 				}
 			}
 
 			// Try to fetch any random group:
-			$random = groups_get_groups( array(
+			$random = groups_get_groups(
+				array(
 					'type'        => 'random',
 					'per_page'    => 1,
 					'slug'        => $slug,
 					'show_hidden' => true,
-				) );
+				)
+			);
 
 			if ( ! empty( $random['groups'] ) ) {
 				$group    = reset( $random['groups'] );
@@ -69,7 +71,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 				$guide = __( 'Drag and drop each tab to change the group navigation order.', 'buddyboss' );
 			}
 
-		// It's a user!
+			// It's a user!
 		} else {
 			$item_nav = bp_nouveau_member_customizer_nav();
 			$type     = 'user';
@@ -115,7 +117,7 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 							</li>
 							<?php
 						}
-					// do nothing
+						// do nothing
 					} else {
 						$i += 1;
 
@@ -132,7 +134,8 @@ class BP_Nouveau_Nav_Customize_Control extends WP_Customize_Control {
 						<?php
 					}
 
-				endforeach; ?>
+				endforeach;
+				?>
 
 			</ul>
 		<?php endif; ?>

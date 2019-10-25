@@ -229,17 +229,21 @@ function bp_nouveau_group_creation_tabs() {
 	foreach ( (array) $bp->groups->group_creation_steps as $slug => $step ) {
 		$is_enabled = bp_are_previous_group_creation_steps_complete( $slug ); ?>
 
-		<li<?php if ( bp_get_groups_current_create_step() === $slug ) : ?> class="current"<?php endif; ?>>
+		<li
+			<?php
+			if ( bp_get_groups_current_create_step() === $slug ) :
+				?>
+				class="current"<?php endif; ?>>
 			<?php if ( $is_enabled ) : ?>
 				<a href="<?php echo esc_url( bp_groups_directory_permalink() . 'create/step/' . $slug . '/' ); ?>">
-					<?php echo (int) $counter; ?> <?php echo esc_html( $step['name'] ); ?>
+					<?php echo (int) $counter; ?><?php echo esc_html( $step['name'] ); ?>
 				</a>
 			<?php else : ?>
 				<?php echo (int) $counter; ?>. <?php echo esc_html( $step['name'] ); ?>
 			<?php endif ?>
 		</li>
 			<?php
-		$counter++;
+			$counter++;
 	}
 
 	unset( $is_enabled );
@@ -291,7 +295,7 @@ function bp_nouveau_group_manage_screen() {
 
 		$core_screen = bp_nouveau_group_get_core_manage_screens( $screen_id );
 
-	// It's a group step, get the creation screens.
+		// It's a group step, get the creation screens.
 	} else {
 		$core_screen = bp_nouveau_group_get_core_create_screens( $screen_id );
 	}
@@ -307,7 +311,7 @@ function bp_nouveau_group_manage_screen() {
 			 */
 			do_action( 'groups_custom_edit_steps' );
 
-		// Else use the group create hook
+			// Else use the group create hook
 		} else {
 			/**
 			 * Fires inside the group admin template.
@@ -319,7 +323,7 @@ function bp_nouveau_group_manage_screen() {
 			do_action( 'groups_custom_create_steps' );
 		}
 
-	// Else we load the core screen.
+		// Else we load the core screen.
 	} else {
 		if ( ! empty( $core_screen['hook'] ) ) {
 			/**
@@ -656,427 +660,427 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
 	 *
 	 * @param array $args Optional. See bp_nouveau_wrapper() for the description of parameters.
 	 */
-	function bp_nouveau_get_groups_buttons( $args = array() ) {
-		$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
+function bp_nouveau_get_groups_buttons( $args = array() ) {
+	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'group';
 
-		// @todo Not really sure why BP Legacy needed to do this...
-		if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			return;
-		}
+	// @todo Not really sure why BP Legacy needed to do this...
+	if ( 'group' === $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		return;
+	}
 
-		$buttons = array();
+	$buttons = array();
 
-		if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
-			$group = $GLOBALS['groups_template']->group;
-		} else {
-			$group = groups_get_current_group();
-		}
+	if ( ( 'loop' === $type || 'invite' === $type ) && isset( $GLOBALS['groups_template']->group ) ) {
+		$group = $GLOBALS['groups_template']->group;
+	} else {
+		$group = groups_get_current_group();
+	}
 
-		if ( empty( $group->id ) ) {
+	if ( empty( $group->id ) ) {
+		return $buttons;
+	}
+
+	/*
+	 * If the 'container' is set to 'ul' set $parent_element to li,
+	 * otherwise simply pass any value found in $args or set var false.
+	 */
+	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
+		$parent_element = 'li';
+	} elseif ( ! empty( $args['parent_element'] ) ) {
+		$parent_element = $args['parent_element'];
+	} else {
+		$parent_element = false;
+	}
+
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor) o override & hardcode the
+	 * 'element' string on $buttons array.
+	 *
+	 * Icons sets a class for icon display if not using the button element
+	 */
+	$icons = '';
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	} else {
+		$button_element = 'a';
+		$icons          = ' icons';
+	}
+
+	// If we pass through parent classes add them to $button array
+	$parent_class = '';
+	if ( ! empty( $args['parent_attr']['class'] ) ) {
+		$parent_class = $args['parent_attr']['class'];
+	}
+
+	// Invite buttons on member's invites screen
+	if ( 'invite' === $type ) {
+		// Don't show button if not logged in or previously banned
+		if ( ! is_user_logged_in() || bp_group_is_user_banned( $group ) || empty( $group->status ) ) {
 			return $buttons;
 		}
 
-		/*
-		 * If the 'container' is set to 'ul' set $parent_element to li,
-		 * otherwise simply pass any value found in $args or set var false.
-		 */
-		if ( ! empty( $args['container'] ) && 'ul' === $args['container']  ) {
-			$parent_element = 'li';
-		} elseif ( ! empty( $args['parent_element'] ) ) {
-			$parent_element = $args['parent_element'];
+		// Setup Accept button attributes
+		$buttons['accept_invite'] = array(
+			'id'                => 'accept_invite',
+			'position'          => 5,
+			'component'         => 'groups',
+			'must_be_logged_in' => true,
+			'parent_element'    => $parent_element,
+			'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+			'button_element'    => $button_element,
+			'parent_attr'       => array(
+				'id'    => '',
+				'class' => $parent_class . ' ' . 'accept',
+			),
+			'button_attr'       => array(
+				'id'    => '',
+				'class' => 'button accept group-button accept-invite',
+				'rel'   => '',
+			),
+		);
+
+		// If button element set add nonce link to data-attr attr
+		if ( 'button' === $button_element ) {
+			$buttons['accept_invite']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_accept_invite_link() );
 		} else {
-			$parent_element = false;
+			$buttons['accept_invite']['button_attr']['href'] = esc_url( bp_get_group_accept_invite_link() );
 		}
 
-		/*
-		 * If we have an arg value for $button_element passed through
-		 * use it to default all the $buttons['button_element'] values
-		 * otherwise default to 'a' (anchor) o override & hardcode the
-		 * 'element' string on $buttons array.
-		 *
-		 * Icons sets a class for icon display if not using the button element
-		 */
-		$icons = '';
-		if ( ! empty( $args['button_element'] ) ) {
-			$button_element = $args['button_element'] ;
+		// Setup Reject button attributes
+		$buttons['reject_invite'] = array(
+			'id'                => 'reject_invite',
+			'position'          => 15,
+			'component'         => 'groups',
+			'must_be_logged_in' => true,
+			'parent_element'    => $parent_element,
+			'link_text'         => __( 'Reject', 'buddyboss' ),
+			'parent_attr'       => array(
+				'id'    => '',
+				'class' => $parent_class . ' ' . 'reject',
+			),
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'id'    => '',
+				'class' => 'button reject group-button reject-invite',
+				'rel'   => '',
+			),
+		);
+
+		// If button element set add nonce link to formaction attr
+		if ( 'button' === $button_element ) {
+			$buttons['reject_invite']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_reject_invite_link() );
 		} else {
-			$button_element = 'a';
-			$icons = ' icons';
+			$buttons['reject_invite']['button_attr']['href'] = esc_url( bp_get_group_reject_invite_link() );
 		}
-
-		// If we pass through parent classes add them to $button array
-		$parent_class = '';
-		if ( ! empty( $args['parent_attr']['class'] ) ) {
-			$parent_class = $args['parent_attr']['class'];
-		}
-
-		// Invite buttons on member's invites screen
-		if ( 'invite' === $type ) {
-			// Don't show button if not logged in or previously banned
-			if ( ! is_user_logged_in() || bp_group_is_user_banned( $group ) || empty( $group->status ) ) {
-				return $buttons;
-			}
-
-			// Setup Accept button attributes
-			$buttons['accept_invite'] =  array(
-				'id'                => 'accept_invite',
-				'position'          => 5,
-				'component'         => 'groups',
-				'must_be_logged_in' => true,
-				'parent_element'    => $parent_element,
-				'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
-				'button_element'    => $button_element,
-				'parent_attr'       => array(
-					'id'    => '',
-					'class' => $parent_class . ' ' . 'accept',
-				),
-				'button_attr'       => array(
-					'id'    => '',
-					'class' => 'button accept group-button accept-invite',
-					'rel'   => '',
-				),
-			);
-
-			// If button element set add nonce link to data-attr attr
-			if ( 'button' === $button_element ) {
-				$buttons['accept_invite']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_accept_invite_link() );
-			} else {
-				$buttons['accept_invite']['button_attr']['href'] = esc_url( bp_get_group_accept_invite_link() );
-			}
-
-			// Setup Reject button attributes
-			$buttons['reject_invite'] = array(
-				'id'                => 'reject_invite',
-				'position'          => 15,
-				'component'         => 'groups',
-				'must_be_logged_in' => true,
-				'parent_element'    => $parent_element,
-				'link_text'         => __( 'Reject', 'buddyboss' ),
-				'parent_attr'       => array(
-					'id'    => '',
-					'class' => $parent_class . ' ' . 'reject',
-				),
-				'button_element'    => $button_element,
-				'button_attr'       => array(
-					'id'    => '',
-					'class' => 'button reject group-button reject-invite',
-					'rel'   => '',
-				),
-			);
-
-			// If button element set add nonce link to formaction attr
-			if ( 'button' === $button_element ) {
-				$buttons['reject_invite']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_reject_invite_link() );
-			} else {
-				$buttons['reject_invite']['button_attr']['href'] = esc_url( bp_get_group_reject_invite_link() );
-			}
 
 		// Request button for the group's manage screen
-		} elseif ( 'request' === $type ) {
-			// Setup Accept button attributes
-			$buttons['group_membership_accept'] =  array(
-				'id'                => 'group_membership_accept',
+	} elseif ( 'request' === $type ) {
+		// Setup Accept button attributes
+		$buttons['group_membership_accept'] = array(
+			'id'                => 'group_membership_accept',
+			'position'          => 5,
+			'component'         => 'groups',
+			'must_be_logged_in' => true,
+			'parent_element'    => $parent_element,
+			'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
+			'button_element'    => $button_element,
+			'parent_attr'       => array(
+				'id'    => '',
+				'class' => $parent_class,
+			),
+			'button_attr'       => array(
+				'id'    => '',
+				'class' => 'button accept',
+				'rel'   => '',
+			),
+		);
+
+		// If button element set add nonce link to data-attr attr
+		if ( 'button' === $button_element ) {
+			$buttons['group_membership_accept']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_request_accept_link() );
+		} else {
+			$buttons['group_membership_accept']['button_attr']['href'] = esc_url( bp_get_group_request_accept_link() );
+		}
+
+		$buttons['group_membership_reject'] = array(
+			'id'                => 'group_membership_reject',
+			'position'          => 15,
+			'component'         => 'groups',
+			'must_be_logged_in' => true,
+			'parent_element'    => $parent_element,
+			'button_element'    => $button_element,
+			'link_text'         => __( 'Reject', 'buddyboss' ),
+			'parent_attr'       => array(
+				'id'    => '',
+				'class' => $parent_class,
+			),
+			'button_attr'       => array(
+				'id'    => '',
+				'class' => 'button reject',
+				'rel'   => '',
+			),
+		);
+
+		// If button element set add nonce link to data-attr attr
+		if ( 'button' === $button_element ) {
+			$buttons['group_membership_reject']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_request_reject_link() );
+		} else {
+			$buttons['group_membership_reject']['button_attr']['href'] = esc_url( bp_get_group_request_reject_link() );
+		}
+
+		/*
+		* Manage group members for the group's manage screen.
+		* The 'button_attr' keys 'href' & 'formaction' are set at the end of this array block
+		*/
+	} elseif ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
+		$user_id = $GLOBALS['members_template']->member->user_id;
+
+		$buttons = array(
+			'unban_member'  => array(
+				'id'                => 'unban_member',
 				'position'          => 5,
 				'component'         => 'groups',
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
-				'link_text'         => esc_html__( 'Accept', 'buddyboss' ),
 				'button_element'    => $button_element,
+				'link_text'         => __( 'Remove Ban', 'buddyboss' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
 				),
 				'button_attr'       => array(
 					'id'    => '',
-					'class' => 'button accept',
+					'class' => 'button confirm member-unban',
 					'rel'   => '',
+					'title' => '',
 				),
-			);
-
-			// If button element set add nonce link to data-attr attr
-			if ( 'button' === $button_element ) {
-				$buttons['group_membership_accept']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_request_accept_link() );
-			} else {
-				$buttons['group_membership_accept']['button_attr']['href'] = esc_url( bp_get_group_request_accept_link() );
-			}
-
-			$buttons['group_membership_reject'] = array(
-				'id'                => 'group_membership_reject',
+			),
+			'ban_member'    => array(
+				'id'                => 'ban_member',
 				'position'          => 15,
 				'component'         => 'groups',
 				'must_be_logged_in' => true,
 				'parent_element'    => $parent_element,
 				'button_element'    => $button_element,
-				'link_text'         => __( 'Reject', 'buddyboss' ),
+				'link_text'         => __( 'Kick &amp; Ban', 'buddyboss' ),
 				'parent_attr'       => array(
 					'id'    => '',
 					'class' => $parent_class,
 				),
 				'button_attr'       => array(
 					'id'    => '',
-					'class' => 'button reject',
+					'class' => 'button confirm member-ban',
 					'rel'   => '',
+					'title' => '',
 				),
-			);
+			),
+			'promote_mod'   => array(
+				'id'                => 'promote_mod',
+				'position'          => 25,
+				'component'         => 'groups',
+				'must_be_logged_in' => true,
+				'parent_element'    => $parent_element,
+				'parent_attr'       => array(
+					'id'    => '',
+					'class' => $parent_class,
+				),
+				'button_element'    => $button_element,
+				'button_attr'       => array(
+					'id'    => '',
+					'class' => 'button confirm member-promote-to-mod',
+					'rel'   => '',
+					'title' => '',
+				),
+				'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
+			),
+			'promote_admin' => array(
+				'id'                => 'promote_admin',
+				'position'          => 35,
+				'component'         => 'groups',
+				'must_be_logged_in' => true,
+				'parent_element'    => $parent_element,
+				'button_element'    => $button_element,
+				'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
+				'parent_attr'       => array(
+					'id'    => '',
+					'class' => $parent_class,
+				),
+				'button_attr'       => array(
+					'href'  => esc_url( bp_get_group_member_promote_admin_link() ),
+					'id'    => '',
+					'class' => 'button confirm member-promote-to-admin',
+					'rel'   => '',
+					'title' => '',
+				),
+			),
+			'remove_member' => array(
+				'id'                => 'remove_member',
+				'position'          => 45,
+				'component'         => 'groups',
+				'must_be_logged_in' => true,
+				'parent_element'    => $parent_element,
+				'button_element'    => $button_element,
+				'link_text'         => __( 'Remove from group', 'buddyboss' ),
+				'parent_attr'       => array(
+					'id'    => '',
+					'class' => $parent_class,
+				),
+				'button_attr'       => array(
+					'id'    => '',
+					'class' => 'button confirm',
+					'rel'   => '',
+					'title' => '',
+				),
+			),
+		);
 
-			// If button element set add nonce link to data-attr attr
-			if ( 'button' === $button_element ) {
-				$buttons['group_membership_reject']['button_attr']['data-bp-nonce'] = esc_url( bp_get_group_request_reject_link() );
-			} else {
-				$buttons['group_membership_reject']['button_attr']['href'] = esc_url( bp_get_group_request_reject_link() );
-			}
-
-		/*
-		 * Manage group members for the group's manage screen.
-		 * The 'button_attr' keys 'href' & 'formaction' are set at the end of this array block
-		 */
-		} elseif ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
-			$user_id = $GLOBALS['members_template']->member->user_id;
-
-			$buttons = array(
-				'unban_member' => array(
-					'id'                => 'unban_member',
-					'position'          => 5,
-					'component'         => 'groups',
-					'must_be_logged_in' => true,
-					'parent_element'    => $parent_element,
-					'button_element'    => $button_element,
-					'link_text'         => __( 'Remove Ban', 'buddyboss' ),
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'button_attr'       => array(
-						'id'    => '',
-						'class' => 'button confirm member-unban',
-						'rel'   => '',
-						'title' => '',
-					),
-				),
-				'ban_member' => array(
-					'id'                => 'ban_member',
-					'position'          => 15,
-					'component'         => 'groups',
-					'must_be_logged_in' => true,
-					'parent_element'    => $parent_element,
-					'button_element'    => $button_element,
-					'link_text'         => __( 'Kick &amp; Ban', 'buddyboss' ),
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'button_attr'       => array(
-						'id'    => '',
-						'class' => 'button confirm member-ban',
-						'rel'   => '',
-						'title' => '',
-					),
-				),
-				'promote_mod' => array(
-					'id'                => 'promote_mod',
-					'position'          => 25,
-					'component'         => 'groups',
-					'must_be_logged_in' => true,
-					'parent_element'    => $parent_element,
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'button_element'    => $button_element,
-					'button_attr'       => array(
-						'id'               => '',
-						'class'            => 'button confirm member-promote-to-mod',
-						'rel'              => '',
-						'title'            => '',
-					),
-					'link_text'         => sprintf( __( 'Promote to %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ),
-				),
-				'promote_admin' => array(
-					'id'                => 'promote_admin',
-					'position'          => 35,
-					'component'         => 'groups',
-					'must_be_logged_in' => true,
-					'parent_element'    => $parent_element,
-					'button_element'    => $button_element,
-					'link_text'         => sprintf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ),
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'button_attr'       => array(
-						'href'  => esc_url( bp_get_group_member_promote_admin_link() ),
-						'id'    => '',
-						'class' => 'button confirm member-promote-to-admin',
-						'rel'   => '',
-						'title' => '',
-					),
-				),
-				'remove_member' => array(
-					'id'                => 'remove_member',
-					'position'          => 45,
-					'component'         => 'groups',
-					'must_be_logged_in' => true,
-					'parent_element'    => $parent_element,
-					'button_element'    => $button_element,
-					'link_text'         => __( 'Remove from group', 'buddyboss' ),
-					'parent_attr'       => array(
-						'id'    => '',
-						'class' => $parent_class,
-					),
-					'button_attr'       => array(
-						'id'    => '',
-						'class' => 'button confirm',
-						'rel'   => '',
-						'title' => '',
-					),
-				),
-			);
-
-			// If 'button' element is set add the nonce link to data-attr attr, else add it to the href.
-			if ( 'button' === $button_element ) {
-				$buttons['unban_member']['button_attr']['data-bp-nonce'] = bp_get_group_member_unban_link( $user_id );
-				$buttons['ban_member']['button_attr']['data-bp-nonce'] = bp_get_group_member_ban_link( $user_id );
-				$buttons['promote_mod']['button_attr']['data-bp-nonce'] = bp_get_group_member_promote_mod_link();
-				$buttons['promote_admin']['button_attr']['data-bp-nonce'] = bp_get_group_member_promote_admin_link();
-				$buttons['remove_member']['button_attr']['data-bp-nonce'] = bp_get_group_member_remove_link( $user_id );
-			} else {
-				$buttons['unban_member']['button_attr']['href'] = bp_get_group_member_unban_link( $user_id );
-				$buttons['ban_member']['button_attr']['href'] = bp_get_group_member_ban_link( $user_id );
-				$buttons['promote_mod']['button_attr']['href'] = bp_get_group_member_promote_mod_link();
-				$buttons['promote_admin']['button_attr']['href'] = bp_get_group_member_promote_admin_link();
-				$buttons['remove_member']['button_attr']['href'] = bp_get_group_member_remove_link( $user_id );
-			}
+		// If 'button' element is set add the nonce link to data-attr attr, else add it to the href.
+		if ( 'button' === $button_element ) {
+			$buttons['unban_member']['button_attr']['data-bp-nonce']  = bp_get_group_member_unban_link( $user_id );
+			$buttons['ban_member']['button_attr']['data-bp-nonce']    = bp_get_group_member_ban_link( $user_id );
+			$buttons['promote_mod']['button_attr']['data-bp-nonce']   = bp_get_group_member_promote_mod_link();
+			$buttons['promote_admin']['button_attr']['data-bp-nonce'] = bp_get_group_member_promote_admin_link();
+			$buttons['remove_member']['button_attr']['data-bp-nonce'] = bp_get_group_member_remove_link( $user_id );
+		} else {
+			$buttons['unban_member']['button_attr']['href']  = bp_get_group_member_unban_link( $user_id );
+			$buttons['ban_member']['button_attr']['href']    = bp_get_group_member_ban_link( $user_id );
+			$buttons['promote_mod']['button_attr']['href']   = bp_get_group_member_promote_mod_link();
+			$buttons['promote_admin']['button_attr']['href'] = bp_get_group_member_promote_admin_link();
+			$buttons['remove_member']['button_attr']['href'] = bp_get_group_member_remove_link( $user_id );
+		}
 
 		// Membership button on groups loop or single group's header
-		} else {
-			/*
-			 * This filter workaround is waiting for a core adaptation
-			 * so that we can directly get the groups button arguments
-			 * instead of the button.
-			 *
-			 * See https://buddypress.trac.wordpress.org/ticket/7126
-			 */
-			add_filter( 'bp_get_group_join_button', 'bp_nouveau_groups_catch_button_args', 100, 1 );
-
-			bp_get_group_join_button( $group );
-
-			remove_filter( 'bp_get_group_join_button', 'bp_nouveau_groups_catch_button_args', 100, 1 );
-
-			if ( ! empty( bp_nouveau()->groups->button_args ) ) {
-				$button_args = bp_nouveau()->groups->button_args;
-
-				// If we pass through parent classes merge those into the existing ones
-				if ( $parent_class ) {
-					$parent_class .= ' ' . $button_args['wrapper_class'];
-				}
-
-				// The join or leave group header button should default to 'button'
-				// Reverse the earler button var to set default as 'button' not 'a'
-				if ( empty( $args['button_element'] ) ) {
-					$button_element = 'button';
-				}
-
-				$buttons['group_membership'] = array(
-					'id'                => 'group_membership',
-					'position'          => 5,
-					'component'         => $button_args['component'],
-					'must_be_logged_in' => $button_args['must_be_logged_in'],
-					'block_self'        => $button_args['block_self'],
-					'parent_element'    => $parent_element,
-					'button_element'    => $button_element,
-					'link_text'         => $button_args['link_text'],
-					'parent_attr'       => array(
-							'id'    => $button_args['wrapper_id'],
-							'class' => $parent_class,
-					),
-					'button_attr'       => array(
-						'id'    => ! empty( $button_args['link_id'] ) ? $button_args['link_id'] : '',
-						'class' => $button_args['link_class'] . ' button',
-						'rel'   => ! empty( $button_args['link_rel'] ) ? $button_args['link_rel'] : '',
-						'title' => '',
-					),
-				);
-
-				if ( ! empty( $button_args['button_attr'] ) ) {
-					foreach ( $button_args['button_attr'] as $title => $value ) {
-						$buttons['group_membership']['button_attr'][$title] = $value;
-					}
-				}
-
-                // If button element set add nonce 'href' link to data-attr attr.
-                if ( 'button' === $button_element ) {
-                    $buttons['group_membership']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
-                } else {
-                // Else this is an anchor so use an 'href' attr.
-                    $buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
-                }
-
-				unset( bp_nouveau()->groups->button_args );
-			}
-		}
-
-		// Exclude Kick & Ban button for the site admin.
-		if ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
-			$user_id = $GLOBALS['members_template']->member->user_id;
-			if ( user_can( $user_id, 'manage_options' ) ) {
-				unset( $buttons['ban_member'] );
-			}
-		}
-
-		/**
-		 * Filter to add your buttons, use the position argument to choose where to insert it.
+	} else {
+		/*
+		 * This filter workaround is waiting for a core adaptation
+		 * so that we can directly get the groups button arguments
+		 * instead of the button.
 		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $buttons The list of buttons.
-		 * @param int    $group   The current group object.
-		 * @param string $type    Whether we're displaying a groups loop or a groups single item.
+		 * See https://buddypress.trac.wordpress.org/ticket/7126
 		 */
-		$buttons_group = apply_filters( 'bp_nouveau_get_groups_buttons', $buttons, $group, $type );
+		add_filter( 'bp_get_group_join_button', 'bp_nouveau_groups_catch_button_args', 100, 1 );
 
-		if ( ! $buttons_group ) {
-			return $buttons;
+		bp_get_group_join_button( $group );
+
+		remove_filter( 'bp_get_group_join_button', 'bp_nouveau_groups_catch_button_args', 100, 1 );
+
+		if ( ! empty( bp_nouveau()->groups->button_args ) ) {
+			$button_args = bp_nouveau()->groups->button_args;
+
+			// If we pass through parent classes merge those into the existing ones
+			if ( $parent_class ) {
+				$parent_class .= ' ' . $button_args['wrapper_class'];
+			}
+
+			// The join or leave group header button should default to 'button'
+			// Reverse the earler button var to set default as 'button' not 'a'
+			if ( empty( $args['button_element'] ) ) {
+				$button_element = 'button';
+			}
+
+			$buttons['group_membership'] = array(
+				'id'                => 'group_membership',
+				'position'          => 5,
+				'component'         => $button_args['component'],
+				'must_be_logged_in' => $button_args['must_be_logged_in'],
+				'block_self'        => $button_args['block_self'],
+				'parent_element'    => $parent_element,
+				'button_element'    => $button_element,
+				'link_text'         => $button_args['link_text'],
+				'parent_attr'       => array(
+					'id'    => $button_args['wrapper_id'],
+					'class' => $parent_class,
+				),
+				'button_attr'       => array(
+					'id'    => ! empty( $button_args['link_id'] ) ? $button_args['link_id'] : '',
+					'class' => $button_args['link_class'] . ' button',
+					'rel'   => ! empty( $button_args['link_rel'] ) ? $button_args['link_rel'] : '',
+					'title' => '',
+				),
+			);
+
+			if ( ! empty( $button_args['button_attr'] ) ) {
+				foreach ( $button_args['button_attr'] as $title => $value ) {
+					$buttons['group_membership']['button_attr'][ $title ] = $value;
+				}
+			}
+
+			// If button element set add nonce 'href' link to data-attr attr.
+			if ( 'button' === $button_element ) {
+				$buttons['group_membership']['button_attr']['data-bp-nonce'] = $button_args['link_href'];
+			} else {
+				// Else this is an anchor so use an 'href' attr.
+				$buttons['group_membership']['button_attr']['href'] = $button_args['link_href'];
+			}
+
+			unset( bp_nouveau()->groups->button_args );
 		}
+	}
 
-		// It's the first entry of the loop, so build the Group and sort it
-		if ( ! isset( bp_nouveau()->groups->group_buttons ) || ! is_a( bp_nouveau()->groups->group_buttons, 'BP_Buttons_Group' ) ) {
-			$sort = true;
-			bp_nouveau()->groups->group_buttons = new BP_Buttons_Group( $buttons_group );
+	// Exclude Kick & Ban button for the site admin.
+	if ( 'manage_members' === $type && isset( $GLOBALS['members_template']->member->user_id ) ) {
+		$user_id = $GLOBALS['members_template']->member->user_id;
+		if ( user_can( $user_id, 'manage_options' ) ) {
+			unset( $buttons['ban_member'] );
+		}
+	}
+
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $buttons The list of buttons.
+	 * @param int    $group   The current group object.
+	 * @param string $type    Whether we're displaying a groups loop or a groups single item.
+	 */
+	$buttons_group = apply_filters( 'bp_nouveau_get_groups_buttons', $buttons, $group, $type );
+
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
+
+	// It's the first entry of the loop, so build the Group and sort it
+	if ( ! isset( bp_nouveau()->groups->group_buttons ) || ! is_a( bp_nouveau()->groups->group_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                               = true;
+		bp_nouveau()->groups->group_buttons = new BP_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group
-		} else {
-			$sort = false;
-			bp_nouveau()->groups->group_buttons->update( $buttons_group );
-		}
-
-		$return = bp_nouveau()->groups->group_buttons->get( $sort );
-
-		if ( ! $return ) {
-			return array();
-		}
-
-		// Remove buttons according to the user's membership type.
-		if ( 'manage_members' === $type && isset( $GLOBALS['members_template'] ) ) {
-			if ( bp_get_group_member_is_banned() ) {
-				unset( $return['ban_member'], $return['promote_mod'], $return['promote_admin'] );
-			} else {
-				unset( $return['unban_member'] );
-			}
-		}
-
-		/**
-		 * Leave a chance to adjust the $return
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $return  The list of buttons.
-		 * @param int    $group   The current group object.
-		 * @parem string $type    Whether we're displaying a groups loop or a groups single item.
-		 */
-		do_action_ref_array( 'bp_nouveau_return_groups_buttons', array( &$return, $group, $type ) );
-
-		return $return;
+	} else {
+		$sort = false;
+		bp_nouveau()->groups->group_buttons->update( $buttons_group );
 	}
+
+	$return = bp_nouveau()->groups->group_buttons->get( $sort );
+
+	if ( ! $return ) {
+		return array();
+	}
+
+	// Remove buttons according to the user's membership type.
+	if ( 'manage_members' === $type && isset( $GLOBALS['members_template'] ) ) {
+		if ( bp_get_group_member_is_banned() ) {
+			unset( $return['ban_member'], $return['promote_mod'], $return['promote_admin'] );
+		} else {
+			unset( $return['unban_member'] );
+		}
+	}
+
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $return  The list of buttons.
+	 * @param int    $group   The current group object.
+	 * @parem string $type    Whether we're displaying a groups loop or a groups single item.
+	 */
+	do_action_ref_array( 'bp_nouveau_return_groups_buttons', array( &$return, $group, $type ) );
+
+	return $return;
+}
 
 /**
  * Does the group has metas or a specific meta value.
@@ -1086,13 +1090,13 @@ function bp_nouveau_groups_manage_members_buttons( $args = array() ) {
  * @return bool True if the group has meta. False otherwise.
  */
 function bp_nouveau_group_has_meta( $meta_key = '' ) {
-    $group_meta = bp_nouveau_get_group_meta();
+	$group_meta = bp_nouveau_get_group_meta();
 
-    if ( ! $meta_key ) {
-        return (bool) $group_meta;
-    }
+	if ( ! $meta_key ) {
+		return (bool) $group_meta;
+	}
 
-    return ! empty( $group_meta[ $meta_key ] );
+	return ! empty( $group_meta[ $meta_key ] );
 }
 
 /**
@@ -1138,31 +1142,31 @@ function bp_nouveau_group_meta() {
 	 *
 	 * @return array The group meta.
 	 */
-	function bp_nouveau_get_group_meta() {
-		/*
-		 * @todo For brevity required approapriate markup is added here as strings
-		 * this needs to be either filterable or the function needs to be able to accept
-		 * & parse args!
-		 */
-		$meta     = array();
-		$is_group = bp_is_group();
+function bp_nouveau_get_group_meta() {
+	/*
+	 * @todo For brevity required approapriate markup is added here as strings
+	 * this needs to be either filterable or the function needs to be able to accept
+	 * & parse args!
+	 */
+	$meta     = array();
+	$is_group = bp_is_group();
 
-		if ( ! empty( $GLOBALS['groups_template']->group ) ) {
-			$group = $GLOBALS['groups_template']->group;
-		}
+	if ( ! empty( $GLOBALS['groups_template']->group ) ) {
+		$group = $GLOBALS['groups_template']->group;
+	}
 
-		if ( empty( $group->id ) ) {
-			return $meta;
-		}
+	if ( empty( $group->id ) ) {
+		return $meta;
+	}
 
-		if ( empty( $group->template_meta ) ) {
-			// It's a single group
-			if ( $is_group ) {
-					$meta = array(
-						'status'          =>  bp_get_group_type(),
-						//'group_type_list' =>  bp_get_group_type_list(),
-						'description'     =>  bp_get_group_description(),
-					);
+	if ( empty( $group->template_meta ) ) {
+		// It's a single group
+		if ( $is_group ) {
+				$meta = array(
+					'status'      => bp_get_group_type(),
+					//'group_type_list' =>  bp_get_group_type_list(),
+					'description' => bp_get_group_description(),
+				);
 
 				// Make sure to include hooked meta.
 				$extra_meta = bp_nouveau_get_hooked_group_meta();
@@ -1171,28 +1175,28 @@ function bp_nouveau_group_meta() {
 					$meta['extra'] = $extra_meta;
 				}
 
-			// We're in the groups loop
-			} else {
-				$meta = array(
-					'status' => bp_get_group_type(),
-					'count'  => bp_get_group_member_count(),
-				);
-			}
-
-			/**
-			 * Filter to add/remove Group meta.
-			 *
-			 * @since BuddyPress 3.0.0
-			 *
-			 * @param array  $meta     The list of meta to output.
-			 * @param object $group    The current Group of the loop object.
-			 * @param bool   $is_group True if a single group is displayed. False otherwise.
-			 */
-			$group->template_meta = apply_filters( 'bp_nouveau_get_group_meta', $meta, $group, $is_group );
+				// We're in the groups loop
+		} else {
+			$meta = array(
+				'status' => bp_get_group_type(),
+				'count'  => bp_get_group_member_count(),
+			);
 		}
 
-		return $group->template_meta;
+		/**
+		 * Filter to add/remove Group meta.
+		 *
+		 * @since BuddyPress 3.0.0
+		 *
+		 * @param array  $meta     The list of meta to output.
+		 * @param object $group    The current Group of the loop object.
+		 * @param bool   $is_group True if a single group is displayed. False otherwise.
+		 */
+		$group->template_meta = apply_filters( 'bp_nouveau_get_group_meta', $meta, $group, $is_group );
 	}
+
+	return $group->template_meta;
+}
 
 /**
  * Load the appropriate content for the single group pages
@@ -1231,11 +1235,11 @@ function bp_nouveau_group_template_part() {
 		 */
 		do_action( 'bp_after_group_status_message' );
 
-	// We have a front template, Use BuddyPress function to load it.
+		// We have a front template, Use BuddyPress function to load it.
 	} elseif ( $bp_is_group_home && false !== bp_groups_get_front_template() ) {
 		bp_groups_front_template_part();
 
-	// Otherwise use BP_Nouveau template hierarchy
+		// Otherwise use BP_Nouveau template hierarchy
 	} else {
 		$template = 'plugins';
 
@@ -1247,7 +1251,7 @@ function bp_nouveau_group_template_part() {
 				$template = 'members';
 			}
 
-		// Not the home page
+			// Not the home page
 		} elseif ( bp_is_group_admin_page() ) {
 			$template = 'admin';
 		} elseif ( bp_is_group_activity() ) {
@@ -1345,26 +1349,25 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
 	);
 }
 
- /**
-  * Output "checked" attribute to determine if the group type should be checked.
-  *
-  * @since BuddyPress 3.2.0
-  *
-  * @param object $type Group type object. See bp_groups_get_group_type_object().
-  */
- function bp_nouveau_group_type_checked( $type = null ) {
-     if ( ! is_object( $type ) ) {
-         return;
-     }
+/**
+* Output "checked" attribute to determine if the group type should be checked.
+*
+* @since BuddyPress 3.2.0
+*
+* @param object $type Group type object. See bp_groups_get_group_type_object().
+*/
+function bp_nouveau_group_type_checked( $type = null ) {
+	if ( ! is_object( $type ) ) {
+		return;
+	}
 
-     // Group creation screen requires a different check.
-     if ( bp_is_group_create() ) {
-         checked( true, ! empty( $type->create_screen_checked ) );
-     } elseif ( bp_is_group() ) {
-         checked( bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) );
-     }
- }
-
+	// Group creation screen requires a different check.
+	if ( bp_is_group_create() ) {
+		checked( true, ! empty( $type->create_screen_checked ) );
+	} elseif ( bp_is_group() ) {
+		checked( bp_groups_has_group_type( bp_get_current_group_id(), $type->name ) );
+	}
+}
 
 /**
  * Adds the "Notify group members of these changes" checkbox to the Manage > Details panel.
@@ -1374,10 +1377,13 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
  * @since BuddyPress 4.0.0
  */
 function bp_nouveau_add_notify_group_members_checkbox() {
-	printf( '<p class="bp-controls-wrap">
+	printf(
+		'<p class="bp-controls-wrap">
 		<label for="group-notify-members" class="bp-label-text">
 			<input type="checkbox" name="group-notify-members" id="group-notify-members" value="1" /> %s
 		</label>
-	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
+	</p>',
+		esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+	);
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );

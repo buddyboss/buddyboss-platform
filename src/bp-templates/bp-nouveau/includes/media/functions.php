@@ -22,13 +22,16 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-media' => array(
-			'file'         => 'js/buddypress-media%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-media' => array(
+				'file'         => 'js/buddypress-media%s.js',
+				'dependencies' => array( 'bp-nouveau' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -38,14 +41,15 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
-	if ( bp_is_user_media() ||
-	     bp_is_single_album() ||
-	     bp_is_media_directory() ||
-	     bp_is_activity_component() ||
-	     bp_is_group_activity() ||
-	     bp_is_group_media() ||
-	     bp_is_group_albums() ||
-	     bp_is_messages_component()
+	if (
+		bp_is_user_media() ||
+		bp_is_single_album() ||
+		bp_is_media_directory() ||
+		bp_is_activity_component() ||
+		bp_is_group_activity() ||
+		bp_is_group_media() ||
+		bp_is_group_albums() ||
+		bp_is_messages_component()
 	) {
 
 		$gif = false;
@@ -98,7 +102,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$params['media']['group_id'] = bp_get_current_group_id();
-    }
+	}
 
 	$params['media']['emoji']            = array(
 		'profile'  => bp_is_profiles_emoji_support_enabled(),

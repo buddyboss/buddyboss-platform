@@ -9,80 +9,84 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_init', function() {
-	$ajax_actions = array(
-		array(
-			'activity_filter' => array(
-				'function' => 'bp_nouveau_ajax_object_template_loader',
-				'nopriv'   => true,
+add_action(
+	'admin_init',
+	function() {
+		$ajax_actions = array(
+			array(
+				'activity_filter' => array(
+					'function' => 'bp_nouveau_ajax_object_template_loader',
+					'nopriv'   => true,
+				),
 			),
-		),
-		array(
-			'get_single_activity_content' => array(
-				'function' => 'bp_nouveau_ajax_get_single_activity_content',
-				'nopriv'   => true,
+			array(
+				'get_single_activity_content' => array(
+					'function' => 'bp_nouveau_ajax_get_single_activity_content',
+					'nopriv'   => true,
+				),
 			),
-		),
-		array(
-			'activity_mark_fav' => array(
-				'function' => 'bp_nouveau_ajax_mark_activity_favorite',
-				'nopriv'   => false,
+			array(
+				'activity_mark_fav' => array(
+					'function' => 'bp_nouveau_ajax_mark_activity_favorite',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'activity_mark_unfav' => array(
-				'function' => 'bp_nouveau_ajax_unmark_activity_favorite',
-				'nopriv'   => false,
+			array(
+				'activity_mark_unfav' => array(
+					'function' => 'bp_nouveau_ajax_unmark_activity_favorite',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'activity_clear_new_mentions' => array(
-				'function' => 'bp_nouveau_ajax_clear_new_mentions',
-				'nopriv'   => false,
+			array(
+				'activity_clear_new_mentions' => array(
+					'function' => 'bp_nouveau_ajax_clear_new_mentions',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'delete_activity' => array(
-				'function' => 'bp_nouveau_ajax_delete_activity',
-				'nopriv'   => false,
+			array(
+				'delete_activity' => array(
+					'function' => 'bp_nouveau_ajax_delete_activity',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'new_activity_comment' => array(
-				'function' => 'bp_nouveau_ajax_new_activity_comment',
-				'nopriv'   => false,
+			array(
+				'new_activity_comment' => array(
+					'function' => 'bp_nouveau_ajax_new_activity_comment',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'bp_nouveau_get_activity_objects' => array(
-				'function' => 'bp_nouveau_ajax_get_activity_objects',
-				'nopriv'   => false,
+			array(
+				'bp_nouveau_get_activity_objects' => array(
+					'function' => 'bp_nouveau_ajax_get_activity_objects',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'post_update' => array(
-				'function' => 'bp_nouveau_ajax_post_update',
-				'nopriv'   => false,
+			array(
+				'post_update' => array(
+					'function' => 'bp_nouveau_ajax_post_update',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'bp_spam_activity' => array(
-				'function' => 'bp_nouveau_ajax_spam_activity',
-				'nopriv'   => false,
+			array(
+				'bp_spam_activity' => array(
+					'function' => 'bp_nouveau_ajax_spam_activity',
+					'nopriv'   => false,
+				),
 			),
-		),
-	);
+		);
 
-	foreach ( $ajax_actions as $ajax_action ) {
-		$action = key( $ajax_action );
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
 
-		add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+			add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
 
-		if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
-			add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
+				add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			}
 		}
-	}
-}, 12 );
+	},
+	12
+);
 
 /**
  * Mark an activity as a favourite via a POST request.
@@ -105,7 +109,7 @@ function bp_nouveau_ajax_mark_activity_favorite() {
 		$response = array(
 			'content'    => __( 'Unlike', 'buddyboss' ),
 			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
-			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] )
+			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
 		); // here like_count is for activity total like count
 
 		if ( ! bp_is_user() ) {
@@ -149,7 +153,7 @@ function bp_nouveau_ajax_unmark_activity_favorite() {
 		$response = array(
 			'content'    => __( 'Like', 'buddyboss' ),
 			'like_count' => bp_activity_get_favorite_users_string( $_POST['id'] ),
-			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] )
+			'tooltip'    => bp_activity_get_favorite_users_tooltip_string( $_POST['id'] ),
 		); // here like_count is for activity total like count
 
 		$fav_count = (int) bp_get_total_favorite_count_for_user( bp_loggedin_user_id() );
@@ -238,9 +242,14 @@ function bp_nouveau_ajax_delete_activity() {
 			wp_send_json_error( $response );
 		}
 
-	// Deleting an activity.
+		// Deleting an activity.
 	} else {
-		if ( ! bp_activity_delete( array( 'id' => $activity->id, 'user_id' => $activity->user_id ) ) ) {
+		if ( ! bp_activity_delete(
+			array(
+				'id'      => $activity->id,
+				'user_id' => $activity->user_id,
+			)
+		) ) {
 			wp_send_json_error( $response );
 		}
 	}
@@ -353,28 +362,36 @@ function bp_nouveau_ajax_new_activity_comment() {
 	}
 
 	if ( empty( $_POST['content'] ) ) {
-		wp_send_json_error( array( 'feedback' => sprintf(
-			'<div class="bp-feedback bp-messages error">%s</div>',
-			esc_html__( 'Please do not leave the comment area blank.', 'buddyboss' )
-		) ) );
+		wp_send_json_error(
+			array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html__( 'Please do not leave the comment area blank.', 'buddyboss' )
+				),
+			)
+		);
 	}
 
 	if ( empty( $_POST['form_id'] ) || empty( $_POST['comment_id'] ) || ! is_numeric( $_POST['form_id'] ) || ! is_numeric( $_POST['comment_id'] ) ) {
 		wp_send_json_error( $response );
 	}
 
-	$comment_id = bp_activity_new_comment( array(
-		'activity_id' => $_POST['form_id'],
-		'content'     => $_POST['content'],
-		'parent_id'   => $_POST['comment_id'],
-	) );
+	$comment_id = bp_activity_new_comment(
+		array(
+			'activity_id' => $_POST['form_id'],
+			'content'     => $_POST['content'],
+			'parent_id'   => $_POST['comment_id'],
+		)
+	);
 
 	if ( ! $comment_id ) {
 		if ( ! empty( $bp->activity->errors['new_comment'] ) && is_wp_error( $bp->activity->errors['new_comment'] ) ) {
-			$response = array( 'feedback' => sprintf(
-				'<div class="bp-feedback bp-messages error">%s</div>',
-				esc_html( $bp->activity->errors['new_comment']->get_error_message() )
-			) );
+			$response = array(
+				'feedback' => sprintf(
+					'<div class="bp-feedback bp-messages error">%s</div>',
+					esc_html( $bp->activity->errors['new_comment']->get_error_message() )
+				),
+			);
 			unset( $bp->activity->errors['new_comment'] );
 		}
 
@@ -481,15 +498,15 @@ function bp_nouveau_ajax_post_update() {
 		wp_send_json_error();
 	}
 
-	if ( !strlen( trim( $_POST['content'] ) ) ) {
+	if ( ! strlen( trim( $_POST['content'] ) ) ) {
 
 		// check activity toolbar options if one of them is set, activity can be empty
 		$toolbar_option = false;
 		if ( bp_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
 			$toolbar_option = true;
-		} else if ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
+		} elseif ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
 			$toolbar_option = true;
-		} else if ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
+		} elseif ( bp_is_active( 'media' ) && ! empty( $_POST['gif_data'] ) ) {
 			$toolbar_option = true;
 		}
 
@@ -516,7 +533,7 @@ function bp_nouveau_ajax_post_update() {
 	if ( ! empty( $_POST['object'] ) ) {
 		$object = sanitize_key( $_POST['object'] );
 
-	// If the object is not set and we're in a group, set the item id and the object
+		// If the object is not set and we're in a group, set the item id and the object
 	} elseif ( bp_is_group() ) {
 		$item_id = bp_get_current_group_id();
 		$object  = 'group';
@@ -526,11 +543,11 @@ function bp_nouveau_ajax_post_update() {
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
 		$content = $_POST['content'];
 
-        if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && $_POST['user_id'] != bp_get_displayed_user()->id ) {
-			$content = sprintf('@%s %s', bp_get_displayed_user_mentionname(), $content);
-        }
+		if ( ! empty( $_POST['user_id'] ) && bp_get_displayed_user() && bp_get_displayed_user()->id !== $_POST['user_id'] ) {
+			$content = sprintf( '@%s %s', bp_get_displayed_user_mentionname(), $content );
+		}
 
-        $activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {
@@ -553,7 +570,6 @@ function bp_nouveau_ajax_post_update() {
 				$is_private = 'public' !== $status;
 			}
 		}
-
 	} else {
 		/** This filter is documented in bp-activity/bp-activity-actions.php */
 		$activity_id = apply_filters( 'bp_activity_custom_update', false, $object, $item_id, $_POST['content'] );
@@ -568,7 +584,12 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	ob_start();
-	if ( bp_has_activities( array( 'include' => $activity_id, 'show_hidden' => $is_private ) ) ) {
+	if ( bp_has_activities(
+		array(
+			'include'     => $activity_id,
+			'show_hidden' => $is_private,
+		)
+	) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
@@ -577,21 +598,23 @@ function bp_nouveau_ajax_post_update() {
 	$activity = ob_get_contents();
 	ob_end_clean();
 
-	wp_send_json_success( array(
-		'id'           => $activity_id,
-		'message'      => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
-		'activity'     => $activity,
+	wp_send_json_success(
+		array(
+			'id'           => $activity_id,
+			'message'      => esc_html__( 'Update posted.', 'buddyboss' ) . ' ' . sprintf( '<a href="%s" class="just-posted">%s</a>', esc_url( bp_activity_get_permalink( $activity_id ) ), esc_html__( 'View activity.', 'buddyboss' ) ),
+			'activity'     => $activity,
 
-		/**
-		 * Filters whether or not an AJAX post update is private.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string/bool $is_private Privacy status for the update.
-		 */
-		'is_private'   => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
-		'is_directory' => bp_is_activity_directory(),
-	) );
+			/**
+			 * Filters whether or not an AJAX post update is private.
+			 *
+			 * @since BuddyPress 3.0.0
+			 *
+			 * @param string/bool $is_private Privacy status for the update.
+			 */
+			'is_private'   => apply_filters( 'bp_nouveau_ajax_post_update_is_private', $is_private ),
+			'is_directory' => bp_is_activity_directory(),
+		)
+	);
 }
 
 /**
