@@ -15,7 +15,6 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
                             <h3 class="bb-certificate-title"><a
                                         href="<?php echo $certificate->link; ?>"><?php echo $certificate->title; ?></a>
                             </h3>
-                            <div class="bb-certificate-text"><?php echo wp_trim_words( $certificate->content, 10, '&hellip;' ); ?></div>
                             <div class="bb-certificate-date"><?php echo mysql2date( 'F j, Y', $certificate->date ); ?></div>
                         </div>
                     </div>
