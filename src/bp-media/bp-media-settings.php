@@ -396,7 +396,7 @@ function bp_media_settings_callback_messages_media_support() {
 	<label for="bp_media_messages_media_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to upload photos in <strong>private</strong> and <strong>group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to upload photos in <strong>private and group messages</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to upload photos in <strong>private messages</strong>', 'buddyboss' );
 		}
@@ -519,7 +519,7 @@ function bp_media_settings_callback_messages_emoji_support() {
 	<label for="bp_media_messages_emoji_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to use emoji in <strong>private</strong> and <strong>group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to use emoji in <strong>private and group messages</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to use emoji in <strong>private messages</strong>', 'buddyboss' );
 		}
@@ -707,7 +707,7 @@ function bp_media_settings_callback_messages_gif_support() {
 	<label for="bp_media_messages_gif_support">
 		<?php
 		if ( true === bp_disable_group_messages() ) {
-			_e( 'Allow members to use animated GIFs in <strong>private</strong> and <strong>group messages</strong>', 'buddyboss' );
+			_e( 'Allow members to use animated GIFs in <strong>private and group messages</strong>', 'buddyboss' );
 		} else {
 			_e( 'Allow members to use animated GIFs in <strong>private messages</strong>', 'buddyboss' );
 		}
