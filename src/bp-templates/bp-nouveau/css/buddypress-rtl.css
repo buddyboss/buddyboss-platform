@@ -11603,9 +11603,9 @@ div#bp-group-message-content {
 }
 
 .bp-single-message-wrap.group-messages-highlight {
-  background: #FFFFEA;
-  padding: 15px;
-  border: 1px solid #E7E9EC;
+  background: #fffced;
+  padding: 10px;
+  border: 1px solid #f9efca;
   border-radius: 5px;
 }
 
