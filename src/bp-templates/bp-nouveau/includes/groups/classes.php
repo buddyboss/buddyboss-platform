@@ -312,7 +312,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 		if ( bp_is_active( 'groups' ) && bp_is_active( 'messages' ) && true === bp_disable_group_messages() && groups_can_user_manage_messages( bp_loggedin_user_id(), $this->group->id ) ) {
 			$nav_items['messages'] = array(
-				'name'        => __( 'Group Message', 'buddyboss' ),
+				'name'        => __( 'Send Messages', 'buddyboss' ),
 				'slug'        => 'messages',
 				'parent_slug' => $this->group->slug,
 				'position'    => 20,
