@@ -728,6 +728,10 @@ a.layout-grid-view {
   border-right: 1px solid #eee;
 }
 
+.flex.bp-secondary-header.align-items-center > .push-right.flex .no-ajax:last-child div div div {
+  margin-right: 0px;
+}
+
 /**
 *----------------------------------------------------------
 * @section 2.2 - Pagination

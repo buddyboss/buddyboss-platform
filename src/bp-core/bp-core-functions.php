@@ -1398,7 +1398,7 @@ function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
  * @return string|null
  */
 function bp_core_format_date( $date = '', $format = '' ) {
-	echo bp_core_get_format_date( strtotime( $date ), $format );
+	echo bp_core_get_format_date( $date, $format );
 }
 
 /**
@@ -1414,6 +1414,8 @@ function bp_core_get_format_date( $date = '', $format = '' ) {
 	if ( ! $date ) {
 		return '';
 	}
+
+	$date = strtotime( $date );
 
 	if ( empty( $format ) ) {
 		$format = bp_core_date_format();
