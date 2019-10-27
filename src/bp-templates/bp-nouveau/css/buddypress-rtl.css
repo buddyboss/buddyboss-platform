@@ -1633,6 +1633,10 @@ input.search-query-input {
   content: "\f153";
 }
 
+.activity-list .activity-item .bp-generic-meta.action .spam-activity:before {
+  content: "\f227";
+}
+
 .activity-list .activity-item .bp-generic-meta.action .delete-activity:hover {
   color: #800;
 }

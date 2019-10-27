@@ -770,6 +770,9 @@ window.bp = window.bp || {};
 			$(event.currentTarget).closest('#bp-media-uploader').find('.bp-media-upload-tab').removeClass('selected');
 			$(event.currentTarget).addClass('selected');
 			this.toggleSubmitMediaButton();
+
+			//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+			jQuery(window).scroll();
 		},
 
 		openCreateAlbumModal: function(event){
@@ -826,11 +829,11 @@ window.bp = window.bp || {};
 
 							// Prepend the activity.
 							bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
-							
+
 							for( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
 							}
-							
+
 							self.closeUploader(event);
 
 							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad

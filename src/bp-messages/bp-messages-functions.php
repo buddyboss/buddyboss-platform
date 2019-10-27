@@ -752,8 +752,8 @@ function bp_messages_show_sites_notices() {
 		( ! bp_is_directory() && ! bp_is_single_item() && bp_is_blog_page() )
 		|| ( empty( bp_is_blog_page() ) && bp_is_members_component() ) // check that it's members page on the members component
 	) {
-		wp_enqueue_script( 'bp-nouveau' );
 		bp_nouveau_template_notices();
+		wp_enqueue_script( 'bp-nouveau' );
 	}
 }
-add_action( 'wp_footer', 'bp_messages_show_sites_notices', 10000 );
+add_action( 'wp_footer', 'bp_messages_show_sites_notices' );
