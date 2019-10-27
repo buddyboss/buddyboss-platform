@@ -12,10 +12,11 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
                 <li class="sm-grid-1-1">
                     <div class="bb-certificate-wrap">
                         <div class="bb-certificate-content">
-                            <h3 class="bb-certificate-title"><a
-                                        href="<?php echo $certificate->link; ?>"><?php echo $certificate->title; ?></a>
+                            <h3 class="bb-certificate-title">
+                                <?php _e( 'Certificate in', 'buddyboss' ); ?> <?php echo $certificate->title; ?>
                             </h3>
-                            <div class="bb-certificate-date"><?php echo mysql2date( 'F j, Y', $certificate->date ); ?></div>
+                            <div class="bb-certificate-date"><?php _e( 'Earned on', 'buddyboss' ); ?> <?php echo mysql2date( 'F j, Y', $certificate->date ); ?></div>
+                            <p><a href="<?php echo $certificate->link; ?>"><?php _e( 'Download PDF', 'buddyboss' ); ?></a></p>
                         </div>
                     </div>
                 </li>
