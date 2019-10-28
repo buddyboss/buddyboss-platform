@@ -190,7 +190,7 @@ function bp_admin_setting_callback_heartbeat() {
 	$heartbeat_disabled = get_option( 'bp_wp_heartbeat_disabled' );
 	?>
 
-	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1" 
+	<input id="_bp_enable_heartbeat_refresh" name="_bp_enable_heartbeat_refresh" type="checkbox" value="1"
 	<?php
 	if ( '1' != $heartbeat_disabled ) {
 		checked( bp_is_activity_heartbeat_active( true ) );
@@ -1021,4 +1021,60 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 	<label for="register-confirm-password"><?php _e( 'Add Password confirmation to register form', 'buddyboss' ); ?></label>
 
 	<?php
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Lists
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_admin_setting_callback_group_layout_type_format() {
+	$options = [
+		'list_grid' => __( 'Grid and List', 'buddyboss' ),
+		'grid'      => __( 'Grid', 'buddyboss' ),
+		'list'      => __( 'List', 'buddyboss' ),
+	];
+
+	$current_value = bp_get_option( 'bp-group-layout-format' );
+
+	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-format' );
+	foreach ( $options as $key => $value ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			$key,
+			$key == $current_value? 'selected' : '',
+			$value
+		);
+	}
+	printf( '</select>' );
+
+	?>
+	<p class="description"><?php _e( 'Choose if group lists should display in Grid or List View in all group directories.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Lists > Default Format
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_admin_setting_group_layout_default_option() {
+	$selected = bp_group_layout_default_format( 'grid' );
+
+	$options = [
+		'grid'      => __( 'Grid', 'buddyboss' ),
+		'list'      => __( 'List', 'buddyboss' ),
+	];
+
+	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-default-format' );
+	foreach ( $options as $key => $value ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			$key,
+			$key == $selected ? 'selected' : '',
+			$value
+		);
+	}
+	printf( '</select>' );
+
 }

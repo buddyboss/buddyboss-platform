@@ -684,7 +684,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 			// Discussions with no replies
 			bbp_register_view(
 				'no-replies',
-				__( 'Discussions with no replies', 'buddyboss' ),
+				__( 'Unanswered discussions', 'buddyboss' ),
 				apply_filters(
 					'bbp_register_view_no_replies',
 					array(
