@@ -1719,8 +1719,6 @@ window.bp = window.bp || {};
 				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
 			});
 
-
-
 		}
 	} );
 

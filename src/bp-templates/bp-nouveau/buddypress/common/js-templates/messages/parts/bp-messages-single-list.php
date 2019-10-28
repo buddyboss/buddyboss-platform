@@ -1,8 +1,4 @@
 <script type="text/html" id="tmpl-bp-messages-single-list">
-	<# console.log(data); #>
-	<# if ( data.date_separator && '' !== data.date_separator ) { #>
-	<hr class="hr-text" data-content="{{{data.date_separator}}}"></hr>
-	<# } else { #>
 
 	<# if ( data.message_from && 'group' === data.message_from ) { #>
 	<div class="bp-single-message-wrap group-messages-highlight">
@@ -83,5 +79,4 @@
 			<# } #>
 		</div>
 	</div>
-		<# } #>
 </script>

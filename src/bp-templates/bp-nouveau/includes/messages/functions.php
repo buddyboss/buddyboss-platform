@@ -414,7 +414,8 @@ function bp_nouveau_get_message_date( $date ) {
 	// 	$date_format = 'M j';
 	// }
 
-	$date_format = 'g:i A';
+	$date_format = 'M j';
+	//$date_format = 'g:i A';
 
 	/**
 	 * Filters the message date for BuddyPress Nouveau display.

@@ -281,7 +281,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 			'html'    => false,
 		) ) ),
 		'date'          => bp_get_the_thread_message_date_sent() * 1000,
-		'display_date'  => date_i18n( 'g:i A', strtotime( $thread_template->message->date_sent ) ),
+		'display_date'  => bp_get_the_thread_message_time_since(),
 	);
 
 	if ( bp_is_active( 'messages', 'star' ) ) {
@@ -350,11 +350,12 @@ function bp_nouveau_ajax_messages_send_reply() {
 	$reply['is_new'] = true;
 
 	wp_send_json_success( array(
-		'messages' => $reply,
+		'messages'  => array( $reply ),
 		'thread_id' => $thread_id,
-		'feedback' => __( 'Your reply was sent successfully', 'buddyboss' ),
-		'type'     => 'success',
+		'feedback'  => __( 'Your reply was sent successfully', 'buddyboss' ),
+		'type'      => 'success',
 	) );
+
 }
 
 /**
@@ -458,16 +459,16 @@ function bp_nouveau_ajax_get_user_message_threads() {
 
 		}
 
-		$date = date('d/m/Y', strtotime( bp_get_message_thread_last_post_date_raw() ) );
-
-		if( $date == date('d/m/Y')) {
-			$date = 'Today';
-		}
-		else if( $date == date('d/m/Y',date() - (24 * 60 * 60))) {
-			$date = 'Yesterday';
-		} else {
-			$date = 'Yesterday';
-		}
+//		$date = date('d/m/Y', strtotime( bp_get_message_thread_last_post_date_raw() ) );
+//
+//		if( $date == date('d/m/Y')) {
+//			$date = 'Today';
+//		}
+//		else if( $date == date('d/m/Y',date() - (24 * 60 * 60))) {
+//			$date = 'Yesterday';
+//		} else {
+//			$date = 'Yesterday';
+//		}
 
 		$threads->threads[ $i ] = array(
 			'id'                        => bp_get_message_thread_id(),
@@ -770,16 +771,16 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
 		$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
 
-		$date = '';
-
-		if( strtotime( $thread_template->message->date_sent ) >= strtotime('today' ) ) {
-			$date = 'Today';
-		}
-		else if( strtotime( $thread_template->message->date_sent ) >= strtotime('yesterday' ) ) {
-			$date = 'Yesterday';
-		} else {
-			$date = date_i18n( 'l, F jS', strtotime( $thread_template->message->date_sent ) );
-		}
+//		$date = '';
+//
+//		if( strtotime( $thread_template->message->date_sent ) >= strtotime('today' ) ) {
+//			$date = 'Today';
+//		}
+//		else if( strtotime( $thread_template->message->date_sent ) >= strtotime('yesterday' ) ) {
+//			$date = 'Yesterday';
+//		} else {
+//			$date = date_i18n( 'l, F jS', strtotime( $thread_template->message->date_sent ) );
+//		}
 
 		if ( $group_id && $message_from && 'group' === $message_from ) {
 
@@ -818,7 +819,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 			$thread->messages[ $i ] = array(
 				'group_name'                => $group_name,
-				'separator'                 => $date,
+				//'separator'                 => $date,
 				'group_link'                => $group_link,
 				'group_avatar'              => $group_avatar,
 				'group_message_users'       => $group_message_users,
@@ -833,16 +834,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 				'sender_name'               => esc_html( bp_get_the_thread_message_sender_name() ),
 				'sender_link'               => bp_get_the_thread_message_sender_link(),
 				'sender_is_you'             => bp_get_the_thread_message_sender_id() === bp_loggedin_user_id(),
-				'sender_avatar'             => esc_url( bp_core_fetch_avatar( array(
-					'item_id' => bp_get_the_thread_message_sender_id(),
-					'object'  => 'user',
-					'type'    => 'thumb',
-					'width'   => 32,
-					'height'  => 32,
-					'html'    => false,
-				) ) ),
+				'sender_avatar'             => esc_url( bp_core_fetch_avatar( array( 'item_id' => bp_get_the_thread_message_sender_id(), 'object'  => 'user', 'type'    => 'thumb', 'width'   => 32, 'height'  => 32, 'html'    => false, ) ) ),
 				'date'                      => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'              => date_i18n( 'g:i A', strtotime( $thread_template->message->date_sent ) ),
+				'display_date'              => bp_get_the_thread_message_time_since(),
 			);
 
 		} else {
@@ -861,7 +855,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 			$thread->messages[ $i ] = array(
 				'id'            => bp_get_the_thread_message_id(),
-				'separator'     => $date,
+				//'separator'     => $date,
 				'content'       => $content,
 				'sender_id'     => bp_get_the_thread_message_sender_id(),
 				'sender_name'   => esc_html( bp_get_the_thread_message_sender_name() ),
@@ -876,7 +870,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 					'html'    => false,
 				) ) ),
 				'date'          => bp_get_the_thread_message_date_sent() * 1000,
-				'display_date'  => date_i18n( 'g:i A', strtotime( $thread_template->message->date_sent ) ),
+				'display_date'  => bp_get_the_thread_message_time_since(),
 			);
 		}
 
@@ -972,9 +966,9 @@ function bp_nouveau_ajax_get_thread_messages() {
 	$bp->current_action = $reset_action;
 
 	// pagination
-	$thread->per_page = $thread_template->thread->messages_perpage;
-	$thread->messages_count = $thread_template->thread->total_messages;
-	$thread->next_messages_timestamp = $thread_template->thread->messages[count($thread_template->thread->messages) - 1]->date_sent;
+	$thread->per_page                = $thread_template->thread->messages_perpage;
+	$thread->messages_count          = $thread_template->thread->total_messages;
+	$thread->next_messages_timestamp = $thread_template->thread->messages[ count( $thread_template->thread->messages ) - 1 ]->date_sent;
 
 	wp_send_json_success( $thread );
 }
