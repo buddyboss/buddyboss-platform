@@ -23,7 +23,7 @@
 		<dl class="thread-participants">
 			<dt>
 				<# if ( data.group_name.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
-					<span class="user-name">{{data.group_name}}</span>
+				<span class="user-name"><a href="{{data.group_link}}">{{data.group_name}}</a></span>
 				<# } else { #>
 					<# for ( i in other_recipients ) { #>
 						<span class="participants-name">
