@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-07 14:33:58+00:00\n"
+"POT-Creation-Date: 2019-10-28 12:52:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3524,6 +3524,10 @@ msgstr ""
 
 #: bp-core/bp-core-cssjs.php:837
 msgid "Enter valid email"
+msgstr ""
+
+#: bp-core/bp-core-cssjs.php:838 bp-members/screens/register.php:138
+msgid "This is a required field."
 msgstr ""
 
 #: bp-core/bp-core-customizer-email.php:27
@@ -14248,10 +14252,6 @@ msgstr ""
 
 #: bp-members/screens/register.php:102
 msgid "The passwords entered do not match."
-msgstr ""
-
-#: bp-members/screens/register.php:138
-msgid "This is a required field."
 msgstr ""
 
 #: bp-messages/actions/bulk-delete.php:30
