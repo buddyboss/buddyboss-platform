@@ -255,7 +255,7 @@ window.bp = window.bp || {};
 		 * @return {[type]}           [description]
 		 */
 		ajax: function( post_data, object ) {
-			if ( this.ajax_request ) {
+			if ( this.ajax_request && 'follow' != object ) {
 				this.ajax_request.abort();
 			}
 
