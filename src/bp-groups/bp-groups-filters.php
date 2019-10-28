@@ -81,7 +81,7 @@ add_filter( 'bbp_after_has_topics_parse_args', 'bp_groups_exclude_forums_topics_
 add_filter( 'bp_media_set_groups_scope_args', 'bp_groups_filter_media_scope', 10, 2 );
 
 add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
-add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_accepted', 10, 2 );
+add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_accepted', 10, 3 );
 
 add_action( 'groups_leave_group', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
 add_action( 'groups_remove_member', 'bp_group_messages_remove_group_member_from_thread', 10, 2 );
@@ -553,7 +553,7 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	return $retval;
 }
 
-function bp_group_messages_groups_membership_accepted( $group_id, $user_id ) {
+function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $accepted ) {
 
 	global $wpdb, $bp, $messages_template;
 
@@ -595,6 +595,7 @@ function bp_group_messages_groups_membership_accepted( $group_id, $user_id ) {
 
 			$new_reply = messages_new_message( array(
 				'thread_id' => $group_message_thread_id,
+				'sender_id' => $user_id,
 				'subject'   => '',
 				'content'   => '<p> </p>',
 				'date_sent' => $date_sent = bp_core_current_time(),
@@ -657,6 +658,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 			$new_reply = messages_new_message( array(
 				'thread_id' => $group_message_thread_id,
+				'sender_id' => $user_id,
 				'subject'   => '',
 				'content'   => '<p> </p>',
 				'date_sent' => $date_sent = bp_core_current_time(),

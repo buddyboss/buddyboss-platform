@@ -549,7 +549,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
+				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji) && $('#group_message_content').length ) {
 
 					$('#group_message_content').emojioneArea({
 						standalone: true,
