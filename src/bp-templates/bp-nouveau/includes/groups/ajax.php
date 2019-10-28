@@ -726,11 +726,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				if ( 'all' !== $_POST['type'] ) {
 					?>
 					<div class="action">
-						<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Select',
-							'buddyboss' ); ?>">
-							<span class="icons" aria-hidden="true"></span> <span class="bp-screen-reader-text">
-							<?php esc_html_e( 'Select', 'buddyboss' ); ?>
-						</span>
+						<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+							<span class="icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text">
+								<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
+							</span>
 						</button>
 					</div>
 					<?php
