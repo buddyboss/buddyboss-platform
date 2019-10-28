@@ -908,6 +908,26 @@ function bbp_is_search_results() {
 }
 
 /**
+ * Check if current page is a bbPress shortcode
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @uses bbp_is_query_name() To get the query name
+ * @return bool Is it a bbPress shortcode page?
+ */
+function bbp_is_shortcode() {
+	// Assume false
+	$retval = false;
+
+	// Check query name
+	if ( empty( $retval ) && 'bbp_shortcodes' === get_query_var( '_bbp_shortcode_query' ) ) {
+		$retval = true;
+	}
+
+	return (bool) apply_filters( 'bbp_is_shortcode', $retval );
+}
+
+/**
  * Check if current page is an edit page
  *
  * @since bbPress (r3585)
@@ -1177,6 +1197,11 @@ function is_bbpress() {
 		$retval = true;
 
 	} elseif ( bbp_is_search_results() ) {
+		$retval = true;
+
+		/** Shortcode */
+
+	} elseif ( bbp_is_shortcode() ) {
 		$retval = true;
 	}
 
