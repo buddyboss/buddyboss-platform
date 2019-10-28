@@ -5022,6 +5022,20 @@ function bp_activity_action_parse_url() {
 			if ( empty( $images ) ) {
 				$images = $parser->getImageSources( false );
 			}
+			if ( !empty( $images ) ) {
+				$imagesObj = [];
+				
+				foreach ($images as $key => $img) {
+					if ( strpos( $url, 'youtube.com' ) > 0 ){
+						$img = "https://www.youtube.com".$img;
+					}
+					if ( @fopen( $img, 'r' ) ) {
+						$imagesObj[] = $img;
+					}
+				}
+				$images = $imagesObj;
+			}
+
 			// Generate Image URL Previews
 			if ( empty( $images ) ) {
 				$content_type = wp_remote_retrieve_header( $body, 'content-type' );
