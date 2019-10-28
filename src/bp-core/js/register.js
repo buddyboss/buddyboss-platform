@@ -199,7 +199,6 @@ jQuery( document ).ready( function() {
 	//for form validation
 	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
 		
-		//jQuery( '[aria-required="true"]' ).each(function( index ) {
 		jQuery( '.required-field' ).each( function( index ) {
 			var html_error = '<div class="bp-messages bp-feedback error">';
 				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
