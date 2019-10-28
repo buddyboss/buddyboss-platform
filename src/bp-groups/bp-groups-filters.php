@@ -705,8 +705,6 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 		     $group &&
 		     $message_users_ids &&
 		     (int) $group === (int) $group_id &&
-		     'all' === $message_users &&
-		     'open' === $message_type &&
 		     'new' === $thread_type &&
 		     'group' === $message_from ) {
 

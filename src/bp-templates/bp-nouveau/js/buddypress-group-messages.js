@@ -52,6 +52,13 @@ window.bp = window.bp || {};
 			var feedbackSelectorLeft 	 		 = $( '#group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback' );
 			var feedbackParagraphTagSelectorLeft = $( '#group-messages-container .bb-groups-messages-left .group-messages-members-listing .bp-messages-feedback .bp-feedback p' );
 
+
+			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
+			$( document ).on( 'click', '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field', function() {
+				$( this ).prop( 'disabled', true );
+			});
+
+
 			$group_messages_select.on('select2:unselect', function(e) {
 				var data = e.params.data;
 				$( '#group-messages-send-to-input option[value="' + data.id + '"]' ).each(function() {
@@ -172,6 +179,7 @@ window.bp = window.bp || {};
 							$(this).remove();
 						});
 						$group_messages_select.select2().prop( 'disabled', false );
+						$( '#group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 						feedbackSelector.removeClass( 'bp-messages-feedback-hide' );
 						feedbackSelectorLeft.removeClass( 'bp-messages-feedback-hide' );
 						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'info' );
