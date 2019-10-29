@@ -16,15 +16,15 @@ $certificates = bp_learndash_get_users_certificates( $user_id );
                             <h3 class="bb-certificate-title">
 								<?php
 								printf(
-									__( 'Certificate in <a href="%s">%s</a>', 'buddyboss' ),
+									__( '<span>Certificate in </span> <a href="%s">%s</a>', 'buddyboss' ),
 									get_permalink( $certificate->ID ),
 									$certificate->title
 								);
 								?>
                             </h3>
-                            <div class="bb-certificate-date"><?php printf( __( 'Earned on %s', 'buddyboss' ), bp_core_get_format_date( $certificate->date ) ); ?></div>
-                            <p>
-                                <a href="<?php echo $certificate->link; ?>"><?php _e( 'Download PDF', 'buddyboss' ); ?></a>
+                            <div class="bb-certificate-date"><?php printf( __( '<span>Earned on</span> %s', 'buddyboss' ), bp_core_get_format_date( $certificate->date ) ); ?></div>
+                            <p class="bb-certificate-download">
+                                <a href="<?php echo $certificate->link; ?>"><i class="bb-icon-arrow-circle" aria-hidden="true"></i><?php _e( 'Download PDF', 'buddyboss' ); ?></a>
                             </p>
                         </div>
                     </div>
