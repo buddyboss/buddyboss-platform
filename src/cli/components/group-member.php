@@ -173,12 +173,14 @@ class Group_Member extends BuddypressCommand {
 		}
 
 		// Get our members.
-		$members_query = groups_get_group_members( array(
-			'group_id'            => $group_id,
-			'exclude_admins_mods' => false,
-			'group_role'          => $roles,
-		) );
-		$members = $members_query['members'];
+		$members_query = groups_get_group_members(
+			array(
+				'group_id'            => $group_id,
+				'exclude_admins_mods' => false,
+				'group_role'          => $roles,
+			)
+		);
+		$members       = $members_query['members'];
 
 		// Make 'role' human-readable.
 		foreach ( $members as &$member ) {

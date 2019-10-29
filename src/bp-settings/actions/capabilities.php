@@ -50,7 +50,7 @@ function bp_settings_action_capabilities() {
 
 	/* Spam **************************************************************/
 
-	$is_spammer = !empty( $_POST['user-spammer'] ) ? true : false;
+	$is_spammer = ! empty( $_POST['user-spammer'] ) ? true : false;
 
 	if ( bp_is_user_spammer( bp_displayed_user_id() ) != $is_spammer ) {
 		$status = ( true == $is_spammer ) ? 'spam' : 'ham';

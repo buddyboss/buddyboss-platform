@@ -29,7 +29,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 * @since BuddyPress 2.6.0
 	 */
 	protected function custom_hooks() {
-		add_action( 'oembed_dataparse',   array( $this, 'use_custom_iframe_sandbox_attribute' ), 20, 3 );
+		add_action( 'oembed_dataparse', array( $this, 'use_custom_iframe_sandbox_attribute' ), 20, 3 );
 		add_action( 'embed_content_meta', array( $this, 'embed_comments_button' ), 5 );
 		add_action( 'get_template_part_assets/embeds/header', array( $this, 'on_activity_header' ), 10, 2 );
 
@@ -48,9 +48,9 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	protected function set_route_args() {
 		return array(
 			'hide_media' => array(
-				'default' => false,
-				'sanitize_callback' => 'wp_validate_boolean'
-			)
+				'default'           => false,
+				'sanitize_callback' => 'wp_validate_boolean',
+			),
 		);
 	}
 
@@ -79,7 +79,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	 *
 	 * @since BuddyPress 2.6.0
 	 *
-	 * @param  string   $url The URL to check.
+	 * @param  string $url The URL to check.
 	 * @return int|bool Activity ID on success; boolean false on failure.
 	 */
 	protected function validate_url_to_item_id( $url ) {
@@ -139,7 +139,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			'author_url'   => bp_core_get_user_domain( $activity->user_id ),
 
 			// Custom identifier.
-			'x_buddypress' => 'activity'
+			'x_buddypress' => 'activity',
 		);
 	}
 
@@ -157,11 +157,12 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		$date        = date_i18n( get_option( 'date_format' ), strtotime( $activity->date_recorded ) );
 
 		// Make sure we can use some activity functions that depend on the loop.
-		$GLOBALS['activities_template'] = new stdClass;
+		$GLOBALS['activities_template']           = new stdClass();
 		$GLOBALS['activities_template']->activity = $activity;
 
 		// 'wp-embedded-content' CSS class is necessary due to how the embed JS works.
-		$blockquote = sprintf( '<blockquote class="wp-embedded-content bp-activity-item">%1$s%2$s %3$s</blockquote>',
+		$blockquote = sprintf(
+			'<blockquote class="wp-embedded-content bp-activity-item">%1$s%2$s %3$s</blockquote>',
 			bp_activity_get_embed_excerpt( $activity->content ),
 			'- ' . bp_core_get_user_displayname( $activity->user_id ) . $mentionname,
 			'<a href="' . esc_url( bp_activity_get_permalink( $item_id ) ) . '">' . $date . '</a>'
@@ -217,14 +218,14 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 
 		// Get unfiltered sandbox attribute from our own oEmbed response.
 		$sandbox_pos = strpos( $data->html, 'sandbox=' ) + 9;
-		$sandbox = substr( $data->html, $sandbox_pos, strpos( $data->html, '"', $sandbox_pos ) - $sandbox_pos );
+		$sandbox     = substr( $data->html, $sandbox_pos, strpos( $data->html, '"', $sandbox_pos ) - $sandbox_pos );
 
 		// Replace only if our sandbox attribute contains 'allow-top-navigation'.
 		if ( false !== strpos( $sandbox, 'allow-top-navigation' ) ) {
 			$result = str_replace( ' sandbox="allow-scripts"', " sandbox=\"{$sandbox}\"", $result );
 
 			// Also remove 'security' attribute; this is only used for IE < 10.
-			$result = str_replace( 'security="restricted"', "", $result );
+			$result = str_replace( 'security="restricted"', '', $result );
 		}
 
 		return $result;
@@ -255,7 +256,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			// Removes WP's hardcoded IFRAME height restriction.
 			$retval = str_replace( 'height = 1000;', 'height = height;', $retval );
 
-		// This is for the WP build minified version.
+			// This is for the WP build minified version.
 		} else {
 			$retval = str_replace( 'g=1e3', 'g=g', $retval );
 		}
@@ -302,7 +303,7 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 		if ( empty( $count ) ) {
 			return;
 		}
-	?>
+		?>
 
 		<div class="wp-embed-comments">
 			<a href="<?php bp_activity_thread_permalink(); ?>">
@@ -323,6 +324,6 @@ class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 			</a>
 		</div>
 
-	<?php
+		<?php
 	}
 }

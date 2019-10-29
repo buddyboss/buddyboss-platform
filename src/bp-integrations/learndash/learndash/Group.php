@@ -18,41 +18,42 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class Group
-{
+class Group {
+
 	/**
 	 * Get groups that's not associated to bp
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function getUnassociatedGroups($include = null)
-	{
-		$meta_query = [
+	public function getUnassociatedGroups( $include = null ) {
+		$meta_query = array(
 			'relation' => 'OR',
-			[
+			array(
 				'key'   => '_sync_group_id',
-				'value' => [0, ''],
-			],
-			[
+				'value' => array( 0, '' ),
+			),
+			array(
 				'key'     => '_sync_group_id',
 				'compare' => 'NOT EXISTS',
-			],
-		];
+			),
+		);
 
-		if ($include) {
-			$meta_query[] = [
+		if ( $include ) {
+			$meta_query[] = array(
 				'key'   => '_sync_group_id',
-				'value' => is_array($include) ? $include : [$include]
-			];
+				'value' => is_array( $include ) ? $include : array( $include ),
+			);
 		}
 
-		return (new WP_Query([
-			'post_type'      => 'groups',
-			'posts_per_page' => -1,
-			'orderby'        => 'name',
-			'order'          => 'asc',
-			'meta_query'     => [$meta_query],
-		]))->posts;
+		return ( new WP_Query(
+			array(
+				'post_type'      => 'groups',
+				'posts_per_page' => -1,
+				'orderby'        => 'name',
+				'order'          => 'asc',
+				'meta_query'     => array( $meta_query ),
+			)
+		) )->posts;
 	}
 
 }

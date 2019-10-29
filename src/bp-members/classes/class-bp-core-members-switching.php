@@ -17,6 +17,7 @@ class BP_Core_Members_Switching {
 
 	/**
 	 * Sets up all the filters and actions.
+	 *
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function init_hooks() {
@@ -40,7 +41,7 @@ class BP_Core_Members_Switching {
 		add_action( 'personal_options', array( $this, 'action_personal_options' ) );
 		add_action( 'admin_bar_menu', array( $this, 'action_admin_bar_menu' ), 100 );
 		add_action( 'bbp_template_after_user_details', array( $this, 'action_bbpress_button' ) );
-		//add_filter( 'show_admin_bar', array( $this, 'filter_show_admin_bar' ), 999, 1 );
+		// add_filter( 'show_admin_bar', array( $this, 'filter_show_admin_bar' ), 999, 1 );
 	}
 
 	/**
@@ -245,26 +246,33 @@ class BP_Core_Members_Switching {
 					$message       = '';
 					$just_switched = isset( $_GET['user_switched'] );
 					if ( $just_switched ) {
-						$message = esc_html( sprintf(
-						/* Translators: 1: user display name; 2: username; */
-							__( 'Switched to %1$s (%2$s).', 'buddyboss' ),
-							$user->display_name,
-							$user->user_login
-						) );
+						$message = esc_html(
+							sprintf(
+								/* Translators: 1: user display name; 2: username; */
+								__( 'Switched to %1$s (%2$s).', 'buddyboss' ),
+								$user->display_name,
+								$user->user_login
+							)
+						);
 					}
-					$switch_back_url = add_query_arg( array(
-						'redirect_to' => urlencode( self::current_url() ),
-					), self::switch_back_url( $old_user ) );
+					$switch_back_url = add_query_arg(
+						array(
+							'redirect_to' => urlencode( self::current_url() ),
+						),
+						self::switch_back_url( $old_user )
+					);
 
 					$message .= sprintf(
 						' <a href="%s">%s</a>.',
 						esc_url( $switch_back_url ),
-						esc_html( sprintf(
-						/* Translators: 1: user display name; 2: username; */
-							__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
-							$old_user->display_name,
-							$old_user->user_login
-						) )
+						esc_html(
+							sprintf(
+								/* Translators: 1: user display name; 2: username; */
+								__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
+								$old_user->display_name,
+								$old_user->user_login
+							)
+						)
 					);
 
 					/**
@@ -290,19 +298,23 @@ class BP_Core_Members_Switching {
 				<p>
 					<?php
 					if ( isset( $_GET['switched_back'] ) ) {
-						echo esc_html( sprintf(
-						/* Translators: 1: user display name; 2: username; */
-							__( 'Switched back to %1$s (%2$s).', 'buddyboss' ),
-							$user->display_name,
-							$user->user_login
-						) );
+						echo esc_html(
+							sprintf(
+								/* Translators: 1: user display name; 2: username; */
+								__( 'Switched back to %1$s (%2$s).', 'buddyboss' ),
+								$user->display_name,
+								$user->user_login
+							)
+						);
 					} else {
-						echo esc_html( sprintf(
-						/* Translators: 1: user display name; 2: username; */
-							__( 'Switched to %1$s (%2$s).', 'buddyboss' ),
-							$user->display_name,
-							$user->user_login
-						) );
+						echo esc_html(
+							sprintf(
+								/* Translators: 1: user display name; 2: username; */
+								__( 'Switched to %1$s (%2$s).', 'buddyboss' ),
+								$user->display_name,
+								$user->user_login
+							)
+						);
 					}
 					?>
 				</p>
@@ -377,18 +389,25 @@ class BP_Core_Members_Switching {
 		$old_user = self::get_old_user();
 
 		if ( $old_user ) {
-			$wp_admin_bar->add_menu( array(
-				'parent' => 'top-secondary',
-				'id'     => 'switch-back',
-				'title'  => esc_html( sprintf(
-					__( 'Switch back to Admin', 'buddyboss' ),
-					$old_user->display_name,
-					$old_user->user_login
-				) ),
-				'href'   => add_query_arg( array(
-					'redirect_to' => urlencode( self::current_url() ),
-				), self::switch_back_url( $old_user ) ),
-			) );
+			$wp_admin_bar->add_menu(
+				array(
+					'parent' => 'top-secondary',
+					'id'     => 'switch-back',
+					'title'  => esc_html(
+						sprintf(
+							__( 'Switch back to Admin', 'buddyboss' ),
+							$old_user->display_name,
+							$old_user->user_login
+						)
+					),
+					'href'   => add_query_arg(
+						array(
+							'redirect_to' => urlencode( self::current_url() ),
+						),
+						self::switch_back_url( $old_user )
+					),
+				)
+			);
 		}
 
 	}
@@ -403,14 +422,17 @@ class BP_Core_Members_Switching {
 
 		if ( $old_user instanceof WP_User ) {
 			$link = sprintf(
-			/* Translators: 1: user display name; 2: username; */
+				/* Translators: 1: user display name; 2: username; */
 				__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
 				$old_user->display_name,
 				$old_user->user_login
 			);
-			$url  = add_query_arg( array(
-				'redirect_to' => urlencode( self::current_url() ),
-			), self::switch_back_url( $old_user ) );
+			$url = add_query_arg(
+				array(
+					'redirect_to' => urlencode( self::current_url() ),
+				),
+				self::switch_back_url( $old_user )
+			);
 			echo '<li id="bp_member_switching_switch_on"><a href="' . esc_url( $url ) . '">' . esc_html( $link ) . '</a></li>';
 		}
 	}
@@ -437,8 +459,8 @@ class BP_Core_Members_Switching {
 				<style>
 					/* Member Switching */
 					#wpadminbar #wp-admin-bar-top-secondary li#wp-admin-bar-switch-back a {
-						background: <?php echo $colors['background'] ?>;
-						color: <?php echo  $colors['color'] ?>;;
+						background: <?php echo $colors['background']; ?>;
+						color: <?php echo $colors['color']; ?>;;
 					}
 				</style>
 				<?php
@@ -460,21 +482,27 @@ class BP_Core_Members_Switching {
 
 		if ( $old_user instanceof WP_User ) {
 			$link = sprintf(
-			/* Translators: 1: user display name; 2: username; */
+				/* Translators: 1: user display name; 2: username; */
 				__( 'Switch back to %1$s (%2$s)', 'buddyboss' ),
 				$old_user->display_name,
 				$old_user->user_login
 			);
-			$url  = self::switch_back_url( $old_user );
+			$url = self::switch_back_url( $old_user );
 
 			if ( ! empty( $_REQUEST['interim-login'] ) ) {
-				$url = add_query_arg( array(
-					'interim-login' => '1',
-				), $url );
+				$url = add_query_arg(
+					array(
+						'interim-login' => '1',
+					),
+					$url
+				);
 			} elseif ( ! empty( $_REQUEST['redirect_to'] ) ) {
-				$url = add_query_arg( array(
-					'redirect_to' => urlencode( wp_unslash( $_REQUEST['redirect_to'] ) ), // WPCS: sanitization ok
-				), $url );
+				$url = add_query_arg(
+					array(
+						'redirect_to' => urlencode( wp_unslash( $_REQUEST['redirect_to'] ) ), // WPCS: sanitization ok
+					),
+					$url
+				);
 			}
 
 			$message .= '<p class="message" id="bp_member_switching_switch_on">';
@@ -492,7 +520,7 @@ class BP_Core_Members_Switching {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string[] $actions The actions to display for this user row.
-	 * @param WP_User $user The user object displayed in this row.
+	 * @param WP_User  $user The user object displayed in this row.
 	 *
 	 * @return string[] The actions to display for this user row.
 	 */
@@ -512,7 +540,6 @@ class BP_Core_Members_Switching {
 	 * Adds a 'View As' link to each member's profile page and profile listings in BuddyPress.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 *
 	 */
 	public function action_bp_button() {
 		$user = null;
@@ -533,26 +560,30 @@ class BP_Core_Members_Switching {
 			return;
 		}
 
-		$link = add_query_arg( array(
-			'redirect_to' => urlencode( bp_core_get_user_domain( $user->ID ) ),
-		), $link );
+		$link = add_query_arg(
+			array(
+				'redirect_to' => urlencode( bp_core_get_user_domain( $user->ID ) ),
+			),
+			$link
+		);
 
 		$components = array_keys( buddypress()->active_components );
 
-		echo bp_get_button( array(
-			'id'         => 'bp_member_switching',
-			'component'  => reset( $components ),
-			'link_href'  => esc_url( $link ),
-			'link_text'  => esc_html__( 'View As', 'buddyboss' ),
-			'wrapper_id' => 'bp_member_switching_switch_to',
-		) );
+		echo bp_get_button(
+			array(
+				'id'         => 'bp_member_switching',
+				'component'  => reset( $components ),
+				'link_href'  => esc_url( $link ),
+				'link_text'  => esc_html__( 'View As', 'buddyboss' ),
+				'wrapper_id' => 'bp_member_switching_switch_to',
+			)
+		);
 	}
 
 	/**
 	 * Adds a 'View As' link to each member's profile page in bbPress.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 *
 	 */
 	public function action_bbpress_button() {
 		$user = get_userdata( bbp_get_user_id() );
@@ -567,9 +598,12 @@ class BP_Core_Members_Switching {
 			return;
 		}
 
-		$link = add_query_arg( array(
-			'redirect_to' => urlencode( bbp_get_user_profile_url( $user->ID ) ),
-		), $link );
+		$link = add_query_arg(
+			array(
+				'redirect_to' => urlencode( bbp_get_user_profile_url( $user->ID ) ),
+			),
+			$link
+		);
 
 		?>
 		<ul id="bp_member_switching_switch_to">
@@ -591,11 +625,14 @@ class BP_Core_Members_Switching {
 	 * @return string[] Updated list of removable query arguments.
 	 */
 	public function filter_removable_query_args( array $args ) {
-		return array_merge( $args, array(
-			'user_switched',
-			'switched_off',
-			'switched_back',
-		) );
+		return array_merge(
+			$args,
+			array(
+				'user_switched',
+				'switched_off',
+				'switched_back',
+			)
+		);
 	}
 
 	/**
@@ -627,11 +664,17 @@ class BP_Core_Members_Switching {
 	 * @return string The required URL.
 	 */
 	public static function switch_to_url( WP_User $user ) {
-		return wp_nonce_url( add_query_arg( array(
-			'action'  => 'switch_to_user',
-			'user_id' => $user->ID,
-			'nr'      => 1,
-		), wp_login_url() ), "switch_to_user_{$user->ID}" );
+		return wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'  => 'switch_to_user',
+					'user_id' => $user->ID,
+					'nr'      => 1,
+				),
+				wp_login_url()
+			),
+			"switch_to_user_{$user->ID}"
+		);
 	}
 
 	/**
@@ -644,10 +687,16 @@ class BP_Core_Members_Switching {
 	 * @return string        The required URL.
 	 */
 	public static function switch_back_url( WP_User $user ) {
-		return wp_nonce_url( add_query_arg( array(
-			'action' => 'switch_to_olduser',
-			'nr'     => 1,
-		), wp_login_url() ), "switch_to_olduser_{$user->ID}" );
+		return wp_nonce_url(
+			add_query_arg(
+				array(
+					'action' => 'switch_to_olduser',
+					'nr'     => 1,
+				),
+				wp_login_url()
+			),
+			"switch_to_olduser_{$user->ID}"
+		);
 	}
 
 	/**
@@ -660,10 +709,16 @@ class BP_Core_Members_Switching {
 	 * @return string        The required URL.
 	 */
 	public static function switch_off_url( WP_User $user ) {
-		return wp_nonce_url( add_query_arg( array(
-			'action' => 'switch_off',
-			'nr'     => 1,
-		), wp_login_url() ), "switch_off_{$user->ID}" );
+		return wp_nonce_url(
+			add_query_arg(
+				array(
+					'action' => 'switch_off',
+					'nr'     => 1,
+				),
+				wp_login_url()
+			),
+			"switch_off_{$user->ID}"
+		);
 	}
 
 	/**
@@ -733,25 +788,49 @@ class BP_Core_Members_Switching {
 		$current_color = get_user_option( 'admin_color' );
 		switch ( $current_color ) {
 			case 'fresh':
-				return [ 'background' => '#0073aa', 'color' => '#fff' ];
+				return array(
+					'background' => '#0073aa',
+					'color'      => '#fff',
+				);
 				break;
 			case 'light':
-				return [ 'background' => '#888', 'color' => '#fff' ];
+				return array(
+					'background' => '#888',
+					'color'      => '#fff',
+				);
 				break;
 			case 'blue':
-				return [ 'background' => '#096484', 'color' => '#fff' ];
+				return array(
+					'background' => '#096484',
+					'color'      => '#fff',
+				);
 				break;
 			case 'coffee':
-				return [ 'background' => '#c7a589', 'color' => '#fff' ];
+				return array(
+					'background' => '#c7a589',
+					'color'      => '#fff',
+				);
 				break;
 			case 'ectoplasm':
-				return [ 'background' => '#a3b745', 'color' => '#fff' ];
+				return array(
+					'background' => '#a3b745',
+					'color'      => '#fff',
+				);
 			case 'midnight':
-				return [ 'background' => '#e14d43', 'color' => '#fff' ];
+				return array(
+					'background' => '#e14d43',
+					'color'      => '#fff',
+				);
 			case 'ocean':
-				return [ 'background' => '#9ebaa0', 'color' => '#fff' ];
+				return array(
+					'background' => '#9ebaa0',
+					'color'      => '#fff',
+				);
 			case 'sunrise':
-				return [ 'background' => '#dd823b', 'color' => '#fff' ];
+				return array(
+					'background' => '#dd823b',
+					'color'      => '#fff',
+				);
 				break;
 		}
 	}
@@ -768,18 +847,18 @@ class BP_Core_Members_Switching {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param bool[] $user_caps Array of key/value pairs where keys represent a capability name and boolean values
-	 *                                represent whether the user has that capability.
+	 * @param bool[]   $user_caps Array of key/value pairs where keys represent a capability name and boolean values
+	 *                                  represent whether the user has that capability.
 	 * @param string[] $required_caps Required primitive capabilities for the requested capability.
-	 * @param array $args {
-	 *     Arguments that accompany the requested capability check.
+	 * @param array    $args {
+	 *        Arguments that accompany the requested capability check.
 	 *
 	 * @type string    $0 Requested capability.
 	 * @type int       $1 Concerned user ID.
 	 * @type mixed  ...$2 Optional second and further parameters.
 	 * }
 	 *
-	 * @param WP_User $user Concerned user object.
+	 * @param WP_User  $user Concerned user object.
 	 *
 	 * @return bool[] Concerned user's capabilities.
 	 */
@@ -817,10 +896,10 @@ class BP_Core_Members_Switching {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string[] $required_caps Required primitive capabilities for the requested capability.
-	 * @param string $cap Capability or meta capability being checked.
-	 * @param int $user_id Concerned user ID.
-	 * @param array $args {
-	 *     Arguments that accompany the requested capability check.
+	 * @param string   $cap Capability or meta capability being checked.
+	 * @param int      $user_id Concerned user ID.
+	 * @param array    $args {
+	 *        Arguments that accompany the requested capability check.
 	 *
 	 * @type mixed ...$0 Optional second and further parameters.
 	 * }
@@ -874,7 +953,6 @@ class BP_Core_Members_Switching {
 	 * Private class constructor. Use `get_instance()` to get the instance.
 	 *
 	 * @since BuddyBoss 1.0.0
-	 *
 	 */
 	final private function __construct() {
 	}

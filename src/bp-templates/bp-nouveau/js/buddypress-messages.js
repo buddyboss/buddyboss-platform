@@ -189,6 +189,9 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
+			
+			//show compose message screen
+			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
 
 		threadsView: function() {
@@ -1122,6 +1125,8 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
+                                dropdownCssClass: 'bb-select-dropdown',
+                                containerCssClass: 'bb-select-container',
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',

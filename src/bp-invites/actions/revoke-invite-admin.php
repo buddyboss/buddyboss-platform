@@ -6,15 +6,15 @@
  * @package BuddyBoss\Invite\Actions
  * @since BuddyBoss 1.0.0
  */
- 
+
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
  /**
- * Admin revoke email invite.
- *
- * @since BuddyBoss 1.0.0
- */
+  * Admin revoke email invite.
+  *
+  * @since BuddyBoss 1.0.0
+  */
 function bp_member_revoke_invite_admin() {
 
 	global $bp;

@@ -22,22 +22,25 @@ function bp_admin_bar_my_account_root() {
 	global $wp_admin_bar;
 
 	// Bail if this is an ajax request.
-	if ( !bp_use_wp_admin_bar() || defined( 'DOING_AJAX' ) )
+	if ( ! bp_use_wp_admin_bar() || defined( 'DOING_AJAX' ) ) {
 		return;
+	}
 
 	// Only add menu for logged in user.
 	if ( is_user_logged_in() ) {
 
 		// Add secondary parent item for all BuddyPress components.
-		$wp_admin_bar->add_menu( array(
-			'parent'    => 'my-account',
-			'id'        => 'my-account-buddypress',
-			'title'     => __( 'My Account', 'buddyboss' ),
-			'group'     => true,
-			'meta'      => array(
-				'class' => 'ab-sub-secondary'
+		$wp_admin_bar->add_menu(
+			array(
+				'parent' => 'my-account',
+				'id'     => 'my-account-buddypress',
+				'title'  => __( 'My Account', 'buddyboss' ),
+				'group'  => true,
+				'meta'   => array(
+					'class' => 'ab-sub-secondary',
+				),
 			)
-		) );
+		);
 	}
 }
 add_action( 'admin_bar_menu', 'bp_admin_bar_my_account_root', 100 );
@@ -67,15 +70,15 @@ function bp_core_load_admin_bar() {
 		show_admin_bar( false );
 
 		// Actions used to build the BP Toolbar.
-		add_action( 'bp_adminbar_logo',  'bp_adminbar_logo'               );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_login_menu',    2   );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_account_menu',  4   );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_thisblog_menu', 6   );
-		add_action( 'bp_adminbar_menus', 'bp_adminbar_random_menu',   100 );
+		add_action( 'bp_adminbar_logo', 'bp_adminbar_logo' );
+		add_action( 'bp_adminbar_menus', 'bp_adminbar_login_menu', 2 );
+		add_action( 'bp_adminbar_menus', 'bp_adminbar_account_menu', 4 );
+		add_action( 'bp_adminbar_menus', 'bp_adminbar_thisblog_menu', 6 );
+		add_action( 'bp_adminbar_menus', 'bp_adminbar_random_menu', 100 );
 
 		// Actions used to append BP Toolbar to footer.
-		add_action( 'wp_footer',    'bp_core_admin_bar', 8 );
-		add_action( 'admin_footer', 'bp_core_admin_bar'    );
+		add_action( 'wp_footer', 'bp_core_admin_bar', 8 );
+		add_action( 'admin_footer', 'bp_core_admin_bar' );
 	}
 }
 add_action( 'init', 'bp_core_load_admin_bar', 9 );
@@ -90,7 +93,7 @@ add_action( 'init', 'bp_core_load_admin_bar', 9 );
  * @since BuddyPress 1.5.0
  */
 function bp_core_load_admin_bar_css() {
-	add_action( 'bp_enqueue_scripts',       'bp_core_enqueue_admin_bar_css', 1 );
+	add_action( 'bp_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
 	add_action( 'bp_admin_enqueue_scripts', 'bp_core_enqueue_admin_bar_css', 1 );
 }
 
@@ -129,23 +132,28 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 		return;
 	}
 	$display_name = $current_user->data->display_name;
-	$avatar = get_avatar( $user_id, 26 );
+	$avatar       = get_avatar( $user_id, 26 );
+	$name         = bp_xprofile_get_member_display_name( $user_id );
 
 	// my account
-	$wp_admin_bar->add_node( [
-		'id' => 'my-account',
-		'title' => '<span class="display-name">' . $display_name . $avatar . '</span>'
-	] );
+	$wp_admin_bar->add_node(
+		array(
+			'id'    => 'my-account',
+			'title' => '<span class="display-name">' . $name . $avatar . '</span>',
+		)
+	);
 
 	// user info
 	$user_info  = get_avatar( $user_id, 64 );
-	$user_info .= "<span class='display-name'>". $display_name . "</span>";
-	$user_info .= "<span class='username'>" . bp_activity_get_user_mentionname( $user_id ) . "</span>";
+	$user_info .= "<span class='display-name'>" . $display_name . '</span>';
+	$user_info .= "<span class='username'>" . bp_activity_get_user_mentionname( $user_id ) . '</span>';
 
-	$wp_admin_bar->add_menu([
-		'id' => 'user-info',
-		'title'  => $user_info
-	]);
+	$wp_admin_bar->add_menu(
+		array(
+			'id'    => 'user-info',
+			'title' => $user_info,
+		)
+	);
 
 	if ( current_user_can( 'read' ) ) {
 		$profile_url = get_edit_profile_url( $user_id );
@@ -163,7 +171,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	);
 
 	$user_info  = get_avatar( $user_id, 64 );
-	$user_info .= "<span class='display-name'>{$display_name}</span>";
+	$user_info .= "<span class='display-name'>{$name}</span>";
 
 	if ( $current_user->display_name !== $current_user->user_login ) {
 

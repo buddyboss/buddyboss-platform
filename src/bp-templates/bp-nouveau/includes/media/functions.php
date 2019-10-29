@@ -48,19 +48,23 @@ function bp_nouveau_media_enqueue_scripts() {
 	     bp_is_messages_component()
 	) {
 
-		if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() ) {
-			wp_enqueue_script( 'bp-media-dropzone' );
-			wp_enqueue_script( 'bp-nouveau-media' );
-			wp_enqueue_script( 'bp-exif' );
-		}
-
+		$gif = false;
 		if ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() ) {
 			wp_enqueue_script( 'giphy' );
+			$gif = true;
 		}
 
+		$emoji = false;
 		if ( bp_is_profiles_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() || bp_is_messages_emoji_support_enabled() ) {
 			wp_enqueue_script( 'emojionearea' );
 			wp_enqueue_style( 'emojionearea' );
+			$emoji = true;
+		}
+
+		if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji ) {
+			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_script( 'bp-nouveau-media' );
+			wp_enqueue_script( 'bp-exif' );
 		}
 	}
 }
@@ -75,12 +79,9 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
-	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! bp_is_messages_component() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
-		return $params;
-	}
-
+	//initialize media vars because it is used globally
 	$params['media'] = array(
-		'max_upload_size' => bp_media_file_upload_max_size(),
+		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_media_support_enabled(),
 		'profile_album'   => bp_is_profile_albums_support_enabled(),
 		'group_media'     => bp_is_group_media_support_enabled(),

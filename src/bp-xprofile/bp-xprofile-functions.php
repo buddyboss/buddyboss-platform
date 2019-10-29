@@ -28,22 +28,22 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_xprofile_get_groups( $args = array() ) {
 
-    /**
-     * For repeaters, automatically set the parameter value
-     * to determine if we should display only the template fields
-     * or only the clone fields
-     */
+	/**
+	 * For repeaters, automatically set the parameter value
+	 * to determine if we should display only the template fields
+	 * or only the clone fields
+	 */
 
-    if ( !isset( $args[ 'repeater_show_main_fields_only' ] ) ) {
-        $repeater_show_main_fields_only = true;
+	if ( ! isset( $args['repeater_show_main_fields_only'] ) ) {
+		$repeater_show_main_fields_only = true;
 
-        //If on a user profile
-        if ( 'profile' == bp_current_component() ) {
-            $repeater_show_main_fields_only = false;
-        }
+		// If on a user profile
+		if ( 'profile' == bp_current_component() ) {
+			$repeater_show_main_fields_only = false;
+		}
 
-        $args[ 'repeater_show_main_fields_only' ] = apply_filters( 'bp_xprofile_get_groups_repeater_show_main_fields_only', $repeater_show_main_fields_only );
-    }
+		$args['repeater_show_main_fields_only'] = apply_filters( 'bp_xprofile_get_groups_repeater_show_main_fields_only', $repeater_show_main_fields_only );
+	}
 
 	$groups = BP_XProfile_Group::get( $args );
 
@@ -76,12 +76,16 @@ function bp_xprofile_get_groups( $args = array() ) {
 function xprofile_insert_field_group( $args = '' ) {
 
 	// Parse the arguments.
-	$r = bp_parse_args( $args, array(
-		'field_group_id' => false,
-		'name'           => false,
-		'description'    => '',
-		'can_delete'     => true
-	), 'xprofile_insert_field_group' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'field_group_id' => false,
+			'name'           => false,
+			'description'    => '',
+			'can_delete'     => true,
+		),
+		'xprofile_insert_field_group'
+	);
 
 	// Bail if no group name.
 	if ( empty( $r['name'] ) ) {
@@ -179,7 +183,7 @@ function bp_xprofile_get_field_types() {
 		'socialnetworks' => 'BP_XProfile_Field_Type_Social_Networks',
 	);
 
-	if ( function_exists( 'bp_member_type_enable_disable') && true === bp_member_type_enable_disable() ) {
+	if ( function_exists( 'bp_member_type_enable_disable' ) && true === bp_member_type_enable_disable() ) {
 		$fields['membertypes'] = 'BP_XProfile_Field_Type_Member_Types';
 	}
 
@@ -207,15 +211,15 @@ function bp_xprofile_get_field_types() {
 function bp_xprofile_create_field_type( $type ) {
 
 	$field = bp_xprofile_get_field_types();
-	$class = isset( $field[$type] ) ? $field[$type] : '';
+	$class = isset( $field[ $type ] ) ? $field[ $type ] : '';
 
 	/**
 	 * To handle (missing) field types, fallback to a placeholder field object if a type is unknown.
 	 */
 	if ( $class && class_exists( $class ) ) {
-		return new $class;
+		return new $class();
 	} else {
-		return new BP_XProfile_Field_Type_Placeholder;
+		return new BP_XProfile_Field_Type_Placeholder();
 	}
 }
 
@@ -249,20 +253,23 @@ function bp_xprofile_create_field_type( $type ) {
  */
 function xprofile_insert_field( $args = '' ) {
 
-	$r = wp_parse_args( $args, array(
-		'field_id'          => null,
-		'field_group_id'    => null,
-		'parent_id'         => null,
-		'type'              => '',
-		'name'              => '',
-		'description'       => '',
-		'is_required'       => false,
-		'can_delete'        => true,
-		'order_by'          => '',
-		'is_default_option' => false,
-		'option_order'      => null,
-		'field_order'       => null,
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'field_id'          => null,
+			'field_group_id'    => null,
+			'parent_id'         => null,
+			'type'              => '',
+			'name'              => '',
+			'description'       => '',
+			'is_required'       => false,
+			'can_delete'        => true,
+			'order_by'          => '',
+			'is_default_option' => false,
+			'option_order'      => null,
+			'field_order'       => null,
+		)
+	);
 
 	// Field_group_id is required.
 	if ( empty( $r['field_group_id'] ) ) {
@@ -278,7 +285,7 @@ function xprofile_insert_field( $args = '' ) {
 	if ( ! empty( $r['field_id'] ) ) {
 		$field = xprofile_get_field( $r['field_id'] );
 	} else {
-		$field = new BP_XProfile_Field;
+		$field = new BP_XProfile_Field();
 	}
 
 	$field->group_id = $r['field_group_id'];
@@ -386,7 +393,7 @@ function xprofile_get_field_data( $field, $user_id = 0, $multi_format = 'array' 
 
 	if ( is_array( $values ) ) {
 		$data = array();
-		foreach( (array) $values as $value ) {
+		foreach ( (array) $values as $value ) {
 
 			/**
 			 * Filters the field data value for a specific field for the user.
@@ -489,7 +496,7 @@ function xprofile_set_field_data( $field, $user_id, $value, $is_required = false
 	$field->user_id  = $user_id;
 
 	// Gets un/reserialized via xprofile_sanitize_data_value_before_save()
-	$field->value    = maybe_serialize( $value );
+	$field->value = maybe_serialize( $value );
 
 	return $field->save();
 }
@@ -511,18 +518,18 @@ function xprofile_set_field_visibility_level( $field_id = 0, $user_id = 0, $visi
 
 	// Check against a whitelist.
 	$allowed_values = bp_xprofile_get_visibility_levels();
-	if ( !array_key_exists( $visibility_level, $allowed_values ) ) {
+	if ( ! array_key_exists( $visibility_level, $allowed_values ) ) {
 		return false;
 	}
 
 	// Stored in an array in usermeta.
 	$current_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
-	if ( !$current_visibility_levels ) {
+	if ( ! $current_visibility_levels ) {
 		$current_visibility_levels = array();
 	}
 
-	$current_visibility_levels[$field_id] = $visibility_level;
+	$current_visibility_levels[ $field_id ] = $visibility_level;
 
 	return bp_update_user_meta( $user_id, 'bp_xprofile_visibility_levels', $current_visibility_levels );
 }
@@ -616,7 +623,7 @@ function xprofile_check_is_required_field( $field_id ) {
  * @since BuddyBoss 1.0.0
  */
 function xprofile_validate_field( $field_id, $value, $UserId ) {
-	return apply_filters('xprofile_validate_field', '', $field_id, $value, $UserId );
+	return apply_filters( 'xprofile_validate_field', '', $field_id, $value, $UserId );
 }
 
 /**
@@ -686,7 +693,7 @@ function xprofile_format_profile_field( $field_type, $field_value ) {
 	$field_value = bp_unserialize_profile_field( $field_value );
 
 	if ( 'datebox' != $field_type ) {
-		$content = $field_value;
+		$content     = $field_value;
 		$field_value = str_replace( ']]>', ']]&gt;', $content );
 	}
 
@@ -759,11 +766,11 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 		$directory = 'avatars';
 	}
 
-	$path      = bp_core_avatar_upload_path() . '/' . $directory. '/' . $user_id;
+	$path      = bp_core_avatar_upload_path() . '/' . $directory . '/' . $user_id;
 	$newbdir   = $path;
-	$newurl    = bp_core_avatar_url() . '/' . $directory. '/' . $user_id;
+	$newurl    = bp_core_avatar_url() . '/' . $directory . '/' . $user_id;
 	$newburl   = $newurl;
-	$newsubdir = '/' . $directory. '/' . $user_id;
+	$newsubdir = '/' . $directory . '/' . $user_id;
 
 	/**
 	 * Filters the avatar upload directory for a user.
@@ -772,14 +779,17 @@ function xprofile_avatar_upload_dir( $directory = 'avatars', $user_id = 0 ) {
 	 *
 	 * @param array $value Array containing the path, URL, and other helpful settings.
 	 */
-	return apply_filters( 'xprofile_avatar_upload_dir', array(
-		'path'    => $path,
-		'url'     => $newurl,
-		'subdir'  => $newsubdir,
-		'basedir' => $newbdir,
-		'baseurl' => $newburl,
-		'error'   => false
-	) );
+	return apply_filters(
+		'xprofile_avatar_upload_dir',
+		array(
+			'path'    => $path,
+			'url'     => $newurl,
+			'subdir'  => $newsubdir,
+			'basedir' => $newbdir,
+			'baseurl' => $newburl,
+			'error'   => false,
+		)
+	);
 }
 
 /**
@@ -806,7 +816,7 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 		$search_terms_nospace = '%' . $search_terms_clean;
 		$search_terms_space   = '%' . $search_terms_clean . ' %';
 	} elseif ( $query->query_vars['search_wildcard'] === 'right' ) {
-		$search_terms_nospace =        $search_terms_clean . '%';
+		$search_terms_nospace = $search_terms_clean . '%';
 		$search_terms_space   = '% ' . $search_terms_clean . '%';
 	} else {
 		$search_terms_nospace = '%' . $search_terms_clean . '%';
@@ -815,38 +825,42 @@ function bp_xprofile_bp_user_query_search( $sql, BP_User_Query $query ) {
 
 	// Combine the core search (against wp_users) into a single OR clause
 	// with the xprofile_data search.
-	$matched_user_ids = $wpdb->get_col( $wpdb->prepare(
-		"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-		$search_terms_nospace,
-		$search_terms_space
-	) );
+	$matched_user_ids = $wpdb->get_col(
+		$wpdb->prepare(
+			"SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+			$search_terms_nospace,
+			$search_terms_space
+		)
+	);
 
 	// Checked profile fields based on privacy settings of particular user while searching
 	if ( ! empty( $matched_user_ids ) ) {
-		$matched_user_data = $wpdb->get_results( $wpdb->prepare(
-			"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
-			$search_terms_nospace,
-			$search_terms_space
-		) );
+		$matched_user_data = $wpdb->get_results(
+			$wpdb->prepare(
+				"SELECT * FROM {$bp->profile->table_name_data} WHERE value LIKE %s OR value LIKE %s",
+				$search_terms_nospace,
+				$search_terms_space
+			)
+		);
 
 		foreach ( $matched_user_data as $key => $user ) {
 			$field_visibility = xprofile_get_field_visibility_level( $user->field_id, $user->user_id );
-			if ( 'adminsonly' === $field_visibility && !current_user_can('administrator') ) {
-				if (($key = array_search($user->user_id, $matched_user_ids)) !== false) {
-					unset($matched_user_ids[$key]);
+			if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
+				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
+					unset( $matched_user_ids[ $key ] );
 				}
 			}
-			if ( 'friends' === $field_visibility && !current_user_can('administrator') && false === friends_check_friendship( intval($user->user_id), bp_loggedin_user_id() ) ) {
-				if (($key = array_search($user->user_id, $matched_user_ids)) !== false) {
-					unset($matched_user_ids[$key]);
+			if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user->user_id ), bp_loggedin_user_id() ) ) {
+				if ( ( $key = array_search( $user->user_id, $matched_user_ids ) ) !== false ) {
+					unset( $matched_user_ids[ $key ] );
 				}
 			}
 		}
 	}
 
 	if ( ! empty( $matched_user_ids ) ) {
-		$search_core     = $sql['where']['search'];
-		$search_combined = " ( u.{$query->uid_name} IN (" . implode(',', $matched_user_ids) . ") OR {$search_core} )";
+		$search_core            = $sql['where']['search'];
+		$search_combined        = " ( u.{$query->uid_name} IN (" . implode( ',', $matched_user_ids ) . ") OR {$search_core} )";
 		$sql['where']['search'] = $search_combined;
 	}
 
@@ -899,8 +913,8 @@ function xprofile_sync_wp_profile( $user_id = 0, $field_id = null ) {
 
 	bp_xprofile_update_display_name( $user_id );
 }
-add_action( 'bp_core_signup_user',      'xprofile_sync_wp_profile' );
-add_action( 'bp_core_activated_user',   'xprofile_sync_wp_profile' );
+add_action( 'bp_core_signup_user', 'xprofile_sync_wp_profile' );
+add_action( 'bp_core_activated_user', 'xprofile_sync_wp_profile' );
 
 /**
  * Syncs the standard built in WordPress profile data to XProfile.
@@ -923,11 +937,11 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 	}
 
 	if ( isset( $user->last_name ) ) {
-		xprofile_set_field_data( bp_xprofile_lastname_field_id(),  $user->ID, $user->last_name );
+		xprofile_set_field_data( bp_xprofile_lastname_field_id(), $user->ID, $user->last_name );
 	}
 
 	if ( isset( $user->nickname ) ) {
-		xprofile_set_field_data( bp_xprofile_nickname_field_id(),  $user->ID, $user->nickname );
+		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
 	}
 
 	$user->display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
@@ -940,10 +954,12 @@ add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_update_display_name( $user_id ) {
-	wp_update_user( array(
-		'ID' => $user_id,
-		'display_name' => bp_core_get_member_display_name( get_user_by( 'ID', $user_id )->display_name, $user_id )
-	) );
+	wp_update_user(
+		array(
+			'ID'           => $user_id,
+			'display_name' => bp_core_get_member_display_name( get_user_by( 'ID', $user_id )->display_name, $user_id ),
+		)
+	);
 }
 
 /**
@@ -977,11 +993,13 @@ add_action( 'user_profile_update_errors', 'user_profile_update_validate_nickname
  * @param BP_XProfile_ProfileData $data Current instance of the profile data being saved.
  */
 function xprofile_sync_wp_profile_on_single_field_set( $data ) {
-	$synced_fields = array_filter( [
-		bp_xprofile_firstname_field_id(),
-		bp_xprofile_lastname_field_id(),
-		bp_xprofile_nickname_field_id()
-	] );
+	$synced_fields = array_filter(
+		array(
+			bp_xprofile_firstname_field_id(),
+			bp_xprofile_lastname_field_id(),
+			bp_xprofile_nickname_field_id(),
+		)
+	);
 
 	if ( ! in_array( $data->field_id, $synced_fields ) ) {
 		return;
@@ -1003,8 +1021,8 @@ add_action( 'xprofile_data_after_save', 'xprofile_sync_wp_profile_on_single_fiel
 function xprofile_remove_data( $user_id ) {
 	BP_XProfile_ProfileData::delete_data_for_user( $user_id );
 }
-add_action( 'wpmu_delete_user',  'xprofile_remove_data' );
-add_action( 'delete_user',       'xprofile_remove_data' );
+add_action( 'wpmu_delete_user', 'xprofile_remove_data' );
+add_action( 'delete_user', 'xprofile_remove_data' );
 add_action( 'bp_make_spam_user', 'xprofile_remove_data' );
 
 /*** XProfile Meta ****************************************************/
@@ -1038,7 +1056,7 @@ function bp_xprofile_delete_meta( $object_id, $object_type, $meta_key = false, $
 	if ( empty( $meta_key ) ) {
 		$table_key  = 'xprofile_' . $object_type . 'meta';
 		$table_name = $wpdb->{$table_key};
-		$keys = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$table_name} WHERE object_type = %s AND object_id = %d", $object_type, $object_id ) );
+		$keys       = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$table_name} WHERE object_type = %s AND object_id = %d", $object_type, $object_id ) );
 
 		// Force delete_all to false if deleting all for object.
 		$delete_all = false;
@@ -1136,7 +1154,7 @@ function bp_xprofile_update_meta( $object_id, $object_type, $meta_key, $meta_val
 function bp_xprofile_add_meta( $object_id, $object_type, $meta_key, $meta_value, $unique = false ) {
 	add_filter( 'query', 'bp_filter_metaid_column_name' );
 	add_filter( 'query', 'bp_xprofile_filter_meta_query' );
-	$retval = add_metadata( 'xprofile_' . $object_type , $object_id, $meta_key, $meta_value, $unique );
+	$retval = add_metadata( 'xprofile_' . $object_type, $object_id, $meta_key, $meta_value, $unique );
 	remove_filter( 'query', 'bp_filter_metaid_column_name' );
 	remove_filter( 'query', 'bp_xprofile_filter_meta_query' );
 
@@ -1203,8 +1221,8 @@ function bp_xprofile_fullname_field_id() {
 		if ( isset( $bp->profile->table_name_fields ) ) {
 			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->profile->table_name_fields} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
 		} else {
-			$table = bp_core_get_table_prefix() .'bp_xprofile_fields';
-			$id = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
+			$table = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+			$id    = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table} WHERE name = %s", addslashes( bp_xprofile_fullname_field_name() ) ) );
 		}
 
 		wp_cache_set( 'fullname_field_id', $id, 'bp_xprofile' );
@@ -1236,6 +1254,8 @@ function bp_xprofile_base_group_id( $defalut = 1, $get_option = true ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
+	$field_id = 0;
+
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-firstname-field-id' );
 	}
@@ -1253,6 +1273,8 @@ function bp_xprofile_firstname_field_id( $defalut = 1, $get_option = true ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
+	$field_id = 0;
+
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-lastname-field-id' );
 	}
@@ -1270,6 +1292,7 @@ function bp_xprofile_lastname_field_id( $defalut = 0, $get_option = true ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_nickname_field_id( $no_fallback = false, $get_option = true ) {
+	$field_id = 0;
 
 	if ( is_multisite() ) {
 		$field_id = get_site_option( 'bp-xprofile-nickname-field-id', $no_fallback ? 0 : 0 );
@@ -1303,7 +1326,7 @@ function bp_xprofile_fullname_field_name() {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	if ( $nickname_field_id = bp_xprofile_nickname_field_id( true) ) {
+	if ( $nickname_field_id = bp_xprofile_nickname_field_id( true ) ) {
 		$field_name = xprofile_get_field( $nickname_field_id )->name;
 	}
 
@@ -1387,15 +1410,15 @@ function bp_xprofile_get_visibility_levels() {
  * @return array An array of field ids that should be excluded from the profile query
  */
 function bp_xprofile_get_hidden_fields_for_user( $displayed_user_id = 0, $current_user_id = 0 ) {
-	if ( !$displayed_user_id ) {
+	if ( ! $displayed_user_id ) {
 		$displayed_user_id = bp_displayed_user_id();
 	}
 
-	if ( !$displayed_user_id ) {
+	if ( ! $displayed_user_id ) {
 		return array();
 	}
 
-	if ( !$current_user_id ) {
+	if ( ! $current_user_id ) {
 		$current_user_id = bp_loggedin_user_id();
 	}
 
@@ -1442,18 +1465,18 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
 		if ( $displayed_user_id == $current_user_id || bp_current_user_can( 'bp_moderate' ) ) {
 			$hidden_levels = array();
 
-		// If the current user and displayed user are friends, show all.
+			// If the current user and displayed user are friends, show all.
 		} elseif ( bp_is_active( 'friends' ) && friends_check_friendship( $displayed_user_id, $current_user_id ) ) {
-			$hidden_levels = array( 'adminsonly', );
+			$hidden_levels = array( 'adminsonly' );
 
-		// Current user is logged in but not friends, so exclude friends-only.
+			// Current user is logged in but not friends, so exclude friends-only.
 		} else {
-			$hidden_levels = array( 'friends', 'adminsonly', );
+			$hidden_levels = array( 'friends', 'adminsonly' );
 		}
 
-	// Current user is not logged in, so exclude friends-only, loggedin, and adminsonly.
+		// Current user is not logged in, so exclude friends-only, loggedin, and adminsonly.
 	} else {
-		$hidden_levels = array( 'friends', 'loggedin', 'adminsonly', );
+		$hidden_levels = array( 'friends', 'loggedin', 'adminsonly' );
 	}
 
 	/**
@@ -1481,8 +1504,8 @@ function bp_xprofile_get_hidden_field_types_for_user( $displayed_user_id = 0, $c
  * @return array $field_ids The fields that match the requested visibility levels for the given user.
  */
 function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array() ) {
-	if ( !is_array( $levels ) ) {
-		$levels = (array)$levels;
+	if ( ! is_array( $levels ) ) {
+		$levels = (array) $levels;
 	}
 
 	$user_visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
@@ -1491,16 +1514,16 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	// precedence.
 	$default_visibility_levels = BP_XProfile_Group::fetch_default_visibility_levels();
 
-	foreach( (array) $default_visibility_levels as $d_field_id => $defaults ) {
+	foreach ( (array) $default_visibility_levels as $d_field_id => $defaults ) {
 		// If the admin has forbidden custom visibility levels for this field, replace
 		// the user-provided setting with the default specified by the admin.
 		if ( isset( $defaults['allow_custom'] ) && isset( $defaults['default'] ) && 'disabled' == $defaults['allow_custom'] ) {
-			$user_visibility_levels[$d_field_id] = $defaults['default'];
+			$user_visibility_levels[ $d_field_id ] = $defaults['default'];
 		}
 	}
 
 	$field_ids = array();
-	foreach( (array) $user_visibility_levels as $field_id => $field_visibility ) {
+	foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
 		if ( in_array( $field_visibility, $levels ) ) {
 			$field_ids[] = $field_id;
 		}
@@ -1509,7 +1532,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 	// Never allow the fullname field to be excluded.
 	if ( in_array( 1, $field_ids ) ) {
 		$key = array_search( 1, $field_ids );
-		unset( $field_ids[$key] );
+		unset( $field_ids[ $key ] );
 	}
 
 	return $field_ids;
@@ -1525,15 +1548,15 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
  *              the datebox data.
  */
 function bp_xprofile_maybe_format_datebox_post_data( $field_id ) {
-	if ( ! isset( $_POST['field_' . $field_id] ) ) {
-		if ( ! empty( $_POST['field_' . $field_id . '_day'] ) && ! empty( $_POST['field_' . $field_id . '_month'] ) && ! empty( $_POST['field_' . $field_id . '_year'] ) ) {
+	if ( ! isset( $_POST[ 'field_' . $field_id ] ) ) {
+		if ( ! empty( $_POST[ 'field_' . $field_id . '_day' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_month' ] ) && ! empty( $_POST[ 'field_' . $field_id . '_year' ] ) ) {
 			// Concatenate the values.
-			$date_value = $_POST['field_' . $field_id . '_day'] . ' ' . $_POST['field_' . $field_id . '_month'] . ' ' . $_POST['field_' . $field_id . '_year'];
+			$date_value = $_POST[ 'field_' . $field_id . '_day' ] . ' ' . $_POST[ 'field_' . $field_id . '_month' ] . ' ' . $_POST[ 'field_' . $field_id . '_year' ];
 
 			// Check that the concatenated value can be turned into a timestamp.
 			if ( $timestamp = strtotime( $date_value ) ) {
 				// Add the timestamp to the global $_POST that should contain the datebox data.
-				$_POST['field_' . $field_id] = date( 'Y-m-d H:i:s', $timestamp );
+				$_POST[ 'field_' . $field_id ] = date( 'Y-m-d H:i:s', $timestamp );
 			}
 		}
 	}
@@ -1569,11 +1592,14 @@ function bp_activity_get_user_mentionname( $user_id ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_at_mention_default_options() {
-	return apply_filters( 'bp_at_mention_js_options', [
-		'selectors' => [ '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ],
-		'insert_tpl' => '@${ID}',
-		'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>'
-	] );
+	return apply_filters(
+		'bp_at_mention_js_options',
+		array(
+			'selectors'   => array( '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ),
+			'insert_tpl'  => '@${ID}',
+			'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>',
+		)
+	);
 }
 
 /**
@@ -1592,70 +1618,70 @@ function bp_xprofile_social_network_provider() {
 		'is_default_option' => false,
 		'name'              => __( 'Facebook', 'buddyboss' ),
 		'value'             => 'facebook',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM20.192 10.688h-1.504c-1.184 0-1.376 0.608-1.376 1.408v1.792h2.784l-0.384 2.816h-2.4v7.296h-2.912v-7.296h-2.496v-2.816h2.496v-2.080c-0.096-2.496 1.408-3.808 3.616-3.808 0.992 0 1.888 0.096 2.176 0.096v2.592z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM20.192 10.688h-1.504c-1.184 0-1.376 0.608-1.376 1.408v1.792h2.784l-0.384 2.816h-2.4v7.296h-2.912v-7.296h-2.496v-2.816h2.496v-2.080c-0.096-2.496 1.408-3.808 3.616-3.808 0.992 0 1.888 0.096 2.176 0.096v2.592z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 2,
 		'is_default_option' => false,
 		'name'              => __( 'Flickr', 'buddyboss' ),
 		'value'             => 'flickr',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.837 0-16 7.212-16 16.109s7.163 16.109 16 16.109 16-7.212 16-16.109-7.163-16.109-16-16.109zM9 21c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5c0 2.761-2.239 5-5 5zM23 21c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5c0 2.761-2.239 5-5 5z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.837 0-16 7.212-16 16.109s7.163 16.109 16 16.109 16-7.212 16-16.109-7.163-16.109-16-16.109zM9 21c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5c0 2.761-2.239 5-5 5zM23 21c-2.761 0-5-2.239-5-5s2.239-5 5-5 5 2.239 5 5c0 2.761-2.239 5-5 5z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 3,
 		'is_default_option' => false,
 		'name'              => __( 'Google+', 'buddyboss' ),
 		'value'             => 'google',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.838 0-16 7.162-16 16s7.162 16 16 16 16-7.163 16-16-7.163-16-16-16zM12 24c-4.425 0-8-3.575-8-8s3.575-8 8-8c2.162 0 3.969 0.787 5.363 2.094l-2.175 2.088c-0.594-0.569-1.631-1.231-3.188-1.231-2.731 0-4.963 2.263-4.963 5.050s2.231 5.050 4.963 5.050c3.169 0 4.356-2.275 4.538-3.45h-4.537v-2.744h7.556c0.069 0.4 0.125 0.8 0.125 1.325 0 4.575-3.063 7.819-7.681 7.819zM26 16v2h-2v-2h-2v-2h2v-2h2v2h2v2h-2z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.838 0-16 7.162-16 16s7.162 16 16 16 16-7.163 16-16-7.163-16-16-16zM12 24c-4.425 0-8-3.575-8-8s3.575-8 8-8c2.162 0 3.969 0.787 5.363 2.094l-2.175 2.088c-0.594-0.569-1.631-1.231-3.188-1.231-2.731 0-4.963 2.263-4.963 5.050s2.231 5.050 4.963 5.050c3.169 0 4.356-2.275 4.538-3.45h-4.537v-2.744h7.556c0.069 0.4 0.125 0.8 0.125 1.325 0 4.575-3.063 7.819-7.681 7.819zM26 16v2h-2v-2h-2v-2h2v-2h2v2h2v2h-2z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 4,
 		'is_default_option' => false,
 		'name'              => __( 'Instagram', 'buddyboss' ),
 		'value'             => 'instagram',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 19.104c-1.696 0-3.104-1.408-3.104-3.104 0-1.728 1.408-3.104 3.104-3.104 1.728 0 3.104 1.376 3.104 3.104 0 1.696-1.376 3.104-3.104 3.104zM19.616 12.896c-0.32 0-0.512-0.192-0.416-0.384v-2.208c0-0.192 0.192-0.416 0.416-0.416h2.176c0.224 0 0.416 0.224 0.416 0.416v2.208c0 0.192-0.192 0.384-0.416 0.384h-2.176zM16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM24 22.112c0 0.992-0.896 1.888-1.888 1.888h-12.224c-0.992 0-1.888-0.8-1.888-1.888v-12.224c0-1.088 0.896-1.888 1.888-1.888h12.224c0.992 0 1.888 0.8 1.888 1.888v12.224zM20.896 16c0 2.688-2.208 4.896-4.896 4.896s-4.896-2.208-4.896-4.896c0-0.416 0.096-0.896 0.192-1.312h-1.504v7.008c0 0.192 0.224 0.416 0.416 0.416h11.488c0.192 0 0.416-0.224 0.416-0.416v-7.008h-1.504c0.192 0.416 0.288 0.896 0.288 1.312z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 19.104c-1.696 0-3.104-1.408-3.104-3.104 0-1.728 1.408-3.104 3.104-3.104 1.728 0 3.104 1.376 3.104 3.104 0 1.696-1.376 3.104-3.104 3.104zM19.616 12.896c-0.32 0-0.512-0.192-0.416-0.384v-2.208c0-0.192 0.192-0.416 0.416-0.416h2.176c0.224 0 0.416 0.224 0.416 0.416v2.208c0 0.192-0.192 0.384-0.416 0.384h-2.176zM16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM24 22.112c0 0.992-0.896 1.888-1.888 1.888h-12.224c-0.992 0-1.888-0.8-1.888-1.888v-12.224c0-1.088 0.896-1.888 1.888-1.888h12.224c0.992 0 1.888 0.8 1.888 1.888v12.224zM20.896 16c0 2.688-2.208 4.896-4.896 4.896s-4.896-2.208-4.896-4.896c0-0.416 0.096-0.896 0.192-1.312h-1.504v7.008c0 0.192 0.224 0.416 0.416 0.416h11.488c0.192 0 0.416-0.224 0.416-0.416v-7.008h-1.504c0.192 0.416 0.288 0.896 0.288 1.312z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 5,
 		'is_default_option' => false,
 		'name'              => __( 'LinkedIn', 'buddyboss' ),
 		'value'             => 'linkedIn',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#333" d="M10 0.4c-5.302 0-9.6 4.298-9.6 9.6s4.298 9.6 9.6 9.6 9.6-4.298 9.6-9.6-4.298-9.6-9.6-9.6zM7.65 13.979h-1.944v-6.256h1.944v6.256zM6.666 6.955c-0.614 0-1.011-0.435-1.011-0.973 0-0.549 0.409-0.971 1.036-0.971s1.011 0.422 1.023 0.971c0 0.538-0.396 0.973-1.048 0.973zM14.75 13.979h-1.944v-3.467c0-0.807-0.282-1.355-0.985-1.355-0.537 0-0.856 0.371-0.997 0.728-0.052 0.127-0.065 0.307-0.065 0.486v3.607h-1.945v-4.26c0-0.781-0.025-1.434-0.051-1.996h1.689l0.089 0.869h0.039c0.256-0.408 0.883-1.010 1.932-1.010 1.279 0 2.238 0.857 2.238 2.699v3.699z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#333" d="M10 0.4c-5.302 0-9.6 4.298-9.6 9.6s4.298 9.6 9.6 9.6 9.6-4.298 9.6-9.6-4.298-9.6-9.6-9.6zM7.65 13.979h-1.944v-6.256h1.944v6.256zM6.666 6.955c-0.614 0-1.011-0.435-1.011-0.973 0-0.549 0.409-0.971 1.036-0.971s1.011 0.422 1.023 0.971c0 0.538-0.396 0.973-1.048 0.973zM14.75 13.979h-1.944v-3.467c0-0.807-0.282-1.355-0.985-1.355-0.537 0-0.856 0.371-0.997 0.728-0.052 0.127-0.065 0.307-0.065 0.486v3.607h-1.945v-4.26c0-0.781-0.025-1.434-0.051-1.996h1.689l0.089 0.869h0.039c0.256-0.408 0.883-1.010 1.932-1.010 1.279 0 2.238 0.857 2.238 2.699v3.699z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 6,
 		'is_default_option' => false,
 		'name'              => __( 'Medium', 'buddyboss' ),
 		'value'             => 'medium',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M9.328 6.578v18.328c0 0.484-0.234 0.938-0.766 0.938-0.187 0-0.359-0.047-0.516-0.125l-7.266-3.641c-0.438-0.219-0.781-0.781-0.781-1.25v-17.813c0-0.391 0.187-0.75 0.609-0.75 0.25 0 0.469 0.125 0.688 0.234l7.984 4c0.016 0.016 0.047 0.063 0.047 0.078zM10.328 8.156l8.344 13.531-8.344-4.156v-9.375zM28 8.437v16.469c0 0.516-0.297 0.875-0.812 0.875-0.266 0-0.516-0.078-0.734-0.203l-6.891-3.437zM27.953 6.563c0 0.063-8.078 13.172-8.703 14.172l-6.094-9.906 5.063-8.234c0.172-0.281 0.484-0.438 0.812-0.438 0.141 0 0.281 0.031 0.406 0.094l8.453 4.219c0.031 0.016 0.063 0.047 0.063 0.094z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M9.328 6.578v18.328c0 0.484-0.234 0.938-0.766 0.938-0.187 0-0.359-0.047-0.516-0.125l-7.266-3.641c-0.438-0.219-0.781-0.781-0.781-1.25v-17.813c0-0.391 0.187-0.75 0.609-0.75 0.25 0 0.469 0.125 0.688 0.234l7.984 4c0.016 0.016 0.047 0.063 0.047 0.078zM10.328 8.156l8.344 13.531-8.344-4.156v-9.375zM28 8.437v16.469c0 0.516-0.297 0.875-0.812 0.875-0.266 0-0.516-0.078-0.734-0.203l-6.891-3.437zM27.953 6.563c0 0.063-8.078 13.172-8.703 14.172l-6.094-9.906 5.063-8.234c0.172-0.281 0.484-0.438 0.812-0.438 0.141 0 0.281 0.031 0.406 0.094l8.453 4.219c0.031 0.016 0.063 0.047 0.063 0.094z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 7,
 		'is_default_option' => false,
 		'name'              => __( 'Meetup', 'buddyboss' ),
 		'value'             => 'meetup',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M31.971 26.984c-0.405-2.575-5.165-0.592-5.461-3.412-0.417-3.997 5.533-12.612 5.063-15.963-0.417-3.007-2.455-3.64-4.22-3.675-1.712-0.027-2.164 0.243-2.744 0.58-0.337 0.195-0.816 0.58-1.483-0.055-0.445-0.424-0.743-0.715-1.207-1.092-0.243-0.189-0.621-0.432-1.26-0.527-0.635-0.095-1.464 0-1.989 0.223-0.527 0.229-0.936 0.621-1.368 0.999-0.431 0.377-1.529 1.597-2.548 1.145-0.447-0.193-1.944-0.941-3.029-1.407-2.084-0.903-5.096 0.56-6.181 2.488-1.617 2.865-4.8 14.137-5.285 15.62-1.079 3.336 1.376 6.053 4.679 5.899 1.403-0.068 2.333-0.573 3.216-2.184 0.512-0.924 5.305-13.449 5.664-14.057 0.263-0.431 1.125-1.004 1.853-0.633 0.735 0.377 0.883 1.159 0.775 1.895-0.181 1.193-3.559 8.839-3.695 9.7-0.216 1.471 0.479 2.285 2.009 2.365 1.045 0.055 2.089-0.316 2.912-1.88 0.465-0.869 5.799-11.555 6.269-12.269 0.52-0.781 0.937-1.039 1.471-1.011 0.412 0.020 1.065 0.128 0.904 1.355-0.163 1.207-4.457 9.040-4.901 10.961-0.608 2.569 0.803 5.165 3.121 6.304 1.483 0.728 7.96 1.968 7.436-1.369z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M31.971 26.984c-0.405-2.575-5.165-0.592-5.461-3.412-0.417-3.997 5.533-12.612 5.063-15.963-0.417-3.007-2.455-3.64-4.22-3.675-1.712-0.027-2.164 0.243-2.744 0.58-0.337 0.195-0.816 0.58-1.483-0.055-0.445-0.424-0.743-0.715-1.207-1.092-0.243-0.189-0.621-0.432-1.26-0.527-0.635-0.095-1.464 0-1.989 0.223-0.527 0.229-0.936 0.621-1.368 0.999-0.431 0.377-1.529 1.597-2.548 1.145-0.447-0.193-1.944-0.941-3.029-1.407-2.084-0.903-5.096 0.56-6.181 2.488-1.617 2.865-4.8 14.137-5.285 15.62-1.079 3.336 1.376 6.053 4.679 5.899 1.403-0.068 2.333-0.573 3.216-2.184 0.512-0.924 5.305-13.449 5.664-14.057 0.263-0.431 1.125-1.004 1.853-0.633 0.735 0.377 0.883 1.159 0.775 1.895-0.181 1.193-3.559 8.839-3.695 9.7-0.216 1.471 0.479 2.285 2.009 2.365 1.045 0.055 2.089-0.316 2.912-1.88 0.465-0.869 5.799-11.555 6.269-12.269 0.52-0.781 0.937-1.039 1.471-1.011 0.412 0.020 1.065 0.128 0.904 1.355-0.163 1.207-4.457 9.040-4.901 10.961-0.608 2.569 0.803 5.165 3.121 6.304 1.483 0.728 7.96 1.968 7.436-1.369z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 8,
 		'is_default_option' => false,
 		'name'              => __( 'Pinterest', 'buddyboss' ),
 		'value'             => 'pinterest',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28"><path fill="#333" d="M24 14c0 6.625-5.375 12-12 12-1.188 0-2.312-0.172-3.406-0.5 0.453-0.719 0.969-1.641 1.219-2.562 0 0 0.141-0.531 0.844-3.297 0.406 0.797 1.625 1.5 2.922 1.5 3.859 0 6.484-3.516 6.484-8.234 0-3.547-3.016-6.875-7.609-6.875-5.688 0-8.563 4.094-8.563 7.5 0 2.063 0.781 3.906 2.453 4.594 0.266 0.109 0.516 0 0.594-0.313 0.063-0.203 0.187-0.734 0.25-0.953 0.078-0.313 0.047-0.406-0.172-0.672-0.484-0.578-0.797-1.313-0.797-2.359 0-3.031 2.266-5.75 5.906-5.75 3.219 0 5 1.969 5 4.609 0 3.453-1.531 6.375-3.813 6.375-1.25 0-2.188-1.031-1.891-2.312 0.359-1.516 1.062-3.156 1.062-4.25 0-0.984-0.531-1.813-1.625-1.813-1.281 0-2.312 1.328-2.312 3.109 0 0 0 1.141 0.391 1.906-1.313 5.563-1.547 6.531-1.547 6.531-0.219 0.906-0.234 1.922-0.203 2.766-4.234-1.859-7.187-6.078-7.187-11 0-6.625 5.375-12 12-12s12 5.375 12 12z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 28"><path fill="#333" d="M24 14c0 6.625-5.375 12-12 12-1.188 0-2.312-0.172-3.406-0.5 0.453-0.719 0.969-1.641 1.219-2.562 0 0 0.141-0.531 0.844-3.297 0.406 0.797 1.625 1.5 2.922 1.5 3.859 0 6.484-3.516 6.484-8.234 0-3.547-3.016-6.875-7.609-6.875-5.688 0-8.563 4.094-8.563 7.5 0 2.063 0.781 3.906 2.453 4.594 0.266 0.109 0.516 0 0.594-0.313 0.063-0.203 0.187-0.734 0.25-0.953 0.078-0.313 0.047-0.406-0.172-0.672-0.484-0.578-0.797-1.313-0.797-2.359 0-3.031 2.266-5.75 5.906-5.75 3.219 0 5 1.969 5 4.609 0 3.453-1.531 6.375-3.813 6.375-1.25 0-2.188-1.031-1.891-2.312 0.359-1.516 1.062-3.156 1.062-4.25 0-0.984-0.531-1.813-1.625-1.813-1.281 0-2.312 1.328-2.312 3.109 0 0 0 1.141 0.391 1.906-1.313 5.563-1.547 6.531-1.547 6.531-0.219 0.906-0.234 1.922-0.203 2.766-4.234-1.859-7.187-6.078-7.187-11 0-6.625 5.375-12 12-12s12 5.375 12 12z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 9,
 		'is_default_option' => false,
 		'name'              => __( 'Quora', 'buddyboss' ),
 		'value'             => 'quora',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M19.609 12.297c0-6.516-2.031-9.859-6.797-9.859-4.688 0-6.719 3.344-6.719 9.859 0 6.484 2.031 9.797 6.719 9.797 0.75 0 1.422-0.078 2.047-0.266v0c-0.969-1.906-2.109-3.828-4.328-3.828-0.422 0-0.844 0.063-1.234 0.25l-0.766-1.516c0.922-0.797 2.406-1.422 4.312-1.422 2.984 0 4.5 1.437 5.719 3.266 0.703-1.563 1.047-3.672 1.047-6.281zM25.703 22.172h1.828c0.109 1.125-0.453 5.828-5.563 5.828-3.094 0-4.719-1.797-5.953-3.891v0c-1.016 0.281-2.109 0.422-3.203 0.422-6.25 0-12.359-4.984-12.359-12.234 0-7.313 6.125-12.297 12.359-12.297 6.359 0 12.406 4.953 12.406 12.297 0 4.094-1.906 7.422-4.672 9.562 0.891 1.344 1.813 2.234 3.094 2.234 1.406 0 1.969-1.078 2.063-1.922z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M19.609 12.297c0-6.516-2.031-9.859-6.797-9.859-4.688 0-6.719 3.344-6.719 9.859 0 6.484 2.031 9.797 6.719 9.797 0.75 0 1.422-0.078 2.047-0.266v0c-0.969-1.906-2.109-3.828-4.328-3.828-0.422 0-0.844 0.063-1.234 0.25l-0.766-1.516c0.922-0.797 2.406-1.422 4.312-1.422 2.984 0 4.5 1.437 5.719 3.266 0.703-1.563 1.047-3.672 1.047-6.281zM25.703 22.172h1.828c0.109 1.125-0.453 5.828-5.563 5.828-3.094 0-4.719-1.797-5.953-3.891v0c-1.016 0.281-2.109 0.422-3.203 0.422-6.25 0-12.359-4.984-12.359-12.234 0-7.313 6.125-12.297 12.359-12.297 6.359 0 12.406 4.953 12.406 12.297 0 4.094-1.906 7.422-4.672 9.562 0.891 1.344 1.813 2.234 3.094 2.234 1.406 0 1.969-1.078 2.063-1.922z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 10,
 		'is_default_option' => false,
 		'name'              => __( 'Reddit', 'buddyboss' ),
 		'value'             => 'reddit',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M17.109 18.234c0.141 0.141 0.141 0.359 0 0.484-0.891 0.891-2.609 0.969-3.109 0.969s-2.219-0.078-3.109-0.969c-0.141-0.125-0.141-0.344 0-0.484 0.125-0.125 0.344-0.125 0.469 0 0.562 0.578 1.781 0.766 2.641 0.766s2.063-0.187 2.641-0.766c0.125-0.125 0.344-0.125 0.469 0zM12.313 15.406c0 0.766-0.625 1.391-1.391 1.391-0.781 0-1.406-0.625-1.406-1.391 0-0.781 0.625-1.406 1.406-1.406 0.766 0 1.391 0.625 1.391 1.406zM18.484 15.406c0 0.766-0.625 1.391-1.406 1.391-0.766 0-1.391-0.625-1.391-1.391 0-0.781 0.625-1.406 1.391-1.406 0.781 0 1.406 0.625 1.406 1.406zM22.406 13.531c0-1.031-0.844-1.859-1.875-1.859-0.531 0-1 0.219-1.344 0.562-1.266-0.875-2.969-1.437-4.859-1.5l0.984-4.422 3.125 0.703c0 0.766 0.625 1.391 1.391 1.391 0.781 0 1.406-0.641 1.406-1.406s-0.625-1.406-1.406-1.406c-0.547 0-1.016 0.328-1.25 0.781l-3.453-0.766c-0.172-0.047-0.344 0.078-0.391 0.25l-1.078 4.875c-1.875 0.078-3.563 0.641-4.828 1.516-0.344-0.359-0.828-0.578-1.359-0.578-1.031 0-1.875 0.828-1.875 1.859 0 0.75 0.438 1.375 1.062 1.687-0.063 0.281-0.094 0.578-0.094 0.875 0 2.969 3.344 5.375 7.453 5.375 4.125 0 7.469-2.406 7.469-5.375 0-0.297-0.031-0.609-0.109-0.891 0.609-0.313 1.031-0.938 1.031-1.672zM28 14c0 7.734-6.266 14-14 14s-14-6.266-14-14 6.266-14 14-14 14 6.266 14 14z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 28 28"><path fill="#333" d="M17.109 18.234c0.141 0.141 0.141 0.359 0 0.484-0.891 0.891-2.609 0.969-3.109 0.969s-2.219-0.078-3.109-0.969c-0.141-0.125-0.141-0.344 0-0.484 0.125-0.125 0.344-0.125 0.469 0 0.562 0.578 1.781 0.766 2.641 0.766s2.063-0.187 2.641-0.766c0.125-0.125 0.344-0.125 0.469 0zM12.313 15.406c0 0.766-0.625 1.391-1.391 1.391-0.781 0-1.406-0.625-1.406-1.391 0-0.781 0.625-1.406 1.406-1.406 0.766 0 1.391 0.625 1.391 1.406zM18.484 15.406c0 0.766-0.625 1.391-1.406 1.391-0.766 0-1.391-0.625-1.391-1.391 0-0.781 0.625-1.406 1.391-1.406 0.781 0 1.406 0.625 1.406 1.406zM22.406 13.531c0-1.031-0.844-1.859-1.875-1.859-0.531 0-1 0.219-1.344 0.562-1.266-0.875-2.969-1.437-4.859-1.5l0.984-4.422 3.125 0.703c0 0.766 0.625 1.391 1.391 1.391 0.781 0 1.406-0.641 1.406-1.406s-0.625-1.406-1.406-1.406c-0.547 0-1.016 0.328-1.25 0.781l-3.453-0.766c-0.172-0.047-0.344 0.078-0.391 0.25l-1.078 4.875c-1.875 0.078-3.563 0.641-4.828 1.516-0.344-0.359-0.828-0.578-1.359-0.578-1.031 0-1.875 0.828-1.875 1.859 0 0.75 0.438 1.375 1.062 1.687-0.063 0.281-0.094 0.578-0.094 0.875 0 2.969 3.344 5.375 7.453 5.375 4.125 0 7.469-2.406 7.469-5.375 0-0.297-0.031-0.609-0.109-0.891 0.609-0.313 1.031-0.938 1.031-1.672zM28 14c0 7.734-6.266 14-14 14s-14-6.266-14-14 6.266-14 14-14 14 6.266 14 14z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 14,
@@ -1669,21 +1695,21 @@ function bp_xprofile_social_network_provider() {
 		'is_default_option' => false,
 		'name'              => __( 'Tumblr', 'buddyboss' ),
 		'value'             => 'tumblr',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#333" d="M10 0.4c-5.302 0-9.6 4.298-9.6 9.6s4.298 9.6 9.6 9.6 9.6-4.298 9.6-9.6-4.298-9.6-9.6-9.6zM12.577 14.141c-0.393 0.188-0.748 0.318-1.066 0.395-0.318 0.074-0.662 0.113-1.031 0.113-0.42 0-0.791-0.055-1.114-0.162s-0.598-0.26-0.826-0.459c-0.228-0.197-0.386-0.41-0.474-0.633-0.088-0.225-0.132-0.549-0.132-0.973v-3.262h-1.016v-1.314c0.359-0.119 0.67-0.289 0.927-0.512 0.257-0.221 0.464-0.486 0.619-0.797s0.263-0.707 0.322-1.185h1.307v2.35h2.18v1.458h-2.18v2.385c0 0.539 0.028 0.885 0.085 1.037 0.056 0.154 0.161 0.275 0.315 0.367 0.204 0.123 0.437 0.185 0.697 0.185 0.466 0 0.928-0.154 1.388-0.461v1.468z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#333" d="M10 0.4c-5.302 0-9.6 4.298-9.6 9.6s4.298 9.6 9.6 9.6 9.6-4.298 9.6-9.6-4.298-9.6-9.6-9.6zM12.577 14.141c-0.393 0.188-0.748 0.318-1.066 0.395-0.318 0.074-0.662 0.113-1.031 0.113-0.42 0-0.791-0.055-1.114-0.162s-0.598-0.26-0.826-0.459c-0.228-0.197-0.386-0.41-0.474-0.633-0.088-0.225-0.132-0.549-0.132-0.973v-3.262h-1.016v-1.314c0.359-0.119 0.67-0.289 0.927-0.512 0.257-0.221 0.464-0.486 0.619-0.797s0.263-0.707 0.322-1.185h1.307v2.35h2.18v1.458h-2.18v2.385c0 0.539 0.028 0.885 0.085 1.037 0.056 0.154 0.161 0.275 0.315 0.367 0.204 0.123 0.437 0.185 0.697 0.185 0.466 0 0.928-0.154 1.388-0.461v1.468z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 12,
 		'is_default_option' => false,
 		'name'              => __( 'Twitter', 'buddyboss' ),
 		'value'             => 'twitter',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM22.4 12.704v0.384c0 4.32-3.296 9.312-9.312 9.312-1.888 0-3.584-0.512-4.992-1.504h0.8c1.504 0 3.008-0.512 4.096-1.408-1.376 0-2.592-0.992-3.104-2.304 0.224 0 0.416 0.128 0.608 0.128 0.32 0 0.608 0 0.896-0.128-1.504-0.288-2.592-1.6-2.592-3.2v0c0.416 0.224 0.896 0.416 1.504 0.416-0.896-0.608-1.504-1.6-1.504-2.688 0-0.608 0.192-1.216 0.416-1.728 1.6 2.016 4 3.328 6.784 3.424-0.096-0.224-0.096-0.512-0.096-0.704 0-1.792 1.504-3.296 3.296-3.296 0.896 0 1.792 0.384 2.4 0.992 0.704-0.096 1.504-0.416 2.112-0.8-0.224 0.8-0.8 1.408-1.408 1.792 0.704-0.096 1.312-0.288 1.888-0.48-0.576 0.8-1.184 1.376-1.792 1.792v0z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM22.4 12.704v0.384c0 4.32-3.296 9.312-9.312 9.312-1.888 0-3.584-0.512-4.992-1.504h0.8c1.504 0 3.008-0.512 4.096-1.408-1.376 0-2.592-0.992-3.104-2.304 0.224 0 0.416 0.128 0.608 0.128 0.32 0 0.608 0 0.896-0.128-1.504-0.288-2.592-1.6-2.592-3.2v0c0.416 0.224 0.896 0.416 1.504 0.416-0.896-0.608-1.504-1.6-1.504-2.688 0-0.608 0.192-1.216 0.416-1.728 1.6 2.016 4 3.328 6.784 3.424-0.096-0.224-0.096-0.512-0.096-0.704 0-1.792 1.504-3.296 3.296-3.296 0.896 0 1.792 0.384 2.4 0.992 0.704-0.096 1.504-0.416 2.112-0.8-0.224 0.8-0.8 1.408-1.408 1.792 0.704-0.096 1.312-0.288 1.888-0.48-0.576 0.8-1.184 1.376-1.792 1.792v0z"></path></svg>',
 	);
 	$options[] = (object) array(
 		'id'                => 13,
 		'is_default_option' => false,
 		'name'              => __( 'YouTube', 'buddyboss' ),
 		'value'             => 'youTube',
-        'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM24 16.608c0 1.28-0.192 2.592-0.192 2.592s-0.192 1.088-0.608 1.6c-0.608 0.608-1.312 0.608-1.6 0.704-2.208 0.192-5.6 0.192-5.6 0.192s-4.192 0-5.408-0.192c-0.384-0.096-1.184 0-1.792-0.704-0.512-0.512-0.608-1.6-0.608-1.6s-0.192-1.312-0.192-2.592v-1.216c0-1.28 0.192-2.592 0.192-2.592s0.224-1.088 0.608-1.6c0.608-0.608 1.312-0.608 1.6-0.704 2.208-0.192 5.6-0.192 5.6-0.192s3.392 0 5.6 0.192c0.288 0 0.992 0 1.6 0.704 0.512 0.512 0.608 1.6 0.608 1.6s0.192 1.312 0.192 2.592v1.216zM14.304 18.112l4.384-2.304-4.384-2.208v4.512z"></path></svg>',
+		'svg'               => '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path fill="#333" d="M16 0c-8.8 0-16 7.2-16 16s7.2 16 16 16c8.8 0 16-7.2 16-16s-7.2-16-16-16v0zM24 16.608c0 1.28-0.192 2.592-0.192 2.592s-0.192 1.088-0.608 1.6c-0.608 0.608-1.312 0.608-1.6 0.704-2.208 0.192-5.6 0.192-5.6 0.192s-4.192 0-5.408-0.192c-0.384-0.096-1.184 0-1.792-0.704-0.512-0.512-0.608-1.6-0.608-1.6s-0.192-1.312-0.192-2.592v-1.216c0-1.28 0.192-2.592 0.192-2.592s0.224-1.088 0.608-1.6c0.608-0.608 1.312-0.608 1.6-0.704 2.208-0.192 5.6-0.192 5.6-0.192s3.392 0 5.6 0.192c0.288 0 0.992 0 1.6 0.704 0.512 0.512 0.608 1.6 0.608 1.6s0.192 1.312 0.192 2.592v1.216zM14.304 18.112l4.384-2.304-4.384-2.208v4.512z"></path></svg>',
 	);
 
 	return apply_filters( 'bp_xprofile_fields_social_networks_provider', $options );
@@ -1694,7 +1720,6 @@ function bp_xprofile_social_network_provider() {
  *
  * @return string
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_get_user_social_networks_urls( $user_id = null ) {
 
@@ -1760,12 +1785,14 @@ function bp_check_member_type_field_have_options() {
 	$arr = array();
 
 	// Get posts of custom post type selected.
-	$posts = new \WP_Query( array(
-		'posts_per_page' => - 1,
-		'post_type'      => bp_get_member_type_post_type(),
-		'orderby'        => 'title',
-		'order'          => 'ASC'
-	) );
+	$posts = new \WP_Query(
+		array(
+			'posts_per_page' => - 1,
+			'post_type'      => bp_get_member_type_post_type(),
+			'orderby'        => 'title',
+			'order'          => 'ASC',
+		)
+	);
 	if ( $posts ) {
 		foreach ( $posts->posts as $post ) {
 			$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
@@ -1789,7 +1816,7 @@ function bp_check_member_type_field_have_options() {
  * @since BuddyBoss 1.0.0
  *
  * @param string $display_name
- * @param int $user_id
+ * @param int    $user_id
  *
  * @return string
  */
@@ -1803,7 +1830,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	switch ( $format ) {
 		case 'first_name':
-
 			// Get First Name Field Id.
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
 
@@ -1837,7 +1863,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 			break;
 		case 'first_last_name':
-
 			// Get First Name Field Id.
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
 			// Get Last Name Field Id.
@@ -1858,11 +1883,15 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 				xprofile_set_field_data( $last_name_id, $user_id, $result_last_name );
 			}
 
-			$display_name = implode( ' ',
-				array_filter( [
-					isset( $result_first_name ) ? $result_first_name : '',
-					isset( $result_last_name ) ? $result_last_name : '',
-				] ) );
+			$display_name = implode(
+				' ',
+				array_filter(
+					array(
+						isset( $result_first_name ) ? $result_first_name : '',
+						isset( $result_last_name ) ? $result_last_name : '',
+					)
+				)
+			);
 
 			// Get Nick Name Field Id.
 			$nickname_id = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
@@ -1884,7 +1913,6 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 			break;
 		case 'nickname':
-
 			// Get Nick Name Field Id.
 			$nickname_id  = (int) bp_get_option( 'bp-xprofile-nickname-field-id' );
 			$display_name = xprofile_get_field_data( $nickname_id, $user_id );
@@ -1909,3 +1937,4 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
+

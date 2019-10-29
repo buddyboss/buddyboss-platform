@@ -15,15 +15,22 @@
  */
 function bp_activity_action_permalink_router() {
 	// Not viewing activity.
-	if ( ! bp_is_activity_component() || ! bp_is_current_action( 'p' ) )
+	if ( ! bp_is_activity_component() || ! bp_is_current_action( 'p' ) ) {
 		return false;
+	}
 
 	// No activity to display.
-	if ( ! bp_action_variable( 0 ) || ! is_numeric( bp_action_variable( 0 ) ) )
+	if ( ! bp_action_variable( 0 ) || ! is_numeric( bp_action_variable( 0 ) ) ) {
 		return false;
+	}
 
 	// Get the activity details.
-	$activity = bp_activity_get_specific( array( 'activity_ids' => bp_action_variable( 0 ), 'show_hidden' => true ) );
+	$activity = bp_activity_get_specific(
+		array(
+			'activity_ids' => bp_action_variable( 0 ),
+			'show_hidden'  => true,
+		)
+	);
 
 	// 404 if activity does not exist
 	if ( empty( $activity['activities'][0] ) ) {
@@ -43,7 +50,7 @@ function bp_activity_action_permalink_router() {
 		if ( ! empty( $activity->user_id ) ) {
 			$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 
-		// Activity is something else.
+			// Activity is something else.
 		} else {
 
 			// Set redirect to group activity feed.
@@ -52,7 +59,7 @@ function bp_activity_action_permalink_router() {
 			}
 		}
 
-	// Set redirect to users' activity feed.
+		// Set redirect to users' activity feed.
 	} elseif ( ! empty( $activity->user_id ) ) {
 		$redirect = bp_core_get_user_domain( $activity->user_id, $activity->user_nicename, $activity->user_login ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 	}
@@ -99,11 +106,13 @@ function bp_activity_screen_single_activity_permalink() {
 	}
 
 	// Get the activity details.
-	$activity = bp_activity_get_specific( array(
-		'activity_ids' => $action,
-		'show_hidden'  => true,
-		'spam'         => 'ham_only',
-	) );
+	$activity = bp_activity_get_specific(
+		array(
+			'activity_ids' => $action,
+			'show_hidden'  => true,
+			'spam'         => 'ham_only',
+		)
+	);
 
 	// 404 if activity does not exist
 	if ( empty( $activity['activities'][0] ) || bp_action_variables() ) {
@@ -143,7 +152,7 @@ function bp_activity_screen_single_activity_permalink() {
 		if ( ! is_user_logged_in() ) {
 			bp_core_no_access();
 
-		// Redirect away.
+			// Redirect away.
 		} else {
 			bp_core_add_message( __( 'You do not have access to this activity.', 'buddyboss' ), 'error' );
 			bp_core_redirect( bp_loggedin_user_domain() );

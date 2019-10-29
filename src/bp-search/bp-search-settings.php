@@ -16,23 +16,26 @@ defined( 'ABSPATH' ) || exit;
  * @return array
  */
 function bp_search_get_settings_sections() {
-	return (array) apply_filters( 'bp_search_get_settings_sections', array(
-		'bp_search_settings_community'  => array(
-			'page'     => 'search',
-			'title'    => __( 'Network Search', 'buddyboss' ),
-			'callback' => 'bp_search_settings_callback_community_section',
-		),
-		'bp_search_settings_post_types' => array(
-			'page'  => 'search',
-			'title'    => __( 'Pages and Posts Search', 'buddyboss' ),
-			'callback' => 'bp_search_settings_callback_post_type_section',
-		),
-		'bp_search_settings_general'    => array(
-			'page'  => 'search',
-			'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
-			'callback' => '',
-		),
-	) );
+	return (array) apply_filters(
+		'bp_search_get_settings_sections',
+		array(
+			'bp_search_settings_community'  => array(
+				'page'     => 'search',
+				'title'    => __( 'Network Search', 'buddyboss' ),
+				'callback' => 'bp_search_settings_callback_community_section',
+			),
+			'bp_search_settings_post_types' => array(
+				'page'     => 'search',
+				'title'    => __( 'Pages and Posts Search', 'buddyboss' ),
+				'callback' => 'bp_search_settings_callback_post_type_section',
+			),
+			'bp_search_settings_general'    => array(
+				'page'     => 'search',
+				'title'    => __( 'Autocomplete Settings', 'buddyboss' ),
+				'callback' => '',
+			),
+		)
+	);
 }
 
 /**
@@ -43,209 +46,218 @@ function bp_search_get_settings_sections() {
  */
 function bp_search_get_settings_fields() {
 
-	$fields = [];
+	$fields = array();
 
-	/** General Section ******************************************************/
-	$fields['bp_search_settings_general'] = [
+	/** General Section */
+	$fields['bp_search_settings_general'] = array(
 
-		'bp_search_autocomplete' => [
+		'bp_search_autocomplete'      => array(
 			'title'             => __( 'Enable Autocomplete', 'buddyboss' ),
 			'callback'          => 'bp_search_settings_callback_autocomplete',
 			'sanitize_callback' => 'intval',
-			'args'              => []
-		],
+			'args'              => array(),
+		),
 
-		'bp_search_number_of_results' => [
+		'bp_search_number_of_results' => array(
 			'title'             => __( 'Number of Results', 'buddyboss' ),
 			'callback'          => 'bp_search_settings_callback_number_of_results',
 			'sanitize_callback' => 'intval',
-			'args'              => []
-		],
+			'args'              => array(),
+		),
 
-		'bp_search_tutorial' => [
-			'title'             => __( '&#65279', 'buddyboss' ),
-			'callback'          => 'bp_search_settings_tutorial',
-		],
-	];
+		'bp_search_tutorial'          => array(
+			'title'    => __( '&#65279', 'buddyboss' ),
+			'callback' => 'bp_search_settings_tutorial',
+		),
+	);
 
-	$fields['bp_search_settings_community'] = [
-		'bp_search_members' => [
+	$fields['bp_search_settings_community'] = array(
+		'bp_search_members' => array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_members',
 			'sanitize_callback' => 'intval',
-			'args'              => [
-				'class' => 'bp-search-parent-field'
-			]
-		],
-	];
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		),
+	);
 
-	$fields['bp_search_settings_community']['bp_search_user_fields_label'] = [
+	$fields['bp_search_settings_community']['bp_search_user_fields_label'] = array(
 		'title'    => '&#65279;',
 		'callback' => 'bp_search_settings_callback_user_fields_label',
-		'args'     => [
-			'class' => 'bp-search-child-field'
-		]
-	];
+		'args'     => array(
+			'class' => 'bp-search-child-field',
+		),
+	);
 
 	$user_fields = bp_get_search_user_fields();
 
 	foreach ( $user_fields as $field_key => $field_label ) {
-		$fields['bp_search_settings_community']["bp_search_user_field_{$field_key}"] = [
+		$fields['bp_search_settings_community'][ "bp_search_user_field_{$field_key}" ] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_user_field',
 			'sanitize_callback' => 'intval',
-			'args'              => [
-				'field' => [
+			'args'              => array(
+				'field' => array(
 					'field_key'   => $field_key,
-					'field_label' => $field_label
-				],
-				'class' => 'bp-search-child-field'
-			]
-		];
+					'field_label' => $field_label,
+				),
+				'class' => 'bp-search-child-field',
+			),
+		);
 	}
 
-	$groups = bp_xprofile_get_groups( array(
-		'fetch_fields' => true
-	) );
+	$groups = bp_xprofile_get_groups(
+		array(
+			'fetch_fields' => true,
+		)
+	);
 
 	if ( ! empty( $groups ) ) {
 		foreach ( $groups as $group ) {
 			if ( ! empty( $group->fields ) ) {
 
-				$fields['bp_search_settings_community']["bp_search_xprofile_group_{$group->id}"] = [
+				$fields['bp_search_settings_community'][ "bp_search_xprofile_group_{$group->id}" ] = array(
 					'title'    => '&#65279;',
 					'callback' => 'bp_search_settings_callback_xprofile_group',
-					'args'     => [
+					'args'     => array(
 						'group' => $group,
-						'class' => 'bp-search-child-field bp-search-subgroup-heading'
-					]
-				];
+						'class' => 'bp-search-child-field bp-search-subgroup-heading',
+					),
+				);
 
 				foreach ( $group->fields as $field ) {
-					$fields['bp_search_settings_community']["bp_search_xprofile_{$field->id}"] = [
+					$fields['bp_search_settings_community'][ "bp_search_xprofile_{$field->id}" ] = array(
 						'title'             => '&#65279;',
 						'callback'          => 'bp_search_settings_callback_xprofile',
 						'sanitize_callback' => 'intval',
-						'args'              => [
+						'args'              => array(
 							'field' => $field,
-							'class' => 'bp-search-child-field'
-						]
-					];
+							'class' => 'bp-search-child-field',
+						),
+					);
 				}
 			}
 		}
 	}
 
-
 	if ( bp_is_active( 'forums' ) ) {
-		$fields['bp_search_settings_community']["bp_search_post_type_forum"] = [
+		$fields['bp_search_settings_community']['bp_search_post_type_forum'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_post_type',
 			'sanitize_callback' => 'intval',
-			'args'              => [
+			'args'              => array(
 				'post_type' => 'forum',
-				'class'     => 'bp-search-parent-field'
-			]
-		];
+				'class'     => 'bp-search-parent-field',
+			),
+		);
 
-		$fields['bp_search_settings_community']["bp_search_post_type_topic"] = [
+		$fields['bp_search_settings_community']['bp_search_post_type_topic'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_post_type',
 			'sanitize_callback' => 'intval',
-			'args'              => [
+			'args'              => array(
 				'post_type' => 'topic',
-				'class'     => 'bp-search-child-field'
-			]
-		];
+				'class'     => 'bp-search-child-field',
+			),
+		);
 
-		$fields['bp_search_settings_community']["bp_search_post_type_reply"] = [
+		$fields['bp_search_settings_community']['bp_search_post_type_reply'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_post_type',
 			'sanitize_callback' => 'intval',
-			'args'              => [
+			'args'              => array(
 				'post_type' => 'reply',
-				'class'     => 'bp-search-child-field'
-			]
-		];
+				'class'     => 'bp-search-child-field',
+			),
+		);
 	}
 
 	if ( bp_is_active( 'groups' ) ) {
-		$fields['bp_search_settings_community']["bp_search_groups"] = [
+		$fields['bp_search_settings_community']['bp_search_groups'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_groups',
 			'sanitize_callback' => 'intval',
-			'args'              => [
-				'class' => 'bp-search-parent-field'
-			]
-		];
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
 	}
 
 	if ( bp_is_active( 'activity' ) ) {
-		$fields['bp_search_settings_community']["bp_search_activity"] = [
+		$fields['bp_search_settings_community']['bp_search_activity'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_activity',
 			'sanitize_callback' => 'intval',
-			'args'              => [
-				'class' => 'bp-search-parent-field'
-			]
-		];
+			'args'              => array(
+				'class' => 'bp-search-parent-field',
+			),
+		);
 
-		$fields['bp_search_settings_community']["bp_search_activity_comments"] = [
+		$fields['bp_search_settings_community']['bp_search_activity_comments'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_activity_comments',
 			'sanitize_callback' => 'intval',
-			'args'              => [
-				'class' => 'bp-search-child-field'
-			]
-		];
+			'args'              => array(
+				'class' => 'bp-search-child-field',
+			),
+		);
 	}
 
-	$post_types = get_post_types( [ 'public' => true ] );
+	$post_types = get_post_types( array( 'public' => true ) );
 
 	foreach ( $post_types as $post_type ) {
 
-		if ( in_array( $post_type, [ 'forum', 'topic', 'reply' ] ) ) {
+		if ( in_array( $post_type, array( 'forum', 'topic', 'reply' ) ) ) {
 			continue;
 		}
 
-		$fields['bp_search_settings_post_types']["bp_search_post_type_$post_type"] = [
+		$fields['bp_search_settings_post_types'][ "bp_search_post_type_$post_type" ] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_post_type',
 			'sanitize_callback' => 'intval',
-			'args'              => [
+			'args'              => array(
 				'post_type' => $post_type,
-				'class'     => 'bp-search-parent-field'
-			]
-		];
+				'class'     => 'bp-search-parent-field',
+			),
+		);
 
-		$taxonomies = get_object_taxonomies( $post_type );
+		/**
+		 * Filter to add or remove the Taxonomy from Post Type
+		 *
+		 * @since 1.1.9
+		 *
+		 * @param array Return the names or objects of the taxonomies which are registered for the requested object or object type
+		 * @param array $post_type Post type
+		 *
+		 * @return array $taxonomies Return the names or objects of the taxonomies which are registered for the requested object or object type
+		 */
+		$taxonomies = (array) apply_filters( 'bp_search_settings_post_type_taxonomies', get_object_taxonomies( $post_type ), $post_type );
 
 		foreach ( $taxonomies as $taxonomy ) {
-			$fields['bp_search_settings_post_types']["bp_search_{$post_type}_tax_{$taxonomy}"] = [
+			$fields['bp_search_settings_post_types'][ "bp_search_{$post_type}_tax_{$taxonomy}" ] = array(
 				'title'             => '&#65279;',
 				'callback'          => 'bp_search_settings_callback_post_type_taxonomy',
 				'sanitize_callback' => 'intval',
-				'args'              => [
+				'args'              => array(
 					'post_type' => $post_type,
 					'taxonomy'  => $taxonomy,
-					'class'     => 'bp-search-child-field'
-				]
-			];
+					'class'     => 'bp-search-child-field',
+				),
+			);
 		}
 
-
-		if ( in_array( $post_type, [ 'post', 'page' ] ) ) {
-			$fields['bp_search_settings_post_types']["bp_search_post_type_meta_$post_type"] = [
+		if ( in_array( $post_type, array( 'post', 'page' ) ) ) {
+			$fields['bp_search_settings_post_types'][ "bp_search_post_type_meta_$post_type" ] = array(
 				'title'             => '&#65279;',
 				'callback'          => 'bp_search_settings_callback_post_type_meta',
 				'sanitize_callback' => 'intval',
-				'args'              => [
+				'args'              => array(
 					'post_type' => $post_type,
-					'class'     => 'bp-search-child-field'
-				]
-			];
+					'class'     => 'bp-search-child-field',
+				),
+			);
 		}
-
 	}
 
 	return (array) apply_filters( 'bp_search_get_settings_fields', $fields );
@@ -282,7 +294,7 @@ function bp_search_get_settings_fields_for_section( $section_id = '' ) {
  *
  * @param string $option
  * @param string $default
- * @param bool $slug
+ * @param bool   $slug
  */
 function bp_search_form_option( $option, $default = '', $slug = false ) {
 	echo bp_search_get_form_option( $option, $default, $slug );
@@ -299,7 +311,7 @@ function bp_search_form_option( $option, $default = '', $slug = false ) {
  *
  * @param string $option
  * @param string $default
- * @param bool $slug
+ * @param bool   $slug
  *
  * @return mixed
  */
@@ -367,7 +379,7 @@ function bp_search_settings_callback_number_of_results() {
 	?>
 
 	<input name="bp_search_number_of_results" id="bp_search_number_of_results" type="number" min="1" step="1"
-	       value="<?php bp_search_form_option( 'bp_search_number_of_results', '5' ); ?>" class="small-text"/>
+		   value="<?php bp_search_form_option( 'bp_search_number_of_results', '5' ); ?>" class="small-text"/>
 	<label for="bp_search_number_of_results"><?php esc_html_e( 'results', 'buddyboss' ); ?></label>
 
 	<?php
@@ -377,7 +389,6 @@ function bp_search_settings_callback_number_of_results() {
  * Link to Search tutorial
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_search_settings_tutorial() {
 	?>
@@ -396,9 +407,9 @@ function bp_search_settings_tutorial() {
  */
 function bp_search_settings_callback_community_section() {
 	?>
-	<p><?php esc_html_e( 'Search the following BuddyBoss components:', 'buddyboss' ) ?></p>
+	<p><?php esc_html_e( 'Search the following BuddyBoss components:', 'buddyboss' ); ?></p>
 	<input id="bp_search_select_all_components" type="checkbox" value="1">
-	<label for="bp_search_select_all_components"><?php esc_html_e('Select All','buddyboss'); ?></label>
+	<label for="bp_search_select_all_components"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></label>
 
 	<?php
 }
@@ -410,9 +421,9 @@ function bp_search_settings_callback_community_section() {
  */
 function bp_search_settings_callback_post_type_section() {
 	?>
-	<p><?php esc_html_e( 'Search the following WordPress content and custom post types:', 'buddyboss' ) ?></p>
+	<p><?php esc_html_e( 'Search the following WordPress content and custom post types:', 'buddyboss' ); ?></p>
 	<input id="bp_search_select_all_post_types" type="checkbox" value="1">
-	<label for="bp_search_select_all_post_types"><?php esc_html_e('Select All','buddyboss'); ?></label>
+	<label for="bp_search_select_all_post_types"><?php esc_html_e( 'Select All', 'buddyboss' ); ?></label>
 	<?php
 }
 
@@ -426,7 +437,7 @@ function bp_search_settings_callback_post_type_section() {
 function bp_search_settings_callback_members() {
 	?>
 	<input name="bp_search_members" id="bp_search_members" type="checkbox" value="1"
-		<?php checked( bp_is_search_members_enable( true ) ) ?> />
+		<?php checked( bp_is_search_members_enable( true ) ); ?> />
 	<label
 		for="bp_search_members"><?php esc_html_e( 'Members', 'buddyboss' ); ?></label>
 
@@ -459,7 +470,7 @@ function bp_is_search_members_enable( $default = 1 ) {
 function bp_search_settings_callback_xprofile_group( $args ) {
 	$group = $args['group'];
 	?>
-	<strong><?php echo $group->name ?></strong>
+	<strong><?php echo $group->name; ?></strong>
 	<?php
 }
 
@@ -478,10 +489,10 @@ function bp_search_settings_callback_xprofile( $args ) {
 	$option_name = 'bp_search_xprofile_' . $id;
 	?>
 
-	<input name="<?php echo $option_name ?>" id="<?php echo $option_name ?>" type="checkbox" value="1"
-		<?php checked( bp_is_search_xprofile_enable( $id ) ) ?> />
+	<input name="<?php echo $option_name; ?>" id="<?php echo $option_name; ?>" type="checkbox" value="1"
+		<?php checked( bp_is_search_xprofile_enable( $id ) ); ?> />
 	<label
-		for="<?php echo $option_name ?>"><?php echo $field->name ?></label>
+		for="<?php echo $option_name; ?>"><?php echo $field->name; ?></label>
 
 	<?php
 }
@@ -511,7 +522,7 @@ function bp_is_search_xprofile_enable( $id ) {
  */
 function bp_search_settings_callback_user_fields_label() {
 	?>
-	<strong><?php esc_html_e( 'Account', 'buddyboss' ) ?></strong>
+	<strong><?php esc_html_e( 'Account', 'buddyboss' ); ?></strong>
 	<?php
 }
 
@@ -531,10 +542,10 @@ function bp_search_settings_callback_user_field( $args ) {
 	$option_name = 'bp_search_user_field_' . $id;
 	?>
 
-	<input name="<?php echo $option_name ?>" id="<?php echo $option_name ?>" type="checkbox" value="1"
-		<?php checked( bp_is_search_user_field_enable( $id ) ) ?> />
+	<input name="<?php echo $option_name; ?>" id="<?php echo $option_name; ?>" type="checkbox" value="1"
+		<?php checked( bp_is_search_user_field_enable( $id ) ); ?> />
 	<label
-		for="<?php echo $option_name ?>"><?php echo $field['field_label'] ?></label>
+		for="<?php echo $option_name; ?>"><?php echo $field['field_label']; ?></label>
 
 	<?php
 }
@@ -570,14 +581,14 @@ function bp_search_settings_callback_post_type( $args ) {
 	$post_type_obj = get_post_type_object( $post_type );
 	?>
 	<input
-		name="<?php echo $option_name ?>"
-		id="<?php echo $option_name ?>"
+		name="<?php echo $option_name; ?>"
+		id="<?php echo $option_name; ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_post_type_enable( $post_type, true ) ) ?>
+		<?php checked( bp_is_search_post_type_enable( $post_type, true ) ); ?>
 	/>
-	<label for="<?php echo $option_name ?>">
-		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name ?>
+	<label for="<?php echo $option_name; ?>">
+		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 }
@@ -612,14 +623,14 @@ function bp_search_settings_callback_post_type_meta( $args ) {
 	$post_type_obj = get_post_type_object( $post_type );
 	?>
 	<input
-		name="<?php echo $option_name ?>"
-		id="<?php echo $option_name ?>"
+		name="<?php echo $option_name; ?>"
+		id="<?php echo $option_name; ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_post_type_meta_enable( $post_type ) ) ?>
+		<?php checked( bp_is_search_post_type_meta_enable( $post_type ) ); ?>
 	/>
-	<label for="<?php echo $option_name ?>">
-		<?php printf( esc_html__( 'Meta Data', 'buddyboss' ) ) ?>
+	<label for="<?php echo $option_name; ?>">
+		<?php printf( esc_html__( 'Meta Data', 'buddyboss' ) ); ?>
 	</label>
 	<?php
 }
@@ -644,16 +655,17 @@ function bp_is_search_post_type_meta_enable( $post_type ) {
  *
  * @uses checked() To display the checked attribute
  */
-function bp_search_settings_callback_groups() { ?>
+function bp_search_settings_callback_groups() {
+	?>
 	<input
 		name="bp_search_groups"
 		id="bp_search_groups"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_groups_enable( true ) ) ?>
+		<?php checked( bp_is_search_groups_enable( true ) ); ?>
 	/>
 	<label for="bp_search_groups">
-		<?php esc_html_e( 'Groups', 'buddyboss' ) ?>
+		<?php esc_html_e( 'Groups', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -678,16 +690,17 @@ function bp_is_search_groups_enable( $default = 1 ) {
  *
  * @uses checked() To display the checked attribute
  */
-function bp_search_settings_callback_activity() { ?>
+function bp_search_settings_callback_activity() {
+	?>
 	<input
 		name="bp_search_activity"
 		id="bp_search_activity"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_activity_enable( true ) ) ?>
+		<?php checked( bp_is_search_activity_enable( true ) ); ?>
 	/>
 	<label for="bp_search_activity">
-		<?php esc_html_e( 'Activity', 'buddyboss' ) ?>
+		<?php esc_html_e( 'Activity', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -712,16 +725,17 @@ function bp_is_search_activity_enable( $default = 1 ) {
  *
  * @uses checked() To display the checked attribute
  */
-function bp_search_settings_callback_activity_comments() { ?>
+function bp_search_settings_callback_activity_comments() {
+	?>
 	<input
 		name="bp_search_activity_comments"
 		id="bp_search_activity_comments"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_activity_comments_enable( true ) ) ?>
+		<?php checked( bp_is_search_activity_comments_enable( true ) ); ?>
 	/>
 	<label for="bp_search_activity_comments">
-		<?php esc_html_e( 'Activity Comments', 'buddyboss' ) ?>
+		<?php esc_html_e( 'Activity Comments', 'buddyboss' ); ?>
 	</label>
 	<?php
 }
@@ -758,14 +772,14 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
 	$post_type_obj = get_post_type_object( $post_type );
 	?>
 	<input
-		name="<?php echo $option_name ?>"
-		id="<?php echo $option_name ?>"
+		name="<?php echo $option_name; ?>"
+		id="<?php echo $option_name; ?>"
 		type="checkbox"
 		value="1"
-		<?php checked( bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) ) ?>
+		<?php checked( bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) ); ?>
 	/>
-	<label for="<?php echo $option_name ?>">
-		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->singular_name ) ?>
+	<label for="<?php echo $option_name; ?>">
+		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->singular_name ); ?>
 	</label>
 	<?php
 }

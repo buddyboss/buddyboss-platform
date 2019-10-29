@@ -68,12 +68,12 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 			<?php bp_the_profile_field_name(); ?>
 			<?php if ( bp_is_register_page() ) : ?>
 				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
+			<?php else : ?>
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 
-        <?php if ( bp_get_the_profile_field_description() ) : ?>
+		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
@@ -109,30 +109,31 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 
 		$raw_properties = array();
 
-		if ( empty( $original_option_values ) && !empty( $_POST['field_' . $this->field_obj->id] ) ) {
-			$original_option_values = sanitize_text_field(  $_POST['field_' . $this->field_obj->id] );
+		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
-		$providers = bp_xprofile_social_network_provider();
-		$field_name = bp_get_the_profile_field_input_name();
+		$providers     = bp_xprofile_social_network_provider();
+		$field_name    = bp_get_the_profile_field_input_name();
 		foreach ( $options as $option ) {
 
-			$social_value = ( isset( $original_option_values ) && isset( $original_option_values[$option->name] ) ) ? $original_option_values[$option->name] : '';
-			$field =  $this->get_edit_field_html_elements( array_merge(
-				array(
-					'type' => 'text',
-					'name' => $field_name .'['.$option->name.']',
-					'id' => $field_name .'['.$option->name.']',
-					'value' => $social_value,
-				),
-				$raw_properties
-			) );
+			$social_value = ( isset( $original_option_values ) && isset( $original_option_values[ $option->name ] ) ) ? $original_option_values[ $option->name ] : '';
+			$field        = $this->get_edit_field_html_elements(
+				array_merge(
+					array(
+						'type'  => 'text',
+						'name'  => $field_name . '[' . $option->name . ']',
+						'id'    => $field_name . '[' . $option->name . ']',
+						'value' => $social_value,
+					),
+					$raw_properties
+				)
+			);
 
-
-			$key = bp_social_network_search_key( $option->name, $providers);
-			$html .= '<div class="editfield"><legend id="field_'.$option->id.'-1">'.$providers[$key]->name.'</legend>
-						<input '.$field.'></div>';
+			$key   = bp_social_network_search_key( $option->name, $providers );
+			$html .= '<div class="editfield"><legend id="field_' . $option->id . '-1">' . $providers[ $key ]->name . '</legend>
+						<input ' . $field . '></div>';
 		}
 
 		echo $html;
@@ -150,10 +151,12 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
-			/* translators: accessibility text */
-			esc_html_e( 'Select', 'buddyboss' );
-			?></label>
+		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+															 <?php
+																/* translators: accessibility text */
+																esc_html_e( 'Select', 'buddyboss' );
+																?>
+			</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
@@ -188,9 +191,9 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				<p style="display: none;">
 					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom',     'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc',    $current_field->order_by ); ?>><?php esc_html_e( 'Ascending',  'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc',   $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
 					</select>
 				</p>
 
@@ -203,7 +206,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				if ( empty( $options ) ) {
 					$default_options = apply_filters( 'social_network_default_options', array( 'facebook', 'twitter', 'linkedIn' ) );
 					$all_options     = bp_xprofile_social_network_provider();
-					$options = array();
+					$options         = array();
 					if ( empty( $default_options ) ) {
 						$options = bp_xprofile_social_network_provider();
 					} else {
@@ -223,13 +226,13 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 					$options = array();
 					$i       = 1;
 
-					while ( isset( $_POST[$type . '_option'][$i] ) ) {
+					while ( isset( $_POST[ $type . '_option' ][ $i ] ) ) {
 
 						// Multiselectbox and checkboxes support MULTIPLE default options; all other core types support only ONE.
-						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST["isDefault_{$type}_option"][$i] ) && (int) $_POST["isDefault_{$type}_option"] === $i ) {
+						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) && (int) $_POST[ "isDefault_{$type}_option" ] === $i ) {
 							$is_default_option = true;
-						} elseif ( isset( $_POST["isDefault_{$type}_option"][$i] ) ) {
-							$is_default_option = (bool) $_POST["isDefault_{$type}_option"][$i];
+						} elseif ( isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) ) {
+							$is_default_option = (bool) $_POST[ "isDefault_{$type}_option" ][ $i ];
 						} else {
 							$is_default_option = false;
 						}
@@ -238,7 +241,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 						$options[] = (object) array(
 							'id'                => -1,
 							'is_default_option' => $is_default_option,
-							'name'              => sanitize_text_field( stripslashes( $_POST[$type . '_option'][$i] ) ),
+							'name'              => sanitize_text_field( stripslashes( $_POST[ $type . '_option' ][ $i ] ) ),
 						);
 
 						++$i;
@@ -266,25 +269,24 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 							$default_name = '[' . $j . ']';
 						}
 
-
 						$class = 'sortable';
 
 						?>
 
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
 							<span class="bp-option-icon grabber"></span>
-							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text"><?php
-								/* translators: accessibility text */
-								esc_html_e( 'Add an option', 'buddyboss' );
-								?></label>
+							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
+												   <?php
+													/* translators: accessibility text */
+													esc_html_e( 'Add an option', 'buddyboss' );
+													?>
+								</label>
 							<select class="select-social-networks" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
 								<?php
 								foreach ( bp_xprofile_social_network_provider() as $option ) {
-									$compare = ( true === $fresh_setup ) ? $options[$i]->value : $options[$i]->name;
+									$compare = ( true === $fresh_setup ) ? $options[ $i ]->value : $options[ $i ]->name;
 									?>
-									<option class="<?php echo $options[$i]->name.' '.$option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>>
-										<?php printf( esc_html__( '%s', 'buddyboss' ), $option->name ); ?>
-									</option>
+									<option class="<?php echo $options[ $i ]->name . ' ' . $option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php printf( esc_html__( '%s', 'buddyboss' ), $option->name ); ?></option>
 									<?php
 
 								}
@@ -307,9 +309,11 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				<?php } ?>
 
 				<?php
-				if ( $options < bp_xprofile_social_network_provider() ) { ?>
+				if ( $options < bp_xprofile_social_network_provider() ) {
+					?>
 					<div id="<?php echo esc_attr( "{$type}_more" ); ?>"></div>					<p>
-					<a class="social_networks_add_more" href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option','buddyboss' ); ?></a></p><?php
+					<a class="social_networks_add_more" href="javascript:add_option('<?php echo esc_js( $type ); ?>')"><?php esc_html_e( 'Add Another Option', 'buddyboss' ); ?></a></p>
+																								<?php
 				}
 				?>
 
@@ -322,7 +326,8 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 				 *
 				 * @param BP_XProfile_Field $current_field Current field being rendered.
 				 */
-				do_action( 'bp_xprofile_admin_new_field_additional_settings_social_networks', $current_field ) ?>
+				do_action( 'bp_xprofile_admin_new_field_additional_settings_social_networks', $current_field )
+				?>
 			</div>
 		</div>
 
@@ -347,7 +352,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		$valid = false;
 		if ( is_array( $values ) ) {
 			foreach ( $values as $value ) {
-				if ( '' === $value || filter_var( $value, FILTER_VALIDATE_URL) ) {
+				if ( '' === $value || filter_var( $value, FILTER_VALIDATE_URL ) ) {
 					$valid = true;
 				} else {
 					return false;
@@ -361,7 +366,6 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 			return true;
 		}
 		return false;
-
 
 	}
 

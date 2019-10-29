@@ -12,8 +12,9 @@
  * @since BuddyPress 1.0.0
  */
 function bp_blogs_screen_my_blogs() {
-	if ( !is_multisite() )
+	if ( ! is_multisite() ) {
 		return false;
+	}
 
 	/**
 	 * Fires right before the loading of the My Blogs screen template file.

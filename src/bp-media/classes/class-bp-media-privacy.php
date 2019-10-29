@@ -7,7 +7,9 @@
  */
 
 // Exit if accessed directly
-if ( !defined( 'ABSPATH' ) ) exit;
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
 
 /**
  * BuddyBoss Media Privacy.
@@ -43,16 +45,16 @@ class BP_Media_Privacy {
 	 * @param bool $group
 	 * @return array
 	 */
-	function get_visibility_options( $is_group = false ){
+	function get_visibility_options( $is_group = false ) {
 
 		$options = array(
 			'public'   => __( 'Everyone', 'buddyboss' ),
 			'loggedin' => __( 'Logged In Users', 'buddyboss' ),
 			'onlyme'   => __( 'Only Me', 'buddyboss' ),
-			'friends'  => __( 'My Friends', 'buddyboss' ),
+			'friends'  => __( 'My Connections', 'buddyboss' ),
 		);
 
-		if( $is_group && bp_is_active( 'groups' ) ) {
+		if ( $is_group && bp_is_active( 'groups' ) ) {
 			$options['grouponly'] = __( 'Group Members', 'buddyboss' );
 		}
 
@@ -99,15 +101,15 @@ class BP_Media_Privacy {
 		if ( bp_loggedin_user_id() != $media->user_id ) {
 
 			switch ( $visibility ) {
-				//Logged in users
-				case 'loggedin' :
+				// Logged in users
+				case 'loggedin':
 					if ( ! bp_loggedin_user_id() ) {
 						$visible = false;
 					}
 					break;
 
-				//My friends
-				case 'friends' :
+				// My friends
+				case 'friends':
 					if ( bp_is_active( 'friends' ) ) {
 						$is_friend = friends_check_friendship( bp_loggedin_user_id(), $media->user_id );
 						if ( ! $is_friend ) {
@@ -116,23 +118,23 @@ class BP_Media_Privacy {
 					}
 					break;
 
-				//Only group members
-				case 'grouponly' :
+				// Only group members
+				case 'grouponly':
 					$group_is_user_member = groups_is_user_member( bp_loggedin_user_id(), $media->activity_id );
 					if ( ! $group_is_user_member ) {
 						$visible = false;
 					}
 					break;
 
-				//Only Me
-				case 'onlyme' :
+				// Only Me
+				case 'onlyme':
 					if ( bp_loggedin_user_id() != $media->user_id ) {
 						$visible = false;
 					}
 					break;
 
 				default:
-					//public
+					// public
 					break;
 			}
 		}

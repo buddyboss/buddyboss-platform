@@ -118,28 +118,31 @@ class BP_Messages_Box_Template {
 				3 => 'max',
 				4 => 'type',
 				5 => 'search_terms',
-				6 => 'page_arg'
+				6 => 'page_arg',
 			);
 
 			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 		}
 
-		$r = wp_parse_args( $args, array(
-			'page'         => 1,
-			'per_page'     => 10,
-			'page_arg'     => 'mpage',
-			'box'          => 'inbox',
-			'type'         => 'all',
-			'user_id'      => bp_loggedin_user_id(),
-			'max'          => false,
-			'search_terms' => '',
-			'include'      => false,
-			'meta_query'   => array(),
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'page'         => 1,
+				'per_page'     => 10,
+				'page_arg'     => 'mpage',
+				'box'          => 'inbox',
+				'type'         => 'all',
+				'user_id'      => bp_loggedin_user_id(),
+				'max'          => false,
+				'search_terms' => '',
+				'include'      => false,
+				'meta_query'   => array(),
+			)
+		);
 
 		$this->pag_arg      = sanitize_key( $r['page_arg'] );
-		$this->pag_page     = bp_sanitize_pagination_arg( $this->pag_arg, $r['page']     );
-		$this->pag_num      = bp_sanitize_pagination_arg( 'num',          $r['per_page'] );
+		$this->pag_page     = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num      = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 		$this->user_id      = $r['user_id'];
 		$this->box          = $r['box'];
 		$this->type         = $r['type'];
@@ -147,27 +150,31 @@ class BP_Messages_Box_Template {
 		$this->include      = $r['include'];
 
 		if ( 'notices' === $this->box ) {
-			$this->threads = BP_Messages_Notice::get_notices( array(
-				'pag_num'  => $this->pag_num,
-				'pag_page' => $this->pag_page
-			) );
+			$this->threads = BP_Messages_Notice::get_notices(
+				array(
+					'pag_num'  => $this->pag_num,
+					'pag_page' => $this->pag_page,
+				)
+			);
 		} else {
-			$threads = BP_Messages_Thread::get_current_threads_for_user( array(
-				'user_id'      => $this->user_id,
-				'box'          => $this->box,
-				'type'         => $this->type,
-				'limit'        => $this->pag_num,
-				'page'         => $this->pag_page,
-				'search_terms' => $this->search_terms,
-				'include'      => $this->include,
-				'meta_query'   => $r['meta_query'],
-			) );
+			$threads = BP_Messages_Thread::get_current_threads_for_user(
+				array(
+					'user_id'      => $this->user_id,
+					'box'          => $this->box,
+					'type'         => $this->type,
+					'limit'        => $this->pag_num,
+					'page'         => $this->pag_page,
+					'search_terms' => $this->search_terms,
+					'include'      => $this->include,
+					'meta_query'   => $r['meta_query'],
+				)
+			);
 
 			$this->threads            = $threads['threads'];
 			$this->total_thread_count = $threads['total'];
 		}
 
-		if ( !$this->threads ) {
+		if ( ! $this->threads ) {
 			$this->thread_count       = 0;
 			$this->total_thread_count = 0;
 		} else {
@@ -209,16 +216,18 @@ class BP_Messages_Box_Template {
 				$add_args['s'] = $this->search_terms;
 			}
 
-			$this->pag_links = paginate_links( array(
-				'base'      => add_query_arg( $pag_args, $base ),
-				'format'    => '',
-				'total'     => ceil( (int) $this->total_thread_count / (int) $this->pag_num ),
-				'current'   => $this->pag_page,
-				'prev_text' => __( '&larr;', 'buddyboss' ),
-				'next_text' => __( '&rarr;', 'buddyboss' ),
-				'mid_size'  => 1,
-				'add_args'  => $add_args,
-			) );
+			$this->pag_links = paginate_links(
+				array(
+					'base'      => add_query_arg( $pag_args, $base ),
+					'format'    => '',
+					'total'     => ceil( (int) $this->total_thread_count / (int) $this->pag_num ),
+					'current'   => $this->pag_page,
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'mid_size'  => 1,
+					'add_args'  => $add_args,
+				)
+			);
 		}
 	}
 
@@ -244,7 +253,7 @@ class BP_Messages_Box_Template {
 	 */
 	public function next_thread() {
 		$this->current_thread++;
-		$this->thread = $this->threads[$this->current_thread];
+		$this->thread = $this->threads[ $this->current_thread ];
 
 		return $this->thread;
 	}
@@ -304,7 +313,7 @@ class BP_Messages_Box_Template {
 		$this->thread      = $this->next_thread();
 
 		if ( ! bp_is_current_action( 'notices' ) ) {
-			$last_message_index     = 0;
+			$last_message_index = 0;
 			// $this->thread->messages = array_reverse( (array) $this->thread->messages );
 
 			$this->thread->last_message_id      = $this->thread->messages[ $last_message_index ]->id;

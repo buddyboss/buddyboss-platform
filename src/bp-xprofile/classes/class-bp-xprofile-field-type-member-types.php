@@ -66,13 +66,21 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			<div id="<?php echo esc_attr( $type ); ?>" class="postbox bp-options-box" style="<?php echo esc_attr( $class ); ?> margin-top: 15px;">
 				<h3>
 					<?php
-					printf( '%s',
-						sprintf( __( 'Please make sure to add some <a href="%s">profile types</a> first.',
-							'buddyboss' ),
-							add_query_arg( [
-								'post_type' => bp_get_member_type_post_type(),
-							],
-								admin_url( 'edit.php' ) ) ) );
+					printf(
+						'%s',
+						sprintf(
+							__(
+								'Please make sure to add some <a href="%s">profile types</a> first.',
+								'buddyboss'
+							),
+							add_query_arg(
+								array(
+									'post_type' => bp_get_member_type_post_type(),
+								),
+								admin_url( 'edit.php' )
+							)
+						)
+					);
 					?>
 				</h3>
 			</div>
@@ -109,7 +117,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_name(); ?>
 				<?php if ( bp_is_register_page() ) : ?>
 					<?php bp_the_profile_field_optional_label(); ?>
-				<?php else: ?>
+				<?php else : ?>
 					<?php bp_the_profile_field_required_label(); ?>
 				<?php endif; ?>
 			</legend>
@@ -168,27 +176,31 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		}
 
 		// Get posts of custom post type selected.
-		$posts = new \WP_Query( array(
-			'posts_per_page' => - 1,
-			'post_type'      => bp_get_member_type_post_type(),
-			'orderby'        => 'title',
-			'order'          => 'ASC'
-		) );
+		$posts = new \WP_Query(
+			array(
+				'posts_per_page' => - 1,
+				'post_type'      => bp_get_member_type_post_type(),
+				'orderby'        => 'title',
+				'order'          => 'ASC',
+			)
+		);
 		if ( $posts ) {
 
-			$html    .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
+			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
 
 			foreach ( $posts->posts as $post ) {
 				$enabled = get_post_meta( $post->ID, '_bp_member_type_enable_profile_field', true );
+				$name    = get_post_meta( $post->ID, '_bp_member_type_label_singular_name', true );
 				if ( '' === $enabled || '1' === $enabled ) {
-					$html .= sprintf( '<option value="%s" %s>%s</option>',
+					$html .= sprintf(
+						'<option value="%s" %s>%s</option>',
 						$post->ID,
 						( $post_selected == $post->ID ) ? ' selected="selected"' : '',
-						$post->post_title );
+						$name
+					);
 				}
 			}
 		}
-
 
 		echo apply_filters( 'bp_get_the_profile_field_member_type_post_type', $html, $args['type'], $post_type_selected, $this->field_obj->id );
 	}

@@ -21,21 +21,20 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyBoss 1.0.0
  */
-class Core
-{
+class Core {
+
 	/**
 	 * Constructor
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function __construct()
-	{
-		$this->sync    = new Sync;
-		$this->hooks   = new Hooks;
-		$this->admin   = new Admin;
-		$this->group   = new Group;
+	public function __construct() {
+		 $this->sync = new Sync();
+		$this->hooks = new Hooks();
+		$this->admin = new Admin();
+		$this->group = new Group();
 
-		add_action('bp_ld_sync/init', [$this, 'init']);
+		add_action( 'bp_ld_sync/init', array( $this, 'init' ) );
 	}
 
 	/**
@@ -43,8 +42,6 @@ class Core
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function init()
-	{
-
+	public function init() {
 	}
 }
