@@ -71,7 +71,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 			'search_terms'    => false,
             'exclude'         => bp_loggedin_user_id(),
 		);
-        
+
         $total_online = 0;
         $current_online_count = bp_loggedin_user_id() ? 1 : 0;
 		if ( function_exists( 'bp_get_total_online_member_count' ) ){
@@ -91,7 +91,9 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		<div class="item-options" id="who-online-members-list-options">
 			<a href="javascript:void(0);" id="online-members" data-content="boss_whos_online_widget_heartbeat">
 				<?php esc_html_e( 'Online', 'buddyboss' ); ?>
-				<span class="widget-num-count"><?php esc_html_e( $total_online, 'buddyboss'); ?></span>
+				<span class="widget-num-count">
+					<?php printf( __( '%s', 'buddyboss' ), $total_online ); ?>
+				</span>
 			</a>
 			<?php
 			if ( bp_is_active( 'friends' ) ) :
@@ -110,36 +112,38 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections">
 					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
-					<span class="widget-num-count"><?php esc_html_e( $count, 'buddyboss'); ?></span>
+					<span class="widget-num-count">
+						<?php printf( __( '%s', 'buddyboss' ), $count ); ?>
+					</span>
 				</a> <?php
 			endif; ?>
 
 		</div>
         <div class="widget-content" id="boss_whos_online_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
     		<?php if ( bp_has_members( $members_args ) ) : ?>
-    
+
     			<div class="avatar-block">
-    
+
     				<?php while ( bp_members() ) : bp_the_member(); ?>
-    
+
     					<div class="item-avatar">
     						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
     					</div>
-    
+
     				<?php endwhile; ?>
-    
+
     			</div>
-                
+
                 <?php if (  $members_template->total_member_count < $total_online ){ ?>
                     <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
                 <?php } ?>
-    
+
     		<?php else: ?>
-    
+
     			<div class="widget-error">
     				<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
     			</div>
-    
+
     		<?php endif; ?>
         </div>
 		<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">

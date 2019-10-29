@@ -281,7 +281,11 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 								<?php
 								foreach ( bp_xprofile_social_network_provider() as $option ) {
 									$compare = ( true === $fresh_setup ) ? $options[$i]->value : $options[$i]->name;
-									?><option class="<?php echo $options[$i]->name.' '.$option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>><?php esc_html_e( $option->name, 'buddyboss' ); ?></option><?php
+									?>
+									<option class="<?php echo $options[$i]->name.' '.$option->value; ?>" value="<?php echo esc_attr( $option->value ); ?>" <?php echo ( $compare === $option->value ) ? 'selected' : ''; ?>>
+										<?php printf( esc_html__( '%s', 'buddyboss' ), $option->name ); ?>
+									</option>
+									<?php
 
 								}
 								?>

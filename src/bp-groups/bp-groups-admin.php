@@ -1960,7 +1960,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 				<tr>
 					<td colspan="2">
 						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
-						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
+						<?php printf( __( '%s', 'buddyboss' ), get_the_title( $member_type ) ); ?>
 					</td>
 				</tr>
 
@@ -1997,7 +1997,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 				<tr>
 					<td colspan="2">
 						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
-						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
+						<?php printf( __( '%s', 'buddyboss' ), get_the_title( $member_type ) ); ?>
 					</td>
 				</tr>
 

@@ -2847,11 +2847,11 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	$role_title = '';
 
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$role_title = __( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
+		$role_title = sprintf( __( '%s', 'buddyboss' ), get_group_role_label( $group_id, 'organizer_singular_label_name' ) );
 	} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-		$role_title = __( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
+		$role_title = sprintf( __( '%s', 'buddyboss' ), get_group_role_label( $group_id, 'moderator_singular_label_name' ) );
 	} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-		$role_title = __( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
+		$role_title = sprintf( __( '%s', 'buddyboss' ), get_group_role_label( $group_id, 'member_singular_label_name' ) );
 	}
 
 	/**
