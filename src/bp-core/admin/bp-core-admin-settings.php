@@ -1024,7 +1024,7 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 }
 
 /**
- * Admin Settings for Settings > Groups > Group Lists
+ * Admin Settings for Settings > Groups > Group Directories
  *
  * @since BuddyBoss 1.2.0
  */
@@ -1049,12 +1049,12 @@ function bp_admin_setting_callback_group_layout_type_format() {
 	printf( '</select>' );
 
 	?>
-	<p class="description"><?php _e( 'Choose if group lists should display in Grid or List View in all group directories.', 'buddyboss' ); ?></p>
+	<p class="description"><?php _e( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
 	<?php
 }
 
 /**
- * Admin Settings for Settings > Groups > Group Lists > Default Format
+ * Admin Settings for Settings > Groups > Group Directories > Default Format
  *
  * @since BuddyBoss 1.2.0
  */

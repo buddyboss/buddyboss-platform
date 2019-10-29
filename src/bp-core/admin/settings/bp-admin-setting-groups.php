@@ -77,16 +77,16 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-group-hierarchies-tutorial','', 'bp_group_hierarchies_tutorial' );
 
 		// Section for group list.
-		$this->add_section( 'bp_group_list_settings', __( 'Group Lists', 'buddyboss' ) );
+		$this->add_section( 'bp_group_list_settings', __( 'Group Directories', 'buddyboss' ) );
 
-		// Admin Settings for Settings > Groups > Group Lists > Enabled Views
+		// Admin Settings for Settings > Groups > Group Directories > Enabled Views
 		$this->add_field(
 			'bp-group-layout-format',
 			__( 'Enabled View(s)', 'buddyboss' ),
 			'bp_admin_setting_callback_group_layout_type_format'
 		);
 
-		// Admin Settings for Settings > Groups > Group Lists > Default View
+		// Admin Settings for Settings > Groups > Group Directories > Default View
 		$args = array();
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option',  'radio', $args );

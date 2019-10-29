@@ -155,16 +155,16 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-profile-search-tutorial', '', array( $this, 'bp_profile_search_tutorial' ) );
 
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile Lists', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ) );
 
-		// Admin Settings for Settings > Profile > Profile Lists > Enabled Views
+		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views
 		$this->add_field(
 			'bp-profile-layout-format',
 			__( 'Enabled View(s)', 'buddyboss' ),
 			[ $this, 'bp_admin_setting_profile_layout_type_format']
 		);
 
-		// Admin Settings for Settings > Profiles > Profile Lists > Default View
+		// Admin Settings for Settings > Profiles > Profile Directories > Default View
 		$args = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
@@ -423,7 +423,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Admin Settings for Settings > Profiles > Profile Lists > Default Format
+	 * Admin Settings for Settings > Profiles > Profile Directories > Default Format
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
@@ -448,12 +448,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		printf( '</select>' );
 
 		?>
-		<p class="description"><?php _e( 'Choose if profile lists should display in Grid or List View in all profile/member directories.', 'buddyboss' ); ?></p>
+		<p class="description"><?php _e( 'Display profile/member directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
 		<?php
 	}
 
 	/**
-	 * Admin Settings for Settings > Profiles > Profile Lists > Default Format
+	 * Admin Settings for Settings > Profiles > Profile Directories > Default Format
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */

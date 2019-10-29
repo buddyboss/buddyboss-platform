@@ -2906,7 +2906,7 @@ msgid "Restrict Invitations"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:80
-msgid "Group Lists"
+msgid "Group Directories"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-groups.php:85
@@ -3041,7 +3041,7 @@ msgid "Profile Search"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:158
-msgid "Profile Lists"
+msgid "Profile Directories"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:183
@@ -3116,7 +3116,7 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:451
 msgid ""
-"Choose if profile lists should display in Grid or List View in all "
+"Choose if profile directories should display in Grid or List View in all "
 "profile/member directories."
 msgstr ""
 
