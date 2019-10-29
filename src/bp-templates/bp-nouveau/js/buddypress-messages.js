@@ -189,7 +189,7 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
-			
+
 			//show compose message screen
 			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
@@ -1719,6 +1719,29 @@ window.bp = window.bp || {};
 				data: data,
 				success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 				error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
+			});
+
+			$('#bp-message-thread-list li').each(function () {
+				$(this).removeClass( 'divider' );
+				$(this).removeAttr( 'data-divider' );
+			});
+
+			$('#bp-message-thread-list li').each(function () {
+				if ( $( this ).find( 'hr').length ) {
+					$(this).addClass('divider');
+					var divider = $( this ).find( 'hr').attr('data-content');
+					$(this).attr('data-divider', divider );
+				}
+			});
+
+			var seen = {};
+			$('#bp-message-thread-list li.divider').each(function () {
+				var txt = $(this).attr('data-divider');
+				if (seen[txt]) {
+					$(this).remove();
+				} else {
+					seen[txt] = true;
+				}
 			});
 		}
 	} );

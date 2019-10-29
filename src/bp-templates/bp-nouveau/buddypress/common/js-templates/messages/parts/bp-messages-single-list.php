@@ -1,4 +1,8 @@
 <script type="text/html" id="tmpl-bp-messages-single-list">
+
+	<# if ( data.date_separator && '' !== data.date_separator ) { #>
+		<hr class="hr-text" data-content="{{{data.date_separator}}}"></hr>
+	<# } else { #>
 	<div class="bp-single-message-wrap">
 		<div class="bp-avatar-wrap">
 			<a href="{{data.sender_link}}" class="bp-user-avatar">
@@ -70,4 +74,5 @@
 
 		</div>
 	</div>
+	<# } #>
 </script>
