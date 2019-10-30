@@ -1080,7 +1080,7 @@ function bp_admin_setting_group_layout_default_option() {
 }
 
 /**
- * Link to Group Hierarchies tutorial
+ * Link to Group Directories tutorial
  *
  * @since BuddyBoss 1.0.0
  */
