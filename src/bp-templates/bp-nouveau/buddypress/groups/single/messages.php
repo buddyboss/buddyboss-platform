@@ -1,9 +1,12 @@
 <div id="group-messages-container">
 	<div class="bb-groups-messages-left">
-		<select class="group-messages-select-members-dropdown" name="group-members">
-			<option value="all"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
-			<option value="single"><?php _e( 'Select Members', 'buddyboss' ); ?></option>
-		</select>
+		<div class="bb-panel-head">
+			<select class="group-messages-select-members-dropdown" name="group-members">
+				<option value="all"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
+				<option value="single"><?php _e( 'Select Members', 'buddyboss' ); ?></option>
+			</select>
+		</div>
+
 		<div class="group-messages-search subnav-search clearfix" role="search">
 			<div class="bp-search">
 				<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form" data-bp-search="group-messages">
@@ -16,22 +19,21 @@
 				</form>
 			</div>
 		</div>
+
 		<div class="group-messages-members-listing">
+			<div class="last"></div>
+
 			<div class="bp-messages-feedback bp-messages-feedback-hide">
 				<div class="bp-feedback">
 					<span class="bp-icon" aria-hidden="true"></span>
 					<p></p>
 				</div>
 			</div>
-			<div class="last">
-
-			</div>
-			<span class="total-members-text"></span>
-			<ul id="members-list" class="item-list bp-list all-members">
-
-			</ul>
+			<h4 class="total-members-text"></h4>
+			<ul id="members-list" class="item-list bp-list all-members"></ul>
 		</div>
 	</div>
+
 	<div class="bb-groups-messages-right">
 		<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
 			<div class="bb-groups-messages-right-top">
@@ -46,6 +48,7 @@
 					<option value="all" selected="selected"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
 				</select>
 			</div>
+
 			<div class="bb-groups-messages-right-bottom">
 				<div id="bp-group-message-content">
 					<div id="group_message_content" name="group_message_content" tabindex="3"></div>

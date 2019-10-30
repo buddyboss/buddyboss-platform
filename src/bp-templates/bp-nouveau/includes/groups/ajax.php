@@ -704,8 +704,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			$image  = htmlspecialchars_decode( bp_core_fetch_avatar( array(
 				'item_id' => $member->ID,
 				'object'  => 'user',
-				'width'   => 40,
-				'height'  => 40,
+				'type'    => 'thumb',
 				'class'   => '',
 			) ) );
 
@@ -726,7 +725,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 				if ( 'all' !== $_POST['type'] ) {
 					?>
 					<div class="action">
-						<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
+						<button type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons" data-bp-user-id="<?php echo esc_attr( $member->ID ); ?>" data-bp-user-name="<?php echo esc_attr( $name ); ?>" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Add Recipient', 'buddyboss' ); ?>">
 							<span class="icons" aria-hidden="true"></span>
 							<span class="bp-screen-reader-text">
 								<?php esc_html_e( 'Add Recipient', 'buddyboss' ); ?>
