@@ -1078,3 +1078,18 @@ function bp_admin_setting_group_layout_default_option() {
 	printf( '</select>' );
 
 }
+
+/**
+ * Link to Group Hierarchies tutorial
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_group_directories_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-directories.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
