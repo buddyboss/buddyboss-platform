@@ -480,7 +480,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 	}
 
 	/**
-	 * Link to Profile Search tutorial
+	 * Link to Profile Directories tutorial
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
