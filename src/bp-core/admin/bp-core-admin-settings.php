@@ -1082,7 +1082,7 @@ function bp_admin_setting_group_layout_default_option() {
 /**
  * Link to Group Directories tutorial
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.0
  */
 function bp_group_directories_tutorial() {
 	?>
