@@ -169,6 +169,8 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
 
+		// Profile Directories Tutorial
+		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 	}
 
@@ -475,6 +477,21 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			);
 		}
 		printf( '</select>' );
+	}
+
+	/**
+	 * Link to Profile Directories tutorial
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function bp_profile_directories_tutorial() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 }
 
