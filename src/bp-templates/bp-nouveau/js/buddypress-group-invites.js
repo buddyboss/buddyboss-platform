@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone */
+/* global wp, bp, BP_Nouveau, _ */
 /* @version 3.0.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
@@ -18,6 +18,12 @@ window.bp = window.bp || {};
 
 	bp.Nouveau = bp.Nouveau || {};
 
+	bp.Models.ACReply = Backbone.Model.extend( {
+		defaults: {
+			gif_data: {}
+		}
+	} );
+
 	/**
 	 * [Nouveau description]
 	 * @type {Object}
@@ -28,808 +34,526 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		start: function() {
-			this.scope    = null;
 			this.views    = new Backbone.Collection();
-			this.navItems = new Backbone.Collection();
-			this.users    = new bp.Collections.Users();
-			this.invites  = this.users.clone();
 
-			// Add views
-			this.setupNav();
-			this.setupLoops();
-			this.displayFeedback( BP_Nouveau.group_invites.loading, 'loading' );
+			var $group_invites_select = $( 'body' ).find( '#group-invites-send-to-input' );
+			var page = 1;
+
+			// Activate bp_mentions
+			this.addSelect2( $group_invites_select );
+
+			var feedbackSelector 	 		 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback' );
+			var feedbackParagraphTagClass 	 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback' );
+			var feedbackParagraphTagSelector 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback p' );
+
+			// Feedback Selector left.
+			var feedbackSelectorLeft 	 		 = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' );
+			var feedbackSelectorLeftClass 		 = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback' );
+			var feedbackParagraphTagSelectorLeft = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback p' );
+
+			var listSelector = $('.group-invites-members-listing #members-list');
+			var lastSelector = $('.group-invites-members-listing .last');
+
+			// Set Feedback for all members.
+			feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+			feedbackSelectorLeftClass.addClass( 'loading' );
+			feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+
+			feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
+			feedbackParagraphTagClass.addClass( 'help' );
+			feedbackParagraphTagSelector.html( '' );
+			feedbackParagraphTagSelector.html( BP_Nouveau.group_invites.invites_form );
+
+			$( '#item-body #group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field', function() {
+				$( this ).prop( 'disabled', true );
+			});
+
+
+			$group_invites_select.on('select2:unselect', function(e) {
+				var data = e.params.data;
+				$( '#group-invites-send-to-input option[value="' + data.id + '"]' ).each(function() {
+					$(this).remove();
+				});
+				$( '#item-body #group-invites-container .bb-groups-invites-left #members-list li.' + data.id ).removeClass( 'selected' );
+				$( '#item-body #group-invites-container .bb-groups-invites-left #members-list li.' + data.id + ' .action button' ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.add_recipient );
+			});
+
+			var data = {
+				'action'   : 'groups_get_group_potential_invites',
+				'nonce'    : BP_Nouveau.nonces.groups,
+				'group_id' : BP_Nouveau.group_invites.group_id,
+				'scope'    : 'members'
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				async: false,
+				data: data,
+				success: function (response) {
+
+					if ( response.success ) {
+						listSelector.html('');
+						listSelector.html( response.data.html );
+						lastSelector.html('');
+						lastSelector.html( response.data.pagination );
+						page = response.data.page;
+
+						feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+						feedbackSelectorLeftClass.addClass( 'info' );
+						feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 
-			// Add an invite when a user is selected
-			this.users.on( 'change:selected', this.addInvite, this );
-
-			// Add an invite when a user is selected
-			this.invites.on( 'change:selected', this.manageInvite, this );
-
-			// And display the Invites nav
-			this.invites.on( 'add', this.invitesNav, this );
-			this.invites.on( 'reset', this.hideInviteNav, this );
-		},
-
-		setupNav: function() {
-			var activeView;
-
-			// Init the nav
-			this.nav = new bp.Views.invitesNav( { collection: this.navItems } );
-
-			// loop through available nav items to build it
-			_.each( BP_Nouveau.group_invites.nav, function( item, index ) {
-				if ( ! _.isObject( item ) ) {
-					return;
-				}
-
-				// Reset active View
-				activeView = 0;
-
-				if ( 0 === index ) {
-					this.scope = item.id;
-					activeView = 1;
-				}
-
-				this.navItems.add( {
-					id     : item.id,
-					name   : item.caption,
-					href   : item.href || '#members-list',
-					active : activeView,
-					hide   : _.isUndefined( item.hide ) ? 0 : item.hide
-				} );
-			}, this );
-
-			// Inject the nav into the DOM
-			this.nav.inject( '.bp-invites-nav' );
-
-			// Listen to the confirm event
-			this.nav.on( 'bp-invites:confirm', this.loadConfirmView, this );
-			this.nav.on( 'bp-invites:loops', this.setupLoops, this );
-		},
-
-		setupLoops: function( scope ) {
-			var users;
-
-			scope = scope || this.scope;
-
-			// Reset Views
-			this.clearViews();
-
-			// Only display the loading message if scope has changed
-			if ( scope !== this.scope ) {
-				// Loading
-				this.displayFeedback( BP_Nouveau.group_invites.loading, 'loading' );
-			}
-
-			// Set global scope to requested one
-			this.scope = scope;
-
-			// Create the loop view
-			users = new bp.Views.inviteUsers( { collection: this.users, scope: scope } );
-
-			this.views.add( { id: 'users', view: users } );
-
-			users.inject( '.bp-invites-content' );
-
-			this.displayFilters( this.users );
-		},
-
-		displayFilters: function( collection ) {
-			var filters_view;
-
-			// Create the model
-			this.filters = new Backbone.Model( {
-				page         : 1,
-				total_page   : 0,
-				search_terms : '',
-				scope        : this.scope
-			} );
-
-			// Use it in the filters viex
-			filters_view = new bp.Views.inviteFilters( { model: this.filters, users: collection } );
-
-			this.views.add( { id: 'filters', view: filters_view } );
-
-			filters_view.inject( '.bp-invites-filters' );
-		},
-
-		removeFeedback: function() {
-			var feedback;
-
-			if ( ! _.isUndefined( this.views.get( 'feedback' ) ) ) {
-				feedback = this.views.get( 'feedback' );
-				feedback.get( 'view' ).remove();
-				this.views.remove( { id: 'feedback', view: feedback } );
-			}
-		},
-
-		displayFeedback: function( message, type ) {
-			var feedback;
-
-			// Make sure to remove the feedbacks
-			this.removeFeedback();
-
-			if ( ! message ) {
-				return;
-			}
-
-			feedback = new bp.Views.Feedback( {
-				value : message,
-				type  : type || 'info'
-			} );
-
-			this.views.add( { id: 'feedback', view: feedback } );
-
-			feedback.inject( '.bp-invites-feedback' );
-		},
-
-		addInvite: function( user ) {
-			if ( true === user.get( 'selected' ) ) {
-				this.invites.add( user );
-			} else {
-				var invite = this.invites.get( user.get( 'id' ) );
-
-				if ( true === invite.get( 'selected' ) ) {
-					this.invites.remove( invite );
-				}
-			}
-		},
-
-		manageInvite: function( invite ) {
-			var user = this.users.get( invite.get( 'id' ) );
-
-			// Update the user
-			if ( user ) {
-				user.set( 'selected', false );
-			}
-
-			// remove the invite
-			this.invites.remove( invite );
-
-			// No more invites, reset the collection
-			if ( ! this.invites.length  ) {
-				this.invites.reset();
-			}
-		},
-
-		invitesNav: function() {
-			this.navItems.get( 'invites' ).set( { active: 0, hide: 0 } );
-		},
-
-		hideInviteNav: function() {
-			this.navItems.get( 'invites' ).set( { active: 0, hide: 1 } );
-		},
-
-		clearViews: function() {
-			// Clear views
-			if ( ! _.isUndefined( this.views.models ) ) {
-				_.each( this.views.models, function( model ) {
-					model.get( 'view' ).remove();
-				}, this );
-
-				this.views.reset();
-			}
-		},
-
-		loadConfirmView: function() {
-			this.clearViews();
-
-			this.displayFeedback( BP_Nouveau.group_invites.invites_form, 'help' );
-
-			// Activate the loop view
-			var invites = new bp.Views.invitesEditor( { collection: this.invites } );
-
-			this.views.add( { id: 'invites', view: invites } );
-
-			invites.inject( '.bp-invites-content' );
-		}
-	};
-
-	// Item (group or blog or any other)
-	bp.Models.User = Backbone.Model.extend( {
-		defaults : {
-			id       : 0,
-			avatar   : '',
-			name     : '',
-			selected : false
-        }
-	} );
-
-	/** Collections ***********************************************************/
-
-	// Items (groups or blogs or any others)
-	bp.Collections.Users = Backbone.Collection.extend( {
-		model: bp.Models.User,
-
-		initialize : function() {
-			this.options = { page: 1, total_page: 0, group_id: BP_Nouveau.group_invites.group_id };
-		},
-
-		sync: function( method, model, options ) {
-			options         = options || {};
-			options.context = this;
-			options.data    = options.data || {};
-
-			// Add generic nonce
-			options.data.nonce = BP_Nouveau.nonces.groups;
-
-			if ( this.options.group_id ) {
-				options.data.group_id = this.options.group_id;
-			}
-
-			if ( 'read' === method ) {
-				options.data = _.extend( options.data, {
-					action: 'groups_get_group_potential_invites'
-				} );
-
-				return bp.ajax.send( options );
-			}
-
-			if ( 'create' === method ) {
-				options.data = _.extend( options.data, {
-					action   : 'groups_send_group_invites',
-					_wpnonce : BP_Nouveau.group_invites.nonces.send_invites
-				} );
-
-				if ( model ) {
-					options.data.users = model;
-				}
-
-				return bp.ajax.send( options );
-			}
-
-			if ( 'delete' === method ) {
-				options.data = _.extend( options.data, {
-					action   : 'groups_delete_group_invite',
-					_wpnonce : BP_Nouveau.group_invites.nonces.uninvite
-				} );
-
-				if ( model ) {
-					options.data.user = model;
-				}
-
-				return bp.ajax.send( options );
-			}
-		},
-
-		parse: function( resp ) {
-
-			if ( ! _.isArray( resp.users ) ) {
-				resp.users = [resp.users];
-			}
-
-			_.each( resp.users, function( value, index ) {
-				if ( _.isNull( value ) ) {
-					return;
-				}
-
-				resp.users[index].id = value.id;
-				resp.users[index].avatar = value.avatar;
-				resp.users[index].name = value.name;
-			} );
-
-			if ( ! _.isUndefined( resp.meta ) ) {
-				this.options.page = resp.meta.page;
-				this.options.total_page = resp.meta.total_page;
-			}
-
-			return resp.users;
-		}
-
-	} );
-
-	// Extend wp.Backbone.View with .prepare() and .inject()
-	bp.Nouveau.GroupInvites.View = bp.Backbone.View.extend( {
-		inject: function( selector ) {
-			this.render();
-			$(selector).html( this.el );
-			this.views.ready();
-		},
-
-		prepare: function() {
-			if ( ! _.isUndefined( this.model ) && _.isFunction( this.model.toJSON ) ) {
-				return this.model.toJSON();
-			} else {
-				return {};
-			}
-		}
-	} );
-
-	// Feedback view
-	bp.Views.Feedback = bp.Nouveau.GroupInvites.View.extend( {
-		tagName   : 'div',
-		className : 'bp-invites-feedback',
-		template  : bp.template( 'bp-group-invites-feedback' ),
-
-		initialize: function() {
-			this.model = new Backbone.Model( {
-				type: this.options.type || 'info',
-				message: this.options.value
-			} );
-		}
-	} );
-
-	bp.Views.invitesNav = bp.Nouveau.GroupInvites.View.extend( {
-		tagName: 'ul',
-		className: 'subnav',
-
-		events: {
-			'click .bp-invites-nav-item' : 'toggleView'
-		},
-
-		initialize: function() {
-			this.collection.on( 'add', this.outputNav, this );
-			this.collection.on( 'change:hide', this.showHideNavItem, this );
-		},
-
-		outputNav: function( nav ) {
-			/**
-			 * The delete nav is not added if no avatar
-			 * is set for the object
-			 */
-			if ( 1 === nav.get( 'hide' ) ) {
-				return;
-			}
-
-			this.views.add( new bp.Views.invitesNavItem( { model: nav } ) );
-		},
-
-		showHideNavItem: function( item ) {
-			var isRendered = null;
-
-			/**
-			 * Loop in views to show/hide the nav item
-			 * BuddyPress is only using this for the delete nav
-			 */
-			_.each( this.views._views[''], function( view ) {
-				if ( 1 === view.model.get( 'hide' ) ) {
-					view.remove();
-				}
-
-				// Check to see if the nav is not already rendered
-				if ( item.get( 'id' ) === view.model.get( 'id' ) ) {
-					isRendered = true;
-				}
-			} );
-
-			// Add the Delete nav if not rendered
-			if ( ! _.isBoolean( isRendered ) ) {
-				item.set( 'invites_count', bp.Nouveau.GroupInvites.invites.length );
-				this.outputNav( item );
-			}
-		},
-
-		toggleView: function( event ) {
-			var target = $( event.target );
-			event.preventDefault();
-
-			if ( ! target.data( 'nav' ) && 'SPAN' === event.target.tagName ) {
-				target = $( event.target ).parent();
-			}
-
-			var current_nav_id = target.data( 'nav' );
-
-			_.each( this.collection.models, function( nav ) {
-				if ( nav.id === current_nav_id ) {
-					nav.set( 'active', 1 );
-
-					// Specific to the invites view
-					if ( 'invites' === nav.id ) {
-						this.trigger( 'bp-invites:confirm' );
 					} else {
-						this.trigger( 'bp-invites:loops', nav.id );
+						listSelector.html('');
+						lastSelector.html('');
+
+						feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+						feedbackSelectorLeftClass.addClass( response.data.type );
+						feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 					}
 
-				} else if ( 1 !== nav.get( 'hide' ) ) {
-					nav.set( 'active', 0 );
 				}
-			}, this );
-		}
-	} );
+			});
 
-	bp.Views.invitesNavItem = bp.Nouveau.GroupInvites.View.extend( {
-		tagName  : 'li',
-		template : bp.template( 'bp-invites-nav' ),
+			$('.group-invites-select-members-dropdown').on('change', function () {
 
-		initialize: function() {
-			if ( 1 === this.model.get( 'active' ) ) {
-				this.el.className += ' current';
-			}
+				feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+				feedbackSelectorLeftClass.addClass( 'loading' );
+				feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_invites.loading);
 
-			if ( 'invites' === this.model.get( 'id' ) ) {
-				this.el.className += ' dynamic';
-			}
+				var valueSelected = this.value;
 
-			if ( 'invited' === this.model.get( 'id' ) ) {
-				this.el.className += ' pending';
-			}
+				if ( valueSelected ) {
 
-			this.model.on( 'change:active', this.toggleClass, this );
-			this.on( 'ready', this.updateCount, this );
+					var data = {
+						'action'   : 'groups_get_group_potential_invites',
+						'nonce'    : BP_Nouveau.nonces.groups,
+						'group_id' : BP_Nouveau.group_invites.group_id,
+						'scope'    : valueSelected
+					};
 
-			bp.Nouveau.GroupInvites.invites.on( 'add', this.updateCount, this );
-			bp.Nouveau.GroupInvites.invites.on( 'remove', this.updateCount, this );
-		},
+					$.ajax({
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						async: false,
+						data: data,
+						success: function (response) {
+							if ( response.success ) {
+								listSelector.html('');
+								listSelector.html( response.data.html );
+								lastSelector.html('');
+								lastSelector.html( response.data.pagination );
+								page = response.data.page;
 
-		updateCount: function( user, invite ) {
-			if ( 'invites' !== this.model.get( 'id' ) ) {
-				return;
-			}
+								feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+								feedbackSelectorLeftClass.addClass( 'info' );
+								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 
-			var span_count = _.isUndefined( invite ) ? this.model.get( 'invites_count' ) : invite.models.length;
+							} else {
+								listSelector.html('');
+								lastSelector.html('');
 
-			if ( $( this.el ).find( 'span' ).length ) {
-				$( this.el ).find( 'span' ).html( span_count );
-			} else {
-				$( this.el ).find( 'a' ).append( $( '<span class="count"></span>' ).html( span_count ) );
-			}
-		},
+								feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+								feedbackSelectorLeftClass.addClass( response.data.type );
+								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							}
 
-		toggleClass: function( model ) {
-			if ( 0 === model.get( 'active' ) ) {
-				$( this.el ).removeClass( 'current' );
-			} else {
-				$( this.el ).addClass( 'current' );
-			}
-		}
-	} );
-
-	bp.Views.Pagination = bp.Nouveau.GroupInvites.View.extend( {
-		tagName   : 'div',
-		className : 'last',
-		template  :  bp.template( 'bp-invites-paginate' )
-	} );
-
-	bp.Views.inviteFilters = bp.Nouveau.GroupInvites.View.extend( {
-		tagName: 'div',
-		template:  bp.template( 'bp-invites-filters' ),
-
-		events : {
-			'search #group_invites_search'      : 'resetSearchTerms',
-			'submit #group_invites_search_form' : 'setSearchTerms',
-			'click #bp-invites-next-page'       : 'nextPage',
-			'click #bp-invites-prev-page'       : 'prevPage'
-		},
-
-		initialize: function() {
-			this.model.on( 'change', this.filterUsers, this );
-			this.options.users.on( 'sync', this.addPaginatation, this );
-		},
-
-		addPaginatation: function( collection ) {
-			_.each( this.views._views[''], function( view ) {
-				view.remove();
-			} );
-
-			if ( 1 === collection.options.total_page ) {
-				return;
-			}
-
-			this.views.add( new bp.Views.Pagination( { model: new Backbone.Model( collection.options ) } ) );
-		},
-
-		filterUsers: function() {
-			bp.Nouveau.GroupInvites.displayFeedback( BP_Nouveau.group_invites.loading, 'loading' );
-
-			this.options.users.reset();
-
-			this.options.users.fetch( {
-				data    : _.pick( this.model.attributes, ['scope', 'search_terms', 'page'] ),
-				success : this.usersFiltered,
-				error   : this.usersFilterError
-			} );
-		},
-
-		usersFiltered: function() {
-			bp.Nouveau.GroupInvites.removeFeedback();
-		},
-
-		usersFilterError: function( collection, response ) {
-			bp.Nouveau.GroupInvites.displayFeedback( response.feedback, 'error' );
-		},
-
-		resetSearchTerms: function( event ) {
-			event.preventDefault();
-
-			if ( ! $( event.target ).val() ) {
-				$( event.target ).closest( 'form' ).submit();
-			} else {
-				$( event.target ).closest( 'form' ).find( '[type=submit]' ).addClass('bp-show');
-			}
-		},
-
-		setSearchTerms: function( event ) {
-			event.preventDefault();
-
-			this.model.set( {
-				search_terms : $( event.target ).find( 'input[type=search]' ).val() || '',
-				page         : 1
-			} );
-		},
-
-		nextPage: function( event ) {
-			event.preventDefault();
-
-			this.model.set( 'page', this.model.get( 'page' ) + 1 );
-		},
-
-		prevPage: function( event ) {
-			event.preventDefault();
-
-			this.model.set( 'page', this.model.get( 'page' ) - 1 );
-		}
-	} );
-
-	bp.Views.inviteUsers = bp.Nouveau.GroupInvites.View.extend( {
-		tagName   : 'ul',
-		className : 'item-list bp-list',
-		id        : 'members-list',
-
-		initialize: function() {
-			// Load users for the active view
-			this.requestUsers();
-
-			this.collection.on( 'reset', this.cleanContent, this );
-			this.collection.on( 'add', this.addUser, this );
-		},
-
-		requestUsers: function() {
-			this.collection.reset();
-
-			this.collection.fetch( {
-				data    : _.pick( this.options, 'scope' ),
-				success : this.usersFetched,
-				error   : this.usersFetchError
-			} );
-		},
-
-		usersFetched: function( collection, response ) {
-			bp.Nouveau.GroupInvites.displayFeedback( response.feedback, 'help' );
-		},
-
-		usersFetchError: function( collection, response ) {
-			var type = response.type || 'help';
-
-			bp.Nouveau.GroupInvites.displayFeedback( response.feedback, type );
-		},
-
-		cleanContent: function() {
-			_.each( this.views._views[''], function( view ) {
-				view.remove();
-			} );
-		},
-
-		addUser: function( user ) {
-			this.views.add( new bp.Views.inviteUser( { model: user } ) );
-		}
-	} );
-
-	bp.Views.inviteUser = bp.Nouveau.GroupInvites.View.extend( {
-		tagName  : 'li',
-		template : bp.template( 'bp-invites-users' ),
-
-		events: {
-			'click .group-add-remove-invite-button'    : 'toggleUser',
-			'click .group-remove-invite-button'        : 'removeInvite'
-		},
-
-		initialize: function() {
-			var invite = bp.Nouveau.GroupInvites.invites.get( this.model.get( 'id' ) );
-
-			if ( invite ) {
-				this.model.set( 'selected', true, { silent: true } );
-			}
-		},
-
-		render: function() {
-			if ( this.model.get( 'selected' ) ) {
-				this.el.className = 'selected';
-			} else {
-				this.el.className = '';
-			}
-
-			bp.Nouveau.GroupInvites.View.prototype.render.apply( this, arguments );
-		},
-
-		toggleUser: function( event ) {
-			event.preventDefault();
-
-			var selected = this.model.get( 'selected' );
-
-			if ( false === selected ) {
-				this.model.set( 'selected', true );
-			} else {
-				this.model.set( 'selected', false );
-
-				if ( ! bp.Nouveau.GroupInvites.invites.length  ) {
-					bp.Nouveau.GroupInvites.invites.reset();
+						}
+					});
 				}
-			}
+			});
 
-			// Rerender to update buttons.
-			this.render();
-		},
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left #members-list li .action .group-add-remove-invite-button', function() {
 
-		removeInvite: function( event ) {
-			event.preventDefault();
+				var userId   = $( this ).attr( 'data-bp-user-id');
+				var userName = $( this ).attr( 'data-bp-user-name');
 
-			var collection = this.model.collection;
+				var data = {
+					id: userId,
+					text: userName
+				};
 
-			if ( ! collection.length ) {
-				return;
-			}
+				if ( $( this ).closest( 'li' ).hasClass( 'selected' ) ) {
 
-			collection.sync( 'delete', this.model.get( 'id' ), {
-				success : _.bind( this.inviteRemoved, this ),
-				error   : _.bind( this.uninviteError, this )
-			} );
-		},
+					$( this ).closest( 'li' ).removeClass( 'selected' );
 
-		inviteRemoved: function( response ) {
-			var collection = this.model.collection;
+					var newArray = [];
+					var newData = $.grep( $group_invites_select.select2('data'), function (value) {
+						return value['id'] != userId; // jshint ignore:line
+					});
 
-			if ( ! collection.length ) {
-				return;
-			}
+					newData.forEach(function(data) {
+						newArray.push(+data.id);
+					});
 
-			collection.remove( this.model );
-			this.remove();
+					$group_invites_select.val(newArray).trigger('change');
 
-			bp.Nouveau.GroupInvites.removeFeedback();
+					$( '#group-invites-send-to-input option[value="' + userId + '"]' ).each(function() {
+						$(this).remove();
+					});
 
-			if ( false === response.has_invites ) {
-				bp.Nouveau.GroupInvites.displayFeedback( response.feedback, 'success' );
+					$( this ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.add_recipient );
 
-				// Hide the invited nav
-				bp.Nouveau.GroupInvites.navItems.get( 'invited' ).set( { active: 0, hide: 1 } );
-			}
-		},
-
-		uninviteError: function( response ) {
-			bp.Nouveau.GroupInvites.displayFeedback( response.feedback, 'error' );
-		}
-	} );
-
-	bp.Views.invitesEditor = bp.Nouveau.GroupInvites.View.extend( {
-		tagName : 'div',
-		id      : 'send-invites-editor',
-
-		events: {
-			'click #bp-invites-send'  : 'sendInvites',
-			'click #bp-invites-reset' : 'clearForm'
-		},
-
-		initialize: function() {
-			this.views.add( new bp.Views.selectedUsers( { collection: this.collection } ) );
-			this.views.add( new bp.Views.invitesForm() );
-
-			this.collection.on( 'reset', this.cleanViews, this );
-		},
-
-		sendInvites: function( event ) {
-			event.preventDefault();
-
-			$( this.el ).addClass( 'bp-hide' );
-
-			bp.Nouveau.GroupInvites.displayFeedback( BP_Nouveau.group_invites.invites_sending, 'info' );
-
-			this.collection.sync( 'create', _.pluck( this.collection.models, 'id' ), {
-				success : _.bind( this.invitesSent, this ),
-				error   : _.bind( this.invitesError, this ),
-				data    : {
-					message: $( this.el ).find( 'textarea' ).val()
-				}
-			} );
-		},
-
-		invitesSent: function( response ) {
-			this.collection.reset();
-
-			bp.Nouveau.GroupInvites.displayFeedback( response.feedback, 'success' );
-
-			// Display the pending invites
-			if ( 1 === bp.Nouveau.GroupInvites.navItems.get( 'invited' ).get( 'hide' ) && ! BP_Nouveau.group_invites.is_group_create ) {
-				bp.Nouveau.GroupInvites.navItems.get( 'invited' ).set( { active: 0, hide: 0 } );
-			}
-		},
-
-		invitesError: function( response ) {
-			var type = response.type || 'help';
-
-			$( this.el ).removeClass( 'bp-hide' );
-
-			bp.Nouveau.GroupInvites.displayFeedback( response.feedback, type );
-
-			if ( ! _.isUndefined( response.users ) ) {
-				// Display the pending invites
-				if ( 1 === bp.Nouveau.GroupInvites.navItems.get( 'invited' ).get( 'hide' ) && response.users.length < this.collection.length ) {
-					bp.Nouveau.GroupInvites.navItems.get( 'invited' ).set( { active: 0, hide: 0 } );
-				}
-
-				_.each( this.collection.models, function( invite ) {
-					// If not an error, remove from the selection
-					if ( -1 === _.indexOf( response.users, invite.get( 'id' ) ) ) {
-						invite.set( 'selected', false );
+				} else {
+					$( this ).closest( 'li' ).addClass( 'selected' );
+					if ( ! $group_invites_select.find( "option[value='" + data.id + "']" ).length ) { // jshint ignore:line
+						var newOption = new Option(data.text, data.id, true, true);
+						$group_invites_select.append(newOption).trigger('change');
 					}
-				}, this );
-			}
-		},
+					$( this ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.remove_recipient );
+				}
 
-		clearForm: function( event ) {
-			event.preventDefault();
 
-			this.collection.reset();
-		},
+			});
 
-		cleanViews: function() {
-			_.each( this.views._views[''], function( view ) {
-				view.remove();
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left .last #bp-group-invites-next-page', function() {
+
+				feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+				feedbackSelectorLeftClass.addClass( 'loading' );
+				feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_invites.loading);
+
+				var data = {
+					'action'       : 'groups_get_group_potential_invites',
+					'nonce'        : BP_Nouveau.nonces.groups,
+					'group_id'     : BP_Nouveau.group_invites.group_id,
+					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'page'     	   : page,
+					'search_terms' : $( '#item-body #group-invites-container .bb-groups-invites-left #group_invites_search' ).val()
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+
+						if ( response.success ) {
+							listSelector.html('');
+							listSelector.html( response.data.html );
+							lastSelector.html('');
+							lastSelector.html( response.data.pagination );
+							page = response.data.page;
+
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( 'info' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+
+						} else {
+							listSelector.html('');
+							lastSelector.html('');
+
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( response.data.type );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						}
+
+					}
+				});
 			} );
 
-			bp.Nouveau.GroupInvites.displayFeedback( BP_Nouveau.group_invites.invites_form_reset, 'success' );
-		}
-	} );
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left .last #bp-group-invites-prev-page', function() {
+				$( '#item-body #group-invites-container .bb-groups-invites-left .bp-invites-feedback').show();
+				$( '#item-body #group-invites-container .bb-groups-invites-left .bp-invites-feedback .bp-feedback').addClass( 'info' );
+				feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
+				page = page - 2;
 
-	bp.Views.invitesForm = bp.Nouveau.GroupInvites.View.extend( {
-		tagName  : 'div',
-		id       : 'bp-send-invites-form',
-		template :  bp.template( 'bp-invites-form' )
-	} );
+				var data = {
+					'action'       : 'groups_get_group_potential_invites',
+					'nonce'        : BP_Nouveau.nonces.groups,
+					'group_id'     : BP_Nouveau.group_invites.group_id,
+					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'page'     	   : page,
+					'search_terms' : $( '#item-body #group-invites-container .bb-groups-invites-left #group_invites_search' ).val()
+				};
 
-	bp.Views.selectedUsers = bp.Nouveau.GroupInvites.View.extend( {
-		tagName : 'ul',
-
-		initialize: function() {
-			this.cleanContent();
-
-			_.each( this.collection.models, function( invite ) {
-				this.views.add( new bp.Views.selectedUser( { model: invite } ) );
-			}, this );
-		},
-
-		cleanContent: function() {
-			_.each( this.views._views[''], function( view ) {
-				view.remove();
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+							listSelector.html('');
+							listSelector.html( response.data.html );
+							lastSelector.html('');
+							lastSelector.html( response.data.pagination );
+							page = response.data.page;
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( 'info' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						} else {
+							listSelector.html('');
+							lastSelector.html('');
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( response.data.type );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						}
+					}
+				});
 			} );
+
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left #group_invites_search', function() {
+				var searchText = $( '#item-body #group-invites-container .bb-groups-invites-left #group_invites_search' ).val();
+				if ( ''  === searchText )  {
+					return false;
+				}
+
+				var data = {
+					'action'       : 'groups_get_group_potential_invites',
+					'nonce'        : BP_Nouveau.nonces.groups,
+					'group_id'     : BP_Nouveau.group_invites.group_id,
+					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'page'     	   : 1,
+					'search_terms' : searchText
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+							listSelector.html('');
+							listSelector.html( response.data.html );
+							lastSelector.html('');
+							lastSelector.html( response.data.pagination );
+							page = response.data.page;
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( 'info' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						} else {
+							listSelector.html('');
+							lastSelector.html('');
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( response.data.type );
+							feedbackParagraphTagSelectorLeft.html( '' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						}
+					}
+				});
+			});
+
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing #members-list li .item .action .group-remove-invite-button', function( e ) {
+				e.preventDefault();
+				console.log('removed');
+
+				var data = {
+					'action'  	 	: 'groups_delete_group_invite',
+					'nonce'   	 	: BP_Nouveau.nonces.groups,
+					'_wpnonce' 		: BP_Nouveau.group_invites.nonces.send_invites,
+					'group_id'   	: BP_Nouveau.group_invites.group_id,
+					'user'   		: users_list
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+							feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
+							feedbackParagraphTagClass.addClass( response.data.type );
+							feedbackParagraphTagSelector.html( '' );
+							feedbackParagraphTagSelector.html(  response.data.feedback );
+							$group_invites_select.find('option').remove();
+							$('textarea#send-invites-control').val( '' );
+						} else {
+							feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
+							feedbackParagraphTagClass.addClass( response.data.type );
+							feedbackParagraphTagSelector.html( '' );
+							feedbackParagraphTagSelector.html(  response.data.feedback );
+						}
+					}
+				});
+
+			});
+
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-bottom #send_group_invite_button', function( e ) {
+				e.preventDefault();
+				var users_list = [];
+				var newData = $.grep( $group_invites_select.select2('data'), function (value) {
+					return value['id'] != 0; // jshint ignore:line
+				});
+
+				newData.forEach(function(data) {
+					users_list.push(+data.id);
+				});
+
+				var data = {
+					'action'  	 	: 'groups_send_group_invites',
+					'nonce'   	 	: BP_Nouveau.nonces.groups,
+					'_wpnonce' 		: BP_Nouveau.group_invites.nonces.send_invites,
+					'group_id'   	: BP_Nouveau.group_invites.group_id,
+					'message' 	 	: $('textarea#send-invites-control').val(),
+					'users'   		: users_list
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+							feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
+							feedbackParagraphTagClass.addClass( response.data.type );
+							feedbackParagraphTagSelector.html( '' );
+							feedbackParagraphTagSelector.html(  response.data.feedback );
+							$group_invites_select.find('option').remove();
+							$('textarea#send-invites-control').val( '' );
+						} else {
+							feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
+							feedbackParagraphTagClass.addClass( response.data.type );
+							feedbackParagraphTagSelector.html( '' );
+							feedbackParagraphTagSelector.html(  response.data.feedback );
+						}
+					}
+				});
+
+			});
+
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-bottom #bp_invites_reset', function( e ) {
+				e.preventDefault();
+
+				$group_invites_select.find('option').remove();
+				$('textarea#send-invites-control').val( '' );
+
+				var data = {
+					'action'   : 'groups_get_group_potential_invites',
+					'nonce'    : BP_Nouveau.nonces.groups,
+					'group_id' : BP_Nouveau.group_invites.group_id,
+					'scope'    : 'members',
+					'page'     : 1
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					async: false,
+					data: data,
+					success: function (response) {
+
+						if ( response.success ) {
+							listSelector.html('');
+							listSelector.html( response.data.html );
+							lastSelector.html('');
+							lastSelector.html( response.data.pagination );
+							page = response.data.page;
+
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( 'info' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+
+						} else {
+							listSelector.html('');
+							lastSelector.html('');
+
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( response.data.type );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						}
+
+					}
+				});
+
+			});
+
+			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left #group_invites_search_submit', function( e ) {
+				e.preventDefault();
+				var searchText = $( '#item-body #group-invites-container .bb-groups-invites-left #group_invites_search' ).val();
+				if ( ''  === searchText )  {
+					return false;
+				}
+
+				var data = {
+					'action'       : 'groups_get_group_potential_invites',
+					'nonce'        : BP_Nouveau.nonces.groups,
+					'group_id'     : BP_Nouveau.group_invites.group_id,
+					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'page'     	   : 1,
+					'search_terms' : searchText
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+							listSelector.html('');
+							listSelector.html( response.data.html );
+							lastSelector.html('');
+							lastSelector.html( response.data.pagination );
+							page = response.data.page;
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( 'info' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						} else {
+							listSelector.html('');
+							lastSelector.html('');
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( response.data.type );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+						}
+					}
+				});
+			});
+		},
+
+		addSelect2: function( $input ) {
+
+			var ArrayData = [];
+			$input.select2({
+				placeholder: '',
+				minimumInputLength: 1,
+				ajax: {
+					url: bp.ajax.settings.url,
+					dataType: 'json',
+					delay: 250,
+					data: function(params) {
+						return $.extend( {}, params, {
+							nonce: BP_Nouveau.group_invites.nonces.retrieve_group_members,
+							action: 'groups_get_group_potential_user_send_invites',
+							group: BP_Nouveau.group_invites.group_id
+						});
+					},
+					cache: true,
+					processResults: function( data ) {
+
+						// Removed the element from results if already selected.
+						if ( false === jQuery.isEmptyObject( ArrayData ) ) {
+							$.each( ArrayData, function( index, value ) {
+								for(var i=0;i<data.data.results.length;i++){
+									if(data.data.results[i].id === value){
+										data.data.results.splice(i,1);
+									}
+								}
+							});
+						}
+
+						return {
+							results: data && data.success? data.data.results : []
+						};
+					}
+				}
+			});
+
+			// Add element into the Arrdata array.
+			$input.on('select2:select', function(e) {
+				var data = e.params.data;
+				ArrayData.push(data.id);
+			});
+
+			// Remove element into the Arrdata array.
+			$input.on('select2:unselect', function(e) {
+				var data = e.params.data;
+				ArrayData = jQuery.grep(ArrayData, function(value) {
+					return value !== data.id;
+				});
+			});
+
 		}
-	} );
 
-	bp.Views.selectedUser = bp.Nouveau.GroupInvites.View.extend( {
-		tagName  : 'li',
-		template : bp.template( 'bp-invites-selection' ),
-
-		events: {
-			click : 'removeSelection'
-		},
-
-		initialize: function() {
-			this.model.on( 'change:selected', this.removeView, this );
-
-			// Build the BP Tooltip.
-			if ( ! this.model.get( 'uninviteTooltip' ) ) {
-				this.model.set( 'uninviteTooltip',
-					BP_Nouveau.group_invites.removeUserInvite.replace( '%s', this.model.get( 'name' ) ),
-					{ silent: true }
-				);
-			}
-
-			this.el.id = 'uninvite-user-' + this.model.get( 'id' );
-		},
-
-		removeSelection: function( event ) {
-			event.preventDefault();
-
-			this.model.set( 'selected', false );
-		},
-
-		removeView: function( model ) {
-			if ( false !== model.get( 'selected' ) ) {
-				return;
-			}
-
-			this.remove();
-		}
-	} );
+	};
 
 	// Launch BP Nouveau Groups
 	bp.Nouveau.GroupInvites.start();

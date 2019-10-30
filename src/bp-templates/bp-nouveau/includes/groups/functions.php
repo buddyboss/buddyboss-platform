@@ -186,7 +186,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 
 	$response = array(
 		'id'           => intval( $user->ID ),
-		'name'         => $user->display_name,
+		'name'         => bp_core_get_user_displayname( intval( $user->ID )  ),
 		'avatar'       => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 			'item_id' => $user->ID,
 			'object'  => 'user',
@@ -1083,7 +1083,7 @@ function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 		'group-invites' => array(
 			'hook'     => 'group_invites_creation_step',
 			'nonce'    => 'groups_create_save_group-invites',
-			'template' => 'common/js-templates/invites/index',
+			//'template' => 'common/js-templates/invites/index',
 		),
 	);
 
