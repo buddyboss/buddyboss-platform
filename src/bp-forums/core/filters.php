@@ -244,10 +244,6 @@ add_filter( 'bbp_make_clickable', 'bbp_make_ftps_clickable', 4 ); // ftps://bbpr
 add_filter( 'bbp_make_clickable', 'bbp_make_emails_clickable', 6 ); // jjj@bbpress.org
 add_filter( 'bbp_make_clickable', 'bbp_make_mentions_clickable', 8 ); // @jjj
 
-// Private Forum Title Fix
-add_filter('the_title', 'bbp_forum_private_forum_title_format', 999999999, 2 );
-
-
 /** Deprecated ****************************************************************/
 
 /**

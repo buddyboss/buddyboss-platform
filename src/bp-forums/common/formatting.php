@@ -484,26 +484,3 @@ function bbp_make_mentions_clickable_callback( $matches = array() ) {
 
 	return $matches[1] . $link;
 }
-
-/**
- * Set the "Private:" before the private forum title.
- *
- * @param $title
- * @param $id
- *
- * @since BuddyBoss 1.2.0
- *
- * @return mixed|string|void
- */
-function bbp_forum_private_forum_title_format( $title, $id ) {
-
-	if ( get_post_type( $id ) === bbp_get_forum_post_type() && 'private' === get_post_status( $id ) ) {
-		$post                 = get_post( $id );
-		$private_title_format = apply_filters( 'bbp_forum_private_forum_title_format', __( 'Private: %s' ), $post );
-		$title                = sprintf( $private_title_format, $post->post_title );
-		$title                = apply_filters( 'bbp_private_forum_title', $title, $id );
-	}
-
-	return $title;
-
-}
