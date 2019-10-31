@@ -15,6 +15,8 @@ if ( bp_is_members_directory() || bp_is_user() || ( is_a( $post, 'WP_Post' ) && 
 	}
 } elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group') ) ) {
 	$current_value = bp_get_option( 'bp-group-layout-format', 'list_grid' );
+} else {
+	$current_value = bp_get_option( 'bp-group-layout-format', 'list_grid' );
 }
 if ( 'list_grid' === $current_value ) {
 
@@ -34,6 +36,8 @@ if ( 'list_grid' === $current_value ) {
 				$default_current_value = bp_group_layout_default_format( 'grid' );
 			}
 		} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
+			$default_current_value = bp_group_layout_default_format( 'grid' );
+		} else {
 			$default_current_value = bp_group_layout_default_format( 'grid' );
 		}
 	}
