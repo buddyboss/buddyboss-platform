@@ -17,10 +17,6 @@ table.dataTable a .i-progress {
 	text-align: left;
 }
 
-.bp_ld_report_table_wrapper {
-	margin-bottom: 30px;
-}
-
 .bp_ld_report_table_wrapper.no-data {
 	display: none !important;
 }
@@ -43,12 +39,16 @@ table.dataTable a .i-progress {
 	flex-flow: row wrap;
 	align-items: center;
 	background: #fff;
-	border: 1px solid #dedfe2;
+	border: 1px solid #E7E9EC;
 	margin-bottom: 15px;
 }
 
+.ld-report-user-stats .member-name {
+    font-size: 20px;
+}
+
 .ld-report-user-stats > * {
-	padding: 15px;
+	padding: 30px 40px;
 }
 
 .ld-report-user-stats p {
@@ -66,7 +66,7 @@ table.dataTable a .i-progress {
 }
 
 .ld-report-user-stats .avatar {
-	max-width: 52px;
+	max-width: 80px;
 }
 
 .ld-report-user-stats .user-message {
@@ -156,47 +156,66 @@ table.dataTable a .i-progress {
 	background-color: #4b86db;
 }
 
-.bp_ld_report_table_wrapper .admin-show-all {
+.bp_ld_report_table_wrapper {
+        background: #fff;
 	border: 0;
 	border-collapse: collapse;
 	border-radius: 4px;
 	overflow: hidden;
 	box-shadow: 0 0 0 1px #E7EAEC;
 	width: 100% !important;
+        margin-bottom: 30px;
+        padding: 0 20px;
 }
-.bp_ld_report_table_wrapper .admin-show-all thead tr {
-	background: #fff;
-	border-bottom: 1px solid #E7E9EC;
-}
+
 .bp_ld_report_table_wrapper .admin-show-all thead th {
-	border-bottom: 0;
 	font-size: 13px;
 	outline: none;
 	font-weight: normal;
-	color: #A3A5A9;
+	color: #A3A5A9;    
+        letter-spacing: 0.35px;
+        text-transform: uppercase;
 }
+
 .bp_ld_report_table_wrapper .admin-show-all th,
 .bp_ld_report_table_wrapper .admin-show-all td {
-	border: 0;
 	font-size: 14px;
-	padding: 12px 20px;
+	padding: 15px 20px;
+        letter-spacing: -0.24px;
+}
+
+.bp_ld_report_table_wrapper .dataTable thead th:first-child,
+.bp_ld_report_table_wrapper .dataTable td:first-child {
+    padding-right: 0;
 }
 
 table.dataTable.no-footer.admin-show-all {
 	border-bottom: 0;
 }
 
+table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+    border-bottom: 0;
+}
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
+    border-color: #E7E9EC;
+}
+
 table.dataTable tbody tr, table.dataTable.display tbody tr.odd>.sorting_1, table.dataTable.order-column.stripe tbody tr.odd>.sorting_1, table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
 	background-color: #ffffff !important;
+        border-color: #E7E9EC;
+        border-bottom: 0;
+        
 }
 
 #admin-show-all tbody tr td span img {
 	vertical-align: middle;
-	margin-left: 10px;
-}
-
-.bp_ld_report_table_wrapper h2 {
-	margin: 1.6875rem 0 1.6875rem 0 !important;
+	margin-left: 15px;
 }
 
 @keyframes toggle {
