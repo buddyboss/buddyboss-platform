@@ -151,7 +151,10 @@ class BpGroupCourses extends BP_Group_Extension {
 
 		$coursesCount = count( bp_learndash_get_group_courses( $currentGroup->id ) );
 
-		return _nx( 'Course', 'Courses', $coursesCount, 'bp group tab name', 'buddyboss' );
+		$custom_labels = get_option('learndash_settings_custom_labels');
+		$lable_courses = (isset($custom_labels['courses']) && 0 < strlen($custom_labels['courses'])) ? $custom_labels['courses'] : $default;
+
+		return _nx( 'Course', $lable_courses, $coursesCount, 'bp group tab name', 'buddyboss' );
 	}
 
 	/**
