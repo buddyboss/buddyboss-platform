@@ -12,24 +12,6 @@
 	min-width: 0;
         position: relative;
 
-/*        .dropzone.open {
-		position: absolute;
-		top: 0;
-		background: rgba(255, 255, 255, 0.99);
-		height: calc(100% - 162px);
-		width: 100%;
-		display: flex;
-		align-items: center;
-		align-content: center;
-		justify-content: center;
-		left: 0;
-                margin: 0 auto;
-		border-radius: 4px;
-		padding: 20px;
-		overflow-y: auto;
-                overflow-x: hidden;
-        }*/
-
         .medium-editor-element:not(.emojionearea),
         .medium-editor-placeholder:not(.emojionearea) {
             max-height: 50vh;
@@ -64,6 +46,21 @@
         }
 }
 
+.bb-panel-mobile-header {
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+
+    .bb-select-members-title {
+        margin: 0 !important;
+    }
+}
+
+.bb-panel-footer {
+    border-top: 1px solid #E7E9EC;
+    padding: 10px 20px;
+    text-align: right;
+}
 
 @include medium-up() {
     
@@ -448,5 +445,60 @@ span.icons:before {
         
         .group-messages-members-listing #members-list {
                 max-height: 25vh;
+        }
+
+        .bb-panel-footer,
+        .group-messages-search,
+        .group-messages-members-listing {
+            display: none;
+        }
+
+        .bb-groups-messages-left.bb-select-member-view {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.69);
+            content: '';
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 999999;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+
+            .bb-groups-messages-left-inner {
+                background: #fff;
+                border-radius: 5px;
+                width: 100%;
+                max-width: 500px;
+            }
+
+            .bb-panel-mobile-header {
+                display: flex;
+            }
+
+            .bb-panel-footer,
+            .group-messages-search,
+            .group-messages-members-listing  {
+                display: block;
+            }
+
+            select.group-messages-select-members-dropdown {
+                display: none;
+            }
+
+            .group-messages-members-listing {
+                padding-bottom: 0;
+            }
+
+            .bb-panel-head {
+                background: #fbfbfc;
+            }
+        }
+        
+        body #buddypress .group-messages-members-listing .bp-list .action {
+            flex: 0 0 26px;
+            margin-left: auto;
         }
 }

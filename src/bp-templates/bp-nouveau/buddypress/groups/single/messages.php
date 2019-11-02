@@ -1,36 +1,46 @@
 <div id="group-messages-container">
 	<div class="bb-groups-messages-left">
-		<div class="bb-panel-head">
-			<select class="group-messages-select-members-dropdown" name="group-members">
-				<option value="all"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
-				<option value="single"><?php _e( 'Select Members', 'buddyboss' ); ?></option>
-			</select>
-		</div>
-
-		<div class="group-messages-search subnav-search clearfix" role="search">
-			<div class="bp-search">
-				<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form" data-bp-search="group-messages">
-					<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
-					<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
-					<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit">
-						<span class="dashicons dashicons-search" aria-hidden="true"></span>
-						<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
-					</button>
-				</form>
-			</div>
-		</div>
-
-		<div class="group-messages-members-listing">
-			<div class="last"></div>
-
-			<div class="bp-messages-feedback bp-messages-feedback-hide">
-				<div class="bp-feedback">
-					<span class="bp-icon" aria-hidden="true"></span>
-					<p></p>
+		<div class="bb-groups-messages-left-inner">
+			<div class="bb-panel-head">
+				<select class="group-messages-select-members-dropdown" name="group-members">
+					<option value="all"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
+					<option value="single"><?php _e( 'Select Members', 'buddyboss' ); ?></option>
+				</select>
+				<div class="bb-panel-mobile-header">
+					<h4 class="bb-select-members-title"><?php _e( 'Select Members', 'buddyboss' ); ?></h4>
+					<a class="bb-close-select-members" href="#"><span class="dashicons dashicons-no-alt"></span></a>
 				</div>
 			</div>
-			<h4 class="total-members-text"></h4>
-			<ul id="members-list" class="item-list bp-list all-members"></ul>
+
+			<div class="group-messages-search subnav-search clearfix" role="search">
+				<div class="bp-search">
+					<form action="" method="get" id="group_messages_search_form" class="bp-messages-search-form" data-bp-search="group-messages">
+						<label for="group_messages_search" class="bp-screen-reader-text"><?php bp_nouveau_search_default_text( __( 'Search Members', 'buddyboss' ), false ); ?></label>
+						<input type="search" id="group_messages_search" placeholder="<?php esc_attr_e( 'Search Members', 'buddyboss' ); ?>"/>
+						<button type="submit" id="group_messages_search_submit" class="nouveau-search-submit">
+							<span class="dashicons dashicons-search" aria-hidden="true"></span>
+							<span id="button-text" class="bp-screen-reader-text"><?php esc_html_e( 'Search Members', 'buddyboss' ); ?></span>
+						</button>
+					</form>
+				</div>
+			</div>
+
+			<div class="group-messages-members-listing">
+				<div class="last"></div>
+
+				<div class="bp-messages-feedback bp-messages-feedback-hide">
+					<div class="bp-feedback">
+						<span class="bp-icon" aria-hidden="true"></span>
+						<p></p>
+					</div>
+				</div>
+				<h4 class="total-members-text"></h4>
+				<ul id="members-list" class="item-list bp-list all-members"></ul>
+			</div>
+
+			<div class="bb-panel-footer">
+				<a class="bb-close-select-members button" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
+			</div>
 		</div>
 	</div>
 

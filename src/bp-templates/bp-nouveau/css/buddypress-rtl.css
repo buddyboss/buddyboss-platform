@@ -11237,23 +11237,6 @@ img.emojioneemoji {
   flex: 1;
   min-width: 0;
   position: relative;
-  /*        .dropzone.open {
-		position: absolute;
-		top: 0;
-		background: rgba(255, 255, 255, 0.99);
-		height: calc(100% - 162px);
-		width: 100%;
-		display: flex;
-		align-items: center;
-		align-content: center;
-		justify-content: center;
-		left: 0;
-                margin: 0 auto;
-		border-radius: 4px;
-		padding: 20px;
-		overflow-y: auto;
-                overflow-x: hidden;
-        }*/
 }
 
 .bb-groups-messages-right .medium-editor-element:not(.emojionearea),
@@ -11289,6 +11272,22 @@ img.emojioneemoji {
 
 #buddypress .group-messages-members-listing ul.item-list {
   margin-bottom: 0;
+}
+
+.bb-panel-mobile-header {
+  display: none;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.bb-panel-mobile-header .bb-select-members-title {
+  margin: 0 !important;
+}
+
+.bb-panel-footer {
+  border-top: 1px solid #E7E9EC;
+  padding: 10px 20px;
+  text-align: left;
 }
 
 @media screen and (min-width: 46.8em) {
@@ -11666,5 +11665,51 @@ span.icons:before {
   }
   .group-messages-members-listing #members-list {
     max-height: 25vh;
+  }
+  .bb-panel-footer,
+  .group-messages-search,
+  .group-messages-members-listing {
+    display: none;
+  }
+  .bb-groups-messages-left.bb-select-member-view {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.69);
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .bb-groups-messages-left.bb-select-member-view .bb-groups-messages-left-inner {
+    background: #fff;
+    border-radius: 5px;
+    width: 100%;
+    max-width: 500px;
+  }
+  .bb-groups-messages-left.bb-select-member-view .bb-panel-mobile-header {
+    display: flex;
+  }
+  .bb-groups-messages-left.bb-select-member-view .bb-panel-footer,
+  .bb-groups-messages-left.bb-select-member-view .group-messages-search,
+  .bb-groups-messages-left.bb-select-member-view .group-messages-members-listing {
+    display: block;
+  }
+  .bb-groups-messages-left.bb-select-member-view select.group-messages-select-members-dropdown {
+    display: none;
+  }
+  .bb-groups-messages-left.bb-select-member-view .group-messages-members-listing {
+    padding-bottom: 0;
+  }
+  .bb-groups-messages-left.bb-select-member-view .bb-panel-head {
+    background: #fbfbfc;
+  }
+  body #buddypress .group-messages-members-listing .bp-list .action {
+    flex: 0 0 26px;
+    margin-right: auto;
   }
 }
