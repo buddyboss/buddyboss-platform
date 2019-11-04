@@ -286,10 +286,68 @@ class BP_Activity_Activity {
 			}
 		}
 
+		// Exclude Lessons, Quiz, Topic, Certificates and Assignment if Course set to future publish date
+		if (
+		    !empty( $this->component )
+		    && !empty( $this->type )
+		    && !empty( $this->secondary_item_id )
+		    && 'blogs' == $this->component
+		    && (
+		        'new_blog_sfwd-lessons' == $this->type
+		        || 'new_blog_sfwd-quiz' == $this->type
+		        || 'new_blog_sfwd-topic' == $this->type
+		        || 'new_blog_sfwd-certificates' == $this->type
+		        || 'new_blog_sfwd-assignment' == $this->type
+		    )
+		) {
+
+			$post = get_post( $this->secondary_item_id );
+			if (
+				!empty( $post )
+				&& (
+					'sfwd-certificates' == $post->post_type
+				)
+			) {
+
+				return false;
+
+			} else if (
+				!empty( $post )
+				&& (
+					'sfwd-lessons' == $post->post_type
+					|| 'sfwd-quiz' == $post->post_type
+					|| 'sfwd-topic' == $post->post_type
+					|| 'sfwd-assignment' == $post->post_type
+				)
+				&& (
+					empty( get_post_meta( $post->ID, 'course_id', true ) )
+					|| (
+						!empty( get_post_meta( $post->ID, 'course_id', true ) )
+						&& 'future' === get_post_status( get_post_meta( $post->ID, 'course_id', true ) )
+					)
+					|| (
+						(
+							'sfwd-topic' == $post->post_type
+							|| 'sfwd-assignment' == $post->post_type
+						)
+						&& (
+							empty( get_post_meta( $post->ID, 'lesson_id', true ) )
+							|| (
+								!empty( get_post_meta( $post->ID, 'lesson_id', true ) )
+								&& 'future' === get_post_status( get_post_meta( $post->ID, 'lesson_id', true ) )
+							)
+						)
+					)
+				)
+			) {
+				return false;
+			}
+		}
+
 		if ( empty( $this->primary_link ) ) {
 			$this->primary_link = bp_loggedin_user_domain();
 		}
-		
+
 		// If we have an existing ID, update the activity item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
 			$q = $wpdb->prepare( "UPDATE {$bp->activity->table_name} SET user_id = %d, component = %s, type = %s, action = %s, content = %s, primary_link = %s, date_recorded = %s, item_id = %d, secondary_item_id = %d, hide_sitewide = %d, is_spam = %d, privacy = %s WHERE id = %d", $this->user_id, $this->component, $this->type, $this->action, $this->content, $this->primary_link, $this->date_recorded, $this->item_id, $this->secondary_item_id, $this->hide_sitewide, $this->is_spam, $this->privacy, $this->id );
@@ -309,18 +367,6 @@ class BP_Activity_Activity {
 		} else {
 			add_filter( 'bp_activity_at_name_do_notifications', '__return_false' );
 		}
-
-		// Check course is published or not.
-        if ( in_array( 'sfwd-lms/sfwd_lms.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
-        	$types_array 	= ['sfwd-lessons', 'sfwd-topic', 'sfwd-quiz', 'sfwd-assignment', 'sfwd-essays'];
-        	$post_type 		= get_post_type( (int)$this->secondary_item_id );
-            if ( in_array( $post_type, $types_array ) ) {
-                $course_id = learndash_get_course_id( $this->secondary_item_id );
-                if ( 0 < $course_id && get_post_status( $course_id ) != 'publish' ) {
-                	bp_activity_delete( array( 'id' => $this->id ) );
-                }
-            }
-        }
 
 		/**
 		 * Fires after an activity item has been saved to the database.
