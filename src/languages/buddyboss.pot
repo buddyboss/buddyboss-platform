@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-10-28 12:55:20+00:00\n"
+"POT-Creation-Date: 2019-11-04 10:43:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1076,6 +1076,25 @@ msgstr ""
 msgid "View all actions"
 msgstr ""
 
+#: bp-activity/classes/class-bp-activity-list-table.php:491
+#: bp-activity/classes/class-bp-activity-list-table.php:596
+#: bp-blogs/bp-blogs-activity.php:106
+#: bp-core/admin/bp-core-admin-settings.php:812
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:333
+#: bp-core/bp-core-template.php:3951 bp-groups/bp-groups-admin.php:2141
+#: bp-groups/bp-groups-admin.php:2178 bp-groups/bp-groups-functions.php:2953
+#: bp-groups/bp-groups-functions.php:2955
+#: bp-groups/bp-groups-functions.php:2957
+#: bp-members/classes/class-bp-core-whos-online-widget.php:98
+#: bp-members/classes/class-bp-core-whos-online-widget.php:117
+#: bp-messages/bp-messages-functions.php:202
+#: bp-messages/bp-messages-template.php:2121
+#: bp-search/bp-search-settings.php:782 bp-settings/actions/export.php:35
+#: bp-templates/bp-nouveau/buddypress/common/filters/member-filters.php:51
+#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:289
+msgid "%s"
+msgstr ""
+
 #: bp-activity/classes/class-bp-activity-list-table.php:513
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-filters.php:13
 msgid "Filter"
@@ -1212,13 +1231,6 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:78
 msgid "New post published"
-msgstr ""
-
-#: bp-blogs/bp-blogs-activity.php:106 bp-core/bp-core-template.php:3951
-#: bp-messages/bp-messages-functions.php:202
-#: bp-messages/bp-messages-template.php:2121
-#: bp-search/bp-search-settings.php:782 bp-settings/actions/export.php:35
-msgid "%s"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:136
@@ -1483,27 +1495,19 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:152
 msgid "All <span class=\"count\">(%s)</span>"
-msgid_plural "All <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:169
 msgid "Active <span class=\"count\">(%s)</span>"
-msgid_plural "Active <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:186
 msgid "Inactive <span class=\"count\">(%s)</span>"
-msgid_plural "Inactive <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:203
 msgid "Required <span class=\"count\">(%s)</span>"
-msgid_plural "Required <span class=\"count\">(%s)</span>"
-msgstr[0] ""
-msgstr[1] ""
+msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:209
 #. translators: accessibility text
@@ -2080,11 +2084,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:402
 #: bp-core/admin/bp-core-admin-settings.php:481
 #: bp-core/admin/bp-core-admin-settings.php:523
-#: bp-core/admin/bp-core-admin-settings.php:839
-#: bp-core/admin/bp-core-admin-settings.php:947
+#: bp-core/admin/bp-core-admin-settings.php:838
+#: bp-core/admin/bp-core-admin-settings.php:946
 #: bp-core/admin/settings/bp-admin-setting-friends.php:78
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:375
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:419
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:369
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:413
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:238
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:373
 #: bp-media/bp-media-settings.php:456 bp-media/bp-media-settings.php:599
@@ -2124,25 +2128,25 @@ msgid "General"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:437
-#: bp-core/admin/bp-core-admin-settings.php:854
-#: bp-core/admin/bp-core-admin-settings.php:882
-#: bp-core/admin/bp-core-admin-settings.php:910
+#: bp-core/admin/bp-core-admin-settings.php:853
+#: bp-core/admin/bp-core-admin-settings.php:881
+#: bp-core/admin/bp-core-admin-settings.php:909
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:213
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:441
-#: bp-core/admin/bp-core-admin-settings.php:859
-#: bp-core/admin/bp-core-admin-settings.php:887
-#: bp-core/admin/bp-core-admin-settings.php:924 bp-core/bp-core-options.php:40
+#: bp-core/admin/bp-core-admin-settings.php:858
+#: bp-core/admin/bp-core-admin-settings.php:886
+#: bp-core/admin/bp-core-admin-settings.php:923 bp-core/bp-core-options.php:40
 msgid "Last Name"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-schema.php:445
-#: bp-core/admin/bp-core-admin-settings.php:864
-#: bp-core/admin/bp-core-admin-settings.php:892
-#: bp-core/admin/bp-core-admin-settings.php:929
+#: bp-core/admin/bp-core-admin-settings.php:863
+#: bp-core/admin/bp-core-admin-settings.php:891
+#: bp-core/admin/bp-core-admin-settings.php:928
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:215
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
@@ -2340,68 +2344,68 @@ msgstr ""
 msgid "Only allow the selected profile types to send invites."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:826
+#: bp-core/admin/bp-core-admin-settings.php:825
 msgid ""
 "Allow members to use <a href=\"https://gravatar.com/\">gravatars</a> for "
 "profile avatars"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:859
-#: bp-core/admin/bp-core-admin-settings.php:910
-#: bp-core/admin/bp-core-admin-settings.php:924
+#: bp-core/admin/bp-core-admin-settings.php:858
+#: bp-core/admin/bp-core-admin-settings.php:909
+#: bp-core/admin/bp-core-admin-settings.php:923
 msgid "(can be disabled)"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:868
+#: bp-core/admin/bp-core-admin-settings.php:867
 msgid ""
 "If you disable \"Last Name\" field, it will not appear anywhere in the "
 "network."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:896
+#: bp-core/admin/bp-core-admin-settings.php:895
 msgid ""
 "All name fields are required with this format. Best used for professional "
 "networks."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:933
+#: bp-core/admin/bp-core-admin-settings.php:932
 msgid ""
 "If you disable \"First Name\" and \"Last Name\" fields, they will not "
 "appear anywhere in the network. This allows your members to be fully "
 "anonymous (if they use a pseudonym for their nickname)."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1007
+#: bp-core/admin/bp-core-admin-settings.php:1006
 msgid "Add Email confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1021
+#: bp-core/admin/bp-core-admin-settings.php:1020
 msgid "Add Password confirmation to register form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1033
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:432
+#: bp-core/admin/bp-core-admin-settings.php:1032
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:426
 msgid "Grid and List"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1033
+#: bp-core/admin/bp-core-admin-settings.php:1064
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:427
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:458
+msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1034
 #: bp-core/admin/bp-core-admin-settings.php:1065
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:433
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:464
-msgid "Grid"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-settings.php:1035
-#: bp-core/admin/bp-core-admin-settings.php:1066
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:434
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:465
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:428
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:459
 msgid "List"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1052
+#: bp-core/admin/bp-core-admin-settings.php:1051
 msgid ""
-"Choose if group lists should display in Grid or List View in all group "
-"directories."
+"Display group directories in Grid View, List View, or allow toggling "
+"between both views."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -3098,7 +3102,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:349
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:343
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -3106,18 +3110,18 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:394
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:388
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:405
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:399
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:451
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:445
 msgid ""
-"Choose if profile directories should display in Grid or List View in all "
-"profile/member directories."
+"Display profile/member directories in Grid View, List View, or allow "
+"toggling between both views."
 msgstr ""
 
 #: bp-core/admin/templates/about-appboss.php:20
@@ -5900,13 +5904,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
