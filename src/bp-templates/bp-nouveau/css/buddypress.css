@@ -1,3 +1,4 @@
+@charset "UTF-8";
 /*--------------------------------------------------------------
 Hello, this is the BuddyPress Nouveau stylesheet.
 
@@ -3522,6 +3523,20 @@ div#bp-group-invite-content {
   color: #847d7d;
   font-style: italic;
   font-weight: bold;
+}
+
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing #members-list li .item .action button span.icons:before {
+  content: "";
+  font-family: bb-icons;
+  speak: none;
+  font-style: normal;
+  font-weight: normal;
+  text-transform: none;
+  line-height: 1;
+  -webkit-font-smoothing: antialiased;
+  color: #939597;
+  font-variant: normal;
+  list-style: none;
 }
 
 .hr-text {

@@ -413,6 +413,20 @@ div#bp-group-invite-content {
 	font-weight: bold;
 }
 
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing #members-list li .item .action button span.icons:before {
+	content: "";
+	font-family: bb-icons;
+	speak: none;
+	font-style: normal;
+	font-weight: normal;
+	text-transform: none;
+	line-height: 1;
+	-webkit-font-smoothing: antialiased;
+	color: rgb(147, 149, 151);
+	font-variant: normal;
+	list-style: none;
+}
+
 .hr-text {
 	line-height: 1em;
 	position: relative;
