@@ -143,7 +143,7 @@ class BpGroupCourses extends BP_Group_Extension {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function tabLabel() {
-		$default = __( 'Courses', 'buddyboss' );
+		$default = sprintf( __( '%s', 'buddyboss' ), \LearnDash_Custom_Label::get_label( 'courses' ) );
 
 		if ( ! $currentGroup = groups_get_current_group() ) {
 			return $default;
@@ -151,10 +151,7 @@ class BpGroupCourses extends BP_Group_Extension {
 
 		$coursesCount = count( bp_learndash_get_group_courses( $currentGroup->id ) );
 
-		$custom_labels = get_option('learndash_settings_custom_labels');
-		$lable_courses = (isset($custom_labels['courses']) && 0 < strlen($custom_labels['courses'])) ? $custom_labels['courses'] : $default;
-
-		return _nx( 'Course', $lable_courses, $coursesCount, 'bp group tab name', 'buddyboss' );
+		return sprintf( _n( \LearnDash_Custom_Label::get_label( 'course' ) , \LearnDash_Custom_Label::get_label( 'courses' ) , $coursesCount, 'buddyboss' ), $coursesCount );
 	}
 
 	/**
