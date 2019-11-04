@@ -1891,7 +1891,9 @@ function bbp_get_the_content( $args = array() ) {
 	if ( bbp_use_wp_editor() && ( false !== $r['tinymce'] ) ) {
 		remove_filter( 'bbp_get_form_forum_content', 'esc_textarea' );
 		remove_filter( 'bbp_get_form_topic_content', 'esc_textarea' );
+		remove_filter( 'bbp_get_form_topic_content', 'bbp_code_trick_reverse' );
 		remove_filter( 'bbp_get_form_reply_content', 'esc_textarea' );
+		remove_filter( 'bbp_get_form_reply_content', 'bbp_code_trick_reverse' );
 	}
 
 	// Assume we are not editing
