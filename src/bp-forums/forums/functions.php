@@ -188,31 +188,26 @@ function bbp_new_forum_handler( $action = '' ) {
 	// Filter and sanitize
 	$forum_parent_id = apply_filters( 'bbp_new_forum_pre_parent_id', $forum_parent_id );
 
-	// No forum parent was passed (should never happen)
-	if ( empty( $forum_parent_id ) ) {
-		bbp_add_error( 'bbp_new_forum_missing_parent', __( '<strong>ERROR</strong>: Your forum must have a parent.', 'buddyboss' ) );
-
-		// Forum exists
-	} elseif ( ! empty( $forum_parent_id ) ) {
+	if ( ! empty( $forum_parent_id ) ) {
 
 		// Forum is a category
 		if ( bbp_is_forum_category( $forum_parent_id ) ) {
-			bbp_add_error( 'bbp_new_forum_forum_category', __( '<strong>ERROR</strong>: This forum is a category. No forums can be created in this forum.', 'buddyboss' ) );
+			bbp_add_error( 'bbp_new_forum_forum_category', __( 'This forum is a category. No forums can be created in this forum.', 'buddyboss' ) );
 		}
 
 		// Forum is closed and user cannot access
 		if ( bbp_is_forum_closed( $forum_parent_id ) && ! current_user_can( 'edit_forum', $forum_parent_id ) ) {
-			bbp_add_error( 'bbp_new_forum_forum_closed', __( '<strong>ERROR</strong>: This forum has been closed to new forums.', 'buddyboss' ) );
+			bbp_add_error( 'bbp_new_forum_forum_closed', __( 'This forum has been closed to new forums.', 'buddyboss' ) );
 		}
 
 		// Forum is private and user cannot access
 		if ( bbp_is_forum_private( $forum_parent_id ) && ! current_user_can( 'read_private_forums' ) ) {
-			bbp_add_error( 'bbp_new_forum_forum_private', __( '<strong>ERROR</strong>: This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss' ) );
+			bbp_add_error( 'bbp_new_forum_forum_private', __( 'This forum is private and you do not have the capability to read or create new forums in it.', 'buddyboss' ) );
 		}
 
 		// Forum is hidden and user cannot access
 		if ( bbp_is_forum_hidden( $forum_parent_id ) && ! current_user_can( 'read_hidden_forums' ) ) {
-			bbp_add_error( 'bbp_new_forum_forum_hidden', __( '<strong>ERROR</strong>: This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss' ) );
+			bbp_add_error( 'bbp_new_forum_forum_hidden', __( 'This forum is hidden and you do not have the capability to read or create new forums in it.', 'buddyboss' ) );
 		}
 	}
 

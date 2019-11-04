@@ -1125,6 +1125,8 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
+                                dropdownCssClass: 'bb-select-dropdown',
+                                containerCssClass: 'bb-select-container',
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',

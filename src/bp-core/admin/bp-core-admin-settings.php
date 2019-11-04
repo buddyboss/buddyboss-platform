@@ -1024,6 +1024,77 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 }
 
 /**
+ * Admin Settings for Settings > Groups > Group Directories
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_admin_setting_callback_group_layout_type_format() {
+	$options = [
+		'list_grid' => __( 'Grid and List', 'buddyboss' ),
+		'grid'      => __( 'Grid', 'buddyboss' ),
+		'list'      => __( 'List', 'buddyboss' ),
+	];
+
+	$current_value = bp_get_option( 'bp-group-layout-format' );
+
+	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-format' );
+	foreach ( $options as $key => $value ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			$key,
+			$key == $current_value? 'selected' : '',
+			$value
+		);
+	}
+	printf( '</select>' );
+
+	?>
+	<p class="description"><?php _e( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
+	<?php
+}
+
+/**
+ * Admin Settings for Settings > Groups > Group Directories > Default Format
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_admin_setting_group_layout_default_option() {
+	$selected = bp_group_layout_default_format( 'grid' );
+
+	$options = [
+		'grid'      => __( 'Grid', 'buddyboss' ),
+		'list'      => __( 'List', 'buddyboss' ),
+	];
+
+	printf( '<select name="%1$s" for="%1$s">', 'bp-group-layout-default-format' );
+	foreach ( $options as $key => $value ) {
+		printf(
+			'<option value="%s" %s>%s</option>',
+			$key,
+			$key == $selected ? 'selected' : '',
+			$value
+		);
+	}
+	printf( '</select>' );
+
+}
+
+/**
+ * Link to Group Directories tutorial
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_group_directories_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-directories.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
+}
+
+/**
  * Enable group messages field markup.
  *
  * @since BuddyBoss 1.2.0
