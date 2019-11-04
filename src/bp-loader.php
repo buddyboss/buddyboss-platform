@@ -143,7 +143,14 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 			}
 
 			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
+
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
+
+                apply_filters( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
+
+                if ( isset( $_REQUEST['checked'] ) ) {
+                    add_action( 'load-plugins.php', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
+                }
 			}
 
 			/**
@@ -168,6 +175,21 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		return $value;
+	}
+
+	/**
+     * Remove the BuddyPress and bbPress Spoofing
+     *
+	 * @since BuddyBoss 1.2.0
+     *
+	 * @param $plugins
+	 *
+	 * @return mixed
+	 */
+	function bp_core_unset_bbpress_buddypress_active_all_plugins( $plugins ) {
+		bp_core_unset_bbpress_buddypress_active();
+
+		return $plugins;
 	}
 
 	/**

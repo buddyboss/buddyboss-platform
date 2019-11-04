@@ -1370,6 +1370,25 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 }
 
 /**
+ * Return the Default date format
+ *
+ * @param bool $date
+ * @param bool $time
+ * @param string $symbol
+ *
+ * @return mixed
+ */
+function bp_core_date_format( $time = false, $date = true, $symbol = ' @ ' ) {
+
+	$format = $date ? get_option( 'date_format' ) : '';
+
+	if ( $time ) {
+		$format .= empty( $format ) ? get_option( 'time_format' ) : $symbol . get_option( 'time_format' );
+	}
+	return $format;
+}
+
+/**
  * Output formatted date from a date string.
  *
  * @since BuddyBoss 1.0.0
@@ -4217,4 +4236,64 @@ function bp_platform_default_activity_types() {
 	);
 
 	return $activity_type;
+}
+
+if ( ! function_exists( 'bp_core_get_post_id_by_slug' ) ) {
+	/**
+	 * Get Post id by Post SLUG
+	 *
+	 * @param $slug
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return array
+	 */
+	function bp_core_get_post_id_by_slug( $slug ) {
+		$post_id = array();
+		$args    = array(
+			'posts_per_page' => 1,
+			'post_type'      => 'docs',
+			'name'           => $slug,
+			'post_parent'    => 0,
+		);
+		$docs    = get_posts( $args );
+		if ( ! empty( $docs ) ) {
+			foreach ( $docs as $doc ) {
+				$post_id[] = $doc->ID;
+			}
+		}
+
+		return $post_id;
+	}
+}
+
+/**
+ * Generate post slug by files name
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $dir_index_file
+ *
+ * @return string
+ */
+function bp_core_get_post_slug_by_index( $dir_index_file ) {
+	$dir_file_array = explode( '/', $dir_index_file );
+	$index_file     = bp_core_help_remove_file_extension_from_slug( end( $dir_file_array ) );
+
+	return bp_core_help_remove_file_number_from_slug( $index_file );
+}
+
+/**
+ * Remove H1 tag from Content
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $content
+ *
+ * @return mixed|null|string|string[]
+ */
+function bp_core_strip_header_tags( $content ) {
+	$content = preg_replace( '/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $content );
+
+	return $content;
 }

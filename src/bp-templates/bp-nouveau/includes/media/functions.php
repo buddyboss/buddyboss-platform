@@ -83,10 +83,7 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
-	if ( ! bp_is_media_component() && ! bp_is_user_media() && ! bp_is_single_album() && ! bp_is_media_directory() && ! bp_is_activity_component() && ! bp_is_group() && ! bp_is_messages_component() && ! ( function_exists( 'is_bbpress' ) && is_bbpress() ) ) {
-		return $params;
-	}
-
+	//initialize media vars because it is used globally
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_media_support_enabled(),
