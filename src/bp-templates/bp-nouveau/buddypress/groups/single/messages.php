@@ -26,7 +26,7 @@
 			</div>
 
 			<div class="group-messages-members-listing">
-				<div class="last"></div>
+				<div class="last" style="display: none;"></div>
 
 				<div class="bp-messages-feedback bp-messages-feedback-hide">
 					<div class="bp-feedback">
