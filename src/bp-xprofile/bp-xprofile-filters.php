@@ -775,7 +775,10 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 
 	$international   = false;
 	$selected_format = bp_xprofile_get_meta( $field_id, 'field', 'phone_format', true );
-	if ( empty( $selected_format ) ) {
+	if (
+		empty( $selected_format )
+		||  $selected_format == 'international'
+	) {
 		$international = true;
 	}
 

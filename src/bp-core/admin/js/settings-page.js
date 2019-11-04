@@ -495,7 +495,112 @@
 				);
 			}
 
-			if ( $( '#bp-tools-submit' ).length ) {
+		// For Profile layout options.
+		var profileSelectorType = $('.profile-layout-options');
+		if ( profileSelectorType.length ) {
+
+			var profileSelectorOptions = $('select[name=bp-profile-layout-format]');
+			var profileView = profileSelectorOptions.val();
+
+			$( profileSelectorType ).each(function() {
+				$(this).hide();
+			});
+
+			if ( 'list_grid' === profileView ) {
+				$('.profile-default-layout').show();
+			} else {
+				$('.profile-default-layout').hide();
+			}
+
+			$( profileSelectorOptions ).change(function () {
+
+				$( profileSelectorType ).each(function() {
+					$(this).hide();
+				});
+
+				profileView = $(this).val();
+
+				if ( 'list_grid' === profileView ) {
+					$('.profile-default-layout').show();
+				} else {
+					$('.profile-default-layout').hide();
+				}
+
+			});
+
+			/* jshint ignore:start */
+			var getCookies = function(){
+				var pairs = document.cookie.split(';');
+				var cookies = {};
+				for (var i=0; i<pairs.length; i++){
+					var pair = pairs[i].split('=');
+					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
+				}
+				return cookies;
+			};
+			var getResetCookies = getCookies();
+			if ( getResetCookies.reset_member ) {
+				localStorage.setItem( 'bp-members', '' );
+				localStorage.setItem( 'bp-group_members', '' );
+				setCookie('reset_member','',0); // this will delete the cookie.
+			}
+			/* jshint ignore:end */
+
+		}
+
+		// For Group layout options.
+		var groupSelectorType = $('.group-layout-options');
+		if ( groupSelectorType.length ) {
+
+			var groupSelectorOptions = $('select[name=bp-group-layout-format]');
+			var groupView = groupSelectorOptions.val();
+
+			$( groupSelectorType ).each(function() {
+				$(this).hide();
+			});
+
+			if ( 'list_grid' === groupView ) {
+				$('.group-default-layout').show();
+			} else {
+				$('.group-default-layout').hide();
+			}
+
+			$( groupSelectorOptions ).change(function () {
+
+				$( groupSelectorType ).each(function() {
+					$(this).hide();
+				});
+
+				groupView = $(this).val();
+
+				if ( 'list_grid' === groupView ) {
+					$('.group-default-layout').show();
+				} else {
+					$('.group-default-layout').hide();
+				}
+
+			});
+
+			/* jshint ignore:start */
+			var getGroupCookies = function(){
+				var pairs = document.cookie.split(';');
+				var cookies = {};
+				for (var i=0; i<pairs.length; i++){
+					var pair = pairs[i].split('=');
+					cookies[(pair[0]+'').trim()] = unescape(pair.slice(1).join('='));
+				}
+				return cookies;
+			};
+			var getGroupResetCookies = getGroupCookies();
+			if ( getGroupResetCookies.reset_group ) {
+				localStorage.setItem( 'bp-groups', '' );
+				setCookie('reset_group','',0); // this will delete the cookie.
+			}
+			/* jshint ignore:end */
+
+		}
+
+		if ( $( '#bp-tools-submit' ).length ) {
 
 				var bp_admin_repair_tools_wrapper_function = function( offset, currentAction ) {
 					$( 'body .section-repair_community .settings fieldset .checkbox label[for="' + BbToolsCommunityRepairActions[currentAction] + '"]' ).append( '<div class="loader-repair-tools"></div>' );
@@ -644,5 +749,14 @@
 
 		}
 	);
+
+	/* jshint ignore:start */
+	function setCookie(cname, cvalue, exMins) {
+		var d = new Date();
+		d.setTime(d.getTime() + (exMins*60*1000));
+		var expires = 'expires='+d.toUTCString();
+		document.cookie = cname + '=' + cvalue + ';' + expires + ';path=/';
+	}
+	/* jshint ignore:end */
 
 }());

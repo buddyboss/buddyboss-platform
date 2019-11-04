@@ -154,6 +154,24 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Profile Search Tutorial
 		$this->add_field( 'bp-profile-search-tutorial', '', array( $this, 'bp_profile_search_tutorial' ) );
 
+		// Section for profile list.
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ) );
+
+		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views
+		$this->add_field(
+			'bp-profile-layout-format',
+			__( 'Enabled View(s)', 'buddyboss' ),
+			[ $this, 'bp_admin_setting_profile_layout_type_format']
+		);
+
+		// Admin Settings for Settings > Profiles > Profile Directories > Default View
+		$args = array();
+		$args['class'] = 'profile-default-layout profile-layout-options';
+		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
+
+		// Profile Directories Tutorial
+		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
+
 	}
 
 	/**
@@ -306,7 +324,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 														$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
 														// if ( ! empty( $type_id ) ) {
 														?>
-						<option 
+						<option
 														<?php
 														selected(
 															$existing_selected,
@@ -401,6 +419,76 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 
 		<p>
 			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
+	}
+
+	/**
+	 * Admin Settings for Settings > Profiles > Profile Directories > Default Format
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function bp_admin_setting_profile_layout_type_format() {
+		$options = [
+			'list_grid' => __( 'Grid and List', 'buddyboss' ),
+			'grid'      => __( 'Grid', 'buddyboss' ),
+			'list'      => __( 'List', 'buddyboss' ),
+		];
+
+		$current_value = bp_get_option( 'bp-profile-layout-format' );
+
+		printf( '<select name="%1$s" for="%1$s">', 'bp-profile-layout-format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				$key,
+				$key == $current_value? 'selected' : '',
+				$value
+			);
+		}
+		printf( '</select>' );
+
+		?>
+		<p class="description"><?php _e( 'Display profile/member directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
+		<?php
+	}
+
+	/**
+	 * Admin Settings for Settings > Profiles > Profile Directories > Default Format
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function bp_admin_setting_profile_layout_default_option() {
+		$selected = bp_profile_layout_default_format( 'grid' );
+
+		$options = [
+			'grid'      => __( 'Grid', 'buddyboss' ),
+			'list'      => __( 'List', 'buddyboss' ),
+		];
+
+		printf( '<select name="%1$s" for="%1$s">', 'bp-profile-layout-default-format' );
+		foreach ( $options as $key => $value ) {
+			printf(
+				'<option value="%s" %s>%s</option>',
+				$key,
+				$key == $selected ? 'selected' : '',
+				$value
+			);
+		}
+		printf( '</select>' );
+	}
+
+	/**
+	 * Link to Profile Directories tutorial
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function bp_profile_directories_tutorial() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-directories.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
