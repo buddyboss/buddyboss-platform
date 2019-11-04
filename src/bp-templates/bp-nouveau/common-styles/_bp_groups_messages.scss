@@ -64,7 +64,7 @@
 }
 
 @include medium-up() {
-    
+
     .group-messages-members-listing #members-list {
             max-height: 70vh;
             overflow-y: auto;
@@ -443,7 +443,7 @@ span.icons:before {
 		flex: 0 0 100%;
 		border-right: 0;
 	}
-        
+
         .group-messages-members-listing #members-list {
                 max-height: 25vh;
         }
@@ -485,7 +485,7 @@ span.icons:before {
                 display: block;
             }
 
-            select.group-messages-select-members-dropdown {
+            select.group-messages-select-members-dropdown, .add-more-members {
                 display: none;
             }
 
@@ -497,7 +497,7 @@ span.icons:before {
                 background: #fbfbfc;
             }
         }
-        
+
         body #buddypress .group-messages-members-listing .bp-list .action {
             flex: 0 0 26px;
             margin-left: auto;

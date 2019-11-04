@@ -11768,7 +11768,7 @@ span.icons:before {
   .bb-groups-messages-left.bb-select-member-view .group-messages-members-listing {
     display: block;
   }
-  .bb-groups-messages-left.bb-select-member-view select.group-messages-select-members-dropdown {
+  .bb-groups-messages-left.bb-select-member-view select.group-messages-select-members-dropdown, .bb-groups-messages-left.bb-select-member-view .add-more-members {
     display: none;
   }
   .bb-groups-messages-left.bb-select-member-view .group-messages-members-listing {
