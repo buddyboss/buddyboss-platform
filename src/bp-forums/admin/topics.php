@@ -813,12 +813,18 @@ class BBP_Topics_Admin {
 		if ( current_user_can( 'delete_topic', $topic->ID ) ) {
 			if ( bbp_get_trash_status_id() === $topic->post_status ) {
 				$post_type_object   = get_post_type_object( bbp_get_topic_post_type() );
-				$actions['untrash'] = "<a title='" . esc_attr__( 'Restore this item from the Trash', 'buddyboss' ) . "' href='" . esc_url( wp_nonce_url( add_query_arg( array( '_wp_http_referer' => add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) ) ), admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $topic->ID ) ) ), 'untrash-' . $topic->post_type . '_' . $topic->ID ) ) . "'>" . esc_html__( 'Restore', 'buddyboss' ) . "</a>";
+				$actions['untrash'] = sprintf(
+					'<a href="%s" aria-label="%s">%s</a>',
+					wp_nonce_url( admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $topic->ID ) ), 'untrash-post_' . $topic->ID ),
+					/* translators: %s: post title */
+					esc_attr( sprintf( __( 'Restore &#8220;%s&#8221; from the Trash' ), $topic->post_title ) ),
+					__( 'Restore' )
+				);
 			} elseif ( EMPTY_TRASH_DAYS ) {
 				$actions['trash'] = "<a class='submitdelete' title='" . esc_attr__( 'Move this item to the Trash', 'buddyboss' ) . "' href='" . esc_url( add_query_arg( array( '_wp_http_referer' => add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) ) ), get_delete_post_link( $topic->ID ) ) ) . "'>" . esc_html__( 'Trash', 'buddyboss' ) . "</a>";
 			}
 
-			if ( bbp_get_trash_status_id() === $topic->post_status || !EMPTY_TRASH_DAYS ) {
+			if ( bbp_get_trash_status_id() === $topic->post_status || ! EMPTY_TRASH_DAYS ) {
 				$actions['delete'] = "<a class='submitdelete' title='" . esc_attr__( 'Delete this item permanently', 'buddyboss' ) . "' href='" . esc_url( add_query_arg( array( '_wp_http_referer' => add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) ) ), get_delete_post_link( $topic->ID, '', true ) ) ) . "'>" . esc_html__( 'Delete Permanently', 'buddyboss' ) . "</a>";
 			} elseif ( bbp_get_spam_status_id() === $topic->post_status ) {
 				unset( $actions['trash'] );
