@@ -187,6 +187,10 @@ jQuery(document).ready(function($) {
 							ul.addClass('bp-forum-search-ac-header');
 						}
 
+						if ( $('#bbp_search').length ) {
+							ul.addClass('bp-forum-search-ac-header');
+						}
+
 						if ( $('body.bbp-search.forum-search').length ) {
 							ul.addClass('bp-forum-search-ac-header');
 						}

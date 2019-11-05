@@ -312,7 +312,7 @@ final class BP_Group_Export extends BP_Export {
 		$ids_in = array_fill( 0, count( $group_ids ), '%s' );
 		$ids_in = join( ',', $ids_in );
 
-		$query = $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})", $group_ids );
+		$query = $wpdb->prepare( "SELECT *FROM {$group_meta_table} WHERE group_id in ({$ids_in})" );
 
 		$results = $wpdb->get_results( $query );
 

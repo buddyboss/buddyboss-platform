@@ -42,8 +42,11 @@ function bp_core_set_uri_globals() {
 	$bp = buddypress();
 
 	// Define local variables.
-	$root_profile = $match   = false;
-	$key_slugs    = $matches = $uri_chunks = array();
+	$root_profile = false;
+	$match        = false;
+	$key_slugs    = array();
+	$matches      = array();
+	$uri_chunks   = array();
 
 	// Fetch all the WP page names for each component.
 	if ( empty( $bp->pages ) ) {
@@ -87,7 +90,7 @@ function bp_core_set_uri_globals() {
 	 * 2. when BP is running on secondary blog of a subdirectory
 	 * multisite installation. Phew!
 	 */
-	if ( is_multisite() && ! is_subdomain_install() && ( bp_is_multiblog_mode() || 1 != bp_get_root_blog_id() ) ) {
+	if ( is_multisite() && ! is_subdomain_install() && ( bp_is_multiblog_mode() || 1 !== bp_get_root_blog_id() ) ) {
 
 		// Blow chunks.
 		$chunks = explode( '/', $current_blog->path );
@@ -128,7 +131,7 @@ function bp_core_set_uri_globals() {
 
 	// Unset URI indices if they intersect with the paths.
 	foreach ( (array) $bp_uri as $key => $uri_chunk ) {
-		if ( isset( $paths[ $key ] ) && $uri_chunk == $paths[ $key ] ) {
+		if ( isset( $paths[ $key ] ) && $uri_chunk === $paths[ $key ] ) {
 			unset( $bp_uri[ $key ] );
 		}
 	}
@@ -141,7 +144,7 @@ function bp_core_set_uri_globals() {
 	 * so that $current_component is populated (unless a specific WP post is being requested
 	 * via a URL parameter, usually signifying Preview mode).
 	 */
-	if ( 'page' == get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) && empty( $_GET['cat'] ) ) {
+	if ( 'page' === get_option( 'show_on_front' ) && get_option( 'page_on_front' ) && empty( $bp_uri ) && empty( $_GET['p'] ) && empty( $_GET['page_id'] ) && empty( $_GET['cat'] ) ) {
 		$post = get_post( get_option( 'page_on_front' ) );
 		if ( ! empty( $post ) ) {
 			$bp_uri[0] = $post->post_name;
@@ -166,7 +169,7 @@ function bp_core_set_uri_globals() {
 
 	// Loop through page slugs and look for exact match to path.
 	foreach ( $key_slugs as $key => $slug ) {
-		if ( $slug == $path ) {
+		if ( $slug === $path ) {
 			$match      = $bp->pages->{$key};
 			$match->key = $key;
 			$matches[]  = 1;
@@ -190,7 +193,7 @@ function bp_core_set_uri_globals() {
 				foreach ( (array) $uri_chunks as $key => $uri_chunk ) {
 
 					// Make sure chunk is in the correct position.
-					if ( ! empty( $bp_uri[ $key ] ) && ( $bp_uri[ $key ] == $uri_chunk ) ) {
+					if ( ! empty( $bp_uri[ $key ] ) && ( $bp_uri[ $key ] === $uri_chunk ) ) {
 						$matches[] = 1;
 
 						// No match.
@@ -236,7 +239,8 @@ function bp_core_set_uri_globals() {
 		$member_slug = apply_filters( 'bp_core_set_uri_globals_member_slug', $bp_uri[0] );
 
 		// Make sure there's a user corresponding to $bp_uri[0].
-		if ( ! empty( $bp->pages->members ) && $root_profile = get_user_by( $field, $member_slug ) ) {
+		$root_profile = get_user_by( $field, $member_slug );
+		if ( ! empty( $bp->pages->members ) && $root_profile ) {
 
 			// Force BP to recognize that this is a members page.
 			$matches[]  = 1;
@@ -246,7 +250,7 @@ function bp_core_set_uri_globals() {
 	}
 
 	// Search doesn't have an associated page, so we check for it separately.
-	if ( ! empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
+	if ( ! empty( $bp_uri[0] ) && ( bp_get_search_slug() === $bp_uri[0] ) ) {
 		$matches[]   = 1;
 		$match       = new stdClass();
 		$match->key  = 'search';
@@ -284,7 +288,7 @@ function bp_core_set_uri_globals() {
 		$bp->current_component = $match->key;
 
 		// If members component, do more work to find the actual component.
-		if ( 'members' == $match->key ) {
+		if ( 'members' === $match->key ) {
 
 			$after_member_slug = false;
 			if ( ! empty( $bp_uri[ $uri_offset + 1 ] ) ) {
@@ -311,7 +315,7 @@ function bp_core_set_uri_globals() {
 			}
 
 			// Is this a profile type directory?
-			if ( ! bp_displayed_user_id() && $after_member_slug === bp_get_members_member_type_base() && ! empty( $bp_uri[ $uri_offset + 2 ] ) ) {
+			if ( ! bp_displayed_user_id() && bp_get_members_member_type_base() === $after_member_slug && ! empty( $bp_uri[ $uri_offset + 2 ] ) ) {
 				$matched_types = bp_get_member_types(
 					array(
 						'has_directory'  => true,
@@ -368,7 +372,7 @@ function bp_core_set_uri_globals() {
 	 * If a BuddyPress directory is set to the WP front page, URLs like example.com/members/?s=foo
 	 * shouldn't interfere with blog searches.
 	 */
-	if ( empty( $current_action ) && ! empty( $_GET['s'] ) && 'page' == get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
+	if ( empty( $current_action ) && ! empty( $_GET['s'] ) && 'page' === get_option( 'show_on_front' ) && ! empty( $match->id ) ) {
 		$page_on_front = (int) get_option( 'page_on_front' );
 		if ( (int) $match->id === $page_on_front ) {
 			$bp->current_component = '';
@@ -400,7 +404,7 @@ function bp_core_enable_root_profiles() {
 
 	$retval = false;
 
-	if ( defined( 'BP_ENABLE_ROOT_PROFILES' ) && ( true == BP_ENABLE_ROOT_PROFILES ) ) {
+	if ( defined( 'BP_ENABLE_ROOT_PROFILES' ) && ( true === BP_ENABLE_ROOT_PROFILES ) ) {
 		$retval = true;
 	}
 
@@ -666,7 +670,7 @@ function bp_core_no_access( $args = '' ) {
 	 * @param array $r Array of parsed arguments for redirect determination.
 	 */
 	$r = apply_filters( 'bp_core_no_access', $r );
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	/*
 	 * @ignore Ignore these filters and use 'bp_core_no_access' above.
@@ -899,12 +903,13 @@ function bp_get_canonical_url( $args = array() ) {
 		'include_query_args' => false, // Include URL arguments, eg ?foo=bar&foo2=bar2.
 	);
 	$r        = wp_parse_args( $args, $defaults );
-	extract( $r );
+	extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	// Special case: when a BuddyPress directory (eg example.com/members)
 	// is set to be the front page, ensure that the current canonical URL
 	// is the home page URL.
-	if ( 'page' == get_option( 'show_on_front' ) && $page_on_front = (int) get_option( 'page_on_front' ) ) {
+	$page_on_front = (int) get_option( 'page_on_front' );
+	if ( 'page' === get_option( 'show_on_front' ) && $page_on_front ) {
 		$front_page_component = array_search( $page_on_front, bp_core_get_directory_page_ids() );
 
 		/*
@@ -920,7 +925,7 @@ function bp_get_canonical_url( $args = array() ) {
 			// Except when the front page is set to the registration page
 			// and the current user is logged in. In this case we send to
 			// the members directory to avoid redirect loops.
-		} elseif ( bp_is_register_page() && 'register' == $front_page_component && is_user_logged_in() ) {
+		} elseif ( bp_is_register_page() && 'register' === $front_page_component && is_user_logged_in() ) {
 
 			/**
 			 * Filters the logged in register page redirect URL.
@@ -1165,7 +1170,7 @@ function bp_private_network_template_redirect() {
 						$fragments = explode( '/', $request_url );
 
 						foreach ( $fragments as $fragment ) {
-							if ( $fragment === trim( $url, '/' ) ) {
+							if ( trim( $url, '/' ) === $fragment ) {
 								return;
 							}
 						}
@@ -1178,10 +1183,10 @@ function bp_private_network_template_redirect() {
 
 						if ( class_exists( 'woocommerce' ) ) {
 
-							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+							$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-							if ( $actual_link !== wc_lostpassword_url() ) {
-								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+							if ( wc_lostpassword_url() !== $actual_link ) {
+								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && intval( get_option( 'woocommerce_myaccount_page_id' ) ) !== $id ) {
 
 									$redirect_url  = is_ssl() ? 'https://' : 'http://';
 									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1232,10 +1237,10 @@ function bp_private_network_template_redirect() {
 				} else {
 					if ( class_exists( 'woocommerce' ) ) {
 
-						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+						$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-						if ( $actual_link !== wc_lostpassword_url() ) {
-							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+						if ( wc_lostpassword_url() !== $actual_link ) {
+							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && intval( get_option( 'woocommerce_myaccount_page_id' ) ) !== $id ) {
 
 								$redirect_url  = is_ssl() ? 'https://' : 'http://';
 								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1275,8 +1280,8 @@ function bp_private_network_template_redirect() {
 
 					$actual_link = ( isset( $_SERVER['HTTPS'] ) && 'on' === $_SERVER['HTTPS'] ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
-					if ( $actual_link !== wc_lostpassword_url() && ! bp_is_activation_page() ) {
-						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+					if ( wc_lostpassword_url() !== $actual_link && ! bp_is_activation_page() ) {
+						if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && intval( get_option( 'woocommerce_myaccount_page_id' ) ) !== $id ) {
 
 							$redirect_url  = is_ssl() ? 'https://' : 'http://';
 							$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';

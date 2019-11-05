@@ -25,7 +25,8 @@ defined( 'ABSPATH' ) || exit;
 function bp_core_check_for_flood( $user_id = 0 ) {
 
 	// Option disabled. No flood checks.
-	if ( ! $throttle_time = bp_get_option( '_bp_throttle_time' ) ) {
+	$throttle_time = bp_get_option( '_bp_throttle_time' );
+	if ( ! $throttle_time ) {
 		return true;
 	}
 

@@ -82,7 +82,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 			$raw_response   = wp_remote_post( $this->api_url, $request_string );
 
 			$response = null;
-			if ( ! is_wp_error( $raw_response ) && ( $raw_response['response']['code'] == 200 ) ) {
+			if ( ! is_wp_error( $raw_response ) && ( 200 === $raw_response['response']['code'] ) ) {
 				$response = unserialize( $raw_response['body'] );
 			}
 
@@ -105,7 +105,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 
 		function plugins_api( $def, $action, $args ) {
 
-			if ( ! isset( $args->slug ) || $args->slug != $this->plugin_slug ) {
+			if ( ! isset( $args->slug ) || $args->slug !== $this->plugin_slug ) {
 				return $def;
 			}
 
@@ -129,7 +129,7 @@ if ( ! class_exists( 'BP_BuddyBoss_Platform_Updater' ) ) :
 				$res = new WP_Error( 'plugins_api_failed', __( 'An Unexpected HTTP Error occurred during the API request.</p> <p><a href="?" onclick="document.location.reload(); return false;">Try again</a>', 'buddyboss' ), $raw_response->get_error_message() );
 			} else {
 				$res = unserialize( $raw_response['body'] );
-				if ( $res === false ) {
+				if ( false === $res ) {
 					$res = new WP_Error( 'plugins_api_failed', __( 'An unknown error occurred', 'buddyboss' ), $raw_response['body'] );
 				}
 			}
