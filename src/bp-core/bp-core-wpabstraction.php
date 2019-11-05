@@ -198,7 +198,7 @@ if ( ! is_multisite() ) {
 		 * @return bool
 		 */
 		function is_subdomain_install() {
-			if ( ( defined( 'VHOST' ) && 'yes' == VHOST ) || ( defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ) ) {
+			if ( ( defined( 'VHOST' ) && 'yes' === VHOST ) || ( defined( 'SUBDOMAIN_INSTALL' ) && SUBDOMAIN_INSTALL ) ) {
 				return true;
 			}
 

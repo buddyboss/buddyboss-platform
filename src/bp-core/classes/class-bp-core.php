@@ -82,7 +82,7 @@ class BP_Core extends BP_Component {
 		$bp->required_components = apply_filters( 'bp_required_components', array( 'members', 'xprofile' ) );
 
 		// Get a list of activated components.
-		if ( $active_components = bp_get_option( 'bp-active-components' ) ) {
+		if ( $active_components = bp_get_option( 'bp-active-components' ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 
 			/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
 			$bp->active_components = apply_filters( 'bp_active_components', $active_components );
@@ -97,7 +97,7 @@ class BP_Core extends BP_Component {
 			$bp->deactivated_components = apply_filters( 'bp_deactivated_components', array_values( array_diff( array_values( array_merge( $bp->optional_components, $bp->required_components ) ), array_keys( $bp->active_components ) ) ) );
 
 			// Pre 1.5 Backwards compatibility.
-		} elseif ( $deactivated_components = bp_get_option( 'bp-deactivated-components' ) ) {
+		} elseif ( $deactivated_components = bp_get_option( 'bp-deactivated-components' ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 
 			// Trim off namespace and filename.
 			foreach ( array_keys( (array) $deactivated_components ) as $component ) {

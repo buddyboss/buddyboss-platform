@@ -237,7 +237,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 	 * component, don't attach the default subnav function so we can display a
 	 * directory or something else.
 	 */
-	if ( ( -1 != $r['position'] ) && bp_is_root_component( $r['slug'] ) && ! bp_displayed_user_id() ) {
+	if ( ( -1 !== $r['position'] ) && bp_is_root_component( $r['slug'] ) && ! bp_displayed_user_id() ) {
 		return;
 	}
 
@@ -357,7 +357,7 @@ function bp_core_new_nav_default( $args = '' ) {
 
 			// The URL is explicitly requesting the new subnav item, but should be
 			// directed to the canonical URL.
-		} elseif ( $unfiltered_action == $r['subnav_slug'] ) {
+		} elseif ( $unfiltered_action === $r['subnav_slug'] ) {
 			unset( $bp->canonical_stack['action'] );
 
 			// In all other cases (including the case where the original subnav item
@@ -625,7 +625,7 @@ function bp_core_register_subnav_screen_function( $args = '', $component = 'memb
 	}
 
 	// If we *do* meet condition (2), then the added subnav item is currently being requested.
-	if ( ( bp_current_action() && bp_is_current_action( $r['slug'] ) ) || ( bp_is_user() && ! bp_current_action() && ! empty( $parent_nav->screen_function ) && $r['screen_function'] == $parent_nav->screen_function ) ) {
+	if ( ( bp_current_action() && bp_is_current_action( $r['slug'] ) ) || ( bp_is_user() && ! bp_current_action() && ! empty( $parent_nav->screen_function ) && $r['screen_function'] === $parent_nav->screen_function ) ) {
 
 		// If this is for site admins only and the user is not one, don't create the subnav item.
 		if ( ! empty( $r['site_admin_only'] ) && ! bp_current_user_can( 'bp_moderate' ) ) {
@@ -715,7 +715,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 						$redirect_to = trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() );
 						// Then try 'profile'.
 					} else {
-						$redirect_to = trailingslashit( bp_displayed_user_domain() . ( 'xprofile' == $bp->profile->id ? 'profile' : $bp->profile->id ) );
+						$redirect_to = trailingslashit( bp_displayed_user_domain() . ( 'xprofile' === $bp->profile->id ? 'profile' : $bp->profile->id ) );
 					}
 
 					$message = '';

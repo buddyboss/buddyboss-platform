@@ -160,7 +160,7 @@ function bp_core_help_remove_file_extension_from_slug( $slug, $file_type = '.md'
 function bp_core_help_remove_file_number_from_slug( $index_file ) {
 	$index_file = explode( '-', $index_file );
 
-	if ( ( absint( $index_file[0] ) > 0 || '0' == $index_file[0] ) && count( $index_file ) > 1 ) {
+	if ( ( absint( $index_file[0] ) > 0 || '0' === $index_file[0] ) && count( $index_file ) > 1 ) {
 		unset( $index_file[0] );
 	}
 
@@ -210,7 +210,7 @@ function bp_core_help_dynamically_add_number_in_path( $slug ) {
 		foreach ( $paths as $path ) {
 			$file_path = str_replace( $docs_path, '', $path );
 			$path      = bp_core_help_strip_number_from_slug( $file_path );
-			if ( $path == $new_slug ) {
+			if ( $path === $new_slug ) {
 				$new_slug = $file_path;
 				break;
 			}
@@ -237,7 +237,7 @@ function bp_core_help_get_all_file_from_dir_and_subdir( $dir, &$results = array(
 		$path = realpath( $dir . DIRECTORY_SEPARATOR . $value );
 		if ( ! is_dir( $path ) ) {
 			$results[] = $path;
-		} elseif ( $value != '.' && $value != '..' ) {
+		} elseif ( '.' !== $value && '..' !== $value ) {
 			bp_core_help_get_all_file_from_dir_and_subdir( $path, $results );
 			$results[] = $path;
 		}

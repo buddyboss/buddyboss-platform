@@ -42,21 +42,21 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
 	wp_register_script( 'bp-ps-template-form', buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js', array(), bp_get_version() );
 	wp_enqueue_script( 'bp-ps-template-form' );
-	$F            = new stdClass();
-	$F->id        = $form;
-	$F->title     = get_the_title( $form );
-	$F->location  = $location;
-	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$form_data            = new stdClass();
+	$form_data->id        = $form;
+	$form_data->title     = get_the_title( $form );
+	$form_data->location  = $location;
+	$form_data->unique_id = bp_ps_unique_id( 'form_' . $form );
+	$form_data->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
-	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$form_data->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$F->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$form_data->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
 	}
 
-	$F->method = 'POST';
-	$F->fields = array();
+	$form_data->method = 'POST';
+	$form_data->fields = array();
 
 	foreach ( $meta['field_code'] as $k => $code ) {
 		if ( empty( $fields[ $code ] ) ) {
@@ -65,19 +65,19 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 
 		$f    = $fields[ $code ];
 		$mode = $meta['field_mode'][ $k ];
-		if ( ! bp_ps_Fields::set_display( $f, $mode ) ) {
+		if ( ! BP_PS_Fields::set_display( $f, $mode ) ) {
 			continue;
 		}
 
 		$f->label     = $f->name;
 		$custom_label = $meta['field_label'][ $k ];
 		if ( ! empty( $custom_label ) ) {
-			$f->label    = $custom_label;
-			$F->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
+			$f->label            = $custom_label;
+			$form_data->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
 		}
 
 		$custom_desc = $meta['field_desc'][ $k ];
-		if ( $custom_desc == '-' ) {
+		if ( '-' === $custom_desc ) {
 			$f->description = '';
 		} elseif ( ! empty( $custom_desc ) ) {
 			$f->description = $custom_desc;
@@ -126,7 +126,11 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 
 			case 'distance':
 				if ( ! isset( $f->value['location'] ) ) {
-					$f->value['distance'] = $f->value['units'] = $f->value['location'] = $f->value['lat'] = $f->value['lng'] = '';
+					$f->value['distance'] = '';
+					$f->value['units']    = '';
+					$f->value['location'] = '';
+					$f->value['lat']      = '';
+					$f->value['lng']      = '';
 				}
 				wp_enqueue_script( $f->script_handle );
 				wp_enqueue_script( 'bp-ps-template' );
@@ -156,7 +160,7 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 
 		$f->values = (array) $f->value;
 
-		$f->html_name  = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;
+		$f->html_name  = ( '' === $mode ) ? $f->code : $f->code . '_' . $mode;
 		$f->unique_id  = bp_ps_unique_id( $f->html_name );
 		$f->mode       = $mode;
 		$f->full_label = bp_ps_full_label( $f );
@@ -167,23 +171,23 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 		 * @since BuddyBoss 1.0.0
 		 */
 		do_action( 'bp_ps_field_before_search_form', $f );
-		$f->code     = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;       // to be removed
-		$F->fields[] = $f;
+		$f->code             = ( '' === $mode ) ? $f->code : $f->code . '_' . $mode;       // to be removed
+		$form_data->fields[] = $f;
 	}
 
-	$F->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
+	$form_data->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
 	/**
 	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	do_action( 'bp_ps_before_search_form', $F );
+	do_action( 'bp_ps_before_search_form', $form_data );
 
-	foreach ( $F->fields as $f ) {
+	foreach ( $form_data->fields as $f ) {
 		if ( ! is_array( $f->value ) ) {
 			$f->value = esc_attr( stripslashes( $f->value ) );
 		}
-		if ( $f->display == 'hidden' ) {
+		if ( 'hidden' === $f->display ) {
 			continue;
 		}
 
@@ -207,5 +211,5 @@ function bp_profile_search_escaped_form_data( $form = false ) {
 		$f->options = $options;
 	}
 
-	return $F;
+	return $form_data;
 }

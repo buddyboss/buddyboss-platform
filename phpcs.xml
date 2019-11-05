@@ -11,6 +11,8 @@
     <exclude-pattern>*.js</exclude-pattern>
     <exclude-pattern>*/deprecated/*</exclude-pattern>
     <exclude-pattern>*/bp-integrations/*</exclude-pattern>
+    <exclude-pattern>*/bp-core/classes/class-bp-phpmailer.php</exclude-pattern>
+    <exclude-pattern>*/bp-core/classes/class-bp-email-tokens.php</exclude-pattern>
     <exclude-pattern>*/js/autocomplete/*</exclude-pattern>
     <exclude-pattern>*/js-templates/*</exclude-pattern>
     <exclude-pattern>awpcp_ad_listing-ajax.php</exclude-pattern>

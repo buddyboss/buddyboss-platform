@@ -58,7 +58,7 @@ final class BP_Friendship_Export extends BP_Export {
 			$group_label = __( 'Connections', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
-			if ( $item->initiator_user_id == $user->ID ) {
+			if ( $item->initiator_user_id === $user->ID ) {
 				$friend_user_id = $item->friend_user_id;
 				$is_initiator   = true;
 			} else {
@@ -66,12 +66,12 @@ final class BP_Friendship_Export extends BP_Export {
 				$is_initiator   = false;
 			}
 
-			if ( $item->is_confirmed == '0' && $is_initiator ) {
+			if ( '0' === $item->is_confirmed && $is_initiator ) {
 				$group_id   .= '_pending_sent';
 				$group_label = __( 'Pending Sent Connection Requests', 'buddyboss' );
 			}
 
-			if ( $item->is_confirmed == '0' && ! $is_initiator ) {
+			if ( '0' === $item->is_confirmed && ! $is_initiator ) {
 				$group_id   .= '_pending_received';
 				$group_label = __( 'Pending Received Connection Requests', 'buddyboss' );
 			}
@@ -89,7 +89,7 @@ final class BP_Friendship_Export extends BP_Export {
 				),
 			);
 
-			if ( $item->is_confirmed == '1' ) {
+			if ( '1' === $item->is_confirmed ) {
 				$is_initiator_value = ( ( $is_initiator ) ? __( 'Yes', 'buddyboss' ) : __( 'No', 'buddyboss' ) );
 				$data[]             = array(
 					'name'  => __( 'Request Initiator', 'buddyboss' ),

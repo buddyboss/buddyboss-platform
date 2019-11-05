@@ -73,7 +73,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 			$value = new self( $value );
 		}
 
-		if ( $offset !== null ) {
+		if ( null !== $offset ) {
 			// Temporarily set the backcompat_nav.
 			$this->backcompat_nav[ $offset ] = $value;
 
@@ -184,7 +184,7 @@ class BP_Core_BP_Nav_BackCompat implements ArrayAccess {
 	 */
 	public function get_component( $offset = '' ) {
 		if ( ! isset( $this->component ) ) {
-			if ( bp_is_active( 'groups' ) && $offset === bp_get_current_group_slug() ) {
+			if ( bp_is_active( 'groups' ) && bp_get_current_group_slug() === $offset ) {
 				$this->component = 'groups';
 			} else {
 				$this->component = 'members';
