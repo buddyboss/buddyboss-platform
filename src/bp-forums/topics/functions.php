@@ -195,7 +195,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	$topic_content = apply_filters( 'bbp_new_topic_pre_content', $topic_content );
 
 	// No topic content
-	if ( empty( $topic_content ) ) {
+	if ( empty( $topic_content ) && empty( $_POST['bbp_media_gif'] ) ) {
 		bbp_add_error( 'bbp_topic_content', __( '<strong>ERROR</strong>: Your discussion cannot be empty.', 'buddyboss' ) );
 	}
 
