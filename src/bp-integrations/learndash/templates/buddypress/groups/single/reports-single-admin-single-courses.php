@@ -37,13 +37,22 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				</div>
 			</div>
 		</div>
-	<?php } ?>
-	<?php } ?>
-	<?php
+	<?php }
+	}
 }
 ?>
+
 <div class="bp_ld_report_table_wrapper">
-	<?php
+	<div class="bp_ld_report_container"><?php
+	/**
+	* @todo Should we be labeling Teacher and Student here?
+	*/
+	if ( $courses[0]->ID ) :
+		$course = get_post( $courses[0]->ID );
+		?>
+		<h2 class="ld-report-course-name"><?php echo $courses[0]->post_title; ?></h2><?php
+	endif;
+
 	foreach ( $courses as $course ) {
 		$course_users = learndash_get_groups_user_ids( $group_id );
 		if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
@@ -430,9 +439,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 
 				</table>
 				<?php
-		}
-	}
-	?>
+			} ?>
+	<?php } ?>
+	</div>
 </div>
-
-

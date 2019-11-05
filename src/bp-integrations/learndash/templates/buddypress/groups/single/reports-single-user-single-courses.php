@@ -37,10 +37,8 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 }
 ?>
 <div class="bp_ld_report_table_wrapper">
-	<?php
-	foreach ( $courses as $course ) {
-
-		?>
+	<?php foreach ( $courses as $course ) { ?>
+	<div class="bp_ld_report_container">
 		<h2><?php echo $course->post_title; ?></h2>
 		<?php
 		$course_users = learndash_get_groups_user_ids( $group_id );
@@ -488,9 +486,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				</table>
 				<?php
 			}
-		}
-	}
-	?>
+		} ?>
+	</div><?php
+	} ?>
 </div>
-
-

@@ -26,11 +26,9 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 					</div>
 				</div>
 			</div>
-		<?php } ?>
-		<?php } ?>
-		<?php
-}
-?>
+		<?php }
+	}
+} ?>
 
 <?php
 /**
@@ -56,11 +54,7 @@ if ( $courseId ) {
 </div>
 
 <div class="bp_ld_report_table_wrapper">
-	<table class="bp_ld_report_table" data-completed="true"></table>
+	<div class="bp_ld_report_container">
+		<table class="bp_ld_report_table" data-completed="true"></table>
+	</div>
 </div>
-
-<!--<div class="bp_ld_report_table_wrapper">-->
-<!--	<h2>--><?php //echo $incompleted_table_title; ?><!--</h2>-->
-<!--	<table class="bp_ld_report_table" data-completed="false"></table>-->
-<!--</div>-->
-

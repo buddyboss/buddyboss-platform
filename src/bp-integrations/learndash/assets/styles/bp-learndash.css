@@ -11,10 +11,12 @@ table.dataTable a {
 
 table.dataTable a .i-progress {
 	margin-right: 10px;
+        min-width: 22px;
 }
 
 .bp-learndash-reports-filters-form {
 	text-align: right;
+        margin-bottom: 10px;
 }
 
 .bp_ld_report_table_wrapper.no-data {
@@ -29,6 +31,44 @@ table.dataTable a .i-progress {
 	display: none !important;
 }
 
+.dataTables_wrapper .dataTables_paginate {
+        float: none;
+        padding: 0;
+        text-align: center;
+}
+
+#buddypress .dataTables_paginate a.button {
+    margin: 0 5px 20px;
+}
+
+.user-points {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        justify-content: center;
+}
+
+.user-points-text {
+        display: flex;
+        flex-flow: column;
+        margin-left: 20px;
+}
+
+.user-points-text b {
+        font-size: 22px;
+        color: #122B46;
+        letter-spacing: -0.2px;
+}
+
+.user-points-text span {
+        font-size: 14px;
+        color: #939597;
+        letter-spacing: -0.24px;
+}
+
 /* only have 1 page */
 .dataTables_paginate span .button:first-child:last-child {
 	display: none !important;
@@ -41,6 +81,7 @@ table.dataTable a .i-progress {
 	background: #fff;
 	border: 1px solid #E7E9EC;
 	margin-bottom: 15px;
+        padding: 20px 0;
 }
 
 .ld-report-user-stats .member-name {
@@ -48,7 +89,21 @@ table.dataTable a .i-progress {
 }
 
 .ld-report-user-stats > * {
-	padding: 30px 40px;
+        flex: 1;
+	padding: 0 30px;
+        min-height: 100px;
+}
+
+.ld-report-user-stats .user-message {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .ld-report-user-stats p {
@@ -61,6 +116,10 @@ table.dataTable a .i-progress {
 	min-width: 20%;
 }
 
+.ld-report-user-stats > div:not(:last-child) {
+    border-right: 1px solid #E7E9EC;
+}
+
 .ld-report-user-stats .user-avatar {
 	margin-right: 15px;
 }
@@ -69,8 +128,13 @@ table.dataTable a .i-progress {
 	max-width: 80px;
 }
 
-.ld-report-user-stats .user-message {
-	margin-left: auto;
+.ld-report-user-stats .send-message {
+        max-width: 130px;
+        margin: auto;
+}
+
+.ld-report-user-stats #send-private-message {
+        float: right;
 }
 
 .ld-report-user-stats .user-name h5 {
@@ -109,10 +173,39 @@ table.dataTable a .i-progress {
 	display: none;
 }
 
+.ld-report-user-stats .user-steps {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+}
+
 .bp-ld-reports-progress-bar {
 	position: relative;
 	height: 100px;
 	width: 100px;
+        transform: scale(0.8);
+        margin-right: 10px;
+        margin-left: -10px;
+}
+
+.reports-progress-info b {
+    font-size: 22px;
+    color: #122B46;
+    letter-spacing: -0.2px;
+}
+
+.reports-progress-info span {
+    text-transform: capitalize;
+    font-size: 14px;
+    color: #939597;
+    letter-spacing: -0.24px;
+    display: block;
 }
 
 .bp-ld-reports-progress-bar div {
@@ -124,7 +217,6 @@ table.dataTable a .i-progress {
 
 .bp-ld-reports-progress-bar div span {
 	position: absolute;
-	font-family: Arial;
 	font-size: 25px;
 	line-height: 75px;
 	height: 75px;
@@ -156,7 +248,7 @@ table.dataTable a .i-progress {
 	background-color: #4b86db;
 }
 
-.bp_ld_report_table_wrapper {
+.bp_ld_report_container {
         background: #fff;
 	border: 0;
 	border-collapse: collapse;

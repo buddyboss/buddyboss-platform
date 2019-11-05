@@ -74,6 +74,7 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 		}
 
 		?>
+		<div class="bp_ld_report_container">
 			<h2><?php echo $course->post_title; ?></h2>
 			<table id="admin-show-all" class="admin-show-all display" style="width:100%">
 				<thead>
@@ -127,9 +128,6 @@ if ( ( groups_is_user_mod( bp_loggedin_user_id(), bp_get_current_group_id() ) ||
 				</tbody>
 
 			</table>
-			<?php
-	}
-	?>
+		</div><?php
+	} ?>
 </div>
-
-
