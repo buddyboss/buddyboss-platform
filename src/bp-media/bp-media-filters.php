@@ -13,14 +13,14 @@ add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' 
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
-add_action( 'bp_activity_posted_update', 'bp_media_update_media_meta', 10, 3 );
-add_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
-add_action( 'bp_activity_comment_posted', 'bp_media_comments_update_media_meta', 10, 3 );
-add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_comments_update_media_meta', 10, 3 );
+add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
+add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
+add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 add_filter( 'bp_get_activity_content_body', 'bp_media_activity_embed_gif', 20, 2 );
 add_action( 'bp_activity_after_comment_content', 'bp_media_comment_embed_gif', 20, 1 );
-add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data', 2, 1 );
+add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data',           2, 1   );
 
 // Forums
 add_action( 'bbp_template_after_single_topic', 'bp_media_add_theatre_template' );
@@ -177,78 +177,31 @@ function bp_media_activity_comment_entry( $comment_id ) {
  *
  * @return bool
  */
-function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
+function bp_media_update_activity_media_meta( $content, $user_id, $activity_id ) {
 
 	if ( ! isset( $_POST['media'] ) || empty( $_POST['media'] ) ) {
 		return false;
 	}
 
-	$media_list = $_POST['media'];
+	$_POST['medias'] = $_POST['media'];
+	$_POST['bp_activity_update'] = true;
 
-	if ( ! empty( $media_list ) ) {
-		$media_ids = array();
-		foreach ( $media_list as $media_index => $media ) {
+	remove_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
+	remove_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
+	remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta',      10, 3   );
 
-			// remove actions to avoid infinity loop
-			remove_action( 'bp_activity_posted_update', 'bp_media_update_media_meta', 10, 3 );
-			remove_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
+	$media_ids = bp_media_add_handler();
 
-			// make an activity for the media
-			$a_id = bp_activity_post_update(
-				array(
-					'hide_sitewide' => true,
-					'privacy'       => 'media',
-				)
-			);
+	add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
+	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
+	add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
+	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta',      10, 3   );
 
-			if ( $a_id ) {
-				// update activity meta
-				bp_activity_update_meta( $a_id, 'bp_media_activity', '1' );
-			}
-
-			add_action( 'bp_activity_posted_update', 'bp_media_update_media_meta', 10, 3 );
-			add_action( 'bp_groups_posted_update', 'bp_media_groups_update_media_meta', 10, 4 );
-
-			$title         = ! empty( $media['name'] ) ? $media['name'] : '&nbsp;';
-			$album_id      = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
-			$group_id      = ! empty( $media['group_id'] ) ? $media['group_id'] : 0;
-			$privacy       = ! empty( $media['privacy'] ) ? $media['privacy'] : 'public';
-			$attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
-			$menu_order    = ! empty( $media['menu_order'] ) ? $media['menu_order'] : $media_index;
-
-			$media_id = bp_media_add(
-				array(
-					'title'         => $title,
-					'album_id'      => $album_id,
-					'group_id'      => $group_id,
-					'activity_id'   => $a_id,
-					'privacy'       => $privacy,
-					'attachment_id' => $attachment_id,
-					'menu_order'    => $menu_order,
-				)
-			);
-
-			if ( $media_id ) {
-				$media_ids[] = $media_id;
-
-				// save media is saved in attahchment
-				update_post_meta( $attachment_id, 'bp_media_saved', true );
-
-				// save media meta for activity
-				if ( ! empty( $activity_id ) && ! empty( $attachment_id ) ) {
-					update_post_meta( $attachment_id, 'bp_media_parent_activity_id', $activity_id );
-					update_post_meta( $attachment_id, 'bp_media_activity_id', $a_id );
-				}
-			}
-		}
-
-		$media_ids = implode( ',', $media_ids );
-
-		// save media meta for activity
-		if ( ! empty( $activity_id ) ) {
-			bp_activity_update_meta( $activity_id, 'bp_media_ids', $media_ids );
-		}
-	}
+    //save media meta for activity
+    if ( ! empty( $activity_id ) ) {
+        bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
+    }
 }
 
 /**
@@ -263,8 +216,8 @@ function bp_media_update_media_meta( $content, $user_id, $activity_id ) {
  *
  * @return bool
  */
-function bp_media_groups_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
-	bp_media_update_media_meta( $content, $user_id, $activity_id );
+function bp_media_groups_activity_update_media_meta( $content, $user_id, $group_id, $activity_id ) {
+	bp_media_update_activity_media_meta( $content, $user_id, $activity_id );
 }
 
 /**
@@ -278,8 +231,8 @@ function bp_media_groups_update_media_meta( $content, $user_id, $group_id, $acti
  *
  * @return bool
  */
-function bp_media_comments_update_media_meta( $comment_id, $r, $activity ) {
-	bp_media_update_media_meta( false, false, $comment_id );
+function bp_media_activity_comments_update_media_meta( $comment_id, $r, $activity ) {
+	bp_media_update_activity_media_meta( false, false, $comment_id );
 }
 
 /**
