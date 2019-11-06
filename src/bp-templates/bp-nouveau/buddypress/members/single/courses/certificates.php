@@ -1,4 +1,11 @@
 <?php
+/**
+ * BuddyBoss - Members Course Certificates
+ *
+ * @since BuddyBoss 1.2.0
+ * @version 1.0.0
+ */
+
 $user_id      = bp_displayed_user_id();
 $certificates = bp_learndash_get_users_certificates( $user_id );
 ?>
