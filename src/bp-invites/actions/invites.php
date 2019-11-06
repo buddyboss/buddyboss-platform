@@ -133,6 +133,12 @@ function bp_member_invite_submit() {
 			),
 		);
 
+		/**
+		 * Remove Recipients avatar and name
+		 *
+		 * T:1602 - https://trello.com/c/p2VKGMHs/1602-recipients-name-and-avatar-should-not-be-showing-on-email-invite-template
+		 */
+		add_filter( 'bp_email_get_salutation', '__return_false' );
 		// Send invitation email.
 		bp_send_email( 'invites-member-invite', $email, $args );
 
