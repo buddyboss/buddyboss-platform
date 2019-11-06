@@ -3534,6 +3534,14 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 
 	if ( bp_is_group_invites() ) {
 		$bp_classes[] = 'group-invites';
+
+		if ( 'send-invites' === bp_get_group_current_invite_tab() ) {
+			$bp_classes[] = 'send-invites';
+		}
+
+		if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
+			$bp_classes[] = 'pending-invites';
+		}
 	}
 
 	if ( bp_is_group_members() ) {

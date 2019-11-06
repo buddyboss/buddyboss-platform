@@ -13,7 +13,6 @@
 		<select class="group-invites-select-members-dropdown" name="group-members">
 			<option value="members"><?php _e( 'All Members', 'buddyboss' ); ?></option>
 			<option value="friends"><?php _e( 'My Connections', 'buddyboss' ); ?></option>
-			<option value="invited"><?php _e( 'Pending Invites', 'buddyboss' ); ?></option>
 		</select>
 		<div class="group-invites-search subnav-search clearfix" role="search">
 			<div class="bp-search">
