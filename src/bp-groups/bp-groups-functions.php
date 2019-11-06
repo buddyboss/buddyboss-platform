@@ -2146,7 +2146,7 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 
 			$get_requesting_user_member_type = bp_get_member_type( $requesting_user_id );
 
-			if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
 				groups_accept_invite( $requesting_user_id, $group_id );
 				return true;
 			}
