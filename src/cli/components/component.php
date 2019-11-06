@@ -78,11 +78,11 @@ class Components extends BuddypressCommand {
 
 		// Ensure that dbDelta() is defined.
 		if ( ! function_exists( 'dbDelta' ) ) {
-			require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
+			require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 		}
 
 		// Run the setup, in case tables have to be created.
-		require_once( \BP_PLUGIN_DIR . 'bp-core/admin/bp-core-admin-schema.php' );
+		require_once \BP_PLUGIN_DIR . 'bp-core/admin/bp-core-admin-schema.php';
 		bp_core_install( $active_components );
 		bp_core_add_page_mappings( $active_components );
 

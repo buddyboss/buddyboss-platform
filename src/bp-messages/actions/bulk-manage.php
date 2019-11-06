@@ -46,26 +46,26 @@ function bp_messages_action_bulk_manage() {
 
 	// Delete, mark as read or unread depending on the user 'action'.
 	switch ( $action ) {
-		case 'delete' :
+		case 'delete':
 			foreach ( $messages as $message ) {
 				messages_delete_thread( $message );
 			}
 			bp_core_add_message( __( 'Messages deleted.', 'buddyboss' ) );
-		break;
+			break;
 
-		case 'read' :
+		case 'read':
 			foreach ( $messages as $message ) {
 				messages_mark_thread_read( $message );
 			}
 			bp_core_add_message( __( 'Messages marked as read', 'buddyboss' ) );
-		break;
+			break;
 
-		case 'unread' :
+		case 'unread':
 			foreach ( $messages as $message ) {
 				messages_mark_thread_unread( $message );
 			}
 			bp_core_add_message( __( 'Messages marked as unread.', 'buddyboss' ) );
-		break;
+			break;
 	}
 
 	// Redirect back to message box.

@@ -54,7 +54,7 @@ window.bp = window.bp || {};
 
 			$.ajaxPrefilter( this.memberPreFilter );
 			$.ajaxPrefilter( this.groupPreFilter );
-			
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on( 'scroll resize',function(){
@@ -153,6 +153,49 @@ window.bp = window.bp || {};
 			sessionStorage.setItem( type, JSON.stringify( store ) );
 
 			return sessionStorage.getItem( type ) !== null;
+		},
+
+		/**
+		 * [setLocalStorage description]
+		 * @param {[type]} type     [description]
+		 * @param {[type]} property [description]
+		 * @param {[type]} value    [description]
+		 */
+		setLocalStorage: function( type, property, value ) {
+			var store = this.getLocalStorage( type );
+
+			if ( undefined === value && undefined !== store[ property ] ) {
+				delete store[ property ];
+			} else {
+				// Set property
+				store[ property ] = value;
+			}
+
+			localStorage.setItem( type, JSON.stringify( store ) );
+
+			return localStorage.getItem( type ) !== null;
+		},
+
+		/**
+		 * [getLocalStorage description]
+		 * @param  {[type]} type     [description]
+		 * @param  {[type]} property [description]
+		 * @return {[type]}          [description]
+		 */
+		getLocalStorage: function( type, property ) {
+			var store = localStorage.getItem( type );
+
+			if ( store ) {
+				store = JSON.parse( store );
+			} else {
+				store = {};
+			}
+
+			if ( undefined !== property ) {
+				return store[property] || false;
+			}
+
+			return store;
 		},
 
 		/**
@@ -277,7 +320,7 @@ window.bp = window.bp || {};
 				startIndex 	= 	_findtext.indexOf( 'www' );
 				_is_exist	=	1;
 			}
-			if (_is_exist	==	1) {
+			if ( 1 === _is_exist ) {
 				for ( var i = startIndex; i < _findtext.length; i ++ ) {
 					if ( _findtext[i] === ' ' || _findtext[i] === '\n' ) {
 						break;
@@ -290,10 +333,10 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					$( this ).find('.activity-inner a').hide();
+					$( this ).find('.activity-inner > p:first a').hide();
 				}
 			}
-			
+
         },
 		/**
 		 * [objectRequest description]
@@ -346,7 +389,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( null !== data.extras ) {
-				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
+				this.setLocalStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
 			/* Set the correct selected nav and filter */
@@ -437,7 +480,7 @@ window.bp = window.bp || {};
 
 							// Inform other scripts the list of objects has been refreshed.
 							$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
-							
+
 							//Lazy Load Images
 							if(bp.Nouveau.lazyLoad){
 								setTimeout(function(){ // Waiting to load dummy image
@@ -458,7 +501,7 @@ window.bp = window.bp || {};
 			var self = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null, filter = null;
 
 			$.each( this.objects, function( o, object ) {
-				objectData = self.getStorage( 'bp-' + object );
+				objectData = self.getLocalStorage( 'bp-' + object );
 
 				if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
@@ -594,7 +637,7 @@ window.bp = window.bp || {};
                 object = 'members';
             }
 
-            var objectData = _this.getStorage( 'bp-' + object );
+            var objectData = _this.getLocalStorage( 'bp-' + object );
 
             var extras = {};
             if ( undefined !== objectData.extras ) {
@@ -602,7 +645,7 @@ window.bp = window.bp || {};
 
                 if ( undefined !== extras.layout ) {
 	                $('.grid-filters .layout-view').removeClass('active');
-	                if ( extras.layout == 'list' ) {
+	                if ( extras.layout === 'list' ) {
 		                $('.grid-filters .layout-list-view').addClass('active');
 	                } else {
 		                $('.grid-filters .layout-grid-view').addClass('active');
@@ -627,9 +670,9 @@ window.bp = window.bp || {};
 
                 // Added this condition to fix the list and grid view on Groups members page pagination.
 				if ( true === $( 'body' ).hasClass('group-members' ) ) {
-					_this.setStorage( 'bp-group_members', 'extras', extras );
+					_this.setLocalStorage( 'bp-group_members', 'extras', extras );
 				} else {
-					_this.setStorage( 'bp-' + object, 'extras', extras );
+					_this.setLocalStorage( 'bp-' + object, 'extras', extras );
 				}
             });
 		},
@@ -883,7 +926,7 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
-			var objectData = self.getStorage( 'bp-' + object );
+			var objectData = self.getLocalStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -937,7 +980,7 @@ window.bp = window.bp || {};
 				object = 'members';
 			}
 
-			var objectData = self.getStorage( 'bp-' + object );
+			var objectData = self.getLocalStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -1077,7 +1120,7 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
-			var objectData = self.getStorage( 'bp-' + object );
+			var objectData = self.getLocalStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -1380,7 +1423,7 @@ window.bp = window.bp || {};
 
 			// Set the scope & filter
 			if ( null !== object ) {
-				objectData = self.getStorage( 'bp-' + object );
+				objectData = self.getLocalStorage( 'bp-' + object );
 
 				if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
@@ -1511,9 +1554,11 @@ window.bp = window.bp || {};
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
 						lazy[i].removeAttribute('data-src');
+						/* jshint ignore:start */
 						$(lazy[i]).on('load', function () {
 							$(this).removeClass('lazy');
 						});
+						/* jshint ignore:end */
 
 						// Inform other scripts about the lazy load.
 						$( document ).trigger( 'bp_nouveau_lazy_load', { element: lazy[i] } );

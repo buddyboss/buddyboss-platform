@@ -37,7 +37,7 @@ env:
 matrix:
   include:
     - php: 7.3
-      env: WP_VERSION=master BP_TRAVISCI=travis:grunt
+      env: WP_VERSION=master BP_TRAVISCI=travis:grunt SNIFF=1
     - php: 7.3
       env: WP_VERSION=master BP_TRAVISCI=travis:phpcompat
     - php: 5.3
@@ -72,6 +72,18 @@ before_install:
       phpenv config-rm xdebug.ini
     fi
 
+  # set up phpcs
+  - if [[ "$SNIFF" == "1" ]]; then export PHPCS_DIR=/tmp/phpcs; fi
+  - if [[ "$SNIFF" == "1" ]]; then export SNIFFS_DIR=/tmp/sniffs; fi
+  # Install PHP_CodeSniffer.
+  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/squizlabs/PHP_CodeSniffer.git $PHPCS_DIR; fi
+  # Install WordPress Coding Standards.
+  - if [[ "$SNIFF" == "1" ]]; then git clone -b master --depth 1 https://github.com/WordPress/WordPress-Coding-Standards.git $SNIFFS_DIR; fi
+  # Set install path for WordPress Coding Standards.
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs --config-set installed_paths $SNIFFS_DIR; fi
+  # After CodeSniffer install you should refresh your path.
+  - if [[ "$SNIFF" == "1" ]]; then phpenv rehash; fi
+
   # set up tests config
   - cd $WP_DEVELOP_DIR
   - echo $WP_DEVELOP_DIR
@@ -105,6 +117,7 @@ before_install:
 
 # before_script: Failures in this section will result in build status 'errored'
 before_script:
+  - if [[ "$SNIFF" == "1" ]]; then $PHPCS_DIR/bin/phpcs -p . --standard=WordPress --ignore=*/vendor/* src/; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.3" ]]; then composer global require --dev phpunit/phpunit ^4; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "5.6" ]]; then composer global require --dev phpunit/phpunit ^5; composer install; fi
   - if [[ ${TRAVIS_PHP_VERSION:0:3} == "7.2" ]]; then composer global require --dev phpunit/phpunit ^6; composer install; fi

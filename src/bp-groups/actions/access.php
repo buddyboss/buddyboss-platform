@@ -25,15 +25,23 @@ function bp_groups_group_access_protection() {
 	if ( ! $user_has_access && $is_visible ) {
 
 		// Always allow access to request-membership.
-		if ( bp_is_current_action( 'request-membership' ) ) {
+		if ( bp_is_current_action( 'request-membership' ) && ! is_user_logged_in() ) {
+			$redirect = bp_get_group_permalink( $current_group );
+			bp_core_redirect( add_query_arg( array(
+					'bp-auth'       => 1,
+					'action'        => 'bpnoaccess',
+					'redirect_from' => 'private_group',
+				),
+					wp_login_url( $redirect ) ) );
+		} elseif ( bp_is_current_action( 'request-membership' ) && is_user_logged_in() ) {
 			$user_has_access = true;
 
-		// User doesn't have access, so set up redirect args.
+			// User doesn't have access, so set up redirect args.
 		} elseif ( is_user_logged_in() ) {
 			$no_access_args = array(
 				'message'  => __( 'You do not have access to this group.', 'buddyboss' ),
 				'root'     => bp_get_group_permalink( $current_group ) . 'home/',
-				'redirect' => false
+				'redirect' => false,
 			);
 		}
 	}
@@ -44,7 +52,7 @@ function bp_groups_group_access_protection() {
 		$no_access_args  = array(
 			'message'  => __( 'You are not an organizer or moderator of this group.', 'buddyboss' ),
 			'root'     => bp_get_group_permalink( $current_group ),
-			'redirect' => false
+			'redirect' => false,
 		);
 	}
 

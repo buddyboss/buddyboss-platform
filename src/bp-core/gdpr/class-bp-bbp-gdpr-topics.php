@@ -65,7 +65,7 @@ class BP_Bbp_Gdpr_Topics {
 	 * Export member created forum topics.
 	 *
 	 * @param $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -173,7 +173,10 @@ class BP_Bbp_Gdpr_Topics {
 		$the_query = new \WP_Query( $pp_args );
 
 		if ( $the_query->have_posts() ) {
-			return array( 'topics' => $the_query->posts, 'total' => $the_query->post_count );
+			return array(
+				'topics' => $the_query->posts,
+				'total'  => $the_query->post_count,
+			);
 		}
 
 		return false;
@@ -183,7 +186,7 @@ class BP_Bbp_Gdpr_Topics {
 	 * Delete forum topics created by member.
 	 *
 	 * @param $email_address
-	 * @param int $page
+	 * @param int           $page
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -223,11 +226,13 @@ class BP_Bbp_Gdpr_Topics {
 
 		if ( $total ) {
 			foreach ( (array) $topics as $topic ) {
-				$attachments = get_posts( array(
-					'post_type'      => 'attachment',
-					'posts_per_page' => - 1,
-					'post_parent'    => $topic->ID,
-				) );
+				$attachments = get_posts(
+					array(
+						'post_type'      => 'attachment',
+						'posts_per_page' => - 1,
+						'post_parent'    => $topic->ID,
+					)
+				);
 
 				if ( $attachments ) {
 					foreach ( $attachments as $attachment ) {

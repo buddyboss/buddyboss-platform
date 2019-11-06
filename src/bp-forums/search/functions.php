@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Run the search query
  *
- * @since bbPress (r4579) 
+ * @since bbPress (r4579)
  *
  * @param mixed $new_args New arguments
  * @uses bbp_get_search_query_args() To get the search query args
@@ -24,11 +24,11 @@ defined( 'ABSPATH' ) || exit;
  */
 function bbp_search_query( $new_args = array() ) {
 
-	// Existing arguments 
+	// Existing arguments
 	$query_args = bbp_get_search_query_args();
 
 	// Merge arguments
-	if ( !empty( $new_args ) ) {
+	if ( ! empty( $new_args ) ) {
 		$new_args   = bbp_parse_args( $new_args, array(), 'search_query' );
 		$query_args = array_merge( $query_args, $new_args );
 	}
@@ -48,7 +48,7 @@ function bbp_get_search_query_args() {
 
 	// Get search terms
 	$search_terms = bbp_get_search_terms();
-	$retval       = !empty( $search_terms ) ? array( 's' => $search_terms ) : array();
+	$retval       = ! empty( $search_terms ) ? array( 's' => $search_terms ) : array();
 
 	return apply_filters( 'bbp_get_search_query_args', $retval );
 }
@@ -61,7 +61,7 @@ function bbp_get_search_query_args() {
  */
 function bbp_search_results_redirect() {
 	global $wp_rewrite;
-	
+
 	// Bail if not a search request action
 	if ( empty( $_GET['action'] ) || ( 'bbp-search-request' !== $_GET['action'] ) ) {
 		return;

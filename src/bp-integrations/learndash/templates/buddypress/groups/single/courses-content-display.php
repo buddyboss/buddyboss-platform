@@ -21,9 +21,10 @@ $lessons_options            = learndash_get_option( 'sfwd-lessons' );
 $quizzes_options            = learndash_get_option( 'sfwd-quiz' );
 $course_status              = learndash_course_status( $course_id, null );
 $has_access                 = sfwd_lms_has_access( $course_id, $user_id );
+$has_topics                 = false;
 
 $content = apply_filters( 'the_content', $courses_new[0]->post_content );
-//$content = do_shortcode( $courses_new[0]->post_content );
+// $content = do_shortcode( $courses_new[0]->post_content );
 
 $logged_in = ! empty( $user_id );
 $materials = '';
@@ -48,18 +49,19 @@ if ( ! empty( $lessons ) ) {
 
 		$all_topics = learndash_topic_dots( $lesson['post']->ID, false, 'array', null, $course_id );
 
-		$topic_pager_args = apply_filters( 'ld30_ajax_topic_pager_args',
+		$topic_pager_args = apply_filters(
+			'ld30_ajax_topic_pager_args',
 			array(
 				'course_id' => $course_id,
 				'lesson_id' => $lesson['post']->ID,
-			) );
+			)
+		);
 
 		$lesson_topics[ $lesson['post']->ID ] = learndash_process_lesson_topics_pager( $all_topics, $topic_pager_args );
 
 		if ( ! empty( $lesson_topics[ $lesson['post']->ID ] ) ) {
 			$has_topics = true;
 		}
-
 	}
 }
 
@@ -112,13 +114,12 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 
 	/**
 	 * Certificate link
-	 *
-	 *
 	 */
 
-	if ( $course_certficate_link && ! empty( $course_certficate_link ) ):
+	if ( $course_certficate_link && ! empty( $course_certficate_link ) ) :
 
-		learndash_get_template_part( 'modules/alert.php',
+		learndash_get_template_part(
+			'modules/alert.php',
 			array(
 				'type'    => 'success ld-alert-certificate',
 				'icon'    => 'certificate',
@@ -129,7 +130,8 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 					'label' => __( 'Download Certificate', 'buddyboss' ),
 				),
 			),
-			true );
+			true
+		);
 
 	endif;
 
@@ -157,9 +159,9 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 			<?php
 			/**
 			 * Course info bar
-			 *
 			 */
-			learndash_get_template_part( 'modules/infobar.php',
+			learndash_get_template_part(
+				'modules/infobar.php',
 				array(
 					'context'       => 'course',
 					'course_id'     => $course_id,
@@ -168,7 +170,9 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 					'course_status' => $course_status,
 					'post'          => $post,
 				),
-				true ); ?>
+				true
+			);
+			?>
 
 			<?php
 			/**
@@ -177,19 +181,21 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 			 * @since 2.3
 			 * See https://bitbucket.org/snippets/learndash/7oe9K for example use of this filter.
 			 */
-			echo apply_filters( 'ld_after_course_status_template_container',
+			echo apply_filters(
+				'ld_after_course_status_template_container',
 				'',
 				learndash_course_status_idx( $course_status ),
 				$course_id,
-				$user_id );
+				$user_id
+			);
 
 			/**
 			 * Content tabs
-			 *
 			 */
 			echo '<div class="bb-ld-tabs">';
 			echo '<div id="learndash-course-content"></div>';
-			learndash_get_template_part( 'modules/tabs.php',
+			learndash_get_template_part(
+				'modules/tabs.php',
 				array(
 					'course_id' => $course_id,
 					'post_id'   => $course_id,
@@ -198,16 +204,19 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 					'materials' => $materials,
 					'context'   => 'course',
 				),
-				true );
+				true
+			);
 			echo '</div>';
 
 			/**
 			 * Identify if we should show the course content listing
+			 *
 			 * @var $show_course_content [bool]
 			 */
 			$show_course_content = ( ! $has_access && 'on' === $course_meta['sfwd-courses_course_disable_content_table'] ? false : true );
 
-			if ( $has_course_content && $show_course_content ): ?>
+			if ( $has_course_content && $show_course_content ) :
+				?>
 
 				<div class="ld-item-list ld-lesson-list">
 					<div class="ld-section-heading">
@@ -218,10 +227,17 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 						 *
 						 * @since 3.0
 						 */
-						do_action( 'learndash-course-heading-before', $course_id, $user_id ); ?>
+						do_action( 'learndash-course-heading-before', $course_id, $user_id );
+						?>
 
-						<h2><?php printf( esc_html_x( '%s Content', 'Course Content Label', 'buddyboss' ),
-								esc_attr( LearnDash_Custom_Label::get_label( 'course' ) ) ); ?></h2>
+						<h2>
+						<?php
+						printf(
+							esc_html_x( '%s Content', 'Course Content Label', 'buddyboss' ),
+							esc_attr( LearnDash_Custom_Label::get_label( 'course' ) )
+						);
+						?>
+							</h2>
 
 						<?php
 						/**
@@ -229,7 +245,8 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 						 *
 						 * @since 3.0
 						 */
-						do_action( 'learndash-course-heading-after', $course_id, $user_id ); ?>
+						do_action( 'learndash-course-heading-after', $course_id, $user_id );
+						?>
 
 						<div class="ld-item-list-actions" data-ld-expand-list="true">
 
@@ -239,28 +256,46 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 							 *
 							 * @since 3.0
 							 */
-							do_action( 'learndash-course-expand-before', $course_id, $user_id ); ?>
+							do_action( 'learndash-course-expand-before', $course_id, $user_id );
+							?>
 
 							<?php
 							// Only display if there is something to expand
-							if ( $has_topics || $has_lesson_quizzes ): ?>
-								<div class="ld-expand-button ld-primary-background" id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-text="<?php echo esc_attr_e( 'Expand All',
-									'buddyboss' ); ?>" data-ld-collapse-text="<?php echo esc_attr_e( 'Collapse All',
-									'buddyboss' ); ?>">
+							if ( $has_topics || $has_lesson_quizzes ) :
+								?>
+								<div class="ld-expand-button ld-primary-background" id="<?php echo esc_attr( 'ld-expand-button-' . $course_id ); ?>" data-ld-expands="<?php echo esc_attr( 'ld-item-list-' . $course_id ); ?>" data-ld-expand-text="
+																								   <?php
+																									echo esc_attr_e(
+																										'Expand All',
+																										'buddyboss'
+																									);
+																									?>
+																																																													" data-ld-collapse-text="
+																																																													<?php
+																																																													echo esc_attr_e(
+																																																														'Collapse All',
+																																																														'buddyboss'
+																																																													);
+																																																													?>
+																">
 									<span class="ld-icon-arrow-down ld-icon"></span>
 									<span class="ld-text"><?php echo esc_html_e( 'Expand All', 'buddyboss' ); ?></span>
-								</div> <!--/.ld-expand-button-->							<?php
-							// TODO @37designs Need to test this
-							if ( apply_filters( 'learndash_course_steps_expand_all',
-								false,
-								$course_id,
-								'course_lessons_listing_main' ) ): ?>
+								</div> <!--/.ld-expand-button-->							
+								<?php
+								// TODO @37designs Need to test this
+								if ( apply_filters(
+									'learndash_course_steps_expand_all',
+									false,
+									$course_id,
+									'course_lessons_listing_main'
+								) ) :
+									?>
 								<script>
 									jQuery(document).ready(function () {
 										jQuery("<?php echo '#ld-expand-button-' . $course_id; ?>").click();
 									});
 								</script>
-							<?php
+									<?php
 							endif;
 
 							endif;
@@ -270,7 +305,8 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 							 *
 							 * @since 3.0
 							 */
-							do_action( 'learndash-course-expand-after', $course_id, $user_id ); ?>
+							do_action( 'learndash-course-expand-after', $course_id, $user_id );
+							?>
 
 						</div> <!--/.ld-item-list-actions-->
 					</div> <!--/.ld-section-heading-->
@@ -291,7 +327,8 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 					 * ('listing.php');
 					 */
 
-					learndash_get_template_part( 'course/listing.php',
+					learndash_get_template_part(
+						'course/listing.php',
 						array(
 							'course_id'                  => $course_id,
 							'user_id'                    => $user_id,
@@ -302,27 +339,31 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 							'course_pager_results'       => $course_pager_results,
 							'lesson_progression_enabled' => $lesson_progression_enabled,
 						),
-						true );
+						true
+					);
 
 					/**
 					 * Action to add custom content before the course content listing
 					 *
 					 * @since 3.0
 					 */
-					do_action( 'learndash-course-content-list-after', $course_id, $user_id ); ?>
+					do_action( 'learndash-course-content-list-after', $course_id, $user_id );
+					?>
 
 				</div> <!--/.ld-item-list-->
 
-			<?php
+				<?php
 			endif;
 			$post = $courses_new[0];
-			learndash_get_template_part( 'template-course-author-details.php',
+			learndash_get_template_part(
+				'template-course-author-details.php',
 				array(
 					'context'   => 'course',
 					'course_id' => $course_id,
 					'user_id'   => $user_id,
 				),
-				true );
+				true
+			);
 
 
 			?>
@@ -346,7 +387,8 @@ $has_lesson_quizzes = learndash_30_has_lesson_quizzes( $course_id, $lessons ); ?
 	 */
 	do_action( 'learndash-course-after', $course_id, $course_id, $user_id );
 
-	learndash_get_template_part( 'modules/login-modal.php', array(), true ); ?>
+	learndash_get_template_part( 'modules/login-modal.php', array(), true );
+	?>
 
 </div>
 

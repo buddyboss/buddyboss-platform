@@ -36,8 +36,9 @@ class BP_Groups_Theme_Compat {
 	public function is_group() {
 
 		// Bail if not looking at a group.
-		if ( ! bp_is_groups_component() )
+		if ( ! bp_is_groups_component() ) {
 			return;
+		}
 
 		// Group Directory.
 		if ( bp_is_groups_directory() ) {
@@ -50,21 +51,21 @@ class BP_Groups_Theme_Compat {
 			 */
 			do_action( 'groups_directory_groups_setup' );
 
-			add_filter( 'bp_get_buddypress_template',                array( $this, 'directory_template_hierarchy' ) );
+			add_filter( 'bp_get_buddypress_template', array( $this, 'directory_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'directory_dummy_post' ) );
-			add_filter( 'bp_replace_the_content',                    array( $this, 'directory_content'    ) );
+			add_filter( 'bp_replace_the_content', array( $this, 'directory_content' ) );
 
-		// Creating a group.
+			// Creating a group.
 		} elseif ( bp_is_groups_component() && bp_is_current_action( 'create' ) ) {
-			add_filter( 'bp_get_buddypress_template',                array( $this, 'create_template_hierarchy' ) );
+			add_filter( 'bp_get_buddypress_template', array( $this, 'create_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'create_dummy_post' ) );
-			add_filter( 'bp_replace_the_content',                    array( $this, 'create_content'    ) );
+			add_filter( 'bp_replace_the_content', array( $this, 'create_content' ) );
 
-		// Group page.
+			// Group page.
 		} elseif ( bp_is_single_item() ) {
-			add_filter( 'bp_get_buddypress_template',                array( $this, 'single_template_hierarchy' ) );
+			add_filter( 'bp_get_buddypress_template', array( $this, 'single_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'single_dummy_post' ) );
-			add_filter( 'bp_replace_the_content',                    array( $this, 'single_content'    ) );
+			add_filter( 'bp_replace_the_content', array( $this, 'single_content' ) );
 
 		}
 	}
@@ -112,17 +113,19 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function directory_dummy_post() {
-		bp_theme_compat_reset_post( array(
-			'ID'             => 0,
-			'post_title'     => bp_get_directory_title( 'groups' ),
-			'post_author'    => 0,
-			'post_date'      => 0,
-			'post_content'   => '',
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'is_page'        => true,
-			'comment_status' => 'closed'
-		) );
+		bp_theme_compat_reset_post(
+			array(
+				'ID'             => 0,
+				'post_title'     => bp_get_directory_title( 'groups' ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'is_page'        => true,
+				'comment_status' => 'closed',
+			)
+		);
 	}
 
 	/**
@@ -156,9 +159,12 @@ class BP_Groups_Theme_Compat {
 		 *
 		 * @param array $value Array of default template files to use.
 		 */
-		$new_templates = apply_filters( 'bp_template_hierarchy_groups_create', array(
-			'groups/index-create.php'
-		) );
+		$new_templates = apply_filters(
+			'bp_template_hierarchy_groups_create',
+			array(
+				'groups/index-create.php',
+			)
+		);
 
 		// Merge new templates with existing stack.
 		// @see bp_get_theme_compat_templates().
@@ -176,17 +182,19 @@ class BP_Groups_Theme_Compat {
 
 		$title = __( 'Social Groups', 'buddyboss' );
 
-		bp_theme_compat_reset_post( array(
-			'ID'             => 0,
-			'post_title'     => $title,
-			'post_author'    => 0,
-			'post_date'      => 0,
-			'post_content'   => '',
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'is_page'        => true,
-			'comment_status' => 'closed'
-		) );
+		bp_theme_compat_reset_post(
+			array(
+				'ID'             => 0,
+				'post_title'     => $title,
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'is_page'        => true,
+				'comment_status' => 'closed',
+			)
+		);
 	}
 
 	/**
@@ -222,13 +230,16 @@ class BP_Groups_Theme_Compat {
 		 *
 		 * @param array $value Array of default template files to use.
 		 */
-		$new_templates = apply_filters( 'bp_template_hierarchy_groups_single_item', array(
-			'groups/single/index-id-'     . sanitize_file_name( bp_get_current_group_id() )   . '.php',
-			'groups/single/index-slug-'   . sanitize_file_name( bp_get_current_group_slug() ) . '.php',
-			'groups/single/index-action-' . sanitize_file_name( bp_current_action() )         . '.php',
-			'groups/single/index-status-' . sanitize_file_name( $group->status )              . '.php',
-			'groups/single/index.php'
-		) );
+		$new_templates = apply_filters(
+			'bp_template_hierarchy_groups_single_item',
+			array(
+				'groups/single/index-id-' . sanitize_file_name( bp_get_current_group_id() ) . '.php',
+				'groups/single/index-slug-' . sanitize_file_name( bp_get_current_group_slug() ) . '.php',
+				'groups/single/index-action-' . sanitize_file_name( bp_current_action() ) . '.php',
+				'groups/single/index-status-' . sanitize_file_name( $group->status ) . '.php',
+				'groups/single/index.php',
+			)
+		);
 
 		// Merge new templates with existing stack.
 		// @see bp_get_theme_compat_templates().
@@ -243,17 +254,19 @@ class BP_Groups_Theme_Compat {
 	 * @since BuddyPress 1.7.0
 	 */
 	public function single_dummy_post() {
-		bp_theme_compat_reset_post( array(
-			'ID'             => 0,
-			'post_title'     => bp_get_current_group_name(),
-			'post_author'    => 0,
-			'post_date'      => 0,
-			'post_content'   => '',
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'is_page'        => true,
-			'comment_status' => 'closed'
-		) );
+		bp_theme_compat_reset_post(
+			array(
+				'ID'             => 0,
+				'post_title'     => bp_get_current_group_name(),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'is_page'        => true,
+				'comment_status' => 'closed',
+			)
+		);
 	}
 
 	/**

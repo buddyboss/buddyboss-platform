@@ -13,12 +13,14 @@
  */
 function groups_screen_group_admin_avatar() {
 
-	if ( 'group-avatar' != bp_get_group_current_admin_tab() )
+	if ( 'group-avatar' != bp_get_group_current_admin_tab() ) {
 		return false;
+	}
 
 	// If the logged-in user doesn't have permission or if avatar uploads are disabled, then stop here.
-	if ( ! bp_is_item_admin() || bp_disable_group_avatar_uploads() || ! buddypress()->avatar->show_avatars )
+	if ( ! bp_is_item_admin() || bp_disable_group_avatar_uploads() || ! buddypress()->avatar->show_avatars ) {
 		return false;
+	}
 
 	$bp = buddypress();
 
@@ -28,7 +30,12 @@ function groups_screen_group_admin_avatar() {
 		// Check the nonce.
 		check_admin_referer( 'bp_group_avatar_delete' );
 
-		if ( bp_core_delete_existing_avatar( array( 'item_id' => $bp->groups->current_group->id, 'object' => 'group' ) ) ) {
+		if ( bp_core_delete_existing_avatar(
+			array(
+				'item_id' => $bp->groups->current_group->id,
+				'object'  => 'group',
+			)
+		) ) {
 			bp_core_add_message( __( 'The group profile photo was deleted successfully!', 'buddyboss' ) );
 		} else {
 			bp_core_add_message( __( 'There was a problem deleting the group profile photo. Please try again.', 'buddyboss' ), 'error' );
@@ -41,7 +48,7 @@ function groups_screen_group_admin_avatar() {
 
 	$bp->avatar_admin->step = 'upload-image';
 
-	if ( !empty( $_FILES ) ) {
+	if ( ! empty( $_FILES ) ) {
 
 		// Check the nonce.
 		check_admin_referer( 'bp_avatar_upload' );
@@ -53,7 +60,6 @@ function groups_screen_group_admin_avatar() {
 			// Make sure we include the jQuery jCrop file for image cropping.
 			add_action( 'wp_print_scripts', 'bp_core_add_jquery_cropper' );
 		}
-
 	}
 
 	// If the image cropping is done, crop the image and save a full/thumb version.
@@ -70,10 +76,10 @@ function groups_screen_group_admin_avatar() {
 			'crop_x'        => $_POST['x'],
 			'crop_y'        => $_POST['y'],
 			'crop_w'        => $_POST['w'],
-			'crop_h'        => $_POST['h']
+			'crop_h'        => $_POST['h'],
 		);
 
-		if ( !bp_core_avatar_handle_crop( $args ) ) {
+		if ( ! bp_core_avatar_handle_crop( $args ) ) {
 			bp_core_add_message( __( 'There was a problem cropping the group profile photo.', 'buddyboss' ), 'error' );
 		} else {
 			/**

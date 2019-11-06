@@ -567,16 +567,71 @@ function bp_nouveau_loop_classes() {
 		if ( ! empty( $available_components[ $component ] ) && ( bp_is_directory() || bp_is_group() || bp_is_user() ) ) {
 
 			// check for layout options in browsers storage
-			$list = false;
-			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
-				$list = true;
-            }
+			if ( bp_is_members_directory() || bp_is_user() )  {
+				if ( ! bp_is_user_groups() ) {
+					$current_value = bp_get_option( 'bp-profile-layout-format' );
+				} else {
+					$current_value = bp_get_option( 'bp-group-layout-format' );
+				}
+			} elseif ( bp_is_groups_directory() || bp_is_group() ) {
+				if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+					$current_value = bp_get_option( 'bp-profile-layout-format' );
+				} else {
+					$current_value = bp_get_option( 'bp-group-layout-format' );
+				}
+			}
+			if ( 'list_grid' === $current_value ) {
+				$list = false;
+				if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
+					$list = true;
+				}
 
-            if ( ! $list ) {
-                $classes = array_merge( $classes, array(
-                    'grid'
-                ) );
-            }
+				if ( ! $list && isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
+					$list = true;
+				}
+
+				if ( ! $list ) {
+					if ( bp_is_members_directory() || bp_is_user() )  {
+						if ( ! bp_is_user_groups() ) {
+							$default_current_value = bp_profile_layout_default_format( 'grid' );
+						} else {
+							$default_current_value = bp_group_layout_default_format( 'grid' );
+						}
+					} elseif ( bp_is_groups_directory() || bp_is_group() ) {
+						if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+							$default_current_value = bp_profile_layout_default_format( 'grid' );
+						} else {
+							$default_current_value = bp_group_layout_default_format( 'grid' );
+						}
+					} else {
+						$default_current_value = bp_group_layout_default_format( 'grid' );
+					}
+					$classes = array_merge( $classes,
+						array(
+							$default_current_value
+						) );
+				} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
+					$classes = array_merge( $classes,
+						array(
+							$_POST['extras']['layout']
+						) );
+				}
+			} elseif ( 'list' === $current_value ) {
+				$classes = array_merge( $classes,
+					array(
+						'list'
+					) );
+			} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
+				$classes = array_merge( $classes,
+					array(
+						$_POST['extras']['layout']
+					) );
+			} else {
+				$classes = array_merge( $classes,
+					array(
+						'grid'
+					) );
+			}
 		}
 
 		/**
@@ -1207,6 +1262,10 @@ function bp_nouveau_nav_has_count() {
 		$count = $nav_item->count;
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'members' === $nav_item->slug ) {
 	    $count = 0 !== (int) groups_get_current_group()->total_member_count;
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug ) {
+	    $count = 0 !== (int) bp_media_get_total_group_media_count();
+	} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug ) {
+	    $count = 0 !== (int) bp_media_get_total_group_album_count();
 	} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'subgroups' === $nav_item->slug ) {
 		$count = 0 !== (int) count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
 	} elseif ( 'personal' === $bp_nouveau->displayed_nav && ! empty( $nav_item->primary ) ) {
@@ -1254,6 +1313,10 @@ function bp_nouveau_nav_count() {
 
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav &&  'subgroups' === $nav_item->slug  ) {
 			$count = count( bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() ) );
+		} elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_media_support_enabled() && 'photos' === $nav_item->slug  ) {
+			$count = bp_media_get_total_group_media_count();
+		}  elseif ( 'groups' === $bp_nouveau->displayed_nav && bp_is_active( 'media' ) && bp_is_group_albums_support_enabled() && 'albums' === $nav_item->slug  ) {
+			$count = bp_media_get_total_group_album_count();
 		} elseif ( 'groups' === $bp_nouveau->displayed_nav && 'leaders' == $nav_item->slug ) {
 			$group  = groups_get_current_group();
 			$admins = groups_get_group_admins( $group->id );
@@ -2420,9 +2483,16 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 		}
 
 		// Password strength is restricted to the signup_password field
-		if ( 'signup_password' === $name ) :
+		if ( 'signup_password' === $name) :
 		?>
 			<div id="pass-strength-result"></div>
+		<?php
+		endif;
+
+		// Email Confirm
+		if ( 'signup_email' === $name ) :
+		?>
+			<div id="email-strength-result"></div>
 		<?php
 		endif;
 	}

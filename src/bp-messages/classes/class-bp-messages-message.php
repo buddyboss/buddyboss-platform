@@ -287,7 +287,7 @@ class BP_Messages_Message {
 	 *
 	 * @param int $user_id user id whom message should get deleted
 	 */
-	public static function delete_user_message( $user_id ){
+	public static function delete_user_message( $user_id ) {
 		global $wpdb;
 
 		$bp = buddypress();
@@ -310,7 +310,7 @@ class BP_Messages_Message {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param  array  $recipient_ids
+	 * @param  array   $recipient_ids
 	 * @param  integer $sender
 	 */
 	public static function get_existing_thread( $recipient_ids, $sender = 0 ) {
@@ -320,11 +320,12 @@ class BP_Messages_Message {
 
 		// add the sender into the recipient list and order by id ascending
 		$recipient_ids[] = $sender;
-		$recipient_ids = array_filter(array_unique(array_values($recipient_ids)));
-		sort($recipient_ids);
+		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
+		sort( $recipient_ids );
 
-		$results = $wpdb->get_results( $sql = $wpdb->prepare(
-			"SELECT
+		$results = $wpdb->get_results(
+			$sql = $wpdb->prepare(
+				"SELECT
 				r.thread_id as thread_id,
 				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
 				MAX(m.date_sent) AS date_sent
@@ -335,19 +336,20 @@ class BP_Messages_Message {
 			ORDER BY date_sent DESC
 			LIMIT 1
 			",
-			implode(',', $recipient_ids)
-		) );
+				implode( ',', $recipient_ids )
+			)
+		);
 
-        if ( ! $results ) {
-            return null;
-        }
+		if ( ! $results ) {
+			return null;
+		}
 
-        $thread_id = $results[0]->thread_id;
+		$thread_id = $results[0]->thread_id;
 
-        if ( ! $is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender ) ) {
-            return null;
-        }
+		if ( ! $is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender ) ) {
+			return null;
+		}
 
-        return $thread_id;
+		return $thread_id;
 	}
 }

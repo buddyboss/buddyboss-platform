@@ -18,7 +18,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 * Constructor method.
 	 */
 	public function __construct() {
-		$widget_ops = array(
+		$widget_ops                       = array(
 			'description'                 => __( 'A list of recently published posts from across your network.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_blogs_widget buddypress widget',
 			'customize_selective_refresh' => true,
@@ -74,7 +74,7 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 			'user_id'    => 0,
 			'scope'      => false,
 			'object'     => false,
-			'primary_id' => false
+			'primary_id' => false,
 		);
 
 		// Back up global.
@@ -86,7 +86,10 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 
 			<ul id="blog-post-list" class="activity-list item-list">
 
-				<?php while ( bp_activities() ) : bp_the_activity(); ?>
+				<?php
+				while ( bp_activities() ) :
+					bp_the_activity();
+					?>
 
 					<li>
 						<div class="activity-content" style="margin: 0">
@@ -113,7 +116,8 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 
 		<?php endif; ?>
 
-		<?php echo $after_widget;
+		<?php
+		echo $after_widget;
 
 		// Restore the global.
 		$activities_template = $old_activities_template;
@@ -143,11 +147,14 @@ class BP_Blogs_Recent_Posts_Widget extends WP_Widget {
 	 * @return void
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
-			'title'      => __( 'Recent Networkwide Posts', 'buddyboss' ),
-			'max_posts'  => 10,
-			'link_title' => false,
-		) );
+		$instance = wp_parse_args(
+			(array) $instance,
+			array(
+				'title'      => __( 'Recent Networkwide Posts', 'buddyboss' ),
+				'max_posts'  => 10,
+				'link_title' => false,
+			)
+		);
 
 		$title      = strip_tags( $instance['title'] );
 		$max_posts  = strip_tags( $instance['max_posts'] );

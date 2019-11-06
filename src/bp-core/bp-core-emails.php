@@ -23,8 +23,8 @@ add_action( 'bp_init', 'bp_setup_core_email_tokens', 0 );
  *
  * @since BuddyBoss 1.0.0
  */
-function bp_email_set_content_type(){
-	return "text/html";
+function bp_email_set_content_type() {
+	return 'text/html';
 }
 
 /**

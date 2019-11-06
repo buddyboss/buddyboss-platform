@@ -30,8 +30,8 @@ class BP_Activity_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 25,
-				'search_query_arg' => 'activity_search',
-				'features' => array( 'embeds' )
+				'search_query_arg'         => 'activity_search',
+				'features'                 => array( 'embeds' ),
 			)
 		);
 	}
@@ -54,7 +54,7 @@ class BP_Activity_Component extends BP_Component {
 			'adminbar',
 			'template',
 			'functions',
-			'cache'
+			'cache',
 		);
 
 		// Notifications support.
@@ -176,7 +176,7 @@ class BP_Activity_Component extends BP_Component {
 
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[$this->id];
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for activity component.
 		// Note that global_tables is included in this array.
@@ -196,16 +196,20 @@ class BP_Activity_Component extends BP_Component {
 		if ( bp_is_activity_follow_active() ) {
 			// locally cache total count values for logged-in user
 			if ( is_user_logged_in() ) {
-				$bp->loggedin_user->total_follow_counts = bp_total_follow_counts( array(
-					'user_id' => bp_loggedin_user_id()
-				) );
+				$bp->loggedin_user->total_follow_counts = bp_total_follow_counts(
+					array(
+						'user_id' => bp_loggedin_user_id(),
+					)
+				);
 			}
 
 			// locally cache total count values for displayed user
 			if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
-				$bp->displayed_user->total_follow_counts = bp_total_follow_counts( array(
-					'user_id' => bp_displayed_user_id()
-				) );
+				$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
+					array(
+						'user_id' => bp_displayed_user_id(),
+					)
+				);
 			}
 		}
 	}
@@ -243,7 +247,7 @@ class BP_Activity_Component extends BP_Component {
 
 		if ( ! $activity_tabs_active ) {
 
-			$main_slug = [ 'just-me' ];
+			$main_slug = array( 'just-me' );
 			if ( bp_activity_do_mentions() ) {
 				$main_slug[] = 'mentions';
 			}
@@ -264,7 +268,7 @@ class BP_Activity_Component extends BP_Component {
 				'position'            => 25,
 				'screen_function'     => 'bp_activity_screen_my_activity',
 				'default_subnav_slug' => implode( ',', $main_slug ),
-				'item_css_id'         => $this->id
+				'item_css_id'         => $this->id,
 			);
 		} else {
 
@@ -275,7 +279,7 @@ class BP_Activity_Component extends BP_Component {
 				'position'            => 10,
 				'screen_function'     => 'bp_activity_screen_my_activity',
 				'default_subnav_slug' => 'just-me',
-				'item_css_id'         => $this->id
+				'item_css_id'         => $this->id,
 			);
 
 			// Add the subnav items to the activity nav item if we are using a theme that supports this.
@@ -285,7 +289,7 @@ class BP_Activity_Component extends BP_Component {
 				'parent_url'      => $activity_link,
 				'parent_slug'     => $slug,
 				'screen_function' => 'bp_activity_screen_my_activity',
-				'position'        => 10
+				'position'        => 10,
 			);
 
 			// Favorite activity items.
@@ -297,7 +301,7 @@ class BP_Activity_Component extends BP_Component {
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_favorites',
 					'position'        => 20,
-					'item_css_id'     => 'activity-favs'
+					'item_css_id'     => 'activity-favs',
 				);
 			}
 
@@ -310,7 +314,7 @@ class BP_Activity_Component extends BP_Component {
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_friends',
 					'position'        => 30,
-					'item_css_id'     => 'activity-friends'
+					'item_css_id'     => 'activity-friends',
 				);
 			}
 
@@ -323,7 +327,7 @@ class BP_Activity_Component extends BP_Component {
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_groups',
 					'position'        => 40,
-					'item_css_id'     => 'activity-groups'
+					'item_css_id'     => 'activity-groups',
 				);
 			}
 
@@ -336,7 +340,7 @@ class BP_Activity_Component extends BP_Component {
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_mentions',
 					'position'        => 50,
-					'item_css_id'     => 'activity-mentions'
+					'item_css_id'     => 'activity-mentions',
 				);
 			}
 
@@ -349,7 +353,7 @@ class BP_Activity_Component extends BP_Component {
 					'parent_slug'     => $slug,
 					'screen_function' => 'bp_activity_screen_following',
 					'position'        => 60,
-					'item_css_id'     => 'activity-following'
+					'item_css_id'     => 'activity-following',
 				);
 			}
 		}
@@ -379,7 +383,7 @@ class BP_Activity_Component extends BP_Component {
 			// Unread message count.
 			if ( bp_activity_do_mentions() ) {
 				$count = bp_get_total_mention_count_for_user( bp_loggedin_user_id() );
-				if ( !empty( $count ) ) {
+				if ( ! empty( $count ) ) {
 					$title = sprintf(
 						/* translators: %s: Unread mention count for the current user */
 						__( 'Mentions %s', 'buddyboss' ),
@@ -395,7 +399,7 @@ class BP_Activity_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Timeline', 'buddyboss' ),
-				'href'   => $activity_link
+				'href'   => $activity_link,
 			);
 
 			// Personal.
@@ -404,7 +408,7 @@ class BP_Activity_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-personal',
 				'title'    => bp_is_activity_tabs_active() ? __( 'Personal', 'buddyboss' ) : __( 'Posts', 'buddyboss' ),
 				'href'     => $activity_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			if ( bp_is_activity_tabs_active() ) {
@@ -416,7 +420,7 @@ class BP_Activity_Component extends BP_Component {
 						'id'       => 'my-account-' . $this->id . '-favorites',
 						'title'    => _x( 'Likes', 'My Account Activity sub nav', 'buddyboss' ),
 						'href'     => trailingslashit( $activity_link . 'favorites' ),
-						'position' => 10
+						'position' => 10,
 					);
 				}
 
@@ -427,7 +431,7 @@ class BP_Activity_Component extends BP_Component {
 						'id'       => 'my-account-' . $this->id . '-friends',
 						'title'    => _x( 'Connections', 'My Account Activity sub nav', 'buddyboss' ),
 						'href'     => trailingslashit( $activity_link . bp_get_friends_slug() ),
-						'position' => 30
+						'position' => 30,
 					);
 				}
 
@@ -438,7 +442,7 @@ class BP_Activity_Component extends BP_Component {
 						'id'       => 'my-account-' . $this->id . '-groups',
 						'title'    => _x( 'Groups', 'My Account Activity sub nav', 'buddyboss' ),
 						'href'     => trailingslashit( $activity_link . bp_get_groups_slug() ),
-						'position' => 40
+						'position' => 40,
 					);
 				}
 
@@ -449,7 +453,7 @@ class BP_Activity_Component extends BP_Component {
 						'id'       => 'my-account-' . $this->id . '-mentions',
 						'title'    => $title,
 						'href'     => trailingslashit( $activity_link . 'mentions' ),
-						'position' => 50
+						'position' => 50,
 					);
 				}
 
@@ -460,7 +464,7 @@ class BP_Activity_Component extends BP_Component {
 						'id'       => 'my-account-' . $this->id . '-following',
 						'title'    => _x( 'Following', 'My Account Activity sub nav', 'buddyboss' ),
 						'href'     => trailingslashit( $activity_link . 'following' ),
-						'position' => 60
+						'position' => 60,
 					);
 				}
 			}
@@ -473,7 +477,6 @@ class BP_Activity_Component extends BP_Component {
 	 * Set up the title for pages and <title>.
 	 *
 	 * @since BuddyPress 1.5.0
-	 *
 	 */
 	public function setup_title() {
 
@@ -484,11 +487,13 @@ class BP_Activity_Component extends BP_Component {
 			if ( bp_is_my_profile() ) {
 				$bp->bp_options_title = __( 'My Activity', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-					'item_id' => bp_displayed_user_id(),
-					'type'    => 'thumb',
-					'alt'	  => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
-				) );
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
 				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}
 		}
@@ -504,12 +509,14 @@ class BP_Activity_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_activity',
-			'bp_activity_comments',
-			'activity_meta',
-			'bp_activity_follow'
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'bp_activity',
+				'bp_activity_comments',
+				'activity_meta',
+				'bp_activity_follow',
+			)
+		);
 
 		parent::setup_cache_groups();
 	}

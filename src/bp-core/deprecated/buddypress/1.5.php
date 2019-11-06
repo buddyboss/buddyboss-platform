@@ -55,7 +55,7 @@ function bp_core_is_main_site( $blog_id = '' ) {
 	return is_main_site( $blog_id );
 }
 
-if ( !function_exists( 'is_site_admin' ) ) {
+if ( ! function_exists( 'is_site_admin' ) ) {
 	/**
 	 * WPMU version of is_super_admin()
 	 *
@@ -94,7 +94,7 @@ function bp_core_add_admin_menu_page( $args = '' ) {
 		'icon_url'     => false,
 		'menu_title'   => '',
 		'page_title'   => '',
-		'position'     => 100
+		'position'     => 100,
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -103,22 +103,24 @@ function bp_core_add_admin_menu_page( $args = '' ) {
 	$file     = plugin_basename( $file );
 	$hookname = get_plugin_page_hookname( $file, '' );
 
-	$admin_page_hooks[$file] = sanitize_title( $menu_title );
+	$admin_page_hooks[ $file ] = sanitize_title( $menu_title );
 
-	if ( !empty( $function ) && !empty ( $hookname ) )
+	if ( ! empty( $function ) && ! empty( $hookname ) ) {
 		add_action( $hookname, $function );
+	}
 
-	if ( empty( $icon_url ) )
+	if ( empty( $icon_url ) ) {
 		$icon_url = 'images/generic.png';
-	elseif ( is_ssl() && 0 === strpos( $icon_url, 'http://' ) )
+	} elseif ( is_ssl() && 0 === strpos( $icon_url, 'http://' ) ) {
 		$icon_url = 'https://' . substr( $icon_url, 7 );
+	}
 
 	do {
 		$position++;
-	} while ( !empty( $menu[$position] ) );
+	} while ( ! empty( $menu[ $position ] ) );
 
-	$menu[$position] = array ( $menu_title, $access_level, $file, $page_title, 'menu-top ' . $hookname, $hookname, $icon_url );
-	$_registered_pages[$hookname] = true;
+	$menu[ $position ]              = array( $menu_title, $access_level, $file, $page_title, 'menu-top ' . $hookname, $hookname, $icon_url );
+	$_registered_pages[ $hookname ] = true;
 
 	return $hookname;
 }
@@ -147,7 +149,7 @@ function bp_core_get_wp_profile() {
 	$ud = get_userdata( bp_displayed_user_id() ); ?>
 
 <div class="bp-widget wp-profile">
-	<h4><?php _e( 'My Profile', 'buddyboss' ) ?></h4>
+	<h4><?php _e( 'My Profile', 'buddyboss' ); ?></h4>
 
 	<table class="wp-profile-fields">
 
@@ -208,7 +210,7 @@ function bp_core_get_wp_profile() {
 	</table>
 </div>
 
-<?php
+	<?php
 }
 
 /**
@@ -230,7 +232,7 @@ function bp_is_home() {
  * @return bool
  */
 function bp_is_front_page() {
-	_deprecated_function( __FUNCTION__, '1.5', "is_front_page()" );
+	_deprecated_function( __FUNCTION__, '1.5', 'is_front_page()' );
 	return is_front_page();
 }
 
@@ -300,15 +302,15 @@ function bp_page_title() {
 	 *
 	 * @return string
 	 */
-	function bp_get_page_title() {
-		_deprecated_function( __FUNCTION__, '1.5', 'wp_title()' );
-		$title = wp_title( '|', false, 'right' ) . get_bloginfo( 'name', 'display' );
+function bp_get_page_title() {
+	_deprecated_function( __FUNCTION__, '1.5', 'wp_title()' );
+	$title = wp_title( '|', false, 'right' ) . get_bloginfo( 'name', 'display' );
 
-		// Backpat for BP 1.2 filter
-		$title = apply_filters( 'bp_page_title', esc_attr( $title ), esc_attr( $title ) );
+	// Backpat for BP 1.2 filter
+	$title = apply_filters( 'bp_page_title', esc_attr( $title ), esc_attr( $title ) );
 
-		return apply_filters( 'bp_get_page_title', $title );
-	}
+	return apply_filters( 'bp_get_page_title', $title );
+}
 
 /**
  * Generate a link to log out. Last used in BP 1.2-beta. You should be using wp_logout_url().
@@ -338,18 +340,21 @@ function groups_at_message_notification( $content, $poster_user_id, $group_id, $
 	preg_match_all( $pattern, $content, $usernames );
 
 	/* Make sure there's only one instance of each username */
-	if ( !$usernames = array_unique( $usernames[1] ) )
+	if ( ! $usernames = array_unique( $usernames[1] ) ) {
 		return false;
+	}
 
 	$group = new BP_Groups_Group( $group_id );
 
-	foreach( (array) $usernames as $username ) {
-		if ( !$receiver_user_id = bp_core_get_userid( $username ) )
+	foreach ( (array) $usernames as $username ) {
+		if ( ! $receiver_user_id = bp_core_get_userid( $username ) ) {
 			continue;
+		}
 
 		/* Check the user is a member of the group before sending the update. */
-		if ( !groups_is_user_member( $receiver_user_id, $group_id ) )
+		if ( ! groups_is_user_member( $receiver_user_id, $group_id ) ) {
 			continue;
+		}
 
 		// Now email the user with the contents of the message (if they have enabled email notifications)
 		if ( 'no' != bp_get_user_meta( $receiver_user_id, 'notification_activity_new_mention', true ) ) {
@@ -360,25 +365,33 @@ function groups_at_message_notification( $content, $poster_user_id, $group_id, $
 			$settings_link = bp_core_get_user_domain( $receiver_user_id ) . $settings_slug . '/notifications/';
 
 			$poster_name = stripslashes( $poster_name );
-			$content = bp_groups_filter_kses( stripslashes( $content ) );
+			$content     = bp_groups_filter_kses( stripslashes( $content ) );
 
 			// Set up and send the message
-			$ud = bp_core_get_core_userdata( $receiver_user_id );
-			$to = $ud->user_email;
+			$ud      = bp_core_get_core_userdata( $receiver_user_id );
+			$to      = $ud->user_email;
 			$subject = bp_get_email_subject( array( 'text' => sprintf( __( '%1$s mentioned you in the group "%2$s"', 'buddyboss' ), $poster_name, $group->name ) ) );
 
-$message = sprintf( __(
-'%1$s mentioned you in the group "%2$s":
+			$message = sprintf(
+				__(
+					'%1$s mentioned you in the group "%2$s":
 
 "%3$s"
 
 To view and respond to the message, log in and visit: %4$s
 
 ---------------------
-', 'buddyboss' ), $poster_name, $group->name, $content, $message_link );
+',
+					'buddyboss'
+				),
+				$poster_name,
+				$group->name,
+				$content,
+				$message_link
+			);
 
 			/* Send the message */
-			$to = apply_filters( 'groups_at_message_notification_to', $to );
+			$to      = apply_filters( 'groups_at_message_notification_to', $to );
 			$subject = apply_filters( 'groups_at_message_notification_subject', $subject, $group, $poster_name );
 			$message = apply_filters( 'groups_at_message_notification_message', $message, $group, $poster_name, $content, $message_link, $settings_link );
 
@@ -391,6 +404,7 @@ To view and respond to the message, log in and visit: %4$s
 
 /**
  * BP 1.5 simplified notification functions a bit
+ *
  * @deprecated BuddyPress 1.5.0
  *
  * @return mixed
@@ -485,108 +499,110 @@ function bp_core_is_root_component( $component_name ) {
  * @since BuddyPress 1.5.0
  */
 function bp_dtheme_deprecated() {
-	if ( !function_exists( 'bp_dtheme_wp_pages_filter' ) ) :
-	/**
-	 * In BuddyPress 1.2.x, this function filtered the dropdown on the
-	 * Settings > Reading screen for selecting the page to show on front to
-	 * include "Activity Feed." As of 1.5.x, it is no longer required.
-	 *
-	 * @deprecated BuddyPress 1.5.0
-	 * @deprecated No longer required.
-	 * @param string $page_html A list of pages as a dropdown (select list)
-	 * @return string
-	 * @see wp_dropdown_pages()
-	 * @since BuddyPress 1.2.0
-	 */
-	function bp_dtheme_wp_pages_filter( $page_html ) {
-		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
-		return $page_html;
-	}
+	if ( ! function_exists( 'bp_dtheme_wp_pages_filter' ) ) :
+		/**
+		 * In BuddyPress 1.2.x, this function filtered the dropdown on the
+		 * Settings > Reading screen for selecting the page to show on front to
+		 * include "Activity Feed." As of 1.5.x, it is no longer required.
+		 *
+		 * @deprecated BuddyPress 1.5.0
+		 * @deprecated No longer required.
+		 * @param string $page_html A list of pages as a dropdown (select list)
+		 * @return string
+		 * @see wp_dropdown_pages()
+		 * @since BuddyPress 1.2.0
+		 */
+		function bp_dtheme_wp_pages_filter( $page_html ) {
+			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
+			return $page_html;
+		}
 	endif;
 
-	if ( !function_exists( 'bp_dtheme_page_on_front_update' ) ) :
-	/**
-	 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity feed setting.
-	 * As of 1.5.x, it is no longer required.
-	 *
-	 * @deprecated BuddyPress 1.5.0
-	 * @deprecated No longer required.
-	 * @param string $oldvalue Previous value of get_option( 'page_on_front' )
-	 * @param string $oldvalue New value of get_option( 'page_on_front' )
-	 * @return false|string
-	 * @since BuddyPress 1.2.0
-	 */
-	function bp_dtheme_page_on_front_update( $oldvalue, $newvalue ) {
-		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
-		if ( !is_admin() || !bp_current_user_can( 'bp_moderate' ) )
-			return false;
+	if ( ! function_exists( 'bp_dtheme_page_on_front_update' ) ) :
+		/**
+		 * In BuddyPress 1.2.x, this function hijacked the saving of page on front setting to save the activity feed setting.
+		 * As of 1.5.x, it is no longer required.
+		 *
+		 * @deprecated BuddyPress 1.5.0
+		 * @deprecated No longer required.
+		 * @param string $oldvalue Previous value of get_option( 'page_on_front' )
+		 * @param string $oldvalue New value of get_option( 'page_on_front' )
+		 * @return false|string
+		 * @since BuddyPress 1.2.0
+		 */
+		function bp_dtheme_page_on_front_update( $oldvalue, $newvalue ) {
+			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
+			if ( ! is_admin() || ! bp_current_user_can( 'bp_moderate' ) ) {
+				return false;
+			}
 
-		return $oldvalue;
-	}
+			return $oldvalue;
+		}
 	endif;
 
-	if ( !function_exists( 'bp_dtheme_page_on_front_template' ) ) :
-	/**
-	 * In BuddyPress 1.2.x, this function loaded the activity feed template if the front page display settings allow.
-	 * As of 1.5.x, it is no longer required.
-	 *
-	 * @deprecated BuddyPress 1.5.0
-	 * @deprecated No longer required.
-	 * @param string $template Absolute path to the page template
-	 * @return string
-	 * @since BuddyPress 1.2.0
-	 */
-	function bp_dtheme_page_on_front_template( $template ) {
-		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
-		return $template;
-	}
+	if ( ! function_exists( 'bp_dtheme_page_on_front_template' ) ) :
+		/**
+		 * In BuddyPress 1.2.x, this function loaded the activity feed template if the front page display settings allow.
+		 * As of 1.5.x, it is no longer required.
+		 *
+		 * @deprecated BuddyPress 1.5.0
+		 * @deprecated No longer required.
+		 * @param string $template Absolute path to the page template
+		 * @return string
+		 * @since BuddyPress 1.2.0
+		 */
+		function bp_dtheme_page_on_front_template( $template ) {
+			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
+			return $template;
+		}
 	endif;
 
-	if ( !function_exists( 'bp_dtheme_fix_get_posts_on_activity_front' ) ) :
-	/**
-	 * In BuddyPress 1.2.x, this forced the page ID as a string to stop the get_posts query from kicking up a fuss.
-	 * As of 1.5.x, it is no longer required.
-	 *
-	 * @deprecated BuddyPress 1.5.0
-	 * @deprecated No longer required.
-	 * @since BuddyPress 1.2.0
-	 */
-	function bp_dtheme_fix_get_posts_on_activity_front() {
-		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
-	}
+	if ( ! function_exists( 'bp_dtheme_fix_get_posts_on_activity_front' ) ) :
+		/**
+		 * In BuddyPress 1.2.x, this forced the page ID as a string to stop the get_posts query from kicking up a fuss.
+		 * As of 1.5.x, it is no longer required.
+		 *
+		 * @deprecated BuddyPress 1.5.0
+		 * @deprecated No longer required.
+		 * @since BuddyPress 1.2.0
+		 */
+		function bp_dtheme_fix_get_posts_on_activity_front() {
+			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
+		}
 	endif;
 
-	if ( !function_exists( 'bp_dtheme_fix_the_posts_on_activity_front' ) ) :
-	/**
-	 * In BuddyPress 1.2.x, this was used as part of the code that set the activity feed to be on the front page.
-	 * As of 1.5.x, it is no longer required.
-	 *
-	 * @deprecated BuddyPress 1.5.0
-	 * @deprecated No longer required.
-	 * @param array $posts Posts as retrieved by WP_Query
-	 * @return array
-	 * @since BuddyPress 1.2.5
-	 */
-	function bp_dtheme_fix_the_posts_on_activity_front( $posts ) {
-		_deprecated_function( __FUNCTION__, '1.5', "No longer required." );
-		return $posts;
-	}
+	if ( ! function_exists( 'bp_dtheme_fix_the_posts_on_activity_front' ) ) :
+		/**
+		 * In BuddyPress 1.2.x, this was used as part of the code that set the activity feed to be on the front page.
+		 * As of 1.5.x, it is no longer required.
+		 *
+		 * @deprecated BuddyPress 1.5.0
+		 * @deprecated No longer required.
+		 * @param array $posts Posts as retrieved by WP_Query
+		 * @return array
+		 * @since BuddyPress 1.2.5
+		 */
+		function bp_dtheme_fix_the_posts_on_activity_front( $posts ) {
+			_deprecated_function( __FUNCTION__, '1.5', 'No longer required.' );
+			return $posts;
+		}
 	endif;
 
-	if ( !function_exists( 'bp_dtheme_add_blog_comments_js' ) ) :
-	/**
-	 * In BuddyPress 1.2.x, this added the JavaScript needed for blog comment replies.
-	 * As of 1.5.x, we recommend that you enqueue the comment-reply JavaScript in your theme's header.php.
-	 *
-	 * @deprecated BuddyPress 1.5.0
-	 * @deprecated Enqueue the comment-reply script in your theme's header.php.
-	 * @since BuddyPress 1.2.0
-	 */
-	function bp_dtheme_add_blog_comments_js() {
-		_deprecated_function( __FUNCTION__, '1.5', "Enqueue the comment-reply script in your theme's header.php." );
-		if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) )
-			wp_enqueue_script( 'comment-reply' );
-	}
+	if ( ! function_exists( 'bp_dtheme_add_blog_comments_js' ) ) :
+		/**
+		 * In BuddyPress 1.2.x, this added the JavaScript needed for blog comment replies.
+		 * As of 1.5.x, we recommend that you enqueue the comment-reply JavaScript in your theme's header.php.
+		 *
+		 * @deprecated BuddyPress 1.5.0
+		 * @deprecated Enqueue the comment-reply script in your theme's header.php.
+		 * @since BuddyPress 1.2.0
+		 */
+		function bp_dtheme_add_blog_comments_js() {
+			_deprecated_function( __FUNCTION__, '1.5', "Enqueue the comment-reply script in your theme's header.php." );
+			if ( is_singular() && bp_is_blog_page() && get_option( 'thread_comments' ) ) {
+				wp_enqueue_script( 'comment-reply' );
+			}
+		}
 	endif;
 }
 add_action( 'after_setup_theme', 'bp_dtheme_deprecated', 15 );

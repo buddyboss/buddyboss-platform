@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 /**
- * Escape BuddyBoss profile search form data version 4.7. 
+ * Escape BuddyBoss profile search form data version 4.7.
  *
  * @since BuddyBoss 1.0.0
  */
@@ -18,12 +18,14 @@ function bp_ps_escaped_form_data47( $version ) {
 
 	$meta   = bp_ps_meta( $form );
 	$fields = bp_ps_parse_request( bp_ps_get_request( 'form', $form ) );
-	wp_register_script( 'bp-ps-template',
+	wp_register_script(
+		'bp-ps-template',
 		buddypress()->plugin_url . 'bp-core/profile-search/bp-ps-template.js',
 		array(),
-		bp_get_version() );
+		bp_get_version()
+	);
 
-	$F            = new stdClass;
+	$F            = new stdClass();
 	$F->id        = $form;
 	$F->title     = get_the_title( $form );
 	$F->location  = $location;
@@ -31,13 +33,13 @@ function bp_ps_escaped_form_data47( $version ) {
 	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	$template_options = $meta['template_options'][ $meta['template'] ];
-	if ( isset ( $template_options['header'] ) ) {
+	if ( isset( $template_options['header'] ) ) {
 		$F->header = $template_options['header'];
 	}
-	if ( isset ( $template_options['toggle'] ) ) {
+	if ( isset( $template_options['toggle'] ) ) {
 		$F->toggle = ( $template_options['toggle'] == 'Enabled' );
 	}
-	if ( isset ( $template_options['button'] ) ) {
+	if ( isset( $template_options['button'] ) ) {
 		$F->toggle_text = $template_options['button'];
 	}
 
@@ -51,7 +53,7 @@ function bp_ps_escaped_form_data47( $version ) {
 	$F->fields = array();
 
 	foreach ( $meta['field_code'] as $k => $code ) {
-		if ( empty ( $fields[ $code ] ) ) {
+		if ( empty( $fields[ $code ] ) ) {
 			continue;
 		}
 
@@ -63,7 +65,7 @@ function bp_ps_escaped_form_data47( $version ) {
 
 		$f->label     = $f->name;
 		$custom_label = $meta['field_label'][ $k ];
-		if ( ! empty ( $custom_label ) ) {
+		if ( ! empty( $custom_label ) ) {
 			$f->label    = $custom_label;
 			$F->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
 		}
@@ -71,17 +73,17 @@ function bp_ps_escaped_form_data47( $version ) {
 		$custom_desc = $meta['field_desc'][ $k ];
 		if ( $custom_desc == '-' ) {
 			$f->description = '';
-		} elseif ( ! empty ( $custom_desc ) ) {
+		} elseif ( ! empty( $custom_desc ) ) {
 			$f->description = $custom_desc;
 		}
 
 		switch ( $f->display ) {
 			case 'range':
 			case 'range-select':
-				if ( ! isset ( $f->value['min'] ) ) {
+				if ( ! isset( $f->value['min'] ) ) {
 					$f->value['min'] = '';
 				}
-				if ( ! isset ( $f->value['max'] ) ) {
+				if ( ! isset( $f->value['max'] ) ) {
 					$f->value['max'] = '';
 				}
 				$f->min = $f->value['min'];
@@ -90,13 +92,13 @@ function bp_ps_escaped_form_data47( $version ) {
 
 			case 'textbox':
 			case 'number':
-				if ( ! isset ( $f->value ) ) {
+				if ( ! isset( $f->value ) ) {
 					$f->value = '';
 				}
 				break;
 
 			case 'distance':
-				if ( ! isset ( $f->value['location'] ) ) {
+				if ( ! isset( $f->value['location'] ) ) {
 					$f->value['distance'] = $f->value['units'] = $f->value['location'] = $f->value['lat'] = $f->value['lng'] = '';
 				}
 				wp_enqueue_script( $f->script_handle );
@@ -104,7 +106,7 @@ function bp_ps_escaped_form_data47( $version ) {
 				break;
 
 			case 'selectbox':
-				if ( ! isset ( $f->value ) ) {
+				if ( ! isset( $f->value ) ) {
 					$f->value = '';
 				}
 				if ( $version == '4.9' ) {
@@ -113,7 +115,7 @@ function bp_ps_escaped_form_data47( $version ) {
 				break;
 
 			case 'radio':
-				if ( ! isset ( $f->value ) ) {
+				if ( ! isset( $f->value ) ) {
 					$f->value = '';
 				}
 				wp_enqueue_script( 'bp-ps-template' );
@@ -121,7 +123,7 @@ function bp_ps_escaped_form_data47( $version ) {
 
 			case 'multiselectbox':
 			case 'checkbox':
-				if ( ! isset ( $f->value ) ) {
+				if ( ! isset( $f->value ) ) {
 					$f->value = '';
 				}
 				break;
@@ -183,7 +185,7 @@ function bp_ps_escaped_form_data47( $version ) {
 function bp_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
-	$F         = new stdClass;
+	$F         = new stdClass();
 	$action    = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 	$action    = add_query_arg( BP_PS_FORM, 'clear', $action );
 	$F->action = $full ? esc_url( $action ) : '';
@@ -191,19 +193,19 @@ function bp_ps_escaped_filters_data47() {
 
 	$fields = bp_ps_parse_request( $request );
 	foreach ( $fields as $f ) {
-		if ( ! isset ( $f->filter ) ) {
+		if ( ! isset( $f->filter ) ) {
 			continue;
 		}
 		if ( ! bp_ps_Fields::set_display( $f, $f->filter ) ) {
 			continue;
 		}
 
-		if ( empty ( $f->label ) ) {
+		if ( empty( $f->label ) ) {
 			$f->label = $f->name;
 		}
 
-		$f->min    = isset ( $f->value['min'] ) ? $f->value['min'] : '';
-		$f->max    = isset ( $f->value['max'] ) ? $f->value['max'] : '';
+		$f->min    = isset( $f->value['min'] ) ? $f->value['min'] : '';
+		$f->max    = isset( $f->value['max'] ) ? $f->value['max'] : '';
 		$f->values = (array) $f->value;
 
 		/**
@@ -259,7 +261,7 @@ function bp_ps_full_label( $f ) {
 		'unknown'    => __( '<strong>%1$s</strong>:', 'buddyboss' ),
 	);
 
-	$mode  = isset ( $labels[ $f->mode ] ) ? $f->mode : 'unknown';
+	$mode  = isset( $labels[ $f->mode ] ) ? $f->mode : 'unknown';
 	$label = sprintf( $labels[ $mode ], $f->label );
 
 	return apply_filters( 'bp_ps_full_label', $label, $f );
@@ -271,7 +273,7 @@ function bp_ps_full_label( $f ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_print_filter( $f ) {
-	if ( ! empty ( $f->options ) ) {
+	if ( ! empty( $f->options ) ) {
 		$values = array();
 		foreach ( $f->options as $key => $label ) {
 			if ( in_array( $key, $f->values ) ) {
@@ -284,17 +286,17 @@ function bp_ps_print_filter( $f ) {
 		switch ( $f->filter ) {
 			case 'range':
 			case 'date_range':
-				if ( ! isset ( $f->value['max'] ) ) {
+				if ( ! isset( $f->value['max'] ) ) {
 					return sprintf( esc_html__( 'min: %1$s', 'buddyboss' ), $f->value['min'] );
 				}
-				if ( ! isset ( $f->value['min'] ) ) {
+				if ( ! isset( $f->value['min'] ) ) {
 					return sprintf( esc_html__( 'max: %1$s', 'buddyboss' ), $f->value['max'] );
 				}
 
 				return sprintf( esc_html__( 'min: %1$s, max: %2$s', 'buddyboss' ), $f->value['min'], $f->value['max'] );
 
 			case '':
-				if ( isset ( $values ) ) {
+				if ( isset( $values ) ) {
 					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
 				}
 
@@ -329,14 +331,18 @@ function bp_ps_print_filter( $f ) {
 
 			case 'distance':
 				if ( $f->value['units'] == 'km' ) {
-					return sprintf( esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
+					return sprintf(
+						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
 						$f->value['distance'],
-						$f->value['location'] );
+						$f->value['location']
+					);
 				}
 
-				return sprintf( esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss' ),
+				return sprintf(
+					esc_html__( 'is within: %1$s miles of %2$s', 'buddyboss' ),
 					$f->value['distance'],
-					$f->value['location'] );
+					$f->value['location']
+				);
 
 			default:
 				return "BP Profile Search: undefined filter <em>$f->filter</em>";
@@ -352,7 +358,7 @@ function bp_ps_print_filter( $f ) {
 function bp_ps_autocomplete_script( $f ) {
 	wp_enqueue_script( $f->script_handle );
 	$autocomplete_options = apply_filters( 'bp_ps_autocomplete_options', "{types: ['geocode']}", $f );
-	$geolocation_options  = apply_filters( 'bp_ps_geolocation_options', "{timeout: 5000}", $f );
+	$geolocation_options  = apply_filters( 'bp_ps_geolocation_options', '{timeout: 5000}', $f );
 	?>
 	<input type="hidden" id="Lat_<?php echo $f->unique_id; ?>" name="<?php echo $f->code . '[lat]'; ?>" value="<?php echo $f->value['lat']; ?>">
 	<input type="hidden" id="Lng_<?php echo $f->unique_id; ?>" name="<?php echo $f->code . '[lng]'; ?>" value="<?php echo $f->value['lng']; ?>">
@@ -415,7 +421,7 @@ function bp_ps_autocomplete_script( $f ) {
 function bp_ps_unique_id( $id ) {
 	static $k = array();
 
-	$k[ $id ] = isset ( $k[ $id ] ) ? $k[ $id ] + 1 : 0;
+	$k[ $id ] = isset( $k[ $id ] ) ? $k[ $id ] + 1 : 0;
 
 	return $k[ $id ] ? $id . '_' . $k[ $id ] : $id;
 }

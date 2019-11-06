@@ -10,7 +10,6 @@
  * Handles the display of the profile page by loading the correct template file.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function xprofile_screen_display_profile() {
 	$new = isset( $_GET['new'] ) ? $_GET['new'] : '';

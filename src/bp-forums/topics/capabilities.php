@@ -17,15 +17,18 @@
  * @return array Topic capabilities
  */
 function bbp_get_topic_caps() {
-	return apply_filters( 'bbp_get_topic_caps', array (
-		'edit_posts'          => 'edit_topics',
-		'edit_others_posts'   => 'edit_others_topics',
-		'publish_posts'       => 'publish_topics',
-		'read_private_posts'  => 'read_private_topics',
-		'read_hidden_posts'   => 'read_hidden_topics',
-		'delete_posts'        => 'delete_topics',
-		'delete_others_posts' => 'delete_others_topics'
-	) );
+	return apply_filters(
+		'bbp_get_topic_caps',
+		array(
+			'edit_posts'          => 'edit_topics',
+			'edit_others_posts'   => 'edit_others_topics',
+			'publish_posts'       => 'publish_topics',
+			'read_private_posts'  => 'read_private_topics',
+			'read_hidden_posts'   => 'read_hidden_topics',
+			'delete_posts'        => 'delete_topics',
+			'delete_others_posts' => 'delete_others_topics',
+		)
+	);
 }
 
 /**
@@ -37,12 +40,15 @@ function bbp_get_topic_caps() {
  * @return array Topic tag capabilities
  */
 function bbp_get_topic_tag_caps() {
-	return apply_filters( 'bbp_get_topic_tag_caps', array (
-		'manage_terms' => 'manage_topic_tags',
-		'edit_terms'   => 'edit_topic_tags',
-		'delete_terms' => 'delete_topic_tags',
-		'assign_terms' => 'assign_topic_tags'
-	) );
+	return apply_filters(
+		'bbp_get_topic_tag_caps',
+		array(
+			'manage_terms' => 'manage_topic_tags',
+			'edit_terms'   => 'edit_topic_tags',
+			'delete_terms' => 'delete_topic_tags',
+			'assign_terms' => 'assign_topic_tags',
+		)
+	);
 }
 
 /**
@@ -50,10 +56,10 @@ function bbp_get_topic_tag_caps() {
  *
  * @since bbPress (r4242)
  *
- * @param array $caps Capabilities for meta capability
+ * @param array  $caps Capabilities for meta capability
  * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param int    $user_id User id
+ * @param mixed  $args Arguments
  * @uses get_post() To get the post
  * @uses get_post_type_object() To get the post type object
  * @uses apply_filters() Filter capability map results
@@ -64,20 +70,19 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 	// What capability is being checked?
 	switch ( $cap ) {
 
-		/** Reading ***********************************************************/
+		/** Reading */
 
-		case 'read_topic' :
-
+		case 'read_topic':
 			// User cannot spectate
 			if ( ! user_can( $user_id, 'spectate' ) ) {
 				$caps = array( 'do_not_allow' );
 
-			// Do some post ID based logic
+				// Do some post ID based logic
 			} else {
 
 				// Get the post
 				$_post = get_post( $args[0] );
-				if ( !empty( $_post ) ) {
+				if ( ! empty( $_post ) ) {
 
 					// Get caps for post type object
 					$post_type = get_post_type_object( $_post->post_type );
@@ -86,11 +91,11 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 					if ( bbp_get_public_status_id() === $_post->post_status ) {
 						$caps = array( 'spectate' );
 
-					// User is author so allow read
+						// User is author so allow read
 					} elseif ( (int) $user_id === (int) $_post->post_author ) {
 						$caps = array( 'spectate' );
 
-					// Unknown so map to private posts
+						// Unknown so map to private posts
 					} else {
 						$caps = array( $post_type->cap->read_private_posts );
 					}
@@ -99,10 +104,9 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Publishing ********************************************************/
+		/** Publishing */
 
-		case 'publish_topics'  :
-
+		case 'publish_topics':
 			// Moderators can always publish
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
@@ -110,17 +114,16 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Editing ***********************************************************/
+		/** Editing */
 
 		// Used primarily in wp-admin
-		case 'edit_topics'        :
-		case 'edit_others_topics' :
-
+		case 'edit_topics':
+		case 'edit_others_topics':
 			// Moderators can always edit
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( $cap );
 
-			// Otherwise, block
+				// Otherwise, block
 			} else {
 				$caps = array( 'do_not_allow' );
 			}
@@ -128,11 +131,10 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 			break;
 
 		// Used everywhere
-		case 'edit_topic' :
-
+		case 'edit_topic':
 			// Get the post
 			$_post = get_post( $args[0] );
-			if ( !empty( $_post ) ) {
+			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
 				$post_type = get_post_type_object( $_post->post_type );
@@ -142,11 +144,11 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				if ( bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
-				// User is author so allow edit if not in admin
-				} elseif ( !is_admin() && ( (int) $user_id === (int) $_post->post_author ) ) {
+					// User is author so allow edit if not in admin
+				} elseif ( ! is_admin() && ( (int) $user_id === (int) $_post->post_author ) ) {
 					$caps[] = $post_type->cap->edit_posts;
 
-				// Unknown, so map to edit_others_posts
+					// Unknown, so map to edit_others_posts
 				} else {
 					$caps[] = $post_type->cap->edit_others_posts;
 				}
@@ -154,13 +156,12 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Deleting **********************************************************/
+		/** Deleting */
 
-		case 'delete_topic' :
-
+		case 'delete_topic':
 			// Get the post
 			$_post = get_post( $args[0] );
-			if ( !empty( $_post ) ) {
+			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
 				$post_type = get_post_type_object( $_post->post_type );
@@ -170,11 +171,11 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				if ( bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
-				// Moderators can always edit forum content
+					// Moderators can always edit forum content
 				} elseif ( user_can( $user_id, 'moderate' ) ) {
 					$caps[] = 'moderate';
 
-				// Unknown so map to delete_others_posts
+					// Unknown so map to delete_others_posts
 				} else {
 					$caps[] = $post_type->cap->delete_others_posts;
 				}
@@ -183,9 +184,8 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 			break;
 
 		// Moderation override
-		case 'delete_topics'         :
-		case 'delete_others_topics'  :
-
+		case 'delete_topics':
+		case 'delete_others_topics':
 			// Moderators can always delete
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( $cap );
@@ -193,9 +193,9 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Admin *************************************************************/
+		/** Admin */
 
-		case 'bbp_topics_admin' :
+		case 'bbp_topics_admin':
 			$caps = array( 'moderate' );
 			break;
 	}
@@ -208,10 +208,10 @@ function bbp_map_topic_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
  *
  * @since bbPress (r4242)
  *
- * @param array $caps Capabilities for meta capability
+ * @param array  $caps Capabilities for meta capability
  * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param int    $user_id User id
+ * @param mixed  $args Arguments
  * @uses apply_filters() Filter capability map results
  * @return array Actual capabilities for meta capability
  */
@@ -219,12 +219,11 @@ function bbp_map_topic_tag_meta_caps( $caps, $cap, $user_id, $args ) {
 
 	// What capability is being checked?
 	switch ( $cap ) {
-		case 'manage_topic_tags'    :
-		case 'edit_topic_tags'      :
-		case 'delete_topic_tags'    :
-		case 'assign_topic_tags'    :
-		case 'bbp_topic_tags_admin' :
-
+		case 'manage_topic_tags':
+		case 'edit_topic_tags':
+		case 'delete_topic_tags':
+		case 'assign_topic_tags':
+		case 'bbp_topic_tags_admin':
 			// Moderators can always edit
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
