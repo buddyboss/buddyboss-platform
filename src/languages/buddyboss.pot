@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-18 16:03:55+00:00\n"
+"POT-Creation-Date: 2019-11-18 16:04:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12949,7 +12949,7 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/generators/AssignmentsReportsGenerator.php:79
 #: bp-integrations/learndash/buddypress/generators/EssaysReportsGenerator.php:86
 #: bp-integrations/learndash/buddypress/generators/QuizzesReportsGenerator.php:57
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:148
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:147
 msgid "Score"
 msgstr ""
 
@@ -15761,32 +15761,44 @@ msgstr ""
 msgid "Yes, I'd like to create a new site"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/certificates.php:36
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/certificates.php:26
+msgid "<span>Certificate in </span> <a href=\"%s\">%s</a>"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/certificates.php:32
+msgid "<span>Earned on</span> %s"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/certificates.php:34
+msgid "Download PDF"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/certificates.php:45
 msgid "Sorry, no certificates were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:132
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:131
 msgid "%s out of %s steps completed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:138
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:137
 msgid "%s%% Complete"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:147
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:146
 msgid "Certificate"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:149
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:148
 msgid "Statistics"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:150
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:149
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:28
 msgid "Date"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:234
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:233
 msgid "Sorry, no %s were found."
 msgstr ""
 
@@ -18070,12 +18082,12 @@ msgctxt ""
 msgid "Active: %s"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:128
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:127
 msgctxt "Course Progress Overview Label"
 msgid "%s Progress Overview"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:189
+#: bp-templates/bp-nouveau/buddypress/members/single/courses/courses.php:188
 msgctxt "Pending Certificate Status Label"
 msgid "Pending"
 msgstr ""
