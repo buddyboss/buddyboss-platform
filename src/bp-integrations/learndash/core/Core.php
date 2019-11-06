@@ -80,24 +80,24 @@ class Core {
 	 */
 	function setup_user_profile_bar() {
 		?>
-        <li id="wp-admin-bar-my-account-<?php echo $this->course_slug; ?>" class="menupop">
+        <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->course_slug ); ?>" class="menupop">
             <a class="ab-item" aria-haspopup="true"
-               href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>">
-                <span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo $this->course_name; ?>
+               href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>">
+                <span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo esc_attr( $this->course_name ); ?>
             </a>
 
             <div class="ab-sub-wrapper">
                 <ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
-                    <li id="wp-admin-bar-my-account-<?php echo $this->my_courses_slug; ?>">
+                    <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->my_courses_slug ); ?>">
                         <a class="ab-item"
-                           href="<?php echo $this->adminbar_nav_link( $this->course_slug ); ?>"><?php echo $this->my_courses_name; ?></a>
+                           href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_courses_name ); ?></a>
                     </li>
 					<?php
 					if ( $this->certificates_enables ) {
 						?>
-                        <li id="wp-admin-bar-my-account-<?php echo $this->certificates_tab_slug; ?>">
+                        <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->certificates_tab_slug ); ?>">
                             <a class="ab-item"
-                               href="<?php echo $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ); ?>"><?php echo $this->my_certificates_tab_name; ?></a>
+                               href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_certificates_tab_name ); ?></a>
                         </li>
 						<?php
 					}
