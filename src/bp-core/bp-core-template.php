@@ -2951,7 +2951,7 @@ function bp_is_group_leaders() {
  * @return bool True if the current page is a group's Send Invites page.
  */
 function bp_is_group_invites() {
-	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'send-invites' ) );
+	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'invite' ) );
 }
 
 /**

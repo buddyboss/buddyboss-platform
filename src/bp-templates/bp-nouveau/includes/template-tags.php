@@ -784,6 +784,8 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
+		} else if ( 'group_invite' === $bp_nouveau->object_nav && bp_is_group_invites() ) {
+			$parent_slug .= '_invite';
 		} else if ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
 			$parent_slug .= '_media';
 		} else if ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
@@ -1659,7 +1661,7 @@ function bp_nouveau_single_item_subnav_classes() {
 			$classes[] = 'group-subnav';
 		}
 
-		if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
+		if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
 			$classes[] = 'bp-invites-nav';
 		}
 

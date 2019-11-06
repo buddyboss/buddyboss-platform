@@ -339,7 +339,7 @@ function bp_nouveau_group_setup_nav() {
 
 		$bp->groups->nav->edit_nav(
 			array( 'name' => __( 'Send Invites', 'buddyboss' ) ),
-			'send-invites',
+			'invite',
 			bp_get_current_group_slug()
 		);
 
@@ -350,7 +350,7 @@ function bp_nouveau_group_setup_nav() {
 
 		bp_core_new_subnav_item( array(
 			'name'            => __( 'Send Invites', 'buddyboss' ),
-			'slug'            => 'send-invites',
+			'slug'            => 'invite',
 			'parent_url'      => $group_link,
 			'parent_slug'     => $current_group->slug,
 			'screen_function' => 'groups_screen_group_invite',
