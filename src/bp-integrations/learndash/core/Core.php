@@ -44,18 +44,6 @@ class Core {
 		$this->pluginName = __( 'BuddyBoss LearnDash', 'buddyboss' );
 
 		add_action( 'bp_ld_sync/requirements_checked', array( $this, 'init' ) );
-
-		$this->course_name              = \LearnDash_Custom_Label::get_label( 'courses' );
-		$this->my_courses_name          = sprintf( __( 'My %s', 'buddyboss' ), $this->course_name );
-		$this->create_courses_name      = sprintf( __( 'Create a %s', 'buddyboss' ), $this->course_name );
-		$this->create_courses_slug      = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
-		$this->course_slug              = apply_filters( 'bp_learndash_profile_courses_slug', 'courses' );
-		$this->my_courses_slug          = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
-		$this->course_access            = bp_core_can_edit_settings();
-		$this->certificates_enables     = bp_core_learndash_certificates_enables();
-		$this->my_certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'My Certificates', 'buddyboss' ) );
-		$this->certificates_tab_name    = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
-		$this->certificates_tab_slug    = apply_filters( 'bp_learndash_profile_certificates_slug', 'certificates' );
 		$this->registerCourseComponent();
 	}
 
@@ -66,8 +54,19 @@ class Core {
 	 */
 	public function registerCourseComponent() {
 		if ( $this->settings->get( 'course.courses_visibility' ) ) {
-			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 75 );
+			/**
+			 * Load first
+			 */
 			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
+
+			/**
+			 * Load second
+			 */
+			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 75 );
+
+			/**
+			 * Load third
+			 */
 			add_action( 'buddyboss_theme_after_bb_groups_menu', array( $this, 'setup_user_profile_bar' ), 10 );
 		}
 	}
@@ -115,6 +114,18 @@ class Core {
 	 * @since BuddyBoss 1.2.0
 	 */
 	public function setup_nav() {
+		$this->course_name              = \LearnDash_Custom_Label::get_label( 'courses' );
+		$this->my_courses_name          = sprintf( __( 'My %s', 'buddyboss' ), $this->course_name );
+		$this->create_courses_name      = sprintf( __( 'Create a %s', 'buddyboss' ), $this->course_name );
+		$this->create_courses_slug      = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
+		$this->course_slug              = apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Section_Permalinks', 'courses' ) );
+		$this->my_courses_slug          = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
+		$this->course_access            = bp_core_can_edit_settings();
+		$this->certificates_enables     = bp_core_learndash_certificates_enables();
+		$this->my_certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'My Certificates', 'buddyboss' ) );
+		$this->certificates_tab_name    = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
+		$this->certificates_tab_slug    = apply_filters( 'bp_learndash_profile_certificates_slug', 'certificates' );
+
 		$this->bp_displayed_user_id = bp_displayed_user_id();
 		$this->bp_loggedin_user_id  = bp_loggedin_user_id();
 		$this->user_same            = ( $this->bp_displayed_user_id == $this->bp_loggedin_user_id ? true : false );
@@ -210,6 +221,7 @@ class Core {
 				'slug'     => $this->certificates_tab_slug,
 				'parent'   => $this->course_slug,
 				'nav_link' => $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ),
+				'position' => 2,
 			);
 		}
 
