@@ -8,12 +8,15 @@ jQuery( document ).ready(
 		$tagsSelect.select2({
 			placeholder: $tagsSelect.attr('placeholder'),
 			minimumInputLength: 1,
+			closeOnSelect: true,
 			tags: true,
+			dropdownCssClass: 'bb-select-dropdown',
+			containerCssClass: 'bb-select-container',
 			tokenSeparators: [',', ' '],
 			ajax: {
 				url: bbpCommonJsData.ajax_url,
 				dataType: 'json',
-				delay: 250,
+				delay: 1000,
 				data: function (params) {
 					return jQuery.extend({}, params, {
 						_wpnonce: bbpCommonJsData.nonce,
@@ -47,6 +50,11 @@ jQuery( document ).ready(
 			tagsArrayData.push(data.id);
 			var tags = tagsArrayData.join(',');
 			jQuery('body #bbp_topic_tags').val(tags);
+
+			jQuery( 'body .select2-search__field' ).trigger( 'click' );
+			console.log('1');
+			jQuery( 'body .select2-search__field' ).trigger( 'click' );
+			console.log('111');
 		});
 
 		// Remove element into the Arrdata array.
@@ -61,6 +69,7 @@ jQuery( document ).ready(
 				jQuery(window).scrollTop(jQuery(window).scrollTop() + 1);
 			}
 		});
+
 	}
 	// "remove all tags" button event listener
 	jQuery( 'body' ).on('click', '.js-modal-close', function() {

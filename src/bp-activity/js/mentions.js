@@ -264,6 +264,7 @@ window.bp = window.bp || {};
 			searchKey:  'search',
 			displayTpl: BP_Mentions_Options.display_tpl
 			},
+			BP_Mentions_Options.extra_options,
 			mentions
 		);
 

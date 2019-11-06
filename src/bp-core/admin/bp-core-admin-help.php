@@ -46,7 +46,7 @@ function bp_core_admin_help_main_menu( $main_directories, $docs_path ) {
 				if ( ! empty( $content_array[1] ) ) {
 					echo $content_array[1];
 				} else {
-					$content = bp_core_stripe_header_tags( $content );
+					$content = bp_core_strip_header_tags( $content );
 					echo wp_trim_words( $content, 30, null );
 				}
 				?>
@@ -186,7 +186,7 @@ function bp_core_admin_help_display_content( $docs_path ) {
 	$Parsedown = new Parsedown();
 	$text      = file_get_contents( $docs_path );
 
-	return bp_core_rap_the_content_filter( $Parsedown->text( $text ) );
+	return bp_core_help_wrap_the_content_filter( $Parsedown->text( $text ) );
 }
 
 /**

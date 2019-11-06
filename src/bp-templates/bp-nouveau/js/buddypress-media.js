@@ -115,12 +115,12 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
 
 			//forums
-			$( '.bbpress,.buddypress' ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
-			$( '.bbpress,.buddypress' ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
-			$( '.bbpress form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
-			$( '.bbpress form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
-			$( '.bbpress form #whats-new-attachments .forums-attached-gif-container .gif-search-results, .forum form #whats-new-attachments .forums-attached-gif-container .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
-			$( '.bbpress form #whats-new-attachments .forums-attached-gif-container, .forum form #whats-new-attachments .forums-attached-gif-container' ).on( 'click', '.gif-image-remove', this.removeSelectedGif.bind( this ) );
+			$( document ).on( 'click', '#forums-media-button', this.openForumsUploader.bind( this ) );
+			$( document ).on( 'click', '#forums-gif-button', this.toggleGifSelector.bind( this ) );
+			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'keyup', '.search-query-input', this.searchGif.bind( this ) );
+			$( document ).find( 'form #whats-new-toolbar, .forum form #whats-new-toolbar' ).on( 'click', '.found-media-item', this.selectGif.bind( this ) );
+			$( document ).find( 'form #whats-new-attachments .forums-attached-gif-container .gif-search-results, .forum form #whats-new-attachments .forums-attached-gif-container .gif-search-results' ).scroll( this.loadMoreGif.bind( this ) );
+			$( document ).find( 'form #whats-new-attachments .forums-attached-gif-container, .forum form #whats-new-attachments .forums-attached-gif-container' ).on( 'click', '.gif-image-remove', this.removeSelectedGif.bind( this ) );
 
 			$(document).on('click', '.gif-image-container', this.playVideo.bind( this ) );
 			// Gifs autoplay
@@ -395,9 +395,14 @@ window.bp = window.bp || {};
 		resetForumsGifComponent: function() {
 			$('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
 			$('#whats-new-toolbar #forums-gif-button').removeClass('active');
-			$('#whats-new-attachments .forums-attached-gif-container').addClass('closed');
-			$('#whats-new-attachments .forums-attached-gif-container').find('.gif-image-container img').attr('src','');
-			$('#whats-new-attachments .forums-attached-gif-container')[0].style = '';
+
+			var $forums_attached_gif_container = $('#whats-new-attachments .forums-attached-gif-container');
+			if ( $forums_attached_gif_container ) {
+				$forums_attached_gif_container.addClass('closed');
+				$forums_attached_gif_container.find('.gif-image-container img').attr('src', '');
+				$forums_attached_gif_container[0].style = '';
+			}
+
 			if( $('#bbp_media_gif').length ) {
 				$('#bbp_media_gif').val('');
 			}
@@ -770,6 +775,9 @@ window.bp = window.bp || {};
 			$(event.currentTarget).closest('#bp-media-uploader').find('.bp-media-upload-tab').removeClass('selected');
 			$(event.currentTarget).addClass('selected');
 			this.toggleSubmitMediaButton();
+
+			//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+			jQuery(window).scroll();
 		},
 
 		openCreateAlbumModal: function(event){
