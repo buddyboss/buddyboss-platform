@@ -453,7 +453,7 @@ class BuddyPress {
 		 *
 		 * @param string $value Group Type post type slug.
 		 */
-		$this->group_type_post_type = apply_filters( 'bp_group_type_post_type', 'bp-group-type' );
+		$this->group_type_post_type     = apply_filters( 'bp_groups_group_type_post_type', 'bp-group-type' );
 
 		/**
 		 * Filters the taxonomy slug for the email type component.
@@ -578,7 +578,8 @@ class BuddyPress {
 
 		// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bb_ignore_deprecated_code', ! $this->load_deprecated ) ) {
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php';
+			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php' );
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {
