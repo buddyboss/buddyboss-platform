@@ -1,10 +1,11 @@
 <?php
 /**
- * @package WordPress
- * @subpackage BuddyPress for LearnDash
+ * BuddyBoss - Member Courses
+ *
+ * @since BuddyBoss 1.2.0
+ * @version 1.0.0
  */
-?>
-<?php
+
 $filepath = locate_template(
 	array(
 		'learndash/learndash_template_script.min.js',
@@ -30,9 +31,7 @@ if ( ! empty( $filepath ) ) {
 
 //LD_QuizPro::showModalWindow();
 add_action( 'wp_footer', array( 'LD_QuizPro', 'showModalWindow' ), 20 );
-?>
 
-<?php
 $user_id            = bp_displayed_user_id();
 $atts               = apply_filters( 'bp_learndash_user_courses_atts', array() );
 $user_courses       = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $user_id, $atts ) );
@@ -229,10 +228,10 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 			<?php }
 		} else { ?>
 	        <aside class="bp-feedback bp-messages info">
-				
+
 				<span class="bp-icon" aria-hidden="true"></span>
 				<p><?php printf( __( 'Sorry, no %s were found.', 'buddyboss' ), LearnDash_Custom_Label::label_to_lower( 'courses' ) ); ?></p>
-				
+
 			</aside>
             <?php
 		} ?>
