@@ -1428,3 +1428,21 @@ function bp_register_confirm_password( $default = false ) {
 	 */
 	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
 }
+
+/**
+ * Default layout option for the members listing
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_profile_layout_default_format( $default = 'grid' ) {
+	return apply_filters( 'bp_profile_layout_default_format', bp_get_option( 'bp-profile-layout-default-format', $default ) );
+}
+
+/**
+ * Default layout option for the groups listing
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_group_layout_default_format( $default = 'grid' ) {
+	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
+}
