@@ -36,7 +36,11 @@ if ( 'list_grid' === $current_value ) {
 				$default_current_value = bp_group_layout_default_format( 'grid' );
 			}
 		} elseif ( bp_is_groups_directory() || bp_is_group() || ( is_a( $post, 'WP_Post' ) && has_shortcode( $post->post_content, 'group' ) ) ) {
-			$default_current_value = bp_group_layout_default_format( 'grid' );
+			if ( ! bp_is_user_groups() && ! bp_is_groups_directory() ) {
+				$default_current_value = bp_profile_layout_default_format( 'grid' );
+			} else {
+				$default_current_value = bp_group_layout_default_format( 'grid' );
+			}
 		} else {
 			$default_current_value = bp_group_layout_default_format( 'grid' );
 		}
