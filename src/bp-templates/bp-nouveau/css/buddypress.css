@@ -3544,6 +3544,10 @@ div#bp-group-invite-content {
   overflow: auto;
 }
 
+.group-invites.pending-invites.invite #group-invites-container .group-invites-column .group-subnav-filters div .last {
+  display: none;
+}
+
 .hr-text {
   line-height: 1em;
   position: relative;

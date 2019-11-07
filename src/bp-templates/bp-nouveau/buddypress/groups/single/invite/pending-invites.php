@@ -10,6 +10,7 @@
 <div id="group-invites-container">
 	<?php bp_get_template_part( 'groups/single/parts/invite-subnav' ); ?>
 	<div class="group-invites-column">
+		<h2 class="bb-title"><?php _e( 'Pending Invites', 'buddyboss' ); ?></h2>
 		<div class="subnav-filters group-subnav-filters bp-invites-filters">
 			<div>
 				<div class="group-invites-search subnav-search clearfix" role="search">

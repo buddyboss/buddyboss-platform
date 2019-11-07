@@ -417,6 +417,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$potential_invites->users = array_map( 'bp_nouveau_prepare_group_potential_invites_for_js', array_values( $potential_invites->users ) );
 	$potential_invites->users = array_filter( $potential_invites->users );
 
+	$total_page = (int) $potential_invites->meta['total_page'];
+	$page       = ( isset( $_POST ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? (int) $_POST['page'] : 1;
 	$html = '';
 	ob_start();
 
@@ -483,14 +485,22 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		<?php
 	}
 
+	if ( $total_page !== (int) $_POST['page'] ) {
+		?>
+		<li class="load-more">
+			<div class="center">
+				<i class="dashicons dashicons-update animate-spin"></i>
+			</div>
+		</li>
+		<?php
+	}
+
+
 
 	$html = ob_get_contents();
 	ob_clean();
 
 	$potential_invites->html = $html;
-
-	$total_page = (int) $potential_invites->meta['total_page'];
-	$page       = ( isset( $_POST ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? (int) $_POST['page'] : 1;
 	$paginate   = '';
 
 	ob_start();

@@ -149,6 +149,7 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 	$params['group_invites'] = array(
 		'nav'                => bp_sort_by_key( $invites_nav, 'order', 'num' ),
 		'loading'            => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'removing'            => __( 'Removing member invite. Please wait.', 'buddyboss' ),
 		'invites_form'       => __( 'Use the "Send" button to send your invite or the "Cancel" button to abort.', 'buddyboss' ),
 		'invites_form_reset' => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
 		'invites_sending'    => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
