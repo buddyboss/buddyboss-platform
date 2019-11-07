@@ -390,6 +390,19 @@ span.icons:before {
         margin-top: 20px;
 }
 
+#group-messages-container .load-more .center {
+	width: 100%;
+	text-align: center;
+}
+
+#group-messages-container .load-more .dashicons-update {
+	font-family: "bb-icons";
+}
+#group-messages-container .load-more .dashicons-update:before {
+	content: "\e838";
+}
+
+
 .hr-text {
 	line-height: 1em;
 	position: relative;

@@ -742,7 +742,9 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 		if ( $total_page !== (int) $_POST['page'] ) {
 			?>
 			<li class="load-more">
-				<a class="button outline group-message-load-more-button" href="javascript:void(0);"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+				<div class="center">
+					<i class="dashicons dashicons-update animate-spin"></i>
+				</div>
 			</li>
 		<?php
 		}
