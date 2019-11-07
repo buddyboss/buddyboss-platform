@@ -438,10 +438,10 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		);
 		$this->add_checkbox_field(
 			'courses_visibility',
-			__('Courses Tab', 'buddyboss'),
+			__('My Courses Tab', 'buddyboss'),
 			[
 				'input_text' => __('Display "Courses" tab in profiles', 'buddyboss'),
-				'input_description' => __( 'Adds a tab to each member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates each member has earned.', 'buddyboss' ),
+				'input_description' => __( 'Adds a tab to the logged in member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates the member has earned.', 'buddyboss' ),
 			]
 		);
 	}
