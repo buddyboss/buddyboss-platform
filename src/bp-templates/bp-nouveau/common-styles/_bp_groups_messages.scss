@@ -398,10 +398,21 @@ span.icons:before {
 #group-messages-container .load-more .dashicons-update {
 	font-family: "bb-icons";
 }
+
 #group-messages-container .load-more .dashicons-update:before {
 	content: "\e838";
 }
 
+.bb-group-message-info {
+    font-size: 12px;
+    font-style: italic;
+    color: #939597;
+    letter-spacing: -0.21px;
+
+    #buddypress & a {
+        text-decoration: underline;
+    }
+}
 
 .hr-text {
 	line-height: 1em;

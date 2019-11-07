@@ -11698,6 +11698,17 @@ span.icons:before {
   content: "\e838";
 }
 
+.bb-group-message-info {
+  font-size: 12px;
+  font-style: italic;
+  color: #939597;
+  letter-spacing: -0.21px;
+}
+
+#buddypress .bb-group-message-info a {
+  text-decoration: underline;
+}
+
 .hr-text {
   line-height: 1em;
   position: relative;

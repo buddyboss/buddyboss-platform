@@ -75,7 +75,7 @@
 			<# } #>
 
 			<# if ( data.group_text && data.message_from && 'group' === data.message_from ) { #>
-				<p>{{{data.group_text}}}</p>
+					<div class="bb-group-message-info">{{{data.group_text}}}</div>
 			<# } #>
 		</div>
 	</div>
