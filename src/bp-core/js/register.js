@@ -158,7 +158,7 @@ jQuery( document ).ready( function() {
 					if ( true === parseInt( response.data.field_html ) ) {
 						tinyMceAdded = 1;
 					}
-					
+
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
@@ -197,14 +197,14 @@ jQuery( document ).ready( function() {
 	});
 
 	//for form validation
-	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
-		
-		jQuery( '.required-field' ).each( function( index ) {
+	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function() {
+
+		jQuery( '.required-field' ).each( function() {
 			var html_error = '<div class="bp-messages bp-feedback error">';
 				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
 				html_error += '<p>' + BP_Register.required_field + '</p>';
 				html_error += '</div>';
-			
+
 			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
 				if ( 0 >= jQuery( this ).find( 'legend .error' ).length) {
 					jQuery( this ).find( 'legend' ).after( ).append( html_error );
@@ -227,13 +227,13 @@ jQuery( document ).ready( function() {
 				if ( 0 >= jQuery( this ).find( 'legend .error' ).length) {
 					var checked_check = 0;
 					jQuery( this ).find('input[type="checkbox"]' ).each( function() {
-					    if ( jQuery( this ).prop( 'checked' )==true ){ 
+					    if ( jQuery( this ).prop( 'checked' )==true ){
 					        checked_check++;
 					    }
 					});
 					if ( 0 >= checked_check ) {
 						jQuery( this ).find( 'legend' ).after().append( html_error );
-					}	
+					}
 				}
 				return;
 			}

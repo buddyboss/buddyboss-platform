@@ -427,6 +427,11 @@ div#bp-group-invite-content {
 	list-style: none;
 }
 
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing ul#members-list {
+	max-height: 60vh;
+	overflow: auto;
+}
+
 .hr-text {
 	line-height: 1em;
 	position: relative;

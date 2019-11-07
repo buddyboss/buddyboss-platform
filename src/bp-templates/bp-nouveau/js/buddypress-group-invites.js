@@ -38,18 +38,14 @@ window.bp = window.bp || {};
 
 			var $group_invites_select = $( 'body' ).find( '#group-invites-send-to-input' );
 			var page = 1;
-			var next = 0;
-			var prev = 0;
 
 			// Activate bp_mentions
 			this.addSelect2( $group_invites_select );
 
-			var feedbackSelector 	 		 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback' );
 			var feedbackParagraphTagClass 	 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback' );
 			var feedbackParagraphTagSelector 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback p' );
 
 			// Feedback Selector left.
-			var feedbackSelectorLeft 	 		 = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' );
 			var feedbackSelectorLeftClass 		 = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback' );
 			var feedbackParagraphTagSelectorLeft = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback p' );
 
@@ -279,7 +275,7 @@ window.bp = window.bp || {};
 			} else {
 
 				$( '.groups.group-invites.send-invites .subnav #send-invites-groups-li' ).addClass('current selected');
-				var data = {
+				 var param = {
 					'action'   : 'groups_get_group_potential_invites',
 					'nonce'    : BP_Nouveau.nonces.groups,
 					'group_id' : BP_Nouveau.group_invites.group_id,
@@ -290,7 +286,7 @@ window.bp = window.bp || {};
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
 					async: false,
-					data: data,
+					data: param,
 					success: function (response) {
 
 						if ( response.success ) {
