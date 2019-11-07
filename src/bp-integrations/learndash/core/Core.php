@@ -120,7 +120,7 @@ class Core {
 		$this->create_courses_slug      = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
 		$this->course_slug              = apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Section_Permalinks', 'courses' ) );
 		$this->my_courses_slug          = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
-		$this->course_access            = true;
+		$this->course_access            = bp_core_can_edit_settings();
 		$this->certificates_enables     = bp_core_learndash_certificates_enables();
 		$this->my_certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'My Certificates', 'buddyboss' ) );
 		$this->certificates_tab_name    = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
