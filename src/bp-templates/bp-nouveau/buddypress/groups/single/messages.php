@@ -6,6 +6,11 @@
 					<option value="all"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
 					<option value="single"><?php _e( 'Select Members', 'buddyboss' ); ?></option>
 				</select>
+				<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
+					<div>
+						<i class="dashicons dashicons-update animate-spin"></i>
+					</div>
+				</div>
 				<div class="bb-panel-mobile-header">
 					<h4 class="bb-select-members-title"><?php _e( 'Select Members', 'buddyboss' ); ?></h4>
 					<a class="bb-close-select-members" href="#"><span class="dashicons dashicons-no-alt"></span></a>
