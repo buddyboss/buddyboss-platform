@@ -47,15 +47,19 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	 */
 	public function register_fields() {
 
-		$fields = apply_filters(
-			'bp_integrations_learndash_fields',
-			array(
-				'buddypress' => array( $this, 'registerBuddypressSettings' ),
-				'learndash'  => array( $this, 'registerLearnDashSettings' ),
-			// 'reports' => [$this, 'registerReportsSettings'],
-			),
-			$this
-		);
+	    $fields = array(
+		    'buddypress' => array( $this, 'registerBuddypressSettings' ),
+		    'learndash'  => array( $this, 'registerLearnDashSettings' ),
+		    'coursetab' => [$this, 'registerCourseTab'],
+		    // 'reports' => [$this, 'registerReportsSettings'],
+	    );
+
+	    if ( ! bp_is_active( 'groups' ) ) {
+		    unset( $fields['buddypress'] );
+		    unset( $fields['learndash'] );
+        }
+
+		$fields = apply_filters( 'bp_integrations_learndash_fields', $fields, $this );
 
 		foreach ( $fields as $key => $callback ) {
 			call_user_func( $callback );
@@ -80,8 +84,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			if ( is_file( $this->intro_template ) ) {
 				require $this->intro_template;
 			}
-
-			return;
 		}
 
 		parent::form_html();
@@ -420,6 +422,27 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 				'input_description' => __( 'Number of report results displayed per page', 'buddyboss' ),
 				'class'             => 'js-show-on-reports_enabled',
 			)
+		);
+	}
+
+	/**
+	 * Register BuddyPress for LearnDash related settings
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function registerCourseTab() {
+		$this->current_section = 'course';
+		$this->add_section(
+			'bp_ld_course_tab-buddypress',
+			__('Profiles', 'buddyboss')
+		);
+		$this->add_checkbox_field(
+			'courses_visibility',
+			__('Courses Tab', 'buddyboss'),
+			[
+				'input_text' => __('Display "Courses" tab in profiles', 'buddyboss'),
+				'input_description' => __( 'Adds a tab to each member\'s profile displaying all courses they are enrolled in, and a matching link in the profile dropdown. If any certificates have been created, adds a sub-tab showing all certificates each member has earned.', 'buddyboss' ),
+			]
 		);
 	}
 
