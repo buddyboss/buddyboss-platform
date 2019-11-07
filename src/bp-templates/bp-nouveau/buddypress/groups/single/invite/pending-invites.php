@@ -24,8 +24,24 @@
 						</form>
 					</div>
 				</div>
+				<div class="last"></div>
 			</div>
 		</div>
+
+		<div class="bp-invites-feedback">
+			<div class="bp-invites-feedback">
+				<div class="bp-feedback loading">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php esc_html_e( 'Loading Members. Please Wait.', 'buddyboss' ); ?></p>
+				</div>
+			</div>
+		</div>
+
+		<div class="members bp-invites-content">
+			<ul id="members-list" class="item-list bp-list"></ul>
+		</div>
+
+
 	</div>
 </div>
 

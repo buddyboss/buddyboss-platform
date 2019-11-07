@@ -45,7 +45,7 @@
 	<div class="bb-groups-invites-right">
 		<form id="send_group_invite_form" class="standard-form" data-select2-id="send_group_invite_form">
 			<div class="bb-groups-invites-right-top">
-				<h2 class="bb-title"><?php _e( 'New Group Invites ss', 'buddyboss' ); ?></h2>
+				<h2 class="bb-title"><?php _e( 'New Group Invites', 'buddyboss' ); ?></h2>
 				<div class="bp-invites-feedback">
 					<div class="bp-feedback">
 						<span class="bp-icon" aria-hidden="true"></span>
