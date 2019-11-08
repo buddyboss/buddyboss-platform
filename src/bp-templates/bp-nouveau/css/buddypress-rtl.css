@@ -3548,6 +3548,11 @@ div#bp-group-invite-content {
   display: none;
 }
 
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing #members-list .load-more .center {
+  width: 100%;
+  text-align: center;
+}
+
 .hr-text {
   line-height: 1em;
   position: relative;

@@ -337,7 +337,8 @@ window.bp = window.bp || {};
 					'action'   : 'groups_get_group_potential_invites',
 					'nonce'    : BP_Nouveau.nonces.groups,
 					'group_id' : BP_Nouveau.group_invites.group_id,
-					'scope'    : 'members'
+					'scope'    : 'members',
+					'page'     : page
 				};
 
 				$.ajax({
@@ -376,12 +377,13 @@ window.bp = window.bp || {};
 				var valueSelected = this.value;
 
 				if ( valueSelected ) {
-
+					page = 1;
 					var data = {
 						'action'   : 'groups_get_group_potential_invites',
 						'nonce'    : BP_Nouveau.nonces.groups,
 						'group_id' : BP_Nouveau.group_invites.group_id,
-						'scope'    : valueSelected
+						'scope'    : valueSelected,
+						'page'     : page
 					};
 
 					$.ajax({
