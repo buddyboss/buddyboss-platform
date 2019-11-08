@@ -14,6 +14,11 @@
 			<option value="members"><?php _e( 'All Members', 'buddyboss' ); ?></option>
 			<option value="friends"><?php _e( 'My Connections', 'buddyboss' ); ?></option>
 		</select>
+		<div id="bp-invites-dropdown-options-loader" class="bp-invites-dropdown-options-loader-hide">
+			<div>
+				<i class="dashicons dashicons-update animate-spin"></i>
+			</div>
+		</div>
 		<div class="group-invites-search subnav-search clearfix" role="search">
 			<div class="bp-search">
 				<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form" data-bp-search="group-invites">

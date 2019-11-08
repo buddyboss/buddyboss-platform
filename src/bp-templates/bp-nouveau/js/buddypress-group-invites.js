@@ -103,7 +103,8 @@ window.bp = window.bp || {};
 					'action'   : 'groups_get_group_potential_invites',
 					'nonce'    : BP_Nouveau.nonces.groups,
 					'group_id' : BP_Nouveau.group_invites.group_id,
-					'scope'    : 'invited'
+					'scope'    : 'invited',
+					'page'     : page,
 				};
 
 				$.ajax({
@@ -332,7 +333,10 @@ window.bp = window.bp || {};
 
 			} else {
 
+				$( '.group-invites-members-listing #members-list' ).scroll( this.loadMoreInvitesMembers );
+
 				$( '.groups.group-invites.send-invites .subnav #send-invites-groups-li' ).addClass('current selected');
+
 				 var param = {
 					'action'   : 'groups_get_group_potential_invites',
 					'nonce'    : BP_Nouveau.nonces.groups,
@@ -347,7 +351,6 @@ window.bp = window.bp || {};
 					async: false,
 					data: param,
 					success: function (response) {
-
 						if ( response.success ) {
 							listSelector.html('');
 							listSelector.html( response.data.html );
@@ -370,10 +373,7 @@ window.bp = window.bp || {};
 
 			$('.group-invites-select-members-dropdown').on('change', function () {
 
-				feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
-				feedbackSelectorLeftClass.addClass( 'loading' );
-				feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_invites.loading);
-
+				$( '#group-invites-container .bb-groups-invites-left #bp-invites-dropdown-options-loader' ).removeClass( 'bp-invites-dropdown-options-loader-hide' );
 				var valueSelected = this.value;
 
 				if ( valueSelected ) {
@@ -389,7 +389,7 @@ window.bp = window.bp || {};
 					$.ajax({
 						type: 'POST',
 						url: BP_Nouveau.ajaxurl,
-						async: false,
+						//async: false,
 						data: data,
 						success: function (response) {
 							if ( response.success ) {
@@ -408,6 +408,7 @@ window.bp = window.bp || {};
 								feedbackSelectorLeftClass.addClass( response.data.type );
 								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 							}
+							$( '#group-invites-container .bb-groups-invites-left #bp-invites-dropdown-options-loader' ).addClass( 'bp-invites-dropdown-options-loader-hide' );
 						}
 					});
 				}
@@ -417,7 +418,6 @@ window.bp = window.bp || {};
 
 				var userId   = $( this ).attr( 'data-bp-user-id');
 				var userName = $( this ).attr( 'data-bp-user-name');
-
 				var data = {
 					id: userId,
 					text: userName
@@ -452,15 +452,13 @@ window.bp = window.bp || {};
 					}
 					$( this ).attr( 'data-bp-tooltip', BP_Nouveau.group_invites.remove_recipient );
 				}
-
-
 			});
 
 			$( document ).on( 'click', '#item-body #group-invites-container .bb-groups-invites-left .last #bp-group-invites-next-page', function() {
 				page = page + 1;
-				feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
-				feedbackSelectorLeftClass.addClass( 'loading' );
-				feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_invites.loading);
+				// feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+				// feedbackSelectorLeftClass.addClass( 'loading' );
+				// feedbackParagraphTagSelectorLeft.html(BP_Nouveau.group_invites.loading);
 				var data = {
 					'action'       : 'groups_get_group_potential_invites',
 					'nonce'        : BP_Nouveau.nonces.groups,
@@ -476,8 +474,9 @@ window.bp = window.bp || {};
 					data: data,
 					success: function (response) {
 						if ( response.success ) {
-							listSelector.html('');
-							listSelector.html( response.data.html );
+
+							$( '#group-invites-container .group-invites-members-listing #members-list li.load-more' ).remove();
+							listSelector.append( response.data.html );
 							lastSelector.html('');
 							lastSelector.html( response.data.pagination );
 							//page = response.data.page;
@@ -485,8 +484,8 @@ window.bp = window.bp || {};
 							feedbackSelectorLeftClass.addClass( 'info' );
 							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 						} else {
-							listSelector.html('');
-							lastSelector.html('');
+							//listSelector.html('');
+							//lastSelector.html('');
 							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 							feedbackSelectorLeftClass.addClass( response.data.type );
 							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
@@ -608,6 +607,42 @@ window.bp = window.bp || {};
 							feedbackParagraphTagSelector.html(  response.data.feedback );
 							$group_invites_select.find('option').remove();
 							$('textarea#send-invites-control').val( '' );
+
+							page  = 1;
+							var data = {
+								'action'   : 'groups_get_group_potential_invites',
+								'nonce'    : BP_Nouveau.nonces.groups,
+								'group_id' : BP_Nouveau.group_invites.group_id,
+								'scope'    : $( '#group-invites-container .bb-groups-invites-left .group-invites-select-members-dropdown' ).val(),
+								'page'     : page
+							};
+
+							$.ajax({
+								type: 'POST',
+								url: BP_Nouveau.ajaxurl,
+								async: false,
+								data: data,
+								success: function (response) {
+									if ( response.success ) {
+										listSelector.html('');
+										listSelector.html( response.data.html );
+										lastSelector.html('');
+										lastSelector.html( response.data.pagination );
+										//page = response.data.page;
+										feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+										feedbackSelectorLeftClass.addClass( 'info' );
+										feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+									} else {
+										listSelector.html('');
+										lastSelector.html('');
+										feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+										feedbackSelectorLeftClass.addClass( response.data.type );
+										feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+									}
+								}
+							});
+
+
 						} else {
 							feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
 							feedbackParagraphTagClass.addClass( response.data.type );
@@ -629,7 +664,7 @@ window.bp = window.bp || {};
 					'action'   : 'groups_get_group_potential_invites',
 					'nonce'    : BP_Nouveau.nonces.groups,
 					'group_id' : BP_Nouveau.group_invites.group_id,
-					'scope'    : 'members',
+					'scope'    : $( '#group-invites-container .bb-groups-invites-left .group-invites-select-members-dropdown' ).val(),
 					'page'     : page
 				};
 
@@ -764,6 +799,16 @@ window.bp = window.bp || {};
 			var elemBottom = elemTop + $(elem).height();
 
 			return ((elemBottom <= docViewBottom) && (elemTop >= docViewTop));
+		},
+
+		loadMoreInvitesMembers:function ( event ) {
+			var target = $( event.currentTarget );
+			if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) === target.innerHeight() ) {
+				var element =  $( '#group-invites-container .group-invites-members-listing #members-list li.load-more' );
+				if ( element.length ) {
+					$( '#group-invites-container .group-invites-members-listing .last #bp-group-invites-next-page' ).trigger( 'click' );
+				}
+			}
 		}
 
 	};
