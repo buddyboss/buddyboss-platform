@@ -603,6 +603,8 @@ function bp_nouveau_loop_classes() {
 						} else {
 							$default_current_value = bp_group_layout_default_format( 'grid' );
 						}
+					} else {
+						$default_current_value = bp_group_layout_default_format( 'grid' );
 					}
 					$classes = array_merge( $classes,
 						array(
@@ -618,6 +620,11 @@ function bp_nouveau_loop_classes() {
 				$classes = array_merge( $classes,
 					array(
 						'list'
+					) );
+			} elseif ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) ) {
+				$classes = array_merge( $classes,
+					array(
+						$_POST['extras']['layout']
 					) );
 			} else {
 				$classes = array_merge( $classes,
