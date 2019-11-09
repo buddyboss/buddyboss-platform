@@ -1826,16 +1826,16 @@ function bp_register_group_type_sections_filters_actions() {
 		add_action( 'admin_head', 'bp_group_type_show_correct_current_menu', 50 );
 
 		// Action for register meta boxes for group type post type.
-		add_action( 'add_meta_boxes_' . bp_get_group_type_post_type(), 'bp_group_type_custom_meta_boxes' );
+		add_action( 'add_meta_boxes_' . bp_groups_get_group_type_post_type(), 'bp_group_type_custom_meta_boxes' );
 
 		// add column
-		add_filter( 'manage_' . bp_get_group_type_post_type() . '_posts_columns', 'bp_group_type_add_column' );
+		add_filter( 'manage_' . bp_groups_get_group_type_post_type() . '_posts_columns', 'bp_group_type_add_column' );
 
 		// action for adding a sortable column name.
-		add_action( 'manage_' . bp_get_group_type_post_type() . '_posts_custom_column', 'bp_group_type_show_data', 10, 2 );
+		add_action( 'manage_' . bp_groups_get_group_type_post_type() . '_posts_custom_column', 'bp_group_type_show_data', 10, 2 );
 
 		// sortable columns
-		add_filter( 'manage_edit-' . bp_get_group_type_post_type() . '_sortable_columns', 'bp_group_type_add_sortable_columns' );
+		add_filter( 'manage_edit-' . bp_groups_get_group_type_post_type() . '_sortable_columns', 'bp_group_type_add_sortable_columns' );
 
 		// hide quick edit link on the custom post type list screen
 		add_filter( 'post_row_actions', 'bp_group_type_hide_quick_edit', 10, 2 );
@@ -1883,7 +1883,7 @@ function bp_group_type_custom_meta_boxes() {
 		add_meta_box( 'bp-group-type-short-code', __( 'Shortcode', 'buddyboss' ), 'bp_group_shortcode_meta_box', null, 'normal', 'high' );
 	}
 
-	remove_meta_box( 'slugdiv', bp_get_group_type_post_type(), 'normal' );
+	remove_meta_box( 'slugdiv', bp_groups_get_group_type_post_type(), 'normal' );
 }
 
 /**
@@ -2198,7 +2198,7 @@ function bp_group_type_permissions_meta_box( $post ) {
  */
 function bp_group_shortcode_meta_box( $post ) {
 
-	$key = bp_get_group_type_key( $post->ID );
+	$key = bp_group_get_group_type_key( $post->ID );
 	?>
 
 		<p><?php _e( 'To display all groups with this group type on a dedicated page, add this shortcode to any WordPress page.', 'buddyboss' ); ?></p>
@@ -2264,12 +2264,12 @@ function bp_group_type_show_data( $column, $post_id ) {
 			break;
 
 		case 'total_groups':
-			$group_key      = bp_get_group_type_key( $post_id );
-			$group_type_url = admin_url() . 'admin.php?page=bp-groups&bp-group-type=' . $group_key;
+			$group_key      = bp_group_get_group_type_key( $post_id );
+			$group_type_url = admin_url().'admin.php?page=bp-groups&bp-group-type='.$group_key;
 			printf(
 				__( '<a href="%1$s">%2$s</a>', 'buddyboss' ),
 				esc_url( $group_type_url ),
-				bp_get_total_count_by_group_types( $group_key )
+				bp_group_get_count_by_group_type( $group_key )
 			);
 
 			break;
@@ -2318,7 +2318,7 @@ function bp_group_type_add_request_filter() {
  */
 function bp_group_type_sort_items( $qv ) {
 
-	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_group_type_post_type() ) {
+	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_groups_get_group_type_post_type() ) {
 		return $qv;
 	}
 
@@ -2360,7 +2360,7 @@ function bp_group_type_hide_quick_edit( $actions, $post ) {
 		global $post;
 	}
 
-	if ( bp_get_group_type_post_type() == $post->post_type ) {
+	if ( bp_groups_get_group_type_post_type() === $post->post_type ) {
 		unset( $actions['inline hide-if-no-js'] );
 	}
 
@@ -2383,7 +2383,7 @@ function bp_save_group_type_post_meta_box_data( $post_id ) {
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_group_type_post_type() ) {
+	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
 		return;
 	}
 
@@ -2452,7 +2452,7 @@ function bp_save_group_type_role_labels_post_meta_box_data( $post_id ) {
 
 	$post = get_post( $post_id );
 
-	if ( $post->post_type !== bp_get_group_type_post_type() ) {
+	if ( bp_groups_get_group_type_post_type() !== $post->post_type ) {
 		return;
 	}
 
