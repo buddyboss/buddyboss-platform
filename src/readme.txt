@@ -60,7 +60,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Added full support for all bbPress forum shortcodes
 * Media - Now displaying number of photos in the group 'Photos' tab
 * Media - Fixed lazy load when selecting from existing photos to add into an album
-* Notices - Now allowing for adding shortcodes into site notices
+* Notices - Now displaying site notices on all WordPress pages
+* Notices - Added support for entering shortcodes into site notices
 * Widgets - Added tooltips to display the name of each member in both 'Following' widgets
 * Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
 * LearnDash - New option to display 'My Courses' menu for the logged in member
