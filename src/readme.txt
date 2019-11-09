@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Added full support for all bbPress forum shortcodes
 * Forums - Fixed issue with restoring trashed discussions in WordPress admin
 * Forums - Fixed pagination issues when viewing the last page of discussions
+* Forums - Fixed displaying original text formatting when editing a forum post
 * Media - Now displaying number of photos in the group 'Photos' tab
 * Media - Fixed lazy load when selecting from existing photos to add into an album
 * Notices - Now displaying site notices on all WordPress pages
