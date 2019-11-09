@@ -56,7 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.0 =
-* Item ...
+* Translations - Add Hungarian language files, credits to Tamas Prepost
 
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity
