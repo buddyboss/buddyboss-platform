@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * LearnDash - Fixed 'Courses' link on groups not applying custom label for 'Courses' text
 * Translations - Added Hungarian language files, credits to Tamas Prepost
 * Coding Standards - General code refactoring validated through PHP_CodeSniffer
+* Compatibility - Improved support for plugins that 'Require bbPress' and 'Require BuddyPress'
 * Documentation - Profile Grid vs List View
 * Documentation - Group Grid vs List View
 * Documentation - Forum Shortcodes
