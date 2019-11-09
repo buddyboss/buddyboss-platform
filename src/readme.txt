@@ -57,7 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
-* Translations - Add Hungarian language files, credits to Tamas Prepost
+* Translations - Added Hungarian language files, credits to Tamas Prepost
 * Documentation - Profile Grid vs List View
 * Documentation - Group Grid vs List View
 * Documentation - Forum Shortcodes
