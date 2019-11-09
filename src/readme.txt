@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
+* Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
 * LearnDash - New option to display 'My Courses' menu for the logged in member
 * LearnDash - Fixed 'Courses' link on groups not applying custom label for 'Courses' text
 * Translations - Added Hungarian language files, credits to Tamas Prepost
