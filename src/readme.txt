@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
 * Forums - Added full support for all bbPress forum shortcodes
+* Forums - Fixed issue with restoring trashed discussions in WordPress admin
 * Media - Now displaying number of photos in the group 'Photos' tab
 * Media - Fixed lazy load when selecting from existing photos to add into an album
 * Notices - Now displaying site notices on all WordPress pages
