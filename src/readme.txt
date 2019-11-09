@@ -58,6 +58,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
 * Profiles - Fixed issue with saving international numbers in 'Phone' profile field type
+* Profiles - Fixed issue with saving Visibility when editing 'Profile Type' profile field type
 * Forums - Added full support for all bbPress forum shortcodes
 * Forums - Fixed issue with restoring trashed discussions in WordPress admin
 * Forums - Fixed pagination issues when viewing the last page of discussions
