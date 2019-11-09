@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
 * Media - Now displaying number of photos in the group 'Photos' tab
 * Media - Fixed lazy load when selecting from existing photos to add into an album
+* Notices - Now allowing for adding shortcodes into site notices
 * Widgets - Added tooltips to display the name of each member in both 'Following' widgets
 * Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
 * LearnDash - New option to display 'My Courses' menu for the logged in member
