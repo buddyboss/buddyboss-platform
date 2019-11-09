@@ -59,12 +59,13 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
 * Media - Now displaying number of photos in the group 'Photos' tab
 * Media - Fixed lazy load when selecting from existing photos to add into an album
+* Widgets - Added tooltips to display the name of each member in both 'Following' widgets
 * Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
 * LearnDash - New option to display 'My Courses' menu for the logged in member
-* LearnDash - Fixed 'Courses' link on groups not applying custom label for 'Courses' text
-* Translations - Added Hungarian language files, credits to Tamas Prepost
-* Coding Standards - General code refactoring validated through PHP_CodeSniffer
+* LearnDash - Fixed 'Courses' tab on groups not applying custom label for 'Courses' text
 * Compatibility - Improved support for plugins that 'Require bbPress' and 'Require BuddyPress'
+* Coding Standards - General code refactoring, validated through PHP_CodeSniffer
+* Translations - Added Hungarian language files, credits to Tamas Prepost
 * Documentation - Profile Grid vs List View
 * Documentation - Group Grid vs List View
 * Documentation - Forum Shortcodes
