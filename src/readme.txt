@@ -57,6 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.0 =
 * Translations - Add Hungarian language files, credits to Tamas Prepost
+* Documentation - Profile Grid vs List View
+* Documentation - Group Grid vs List View
+* Documentation - Forum Shortcodes
+* Documentation - New Forum Shortcode
+* Documentation - My Courses Profile Menu
 
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity
