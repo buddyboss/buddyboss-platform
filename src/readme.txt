@@ -69,6 +69,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Media - Fixed photo lazy loading when selecting from existing photos to add into an album
 * Notices - Now displaying site notices on all WordPress pages
 * Notices - Added support for entering shortcodes into site notices
+* Email Invites - Removed the avatar and name from email template sent to invited recipients
 * Widgets - Added tooltips to display the name of each member in both 'Following' widgets
 * Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
 * LearnDash - New option to display 'My Courses' menu for the logged in member
