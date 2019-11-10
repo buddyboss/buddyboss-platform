@@ -65,7 +65,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed pagination issues when viewing the last page of discussions
 * Forums - Fixed displaying original text formatting when editing a forum post
 * Media - Now displaying the number of photos in social group 'Photos' tabs
-* Media - Fixed lazy load when selecting from existing photos to add into an album
+* Media - Fixed syncing of photo deletion between frontend and admin Media Library
+* Media - Fixed photo lazy loading when selecting from existing photos to add into an album
 * Notices - Now displaying site notices on all WordPress pages
 * Notices - Added support for entering shortcodes into site notices
 * Widgets - Added tooltips to display the name of each member in both 'Following' widgets
