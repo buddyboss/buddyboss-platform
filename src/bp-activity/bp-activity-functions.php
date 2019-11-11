@@ -5023,17 +5023,17 @@ function bp_activity_action_parse_url() {
 				$images = $parser->getImageSources( false );
 			}
 			if ( !empty( $images ) ) {
-				$imagesObj = [];
+				$images_obj = [];
 				
-				foreach ($images as $key => $img) {
+				foreach ( $images as $key => $img ) {
 					if ( strpos( $url, 'youtube.com' ) > 0 ){
-						$img = "https://www.youtube.com".$img;
+						$img = "https://www.youtube.com" . $img;
 					}
 					if ( @fopen( $img, 'r' ) ) {
-						$imagesObj[] = $img;
+						$images_obj[] = $img;
 					}
 				}
-				$images = $imagesObj;
+				$images = $images_obj;
 			}
 
 			// Generate Image URL Previews
