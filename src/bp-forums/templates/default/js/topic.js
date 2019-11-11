@@ -9,6 +9,7 @@ jQuery( document ).ready(
 			};
 
 			  /*globals bbpTopicJS:false */
+			  console.log(bbpTopicJS);
 			$.post(
 				bbpTopicJS.bbp_ajaxurl,
 				$data,
