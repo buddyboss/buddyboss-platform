@@ -454,12 +454,12 @@ window.bp = window.bp || {};
 					$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 				} else {
 					/* animate to top if called from bottom pagination */
-					if ( data.caller === 'pag-bottom' && ( $( '#subnav' ).length || $( '.bp-navs.dir-navs' ).length ) ) {
+					if ( data.caller === 'pag-bottom' ) {
 						var top = null;
 						if ( $( '#subnav' ).length ) {
 							top = $('#subnav').parent();
 						} else {
-							top = $( '.bp-navs.dir-navs' );
+							top = $( data.target );
 						}
 						$( 'html,body' ).animate( { scrollTop: top.offset().top }, 'slow', function() {
 							$( data.target ).fadeOut( 100, function() {
