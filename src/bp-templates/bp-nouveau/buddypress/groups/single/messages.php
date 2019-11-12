@@ -130,7 +130,12 @@
 								<option value="open"><?php _e( 'Group Thread', 'buddyboss' ); ?></option>
 								<option value="private"><?php _e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
 							</select>
-							<input type="submit" name="send_group_message_button" value="Send Message" id="send_group_message_button" class="small">
+							<?php
+							$disabled = 'disabled';
+							if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&group_id=' . bp_get_current_group_id() ) ) {
+								$disabled = '';
+							} ?>
+							<input <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" value="Send Message" id="send_group_message_button" class="small">
 						</div>
 					</div>
 				</div>

@@ -1202,6 +1202,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 	$params['group_messages'] = array(
 		'page'                  => 1,
 		'type_message'          => __( 'Type message', 'buddyboss' ),
+		'group_no_member'       => __( 'There is no members in this group. Please add members to send the message.', 'buddyboss' ),
 		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
 		'remove_recipient'      => __( 'Remove Recipient', 'buddyboss' ),
 		'add_recipient'         => __( 'Add Recipient', 'buddyboss' ),
