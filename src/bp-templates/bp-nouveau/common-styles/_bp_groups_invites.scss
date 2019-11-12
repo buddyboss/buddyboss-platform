@@ -228,19 +228,19 @@ div#bp-group-invite-content {
 	display: none;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li {
 	border-color: #ebe9e6;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li:first-child {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li:first-child {
 	border-top: none;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list li:last-child {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list li:last-child {
 	border-bottom: none;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li {
 	background-color: #fff;
 	border-bottom: 1px solid #E7E9EC;
 	margin-bottom: -1px;
@@ -259,14 +259,14 @@ div#bp-group-invite-content {
 	border-top: 1px solid #E7E9EC;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title {
 	color: #393e41;
 	font-size: 15px;
 	margin: 0 auto;
 	width: 100%;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .action {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .action {
 	-webkit-box-flex: 1;
 	-ms-flex: 1;
 	flex: 1;
@@ -276,7 +276,7 @@ div#bp-group-invite-content {
 	position: static;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .action button {
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .action button {
 	height: auto;
 	min-height: 10px;
 	padding: 0;
@@ -287,43 +287,43 @@ div#bp-group-invite-content {
 	box-shadow: none;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .last {
+#group-invites-container .bb-groups-invites-left .last {
 	text-align: center;
 	float: right;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button {
+#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button {
 	background-color: transparent;
 	border: 0;
 	padding-left: 5px;
 	padding-right: 5px;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left #group-group-invites-container .button.group-invite-button {
+#group-invites-container .bb-groups-invites-left #group-group-invites-container .button.group-invite-button {
 	min-height: 34px;
 	padding: 5px 16px;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .button.group-invite-button {
+#group-invites-container .bb-groups-invites-left .button.group-invite-button {
 	min-height: 26px;
 	padding: 0;
 	background: transparent;
 	border: 0;
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-left:before {
+#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-left:before {
 	content: "\e87a";
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-left:before {
+#group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-left:before {
 	content: "\e87a" !important;
 }
-#item-body #group-invites-container .bp-invites-filters .button.invite-button .dashicons-arrow-left:before {
+#group-invites-container .bp-invites-filters .button.invite-button .dashicons-arrow-left:before {
 	content: "\e87a";
 }
 
-#item-body #group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-right:before,
-#item-body #group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-left:before {
+#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-right:before,
+#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-left:before {
 	content: "\e87b";
 	font-family: 'bb-icons';
 	speak: none;
@@ -339,8 +339,8 @@ div#bp-group-invite-content {
 
 
 
-#item-body #group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-right:before,
-#item-body #group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-left:before {
+#group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-right:before,
+#group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-left:before {
 	content: "\e87b";
 	font-family: 'bb-icons';
 	speak: none;
@@ -356,11 +356,11 @@ div#bp-group-invite-content {
 
 
 
-#item-body #group-invites-container .bb-groups-invites-left .dashicons-arrow-right:before {
+#group-invites-container .bb-groups-invites-left .dashicons-arrow-right:before {
 	content: "\f139";
 }
 
-#item-body #group-invites-container .bb-groups-invites-left  .dashicons-arrow-left:before {
+#group-invites-container .bb-groups-invites-left  .dashicons-arrow-left:before {
 	content: "\f141";
 }
 
@@ -385,25 +385,25 @@ div#bp-group-invite-content {
 	border-radius: 5px;
 }
 
-#item-body #group-invites-container .select2-container--default.select2-container--disabled .select2-selection--multiple {
+#group-invites-container .select2-container--default.select2-container--disabled .select2-selection--multiple {
 	background-color: transparent !important;
 	cursor: default;
 }
 
-#item-body #group-invites-container div#group-invites-new-submit {
+#group-invites-container div#group-invites-new-submit {
 	margin-left: auto;
 	display: flex;
 }
 
-#item-body #group-invites-container select.group-invites-type {
+#group-invites-container select.group-invites-type {
 	margin-right: 10px;
 }
 
-#item-body #group-invites-container form#send_group_invite_form {
+#group-invites-container form#send_group_invite_form {
 	margin-bottom: 0px;
 }
 
-#item-body #group-invites-container .bb-groups-invites-right > .bp-feedback {
+#group-invites-container .bb-groups-invites-right > .bp-feedback {
 	margin: 20px 20px 20px 20px;
 }
 

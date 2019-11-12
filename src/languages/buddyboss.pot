@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-08 10:31:54+00:00\n"
+"POT-Creation-Date: 2019-11-12 10:10:40+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11121,7 +11121,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:197
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:15
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/includes/groups/functions.php:140
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
 #: bp-xprofile/classes/class-bp-xprofile-component.php:196
@@ -11589,7 +11589,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1187 bp-groups/bp-groups-admin.php:1208
 #: bp-groups/bp-groups-admin.php:1220
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:14
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:18
 #: bp-templates/bp-nouveau/includes/groups/functions.php:119
 #: bp-templates/bp-nouveau/includes/members/functions.php:27
 #: bp-xprofile/classes/class-bp-xprofile-component.php:189
@@ -15211,9 +15211,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:19
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:20
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:23
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:25
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:29
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:30
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:33
 msgid "Search Members"
 msgstr ""
 
@@ -15278,7 +15278,7 @@ msgid "Invite"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:13
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:60
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:64
 msgid "Type the names of one or more people"
 msgstr ""
 
@@ -15674,7 +15674,7 @@ msgstr ""
 msgid "Loading Members. Please Wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:53
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:57
 msgid "New Group Invites"
 msgstr ""
 

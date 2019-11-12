@@ -8,7 +8,11 @@
 
 ?>
 <div id="group-invites-container">
-	<?php bp_get_template_part( 'groups/single/parts/invite-subnav' ); ?>
+	<?php
+	if ( ! bp_is_group_creation_step( 'group-invites' ) ) {
+		bp_get_template_part( 'groups/single/parts/invite-subnav' );
+	}
+	?>
 	<div class="bb-groups-invites-left">
 		<select class="group-invites-select-members-dropdown" name="group-members">
 			<option value="members"><?php _e( 'All Members', 'buddyboss' ); ?></option>

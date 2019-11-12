@@ -1085,7 +1085,7 @@ function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 		'group-invites' => array(
 			'hook'     => 'group_invites_creation_step',
 			'nonce'    => 'groups_create_save_group-invites',
-			//'template' => 'common/js-templates/invites/index',
+			'template' => 'groups/single/invite/send-invites',
 		),
 	);
 
