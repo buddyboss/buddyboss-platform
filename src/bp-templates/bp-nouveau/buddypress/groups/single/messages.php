@@ -2,10 +2,16 @@
 	<div class="bb-groups-messages-left">
 		<div class="bb-groups-messages-left-inner">
 			<div class="bb-panel-head">
-				<select class="group-messages-select-members-dropdown" name="group-members">
-					<option value="all"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
-					<option value="single"><?php _e( 'Select Members', 'buddyboss' ); ?></option>
-				</select>
+<!--				<select class="group-messages-select-members-dropdown" name="group-members">-->
+<!--					<option value="all">--><?php //_e( 'All Group Members', 'buddyboss' ); ?><!--</option>-->
+<!--					<option value="single">--><?php //_e( 'Select Members', 'buddyboss' ); ?><!--</option>-->
+<!--				</select>-->
+				<h4 class="total-members-text"></h4>
+				<h5><?php esc_html_e( 'All Members', 'buddyboss' ); ?></h5>
+				<label class="bp-group-message-switch">
+					<input type="checkbox" checked>
+					<span class="bp-group-message-slider bp-group-message-round"></span>
+				</label>
 				<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
 					<div>
 						<i class="dashicons dashicons-update animate-spin"></i>
@@ -39,7 +45,7 @@
 						<p></p>
 					</div>
 				</div>
-				<h4 class="total-members-text"></h4>
+
 				<ul id="members-list" class="item-list bp-list all-members"></ul>
 			</div>
 

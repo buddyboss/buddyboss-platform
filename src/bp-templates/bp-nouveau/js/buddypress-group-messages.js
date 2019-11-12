@@ -103,14 +103,20 @@ window.bp = window.bp || {};
 				}
 			});
 
-			$('.group-messages-select-members-dropdown').on('change', function () {
+			$('.bb-groups-messages-left-inner .bb-panel-head .bp-group-message-switch input').on('change', function () {
 
 				$( '#group-messages-container .bb-groups-messages-left .bb-groups-messages-left-inner .bb-panel-head #bp-message-dropdown-options' ).removeClass( 'bp-message-dropdown-options-hide' );
 
 				page  = 1;
+				var valueSelected;
 				// Reset select2
 				$group_messages_select.val('').trigger( 'change' );
-				var valueSelected 		 		 	 = this.value;
+				if( $( this ).is( ':checked' ) ) {
+					valueSelected = 'all';
+				} else {
+					valueSelected = 'single';
+				}
+
 				if ( valueSelected ) {
 					feedbackSelector.addClass( 'bp-messages-feedback-hide' );
 					feedbackSelectorLeft.addClass( 'bp-messages-feedback-hide' );
