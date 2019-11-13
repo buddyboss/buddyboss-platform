@@ -56,11 +56,11 @@ function bbp_admin_get_settings_sections() {
 				'callback' => 'bbp_admin_setting_callback_single_slug_section',
 				'page'     => 'permalink',
 			),
-			// 'bbp_settings_user_slugs' => array(
-			// 'title'    => __( 'Forum User Slugs', 'buddyboss' ),
-			// 'callback' => 'bbp_admin_setting_callback_user_slug_section',
-			// 'page'     => 'permalink',
-			// ),
+			 'bbp_settings_user_slugs' => array(
+			 'title'    => __( 'Forum User Slugs', 'buddyboss' ),
+			 'callback' => 'bbp_admin_setting_callback_user_slug_section',
+			 'page'     => 'permalink',
+			 ),
 			'bbp_settings_buddypress'   => array(
 				'title'    => __( 'Group Forums', 'buddyboss' ),
 				'callback' => 'bbp_admin_setting_callback_buddypress_section',
@@ -82,7 +82,7 @@ function bbp_admin_get_settings_sections() {
  * @return type
  */
 function bbp_admin_get_settings_fields() {
-	return (array) apply_filters(
+	$fields = (array) apply_filters(
 		'bbp_admin_get_settings_fields',
 		array(
 
@@ -341,6 +341,43 @@ function bbp_admin_get_settings_fields() {
 				),
 			),
 
+			/** User Slugs ********************************************************/
+
+			'bbp_settings_user_slugs' => array(
+
+				// Topics slug setting
+//				'_bbp_topic_archive_slug' => array(
+//					'title'             => esc_html__( 'Discussions Started', 'buddyboss' ),
+//					'callback'          => 'bbp_admin_setting_callback_topic_archive_slug',
+//					'sanitize_callback' => 'bbp_sanitize_slug',
+//					'args'              => array( 'label_for'=>'_bbp_topic_archive_slug' )
+//				),
+
+				// Replies slug setting
+				'_bbp_reply_archive_slug' => array(
+					'title'             => esc_html__( 'Replies Created', 'buddyboss' ),
+					'callback'          => 'bbp_admin_setting_callback_reply_archive_slug',
+					'sanitize_callback' => 'bbp_sanitize_slug',
+					'args'              => array( 'label_for'=>'_bbp_reply_archive_slug' )
+				),
+
+				// Favorites slug setting
+				'_bbp_user_favs_slug' => array(
+					'title'             => esc_html__( 'Favorite Discussions', 'buddyboss' ),
+					'callback'          => 'bbp_admin_setting_callback_user_favs_slug',
+					'sanitize_callback' => 'bbp_sanitize_slug',
+					'args'              => array( 'label_for'=>'_bbp_user_favs_slug' )
+				),
+
+				// Subscriptions slug setting
+				'_bbp_user_subs_slug' => array(
+					'title'             => esc_html__( 'Subscriptions', 'buddyboss' ),
+					'callback'          => 'bbp_admin_setting_callback_user_subs_slug',
+					'sanitize_callback' => 'bbp_sanitize_slug',
+					'args'              => array( 'label_for'=>'_bbp_user_subs_slug' )
+				)
+			),
+
 			/** BuddyBoss */
 
 			'bbp_settings_buddypress'   => array(
@@ -376,6 +413,8 @@ function bbp_admin_get_settings_fields() {
 			),
 		)
 	);
+
+	return $fields;
 }
 
 /**
@@ -456,7 +495,7 @@ function bbp_admin_setting_callback_throttle() {
 function bbp_admin_setting_callback_anonymous() {
 	?>
 
-	<input name="_bbp_allow_anonymous" id="_bbp_allow_anonymous" type="checkbox" value="1" 
+	<input name="_bbp_allow_anonymous" id="_bbp_allow_anonymous" type="checkbox" value="1"
 	<?php
 	checked( bbp_allow_anonymous( false ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_anonymous' );
@@ -492,7 +531,7 @@ function bbp_admin_setting_callback_features_section() {
 function bbp_admin_setting_callback_favorites() {
 	?>
 
-	<input name="_bbp_enable_favorites" id="_bbp_enable_favorites" type="checkbox" value="1" 
+	<input name="_bbp_enable_favorites" id="_bbp_enable_favorites" type="checkbox" value="1"
 	<?php
 	checked( bbp_is_favorites_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_favorites' );
@@ -513,7 +552,7 @@ function bbp_admin_setting_callback_favorites() {
 function bbp_admin_setting_callback_subscriptions() {
 	?>
 
-	<input name="_bbp_enable_subscriptions" id="_bbp_enable_subscriptions" type="checkbox" value="1" 
+	<input name="_bbp_enable_subscriptions" id="_bbp_enable_subscriptions" type="checkbox" value="1"
 	<?php
 	checked( bbp_is_subscriptions_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_subscriptions' );
@@ -534,7 +573,7 @@ function bbp_admin_setting_callback_subscriptions() {
 function bbp_admin_setting_callback_topic_tags() {
 	?>
 
-	<input name="_bbp_allow_topic_tags" id="_bbp_allow_topic_tags" type="checkbox" value="1" 
+	<input name="_bbp_allow_topic_tags" id="_bbp_allow_topic_tags" type="checkbox" value="1"
 	<?php
 	checked( bbp_allow_topic_tags( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_topic_tags' );
@@ -555,7 +594,7 @@ function bbp_admin_setting_callback_topic_tags() {
 function bbp_admin_setting_callback_search() {
 	?>
 
-	<input name="_bbp_allow_search" id="_bbp_allow_search" type="checkbox" value="1" 
+	<input name="_bbp_allow_search" id="_bbp_allow_search" type="checkbox" value="1"
 	<?php
 	checked( bbp_allow_search( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_search' );
@@ -599,7 +638,7 @@ function bbp_admin_setting_callback_thread_replies_depth() {
 	<?php $select = ob_get_clean(); ?>
 
 	<label for="_bbp_allow_threaded_replies">
-		<input name="_bbp_allow_threaded_replies" id="_bbp_allow_threaded_replies" type="checkbox" value="1" 
+		<input name="_bbp_allow_threaded_replies" id="_bbp_allow_threaded_replies" type="checkbox" value="1"
 		<?php
 		checked( '1', bbp_allow_threaded_replies( true ) );
 		bbp_maybe_admin_setting_disabled( '_bbp_allow_threaded_replies' );
@@ -621,7 +660,7 @@ function bbp_admin_setting_callback_thread_replies_depth() {
 function bbp_admin_setting_callback_revisions() {
 	?>
 
-	<input name="_bbp_allow_revisions" id="_bbp_allow_revisions" type="checkbox" value="1" 
+	<input name="_bbp_allow_revisions" id="_bbp_allow_revisions" type="checkbox" value="1"
 	<?php
 	checked( bbp_allow_revisions( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_allow_revisions' );
@@ -642,7 +681,7 @@ function bbp_admin_setting_callback_revisions() {
 function bbp_admin_setting_callback_use_wp_editor() {
 	?>
 
-	<input name="_bbp_use_wp_editor" id="_bbp_use_wp_editor" type="checkbox" value="1" 
+	<input name="_bbp_use_wp_editor" id="_bbp_use_wp_editor" type="checkbox" value="1"
 	<?php
 	checked( bbp_use_wp_editor( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_use_wp_editor' );
@@ -712,7 +751,7 @@ function bbp_admin_setting_callback_subtheme_id() {
 function bbp_admin_setting_callback_use_autoembed() {
 	?>
 
-	<input name="_bbp_use_autoembed" id="_bbp_use_autoembed" type="checkbox" value="1" 
+	<input name="_bbp_use_autoembed" id="_bbp_use_autoembed" type="checkbox" value="1"
 	<?php
 	checked( bbp_use_autoembed( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_use_autoembed' );
@@ -880,7 +919,7 @@ function bbp_admin_setting_callback_root_slug() {
 function bbp_admin_setting_callback_include_root() {
 	?>
 
-	<input name="_bbp_include_root" id="_bbp_include_root" type="checkbox" value="1" 
+	<input name="_bbp_include_root" id="_bbp_include_root" type="checkbox" value="1"
 	<?php
 	checked( bbp_include_root_slug() );
 	bbp_maybe_admin_setting_disabled( '_bbp_include_root' );
@@ -1081,7 +1120,7 @@ function bbp_admin_setting_callback_buddypress_section() {
 function bbp_admin_setting_callback_group_forums() {
 	?>
 
-	<input name="_bbp_enable_group_forums" id="_bbp_enable_group_forums" type="checkbox" value="1" 
+	<input name="_bbp_enable_group_forums" id="_bbp_enable_group_forums" type="checkbox" value="1"
 	<?php
 	checked( bbp_is_group_forums_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_group_forums' );
@@ -1147,7 +1186,7 @@ function bbp_admin_setting_callback_akismet_section() {
 function bbp_admin_setting_callback_akismet() {
 	?>
 
-	<input name="_bbp_enable_akismet" id="_bbp_enable_akismet" type="checkbox" value="1" 
+	<input name="_bbp_enable_akismet" id="_bbp_enable_akismet" type="checkbox" value="1"
 	<?php
 	checked( bbp_is_akismet_active( true ) );
 	bbp_maybe_admin_setting_disabled( '_bbp_enable_akismet' );
@@ -1760,4 +1799,79 @@ function bbp_form_slug_conflict_check( $slug, $default ) {
 			<?php
 		endif;
 	}
+}
+
+/** User Slug Section *********************************************************/
+
+/**
+ * Slugs settings section description for the settings page
+ *
+ * @since 2.0.0 bbPress (r2786)
+ */
+function bbp_admin_setting_callback_user_slug_section() {
+	?>
+
+	<p><?php esc_html_e( 'Customize your user profile slugs.', 'buddyboss' ); ?></p>
+
+	<?php
+}
+
+/**
+ * Topic archive slug setting field
+ *
+ * @since 2.0.0 bbPress (r2786)
+ */
+function bbp_admin_setting_callback_topic_archive_slug() {
+	?>
+
+	<input name="_bbp_topic_archive_slug" id="_bbp_topic_archive_slug" type="text" class="regular-text code" value="<?php bbp_form_option( '_bbp_topic_archive_slug', 'topics', true ); ?>"<?php bbp_maybe_admin_setting_disabled( '_bbp_topic_archive_slug' ); ?> />
+
+	<?php
+	// Slug Check
+	bbp_form_slug_conflict_check( '_bbp_topic_archive_slug', 'topics' );
+}
+
+/**
+ * Reply archive slug setting field
+ *
+ * @since 2.4.0 bbPress (r4932)
+ */
+function bbp_admin_setting_callback_reply_archive_slug() {
+	?>
+
+	<input name="_bbp_reply_archive_slug" id="_bbp_reply_archive_slug" type="text" class="regular-text code" value="<?php bbp_form_option( '_bbp_reply_archive_slug', 'replies', true ); ?>"<?php bbp_maybe_admin_setting_disabled( '_bbp_reply_archive_slug' ); ?> />
+
+	<?php
+	// Slug Check
+	bbp_form_slug_conflict_check( '_bbp_reply_archive_slug', 'replies' );
+}
+
+/**
+ * Favorites slug setting field
+ *
+ * @since 2.4.0 bbPress (r4932)
+ */
+function bbp_admin_setting_callback_user_favs_slug() {
+	?>
+
+	<input name="_bbp_user_favs_slug" id="_bbp_user_favs_slug" type="text" class="regular-text code" value="<?php bbp_form_option( '_bbp_user_favs_slug', 'favorites', true ); ?>"<?php bbp_maybe_admin_setting_disabled( '_bbp_user_favs_slug' ); ?> />
+
+	<?php
+	// Slug Check
+	bbp_form_slug_conflict_check( '_bbp_user_favs_slug', 'favorites' );
+}
+
+/**
+ * Subscriptions slug setting field
+ *
+ * @since 2.4.0 bbPress (r4932)
+ */
+function bbp_admin_setting_callback_user_subs_slug() {
+	?>
+
+	<input name="_bbp_user_subs_slug" id="_bbp_user_subs_slug" type="text" class="regular-text code" value="<?php bbp_form_option( '_bbp_user_subs_slug', 'subscriptions', true ); ?>"<?php bbp_maybe_admin_setting_disabled( '_bbp_user_subs_slug' ); ?> />
+
+	<?php
+	// Slug Check
+	bbp_form_slug_conflict_check( '_bbp_user_subs_slug', 'subscriptions' );
 }
