@@ -195,6 +195,13 @@ function bp_core_admin_help_display_content( $docs_path ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_core_admin_help_main_page() {
+
+	?>
+	<div class="bp-help-main-menu-wrap" id="bp-help-main-menu-wrap">
+
+	</div>
+	<?php
+
 	$base_path   = buddypress()->plugin_dir . 'bp-help';
 	$docs_path   = $base_path . '/docs/';
 	$vendor_path = $base_path . '/vendors';
