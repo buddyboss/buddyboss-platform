@@ -196,11 +196,29 @@ function bp_core_admin_help_display_content( $docs_path ) {
  */
 function bp_core_admin_help_main_page() {
 
-	?>
-	<div class="bp-help-main-menu-wrap" id="bp-help-main-menu-wrap">
+	if ( empty( bp_core_admin_help_get_article_value() ) ) {
+		?>
+		<div class="bp-help-main-menu-wrap" id="bp-help-main-menu-wrap"></div>
+		<?php
+	} else {
+		?>
+		<div class="bp-help-content-wrap">
+			<div class="bp-help-sidebar">
+			</div>
+			<div class="bp-help-content">
+				<!-- print breadcrumbs -->
+				<ul class="bp-help-menu">
 
-	</div>
-	<?php
+				</ul>
+				<!-- print content -->
+
+				<!-- print submenu -->
+				<div class="article-child well">
+				</div>
+			</div>
+		</div>
+		<?php
+	}
 
 	$base_path   = buddypress()->plugin_dir . 'bp-help';
 	$docs_path   = $base_path . '/docs/';
