@@ -309,39 +309,41 @@ add_action( 'bp_screens', 'bp_core_screen_signup' );
  */
 function bp_ua_check_email(){
 	
-	$status = true;
+	$signup_username = '';
+	$signup_email = '';
 	$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
 	$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
 	$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
 	// If there are errors with account details, set them for display.
 	if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
-		$signup_message = $account_details['errors']->errors['user_name'][0];
-		$status = false;
+		$signup_username = $account_details['errors']->errors['user_name'][0];
 	}
 
 	if ( ! empty( $account_details['errors']->errors['user_email'] ) ) {
-		$signup_message = $account_details['errors']->errors['user_email'][0];
-		$status = false;
+		$signup_email = $account_details['errors']->errors['user_email'][0];
 	}
 	// if email opt enabled.
 	if ( true === $email_opt ) {
 
 		// Check that both password fields are filled in.
 		if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
-			$signup_message = __( 'Please make sure to enter your email twice.', 'buddyboss' );
+			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss' );
 		}
 
 		// Check that the passwords match.
 		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
-			$signup_message = __( 'The emails entered do not match.', 'buddyboss' );
+			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
 		}
 	}
+	$nickname_field = 'field_' . bp_xprofile_nickname_field_id();
 	$return = array(
-	    'message'  => apply_filters( 'bp_members_signup_error_message', '<div class="error">' . $signup_message . '</div>' ),
-	    'status'   => $status
+		'field_id'   => bp_xprofile_nickname_field_id(),
+	    'signup_email'  => $signup_email,
+	    'signup_username'  => $signup_username
+	    
 	);
 
-	wp_send_json($return);
+	wp_send_json( $return, true );
 }
 
 add_action( "wp_ajax_nopriv_check_email", "bp_ua_check_email" );
