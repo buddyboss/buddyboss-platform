@@ -1338,7 +1338,7 @@ window.bp = window.bp || {};
 		buttonRevert: function( event ) {
 			var target = $( event.currentTarget );
 
-			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
+			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) && ! target.hasClass( 'follow-button' ) ) {
 
 				//support for buddyboss theme for button actions and icons and texts
 				if ( $(document.body).hasClass('buddyboss-theme') && typeof target.data('balloon') !== 'undefined' ) {
