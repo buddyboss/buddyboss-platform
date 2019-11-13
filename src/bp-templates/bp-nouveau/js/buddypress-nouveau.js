@@ -420,10 +420,9 @@ window.bp = window.bp || {};
 			} else if ( 'notifications' === data.object ) {
 				data.object = 'members';
 				data.template = 'member_notifications';
-			}else{	
-				data.scope = 'members';
-				data.object = 'members';
+			} else {	
 				if ( $( document ).find('[profile-type-id]' ).length ) {
+					data.object = 'members';
 					data.filter = $( document ).find( "#members-dir-list" ).attr( 'profile-type-id' );
 					data.member_type_id = $( document ).find( "#members-dir-list" ).attr( 'profile-type-id' );
 				}
