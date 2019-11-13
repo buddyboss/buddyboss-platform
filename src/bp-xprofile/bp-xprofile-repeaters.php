@@ -72,9 +72,9 @@ function bp_get_repeater_clone_field_ids_subset( $field_group_id, $count ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$sql = "select m1.object_id, m2.meta_value AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1 
-        JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id 
-        WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d 
+		$sql = "select m1.object_id, m2.meta_value AS 'clone_number' FROM {$bp->profile->table_name_meta} as m1
+        JOIN {$bp->profile->table_name_meta} AS m2 ON m1.object_id = m2.object_id
+        WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d
         AND m2.meta_key = '_clone_number' ORDER BY m2.meta_value ASC ";
 		$sql = $wpdb->prepare( $sql, $template_field_id );
 
@@ -128,7 +128,7 @@ function bp_get_repeater_clone_field_ids_all( $field_group_id ) {
 	}
 
 	foreach ( $template_field_ids as $template_field_id ) {
-		$sql = "select m1.object_id FROM {$bp->profile->table_name_meta} as m1 
+		$sql = "select m1.object_id FROM {$bp->profile->table_name_meta} as m1
         WHERE m1.meta_key = '_cloned_from' AND m1.meta_value = %d";
 		$sql = $wpdb->prepare( $sql, $template_field_id );
 
@@ -458,9 +458,23 @@ function xprofile_update_clones_on_template_update( $field ) {
 		$metas = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_meta} WHERE object_id = {$field->id} AND object_type = 'field'", ARRAY_A );
 
 		if ( ! empty( $metas ) && ! is_wp_error( $metas ) ) {
+			$field_member_types = array();
 			foreach ( $clone_ids as $clone_id ) {
 				foreach ( $metas as $meta ) {
-					bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					if ( $meta['meta_key'] != 'member_type' ) {
+						bp_xprofile_update_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					} else {
+						$field_member_types[] = $meta;
+						bp_xprofile_delete_meta( $clone_id, 'field', 'member_type' );
+					}
+				}
+			}
+
+			if ( !empty( $field_member_types ) ) {
+				foreach ( $clone_ids as $clone_id ) {
+					foreach ( $field_member_types as $meta ) {
+						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );
+					}
 				}
 			}
 		}
@@ -757,7 +771,7 @@ function bp_profile_repeaters_print_group_html_start() {
 			?>
 			<div class="repeater_sets_sortable">
 			<div class="repeater_group_outer" data-set_no="<?php echo $current_set_number; ?>">
-				
+
 				<div class="repeater_tools">
 					<span class="repeater_set_title"></span>
 					<a class="repeater_set_edit bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Edit', 'buddyboss' ); ?>">
@@ -770,7 +784,7 @@ function bp_profile_repeaters_print_group_html_start() {
 						<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
 							<i class="dashicons dashicons-trash"></i>
 							<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
-						</a> 
+						</a>
 						<?php
 					}
 					?>
@@ -799,7 +813,7 @@ function bp_profile_repeaters_print_group_html_start() {
 					<a class="repeater_set_delete bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Delete', 'buddyboss' ); ?>">
 						<i class="dashicons dashicons-trash"></i>
 						<span class="bp-screen-reader-text"><?php _e( 'Delete', 'buddyboss' ); ?></span>
-					</a> 
+					</a>
 					<?php
 				}
 				?>
