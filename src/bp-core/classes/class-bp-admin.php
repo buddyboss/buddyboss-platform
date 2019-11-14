@@ -717,6 +717,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			wp_enqueue_script( 'bp-fitvids-js' );
+			wp_enqueue_script( 'bp-wp-api-js' );
 			wp_enqueue_script( 'bp-help-js' );
 
 			$bp_help_base_url = bp_get_admin_url(
@@ -733,7 +734,6 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'BP_HELP',
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
-					'bb_resources_json_url' => 'https://buddyboss.com/resources/wp-json/wp/v2/docs',
 					'bb_help_url' => $bp_help_base_url,
 				)
 			);
@@ -976,6 +976,12 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					// 1.1
 					'bp-fitvids-js'          => array(
 						'file'         => "{$url}fitvids{$min}.js",
+						'dependencies' => array(),
+						'footer'       => true,
+					),
+
+					'bp-wp-api-js'          => array(
+						'file'         => "{$url}vendor/wpapi{$min}.js",
 						'dependencies' => array(),
 						'footer'       => true,
 					),
