@@ -86,6 +86,8 @@ TABLE OF CONTENTS:
  * 2.1 - Dashicons
  */
 .bp-hello-close .button {
+  line-height: 24px;
+  height: 28px;
   padding: 5px !important;
 }
 

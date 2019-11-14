@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.0\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-13 10:00:16+00:00\n"
+"POT-Creation-Date: 2019-11-14 11:54:21+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -397,10 +397,10 @@ msgstr ""
 #: bp-forums/topics/template.php:54 bp-forums/topics/template.php:2565
 #: bp-groups/classes/class-bp-groups-list-table.php:565
 #: bp-invites/bp-invites-admin.php:263 bp-xprofile/bp-xprofile-admin.php:924
-#: bp-xprofile/bp-xprofile-repeaters.php:763
-#: bp-xprofile/bp-xprofile-repeaters.php:765
-#: bp-xprofile/bp-xprofile-repeaters.php:792
-#: bp-xprofile/bp-xprofile-repeaters.php:794
+#: bp-xprofile/bp-xprofile-repeaters.php:777
+#: bp-xprofile/bp-xprofile-repeaters.php:779
+#: bp-xprofile/bp-xprofile-repeaters.php:806
+#: bp-xprofile/bp-xprofile-repeaters.php:808
 #: bp-xprofile/classes/class-bp-xprofile-component.php:272
 #: bp-xprofile/classes/class-bp-xprofile-component.php:389
 msgid "Edit"
@@ -892,10 +892,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:929
-#: bp-xprofile/bp-xprofile-repeaters.php:770
-#: bp-xprofile/bp-xprofile-repeaters.php:772
-#: bp-xprofile/bp-xprofile-repeaters.php:799
-#: bp-xprofile/bp-xprofile-repeaters.php:801
+#: bp-xprofile/bp-xprofile-repeaters.php:784
+#: bp-xprofile/bp-xprofile-repeaters.php:786
+#: bp-xprofile/bp-xprofile-repeaters.php:813
+#: bp-xprofile/bp-xprofile-repeaters.php:815
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:342
 #: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:300
 #: bp-xprofile/classes/class-bp-xprofile-field-type.php:417
@@ -17476,7 +17476,7 @@ msgstr ""
 msgid "YouTube"
 msgstr ""
 
-#: bp-xprofile/bp-xprofile-repeaters.php:700
+#: bp-xprofile/bp-xprofile-repeaters.php:714
 #. translators: %s = profile field group name
 msgid "Add Another"
 msgstr ""
