@@ -735,6 +735,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				array(
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
 					'bb_help_url' => $bp_help_base_url,
+					'bb_help_title' => __( 'Docs', 'buddyboss' ),
 				)
 			);
 		}

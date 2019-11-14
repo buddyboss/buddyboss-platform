@@ -9,7 +9,7 @@
 		'load',
 		function() {
 
-			var bp_help_wpapi = new WPAPI({ endpoint: 'http://localhost/buddyboss/wp-json' });
+			var bp_help_wpapi = new WPAPI({ endpoint: 'https://buddyboss.com/resources/wp-json' });
 			bp_help_wpapi.docs = bp_help_wpapi.registerRoute( 'wp/v2', '/docs/(?P<id>)', {
 				params: [ 'before', 'after', 'author', 'parent', 'post', 'order', 'orderby' ]
 			} );
@@ -35,7 +35,31 @@
 				bp_help_wpapi.docs().id( article_id ).then(function (doc) {
 					$( '#bp-help-content-area' ).append('<h1>' + doc.title.rendered + '</h1>');
 					$( '#bp-help-content-area' ).append(doc.content.rendered);
+					bp_help_js_render_hierarchy_dom( doc );
+					$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).attr('href',BP_HELP.bb_help_url+'&article='+doc.id);
+					$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).text(doc.title.rendered);
+					$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).closest('li').addClass(doc.slug);
 				});
+			}
+
+			function bp_help_js_render_hierarchy_dom( doc ) {
+
+				var ancestors = doc.ancestors ? doc.ancestors.reverse() : [];
+				var children = doc.children ? doc.children : [];
+
+				var breadcrumps = '<li class="main"><a href="'+BP_HELP.bb_help_url+'" class="dir">'+BP_HELP.bb_help_title+'</a></li>';
+				breadcrumps += '<li class="main level-1 '+doc.slug+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.id+'" class="dir">'+doc.title.rendered+'</a></li>';
+
+				if ( ancestors.length ) {
+					var level = 2;
+					$.each( ancestors, function (key,value) {
+						breadcrumps += '<li class="main level-'+level+' '+value.post_name+'"><a href="'+BP_HELP.bb_help_url+'&article='+value.ID+'" class="dir">'+value.post_title+'</a></li>';
+						level++;
+					} );
+				}
+
+				$( '.bp-help-menu' ).append(breadcrumps);
+
 			}
 		}
 	);

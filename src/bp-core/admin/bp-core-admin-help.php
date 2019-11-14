@@ -204,6 +204,11 @@ function bp_core_admin_help_main_page() {
 		?>
 		<div class="bp-help-content-wrap">
 			<div class="bp-help-sidebar">
+				<ul class="loop-1">
+					<li class="main level-1">
+						<a href="#" class="dir"></a>
+					</li>
+				</ul>
 			</div>
 			<div class="bp-help-content">
 				<!-- print breadcrumbs -->
