@@ -134,7 +134,7 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			add_action( 'bbp_admin_notices', array( $this, 'activation_notice' ) ); // Add notice if not using a Forums theme
 			add_action( 'bbp_register_admin_style', array( $this, 'register_admin_style' ) ); // Add green admin style
 			add_action( 'bbp_activation', array( $this, 'new_install' ) ); // Add menu item to settings menu
-			// add_action( 'admin_enqueue_scripts',       array( $this, 'enqueue_styles'             )     ); // Add enqueued CSS
+			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_styles' )     ); // Add enqueued CSS
 			add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Add enqueued JS
 			add_action( 'wp_dashboard_setup', array( $this, 'dashboard_widget_right_now' ) ); // Forums 'Right now' Dashboard widget
 			add_action( 'admin_bar_menu', array( $this, 'admin_bar_about_link' ), 15 ); // Add a link to Forums about page to the admin bar
@@ -469,6 +469,15 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 		/**
 		 * Enqueue any admin scripts we might need
 		 *
+		 * @since bbPress (r5224)
+		 */
+		public function enqueue_styles() {
+			wp_enqueue_style( 'bbp-admin-css' );
+		}
+
+		/**
+		 * Enqueue any admin scripts we might need
+		 *
 		 * @since bbPress (r4260)
 		 */
 		public function enqueue_scripts() {
@@ -535,6 +544,13 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 			// RTL and/or minified
 			$suffix = is_rtl() ? '-rtl' : '';
 			// $suffix .= defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
+
+			wp_register_style(
+				'bbp-admin-css',
+				$this->styles_url . 'admin.min.css',
+				array( 'dashicons' ),
+				bbp_get_version()
+			);
 
 			// Mint
 			wp_admin_css_color(

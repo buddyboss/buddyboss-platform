@@ -1,0 +1,4 @@
+body.post-type-forum #minor-publishing,
+body.post-type-forum #save-post {
+	display: none;
+}
