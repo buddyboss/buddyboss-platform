@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.2.3
+Tested up to: 5.2.4
 Requires PHP: 5.6.20
-Stable tag: 1.1.9
+Stable tag: 1.2.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,36 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.0 =
+* Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
+* Groups - New option to display group directories in Grid View, List View, or both with a toggle
+* Profiles - New option to display profile directories in Grid View, List View, or both with a toggle
+* Profiles - Fixed display of 'Phone' profile field type when added into a Repeater set
+* Profiles - Fixed issue with saving international numbers in 'Phone' profile field type
+* Profiles - Fixed issue with saving Visibility when editing 'Profile Type' profile field type
+* Forums - Added full support for all bbPress forum shortcodes
+* Forums - Fixed issue with restoring trashed discussions in WordPress admin
+* Forums - Fixed pagination issues when viewing the last page of discussions
+* Forums - Fixed displaying original text formatting when editing a forum post
+* Media - Now displaying the number of photos in social group 'Photos' tabs
+* Media - Fixed syncing of photo deletion between frontend and admin Media Library
+* Media - Fixed photo lazy loading when selecting from existing photos to add into an album
+* Notices - Now displaying site notices on all WordPress pages
+* Notices - Added support for entering shortcodes into site notices
+* Email Invites - Removed the avatar and name from email template sent to invited recipients
+* Widgets - Added tooltips to display the name of each member in both 'Following' widgets
+* Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
+* LearnDash - New option to display 'My Courses' menu for logged in members
+* LearnDash - Fixed 'Courses' tab on groups not applying custom label for 'Courses' text
+* Compatibility - Improved support for many plugins that 'Require bbPress' and 'Require BuddyPress'
+* Coding Standards - General code refactoring, validated through PHP_CodeSniffer
+* Translations - Added Hungarian language files, credits to Tamas Prepost
+* Documentation - Profile Grid vs List View
+* Documentation - Group Grid vs List View
+* Documentation - Forum Shortcodes
+* Documentation - New Forum Shortcode
+* Documentation - My Courses Profile Menu
 
 = 1.1.9 =
 * Performance - Lazy load iframes (video embeds) in Activity

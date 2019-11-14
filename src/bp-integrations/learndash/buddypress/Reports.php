@@ -83,7 +83,7 @@ class Reports {
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportUserStats' ), 20 );
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportCourseStats' ), 20 );
 		add_action( 'bp_ld_sync/reports', array( $this, 'showReportTables' ), 30 );
-		//add_action( 'bp_ld_sync/reports', array( $this, 'showReportExport' ), 40 );
+		add_action( 'bp_ld_sync/reports', array( $this, 'showReportExport' ), 40 );
 
 		//add_filter('bp_ld_sync/reports_generator_params', [$this, 'forceOwnReportResults'], 99);
 		//add_filter('bp_ld_sync/reports_generator_params', [$this, 'courseReportResults'], 99);

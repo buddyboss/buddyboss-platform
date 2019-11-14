@@ -461,6 +461,7 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bbp_settings_per_rss_page h2:before,
 .bp-admin-card.section-bbp_settings_root_slugs h2:before,
 .bp-admin-card.section-bbp_settings_single_slugs h2:before,
+.bp-admin-card.section-bbp_settings_user_slugs h2:before,
 .bp-admin-card.section-bbp_settings_buddypress h2:before {
 	background-image: url(../../images/admin/icons/buddyboss/forums.svg);
 	background-size: 21px 21px;
@@ -530,7 +531,8 @@ body.buddyboss_page_bbp-converter .bp-admin-card h2:before,
 .bp-admin-card.section-bp_ld-integration h2:before,
 .bp-admin-card.section-bp_ld_sync-buddypress h2:before,
 .bp-admin-card.section-bp_ld_sync-learndash h2:before,
-.bp-admin-card.section-bp_ld_sync-reports h2:before {
+.bp-admin-card.section-bp_ld_sync-reports h2:before,
+.bp-admin-card.section-bp_ld_course_tab-buddypress h2:before {
 	background-image: url(../../images/admin/icons/logos/learndash.png);
 	background-size: 100% 100%;
 }
