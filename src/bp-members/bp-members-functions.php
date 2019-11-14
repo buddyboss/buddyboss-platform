@@ -3867,10 +3867,7 @@ function bp_member_type_shortcode_callback( $atts ) {
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
 
-	$type 		= isset( $atts['type'] ) ? $atts['type'] : '' ;
-	$type_obj 	= get_page_by_path( $type, '', 'bp-member-type');
-	$type_id 	= isset( $type_obj->ID ) ? $type_obj->ID : '';
-	echo '<div id="members-dir-list" class="members dir-list" data-bp-list="'. esc_attr( $type ) .'" profile-type-id="'. esc_attr( $type_id ) .'">';
+	echo '<div id="members-dir-list" class="members dir-list">';
 
 	if ( ! empty( $atts['type'] ) ) {
 
