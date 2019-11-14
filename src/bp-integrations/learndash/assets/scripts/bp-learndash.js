@@ -146,10 +146,8 @@
 			}
 
 			var export_args = {
-				start   : 0,
-				length : BP_LD_REPORTS_DATA.config.perpage,
 				nonce   : BP_LD_REPORTS_DATA.nonce,
-				action  : 'bp_ld_group_get_reports',
+				action  : 'bp_ld_group_export_reports',
 				group   : BP_LD_REPORTS_DATA.current_group,
 				'export'  : true
 			};
@@ -179,20 +177,8 @@
 						$( '.export-indicator' ).text( BP_LD_REPORTS_DATA.text.export_failed );
 						return;
 					}
-
-					if (data.data.has_more) {
-						export_args.start = export_args.start + export_args.length;
-						export_args.hash  = data.data.hash;
-						$target.data( 'export_args', export_args );
-						$( '.export-indicator' ).show();
-						$( '.export-indicator .export-current-step' ).text( data.data.page );
-						$( '.export-indicator .export-total-step' ).text( data.data.total );
-						self.startExport( $target );
-						return;
-					}
-
-					$target.data( 'exported', true );
-					$target.data( 'export_url', data.data.url );
+					//$target.data( 'exported', true );
+					//$target.data( 'export_url', data.data.url );
 					window.location.href = data.data.url;
 					$( '.export-indicator' ).hide();
 				},
