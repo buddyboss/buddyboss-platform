@@ -255,7 +255,11 @@ window.bp = window.bp || {};
 		 * @return {[type]}           [description]
 		 */
 		ajax: function( post_data, object ) {
-			if ( this.ajax_request && 'follow' != object ) {
+			if (
+				this.ajax_request && 'follow' != object && 'friends' != object && (
+					( 'activity' == object && 'activity_filter' == post_data.action ) || ( 'members' == object && 'members_filter' == post_data.action ) || ( 'groups' == object && 'groups_filter' == post_data.action )
+				)
+			) {
 				this.ajax_request.abort();
 			}
 
@@ -608,6 +612,7 @@ window.bp = window.bp || {};
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
