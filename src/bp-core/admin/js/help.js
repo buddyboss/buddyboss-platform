@@ -31,6 +31,22 @@
 					}
 				});
 			}
+
+			if ( $( '#bp-help-content-area' ).length ) {
+				var url = new URL(window.location.href);
+				var article_id = url.searchParams.get("article");
+				$.ajax({
+					url: BP_HELP.bb_resources_json_url + '/' + article_id,
+					success: function (response) {
+						$( '#bp-help-content-area' ).append('<h1>' + response.title.rendered + '</h1>');
+						$( '#bp-help-content-area' ).append(response.content.rendered);
+					},
+					dataType: 'json',
+					error : function( error ) {
+						console.log(error);
+					}
+				});
+			}
 		}
 	);
 })( jQuery );

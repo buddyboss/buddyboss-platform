@@ -211,6 +211,7 @@ function bp_core_admin_help_main_page() {
 
 				</ul>
 				<!-- print content -->
+				<div id="bp-help-content-area"></div>
 
 				<!-- print submenu -->
 				<div class="article-child well">
