@@ -57,7 +57,7 @@ function bbp_admin_get_settings_sections() {
 				'page'     => 'permalink',
 			),
 			 'bbp_settings_user_slugs' => array(
-			 'title'    => __( 'Forum User Slugs', 'buddyboss' ),
+			 'title'    => __( 'Forum Profile Slugs', 'buddyboss' ),
 			 'callback' => 'bbp_admin_setting_callback_user_slug_section',
 			 'page'     => 'permalink',
 			 ),
@@ -1811,7 +1811,7 @@ function bbp_form_slug_conflict_check( $slug, $default ) {
 function bbp_admin_setting_callback_user_slug_section() {
 	?>
 
-	<p><?php esc_html_e( 'Customize your user profile slugs.', 'buddyboss' ); ?></p>
+	<p><?php esc_html_e( 'Custom slugs for member profiles.', 'buddyboss' ); ?></p>
 
 	<?php
 }
