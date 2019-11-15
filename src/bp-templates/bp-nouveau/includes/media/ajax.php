@@ -474,6 +474,13 @@ function bp_nouveau_ajax_media_album_save() {
 		wp_send_json_error( $response );
 	}
 
+	if ( ! empty( $_POST['medias'] ) && is_array( $_POST['medias'] ) ) {
+		// set album id for media
+		foreach ( $_POST['medias'] as $key => $media ) {
+			$_POST['medias'][$key]['album_id'] = $album_id;
+		}
+	}
+
 	// save all media uploaded
 	bp_media_add_handler();
 
