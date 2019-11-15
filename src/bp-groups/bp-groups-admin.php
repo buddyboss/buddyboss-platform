@@ -1528,9 +1528,11 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 			<?php
 
 			foreach ( $types as $type ) :
+				if ( isset( $type->labels['singular_name'] ) && !empty( $type->labels['singular_name'] ) ) :
 				?>
-				<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+					<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 				<?php
+				endif;
 			endforeach;
 
 			?>
