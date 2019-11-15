@@ -9,8 +9,8 @@
 		'load',
 		function() {
 
-			//var bp_help_wpapi = new WPAPI({ endpoint: 'https://buddyboss.com/resources/wp-json' });
-			var bp_help_wpapi = new WPAPI({ endpoint: 'http://localhost/buddyboss/wp-json' });
+			var bp_help_wpapi = new WPAPI({ endpoint: 'https://buddyboss.com/resources/wp-json' });
+			//var bp_help_wpapi = new WPAPI({ endpoint: 'http://localhost/buddyboss/wp-json' });
 			bp_help_wpapi.docs = bp_help_wpapi.registerRoute( 'wp/v2', '/docs/(?P<id>)', {
 				params: [ 'before', 'after', 'author', 'parent', 'post', 'order', 'orderby' ]
 			} );
@@ -48,6 +48,7 @@
 
 				var ancestors = doc.ancestors ? doc.ancestors.reverse() : [];
 				var children = doc.children ? doc.children : [];
+				var hierarchy = doc.hierarchy ? doc.hierarchy : [];
 
 				var breadcrumps = '<li class="main"><a href="'+BP_HELP.bb_help_url+'" class="dir">'+BP_HELP.bb_help_title+'</a></li>';
 
@@ -65,18 +66,29 @@
 
 				var selected = doc.id == article_id ? 'selected' : '';
 				var sidebar = '';
+				var articles_children = '';
 				if ( ancestors.length ) {
-					sidebar = '<ul class="loop-1"><li class="main level-1 '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+ancestors[0].id+'" class="dir">'+ancestors[0].post_title+'</a>';
+					sidebar = '<ul class="loop-1"><li class="main level-1 '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+ancestors[0].ID+'" class="dir">'+ancestors[0].post_title+'</a>';
 				} else {
 					sidebar = '<ul class="loop-1"><li class="main level-1 '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.id+'" class="dir">'+doc.title.rendered+'</a>';
 				}
 
-				if ( children.length ) {
+				if ( hierarchy.length ) {
 					sidebar += '<ul class="loop-2">';
-					for(var k = 0; k < children.length; k++){
-						sidebar += bp_help_js_get_doc_children_dom(children[k],2);
+					for(var k = 0; k < hierarchy.length; k++){
+						sidebar += bp_help_js_get_doc_hierarchy_dom(hierarchy[k],2);
 					}
 					sidebar += '</ul>';
+				}
+
+				if ( children.length ) {
+					articles_children += '<ul class="loop-1">';
+					for(var i = 0; i < children.length; i++){
+						articles_children += bp_help_js_get_doc_children_dom(children[i],1);
+					}
+					articles_children += '</ul>';
+					$( '.article-child #article-child-title' ).show();
+					$( '.article-child' ).append(articles_children);
 				}
 
 				sidebar += '</li></ul>';
@@ -85,6 +97,24 @@
 			}
 
 			function bp_help_js_get_doc_children_dom( doc,level ) {
+				var articles_children = '<li class="main level-'+level+' '+doc.post_name+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.ID+'">'+doc.post_title;
+
+				if ( typeof doc.children !== 'undefined' && doc.children.length ) {
+
+					level = level + 1;
+					articles_children += '<ul class="loop-'+level+'">';
+					for(var k = 0; k < doc.children.length; k++){
+						articles_children += bp_help_js_get_doc_children_dom(doc.children[k],level);
+					}
+					articles_children += '</ul>';
+				}
+
+				articles_children += '</li>';
+
+				return articles_children;
+			}
+
+			function bp_help_js_get_doc_hierarchy_dom( doc,level ) {
 				var article_id = bp_help_page_url.searchParams.get("article");
 				var selected = doc.ID == article_id ? 'selected' : '';
 				var sidebar = '<li class="main level-'+level+' '+doc.post_name+' '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.ID+'">'+doc.post_title;
@@ -96,11 +126,13 @@
 				sidebar += '</a>';
 
 				if ( typeof doc.children !== 'undefined' && doc.children.length ) {
-					var active = false;
-					for(var i = 0; i < doc.children.length; i++){
-						if ( doc.children[i].ID == article_id ) {
-							active = true;
-							break;
+					var active = selected ? true : false;
+					if ( ! active ) {
+						for (var i = 0; i < doc.children.length; i++) {
+							if (doc.children[i].ID == article_id) {
+								active = true;
+								break;
+							}
 						}
 					}
 					var activeClass = active ? 'active' : '';
@@ -110,7 +142,7 @@
 					var hiddenClass = active ? 'active' : 'hidden';
 					sidebar += '<ul class="'+hiddenClass+' loop-'+level+'">';
 					for(var k = 0; k < doc.children.length; k++){
-						sidebar += bp_help_js_get_doc_children_dom(doc.children[k],level);
+						sidebar += bp_help_js_get_doc_hierarchy_dom(doc.children[k],level);
 					}
 					sidebar += '</ul>';
 				}

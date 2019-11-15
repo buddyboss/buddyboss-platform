@@ -216,91 +216,11 @@ function bp_core_admin_help_main_page() {
 
 				<!-- print submenu -->
 				<div class="article-child well">
+					<h3 id="article-child-title" style="display: none;"><?php _e( 'Articles', 'buddyboss' ); ?></h3>
 				</div>
 			</div>
 		</div>
 		<?php
-	}
-
-	$base_path   = buddypress()->plugin_dir . 'bp-help';
-	$docs_path   = $base_path . '/docs/';
-	$vendor_path = $base_path . '/vendors';
-
-	$main_directories = glob( $docs_path . '*', GLOB_ONLYDIR );
-
-	$article_value = bp_core_admin_help_get_article_value();
-
-	if ( ! empty( $main_directories ) ) {
-		if ( empty( $article_value ) ) {
-			?>
-			<div class="bp-help-main-menu-wrap">
-				<?php
-				bp_core_admin_help_main_menu( $main_directories, $docs_path );
-				?>
-			</div>
-			<?php
-		} else {
-			/**
-			 * Sidebar main dir path
-			 */
-			$article_dir_array = explode( '/', $article_value );
-			$content_main_dir  = $docs_path . $article_dir_array[0];
-
-			/**
-			 * Show display sidebar or not
-			 */
-			$sidebar = false !== strpos( $article_value, 'miscellaneous' ) ? false : true;
-			?>
-
-			<div class="bp-help-content-wrap">
-
-				<?php
-				if ( $sidebar ) {
-					?>
-					<div class="bp-help-sidebar">
-						<?php
-						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2 );
-						?>
-					</div>
-					<?php
-				}
-				?>
-
-				<div class="bp-help-content">
-					<ul class="bp-help-menu">
-						<?php
-						add_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10, 5 );
-						bp_core_admin_help_sub_menu( (array) $content_main_dir, '1', $docs_path, 2, true );
-						remove_action( 'bp_core_admin_help_sub_menu_before', 'bp_core_admin_help_sub_menu_before_callback', 10 );
-						?>
-					</ul>
-
-
-					<?php
-
-					// print file content
-					echo bp_core_admin_help_display_content( $docs_path . $article_value );
-
-					// print submenu
-					if ( bp_core_admin_help_had_more_directory( $docs_path . $article_value ) ) {
-						unset( $article_dir_array[ ( count( $article_dir_array ) - 1 ) ] );
-						$article_dir_array  = implode( '/', $article_dir_array );
-						$current_doc_path[] = $docs_path . $article_dir_array;
-						?>
-						<div class="article-child well">
-							<?php
-							printf( '<h3>%s</h3>', __( 'Articles', 'buddyboss' ) );
-							bp_core_admin_help_sub_menu( $current_doc_path, '1', $docs_path, 3, false, true );
-							?>
-						</div>
-						<?php
-					}
-					?>
-				</div>
-
-			</div>
-			<?php
-		}
 	}
 }
 
