@@ -10,6 +10,7 @@
 		function() {
 
 			var bp_help_wpapi = new WPAPI({ endpoint: 'https://buddyboss.com/resources/wp-json' });
+			//var bp_help_wpapi = new WPAPI({ endpoint: 'http://localhost/buddyboss/wp-json' });
 			bp_help_wpapi.docs = bp_help_wpapi.registerRoute( 'wp/v2', '/docs/(?P<id>)', {
 				params: [ 'before', 'after', 'author', 'parent', 'post', 'order', 'orderby' ]
 			} );
@@ -36,9 +37,9 @@
 					$( '#bp-help-content-area' ).append('<h1>' + doc.title.rendered + '</h1>');
 					$( '#bp-help-content-area' ).append(doc.content.rendered);
 					bp_help_js_render_hierarchy_dom( doc );
-					$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).attr('href',BP_HELP.bb_help_url+'&article='+doc.id);
-					$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).text(doc.title.rendered);
-					$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).closest('li').addClass(doc.slug);
+					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).attr('href',BP_HELP.bb_help_url+'&article='+doc.id);
+					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).text(doc.title.rendered);
+					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).closest('li').addClass(doc.slug);
 				});
 			}
 
@@ -60,6 +61,36 @@
 
 				$( '.bp-help-menu' ).append(breadcrumps);
 
+				var sidebar = '<ul class="loop-1"><li class="main level-1"><a href="'+BP_HELP.bb_help_url+'&article='+doc.id+'" class="dir">'+doc.title.rendered+'</a>';
+
+				// if ( children.length ) {
+				// 	sidebar += '<ul class="loop-2">';
+				// 	for(var k = 0; k < children.length; k++){
+				// 		sidebar += bp_help_js_get_doc_children_dom(sidebar,children[k],2);
+				// 	}
+				// 	sidebar += '</ul>';
+				// }
+
+				sidebar += '</li></ul>';
+
+				$( '.bp-help-sidebar' ).html(sidebar);
+			}
+
+			function bp_help_js_get_doc_children_dom( sidebar,doc,level ) {
+				sidebar += '<li class="main level-'+level+' '+doc.post_name+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.ID+'">'+doc.post_title+'</a>';
+
+				if ( doc.children ) {
+					level = level + 1;
+					sidebar += '<ul class="loop-'+level+'">';
+					for(var k = 0; k < doc.children.length; k++){
+						sidebar += bp_help_js_get_doc_children_dom(sidebar,doc.children[k],level);
+					}
+					sidebar += '</ul>';
+				}
+
+				sidebar += '</li>';
+
+				return sidebar;
 			}
 		}
 	);
