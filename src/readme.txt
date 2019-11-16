@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.1 =
 * Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
+* Forums - Fixed marking discussion as Favorite not always saving
 * Forums - New settings section for 'Forum Profile Slugs'
 
 = 1.2.0 =
