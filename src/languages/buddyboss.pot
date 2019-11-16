@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.2.0\n"
+"Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-16 00:14:17+00:00\n"
+"POT-Creation-Date: 2019-11-16 01:12:32+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2773,7 +2773,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/includes/media/ajax.php:258
 #: bp-templates/bp-nouveau/includes/media/ajax.php:327
 #: bp-templates/bp-nouveau/includes/media/ajax.php:424
-#: bp-templates/bp-nouveau/includes/media/ajax.php:495
+#: bp-templates/bp-nouveau/includes/media/ajax.php:502
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -16206,8 +16206,8 @@ msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:567
-#: bp-templates/bp-nouveau/includes/media/ajax.php:604
+#: bp-templates/bp-nouveau/includes/media/ajax.php:574
+#: bp-templates/bp-nouveau/includes/media/ajax.php:611
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
@@ -16977,15 +16977,15 @@ msgstr ""
 msgid "There was a problem when trying to create the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:520
+#: bp-templates/bp-nouveau/includes/media/ajax.php:527
 msgid "Please provide ID of album to delete."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:529
+#: bp-templates/bp-nouveau/includes/media/ajax.php:536
 msgid "You do not have permission to delete this album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:616
+#: bp-templates/bp-nouveau/includes/media/ajax.php:623
 msgid "Please provide attachment id to delete."
 msgstr ""
 
