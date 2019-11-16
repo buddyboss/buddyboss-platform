@@ -62,6 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
 * Forums - Fixed marking discussion as Favorite not always saving after page refresh
 * Forums - New settings section to customize 'Forum Profile Slugs'
+* Media - Fixed photos added into newly created group album not saving
 
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
