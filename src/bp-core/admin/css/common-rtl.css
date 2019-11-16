@@ -319,7 +319,7 @@ tr.bp-search-parent-field label {
   min-width: 255px;
   max-width: 1050px;
   border-radius: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ccd0d4;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   background: #fff;
 }
@@ -327,6 +327,10 @@ tr.bp-search-parent-field label {
 .bp-admin-card .form-table td p {
   color: #999;
   margin-top: 6px;
+}
+
+.bp-admin-card .form-table td a.button-secondary {
+  margin-top: 1px;
 }
 
 .bp-admin-card h2 {
@@ -443,7 +447,8 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bbp_settings_root_slugs h2:before,
 .bp-admin-card.section-bbp_settings_single_slugs h2:before,
 .bp-admin-card.section-bbp_settings_user_slugs h2:before,
-.bp-admin-card.section-bbp_settings_buddypress h2:before {
+.bp-admin-card.section-bbp_settings_buddypress h2:before,
+.bp-admin-card.section-bbp_settings_akismet h2:before {
   background-image: url(../../images/admin/icons/buddyboss/forums.svg);
   background-size: 21px 21px;
 }
@@ -985,7 +990,7 @@ body.post-type-bp-email .categorydiv label {
 .bp-help-card-grid .bp-help-card {
   margin: 0 10px 2%;
   background-color: #fff;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ccd0d4;
   border-radius: 5px;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
@@ -1019,7 +1024,7 @@ body.post-type-bp-email .categorydiv label {
   max-width: 1050px;
   background-color: #fff;
   border-radius: 6px;
-  border: 1px solid #e5e5e5;
+  border: 1px solid #ccd0d4;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.04);
   box-sizing: border-box;
 }
@@ -1181,7 +1186,7 @@ body.post-type-bp-email .categorydiv label {
   .bp-help-sidebar {
     background: #f9f9f9;
     padding: 2.5em;
-    border-left: 1px solid #eaeaea;
+    border-left: 1px solid #ccd0d4;
     border-radius: 0 6px 6px 0;
     -webkit-box-flex: 0;
     -ms-flex: 0 0 200px;
@@ -1213,7 +1218,7 @@ body.post-type-bp-email .categorydiv label {
     padding: 2.5em;
     width: 100%;
     min-height: auto;
-    border-bottom: 1px solid #eaeaea;
+    border-bottom: 1px solid #ccd0d4;
     border-radius: 6px 6px 0 0;
   }
   .bp-help-content {
