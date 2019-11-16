@@ -329,6 +329,10 @@ tr.bp-search-parent-field label {
   margin-top: 6px;
 }
 
+.bp-admin-card .form-table td a.button-secondary {
+  margin-top: 1px;
+}
+
 .bp-admin-card h2 {
   line-height: 1;
   margin: 0 0 1em;
