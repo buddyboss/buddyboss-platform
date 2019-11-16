@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.1 =
+* Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
 * Forums - New settings section for 'Forum Profile Slugs'
 
 = 1.2.0 =
