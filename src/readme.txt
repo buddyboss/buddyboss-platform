@@ -57,9 +57,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.1 =
 * Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
+* Profiles - Fixed pagination of members directory not scrolling back to top of page in mobile
+* Groups - Fixed pagination of groups directory not scrolling back to top of page in mobile
 * Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
-* Forums - Fixed marking discussion as Favorite not always saving
-* Forums - New settings section for 'Forum Profile Slugs'
+* Forums - Fixed marking discussion as Favorite not always saving after page refresh
+* Forums - New settings section to customize 'Forum Profile Slugs'
 
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
