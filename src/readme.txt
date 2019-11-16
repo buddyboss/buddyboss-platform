@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.2.4
 Requires PHP: 5.6.20
-Stable tag: 1.2.0
+Stable tag: 1.2.1
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.1 =
+* Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
+* Profiles - Fixed pagination of members directory not scrolling back to top of page in mobile
+* Groups - Fixed pagination of groups directory not scrolling back to top of page in mobile
+* Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
+* Forums - Fixed marking discussion as Favorite not always saving after page refresh
+* Forums - New settings section to customize 'Forum Profile Slugs'
+* Media - Fixed photos added into newly created group album not saving
 
 = 1.2.0 =
 * Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
