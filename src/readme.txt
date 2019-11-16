@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.1 =
+* Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
 * Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
 * Forums - Fixed marking discussion as Favorite not always saving
 * Forums - New settings section for 'Forum Profile Slugs'
