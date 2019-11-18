@@ -17,7 +17,13 @@
 			var bp_help_page_url = new URL(window.location.href);
 
 			if ( $( '#bp-help-main-menu-wrap' ).length ) {
+
+				$( '#bp-help-main-menu-wrap' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+
 				bp_help_wpapi.docs().parent(0).order('asc').orderby('menu_order').then(function (docs) {
+
+					$( '#bp-help-main-menu-wrap' ).removeClass( 'loading' );
+
 					var bp_help_cards = '';
 					$.each( docs, function ( index, value ) {
 						bp_help_cards += '<div class="bp-help-card bp-help-menu-wrap">\n' +
@@ -32,10 +38,15 @@
 			}
 
 			if ( $( '#bp-help-content-area' ).length ) {
+
+				$( '#bp-help-content-area' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+
 				var article_id = bp_help_page_url.searchParams.get("article");
 				bp_help_wpapi.docs().id( article_id ).then(function (doc) {
-					$( '#bp-help-content-area' ).append('<h1>' + doc.title.rendered + '</h1>');
-					$( '#bp-help-content-area' ).append(doc.content.rendered);
+
+					$( '#bp-help-content-area' ).removeClass( 'loading' );
+
+					$( '#bp-help-content-area' ).html('<h1>' + doc.title.rendered + '</h1>' + doc.content.rendered);
 					bp_help_js_render_hierarchy_dom( doc );
 					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).attr('href',BP_HELP.bb_help_url+'&article='+doc.id);
 					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).text(doc.title.rendered);
