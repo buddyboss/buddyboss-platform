@@ -316,7 +316,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		}
 
 		// Include users ( Restrict group invites to only members of who already exists in parent group ) in BuddyBoss > Settings > Social Groups > Group Hierarchies
-		if ( false !== $group_type ) {
+		//if ( false !== $group_type ) {
 			if ( true === bp_enable_group_hierarchies() ) {
 				if ( true === bp_enable_group_restrict_invites() ) {
 					$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
@@ -326,10 +326,17 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						) );
 						$members            = wp_list_pluck( $members_query['members'], 'ID' );
 						$request['include'] = implode( ',', $members );
+
+						if ( empty( $request['include'] ) ) {
+							wp_send_json_error( array(
+								'feedback' => __( 'No members found in parent group.', 'buddyboss' ),
+								'type'     => 'info',
+							) );
+						}
 					}
 				}
 			}
-		}
+		//}
 
 		// Exclude users if ( Restrict invites if user already in other same group type ) is checked
 		if ( false !== $group_type ) {
