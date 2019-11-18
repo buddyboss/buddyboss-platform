@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-16 01:30:16+00:00\n"
+"POT-Creation-Date: 2019-11-18 04:27:34+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -826,9 +826,9 @@ msgstr[1] ""
 #: bp-groups/bp-groups-template.php:1769 bp-groups/bp-groups-template.php:1864
 #: bp-groups/bp-groups-template.php:2934 bp-groups/bp-groups-template.php:2964
 #: bp-groups/bp-groups-template.php:3048 bp-groups/bp-groups-template.php:3078
-#: bp-groups/bp-groups-template.php:4640 bp-groups/bp-groups-template.php:4682
-#: bp-groups/bp-groups-template.php:4726 bp-groups/bp-groups-template.php:6520
-#: bp-groups/classes/class-bp-groups-component.php:957
+#: bp-groups/bp-groups-template.php:4649 bp-groups/bp-groups-template.php:4691
+#: bp-groups/bp-groups-template.php:4735 bp-groups/bp-groups-template.php:6529
+#: bp-groups/classes/class-bp-groups-component.php:974
 #: bp-groups/classes/class-bp-groups-invite-template.php:247
 #: bp-groups/classes/class-bp-groups-invite-template.php:260
 #: bp-groups/classes/class-bp-groups-invite-template.php:272
@@ -875,7 +875,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2703
-#: bp-groups/classes/class-bp-groups-component.php:831
+#: bp-groups/classes/class-bp-groups-component.php:848
 #: bp-groups/classes/class-bp-groups-list-table.php:404
 #: bp-groups/classes/class-bp-groups-list-table.php:568
 #: bp-members/classes/class-bp-members-list-table.php:177
@@ -1394,7 +1394,7 @@ msgstr ""
 #: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
 #: bp-forums/common/template.php:2506 bp-forums/search/template.php:228
 #: bp-forums/templates/default/bbpress/form-search.php:16
-#: bp-groups/bp-groups-template.php:6083
+#: bp-groups/bp-groups-template.php:6092
 #: bp-members/bp-members-template.php:1232
 #: bp-messages/bp-messages-template.php:873
 #: bp-search/classes/class-bp-search-component.php:28
@@ -1577,7 +1577,7 @@ msgstr ""
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:426
 #: bp-groups/bp-groups-admin.php:166
 #: bp-groups/classes/class-bp-groups-component.php:403
-#: bp-groups/classes/class-bp-groups-component.php:780
+#: bp-groups/classes/class-bp-groups-component.php:797
 #: bp-integrations/compatibility/bp-compatibility-integration.php:61
 msgid "Settings"
 msgstr ""
@@ -2462,9 +2462,9 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1355 bp-groups/bp-groups-admin.php:2009
 #: bp-groups/bp-groups-functions.php:3591
 #: bp-groups/bp-groups-functions.php:3610
-#: bp-groups/bp-groups-functions.php:3627 bp-groups/bp-groups-template.php:5279
+#: bp-groups/bp-groups-functions.php:3627 bp-groups/bp-groups-template.php:5288
 #: bp-groups/classes/class-bp-groups-component.php:623
-#: bp-groups/classes/class-bp-groups-component.php:811
+#: bp-groups/classes/class-bp-groups-component.php:828
 #: bp-groups/classes/class-bp-groups-list-table.php:434
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:472
 #: bp-members/classes/class-bp-core-members-widget.php:298
@@ -2515,7 +2515,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1085 bp-groups/bp-groups-admin.php:1113
 #: bp-groups/bp-groups-admin.php:2225
 #: bp-groups/classes/class-bp-groups-component.php:554
-#: bp-groups/classes/class-bp-groups-component.php:881
+#: bp-groups/classes/class-bp-groups-component.php:898
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
 #: bp-media/bp-media-settings.php:100 bp-media/bp-media-settings.php:116
@@ -3717,7 +3717,7 @@ msgid "BuddyPress (logged-out)"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:778
-#: bp-groups/classes/class-bp-groups-component.php:718
+#: bp-groups/classes/class-bp-groups-component.php:735
 #: bp-media/classes/class-bp-media-component.php:60
 #: bp-media/classes/class-bp-media-component.php:248
 #: bp-media/classes/class-bp-media-component.php:311
@@ -4750,7 +4750,7 @@ msgstr ""
 
 #: bp-core/bp-core-options.php:34
 #: bp-groups/classes/class-bp-groups-component.php:399
-#: bp-groups/classes/class-bp-groups-component.php:771
+#: bp-groups/classes/class-bp-groups-component.php:788
 msgid "Details"
 msgstr ""
 
@@ -4810,7 +4810,7 @@ msgstr ""
 msgid "Activate Your Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3326 bp-groups/bp-groups-template.php:4205
+#: bp-core/bp-core-template.php:3326 bp-groups/bp-groups-template.php:4214
 #: bp-templates/bp-nouveau/includes/groups/functions.php:547
 msgid "Create a Group"
 msgstr ""
@@ -5961,7 +5961,7 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
 #: bp-core/deprecated/buddypress/1.6.php:184
-#: bp-groups/bp-groups-template.php:6112 bp-groups/bp-groups-template.php:6156
+#: bp-groups/bp-groups-template.php:6121 bp-groups/bp-groups-template.php:6165
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:108
 #: bp-templates/bp-nouveau/includes/groups/functions.php:602
 #: bp-templates/bp-nouveau/includes/members/functions.php:92
@@ -5972,7 +5972,7 @@ msgstr ""
 #: bp-core/deprecated/buddypress/1.6.php:187
 #: bp-friends/classes/class-bp-core-friends-widget.php:148
 #: bp-friends/classes/class-bp-core-friends-widget.php:252
-#: bp-groups/bp-groups-template.php:5301
+#: bp-groups/bp-groups-template.php:5310
 #: bp-groups/classes/class-bp-groups-widget.php:124
 #: bp-groups/classes/class-bp-groups-widget.php:241
 #: bp-members/classes/class-bp-core-members-widget.php:123
@@ -5984,7 +5984,7 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:164
 #: bp-core/deprecated/buddypress/1.6.php:190
-#: bp-groups/bp-groups-template.php:6137 bp-groups/bp-groups-template.php:6171
+#: bp-groups/bp-groups-template.php:6146 bp-groups/bp-groups-template.php:6180
 msgid "Alphabetically"
 msgstr ""
 
@@ -6048,7 +6048,7 @@ msgid "Edit Details"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/2.1.php:378
-#: bp-groups/classes/class-bp-groups-component.php:972
+#: bp-groups/classes/class-bp-groups-component.php:989
 msgid "Group Profile Photo"
 msgstr ""
 
@@ -6477,7 +6477,7 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:91
 #: bp-groups/classes/class-bp-groups-component.php:420
-#: bp-groups/classes/class-bp-groups-component.php:801
+#: bp-groups/classes/class-bp-groups-component.php:818
 #: bp-xprofile/classes/class-bp-xprofile-component.php:297
 #: bp-xprofile/classes/class-bp-xprofile-component.php:409
 msgid "Cover Photo"
@@ -9320,7 +9320,7 @@ msgstr ""
 msgid "Show discussion author:"
 msgstr ""
 
-#: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5299
+#: bp-forums/common/widgets.php:983 bp-groups/bp-groups-template.php:5308
 #: bp-notifications/bp-notifications-template.php:1002
 #: bp-templates/bp-nouveau/includes/template-tags.php:2146
 msgid "Order By:"
@@ -11273,7 +11273,7 @@ msgid "Mutual Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:219
-#: bp-groups/classes/class-bp-groups-component.php:821
+#: bp-groups/classes/class-bp-groups-component.php:838
 msgid "Requests"
 msgstr ""
 
@@ -11730,7 +11730,7 @@ msgstr ""
 msgid "&raquo;"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1633 bp-groups/bp-groups-template.php:5120
+#: bp-groups/bp-groups-admin.php:1633 bp-groups/bp-groups-template.php:5129
 #: bp-members/bp-members-template.php:489
 #: bp-members/bp-members-template.php:495
 msgid "Viewing 1 member"
@@ -12021,7 +12021,7 @@ msgid "Demote to member"
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:2976 bp-groups/bp-groups-template.php:3090
-#: bp-groups/bp-groups-template.php:4989
+#: bp-groups/bp-groups-template.php:4998
 msgid "joined %s"
 msgstr ""
 
@@ -12043,82 +12043,83 @@ msgid ""
 "Extension API to generate Manage tabs."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4025
+#: bp-groups/bp-groups-template.php:4034
 msgid "You're an %s"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4027 bp-groups/bp-groups-template.php:4029
+#: bp-groups/bp-groups-template.php:4036 bp-groups/bp-groups-template.php:4038
 msgid "You're a %s"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4044
+#: bp-groups/bp-groups-template.php:4053
 msgid "Leave group"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4070 bp-groups/bp-groups-template.php:4131
+#: bp-groups/bp-groups-template.php:4079 bp-groups/bp-groups-template.php:4140
 msgid "Join group"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4087
+#: bp-groups/bp-groups-template.php:4096
 msgid "Accept Invitation"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4102
+#: bp-groups/bp-groups-template.php:4111
 msgid "Request Sent"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4143 bp-groups/bp-groups-template.php:4156
-#: bp-groups/classes/class-bp-groups-component.php:693
+#: bp-groups/bp-groups-template.php:4152 bp-groups/bp-groups-template.php:4165
+#: bp-groups/classes/class-bp-groups-component.php:698
+#: bp-groups/classes/class-bp-groups-component.php:708
 msgid "Request Access"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4297
+#: bp-groups/bp-groups-template.php:4306
 msgid "This group is not currently accessible."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4308
+#: bp-groups/bp-groups-template.php:4317
 msgid ""
 "You must accept your pending invitation before you can access this private "
 "group."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4310
+#: bp-groups/bp-groups-template.php:4319
 msgid ""
 "This is a private group and you must request group membership in order to "
 "join."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4313
+#: bp-groups/bp-groups-template.php:4322
 msgid ""
 "This is a private group. To join you must be a registered site member and "
 "request group membership."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4316
+#: bp-groups/bp-groups-template.php:4325
 msgid ""
 "This is a private group. Your membership request is awaiting approval from "
 "the group organizer."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4324
+#: bp-groups/bp-groups-template.php:4333
 msgid "This is a hidden group. You must be invited to join."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:5254
+#: bp-groups/bp-groups-template.php:5263
 msgid "Group secondary navigation"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:5302
+#: bp-groups/bp-groups-template.php:5311
 #: bp-templates/bp-nouveau/includes/members/functions.php:108
 msgid "Oldest"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:5305
+#: bp-groups/bp-groups-template.php:5314
 #: bp-templates/bp-nouveau/includes/members/functions.php:112
 msgid "Group Activity"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:5308
+#: bp-groups/bp-groups-template.php:5317
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:110
 #: bp-templates/bp-nouveau/includes/groups/functions.php:605
 #: bp-templates/bp-nouveau/includes/members/functions.php:97
@@ -12126,59 +12127,59 @@ msgstr ""
 msgid "Alphabetical"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:5789
+#: bp-groups/bp-groups-template.php:5798
 msgid "Group photo"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6117 bp-groups/bp-groups-template.php:6159
+#: bp-groups/bp-groups-template.php:6126 bp-groups/bp-groups-template.php:6168
 msgid "Recently Joined"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6122 bp-groups/bp-groups-template.php:6162
+#: bp-groups/bp-groups-template.php:6131 bp-groups/bp-groups-template.php:6171
 msgid "Most Popular"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6127
+#: bp-groups/bp-groups-template.php:6136
 msgid "Organizer Of"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6132 bp-groups/bp-groups-template.php:6168
+#: bp-groups/bp-groups-template.php:6141 bp-groups/bp-groups-template.php:6177
 msgid "Moderator Of"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6165
+#: bp-groups/bp-groups-template.php:6174
 msgid "Administrator Of"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6195
+#: bp-groups/bp-groups-template.php:6204
 msgid "Viewing all groups that are %s"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6311
+#: bp-groups/bp-groups-template.php:6320
 msgid "Group avatar"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6632
+#: bp-groups/bp-groups-template.php:6641
 msgid "requested %s"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:6704
+#: bp-groups/bp-groups-template.php:6713
 msgid "Viewing 1 request"
 msgid_plural "Viewing %1$s - %2$s of %3$s requests"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-groups/bp-groups-template.php:6997
+#: bp-groups/bp-groups-template.php:7006
 msgid "Viewing 1 invitation"
 msgid_plural "Viewing %1$s - %2$s of %3$s invitations"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-groups/bp-groups-template.php:7018
+#: bp-groups/bp-groups-template.php:7027
 msgid "Group Activity RSS Feed"
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:7303
+#: bp-groups/bp-groups-template.php:7312
 msgid "%s group"
 msgid_plural "%s groups"
 msgstr[0] ""
@@ -12202,12 +12203,12 @@ msgid "Search Groups&hellip;"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:413
-#: bp-groups/classes/class-bp-groups-component.php:790
+#: bp-groups/classes/class-bp-groups-component.php:807
 msgid "Photo"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:546
-#: bp-groups/classes/class-bp-groups-component.php:887
+#: bp-groups/classes/class-bp-groups-component.php:904
 #. translators: %s: Group count for the current user
 #. translators: %s: Group invitation count for the current user
 msgid "Groups %s"
@@ -12215,8 +12216,8 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:575
 #: bp-groups/classes/class-bp-groups-component.php:609
-#: bp-groups/classes/class-bp-groups-component.php:910
-#: bp-groups/classes/class-bp-groups-component.php:950
+#: bp-groups/classes/class-bp-groups-component.php:927
+#: bp-groups/classes/class-bp-groups-component.php:967
 #: bp-templates/bp-nouveau/includes/groups/classes.php:234
 #: bp-templates/bp-nouveau/includes/groups/functions.php:534
 msgid "My Groups"
@@ -12241,7 +12242,7 @@ msgstr ""
 msgid "Subgroups"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:704
+#: bp-groups/classes/class-bp-groups-component.php:721
 #: bp-invites/classes/class-bp-invites-component.php:242
 #: bp-invites/classes/class-bp-invites-component.php:306
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:5
@@ -12253,32 +12254,32 @@ msgstr ""
 msgid "Send Invites"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:731
+#: bp-groups/classes/class-bp-groups-component.php:748
 #: bp-media/bp-media-filters.php:854
 #: bp-media/classes/class-bp-media-component.php:276
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 msgid "Albums"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:747
+#: bp-groups/classes/class-bp-groups-component.php:764
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 msgid "Manage"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:882
+#: bp-groups/classes/class-bp-groups-component.php:899
 msgid "No Pending Invites"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:893
+#: bp-groups/classes/class-bp-groups-component.php:910
 #. translators: %s: Group invitation count for the current user
 msgid "Pending Invites %s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:929
+#: bp-groups/classes/class-bp-groups-component.php:946
 msgid "Create Group"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:977
+#: bp-groups/classes/class-bp-groups-component.php:994
 msgid "No Group Profile Photo"
 msgstr ""
 
