@@ -118,45 +118,44 @@
 
 #whats-new-post-in-box {
 	margin: $marg-sml 0;
+}
 
-	#whats-new-post-in-box-items {
-		list-style: none;
-		margin: $marg-sml 0;
+#whats-new-post-in-box-items {
+        list-style: none;
+        margin: $marg-sml 0;
 
-		li {
-			margin-bottom: $marg-sml;
-		}
+        li {
+                margin-bottom: $marg-sml;
+        }
 
-		#activity-autocomplete {
-			padding: 0.3em;
-		}
+        #activity-autocomplete {
+                padding: 0.3em;
+        }
 
-		.bp-activity-object {
+        .bp-activity-object {
 
-			@include center-vert();
-			padding: 0.2em;
+                @include center-vert();
+                padding: 0.2em;
 
-			.avatar {
-				width: 30px;
-			}
+                .avatar {
+                        width: 30px;
+                }
 
-			span {
-				padding-left: $marg-sml;
-				vertical-align: middle;
-			}
+                span {
+                        padding-left: $marg-sml;
+                        vertical-align: middle;
+                }
 
-			&:focus,
-			&:hover {
-				background: $light-grey;
-				cursor: pointer;
-			}
+                &:focus,
+                &:hover {
+                        background: $light-grey;
+                        cursor: pointer;
+                }
 
-			&.selected {
-				border: 1px solid $med-light-grey;
-			}
-		}
-	}
-
+                &.selected {
+                        border: 1px solid $med-light-grey;
+                }
+        }
 }
 
 #whats-new-submit {
