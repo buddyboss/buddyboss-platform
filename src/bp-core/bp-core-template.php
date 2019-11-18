@@ -3950,7 +3950,6 @@ function bp_email_get_salutation( $settings = array() ) {
 	 * @param string $value    The Recipient Salutation.
 	 * @param array  $settings Email Settings.
 	 * @param string $token    The Recipient token.
-	 * @todo remove translatable text
 	 */
-	return apply_filters( 'bp_email_get_salutation', sprintf( __( '%s', 'buddyboss' ), $token ), $settings, $token );
+	return apply_filters( 'bp_email_get_salutation', sprintf( '%s' , $token ), $settings, $token );
 }

@@ -413,8 +413,11 @@ class BuddyPress {
 		$this->integration_dir = $this->plugin_dir . 'bp-integrations';
 		$this->integration_url = $this->plugin_url . 'bp-integrations';
 
-		/** Theme Compat */
+		// Path to add support for third party plugin
+		$this->compatibility_dir = $this->plugin_dir . 'bp-core/compatibility/';
+		$this->compatibility_url = $this->plugin_url . 'bp-core/compatibility/';
 
+		/** Theme Compat */
 		$this->theme_compat = new stdClass(); // Base theme compatibility class
 		$this->filters      = new stdClass(); // Used when adding/removing filters
 
@@ -450,7 +453,7 @@ class BuddyPress {
 		 *
 		 * @param string $value Group Type post type slug.
 		 */
-		$this->group_type_post_type = apply_filters( 'bp_group_type_post_type', 'bp-group-type' );
+		$this->group_type_post_type     = apply_filters( 'bp_groups_group_type_post_type', 'bp-group-type' );
 
 		/**
 		 * Filters the taxonomy slug for the email type component.
@@ -511,7 +514,7 @@ class BuddyPress {
 		spl_autoload_register( array( $this, 'autoload' ) );
 
 		// Load the compatibility helpers for third party plugins.
-		require $this->plugin_dir . '/bp-core/compatibility/bp-incompatible-plugins-helper.php';
+		require $this->compatibility_dir . '/bp-incompatible-plugins-helper.php';
 
 		// Load the WP abstraction file so BuddyPress can run on all WordPress setups.
 		require $this->plugin_dir . 'bp-core/bp-core-wpabstraction.php';
@@ -575,7 +578,8 @@ class BuddyPress {
 
 		// Maybe load deprecated buddyboss functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bb_ignore_deprecated_code', ! $this->load_deprecated ) ) {
-			require $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php';
+			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.0.php' );
+			require( $this->plugin_dir . 'bp-core/deprecated/buddyboss/1.1.8.php' );
 		}
 
 		if ( defined( 'WP_CLI' ) && file_exists( $this->plugin_dir . 'cli/wp-cli-bp.php' ) ) {

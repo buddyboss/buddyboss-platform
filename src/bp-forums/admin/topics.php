@@ -904,7 +904,7 @@ if ( ! class_exists( 'BBP_Topics_Admin' ) ) :
 			if ( current_user_can( 'delete_topic', $topic->ID ) ) {
 				if ( bbp_get_trash_status_id() === $topic->post_status ) {
 					$post_type_object   = get_post_type_object( bbp_get_topic_post_type() );
-					$actions['untrash'] = "<a title='" . esc_attr__( 'Restore this item from the Trash', 'buddyboss' ) . "' href='" . esc_url( wp_nonce_url( add_query_arg( array( '_wp_http_referer' => add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) ) ), admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $topic->ID ) ) ), 'untrash-' . $topic->post_type . '_' . $topic->ID ) ) . "'>" . esc_html__( 'Restore', 'buddyboss' ) . '</a>';
+					$actions['untrash'] = "<a title='" . esc_attr__( 'Restore this item from the Trash', 'buddyboss' ) . "' href='" . esc_url( wp_nonce_url( add_query_arg( array( '_wp_http_referer' => add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) ) ), admin_url( sprintf( $post_type_object->_edit_link . '&amp;action=untrash', $topic->ID ) ) ), 'untrash-post_' . $topic->ID ) ) . "'>" . esc_html__( 'Restore', 'buddyboss' ) . '</a>';
 				} elseif ( EMPTY_TRASH_DAYS ) {
 					$actions['trash'] = "<a class='submitdelete' title='" . esc_attr__( 'Move this item to the Trash', 'buddyboss' ) . "' href='" . esc_url( add_query_arg( array( '_wp_http_referer' => add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), admin_url( 'edit.php' ) ) ), get_delete_post_link( $topic->ID ) ) ) . "'>" . esc_html__( 'Trash', 'buddyboss' ) . '</a>';
 				}

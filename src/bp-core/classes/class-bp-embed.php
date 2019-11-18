@@ -259,7 +259,7 @@ class BP_Embed extends WP_Embed {
 		if ( isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type ) ) {
 			// Check if WordPress already embed the link then return the original content.
 			if ( strpos( $content, '<iframe' ) !== false ) {
-				return $content;
+				return apply_filters( 'bp_autoembed', $content );
 			} else {
 				// Find all the URLs from the content.
 				preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match );
@@ -285,7 +285,7 @@ class BP_Embed extends WP_Embed {
 					}
 					// If $html blank return original content
 					if ( '' === $html ) {
-						return $content;
+						return apply_filters( 'bp_autoembed', $content );
 						// Return the new content by adding oembed after the content.
 					} else {
 
@@ -298,11 +298,11 @@ class BP_Embed extends WP_Embed {
 							$html = preg_replace( '/<iframe/is', '<iframe class="lazy"', $html );
 						}
 
-						return $content . $html;
+						return apply_filters( 'bp_autoembed', $content . $html );
 					}
 					// Else return original content.
 				} else {
-					return $content;
+					return apply_filters( 'bp_autoembed', $content );
 				}
 			}
 		}
@@ -328,6 +328,6 @@ class BP_Embed extends WP_Embed {
 		}
 
 		// Put the line breaks back.
-		return str_replace( '<!-- wp-line-break -->', "\n", $content );
+		return apply_filters( 'bp_autoembed', str_replace( '<!-- wp-line-break -->', "\n", $content ) );
 	}
 }

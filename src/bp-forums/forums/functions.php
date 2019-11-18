@@ -176,11 +176,6 @@ function bbp_new_forum_handler( $action = '' ) {
 	// Filter and sanitize
 	$forum_content = apply_filters( 'bbp_new_forum_pre_content', $forum_content );
 
-	// No forum content
-	if ( empty( $forum_content ) ) {
-		bbp_add_error( 'bbp_forum_content', __( '<strong>ERROR</strong>: Your forum description cannot be empty.', 'buddyboss' ) );
-	}
-
 	/** Forum Parent */
 
 	// Forum parent was passed (the norm)
@@ -497,11 +492,6 @@ function bbp_edit_forum_handler( $action = '' ) {
 
 	// Filter and sanitize
 	$forum_content = apply_filters( 'bbp_edit_forum_pre_content', $forum_content, $forum_id );
-
-	// No forum content
-	if ( empty( $forum_content ) ) {
-		bbp_add_error( 'bbp_edit_forum_content', __( '<strong>ERROR</strong>: Your forum description cannot be empty.', 'buddyboss' ) );
-	}
 
 	/** Forum Blacklist */
 

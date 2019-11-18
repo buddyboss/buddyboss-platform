@@ -132,7 +132,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 									continue;
 								}
 
-								$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+								$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 
 								foreach ( $exclude_group_ids as $exclude ) {
 									if ( in_array( $exclude, $group_array ) ) {
@@ -142,7 +142,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 							}
 						} else {
 
-							$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+							$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 							$count             = $count - count( $exclude_group_ids );
 
 						}

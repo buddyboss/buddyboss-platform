@@ -3868,7 +3868,8 @@ function bp_member_type_shortcode_callback( $atts ) {
 	bp_get_template_part( 'common/filters/grid-filters' );
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
-	echo '<div id="members-dir-list" class="members dir-list" data-bp-list="">';
+
+	echo '<div id="members-dir-list" class="members dir-list">';
 
 	if ( ! empty( $atts['type'] ) ) {
 

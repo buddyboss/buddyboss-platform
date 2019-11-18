@@ -453,8 +453,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						'bbp_ajaxurl'        => bbp_get_ajax_url(),
 						'generic_ajax_error' => __( 'Something went wrong. Refresh your browser and try again.', 'buddyboss' ),
 						'is_user_logged_in'  => is_user_logged_in(),
-						'fav_nonce'          => wp_create_nonce( 'toggle-favorite_' . get_the_ID() ),
-						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . get_the_ID() ),
+						'fav_nonce'          => wp_create_nonce( 'toggle-favorite_' . bbp_get_topic_id() ),
+						'subs_nonce'         => wp_create_nonce( 'toggle-subscription_' . bbp_get_topic_id() ),
 					)
 				);
 			}

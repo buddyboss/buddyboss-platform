@@ -409,7 +409,7 @@ function bp_groups_exclude_forums_by_group_type_args( $args_forum ) {
 		// Check group type enabled
 		if ( true === bp_disable_group_type_creation() ) {
 			// Get excluded group ids.
-			$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+			$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 			foreach ( $exclude_group_ids as $exclude_group_id ) {
 				// Get forums id by group id.
 				$exclude_forum_ids_by_group = bbp_get_group_forum_ids( (int) $exclude_group_id );
@@ -442,7 +442,7 @@ function bp_groups_exclude_forums_topics_by_group_type_args( $args_topic ) {
 		// Check group type enabled
 		if ( true === bp_disable_group_type_creation() ) {
 			// Get excluded group ids.
-			$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+			$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 			foreach ( $exclude_group_ids as $exclude_group_id ) {
 				// Get forums id by group id.
 				$exclude_forum_ids = bbp_get_group_forum_ids( $exclude_group_id );

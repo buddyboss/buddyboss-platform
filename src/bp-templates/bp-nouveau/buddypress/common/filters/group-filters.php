@@ -21,7 +21,7 @@ foreach ( $group_types as $group_type_id ) {
 		continue;
 	}
 
-	$group_key        = bp_get_group_type_key( $group_type_id );
+	$group_key = bp_group_get_group_type_key( $group_type_id );
 	$group_type_label = bp_groups_get_group_type_object( $group_key )->labels['name'];
 
 

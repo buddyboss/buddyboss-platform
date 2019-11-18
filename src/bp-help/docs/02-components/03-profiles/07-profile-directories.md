@@ -1,3 +1,0 @@
-#Profile Directories
-
-[stub article]
