@@ -864,7 +864,7 @@ window.bp = window.bp || {};
 	} );
 
 	bp.Views.Item = bp.View.extend( {
-		tagName:   'li',
+		tagName:   'div',
 		className: 'bp-activity-object',
 		template:  bp.template( 'activity-target-item' ),
 
@@ -894,8 +894,9 @@ window.bp = window.bp || {};
 	} );
 
 	bp.Views.AutoComplete = bp.View.extend( {
-		tagName : 'ul',
+		tagName : 'div',
 		id      : 'whats-new-post-in-box-items',
+		ac_req      : false,
 
 		events: {
 			keyup :  'autoComplete'
@@ -908,7 +909,8 @@ window.bp = window.bp || {};
 				placeholder : this.options.placeholder || ''
 			} ).render();
 
-			this.$el.prepend( $( '<li></li>' ).html( autocomplete.$el ) );
+			this.$el.html( autocomplete.$el );
+			this.$el.append( '<div id="bp-activity-group-ac-items"></div>' );
 
 			this.on( 'ready', this.setFocus, this );
 			this.collection.on( 'add', this.addItemView, this );
@@ -920,20 +922,25 @@ window.bp = window.bp || {};
 		},
 
 		addItemView: function( item ) {
-			this.views.add( new bp.Views.Item( { model: item } ) );
+			var group_ac_list_item = new bp.Views.Item( { model: item } );
+			this.$el.find('#bp-activity-group-ac-items').append(group_ac_list_item.render().$el);
 		},
 
 		autoComplete: function() {
 			var search = $( '#activity-autocomplete' ).val();
 
-			// Reset the collection before starting a new search
-			this.collection.reset();
-
 			if ( 2 > search.length ) {
 				return;
 			}
 
-			this.collection.fetch( {
+			// Reset the collection before starting a new search
+			this.collection.reset();
+
+			if ( this.ac_req ) {
+				this.ac_req.abort();
+			}
+
+			this.ac_req = this.collection.fetch( {
 				data: {
 					type   : this.options.type,
 					search : search,
@@ -951,6 +958,7 @@ window.bp = window.bp || {};
 		},
 
 		cleanView: function() {
+			this.$el.find('#bp-activity-group-ac-items').html('');
 			_.each( this.views._views[''], function( view ) {
 					view.remove();
 			} );
