@@ -285,7 +285,11 @@ function bbp_new_reply_handler( $action = '' ) {
 	$reply_content = apply_filters( 'bbp_new_reply_pre_content', $reply_content );
 
 	// No reply content
-	if ( empty( $reply_content ) && empty( $_POST['bbp_media_gif'] ) ) {
+	if (
+		empty( $reply_content )
+		&& empty( $_POST['bbp_media'] )
+		&& empty( $_POST['bbp_media_gif'] )
+	) {
 		bbp_add_error( 'bbp_reply_content', __( '<strong>ERROR</strong>: Your reply cannot be empty.', 'buddyboss' ) );
 	}
 
