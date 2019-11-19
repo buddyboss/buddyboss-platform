@@ -434,6 +434,10 @@ window.bp = window.bp || {};
 								$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 							}
 
+							if ( ! $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
+								$( '#bp-group-message-switch-checkbox' ).trigger( 'click' );
+							}
+
 							if ( containerAttachment.length ) {
 								$('#whats-new-toolbar .bp-group-messages-attached-gif-container').parent().removeClass('open');
 								$('#whats-new-toolbar #bp-group-messages-gif-button').removeClass('active');
