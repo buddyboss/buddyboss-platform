@@ -311,8 +311,9 @@ function bp_nouveau_ajax_get_single_activity_content() {
 	// Activity content retrieved through AJAX should run through normal filters, but not be truncated.
 	remove_filter( 'bp_get_activity_content_body', 'bp_activity_truncate_entry', 5 );
 
-	if ( bp_is_active( 'media' ) )
+	if ( bp_is_active( 'media' ) ) {
 		add_filter( 'bp_get_activity_content_body', 'bp_media_activity_append_media', 20, 2 );
+	}
 
 	/** This filter is documented in bp-activity/bp-activity-template.php */
 	$content = apply_filters_ref_array( 'bp_get_activity_content_body', array( $activity->content, &$activity ) );
