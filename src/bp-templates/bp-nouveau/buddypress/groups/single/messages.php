@@ -9,10 +9,7 @@
 				<!--<h5><?php //esc_html_e( 'All Members', 'buddyboss' ); ?></h5>-->
 				<div class="bb-panel-subhead">
 					<h4 class="total-members-text"></h4>
-					<label class="bp-group-message-switch bp-tooltip" data-bp-tooltip-pos="left" data-bp-tooltip="<?php _e( 'Select Members', 'buddyboss' ); ?>">
-						<input type="checkbox" checked>
-						<span class="bp-group-message-slider bp-group-message-round"></span>
-					</label>
+					<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox" type="checkbox" checked>
 				</div>
 				<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
 					<div>
