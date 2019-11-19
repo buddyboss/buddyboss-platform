@@ -413,28 +413,37 @@ window.bp = window.bp || {};
 							var feedbackHtmlSuccess = '<div class="bp-feedback success bp-feedback-content-no-error remove-after-few-seconds" style="width: 100%;margin: 5px;"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + response.data.redirect_link  + ' </p></div>';
 							$('#item-body #group-messages-container').prepend( feedbackHtmlSuccess );
 							window.group_messages_editor.setContent('');
-							// if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
-							// 	$('.dropzone').each(function () {
-							// 		let dropzoneControl = $(this)[0].dropzone;
-							// 		if (dropzoneControl) {
-							// 			dropzoneControl.destroy();
-							// 			dropzoneControl.dropzone_media = [];
-							// 		}
-							// 	});
-							// 	$( 'div#bp-group-messages-post-media-uploader' ).html('');
-							// 	$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
-							// }
-							//
-							// if ( containerAttachment.length ) {
-							// 	$('#whats-new-toolbar .bp-group-messages-attached-gif-container').parent().removeClass('open');
-							// 	$('#whats-new-toolbar #bp-group-messages-gif-button').removeClass('active');
-							// 	containerAttachment.addClass('closed');
-							// 	containerAttachment.find('.gif-image-container img').attr('src', '');
-							// 	containerAttachment[0].style = '';
-							// 	if (inputHiddenGif.length) {
-							// 		inputHiddenGif.val('');
-							// 	}
-							// }
+							if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
+
+								if ( bp.Nouveau.Media.dropzone_media.length ) {
+
+									$( bp.Nouveau.Media.dropzone_media ).each(function( i ) {
+										bp.Nouveau.Media.dropzone_media[i].saved = true;
+									});
+								}
+
+
+								$('.dropzone').each(function () {
+									var dropzoneControl = $(this)[0].dropzone;
+									if (dropzoneControl) {
+										dropzoneControl.destroy();
+										dropzoneControl.dropzone_media = [];
+									}
+								});
+								$( 'div#bp-group-messages-post-media-uploader' ).html('');
+								$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
+							}
+
+							if ( containerAttachment.length ) {
+								$('#whats-new-toolbar .bp-group-messages-attached-gif-container').parent().removeClass('open');
+								$('#whats-new-toolbar #bp-group-messages-gif-button').removeClass('active');
+								containerAttachment.addClass('closed');
+								containerAttachment.find('.gif-image-container img').attr('src', '');
+								containerAttachment[0].style = '';
+								if (inputHiddenGif.length) {
+									inputHiddenGif.val('');
+								}
+							}
 						} else {
 							$('#item-body #group-messages-container .remove-after-few-seconds').remove();
 							var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error remove-after-few-seconds" style="width: 100%;margin: 5px;"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + ' </p></div>';

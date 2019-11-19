@@ -921,7 +921,7 @@ window.bp = window.bp || {};
 							for ( var i in self.dropzone_media ) {
 								if ( file.upload.uuid == self.dropzone_media[i].uuid  ) {
 
-									if ( ( ! this.bbp_is_reply_edit && ! this.bbp_is_topic_edit && ! this.bbp_is_forum_edit ) && typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+									if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
 										self.removeAttachment(self.dropzone_media[i].id);
 									}
 
