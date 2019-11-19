@@ -40,17 +40,16 @@
 			if ( $( '#bp-help-content-area' ).length ) {
 
 				$( '#bp-help-content-area' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+				$( '.bp-help-sidebar' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
 
 				var article_id = bp_help_page_url.searchParams.get("article");
 				bp_help_wpapi.docs().id( article_id ).then(function (doc) {
 
 					$( '#bp-help-content-area' ).removeClass( 'loading' );
+					$( '.bp-help-sidebar' ).removeClass( 'loading' );
 
 					$( '#bp-help-content-area' ).html('<h1>' + doc.title.rendered + '</h1>' + doc.content.rendered);
 					bp_help_js_render_hierarchy_dom( doc );
-					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).attr('href',BP_HELP.bb_help_url+'&article='+doc.id);
-					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).text(doc.title.rendered);
-					//$( '.bp-help-content-wrap .bp-help-sidebar .loop-1 .main.level-1 > a' ).closest('li').addClass(doc.slug);
 				});
 			}
 

@@ -1720,3 +1720,53 @@ body .section-repair_community .settings fieldset .checkbox label code {
 		margin-top: 0;
 	}
 }
+
+.animate-spin {
+	animation: spin 2s infinite linear;
+	display: inline-block;
+}
+
+@-moz-keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
+
+@-webkit-keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
+
+@-o-keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
+
+@-ms-keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
+
+@keyframes spin {
+	0% {
+		transform: rotate(0deg);
+	}
+	100% {
+		transform: rotate(359deg);
+	}
+}
