@@ -303,17 +303,17 @@ function bp_core_screen_signup() {
 add_action( 'bp_screens', 'bp_core_screen_signup' );
 
 /**
- * for check email id exist or not on ajax submit .
+ * for check email id exist or not on ajax submit.
  *
- * @since BuddyPress 1.1.0
+ * @since BuddyBoss 1.2.1
  */
-function bp_ua_check_email(){
+function bp_check_email_username() {
 	
-	$signup_username = '';
-	$signup_email = '';
-	$account_details = bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
-	$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
-	$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
+	$signup_username 	= '';
+	$signup_email 		= '';
+	$account_details 	= bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
+	$email_opt    		= function_exists( 'bp_register_confirm_email' ) 	&& true === bp_register_confirm_email() 	? true : false;
+	$password_opt 		= function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() 	? true : false;
 	// If there are errors with account details, set them for display.
 	if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
 		$signup_username = $account_details['errors']->errors['user_name'][0];
@@ -337,13 +337,13 @@ function bp_ua_check_email(){
 	}
 	$nickname_field = 'field_' . bp_xprofile_nickname_field_id();
 	$return = array(
-		'field_id'   => bp_xprofile_nickname_field_id(),
-	    'signup_email'  => $signup_email,
-	    'signup_username'  => $signup_username
+		'field_id'   		=> bp_xprofile_nickname_field_id(),
+	    'signup_email'  	=> $signup_email,
+	    'signup_username'  	=> $signup_username
 	    
 	);
 
 	wp_send_json( $return, true );
 }
 
-add_action( "wp_ajax_nopriv_check_email", "bp_ua_check_email" );
+add_action( 'wp_ajax_nopriv_check_email', 'bp_check_email_username' );
