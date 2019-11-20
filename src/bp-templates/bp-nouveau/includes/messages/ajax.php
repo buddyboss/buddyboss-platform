@@ -476,6 +476,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'subject'                   => strip_tags( bp_get_message_thread_subject() ),
 			'group_avatar'              => $group_avatar,
 			'group_name'                => $group_name,
+			'is_group'                  => !empty( $group_id ) ? true : false,
 			'group_link'                => $group_link,
 			'group_message_users'       => $group_message_users,
 			'group_message_type'        => $group_message_type,
