@@ -423,7 +423,7 @@ function bp_admin_setting_callback_group_type_creation() {
 				__( 'Enable <a href="%s">group types</a> to better organize groups', 'buddyboss' ),
 				add_query_arg(
 					array(
-						'post_type' => bp_get_group_type_post_type(),
+						'post_type' => bp_groups_get_group_type_post_type(),
 					),
 					admin_url( 'edit.php' )
 				)

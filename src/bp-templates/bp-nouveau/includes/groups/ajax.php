@@ -312,7 +312,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 		// Include profile type if in Group Types > E.g Team > Group Invites ( Meta Box ) specific profile type selected.
 		if ( false !== $group_type ) {
-			$group_type_id = bp_get_group_type_post_id( $group_type );
+			$group_type_id = bp_group_get_group_type_id( $group_type );
 			$get_selected_member_types = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_group_invites', true );
 			if ( isset( $get_selected_member_types ) && ! empty( $get_selected_member_types ) ) {
 				$request['member_type'] = implode( ',', $get_selected_member_types );
@@ -320,7 +320,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		}
 
 		// Include users ( Restrict group invites to only members of who already exists in parent group ) in BuddyBoss > Settings > Social Groups > Group Hierarchies
-		if ( false !== $group_type ) {
+		//if ( false !== $group_type ) {
 			if ( true === bp_enable_group_hierarchies() ) {
 				if ( true === bp_enable_group_restrict_invites() ) {
 					$parent_group_id = bp_get_parent_group_id( $request['group_id'] );
@@ -330,14 +330,21 @@ function bp_nouveau_ajax_get_users_to_invite() {
 						) );
 						$members            = wp_list_pluck( $members_query['members'], 'ID' );
 						$request['include'] = implode( ',', $members );
+
+						if ( empty( $request['include'] ) ) {
+							wp_send_json_error( array(
+								'feedback' => __( 'No members found in parent group.', 'buddyboss' ),
+								'type'     => 'info',
+							) );
+						}
 					}
 				}
 			}
-		}
+		//}
 
 		// Exclude users if ( Restrict invites if user already in other same group type ) is checked
 		if ( false !== $group_type ) {
-			$group_type_id = bp_get_group_type_post_id( $group_type );
+			$group_type_id = bp_group_get_group_type_id( $group_type );
 			$meta = get_post_custom( $group_type_id );
 			$get_restrict_invites_same_group_types = isset( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ] ) ? intval( $meta[ '_bp_group_type_restrict_invites_user_same_group_type' ][ 0 ] ) : 0;
 			if ( 1 === $get_restrict_invites_same_group_types ) {

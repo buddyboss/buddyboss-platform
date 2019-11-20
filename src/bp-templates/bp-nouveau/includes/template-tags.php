@@ -2540,7 +2540,7 @@ function bp_nouveau_signup_terms_privacy() {
 	if ( $terms && ! $privacy ) {
 		?>
         <p class="register-privacy-info">
-            <?php printf( __( 'terms-modalBy creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ) ); ?>
+            <?php printf( __( 'By creating an account you are agreeing to the <a class="popup-modal-register popup-terms" href="#terms-modal">%s</a>.', 'buddyboss' ), get_the_title( $terms ) ); ?>
         </p>
 		<div id="terms-modal" class="mfp-hide registration-popup bb-modal">
 			<h1><?php echo esc_html( get_the_title( $terms ) ); ?></h1>
