@@ -1533,6 +1533,10 @@ window.bp = window.bp || {};
 				this.el.className += ' unread';
 			}
 
+			if ( this.model.get( 'is_group' ) ) {
+				this.el.className += ' group-thread';
+			}
+
 			if ( $('#thread-id').val() == this.model.get('id') ) {
 				this.el.className += ' current';
 			}
