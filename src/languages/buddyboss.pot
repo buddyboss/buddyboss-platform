@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-18 16:02:08+00:00\n"
+"POT-Creation-Date: 2019-11-20 10:23:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -104,7 +104,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:505
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:508
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -117,7 +117,7 @@ msgid "There was an error when posting your update. Please try again."
 msgstr ""
 
 #: bp-activity/actions/reply.php:43
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:364
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:367
 msgid "Please do not leave the comment area blank."
 msgstr ""
 
@@ -684,7 +684,7 @@ msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
 #: bp-activity/bp-activity-functions.php:2894
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:343
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:346
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
@@ -9553,7 +9553,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:296
 #: bp-media/classes/class-bp-media-privacy.php:51
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:3
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:993
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:994
 #: bp-xprofile/classes/class-bp-xprofile-component.php:181
 msgid "Public"
 msgstr ""
@@ -11140,7 +11140,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:6
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:996
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:997
 #: bp-templates/bp-nouveau/includes/groups/functions.php:139
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
 #: bp-xprofile/classes/class-bp-xprofile-component.php:196
@@ -11610,7 +11610,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1220
 #: bp-media/classes/class-bp-media-privacy.php:53
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:5
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:995
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:996
 #: bp-templates/bp-nouveau/includes/groups/functions.php:118
 #: bp-templates/bp-nouveau/includes/members/functions.php:27
 #: bp-xprofile/classes/class-bp-xprofile-component.php:189
@@ -13603,7 +13603,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-privacy.php:52
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-post-form-privacy.php:4
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:994
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:995
 #: bp-xprofile/classes/class-bp-xprofile-component.php:185
 msgid "Only Me"
 msgstr ""
@@ -16210,27 +16210,27 @@ msgstr ""
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:470
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:473
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:576
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:579
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:593
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:596
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:593
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:596
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:621
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:624
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:670
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:673
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
