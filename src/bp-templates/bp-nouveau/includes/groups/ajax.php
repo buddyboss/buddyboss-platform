@@ -786,7 +786,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 			'total_page'  => $total_page,
 			'page'        => $page,
 			'pagination'  => $paginate,
-			'total_count' => sprintf( __( 'Members(%s)', 'buddyboss' ), $total_count ),
+			'total_count' => __( 'Members', 'buddyboss' ),
 		] );
 
 	}
@@ -877,8 +877,8 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 
 		$new_reply = messages_new_message( array(
 			'thread_id' => $thread_id,
-			'subject'   => ! empty( $_POST['content'] ) ? $_POST['content'] : false,
-			'content'   => $_POST['content'],
+			'subject'   => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+			'content'   => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
 			'date_sent' => $date_sent = bp_core_current_time(),
 			'error_type' => 'wp_error',
 		) );
@@ -888,7 +888,7 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 			wp_send_json_error( $response );
 		}  elseif ( !empty( $new_reply ) ) {
 			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-			$response['redirect_link'] = bp_loggedin_user_domain() . bp_get_messages_slug();
+			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'Click here.', 'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
 		}
@@ -922,7 +922,7 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 			wp_send_json_error( $response );
 		}  elseif ( !empty( $send ) ) {
 			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-			$response['redirect_link'] = bp_loggedin_user_domain() . bp_get_messages_slug();
+			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'Click here.', 'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 
 			wp_send_json_success( $response );
