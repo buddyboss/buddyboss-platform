@@ -11332,7 +11332,7 @@ img.emojioneemoji {
 
 .bb-panel-head {
   border-bottom: 1px solid #E7E9EC;
-  padding: 14px 20px;
+  padding: 15px 20px;
   position: relative;
 }
 
@@ -11346,6 +11346,15 @@ img.emojioneemoji {
 #item-body .total-members-text {
   line-height: 1;
   margin: 0;
+}
+
+.bp-group-message-switch-label {
+  margin: 0 auto 0 0;
+  line-height: 1;
+}
+
+.select-members-text {
+  font-size: 13px;
 }
 
 .add-more-members {

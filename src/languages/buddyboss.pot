@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-20 12:54:56+00:00\n"
+"POT-Creation-Date: 2019-11-20 16:06:47+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2477,6 +2477,8 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-widget.php:298
 #: bp-members/classes/class-bp-members-component.php:37
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:442
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:19
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:789
 #: bp-templates/bp-nouveau/includes/groups/classes.php:241
 #: bp-templates/bp-nouveau/includes/groups/functions.php:805
 #: bp-templates/bp-nouveau/includes/groups/functions.php:811
@@ -10081,7 +10083,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:43
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:6
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:99
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:112
 msgid "Attach a photo"
 msgstr ""
 
@@ -10089,14 +10091,14 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:50
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:15
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:107
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:120
 msgid "Post a GIF"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:56
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:114
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:127
 msgid "Search GIFs"
 msgstr ""
 
@@ -10104,7 +10106,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:55
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:18
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:24
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:128
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:141
 msgid "Insert an emoji"
 msgstr ""
 
@@ -15263,9 +15265,9 @@ msgid "Group invitations menu"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:5
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:31
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:32
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:35
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:40
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:41
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:44
 msgid "Search Members"
 msgstr ""
 
@@ -15321,7 +15323,7 @@ msgid "Invite"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:13
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:70
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:81
 msgid "Type the names of one or more people"
 msgstr ""
 
@@ -15717,30 +15719,33 @@ msgstr ""
 msgid "Change Group Photo"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:12
 #: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:23
+msgid "Select all members"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:32
 msgid "Select Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:55
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:64
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
 msgid "Done"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:63
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:73
 msgid "New Group Message"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:71
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:82
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1211
 msgid "All Group Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:132
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:145
 msgid "Group Thread"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:133
+#: bp-templates/bp-nouveau/buddypress/groups/single/messages.php:146
 msgid "Private Reply (BCC)"
 msgstr ""
 
@@ -16895,13 +16900,14 @@ msgstr ""
 msgid "Add Recipient"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:789
-msgid "Members(%s)"
-msgstr ""
-
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:890
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:924
 msgid "Your message was sent successfully."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:891
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:925
+msgid "Click here."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:140
@@ -17006,7 +17012,7 @@ msgid "Type message"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1205
-msgid "There is no members in this group. Please add members to send the message."
+msgid "There are no members in this group. Please add members to send a message."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1207

@@ -1,15 +1,27 @@
+<?php
+
+$args = array(
+			'exclude'				=> array( bp_loggedin_user_id() ),
+			'exclude_admins_mods'	=> false,
+		);
+
+$group_members = groups_get_group_members( $args );
+
+?>
+
 <div id="group-messages-container">
+	
+	<?php if ( $group_members['count'] != 0 ) { ?>
 	<div class="bb-groups-messages-left">
 		<div class="bb-groups-messages-left-inner">
 			<div class="bb-panel-head">
-<!--				<select class="group-messages-select-members-dropdown" name="group-members">-->
-<!--					<option value="all">--><?php //_e( 'All Group Members', 'buddyboss' ); ?><!--</option>-->
-<!--					<option value="single">--><?php //_e( 'Select Members', 'buddyboss' ); ?><!--</option>-->
-<!--				</select>-->
-				<!--<h5><?php //esc_html_e( 'All Members', 'buddyboss' ); ?></h5>-->
 				<div class="bb-panel-subhead">
-					<h4 class="total-members-text"></h4>
-					<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox" type="checkbox" checked>
+					<h4 class="total-members-text"><?php _e( 'Members', 'buddyboss' ); ?></h4>
+					<label class="bp-group-message-switch-label" for="bp-group-message-switch-checkbox">
+						<input id="bp-group-message-switch-checkbox" class="bp-group-message-switch-checkbox bb-input-switch" type="checkbox" checked>
+						<span class="bb-checkmark"></span>
+						<span class="select-members-text"><?php _e( 'Select all members', 'buddyboss' ); ?></span>
+					</label>
 				</div>
 				<div id="bp-message-dropdown-options" class="bp-message-dropdown-options-hide">
 					<div>
@@ -53,6 +65,7 @@
 			</div>
 		</div>
 	</div>
+	<?php } ?>
 
 	<div class="bb-groups-messages-right">
 		<form id="send_group_message_form" class="standard-form" data-select2-id="send_group_message_form">
@@ -64,11 +77,14 @@
 						<p></p>
 					</div>
 				</div>
+				<?php if ( $group_members['count'] != 0 ) { ?>
 				<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php _e( 'Type the names of one or more people','buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
 					<option value="all" selected="selected"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
 				</select>
+				<?php } ?>
 			</div>
 
+			<?php if ( $group_members['count'] != 0 ) { ?>
 			<div class="bb-groups-messages-right-bottom">
 				<div id="bp-group-message-content">
 					<div id="group_message_content" name="group_message_content" tabindex="3"></div>
@@ -139,6 +155,7 @@
 					</div>
 				</div>
 			</div>
+			<?php } ?>
 		</form>
 	</div>
 </div>
