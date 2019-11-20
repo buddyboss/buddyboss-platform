@@ -989,12 +989,13 @@ function bp_nouveau_activity_privacy() {
 		    <?php
 	    } else {
 		    ?>
-		    <select class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>" name="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
-			    <option value="public" <?php echo 'public' === $privacy ? 'selected' : ''; ?>><?php _e( 'Public', 'buddyboss' ); ?></option>
-			    <option value="onlyme" <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>><?php _e( 'Only Me', 'buddyboss' ); ?></option>
-			    <option value="loggedin" <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>><?php _e( 'All Members', 'buddyboss' ); ?></option>
-			    <option value="friends" <?php echo 'friends' === $privacy ? 'selected' : ''; ?>><?php _e( 'My Connections', 'buddyboss' ); ?></option>
-		    </select>
+		    <span class="privacy selected <?php echo $privacy; ?>"></span>
+		    <ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
+			    <li data-value="public" class="public <?php echo 'public' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Public', 'buddyboss' ); ?></li>
+			    <li data-value="onlyme" class="onlyme <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Only Me', 'buddyboss' ); ?></li>
+			    <li data-value="loggedin" class="loggedin <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>"><?php _e( 'All Members', 'buddyboss' ); ?></li>
+			    <li data-value="friends" class="friends <?php echo 'friends' === $privacy ? 'selected' : ''; ?>"><?php _e( 'My Connections', 'buddyboss' ); ?></li>
+		    </ul>
 		    <?php
 	    }
     }

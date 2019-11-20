@@ -103,7 +103,7 @@ window.bp = window.bp || {};
 
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'change', '.activity-privacy', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 
@@ -476,22 +476,21 @@ window.bp = window.bp || {};
 			var parent = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest('.activity-item'),
 				activity_id = activity_item.data( 'bp-activity-id' );
 
-			if ( target.hasClass( 'activity-privacy') ) {
-				// Stop event propagation
-				event.preventDefault();
+			// Stop event propagation
+			event.preventDefault();
 
-				target.addClass( 'loading' );
+			target.addClass( 'loading' );
 
-				parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.val() }, 'activity' ).done( function( response ) {
-					target.removeClass( 'loading' );
+			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data('value') }, 'activity' ).done( function( response ) {
+				target.removeClass( 'loading' );
 
-					if ( false === response.success ) {
-						return;
-					} else {
-						console.log("success");
-					}
-				} );
-			}
+				if ( true === response.success ) {
+					activity_item.find('.activity-privacy li').removeClass('selected');
+					target.addClass('selected');
+					activity_item.find('.privacy').removeClass('public').removeClass('loggedin').removeClass('onlyme').removeClass('friends');
+					activity_item.find('.privacy').addClass(target.data('value'));
+				}
+			} );
 		},
 
 		/**
