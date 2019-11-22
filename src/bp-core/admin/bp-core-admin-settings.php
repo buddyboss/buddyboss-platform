@@ -220,6 +220,20 @@ function bp_admin_setting_callback_enable_activity_autoload() {
 }
 
 /**
+ * Enable activity edit
+ *
+ * @since BuddyBoss 1.2.1
+ */
+function bp_admin_setting_callback_enable_activity_edit() {
+	?>
+
+	<input id="_bp_enable_activity_edit" name="_bp_enable_activity_edit" type="checkbox" value="1" <?php checked( bp_is_activity_edit_enabled( false ) ); ?> />
+	<label for="_bp_enable_activity_edit"><?php _e( 'Allow your users to edit their activity after posting', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/**
  * Enable activity scopes like groups, friends, mentions, following etc.
  *
  * @since BuddyBoss 1.1.6

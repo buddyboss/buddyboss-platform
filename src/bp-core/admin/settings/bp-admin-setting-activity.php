@@ -75,6 +75,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function register_fields() {
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ) );
 
+		// Allow Activity edit setting.
+		$this->add_field( '_bp_enable_activity_edit', __( 'Edit Activity', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_edit', 'intval' );
+
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 

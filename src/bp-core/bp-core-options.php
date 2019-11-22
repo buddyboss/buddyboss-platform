@@ -898,6 +898,27 @@ function bp_is_activity_autoload_active( $default = true ) {
 }
 
 /**
+ * Check whether Activity edit is enabled.
+ *
+ * @since BuddyBoss 1.2.1
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Edit is enabled, otherwise false.
+ */
+function bp_is_activity_edit_enabled( $default = false ) {
+
+	/**
+	 * Filters whether or not Activity edit is enabled.
+	 *
+	 * @since BuddyBoss 1.2.1
+	 *
+	 * @param bool $value Whether or not Activity edit is enabled.
+	 */
+	return (bool) apply_filters( 'bp_is_activity_edit_enabled', (bool) bp_get_option( '_bp_enable_activity_edit', $default ) );
+}
+
+/**
  * Check whether Activity Tabs are enabled.
  *
  * @since BuddyBoss 1.1.6
