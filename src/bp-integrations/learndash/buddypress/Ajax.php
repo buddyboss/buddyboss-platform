@@ -156,6 +156,19 @@ class Ajax {
 						}
 					}
 				}
+
+				if ( empty( $exports ) ) {
+					$exports[] = array(
+						'user_id'       => $user,
+						'course_name'   => $course->post_title,
+						'student_name'  => bp_core_get_user_displayname( $user ),
+						'progress'      => '-',
+						'start_date'    => '-',
+						'complete_date' => '-',
+						'time_spent'    => '-',
+						'points_earned' => '-',
+					);
+				}
 				set_transient( $hash, $exports, HOUR_IN_SECONDS );
 			} elseif ( ! empty( $_REQUEST['course'] ) && is_string( $_REQUEST['course'] ) && empty( $_REQUEST['user'] ) ) {
 				set_transient( "{$hash}_info",
@@ -261,6 +274,18 @@ class Ajax {
 							);
 						}
 					}
+				}
+				if ( empty( $exports ) ) {
+					$exports[] = array(
+						'user_id'       => $user,
+						'course_name'   => $course->post_title,
+						'student_name'  => bp_core_get_user_displayname( $user ),
+						'progress'      => '-',
+						'start_date'    => '-',
+						'complete_date' => '-',
+						'time_spent'    => '-',
+						'points_earned' => '-',
+					);
 				}
 				set_transient( $hash, $exports, HOUR_IN_SECONDS );
 			} elseif ( empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
@@ -384,6 +409,18 @@ class Ajax {
 						}
 					}
 				}
+				if ( empty( $exports ) ) {
+					$exports[] = array(
+						'user_id'       => $user,
+						'student_name'  => bp_core_get_user_displayname( $user ),
+						'course_name'   => '-',
+						'step'          => '-',
+						'start_date'    => '-',
+						'complete_date' => '-',
+						'time_spent'    => '-',
+						'points_earned' => '-',
+					);
+				}
 				set_transient( $hash, $exports, HOUR_IN_SECONDS );
 			} elseif ( ! empty( $_REQUEST['course'] ) && ! empty( $_REQUEST['user'] ) && ! empty( $_REQUEST['step'] ) ) {
 				$group_id = bp_ld_sync( 'buddypress' )->helpers->getLearndashGroupId( $_REQUEST['group'] );
@@ -484,6 +521,18 @@ class Ajax {
 								);
 							}
 						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'       => $user,
+								'student_name'  => bp_core_get_user_displayname( $user ),
+								'course_name'   => '-',
+								'step'          => '-',
+								'start_date'    => '-',
+								'complete_date' => '-',
+								'time_spent'    => '-',
+								'points_earned' => '-',
+							);
+						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
 					} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 						$label = __( 'Step', 'buddyboss' );
@@ -570,6 +619,18 @@ class Ajax {
 									'points_earned' => $points,
 								);
 							}
+						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'       => $user,
+								'student_name'  => bp_core_get_user_displayname( $user ),
+								'course_name'   => '-',
+								'step'          => '-',
+								'start_date'    => '-',
+								'complete_date' => '-',
+								'time_spent'    => '-',
+								'points_earned' => '-',
+							);
 						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
 					} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
@@ -659,6 +720,18 @@ class Ajax {
 								);
 							}
 						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'       => $user,
+								'student_name'  => bp_core_get_user_displayname( $user ),
+								'course_name'   => '-',
+								$key            => '-',
+								'start_date'    => '-',
+								'complete_date' => '-',
+								'time_spent'    => '-',
+								'points_earned' => '-',
+							);
+						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
 					} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-topic' === $_REQUEST['step'] ) {
 						$label = \LearnDash_Custom_Label::get_label( 'topic' );
@@ -746,6 +819,18 @@ class Ajax {
 									'points_earned' => $points,
 								);
 							}
+						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'       => $user,
+								'student_name'  => bp_core_get_user_displayname( $user ),
+								'course_name'   => '-',
+								$key            => '-',
+								'start_date'    => '-',
+								'complete_date' => '-',
+								'time_spent'    => '-',
+								'points_earned' => '-',
+							);
 						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
 					} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-quiz' === $_REQUEST['step'] ) {
@@ -849,6 +934,19 @@ class Ajax {
 								);
 							}
 						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'       => $user,
+								'student_name'  => bp_core_get_user_displayname( $user ),
+								'course_name'   => '-',
+								$key            => '-',
+								'start_date'    => '-',
+								'complete_date' => '-',
+								'time_spent'    => '-',
+								'points_earned' => '-',
+								'attempts'      => '-',
+							);
+						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
 					} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
 						$label = __( 'ASSIGNMENT', 'buddyboss' );
@@ -899,6 +997,16 @@ class Ajax {
 								'assignment'   => wp_strip_all_tags( $step['title'] ),
 								'graded_date'  => $step['graded'],
 								'score'        => $step['score'],
+							);
+						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'      => $user,
+								'student_name' => bp_core_get_user_displayname( $user ),
+								'course_name'  => '-',
+								'assignment'   => '-',
+								'graded_date'  => '-',
+								'score'        => '-',
 							);
 						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
@@ -987,6 +1095,18 @@ class Ajax {
 									'points_earned' => $points,
 								);
 							}
+						}
+						if ( empty( $exports ) ) {
+							$exports[] = array(
+								'user_id'       => $user,
+								'student_name'  => bp_core_get_user_displayname( $user ),
+								'course_name'   => '-',
+								'step'          => '-',
+								'start_date'    => '-',
+								'complete_date' => '-',
+								'time_spent'    => '-',
+								'points_earned' => '-',
+							);
 						}
 						set_transient( $hash, $exports, HOUR_IN_SECONDS );
 					}
@@ -1111,6 +1231,18 @@ class Ajax {
 							);
 						}
 					}
+				}
+				if ( empty( $exports ) ) {
+					$exports[] = array(
+						'user_id'       => $user,
+						'student_name'  => bp_core_get_user_displayname( $user ),
+						'course_name'   => '-',
+						'step'          => '-',
+						'start_date'    => '-',
+						'complete_date' => '-',
+						'time_spent'    => '-',
+						'points_earned' => '-',
+					);
 				}
 				set_transient( $hash, $exports, HOUR_IN_SECONDS );
 			}
@@ -1240,6 +1372,18 @@ class Ajax {
 						}
 					}
 				}
+				if ( empty( $exports ) ) {
+					$exports[] = array(
+						'user_id'       => $user,
+						'student_name'  => bp_core_get_user_displayname( $user ),
+						'course_name'   => '-',
+						$key            => '-',
+						'start_date'    => '-',
+						'complete_date' => '-',
+						'time_spent'    => '-',
+						'points_earned' => '-',
+					);
+				}
 				set_transient( $hash, $exports, HOUR_IN_SECONDS );
 			} else {
 				if ( isset( $_REQUEST['step'] ) && 'all' != $_REQUEST['step'] && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] ) {
@@ -1367,6 +1511,18 @@ class Ajax {
 							}
 						}
 					}
+					if ( empty( $exports ) ) {
+						$exports[] = array(
+							'user_id'       => $user,
+							'student_name'  => bp_core_get_user_displayname( $user ),
+							'course_name'   => '-',
+							$key            => '-',
+							'start_date'    => '-',
+							'complete_date' => '-',
+							'time_spent'    => '-',
+							'points_earned' => '-',
+						);
+					}
 					set_transient( $hash, $exports, HOUR_IN_SECONDS );
 				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] && '' === $_REQUEST['step'] ) {
 					$user      = ( isset( $_REQUEST ) && isset( $_REQUEST['user'] ) && '' !== $_REQUEST['user'] ) ? $_REQUEST['user'] : bp_loggedin_user_id();
@@ -1492,6 +1648,18 @@ class Ajax {
 								);
 							}
 						}
+					}
+					if ( empty( $exports ) ) {
+						$exports[] = array(
+							'user_id'       => $user,
+							'student_name'  => bp_core_get_user_displayname( $user ),
+							'course_name'   => '-',
+							$key            => '-',
+							'start_date'    => '-',
+							'complete_date' => '-',
+							'time_spent'    => '-',
+							'points_earned' => '-',
+						);
 					}
 					set_transient( $hash, $exports, HOUR_IN_SECONDS );
 				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' === $_REQUEST['course'] && 'all' === $_REQUEST['step'] ) {
@@ -1619,6 +1787,18 @@ class Ajax {
 							}
 						}
 					}
+					if ( empty( $exports ) ) {
+						$exports[] = array(
+							'user_id'       => $user,
+							'student_name'  => bp_core_get_user_displayname( $user ),
+							'course_name'   => '-',
+							$key            => '-',
+							'start_date'    => '-',
+							'complete_date' => '-',
+							'time_spent'    => '-',
+							'points_earned' => '-',
+						);
+					}
 					set_transient( $hash, $exports, HOUR_IN_SECONDS );
 				} elseif ( isset( $_REQUEST['step'] ) && isset( $_REQUEST['course'] ) && '' !== $_REQUEST['course'] ) {
 //					require bp_locate_template( 'groups/single/reports-single-user-single-courses.php', false, false );
@@ -1717,6 +1897,18 @@ class Ajax {
 									);
 								}
 							}
+							if ( empty( $exports ) ) {
+								$exports[] = array(
+									'user_id'       => $user,
+									'student_name'  => bp_core_get_user_displayname( $user ),
+									'course_name'   => '-',
+									$key            => '-',
+									'start_date'    => '-',
+									'complete_date' => '-',
+									'time_spent'    => '-',
+									'points_earned' => '-',
+								);
+							}
 							set_transient( $hash, $exports, HOUR_IN_SECONDS );
 						} else {
 							if ( isset( $_REQUEST ) && isset( $_REQUEST['step'] ) && '' === $_REQUEST['step'] ) {
@@ -1807,6 +1999,18 @@ class Ajax {
 										);
 									}
 								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'start_date'    => '-',
+										'complete_date' => '-',
+										'time_spent'    => '-',
+										'points_earned' => '-',
+									);
+								}
 								set_transient( $hash, $exports, HOUR_IN_SECONDS );
 							} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'all' === $_REQUEST['step'] ) {
 								$user      = ( isset( $_REQUEST ) && isset( $_REQUEST['user'] ) && '' !== $_REQUEST['user'] ) ? $_REQUEST['user'] : bp_loggedin_user_id();
@@ -1895,6 +2099,18 @@ class Ajax {
 											'points_earned' => $points,
 										);
 									}
+								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'start_date'    => '-',
+										'complete_date' => '-',
+										'time_spent'    => '-',
+										'points_earned' => '-',
+									);
 								}
 								set_transient( $hash, $exports, HOUR_IN_SECONDS );
 							} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-lessons' === $_REQUEST['step'] ) {
@@ -1985,6 +2201,18 @@ class Ajax {
 										);
 									}
 								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'start_date'    => '-',
+										'complete_date' => '-',
+										'time_spent'    => '-',
+										'points_earned' => '-',
+									);
+								}
 								set_transient( $hash, $exports, HOUR_IN_SECONDS );
 							} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-topic' === $_REQUEST['step'] ) {
 								$user      = ( isset( $_REQUEST ) && isset( $_REQUEST['user'] ) && '' !== $_REQUEST['user'] ) ? $_REQUEST['user'] : bp_loggedin_user_id();
@@ -2073,6 +2301,18 @@ class Ajax {
 											'points_earned' => $points,
 										);
 									}
+								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'start_date'    => '-',
+										'complete_date' => '-',
+										'time_spent'    => '-',
+										'points_earned' => '-',
+									);
 								}
 								set_transient( $hash, $exports, HOUR_IN_SECONDS );
 							} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-quiz' === $_REQUEST['step'] ) {
@@ -2177,6 +2417,20 @@ class Ajax {
 										);
 									}
 								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'start_date'    => '-',
+										'complete_date' => '-',
+										'score'         => '-',
+										'time_spent'    => '-',
+										'points_earned' => '-',
+										'attempts'      => '-',
+									);
+								}
 								set_transient( $hash, $exports, HOUR_IN_SECONDS );
 							} elseif ( isset( $_REQUEST ) && isset( $_REQUEST['course'] ) && isset( $_REQUEST['step'] ) && 'sfwd-assignment' === $_REQUEST['step'] ) {
 								$user      = ( isset( $_REQUEST ) && isset( $_REQUEST['user'] ) && '' !== $_REQUEST['user'] ) ? $_REQUEST['user'] : bp_loggedin_user_id();
@@ -2229,6 +2483,16 @@ class Ajax {
 										$key           => wp_strip_all_tags( $step['title'] ),
 										'graded'       => $step['graded'],
 										'score'        => $step['score'],
+									);
+								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'graded'        => '-',
+										'score'         => '-',
 									);
 								}
 								set_transient( $hash, $exports, HOUR_IN_SECONDS );
@@ -2330,6 +2594,19 @@ class Ajax {
 										);
 									}
 								}
+								if ( empty( $exports ) ) {
+									$exports[] = array(
+										'user_id'       => $user,
+										'student_name'  => bp_core_get_user_displayname( $user ),
+										'course_name'   => '-',
+										$key            => '-',
+										'start_date'    => '-',
+										'complete_date' => '-',
+										'time_spent'    => '-',
+										'points_earned' => '-',
+									);
+								}
+								set_transient( $hash, $exports, HOUR_IN_SECONDS );
 							}
 						}
 					}
