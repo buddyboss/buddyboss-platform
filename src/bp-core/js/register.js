@@ -158,7 +158,7 @@ jQuery( document ).ready( function() {
 					if ( true === parseInt( response.data.field_html ) ) {
 						tinyMceAdded = 1;
 					}
-					
+
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
 					appendHtmlDiv.append( response.data.field_html );
@@ -209,7 +209,7 @@ jQuery( document ).ready( function() {
 			signup_password_confirm = jQuery( '#signup_password_confirm' );
 		var return_val = true;
 		jQuery( '.register-page .error' ).remove();
-		
+
 		if ( jQuery( document ).find( signup_email_confirm ).length && jQuery( document ).find( signup_email_confirm ).val() == '' ) {
 			jQuery( document ).find( signup_email_confirm ).before( html_error );
 			return_val = false;
@@ -223,9 +223,13 @@ jQuery( document ).ready( function() {
 			return_val = false;
 		}
 		jQuery( '.required-field' ).each( function( index ) {
-			
+
 			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
 				jQuery( this ).find( 'input[type="text"]' ).before( html_error );
+				return_val = false;
+			}
+			if ( jQuery( this ).find( 'input[type="number"]' ).length && jQuery( this ).find( 'input[type="number"] ').val() == '' ) {
+				jQuery( this ).find( 'input[type="number"]' ).before( html_error );
 				return_val = false;
 			}
 			if ( jQuery( this ).find( 'textarea' ).length && jQuery( this ).find( 'textarea' ).val() == '' ) {
@@ -239,14 +243,14 @@ jQuery( document ).ready( function() {
 			if ( jQuery( this ).find( 'input[type="checkbox"]' ).length ) {
 					var checked_check = 0;
 					jQuery( this ).find('input[type="checkbox"]' ).each( function() {
-					    if ( jQuery( this ).prop( 'checked' )==true ){ 
+					    if ( jQuery( this ).prop( 'checked' ) == true ){
 					        checked_check++;
 					    }
 					});
 					if ( 0 >= checked_check ) {
 						jQuery( this ).find( 'legend' ).next().append( html_error );
 						return_val = false;
-					}	
+					}
 			}
 		});
 		if ( jQuery( document ).find( signup_email ).length && jQuery( document ).find( signup_email ).val() == '' ) {
@@ -254,7 +258,7 @@ jQuery( document ).ready( function() {
 			return_val = false;
 		}else{
 			bp_register_validate_confirm_email();
-            
+
             jQuery.ajax({
 			    type: 'POST',
 			    url: ajaxurl,
@@ -266,7 +270,7 @@ jQuery( document ).ready( function() {
 							html_serror += '<span class="bp-icon" aria-hidden="true"></span>';
 							html_serror += '<p>' + response.signup_email + '</p>';
 							html_serror += '</div>';
-			    	
+
                 		jQuery( document ).find( signup_email ).before( html_serror );
                 		return_val = false;
                 	}
@@ -279,9 +283,18 @@ jQuery( document ).ready( function() {
                 		jQuery( document ).find( '#'+nickname ).before( html_uerror );
                 		return_val = false;
                 	}
-	                return true;    
+	                return true;
 	           	}
 			});
+		}
+		if ( ! return_val ) {
+			var target = jQuery( '.error' ).first();
+			if (target.length) {
+				jQuery('html,body').animate({
+					scrollTop: target.offset().top
+				}, 1000);
+				return false;
+			}
 		}
 		return return_val;
 	});
