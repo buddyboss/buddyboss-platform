@@ -2159,7 +2159,6 @@ function bp_activity_add( $args = '' ) {
 	$activity->primary_link      = $r['primary_link'];
 	$activity->item_id           = $r['item_id'];
 	$activity->secondary_item_id = $r['secondary_item_id'];
-	$activity->date_recorded     = $r['recorded_time'];
 	$activity->hide_sitewide     = $r['hide_sitewide'];
 	$activity->is_spam           = $r['is_spam'];
 	$activity->privacy           = $r['privacy'];
@@ -2167,6 +2166,11 @@ function bp_activity_add( $args = '' ) {
 	$activity->action            = ! empty( $r['action'] )
 						? $r['action']
 						: bp_activity_generate_action_string( $activity );
+
+	// Do not update date when update activity
+	if ( empty( $r['id'] ) ) {
+		$activity->date_recorded = $r['recorded_time'];
+	}
 
 	$save = $activity->save();
 
@@ -2204,6 +2208,7 @@ function bp_activity_add( $args = '' ) {
  * @since BuddyPress 1.2.0
  *
  * @param array|string $args {
+ *     @type int    $id         ID of the activity if update existing item
  *     @type string $content    The content of the activity update.
  *     @type int    $user_id    Optional. Defaults to the logged-in user.
  *     @type string $error_type Optional. Error type to return. Either 'bool' or 'wp_error'. Defaults to
@@ -2217,6 +2222,7 @@ function bp_activity_post_update( $args = '' ) {
 	$r = wp_parse_args(
 		$args,
 		array(
+			'id'            => false,
 			'content'       => false,
 			'user_id'       => bp_loggedin_user_id(),
 			'hide_sitewide' => false,
@@ -2259,6 +2265,7 @@ function bp_activity_post_update( $args = '' ) {
 	// Now write the values.
 	$activity_id = bp_activity_add(
 		array(
+			'id'            => $r['id'],
 			'user_id'       => $r['user_id'],
 			'content'       => $add_content,
 			'primary_link'  => $add_primary_link,
@@ -2275,7 +2282,7 @@ function bp_activity_post_update( $args = '' ) {
 		return $activity_id;
 	}
 
-	if ( ! empty( $r['content'] ) && ! strlen( trim( $r['content'] ) ) ) {
+	if ( empty( $r['id'] ) && ! empty( $r['content'] ) && ! strlen( trim( $r['content'] ) ) ) {
 		/**
 		 * Filters the latest update content for the activity item.
 		 *

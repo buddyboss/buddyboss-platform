@@ -511,7 +511,7 @@ function bp_nouveau_ajax_post_update() {
 		}
 	}
 
-	$activity_id = 0;
+	$activity_id = ! empty( $_POST['id'] ) ? $_POST['id'] : 0;
 	$item_id     = 0;
 	$object      = '';
 	$is_private  = false;
@@ -544,7 +544,7 @@ function bp_nouveau_ajax_post_update() {
 			$content = sprintf('@%s %s', bp_get_displayed_user_mentionname(), $content);
         }
 
-        $activity_id = bp_activity_post_update( array( 'content' => $content, 'privacy' => $privacy ) );
+        $activity_id = bp_activity_post_update( array( 'id' => $activity_id, 'content' => $content, 'privacy' => $privacy ) );
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {

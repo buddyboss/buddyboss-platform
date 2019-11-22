@@ -987,6 +987,18 @@ window.bp = window.bp || {};
 					comment_content.prop( 'disabled', false );
 				} );
 			}
+
+			// Edit the activity
+			if ( target.hasClass( 'edit' ) ) {
+				// Stop event propagation
+				event.preventDefault();
+
+				var activity_data = activity_item.data('bp-activity');
+
+				if ( typeof activity_data !== 'undefined' ) {
+					bp.Nouveau.Activity.postForm.displayEditActivity( activity_data );
+				}
+			}
 		},
 
 		/**

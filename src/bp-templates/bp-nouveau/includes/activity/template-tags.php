@@ -525,6 +525,26 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 			),
 		);
 
+		$buttons['activity_edit'] = array(
+			'id'                => 'activity_edit',
+			'position'          => 55,
+			'component'         => 'activity',
+			'parent_element'    => $parent_element,
+			'parent_attr'       => $parent_attr,
+			'must_be_logged_in' => true,
+			'button_element'    => $button_element,
+			'button_attr'       => array(
+				'href'            => '#',
+				'class'           => 'button edit bp-secondary-action bp-tooltip',
+				'title'           => __( 'Edit Activity', 'buddyboss' ),
+			),
+			'link_text' => sprintf(
+				'<span class="bp-screen-reader-text">%1$s</span><span class="edit-label">%2$s</span>',
+				__( 'Edit Activity', 'buddyboss' ),
+				__( 'Edit', 'buddyboss' )
+			),
+		);
+
 		// Add the Spam Button if supported
 		if ( bp_is_akismet_active() && isset( buddypress()->activity->akismet ) && bp_activity_user_can_mark_spam() ) {
 			$buttons['activity_spam'] = array(
@@ -601,6 +621,11 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 		// Remove the Delete button if the user can't delete
 		if ( ! bp_activity_user_can_delete() ) {
 			unset( $return['activity_delete'] );
+		}
+
+		// Remove the Edit button if the user can't edit
+		if ( ! bp_activity_user_can_edit() ) {
+			unset( $return['activity_edit'] );
 		}
 
 		if ( isset( $return['activity_spam'] ) && ! in_array( $activity_type, BP_Akismet::get_activity_types() ) ) {
@@ -999,4 +1024,38 @@ function bp_nouveau_activity_privacy() {
 		    <?php
 	    }
     }
+}
+
+/**
+ * Output the Activity timestamp into the bp-timestamp attribute.
+ *
+ * @since BuddyPress 3.0.0
+ */
+function bp_nouveau_edit_activity_data() {
+	echo bp_nouveau_get_edit_activity_data();
+}
+
+/**
+ * Get the Activity timestamp.
+ *
+ * @since BuddyPress 3.0.0
+ *
+ * @return integer The Activity timestamp.
+ */
+function bp_nouveau_get_edit_activity_data() {
+	global $activities_template;
+
+	$activity = array(
+		'id'      => bp_get_activity_id(),
+		'content' => $activities_template->activity->content,
+	);
+
+	/**
+	 * Filter here to edit the activity timestamp.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param integer $value The Activity timestamp.
+	 */
+	return apply_filters( 'bp_nouveau_get_edit_activity_data', htmlentities( wp_json_encode( $activity ) ) );
 }

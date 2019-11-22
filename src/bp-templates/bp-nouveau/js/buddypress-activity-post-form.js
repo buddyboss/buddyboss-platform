@@ -26,6 +26,7 @@ window.bp = window.bp || {};
 			this.views           = new Backbone.Collection();
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
 			this.buttons         = new Backbone.Collection();
+			this.postForm         = false;
 
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -41,13 +42,13 @@ window.bp = window.bp || {};
 			}
 
 			// Create the BuddyPress Uploader
-			var postForm = new bp.Views.PostForm();
+			this.postForm = new bp.Views.PostForm();
 
 			// Add it to views
-			this.views.add( { id: 'post_form', view: postForm } );
+			this.views.add( { id: 'post_form', view: this.postForm } );
 
 			// Display it
-			postForm.inject( '#bp-nouveau-activity-form' );
+			this.postForm.inject( '#bp-nouveau-activity-form' );
 		},
 
 		dropzoneView: function() {
@@ -65,6 +66,16 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+		},
+
+		displayEditActivity: function( activity_data ) {
+			// Do not carry on if the main element is not available.
+			if ( ! $( '#bp-nouveau-activity-form' ).length ) {
+				return;
+			}
+			$( '#whats-new' ).trigger( 'focus' );
+			$( '#whats-new' ).html( activity_data.content );
+			this.postForm.$el.find('#bp-activity-id').val(activity_data.id);
 		}
 	};
 
@@ -100,6 +111,7 @@ window.bp = window.bp || {};
 	// The Activity to post
 	bp.Models.Activity = Backbone.Model.extend( {
 		defaults: {
+			id: 0,
 			user_id:   0,
 			item_id:   0,
 			object:   '',
@@ -992,6 +1004,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.$el.html( $( '<div></div>' ).prop( 'id', 'whats-new-textarea' ) );
+			this.$el.append( '<input type="hidden" name="id" id="bp-activity-id" value="0"/>' );
 			this.views.set( '#whats-new-textarea', new bp.Views.WhatsNew( { activity: this.options.activity } ) );
 		}
 	} );
@@ -1529,6 +1542,8 @@ window.bp = window.bp || {};
 
 			$('#whats-new-form').removeClass('focus-in'); // remove class when reset
 
+			$( '#whats-new-content' ).find('#bp-activity-id').val(''); // reset activity id if in edit mode
+
 			// Reset the model
 			this.model.clear();
 			this.model.set( this.resetModel.attributes );
@@ -1647,7 +1662,7 @@ window.bp = window.bp || {};
 			bp.ajax.post( 'post_update', data ).done( function( response ) {
 				var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 					searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-					toPrepend = false;
+					toPrepend = false, edit = false;
 
 				// Look for matches if the stream displays search results.
 				if ( searchTerms ) {
@@ -1681,12 +1696,20 @@ window.bp = window.bp || {};
 					self.model.set('media',medias);
 				}
 
+				if ( self.model.get('id') > 0 ) {
+					edit = true;
+				}
+
 				// Reset the form
 				self.resetForm();
 
 				// Display a successful feedback if the acticity is not consistent with the displayed stream.
 				if ( ! toPrepend ) {
-					self.views.add( new bp.Views.activityFeedback( { value: response.message, type: 'updated' } ) );
+					self.views.add(new bp.Views.activityFeedback({value: response.message, type: 'updated'}));
+
+					// Edit activity
+				} else if ( edit ) {
+					$( '#activity-' + response.id  ).replaceWith(response.activity);
 
 				// Inject the activity into the stream only if it hasn't been done already (HeartBeat).
 				} else if ( ! $( '#activity-' + response.id  ).length ) {
