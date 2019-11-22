@@ -189,6 +189,7 @@ jQuery( document ).ready( function() {
 
 							}
 						);
+
 						window.tinymce.on('init', function () {
 							if (window.tinymce.inline) {
 								window.tinymce.execCommand('mceRepaint');
