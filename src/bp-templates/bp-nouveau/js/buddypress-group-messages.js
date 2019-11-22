@@ -88,7 +88,7 @@ window.bp = window.bp || {};
 				data: data,
 				success: function (response) {
 					if ( response.success && 'no_member' !== response.data.results ) {
-						memberListUl.html('');
+						//memberListUl.html('');
 						memberListUl.html(response.data.results);
 						$('.group-messages-members-listing #members-list li .action').hide();
 						memberListUlLast.html('');
@@ -212,7 +212,6 @@ window.bp = window.bp || {};
 					'type'  : type,
 					'page'  : page
 				};
-
 				$.ajax({
 					type: 'POST',
 					url: BP_Nouveau.ajaxurl,
@@ -225,7 +224,7 @@ window.bp = window.bp || {};
 							memberListUlLast.html( response.data.pagination );
 							//page = response.data.page;
 							$( '#item-body #group-messages-container .bb-groups-messages-left .bp-messages-feedback').hide();
-							if ( $( '.bb-groups-messages-left-inner .bb-panel-head .bp-group-message-switch input' ).is( ':checked' ) ) {
+							if ( 'all' === type ) {
 								$('.group-messages-members-listing #members-list li .action').hide();
 							} else {
 								$('.group-messages-members-listing #members-list li .action').show();

@@ -1240,9 +1240,11 @@ function bp_nouveau_groups_messages_enqueue_scripts() {
 		return;
 	}
 
-	wp_enqueue_script( 'bp-select2' );
-	wp_enqueue_script( 'bp-medium-editor' );
-	wp_enqueue_style( 'bp-medium-editor' );
-	wp_enqueue_style( 'bp-medium-editor-beagle' );
-	wp_enqueue_script( 'bp-nouveau-group-messages' );
+	if ( bp_is_group_messages() ) {
+		wp_enqueue_script( 'bp-select2' );
+		wp_enqueue_script( 'bp-medium-editor' );
+		wp_enqueue_style( 'bp-medium-editor' );
+		wp_enqueue_style( 'bp-medium-editor-beagle' );
+		wp_enqueue_script( 'bp-nouveau-group-messages' );
+	}
 }
