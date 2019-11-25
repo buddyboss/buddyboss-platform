@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-12 10:10:40+00:00\n"
+"POT-Creation-Date: 2019-11-25 03:31:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -16749,17 +16749,13 @@ msgid "You are not authorized to send invites to other users."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:368
-msgid ""
-"Select members to invite by clicking the + button next to each member. Once "
-"you've made a selection, use the \"Send Invites\" navigation item to "
-"customize the invite."
+msgid "Select members to invite by clicking the + button next to each member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:373
 msgid ""
 "Select which connections to invite by clicking the + button next to each "
-"member. Once you've made a selection, use the \"Send Invites\" navigation "
-"item to customize the invite."
+"member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:380

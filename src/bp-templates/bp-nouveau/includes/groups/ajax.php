@@ -365,12 +365,12 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	$bp->groups->invites_scope = 'members';
-	$message = __( 'Select members to invite by clicking the + button next to each member. Once you\'ve made a selection, use the "Send Invites" navigation item to customize the invite.', 'buddyboss' );
+	$message = __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' );
 
 	if ( 'friends' === $request['scope'] ) {
 		$request['user_id'] = bp_loggedin_user_id();
 		$bp->groups->invites_scope = 'friends';
-		$message = __( 'Select which connections to invite by clicking the + button next to each member. Once you\'ve made a selection, use the "Send Invites" navigation item to customize the invite.', 'buddyboss' );
+		$message = __( 'Select which connections to invite by clicking the + button next to each member.', 'buddyboss' );
 	}
 
 	if ( 'invited' === $request['scope'] ) {
