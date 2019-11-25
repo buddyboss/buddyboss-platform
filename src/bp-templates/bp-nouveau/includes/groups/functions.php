@@ -149,8 +149,8 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 	$params['group_invites'] = array(
 		'nav'                => bp_sort_by_key( $invites_nav, 'order', 'num' ),
 		'loading'            => __( 'Loading members. Please wait.', 'buddyboss' ),
-		'removing'            => __( 'Removing member invite. Please wait.', 'buddyboss' ),
-		'invites_form'       => __( 'Use the "Send" button to send your invite or the "Cancel" button to abort.', 'buddyboss' ),
+		'removing'           => __( 'Removing member invite. Please wait.', 'buddyboss' ),
+		'invites_form'       => '',
 		'invites_form_reset' => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
 		'invites_sending'    => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
 		'removeUserInvite'   => __( 'Cancel invitation %s', 'buddyboss' ),
@@ -158,7 +158,7 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 		'is_group_create'    => bp_is_group_create(),
 		'nonces'             => array(
 			'uninvite'     => wp_create_nonce( 'groups_invite_uninvite_user' ),
-			'send_invites' => wp_create_nonce( 'groups_send_invites' )
+			'send_invites' => wp_create_nonce( 'groups_send_invites' ),
 		),
 	);
 
