@@ -261,7 +261,7 @@ function bp_core_admin_help() {
 	<h1>
 		<?php _e( 'Documentation', 'buddyboss' ); ?>
 		<a href="https://www.buddyboss.com/resources/docs/" class="page-title-action"
-		   target="_blank"><?php _e( 'Online Resources', 'buddyboss' ); ?></a>
+		   target="_blank"><?php _e( 'Resources Website', 'buddyboss' ); ?></a>
 	</h1>
 
 	<div class="wp-list-table widefat bp-help-card-grid">
