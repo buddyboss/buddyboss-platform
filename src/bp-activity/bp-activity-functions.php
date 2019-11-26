@@ -2218,6 +2218,7 @@ function bp_activity_add( $args = '' ) {
  *                                        object depending on the 'error_type' $args parameter.
  */
 function bp_activity_post_update( $args = '' ) {
+	global $bp_activity_edit;
 
 	$r = wp_parse_args(
 		$args,
@@ -2239,6 +2240,8 @@ function bp_activity_post_update( $args = '' ) {
 	if ( bp_is_user_inactive( $r['user_id'] ) ) {
 		return false;
 	}
+
+	$bp_activity_edit = false;
 
 	// Record this on the user's profile.
 	$activity_content = $r['content'];
@@ -2262,46 +2265,77 @@ function bp_activity_post_update( $args = '' ) {
 	 */
 	$add_primary_link = apply_filters( 'bp_activity_new_update_primary_link', $primary_link );
 
-	// Now write the values.
-	$activity_id = bp_activity_add(
-		array(
-			'id'            => $r['id'],
-			'user_id'       => $r['user_id'],
-			'content'       => $add_content,
-			'primary_link'  => $add_primary_link,
-			'component'     => buddypress()->activity->id,
-			'type'          => $r['type'],
-			'hide_sitewide' => $r['hide_sitewide'],
-			'privacy'       => $r['privacy'],
-			'error_type'    => $r['error_type'],
-		)
-	);
+	if ( ! empty( $r['id'] ) ) {
+		$activity = new BP_Activity_Activity( $r['id'] );
+
+		if ( ! empty( $activity->id ) ) {
+			$activity_id = bp_activity_add(
+				array(
+					'id'            => $r['id'],
+					'user_id'       => $activity->user_id,
+					'content'       => $add_content,
+					'primary_link'  => $add_primary_link,
+					'error_type'    => $r['error_type'],
+				)
+			);
+
+			$bp_activity_edit = true;
+		}
+	} else {
+		// Now write the values.
+		$activity_id = bp_activity_add(
+			array(
+				'user_id'       => $r['user_id'],
+				'content'       => $add_content,
+				'primary_link'  => $add_primary_link,
+				'component'     => buddypress()->activity->id,
+				'type'          => $r['type'],
+				'hide_sitewide' => $r['hide_sitewide'],
+				'privacy'       => $r['privacy'],
+				'error_type'    => $r['error_type'],
+			)
+		);
+	}
 
 	// Bail on failure.
 	if ( false === $activity_id || is_wp_error( $activity_id ) ) {
 		return $activity_id;
 	}
 
-	if ( empty( $r['id'] ) && ! empty( $r['content'] ) && ! strlen( trim( $r['content'] ) ) ) {
-		/**
-		 * Filters the latest update content for the activity item.
-		 *
-		 * @since BuddyPress 1.6.0
-		 *
-		 * @param string $r Content of the activity update.
-		 * @param string $activity_content Content of the activity update.
-		 */
-		$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
+	if ( ! empty( $r['content'] ) && ! strlen( trim( $r['content'] ) ) ) {
+		$update_activity = true;
 
-		// Add this update to the "latest update" usermeta so it can be fetched anywhere.
-		bp_update_user_meta(
-			bp_loggedin_user_id(),
-			'bp_latest_update',
-			array(
-				'id'      => $activity_id,
-				'content' => $activity_content,
-			)
-		);
+		if ( $bp_activity_edit ) {
+			$latest_activity = bp_get_user_meta( bp_loggedin_user_id(), 'bp_latest_update', true );
+
+			if ( $latest_activity['id'] !== $activity_id ) {
+				$update_activity = false;
+			}
+		}
+
+		if ( $update_activity ) {
+
+			/**
+			 * Filters the latest update content for the activity item.
+			 *
+			 * @param string $r Content of the activity update.
+			 * @param string $activity_content Content of the activity update.
+			 *
+			 * @since BuddyPress 1.6.0
+			 *
+			 */
+			$activity_content = apply_filters( 'bp_activity_latest_update_content', $r['content'], $activity_content );
+
+			// Add this update to the "latest update" usermeta so it can be fetched anywhere.
+			bp_update_user_meta(
+				bp_loggedin_user_id(),
+				'bp_latest_update',
+				array(
+					'id'      => $activity_id,
+					'content' => $activity_content,
+				)
+			);
+		}
 	}
 
 	/**
