@@ -1194,7 +1194,7 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
  */
 function bp_activity_media_add( $media ) {
 
-	if ( ! empty( $media ) ) {
+	if ( ! empty( $media ) && empty( $media->activity_id ) ) {
 
 		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
 
@@ -1229,7 +1229,7 @@ function bp_activity_media_add( $media ) {
  */
 function bp_activity_create_parent_media_activity( $media_ids ) {
 
-	if ( ! empty( $media_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
+	if ( ! empty( $media_ids ) && ! isset( $_POST['bp_activity_update'] ) && ! isset( $_POST['edit'] ) ) {
 
 		$added_media_ids = $media_ids;
 		$content         = false;

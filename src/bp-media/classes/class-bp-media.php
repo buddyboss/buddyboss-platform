@@ -858,7 +858,7 @@ class BP_Media {
 	 * @return array|bool An array of deleted media IDs on success, false on failure.
 	 */
 	public static function delete( $args = array(), $from = false ) {
-		global $wpdb;
+		global $wpdb, $bp_activity_edit;
 
 		$bp = buddypress();
 		$r  = wp_parse_args(
@@ -980,7 +980,7 @@ class BP_Media {
 			// Loop through attachment ids and attempt to delete.
 			foreach ( $attachment_ids as $attachment_id ) {
 
-				if ( bp_is_active( 'activity' ) ) {
+				if ( bp_is_active( 'activity' ) && ( ! $bp_activity_edit && empty( $_POST['edit'] ) ) ) {
 					$parent_activity_id = get_post_meta( $attachment_id, 'bp_media_parent_activity_id', true );
 					if ( ! empty( $parent_activity_id ) ) {
 						$activity_media_ids = bp_activity_get_meta( $parent_activity_id, 'bp_media_ids', true );

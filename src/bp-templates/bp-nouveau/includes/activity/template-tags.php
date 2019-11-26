@@ -1045,9 +1045,10 @@ function bp_nouveau_edit_activity_data() {
 function bp_nouveau_get_edit_activity_data() {
 	global $activities_template;
 
-	$activity = array(
-		'id'      => bp_get_activity_id(),
-		'content' => $activities_template->activity->content,
+	$activity = apply_filters( 'bp_nouveau_get_edit_activity_data', array(
+			'id'      => bp_get_activity_id(),
+			'content' => $activities_template->activity->content,
+		)
 	);
 
 	/**
@@ -1057,5 +1058,5 @@ function bp_nouveau_get_edit_activity_data() {
 	 *
 	 * @param integer $value The Activity timestamp.
 	 */
-	return apply_filters( 'bp_nouveau_get_edit_activity_data', htmlentities( wp_json_encode( $activity ) ) );
+	return htmlentities( wp_json_encode( $activity ) );
 }

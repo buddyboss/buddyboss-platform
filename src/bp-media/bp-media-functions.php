@@ -511,13 +511,36 @@ function bp_media_add_handler( $medias = array() ) {
 		// save media
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'privacy'       => $privacy,
-			) );
+			// Update media if existing
+			if ( ! empty( $media['media_id'] ) ) {
+				$bp_media = new BP_Media( $media['media_id'] );
+
+				if ( ! empty( $bp_media->id ) ) {
+					$media_id = bp_media_add( array(
+						'id'            => $bp_media->id,
+						'blog_id'       => $bp_media->blog_id,
+						'attachment_id' => $bp_media->attachment_id,
+						'user_id'       => $bp_media->user_id,
+						'title'         => $bp_media->title,
+						'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
+						'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+						'activity_id'   => $bp_media->activity_id,
+						'privacy'       => $bp_media->privacy,
+						'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+						'date_created'  => $bp_media->date_created,
+					) );
+				}
+			} else {
+
+				$media_id = bp_media_add( array(
+					'attachment_id' => $media['id'],
+					'title'         => $media['name'],
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
+					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+					'menu_order'    => ! empty( $media['menu_order'] ) ? $media['menu_order'] : false,
+					'privacy'       => $privacy,
+				) );
+			}
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;

@@ -23,10 +23,11 @@ window.bp = window.bp || {};
 	 */
 	bp.Nouveau.Activity.postForm = {
 		start: function() {
-			this.views           = new Backbone.Collection();
+			this.views = new Backbone.Collection();
 			this.ActivityObjects = new bp.Collections.ActivityObjects();
-			this.buttons         = new Backbone.Collection();
-			this.postForm         = false;
+			this.buttons = new Backbone.Collection();
+			this.postForm = false;
+			this.activityAttachments = false;
 
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -69,14 +70,77 @@ window.bp = window.bp || {};
 		},
 
 		displayEditActivity: function( activity_data ) {
+			var self = this;
+
 			// Do not carry on if the main element is not available.
 			if ( ! $( '#bp-nouveau-activity-form' ).length ) {
 				return;
 			}
+
+			self.postForm.$el.addClass('bp-activity-edit');
 			$( '#whats-new' ).trigger( 'focus' );
 			$( '#whats-new' ).html( activity_data.content );
-			this.postForm.$el.find('#bp-activity-id').val(activity_data.id);
-		}
+			self.postForm.$el.find('#bp-activity-id').val(activity_data.id);
+
+			// Display media for editing
+			if ( typeof activity_data.media !== 'undefined' && activity_data.media.length ) {
+
+				// close and destroy existing media instance
+				var mediaCloseEvent = new Event('activity_media_close');
+				document.dispatchEvent(mediaCloseEvent);
+
+				// open media uploader for editing media
+				var event = new Event('activity_media_toggle');
+				document.dispatchEvent(event);
+
+				var mock_file = false;
+				for( var i = 0; i < activity_data.media.length; i++ ) {
+					mock_file = false;
+
+					mock_file = {
+						name: activity_data.media[i].title,
+						accepted: true,
+						kind: 'image',
+						upload: {
+							filename: activity_data.media[i].title,
+							uuid: activity_data.media[i].attachment_id
+						},
+						dataURL: activity_data.media[i].url,
+						id: activity_data.media[i].attachment_id,
+						media_edit_data: {
+							'id': activity_data.media[i].attachment_id,
+							'media_id': activity_data.media[i].id,
+							'name': activity_data.media[i].name,
+							'thumb': activity_data.media[i].thumb,
+							'url': activity_data.media[i].url,
+							'uuid': activity_data.media[i].attachment_id,
+							'menu_order': activity_data.media[i].menu_order,
+							'saved': true
+						}
+					};
+
+					self.dropzone.files.push(mock_file);
+					self.dropzone.emit('addedfile', mock_file);
+					self.createThumbnailFromUrl(mock_file);
+				}
+			}
+		},
+
+		createThumbnailFromUrl: function(mock_file) {
+			var self = this;
+			self.dropzone.createThumbnailFromUrl(
+				mock_file,
+				self.dropzone.options.thumbnailWidth,
+				self.dropzone.options.thumbnailHeight,
+				self.dropzone.options.thumbnailMethod,
+				true,
+				function(thumbnail) {
+					self.dropzone.emit('thumbnail', mock_file, thumbnail);
+					self.dropzone.emit('complete', mock_file);
+				}
+			);
+		},
+
 	};
 
 	bp.Backbone.View.prototype.close = function(){
@@ -261,6 +325,13 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.postForm.dropzone.on('sending', function(file, xhr, formData) {
 				formData.append('action', 'media_upload');
 				formData.append('_wpnonce', BP_Nouveau.nonces.media);
+			});
+
+			bp.Nouveau.Activity.postForm.dropzone.on('addedfile', function(file) {
+				if ( file.media_edit_data ) {
+					self.media.push( file.media_edit_data );
+					self.model.set( 'media', self.media );
+				}
 			});
 
 			bp.Nouveau.Activity.postForm.dropzone.on('success', function(file, response) {
@@ -1504,7 +1575,8 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.FormButtons( { collection: bp.Nouveau.Activity.postForm.buttons, model: this.model } ) );
 			}
 
-			this.views.add( new bp.Views.ActivityAttachments( { model: this.model } ) );
+			bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
+			this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
 			this.views.add( new bp.Views.ActivityToolbar( { model: this.model } ) );
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
@@ -1543,6 +1615,7 @@ window.bp = window.bp || {};
 			$('#whats-new-form').removeClass('focus-in'); // remove class when reset
 
 			$( '#whats-new-content' ).find('#bp-activity-id').val(''); // reset activity id if in edit mode
+			bp.Nouveau.Activity.postForm.postForm.$el.removeClass('bp-activity-edit'); // remove edit class if in edit mode
 
 			// Reset the model
 			this.model.clear();
@@ -1567,7 +1640,7 @@ window.bp = window.bp || {};
 
 		postUpdate: function( event ) {
 			var self = this,
-			    meta = {};
+			    meta = {}, edit = false;
 
 			if ( event ) {
 				if ( 'keydown' === event.type && ( 13 !== event.keyCode || ! event.ctrlKey ) ) {
@@ -1659,10 +1732,16 @@ window.bp = window.bp || {};
 				data.content = '&#8203;';
 			}
 
+			// check if edit activity
+			if ( self.model.get('id') > 0 ) {
+				edit = true;
+				data.edit = 1;
+			}
+
 			bp.ajax.post( 'post_update', data ).done( function( response ) {
 				var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 					searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
-					toPrepend = false, edit = false;
+					toPrepend = false;
 
 				// Look for matches if the stream displays search results.
 				if ( searchTerms ) {
@@ -1694,10 +1773,6 @@ window.bp = window.bp || {};
 						medias[k].saved = true;
 					}
 					self.model.set('media',medias);
-				}
-
-				if ( self.model.get('id') > 0 ) {
-					edit = true;
 				}
 
 				// Reset the form
