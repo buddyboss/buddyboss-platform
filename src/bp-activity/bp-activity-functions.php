@@ -2242,6 +2242,7 @@ function bp_activity_post_update( $args = '' ) {
 	}
 
 	$bp_activity_edit = false;
+	$activity_id      = false;
 
 	// Record this on the user's profile.
 	$activity_content = $r['content'];
