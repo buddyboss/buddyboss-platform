@@ -2272,11 +2272,20 @@ function bp_activity_post_update( $args = '' ) {
 		if ( ! empty( $activity->id ) ) {
 			$activity_id = bp_activity_add(
 				array(
-					'id'            => $r['id'],
-					'user_id'       => $activity->user_id,
-					'content'       => $add_content,
-					'primary_link'  => $add_primary_link,
-					'error_type'    => $r['error_type'],
+					'id'                => $activity->id,
+					'action'            => $activity->action,
+					'content'           => $add_content,
+					'component'         => $activity->component,
+					'type'              => $activity->type,
+					'primary_link'      => $add_primary_link,
+					'user_id'           => $activity->user_id,
+					'item_id'           => $activity->item_id,
+					'secondary_item_id' => $activity->secondary_item_id,
+					'recorded_time'     => $activity->date_recorded,
+					'hide_sitewide'     => $activity->hide_sitewide,
+					'is_spam'           => $activity->is_spam,
+					'privacy'           => $activity->privacy,
+					'error_type'        => $r['error_type'],
 				)
 			);
 
