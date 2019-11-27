@@ -1703,3 +1703,11 @@ body .section-repair_community .settings fieldset .checkbox label code {
     transform: rotate(359deg);
   }
 }
+
+.wp-block-embed {
+  margin: 0;
+}
+
+.wp-block-embed iframe {
+  max-width: 100%;
+}
