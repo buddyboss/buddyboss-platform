@@ -333,7 +333,9 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					$( this ).find('.activity-inner > p:first a').hide();
+					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length ) {
+						$(this).find('.activity-inner > p:first a').hide();
+					}
 				}
 			}
 
