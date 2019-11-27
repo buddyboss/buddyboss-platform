@@ -1013,6 +1013,7 @@ function bp_has_albums( $args = '' ) {
 			'exclude'      => false,        // Pass an activity_id or string of IDs comma-separated.
 			'sort'         => 'DESC',       // Sort DESC or ASC.
 			'page'         => 1,            // Which page to load.
+			'type'         => 'media',      // Which page to load.
 			'per_page'     => 20,           // Number of items per page.
 			'page_arg'     => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
 			'max'          => false,        // Max number to return.

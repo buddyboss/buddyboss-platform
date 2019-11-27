@@ -2770,6 +2770,22 @@ function bp_is_single_album() {
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
+/**
+ * Is the current page a single folder item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single album item permalink.
+ */
+function bp_is_single_document_folder() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_folder() && is_numeric( bp_action_variable( 0 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_media_component() && 'folder' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
 
 /**
  * Is the current page a single document item permalink?
@@ -2784,7 +2800,7 @@ function bp_is_single_document() {
 		return true;
 	}
 
-	return (bool) ( bp_is_media_component() && 'documents' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+	return (bool) ( bp_is_media_component() && 'my-document' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 
@@ -3082,6 +3098,23 @@ function bp_is_group_albums() {
 	$retval = false;
 
 	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'albums' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's activity page?
+ *
+ * @since BuddyPress 1.2.1
+ *
+ * @return bool True if the current page is a group's activity page.
+ */
+function bp_is_group_document_folder() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'folder' ) ) {
 		$retval = true;
 	}
 

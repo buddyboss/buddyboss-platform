@@ -78,6 +78,12 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
+			'media_folder_delete' => array(
+				'function' => 'bp_nouveau_ajax_media_folder_delete',
+				'nopriv'   => true,
+			),
+		),
+		array(
 			'media_get_activity' => array(
 				'function' => 'bp_nouveau_ajax_media_get_activity',
 				'nopriv'   => true,
@@ -517,7 +523,7 @@ function bp_nouveau_ajax_media_album_save() {
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
-	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
+	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id, 'type' => 'media' ) );
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
@@ -612,6 +618,76 @@ function bp_nouveau_ajax_media_album_delete() {
 		$redirect_url = trailingslashit( $group_link . '/albums/' );
 	} else {
 		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_media_slug() . '/albums/' );
+	}
+
+	wp_send_json_success( array(
+		'redirect_url'     => $redirect_url,
+	) );
+}
+
+/**
+ * Delete album
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_ajax_media_folder_delete() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['album_id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please provide ID of folder to delete.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	if ( ! bp_album_user_can_delete( $_POST['album_id'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'You do not have permission to delete this folder.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// delete album
+	$album_id = bp_album_delete( array( 'id' => $_POST['album_id'] ) );
+
+	if ( ! $album_id ) {
+		wp_send_json_error( $response );
+	}
+
+	$group_id = ! empty( $_POST['group_id'] ) ? (int) $_POST['group_id'] : false;
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		$group_link = bp_get_group_permalink( groups_get_group( $_POST['group_id'] ) );
+		$redirect_url = trailingslashit( $group_link . '/documents/' );
+	} else {
+		$redirect_url = trailingslashit( bp_displayed_user_domain() . bp_get_document_slug() );
 	}
 
 	wp_send_json_success( array(
@@ -890,7 +966,7 @@ function bp_nouveau_ajax_media_folder_save() {
 	if ( empty( $_POST['title'] ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'Please enter title of album.', 'buddyboss' )
+			esc_html__( 'Please enter title of folder.', 'buddyboss' )
 		);
 
 		wp_send_json_error( $response );
@@ -902,12 +978,12 @@ function bp_nouveau_ajax_media_folder_save() {
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
 
-	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id ) );
+	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id, 'type' => 'document' ) );
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
-			esc_html__( 'There was a problem when trying to create the album.', 'buddyboss' )
+			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
 		);
 		wp_send_json_error( $response );
 	}
@@ -924,9 +1000,9 @@ function bp_nouveau_ajax_media_folder_save() {
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
-		$redirect_url = trailingslashit( $group_link . '/albums/' . $album_id );
+		$redirect_url = trailingslashit( $group_link . '/folder/' . $album_id );
 	} else {
-		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_media_slug() . '/albums/' . $album_id );
+		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() . '/folder/' . $album_id );
 	}
 
 	wp_send_json_success( array(

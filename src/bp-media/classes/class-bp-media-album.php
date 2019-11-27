@@ -63,6 +63,14 @@ class BP_Media_Album {
 	var $privacy;
 
 	/**
+	 * type of the album.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var string
+	 */
+	var $type;
+
+	/**
 	 * Upload date of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -132,6 +140,7 @@ class BP_Media_Album {
 		$this->user_id      = (int) $row->user_id;
 		$this->group_id     = (int) $row->group_id;
 		$this->title        = $row->title;
+		$this->type         = $row->type;
 		$this->privacy      = $row->privacy;
 		$this->type         = $row->type;
 		$this->date_created = $row->date_created;
@@ -236,7 +245,7 @@ class BP_Media_Album {
 			$args,
 			array(
 				'page'         => 1,               // The current page.
-				'type'         => 'media',               // The current page.
+				'type'         => 'media',         // The current page.
 				'per_page'     => 20,              // albums per page.
 				'max'          => false,           // Max number of items to return.
 				'fields'       => 'all',           // Fields to include.
@@ -547,15 +556,17 @@ class BP_Media_Album {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $id       ID to check.
+	 * @param string $type     type to check.
 	 * @return int|bool Album ID if found; false if not.
 	 */
-	public static function album_exists( $id ) {
+	public static function album_exists( $id, $type = 'media' ) {
 		if ( empty( $id ) ) {
 			return false;
 		}
 
 		$args = array(
-			'in' => $id,
+			'in'   => $id,
+			'type' => $type,
 		);
 
 		$albums = self::get( $args );

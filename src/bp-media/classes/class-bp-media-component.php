@@ -121,7 +121,7 @@ class BP_Media_Component extends BP_Component {
 				 *
 				 * 'album' is not a registered nav item, but we add a screen handler manually.
 				 */
-				if ( bp_is_user_media() && in_array( bp_current_action(), array( 'albums', 'documents' ), true ) ) {
+				if ( bp_is_user_media() && in_array( bp_current_action(), array( 'albums', 'documents', 'folder' ), true ) ) {
 					require $this->path . 'bp-media/screens/' . bp_current_action() . '.php';
 				}
 			}
