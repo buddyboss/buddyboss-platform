@@ -110,6 +110,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$allowed_tags['img']['class']  = array();
 	$allowed_tags['img']['id']     = array();
 	$allowed_tags['code']          = array();
+	$allowed_tags['a']['target']   = array();
 
 	/**
 	 * Filters the HTML elements allowed for a given context.
