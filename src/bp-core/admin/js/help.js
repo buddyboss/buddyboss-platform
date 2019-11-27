@@ -18,7 +18,7 @@
 
 			if ( $( '#bp-help-main-menu-wrap' ).length ) {
 
-				$( '#bp-help-main-menu-wrap' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+				$( '#bp-help-main-menu-wrap' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
 
 				bp_help_wpapi.docs().parent(0).order('asc').orderby('menu_order').then(function (docs) {
 
@@ -47,8 +47,8 @@
 
 			if ( $( '#bp-help-content-area' ).length ) {
 
-				$( '#bp-help-content-area' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
-				$( '.bp-help-sidebar' ).addClass( 'loading' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+				$( '#bp-help-content-area' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
+				$( '.bp-help-sidebar' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
 
 				var article_id = bp_help_page_url.searchParams.get("article");
 				bp_help_wpapi.docs().id( article_id ).then(function (doc) {
