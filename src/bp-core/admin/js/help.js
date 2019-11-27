@@ -57,6 +57,7 @@
 					$( '.bp-help-sidebar' ).removeClass( 'loading' );
 
 					$( '#bp-help-content-area' ).html('<h1>' + doc.title.rendered + '</h1>' + doc.content.rendered);
+					$( '#bp-help-content-area' ).find('a').attr( 'target', '_blank' );
 					bp_help_js_render_hierarchy_dom( doc );
 				}).catch(function( err ) {
 					$( '#bp-help-content-area' ).removeClass( 'loading' );
