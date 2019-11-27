@@ -81,22 +81,23 @@ window.bp = window.bp || {};
 			$( '#whats-new' ).trigger( 'focus' );
 			$( '#whats-new' ).html( activity_data.content );
 			self.postForm.$el.find('#bp-activity-id').val(activity_data.id);
+			var bpActivityEvent = new Event('bp_activity_edit');
+
+			// close and destroy existing gif instance
+			self.activityToolbar.closeGifSelector(bpActivityEvent);
+			// close and destroy existing media instance
+			self.activityToolbar.closeMediaSelector(bpActivityEvent);
 
 			if ( typeof activity_data.gif !== 'undefined' && Object.keys( activity_data.gif ).length ) {
-				self.postForm.$el.find('#activity-gif-button').trigger('click');
+				// close and destroy existing media instance
+				self.activityToolbar.toggleGifSelector(bpActivityEvent);
 				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
 			}
 
 			// Display media for editing
 			if ( typeof activity_data.media !== 'undefined' && activity_data.media.length ) {
-
-				// close and destroy existing media instance
-				var mediaCloseEvent = new Event('activity_media_close');
-				document.dispatchEvent(mediaCloseEvent);
-
 				// open media uploader for editing media
-				var event = new Event('activity_media_toggle');
-				document.dispatchEvent(event);
+				self.activityToolbar.toggleMediaSelector(bpActivityEvent);
 
 				var mock_file = false;
 				for( var i = 0; i < activity_data.media.length; i++ ) {
