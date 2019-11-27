@@ -736,6 +736,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'ajax_url' => admin_url( 'admin-ajax.php' ),
 					'bb_help_url' => $bp_help_base_url,
 					'bb_help_title' => __( 'Docs', 'buddyboss' ),
+					'bb_help_no_network' => __( 'You need to go online for the documentation to download.', 'buddyboss' ),
 				)
 			);
 		}

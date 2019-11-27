@@ -34,6 +34,14 @@
 							'\t\t</div>';
 					} );
 					$( '#bp-help-main-menu-wrap' ).html(bp_help_cards);
+				}).catch(function( err ) {
+					$( '#bp-help-main-menu-wrap' ).removeClass( 'loading' );
+					var status = navigator.onLine;
+					if ( ! status ) {
+						$( '#bp-help-main-menu-wrap' ).html('<p>'+BP_HELP.bb_help_no_network+'</p>');
+					} else {
+						$( '#bp-help-main-menu-wrap' ).html( err );
+					}
 				});
 			}
 
@@ -50,6 +58,15 @@
 
 					$( '#bp-help-content-area' ).html('<h1>' + doc.title.rendered + '</h1>' + doc.content.rendered);
 					bp_help_js_render_hierarchy_dom( doc );
+				}).catch(function( err ) {
+					$( '#bp-help-content-area' ).removeClass( 'loading' );
+					$( '.bp-help-sidebar' ).removeClass( 'loading' ).html('');
+					var status = navigator.onLine;
+					if ( ! status ) {
+						$( '#bp-help-content-area' ).html('<p>'+BP_HELP.bb_help_no_network+'</p>');
+					} else {
+						$( '#bp-help-content-area' ).html( err );
+					}
 				});
 			}
 
