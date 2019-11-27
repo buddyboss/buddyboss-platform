@@ -1301,7 +1301,16 @@ function bp_admin_email_add_codex_notice() {
 	bp_core_add_admin_notice(
 		sprintf(
 			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
-			bp_core_help_docs_link( 'components/emails/email-tokens.md' )
+			//bp_get_admin_url( 'admin.php?page=bp-help&article=62844' )
+			bp_get_admin_url( 
+				add_query_arg( 
+					array( 
+						'page' 		=> 'bp-help', 
+						'article' 	=> 62844,
+					),
+					'admin.php' 
+				)
+			)
 		),
 		'error'
 	);
