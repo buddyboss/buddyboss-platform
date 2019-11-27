@@ -473,11 +473,24 @@ function bp_nouveau_ajax_get_users_to_invite() {
 				</button>
 				<?php } ?>
 
-				<?php if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) { ?>
-				<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
-					<span class=" icons" aria-hidden="true"></span>
-					<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
-				</button>
+				<?php
+				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
+					if ( 'invited' === $request['scope'] ) {
+						?>
+						<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button remove-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+							<span class=" icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+						</button>
+						<?php
+					}  else {
+						?>
+						<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+							<span class=" icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+						</button>
+						<?php
+					}
+					?>
 				<?php } ?>
 			</div>
 			</div>
