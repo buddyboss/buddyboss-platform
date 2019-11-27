@@ -982,7 +982,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					),
 
 					'bp-wp-api-js'          => array(
-						'file'         => "{$url}vendor/wpapi{$min}.js",
+						'file'         => "{$url}lib/wpapi{$min}.js",
 						'dependencies' => array(),
 						'footer'       => true,
 					),
