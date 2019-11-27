@@ -18,6 +18,10 @@ function media_screen() {
 		return;
 	}
 
+	if ( 'my-document' === bp_current_action() ) {
+		add_action( 'bp_template_content', 'bp_media_documents_screen' );
+	}
+
 	/**
 	 * Fires right before the loading of the Media screen template file.
 	 *
@@ -33,4 +37,8 @@ function media_screen() {
 	 * @param string $template Path to the media template to load.
 	 */
 	bp_core_load_template( apply_filters( 'media_template', 'members/single/home' ) );
+}
+
+function bp_media_documents_screen() {
+	bp_get_template_part( 'members/single/documents' );
 }

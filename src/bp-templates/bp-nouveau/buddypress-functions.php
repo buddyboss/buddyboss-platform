@@ -598,6 +598,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 		}
 
+//		if ( bp_is_active( 'media' ) ) {
+//			$supported_objects = array_merge( $supported_objects, array( 'document' ) );
+//		}
+
 		// Add components & nonces
 		$params['objects'] = $supported_objects;
 		$params['nonces']  = $object_nonces;

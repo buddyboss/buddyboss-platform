@@ -24,6 +24,10 @@ function bp_media_get_settings_sections() {
 			'page'  => 'media',
 			'title' => __( 'Photo Uploading', 'buddyboss' ),
 		),
+		'bp_media_settings_documents' => array(
+			'page'  => 'doc',
+			'title' => __( 'Document Uploading', 'buddyboss' ),
+		),
 		'bp_media_settings_emoji'  => array(
 			'page'  => 'media',
 			'title' => __( 'Emoji', 'buddyboss' ),
@@ -48,6 +52,25 @@ function bp_media_get_settings_fields() {
 	$fields = array();
 
 	/** Photos Section */
+	$fields['bp_media_settings_photos'] = array(
+
+		'bp_media_profile_media_support'  => array(
+			'title'             => __( 'Profiles', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_profile_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		),
+
+		'bp_media_profile_albums_support' => array(
+			'title'             => __( 'Profile Albums', 'buddyboss' ),
+			'callback'          => '__return_true',
+			'sanitize_callback' => 'absint',
+			'args'              => array(
+				'class' => 'hidden',
+			),
+		),
+	);
+
 	$fields['bp_media_settings_photos'] = array(
 
 		'bp_media_profile_media_support'  => array(
@@ -94,11 +117,25 @@ function bp_media_get_settings_fields() {
 		),
 	);
 
+	$fields['bp_media_settings_documents']['bp_media_profiles_document_support'] = array(
+		'title'             => __( 'Profiles', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_profile_document_support',
+		'sanitize_callback' => 'absint',
+		'args'              => array(),
+	);
+
 	if ( bp_is_active( 'groups' ) ) {
 
 		$fields['bp_media_settings_photos']['bp_media_group_media_support'] = array(
 			'title'             => __( 'Groups', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_group_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		);
+
+		$fields['bp_media_settings_documents']['bp_media_group_document_support'] = array(
+			'title'             => __( 'Groups', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_group_document_support',
 			'sanitize_callback' => 'absint',
 			'args'              => array(),
 		);
@@ -136,6 +173,13 @@ function bp_media_get_settings_fields() {
 			'args'              => array(),
 		);
 
+		$fields['bp_media_settings_documents']['bp_media_messages_document_support'] = array(
+			'title'             => __( 'Messages', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_messages_document_support',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		);
+
 		$fields['bp_media_settings_emoji']['bp_media_messages_emoji_support'] = array(
 			'title'             => __( 'Messages', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_messages_emoji_support',
@@ -156,6 +200,13 @@ function bp_media_get_settings_fields() {
 		$fields['bp_media_settings_photos']['bp_media_forums_media_support'] = array(
 			'title'             => __( 'Forums', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_forums_media_support',
+			'sanitize_callback' => 'absint',
+			'args'              => array(),
+		);
+
+		$fields['bp_media_settings_documents']['bp_media_forums_document_support'] = array(
+			'title'             => __( 'Forums', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_forums_document_support',
 			'sanitize_callback' => 'absint',
 			'args'              => array(),
 		);
@@ -783,3 +834,132 @@ function bp_animated_gifs_tutorial() {
 
 	<?php
 }
+
+/**
+ * Setting > Media > Documents support
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_media_settings_callback_messages_document_support() {
+	?>
+	<input name="bp_media_messages_document_support"
+	       id="bp_media_messages_document_support"
+	       type="checkbox"
+	       value="1"
+		<?php checked( bp_is_messages_document_support_enabled() ); ?>
+	/>
+	<label for="bp_media_messages_document_support">
+		<?php _e( 'Allow members to upload documents in <strong>private messages</strong>', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if media messages doc support is enabled.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $default integer
+ *
+ * @return bool Is media messages doc support enabled or not
+ */
+function bp_is_messages_document_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_messages_document_support_enabled', (bool) get_option( 'bp_media_messages_document_support', $default ) );
+}
+
+/**
+ * Setting > Media > Groups support
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_media_settings_callback_group_document_support() {
+	?>
+	<input name="bp_media_group_document_support"
+	       id="bp_media_group_document_support"
+	       type="checkbox"
+	       value="1"
+		<?php checked( bp_is_group_document_support_enabled() ); ?>
+	/>
+	<label for="bp_media_group_document_support">
+		<?php _e( 'Allow members to upload documents in <strong>groups</strong>', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if media group document support is enabled.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $default integer
+ *
+ * @return bool Is media group document support enabled or not
+ */
+function bp_is_group_document_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_group_document_support_enabled', (bool) get_option( 'bp_media_group_document_support', $default ) );
+}
+
+/**
+ * Setting > Media > Forums support
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_media_settings_callback_forums_document_support() {
+	?>
+	<input name="bp_media_forums_document_support"
+	       id="bp_media_forums_document_support"
+	       type="checkbox"
+	       value="1"
+		<?php checked( bp_is_forums_document_support_enabled() ); ?>
+	/>
+	<label for="bp_media_forums_document_support">
+		<?php _e( 'Allow members to upload documents in <strong>forum discussions</strong>', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if media forums document support is enabled.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $default integer
+ *
+ * @return bool Is media forums document support enabled or not
+ */
+function bp_is_forums_document_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_forums_document_support_enabled', (bool) get_option( 'bp_media_forums_document_support', $default ) );
+}
+
+/**
+ * Setting > Media > Forums support
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_media_settings_callback_profile_document_support() {
+	?>
+	<input name="bp_media_profiles_document_support"
+	       id="bp_media_profiles_document_support"
+	       type="checkbox"
+	       value="1"
+		<?php checked( bp_is_profiles_document_support_enabled() ); ?>
+	/>
+	<label for="bp_media_profiles_document_support">
+		<?php _e( 'Allow members to upload documents in <strong>profiles</strong>', 'buddyboss' ); ?>
+	</label>
+	<?php
+}
+
+/**
+ * Checks if media forums document support is enabled.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $default integer
+ *
+ * @return bool Is media forums document support enabled or not
+ */
+function bp_is_profiles_document_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_profiles_document_support_enabled', (bool) get_option( 'bp_media_profiles_document_support', $default ) );
+}
+

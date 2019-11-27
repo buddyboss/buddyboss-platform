@@ -29,6 +29,8 @@ window.bp = window.bp || {};
 			// Adjust Document/Forms properties
 			this.prepareDocument();
 
+			$.ajaxPrefilter( this.mediaPreFilter );
+
 			// Init the BuddyPress objects
 			this.initObjects();
 
@@ -1500,6 +1502,16 @@ window.bp = window.bp || {};
 				var	group_type = $('#group-type-order-by').find(':selected').val();
 				if (typeof group_type !== 'undefined') {
 					options.data += '&group_type=' + group_type;
+				}
+			}
+		},
+		mediaPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=media_filter') ) {
+				var	type = $( '#buddypress [data-bp-media-type]' ).attr( 'data-bp-media-type' );
+				if ( typeof type !== 'undefined' ) {
+					options.data += '&type=' + type;
+				} else {
+					options.data += '&type=media';
 				}
 			}
 		},

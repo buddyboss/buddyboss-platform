@@ -572,7 +572,7 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 		'bp_emails'          => '',
 		'user_default_tab'   => 'profile'
 	);
-    
+
     if ( bp_is_active( 'friends' ) ) {
 		$default_args['members_friends_layout'] = 4;
 	}
@@ -942,13 +942,25 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading member\'s photos. Please wait.', 'buddyboss' ),
 		),
+		'member-document-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading member\'s documents. Please wait.', 'buddyboss' ),
+		),
 		'media-loop-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
+		'media-loop-document-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
+		),
 		'member-media-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
+		),
+		'member-media-document-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
 		),
 		'media-album-none' => array(
 			'type'    => 'info',

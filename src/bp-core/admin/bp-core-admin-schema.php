@@ -679,6 +679,7 @@ function bp_core_install_media() {
 	   date_created datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   title text NOT NULL,
 	   privacy varchar(50) NULL DEFAULT 'public',
+	   type varchar(50) NULL DEFAULT 'media',
 	   PRIMARY KEY  (id)
    ) {$charset_collate};";
 
@@ -692,6 +693,7 @@ function bp_core_install_media() {
 		group_id bigint(20),
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
+		type varchar(50) NULL DEFAULT 'media',
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),

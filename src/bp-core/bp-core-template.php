@@ -1683,6 +1683,10 @@ function bp_is_current_component( $component = '' ) {
 		$component = 'profile';
 	}
 
+	if ( 'documents' === $component ) {
+		$component = 'media';
+	}
+
 	$bp = buddypress();
 
 	// Only check if BuddyPress found a current_component.
@@ -1696,6 +1700,8 @@ function bp_is_current_component( $component = '' ) {
 			// Since the current component is based on the visible URL slug let's
 			// check the component being passed and see if its root_slug matches.
 		} elseif ( isset( $bp->{$component}->root_slug ) && $bp->{$component}->root_slug == $bp->current_component ) {
+			$is_current_component = true;
+		} elseif ( isset( $bp->{$component}->slug ) && ( $bp->{$component}->slug === bp_get_media_slug() ) && bp_get_document_slug() === $bp->current_component ) {
 			$is_current_component = true;
 
 			// Because slugs can differ from root_slugs, we should check them too.
@@ -2762,6 +2768,23 @@ function bp_is_single_album() {
 	}
 
 	return (bool) ( bp_is_media_component() && 'albums' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+}
+
+
+/**
+ * Is the current page a single document item permalink?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a single document item permalink.
+ */
+function bp_is_single_document() {
+
+	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document() && is_numeric( bp_action_variable( 0 ) ) ) {
+		return true;
+	}
+
+	return (bool) ( bp_is_media_component() && 'documents' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 
@@ -3948,4 +3971,21 @@ function bp_email_get_salutation( $settings = array() ) {
 	 * @param string $token    The Recipient token.
 	 */
 	return apply_filters( 'bp_email_get_salutation', sprintf( '%s' , $token ), $settings, $token );
+}
+
+/**
+ * Is the current page a group's document page?
+ *
+ * @since BuddyPress 1.2.3
+ *
+ * @return bool True if the current page is a group's document page.
+ */
+function bp_is_group_document() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
 }

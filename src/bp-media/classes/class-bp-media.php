@@ -199,6 +199,7 @@ class BP_Media {
 		$this->attachment_id = apply_filters_ref_array( 'bp_media_attachment_id_before_save', array( $this->attachment_id, &$this ) );
 		$this->user_id       = apply_filters_ref_array( 'bp_media_user_id_before_save', array( $this->user_id, &$this ) );
 		$this->title         = apply_filters_ref_array( 'bp_media_title_before_save', array( $this->title, &$this ) );
+		$this->type          = apply_filters_ref_array( 'bp_media_type_before_save', array( $this->type, &$this ) );
 		$this->album_id      = apply_filters_ref_array( 'bp_media_album_id_before_save', array( $this->album_id, &$this ) );
 		$this->activity_id   = apply_filters_ref_array( 'bp_media_activity_id_before_save', array( $this->activity_id, &$this ) );
 		$this->group_id      = apply_filters_ref_array( 'bp_media_group_id_before_save', array( $this->group_id, &$this ) );
@@ -239,9 +240,9 @@ class BP_Media {
 
 		// If we have an existing ID, update the media item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s,  type = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->type, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->album_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, $this->type );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -301,6 +302,7 @@ class BP_Media {
 			array(
 				'scope'        => '',              // Scope - Groups, friends etc.
 				'page'         => 1,               // The current page.
+				'type'         => 'media',         // The current page.
 				'per_page'     => 20,              // Media items per page.
 				'max'          => false,           // Max number of items to return.
 				'fields'       => 'all',           // Fields to include.
@@ -411,6 +413,10 @@ class BP_Media {
 
 		if ( ! empty( $r['group_id'] ) ) {
 			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
+		}
+
+		if ( ! empty( $r['type'] ) ) {
+			$where_conditions['type'] = "m.type = '{$r['type']}'";
 		}
 
 		if ( ! empty( $r['privacy'] ) ) {

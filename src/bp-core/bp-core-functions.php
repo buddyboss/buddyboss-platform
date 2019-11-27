@@ -520,7 +520,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// 'register', 'activate', 'terms' and 'privacy' do not have components, but should be whitelisted.
-		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard', 'new_forums_page' ), true ) ) {
+		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard', 'new_forums_page', 'document' ), true ) ) {
 			continue;
 		}
 
@@ -776,6 +776,7 @@ function bp_core_get_directory_page_default_titles() {
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
+		'document'        => __( 'Documents', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
 		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),

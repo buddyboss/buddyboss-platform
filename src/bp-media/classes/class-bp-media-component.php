@@ -121,7 +121,7 @@ class BP_Media_Component extends BP_Component {
 				 *
 				 * 'album' is not a registered nav item, but we add a screen handler manually.
 				 */
-				if ( bp_is_user_media() && in_array( bp_current_action(), array( 'albums' ), true ) ) {
+				if ( bp_is_user_media() && in_array( bp_current_action(), array( 'albums', 'documents' ), true ) ) {
 					require $this->path . 'bp-media/screens/' . bp_current_action() . '.php';
 				}
 			}
@@ -165,10 +165,17 @@ class BP_Media_Component extends BP_Component {
 				'slug'                                    => 'photos',
 				'root_slug'                               => isset( $bp->pages->media->slug ) ? $bp->pages->media->slug : BP_MEDIA_SLUG,
 				'has_directory'                           => true,
-				// 'notification_callback' => 'bp_media_format_notifications',
-										  'global_tables' => $global_tables,
+				'global_tables'                           => $global_tables,
 				'directory_title'                         => isset( $bp->pages->media->title ) ? $bp->pages->media->title : $default_directory_title,
 				'search_string'                           => __( 'Search Photos&hellip;', 'buddyboss' ),
+			),
+			array(
+				'slug'                                    => 'documents',
+				'root_slug'                               => 'documents',
+				'has_directory'                           => true,
+				'global_tables'                           => $global_tables,
+				'directory_title'                         => 'Documents',
+				'search_string'                           => __( 'Search Documents&hellip;', 'buddyboss' ),
 			)
 		);
 
@@ -285,6 +292,61 @@ class BP_Media_Component extends BP_Component {
 
 		parent::setup_nav( $main_nav, $sub_nav );
 
+		if ( bp_is_profiles_document_support_enabled() ) {
+
+			// Determine user to use.
+			if ( bp_displayed_user_domain() ) {
+				$user_domain = bp_displayed_user_domain();
+			} elseif ( bp_loggedin_user_domain() ) {
+				$user_domain = bp_loggedin_user_domain();
+			} else {
+				return;
+			}
+
+			$slug          = bp_get_document_slug();
+			$document_link = trailingslashit( $user_domain . $slug );
+
+			// Only grab count if we're on a user page and current user has access.
+			if ( bp_is_user() ) {
+				$count    = bp_media_get_total_document_count( bp_displayed_user_id() );
+				$class    = ( 0 === $count ) ? 'no-count' : 'count';
+				$nav_name = sprintf(
+				/* translators: %s: total media count for the current user */
+					__( 'Documents %s', 'buddyboss' ),
+					sprintf(
+						'<span class="%s">%s</span>',
+						esc_attr( $class ),
+						bp_core_number_format( $count )
+					)
+				);
+			} else {
+				$nav_name = __( 'Documents', 'buddyboss' );
+			}
+
+			// Add 'Photos' to the main navigation.
+			$main_nav = array(
+				'name'                => $nav_name,
+				'slug'                => $slug,
+				'position'            => 90,
+				'screen_function'     => 'media_screen',
+				'default_subnav_slug' => 'my-document',
+				'item_css_id'         => 'media-my-documents',
+			);
+
+			// Add the subnav items to the profile.
+			$sub_nav[] = array(
+				'name'            => $nav_name,
+				'slug'            => 'my-document',
+				'parent_url'      => $document_link,
+				'parent_slug'     => $slug,
+				'screen_function' => 'media_screen',
+				'position'        => 10,
+				'item_css_id'     => 'media-my-documents',
+			);
+		}
+
+		parent::setup_nav( $main_nav, $sub_nav );
+
 	}
 
 	/**
@@ -333,6 +395,31 @@ class BP_Media_Component extends BP_Component {
 			}
 		}
 
+		// Menus for logged in user.
+		if ( is_user_logged_in() && bp_is_profiles_document_support_enabled() ) {
+
+			// Setup the logged in user variables.
+			$document_link = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() );
+
+			// Add main Messages menu.
+			$wp_admin_nav[] = array(
+				'parent' => buddypress()->my_account_menu_id,
+				'id'     => 'my-account-document',
+				'title'  => __( 'Documents', 'buddyboss' ),
+				'href'   => $document_link,
+			);
+
+			// Media.
+			$wp_admin_nav[] = array(
+				'parent'   => 'my-account-document',
+				'id'       => 'my-account-document-my-document',
+				'title'    => __( 'My Documents', 'buddyboss' ),
+				'href'     => $document_link,
+				'position' => 10,
+			);
+
+		}
+
 		parent::setup_admin_bar( $wp_admin_nav );
 	}
 
@@ -350,6 +437,17 @@ class BP_Media_Component extends BP_Component {
 				$bp->bp_options_title = __( 'My Photos', 'buddyboss' );
 
 			} elseif ( ! bp_is_my_profile() && ! bp_is_single_album() ) {
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
+				$bp->bp_options_title  = bp_get_displayed_user_fullname();
+			} elseif ( bp_is_my_profile() && ! bp_is_single_document() ) {
+				$bp->bp_options_title = __( 'My Documents', 'buddyboss' );
+			} elseif ( ! bp_is_my_profile() && ! bp_is_single_document() ) {
 				$bp->bp_options_avatar = bp_core_fetch_avatar(
 					array(
 						'item_id' => bp_displayed_user_id(),

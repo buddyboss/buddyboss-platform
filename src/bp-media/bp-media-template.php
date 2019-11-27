@@ -204,6 +204,7 @@ function bp_has_media( $args = '' ) {
 			'sort'         => 'DESC',          // Sort DESC or ASC.
 			'order_by'     => false,           // Order by. Default: date_created
 			'page'         => 1,               // Which page to load.
+			'type'         => 'media',         // Which type to load media/document.
 			'per_page'     => 20,              // Number of items per page.
 			'page_arg'     => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
 			'max'          => false,           // Max number to return.
@@ -232,6 +233,10 @@ function bp_has_media( $args = '' ) {
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
 		$r['search_terms'] = $_REQUEST['s'];
+	}
+
+	if ( ! empty( $_REQUEST['type'] ) ) {
+		$r['type'] = $_REQUEST['type'];
 	}
 
 	// Do not exceed the maximum per page.
@@ -1452,4 +1457,24 @@ function bp_album_user_can_delete( $album = false ) {
 	 * @param object $album   Current album item object.
 	 */
 	return (bool) apply_filters( 'bp_album_user_can_delete', $can_delete, $album );
+}
+
+/**
+ * Return the media component slug.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string
+ */
+function bp_get_document_slug() {
+
+	/**
+	 * Filters the media component slug.
+	 *
+	 * @param string $slug Media component slug.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 */
+	return apply_filters( 'bp_get_document_slug', 'documents' );
 }

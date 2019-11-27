@@ -291,6 +291,7 @@ function bp_media_get( $args = '' ) {
 			'max'          => false,        // Maximum number of results to return.
 			'fields'       => 'all',
 			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
+			'type'         => 'media',            // Page 1 without a per_page will result in no pagination.
 			'per_page'     => false,        // results per page
 			'sort'         => 'DESC',       // sort ASC or DESC
 			'order_by'     => false,       // order by
@@ -313,6 +314,7 @@ function bp_media_get( $args = '' ) {
 	$media = BP_Media::get(
 		array(
 			'page'         => $r['page'],
+			'type'         => $r['type'],
 			'per_page'     => $r['per_page'],
 			'user_id'      => $r['user_id'],
 			'activity_id'  => $r['activity_id'],
@@ -364,6 +366,7 @@ function bp_media_get_specific( $args = '' ) {
 			'media_ids' => false,      // A single media_id or array of IDs.
 			'max'       => false,      // Maximum number of results to return.
 			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
+			'type'      => 'media',    // Page 1 without a per_page will result in no pagination.
 			'per_page'  => false,      // Results per page.
 			'sort'      => 'DESC',     // Sort ASC or DESC
 			'order_by'  => false,     // Sort ASC or DESC
@@ -375,6 +378,7 @@ function bp_media_get_specific( $args = '' ) {
 		'in'       => $r['media_ids'],
 		'max'      => $r['max'],
 		'page'     => $r['page'],
+		'type'     => $r['type'],
 		'per_page' => $r['per_page'],
 		'sort'     => $r['sort'],
 		'order_by' => $r['order_by'],
@@ -429,6 +433,7 @@ function bp_media_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of media being added.
+			'type'          => 'media',                 // title of media being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
@@ -446,6 +451,7 @@ function bp_media_add( $args = '' ) {
 	$media->attachment_id = $r['attachment_id'];
 	$media->user_id       = (int) $r['user_id'];
 	$media->title         = $r['title'];
+	$media->type          = $r['type'];
 	$media->album_id      = (int) $r['album_id'];
 	$media->group_id      = (int) $r['group_id'];
 	$media->activity_id   = (int) $r['activity_id'];
@@ -514,6 +520,7 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
 				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+				'type'      => ! empty( $media['type'] ) ? $media['type'] : false,
 			) );
 
 			if ( $media_id ) {
@@ -2072,4 +2079,163 @@ function bp_media_import_status_request() {
 			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
 		)
 	);
+}
+
+/**
+ * Get the media count of a given user.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param int $user_id ID of the user whose media are being counted.
+ * @return int media count of the user.
+ */
+function bp_media_get_total_document_count( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	}
+
+	$count = wp_cache_get( 'bp_total_document_for_user_' . $user_id, 'bp' );
+
+	if ( false === $count ) {
+		$count = BP_Media::total_media_count( $user_id );
+		wp_cache_set( 'bp_total_document_for_user_' . $user_id, $count, 'bp' );
+	}
+
+	/**
+	 * Filters the total media count for a given user.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $count Total media count for a given user.
+	 */
+	return apply_filters( 'bp_media_get_total_document_count', (int) $count );
+}
+
+/**
+ * Create and upload the media file
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array|null|WP_Error|WP_Post
+ */
+function bp_media_upload_document() {
+	/**
+	 * Make sure user is logged in
+	 */
+	if ( ! is_user_logged_in() ) {
+		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
+	}
+
+	$attachment = bp_media_upload_document_handler();
+
+	if ( is_wp_error( $attachment ) ) {
+		return $attachment;
+	}
+
+	$name = $attachment->post_title;
+
+	$result = array(
+		'id'    => (int) $attachment->ID,
+		'url'   => esc_url( $attachment->guid ),
+		'name'  => esc_attr( $name ),
+		'type'  => esc_attr( 'document' ),
+	);
+
+	return $result;
+}
+
+/**
+ * Media upload handler
+ *
+ * @param string $file_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return array|int|null|WP_Error|WP_Post
+ */
+function bp_media_upload_document_handler( $file_id = 'file' ) {
+
+	/**
+	 * Include required files
+	 */
+
+	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
+		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
+		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
+	}
+
+	if ( ! function_exists( 'media_handle_upload' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/admin.php';
+	}
+
+	add_filter( 'upload_mimes', 'bp_media_document_allowed_mimes', 9, 1 );
+
+	$aid = media_handle_upload(
+		$file_id,
+		0,
+		array(),
+		array(
+			'test_form'            => false,
+			'upload_error_strings' => array(
+				false,
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
+				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
+				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
+				__( 'No file was uploaded.', 'buddyboss' ),
+				'',
+				__( 'Missing a temporary folder.', 'buddyboss' ),
+				__( 'Failed to write file to disk.', 'buddyboss' ),
+				__( 'File upload stopped by extension.', 'buddyboss' ),
+			),
+		)
+	);
+
+	// if has wp error then throw it.
+	if ( is_wp_error( $aid ) ) {
+		return $aid;
+	}
+
+	$attachment = get_post( $aid );
+
+	if ( ! empty( $attachment ) ) {
+		update_post_meta( $attachment->ID, 'bp_media_upload', true );
+		update_post_meta( $attachment->ID, 'bp_media_saved', '0' );
+		return $attachment;
+	}
+
+	return new WP_Error( 'error_uploading', __( 'Error while uploading document.', 'buddyboss' ), array( 'status' => 500 ) );
+
+}
+
+/**
+ * Mine type for uploader allowed by buddyboss media for security reason
+ *
+ * @param  Array $mime_types carry mime information
+ * @since BuddyBoss 1.0.0
+ *
+ * @return Array
+ */
+function bp_media_document_allowed_mimes( $mime_types ) {
+
+	// Creating a new array will reset the allowed file types
+	$mime_types = array(
+
+		'txt' => 'text/plain',
+		// archives
+		'zip' => 'application/zip',
+		// adobe
+		'pdf' => 'application/pdf',
+		'psd' => 'image/vnd.adobe.photoshop',
+		// ms office
+		'doc' => 'application/msword',
+		'rtf' => 'application/rtf',
+		'xls' => 'application/vnd.ms-excel',
+		'ppt' => 'application/vnd.ms-powerpoint',
+		// open office
+		'odt' => 'application/vnd.oasis.opendocument.text',
+		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
+	);
+
+	return $mime_types;
 }

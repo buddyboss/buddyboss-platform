@@ -137,6 +137,7 @@ class BP_Media_Template {
 
 		$defaults = array(
 			'page'         => 1,
+			'type'         => 'media',
 			'per_page'     => 20,
 			'page_arg'     => 'acpage',
 			'max'          => false,
@@ -171,6 +172,7 @@ class BP_Media_Template {
 					'max'         => $max,
 					'count_total' => $count_total,
 					'page'        => $this->pag_page,
+					'type'        => $type,
 					'per_page'    => $this->pag_num,
 					'sort'        => $sort,
 					'order_by'    => $order_by,
@@ -187,6 +189,7 @@ class BP_Media_Template {
 					'count_total'  => $count_total,
 					'per_page'     => $this->pag_num,
 					'page'         => $this->pag_page,
+					'type'         => $type,
 					'sort'         => $sort,
 					'order_by'     => $order_by,
 					'search_terms' => $search_terms,

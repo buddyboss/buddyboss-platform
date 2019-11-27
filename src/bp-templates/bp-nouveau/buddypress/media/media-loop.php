@@ -34,7 +34,13 @@ bp_nouveau_before_loop(); ?>
 
 <?php else : ?>
 
-	<?php bp_nouveau_user_feedback( 'media-loop-none' ); ?>
+	<?php
+	if ( isset( $_POST ) && isset( $_POST['type'] ) && 'document' === $_POST['type'] )  {
+		bp_nouveau_user_feedback( 'media-loop-document-none' );
+	} else {
+		bp_nouveau_user_feedback( 'media-loop-none' );
+	}
+	?>
 
 <?php endif; ?>
 
