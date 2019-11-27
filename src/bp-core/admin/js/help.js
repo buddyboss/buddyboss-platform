@@ -38,7 +38,7 @@
 					$( '#bp-help-main-menu-wrap' ).removeClass( 'loading' );
 					var status = navigator.onLine;
 					if ( ! status ) {
-						$( '#bp-help-main-menu-wrap' ).html('<p>'+BP_HELP.bb_help_no_network+'</p>');
+						$( '#bp-help-main-menu-wrap' ).html('<div class="notice notice-error"><p>'+BP_HELP.bb_help_no_network+'</p></div>');
 					} else {
 						$( '#bp-help-main-menu-wrap' ).html( err );
 					}
@@ -64,7 +64,7 @@
 					$( '.bp-help-sidebar' ).removeClass( 'loading' ).html('');
 					var status = navigator.onLine;
 					if ( ! status ) {
-						$( '#bp-help-content-area' ).html('<p>'+BP_HELP.bb_help_no_network+'</p>');
+						$( '#bp-help-content-area' ).html('<div class="notice notice-error"><p>'+BP_HELP.bb_help_no_network+'</p></div>');
 					} else {
 						$( '#bp-help-content-area' ).html( err );
 					}
