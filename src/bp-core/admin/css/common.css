@@ -1732,7 +1732,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
   position: absolute;
   left: 5px;
   width: 9px;
-  background: #444;
+  background: #dadada;
   animation: contentLoader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
 }
 
