@@ -551,6 +551,7 @@ function bp_nouveau_ajax_post_update() {
 			// This function is setting the current group!
 			$activity_id = groups_post_update(
 				array(
+					'id'       => $activity_id,
 					'content'  => $_POST['content'],
 					'group_id' => $item_id,
 				)

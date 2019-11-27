@@ -357,6 +357,7 @@ add_filter( 'bp_activity_set_groups_scope_args', 'bp_groups_filter_activity_scop
  * @return WP_Error|bool|int See {@link bp_activity_add()}.
  */
 function groups_record_activity( $args = '' ) {
+	global $bp_activity_edit;
 
 	if ( ! bp_is_active( 'activity' ) ) {
 		return false;
@@ -373,6 +374,32 @@ function groups_record_activity( $args = '' ) {
 
 		if ( isset( $group->status ) && 'public' != $group->status ) {
 			$hide_sitewide = true;
+		}
+	}
+
+	// Edit group activity args
+	if ( ! empty( $args['id'] ) ) {
+		$activity = new BP_Activity_Activity( $args['id'] );
+
+		if ( ! empty( $activity->id ) ) {
+			$bp_activity_edit = true;
+
+			$args = array(
+				'id'                => $activity->id,
+				'action'            => ! empty( $args['action'] ) ? $args['action'] : $activity->action,
+				'content'           => ! empty( $args['content'] ) ? $args['content'] : '',
+				'component'         => $activity->component,
+				'type'              => $activity->type,
+				'primary_link'      => $activity->primary_link,
+				'user_id'           => $activity->user_id,
+				'item_id'           => ! empty( $args['item_id'] ) ? $args['item_id'] : $activity->item_id,
+				'secondary_item_id' => $activity->secondary_item_id,
+				'recorded_time'     => $activity->date_recorded,
+				'hide_sitewide'     => $activity->hide_sitewide,
+				'is_spam'           => $activity->is_spam,
+				'privacy'           => $activity->privacy,
+				'error_type'        => ! empty( $args['error_type'] ) ? $args['error_type'] : $activity->error_type,
+			);
 		}
 	}
 
