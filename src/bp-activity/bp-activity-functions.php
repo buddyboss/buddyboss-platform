@@ -2270,6 +2270,8 @@ function bp_activity_post_update( $args = '' ) {
 		$activity = new BP_Activity_Activity( $r['id'] );
 
 		if ( ! empty( $activity->id ) ) {
+			$bp_activity_edit = true;
+
 			$activity_id = bp_activity_add(
 				array(
 					'id'                => $activity->id,
@@ -2288,8 +2290,6 @@ function bp_activity_post_update( $args = '' ) {
 					'error_type'        => $r['error_type'],
 				)
 			);
-
-			$bp_activity_edit = true;
 		}
 	} else {
 		// Now write the values.

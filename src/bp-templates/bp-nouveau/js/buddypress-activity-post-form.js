@@ -82,6 +82,11 @@ window.bp = window.bp || {};
 			$( '#whats-new' ).html( activity_data.content );
 			self.postForm.$el.find('#bp-activity-id').val(activity_data.id);
 
+			if ( typeof activity_data.gif !== 'undefined' && Object.keys( activity_data.gif ).length ) {
+				self.postForm.$el.find('#activity-gif-button').trigger('click');
+				self.activityToolbar.gifMediaSearchDropdownView.model.set( 'gif_data', activity_data.gif );
+			}
+
 			// Display media for editing
 			if ( typeof activity_data.media !== 'undefined' && activity_data.media.length ) {
 
@@ -1231,6 +1236,7 @@ window.bp = window.bp || {};
 			'click #activity-media-button': 'toggleMediaSelector',
 			'click .post-elements-buttons-item': 'activeButton'
 		},
+		gifMediaSearchDropdownView : false,
 
 		initialize: function() {
 			document.addEventListener( 'keydown', _.bind( this.closePickersOnEsc, this ) );
@@ -1268,8 +1274,8 @@ window.bp = window.bp || {};
 			this.closeURLInput();
 			this.closeMediaSelector();
 			if ( this.$gifPickerEl.is(':empty') ) {
-				var gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
-				this.$gifPickerEl.html( gifMediaSearchDropdownView.render().el );
+				this.gifMediaSearchDropdownView = new bp.Views.GifMediaSearchDropdown({model: this.model});
+				this.$gifPickerEl.html( this.gifMediaSearchDropdownView.render().el );
 			}
 			this.$self.toggleClass('open');
 			this.$gifPickerEl.toggleClass('open');
@@ -1577,7 +1583,8 @@ window.bp = window.bp || {};
 
 			bp.Nouveau.Activity.postForm.activityAttachments = new bp.Views.ActivityAttachments( { model: this.model } );
 			this.views.add( bp.Nouveau.Activity.postForm.activityAttachments );
-			this.views.add( new bp.Views.ActivityToolbar( { model: this.model } ) );
+			bp.Nouveau.Activity.postForm.activityToolbar = new bp.Views.ActivityToolbar( { model: this.model } );
+			this.views.add( bp.Nouveau.Activity.postForm.activityToolbar );
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
