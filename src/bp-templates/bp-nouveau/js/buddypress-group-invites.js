@@ -38,27 +38,24 @@ window.bp = window.bp || {};
 
 			var $group_invites_select = $( 'body' ).find( '#group-invites-send-to-input' );
 			var page = 1;
+			var scope = '';
 
 			// Activate bp_mentions
 			this.addSelect2( $group_invites_select );
 
 			var feedbackParagraphTagClass 	 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback' );
 			var feedbackParagraphTagSelector 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback p' );
-
-			var feedbackDivHide = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback' );
-			feedbackDivHide.hide();
+			var feedbackDivHide 				 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback' );
 			var feedbackInviteColumn = $( '#group-invites-container .group-invites-column .bp-invites-feedback .bp-feedback' );
 			var feedbackInvitePTag   = $( '#group-invites-container .group-invites-column .bp-invites-feedback .bp-feedback p' );
 
 			// Feedback Selector left.
 			var feedbackSelectorLeftClass 		 = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback' );
 			var feedbackParagraphTagSelectorLeft = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback p' );
-
-			var listSelector = $( '.group-invites-members-listing #members-list' );
-			var lastSelector = $( '.group-invites-members-listing .last' );
-
-			var memberInvitedList = $( '.members.bp-invites-content #members-list' );
-			var subNavFilterLast  = $( '#group-invites-container .group-invites-column .subnav-filters div .last' );
+			var listSelector 					 = $( '.group-invites-members-listing #members-list' );
+			var lastSelector 					 = $( '.group-invites-members-listing .last' );
+			var memberInvitedList 				 = $( '.members.bp-invites-content #members-list' );
+			var subNavFilterLast  				 = $( '#group-invites-container .group-invites-column .subnav-filters div .last' );
 
 			// Set Feedback for all members.
 			feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
@@ -355,6 +352,7 @@ window.bp = window.bp || {};
 							feedbackSelectorLeftClass.addClass( 'info' );
 							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 						} else {
+							$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 							listSelector.html('');
 							lastSelector.html('');
 							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
@@ -365,10 +363,15 @@ window.bp = window.bp || {};
 				});
 			}
 
-			$('.group-invites-select-members-dropdown').on('change', function () {
+			$( '#bp-group-send-invite-switch-checkbox' ).on( 'change', function () {
 
 				$( '#group-invites-container .bb-groups-invites-left #bp-invites-dropdown-options-loader' ).removeClass( 'bp-invites-dropdown-options-loader-hide' );
-				var valueSelected = this.value;
+				var valueSelected = '';
+				if( $( this ).is( ':checked' ) ) {
+					valueSelected = 'friends';
+				} else {
+					valueSelected = 'members';
+				}
 
 				if ( valueSelected ) {
 					page = 1;
@@ -387,6 +390,7 @@ window.bp = window.bp || {};
 						data: data,
 						success: function (response) {
 							if ( response.success ) {
+								$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).hide();
 								listSelector.html('');
 								listSelector.html( response.data.html );
 								lastSelector.html('');
@@ -395,6 +399,7 @@ window.bp = window.bp || {};
 								feedbackSelectorLeftClass.addClass( 'info' );
 								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 							} else {
+								$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 								listSelector.html('');
 								lastSelector.html('');
 								feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
@@ -449,11 +454,18 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-left .last #bp-group-invites-next-page', function() {
 				page = page + 1;
+
+				if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+					scope = 'friends';
+				} else {
+					scope = 'members';
+				}
+
 				var data = {
 					'action'       : 'groups_get_group_potential_invites',
 					'nonce'        : BP_Nouveau.nonces.groups,
 					'group_id'     : BP_Nouveau.group_invites.group_id,
-					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'scope'        : scope,
 					'page'     	   : page,
 					'search_terms' : $( '#group-invites-container .bb-groups-invites-left #group_invites_search' ).val()
 				};
@@ -486,11 +498,17 @@ window.bp = window.bp || {};
 					return false;
 				}
 
+				if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+					scope = 'friends';
+				} else {
+					scope = 'members';
+				}
+
 				var data = {
 					'action'       : 'groups_get_group_potential_invites',
 					'nonce'        : BP_Nouveau.nonces.groups,
 					'group_id'     : BP_Nouveau.group_invites.group_id,
-					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'scope'        : scope,
 					'page'     	   : 1,
 					'search_terms' : searchText
 				};
@@ -555,12 +573,18 @@ window.bp = window.bp || {};
 							$group_invites_select.find('option').remove();
 							$('textarea#send-invites-control').val( '' );
 
+							if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+								scope = 'friends';
+							} else {
+								scope = 'members';
+							}
+
 							page  = 1;
 							var data = {
 								'action'   : 'groups_get_group_potential_invites',
 								'nonce'    : BP_Nouveau.nonces.groups,
 								'group_id' : BP_Nouveau.group_invites.group_id,
-								'scope'    : $( '#group-invites-container .bb-groups-invites-left .group-invites-select-members-dropdown' ).val(),
+								'scope'    : scope,
 								'page'     : page
 							};
 
@@ -579,6 +603,7 @@ window.bp = window.bp || {};
 										feedbackSelectorLeftClass.addClass( 'info' );
 										feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 									} else {
+										$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 										listSelector.html('');
 										lastSelector.html('');
 										feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
@@ -604,11 +629,17 @@ window.bp = window.bp || {};
 				$group_invites_select.find('option').remove();
 				$('textarea#send-invites-control').val( '' );
 				page  = 1;
+
+				if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+					scope = 'friends';
+				} else {
+					scope = 'members';
+				}
 				var data = {
 					'action'   : 'groups_get_group_potential_invites',
 					'nonce'    : BP_Nouveau.nonces.groups,
 					'group_id' : BP_Nouveau.group_invites.group_id,
-					'scope'    : $( '#group-invites-container .bb-groups-invites-left .group-invites-select-members-dropdown' ).val(),
+					'scope'    : scope,
 					'page'     : page
 				};
 
@@ -646,11 +677,16 @@ window.bp = window.bp || {};
 					return false;
 				}
 				page  = 1;
+				if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+					scope = 'friends';
+				} else {
+					scope = 'members';
+				}
 				var data = {
 					'action'       : 'groups_get_group_potential_invites',
 					'nonce'        : BP_Nouveau.nonces.groups,
 					'group_id'     : BP_Nouveau.group_invites.group_id,
-					'scope'        : $( '.group-invites-select-members-dropdown :selected' ).val(),
+					'scope'        : scope,
 					'page'     	   : page,
 					'search_terms' : searchText
 				};

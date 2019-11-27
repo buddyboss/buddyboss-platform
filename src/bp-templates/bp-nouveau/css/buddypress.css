@@ -3557,6 +3557,10 @@ div#bp-group-invite-content {
   display: none;
 }
 
+.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback, .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .bp-invites-feedback {
+  display: none;
+}
+
 .hr-text {
   line-height: 1em;
   position: relative;
