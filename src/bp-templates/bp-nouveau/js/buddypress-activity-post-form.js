@@ -28,6 +28,7 @@ window.bp = window.bp || {};
 			this.buttons = new Backbone.Collection();
 			this.postForm = false;
 			this.activityAttachments = false;
+			this.editActivityData = false;
 
 			if ( !_.isUndefined( window.Dropzone ) && !_.isUndefined( BP_Nouveau.media ) ) {
 				this.dropzoneView();
@@ -77,10 +78,23 @@ window.bp = window.bp || {};
 				return;
 			}
 
+			// reset post form before editing
+			self.postForm.$el.trigger('reset');
+
+			// set edit activity data
+			self.editActivityData = activity_data;
+
 			self.postForm.$el.addClass('bp-activity-edit');
-			$( '#whats-new' ).trigger( 'focus' );
-			$( '#whats-new' ).html( activity_data.content );
+			self.postForm.$el.find( '#whats-new' ).trigger( 'focus' );
+			self.postForm.$el.find( '#whats-new' ).html( activity_data.content );
 			self.postForm.$el.find('#bp-activity-id').val(activity_data.id);
+
+			// set object of activity and item id when group activity
+			if ( typeof activity_data.object !== 'undefined' && typeof activity_data.item_id !== 'undefined' && 'groups' === activity_data.object ) {
+				self.postForm.model.set( 'item_id', activity_data.item_id );
+				self.postForm.model.set( 'object', 'group' );
+			}
+
 			var bpActivityEvent = new Event('bp_activity_edit');
 
 			// close and destroy existing gif instance
@@ -196,7 +210,8 @@ window.bp = window.bp || {};
 			link_title: '',
 			link_description: '',
 			link_url: '',
-			gif_data: {}
+			gif_data: {},
+			privacy: 'public'
 		}
 	} );
 
@@ -943,11 +958,11 @@ window.bp = window.bp || {};
 		},
 
 		initialize: function() {
-			this.model = new Backbone.Model();
+			this.model.set( 'privacy', this.$el.find('#bp-activity-privacy').val() );
 		},
 
-		change: function() {
-			this.model.set( { 'selected': this.el.value } );
+		change: function(e) {
+			this.model.set( { 'privacy': e.target.value } );
 		}
 	} );
 
@@ -1506,13 +1521,13 @@ window.bp = window.bp || {};
 		id: 'activity-form-submit-wrapper',
 		initialize: function() {
 			// Select box for the object
-			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) {
+			if ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length && bp.Nouveau.Activity.postForm.editActivityData === false ) {
 				this.views.add( new bp.Views.FormTarget( { model: this.model } ) );
 			}
 
 			// activity privacy dropdown for profile
-			if ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) {
-				var privacy = new bp.Views.ActivityPrivacy();
+			if ( bp.Nouveau.Activity.postForm.editActivityData === false && ( ( ! _.isUndefined( BP_Nouveau.activity.params.objects ) && 1 < _.keys( BP_Nouveau.activity.params.objects ).length ) || ( ! _.isUndefined( BP_Nouveau.activity.params.object ) && 'user' === BP_Nouveau.activity.params.object ) ) ) {
+				var privacy = new bp.Views.ActivityPrivacy( { model: this.model } );
 				this.views.add(privacy);
 			}
 
@@ -1624,6 +1639,7 @@ window.bp = window.bp || {};
 
 			$( '#whats-new-content' ).find('#bp-activity-id').val(''); // reset activity id if in edit mode
 			bp.Nouveau.Activity.postForm.postForm.$el.removeClass('bp-activity-edit'); // remove edit class if in edit mode
+			bp.Nouveau.Activity.postForm.editActivityData = false;
 
 			// Reset the model
 			this.model.clear();

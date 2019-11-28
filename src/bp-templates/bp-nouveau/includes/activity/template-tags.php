@@ -1036,11 +1036,11 @@ function bp_nouveau_edit_activity_data() {
 }
 
 /**
- * Get the Activity timestamp.
+ * Get the Activity edit data.
  *
- * @since BuddyPress 3.0.0
+ * @since BuddyBoss 1.2.1
  *
- * @return integer The Activity timestamp.
+ * @return json The Activity edit data.
  */
 function bp_nouveau_get_edit_activity_data() {
 	global $activities_template;
@@ -1048,15 +1048,18 @@ function bp_nouveau_get_edit_activity_data() {
 	$activity = apply_filters( 'bp_nouveau_get_edit_activity_data', array(
 			'id'      => bp_get_activity_id(),
 			'content' => $activities_template->activity->content,
+			'item_id' => bp_get_activity_item_id(),
+			'object'  => bp_get_activity_object_name(),
+			'privacy' => bp_get_activity_privacy(),
 		)
 	);
 
 	/**
-	 * Filter here to edit the activity timestamp.
+	 * Filter here to edit the activity edit data.
 	 *
-	 * @since BuddyPress 3.0.0
+	 * @since BuddyBoss 1.2.1
 	 *
-	 * @param integer $value The Activity timestamp.
+	 * @param json $activity The Activity edit data.
 	 */
 	return htmlentities( wp_json_encode( $activity ) );
 }
