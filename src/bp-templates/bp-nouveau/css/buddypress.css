@@ -1106,7 +1106,6 @@ a.layout-grid-view {
 #activity-form-submit-wrapper {
   border-top: 1px solid #ddd;
   display: flex;
-  justify-content: space-between;
   flex-flow: row wrap;
   align-items: center;
   padding: 0 10px;
@@ -1114,19 +1113,25 @@ a.layout-grid-view {
 
 #whats-new-post-in-box {
   margin: 10px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 #whats-new-post-in-box #whats-new-post-in-box-items {
   list-style: none;
-  margin: 10px 0;
+  position: relative;
 }
 
 #whats-new-post-in-box #whats-new-post-in-box-items li {
   margin-bottom: 10px;
-}
-
-#whats-new-post-in-box #whats-new-post-in-box-items #activity-autocomplete {
-  padding: 0.3em;
 }
 
 #whats-new-post-in-box #whats-new-post-in-box-items .bp-activity-object {
@@ -1138,14 +1143,15 @@ a.layout-grid-view {
   -webkit-align-items: center;
   -webkit-box-align: center;
   align-items: center;
-  padding: 0.2em;
+  padding: 5px 10px;
 }
 
 #whats-new-post-in-box #whats-new-post-in-box-items .bp-activity-object .avatar {
   width: 30px;
 }
 
-#whats-new-post-in-box #whats-new-post-in-box-items .bp-activity-object span {
+#whats-new-post-in-box #whats-new-post-in-box-items .bp-activity-object .bp-item-name {
+  font-size: 16px;
   padding-left: 10px;
   vertical-align: middle;
 }
@@ -1159,8 +1165,37 @@ a.layout-grid-view {
   border: 1px solid #d6d6d6;
 }
 
+#whats-new-post-in-box #activity-autocomplete {
+  font-size: 15px;
+  padding: 2px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+#whats-new-post-in {
+  margin-right: 10px;
+}
+
+#bp-activity-group-ac-items {
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  min-width: 200px;
+  max-height: 290px;
+  overflow: auto;
+  padding: 5px 0;
+  position: absolute;
+  width: 100%;
+  z-index: 11;
+}
+
+#bp-activity-group-ac-items:empty {
+  display: none;
+}
+
 #whats-new-submit {
-  margin: 10px 0;
+  margin: 10px 0 10px auto;
   display: flex;
   flex-flow: row-reverse;
 }
@@ -1168,6 +1203,100 @@ a.layout-grid-view {
 #whats-new-submit input {
   font-size: 14px;
   line-height: 1;
+}
+
+#activity-post-form-privacy {
+  line-height: 1;
+}
+
+.bp-activity-privacy {
+  font-size: 16px;
+}
+
+.bb-media-privacy-wrap {
+  display: inline-block;
+  position: relative;
+}
+
+.bb-media-privacy-wrap .privacy-wrap {
+  display: block;
+  height: 20px;
+  width: 20px;
+  cursor: pointer;
+}
+
+.bb-media-privacy-wrap .privacy:before {
+  content: "\f11f";
+  font-family: dashicons;
+  font-size: 18px;
+  vertical-align: middle;
+  display: inline-block;
+}
+
+.bb-media-privacy-wrap .privacy.onlyme:before {
+  content: "\f160";
+}
+
+.bb-media-privacy-wrap .privacy.loggedin:before {
+  content: "\f307";
+}
+
+.bb-media-privacy-wrap .privacy.friends:before {
+  content: "\f110";
+}
+
+.bb-media-privacy-wrap .privacy.loading:before {
+  content: "\f113";
+  animation: spin 2s infinite linear;
+}
+
+.bb-media-privacy-wrap .activity-privacy {
+  display: none;
+  margin: 0;
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 200px;
+  left: -20px;
+  top: 35px;
+  z-index: 11;
+}
+
+.bb-media-privacy-wrap .activity-privacy:before {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 0;
+  left: 20px;
+  border: 6px solid black;
+  border-color: #fff #fff transparent transparent;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+  z-index: 1002;
+}
+
+.bb-media-privacy-wrap .activity-privacy li {
+  cursor: pointer;
+  line-height: 1;
+  margin: 0;
+  padding: 10px 15px;
+  position: relative;
+}
+
+.bb-media-privacy-wrap .activity-privacy .selected {
+  background: #fafafa;
+}
+
+.bb-media-privacy-wrap .activity-privacy.bb-open {
+  display: block;
 }
 
 .gif-media-search {
@@ -1519,6 +1648,7 @@ input.search-query-input {
 .activity-list .activity-item .activity-content .activity-inner,
 .activity-list .activity-item .activity-content blockquote {
   background: #fafafa;
+  clear: both;
   margin: 15px 0 10px;
   overflow: hidden;
   padding: 1em;

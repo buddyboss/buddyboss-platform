@@ -984,18 +984,22 @@ function bp_nouveau_activity_privacy() {
 
 	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
 	    	?>
-		    <span><?php echo $privacy; ?></span>
-		    <a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+			<div class="bb-media-privacy-wrap">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+			</div>
 		    <?php
 	    } else {
 		    ?>
-		    <span class="privacy selected <?php echo $privacy; ?>"></span>
-		    <ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
-			    <li data-value="public" class="public <?php echo 'public' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Public', 'buddyboss' ); ?></li>
-			    <li data-value="onlyme" class="onlyme <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Only Me', 'buddyboss' ); ?></li>
-			    <li data-value="loggedin" class="loggedin <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>"><?php _e( 'All Members', 'buddyboss' ); ?></li>
-			    <li data-value="friends" class="friends <?php echo 'friends' === $privacy ? 'selected' : ''; ?>"><?php _e( 'My Connections', 'buddyboss' ); ?></li>
-		    </ul>
+			<div class="bb-media-privacy-wrap">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
+					<li data-value="public" class="public <?php echo 'public' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Public', 'buddyboss' ); ?></li>
+					<li data-value="onlyme" class="onlyme <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Only Me', 'buddyboss' ); ?></li>
+					<li data-value="loggedin" class="loggedin <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>"><?php _e( 'All Members', 'buddyboss' ); ?></li>
+					<li data-value="friends" class="friends <?php echo 'friends' === $privacy ? 'selected' : ''; ?>"><?php _e( 'My Connections', 'buddyboss' ); ?></li>
+				</ul>
+			</div>
 		    <?php
 	    }
     }

@@ -400,6 +400,8 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		'item_id'    => $item->id,
 		'object'     => 'group',
 		'type'       => 'thumb',
+		'width'      => 100,
+		'height'     => 100,
 		'html'       => false
 	) );
 
