@@ -62,6 +62,11 @@ function bp_media_add_theatre_template() {
  */
 function bp_media_activity_entry() {
 	global $media_template;
+
+	if ( ( buddypress()->activity->id === bp_get_activity_object_name() && ! bp_is_profile_media_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() && ! bp_is_group_media_support_enabled() ) ) {
+		return false;
+	}
+
 	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
 	// Add Media to single activity page.
@@ -106,6 +111,11 @@ function bp_media_activity_entry() {
  */
 function bp_media_activity_append_media( $content, $activity ) {
 	global $media_template;
+
+	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profile_media_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_group_media_support_enabled() ) ) {
+		return $content;
+	}
+
 	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media(
@@ -140,8 +150,27 @@ function bp_media_activity_append_media( $content, $activity ) {
  * Get activity comment entry media to render on front end
  */
 function bp_media_activity_comment_entry( $comment_id ) {
-	global $media_template;
+	global $media_template, $activities_template;
+
 	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
+
+	if ( empty( $media_ids ) ) {
+		return false;
+	}
+
+	if ( ! empty( $activities_template ) ) {
+		$parent_activity_id = $activities_template->activity->current_comment->item_id;
+	} else {
+		$comment = new BP_Activity_Activity( $comment_id );
+		$parent_activity_id = $comment->item_id;
+	}
+
+	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+	$component       = $parent_activity->component;
+
+	if ( ( buddypress()->activity->id === $component && ! bp_is_profile_media_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! bp_is_group_media_support_enabled() ) ) {
+		return false;
+	}
 
 	if ( ! empty( $media_ids ) && bp_has_media(
 		array(
@@ -336,7 +365,7 @@ function bp_media_update_media_privacy( &$album ) {
  */
 function bp_media_forums_new_post_media_save( $post_id ) {
 
-	if ( ! empty( $_POST['bbp_media'] ) ) {
+	if ( bp_is_forums_media_support_enabled() && ! empty( $_POST['bbp_media'] ) ) {
 
 		// save activity id if it is saved in forums and enabled in platform settings
 		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
@@ -433,7 +462,7 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 	global $media_template;
 
 	// Do not embed attachment in wp-admin area
-	if ( is_admin() ) {
+	if ( is_admin() || ! bp_is_forums_media_support_enabled() ) {
 		return $content;
 	}
 
@@ -478,6 +507,12 @@ function bp_media_forums_embed_attachments( $content, $id ) {
  * @return string
  */
 function bp_media_forums_embed_gif( $content, $id ) {
+
+	// check if forums gif support enabled
+	if ( ! bp_is_forums_gif_support_enabled() ) {
+		return $content;
+	}
+
 	$gif_data = get_post_meta( $id, '_gif_data', true );
 
 	if ( empty( $gif_data ) ) {
@@ -516,6 +551,7 @@ function bp_media_forums_embed_gif( $content, $id ) {
  */
 function bp_media_forums_save_gif_data( $post_id ) {
 
+	// check if forums gif support enabled
 	if ( ! bp_is_forums_gif_support_enabled() ) {
 		return;
 	}
@@ -704,6 +740,11 @@ function bp_media_activity_embed_gif_content( $activity_id ) {
  */
 function bp_media_activity_embed_gif( $content, $activity ) {
 
+	// check if profile and groups activity gif support enabled
+	if ( ( buddypress()->activity->id === $activity->component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component && ! bp_is_groups_gif_support_enabled() ) ) {
+		return $content;
+	}
+
 	$gif_content = bp_media_activity_embed_gif_content( $activity->id );
 
 	if ( ! empty( $gif_content ) ) {
@@ -723,9 +764,25 @@ function bp_media_activity_embed_gif( $content, $activity ) {
  *
  * @return string
  */
-function bp_media_comment_embed_gif( $activity_id ) {
+function bp_media_comment_embed_gif( $comment_id ) {
+	global $activities_template;
 
-	$gif_content = bp_media_activity_embed_gif_content( $activity_id );
+	// check if profile and groups comments gif support enabled
+	if ( ! empty( $activities_template ) ) {
+		$parent_activity_id = $activities_template->activity->current_comment->item_id;
+	} else {
+		$comment = new BP_Activity_Activity( $comment_id );
+		$parent_activity_id = $comment->item_id;
+	}
+
+	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+	$component       = $parent_activity->component;
+
+	if ( ( buddypress()->activity->id === $component && ! bp_is_profiles_gif_support_enabled() ) || ( bp_is_active( 'groups' ) && buddypress()->groups->id === $component && ! bp_is_groups_gif_support_enabled() ) ) {
+		return false;
+	}
+
+	$gif_content = bp_media_activity_embed_gif_content( $comment_id );
 
 	if ( ! empty( $gif_content ) ) {
 		echo $gif_content;
