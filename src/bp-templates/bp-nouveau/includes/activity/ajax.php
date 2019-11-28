@@ -548,6 +548,9 @@ function bp_nouveau_ajax_post_update() {
 
 	} elseif ( 'group' === $object ) {
 		if ( $item_id && bp_is_active( 'groups' ) ) {
+
+			$_POST['group_id'] = $item_id; // Set POST variable for group id for further processing from other components
+
 			// This function is setting the current group!
 			$activity_id = groups_post_update(
 				array(

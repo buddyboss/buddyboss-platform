@@ -1202,6 +1202,14 @@ function bp_activity_media_add( $media ) {
 
 			//save media activity id in media
 			$media->activity_id = $activity_id;
+
+			// set media group id when group post update
+			if ( bp_is_active( 'groups' ) && ! empty( $_POST['group_id'] ) && $_POST['group_id'] > 0 ) {
+				$media->group_id = $_POST['group_id'];
+				$media->privacy  = 'grouponly';
+			}
+
+			// save media
 			$media->save();
 
 			// update activity meta
