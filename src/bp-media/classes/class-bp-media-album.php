@@ -423,7 +423,7 @@ class BP_Media_Album {
 		if ( 'ids' === $r['fields'] ) {
 			$albums = array_map( 'intval', $album_ids );
 		} else {
-			$albums = self::get_album_data( $album_ids );
+			$albums = self::get_album_data( $album_ids, $r['type'] );
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
@@ -477,7 +477,7 @@ class BP_Media_Album {
 	 * @param array $album_ids Array of media IDs.
 	 * @return array
 	 */
-	protected static function get_album_data( $album_ids = array() ) {
+	protected static function get_album_data( $album_ids = array(), $type = 'media' ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.
@@ -516,12 +516,11 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get(
-				array(
+			$album->media = bp_media_get( array(
 					'album_id'    => $album->id,
+					'type'        => $type,
 					'count_total' => true,
-				)
-			);
+				) );
 
 			$albums[] = $album;
 		}

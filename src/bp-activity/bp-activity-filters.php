@@ -1266,6 +1266,12 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
 
+			if ( 'media_document_save' === $_POST['action'] ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
+			} else {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
+			}
+
 			if ( empty( $group_id ) ) {
 				$main_activity = new BP_Activity_Activity( $activity_id );
 				if ( ! empty( $main_activity ) ) {

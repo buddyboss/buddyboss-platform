@@ -68,27 +68,41 @@ function bp_media_activity_entry() {
 		$media_ids = BP_Media::get_activity_media_id( bp_get_activity_id() );
 	}
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) { ?>
-		<div class="bb-activity-media-wrap
-		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
-		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
-		?>
-		">
-													  <?php
-														while ( bp_media() ) {
-															bp_the_media();
-															bp_get_template_part( 'media/activity-entry' );
-														}
-														?>
-		</div>
-		<?php
+	$media_activity_type = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_type', true );
+
+	if ( 'document' === $media_activity_type ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+				'type'     => 'document',
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			) ) ) { ?>
+			<div class="bb-activity-media-wrap bb-media-length-1 ">
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-document-entry' );
+				}
+				?>
+			</div>
+			<?php
+		}
+	} else {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+					'include'  => $media_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				) ) ) { ?>
+			<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?> ">
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
+				?>
+			</div>
+			<?php
+		}
 	}
 }
 
@@ -259,7 +273,7 @@ function bp_media_delete_activity_media( $activities ) {
                     bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
-            
+
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 	}

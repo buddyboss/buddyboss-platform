@@ -785,12 +785,14 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 	$results['scopes'] = [];
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
-	bp_has_media( bp_ajax_querystring( 'media' ) );
+	bp_has_media( bp_ajax_querystring( 'media' ) . '&type=media' );
 	$results['scopes']['all'] = $GLOBALS["media_template"]->total_media_count;
+	error_log( print_r( $GLOBALS["media_template"], true ) );
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
-	bp_has_media( bp_ajax_querystring( 'media' ) );
+	bp_has_media( bp_ajax_querystring( 'media&type=media' ) . '&type=media' );
+	error_log( print_r( $GLOBALS["media_template"], true ) );
 	$results['scopes']['personal'] = $GLOBALS["media_template"]->total_media_count;
 	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_personal_scope', 20 );
 
@@ -834,10 +836,11 @@ function bp_nouveau_object_template_results_media_all_scope( $querystring ) {
 function bp_nouveau_object_template_results_media_personal_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
-	$querystring['scope'] = 'personal';
-	$querystring['page'] = 1;
+	$querystring['scope']    = 'personal';
+	$querystring['page']     = 1;
 	$querystring['per_page'] = '1';
-	$querystring['user_id'] = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
+	//$querystring['type']     = 'media';
 
 	$privacy  = array( 'public' );
 	if ( is_user_logged_in() ) {

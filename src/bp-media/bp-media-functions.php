@@ -773,7 +773,7 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 function bp_get_total_media_count() {
 
 	add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
-	bp_has_media( bp_ajax_querystring( 'media' ) );
+	bp_has_media( bp_ajax_querystring( 'media' ) . '&type=media' );
 	remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
 	$count = $GLOBALS['media_template']->total_media_count;
 
@@ -912,17 +912,19 @@ function bp_album_get_specific( $args = '' ) {
 			'per_page'          => false,      // Results per page.
 			'sort'              => 'DESC',     // Sort ASC or DESC
 			'update_meta_cache' => true,
+			'count_total'       => false,
 		),
 		'media_get_specific'
 	);
 
 	$get_args = array(
-		'in'       => $r['album_ids'],
-		'max'      => $r['max'],
-		'type'     => $r['type'],
-		'page'     => $r['page'],
-		'per_page' => $r['per_page'],
-		'sort'     => $r['sort'],
+		'in'          => $r['album_ids'],
+		'max'         => $r['max'],
+		'type'        => $r['type'],
+		'page'        => $r['page'],
+		'per_page'    => $r['per_page'],
+		'sort'        => $r['sort'],
+		'count_total' => $r['count_total'],
 	);
 
 	/**

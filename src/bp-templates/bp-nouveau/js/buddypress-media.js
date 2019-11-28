@@ -1519,7 +1519,7 @@ window.bp = window.bp || {};
 					search_terms        : search_terms,
 					page                : next_page,
 					method              : 'append',
-					target              : '#buddypress [data-bp-media-type] table.media-folder-document-data-table'
+					target              : '#buddypress [data-bp-media-type] table#media-folder-document-data-table'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
 						$( event.currentTarget ).remove();
