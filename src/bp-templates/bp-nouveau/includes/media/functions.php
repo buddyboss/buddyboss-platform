@@ -23,6 +23,11 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
+		'bp-nouveau-media-document-data-table' => array(
+			'file'         => 'js/jquery.dataTables%s.js',
+			'dependencies' => array( 'jquery' ),
+			'footer'       => true,
+		),
 		'bp-nouveau-media' => array(
 			'file'         => 'js/buddypress-media%s.js',
 			'dependencies' => array( 'bp-nouveau' ),
@@ -37,6 +42,8 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_media_enqueue_scripts() {
+
+	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
 
 	if ( bp_is_user_media() ||
 	     bp_is_single_album() ||
@@ -67,6 +74,8 @@ function bp_nouveau_media_enqueue_scripts() {
 			wp_enqueue_script( 'bp-exif' );
 		}
 	}
+
+
 }
 
 /**

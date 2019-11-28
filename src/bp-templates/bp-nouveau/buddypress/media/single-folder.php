@@ -25,12 +25,12 @@ $album_id = (int) bp_action_variable( 0 );
                     <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
                     <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
                         <input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php _e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-                        <a href="#" id="bp-edit-album-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
-                        <a href="#" id="bp-save-album-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
+                        <a href="#" id="bp-edit-folder-title"><?php _e( 'edit', 'buddyboss' ); ?></a>
+                        <a href="#" id="bp-save-folder-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
                         <a href="#" id="bp-cancel-edit-album-title" style="display: none;" ><?php _e( 'cancel', 'buddyboss' ); ?></a>
                     <?php endif; ?>
                     <p>
-                        <span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span><span><?php printf( _n( '%s photo', '%s photos', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span>
+                        <span><?php bp_core_format_date( $media_album_template->album->date_created ); ?></span><span class="bb-sep">&middot;</span><span><?php printf( _n( '%s document', '%s documents', $media_album_template->album->media['total'], 'buddyboss' ), number_format_i18n( $media_album_template->album->media['total'] ) ); ?></span>
                     </p>
                 </div>
 

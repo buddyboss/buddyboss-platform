@@ -137,7 +137,7 @@ function bp_has_media( $args = '' ) {
 
 	// Album filtering
 	if ( ! isset( $args['album_id'] ) ) {
-		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
+		$album_id = bp_is_single_album() || bp_is_single_document_folder() ? (int) bp_action_variable( 0 ) : false;
 	} else {
 		$album_id = $args['album_id'];
 	}
@@ -1478,4 +1478,71 @@ function bp_get_document_slug() {
 	 *
 	 */
 	return apply_filters( 'bp_get_document_slug', 'documents' );
+}
+
+/**
+ * Output the media name.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_name() {
+	echo bp_get_media_name();
+}
+
+/**
+ * Return the media name.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media name.
+ */
+function bp_get_media_name() {
+	global $media_template;
+
+
+	$filename = basename ( get_attached_file( $media_template->media->attachment_id ) );
+
+	/**
+	 * Filters the media name being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The media name.
+	 */
+	return apply_filters( 'bp_get_media_name', $filename );
+}
+
+/**
+ * Output the media name.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_media_author() {
+	echo bp_get_media_author();
+}
+
+/**
+ * Return the media name.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media name.
+ */
+function bp_get_media_author() {
+	global $media_template;
+
+	$author = bp_core_get_user_displayname( $media_template->media->user_id );
+
+	/**
+	 * Filters the media name being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The media name.
+	 */
+	return apply_filters( 'bp_get_media_author', $author );
 }

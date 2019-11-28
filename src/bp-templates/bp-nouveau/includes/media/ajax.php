@@ -917,10 +917,10 @@ function bp_nouveau_ajax_media_document_save() {
 	$media = '';
 	if ( ! empty( $media_ids ) ) {
 		ob_start();
-		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ) ) ) ) {
+		if ( bp_has_media( array( 'include' => implode( ',', $media_ids ), 'type' => 'document' ) ) ) {
 			while ( bp_media() ) {
 				bp_the_media();
-				bp_get_template_part( 'media/entry' );
+				bp_get_template_part( 'media/document-entry' );
 			}
 		}
 		$media = ob_get_contents();

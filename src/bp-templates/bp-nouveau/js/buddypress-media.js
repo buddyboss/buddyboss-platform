@@ -48,18 +48,16 @@ window.bp = window.bp || {};
 			}
 
 			if ( $( '#bp-media-uploader' ).hasClass( 'bp-media-document-uploader' ) ) {
-				console.log('doc type');
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
-					acceptedFiles: 'application/pdf,.psd,.zip,.doc,.docx,.ppt,.pptx,.odt,.xls,.xlsx,.ods,.txt,',
+					acceptedFiles: '.csv,.doc,.docx,.gzip,.ics,.jar,.ods,.odt,.pdf,.psd,.ppt,.pptx,.rar,.tar,.txt,.xls,.xlsx,.zip',
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 				};
 			} else {
-				console.log('media type');
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
@@ -107,12 +105,15 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
 			$( '#buddypress [data-bp-list="media"]' ).on('bp_ajax_request',this.bp_ajax_media_request);
 
+			$('#media-folder-document-data-table').DataTable();
+
 			// albums
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-folder', this.openCreateFolderModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
 
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-document-add-more', this.triggerDropzoneSelectFileDialog.bind( this ) );
@@ -121,6 +122,7 @@ window.bp = window.bp || {};
 
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
+			$( '.bp-nouveau [data-bp-media-type="document"]' ).on( 'click', 'div.dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( '.bp-nouveau #albums-dir-list' ).on( 'click', 'li.load-more', this.appendAlbums.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.addSelectedClassToWrapper.bind( this ) );
@@ -128,8 +130,10 @@ window.bp = window.bp || {};
 
 			//single album
 			$( '.bp-nouveau' ).on( 'click', '#bp-edit-album-title', this.editAlbumTitle.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-edit-folder-title', this.editFolderTitle.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-cancel-edit-album-title', this.cancelEditAlbumTitle.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-save-album-title', this.saveAlbum.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-save-folder-title', this.saveFolder.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '#bp-media-single-album select#bb-album-privacy', this.saveAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '#bp-media-single-folder select#bb-folder-privacy', this.saveFolder.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-album', this.deleteAlbum.bind( this ) );
@@ -277,6 +281,16 @@ window.bp = window.bp || {};
 			$('#bp-save-album-title').show();
 			$('#bp-cancel-edit-album-title').show();
 			$('#bp-edit-album-title').hide();
+			$('#bp-media-single-album #bp-single-album-title').hide();
+		},
+
+		editFolderTitle: function(event) {
+			event.preventDefault();
+
+			$('#bb-album-title').show();
+			$('#bp-save-folder-title').show();
+			$('#bp-cancel-edit-album-title').show();
+			$('#bp-edit-folder-title').hide();
 			$('#bp-media-single-album #bp-single-album-title').hide();
 		},
 
@@ -987,6 +1001,14 @@ window.bp = window.bp || {};
 			$('#bb-album-title').val('');
 		},
 
+		closeCreateFolderModal: function(event){
+			event.preventDefault();
+
+			this.closeUploader(event);
+			$('#bp-media-create-folder').hide();
+			$('#bb-album-title').val('');
+		},
+
 		submitMedia: function(event) {
 			var self = this, target = $( event.currentTarget ), data;
 			event.preventDefault();
@@ -1132,13 +1154,14 @@ window.bp = window.bp || {};
 						if (response.success) {
 
 							// It's the very first media, let's make sure the container can welcome it!
-							if (!$('#media-stream ul.media-list').length) {
-								$('#media-stream').html($('<ul></ul>').addClass('media-list item-list bp-list bb-photo-list grid'));
+							if (!$('#media-stream table#media-folder-document-data-table').length) {
+								$('#media-stream').html($('<table></table>').addClass( 'display' ) );
+								$('#media-stream table').attr( 'id', 'media-folder-document-data-table' );
 								$('.bb-photos-actions').show();
 							}
 
 							// Prepend the activity.
-							bp.Nouveau.inject('#media-stream ul.media-list', response.data.media, 'prepend');
+							bp.Nouveau.inject('#media-stream table#media-folder-document-data-table', response.data.media, 'prepend');
 
 							for( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
@@ -1459,6 +1482,44 @@ window.bp = window.bp || {};
 					page                : next_page,
 					method              : 'append',
 					target              : '#buddypress [data-bp-list] ul.bp-list'
+				} ).done( function( response ) {
+					if ( true === response.success ) {
+						$( event.currentTarget ).remove();
+
+						// Update the current page
+						self.current_page = next_page;
+
+						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+						jQuery(window).scroll();
+					}
+				} );
+			}
+		},
+
+		injectDocuments: function( event ) {
+			var store = bp.Nouveau.getStorage( 'bp-media' ),
+				scope = store.scope || null, filter = store.filter || null;
+
+			if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
+				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
+
+				// Stop event propagation
+				event.preventDefault();
+
+				$( event.currentTarget ).find( 'a' ).first().addClass( 'loading' );
+
+				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
+					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
+				}
+
+				bp.Nouveau.objectRequest( {
+					object              : 'media',
+					scope               : scope,
+					filter              : filter,
+					search_terms        : search_terms,
+					page                : next_page,
+					method              : 'append',
+					target              : '#buddypress [data-bp-media-type] table.media-folder-document-data-table'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
 						$( event.currentTarget ).remove();

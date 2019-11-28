@@ -1222,3 +1222,54 @@ img.emojioneemoji {
 	width: 24px !important;
 	height: 24px !important;
 }
+
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader  {
+
+	.dz-preview.dz-file-preview .dz-image {
+		padding-top: 0;
+	}
+
+	.dz-preview.dz-file-preview .dz-details {
+		display: block !important;
+	}
+
+	.dz-preview.dz-file-preview .dz-details {
+		border-radius: 4px;
+		position: relative;
+		overflow: hidden;
+		padding: 25px 10px;
+		display: flex;
+		background: #f0f3f7;
+		text-align: center;
+		height: 120px;
+		width: 120px;
+		flex-flow: column;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.dz-preview.dz-file-preview .dz-details .dz-size {
+		margin-bottom: 0px;
+		font-size: 12px;;
+	}
+
+	.dz-preview.dz-file-preview .dz-details .dz-filename {
+		display: block;
+		width: 100%;
+	}
+
+	.dz-preview.dz-file-preview .dz-details .dz-filename span {
+		margin-top: 0px;
+	}
+
+}
+#media-folder-document-data-table td.svg-document-icon {
+	padding-right: 0px;
+}
+#media-folder-document-data-table td {
+	vertical-align: middle;
+}
+
+#media-folder-document-data-table td img {
+	max-width: 40px;
+}

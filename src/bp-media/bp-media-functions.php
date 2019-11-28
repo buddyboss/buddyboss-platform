@@ -520,7 +520,7 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
 				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'type'      => ! empty( $media['type'] ) ? $media['type'] : false,
+				'type'          => ! empty( $media['type'] ) ? $media['type'] : 'media',
 			) );
 
 			if ( $media_id ) {
@@ -2244,4 +2244,79 @@ function bp_media_document_allowed_mimes( $mime_types ) {
 	);
 
 	return $mime_types;
+}
+
+function bp_media_get_document_extension( $attachment_id ) {
+
+	$file_url  = wp_get_attachment_url( $attachment_id );
+	$file_type = wp_check_filetype( $file_url );
+
+	return $file_type['ext'];
+
+}
+
+function bp_media_get_document_svg_icon( $extension ) {
+
+	$svg = '';
+
+	switch ( $extension ) {
+		case 'csv':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_csv', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/csv.svg', $extension ) ;
+        break;
+		case 'doc':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_doc', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/doc.svg', $extension ) ;
+        break;
+		case 'docx':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_docx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/docx.svg', $extension ) ;
+        break;
+		case 'gzip':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_gzip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/gzip.svg', $extension ) ;
+		break;
+		case 'ics':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_ics', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ics.svg', $extension ) ;
+		break;
+		case 'jar':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_jar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/jar.svg', $extension ) ;
+		break;
+		case 'ods':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_ods', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ods.svg', $extension ) ;
+		break;
+		case 'odt':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_odt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/odt.svg', $extension ) ;
+		break;
+		case 'pdf':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_pdf', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/pdf.svg', $extension ) ;
+		break;
+		case 'psd':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_psd', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/psd.svg', $extension ) ;
+		break;
+		case 'ppt':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_ppt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ppt.svg', $extension ) ;
+		break;
+		case 'pptx':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_pptx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/pptx.svg', $extension ) ;
+		break;
+		case 'rar':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_rar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/rar.svg', $extension ) ;
+		break;
+		case 'tar':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_tar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/tar.svg', $extension ) ;
+		break;
+		case 'txt':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_txt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/txt.svg', $extension ) ;
+		break;
+		case 'xls':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_xls', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/xls.svg', $extension ) ;
+		break;
+		case 'xlsx':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_xlsx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/xlsx.svg', $extension ) ;
+			break;
+		case 'zip':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/zip.svg', $extension ) ;
+		break;
+		default:
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_folder', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/csv.svg', $extension ) ;
+	}
+
+	return apply_filters( 'bp_media_get_document_svg_icon', $svg, $extension );
 }
