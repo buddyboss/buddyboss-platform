@@ -200,6 +200,11 @@
     &:empty {
         display: none;
     }
+
+    > .dashicons {
+        display: block;
+        margin: 5px auto;
+    }
 }
 
 #whats-new-submit {

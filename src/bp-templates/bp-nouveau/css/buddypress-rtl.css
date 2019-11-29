@@ -1203,6 +1203,11 @@ a.layout-grid-view {
   display: none;
 }
 
+#bp-activity-group-ac-items > .dashicons {
+  display: block;
+  margin: 5px auto;
+}
+
 #whats-new-submit {
   margin: 10px auto 10px 0;
   display: flex;
