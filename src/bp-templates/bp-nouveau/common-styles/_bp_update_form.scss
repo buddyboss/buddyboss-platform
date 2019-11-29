@@ -128,47 +128,56 @@
         -ms-flex-flow: row wrap;
         flex-flow: row wrap;
 
-	#whats-new-post-in-box-items {
-		list-style: none;
-                position: relative;
-
-		li {
-			margin-bottom: $marg-sml;
-		}
-
-		.bp-activity-object {
-
-			@include center-vert();
-			padding: 5px 10px;
-
-			.avatar {
-				width: 30px;
-			}
-
-			.bp-item-name {
-                                font-size: 16px;
-				padding-left: $marg-sml;
-				vertical-align: middle;
-			}
-
-			&:focus,
-			&:hover {
-				background: $light-grey;
-				cursor: pointer;
-			}
-
-			&.selected {
-				border: 1px solid $med-light-grey;
-			}
-		}
-	}
-
         #activity-autocomplete {
                 font-size: 15px;
                 padding: 2px 10px;
                 text-overflow: ellipsis;
                 white-space: nowrap;
                 overflow: hidden;
+        }
+}
+
+#whats-new-post-in-box-items {
+        list-style: none;
+        position: relative;
+
+        li {
+                margin-bottom: $marg-sml;
+        }
+
+        .bp-activity-object {
+
+                @include center-vert();
+                padding: 5px 10px;
+
+                .avatar {
+                        width: 24px;
+                }
+
+                .bp-item-name {
+                        font-size: 16px;
+                        padding-left: $marg-sml;
+                        vertical-align: middle;
+                }
+
+                &:focus,
+                &:hover {
+                        background: $light-grey;
+                        cursor: pointer;
+                }
+
+                &.selected {
+                        border: 1px solid $med-light-grey;
+                        padding: 0;
+                }
+                
+                button.bp-remove-item {
+                        padding: 0;
+                        border: 0;
+                        background: transparent;
+                        font-size: 17px;
+                        margin: 0 6px;
+                }
         }
 }
 
