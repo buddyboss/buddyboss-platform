@@ -70,7 +70,7 @@
 	                <?php endif; ?>
 
                     <footer class="flex align-items-center bb-model-footer">
-                        <a class="button outline" id="bp-media-document-add-more" style="display: none;" href="#">+ <?php _e( 'Add More Document', 'buddyboss' ); ?></a>
+                        <a class="button outline" id="bp-media-document-add-more" style="display: none;" href="#">+ <?php _e( 'Add more documents', 'buddyboss' ); ?></a>
                         <a class="button push-right" id="bp-media-document-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
                     </footer>
 

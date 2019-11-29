@@ -70,7 +70,7 @@
 	                <?php endif; ?>
 
                     <footer class="flex align-items-center bb-model-footer">
-                        <a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php _e( 'Add More Media', 'buddyboss' ); ?></a>
+                        <a class="button outline" id="bp-media-add-more" style="display: none;" href="#">+ <?php _e( 'Add more photos', 'buddyboss' ); ?></a>
                         <a class="button push-right" id="bp-media-submit" style="display: none;" href="#"><?php _e( 'Done', 'buddyboss' ); ?></a>
                     </footer>
 
