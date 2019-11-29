@@ -982,22 +982,28 @@ function bp_nouveau_activity_privacy() {
 		    }
 	    }
 
+	    $privacy_items = array(
+		    'public'   => __( 'Public', 'buddyboss' ),
+		    'onlyme'   => __( 'Only Me', 'buddyboss' ),
+		    'loggedin' => __( 'All Members', 'buddyboss' ),
+		    'friends'  => __( 'My Connections', 'buddyboss' ),
+	    );
+
 	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
 	    	?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 				<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
 			</div>
 		    <?php
 	    } else {
 		    ?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 				<ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
-					<li data-value="public" class="public <?php echo 'public' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Public', 'buddyboss' ); ?></li>
-					<li data-value="onlyme" class="onlyme <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Only Me', 'buddyboss' ); ?></li>
-					<li data-value="loggedin" class="loggedin <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>"><?php _e( 'All Members', 'buddyboss' ); ?></li>
-					<li data-value="friends" class="friends <?php echo 'friends' === $privacy ? 'selected' : ''; ?>"><?php _e( 'My Connections', 'buddyboss' ); ?></li>
+					<?php foreach( $privacy_items as $item_key => $privacy_item ) {
+						?><li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php
+					} ?>
 				</ul>
 			</div>
 		    <?php
