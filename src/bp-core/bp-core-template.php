@@ -3114,7 +3114,8 @@ function bp_is_group_albums() {
 function bp_is_group_document_folder() {
 	$retval = false;
 
-	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'folder' ) ) {
+	$action_variables = bp_action_variables();
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) && is_array( $action_variables ) && isset( $action_variables[1] ) && (int) $action_variables[1] > 0 ) {
 		$retval = true;
 	}
 

@@ -1003,7 +1003,7 @@ function bp_nouveau_ajax_media_folder_save() {
 
 	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
 		$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
-		$redirect_url = trailingslashit( $group_link . '/folder/' . $album_id );
+		$redirect_url = trailingslashit( $group_link . bp_get_document_slug() . '/folder/' . $album_id );
 	} else {
 		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() . '/folder/' . $album_id );
 	}

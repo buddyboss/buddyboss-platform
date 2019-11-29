@@ -10705,15 +10705,15 @@ img.emojioneemoji {
   height: 24px !important;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image {
   padding-top: 0;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -10728,17 +10728,17 @@ img.emojioneemoji {
   justify-content: center;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0px;
   font-size: 12px;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
   display: block;
   width: 100%;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0px;
 }
 

@@ -8,7 +8,13 @@
 
 <?php
 global $media_album_template;
-$album_id = (int) bp_action_variable( 0 );
+if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_document_folder() ) {
+	$action_variables = bp_action_variables();
+	$album_id = (int) $action_variables[1];
+} else  {
+	$album_id = (int) bp_action_variable( 0 );
+}
+
 ?>
 
 <?php if ( bp_has_albums( array( 'include' => $album_id, 'type' => 'document' ) ) ) : ?>
