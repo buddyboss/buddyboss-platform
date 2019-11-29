@@ -940,6 +940,8 @@ window.bp = window.bp || {};
 				this.ac_req.abort();
 			}
 
+			this.$el.find( '#bp-activity-group-ac-items' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+
 			this.ac_req = this.collection.fetch( {
 				data: {
 					type   : this.options.type,
@@ -955,6 +957,7 @@ window.bp = window.bp || {};
 			if ( ! items.length ) {
 				this.cleanView();
 			}
+			this.$el.find( '#bp-activity-group-ac-items' ).find('i.dashicons').remove();
 		},
 
 		cleanView: function() {
