@@ -104,8 +104,10 @@ window.bp = window.bp || {};
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
+			$( document ).click( this.togglePopupDropdown );
 
 			//forums
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
@@ -479,18 +481,32 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
-			target.addClass( 'loading' );
+			activity_item.find('.privacy').addClass( 'loading' );
 
 			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data('value') }, 'activity' ).done( function( response ) {
-				target.removeClass( 'loading' );
+				activity_item.find('.privacy').removeClass( 'loading' );
 
 				if ( true === response.success ) {
 					activity_item.find('.activity-privacy li').removeClass('selected');
+					activity_item.find('.privacy-wrap').attr('data-bp-tooltip', target.text());
 					target.addClass('selected');
 					activity_item.find('.privacy').removeClass('public').removeClass('loggedin').removeClass('onlyme').removeClass('friends');
 					activity_item.find('.privacy').addClass(target.data('value'));
 				}
 			} );
+		},
+
+		togglePrivacyDropdown: function( event ) {
+			var parent = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest('.activity-item'),
+				activity_id = activity_item.data( 'bp-activity-id' );
+
+			// Stop event propagation
+			event.preventDefault();
+
+			// close other dropdowns
+			$( 'ul.activity-privacy' ).removeClass( 'bb-open' );
+
+			activity_item.find('.activity-privacy').toggleClass('bb-open');
 		},
 
 		/**
@@ -1039,6 +1055,38 @@ window.bp = window.bp || {};
 			} else if ( event.ctrlKey && 13 === keyCode && $( element ).val() ) {
 				$( element ).closest( 'form' ).find( '[type=submit]' ).first().trigger( 'click' );
 			}
+		},
+
+		/**
+		 * [togglePopupDropdown description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		togglePopupDropdown: function( event ) {
+			var element;
+
+			event = event || window.event;
+
+			if ( event.target ) {
+				element = event.target;
+			} else if ( event.srcElement) {
+				element = event.srcElement;
+			}
+
+			if ( element.nodeType === 3 ) {
+				element = element.parentNode;
+			}
+
+			if ( event.altKey === true || event.metaKey === true ) {
+				return event;
+			}
+
+			// if privacy dropdown items, return
+			if ( $( element ).hasClass( 'privacy-wrap' ) || $( element ).parent().hasClass( 'privacy-wrap' ) ) {
+				return event;
+			}
+
+			$( 'ul.activity-privacy' ).removeClass( 'bb-open' );
 		},
 
 		// activity autoload

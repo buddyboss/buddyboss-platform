@@ -3301,7 +3301,7 @@ function bp_group_type_short_code_callback( $atts ) {
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
 					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
 				</div>
-				<div id="groups-dir-list" class="groups dir-list" data-bp-list="">
+				<div id="groups-dir-list" class="groups dir-list">
 					<?php
 					$atts['group_type'] = $atts['type'];
 

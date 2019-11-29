@@ -851,7 +851,8 @@ window.bp = window.bp || {};
 		loadURLPreview: function(url) {
 			var self = this;
 
-			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			url = $.trim( url );
 			if ( regexp.test( url ) ) {
 
 				if ( typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true ) {
@@ -885,19 +886,19 @@ window.bp = window.bp || {};
 						$('#whats-new-attachments').removeClass('empty');
 
 						if ( $('#whats-new-attachments').hasClass('activity-video-preview') ) {
-                                                    $('#whats-new-attachments').removeClass('activity-video-preview');
+							$('#whats-new-attachments').removeClass('activity-video-preview');
 						}
 
 						if ( $('#whats-new-attachments').hasClass('activity-link-preview') ) {
-                                                    $('#whats-new-attachments').removeClass('activity-link-preview');
+							$('#whats-new-attachments').removeClass('activity-link-preview');
 						}
 
 						if ( $('.activity-media-container').length ) {
-                                                    if (  response.description.indexOf('iframe') > -1 ) {
-                                                            $('#whats-new-attachments').addClass('activity-video-preview');
-                                                    } else {
-                                                            $('#whats-new-attachments').addClass('activity-link-preview');
-                                                    }
+							if (  response.description.indexOf('iframe') > -1 ) {
+									$('#whats-new-attachments').addClass('activity-video-preview');
+							} else {
+									$('#whats-new-attachments').addClass('activity-link-preview');
+							}
 						}
 					} else {
 						self.options.activity.set( {
@@ -1043,6 +1044,8 @@ window.bp = window.bp || {};
 				this.ac_req.abort();
 			}
 
+			this.$el.find( '#bp-activity-group-ac-items' ).html('<i class="dashicons dashicons-update animate-spin"></i>');
+
 			this.ac_req = this.collection.fetch( {
 				data: {
 					type   : this.options.type,
@@ -1058,6 +1061,7 @@ window.bp = window.bp || {};
 			if ( ! items.length ) {
 				this.cleanView();
 			}
+			this.$el.find( '#bp-activity-group-ac-items' ).find('i.dashicons').remove();
 		},
 
 		cleanView: function() {
@@ -1699,7 +1703,9 @@ window.bp = window.bp || {};
 			});
 
 			// Add valid line breaks
-			var content = $whatsNew[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'');
+			var content = $.trim( $whatsNew[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'') );
+			content = content.replace(/&nbsp;/g, ' ');
+
 			self.model.set( 'content', content, { silent: true } );
 
 			// Silently add meta

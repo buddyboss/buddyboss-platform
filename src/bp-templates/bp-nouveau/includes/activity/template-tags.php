@@ -989,10 +989,16 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
  */
 function bp_nouveau_activity_privacy() {
     if ( bp_activity_user_can_edit() && ! bp_is_group() ) {
+
+    	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === bp_get_activity_object_name() ) {
+    		return;
+	    }
+
 	    $privacy                   = bp_get_activity_privacy();
 	    $media_activity            = ( 'media' === $privacy || ( isset( $_REQUEST['action'] ) && 'media_get_activity' === $_REQUEST['action'] ) );
 	    $parent_activity_id        = false;
 	    $parent_activity_permalink = false;
+	    $group_id                  = false;
 
 	    // Get media privacy to show
 	    if ( $media_activity && bp_is_active( 'media' ) ) {
@@ -1000,27 +1006,50 @@ function bp_nouveau_activity_privacy() {
 		    $media    = new BP_Media( $media_id );
 
 		    if ( ! empty( $media ) ) {
-			    $privacy = $media->privacy;
+			    $privacy  = $media->privacy;
+			    $group_id = $media->group_id;
 
 			    $parent_activity_id = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
 			    $parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
 		    }
 	    }
 
+	    if ( $media_activity && empty( $group_id ) && $parent_activity_id ) {
+	    	$parent_activity = new BP_Activity_Activity( $parent_activity_id );
+
+	    	if ( ! empty( $parent_activity->id ) ) {
+	    		$group_id = $parent_activity->item_id;
+		    }
+	    }
+
+	    if ( ! empty( $group_id ) ) {
+	    	return;
+	    }
+
+	    $privacy_items = array(
+		    'public'   => __( 'Public', 'buddyboss' ),
+		    'onlyme'   => __( 'Only Me', 'buddyboss' ),
+		    'loggedin' => __( 'All Members', 'buddyboss' ),
+		    'friends'  => __( 'My Connections', 'buddyboss' ),
+	    );
+
 	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
 	    	?>
-		    <span><?php echo $privacy; ?></span>
-		    <a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+			<div class="bb-media-privacy-wrap">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a>
+			</div>
 		    <?php
 	    } else {
 		    ?>
-		    <span class="privacy selected <?php echo $privacy; ?>"></span>
-		    <ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
-			    <li data-value="public" class="public <?php echo 'public' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Public', 'buddyboss' ); ?></li>
-			    <li data-value="onlyme" class="onlyme <?php echo 'onlyme' === $privacy ? 'selected' : ''; ?>"><?php _e( 'Only Me', 'buddyboss' ); ?></li>
-			    <li data-value="loggedin" class="loggedin <?php echo 'loggedin' === $privacy ? 'selected' : ''; ?>"><?php _e( 'All Members', 'buddyboss' ); ?></li>
-			    <li data-value="friends" class="friends <?php echo 'friends' === $privacy ? 'selected' : ''; ?>"><?php _e( 'My Connections', 'buddyboss' ); ?></li>
-		    </ul>
+			<div class="bb-media-privacy-wrap">
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
+					<?php foreach( $privacy_items as $item_key => $privacy_item ) {
+						?><li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php
+					} ?>
+				</ul>
+			</div>
 		    <?php
 	    }
     }
