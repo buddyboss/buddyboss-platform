@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-28 18:00:24+00:00\n"
+"POT-Creation-Date: 2019-11-29 01:48:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -832,8 +832,8 @@ msgstr[1] ""
 #: bp-groups/classes/class-bp-groups-invite-template.php:247
 #: bp-groups/classes/class-bp-groups-invite-template.php:260
 #: bp-groups/classes/class-bp-groups-invite-template.php:272
-#: bp-media/classes/class-bp-media-component.php:444
-#: bp-media/classes/class-bp-media-component.php:455
+#: bp-media/classes/class-bp-media-component.php:448
+#: bp-media/classes/class-bp-media-component.php:459
 #: bp-members/bp-members-template.php:796
 #: bp-members/bp-members-template.php:1519
 #: bp-members/bp-members-template.php:1577
@@ -2437,8 +2437,8 @@ msgid "Forums"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:779
-#: bp-media/classes/class-bp-media-component.php:323
-#: bp-media/classes/class-bp-media-component.php:408
+#: bp-media/classes/class-bp-media-component.php:327
+#: bp-media/classes/class-bp-media-component.php:412
 #: bp-templates/bp-nouveau/buddypress/media/add-document.php:12
 msgid "Documents"
 msgstr ""
@@ -3732,8 +3732,8 @@ msgstr ""
 #: bp-core/bp-core-functions.php:778
 #: bp-groups/classes/class-bp-groups-component.php:718
 #: bp-media/classes/class-bp-media-component.php:60
-#: bp-media/classes/class-bp-media-component.php:255
-#: bp-media/classes/class-bp-media-component.php:373
+#: bp-media/classes/class-bp-media-component.php:259
+#: bp-media/classes/class-bp-media-component.php:377
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
 #: bp-templates/bp-nouveau/includes/customizer.php:176
@@ -5458,27 +5458,27 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-media/bp-media-functions.php:117 bp-media/bp-media-functions.php:2192
+#: bp-media/bp-media-functions.php:117 bp-media/bp-media-functions.php:2162
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-media/bp-media-functions.php:118 bp-media/bp-media-functions.php:2193
+#: bp-media/bp-media-functions.php:118 bp-media/bp-media-functions.php:2163
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-media/bp-media-functions.php:120 bp-media/bp-media-functions.php:2195
+#: bp-media/bp-media-functions.php:120 bp-media/bp-media-functions.php:2165
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-media/bp-media-functions.php:121 bp-media/bp-media-functions.php:2196
+#: bp-media/bp-media-functions.php:121 bp-media/bp-media-functions.php:2166
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-media/bp-media-functions.php:122 bp-media/bp-media-functions.php:2197
+#: bp-media/bp-media-functions.php:122 bp-media/bp-media-functions.php:2167
 msgid "File upload stopped by extension."
 msgstr ""
 
@@ -12272,7 +12272,7 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:731
 #: bp-media/bp-media-filters.php:868
-#: bp-media/classes/class-bp-media-component.php:283
+#: bp-media/classes/class-bp-media-component.php:287
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 msgid "Albums"
 msgstr ""
@@ -13483,12 +13483,12 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:29 bp-media/bp-media-functions.php:2134
+#: bp-media/bp-media-functions.php:29 bp-media/bp-media-functions.php:2104
 msgid "Please login in order to upload file media."
 msgstr ""
 
 #: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
-#: bp-media/bp-media-functions.php:2190 bp-media/bp-media-functions.php:2191
+#: bp-media/bp-media-functions.php:2160 bp-media/bp-media-functions.php:2161
 msgid "The uploaded file exceeds "
 msgstr ""
 
@@ -13500,7 +13500,7 @@ msgstr ""
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2215
+#: bp-media/bp-media-functions.php:2185
 msgid "Error while uploading document."
 msgstr ""
 
@@ -13624,28 +13624,28 @@ msgstr ""
 msgid "Search Documents&hellip;"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:247
+#: bp-media/classes/class-bp-media-component.php:251
 #. translators: %s: total media count for the current user
 msgid "Photos %s"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:315
+#: bp-media/classes/class-bp-media-component.php:319
 #. translators: %s: total media count for the current user
 msgid "Documents %s"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:381
-#: bp-media/classes/class-bp-media-component.php:437
+#: bp-media/classes/class-bp-media-component.php:385
+#: bp-media/classes/class-bp-media-component.php:441
 #: bp-templates/bp-nouveau/includes/media/functions.php:169
 msgid "My Photos"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:391
+#: bp-media/classes/class-bp-media-component.php:395
 msgid "My Albums"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:416
-#: bp-media/classes/class-bp-media-component.php:449
+#: bp-media/classes/class-bp-media-component.php:420
+#: bp-media/classes/class-bp-media-component.php:453
 msgid "My Documents"
 msgstr ""
 

@@ -681,16 +681,16 @@ function bp_media_get_media_activity( $activity_id ) {
  * @param int $user_id ID of the user whose media are being counted.
  * @return int media count of the user.
  */
-function bp_media_get_total_media_count( $user_id = 0 ) {
+function bp_media_get_total_media_count( $user_id = 0, $type =  'media' ) {
 	if ( empty( $user_id ) ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	$count = wp_cache_get( 'bp_total_media_for_user_' . $user_id, 'bp' );
+	$count = wp_cache_get( 'bp_total_media_for_user_' . $user_id . '_' . $type, 'bp' );
 
 	if ( false === $count ) {
-		$count = BP_Media::total_media_count( $user_id );
-		wp_cache_set( 'bp_total_media_for_user_' . $user_id, $count, 'bp' );
+		$count = BP_Media::total_media_count( $user_id, $type );
+		wp_cache_set( 'bp_total_media_for_user_' . $user_id . '_' . $type, $count, 'bp' );
 	}
 
 	/**
@@ -2087,36 +2087,6 @@ function bp_media_import_status_request() {
 			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
 		)
 	);
-}
-
-/**
- * Get the media count of a given user.
- *
- * @since BuddyBoss 1.0.0
- *
- * @param int $user_id ID of the user whose media are being counted.
- * @return int media count of the user.
- */
-function bp_media_get_total_document_count( $user_id = 0 ) {
-	if ( empty( $user_id ) ) {
-		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	}
-
-	$count = wp_cache_get( 'bp_total_document_for_user_' . $user_id, 'bp' );
-
-	if ( false === $count ) {
-		$count = BP_Media::total_media_count( $user_id );
-		wp_cache_set( 'bp_total_document_for_user_' . $user_id, $count, 'bp' );
-	}
-
-	/**
-	 * Filters the total media count for a given user.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param int $count Total media count for a given user.
-	 */
-	return apply_filters( 'bp_media_get_total_document_count', (int) $count );
 }
 
 /**

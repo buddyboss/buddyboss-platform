@@ -1055,7 +1055,7 @@ class BP_Media {
 	 *
 	 * @return array|bool|int
 	 */
-	public static function total_media_count( $user_id = 0 ) {
+	public static function total_media_count( $user_id = 0, $type = 'media' ) {
 		global $bp, $wpdb;
 
 		$privacy = array( 'public' );
@@ -1070,7 +1070,7 @@ class BP_Media {
 		}
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy})" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->media->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = '{$type}'" );
 
 		return $total_count;
 	}

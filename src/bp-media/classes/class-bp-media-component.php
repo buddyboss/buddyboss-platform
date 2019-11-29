@@ -188,10 +188,14 @@ class BP_Media_Component extends BP_Component {
 			$bp->is_single_item  = true;
 			$this->current_album = albums_get_album( $album_id );
 
-			// Set current_album to 0 to prevent debug errors.
+		} elseif  ( bp_is_single_document_folder() && ( $album_id = BP_Media_Album::album_exists( bp_action_variable( 0 ), 'document' ) ) ) {
+			$bp->is_single_item  = true;
+			$this->current_album = albums_get_album( $album_id );
+		// Set current_album to 0 to prevent debug errors.
 		} else {
 			$this->current_album = 0;
 		}
+
 
 	}
 
@@ -240,7 +244,7 @@ class BP_Media_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$count    = bp_media_get_total_media_count( bp_displayed_user_id() );
+				$count    = bp_media_get_total_media_count( bp_displayed_user_id(), 'media' );
 				$class    = ( 0 === $count ) ? 'no-count' : 'count';
 				$nav_name = sprintf(
 					/* translators: %s: total media count for the current user */
@@ -308,7 +312,7 @@ class BP_Media_Component extends BP_Component {
 
 			// Only grab count if we're on a user page and current user has access.
 			if ( bp_is_user() ) {
-				$count    = bp_media_get_total_document_count( bp_displayed_user_id() );
+				$count    = bp_media_get_total_media_count( bp_displayed_user_id(), 'document' );
 				$class    = ( 0 === $count ) ? 'no-count' : 'count';
 				$nav_name = sprintf(
 				/* translators: %s: total media count for the current user */
