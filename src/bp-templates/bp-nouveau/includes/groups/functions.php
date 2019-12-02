@@ -193,8 +193,8 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 			'item_id' => $user->ID,
 			'object'  => 'user',
 			'type'    => 'thumb',
-			'width'   => 50,
-			'height'  => 50,
+			'width'   => 150,
+			'height'  => 150,
 			'html'    => false )
 		) ),
 	);

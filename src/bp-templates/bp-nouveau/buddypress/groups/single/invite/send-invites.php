@@ -14,22 +14,19 @@
 	}
 	?>
 	<div class="bb-groups-invites-left">
-<!--		<select class="group-invites-select-members-dropdown" name="group-members">-->
-<!--			<option value="members">--><?php //_e( 'All Members', 'buddyboss' ); ?><!--</option>-->
-<!--			<option value="friends">--><?php //_e( 'My Connections', 'buddyboss' ); ?><!--</option>-->
-<!--		</select>-->
-		<div class="bb-panel-subhead">
-			<h4 class="total-members-text"><?php _e( 'Members', 'buddyboss' ); ?></h4>
-			<div class="bp-group-message-wrap">
-				<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
-				<label for="bp-group-send-invite-switch-checkbox" class="bp-group-invite-label"><span class="select-members-text"><?php _e( 'My Connections', 'buddyboss' ); ?></span></label>
+		<div class="bb-panel-head">
+			<div class="bb-panel-subhead">
+				<h4 class="total-members-text"><?php _e( 'Members', 'buddyboss' ); ?></h4>
+				<div id="bp-invites-dropdown-options-loader" class="bp-invites-dropdown-options-loader-hide">
+					<i class="dashicons dashicons-update animate-spin"></i>
+				</div>
+				<div class="bp-group-message-wrap">
+					<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
+					<label for="bp-group-send-invite-switch-checkbox" class="bp-group-invite-label"><span class="select-members-text"><?php _e( 'My Connections', 'buddyboss' ); ?></span></label>
+				</div>
 			</div>
 		</div>
-		<div id="bp-invites-dropdown-options-loader" class="bp-invites-dropdown-options-loader-hide">
-			<div>
-				<i class="dashicons dashicons-update animate-spin"></i>
-			</div>
-		</div>
+
 		<div class="group-invites-search subnav-search clearfix" role="search">
 			<div class="bp-search">
 				<form action="" method="get" id="group_invites_search_form" class="bp-invites-search-form" data-bp-search="group-invites">
@@ -61,7 +58,9 @@
 	<div class="bb-groups-invites-right">
 		<form id="send_group_invite_form" class="standard-form" data-select2-id="send_group_invite_form">
 			<div class="bb-groups-invites-right-top">
-				<h2 class="bb-title"><?php _e( 'New Group Invites', 'buddyboss' ); ?></h2>
+				<div class="bb-title-wrap">
+					<h2 class="bb-title"><?php _e( 'New Group Invites', 'buddyboss' ); ?></h2>
+				</div>
 				<div class="bp-invites-feedback">
 					<div class="bp-feedback">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -72,7 +71,7 @@
 			</div>
 			<div class="bb-groups-invites-right-bottom">
 				<div id="bp-group-invite-content">
-					<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150"></textarea>
+					<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php _e( 'Type message','buddyboss' ); ?>"></textarea>
 					<input type="hidden" id="group_invite_content_hidden" name="group_invite_content_hidden" value="">
 					<div id="whats-new-toolbar">
 						<div id="group-invites-new-submit" class="submit">

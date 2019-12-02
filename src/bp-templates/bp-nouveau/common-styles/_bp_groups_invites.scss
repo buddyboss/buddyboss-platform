@@ -13,26 +13,16 @@
 }
 
 .bb-groups-invites-left {
-	max-width: 350px;
-	padding: 20px;
 	border-right: 1px solid #E7E9EC;
-	min-width: 350px;
+	min-width: 0;
+        flex: 0 0 360px;
 }
 
-.group-invites-members-listing {
-	margin-top: 20px;
+.bb-groups-invites-left .group-invites-search {
+	padding: 20px;
 }
 
-#group-invites-container .bb-groups-invites-left .group-invites-search {
-	margin-top: 20px;
-}
-
-#group-invites-container .bb-groups-invites-left ul.item-list.bp-list.all-members li {
-	border: none !important;
-	padding: 5px 10px 5px 0px !important;
-}
-
-#item-body #group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list li.selected {
+#item-body #group-invites-container li.selected {
 	background: #f5f5f5;
 }
 
@@ -56,10 +46,6 @@
 #send_group_invite_form .select2-search.select2-search--inline {
 	flex: 1;
 	min-width: 0;
-}
-
-#send_group_invite_form .select2-selection__rendered li {
-	margin: 0;
 }
 
 #buddypress #send_group_invite_form .select2-search__field {
@@ -123,12 +109,20 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 
 #send_group_invite_form li.select2-selection__choice {
 	margin-right: 10px;
+        margin-bottom: 5px;
+        margin-top: 5px;
 }
 
 #send_group_invite_form .select2-selection__choice__remove {
-	font-size: 0;
-	line-height: 1;
-	margin: 0 0 0 8px;
+        line-height: 1;
+        margin: 0 0 0 8px;
+        width: 16px;
+        height: 16px;
+        background: #fff;
+        border-radius: 50%;
+        color: #333;
+        font-size: 14px;
+        text-align: center;
 }
 
 #send_group_invite_form .select2-selection--multiple {
@@ -146,14 +140,6 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 #send_group_invite_form .select2-search.select2-search--inline {
 	flex: 1;
 	min-width: 0;
-}
-
-#send_group_invite_form .select2-selection__rendered li {
-	margin: 0;
-}
-
-#send_group_invite_form li.select2-selection__choice {
-	margin-right: 10px;
 }
 
 #send_group_invite_form #group-invites-toolbar {
@@ -181,43 +167,37 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 	font-size: 16px;
 }
 
-div#bp-group-invite-content {
-	padding: 20px;
+#bp-group-invite-content {
+
+    #send-invites-control {
+        border: 0;
+        resize: none;
+        padding: 25px;
+        min-height: 120px;
+        height: auto;
+        max-height: 32vh;
+    }
 }
 
 #group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback-hide {
 	display: none;
 }
 
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li {
-	border-color: #ebe9e6;
-}
-
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li:first-child {
-	border-top: none;
-}
-
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list li:last-child {
-	border-bottom: none;
-}
-
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing .item-list > li {
-	background-color: #fff;
-	border-bottom: 1px solid #E7E9EC;
-	margin-bottom: -1px;
+#group-invites-container .bb-groups-invites-left .item-list li {
+        border: 0;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
 	-ms-flex-flow: row wrap;
 	flex-flow: row wrap;
-	padding: 15px 20px;
 	position: relative;
 	-webkit-box-align: center;
 	-ms-flex-align: center;
 	align-items: center;
 	border-radius: 0;
-	width: 100%;
-	border-top: 1px solid #E7E9EC;
+        margin: 0 -20px 1px;
+        width: auto;
+        padding: 8px 20px;
 }
 
 #group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title {
@@ -225,16 +205,6 @@ div#bp-group-invite-content {
 	font-size: 15px;
 	margin: 0 auto;
 	width: 100%;
-}
-
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing .action {
-	-webkit-box-flex: 1;
-	-ms-flex: 1;
-	flex: 1;
-	-webkit-box-pack: end;
-	-ms-flex-pack: end;
-	justify-content: flex-end;
-	position: static;
 }
 
 #group-invites-container .bb-groups-invites-left .group-invites-members-listing .action button {
@@ -307,9 +277,15 @@ div#bp-group-invite-content {
 	font-weight: bold;
 }
 
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing ul#members-list {
+.group-invites-members-listing {
+    padding-bottom: 20px;
+}
+
+#group-invites-container .bb-groups-invites-left #members-list {
 	max-height: 60vh;
 	overflow: auto;
+        margin: 0;
+        padding: 0 20px;
 }
 
 .group-invites.pending-invites.invite #group-invites-container .group-invites-column .group-subnav-filters div .last {
@@ -321,51 +297,14 @@ div#bp-group-invite-content {
 	text-align: center;
 }
 
-#group-invites-container .bb-groups-invites-left .bp-invites-dropdown-options-loader-hide, #group-invites-container .bb-groups-invites-left .group-invites-members-listing .last {
+#group-invites-container .bb-groups-invites-left .bp-invites-dropdown-options-loader-hide,
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .last {
 	display: none;
 }
 
-.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback, .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .bp-invites-feedback {
+.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback,
+.bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .bp-invites-feedback {
 	display: none;
-}
-
-.hr-text {
-	line-height: 1em;
-	position: relative;
-	outline: 0;
-	border: 0;
-	color: black;
-	text-align: center;
-	height: 1.5em;
-	opacity: .5;
-	width: 100%;
-	background: transparent;
-	margin: 0;
-
-        &:before {
-		content: '';
-		// use the linear-gradient for the fading effect
-		// use a solid background color for a solid bar
-		background: #818078;
-		position: absolute;
-		left: 0;
-		top: 50%;
-		width: 100%;
-		height: 1px;
-	}
-
-        &:after {
-		content: attr(data-content);
-		position: relative;
-		display: inline-block;
-		color: black;
-
-		padding: 0 .5em;
-		line-height: 1.5em;
-		// this is really the only tricky part, you need to specify the background color of the container element...
-		color: #818078;
-		background-color: #FFFFFF;
-	}
 }
 
 .group-invites-members-listing {
