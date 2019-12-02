@@ -126,7 +126,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 																 <?php
 																	if ( 'active' === $settings['member_default'] ) :
 																		?>
-					class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
+					class="selected"<?php endif; ?>><?php esc_html_e( 'Active-1', 'buddyboss' ); ?></a>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 					<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
