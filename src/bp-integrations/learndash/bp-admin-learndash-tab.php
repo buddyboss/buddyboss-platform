@@ -237,7 +237,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/courses-with-social-groups.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62877,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -372,7 +380,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/courses-with-social-groups.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62877,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
