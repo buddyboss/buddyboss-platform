@@ -253,7 +253,7 @@ window.bp = window.bp || {};
 					});
 				});
 
-				$( document ).on( 'click', '#group-invites-container #members-list li .item .action .group-remove-invite-button', function( e ) {
+				$( document ).on( 'click', '#group-invites-container #members-list li .action .group-remove-invite-button', function( e ) {
 					e.preventDefault();
 
 					feedbackInviteColumn.attr( 'class', 'bp-feedback' );
