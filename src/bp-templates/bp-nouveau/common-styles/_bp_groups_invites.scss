@@ -49,6 +49,7 @@
 	display: flex;
 	align-items: center;
 	flex-flow: row wrap;
+        list-style: none;
 	padding: 0;
 }
 
@@ -80,6 +81,7 @@ body.groups.group-invites li.select2-results__option.select2-results__invite {
 	border-radius: 3px;
 	margin-bottom: 0;
 	font-size: 14px;
+        list-style: none;
 	padding: 2px 5px;
 }
 
@@ -129,30 +131,6 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 	margin: 0 0 0 8px;
 }
 
-#send_group_invite_form .select2-selection__choice__remove:before {
-	content: '\E828';
-	font-family: "bb-icons";
-	font-size: 13px;
-	line-height: 1;
-	background: #fff;
-	border-radius: 50%;
-	color: #4D5C6D;
-	display: -webkit-box;
-	display: -ms-flexbox;
-	display: flex;
-	-webkit-box-pack: center;
-	-ms-flex-pack: center;
-	justify-content: center;
-	-webkit-box-align: center;
-	-ms-flex-align: center;
-	align-items: center;
-	min-width: 13px;
-	min-height: 13px;
-	text-indent: -1px;
-	-webkit-font-smoothing: antialiased;
-	-moz-osx-font-smoothing: grayscale;
-}
-
 #send_group_invite_form .select2-selection--multiple {
 	border-color: transparent;
 	padding: 0;
@@ -194,19 +172,6 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 	position: relative;
 }
 
-#group-invites-toolbar .dashicons {
-	font: normal normal normal 24px/1 "bb-icons";
-	color: rgba(18, 43, 70, 0.4);
-	-webkit-transition: all linear .2s;
-	transition: all linear .2s;
-	width: auto;
-	height: auto;
-}
-
-#group-invites-toolbar .dashicons-admin-media:before {
-	content: '\E805';
-}
-
 #group-invites-toolbar .post-elements-buttons-item {
 	margin-right: 10px;
 	position: relative;
@@ -214,10 +179,6 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 
 #bp-group-invite-content .medium-editor-element, #bp-group-invite-content .medium-editor-placeholder {
 	font-size: 16px;
-}
-
-#bp-group-invite-content .dashicons-smiley:before {
-	content: '\E811';
 }
 
 div#bp-group-invite-content {
@@ -311,73 +272,6 @@ div#bp-group-invite-content {
 	border: 0;
 }
 
-#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-left:before {
-	content: "\e87a";
-}
-
-#group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-left:before {
-	content: "\e87a" !important;
-}
-#group-invites-container .bp-invites-filters .button.invite-button .dashicons-arrow-left:before {
-	content: "\e87a";
-}
-
-#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-right:before,
-#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button .dashicons-arrow-left:before {
-	content: "\e87b";
-	font-family: 'bb-icons';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	list-style: none;
-	-webkit-font-smoothing: antialiased;
-	color: #939597;
-}
-
-
-
-#group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-right:before,
-#group-invites-container .bb-groups-invites-left .group-invite-button .dashicons-arrow-left:before {
-	content: "\e87b";
-	font-family: 'bb-icons';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	list-style: none;
-	-webkit-font-smoothing: antialiased;
-	color: #939597;
-}
-
-
-
-#group-invites-container .bb-groups-invites-left .dashicons-arrow-right:before {
-	content: "\f139";
-}
-
-#group-invites-container .bb-groups-invites-left  .dashicons-arrow-left:before {
-	content: "\f141";
-}
-
-.buddypress-wrap ul.item-list li .group-remove-invite-button span.icons:before, .buddypress-wrap ul.item-list li.selected .invite-button span.icons:before {
-	content: "\e8f7";
-	font-family: 'bb-icons';
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	font-variant: normal;
-	text-transform: none;
-	line-height: 1;
-	list-style: none;
-	-webkit-font-smoothing: antialiased;
-	color: #939597;
-}
-
 .bp-single-invite-wrap.group-invites-highlight {
 	background: #fffced;
 	padding: 10px;
@@ -400,31 +294,17 @@ div#bp-group-invite-content {
 }
 
 #group-invites-container form#send_group_invite_form {
-	margin-bottom: 0px;
+	margin-bottom: 0;
 }
 
 #group-invites-container .bb-groups-invites-right > .bp-feedback {
-	margin: 20px 20px 20px 20px;
+	margin: 20px;
 }
 
 .bp-single-invite-content .bp-invite-content-wrap p.joined {
 	color: #847d7d;
 	font-style: italic;
 	font-weight: bold;
-}
-
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing #members-list li .item .action button span.icons:before {
-	content: "";
-	font-family: bb-icons;
-	speak: none;
-	font-style: normal;
-	font-weight: normal;
-	text-transform: none;
-	line-height: 1;
-	-webkit-font-smoothing: antialiased;
-	color: rgb(147, 149, 151);
-	font-variant: normal;
-	list-style: none;
 }
 
 #group-invites-container .bb-groups-invites-left .group-invites-members-listing ul#members-list {
@@ -461,7 +341,8 @@ div#bp-group-invite-content {
 	width: 100%;
 	background: transparent;
 	margin: 0;
-	&:before {
+
+        &:before {
 		content: '';
 		// use the linear-gradient for the fading effect
 		// use a solid background color for a solid bar
@@ -472,7 +353,8 @@ div#bp-group-invite-content {
 		width: 100%;
 		height: 1px;
 	}
-	&:after {
+
+        &:after {
 		content: attr(data-content);
 		position: relative;
 		display: inline-block;
@@ -484,4 +366,10 @@ div#bp-group-invite-content {
 		color: #818078;
 		background-color: #FFFFFF;
 	}
+}
+
+.group-invites-members-listing {
+    .bp-list li .item {
+            overflow: initial;
+    }
 }
