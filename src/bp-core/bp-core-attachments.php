@@ -304,7 +304,7 @@ function bp_attachments_check_filetype( $file, $filename, $allowed_mimes ) {
  * @return bool True on success, false otherwise.
  */
 function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
-	if ( empty( $type ) || ( $type !== 'avatar' && $type !== 'cover_image' ) ) {
+	if ( empty( $type ) || ( 'avatar' !== $type && 'cover_image' !== $type ) ) {
 		return false;
 	}
 
@@ -323,7 +323,7 @@ function bp_attachments_create_item_type( $type = 'avatar', $args = array() ) {
 		'create_item_' . $type
 	);
 
-	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || ! file_exists( $r['image'] ) || ! @getimagesize( $r['image'] ) ) {
+	if ( empty( $r['item_id'] ) || empty( $r['object'] ) || ! file_exists( $r['image'] ) || ! @getimagesize( $r['image'] ) ) { // phpcs:ignore WordPress.PHP.NoSilencedErrors
 		return false;
 	}
 
@@ -503,7 +503,7 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 	 * }
 	 */
 	$pre_filter = apply_filters( 'bp_attachments_pre_get_attachment', null, $r );
-	if ( $pre_filter !== null ) {
+	if ( null !== $pre_filter ) {
 		return $pre_filter;
 	}
 
@@ -536,9 +536,11 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 		$file = false;
 
 		// Open the directory and get the first file.
-		if ( $att_dir = opendir( $type_dir ) ) {
+		$att_dir = opendir( $type_dir );
+		if ( $att_dir ) {
 
-			while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
+			$attachment_file = readdir( $att_dir );
+			while ( false !== $attachment_file ) {
 				// Look for the first file having the type in its name.
 				if ( false !== strpos( $attachment_file, $r['type'] ) && empty( $file ) ) {
 					$file = $attachment_file;
@@ -1162,7 +1164,7 @@ function bp_attachments_cover_image_is_edit() {
 		$retval = ! bp_disable_cover_image_uploads();
 	}
 
-	if ( ( bp_is_group_admin_page() && 'group-cover-image' == bp_get_group_current_admin_tab() )
+	if ( ( bp_is_group_admin_page() && bp_get_group_current_admin_tab() === 'group-cover-image' )
 		|| ( bp_is_group_create() && bp_is_group_creation_step( 'group-cover-image' ) ) ) {
 		$retval = ! bp_disable_group_cover_image_uploads();
 	}
@@ -1283,8 +1285,10 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 	// Do some clean up with old cover photo, now a new one is set.
 	$cover_basename = wp_basename( $cover_file );
 
-	if ( $att_dir = opendir( $args['cover_image_dir'] ) ) {
-		while ( false !== ( $attachment_file = readdir( $att_dir ) ) ) {
+	$att_dir = opendir( $args['cover_image_dir'] );
+	if ( $att_dir ) {
+		$attachment_file = readdir( $att_dir );
+		while ( false !== $attachment_file ) {
 			// Skip directories and the new cover photo.
 			if ( 2 < strlen( $attachment_file ) && 0 !== strpos( $attachment_file, '.' ) && $cover_basename !== $attachment_file ) {
 				@unlink( $args['cover_image_dir'] . '/' . $attachment_file );

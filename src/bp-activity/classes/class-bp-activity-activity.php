@@ -372,6 +372,7 @@ class BP_Activity_Activity {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+			/* translators: 1: Method, 2: File */
 			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -455,14 +456,17 @@ class BP_Activity_Activity {
 		}
 
 		// Regular filtering.
-		if ( $r['filter'] && $filter_sql = self::get_filter_sql( $r['filter'] ) ) {
-			$where_conditions['filter_sql'] = $filter_sql;
+		if ( $r['filter'] ) {
+			$filter_sql = self::get_filter_sql( $r['filter'] );
+			if ( $filter_sql ) {
+				$where_conditions['filter_sql'] = $filter_sql;
+			}
 		}
 
 		// Spam.
-		if ( 'ham_only' == $r['spam'] ) {
+		if ( 'ham_only' === $r['spam'] ) {
 			$where_conditions['spam_sql'] = 'a.is_spam = 0';
-		} elseif ( 'spam_only' == $r['spam'] ) {
+		} elseif ( 'spam_only' === $r['spam'] ) {
 			$where_conditions['spam_sql'] = 'a.is_spam = 1';
 		}
 
@@ -489,7 +493,7 @@ class BP_Activity_Activity {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( $sort != 'ASC' && $sort != 'DESC' ) {
+		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
 			$sort = 'DESC';
 		}
 
@@ -1462,7 +1466,7 @@ class BP_Activity_Activity {
 
 		// Now fetch the activity comments and parse them into the correct position in the activities array.
 		foreach ( (array) $activities as $activity ) {
-			$top_level_parent_id                = 'activity_comment' == $activity->type ? $activity->item_id : 0;
+			$top_level_parent_id                = 'activity_comment' === $activity->type ? $activity->item_id : 0;
 			$activity_comments[ $activity->id ] = self::get_activity_comments( $activity->id, $activity->mptt_left, $activity->mptt_right, $spam, $top_level_parent_id );
 		}
 
@@ -1517,13 +1521,15 @@ class BP_Activity_Activity {
 
 				// Prevent debug errors.
 			} else {
-				$fullname_select = $fullname_from = $fullname_where = '';
+				$fullname_select = '';
+				$fullname_from   = '';
+				$fullname_where  = '';
 			}
 
 			// Don't retrieve activity comments marked as spam.
-			if ( 'ham_only' == $spam ) {
+			if ( 'ham_only' === $spam ) {
 				$spam_sql = 'AND a.is_spam = 0';
-			} elseif ( 'spam_only' == $spam ) {
+			} elseif ( 'spam_only' === $spam ) {
 				$spam_sql = 'AND a.is_spam = 1';
 			} else {
 				$spam_sql = '';
@@ -1733,7 +1739,7 @@ class BP_Activity_Activity {
 			$title                              = explode( '<span', $activities[ $i ]['content'] );
 			$activity_feed[ $i ]['title']       = trim( strip_tags( $title[0] ) );
 			$activity_feed[ $i ]['link']        = $activities[ $i ]['primary_link'];
-			$activity_feed[ $i ]['description'] = @sprintf( $activities[ $i ]['content'], '' );
+			$activity_feed[ $i ]['description'] = @sprintf( $activities[ $i ]['content'], '' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 			$activity_feed[ $i ]['pubdate']     = $activities[ $i ]['date_recorded'];
 		}
 

@@ -19,12 +19,11 @@ defined( 'ABSPATH' ) || exit;
  */
 function bbp_get_default_options() {
 
-	// Default options
-	return apply_filters( 'bbp_get_default_options', array(
+	$bbp_default_options = array(
 
 		/** DB Version ********************************************************/
 
-		'_bbp_db_version'           => bbpress()->db_version,
+		'_bbp_db_version'             => bbpress()->db_version,
 
 		/** Settings **********************************************************/
 
@@ -47,58 +46,60 @@ function bbp_get_default_options() {
 
 		/** Per Page **********************************************************/
 
-		'_bbp_topics_per_page'      => 15,          // Topics per page
-		'_bbp_replies_per_page'     => 15,          // Replies per page
-		'_bbp_forums_per_page'      => 15,          // Forums per page
-		'_bbp_topics_per_rss_page'  => 25,          // Topics per RSS page
-		'_bbp_replies_per_rss_page' => 25,          // Replies per RSS page
+		'_bbp_topics_per_page'        => 15,          // Topics per page
+		'_bbp_replies_per_page'       => 15,          // Replies per page
+		'_bbp_forums_per_page'        => 15,          // Forums per page
+		'_bbp_topics_per_rss_page'    => 25,          // Topics per RSS page
+		'_bbp_replies_per_rss_page'   => 25,          // Replies per RSS page
 
 		/** Page For **********************************************************/
 
-		'_bbp_page_for_forums'      => 0,           // Page for forums
-		'_bbp_page_for_topics'      => 0,           // Page for forums
-		'_bbp_page_for_login'       => 0,           // Page for login
-		'_bbp_page_for_register'    => 0,           // Page for register
-		'_bbp_page_for_lost_pass'   => 0,           // Page for lost-pass
+		'_bbp_page_for_forums'        => 0,           // Page for forums
+		'_bbp_page_for_topics'        => 0,           // Page for forums
+		'_bbp_page_for_login'         => 0,           // Page for login
+		'_bbp_page_for_register'      => 0,           // Page for register
+		'_bbp_page_for_lost_pass'     => 0,           // Page for lost-pass
 
 		/** Forum Root ********************************************************/
 
-		'_bbp_root_slug'            => 'forums',    // Forum archive slug
-		'_bbp_show_on_root'         => 'forums',    // What to show on root (forums|topics)
-		'_bbp_include_root'         => 1,           // Include forum-archive before single slugs
+		'_bbp_root_slug'              => 'forums',    // Forum archive slug
+		'_bbp_show_on_root'           => 'forums',    // What to show on root (forums|topics)
+		'_bbp_include_root'           => 1,           // Include forum-archive before single slugs
 
 		/** Single Slugs ******************************************************/
 
-		'_bbp_forum_slug'           => 'forum',     // Forum slug
-		'_bbp_topic_slug'           => 'topic',     // Topic slug
-		'_bbp_reply_slug'           => 'reply',     // Reply slug
-		'_bbp_topic_tag_slug'       => 'topic-tag', // Topic tag slug
+		'_bbp_forum_slug'             => 'forum',     // Forum slug
+		'_bbp_topic_slug'             => 'topic',     // Topic slug
+		'_bbp_reply_slug'             => 'reply',     // Reply slug
+		'_bbp_topic_tag_slug'         => 'topic-tag', // Topic tag slug
 
 		/** Other Slugs *******************************************************/
 
-		'_bbp_view_slug'            => 'view',      // View slug
-		'_bbp_search_slug'          => 'search',    // Search slug
+		'_bbp_view_slug'              => 'view',      // View slug
+		'_bbp_search_slug'            => 'search',    // Search slug
 
 		/** Topics ************************************************************/
 
-		'_bbp_title_max_length'     => 80,          // Title Max Length
-		'_bbp_super_sticky_topics'  => '',          // Super stickies
+		'_bbp_title_max_length'       => 80,          // Title Max Length
+		'_bbp_super_sticky_topics'    => '',          // Super stickies
 
 		/** Forums ************************************************************/
 
-		'_bbp_private_forums'       => '',          // Private forums
-		'_bbp_hidden_forums'        => '',          // Hidden forums
+		'_bbp_private_forums'         => '',          // Private forums
+		'_bbp_hidden_forums'          => '',          // Hidden forums
 
 		/** BuddyBoss ********************************************************/
 
-		'_bbp_enable_group_forums'  => 1,           // Enable BuddyBoss Group Extension
-		'_bbp_group_forums_root_id' => 0,           // Group Forums parent forum id
+		'_bbp_enable_group_forums'    => 1,           // Enable BuddyBoss Group Extension
+		'_bbp_group_forums_root_id'   => 0,           // Group Forums parent forum id
 
 		/** Akismet ***********************************************************/
 
-		'_bbp_enable_akismet'       => 1            // Users from all sites can post
+		'_bbp_enable_akismet'         => 1,           // Users from all sites can post
+	);
 
-	) );
+	// Default options
+	return apply_filters( 'bbp_get_default_options', $bbp_default_options );
 }
 
 /**
@@ -115,8 +116,9 @@ function bbp_get_default_options() {
 function bbp_add_options() {
 
 	// Add default options
-	foreach ( bbp_get_default_options() as $key => $value )
+	foreach ( bbp_get_default_options() as $key => $value ) {
 		add_option( $key, $value );
+	}
 
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_add_options' );
@@ -136,8 +138,9 @@ function bbp_add_options() {
 function bbp_delete_options() {
 
 	// Add default options
-	foreach ( array_keys( bbp_get_default_options() ) as $key )
+	foreach ( array_keys( bbp_get_default_options() ) as $key ) {
 		delete_option( $key );
+	}
 
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_delete_options' );
@@ -155,8 +158,9 @@ function bbp_delete_options() {
 function bbp_setup_option_filters() {
 
 	// Add filters to each Forums option
-	foreach ( array_keys( bbp_get_default_options() ) as $key )
+	foreach ( array_keys( bbp_get_default_options() ) as $key ) {
 		add_filter( 'pre_option_' . $key, 'bbp_pre_get_option' );
+	}
 
 	// Allow previously activated plugins to append their own options.
 	do_action( 'bbp_setup_option_filters' );
@@ -176,8 +180,9 @@ function bbp_pre_get_option( $value = '' ) {
 	$option = str_replace( 'pre_option_', '', current_filter() );
 
 	// Check the options global for preset value
-	if ( isset( bbpress()->options[$option] ) )
-		$value = bbpress()->options[$option];
+	if ( isset( bbpress()->options[ $option ] ) ) {
+		$value = bbpress()->options[ $option ];
+	}
 
 	// Always return a value, even if false
 	return $value;
@@ -372,17 +377,18 @@ function bbp_get_theme_package_id( $default = 'default' ) {
 function bbp_title_max_length( $default = 80 ) {
 	echo bbp_get_title_max_length( $default );
 }
-	/**
-	 * Return the maximum length of a title
-	 *
-	 * @since bbPress (r3246)
-	 * @param $default bool Optional. Default value 80
-	 * @uses get_option() To get the maximum title length
-	 * @return int Is anonymous posting allowed?
-	 */
-	function bbp_get_title_max_length( $default = 80 ) {
-		return (int) apply_filters( 'bbp_get_title_max_length', (int) get_option( '_bbp_title_max_length', $default ) );
-	}
+
+/**
+ * Return the maximum length of a title
+ *
+ * @since bbPress (r3246)
+ * @param $default bool Optional. Default value 80
+ * @uses get_option() To get the maximum title length
+ * @return int Is anonymous posting allowed?
+ */
+function bbp_get_title_max_length( $default = 80 ) {
+	return (int) apply_filters( 'bbp_get_title_max_length', (int) get_option( '_bbp_title_max_length', $default ) );
+}
 
 /**
  * Output the grop forums root parent forum id
@@ -393,17 +399,18 @@ function bbp_title_max_length( $default = 80 ) {
 function bbp_group_forums_root_id( $default = 0 ) {
 	echo bbp_get_group_forums_root_id( $default );
 }
-	/**
-	 * Return the grop forums root parent forum id
-	 *
-	 * @since bbPress (r3575)
-	 * @param $default bool Optional. Default value 0
-	 * @uses get_option() To get the root group forum ID
-	 * @return int The post ID for the root forum
-	 */
-	function bbp_get_group_forums_root_id( $default = 0 ) {
-		return (int) apply_filters( 'bbp_get_group_forums_root_id', (int) get_option( '_bbp_group_forums_root_id', $default ) );
-	}
+
+/**
+ * Return the grop forums root parent forum id
+ *
+ * @since bbPress (r3575)
+ * @param $default bool Optional. Default value 0
+ * @uses get_option() To get the root group forum ID
+ * @return int The post ID for the root forum
+ */
+function bbp_get_group_forums_root_id( $default = 0 ) {
+	return (int) apply_filters( 'bbp_get_group_forums_root_id', (int) get_option( '_bbp_group_forums_root_id', $default ) );
+}
 
 /**
  * Checks if BuddyBoss Group Forums are enabled
@@ -483,8 +490,9 @@ function bbp_show_on_root( $default = 'forums' ) {
 function bbp_maybe_get_root_slug() {
 	$retval = '';
 
-	if ( bbp_get_root_slug() && bbp_include_root_slug() )
+	if ( bbp_get_root_slug() && bbp_include_root_slug() ) {
 		$retval = trailingslashit( bbp_get_root_slug() );
+	}
 
 	return apply_filters( 'bbp_maybe_get_root_slug', $retval );
 }
@@ -495,7 +503,7 @@ function bbp_maybe_get_root_slug() {
  * @since bbPress (r3759)
  * @return string
  */
-function bbp_get_forum_slug( $default = 'forum' ) {;
+function bbp_get_forum_slug( $default = 'forum' ) {
 	return apply_filters( 'bbp_get_root_slug', bbp_maybe_get_root_slug() . get_option( '_bbp_forum_slug', $default ) );
 }
 

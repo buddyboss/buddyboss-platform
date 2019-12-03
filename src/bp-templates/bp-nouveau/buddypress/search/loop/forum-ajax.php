@@ -1,6 +1,6 @@
-<?php $total = bbp_get_forum_topic_count( get_the_ID() ) ?>
+<?php $total = bbp_get_forum_topic_count( get_the_ID() ); ?>
 <div class="bp-search-ajax-item bp-search-ajax-item_forum">
-	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bbp_get_forum_permalink( get_the_ID()) )); ?>">
+	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_forum_permalink( get_the_ID() ) ) ); ?>">
 		<div class="item-avatar">
 			<img
 				src="<?php echo bbp_get_forum_thumbnail_src( get_the_ID() ) ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
@@ -11,10 +11,13 @@
 			/>
 		</div>
 		<div class="item">
-			<div class="item-title"><?php bbp_forum_title(get_the_ID()); ?></div>
-			<div class="item-desc"><?php
-            //@todo take %d out of this?
-			printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total ); ?></div>
+			<div class="item-title"><?php bbp_forum_title( get_the_ID() ); ?></div>
+			<div class="item-desc">
+			<?php
+			//@todo take %d out of this?
+			printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total );
+			?>
+			</div>
 		</div>
 	</a>
 </div>

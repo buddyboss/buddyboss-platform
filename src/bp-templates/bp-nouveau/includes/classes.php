@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Common Classes
  *
@@ -69,18 +69,21 @@ class BP_Buttons_Group {
 	 */
 	public function set( $args = array() ) {
 
-		$r = wp_parse_args( (array) $args, array(
-			'id'                => '',
-			'position'          => 99,
-			'component'         => '',
-			'must_be_logged_in' => true,
-			'block_self'        => false,
-			'parent_element'    => false,
-			'parent_attr'       => array(),
-			'button_element'    => 'a',
-			'button_attr'       => array(),
-			'link_text'         => '',
-		) );
+		$r = wp_parse_args(
+			(array) $args,
+			array(
+				'id'                => '',
+				'position'          => 99,
+				'component'         => '',
+				'must_be_logged_in' => true,
+				'block_self'        => false,
+				'parent_element'    => false,
+				'parent_attr'       => array(),
+				'button_element'    => 'a',
+				'button_attr'       => array(),
+				'link_text'         => '',
+			)
+		);
 
 		// Just don't set the button if a param is missing
 		if ( empty( $r['id'] ) || empty( $r['component'] ) || empty( $r['link_text'] ) ) {
@@ -95,12 +98,12 @@ class BP_Buttons_Group {
 		}
 
 		/*
-         * If, in bp_nouveau_get_*_buttons(), we pass through a false value for 'parent_element'
-         * but we have attributtes for it in the array, let's default to setting a div.
-         *
-         * Otherwise, the original false value will be passed through to BP buttons.
-         * @todo: this needs review, probably trying to be too clever
-         */
+		 * If, in bp_nouveau_get_*_buttons(), we pass through a false value for 'parent_element'
+		 * but we have attributtes for it in the array, let's default to setting a div.
+		 *
+		 * Otherwise, the original false value will be passed through to BP buttons.
+		 * @todo: this needs review, probably trying to be too clever
+		 */
 		if ( ( ! empty( $r['parent_attr'] ) ) && false === $r['parent_element'] ) {
 			$r['parent_element'] = 'div';
 		}
@@ -186,7 +189,7 @@ class BP_Buttons_Group {
 	 * @param array $args Optional. See the __constructor for a description of this argument.
 	 */
 	public function update( $args = array() ) {
-	    $this->group = array();
+		$this->group = array();
 		foreach ( $args as $id => $params ) {
 			$this->set( $params );
 		}

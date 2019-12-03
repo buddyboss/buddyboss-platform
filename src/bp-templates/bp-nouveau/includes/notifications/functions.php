@@ -23,13 +23,16 @@ function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-notifications' => array(
-			'file'         => 'js/buddypress-notifications%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-notifications' => array(
+				'file'         => 'js/buddypress-notifications%s.js',
+				'dependencies' => array( 'bp-nouveau' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -84,11 +87,14 @@ function bp_nouveau_notifications_init_filters() {
 function bp_nouveau_notifications_register_filter( $args = array() ) {
 	$bp_nouveau = bp_nouveau();
 
-	$r = wp_parse_args( $args, array(
-		'id'       => '',
-		'label'    => '',
-		'position' => 99,
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'id'       => '',
+			'label'    => '',
+			'position' => 99,
+		)
+	);
 
 	if ( empty( $r['id'] ) || empty( $r['label'] ) ) {
 		return false;
@@ -118,7 +124,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
 	if ( empty( $id ) ) {
 		return $bp_nouveau->notifications->filters;
 
-	// Get a specific filter
+		// Get a specific filter
 	} elseif ( ! empty( $id ) && isset( $bp_nouveau->notifications->filters[ $id ] ) ) {
 		return $bp_nouveau->notifications->filters[ $id ];
 

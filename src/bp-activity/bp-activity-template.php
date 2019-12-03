@@ -464,7 +464,12 @@ function bp_get_activity_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $activities_template->pag_num - 1 ) > $activities_template->total_activity_count ) ? $activities_template->total_activity_count : $start_num + ( $activities_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $activities_template->total_activity_count );
 
-	$message = sprintf( _n( 'Viewing 1 item', 'Viewing %1$s - %2$s of %3$s items', $activities_template->total_activity_count, 'buddyboss' ), $from_num, $to_num, $total );
+	if ( 1 === $activities_template->total_activity_count ) {
+		$message = __( 'Viewing 1 item', 'buddyboss' );
+	} else {
+		/* translators: 1: From page, 2: To page, 3: Total pages */
+		$message = sprintf( __( 'Viewing %1$s - %2$s of %3$s items', 'buddyboss' ), $from_num, $to_num, $total );
+	}
 
 	return $message;
 }
@@ -1033,6 +1038,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$dn_default = isset( $current_activity_item->display_name ) ? $current_activity_item->display_name : '';
 
 	// Prepend some descriptive text to alt.
+	/* translators: %s: User display name */
 	$alt_default = ! empty( $dn_default ) ? sprintf( __( 'Profile photo of %s', 'buddyboss' ), $dn_default ) : __( 'Profile photo', 'buddyboss' );
 
 	$defaults = array(
@@ -1044,20 +1050,20 @@ function bp_get_activity_avatar( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	if ( ! isset( $height ) && ! isset( $width ) ) {
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->height ) || isset( $bp->avatar->thumb->height ) ) {
-			$height = ( 'full' == $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
+			$height = ( 'full' === $type ) ? $bp->avatar->full->height : $bp->avatar->thumb->height;
 		} else {
 			$height = 20;
 		}
 
 		// Backpat.
 		if ( isset( $bp->avatar->full->width ) || isset( $bp->avatar->thumb->width ) ) {
-			$width = ( 'full' == $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
+			$width = ( 'full' === $type ) ? $bp->avatar->full->width : $bp->avatar->thumb->width;
 		} else {
 			$width = 20;
 		}
@@ -1087,7 +1093,7 @@ function bp_get_activity_avatar( $args = '' ) {
 	$item_id = apply_filters( 'bp_get_activity_avatar_item_id', $item_id );
 
 	// If this is a user object pass the users' email address for Gravatar so we don't have to prefetch it.
-	if ( 'user' == $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
+	if ( 'user' === $object && empty( $user_id ) && empty( $email ) && isset( $current_activity_item->user_email ) ) {
 		$email = $current_activity_item->user_email;
 	}
 
@@ -1164,7 +1170,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			'email'      => false,
 		)
 	);
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	// Set item_id and object (default to user).
 	switch ( $activities_template->activity->component ) {
@@ -1189,6 +1195,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 				$alt = __( 'Group logo', 'buddyboss' );
 
 				if ( ! empty( $name ) ) {
+					/* translators: %s: Group name */
 					$alt = sprintf( __( 'Group logo of %s', 'buddyboss' ), $name );
 				}
 			}
@@ -1200,6 +1207,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = home_url();
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: Blog or site name */
 				$alt = sprintf( __( 'Profile photo of the author of the site %s', 'buddyboss' ), get_blog_option( $item_id, 'blogname' ) );
 			}
 
@@ -1210,6 +1218,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = bp_core_get_userlink( $item_id, false, true );
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: User display name */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $activities_template->activity->secondary_item_id ) );
 			}
 
@@ -1221,6 +1230,7 @@ function bp_get_activity_secondary_avatar( $args = '' ) {
 			$link    = bp_core_get_userlink( $item_id, false, true );
 
 			if ( empty( $alt ) ) {
+				/* translators: %s: User display name */
 				$alt = sprintf( __( 'Profile photo of %s', 'buddyboss' ), $activities_template->activity->display_name );
 			}
 
@@ -1598,7 +1608,7 @@ function bp_activity_user_can_delete( $activity = false ) {
 		// Users are allowed to delete their own activity. This is actually
 		// quite powerful, because doing so also deletes all comments to that
 		// activity item. We should revisit this eventually.
-		if ( isset( $activity->user_id ) && ( $activity->user_id === bp_loggedin_user_id() ) ) {
+		if ( isset( $activity->user_id ) && ( bp_loggedin_user_id() === $activity->user_id ) ) {
 			$can_delete = true;
 		}
 
@@ -2189,6 +2199,7 @@ function bp_activity_get_comment_count( $deprecated = null ) {
 
 	// Deprecated notice about $args.
 	if ( ! empty( $deprecated ) ) {
+		/* translators: 1: Function name, 2: File name */
 		_deprecated_argument( __FUNCTION__, '1.2', sprintf( __( '%1$s no longer accepts arguments. See the inline documentation at %2$s for more details.', 'buddyboss' ), __FUNCTION__, __FILE__ ) );
 	}
 
@@ -2367,7 +2378,7 @@ function bp_activity_comment_form_nojs_display() {
 function bp_get_activity_comment_form_nojs_display() {
 	global $activities_template;
 
-	if ( isset( $_GET['ac'] ) && ( $_GET['ac'] === ( $activities_template->activity->id . '/' ) ) ) {
+	if ( isset( $_GET['ac'] ) && ( ( $activities_template->activity->id . '/' ) === $_GET['ac'] ) ) {
 		return 'style="display: block"';
 	}
 
@@ -2617,23 +2628,24 @@ function bp_get_activity_css_class() {
 	 * @param string $value Classes to be added to the HTML element.
 	 */
 	return apply_filters( 'bp_get_activity_css_class', $activities_template->activity->component . ' ' . $activities_template->activity->type . $class );
-}/**
-  *
-  * Output the activity comment CSS class.
-  *
-  * @since BuddyBoss 1.0.0
-  */
+}
+
+/**
+ * Output the activity comment CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_activity_comment_css_class() {
 	echo bp_get_activity_comment_css_class();
 }
 
-	/**
-	 * Return the current activity comment's CSS class.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @return string The activity comment's CSS class.
-	 */
+/**
+ * Return the current activity comment's CSS class.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string The activity comment's CSS class.
+ */
 function bp_get_activity_comment_css_class() {
 
 	$class = ' comment-item';
@@ -2762,7 +2774,9 @@ function bp_get_activity_latest_update( $user_id = 0 ) {
 		return false;
 	}
 
-	if ( ! $update = bp_get_user_meta( $user_id, 'bp_latest_update', true ) ) {
+	$update = bp_get_user_meta( $user_id, 'bp_latest_update', true );
+
+	if ( ! $update ) {
 		return false;
 	}
 
@@ -2843,11 +2857,11 @@ function bp_get_activity_filter_links( $args = false ) {
 	foreach ( (array) $components as $component ) {
 
 		// Skip the activity comment filter.
-		if ( 'activity' == $component ) {
+		if ( 'activity' === $component ) {
 			continue;
 		}
 
-		if ( isset( $_GET['afilter'] ) && $component == $_GET['afilter'] ) {
+		if ( isset( $_GET['afilter'] ) && $component === $_GET['afilter'] ) {
 			$selected = ' class="selected"';
 		} else {
 			$selected = '';

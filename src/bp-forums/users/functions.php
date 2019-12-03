@@ -1509,7 +1509,7 @@ function bbp_user_maybe_convert_pass() {
 	global $wpdb;
 
 	// Bail if no user password to convert
-	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->users} INNER JOIN {$wpdb->usermeta} ON user_id = ID WHERE meta_key = '_bbp_class' AND user_login = '%s' LIMIT 1", $username ) );
+	$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$wpdb->users} INNER JOIN {$wpdb->usermeta} ON user_id = ID WHERE meta_key = '_bbp_class' AND user_login = '%s' LIMIT 1", $username ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 	if ( empty( $row ) || is_wp_error( $row ) ) {
 		return;
 	}

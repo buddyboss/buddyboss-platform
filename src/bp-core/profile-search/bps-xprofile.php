@@ -50,7 +50,7 @@ function bp_ps_xprofile_setup( $fields ) {
 					$f->options[ $key ] = $label;
 				}
 
-				if ( $f->format == 'custom' ) {
+				if ( 'custom' === $f->format ) {
 					/**
 					 * @todo add title/description
 					 *
@@ -59,7 +59,7 @@ function bp_ps_xprofile_setup( $fields ) {
 					do_action( 'bp_ps_custom_field', $f );
 				}
 
-				if ( $f->format == 'set' ) {
+				if ( 'set' === $f->format ) {
 					unset( $f->sort_directory, $f->get_value );
 				}
 
@@ -80,7 +80,7 @@ function bp_ps_xprofile_search( $f ) {
 	global $bp, $wpdb;
 
 	$value  = $f->value;
-	$filter = $f->format . '_' . ( $f->filter == '' ? 'is' : $f->filter );
+	$filter = $f->format . '_' . ( '' === $f->filter ? 'is' : $f->filter );
 
 	$sql                      = array(
 		'select' => '',
@@ -117,7 +117,7 @@ function bp_ps_xprofile_search( $f ) {
 					$day   = ! empty( $f->value[ $range_type ]['day'] ) ? $f->value[ $range_type ]['day'] : '00';
 					$date  = $year . '-' . $month . '-' . $day;
 
-					$operator = 'min' == $range_type ? '>=' : '<=';
+					$operator = 'min' === $range_type ? '>=' : '<=';
 
 					$sql['where'][ $range_type ] = $wpdb->prepare( "DATE(value) $operator %s", $date );
 				}
@@ -203,7 +203,7 @@ function bp_ps_xprofile_search( $f ) {
 				$escaped = '%:"' . bp_ps_esc_like( $value ) . '";%';
 				$parts[] = $wpdb->prepare( 'value LIKE %s', $escaped );
 			}
-			$match                   = ( $filter == 'set_match_any' ) ? ' OR ' : ' AND ';
+			$match                   = ( 'set_match_any' === $filter ) ? ' OR ' : ' AND ';
 			$sql['where'][ $filter ] = '(' . implode( $match, $parts ) . ')';
 			break;
 
@@ -247,7 +247,7 @@ function bp_ps_xprofile_sort_directory( $sql, $object, $f, $order ) {
 function bp_ps_xprofile_get_value( $f ) {
 	global $members_template;
 
-	if ( $members_template->current_member == 0 ) {
+	if ( 0 === $members_template->current_member ) {
 		$users = wp_list_pluck( $members_template->members, 'ID' );
 		BP_XProfile_ProfileData::get_value_byid( $f->id, $users );
 	}
@@ -528,7 +528,7 @@ function bp_ps_learndash_get_users_for_course( $course_id = 0, $query_args = arr
 
 	$query_args = wp_parse_args( $query_args, $defaults );
 
-	if ( $exclude_admin == true ) {
+	if ( true === $exclude_admin ) {
 		$query_args['role__not_in'] = array( 'administrator' );
 	}
 

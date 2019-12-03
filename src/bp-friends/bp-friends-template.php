@@ -72,12 +72,14 @@ function bp_get_friends_root_slug() {
  */
 function bp_friends_random_friends() {
 
-	if ( ! $friend_ids = wp_cache_get( 'friends_friend_ids_' . bp_displayed_user_id(), 'bp' ) ) {
+	$friend_ids = wp_cache_get( 'friends_friend_ids_' . bp_displayed_user_id(), 'bp' );
+	if ( ! $friend_ids ) {
 		$friend_ids = BP_Friends_Friendship::get_random_friends( bp_displayed_user_id() );
 		wp_cache_set( 'friends_friend_ids_' . bp_displayed_user_id(), $friend_ids, 'bp' );
 	} ?>
 
 	<div class="info-group">
+		<?php /* translators: [User]'s Connections */ ?>
 		<h4><?php bp_word_or_name( __( 'My Connections', 'buddyboss' ), __( "%s's Connections", 'buddyboss' ) ); ?>  (<?php echo BP_Friends_Friendship::total_friend_count( bp_displayed_user_id() ); ?>) <span><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() ); ?>"><?php _e( 'See All', 'buddyboss' ); ?></a></span></h4>
 
 		<?php if ( $friend_ids ) { ?>
@@ -107,6 +109,7 @@ function bp_friends_random_friends() {
 		<?php } else { ?>
 
 			<div id="message" class="info">
+				<?php /* translators: [User] hasn't created any connections yet. */ ?>
 				<p><?php bp_word_or_name( __( "You haven't made any connections yet.", 'buddyboss' ), __( "%s hasn't created any connections yet.", 'buddyboss' ) ); ?></p>
 			</div>
 
@@ -129,7 +132,8 @@ function bp_friends_random_friends() {
  */
 function bp_friends_random_members( $total_members = 5 ) {
 
-	if ( ! $user_ids = wp_cache_get( 'friends_random_users', 'bp' ) ) {
+	$user_ids = wp_cache_get( 'friends_random_users', 'bp' );
+	if ( ! $user_ids ) {
 		$user_ids = BP_Core_User::get_users( 'random', $total_members );
 		wp_cache_set( 'friends_random_users', $user_ids, 'bp' );
 	}
@@ -251,7 +255,7 @@ function bp_member_total_friend_count() {
 function bp_get_member_total_friend_count() {
 	global $members_template;
 
-	if ( 1 == (int) $members_template->member->total_friend_count ) {
+	if ( 1 === (int) $members_template->member->total_friend_count ) {
 
 		/**
 		 * Filters text used to denote total friend count.
@@ -261,11 +265,11 @@ function bp_get_member_total_friend_count() {
 		 * @param string $value String of the form "x friends".
 		 * @param int    $value Total friend count for current member in the loop.
 		 */
-		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
+		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connection', 'buddyboss' ), (int) $members_template->member->total_friend_count ) ); //phpcs:ignore WordPress.WP.I18n
 	} else {
 
 		/** This filter is documented in bp-friends/bp-friends-template.php */
-		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) );
+		return apply_filters( 'bp_get_member_total_friend_count', sprintf( __( '%d connections', 'buddyboss' ), (int) $members_template->member->total_friend_count ) ); //phpcs:ignore WordPress.WP.I18n
 	}
 }
 
@@ -332,7 +336,7 @@ function bp_is_friend( $user_id = 0 ) {
 		$user_id = bp_get_potential_friend_id( $user_id );
 	}
 
-	if ( bp_loggedin_user_id() == $user_id ) {
+	if ( bp_loggedin_user_id() === $user_id ) {
 		return false;
 	}
 
@@ -612,7 +616,8 @@ function bp_friend_friendship_id() {
 function bp_get_friend_friendship_id() {
 	global $members_template;
 
-	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() ) ) {
+	$friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() );
+	if ( ! $friendship_id ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}
@@ -645,7 +650,8 @@ function bp_friend_accept_request_link() {
 function bp_get_friend_accept_request_link() {
 	global $members_template;
 
-	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() ) ) {
+	$friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() );
+	if ( ! $friendship_id ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}
@@ -680,7 +686,8 @@ function bp_friend_reject_request_link() {
 function bp_get_friend_reject_request_link() {
 	global $members_template;
 
-	if ( ! $friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() ) ) {
+	$friendship_id = wp_cache_get( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id() );
+	if ( ! $friendship_id ) {
 		$friendship_id = friends_get_friendship_id( $members_template->member->id, bp_loggedin_user_id() );
 		wp_cache_set( 'friendship_id_' . $members_template->member->id . '_' . bp_loggedin_user_id(), $friendship_id, 'bp' );
 	}
@@ -817,7 +824,7 @@ function bp_friends_get_profile_stats( $args = '' ) {
 			}
 
 			// If friends exist, show some formatted output.
-			$r['output'] = $r['before'] . sprintf( _n( '%s connection', '%s connections', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after'];
+			$r['output'] = $r['before'] . sprintf( _n( '%s connection', '%s connections', $r['friends'], 'buddyboss' ), '<strong>' . $r['friends'] . '</strong>' ) . $r['after']; // phpcs:ignore WordPress.WP.I18n
 		}
 	}
 

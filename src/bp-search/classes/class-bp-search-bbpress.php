@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
+if ( ! class_exists( 'Bp_Search_BBPress' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbPress class
 	 */
-	abstract class Bp_Search_bbPress extends Bp_Search_Type {
+	abstract class Bp_Search_BBPress extends Bp_Search_Type {
 		public $type;
 
 		function sql( $search_term, $only_totalrow_count = false ) {
@@ -48,7 +48,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'Bp_Search_Forums_sql',
+				'bp_search_forums_sql',
 				$sql,
 				array(
 					'search_term'         => $search_term,
@@ -101,7 +101,7 @@ if ( ! class_exists( 'Bp_Search_bbPress' ) ) :
 
 	}
 
-	// End class Bp_Search_bbPress
+	// End class Bp_Search_BBPress
 
 endif;
 

@@ -34,7 +34,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 
 		public function sql( $search_term, $only_totalrow_count = false ) {
 			/*
-			 an example UNION query :-
+			 * an example UNION query :-
 			-----------------------------------------------------
 			(
 				SELECT
@@ -77,9 +77,9 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$sql .= " FROM {$wpdb->posts} p ";
 
 			/*
-			 ++++++++++++++++++++++++++++++++
+			 * ++++++++++++++++++++++++++++++++
 			 * wp_posts table fields
-			 +++++++++++++++++++++++++++++++ */
+			 * +++++++++++++++++++++++++++++++ */
 			$taxonomies = get_object_taxonomies( $this->pt_name );
 			foreach ( $taxonomies as $taxonomy ) {
 				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->pt_name ) ) {
@@ -127,7 +127,7 @@ if ( ! class_exists( 'Bp_Search_Posts' ) ) :
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'Bp_Search_Posts_sql',
+				'bp_search_posts_sql',
 				$sql,
 				array(
 					'search_term'         => $search_term,

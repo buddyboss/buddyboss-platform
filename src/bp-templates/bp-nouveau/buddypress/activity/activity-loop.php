@@ -16,7 +16,7 @@ bp_nouveau_before_loop(); ?>
 	<?php
 	while ( bp_activities() ) :
 		bp_the_activity();
-	?>
+		?>
 
 		<?php bp_get_template_part( 'activity/entry' ); ?>
 

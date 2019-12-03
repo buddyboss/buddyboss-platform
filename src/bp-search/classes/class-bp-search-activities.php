@@ -89,7 +89,7 @@ if ( ! class_exists( 'Bp_Search_Activities' ) ) :
 			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'Bp_Search_Activities_sql',
+				'bp_search_activities_sql',
 				$sql,
 				array(
 					'search_term'         => $search_term,

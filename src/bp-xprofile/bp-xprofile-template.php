@@ -175,7 +175,7 @@ function bp_get_field_css_class( $class = false ) {
 	// Add the field visibility level.
 	$css_classes[] = 'visibility-' . esc_attr( bp_get_the_profile_field_visibility_level() );
 
-	if ( $profile_template->current_field % 2 == 1 ) {
+	if ( 1 === $profile_template->current_field % 2 ) {
 		$css_classes[] = 'alt';
 	}
 
@@ -1513,10 +1513,10 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 				<?php echo $r['before_controls']; ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
-									   <?php
+									<?php
 										/* translators: accessibility text */
 										_e( 'Select visibility', 'buddyboss' );
-										?>
+									?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 

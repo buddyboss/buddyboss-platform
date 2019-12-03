@@ -138,7 +138,8 @@ function maybe_redirects_to_previous_thread_message() {
 	$recipient = bp_get_messages_username_value();
 	$user_id   = bp_core_get_userid( $recipient );
 
-	if ( ! $thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() ) ) {
+	$thread_id = BP_Messages_Message::get_existing_thread( array( $user_id ), bp_loggedin_user_id() );
+	if ( ! $thread_id ) {
 		return;
 	}
 

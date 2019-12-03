@@ -16,11 +16,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 	 */
 	class BP_Search_Core {
 
-		/*
-		 Includes
-		 * ===================================================================
-		 */
-
 		/**
 		 * Most WordPress/BuddyPress plugin have the includes in the function
 		 * method that loads them, we like to keep them up here for easier
@@ -38,21 +33,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 			'plugins/search-cpt/index',
 		);
 
-		/*
-		 Plugin Options
-		 * ===================================================================
-		 */
-
-		/*
-		 Version
-		 * ===================================================================
-		 */
-
-		/*
-		 Magic
-		 * ===================================================================
-		 */
-
 		/**
 		 * BuddyPress Global Search uses many variables, most of which can be filtered to
 		 * customize the way that it works. To prevent unauthorized access,
@@ -65,11 +45,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		 * @var array
 		 */
 		private $data;
-
-		/*
-		 Singleton
-		 * ===================================================================
-		 */
 
 		/**
 		 * Main BuddyPress Global Search Instance.
@@ -101,11 +76,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 			// Always return the instance
 			return $instance;
 		}
-
-		/*
-		 Magic Methods
-		 * ===================================================================
-		 */
 
 		/**
 		 * A dummy constructor to prevent BuddyBoss Global Search from being loaded more than once.
@@ -214,17 +184,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		}
 
 		/**
-		 * Setup plugin options settings admin page
-		 */
-		public function setup_admin_settings() {
-
-			if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
-				$this->load_admin();
-			}
-		}
-
-
-		/**
 		 * We require BuddyPress to run the main components, so we attach
 		 * to the 'bp_init' action which BuddyPress calls after it's started
 		 * up. This ensures any BuddyPress related code is only loaded
@@ -236,25 +195,6 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		 */
 		public function init_load() {
 			$this->load_main();
-		}
-
-		/*
-		 Load
-		 * ===================================================================
-		 */
-
-		/**
-		 * Include required admin files.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 * @access private
-		 *
-		 * @uses $this->do_includes() Loads array of files in the include folder
-		 */
-		private function load_admin() {
-			$this->do_includes( $this->admin_includes );
-
-			$this->admin = bp_search_Admin::instance();
 		}
 
 		/**
@@ -291,7 +231,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 		}
 
 		/*
-		 Print inline JS for initializing the bp messages autocomplete.
+		 * Print inline JS for initializing the bp messages autocomplete.
 		 * Proper updated auto complete code for buddypress message compose (replacing autocompletefb script).
 		 * @todo : Why this inline code is not at proper file.
 		 * @clean: This is not working.
@@ -299,7 +239,7 @@ if ( ! class_exists( 'BP_Search_Core' ) ) :
 
 
 		/*
-		 Utility functions
+		 * Utility functions
 		 * ===================================================================
 		 */
 

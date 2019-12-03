@@ -68,26 +68,26 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			$query_placeholder = array();
 
-			$COLUMNS = ' SELECT ';
+			$columns = ' SELECT ';
 
 			if ( $only_totalrow_count ) {
-				$COLUMNS .= ' COUNT( DISTINCT u.id ) ';
+				$columns .= ' COUNT( DISTINCT u.id ) ';
 			} else {
-				$COLUMNS            .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
+				$columns            .= " DISTINCT u.id, 'members' as type, u.display_name LIKE %s AS relevance, a.date_recorded as entry_date ";
 				$query_placeholder[] = '%' . $search_term . '%';
 			}
 
-			$FROM = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
+			$from = " {$wpdb->users} u LEFT JOIN {$bp->members->table_name_last_activity} a ON a.user_id=u.id AND a.component = 'members' AND a.type = 'last_activity'";
 
-			$WHERE        = array();
-			$WHERE[]      = '1=1';
-			$WHERE[]      = 'u.user_status = 0';
+			$where        = array();
+			$where[]      = '1=1';
+			$where[]      = 'u.user_status = 0';
 			$where_fields = array();
 
 			/*
-			 ++++++++++++++++++++++++++++++++
+			 * ++++++++++++++++++++++++++++++++
 			 * wp_users table fields
-			 +++++++++++++++++++++++++++++++ */
+			 * +++++++++++++++++++++++++++++++ */
 			$user_fields = bp_get_search_user_fields();
 			if ( ! empty( $user_fields ) ) {
 				$conditions_wp_user_table = array();
@@ -119,9 +119,9 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 			/* _____________________________ */
 
 			/*
-			 ++++++++++++++++++++++++++++++++
+			 * ++++++++++++++++++++++++++++++++
 			 * xprofile fields
-			 +++++++++++++++++++++++++++++++ */
+			 * +++++++++++++++++++++++++++++++ */
 			// get all selected xprofile fields
 			if ( function_exists( 'bp_is_active' ) && bp_is_active( 'xprofile' ) ) {
 				$groups = bp_xprofile_get_groups(
@@ -166,14 +166,11 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					}
 				}
 			}
-			/* _____________________________ */
 
-						/*
-						 ++++++++++++++++++++++++++++++++
+			/**
 			 * Search from search string
-			 +++++++++++++++++++++++++++++++ */
-
-							$split_search_term = explode( ' ', $search_term );
+			 */
+			$split_search_term = explode( ' ', $search_term );
 
 			if ( count( $split_search_term ) > 1 ) {
 
@@ -181,7 +178,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 				foreach ( $split_search_term as $k => $sterm ) {
 
-					if ( $k == 0 ) {
+					if ( 0 === $k ) {
 						$clause_search_string_table .= ' meta_value LIKE %s ';
 						$query_placeholder[]         = '%' . $sterm . '%';
 					} else {
@@ -196,31 +193,29 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 			}
 
-						/* _____________________________ */
-
 			if ( ! empty( $where_fields ) ) {
-				$WHERE[] = '(' . implode( ' OR ', $where_fields ) . ')';
+				$where[] = '(' . implode( ' OR ', $where_fields ) . ')';
 			}
 
 			// other conditions
-			// $WHERE[] = " a.component = 'members' ";
-			// $WHERE[] = " a.type = 'last_activity' ";
+			// $where[] = " a.component = 'members' ";
+			// $where[] = " a.type = 'last_activity' ";
 
-			$sql = $COLUMNS . ' FROM ' . $FROM . ' WHERE ' . implode( ' AND ', $WHERE );
+			$sql = $columns . ' FROM ' . $from . ' WHERE ' . implode( ' AND ', $where );
 			if ( ! $only_totalrow_count ) {
 				$sql .= ' GROUP BY u.id ';
 			}
 
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
-						return apply_filters(
-							'Bp_Search_Members_sql',
-							$sql,
-							array(
-								'search_term'         => $search_term,
-								'only_totalrow_count' => $only_totalrow_count,
-							)
-						);
+			return apply_filters(
+				'bp_search_members_sql',
+				$sql,
+				array(
+					'search_term'         => $search_term,
+					'only_totalrow_count' => $only_totalrow_count,
+				)
+			);
 		}
 
 		protected function generate_html( $template_type = '' ) {

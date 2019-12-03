@@ -20,9 +20,9 @@
 		<?php
 		while ( bp_group_members() ) :
 			bp_group_the_member();
-		?>
+			?>
 
-			<?php bp_group_member_section_title() ?>
+			<?php bp_group_member_section_title(); ?>
 
 			<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php echo esc_attr( bp_get_group_member_id() ); ?>" data-bp-item-component="members">
 
@@ -40,7 +40,7 @@
 							<h3 class="list-title member-name"><?php bp_group_member_link(); ?></h3>
 
 
-							<?php if( !empty( $user_group_role_title ) ) { ?>
+							<?php if ( ! empty( $user_group_role_title ) ) { ?>
 								<p class="role item-meta"><?php echo $user_group_role_title; ?></p>
 							<?php } ?>
 
@@ -69,7 +69,8 @@
 
 	<?php bp_nouveau_group_hook( 'after', 'members_content' ); ?>
 
-<?php else :
+	<?php
+else :
 
 	bp_nouveau_user_feedback( 'group-members-none' );
 

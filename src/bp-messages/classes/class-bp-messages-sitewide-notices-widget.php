@@ -51,7 +51,7 @@ class BP_Messages_Sitewide_Notices_Widget extends WP_Widget {
 			return;
 		}
 
-		extract( $args );
+		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract
 
 		$title = ! empty( $instance['title'] ) ? $instance['title'] : '';
 

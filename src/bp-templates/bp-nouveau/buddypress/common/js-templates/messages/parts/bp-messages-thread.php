@@ -30,12 +30,12 @@
 			<div class="thread-to">
 					<# for ( i in first_three ) { #>
 						<span class="user-name">
-							{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
+							{{other_recipients[i].user_name}}<# if ( i != first_three.length - 1  || ( i == first_three.length -1 && include_you ) ) { #><?php _e( ',', 'buddyboss' ); ?><# } #>
 						</span>
 					<# } #>
 
 					<# if ( include_you ) { #>
-						<span class="user-name"><?php _e('You', 'buddyboss'); ?><# if ( data.toOthers ) { #><?php _e(',', 'buddyboss'); ?><# } #></span>
+						<span class="user-name"><?php _e( 'You', 'buddyboss' ); ?><# if ( data.toOthers ) { #><?php _e( ',', 'buddyboss' ); ?><# } #></span>
 					<# } #>
 
 					<# if ( data.toOthers ) { #>
@@ -46,7 +46,7 @@
 			<div class="thread-subject">
 				<span class="last-message-sender">
 				  <# if ( data.sender_is_you ) { #>
-					<?php _e('You', 'buddyboss'); ?>:
+					<?php _e( 'You', 'buddyboss' ); ?>:
 				  <# } else if ( other_recipients.length > 1 ) { #>
 					{{ data.sender_name }}:
 				  <# } #>

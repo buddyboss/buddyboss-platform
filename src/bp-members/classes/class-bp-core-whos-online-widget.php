@@ -115,7 +115,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 				<a href="javascript:void(0);" id="connection-members" data-content="boss_whos_online_widget_connections">
 					<?php esc_html_e( 'Connections', 'buddyboss' ); ?>
 					<span class="widget-num-count"><?php esc_html_e( $count, 'buddyboss' ); ?></span>
-				</a> 
+				</a>
 				<?php
 			endif;
 			?>
@@ -123,32 +123,31 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		</div>
 		<div class="widget-content" id="boss_whos_online_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
 			<?php if ( bp_has_members( $members_args ) ) : ?>
-	
 				<div class="avatar-block">
-	
+
 					<?php
 					while ( bp_members() ) :
 						bp_the_member();
 						?>
-	
+
 						<div class="item-avatar">
 							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?><span class="member-status online"></span></a>
 						</div>
-	
+
 					<?php endwhile; ?>
-	
+
 				</div>
-				
+
 				<?php if ( $members_template->total_member_count < $total_online ) { ?>
 					<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 				<?php } ?>
-	
+
 			<?php else : ?>
-	
+
 				<div class="widget-error">
 					<?php esc_html_e( 'There are no users currently online', 'buddyboss' ); ?>
 				</div>
-	
+
 			<?php endif; ?>
 		</div>
 		<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">
@@ -161,7 +160,7 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 						?>
 						<div class="item-avatar">
 							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?>
-																  <?php
+																	<?php
 																	$current_time = current_time( 'mysql', 1 );
 																	$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
 																	if ( $diff < 300 ) { // 5 minutes  =  5 * 60

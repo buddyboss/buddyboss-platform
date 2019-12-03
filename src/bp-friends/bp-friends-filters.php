@@ -26,8 +26,10 @@ defined( 'ABSPATH' ) || exit;
 function bp_friends_filter_user_query_populate_extras( BP_User_Query $user_query, $user_ids_sql ) {
 	global $wpdb;
 
+	$user_id = bp_loggedin_user_id();
+
 	// Stop if user isn't logged in.
-	if ( ! $user_id = bp_loggedin_user_id() ) {
+	if ( ! $user_id ) {
 		return;
 	}
 
@@ -39,7 +41,7 @@ function bp_friends_filter_user_query_populate_extras( BP_User_Query $user_query
 	foreach ( $maybe_friend_ids as $friend_id ) {
 		$status = BP_Friends_Friendship::check_is_friend( $user_id, $friend_id );
 		$user_query->results[ $friend_id ]->friendship_status = $status;
-		if ( 'is_friend' == $status ) {
+		if ( 'is_friend' === $status ) {
 			$user_query->results[ $friend_id ]->is_friend = 1;
 		}
 	}

@@ -140,13 +140,14 @@ function bp_get_the_message_star_action_link( $args = array() ) {
 	}
 
 	// Define local variables.
-	$retval = $bulk_attr = '';
+	$retval    = '';
+	$bulk_attr = '';
 
 	// Thread ID.
 	if ( (int) $r['thread_id'] > 0 ) {
 
 		// See if we're in the loop.
-		if ( bp_get_message_thread_id() == $r['thread_id'] ) {
+		if ( bp_get_message_thread_id() === $r['thread_id'] ) {
 
 			// Grab all message ids.
 			$mids = wp_list_pluck( $GLOBALS['messages_template']->thread->messages, 'id' );
@@ -282,7 +283,7 @@ function bp_messages_star_set_action( $args = array() ) {
 	$is_starred = bp_messages_is_message_starred( $r['message_id'], $r['user_id'] );
 
 	// Star.
-	if ( 'star' == $r['action'] ) {
+	if ( 'star' === $r['action'] ) {
 		if ( true === $is_starred ) {
 			return true;
 		} else {

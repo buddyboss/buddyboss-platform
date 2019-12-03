@@ -32,7 +32,7 @@ defined( 'ABSPATH' ) || exit;
 function friends_add_friend( $initiator_userid, $friend_userid, $force_accept = false ) {
 
 	// You cannot be friends with yourself!
-	if ( $initiator_userid == $friend_userid ) {
+	if ( $initiator_userid === $friend_userid ) {
 		return false;
 	}
 
@@ -260,7 +260,7 @@ function friends_withdraw_friendship( $initiator_userid, $friend_userid ) {
  */
 function friends_check_friendship( $user_id, $possible_friend_id ) {
 
-	if ( 'is_friend' == BP_Friends_Friendship::check_is_friend( $user_id, $possible_friend_id ) ) {
+	if ( 'is_friend' === BP_Friends_Friendship::check_is_friend( $user_id, $possible_friend_id ) ) {
 		return true;
 	}
 
@@ -731,7 +731,7 @@ function friends_is_friendship_confirmed( $friendship_id ) {
  */
 function friends_update_friend_totals( $initiator_user_id, $friend_user_id, $status = 'add' ) {
 
-	if ( 'add' == $status ) {
+	if ( 'add' === $status ) {
 		bp_update_user_meta( $initiator_user_id, 'total_friend_count', (int) bp_get_user_meta( $initiator_user_id, 'total_friend_count', true ) + 1 );
 		bp_update_user_meta( $friend_user_id, 'total_friend_count', (int) bp_get_user_meta( $friend_user_id, 'total_friend_count', true ) + 1 );
 	} else {
@@ -866,7 +866,7 @@ add_action( 'bp_activity_mentions_prime_results', 'bp_friends_prime_mentions_res
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_new_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( 'no' == bp_get_user_meta( (int) $friend_id, 'notification_friends_friendship_request', true ) ) {
+	if ( 'no' === bp_get_user_meta( (int) $friend_id, 'notification_friends_friendship_request', true ) ) {
 		return;
 	}
 
@@ -903,7 +903,7 @@ add_action( 'friends_friendship_requested', 'friends_notification_new_request', 
  * @param int $friend_id     ID of the request recipient.
  */
 function friends_notification_accepted_request( $friendship_id, $initiator_id, $friend_id ) {
-	if ( 'no' == bp_get_user_meta( (int) $initiator_id, 'notification_friends_friendship_accepted', true ) ) {
+	if ( 'no' === bp_get_user_meta( (int) $initiator_id, 'notification_friends_friendship_accepted', true ) ) {
 		return;
 	}
 

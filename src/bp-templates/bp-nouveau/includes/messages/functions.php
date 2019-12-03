@@ -23,13 +23,16 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 		return $styles;
 	}
 
-	return array_merge( $styles, array(
-		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/css/mentions%1$s%2$s.css',
-			'dependencies' => array( 'bp-nouveau' ),
-			'version'      => bp_get_version(),
-		),
-	) );
+	return array_merge(
+		$styles,
+		array(
+			'bp-nouveau-messages-at' => array(
+				'file'         => buddypress()->plugin_url . 'bp-activity/css/mentions%1$s%2$s.css',
+				'dependencies' => array( 'bp-nouveau' ),
+				'version'      => bp_get_version(),
+			),
+		)
+	);
 }
 
 /**
@@ -46,19 +49,22 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-messages-at' => array(
-			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
-			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
-			'version'      => bp_get_version(),
-			'footer'       => true,
-		),
-		'bp-nouveau-messages' => array(
-			'file'         => 'js/buddypress-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-messages-at' => array(
+				'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
+				'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
+				'version'      => bp_get_version(),
+				'footer'       => true,
+			),
+			'bp-nouveau-messages'    => array(
+				'file'         => 'js/buddypress-messages%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -121,24 +127,27 @@ function bp_nouveau_messages_localize_scripts( $params = array() ) {
 			'more' => __( '%d others', 'buddyboss' ),
 		),
 		'rootUrl'             => parse_url( trailingslashit( bp_displayed_user_domain() . bp_get_messages_slug() ), PHP_URL_PATH ),
-		'hasThreads'          => bp_has_message_threads( bp_ajax_querystring( 'messages' ) )
+		'hasThreads'          => bp_has_message_threads( bp_ajax_querystring( 'messages' ) ),
 	);
 
 	// Star private messages.
 	if ( bp_is_active( 'messages', 'star' ) ) {
-		$params['messages'] = array_merge( $params['messages'], array(
-			'strings' => array(
-				'text_unstar'  => __( 'Unstar', 'buddyboss' ),
-				'text_star'    => __( 'Star', 'buddyboss' ),
-				'title_unstar' => __( 'Starred', 'buddyboss' ),
-				'title_star'   => __( 'Not starred', 'buddyboss' ),
-				'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
-				'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
-			),
-			'is_single_thread' => (int) bp_is_messages_conversation(),
-			'star_counter'     => 0,
-			'unstar_counter'   => 0
-		) );
+		$params['messages'] = array_merge(
+			$params['messages'],
+			array(
+				'strings'          => array(
+					'text_unstar'         => __( 'Unstar', 'buddyboss' ),
+					'text_star'           => __( 'Star', 'buddyboss' ),
+					'title_unstar'        => __( 'Starred', 'buddyboss' ),
+					'title_star'          => __( 'Not starred', 'buddyboss' ),
+					'title_unstar_thread' => __( 'Remove all starred messages in this thread', 'buddyboss' ),
+					'title_star_thread'   => __( 'Star the first message in this thread', 'buddyboss' ),
+				),
+				'is_single_thread' => (int) bp_is_messages_conversation(),
+				'star_counter'     => 0,
+				'unstar_counter'   => 0,
+			)
+		);
 	}
 
 	// Friends active for force friendship to message.
@@ -171,9 +180,13 @@ function bp_nouveau_messages_adjust_nav() {
 		if ( 'notices' === $secondary_nav_item->slug ) {
 			bp_core_remove_subnav_item( bp_get_messages_slug(), $secondary_nav_item->slug, 'members' );
 		} elseif ( 'compose' === $secondary_nav_item->slug ) {
-			$bp->members->nav->edit_nav( array(
-				'user_has_access' => bp_is_my_profile()
-			), $secondary_nav_item->slug, bp_get_messages_slug() );
+			$bp->members->nav->edit_nav(
+				array(
+					'user_has_access' => bp_is_my_profile(),
+				),
+				$secondary_nav_item->slug,
+				bp_get_messages_slug()
+			);
 		}
 	}
 }
@@ -194,9 +207,14 @@ function bp_nouveau_messages_adjust_admin_nav( $admin_nav ) {
 		$nav_id = str_replace( 'my-account-messages-', '', $nav['id'] );
 
 		if ( 'notices' === $nav_id ) {
-			$admin_nav[ $nav_iterator ]['href'] = esc_url( add_query_arg( array(
-				'page' => 'bp-notices'
-			), bp_get_admin_url( 'admin.php' ) ) );
+			$admin_nav[ $nav_iterator ]['href'] = esc_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-notices',
+					),
+					bp_get_admin_url( 'admin.php' )
+				)
+			);
 		}
 	}
 
@@ -293,7 +311,7 @@ function bp_nouveau_push_sitewide_notices() {
 		$bp = buddypress();
 
 		if ( empty( $bp->template_message ) ) {
-			$message = sprintf(
+			$message                   = sprintf(
 				'<strong class="subject">%s</strong>
 				%s',
 				stripslashes( $notice->subject ),
@@ -398,7 +416,7 @@ function bp_nouveau_get_message_date( $date ) {
 		$datetime_object = date_create( "@{$date}" );
 		$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
 
-	// Fall back on less reliable gmt_offset
+		// Fall back on less reliable gmt_offset
 	} else {
 		$timezone_offset = bp_get_option( 'gmt_offset' );
 	}

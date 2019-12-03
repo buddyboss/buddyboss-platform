@@ -124,7 +124,8 @@ class BP_Messages_Notice {
 			return false;
 		}
 
-		if ( ! $id = $this->id ) {
+		$id = $this->id;
+		if ( ! $id ) {
 			$id = $wpdb->insert_id;
 		}
 

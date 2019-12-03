@@ -82,11 +82,6 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			return $instance;
 		}
 
-		/*
-		 Magic Methods
-		 * ===================================================================
-		 */
-
 		/**
 		 * A dummy constructor to prevent this class from being loaded more than once.
 		 *
@@ -123,7 +118,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			global $bp;
 
 			// load the helper type parent class
-			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-types.php';
+			require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-type.php';
 
 			// load and associate helpers one by one
 			if ( bp_is_search_post_type_enable( 'post' ) ) {
@@ -143,19 +138,19 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 				if ( bp_is_search_post_type_enable( 'forum' ) ) {
 					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums.php';
-					$this->search_helpers['forum'] = Bp_Search_bbPress_Forums::instance();
+					$this->search_helpers['forum'] = Bp_Search_BBPress_Forums::instance();
 					$this->searchable_items[]      = 'forum';
 				}
 
 				if ( bp_is_search_post_type_enable( 'topic' ) ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-topics.php';
-					$this->search_helpers['topic'] = Bp_Search_bbPress_Topics::instance();
+					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-topics.php';
+					$this->search_helpers['topic'] = Bp_Search_BBPress_Topics::instance();
 					$this->searchable_items[]      = 'topic';
 				}
 
 				if ( bp_is_search_post_type_enable( 'reply' ) ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-forums-replies.php';
-					$this->search_helpers['reply'] = Bp_Search_bbPress_Replies::instance();
+					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-bbpress-replies.php';
+					$this->search_helpers['reply'] = Bp_Search_BBPress_Replies::instance();
 					$this->searchable_items[]      = 'reply';
 				}
 			}
@@ -179,7 +174,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				$this->searchable_items[]         = 'activity';
 
 				if ( bp_is_search_activity_comments_enable() ) {
-					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-activity-comments.php';
+					require_once $bp->plugin_dir . 'bp-search/classes/class-bp-search-activity-comment.php';
 					$this->search_helpers['activity_comment'] = Bp_Search_Activity_Comment::instance();
 					$this->searchable_items[]                 = 'activity_comment';
 
@@ -206,7 +201,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		public function ajax_search() {
 			check_ajax_referer( 'bp_search_ajax', 'nonce' );
 
-			if ( isset( $_POST['view'] ) && $_POST['view'] == 'content' ) {
+			if ( isset( $_POST['view'] ) && 'content' === $_POST['view'] ) {
 
 				$_GET['s'] = $_POST['s'];
 				if ( ! empty( $_POST['subset'] ) ) {
@@ -245,9 +240,9 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$search_results = array();
 			if ( isset( $this->search_results['all']['items'] ) && ! empty( $this->search_results['all']['items'] ) ) {
 				/*
-				 ++++++++++++++++++++++++++++++++++
-				group items of same type together
-				++++++++++++++++++++++++++++++++++ */
+				 * ++++++++++++++++++++++++++++++++++
+				 * group items of same type together
+				 * ++++++++++++++++++++++++++++++++++ */
 				$types = array();
 				foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
 					$type = $item['type'];
@@ -260,7 +255,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 				foreach ( $types as $type ) {
 					$first_html_changed = false;
 					foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
-						if ( $item['type'] != $type ) {
+						if ( $item['type'] !== $type ) {
 							continue;
 						}
 
@@ -315,7 +310,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					$bp_search_raw_type = apply_filters( 'bp_search_raw_type', false );
 
 					if ( true === $bp_search_raw_type ) {
-						if ( $type_mem != $new_row['type'] ) {
+						if ( $type_mem !== $new_row['type'] ) {
 							$type_mem              = $new_row['type'];
 							$cat_row               = $new_row;
 							$cat_row['type']       = $item['type'];
@@ -408,14 +403,14 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 
 			$total = array();
 
-			if ( 'all' == $args['search_subset'] ) {
+			if ( 'all' === $args['search_subset'] ) {
 
 				/**
 				 * 1. Generate a 'UNION' sql query for all searchable items with only ID, RANK, TYPE(posts|members|..) as columns, order by RANK DESC.
 				 * 3. Generate html for each of them
 				 */
 				/*
-				 an example UNION query :-
+				 * an example UNION query :-
 				-----------------------------------------------------
 				(
 					SELECT
@@ -528,11 +523,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					}
 					// now we've html saved for search results
 
-					if ( ! empty( $this->search_results['all']['items'] ) && $args['template_type'] != 'ajax' ) {
+					if ( ! empty( $this->search_results['all']['items'] ) && 'ajax' !== $args['template_type'] ) {
 						/*
-						 ++++++++++++++++++++++++++++++++++
-						group items of same type together
-						++++++++++++++++++++++++++++++++++ */
+						 * ++++++++++++++++++++++++++++++++++
+						 * group items of same type together
+						 * ++++++++++++++++++++++++++++++++++ */
 						// create another copy, of items, this time, items of same type grouped together
 						$ordered_items_group = array();
 						foreach ( $this->search_results['all']['items'] as $item_id => $item ) {
@@ -562,11 +557,11 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							$first_item          = reset( $items );
 							$total_results       = $total[ $type ];
 							$start_html          = "<div class='results-group results-group-{$type} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $label ) . "'>"
-										  . "<header class='results-group-header clearfix'>"
-										  . "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
-										  . "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
-										  . '</header>'
-										  . "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
+								. "<header class='results-group-header clearfix'>"
+								. "<h3 class='results-group-title'><span>" . apply_filters( 'bp_search_label_search_type', $label ) . '</span></h3>'
+								. "<span class='total-results'>" . sprintf( _n( '%d result', '%d results', $total_results, 'buddyboss' ), $total_results ) . '</a>'
+								. '</header>'
+								. "<ul id='{$type}-stream' class='item-list {$type}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $label ) . "'>";
 
 							$group_start_html = apply_filters( 'bp_search_results_group_start_html', $start_html, $type );
 
@@ -580,8 +575,8 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 							if ( $total_results > 3 ) {
 								$end_html .= "<footer class='results-group-footer'>";
 								$end_html .= "<a href='" . $category_search_url . "' class='view-all-link'>" .
-											   sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
-											 '</a>';
+											sprintf( esc_html__( 'View (%d) more', 'buddyboss' ), $total_results - $args['number'] ) .
+											'</a>';
 								$end_html .= '</footer>';
 							}
 
@@ -673,7 +668,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					// now prepend html (opening tags) to first item of each type
 					$first_item = reset( $this->search_results[ $args['search_subset'] ]['items'] );
 					$start_html = "<div class='results-group results-group-{$args['search_subset']} " . apply_filters( 'bp_search_class_search_wrap', 'bp-search-results-wrap', $args['search_subset'] ) . "'>"
-								  . "<ul id='{$args['search_subset']}-stream' class='item-list {$args['search_subset']}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $args['search_subset'] ) . "'>";
+								. "<ul id='{$args['search_subset']}-stream' class='item-list {$args['search_subset']}-list bp-list " . apply_filters( 'bp_search_class_search_list', 'bp-search-results-list', $args['search_subset'] ) . "'>";
 
 					$group_start_html = apply_filters( 'bp_search_results_group_start_html', $start_html, $args['search_subset'] );
 
@@ -789,7 +784,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 		 */
 		private function search_page_search_url( $default = true ) {
 
-			if ( true == $this->search_args['forum_search'] ) {
+			if ( true === $this->search_args['forum_search'] ) {
 				// Full search url for bbpress forum search
 				if ( true === $default ) {
 					$base_url = bbp_get_search_url( false );
@@ -821,7 +816,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			$search_url = $this->search_page_search_url();
 
 			// first print the 'all results' tab
-			$class = 'all' == $this->search_args['search_subset'] ? 'active current selected' : '';
+			$class = 'all' === $this->search_args['search_subset'] ? 'active current selected' : '';
 			// this filter can be used to change display of 'all' to 'Everything' etc..
 			$all_label = __( 'All Results', 'buddyboss' );
 			$label     = apply_filters( 'bp_search_label_search_type', $all_label );
@@ -836,7 +831,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 			// then other tabs
 			$search_items = bp_search_items();
 			foreach ( $this->searchable_items as $item ) {
-				$class = $item == $this->search_args['search_subset'] ? 'active current' : '';
+				$class = $item === $this->search_args['search_subset'] ? 'active current' : '';
 				// this filter can be used to change display of 'posts' to 'Blog Posts' etc..
 
 				$label = isset( $search_items[ $item ] ) ? $search_items[ $item ] : $item;
@@ -865,7 +860,7 @@ if ( ! class_exists( 'Bp_Search_Helper' ) ) :
 					echo $item['html'];
 				}
 
-				if ( $current_tab != 'all' ) {
+				if ( 'all' !== $current_tab ) {
 					$page_slug = untrailingslashit( str_replace( home_url(), '', $this->search_page_url() ) );
 
 					bp_search_pagination_page_counts(

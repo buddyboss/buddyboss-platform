@@ -247,7 +247,7 @@ class BP_User_Query {
 		$meta_key     = false;
 		$meta_value   = false;
 
-		extract( $this->query_vars );
+		extract( $this->query_vars ); // phpcs:ignore WordPress.PHP.DontExtract
 
 		// Setup the main SQL query container.
 		$sql = array(
@@ -296,10 +296,10 @@ class BP_User_Query {
 				$sql['select']   = $wpdb->prepare( "SELECT u.{$this->uid_name} as id FROM {$this->uid_table} u LEFT JOIN {$bp->members->table_name_last_activity} a ON u.ID = a.user_id AND a.component = %s AND a.type = 'last_activity' ", buddypress()->members->id );
 				$sql['where'][]  = ' u.user_status = 0 ';
 
-				if ( 'newest' == $type ) {
+				if ( 'newest' === $type ) {
 					$sql['orderby'] = 'ORDER BY u.ID';
 					$sql['order']   = 'DESC';
-				} elseif ( 'random' == $type ) {
+				} elseif ( 'random' === $type ) {
 					$sql['orderby'] = 'ORDER BY rand()';
 				} else {
 					$sql['orderby'] = array(
@@ -372,7 +372,7 @@ class BP_User_Query {
 		$include_ids = $this->get_include_ids( $include );
 
 		// An array containing nothing but 0 should always fail.
-		if ( 1 === count( $include_ids ) && 0 == reset( $include_ids ) ) {
+		if ( 1 === count( $include_ids ) && 0 === reset( $include_ids ) ) {
 			$sql['where'][] = $this->no_results['where'];
 		} elseif ( ! empty( $include_ids ) ) {
 			$include_ids    = implode( ',', wp_parse_id_list( $include_ids ) );
@@ -408,10 +408,10 @@ class BP_User_Query {
 		if ( false !== $search_terms ) {
 			$search_terms = bp_esc_like( wp_kses_normalize_entities( $search_terms ) );
 
-			if ( $search_wildcard === 'left' ) {
+			if ( 'left' === $search_wildcard ) {
 				$search_terms_nospace = '%' . $search_terms;
 				$search_terms_space   = '%' . $search_terms . ' %';
-			} elseif ( $search_wildcard === 'right' ) {
+			} elseif ( 'right' === $search_wildcard ) {
 				$search_terms_nospace = $search_terms . '%';
 				$search_terms_space   = '% ' . $search_terms . '%';
 			} else {
@@ -515,7 +515,7 @@ class BP_User_Query {
 		global $wpdb;
 
 		// If counting using SQL_CALC_FOUND_ROWS, set it up here.
-		if ( 'sql_calc_found_rows' == $this->query_vars['count_total'] ) {
+		if ( 'sql_calc_found_rows' === $this->query_vars['count_total'] ) {
 			$this->uid_clauses['select'] = str_replace( 'SELECT', 'SELECT SQL_CALC_FOUND_ROWS', $this->uid_clauses['select'] );
 		}
 
@@ -533,7 +533,7 @@ class BP_User_Query {
 		$this->user_ids = $wpdb->get_col( "{$this->uid_clauses['select']} {$this->uid_clauses['where']} {$this->uid_clauses['orderby']} {$this->uid_clauses['order']} {$this->uid_clauses['limit']}" );
 
 		// Get the total user count.
-		if ( 'sql_calc_found_rows' == $this->query_vars['count_total'] ) {
+		if ( 'sql_calc_found_rows' === $this->query_vars['count_total'] ) {
 
 			/**
 			 * Filters the found user SQL statements before query.
@@ -548,7 +548,7 @@ class BP_User_Query {
 			 * @param BP_User_Query $this  Current BP_User_Query instance.
 			 */
 			$this->total_users = $wpdb->get_var( apply_filters( 'bp_found_user_query', 'SELECT FOUND_ROWS()', $this ) );
-		} elseif ( 'count_query' == $this->query_vars['count_total'] ) {
+		} elseif ( 'count_query' === $this->query_vars['count_total'] ) {
 			$count_select = preg_replace( '/^SELECT.*?FROM (\S+) u/', "SELECT COUNT(u.{$this->uid_name}) FROM $1 u", $this->uid_clauses['select'] );
 
 			/** This filter is documented in bp-core/classes/class-bp-user-query.php */
@@ -670,7 +670,7 @@ class BP_User_Query {
 		// Bail if the populate_extras flag is set to false
 		// In the case of the 'popular' sort type, we force
 		// populate_extras to true, because we need the friend counts.
-		if ( 'popular' == $this->query_vars['type'] ) {
+		if ( 'popular' === $this->query_vars['type'] ) {
 			$this->query_vars['populate_extras'] = 1;
 		}
 
@@ -816,7 +816,7 @@ class BP_User_Query {
 		// Switch to the root blog, where profile type taxonomies live.
 		$site_id  = bp_get_taxonomy_term_site_id( bp_get_member_type_tax_name() );
 		$switched = false;
-		if ( $site_id !== get_current_blog_id() ) {
+		if ( get_current_blog_id() !== $site_id ) {
 			switch_to_blog( $site_id );
 			$switched = true;
 		}

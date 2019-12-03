@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * BP Nouveau Blogs
  *
@@ -48,13 +48,16 @@ class BP_Nouveau_Blogs {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'blogs_' ) ) {
-					require $this->dir . 'ajax.php';
+			add_action(
+				'admin_init',
+				function() {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'blogs_' ) ) {
+						require $this->dir . 'ajax.php';
+					}
 				}
-			} );
+			);
 		}
 	}
 
@@ -69,11 +72,14 @@ class BP_Nouveau_Blogs {
 			remove_action( 'bp_blogs_directory_blog_types', 'bp_blog_backcompat_create_nav_item', 1000 );
 		}
 
-		add_action( 'bp_nouveau_enqueue_scripts', function() {
-			if ( bp_get_blog_signup_allowed() && bp_is_register_page() ) {
-				wp_add_inline_script( 'bp-nouveau', bp_nouveau_get_blog_signup_inline_script() );
+		add_action(
+			'bp_nouveau_enqueue_scripts',
+			function() {
+				if ( bp_get_blog_signup_allowed() && bp_is_register_page() ) {
+					wp_add_inline_script( 'bp-nouveau', bp_nouveau_get_blog_signup_inline_script() );
+				}
 			}
-		} );
+		);
 	}
 
 	/**
