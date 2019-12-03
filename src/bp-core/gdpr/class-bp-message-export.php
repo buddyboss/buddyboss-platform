@@ -225,7 +225,8 @@ final class BP_Message_Export extends BP_Export {
 
 		$get_results = $wpdb->get_results(
 			$wpdb->prepare(
-				"SELECT * FROM {$table} WHERE thread_id IN ({$ids_in})"
+				"SELECT *FROM {$table} WHERE thread_id IN ({$ids_in})",
+				$thread_ids
 			)
 		);
 

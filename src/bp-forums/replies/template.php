@@ -410,18 +410,18 @@ function bbp_get_reply( $reply, $output = OBJECT, $filter = 'raw' ) {
 		return $reply;
 	}
 
-	if ( bbp_get_reply_post_type() !== $reply->post_type ) {
+	if ( $reply->post_type !== bbp_get_reply_post_type() ) {
 		return null;
 	}
 
-	if ( OBJECT === $output ) {
+	if ( $output === OBJECT ) {
 		return $reply;
 
-	} elseif ( ARRAY_A === $output ) {
+	} elseif ( $output === ARRAY_A ) {
 		$_reply = get_object_vars( $reply );
 		return $_reply;
 
-	} elseif ( ARRAY_N === $output ) {
+	} elseif ( $output === ARRAY_N ) {
 		$_reply = array_values( get_object_vars( $reply ) );
 		return $_reply;
 
@@ -1499,12 +1499,10 @@ function bbp_get_reply_topic_id( $reply_id = 0 ) {
 	$topic_id = 0;
 
 	// Check that reply_id is valid
-	$reply_id = bbp_get_reply_id( $reply_id );
-	if ( $reply_id ) {
+	if ( $reply_id = bbp_get_reply_id( $reply_id ) ) {
 
 		// Get topic_id from reply
-		$topic_id = get_post_meta( $reply_id, '_bbp_topic_id', true );
-		if ( $topic_id ) {
+		if ( $topic_id = get_post_meta( $reply_id, '_bbp_topic_id', true ) ) {
 
 			// Validate the topic_id
 			$topic_id = bbp_get_topic_id( $topic_id );
@@ -1543,12 +1541,10 @@ function bbp_get_reply_forum_id( $reply_id = 0 ) {
 	$forum_id = 0;
 
 	// Check that reply_id is valid
-	$reply_id = bbp_get_reply_id( $reply_id );
-	if ( $reply_id ) {
+	if ( $reply_id = bbp_get_reply_id( $reply_id ) ) {
 
 		// Get forum_id from reply
-		$forum_id = get_post_meta( $reply_id, '_bbp_forum_id', true );
-		if ( $forum_id ) {
+		if ( $forum_id = get_post_meta( $reply_id, '_bbp_forum_id', true ) ) {
 
 			// Validate the forum_id
 			$forum_id = bbp_get_forum_id( $forum_id );
@@ -1587,7 +1583,7 @@ function bbp_get_reply_ancestor_id( $reply_id = 0 ) {
 
 	// Find highest reply ancestor
 	$ancestor_id = $reply_id;
-	while ( $parent_id = bbp_get_reply_to( $ancestor_id ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
+	while ( $parent_id = bbp_get_reply_to( $ancestor_id ) ) {
 		if ( empty( $parent_id ) || ( $parent_id === $ancestor_id ) || ( bbp_get_reply_topic_id( $reply_id ) === $parent_id ) || ( $parent_id === $reply_id ) ) {
 			break;
 		}

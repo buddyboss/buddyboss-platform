@@ -15,8 +15,7 @@
 		multiple="multiple"
 		style="width: 100%"
 	>
-		<?php
-		if ( ! empty( $_GET['r'] ) ) :
+		<?php if ( ! empty( $_GET['r'] ) ):
 
 			if ( bp_is_username_compatibility_mode() ) {
 				$user_id = bp_core_get_userid( urldecode( $_GET['r'] ) );
@@ -34,5 +33,5 @@
 	<?php bp_nouveau_messages_hook( 'after', 'compose_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-form-submit">
-	<input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
+    <input type="button" id="bp-messages-send" class="button bp-primary-action" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>"/>
 </script>

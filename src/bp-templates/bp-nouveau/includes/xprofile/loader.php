@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
 /**
  * BP Nouveau xProfile
  *
@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  */
-class BP_Nouveau_XProfile {
+class BP_Nouveau_xProfile {
 	/**
 	 * Constructor
 	 *
@@ -51,14 +51,11 @@ class BP_Nouveau_XProfile {
 
 			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action(
-				'admin_init',
-				function() {
-					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'xprofile_' ) ) {
-						require trailingslashit( $this->dir ) . 'ajax.php';
-					}
+			add_action( 'admin_init', function() {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'xprofile_' ) ) {
+					require trailingslashit( $this->dir ) . 'ajax.php';
 				}
-			);
+			} );
 		}
 	}
 
@@ -91,6 +88,6 @@ function bp_nouveau_xprofile( $bp_nouveau = null ) {
 		return;
 	}
 
-	$bp_nouveau->xprofile = new BP_Nouveau_XProfile();
+	$bp_nouveau->xprofile = new BP_Nouveau_xProfile();
 }
 add_action( 'bp_nouveau_includes', 'bp_nouveau_xprofile', 10, 1 );

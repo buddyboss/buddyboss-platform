@@ -48,83 +48,63 @@ defined( 'ABSPATH' ) || exit;
  * @return string The path to the template file that is being used
  */
 function bbp_template_include_theme_supports( $template = '' ) {
-	$new_template = false;
 
 	// Editing a user
-	if ( bbp_is_single_user_edit() ) :
-		$new_template = bbp_get_single_user_edit_template();
+	if ( bbp_is_single_user_edit() && ( $new_template = bbp_get_single_user_edit_template() ) ) :
 
 		// User favorites
-	elseif ( bbp_is_favorites() ) :
-		$new_template = bbp_get_favorites_template();
+	elseif ( bbp_is_favorites() && ( $new_template = bbp_get_favorites_template() ) ) :
 
 		// User favorites
-	elseif ( bbp_is_subscriptions() ) :
-		$new_template = bbp_get_subscriptions_template();
+	elseif ( bbp_is_subscriptions() && ( $new_template = bbp_get_subscriptions_template() ) ) :
 
 		// Viewing a user
-	elseif ( bbp_is_single_user() ) :
-		$new_template = bbp_get_single_user_template();
+	elseif ( bbp_is_single_user() && ( $new_template = bbp_get_single_user_template() ) ) :
 
 		// Single View
-	elseif ( bbp_is_single_view() ) :
-		$new_template = bbp_get_single_view_template();
+	elseif ( bbp_is_single_view() && ( $new_template = bbp_get_single_view_template() ) ) :
 
 		// Search
-	elseif ( bbp_is_search() ) :
-		$new_template = bbp_get_search_template();
+	elseif ( bbp_is_search() && ( $new_template = bbp_get_search_template() ) ) :
 
 		// Forum edit
-	elseif ( bbp_is_forum_edit() ) :
-		$new_template = bbp_get_forum_edit_template();
+	elseif ( bbp_is_forum_edit() && ( $new_template = bbp_get_forum_edit_template() ) ) :
 
 		// Single Forum
-	elseif ( bbp_is_single_forum() ) :
-		$new_template = bbp_get_single_forum_template();
+	elseif ( bbp_is_single_forum() && ( $new_template = bbp_get_single_forum_template() ) ) :
 
 		// Forum Archive
-	elseif ( bbp_is_forum_archive() ) :
-		$new_template = bbp_get_forum_archive_template();
+	elseif ( bbp_is_forum_archive() && ( $new_template = bbp_get_forum_archive_template() ) ) :
 
 		// Topic merge
-	elseif ( bbp_is_topic_merge() ) :
-		$new_template = bbp_get_topic_merge_template();
+	elseif ( bbp_is_topic_merge() && ( $new_template = bbp_get_topic_merge_template() ) ) :
 
 		// Topic split
-	elseif ( bbp_is_topic_split() ) :
-		$new_template = bbp_get_topic_split_template();
+	elseif ( bbp_is_topic_split() && ( $new_template = bbp_get_topic_split_template() ) ) :
 
 		// Topic edit
-	elseif ( bbp_is_topic_edit() ) :
-		$new_template = bbp_get_topic_edit_template();
+	elseif ( bbp_is_topic_edit() && ( $new_template = bbp_get_topic_edit_template() ) ) :
 
 		// Single Topic
-	elseif ( bbp_is_single_topic() ) :
-		$new_template = bbp_get_single_topic_template();
+	elseif ( bbp_is_single_topic() && ( $new_template = bbp_get_single_topic_template() ) ) :
 
 		// Topic Archive
-	elseif ( bbp_is_topic_archive() ) :
-		$new_template = bbp_get_topic_archive_template();
+	elseif ( bbp_is_topic_archive() && ( $new_template = bbp_get_topic_archive_template() ) ) :
 
 		// Reply move
-	elseif ( bbp_is_reply_move() ) :
-		$new_template = bbp_get_reply_move_template();
+	elseif ( bbp_is_reply_move() && ( $new_template = bbp_get_reply_move_template() ) ) :
 
 		// Editing a reply
-	elseif ( bbp_is_reply_edit() ) :
-		$new_template = bbp_get_reply_edit_template();
+	elseif ( bbp_is_reply_edit() && ( $new_template = bbp_get_reply_edit_template() ) ) :
 
 		// Single Reply
-	elseif ( bbp_is_single_reply() ) :
-		$new_template = bbp_get_single_reply_template();
+	elseif ( bbp_is_single_reply() && ( $new_template = bbp_get_single_reply_template() ) ) :
 
 		// Editing a topic tag
-	elseif ( bbp_is_topic_tag_edit() ) :
-		$new_template = bbp_get_topic_tag_edit_template();
+	elseif ( bbp_is_topic_tag_edit() && ( $new_template = bbp_get_topic_tag_edit_template() ) ) :
 
 		// Viewing a topic tag
-	elseif ( bbp_is_topic_tag() ) :
-		$new_template = bbp_get_topic_tag_template();
+	elseif ( bbp_is_topic_tag() && ( $new_template = bbp_get_topic_tag_template() ) ) :
 	endif;
 
 	// A Forums template file was located, so override the WordPress template

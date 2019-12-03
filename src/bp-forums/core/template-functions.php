@@ -307,9 +307,8 @@ function bbp_get_template_stack() {
 	global $wp_filter, $merged_filters, $wp_current_filter;
 
 	// Setup some default variables
-	$tag   = 'bbp_template_stack';
-	$args  = array();
-	$stack = array();
+	$tag  = 'bbp_template_stack';
+	$args = $stack = array();
 
 	// Add 'bbp_template_stack' to the current filter array.
 	$wp_current_filter[] = $tag;

@@ -583,8 +583,7 @@ class BP_Groups_Group {
 			);
 		}
 
-		$admin_objects = array();
-		$mod_objects   = array();
+		$admin_objects = $mod_objects = array();
 		foreach ( $admin_mod_users as $admin_mod_user ) {
 			$obj                = new stdClass();
 			$obj->user_id       = $admin_mod_user->ID;
@@ -1072,7 +1071,6 @@ class BP_Groups_Group {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
-			/* translators: 1: Method 2: File */
 			_deprecated_argument( __METHOD__, '1.7', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -1158,8 +1156,8 @@ class BP_Groups_Group {
 		}
 
 		if ( $search ) {
-			$leading_wild  = ( ltrim( $search, '*' ) !== $search );
-			$trailing_wild = ( rtrim( $search, '*' ) !== $search );
+			$leading_wild  = ( ltrim( $search, '*' ) != $search );
+			$trailing_wild = ( rtrim( $search, '*' ) != $search );
 			if ( $leading_wild && $trailing_wild ) {
 				$wild = 'both';
 			} elseif ( $leading_wild ) {
@@ -1173,8 +1171,8 @@ class BP_Groups_Group {
 			$search = trim( $search, '*' );
 
 			$searches      = array();
-			$leading_wild  = ( 'leading' === $wild || 'both' === $wild ) ? '%' : '';
-			$trailing_wild = ( 'trailing' === $wild || 'both' === $wild ) ? '%' : '';
+			$leading_wild  = ( 'leading' == $wild || 'both' == $wild ) ? '%' : '';
+			$trailing_wild = ( 'trailing' == $wild || 'both' == $wild ) ? '%' : '';
 			$wildcarded    = $leading_wild . bp_esc_like( $search ) . $trailing_wild;
 
 			$search_columns = array( 'name', 'description' );
@@ -1309,7 +1307,7 @@ class BP_Groups_Group {
 			$sql['orderby'] = "ORDER BY {$orderby} {$order}";
 		}
 
-		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && -1 !== $r['per_page'] ) {
+		if ( ! empty( $r['per_page'] ) && ! empty( $r['page'] ) && $r['per_page'] != -1 ) {
 			$sql['pagination'] = $wpdb->prepare( 'LIMIT %d, %d', intval( ( $r['page'] - 1 ) * $r['per_page'] ), intval( $r['per_page'] ) );
 		}
 
@@ -1464,8 +1462,7 @@ class BP_Groups_Group {
 	 * }
 	 */
 	protected static function convert_type_to_order_orderby( $type = '' ) {
-		$order   = '';
-		$orderby = '';
+		$order = $orderby = '';
 
 		switch ( $type ) {
 			case 'newest':
@@ -1564,9 +1561,7 @@ class BP_Groups_Group {
 	public static function get_by_letter( $letter, $limit = null, $page = null, $populate_extras = true, $exclude = false ) {
 		global $wpdb;
 
-		$pag_sql     = '';
-		$hidden_sql  = '';
-		$exclude_sql = '';
+		$pag_sql = $hidden_sql = $exclude_sql = '';
 
 		// Multibyte compliance.
 		if ( function_exists( 'mb_strlen' ) ) {
@@ -1782,7 +1777,7 @@ class BP_Groups_Group {
 
 		$site_id  = bp_get_taxonomy_term_site_id( 'bp_group_type' );
 		$switched = false;
-		if ( get_current_blog_id() !== $site_id ) {
+		if ( $site_id !== get_current_blog_id() ) {
 			switch_to_blog( $site_id );
 			$switched = true;
 		}

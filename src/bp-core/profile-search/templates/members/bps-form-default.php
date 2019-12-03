@@ -39,19 +39,19 @@ if ( is_admin() ) {
 
 // 3rd section: display the search form
 
-$form_data = bp_ps_escaped_form_data( '4.9' );
+$F = bp_ps_escaped_form_data( $version = '4.9' );
 
 if ( ! empty( $options['theme'] ) ) {
-	$accordion = 'bp_ps_accordion_' . $form_data->unique_id;
+	$accordion = 'bp_ps_accordion_' . $F->unique_id;
 	wp_enqueue_script( 'jquery-ui-accordion' );
 	wp_enqueue_style( 'jquery-ui-theme', 'https://code.jquery.com/ui/1.12.1/themes/' . $options['theme'] . '/jquery-ui.min.css' );
 	?>
 <script>
 	jQuery(function($) {
 		$('#<?php echo $accordion; ?>').accordion({
-			icons: {"header": "ui-icon-plus", "activeHeader": "<?php echo ( 'Yes' === $options['collapsible'] ) ? 'ui-icon-minus' : 'ui-icon-blank'; ?>"},
+			icons: {"header": "ui-icon-plus", "activeHeader": "<?php echo ( $options['collapsible'] == 'Yes' ) ? 'ui-icon-minus' : 'ui-icon-blank'; ?>"},
 			active: false,
-			collapsible: <?php echo ( 'Yes' === $options['collapsible'] ) ? 'true' : 'false'; ?>,
+			collapsible: <?php echo ( $options['collapsible'] == 'Yes' ) ? 'true' : 'false'; ?>,
 		});
 	});
 </script>
@@ -62,23 +62,23 @@ if ( ! empty( $options['theme'] ) ) {
 </style>
 
 <div id="<?php echo $accordion; ?>">
-	<span class="bp-ps-form-title"> <?php echo $form_data->title; ?></span>
+	<span class="bp-ps-form-title"> <?php echo $F->title; ?></span>
 	<?php
 }
 ?>
-	<form action="<?php echo $form_data->action; ?>" method="<?php echo $form_data->method; ?>" id="<?php echo $form_data->unique_id; ?>" class="bp-ps-form">
+	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bp-ps-form">
 
 <?php
-foreach ( $form_data->fields as $f ) {
+foreach ( $F->fields as $f ) {
 	$id      = $f->unique_id;
 	$name    = $f->html_name;
 	$value   = $f->value;
 	$display = $f->display;
 
-	if ( 'none' === $display ) {
+	if ( $display == 'none' ) {
 		continue;
 	}
-	if ( 'hidden' === $display ) {
+	if ( $display == 'hidden' ) {
 		?>
 			<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>">
 		<?php
@@ -160,12 +160,12 @@ foreach ( $form_data->fields as $f ) {
 			?>
 			<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<option
+				<option 
 				<?php
-				if ( $key === $value ) {
+				if ( $key == $value ) {
 					echo 'selected="selected"';}
 				?>
-				value="<?php echo $key; ?>"><?php echo $label; ?> </option>
+				 value="<?php echo $key; ?>"><?php echo $label; ?> </option>
 			<?php } ?>
 			</select><br>
 			<?php
@@ -175,12 +175,12 @@ foreach ( $form_data->fields as $f ) {
 			?>
 			<select id="<?php echo $id; ?>" name="<?php echo $name . '[]'; ?>" multiple="multiple">
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<option
+				<option 
 				<?php
 				if ( in_array( $key, $f->values ) ) {
 					echo 'selected="selected"';}
 				?>
-				value="<?php echo $key; ?>"><?php echo $label; ?></option>
+				 value="<?php echo $key; ?>"><?php echo $label; ?></option>
 			<?php } ?>
 			</select><br>
 			<?php
@@ -189,9 +189,9 @@ foreach ( $form_data->fields as $f ) {
 		case 'radio':
 			?>
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<label><input type="radio"
+				<label><input type="radio" 
 				<?php
-				if ( $key === $value ) {
+				if ( $key == $value ) {
 					echo 'checked="checked"';}
 				?>
 					name="<?php echo $name; ?>" value="<?php echo $key; ?>"> <?php echo $label; ?></label><br>
@@ -203,7 +203,7 @@ foreach ( $form_data->fields as $f ) {
 		case 'checkbox':
 			?>
 			<?php foreach ( $f->options as $key => $label ) { ?>
-				<label><input type="checkbox"
+				<label><input type="checkbox" 
 				<?php
 				if ( in_array( $key, $f->values ) ) {
 					echo 'checked="checked"';}

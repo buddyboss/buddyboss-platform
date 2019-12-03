@@ -150,7 +150,7 @@ class BP_Media_Album_Template {
 			'search_terms' => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
-		extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract
+		extract( $r );
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
@@ -291,7 +291,7 @@ class BP_Media_Album_Template {
 	public function user_albums() {
 		if ( ( $this->current_album + 1 ) < $this->album_count ) {
 			return true;
-		} elseif ( ( $this->current_album + 1 ) === $this->album_count ) {
+		} elseif ( ( $this->current_album + 1 ) == $this->album_count ) {
 
 			/**
 			 * Fires right before the rewinding of album posts.
@@ -330,7 +330,7 @@ class BP_Media_Album_Template {
 		}
 
 		// Loop has just started.
-		if ( 0 === $this->current_album ) {
+		if ( $this->current_album == 0 ) {
 
 			/**
 			 * Fires if the current album item is the first in the activity loop.

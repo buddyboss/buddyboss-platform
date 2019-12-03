@@ -10,11 +10,11 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-/**
-* Member submit email invite.
-*
-* @since BuddyBoss 1.0.0
-*/
+ /**
+  * Member submit email invite.
+  *
+  * @since BuddyBoss 1.0.0
+  */
 function bp_member_invite_submit() {
 
 	global $bp;
@@ -150,8 +150,7 @@ function bp_member_invite_submit() {
 			'post_type'    => bp_get_invite_post_type(),
 		);
 
-		$post_id = wp_insert_post( $insert_post_args );
-		if ( ! $post_id ) {
+		if ( ! $post_id = wp_insert_post( $insert_post_args ) ) {
 			return false;
 		}
 

@@ -462,7 +462,7 @@ class BP_XProfile_Query {
 				case 'BETWEEN':
 				case 'NOT BETWEEN':
 					$field_value = array_slice( $field_value, 0, 2 );
-					$where       = $wpdb->prepare( '%s AND %s', $field_value ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
+					$where       = $wpdb->prepare( '%s AND %s', $field_value );
 					break;
 
 				case 'LIKE':

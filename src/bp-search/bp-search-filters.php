@@ -107,7 +107,7 @@ function bp_search_override_wp_native_results( $template ) {
 			)
 		);
 
-		if ( '' !== $live_template ) {
+		if ( '' != $live_template ) {
 			return $live_template;
 		}
 	}
@@ -210,7 +210,7 @@ function bp_search_clear_native_search_query( $query ) {
  **/
 function bp_search_filter_bp_before_has_groups_parse_args( $args ) {
 
-	if ( wp_doing_ajax() && isset( $_GET['action'] ) && 'bp_search_ajax' === $_GET['action'] ) {
+	if ( wp_doing_ajax() && isset( $_GET['action'] ) && $_GET['action'] === 'bp_search_ajax' ) {
 		$args['type'] = '';
 	}
 

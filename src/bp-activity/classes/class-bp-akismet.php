@@ -80,22 +80,20 @@ class BP_Akismet {
 		$user_result    = bp_activity_get_meta( $activity['id'], '_bp_akismet_user_result' );
 		$desc           = '';
 
-		if ( ! $user_result || $user_result === $akismet_result ) {
+		if ( ! $user_result || $user_result == $akismet_result ) {
 			// Show the original Akismet result if the user hasn't overridden it, or if their decision was the same.
-			if ( 'true' === $akismet_result && $activity['is_spam'] ) {
+			if ( 'true' == $akismet_result && $activity['is_spam'] ) {
 				$desc = __( 'Flagged as spam by Akismet', 'buddyboss' );
 
-			} elseif ( 'false' === $akismet_result && ! $activity['is_spam'] ) {
+			} elseif ( 'false' == $akismet_result && ! $activity['is_spam'] ) {
 				$desc = __( 'Cleared by Akismet', 'buddyboss' );
 			}
 		} else {
 			$who = bp_activity_get_meta( $activity['id'], '_bp_akismet_user' );
 
-			if ( 'true' === $user_result ) {
-				/* translators: %s: Spammed by */
+			if ( 'true' == $user_result ) {
 				$desc = sprintf( __( 'Flagged as spam by %s', 'buddyboss' ), $who );
 			} else {
-				/* translators: %s: Un-spammed by */
 				$desc = sprintf( __( 'Un-spammed by %s', 'buddyboss' ), $who );
 			}
 		}
@@ -105,7 +103,7 @@ class BP_Akismet {
 			$b = array();
 			foreach ( $actions as $k => $item ) {
 				$b[ $k ] = $item;
-				if ( 'edit' === $k ) {
+				if ( $k == 'edit' ) {
 					$b['history'] = '<a href="' . esc_url( bp_get_admin_url( 'admin.php?page=bp-activity&amp;action=edit&aid=' . $activity['id'] ) ) . '#bp_activity_history"> ' . __( 'History', 'buddyboss' ) . '</a>';
 				}
 			}
@@ -143,7 +141,7 @@ class BP_Akismet {
 		$value   = '_bp_as_nonce_' . bp_loggedin_user_id();
 
 		// If we're in the activity feed loop, we can use the current item's ID to make the nonce unique.
-		if ( 'bp_activity_entry_comments' === current_filter() ) {
+		if ( 'bp_activity_entry_comments' == current_filter() ) {
 			$form_id .= '_' . bp_get_activity_id();
 			$value   .= '_' . bp_get_activity_id();
 		}
@@ -178,7 +176,7 @@ class BP_Akismet {
 		}
 
 		// Was this $activity_id just marked as spam? If not, bail out.
-		if ( ! $this->last_activity->id || $activity_id !== $this->last_activity->id || 'false' === $this->last_activity->akismet_submission['bp_as_result'] ) {
+		if ( ! $this->last_activity->id || $activity_id != $this->last_activity->id || 'false' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			return;
 		}
 
@@ -308,7 +306,7 @@ class BP_Akismet {
 	 */
 	public function mark_as_ham( $activity, $source ) {
 		// If the activity was, originally, automatically marked as spam by Akismet, run the @mentions filter as it would have been skipped.
-		if ( 'true' === bp_activity_get_meta( $activity->id, '_bp_akismet_result' ) && ! bp_activity_get_meta( $activity->id, '_bp_akismet_user_result' ) ) {
+		if ( 'true' == bp_activity_get_meta( $activity->id, '_bp_akismet_result' ) && ! bp_activity_get_meta( $activity->id, '_bp_akismet_user_result' ) ) {
 			$activity->content = bp_activity_at_name_filter( $activity->content, $activity->id );
 		}
 
@@ -357,10 +355,13 @@ class BP_Akismet {
 		 */
 		if ( ! empty( $_POST['_bp_as_nonce'] ) ) {
 			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST['_bp_as_nonce'], "_bp_as_nonce_{$userdata->ID}" ) ? 'passed' : 'failed';
+		}
 
-			// If the new activity was a reply to an existing item, check the nonce with the activity parent ID.
-			// This helps Akismet ensure that the update was a valid form submission.
-		} elseif ( ! empty( $activity->secondary_item_id ) && ! empty( $_POST[ '_bp_as_nonce_' . $activity->secondary_item_id ] ) ) {
+		/**
+		 * If the new activity was a reply to an existing item, check the nonce with the activity parent ID.
+		 * This helps Akismet ensure that the update was a valid form submission.
+		 */
+		elseif ( ! empty( $activity->secondary_item_id ) && ! empty( $_POST[ '_bp_as_nonce_' . $activity->secondary_item_id ] ) ) {
 			$activity_data['akismet_comment_nonce'] = wp_verify_nonce( $_POST[ "_bp_as_nonce_{$activity->secondary_item_id}" ], "_bp_as_nonce_{$userdata->ID}_{$activity->secondary_item_id}" ) ? 'passed' : 'failed';
 		}
 
@@ -408,7 +409,7 @@ class BP_Akismet {
 		$this->last_activity->akismet_submission = $activity_data;
 
 		// Spam.
-		if ( 'true' === $activity_data['bp_as_result'] ) {
+		if ( 'true' == $activity_data['bp_as_result'] ) {
 			/**
 			 * Fires after an activity item has been proven to be spam, but before officially being marked as spam.
 			 *
@@ -429,7 +430,7 @@ class BP_Akismet {
 				'discard' === $activity_data['akismet_pro_tip']
 			) {
 				// If this is so spammy it's not worth your time, let's just delete it.
-				if ( 'activity_comment' === $activity->type ) {
+				if ( $activity->type === 'activity_comment' ) {
 					bp_activity_delete_comment( $activity->item_id, $activity->id );
 				} else {
 					bp_activity_delete( array( 'id' => $activity->id ) );
@@ -454,7 +455,6 @@ class BP_Akismet {
 			return;
 		}
 
-		/* translators: %s: Username */
 		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-spam' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'true' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
@@ -473,7 +473,6 @@ class BP_Akismet {
 			return;
 		}
 
-		/* translators: %s: Username */
 		$this->update_activity_history( $activity->id, sprintf( __( '%s reported this activity as not spam', 'buddyboss' ), bp_get_loggedin_user_username() ), 'report-ham' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user_result', 'false' );
 		bp_activity_update_meta( $activity->id, '_bp_akismet_user', bp_get_loggedin_user_username() );
@@ -488,7 +487,7 @@ class BP_Akismet {
 	 */
 	public function update_activity_akismet_meta( $activity ) {
 		// Check we're dealing with what was last updated by Akismet.
-		if ( empty( $this->last_activity ) || ! empty( $this->last_activity ) && $activity->id !== $this->last_activity->id ) {
+		if ( empty( $this->last_activity ) || ! empty( $this->last_activity ) && $activity->id != $this->last_activity->id ) {
 			return;
 		}
 
@@ -498,19 +497,18 @@ class BP_Akismet {
 		}
 
 		// Spam.
-		if ( 'true' === $this->last_activity->akismet_submission['bp_as_result'] ) {
+		if ( 'true' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'true' );
 			$this->update_activity_history( $activity->id, __( 'Akismet caught this item as spam', 'buddyboss' ), 'check-spam' );
 
 			// Not spam.
-		} elseif ( 'false' === $this->last_activity->akismet_submission['bp_as_result'] ) {
+		} elseif ( 'false' == $this->last_activity->akismet_submission['bp_as_result'] ) {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_result', 'false' );
 			$this->update_activity_history( $activity->id, __( 'Akismet cleared this item', 'buddyboss' ), 'check-ham' );
 
 			// Uh oh, something's gone horribly wrong. Unexpected result.
 		} else {
 			bp_activity_update_meta( $activity->id, '_bp_akismet_error', bp_core_current_time() );
-			/* translators: %s: Akismet result */
 			$this->update_activity_history( $activity->id, sprintf( __( 'Akismet was unable to check this item (response: %s), will automatically retry again later.', 'buddyboss' ), $this->last_activity->akismet_submission['bp_as_result'] ), 'check-error' );
 		}
 
@@ -531,8 +529,7 @@ class BP_Akismet {
 	 * @return array $activity_data Activity data, with Akismet data added.
 	 */
 	public function send_akismet_request( $activity_data, $check = 'check', $spam = 'spam' ) {
-		$query_string = '';
-		$path         = '';
+		$query_string = $path = '';
 
 		$activity_data['blog']         = bp_get_option( 'home' );
 		$activity_data['blog_charset'] = bp_get_option( 'blog_charset' );
@@ -547,7 +544,7 @@ class BP_Akismet {
 
 		// Loop through _POST args and rekey strings.
 		foreach ( $_POST as $key => $value ) {
-			if ( is_string( $value ) && 'cookie' !== $key ) {
+			if ( is_string( $value ) && 'cookie' != $key ) {
 				$activity_data[ 'POST_' . $key ] = $value;
 			}
 		}
@@ -572,9 +569,9 @@ class BP_Akismet {
 			$query_string .= $key . '=' . urlencode( stripslashes( $data ) ) . '&';
 		}
 
-		if ( 'check' === $check ) {
+		if ( 'check' == $check ) {
 			$path = 'comment-check';
-		} elseif ( 'submit' === $check ) {
+		} elseif ( 'submit' == $check ) {
 			$path = 'submit-' . $spam;
 		}
 
@@ -619,7 +616,7 @@ class BP_Akismet {
 	 */
 	function add_history_metabox( $screen_action ) {
 		// Only proceed if we're on the edit screen.
-		if ( 'edit' !== $screen_action ) {
+		if ( 'edit' != $screen_action ) {
 			return;
 		}
 
@@ -645,7 +642,6 @@ class BP_Akismet {
 		}
 
 		echo '<div class="akismet-history"><div>';
-		/* translators: 1: Time since, 2: Activity history */
 		printf( __( '%1$s - %2$s', 'buddyboss' ), '<span>' . bp_core_time_since( $history[2] ) . '</span>', esc_html( $history[1] ) );
 		echo '</div></div>';
 	}
@@ -681,7 +677,7 @@ class BP_Akismet {
 	 */
 	public function get_activity_history( $activity_id = 0 ) {
 		$history = bp_activity_get_meta( $activity_id, '_bp_akismet_history' );
-		if ( false === $history ) {
+		if ( $history === false ) {
 			$history = array();
 		}
 

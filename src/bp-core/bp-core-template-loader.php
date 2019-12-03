@@ -177,8 +177,7 @@ function bp_locate_template_asset( $filename ) {
 
 	// Set up data array.
 	$data         = array();
-	$data['file'] = $located;
-	$data['uri']  = $located;
+	$data['file'] = $data['uri'] = $located;
 
 	$find = array(
 		get_theme_root(),
@@ -264,9 +263,8 @@ function bp_get_template_stack() {
 	global $wp_filter, $merged_filters, $wp_current_filter;
 
 	// Setup some default variables.
-	$tag   = 'bp_template_stack';
-	$args  = array();
-	$stack = array();
+	$tag  = 'bp_template_stack';
+	$args = $stack = array();
 
 	// Add 'bp_template_stack' to the current filter array.
 	$wp_current_filter[] = $tag;
@@ -472,7 +470,7 @@ function bp_parse_query( $posts_query ) {
 	}
 
 	// Bail if filters are suppressed on this query.
-	if ( true === $posts_query->get( 'suppress_filters' ) ) {
+	if ( true == $posts_query->get( 'suppress_filters' ) ) {
 		return;
 	}
 
@@ -637,7 +635,7 @@ function bp_show_hide_toolbar() {
 		$user = wp_get_current_user();
 
 		if ( ! empty( $old_user ) ) {
-			if ( $user->ID !== $old_user->ID ) {
+			if ( $user->ID != $old_user->ID ) {
 				$userdata          = get_userdata( $user->ID );
 				$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
 			}

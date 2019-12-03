@@ -104,15 +104,11 @@ function bp_nouveau_get_blogs_filters( $context = '' ) {
 	 * @param array  the blogs filters.
 	 * @param string the context.
 	 */
-	$filters = apply_filters(
-		'bp_nouveau_get_blogs_filters',
-		array(
-			'active'       => __( 'Recently Active', 'buddyboss' ),
-			'newest'       => __( 'Newest', 'buddyboss' ),
-			'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
-		),
-		$context
-	);
+	$filters = apply_filters( 'bp_nouveau_get_blogs_filters', array(
+		'active'       => __( 'Recently Active', 'buddyboss' ),
+		'newest'       => __( 'Newest', 'buddyboss' ),
+		'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
+	), $context );
 
 	if ( $action ) {
 		return bp_nouveau_parse_hooked_options( $action, $filters );

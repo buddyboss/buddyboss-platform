@@ -22,14 +22,11 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	$wp_customize->register_control_type( 'BP_Nouveau_Nav_Customize_Control' );
 	$bp_nouveau_options = bp_nouveau_get_appearance_settings();
 	//@todo is the BuddyBoss Platform really translatable?
-	$wp_customize->add_panel(
-		'bp_nouveau_panel',
-		array(
-			'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss' ),
-			'title'       => __( 'BuddyBoss Platform', 'buddyboss' ),
-			'priority'    => 200,
-		)
-	);
+	$wp_customize->add_panel( 'bp_nouveau_panel', array(
+		'description' => __( 'Customize the appearance of the BuddyBoss Platform.', 'buddyboss' ),
+		'title'       => __( 'BuddyBoss Platform', 'buddyboss' ),
+		'priority'    => 200,
+	) );
 
 	/**
 	 * Filters the BuddyPress Nouveau customizer sections and their arguments.
@@ -38,23 +35,20 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 *
 	 * @param array $value Array of Customizer sections.
 	 */
-	$sections = apply_filters(
-		'bp_nouveau_customizer_sections',
-		array(
-			'bp_nouveau_user_primary_nav' => array(
-				'title'       => __( 'Profile Navigation', 'buddyboss' ),
-				'panel'       => 'bp_nouveau_panel',
-				'priority'    => 50,
-				'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
-			),
-			'bp_nouveau_mail'             => array(
-				'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
-				'panel'       => 'bp_nouveau_panel',
-				'priority'    => 80,
-				'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
-			),
-		)
-	);
+	$sections = apply_filters( 'bp_nouveau_customizer_sections', array(
+		'bp_nouveau_user_primary_nav' => array(
+			'title'       => __( 'Profile Navigation', 'buddyboss' ),
+			'panel'       => 'bp_nouveau_panel',
+			'priority'    => 50,
+			'description' => __( 'Customize the navigation menu for member profiles. In the preview window, navigate to a user to preview your changes.', 'buddyboss' ),
+		),
+		'bp_nouveau_mail' => array(
+			'title'       => __( 'BuddyBoss Emails', 'buddyboss' ),
+			'panel'       => 'bp_nouveau_panel',
+			'priority'    => 80,
+			'description' => __( 'Customize the appearance of emails sent by BuddyBoss.', 'buddyboss' ),
+		),
+	) );
 
 	// Add the sections to the customizer
 	foreach ( $sections as $id_section => $section_args ) {
@@ -68,87 +62,84 @@ function bp_nouveau_customize_register( WP_Customize_Manager $wp_customize ) {
 	 *
 	 * @param array $value Array of Customizer settings.
 	 */
-	$settings = apply_filters(
-		'bp_nouveau_customizer_settings',
-		array(
-			'bp_nouveau_appearance[user_nav_display]'    => array(
-				'index'             => 'user_nav_display',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[user_default_tab]'    => array(
-				'index'      => 'user_default_tab',
-				'capability' => 'bp_moderate',
-				'transport'  => 'refresh',
-				'type'       => 'option',
-			),
-			'bp_nouveau_appearance[user_nav_order]'      => array(
-				'index'             => 'user_nav_order',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[activity_dir_layout]' => array(
-				'index'             => 'activity_dir_layout',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[activity_dir_tabs]'   => array(
-				'index'             => 'activity_dir_tabs',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[members_dir_layout]'  => array(
-				'index'             => 'members_dir_layout',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[members_dir_tabs]'    => array(
-				'index'             => 'members_dir_tabs',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[groups_dir_layout]'   => array(
-				'index'             => 'groups_dir_layout',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[sites_dir_layout]'    => array(
-				'index'             => 'sites_dir_layout',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[sites_dir_tabs]'      => array(
-				'index'             => 'sites_dir_tabs',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-			'bp_nouveau_appearance[bp_emails]'           => array(
-				'index'             => 'bp_emails',
-				'capability'        => 'bp_moderate',
-				'sanitize_callback' => 'absint',
-				'transport'         => 'refresh',
-				'type'              => 'option',
-			),
-		)
-	);
+	$settings = apply_filters( 'bp_nouveau_customizer_settings', array(
+		'bp_nouveau_appearance[user_nav_display]' => array(
+			'index'             => 'user_nav_display',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[user_default_tab]' => array(
+			'index'             => 'user_default_tab',
+			'capability'        => 'bp_moderate',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[user_nav_order]' => array(
+			'index'             => 'user_nav_order',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[activity_dir_layout]' => array(
+			'index'             => 'activity_dir_layout',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[activity_dir_tabs]' => array(
+			'index'             => 'activity_dir_tabs',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[members_dir_layout]' => array(
+			'index'             => 'members_dir_layout',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[members_dir_tabs]' => array(
+			'index'             => 'members_dir_tabs',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[groups_dir_layout]' => array(
+			'index'             => 'groups_dir_layout',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[sites_dir_layout]' => array(
+			'index'             => 'sites_dir_layout',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[sites_dir_tabs]' => array(
+			'index'             => 'sites_dir_tabs',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+		'bp_nouveau_appearance[bp_emails]' => array(
+			'index'             => 'bp_emails',
+			'capability'        => 'bp_moderate',
+			'sanitize_callback' => 'absint',
+			'transport'         => 'refresh',
+			'type'              => 'option',
+		),
+	) );
 
 	// Add the settings
 	foreach ( $settings as $id_setting => $setting_args ) {
@@ -249,14 +240,10 @@ function bp_nouveau_customizer_enqueue_scripts() {
 		true
 	);
 
-	wp_localize_script(
-		'bp-nouveau-customizer',
-		'BP_Customizer',
-		[
-			'emailCustomizerUrl'    => bp_email_get_redirect_to_customizer_url(),
-			'platformCustomizerUrl' => admin_url( 'customize.php?autofocus[panel]=bp_nouveau_panel' ),
-		]
-	);
+	wp_localize_script( 'bp-nouveau-customizer', 'BP_Customizer', [
+		'emailCustomizerUrl'    => bp_email_get_redirect_to_customizer_url(),
+		'platformCustomizerUrl' => admin_url( 'customize.php?autofocus[panel]=bp_nouveau_panel' )
+	] );
 
 	/**
 	 * Fires after Nouveau enqueues its required javascript.

@@ -1,4 +1,5 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
+
 /**
  * Forums Shortcodes
  *
@@ -396,8 +397,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			if ( ! empty( $attr['forum_id'] ) ) {
 
 				// Set the global current_forum_id for future requests
-				bbpress()->current_forum_id = bbp_get_forum_id( $attr['forum_id'] );
-				$forum_id                   = bbpress()->current_forum_id;
+				bbpress()->current_forum_id = $forum_id = bbp_get_forum_id( $attr['forum_id'] );
 
 				// Start output buffer
 				$this->start( 'bbp_single_forum' );
@@ -571,8 +571,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			$this->start( 'bbp_topic_tag' );
 
 			// Set passed attribute to $ag_id for clarity
-			bbpress()->current_topic_tag_id = $attr['id'];
-			$tag_id                         = $attr['id'];
+			bbpress()->current_topic_tag_id = $tag_id = $attr['id'];
 
 			// Output template
 			bbp_get_template_part( 'content', 'archive-topic' );

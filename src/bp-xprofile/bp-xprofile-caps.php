@@ -37,19 +37,19 @@ function bp_xprofile_map_meta_caps( $caps, $cap, $user_id, $args ) {
 			}
 
 			// Visibility on the fullname field is not editable.
-			if ( 1 === $field_id ) {
+			if ( 1 == $field_id ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}
 
 			// Has the admin disabled visibility modification for this field?
-			if ( 'disabled' === bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' ) ) {
+			if ( 'disabled' == bp_xprofile_get_meta( $field_id, 'field', 'allow_custom_visibility' ) ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}
 
 			// Connections don't edit each other's visibility.
-			if ( bp_displayed_user_id() !== $profile_user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
+			if ( $profile_user_id != bp_displayed_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
 				$caps[] = 'do_not_allow';
 				break;
 			}
@@ -84,7 +84,7 @@ add_filter( 'bp_map_meta_caps', 'bp_xprofile_map_meta_caps', 10, 4 );
 function bp_xprofile_grant_bp_xprofile_change_field_visibility_for_logged_out_users( $user_can, $user_id, $capability ) {
 	if ( 'bp_xprofile_change_field_visibility' === $capability && 0 === $user_id ) {
 		$field_id = bp_get_the_profile_field_id();
-		if ( $field_id && $field = xprofile_get_field( $field_id ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
+		if ( $field_id && $field = xprofile_get_field( $field_id ) ) {
 			$user_can = 'allowed' === $field->allow_custom_visibility;
 		}
 	}

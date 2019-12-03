@@ -99,9 +99,9 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 		return;
 	}
 
-	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' ); // phpcs:ignore WordPress.NamingConventions.ValidHookName
-	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) ); // phpcs:ignore WordPress.NamingConventions.ValidHookName
-	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 ); // phpcs:ignore WordPress.NamingConventions.ValidHookName
+	$main_slug = apply_filters( 'mepr-bp-info-main-nav-slug', 'mp-membership' );
+	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
+	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
 
 	$wp_admin_bar->add_menu(
 		array(
@@ -318,7 +318,7 @@ function bp_core_learndash_bbpress_notices() {
  * @return mixed
  */
 function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
-	if ( isset( $_GET['page'] ) && 'wc-status' === $_GET['page'] ) {
+	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) {
 		bp_core_unset_bbpress_buddypress_active();
 	}
 	return $tabs;

@@ -18,7 +18,7 @@
 		<?php
 		while ( bp_groups() ) :
 			bp_the_group();
-			?>
+		?>
 
 			<li class="item-entry invites-list" data-bp-item-id="<?php bp_group_id(); ?>" data-bp-item-component="groups">
 
@@ -33,16 +33,16 @@
 					<div class="item">
 						<h2 class="list-title groups-title"><?php bp_group_link(); ?></h2>
 						<p class="meta group-details">
-							<?php $inviter = bp_groups_get_invited_by(); ?>
-							<?php if ( ! empty( $inviter ) ) : ?>
-								<span class="small">
-								<?php
-								//@todo NO HTML in text domain please
+                            <?php $inviter = bp_groups_get_invited_by(); ?>
+                            <?php if ( ! empty( $inviter ) ) : ?>
+                                <span class="small">
+                                <?php
+                                //@todo NO HTML in text domain please
 								$member = new BP_Groups_Member( bp_displayed_user_id(), bp_get_group_id() );
-								printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>', 'buddyboss' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
-								?>
-								</span>
-							<?php endif; ?>
+                                printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>', 'buddyboss' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
+                                ?>
+                                </span>
+                            <?php endif; ?>
 						</p>
 
 						<p class="desc">

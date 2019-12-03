@@ -177,7 +177,7 @@ class BP_Attachment_Avatar extends BP_Attachment {
 	 * @return bool
 	 */
 	public static function is_too_small( $file = '' ) {
-		$uploaded_image = @getimagesize( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		$uploaded_image = @getimagesize( $file );
 		$full_width     = bp_core_avatar_full_width();
 		$full_height    = bp_core_avatar_full_height();
 
@@ -276,8 +276,8 @@ class BP_Attachment_Avatar extends BP_Attachment {
 		}
 
 		// Get the file extension.
-		$data = @getimagesize( $absolute_path ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
-		$ext  = 'image/png' === $data['mime'] ? 'png' : 'jpg';
+		$data = @getimagesize( $absolute_path );
+		$ext  = $data['mime'] == 'image/png' ? 'png' : 'jpg';
 
 		$args['original_file'] = $absolute_path;
 		$args['src_abs']       = false;

@@ -109,8 +109,7 @@ class BP_Core_Notification {
 			$sql = $wpdb->prepare( "INSERT INTO {$bp->core->table_name_notifications} ( item_id, secondary_item_id, user_id, component_name, component_action, date_notified, is_new ) VALUES ( %d, %d, %d, %s, %s, %s, %d )", $this->item_id, $this->secondary_item_id, $this->user_id, $this->component_name, $this->component_action, $this->date_notified, $this->is_new );
 		}
 
-		$result = $wpdb->query( $sql );
-		if ( ! $result ) {
+		if ( ! $result = $wpdb->query( $sql ) ) {
 			return false;
 		}
 
@@ -131,8 +130,7 @@ class BP_Core_Notification {
 
 		$bp = buddypress();
 
-		$notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE id = %d", $this->id ) );
-		if ( $notification ) {
+		if ( $notification = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->core->table_name_notifications} WHERE id = %d", $this->id ) ) ) {
 			$this->item_id           = $notification->item_id;
 			$this->secondary_item_id = $notification->secondary_item_id;
 			$this->user_id           = $notification->user_id;

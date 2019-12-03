@@ -168,7 +168,7 @@ function bp_blogs_record_existing_blogs( $args = array() ) {
 		}
 	}
 
-	// Bail if there are no blogs
+	 // Bail if there are no blogs
 	if ( empty( $blogs ) ) {
 		// Make sure we remove our offset marker
 		if ( is_multisite() ) {
@@ -729,7 +729,7 @@ function bp_blogs_update_post_activity_meta( $post, $activity, $activity_post_ob
 	}
 
 	// Add post comment status to activity meta if closed.
-	if ( 'closed' === $post->comment_status ) {
+	if ( 'closed' == $post->comment_status ) {
 		bp_activity_update_meta( $activity->id, 'post_comment_status', $post->comment_status );
 	} else {
 		bp_activity_delete_meta( $activity->id, 'post_comment_status' );

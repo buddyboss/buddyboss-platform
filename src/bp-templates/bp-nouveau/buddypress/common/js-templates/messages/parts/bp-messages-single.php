@@ -45,5 +45,5 @@
 	<?php bp_nouveau_messages_hook( 'after', 'thread_content' ); ?>
 </script>
 <script type="text/html" id="tmpl-bp-messages-reply-form-submit">
-	<input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button" class="small" />
+    <input type="submit" name="send" value="<?php esc_attr_e( 'Send Reply', 'buddyboss' ); ?>" id="send_reply_button" class="small" />
 </script>
