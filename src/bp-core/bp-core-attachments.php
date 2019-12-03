@@ -546,6 +546,8 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 					$file = $attachment_file;
 					break;
 				}
+
+				$attachment_file = readdir( $att_dir );
 			}
 		}
 
@@ -1293,6 +1295,8 @@ function bp_attachments_cover_image_generate_file( $args = array(), $cover_image
 			if ( 2 < strlen( $attachment_file ) && 0 !== strpos( $attachment_file, '.' ) && $cover_basename !== $attachment_file ) {
 				@unlink( $args['cover_image_dir'] . '/' . $attachment_file );
 			}
+
+			$attachment_file = readdir( $att_dir );
 		}
 	}
 

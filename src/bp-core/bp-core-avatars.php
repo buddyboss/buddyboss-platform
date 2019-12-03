@@ -508,6 +508,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 				if ( 2 < strlen( $avatar_file ) ) {
 					$avatar_files[] = $avatar_file;
 				}
+
+				// Read directory
+				$avatar_file = readdir( $av_dir );
 			}
 
 			// Check for array.
@@ -855,6 +858,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 			if ( ( preg_match( '/-bpfull/', $avatar_file ) || preg_match( '/-bpthumb/', $avatar_file ) ) && '.' !== $avatar_file && '..' !== $avatar_file ) {
 				@unlink( $avatar_folder_dir . '/' . $avatar_file );
 			}
+			$avatar_file = readdir( $av_dir );
 		}
 	}
 	closedir( $av_dir );
