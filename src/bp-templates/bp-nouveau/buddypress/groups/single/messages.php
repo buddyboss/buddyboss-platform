@@ -69,17 +69,19 @@ $group_members = groups_get_group_members( $args );
 					<h2 class="bb-title"><?php _e( 'New Group Message', 'buddyboss' ); ?></h2>
 					<div class="add-more-members"><a class="bb-add-members" href="#"><span class="dashicons dashicons-plus-alt"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
-				<div class="bp-messages-feedback bp-messages-feedback-hide">
-					<div class="bp-feedback">
-						<span class="bp-icon" aria-hidden="true"></span>
-						<p></p>
+				<div class="bp-select-members-wrap">
+					<div class="bp-messages-feedback bp-messages-feedback-hide">
+						<div class="bp-feedback">
+							<span class="bp-icon" aria-hidden="true"></span>
+							<p></p>
+						</div>
 					</div>
+					<?php if ( $group_members['count'] != 0 ) { ?>
+					<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php _e( 'Type the names of one or more people','buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
+						<option value="all" selected="selected"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
+					</select>
+					<?php } ?>
 				</div>
-				<?php if ( $group_members['count'] != 0 ) { ?>
-				<select name="group_messages_send_to[]" class="send-to-input select2-hidden-accessible" id="group-messages-send-to-input" placeholder="<?php _e( 'Type the names of one or more people','buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-messages-send-to-input" tabindex="-1" aria-hidden="true">
-					<option value="all" selected="selected"><?php _e( 'All Group Members', 'buddyboss' ); ?></option>
-				</select>
-				<?php } ?>
 			</div>
 
 			<?php if ( $group_members['count'] != 0 ) { ?>

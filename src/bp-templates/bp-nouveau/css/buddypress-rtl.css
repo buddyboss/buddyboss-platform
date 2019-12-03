@@ -11384,7 +11384,7 @@ img.emojioneemoji {
 }
 
 .group-messages-members-listing #members-list {
-  max-height: 70vh;
+  max-height: 60vh;
   overflow-y: auto;
   overflow-x: hidden;
   margin: 0 -20px;
@@ -11472,6 +11472,10 @@ body.groups.messages span.select2-dropdown.select2-dropdown--below {
   height: 100%;
 }
 
+.bp-select-members-wrap {
+  min-height: 94px;
+}
+
 body.groups.messages #send_group_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
   background-color: #4D5C6D;
   border-color: #4D5C6D;
@@ -11490,33 +11494,17 @@ body.groups.messages #send_group_message_form .select2-container--default .selec
 }
 
 #send_group_message_form .select2-selection__choice__remove {
-  font-size: 0;
-  line-height: 1;
-  margin: 0 8px 0 0;
-}
-
-#send_group_message_form .select2-selection__choice__remove:before {
-  content: '\E828';
-  font-family: "bb-icons";
-  font-size: 13px;
-  line-height: 1;
+  color: #333;
+  margin-right: 7px;
   background: #fff;
+  height: 16px;
+  width: 16px;
   border-radius: 50%;
-  color: #4D5C6D;
-  display: -webkit-box;
-  display: -ms-flexbox;
+  line-height: 1;
   display: flex;
-  -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
   align-items: center;
-  min-width: 13px;
-  min-height: 13px;
-  text-indent: -1px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  font-size: 16px;
+  justify-content: center;
 }
 
 #send_group_message_form .select2-selection--multiple {
@@ -11562,28 +11550,6 @@ body.groups.messages #send_group_message_form .select2-container--default .selec
   position: relative;
 }
 
-/*
-#group-messages-toolbar .dashicons {
-    font: normal normal normal 24px/1 "bb-icons";
-    color: rgba(18, 43, 70, 0.4);
-    -webkit-transition: all linear .2s;
-    transition: all linear .2s;
-    width: auto;
-    height: auto;
-}
-
-#group-messages-toolbar .dashicons-admin-media:before {
-	content: '\E805';
-}
-
-#group-messages-toolbar .post-elements-buttons-item {
-    margin-right: 10px;
-    position: relative;
-}
-
-#bp-group-message-content .dashicons-smiley:before {
-    content: '\E811';
-}*/
 div#bp-group-message-content {
   padding: 20px;
   height: 100%;
@@ -11658,9 +11624,10 @@ span.icons:before {
 
 .bp-single-message-wrap.group-messages-highlight {
   background: #fffced;
-  padding: 10px;
+  padding: 5px;
   border: 1px solid #f9efca;
   border-radius: 5px;
+  margin: -5px -5px 0;
 }
 
 #group-messages-container .select2-container--default.select2-container--disabled .select2-selection--multiple {
@@ -11709,14 +11676,6 @@ span.icons:before {
 #group-messages-container .load-more .center {
   width: 100%;
   text-align: center;
-}
-
-#group-messages-container .load-more .dashicons-update {
-  font-family: "bb-icons";
-}
-
-#group-messages-container .load-more .dashicons-update:before {
-  content: "\e838";
 }
 
 .bb-group-message-info {
@@ -11798,6 +11757,35 @@ span.icons:before {
   -webkit-box-pack: justify;
   -ms-flex-pack: justify;
   justify-content: space-between;
+}
+
+.message-lists .group-thread .thread-avatar {
+  position: relative;
+}
+
+.message-lists .group-thread .thread-avatar:before {
+  content: '\f307';
+  font-family: dashicons;
+  font-style: normal;
+  speak: none;
+  text-decoration: inherit;
+  text-transform: none;
+  text-rendering: auto;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  width: 18px;
+  height: 18px;
+  font-size: 14px;
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  border: 1px solid;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  left: -6px;
+  top: 2px;
 }
 
 /* Rounded sliders */
@@ -11887,8 +11875,9 @@ span.icons:before {
   .bb-groups-messages-left.bb-select-member-view .bb-groups-messages-left-inner {
     background: #fff;
     border-radius: 5px;
-    width: 100%;
+    width: 90%;
     max-width: 500px;
+    overflow: hidden;
   }
   .bb-groups-messages-left.bb-select-member-view .bb-panel-footer,
   .bb-groups-messages-left.bb-select-member-view .group-messages-search,
@@ -11907,5 +11896,9 @@ span.icons:before {
   body #buddypress .group-messages-members-listing .bp-list .action {
     flex: 0 0 26px;
     margin-right: auto;
+  }
+  .bb-groups-messages-right .medium-editor-element:not(.emojionearea),
+  .bb-groups-messages-right .medium-editor-placeholder:not(.emojionearea) {
+    min-height: 180px;
   }
 }
