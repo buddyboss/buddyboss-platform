@@ -71,7 +71,7 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 		$parent_field = $this->db_fields['parent'];
 
 		// Flat display.
-		if ( -1 == $max_depth ) {
+		if ( -1 === $max_depth ) {
 
 			$empty_array = array();
 			foreach ( $elements as $e ) {
@@ -111,7 +111,7 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 			$children_elements  = array();
 
 			foreach ( $elements as $e ) {
-				if ( $root->$parent_field == $e->$parent_field ) {
+				if ( $root->$parent_field === $e->$parent_field ) {
 					$top_level_elements[] = $e;
 				} else {
 					$children_elements[ $e->$parent_field ][] = $e;
@@ -127,7 +127,7 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 		 * If we are displaying all levels, and remaining children_elements is not empty,
 		 * then we got orphans, which should be displayed regardless.
 		 */
-		if ( ( $max_depth == 0 ) && count( $children_elements ) > 0 ) {
+		if ( ( 0 === $max_depth ) && count( $children_elements ) > 0 ) {
 			$empty_array = array();
 
 			foreach ( $children_elements as $orphans ) {
@@ -137,7 +137,7 @@ class BP_Walker_Nav_Menu extends Walker_Nav_Menu {
 			}
 		}
 
-		 return $output;
+		return $output;
 	}
 
 	/**

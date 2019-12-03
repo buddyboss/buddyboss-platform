@@ -19,7 +19,7 @@
 		</div>
 		<div id="avatar-crop-actions">
 			<button type="button" class="button avatar-crop-submit"><?php esc_html_e( 'Crop Photo', 'buddyboss' ); ?></button>
-            <a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+			<a class="avatar-crop-cancel" href="#"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 </script>

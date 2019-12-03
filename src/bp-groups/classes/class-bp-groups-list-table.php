@@ -97,7 +97,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 		// Sort order.
 		$order = 'DESC';
 		if ( ! empty( $_REQUEST['order'] ) ) {
-			$order = ( 'desc' == strtolower( $_REQUEST['order'] ) ) ? 'DESC' : 'ASC';
+			$order = ( 'desc' === strtolower( $_REQUEST['order'] ) ) ? 'DESC' : 'ASC';
 		}
 
 		// Order by - default to newest.
@@ -139,7 +139,7 @@ class BP_Groups_List_Table extends WP_List_Table {
 
 		// Pass a dummy array if there are no groups of this type.
 		$include = false;
-		if ( 'all' != $this->view && isset( $this->group_type_ids[ $this->view ] ) ) {
+		if ( 'all' !== $this->view && isset( $this->group_type_ids[ $this->view ] ) ) {
 			$include = ! empty( $this->group_type_ids[ $this->view ] ) ? $this->group_type_ids[ $this->view ] : array( 0 );
 		}
 
@@ -343,27 +343,30 @@ class BP_Groups_List_Table extends WP_List_Table {
 		<ul class="subsubsub">
 			<li class="all"><a href="<?php echo esc_url( $url_base ); ?>" class="
 												<?php
-												if ( 'all' == $this->view ) {
+												if ( 'all' === $this->view ) {
 													echo 'current';}
 												?>
 			"><?php _e( 'All', 'buddyboss' ); ?></a> |</li>
 			<li class="public"><a href="<?php echo esc_url( add_query_arg( 'group_status', 'public', $url_base ) ); ?>" class="
-												   <?php
-													if ( 'public' == $this->view ) {
-														echo 'current';}
-													?>
+												<?php
+												if ( 'public' === $this->view ) {
+													echo 'current';}
+												?>
+												<?php /* translators: Public [Count of public groups] */ ?>
 			"><?php printf( _n( 'Public <span class="count">(%s)</span>', 'Public <span class="count">(%s)</span>', $this->group_counts['public'], 'buddyboss' ), number_format_i18n( $this->group_counts['public'] ) ); ?></a> |</li>
 			<li class="private"><a href="<?php echo esc_url( add_query_arg( 'group_status', 'private', $url_base ) ); ?>" class="
-													<?php
-													if ( 'private' == $this->view ) {
-														echo 'current';}
-													?>
+												<?php
+												if ( 'private' === $this->view ) {
+													echo 'current';}
+												?>
+												<?php /* translators: Private [Count of private groups] */ ?>
 			"><?php printf( _n( 'Private <span class="count">(%s)</span>', 'Private <span class="count">(%s)</span>', $this->group_counts['private'], 'buddyboss' ), number_format_i18n( $this->group_counts['private'] ) ); ?></a> |</li>
 			<li class="hidden"><a href="<?php echo esc_url( add_query_arg( 'group_status', 'hidden', $url_base ) ); ?>" class="
-												   <?php
-													if ( 'hidden' == $this->view ) {
-														echo 'current';}
-													?>
+												<?php
+												if ( 'hidden' === $this->view ) {
+													echo 'current';}
+												?>
+												<?php /* translators: Hidden [Count of hidden groups] */ ?>
 			"><?php printf( _n( 'Hidden <span class="count">(%s)</span>', 'Hidden <span class="count">(%s)</span>', $this->group_counts['hidden'], 'buddyboss' ), number_format_i18n( $this->group_counts['hidden'] ) ); ?></a></li>
 
 			<?php
@@ -486,8 +489,8 @@ class BP_Groups_List_Table extends WP_List_Table {
 		$out = '<div class="' . ( $always_visible ? 'row-actions visible' : 'row-actions' ) . '">';
 		foreach ( $actions as $action => $link ) {
 			++$i;
-			( $i == $action_count ) ? $sep = '' : $sep = ' | ';
-			$out                          .= "<span class='$action'>$link$sep</span>";
+			( $i === $action_count ) ? $sep = '' : $sep = ' | ';
+			$out                           .= "<span class='$action'>$link$sep</span>";
 		}
 		$out .= '</div>';
 
@@ -590,6 +593,8 @@ class BP_Groups_List_Table extends WP_List_Table {
 					'object'     => 'group',
 					'type'       => 'thumb',
 					'avatar_dir' => 'group-avatars',
+
+					/* translators: Group logo of [Group name] */
 					'alt'        => sprintf( __( 'Group logo of %s', 'buddyboss' ), $group_name ),
 					'width'      => '32',
 					'height'     => '32',

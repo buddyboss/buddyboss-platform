@@ -140,6 +140,7 @@ class BP_Activity_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+			/* translators: 1: Method, 2: File */
 			_deprecated_argument( __METHOD__, '1.6', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -185,7 +186,7 @@ class BP_Activity_Template {
 			'update_meta_cache' => true,
 		);
 		$r        = wp_parse_args( $args, $defaults );
-		extract( $r );
+		extract( $r ); //phpcs:ignore WordPress.PHP.DontExtract
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
@@ -268,7 +269,7 @@ class BP_Activity_Template {
 
 		// Fetch parent content for activity comments so we do not have to query in the loop.
 		foreach ( (array) $this->activities as $activity ) {
-			if ( 'activity_comment' != $activity->type ) {
+			if ( 'activity_comment' !== $activity->type ) {
 				continue;
 			}
 
@@ -363,7 +364,7 @@ class BP_Activity_Template {
 	public function user_activities() {
 		if ( ( $this->current_activity + 1 ) < $this->activity_count ) {
 			return true;
-		} elseif ( ( $this->current_activity + 1 ) == $this->activity_count ) {
+		} elseif ( ( $this->current_activity + 1 ) === $this->activity_count ) {
 
 			/**
 			 * Fires right before the rewinding of activity posts.
@@ -402,7 +403,7 @@ class BP_Activity_Template {
 		}
 
 		// Loop has just started.
-		if ( $this->current_activity == 0 ) {
+		if ( 0 === $this->current_activity ) {
 
 			/**
 			 * Fires if the current activity item is the first in the activity loop.

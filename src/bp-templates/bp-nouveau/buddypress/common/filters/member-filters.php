@@ -16,10 +16,10 @@ if ( false === $is_member_type_enabled ) {
 }
 
 $member_types = bp_get_active_member_types();
-$display_arr = array();
+$display_arr  = array();
 foreach ( $member_types as $member_type_id ) {
 
-	if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
+	if ( ! get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
 		continue;
 	}
 
@@ -28,14 +28,14 @@ foreach ( $member_types as $member_type_id ) {
 	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 
 	$display_arr[] = array(
-		'id' => $type_id,
+		'id'             => $type_id,
 		'member_type_id' => $member_type_id,
-		'name' => $member_type_name,
+		'name'           => $member_type_name,
 	);
 
 }
 
-if ( isset( $display_arr ) && !empty( $display_arr )) {
+if ( isset( $display_arr ) && ! empty( $display_arr ) ) {
 	?>
 	<div id="member-type-filters" class="component-filters clearfix">
 		<div id="member-type-select" class="last filter">
@@ -44,9 +44,10 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 			</label>
 			<div class="select-wrap">
 				<select id="member-type-order-by" data-bp-member-type-filter="members">
-					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
-					foreach ( $display_arr as $member ) { ?>
-						<option value="<?php echo $member['member_type_id']; ?>"><?php esc_html_e( $member['name'], 'buddyboss'); ?></option><?php
+					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option>
+					<?php foreach ( $display_arr as $member ) { ?>
+						<option value="<?php echo $member['member_type_id']; ?>"><?php esc_html_e( $member['name'], 'buddyboss' ); ?></option>
+						<?php
 					}
 					?>
 				</select>

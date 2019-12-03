@@ -81,6 +81,7 @@ class BP_Groups_Invite_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
+			/* translators: 1: Method 2: File */
 			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -197,7 +198,7 @@ class BP_Groups_Invite_Template {
 		$tick = intval( $this->current_invite + 1 );
 		if ( $tick < $this->invite_count ) {
 			return true;
-		} elseif ( $tick == $this->invite_count ) {
+		} elseif ( $tick === $this->invite_count ) {
 
 			/**
 			 * Fires right before the rewinding of invites list.
@@ -244,6 +245,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'full',
 				'alt'     => sprintf(
+					/* translators: Profile photo of [User full name] */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -257,6 +259,7 @@ class BP_Groups_Invite_Template {
 				'item_id' => $user_id,
 				'type'    => 'thumb',
 				'alt'     => sprintf(
+					/* translators: Profile photo of [User full name] */
 					__(
 						'Profile photo of %s',
 						'buddyboss'
@@ -269,6 +272,8 @@ class BP_Groups_Invite_Template {
 			array(
 				'item_id' => $user_id,
 				'type'    => 'thumb',
+
+				/* translators: Profile photo of [User full name] */
 				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $this->invite->user->fullname ),
 				'width'   => 30,
 				'height'  => 30,
@@ -277,10 +282,13 @@ class BP_Groups_Invite_Template {
 		$this->invite->user->email        = $this->invite->user->user_email;
 		$this->invite->user->user_url     = bp_core_get_user_domain( $user_id, $this->invite->user->user_nicename, $this->invite->user->user_login );
 		$this->invite->user->user_link    = "<a href='{$this->invite->user->user_url}'>{$this->invite->user->fullname}</a>";
-		$this->invite->user->last_active  = bp_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss' ) );
+
+		/* translators: active [last active] */
+		$this->invite->user->last_active = bp_core_get_last_activity( $this->invite->user->last_activity, __( 'active %s', 'buddyboss' ) );
 
 		if ( bp_is_active( 'groups' ) ) {
-			$total_groups                     = BP_Groups_Member::total_group_count( $user_id );
+			$total_groups = BP_Groups_Member::total_group_count( $user_id );
+			/* translators: [Total group count] groups */
 			$this->invite->user->total_groups = sprintf( _n( '%d group', '%d groups', $total_groups, 'buddyboss' ), $total_groups );
 		}
 
@@ -294,7 +302,7 @@ class BP_Groups_Invite_Template {
 		$this->invite->group_id = $group_id;
 
 		// loop has just started
-		if ( 0 == $this->current_invite ) {
+		if ( 0 === $this->current_invite ) {
 
 			/**
 			 * Fires if the current invite item is the first in the loop.

@@ -8,16 +8,16 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-	$F = bp_profile_search_escaped_form_data();
-if ( empty( $F->fields ) ) {
+$form_data = bp_profile_search_escaped_form_data();
+if ( empty( $form_data->fields ) ) {
 	return false;
 }
 ?>
 	<p class='bp_ps_filters'>
 
 <?php
-foreach ( $F->fields as $f ) {
-	if ( 'hidden' == $f->display ) {
+foreach ( $form_data->fields as $f ) {
+	if ( 'hidden' === $f->display ) {
 		continue;
 	}
 
@@ -29,13 +29,11 @@ foreach ( $F->fields as $f ) {
 	<?php
 }
 
-if ( ! empty( $F->action ) ) {
+if ( ! empty( $form_data->action ) ) {
 	?>
-		<a href='<?php echo $F->action; ?>'><?php _e( 'Clear', 'buddyboss' ); ?></a>
+		<a href='<?php echo $form_data->action; ?>'><?php _e( 'Clear', 'buddyboss' ); ?></a>
 	<?php
 }
 ?>
 	</p>
 <?php
-
-// BP Profile Search - end of template

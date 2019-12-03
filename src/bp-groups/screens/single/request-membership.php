@@ -19,7 +19,7 @@ function groups_screen_group_request_membership() {
 
 	$bp = buddypress();
 
-	if ( 'private' != $bp->groups->current_group->status ) {
+	if ( 'private' !== $bp->groups->current_group->status ) {
 		return false;
 	}
 

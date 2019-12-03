@@ -18,7 +18,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 	 *
 	 * @since bbPress (r2464)
 	 */
-
+	// phpcs:ignore PEAR.NamingConventions.ValidClassName
 	final class bbPress {
 
 		/** Magic *****************************************************************/

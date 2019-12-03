@@ -45,4 +45,5 @@ if ( empty( $GLOBALS['profile_template'] ) ) {
 		?>
 	</p>
 
-<?php endif;
+	<?php
+endif;

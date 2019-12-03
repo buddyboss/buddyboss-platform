@@ -142,6 +142,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	printf(
 		$p,
 		esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss' ) . ' ' .
+		/* translators: URL */
 		sprintf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
 	);
 
@@ -196,6 +197,7 @@ function bp_core_admin_php53_admin_notice() {
 
 	<div id="message" class="error notice is-dismissible bp-is-dismissible" data-noticeid="<?php echo esc_attr( $notice_id ); ?>">
 		<p><strong><?php esc_html_e( 'Your site is not ready for BuddyPress 2.8.', 'buddyboss' ); ?></strong></p>
+		<?php /* translators: %s: PHP version */ ?>
 		<p><?php printf( esc_html__( 'Your site is currently running PHP version %s, while BuddyPress 2.8 will require version 5.3+.', 'buddyboss' ), esc_html( phpversion() ) ); ?> <?php printf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' ); ?></p>
 		<?php wp_nonce_field( "bp-dismissible-notice-$notice_id", "bp-dismissible-nonce-$notice_id" ); ?>
 	</div>

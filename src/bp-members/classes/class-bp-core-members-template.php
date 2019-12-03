@@ -274,7 +274,7 @@ class BP_Core_Members_Template {
 	function members() {
 		if ( $this->current_member + 1 < $this->member_count ) {
 			return true;
-		} elseif ( $this->current_member + 1 == $this->member_count ) {
+		} elseif ( $this->current_member + 1 === $this->member_count ) {
 
 			/**
 			 * Fires right before the rewinding of members listing.
@@ -307,7 +307,7 @@ class BP_Core_Members_Template {
 		$this->member      = $this->next_member();
 
 		// Loop has just started.
-		if ( 0 == $this->current_member ) {
+		if ( 0 === $this->current_member ) {
 
 			/**
 			 * Fires if the current member is the first in the loop.

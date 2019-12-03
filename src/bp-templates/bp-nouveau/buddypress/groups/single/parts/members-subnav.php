@@ -16,7 +16,7 @@
 			<?php
 			while ( bp_nouveau_nav_items() ) :
 				bp_nouveau_nav_item();
-			?>
+				?>
 
 				<li id="<?php bp_nouveau_nav_id(); ?>" class="<?php bp_nouveau_nav_classes(); ?>">
 					<a href="<?php bp_nouveau_nav_link(); ?>" id="<?php bp_nouveau_nav_link_id(); ?>">

@@ -194,7 +194,8 @@ function messages_new_message( $args = '' ) {
 
 		$previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] );
 		if ( $previous_thread && $r['append_thread'] ) {
-			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
+			$message->thread_id = (int) $previous_thread;
+			$r['thread_id']     = (int) $previous_thread;
 
 			// Set a default reply subject if none was sent.
 			if ( empty( $message->subject ) ) {
@@ -219,7 +220,7 @@ function messages_new_message( $args = '' ) {
 		foreach ( (array) $message->recipients as $i => $recipient ) {
 			if ( ! friends_check_friendship( $message->sender_id, $recipient->user_id ) ) {
 				if ( 'wp_error' === $r['error_type'] ) {
-					if ( $new_reply && sizeof( $message->recipients ) == 1 ) {
+					if ( $new_reply && sizeof( $message->recipients ) === 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_reply'] );
 					} elseif ( $new_reply && sizeof( $message->recipients ) > 1 ) {
 						return new WP_Error( 'message_invalid_recipients', $error_messages['new_group_reply'] );
@@ -422,9 +423,9 @@ function messages_mark_thread_unread( $thread_id ) {
  * @param string $content    Content of the message.
  */
 function messages_add_callback_values( $recipients, $subject, $content ) {
-	@setcookie( 'bp_messages_send_to', $recipients, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp_messages_subject', $subject, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp_messages_content', $content, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp_messages_send_to', $recipients, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); //phpcs:ignore WordPress.PHP.NoSilencedErrors
+	@setcookie( 'bp_messages_subject', $subject, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); //phpcs:ignore WordPress.PHP.NoSilencedErrors
+	@setcookie( 'bp_messages_content', $content, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); //phpcs:ignore WordPress.PHP.NoSilencedErrors
 }
 
 /**
@@ -433,9 +434,9 @@ function messages_add_callback_values( $recipients, $subject, $content ) {
  * @see messages_add_callback_values()
  */
 function messages_remove_callback_values() {
-	@setcookie( 'bp_messages_send_to', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp_messages_subject', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp_messages_content', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp_messages_send_to', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); //phpcs:ignore WordPress.PHP.NoSilencedErrors
+	@setcookie( 'bp_messages_subject', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); //phpcs:ignore WordPress.PHP.NoSilencedErrors
+	@setcookie( 'bp_messages_content', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); //phpcs:ignore WordPress.PHP.NoSilencedErrors
 }
 
 /**
@@ -644,11 +645,12 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	// These should be extracted below.
 	$recipients    = array();
-	$email_subject = $email_content = '';
+	$email_subject = '';
+	$email_content = '';
 	$sender_id     = 0;
 
 	// Barf.
-	extract( $args );
+	extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	if ( empty( $recipients ) ) {
 		return;
@@ -664,7 +666,7 @@ function messages_notification_new_message( $raw_args = array() ) {
 
 	// Send an email to each recipient.
 	foreach ( $recipients as $recipient ) {
-		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+		if ( $sender_id === $recipient->user_id || 'no' === bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
 			continue;
 		}
 

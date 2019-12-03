@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 
 /**
  * Forums BuddyBoss Activity Class
@@ -442,7 +442,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		public function topic_delete( $topic_id = 0 ) {
 
 			// Get activity ID, bail if it doesn't exist
-			if ( $activity_id = $this->get_activity_id( $topic_id ) ) {
+			$activity_id = $this->get_activity_id( $topic_id );
+			if ( $activity_id ) {
 				return bp_activity_delete( array( 'id' => $activity_id ) );
 			}
 
@@ -592,7 +593,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		public function reply_delete( $reply_id ) {
 
 			// Get activity ID, bail if it doesn't exist
-			if ( $activity_id = $this->get_activity_id( $reply_id ) ) {
+			$activity_id = $this->get_activity_id( $reply_id );
+			if ( $activity_id ) {
 				return bp_activity_delete( array( 'id' => $activity_id ) );
 			}
 

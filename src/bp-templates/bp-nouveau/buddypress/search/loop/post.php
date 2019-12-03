@@ -3,9 +3,9 @@
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
 				<img
-					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default(get_post_type()) ?>"
+					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
 					class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
-					alt="<?php the_title() ?>"
+					alt="<?php the_title(); ?>"
 				/>
 			</a>
 		</div>
@@ -19,14 +19,14 @@
 				<?php echo make_clickable( get_the_excerpt() ); ?>
 			</div>
 
-			<?php if( get_post_type() == 'post' ) { ?>
+			<?php if ( 'post' === get_post_type() ) { ?>
 				<div class="entry-meta">
 					<span class="author">
-						<?php printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() ) ?>
+						<?php printf( esc_html__( 'By %s', 'buddyboss' ), get_the_author_link() ); ?>
 					</span>
 					<span class="middot">&middot;</span>
 					<span class="published">
-						<?php the_date() ?>
+						<?php the_date(); ?>
 					</span>
 				</div>
 			<?php } ?>

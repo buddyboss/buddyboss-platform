@@ -160,144 +160,144 @@ function bp_nouveau_blogs_loop_buttons( $args = array() ) {
 	 *
 	 * @return array
 	 */
-	function bp_nouveau_get_blogs_buttons( $args ) {
-		$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'loop';
+function bp_nouveau_get_blogs_buttons( $args ) {
+	$type = ( ! empty( $args['type'] ) ) ? $args['type'] : 'loop';
 
-		// @todo Not really sure why BP Legacy needed to do this...
-		if ( 'loop' !== $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
-			return array();
+	// @todo Not really sure why BP Legacy needed to do this...
+	if ( 'loop' !== $type && is_admin() && ! ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		return array();
+	}
+
+	$buttons = array();
+
+	if ( isset( $GLOBALS['blogs_template']->blog ) ) {
+		$blog = $GLOBALS['blogs_template']->blog;
+	}
+
+	if ( empty( $blog->blog_id ) ) {
+		return $buttons;
+	}
+
+	/*
+	 * If the 'container' is set to 'ul', set a var $parent_element to li,
+	 * otherwise simply pass any value found in args or set var false.
+	 */
+	if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
+		$parent_element = 'li';
+	} elseif ( ! empty( $args['parent_element'] ) ) {
+		$parent_element = $args['parent_element'];
+	} else {
+		$parent_element = false;
+	}
+
+	/*
+	 * If we have an arg value for $button_element passed through
+	 * use it to default all the $buttons['button_element'] values
+	 * otherwise default to 'a' (anchor)
+	 * Or override & hardcode the 'element' string on $buttons array.
+	 *
+	 * Icons sets a class for icon display if not using the button element
+	 */
+	$icons = '';
+	if ( ! empty( $args['button_element'] ) ) {
+		$button_element = $args['button_element'];
+	} else {
+		$button_element = 'a';
+		$icons          = ' icons';
+	}
+
+	/*
+	 * This filter workaround is waiting for a core adaptation
+	 * so that we can directly get the groups button arguments
+	 * instead of the button.
+	 *
+	 * See https://buddypress.trac.wordpress.org/ticket/7126
+	 */
+	add_filter( 'bp_get_blogs_visit_blog_button', 'bp_nouveau_blogs_catch_button_args', 100, 1 );
+
+	bp_get_blogs_visit_blog_button();
+
+	remove_filter( 'bp_get_blogs_visit_blog_button', 'bp_nouveau_blogs_catch_button_args', 100, 1 );
+
+	if ( ! empty( bp_nouveau()->blogs->button_args ) ) {
+		$button_args = bp_nouveau()->blogs->button_args;
+
+		// If we pass through parent classes add them to $button array
+		$parent_class = '';
+		if ( ! empty( $args['parent_attr']['class'] ) ) {
+			$parent_class = $args['parent_attr']['class'];
 		}
 
-		$buttons = array();
+		$buttons['visit_blog'] = array(
+			'id'                => 'visit_blog',
+			'position'          => 5,
+			'component'         => $button_args['component'],
+			'must_be_logged_in' => $button_args['must_be_logged_in'],
+			'block_self'        => $button_args['block_self'],
+			'parent_element'    => $parent_element,
+			'button_element'    => $button_element,
+			'link_text'         => $button_args['link_text'],
+			'parent_attr'       => array(
+				'id'    => $button_args['wrapper_id'],
+				'class' => $parent_class,
+			),
+			'button_attr'       => array(
+				'href'  => $button_args['link_href'],
+				'id'    => $button_args['link_id'],
+				'class' => $button_args['link_class'] . ' button',
+				'rel'   => $button_args['link_rel'],
+				'title' => '',
+			),
+		);
 
-		if ( isset( $GLOBALS['blogs_template']->blog ) ) {
-			$blog = $GLOBALS['blogs_template']->blog;
-		}
+		unset( bp_nouveau()->blogs->button_args );
+	}
 
-		if ( empty( $blog->blog_id ) ) {
-			return $buttons;
-		}
+	/**
+	 * Filter to add your buttons, use the position argument to choose where to insert it.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $buttons The list of buttons.
+	 * @param object $blog    The current blog object.
+	 * @param string $type    Whether we're displaying a blogs loop or a the blogs single item (in the future!).
+	 */
+	$buttons_group = apply_filters( 'bp_nouveau_get_blogs_buttons', $buttons, $blog, $type );
 
-		/*
-		 * If the 'container' is set to 'ul', set a var $parent_element to li,
-		 * otherwise simply pass any value found in args or set var false.
-		 */
-		if ( ! empty( $args['container'] ) && 'ul' === $args['container'] ) {
-			$parent_element = 'li';
-		} elseif ( ! empty( $args['parent_element'] ) ) {
-			$parent_element = $args['parent_element'];
-		} else {
-			$parent_element = false;
-		}
+	if ( ! $buttons_group ) {
+		return $buttons;
+	}
 
-		/*
-		 * If we have an arg value for $button_element passed through
-		 * use it to default all the $buttons['button_element'] values
-		 * otherwise default to 'a' (anchor)
-		 * Or override & hardcode the 'element' string on $buttons array.
-		 *
-		 * Icons sets a class for icon display if not using the button element
-		 */
-		$icons = '';
-		if ( ! empty( $args['button_element'] ) ) {
-			$button_element = $args['button_element'] ;
-		} else {
-			$button_element = 'a';
-			$icons = ' icons';
-		}
-
-		/*
-		 * This filter workaround is waiting for a core adaptation
-		 * so that we can directly get the groups button arguments
-		 * instead of the button.
-		 *
-		 * See https://buddypress.trac.wordpress.org/ticket/7126
-		 */
-		add_filter( 'bp_get_blogs_visit_blog_button', 'bp_nouveau_blogs_catch_button_args', 100, 1 );
-
-		bp_get_blogs_visit_blog_button();
-
-		remove_filter( 'bp_get_blogs_visit_blog_button', 'bp_nouveau_blogs_catch_button_args', 100, 1 );
-
-		if ( ! empty( bp_nouveau()->blogs->button_args ) ) {
-			$button_args = bp_nouveau()->blogs->button_args ;
-
-			// If we pass through parent classes add them to $button array
-			$parent_class = '';
-			if ( ! empty( $args['parent_attr']['class'] ) ) {
-				$parent_class = $args['parent_attr']['class'];
-			}
-
-			$buttons['visit_blog'] = array(
-				'id'                => 'visit_blog',
-				'position'          => 5,
-				'component'         => $button_args['component'],
-				'must_be_logged_in' => $button_args['must_be_logged_in'],
-				'block_self'        => $button_args['block_self'],
-				'parent_element'    => $parent_element,
-				'button_element'    => $button_element,
-				'link_text'         => $button_args['link_text'],
-				'parent_attr'       => array(
-					'id'              => $button_args['wrapper_id'],
-					'class'           => $parent_class,
-				),
-				'button_attr'       => array(
-					'href'             => $button_args['link_href'],
-					'id'               => $button_args['link_id'],
-					'class'            => $button_args['link_class'] . ' button',
-					'rel'              => $button_args['link_rel'],
-					'title'            => '',
-				),
-			);
-
-			unset( bp_nouveau()->blogs->button_args );
-		}
-
-		/**
-		 * Filter to add your buttons, use the position argument to choose where to insert it.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $buttons The list of buttons.
-		 * @param object $blog    The current blog object.
-		 * @param string $type    Whether we're displaying a blogs loop or a the blogs single item (in the future!).
-		 */
-		$buttons_group = apply_filters( 'bp_nouveau_get_blogs_buttons', $buttons, $blog, $type );
-
-		if ( ! $buttons_group ) {
-			return $buttons;
-		}
-
-		// It's the first entry of the loop, so build the Group and sort it
-		if ( ! isset( bp_nouveau()->blogs->group_buttons ) || ! is_a( bp_nouveau()->blogs->group_buttons, 'BP_Buttons_Group' ) ) {
-			$sort = true;
-			bp_nouveau()->blogs->group_buttons = new BP_Buttons_Group( $buttons_group );
+	// It's the first entry of the loop, so build the Group and sort it
+	if ( ! isset( bp_nouveau()->blogs->group_buttons ) || ! is_a( bp_nouveau()->blogs->group_buttons, 'BP_Buttons_Group' ) ) {
+		$sort                              = true;
+		bp_nouveau()->blogs->group_buttons = new BP_Buttons_Group( $buttons_group );
 
 		// It's not the first entry, the order is set, we simply need to update the Buttons Group
-		} else {
-			$sort = false;
-			bp_nouveau()->blogs->group_buttons->update( $buttons_group );
-		}
-
-		$return = bp_nouveau()->blogs->group_buttons->get( $sort );
-
-		if ( ! $return ) {
-			return array();
-		}
-
-		/**
-		 * Leave a chance to adjust the $return
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param array  $return  The list of buttons ordered.
-		 * @param object $blog    The current blog object.
-		 * @param string $type    Whether we're displaying a blogs loop or a the blogs single item (in the future!).
-		 */
-		do_action_ref_array( 'bp_nouveau_return_blogs_buttons', array( &$return, $blog, $type ) );
-
-		return $return;
+	} else {
+		$sort = false;
+		bp_nouveau()->blogs->group_buttons->update( $buttons_group );
 	}
+
+	$return = bp_nouveau()->blogs->group_buttons->get( $sort );
+
+	if ( ! $return ) {
+		return array();
+	}
+
+	/**
+	 * Leave a chance to adjust the $return
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param array  $return  The list of buttons ordered.
+	 * @param object $blog    The current blog object.
+	 * @param string $type    Whether we're displaying a blogs loop or a the blogs single item (in the future!).
+	 */
+	do_action_ref_array( 'bp_nouveau_return_blogs_buttons', array( &$return, $blog, $type ) );
+
+	return $return;
+}
 
 /**
  * Check if the Sites has a latest post

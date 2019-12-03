@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore PEAR.NamingConventions.ValidClassName
 /**
  * The BP_RankMath_Title paper.
  *

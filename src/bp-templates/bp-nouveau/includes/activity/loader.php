@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * BP Nouveau Activity
  *
@@ -50,17 +50,20 @@ class BP_Nouveau_Activity {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				// AJAX condtion.
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX &&
+			add_action(
+				'admin_init',
+				function() {
+					// AJAX condtion.
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX &&
 					// Check to see if action is activity-specific.
 					( false !== strpos( $_REQUEST['action'], 'activity' ) || ( 'post_update' === $_REQUEST['action'] ) )
-				) {
-					require $this->dir . 'ajax.php';
+					) {
+						require $this->dir . 'ajax.php';
+					}
 				}
-			} );
+			);
 		}
 	}
 

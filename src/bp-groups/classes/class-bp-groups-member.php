@@ -337,13 +337,13 @@ class BP_Groups_Member {
 	 * @return bool True on success, false on failure.
 	 */
 	public function promote( $status = 'mod' ) {
-		if ( 'mod' == $status ) {
+		if ( 'mod' === $status ) {
 			$this->is_admin   = 0;
 			$this->is_mod     = 1;
 			$this->user_title = __( 'Group Moderator', 'buddyboss' );
 		}
 
-		if ( 'admin' == $status ) {
+		if ( 'admin' === $status ) {
 			$this->is_admin   = 1;
 			$this->is_mod     = 0;
 			$this->user_title = __( 'Group Organizer', 'buddyboss' );
@@ -445,7 +445,8 @@ class BP_Groups_Member {
 		$bp  = buddypress();
 		$sql = $wpdb->prepare( "DELETE FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d", $this->user_id, $this->group_id );
 
-		if ( ! $result = $wpdb->query( $sql ) ) {
+		$result = $wpdb->query( $sql );
+		if ( ! $result ) {
 			return false;
 		}
 
@@ -563,7 +564,7 @@ class BP_Groups_Member {
 		$bp = buddypress();
 
 		// If the user is logged in and viewing their own groups, we can show hidden and private groups.
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() !== $user_id ) {
 			$group_sql    = $wpdb->prepare( "SELECT DISTINCT m.group_id FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0{$pag_sql}", $user_id );
 			$total_groups = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
 		} else {
@@ -599,7 +600,10 @@ class BP_Groups_Member {
 	public static function get_recently_joined( $user_id, $limit = false, $page = false, $filter = false ) {
 		global $wpdb;
 
-		$user_id_sql = $pag_sql = $hidden_sql = $filter_sql = '';
+		$user_id_sql = '';
+		$pag_sql     = '';
+		$hidden_sql  = '';
+		$filter_sql  = '';
 
 		$user_id_sql = $wpdb->prepare( 'm.user_id = %d', $user_id );
 
@@ -612,7 +616,7 @@ class BP_Groups_Member {
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() !== $user_id ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
@@ -647,7 +651,10 @@ class BP_Groups_Member {
 	public static function get_is_admin_of( $user_id, $limit = false, $page = false, $filter = false ) {
 		global $wpdb;
 
-		$user_id_sql = $pag_sql = $hidden_sql = $filter_sql = '';
+		$user_id_sql = '';
+		$pag_sql     = '';
+		$hidden_sql  = '';
+		$filter_sql  = '';
 
 		$user_id_sql = $wpdb->prepare( 'm.user_id = %d', $user_id );
 
@@ -660,7 +667,7 @@ class BP_Groups_Member {
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() !== $user_id ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
@@ -695,7 +702,10 @@ class BP_Groups_Member {
 	public static function get_is_mod_of( $user_id, $limit = false, $page = false, $filter = false ) {
 		global $wpdb;
 
-		$user_id_sql = $pag_sql = $hidden_sql = $filter_sql = '';
+		$user_id_sql = '';
+		$pag_sql     = '';
+		$hidden_sql  = '';
+		$filter_sql  = '';
 
 		$user_id_sql = $wpdb->prepare( 'm.user_id = %d', $user_id );
 
@@ -708,7 +718,7 @@ class BP_Groups_Member {
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id != bp_loggedin_user_id() ) {
+		if ( bp_loggedin_user_id() !== $user_id ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
@@ -745,7 +755,10 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		$user_id_sql = $pag_sql = $hidden_sql = $filter_sql = '';
+		$user_id_sql = '';
+		$pag_sql     = '';
+		$hidden_sql  = '';
+		$filter_sql  = '';
 		$user_id_sql = $wpdb->prepare( 'm.user_id = %d', $user_id );
 
 		if ( $limit && $page ) {
@@ -757,7 +770,7 @@ class BP_Groups_Member {
 			$filter_sql        = $wpdb->prepare( ' AND ( g.name LIKE %s OR g.description LIKE %s )', $search_terms_like, $search_terms_like );
 		}
 
-		if ( $user_id !== bp_loggedin_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bp_loggedin_user_id() !== $user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
 			$hidden_sql = " AND g.status != 'hidden'";
 		}
 
@@ -787,7 +800,7 @@ class BP_Groups_Member {
 
 		$bp = buddypress();
 
-		if ( $user_id != bp_loggedin_user_id() && ! bp_current_user_can( 'bp_moderate' ) ) {
+		if ( bp_loggedin_user_id() !== $user_id && ! bp_current_user_can( 'bp_moderate' ) ) {
 			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id AND g.status != 'hidden' AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
 		} else {
 			return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(DISTINCT m.group_id) FROM {$bp->groups->table_name_members} m, {$bp->groups->table_name} g WHERE m.group_id = g.id AND m.user_id = %d AND m.is_confirmed = 1 AND m.is_banned = 0", $user_id ) );
@@ -877,7 +890,7 @@ class BP_Groups_Member {
 		$bp  = buddypress();
 		$sql = "SELECT id FROM {$bp->groups->table_name_members} WHERE user_id = %d AND group_id = %d AND is_confirmed = 0 AND inviter_id != 0";
 
-		if ( 'sent' == $type ) {
+		if ( 'sent' === $type ) {
 			$sql .= ' AND invite_sent = 1';
 		}
 
@@ -1170,7 +1183,8 @@ class BP_Groups_Member {
 			$uncached_sql     = implode( ',', array_map( 'intval', $uncached ) );
 			$group_admin_mods = $wpdb->get_results( "SELECT user_id, group_id, date_modified, is_admin, is_mod FROM {$bp->groups->table_name_members} WHERE group_id IN ({$uncached_sql}) AND ( is_admin = 1 OR is_mod = 1 ) AND is_banned = 0" );
 
-			$admins = $mods = array();
+			$admins = array();
+			$mods   = array();
 			if ( $group_admin_mods ) {
 				foreach ( $group_admin_mods as $group_admin_mod ) {
 					$obj                = new stdClass();
@@ -1350,7 +1364,7 @@ class BP_Groups_Member {
 			$friend_status = $wpdb->get_results( $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ( {$user_ids} ) ) OR (initiator_user_id IN ( {$user_ids} ) AND friend_user_id = %d )", bp_loggedin_user_id(), bp_loggedin_user_id() ) );
 			for ( $i = 0, $count = count( $members ); $i < $count; ++$i ) {
 				foreach ( (array) $friend_status as $status ) {
-					if ( $status->initiator_user_id == $members[ $i ]->user_id || $status->friend_user_id == $members[ $i ]->user_id ) {
+					if ( $status->initiator_user_id === $members[ $i ]->user_id || $status->friend_user_id === $members[ $i ]->user_id ) {
 						$members[ $i ]->is_friend = $status->is_confirmed;
 					}
 				}

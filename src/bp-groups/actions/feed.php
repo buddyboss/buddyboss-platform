@@ -37,6 +37,8 @@ function groups_action_group_feed() {
 			'title'         => sprintf( __( '%1$s | %2$s | Activity', 'buddyboss' ), bp_get_site_name(), bp_get_current_group_name() ),
 
 			'link'          => bp_get_group_permalink( $group ),
+
+			/* translators: %s: Group's name */
 			'description'   => sprintf( __( 'Activity feed for the group, %s.', 'buddyboss' ), bp_get_current_group_name() ),
 			'activity_args' => array(
 				'object'           => buddypress()->groups->id,
