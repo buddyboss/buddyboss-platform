@@ -23,7 +23,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 		<?php
 		while ( bp_profile_groups() ) :
 			bp_the_profile_group();
-			?>
+		?>
 
 			<?php if ( bp_profile_fields() ) : ?>
 
@@ -40,7 +40,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 						<?php
 						while ( bp_profile_fields() ) :
 							bp_the_profile_field();
-							?>
+						?>
 
 							<tr <?php bp_field_css_class(); ?>>
 								<td class="field-name"><?php bp_the_profile_field_name(); ?></td>

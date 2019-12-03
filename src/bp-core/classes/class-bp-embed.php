@@ -90,8 +90,7 @@ class BP_Embed extends WP_Embed {
 		foreach ( $this->handlers as $priority => $handlers ) {
 			foreach ( $handlers as $hid => $handler ) {
 				if ( preg_match( $handler['regex'], $url, $matches ) && is_callable( $handler['callback'] ) ) {
-					$return = call_user_func( $handler['callback'], $matches, $attr, $url, $rawattr );
-					if ( false !== $return ) {
+					if ( false !== $return = call_user_func( $handler['callback'], $matches, $attr, $url, $rawattr ) ) {
 
 						/**
 						 * Filters the oEmbed handler result for the provided URL.
@@ -145,7 +144,7 @@ class BP_Embed extends WP_Embed {
 		$is_oembed_link = false;
 		if ( ! $attr['discover'] ) {
 			foreach ( (array) $oembed_obj->providers as $provider_matchmask => $provider ) {
-				$regex = ( $is_regex = $provider[1] ) ? $provider_matchmask : '#' . str_replace( '___wildcard___', '(.+)', preg_quote( str_replace( '*', '___wildcard___', $provider_matchmask ), '#' ) ) . '#i'; // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
+				$regex = ( $is_regex = $provider[1] ) ? $provider_matchmask : '#' . str_replace( '___wildcard___', '(.+)', preg_quote( str_replace( '*', '___wildcard___', $provider_matchmask ), '#' ) ) . '#i';
 
 				if ( preg_match( $regex, $url ) ) {
 					$is_oembed_link = true;
@@ -269,8 +268,7 @@ class BP_Embed extends WP_Embed {
 					// Remove duplicate from array and run the loop
 					foreach ( array_unique( $match[0] ) as $url ) {
 						// Store oembed iframe in database cache for 1 day
-						$embed_code = get_transient( $url );
-						if ( false === $embed_code ) {
+						if ( false === ( $embed_code = get_transient( $url ) ) ) {
 
 							// Fetch the oembed code for URL.
 							$embed_code = wp_oembed_get( $url );

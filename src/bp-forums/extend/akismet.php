@@ -1,4 +1,5 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
+
 /**
  * Main bbPress Akismet Class
  *
@@ -359,9 +360,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 			global $akismet_api_host, $akismet_api_port;
 
 			// Define variables
-			$query_string = '';
-			$path         = '';
-			$response     = '';
+			$query_string = $path = $response = '';
 
 			// Populate post data
 			$post_data['blog']         = get_option( 'home' );
@@ -468,12 +467,12 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 
 				// More checks
 				if ( intval( $as_submitted['comment_post_ID'] ) === intval( $_post->post_parent )
-					&& ( $anonymous_data ? $anonymous_data['bbp_anonymous_name'] : $userdata->display_name ) === $as_submitted['comment_author']
-					&& ( $anonymous_data ? $anonymous_data['bbp_anonymous_email'] : $userdata->user_email ) === $as_submitted['comment_author_email']
+					&& $as_submitted['comment_author'] === ( $anonymous_data ? $anonymous_data['bbp_anonymous_name'] : $userdata->display_name )
+					&& $as_submitted['comment_author_email'] === ( $anonymous_data ? $anonymous_data['bbp_anonymous_email'] : $userdata->user_email )
 				) {
 
 					// Normal result: true
-					if ( 'true' === $this->last_post['bbp_akismet_result'] ) {
+					if ( $this->last_post['bbp_akismet_result'] === 'true' ) {
 
 						// Leave a trail so other's know what we did
 						update_post_meta( $post_id, '_bbp_akismet_result', 'true' );
@@ -485,7 +484,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 						}
 
 						// Normal result: false
-					} elseif ( 'false' === $this->last_post['bbp_akismet_result'] ) {
+					} elseif ( $this->last_post['bbp_akismet_result'] === 'false' ) {
 
 						// Leave a trail so other's know what we did
 						update_post_meta( $post_id, '_bbp_akismet_result', 'false' );
@@ -686,8 +685,7 @@ if ( ! class_exists( 'BBP_Akismet' ) ) :
 				$http_request .= $request;
 
 				// Open a socket connection
-				$fs = @fsockopen( $http_host, $port, $errno, $errstr, 10 ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
-				if ( false !== $fs ) {
+				if ( false !== ( $fs = @fsockopen( $http_host, $port, $errno, $errstr, 10 ) ) ) {
 
 					// Write our request to the pointer
 					fwrite( $fs, $http_request );

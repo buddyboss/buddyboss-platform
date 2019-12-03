@@ -13,7 +13,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-class BP_Activity_Oembed_Extension extends BP_Core_Oembed_Extension {
+class BP_Activity_oEmbed_Extension extends BP_Core_oEmbed_Extension {
 	/**
 	 * Custom oEmbed slug endpoint.
 	 *
@@ -310,7 +310,6 @@ class BP_Activity_Oembed_Extension extends BP_Core_Oembed_Extension {
 				<span class="dashicons dashicons-admin-comments"></span>
 				<?php
 				printf(
-					/* translators: accessibility text */
 					_n(
 						/* translators: accessibility text */
 						'%s <span class="screen-reader-text">Comment</span>',

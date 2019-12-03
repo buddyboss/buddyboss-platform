@@ -231,7 +231,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		// of 'type'. If the 'type' value is not 'last_joined' or
 		// 'first_joined', the order will be overridden in
 		// BP_Group_Member_Query::set_orderby().
-		if ( 'group_role' === $this->query_vars['type'] ) {
+		if ( $this->query_vars['type'] === 'group_role' ) {
 			$sql['orderby'] = 'ORDER BY -is_admin, -is_mod, date_modified';
 		} else {
 			$sql['orderby'] = 'ORDER BY date_modified';
@@ -284,7 +284,7 @@ class BP_Group_Member_Query extends BP_User_Query {
 		if ( in_array( $query->query_vars['type'], array( 'last_joined', 'first_joined', 'group_activity', 'group_role' ) ) ) {
 
 			// Group Activity DESC.
-			if ( 'group_activity' === $query->query_vars['type'] ) {
+			if ( 'group_activity' == $query->query_vars['type'] ) {
 				$gm_ids = $this->get_gm_ids_ordered_by_activity( $query, $gm_ids );
 			}
 

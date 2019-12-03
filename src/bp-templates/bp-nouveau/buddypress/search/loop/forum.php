@@ -1,5 +1,5 @@
 <?php
-$forum_id    = get_the_ID();
+$forum_id = get_the_ID();
 $total_topic = bbp_get_forum_topic_count( $forum_id );
 $total_reply = bbp_get_forum_reply_count( $forum_id );
 ?>
@@ -19,10 +19,10 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 
 		<div class="item">
 			<div class="entry-title item-title">
-				<a href="<?php bbp_forum_permalink( $forum_id ); ?>"><?php bbp_forum_title( $forum_id ); ?></a>
+				<a href="<?php bbp_forum_permalink(  $forum_id ); ?>"><?php bbp_forum_title( $forum_id ); ?></a>
 			</div>
 			<div class="entry-content entry-summary">
-				<?php echo wp_trim_words( bbp_get_forum_content( $forum_id ), 30, '...' ); ?>
+				<?php echo wp_trim_words( bbp_get_forum_content( $forum_id ), 30, '...' ) ?>
 			</div>
 			<div class="entry-meta">
 				<span class="topic-count">
@@ -34,7 +34,7 @@ $total_reply = bbp_get_forum_reply_count( $forum_id );
 				</span>
 				<span class="middot">&middot;</span>
 				<span class="freshness">
-					<?php bbp_forum_freshness_link( $forum_id ); ?>
+					<?php bbp_forum_freshness_link( $forum_id ) ?>
 				</span>
 			</div>
 		</div>

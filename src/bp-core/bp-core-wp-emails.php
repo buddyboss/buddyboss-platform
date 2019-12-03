@@ -75,12 +75,12 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 		$notify_author = apply_filters( 'comment_notification_notify_author', false, $comment->comment_ID );
 
 		// The comment was left by the author
-		if ( $author && ! $notify_author && $comment->user_id === $post->post_author ) {
+		if ( $author && ! $notify_author && $comment->user_id == $post->post_author ) {
 			unset( $emails[ $author->user_email ] );
 		}
 
 		// The author moderated a comment on their own post
-		if ( $author && ! $notify_author && get_current_user_id() === $post->post_author ) {
+		if ( $author && ! $notify_author && $post->post_author == get_current_user_id() ) {
 			unset( $emails[ $author->user_email ] );
 		}
 
@@ -98,7 +98,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 		$switched_locale = switch_to_locale( get_locale() );
 
-		$comment_author_domain = @gethostbyaddr( $comment->comment_author_IP ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		$comment_author_domain = @gethostbyaddr( $comment->comment_author_IP );
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
 		// we want to reverse this for the plain text arena of emails.
@@ -158,7 +158,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 							<tbody>
 							<tr>
 								<td valign="middle" width="65px" style="vertical-align: middle;">
-									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>" target="_blank" rel="nofollow">
+									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
+									   target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar(
 											array(
@@ -170,7 +171,9 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 											)
 										);
 										?>
-										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47" style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;" border="0">
+										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
+											 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+											 border="0">
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
@@ -191,7 +194,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 			<tr>
 				<td>
-					<table cellspacing="0" cellpadding="0" border="0" width="100%" style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+					<table cellspacing="0" cellpadding="0" border="0" width="100%"
+						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 						<tbody>
 						<tr>
 							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
@@ -225,7 +229,8 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 			<tr>
 				<td>
-					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow" style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -253,11 +258,10 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 						}
 						?>
 						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?>
-							<?php
-							if ( ! empty( $trash_comment ) ) {
-								echo ', ' . $trash_comment;
-							}
-							?>
+									  <?php
+										if ( ! empty( $trash_comment ) ) {
+											echo ', ' . $trash_comment; }
+										?>
 		<?php
 		if ( ! empty( $delete_comment ) ) {
 							echo ', ' . $delete_comment; }
@@ -278,19 +282,20 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 		$wp_email = 'wordpress@' . preg_replace( '#^www\.#', '', strtolower( $_SERVER['SERVER_NAME'] ) );
 
-		if ( '' === $comment->comment_author ) {
+		if ( '' == $comment->comment_author ) {
 			$from = "From: \"$blogname\" <$wp_email>";
-			if ( '' !== $comment->comment_author_email ) {
+			if ( '' != $comment->comment_author_email ) {
 				$reply_to = "Reply-To: $comment->comment_author_email";
 			}
 		} else {
 			$from = "From: \"$comment->comment_author\" <$wp_email>";
-			if ( '' !== $comment->comment_author_email ) {
+			if ( '' != $comment->comment_author_email ) {
 				$reply_to = "Reply-To: \"$comment->comment_author_email\" <$comment->comment_author_email>";
 			}
 		}
 
-		$message_headers = "$from\n" . 'Content-Type: text/plain; charset="' . get_option( 'blog_charset' ) . "\"\n";
+		$message_headers = "$from\n"
+						   . 'Content-Type: text/plain; charset="' . get_option( 'blog_charset' ) . "\"\n";
 
 		if ( isset( $reply_to ) ) {
 			$message_headers .= $reply_to . "\n";
@@ -330,7 +335,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 
 		foreach ( $emails as $email ) {
 			$email_notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
-			wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
+			@wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
 		}
 
 		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
@@ -389,7 +394,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 
 		$switched_locale = switch_to_locale( get_locale() );
 
-		$comment_author_domain = @gethostbyaddr( $comment->comment_author_IP ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		$comment_author_domain = @gethostbyaddr( $comment->comment_author_IP );
 		$comments_waiting      = $wpdb->get_var( "SELECT count(comment_ID) FROM $wpdb->comments WHERE comment_approved = '0'" );
 
 		// The blogname option is escaped with esc_html on the way into the database in sanitize_option
@@ -444,7 +449,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 							<tr>
 								<td valign="middle" width="65px" style="vertical-align: middle;">
 									<a style="display: block; width: 47px;" href="<?php echo esc_attr( bp_core_get_user_domain( $comment->user_id ) ); ?>"
-									target="_blank" rel="nofollow">
+									   target="_blank" rel="nofollow">
 										<?php
 										$avatar_url = bp_core_fetch_avatar(
 											array(
@@ -457,8 +462,8 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 										);
 										?>
 										<img src="<?php echo esc_attr( $avatar_url ); ?>" width="47" height="47"
-											style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
-											border="0">
+											 style="margin:0; padding:0; border:none; display:block; max-width: 47px; border-radius: 50%;"
+											 border="0">
 									</a>
 								</td>
 								<td width="88%" style="vertical-align: middle;">
@@ -480,7 +485,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<table cellspacing="0" cellpadding="0" border="0" width="100%"
-						style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
+						   style="background: <?php echo esc_attr( $settings['quote_bg'] ); ?>; border: 1px solid <?php echo esc_attr( $settings['body_border_color'] ); ?>; border-radius: 4px; border-collapse: separate !important">
 						<tbody>
 						<tr>
 							<td height="5px" style="font-size: 5px; line-height: 5px;">&nbsp;</td>
@@ -515,7 +520,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -540,10 +545,10 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 						$spam_comment = sprintf( __( '<a href="%s">Spam</a>', 'buddyboss' ), admin_url( "comment.php?action=spam&c={$comment_id}#wpbody-content" ) );
 						?>
 						<p><?php echo $moderate_text; ?><?php echo $approve_comment; ?>
-							<?php
-							if ( ! empty( $trash_comment ) ) {
-								echo ', ' . $trash_comment; }
-							?>
+									  <?php
+										if ( ! empty( $trash_comment ) ) {
+											echo ', ' . $trash_comment; }
+										?>
 		<?php
 		if ( ! empty( $delete_comment ) ) {
 							echo ', ' . $delete_comment; }
@@ -605,7 +610,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 
 		foreach ( $emails as $email ) {
 			$email_notify_message = bp_email_core_wp_get_template( $notify_message, get_user_by( 'email', $email ) );
-			wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
+			@wp_mail( $email, wp_specialchars_decode( $subject ), $email_notify_message, $message_headers );
 		}
 
 		remove_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
@@ -698,7 +703,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 	 *                           string (admin only), 'user', or 'both' (admin and user). Default empty.
 	 */
 	function wp_new_user_notification( $user_id, $deprecated = null, $notify = '' ) {
-		if ( null !== $deprecated ) {
+		if ( $deprecated !== null ) {
 			_deprecated_argument( __FUNCTION__, '4.3.1' );
 		}
 
@@ -749,7 +754,7 @@ if ( ! function_exists( 'wp_new_user_notification' ) ) {
 
 			$wp_new_user_notification_email_admin['message'] = bp_email_core_wp_get_template( $wp_new_user_notification_email_admin['message'], $user );
 
-			wp_mail(
+			@wp_mail(
 				$wp_new_user_notification_email_admin['to'],
 				wp_specialchars_decode( sprintf( $wp_new_user_notification_email_admin['subject'], $blogname ) ),
 				$wp_new_user_notification_email_admin['message'],
@@ -1256,7 +1261,7 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 	function bp_email_newblog_notify_siteadmin( $msg ) {
 
 		$email = get_site_option( 'admin_email' );
-		if ( is_email( $email ) === false ) {
+		if ( is_email( $email ) == false ) {
 			return $msg;
 		}
 
@@ -1320,7 +1325,7 @@ if ( ! function_exists( 'bp_email_update_welcome_email' ) ) {
 	 */
 	function bp_email_update_welcome_email( $welcome_email, $blog_id, $user_id, $password, $title, $meta ) {
 
-		if ( false === $welcome_email ) {
+		if ( $welcome_email == false ) {
 			/* translators: Do not translate USERNAME, SITE_NAME, BLOG_URL, PASSWORD: those are placeholders. */
 			$welcome_email  = '<p>' . __( 'Howdy USERNAME,', 'buddyboss' ) . '</p>';
 			$welcome_email .= '<p>' . __( 'Your new SITE_NAME site has been successfully set up at: <br />BLOG_URL', 'buddyboss' ) . '</p>';

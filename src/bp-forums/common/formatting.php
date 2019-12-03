@@ -363,7 +363,7 @@ function bbp_make_clickable( $text ) {
 			$nested_code_pre--;
 		}
 
-		if ( $nested_code_pre || empty( $piece ) || ( '<' === $piece[0] && ! preg_match( '|^<\s*[\w]{1,20}+://|', $piece ) ) ) {
+		if ( $nested_code_pre || empty( $piece ) || ( $piece[0] === '<' && ! preg_match( '|^<\s*[\w]{1,20}+://|', $piece ) ) ) {
 			$r .= $piece;
 			continue;
 		}

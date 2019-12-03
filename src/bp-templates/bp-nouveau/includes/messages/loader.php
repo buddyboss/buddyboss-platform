@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
 /**
  * BP Nouveau Messages
  *
@@ -49,16 +49,13 @@ class BP_Nouveau_Messages {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-			// Load AJAX code only on AJAX requests.
+		// Load AJAX code only on AJAX requests.
 		} else {
-			add_action(
-				'admin_init',
-				function() {
-					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'messages_' ) ) {
-						require $this->dir . 'ajax.php';
-					}
+			add_action( 'admin_init', function() {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'messages_' ) ) {
+					require $this->dir . 'ajax.php';
 				}
-			);
+			} );
 		}
 	}
 

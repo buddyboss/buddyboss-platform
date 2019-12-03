@@ -244,10 +244,10 @@ function bbp_has_topics( $args = '' ) {
 			$sticky_offset = -1;
 
 			// Loop over topics and relocate stickies to the front.
-			foreach ( $stickies as $sticky_index => $sticky_id ) {
+			foreach ( $stickies as $sticky_index => $sticky_ID ) {
 
 				// Get the post offset from the posts array
-				$post_offsets = wp_filter_object_list( $bbp->topic_query->posts, array( 'ID' => $sticky_id ), 'OR', 'ID' );
+				$post_offsets = wp_filter_object_list( $bbp->topic_query->posts, array( 'ID' => $sticky_ID ), 'OR', 'ID' );
 
 				// Continue if no post offsets
 				if ( empty( $post_offsets ) ) {
@@ -556,19 +556,19 @@ function bbp_get_topic( $topic, $output = OBJECT, $filter = 'raw' ) {
 	}
 
 	// Bail if post_type is not a topic
-	if ( bbp_get_topic_post_type() !== $topic->post_type ) {
+	if ( $topic->post_type !== bbp_get_topic_post_type() ) {
 		return null;
 	}
 
 	// Tweak the data type to return
-	if ( OBJECT === $output ) {
+	if ( $output === OBJECT ) {
 		return $topic;
 
-	} elseif ( ARRAY_A === $output ) {
+	} elseif ( $output === ARRAY_A ) {
 		$_topic = get_object_vars( $topic );
 		return $_topic;
 
-	} elseif ( ARRAY_N === $output ) {
+	} elseif ( $output === ARRAY_N ) {
 		$_topic = array_values( get_object_vars( $topic ) );
 		return $_topic;
 

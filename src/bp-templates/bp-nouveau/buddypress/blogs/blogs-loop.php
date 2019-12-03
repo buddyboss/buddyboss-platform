@@ -17,7 +17,7 @@ bp_nouveau_before_loop(); ?>
 	<?php
 	while ( bp_blogs() ) :
 		bp_the_blog();
-		?>
+	?>
 
 		<li <?php bp_blog_class( array( 'item-entry' ) ); ?>>
 			<div class="list-wrap">

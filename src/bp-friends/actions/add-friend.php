@@ -16,18 +16,17 @@ function friends_action_add_friend() {
 		return false;
 	}
 
-	$potential_friend_id = (int) bp_action_variable( 0 );
-	if ( ! $potential_friend_id ) {
+	if ( ! $potential_friend_id = (int) bp_action_variable( 0 ) ) {
 		return false;
 	}
 
-	if ( bp_loggedin_user_id() === $potential_friend_id ) {
+	if ( $potential_friend_id == bp_loggedin_user_id() ) {
 		return false;
 	}
 
 	$friendship_status = BP_Friends_Friendship::check_is_friend( bp_loggedin_user_id(), $potential_friend_id );
 
-	if ( 'not_friends' === $friendship_status ) {
+	if ( 'not_friends' == $friendship_status ) {
 
 		if ( ! check_admin_referer( 'friends_add_friend' ) ) {
 			return false;
@@ -38,7 +37,7 @@ function friends_action_add_friend() {
 		} else {
 			bp_core_add_message( __( 'Connection requested', 'buddyboss' ) );
 		}
-	} elseif ( 'is_friend' === $friendship_status ) {
+	} elseif ( 'is_friend' == $friendship_status ) {
 		bp_core_add_message( __( 'You are already connected with this user', 'buddyboss' ), 'error' );
 	} else {
 		bp_core_add_message( __( 'You already have a pending connection request with this user', 'buddyboss' ), 'error' );

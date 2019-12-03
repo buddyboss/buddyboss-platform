@@ -152,10 +152,10 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 		?>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
-															<?php
+															 <?php
 																/* translators: accessibility text */
 																esc_html_e( 'Select', 'buddyboss' );
-															?>
+																?>
 			</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
 			<?php bp_the_profile_field_options(); ?>
@@ -181,7 +181,7 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 			return;
 		}
 
-		$class            = $current_field->type !== $type ? 'display: none;' : '';
+		$class            = $current_field->type != $type ? 'display: none;' : '';
 		$current_type_obj = bp_xprofile_create_field_type( $type );
 		?>
 
@@ -276,11 +276,11 @@ class BP_XProfile_Field_Type_Social_Networks extends BP_XProfile_Field_Type {
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
 							<span class="bp-option-icon grabber"></span>
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
-								<?php
-									/* translators: accessibility text */
-									esc_html_e( 'Add an option', 'buddyboss' );
-								?>
-							</label>
+												   <?php
+													/* translators: accessibility text */
+													esc_html_e( 'Add an option', 'buddyboss' );
+													?>
+								</label>
 							<select class="select-social-networks" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>">
 								<?php
 								foreach ( bp_xprofile_social_network_provider() as $option ) {

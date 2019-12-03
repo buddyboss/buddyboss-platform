@@ -37,11 +37,11 @@ switch ( bp_current_action() ) :
 		bp_nouveau_member_hook( 'before', 'friends_content' );
 		?>
 
-		<div class="members mutual-friends" data-bp-list="members">
+        <div class="members mutual-friends" data-bp-list="members">
 
-			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-mutual-friends-loading' ); ?></div>
+            <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-mutual-friends-loading' ); ?></div>
 
-		</div><!-- .members.mutual-friends -->
+        </div><!-- .members.mutual-friends -->
 
 		<?php
 		bp_nouveau_member_hook( 'after', 'friends_content' );

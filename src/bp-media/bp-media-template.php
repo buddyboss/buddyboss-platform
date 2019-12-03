@@ -157,7 +157,7 @@ function bp_has_media( $args = '' ) {
 			 * check if the login user is friends of the display user
 			 * OR check if the login user and the display user is the same
 			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
 				$privacy[] = 'friends';
 			}
 		}
@@ -667,7 +667,7 @@ function bp_media_user_can_delete( $media = false ) {
 		}
 
 		// Users are allowed to delete their own media.
-		if ( isset( $media->user_id ) && ( bp_loggedin_user_id() === $media->user_id ) ) {
+		if ( isset( $media->user_id ) && ( $media->user_id === bp_loggedin_user_id() ) ) {
 			$can_delete = true;
 		}
 	}
@@ -978,7 +978,7 @@ function bp_has_albums( $args = '' ) {
 			 * check if the login user is friends of the display user
 			 * OR check if the login user and the display user is the same
 			 */
-			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id === $user_id ) {
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
 				$privacy[] = 'friends';
 			}
 		}
@@ -1433,7 +1433,7 @@ function bp_album_user_can_delete( $album = false ) {
 			$can_delete = true;
 
 			// Users are allowed to delete their own album.
-		} elseif ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
+		} else if ( isset( $album->user_id ) && bp_loggedin_user_id() === $album->user_id ) {
 			$can_delete = true;
 		}
 

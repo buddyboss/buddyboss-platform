@@ -209,7 +209,7 @@ class BP_Email_Recipient {
 	public function get_user( $transform = 'raw' ) {
 
 		// If transform "search-email", find the WP_User if not already set.
-		if ( 'search-email' === $transform && ! $this->user_object && $this->address ) {
+		if ( $transform === 'search-email' && ! $this->user_object && $this->address ) {
 			$this->user_object = get_user_by( 'email', $this->address );
 		}
 

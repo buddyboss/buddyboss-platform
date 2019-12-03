@@ -26,7 +26,6 @@ function groups_screen_group_invites() {
 			// Record this in activity feeds.
 			$group = groups_get_group( $group_id );
 
-			/* translators: %s: Group's link */
 			bp_core_add_message( sprintf( __( 'Group invite accepted. Visit %s.', 'buddyboss' ), bp_get_group_link( $group ) ) );
 
 			if ( bp_is_active( 'activity' ) ) {

@@ -71,7 +71,7 @@ function bbp_is_activation( $basename = '' ) {
 	}
 
 	// The plugin(s) being activated
-	if ( 'activate' === $action ) {
+	if ( $action === 'activate' ) {
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
@@ -120,7 +120,7 @@ function bbp_is_deactivation( $basename = '' ) {
 	}
 
 	// The plugin(s) being deactivated
-	if ( 'deactivate' === $action ) {
+	if ( $action === 'deactivate' ) {
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();

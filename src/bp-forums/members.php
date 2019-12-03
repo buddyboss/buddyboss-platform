@@ -1,4 +1,5 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
+
 /**
  * Forums BuddyPress Members Class
  *

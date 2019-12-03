@@ -119,9 +119,9 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				?>
 
 				<label for="<?php bp_the_profile_field_input_name(); ?>_day" class="xprofile-field-label">
-																	<?php
+																	 <?php
 																		esc_html_e( 'Day', 'buddyboss' );
-																	?>
+																		?>
 				</label>
 				<select <?php echo $this->get_edit_field_html_elements( $day_r ); ?>>
 					<?php
@@ -135,9 +135,9 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				</select>
 
 				<label for="<?php bp_the_profile_field_input_name(); ?>_month" class="xprofile-field-label">
-																	<?php
+																	 <?php
 																		esc_html_e( 'Month', 'buddyboss' );
-																	?>
+																		?>
 				</label>
 				<select <?php echo $this->get_edit_field_html_elements( $month_r ); ?>>
 					<?php
@@ -151,9 +151,9 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 				</select>
 
 				<label for="<?php bp_the_profile_field_input_name(); ?>_year" class="xprofile-field-label">
-																	<?php
+																	 <?php
 																		esc_html_e( 'Year', 'buddyboss' );
-																	?>
+																		?>
 				</label>
 				<select <?php echo $this->get_edit_field_html_elements( $year_r ); ?>>
 					<?php
@@ -216,7 +216,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		// being saved first time.
 		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_day' ] ) ) {
 			$new_day = (int) $_POST[ 'field_' . $this->field_obj->id . '_day' ];
-			$day     = ( $day !== $new_day ) ? $new_day : $day;
+			$day     = ( $day != $new_day ) ? $new_day : $day;
 		}
 
 		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_month' ] ) ) {
@@ -231,7 +231,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 
 		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id . '_year' ] ) ) {
 			$new_year = (int) $_POST[ 'field_' . $this->field_obj->id . '_year' ];
-			$year     = ( $year !== $new_year ) ? $new_year : $year;
+			$year     = ( $year != $new_year ) ? $new_year : $year;
 		}
 
 		// $type will be passed by calling function when needed.
@@ -339,27 +339,27 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		?>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>_day" class="xprofile-field-label">
-															<?php
+															 <?php
 																esc_html_e( 'Day', 'buddyboss' );
-															?>
+																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $day_r ); ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'day' ) ); ?>
 		</select>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>_month" class="xprofile-field-label">
-															<?php
+															 <?php
 																esc_html_e( 'Month', 'buddyboss' );
-															?>
+																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $month_r ); ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'month' ) ); ?>
 		</select>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>_year" class="xprofile-field-label">
-															<?php
+															 <?php
 																esc_html_e( 'Year', 'buddyboss' );
-															?>
+																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $year_r ); ?>>
 			<?php bp_the_profile_field_options( array( 'type' => 'year' ) ); ?>
@@ -415,7 +415,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 		foreach ( $settings as $key => &$value ) {
 			switch ( $key ) {
 				case 'range_type':
-					if ( 'absolute' !== $value ) {
+					if ( $value !== 'absolute' ) {
 						$value = 'relative';
 					}
 					break;
@@ -495,7 +495,7 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 			return;
 		}
 
-		$class = $current_field->type !== $type ? 'display: none;' : '';
+		$class = $current_field->type != $type ? 'display: none;' : '';
 
 		$settings = self::get_field_settings( $current_field->id );
 		?>
@@ -537,9 +537,14 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 						</label>
 						<label for="date-format-custom-value" class="screen-reader-text"><?php esc_html_e( 'Enter custom time format', 'buddyboss' ); ?></label>
 						<input type="text" name="field-settings[date_format_custom]" id="date-format-custom-value" class="date-format-custom-value" value="<?php echo esc_attr( $settings['date_format_custom'] ); ?>" aria-describedby="date-format-custom-example" /> <span class="screen-reader-text"><?php esc_html_e( 'Example:', 'buddyboss' ); ?></span><span class="date-format-custom-example" id="date-format-custom-sample">
-						<?php if ( $settings['date_format_custom'] ) : ?>
-							<?php echo esc_html( date_i18n( $settings['date_format_custom'] ) ); ?>
-						<?php endif; ?>
+																																									  <?php
+																																										if ( $settings['date_format_custom'] ) :
+																																											?>
+							
+																																											<?php
+																																											echo esc_html( date_i18n( $settings['date_format_custom'] ) );
+endif;
+																																										?>
 						</span><span class="spinner" id="date-format-custom-spinner" aria-hidden="true"></span>
 
 						<p><a href="https://wordpress.org/support/article/formatting-date-and-time/"><?php esc_html_e( 'Documentation on date and time formatting', 'buddyboss' ); ?></a></p>

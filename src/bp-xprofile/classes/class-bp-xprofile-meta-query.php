@@ -106,8 +106,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 	 * }
 	 */
 	public function get_sql( $type, $primary_table, $primary_id_column, $context = null ) {
-		$meta_table = _get_meta_table( $type );
-		if ( ! $meta_table ) {
+		if ( ! $meta_table = _get_meta_table( $type ) ) {
 			return false;
 		}
 
@@ -287,7 +286,7 @@ class BP_XProfile_Meta_Query extends WP_Meta_Query {
 				case 'BETWEEN':
 				case 'NOT BETWEEN':
 					$meta_value = array_slice( $meta_value, 0, 2 );
-					$where      = $wpdb->prepare( '%s AND %s', $meta_value ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
+					$where      = $wpdb->prepare( '%s AND %s', $meta_value );
 					break;
 
 				case 'LIKE':

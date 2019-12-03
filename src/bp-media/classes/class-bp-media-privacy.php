@@ -98,7 +98,7 @@ class BP_Media_Privacy {
 		$visibility = $media->privacy;
 		$visible    = true;
 
-		if ( bp_loggedin_user_id() !== $media->user_id ) {
+		if ( bp_loggedin_user_id() != $media->user_id ) {
 
 			switch ( $visibility ) {
 				// Logged in users
@@ -128,7 +128,7 @@ class BP_Media_Privacy {
 
 				// Only Me
 				case 'onlyme':
-					if ( bp_loggedin_user_id() !== $media->user_id ) {
+					if ( bp_loggedin_user_id() != $media->user_id ) {
 						$visible = false;
 					}
 					break;

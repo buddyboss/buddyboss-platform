@@ -204,7 +204,7 @@ class BP_Activity_Component extends BP_Component {
 			}
 
 			// locally cache total count values for displayed user
-			if ( bp_is_user() && ( bp_loggedin_user_id() !== bp_displayed_user_id() ) ) {
+			if ( bp_is_user() && ( bp_loggedin_user_id() != bp_displayed_user_id() ) ) {
 				$bp->displayed_user->total_follow_counts = bp_total_follow_counts(
 					array(
 						'user_id' => bp_displayed_user_id(),
@@ -491,7 +491,6 @@ class BP_Activity_Component extends BP_Component {
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
-						/* translators: %s: User full name */
 						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
 					)
 				);
