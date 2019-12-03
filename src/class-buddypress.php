@@ -453,7 +453,7 @@ class BuddyPress {
 		 *
 		 * @param string $value Group Type post type slug.
 		 */
-		$this->group_type_post_type     = apply_filters( 'bp_groups_group_type_post_type', 'bp-group-type' );
+		$this->group_type_post_type = apply_filters( 'bp_groups_group_type_post_type', 'bp-group-type' );
 
 		/**
 		 * Filters the taxonomy slug for the email type component.

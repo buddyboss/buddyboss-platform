@@ -42,9 +42,9 @@ function bp_nouveau_search_register_scripts( $scripts = array() ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_search_enqueue_scripts() {
-	
+
 	/* To show number of listing per page. */
-	$per_page = '5';	
+	$per_page = '5';
 	if ( function_exists( 'bp_search_get_form_option' ) ) {
 		$per_page = bp_search_get_form_option( 'bp_search_number_of_results', 5 );
 	}

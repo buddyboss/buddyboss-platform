@@ -2903,11 +2903,11 @@ function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 
 		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id() );
 
-		if ( !empty( $list_fields ) ) {
+		if ( ! empty( $list_fields ) ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
 
 			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
 				$display_name = str_replace( ' ' . $last_name, '', $display_name );
 			}
 		}
@@ -4003,9 +4003,9 @@ function bp_get_user_member_type( $user_id ) {
 
 				// Get the profile type object
 				$type_obj = bp_get_member_type_object( $type );
-				if ( $type_obj ) {
-					$member_type = $type_obj->labels['singular_name'];
-				}
+			if ( $type_obj ) {
+				$member_type = $type_obj->labels['singular_name'];
+			}
 
 			$string = '<span class="bp-member-type">' . $member_type . '</span>';
 		} else {

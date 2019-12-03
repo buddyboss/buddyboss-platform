@@ -3267,7 +3267,7 @@ function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_gro
 		switch_to_blog( bp_get_root_blog_id() );
 	}
 
-	$bp_group_type_query         = array(
+	$bp_group_type_query     = array(
 		'select' => "SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t",
 		'on'     => 'ON tt.term_id = t.term_id',
 		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
@@ -3371,7 +3371,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
  *
  * @return bool|string
  */
-function bp_groups_exclude_group_type( $qs=false, $object=false ) {
+function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
 	$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 
@@ -3464,10 +3464,10 @@ function bp_group_ids_array_flatten( $array ) {
  *
  * @return array
  */
-function bp_groups_get_excluded_group_types(){
+function bp_groups_get_excluded_group_types() {
 
-	$bp_group_type_ids = array();
-	$post_type = bp_groups_get_group_type_post_type();
+	$bp_group_type_ids  = array();
+	$post_type          = bp_groups_get_group_type_post_type();
 	$bp_group_type_args = array(
 		'post_type'  => $post_type,
 		'meta_query' => array(
@@ -3485,8 +3485,8 @@ function bp_groups_get_excluded_group_types(){
 		while ( $bp_group_type_query->have_posts() ) :
 			$bp_group_type_query->the_post();
 
-			$post_id = get_the_ID();
-			$name = bp_group_get_group_type_key( $post_id );
+			$post_id             = get_the_ID();
+			$name                = bp_group_get_group_type_key( $post_id );
 			$bp_group_type_ids[] = array(
 				'ID'   => $post_id,
 				'name' => $name,

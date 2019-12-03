@@ -1599,10 +1599,10 @@ function bp_at_mention_default_options() {
 	return apply_filters(
 		'bp_at_mention_js_options',
 		array(
-			'selectors'   => array( '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ),
-			'insert_tpl'  => '@${ID}',
-			'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>',
-			'extra_options' => array()
+			'selectors'     => array( '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ),
+			'insert_tpl'    => '@${ID}',
+			'display_tpl'   => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>',
+			'extra_options' => array(),
 		)
 	);
 }

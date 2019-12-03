@@ -459,7 +459,7 @@ class BP_XProfile_Field {
 			if ( $is_new_field && $field ) {
 				return false;
 			} else {
-				if ( (int)$this->id !== (int)$field->id ) {
+				if ( (int) $this->id !== (int) $field->id ) {
 					return false;
 				}
 			}

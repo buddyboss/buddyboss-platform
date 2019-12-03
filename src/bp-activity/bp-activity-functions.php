@@ -140,7 +140,7 @@ function bp_activity_find_mention_by_at_sign( $mentioned_users, $content ) {
 
 	return $mentioned_users;
 }
-add_filter('bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2);
+add_filter( 'bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2 );
 
 
 /**
@@ -1756,7 +1756,7 @@ function bp_activity_generate_action_string( $activity ) {
  */
 function bp_activity_format_activity_action_activity_update( $action, $activity ) {
 	if ( bp_activity_do_mentions() && $usernames = bp_activity_find_mentions( $activity->content ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
-		$mentioned_users = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
+		$mentioned_users      = array_filter( array_map( 'bp_get_user_by_nickname', $usernames ) );
 		$mentioned_users_link = array_map(
 			function( $mentioned_user ) {
 				return bp_core_get_userlink( $mentioned_user->ID );
@@ -5043,12 +5043,12 @@ function bp_activity_action_parse_url() {
 			if ( empty( $images ) ) {
 				$images = $parser->getImageSources( false );
 			}
-			if ( !empty( $images ) ) {
+			if ( ! empty( $images ) ) {
 				$images_obj = [];
-				
+
 				foreach ( $images as $key => $img ) {
-					if ( strpos( $url, 'youtube.com' ) > 0 ){
-						$img = "https://www.youtube.com" . $img;
+					if ( strpos( $url, 'youtube.com' ) > 0 ) {
+						$img = 'https://www.youtube.com' . $img;
 					}
 					if ( @fopen( $img, 'r' ) ) {
 						$images_obj[] = $img;

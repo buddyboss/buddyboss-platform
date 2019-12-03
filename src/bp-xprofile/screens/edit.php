@@ -81,7 +81,7 @@ function xprofile_screen_edit_profile() {
 				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
 				if (
-					!empty( $selected_member_type_wp_roles )
+					! empty( $selected_member_type_wp_roles )
 					&& 'none' !== $selected_member_type_wp_roles[0]
 				) {
 
