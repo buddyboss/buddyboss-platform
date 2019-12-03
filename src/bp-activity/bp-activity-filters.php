@@ -1024,6 +1024,42 @@ function bp_add_member_follow_scope_filter( $qs, $object ) {
 add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
 
 /**
+ * Filter the members loop on a followers page.
+ *
+ * This is done so we can return users that:
+ *   - the users are follow me (on a user page or member directory); 
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param array|string $qs The querystring for the BP loop.
+ * @param str          $object The current object for the querystring.
+ *
+ * @return array|string Modified querystring
+ */
+function bp_add_member_follower_scope_filter( $qs, $object ) {
+	// not on the members object? stop now!
+	if ( 'members' !== $object ) {
+		return $qs;
+	}
+
+	// members directory
+	if ( ! bp_is_user() && bp_is_members_directory() ) {
+		$qs_args = wp_parse_args( $qs );
+		// check if members scope is following before manipulating.
+		if ( isset( $qs_args['scope'] ) && 'followers' === $qs_args['scope'] ) {
+			$qs .= '&include=' . bp_get_follower_ids(
+				array(
+					'user_id' => bp_loggedin_user_id(),
+				)
+			);
+		}
+	}
+
+	return $qs;
+}
+add_filter( 'bp_ajax_querystring', 'bp_add_member_follower_scope_filter', 20, 2 );
+
+/**
  * Set up activity arguments for use with the 'following' scope.
  *
  * For details on the syntax, see {@link BP_Activity_Query}.
