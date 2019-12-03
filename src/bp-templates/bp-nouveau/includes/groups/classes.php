@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Groups classes
  *
@@ -39,10 +39,13 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 	 * @since BuddyPress 3.0.0
 	 */
 	public function build_exclude_args() {
-		$this->query_vars = wp_parse_args( $this->query_vars, array(
-			'group_id'     => 0,
-			'is_confirmed' => true,
-		) );
+		$this->query_vars = wp_parse_args(
+			$this->query_vars,
+			array(
+				'group_id'     => 0,
+				'is_confirmed' => true,
+			)
+		);
 
 		$group_member_ids = $this->get_group_member_ids();
 
@@ -55,8 +58,8 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		}
 
 		// We have to exclude users if set on $this->query_vars_raw["exclude"] parameter
-		if ( ! empty( $this->query_vars_raw["exclude"] ) ) {
-			$group_member_ids = array_merge( $group_member_ids, explode(',', $this->query_vars_raw["exclude"] ) );
+		if ( ! empty( $this->query_vars_raw['exclude'] ) ) {
+			$group_member_ids = array_merge( $group_member_ids, explode( ',', $this->query_vars_raw['exclude'] ) );
 		}
 
 		if ( ! empty( $group_member_ids ) ) {
@@ -237,7 +240,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 				/** This filter is documented in bp-groups/classes/class-bp-groups-component.php. */
 				'default_subnav_slug' => apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : 'home' ),
 			),
-			'members'    => array(
+			'members' => array(
 				'name'        => __( 'Members', 'buddyboss' ),
 				'slug'        => 'members',
 				'parent_slug' => $this->group->slug,
@@ -367,10 +370,13 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	 * @return array The list of "global" group front templates.
 	 */
 	public function all_groups_fronts( $templates = array() ) {
-		return array_intersect( array(
-			'groups/single/front.php',
-			'groups/single/default-front.php',
-		), $templates );
+		return array_intersect(
+			array(
+				'groups/single/front.php',
+				'groups/single/default-front.php',
+			),
+			$templates
+		);
 	}
 
 	/**

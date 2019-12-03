@@ -168,7 +168,7 @@ function bbp_has_forums( $args = '' ) {
 			$bbp->forum_query->found_posts = $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count;
 		}
 
-		$base = $base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+		$base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
 
 		// Pagination settings with filter
 		$bbp_topic_pagination = apply_filters(
@@ -323,19 +323,19 @@ function bbp_get_forum( $forum, $output = OBJECT, $filter = 'raw' ) {
 	}
 
 	// Bail if post_type is not a forum
-	if ( $forum->post_type !== bbp_get_forum_post_type() ) {
+	if ( bbp_get_forum_post_type() !== $forum->post_type ) {
 		return null;
 	}
 
 	// Tweak the data type to return
-	if ( $output === OBJECT ) {
+	if ( OBJECT === $output ) {
 		return $forum;
 
-	} elseif ( $output === ARRAY_A ) {
+	} elseif ( ARRAY_A === $output ) {
 		$_forum = get_object_vars( $forum );
 		return $_forum;
 
-	} elseif ( $output === ARRAY_N ) {
+	} elseif ( ARRAY_N === $output ) {
 		$_forum = array_values( get_object_vars( $forum ) );
 		return $_forum;
 
@@ -631,7 +631,8 @@ function bbp_forum_freshness_link( $forum_id = 0 ) {
 function bbp_get_forum_freshness_link( $forum_id = 0 ) {
 	$forum_id  = bbp_get_forum_id( $forum_id );
 	$active_id = bbp_get_forum_last_active_id( $forum_id );
-	$link_url  = $title = '';
+	$link_url  = '';
+	$title     = '';
 
 	if ( empty( $active_id ) ) {
 		$active_id = bbp_get_forum_last_reply_id( $forum_id );
@@ -671,17 +672,18 @@ function bbp_get_forum_freshness_link( $forum_id = 0 ) {
 function bbp_forum_parent_id( $forum_id = 0 ) {
 	echo bbp_get_forum_parent_id( $forum_id );
 }
-	/**
-	 * Return ID of forum parent, if exists
-	 *
-	 * @since bbPress (r3675)
-	 *
-	 * @param int $forum_id Optional. Forum id
-	 * @uses bbp_get_forum_id() To get the forum id
-	 * @uses get_post_field() To get the forum parent
-	 * @uses apply_filters() Calls 'bbp_get_forum_parent' with the parent & forum id
-	 * @return int Forum parent
-	 */
+
+/**
+ * Return ID of forum parent, if exists
+ *
+ * @since bbPress (r3675)
+ *
+ * @param int $forum_id Optional. Forum id
+ * @uses bbp_get_forum_id() To get the forum id
+ * @uses get_post_field() To get the forum parent
+ * @uses apply_filters() Calls 'bbp_get_forum_parent' with the parent & forum id
+ * @return int Forum parent
+ */
 function bbp_get_forum_parent_id( $forum_id = 0 ) {
 	$forum_id  = bbp_get_forum_id( $forum_id );
 	$parent_id = get_post_field( 'post_parent', $forum_id );
@@ -806,9 +808,13 @@ function bbp_forum_get_subforums( $args = '' ) {
 function bbp_list_forums( $args = '' ) {
 
 	// Define used variables
-	$output = $sub_forums = $topic_count = $reply_count = $counts = '';
-	$i      = 0;
-	$count  = array();
+	$output      = '';
+	$sub_forums  = '';
+	$topic_count = '';
+	$reply_count = '';
+	$counts      = '';
+	$i           = 0;
+	$count       = array();
 
 	// Parse arguments against default values
 	$r = bbp_parse_args(
@@ -874,16 +880,16 @@ function bbp_forum_index_pagination_count() {
 	echo bbp_get_forum_index_pagination_count();
 }
 
-	/**
-	 * Return the forum index pagination count
-	 *
-	 * @since bbPress (r2519)
-	 *
-	 * @uses bbp_number_format() To format the number value
-	 * @uses apply_filters() Calls 'bbp_get_forum_index_pagination_count' with the
-	 *                        pagination count
-	 * @return string Forum Pagintion count
-	 */
+/**
+ * Return the forum index pagination count
+ *
+ * @since bbPress (r2519)
+ *
+ * @uses bbp_number_format() To format the number value
+ * @uses apply_filters() Calls 'bbp_get_forum_index_pagination_count' with the
+ *                        pagination count
+ * @return string Forum Pagintion count
+ */
 function bbp_get_forum_index_pagination_count() {
 	$bbp = bbpress();
 
@@ -900,11 +906,18 @@ function bbp_get_forum_index_pagination_count() {
 
 	// Several forums in a forum index with a single page
 	if ( empty( $to_num ) ) {
+		/* Translators: 1: Forum's total post count */
 		$retstr = sprintf( _n( 'Viewing %1$s forum', 'Viewing %1$s forums', $total_int, 'buddyboss' ), $total );
 
 		// Several forums in a forum index with several pages
 	} else {
-		$retstr = sprintf( _n( 'Viewing %2$s of %4$s forums', 'Viewing %2$s - %3$s of %4$s forums', $total_int, 'buddyboss' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
+		if ( $total_int > 1 ) {
+			/* Translators: 2: Forum's from post count, 3: Forum's to post count, 4: Forum's total post count */
+			$retstr = sprintf( __( 'Viewing %2$s - %3$s of %4$s forums', 'buddyboss' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
+		} else {
+			/* Translators: %1$s: Forum's post count */
+			$retstr = sprintf( __( 'Viewing %2$s of %4$s forum', 'buddyboss' ), $bbp->forum_query->post_count, $from_num, $to_num, $total );
+		}
 	}
 
 	// Filter and return
@@ -1378,8 +1391,9 @@ function bbp_forum_topics_link( $forum_id = 0 ) {
 function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	$forum    = bbp_get_forum( $forum_id );
 	$forum_id = $forum->ID;
-	$topics   = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss' ), bbp_get_forum_topic_count( $forum_id ) );
-	$retval   = '';
+	// Translators: %s forum topic count.
+	$topics = sprintf( _n( '%s discussion', '%s discussions', bbp_get_forum_topic_count( $forum_id, true, false ), 'buddyboss' ), bbp_get_forum_topic_count( $forum_id ) );
+	$retval = '';
 
 	// First link never has view=all
 	if ( bbp_get_view_all( 'edit_others_topics' ) ) {
@@ -1395,6 +1409,7 @@ function bbp_get_forum_topics_link( $forum_id = 0 ) {
 	if ( ! empty( $deleted ) && current_user_can( 'edit_others_topics' ) ) {
 
 		// Extra text
+		// Translators: %d deleted or hidden topic count.
 		$extra = sprintf( __( ' (+ %d hidden)', 'buddyboss' ), $deleted );
 
 		// No link

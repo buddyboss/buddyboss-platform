@@ -235,7 +235,7 @@ class BP_XProfile_Data_Template {
 	public function profile_groups() {
 		if ( $this->current_group + 1 < $this->group_count ) {
 			return true;
-		} elseif ( $this->current_group + 1 == $this->group_count ) {
+		} elseif ( $this->current_group + 1 === $this->group_count ) {
 
 			/**
 			 * Fires right before the rewinding of profile groups.
@@ -317,7 +317,7 @@ class BP_XProfile_Data_Template {
 		for ( $i = 0, $count = count( $this->group->fields ); $i < $count; ++$i ) {
 			$field = &$this->group->fields[ $i ];
 
-			if ( ! empty( $field->data ) && ( $field->data->value != null ) ) {
+			if ( ! empty( $field->data ) && ( null !== $field->data->value ) ) {
 				$has_data = true;
 			}
 		}
@@ -335,7 +335,7 @@ class BP_XProfile_Data_Template {
 	public function profile_fields() {
 		if ( $this->current_field + 1 < $this->field_count ) {
 			return true;
-		} elseif ( $this->current_field + 1 == $this->field_count ) {
+		} elseif ( $this->current_field + 1 === $this->field_count ) {
 			// Do some cleaning up after the loop.
 			$this->rewind_fields();
 		}

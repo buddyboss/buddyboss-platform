@@ -321,7 +321,7 @@ abstract class BP_Attachment {
 		// Set the allowed mimes for the upload.
 		foreach ( (array) $this->allowed_mime_types as $ext ) {
 			foreach ( $wp_mimes as $ext_pattern => $mime ) {
-				if ( $ext !== '' && strpos( $ext_pattern, $ext ) !== false ) {
+				if ( '' !== $ext && false !== strpos( $ext_pattern, $ext ) ) {
 					$valid_mimes[ $ext_pattern ] = $mime;
 				}
 			}
@@ -566,10 +566,10 @@ abstract class BP_Attachment {
 	 */
 	public static function get_image_data( $file ) {
 		// Try to get image basic data.
-		list( $width, $height, $sourceImageType ) = @getimagesize( $file );
+		list( $width, $height, $source_image_type ) = @getimagesize( $file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 		// No need to carry on if we couldn't get image's basic data.
-		if ( is_null( $width ) || is_null( $height ) || is_null( $sourceImageType ) ) {
+		if ( is_null( $width ) || is_null( $height ) || is_null( $source_image_type ) ) {
 			return false;
 		}
 

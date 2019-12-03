@@ -69,7 +69,7 @@ function bbp_do_ajax() {
 	define( 'DOING_AJAX', true );
 
 	// Set the header content type
-	@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) );
+	@header( 'Content-Type: text/html; charset=' . get_option( 'blog_charset' ) ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 	// Disable content sniffing in browsers that support it
 	send_nosniff_header();

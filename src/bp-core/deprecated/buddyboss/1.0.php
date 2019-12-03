@@ -609,6 +609,7 @@ function bbp_get_single_topic_description( $args = '' ) {
 	$time_since  = bbp_get_topic_freshness_link( $topic_id );
 
 	// Singular/Plural
+	/* translators: [Members voice count] member, [Members voice count] members */
 	$voice_count = sprintf( _n( '%s member', '%s members', $vc_int, 'buddyboss' ), $voice_count );
 
 	// Topic has replies
@@ -620,10 +621,12 @@ function bbp_get_single_topic_description( $args = '' ) {
 				'size'    => $r['size'],
 			)
 		);
+		/* translators: This discussion contains [Reply count], has [Voice count], and was last updated by [User display name] [Time since]. */
 		$retstr          = sprintf( esc_html__( 'This discussion contains %1$s, has %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $reply_count, $voice_count, $last_updated_by, $time_since );
 
 		// Topic has no replies
 	} elseif ( ! empty( $voice_count ) && ! empty( $reply_count ) ) {
+		/* translators: This discussion contains [Voice count] and has [Reply count]. */
 		$retstr = sprintf( esc_html__( 'This discussion contains %1$s and has %2$s.', 'buddyboss' ), $voice_count, $reply_count );
 
 		// Topic has no replies and no members
@@ -708,6 +711,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 	// Has replies
 	if ( ! empty( $reply_count ) ) {
+		/* translators: [Reply count] reply, [Reply count] replies */
 		$reply_text = sprintf( _n( '%s reply', '%s replies', $rc_int, 'buddyboss' ), $reply_count );
 	}
 
@@ -724,6 +728,7 @@ function bbp_get_single_forum_description( $args = '' ) {
 
 		// Forum has no last active data
 	} else {
+		/* translators: [Topic count] discussion, [Topic count] discussions */
 		$topic_text = sprintf( _n( '%s discussion', '%s discussions', $tc_int, 'buddyboss' ), $topic_count );
 	}
 
@@ -733,15 +738,19 @@ function bbp_get_single_forum_description( $args = '' ) {
 		if ( ! empty( $reply_count ) ) {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
+				/* translators: 1: Topic text, 2: Reply text, 3: User display name, 4: Time since */
 				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
 			} else {
+				/* translators: 1: Topic text, 2: Reply text, 3: User display name, 4: Time since */
 				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s, and was last updated by %3$s %4$s.', 'buddyboss' ), $topic_text, $reply_text, $last_updated_by, $time_since );
 			}
 		} else {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
+				/* translators: 1: Topic text, 2: User display name, 3: Time since */
 				$retstr = sprintf( esc_html__( 'This category contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
 			} else {
+				/* translators: 1: Topic text, 2: User display name, 3: Time since */
 				$retstr = sprintf( esc_html__( 'This forum contains %1$s, and was last updated by %2$s %3$s.', 'buddyboss' ), $topic_text, $last_updated_by, $time_since );
 			}
 		}
@@ -752,8 +761,10 @@ function bbp_get_single_forum_description( $args = '' ) {
 		if ( ! empty( $reply_count ) ) {
 
 			if ( bbp_is_forum_category( $forum_id ) ) {
+				/* translators: 1: Topic text, 2: Reply text */
 				$retstr = sprintf( esc_html__( 'This category contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
 			} else {
+				/* translators: 1: Topic text, 2: Reply text */
 				$retstr = sprintf( esc_html__( 'This forum contains %1$s and %2$s.', 'buddyboss' ), $topic_text, $reply_text );
 			}
 		} else {
@@ -761,8 +772,10 @@ function bbp_get_single_forum_description( $args = '' ) {
 			if ( ! empty( $topic_count ) ) {
 
 				if ( bbp_is_forum_category( $forum_id ) ) {
+					/* translators: 1: Topic text */
 					$retstr = sprintf( esc_html__( 'This category contains %1$s.', 'buddyboss' ), $topic_text );
 				} else {
+					/* translators: 1: Topic text */
 					$retstr = sprintf( esc_html__( 'This forum contains %1$s.', 'buddyboss' ), $topic_text );
 				}
 			} else {

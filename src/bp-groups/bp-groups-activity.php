@@ -87,6 +87,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
+	/* translators: [User link] created the group [Group link] */
 	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	/**
@@ -115,6 +116,7 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
+	/* translators: [User link] joined the group [Group link] */
 	$action = sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	// Legacy filters (do not follow parameter patterns of other activity
@@ -154,6 +156,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
+	/* translators: [User link] posted an update in the group [Group link] */
 	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	/**
@@ -190,21 +193,26 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 
 	// No changed details were found, so use a generic message.
 	if ( empty( $changed ) ) {
+		/* translators: [User link] updated details for the group [Group link] */
 		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 		// Name and description changed - to keep things short, don't describe changes in detail.
 	} elseif ( isset( $changed['name'] ) && isset( $changed['description'] ) ) {
+		/* translators: [User link] changed the name and description of the group [Group link] */
 		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 		// Name only.
 	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
+		/* translators: [User link] changed the name of the group [Group link] from "[Old Group name]" to "[New Group name]" */
 		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
 
 		// Description only.
 	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
+		/* translators: [User link] changed the description of the group [Group link] from "[Old Group name]" to "[New Group name]" */
 		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
 
 	} elseif ( ! empty( $changed['slug']['old'] ) && ! empty( $changed['slug']['new'] ) ) {
+		/* translators: [User link] changed the permalink of the group [Group link] */
 		$action = sprintf( __( '%1$s changed the permalink of the group %2$s.', 'buddyboss' ), $user_link, $group_link );
 
 	}
@@ -300,7 +308,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
+	if ( ! empty( $user_id ) && ( bp_loggedin_user_id() !== $user_id ) ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -365,13 +373,13 @@ function groups_record_activity( $args = '' ) {
 	// Set the default for hide_sitewide by checking the status of the group.
 	$hide_sitewide = false;
 	if ( ! empty( $args['item_id'] ) ) {
-		if ( bp_get_current_group_id() == $args['item_id'] ) {
+		if ( bp_get_current_group_id() === $args['item_id'] ) {
 			$group = groups_get_current_group();
 		} else {
 			$group = groups_get_group( $args['item_id'] );
 		}
 
-		if ( isset( $group->status ) && 'public' != $group->status ) {
+		if ( isset( $group->status ) && 'public' !== $group->status ) {
 			$hide_sitewide = true;
 		}
 	}
@@ -496,7 +504,7 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 	 * @param int    $user_id  ID of the user joining the group.
 	 * @param int    $group_id ID of the group. Passed by reference.
 	 */
-	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
+	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) ); // phpcs:ignore WordPress.WP.I18n
 
 	// Record in activity feeds.
 	groups_record_activity(

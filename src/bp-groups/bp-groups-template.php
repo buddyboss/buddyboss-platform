@@ -244,7 +244,8 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
 
 	$retval = '';
 
-	if ( $types = bp_groups_get_group_type( $group_id, false ) ) {
+	$types = bp_groups_get_group_type( $group_id, false );
+	if ( $types ) {
 		// Make sure we can show the type in the list.
 		if ( false === $r['show_all'] ) {
 			$types = array_intersect( bp_groups_get_group_types( array( 'show_in_list' => true ) ), $types );
@@ -253,7 +254,9 @@ function bp_get_group_type_list( $group_id = 0, $r = array() ) {
 			}
 		}
 
-		$before = $after = $label = '';
+		$before = '';
+		$after  = '';
+		$label  = '';
 
 		// Render parent element.
 		if ( ! empty( $r['parent_element'] ) ) {
@@ -590,7 +593,8 @@ function bp_get_group_class( $classes = array() ) {
 	$classes[] = sanitize_key( $groups_template->group->status );
 
 	// Add current group types.
-	if ( $group_types = bp_groups_get_group_type( bp_get_group_id(), false ) ) {
+	$group_types = bp_groups_get_group_type( bp_get_group_id(), false );
+	if ( $group_types ) {
 		foreach ( $group_types as $group_type ) {
 			$classes[] = sprintf( 'group-type-%s', esc_attr( $group_type ) );
 		}
@@ -709,17 +713,17 @@ function bp_get_group_type( $group = false ) {
 		$group_type = bp_groups_get_group_type_object( $group_type );
 		$group_type = isset( $group_type->labels['singular_name'] ) ? $group_type->labels['singular_name'] : '';
 
-		if ( 'public' == $group->status ) {
+		if ( 'public' === $group->status ) {
 
 			$group_visibility = __( 'Public', 'buddyboss' );
 			$type             = ! empty( $group_type ) ? '<span class="group-visibility public">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility public">' . __( 'Public', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 
-		} elseif ( 'hidden' == $group->status ) {
+		} elseif ( 'hidden' === $group->status ) {
 
 			$group_visibility = __( 'Hidden', 'buddyboss' );
 			$type             = ! empty( $group_type ) ? '<span class="group-visibility hidden">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility hidden">' . __( 'Hidden', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
 
-		} elseif ( 'private' == $group->status ) {
+		} elseif ( 'private' === $group->status ) {
 
 			$group_visibility = __( 'Private', 'buddyboss' );
 			$type             = ! empty( $group_type ) ? '<span class="group-visibility private">' . $group_visibility . '</span> <span class="type-separator">/</span> <span class="group-type">' . $group_type . '</span>' : '<span class="group-visibility private">' . __( 'Private', 'buddyboss' ) . ' <span class="type-separator">/</span> <span class="group-type">' . __( 'Group', 'buddyboss' ) . '</span>';
@@ -729,11 +733,11 @@ function bp_get_group_type( $group = false ) {
 		}
 	} else {
 
-		if ( 'public' == $group->status ) {
+		if ( 'public' === $group->status ) {
 			$type = '<span class="group-visibility public">' . __( 'Public Group', 'buddyboss' ) . '</span>';
-		} elseif ( 'hidden' == $group->status ) {
+		} elseif ( 'hidden' === $group->status ) {
 			$type = '<span class="group-visibility hidden">' . __( 'Hidden Group', 'buddyboss' ) . '</span>';
-		} elseif ( 'private' == $group->status ) {
+		} elseif ( 'private' === $group->status ) {
 			$type = '<span class="group-visibility private">' . __( 'Private Group', 'buddyboss' ) . '</span>';
 		} else {
 			$type = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
@@ -818,11 +822,11 @@ function bp_get_group_status_description( $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( 'public' == $group->status ) {
+	if ( 'public' === $group->status ) {
 		$description = __( 'This group\'s content, including its members and activity, are visible to any site member.', 'buddyboss' );
-	} elseif ( 'hidden' == $group->status ) {
+	} elseif ( 'hidden' === $group->status ) {
 		$description = __( 'Only group members can view its content, including its members and activity.', 'buddyboss' );
-	} elseif ( 'private' == $group->status ) {
+	} elseif ( 'private' === $group->status ) {
 		$description = __( 'This group\'s content is only visible to members of the group.', 'buddyboss' );
 	} else {
 		$description = ucwords( $group->status ) . ' ' . __( 'Group', 'buddyboss' );
@@ -888,6 +892,8 @@ function bp_get_group_avatar( $args = '' ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
+
+			/* translators: Group logo of [Group name] */
 			'alt'    => sprintf( __( 'Group logo of %s', 'buddyboss' ), $groups_template->group->name ),
 		)
 	);
@@ -1630,7 +1636,7 @@ function bp_is_group_creator( $group = null, $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	return (bool) ( $group->creator_id == $user_id );
+	return (bool) ( $group->creator_id === $user_id );
 }
 
 /**
@@ -1683,11 +1689,13 @@ function bp_get_group_creator_avatar( $group = false, $args = array() ) {
 			'height' => false,
 			'class'  => 'avatar',
 			'id'     => false,
+
+			/* translators: Group organizer profile photo of [User display name] */
 			'alt'    => sprintf( __( 'Group organizer profile photo of %s', 'buddyboss' ), bp_core_get_user_displayname( $group->creator_id ) ),
 		),
 		'group_creator_avatar'
 	);
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	$avatar = bp_core_fetch_avatar(
 		array(
@@ -1766,6 +1774,7 @@ function bp_group_list_admins( $group = false ) {
 												'item_id' => $admin->user_id,
 												'email'   => $admin->user_email,
 												'alt'     => sprintf(
+													/* translators: Profile photo of [User display name] */
 													__(
 														'Profile photo of %s',
 														'buddyboss'
@@ -1811,12 +1820,14 @@ function bp_group_list_parents( $group = false ) {
 			<dd class="group-list parent">
 				<ul id="group-parent">
 					<li>
-						<a href="<?php bp_group_permalink( $parent_group ); ?>                        						   data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
-														   <?php
+						<a href="<?php bp_group_permalink( $parent_group ); ?> data-bp-tooltip="<?php printf( ( '%s' ), bp_get_group_name( $parent_group ) ); ?>">
+															<?php
 															echo bp_core_fetch_avatar(
 																array(
 																	'item_id' => $parent_group->id,
 																	'object'  => 'group',
+
+																	/* translators: Group photo of [Group name] */
 																	'alt'     => sprintf( __( 'Group photo of %s', 'buddyboss' ), bp_get_group_name( $parent_group ) ),
 																)
 															)
@@ -1861,6 +1872,7 @@ function bp_group_list_mods( $group = false ) {
 												'item_id' => $mod->user_id,
 												'email'   => $mod->user_email,
 												'alt'     => sprintf(
+													/* translators: Profile photo of [User display name] */
 													__(
 														'Profile photo of %s',
 														'buddyboss'
@@ -1912,7 +1924,7 @@ function bp_group_admin_ids( $group = false, $format = 'string' ) {
 		}
 	}
 
-	if ( 'string' == $format ) {
+	if ( 'string' === $format ) {
 		$admin_ids = implode( ',', $admin_ids );
 	}
 
@@ -1956,7 +1968,7 @@ function bp_group_mod_ids( $group = false, $format = 'string' ) {
 		}
 	}
 
-	if ( 'string' == $format ) {
+	if ( 'string' === $format ) {
 		$mod_ids = implode( ',', $mod_ids );
 	}
 
@@ -2119,7 +2131,7 @@ function bp_get_groups_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $groups_template->pag_num - 1 ) > $groups_template->total_group_count ) ? $groups_template->total_group_count : $start_num + ( $groups_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $groups_template->total_group_count );
 
-	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total );
+	$message = sprintf( _n( 'Viewing 1 group', 'Viewing %1$s - %2$s of %3$s groups', $groups_template->total_group_count, 'buddyboss' ), $from_num, $to_num, $total ); // phpcs:ignore WordPress.WP.I18n
 
 	/**
 	 * Filters the "Viewing x-y of z groups" pagination message.
@@ -2218,6 +2230,7 @@ function bp_get_group_member_count() {
 		$count = 0;
 	}
 
+	/* translators: [Member count] members */
 	$count_string = sprintf( _n( '%s member', '%s members', $count, 'buddyboss' ), bp_core_number_format( $count ) );
 
 	/**
@@ -2322,7 +2335,7 @@ function bp_group_show_status_setting( $setting, $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( $setting == $group->status ) {
+	if ( $setting === $group->status ) {
 		echo ' checked="checked"';
 	}
 }
@@ -2341,7 +2354,7 @@ function bp_group_show_invite_status_setting( $setting, $group = false ) {
 
 	$invite_status = bp_group_get_invite_status( $group_id );
 
-	if ( $setting == $invite_status ) {
+	if ( $setting === $invite_status ) {
 		echo ' checked="checked"';
 	}
 }
@@ -2417,7 +2430,7 @@ function bp_group_show_activity_feed_status_setting( $setting, $group = false ) 
 
 	$activity_feed_status = bp_group_get_activity_feed_status( $group_id );
 
-	if ( $setting == $activity_feed_status ) {
+	if ( $setting === $activity_feed_status ) {
 		echo ' checked="checked"';
 	}
 }
@@ -2487,7 +2500,7 @@ function bp_group_show_albums_status_setting( $setting, $group = false ) {
 
 	$album_status = bp_group_get_album_status( $group_id );
 
-	if ( $setting == $album_status ) {
+	if ( $setting === $album_status ) {
 		echo ' checked="checked"';
 	}
 }
@@ -2557,7 +2570,7 @@ function bp_group_show_media_status_setting( $setting, $group = false ) {
 
 	$media_status = bp_group_get_media_status( $group_id );
 
-	if ( $setting == $media_status ) {
+	if ( $setting === $media_status ) {
 		echo ' checked="checked"';
 	}
 }
@@ -2806,28 +2819,28 @@ function bp_include_group_by_context( $group = false, $user_id = false, $context
 	 * 'exclude_hidden' is useful on directories, where hidden groups
 	 * are excluded by BP.
 	 */
-	if ( 'exclude_hidden' == $context ) {
-		if ( 'hidden' != $group->status ) {
+	if ( 'exclude_hidden' === $context ) {
+		if ( 'hidden' !== $group->status ) {
 			$include = true;
 		}
 		/*
 		 * 'activity' includes only groups for which the user can view the activity streams.
 		 */
-	} elseif ( 'activity' == $context ) {
+	} elseif ( 'activity' === $context ) {
 		// For activity stream inclusion, require public status or membership.
-		if ( 'public' == $group->status || groups_is_user_member( $user_id, $group->id ) ) {
+		if ( 'public' === $group->status || groups_is_user_member( $user_id, $group->id ) ) {
 			$include = true;
 		}
 		/*
 		 * 'mygroups' is useful on user-specific directories, where only groups the
 		 * user belongs to are returned, and the group status is irrelevant.
 		 */
-	} elseif ( 'mygroups' == $context ) {
+	} elseif ( 'mygroups' === $context ) {
 		if ( groups_is_user_member( $user_id, $group->id ) ) {
 			$include = true;
 		}
-	} elseif ( 'normal' == $context ) {
-		if ( 'hidden' != $group->status || groups_is_user_member( $user_id, $group->id ) ) {
+	} elseif ( 'normal' === $context ) {
+		if ( 'hidden' !== $group->status || groups_is_user_member( $user_id, $group->id ) ) {
 			$include = true;
 		}
 	}
@@ -2908,14 +2921,15 @@ function bp_group_admin_memberlist( $admin_list = false, $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( $admins = groups_get_group_admins( $group->id ) ) :
+	$admins = groups_get_group_admins( $group->id );
+	if ( $admins ) :
 		?>
 
 		<ul id="admins-list" class="item-list
 		<?php
 		if ( ! empty( $admin_list ) ) :
 			?>
-			 single-line<?php endif; ?>">
+			single-line<?php endif; ?>">
 
 		<?php foreach ( (array) $admins as $admin ) { ?>
 
@@ -3022,14 +3036,15 @@ function bp_group_mod_memberlist( $admin_list = false, $group = false ) {
 		$group =& $groups_template->group;
 	}
 
-	if ( $group_mods = groups_get_group_mods( $group->id ) ) {
+	$group_mods = groups_get_group_mods( $group->id );
+	if ( $group_mods ) {
 		?>
 
 		<ul id="mods-list" class="item-list
 		<?php
 		if ( $admin_list ) {
 			?>
-			 single-line<?php } ?>">
+			single-line<?php } ?>">
 
 		<?php foreach ( (array) $group_mods as $mod ) { ?>
 
@@ -3174,7 +3189,7 @@ function bp_get_group_member_promote_mod_link( $args = '' ) {
 		),
 		'group_member_promote_mod_link'
 	);
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	/**
 	 * Filters a URL for promoting a user to moderator.
@@ -3219,7 +3234,7 @@ function bp_get_group_member_promote_admin_link( $args = '' ) {
 		),
 		'group_member_promote_admin_link'
 	);
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	/**
 	 * Filters a URL for promoting a user to admin.
@@ -3436,7 +3451,7 @@ function bp_group_admin_tabs( $group = false ) {
 
 	$css_id = 'manage-members';
 
-	if ( 'private' == $group->status ) {
+	if ( 'private' === $group->status ) {
 		$css_id = 'membership-requests';
 	}
 
@@ -4017,7 +4032,7 @@ function bp_get_group_join_button( $group = false ) {
 		$is_only_admin = false;
 		// Stop sole admins from abandoning their group.
 		$group_admins = groups_get_group_admins( $group->id );
-		if ( ( 1 == count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
+		if ( ( 1 === count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
 			$is_only_admin = true;
 		}
 
@@ -4563,16 +4578,16 @@ function bp_group_member_section_title() {
 	 */
 function bp_get_group_member_section_title() {
 	static $last_user_group_role_title = null;
-	$user_id               = bp_get_group_member_id();
-	$group_id              = bp_get_current_group_id();
-	$user_group_role_title = bp_get_user_group_role_title( $user_id, $group_id );
-	$group_admin           = groups_get_group_admins( $group_id );
-	$group_mode            = groups_get_group_mods( $group_id );
-	$group_member          = groups_get_group_members( array( 'group_id' => $group_id ) );
+	$user_id                           = bp_get_group_member_id();
+	$group_id                          = bp_get_current_group_id();
+	$user_group_role_title             = bp_get_user_group_role_title( $user_id, $group_id );
+	$group_admin                       = groups_get_group_admins( $group_id );
+	$group_mode                        = groups_get_group_mods( $group_id );
+	$group_member                      = groups_get_group_members( array( 'group_id' => $group_id ) );
 
 	ob_start();
 
-	if ( $last_user_group_role_title != $user_group_role_title ) {
+	if ( $last_user_group_role_title !== $user_group_role_title ) {
 		$last_user_group_role_title = $user_group_role_title;
 		?>
 			<li class="item-entry item-entry-header">
@@ -4849,7 +4864,7 @@ function bp_get_group_member_is_friend() {
 	if ( ! isset( $members_template->member->is_friend ) ) {
 		$friend_status = 'not_friends';
 	} else {
-		$friend_status = ( 0 == $members_template->member->is_friend )
+		$friend_status = ( 0 === $members_template->member->is_friend )
 			? 'pending'
 			: 'is_friend';
 	}
@@ -4968,7 +4983,7 @@ function bp_get_group_member_joined_since( $args = array() ) {
 		);
 		$group = groups_get_group( $args );
 
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) );
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 
 		$members_template->member->date_modified = $group->date_created;
 	}
@@ -5391,9 +5406,9 @@ function bp_group_creation_tabs() {
 
 		<li
 		<?php
-		if ( bp_get_groups_current_create_step() == $slug ) :
+		if ( bp_get_groups_current_create_step() === $slug ) :
 			?>
-			 class="current"<?php endif; ?>>
+			class="current"<?php endif; ?>>
 			<?php
 			if ( $is_enabled ) :
 				?>
@@ -5402,11 +5417,11 @@ function bp_group_creation_tabs() {
 else :
 	?>
 	<span><?php endif; ?><?php echo $counter; ?>. <?php echo $step['name']; ?>
-					 <?php
-						if ( $is_enabled ) :
-							?>
+		<?php
+		if ( $is_enabled ) :
+			?>
 	</a>
-							<?php
+			<?php
 else :
 	?>
 	</span><?php endif ?></li>
@@ -5496,7 +5511,7 @@ function bp_is_group_creation_step( $step_slug ) {
 
 	// If this the first step, we can just accept and return true.
 	$keys = array_keys( $bp->groups->group_creation_steps );
-	if ( ! bp_action_variable( 1 ) && array_shift( $keys ) == $step_slug ) {
+	if ( ! bp_action_variable( 1 ) && array_shift( $keys ) === $step_slug ) {
 		return true;
 	}
 
@@ -5563,7 +5578,7 @@ function bp_are_previous_group_creation_steps_complete( $step_slug ) {
 
 	// If this is the first group creation step, return true.
 	$keys = array_keys( $bp->groups->group_creation_steps );
-	if ( array_shift( $keys ) == $step_slug ) {
+	if ( array_shift( $keys ) === $step_slug ) {
 		return true;
 	}
 
@@ -6109,32 +6124,32 @@ function bp_groups_header_tabs() {
 	<?php
 	if ( ! bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'recently-joined', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php _e( 'Recently Joined', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/recently-joined' ); ?>"><?php _e( 'Recently Joined', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'most-popular', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php _e( 'Most Popular', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/most-popular' ); ?>"><?php _e( 'Most Popular', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'admin-of', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php _e( 'Organizer Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/admin-of' ); ?>"><?php _e( 'Organizer Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'mod-of', 0 ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php _e( 'Moderator Of', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/mod-of' ); ?>"><?php _e( 'Moderator Of', 'buddyboss' ); ?></a></li>
 	<li
 	<?php
 	if ( bp_is_action_variable( 'alphabetically' ) ) :
 		?>
-		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
+		class="current"<?php endif; ?>><a href="<?php echo trailingslashit( $user_groups . '/my-groups/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
 
 	<?php
 	do_action( 'groups_header_tabs' );

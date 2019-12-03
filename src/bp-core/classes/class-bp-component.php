@@ -570,7 +570,7 @@ if ( ! class_exists( 'BP_Component' ) ) :
 						$pos = $nav['position'];
 
 						// Reset not set pos to 1
-						if ( $pos % 10 === 0 ) {
+						if ( 0 === $pos % 10 ) {
 							$not_set_pos = 1;
 						}
 					}

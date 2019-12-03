@@ -43,15 +43,18 @@
  *
  * @version Buddyboss 1.0.0
  */
-$template_parts = apply_filters( 'bp_messages_js_template_parts', [
-	'parts/bp-group-invites-feedback',
-	'parts/bp-invites-filters',
-	'parts/bp-invites-form',
-	'parts/bp-invites-nav',
-	'parts/bp-invites-paginate',
-	'parts/bp-invites-selection',
-	'parts/bp-invites-users'
-] );
+$template_parts = apply_filters(
+	'bp_messages_js_template_parts',
+	[
+		'parts/bp-group-invites-feedback',
+		'parts/bp-invites-filters',
+		'parts/bp-invites-form',
+		'parts/bp-invites-nav',
+		'parts/bp-invites-paginate',
+		'parts/bp-invites-selection',
+		'parts/bp-invites-users',
+	]
+);
 
 foreach ( $template_parts as $template_part ) {
 	bp_get_template_part( 'common/js-templates/invites/' . $template_part );

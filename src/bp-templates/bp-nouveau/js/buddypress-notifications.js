@@ -84,7 +84,7 @@ window.bp = window.bp || {};
 		sortNotifications: function( event ) {
 			var store = event.data.getStorage( 'bp-notifications' ),
 				scope = store.scope || null, filter = store.filter || null,
-				sort = store.extra || null, search_terms = '';
+				sort  = store.extra || null, search_terms = '';
 
 			event.preventDefault();
 
@@ -95,14 +95,16 @@ window.bp = window.bp || {};
 				search_terms = $( '#buddypress [data-bp-search="notifications"] input[type=search]' ).val();
 			}
 
-			bp.Nouveau.objectRequest( {
-				object              : 'notifications',
-				scope               : scope,
-				filter              : filter,
-				search_terms        : search_terms,
-				extras              : sort,
-				page                : 1
-			} );
+			bp.Nouveau.objectRequest(
+				{
+					object              : 'notifications',
+					scope               : scope,
+					filter              : filter,
+					search_terms        : search_terms,
+					extras              : sort,
+					page                : 1
+				}
+			);
 		},
 
 		/**
@@ -120,9 +122,12 @@ window.bp = window.bp || {};
 		 * @return {[type]}       [description]
 		 */
 		selectAll: function( event ) {
-			$.each( $( '.notification-check' ), function( cb, checkbox ) {
-				$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
-			} );
+			$.each(
+				$( '.notification-check' ),
+				function( cb, checkbox ) {
+					$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
+				}
+			);
 		},
 
 		/**

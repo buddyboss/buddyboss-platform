@@ -168,7 +168,7 @@ function bp_nouveau_get_hooked_member_meta() {
 		 */
 		do_action( 'bp_directory_members_item' );
 
-	// It's the user's header
+		// It's the user's header
 	} else {
 		/**
 		 * Fires after the group header actions section.
@@ -192,24 +192,24 @@ function bp_nouveau_get_hooked_member_meta() {
 
 /**
  * Adds a 'Dashbaord' link in admin bar.
- * 
+ *
  * @global \WP_Admin_Bar $wp_admin_bar
- * 
+ *
  * @since BuddyBoss 1.0.0
- * 
+ *
  * @param array $wp_admin_nav
  * @return void
  */
-function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
-    if ( !bp_loggedin_user_id() ) {
-        return false;
-    }
+function bp_nouveau_admin_bar_member_dashboard( $wp_admin_nav = array() ) {
+	if ( ! bp_loggedin_user_id() ) {
+		return false;
+	}
 
 	if ( bp_nouveau_get_appearance_settings( 'user_front_page' ) ) {
 
 		$page_ids = bp_core_get_directory_page_ids();
 
-		$profile_dashboard   = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
+		$profile_dashboard = isset( $page_ids['profile_dashboard'] ) ? $page_ids['profile_dashboard'] : false;
 
 		if ( $profile_dashboard > 0 ) {
 			$dashboard_link = get_permalink( $profile_dashboard );
@@ -228,7 +228,7 @@ function bp_nouveau_admin_bar_member_dashboard ( $wp_admin_nav = array() ) {
 				'id'       => 'my-account-front-view',
 				'title'    => __( 'View', 'buddyboss' ),
 				'href'     => $dashboard_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			// Define the WordPress global.
@@ -355,9 +355,12 @@ function bp_nouveau_member_is_home_widgets() {
  * @return array The Activities Template arguments.
  */
 function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
-	return array_merge( $args, array(
-		'user_id' => bp_displayed_user_id(),
-	) );
+	return array_merge(
+		$args,
+		array(
+			'user_id' => bp_displayed_user_id(),
+		)
+	);
 }
 
 /**
@@ -370,9 +373,12 @@ function bp_nouveau_member_activity_widget_overrides( $args = array() ) {
  * @return array The Groups Template arguments.
  */
 function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
-	return array_merge( $args, array(
-		'user_id' => bp_displayed_user_id(),
-	) );
+	return array_merge(
+		$args,
+		array(
+			'user_id' => bp_displayed_user_id(),
+		)
+	);
 }
 
 /**
@@ -386,13 +392,16 @@ function bp_nouveau_member_groups_widget_overrides( $args = array() ) {
  */
 function bp_nouveau_member_members_widget_overrides( $args = array() ) {
 	// Do nothing for the friends widget
-	if ( ! empty( $args['user_id'] ) && (int) $args['user_id'] === (int) bp_displayed_user_id() ) {
+	if ( ! empty( $args['user_id'] ) && (int) bp_displayed_user_id() === (int) $args['user_id'] ) {
 		return $args;
 	}
 
-	return array_merge( $args, array(
-		'include' => bp_displayed_user_id(),
-	) );
+	return array_merge(
+		$args,
+		array(
+			'include' => bp_displayed_user_id(),
+		)
+	);
 }
 
 /**

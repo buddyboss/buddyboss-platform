@@ -112,7 +112,7 @@ function xprofile_screen_edit_profile() {
 				}
 			}
 
-			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
+			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 				$errors        = true;
 				$validations[] = $message;
 			}
@@ -140,7 +140,8 @@ function xprofile_screen_edit_profile() {
 			$errors = false;
 
 			// Now we've checked for required fields, lets save the values.
-			$old_values = $new_values = array();
+			$old_values = array();
+			$new_values = array();
 			foreach ( (array) $posted_field_ids as $field_id ) {
 
 				// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.

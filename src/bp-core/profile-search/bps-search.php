@@ -19,7 +19,7 @@ function bp_ps_set_request() {
 	global $post;
 	global $shortcode_tags;
 
-	if ( isset( $post->post_type ) && $post->post_type == 'page' ) {
+	if ( isset( $post->post_type ) && 'page' === $post->post_type ) {
 		$saved_shortcodes = $shortcode_tags;
 		$shortcode_tags   = array();
 		add_shortcode( 'bp_ps_directory', 'bp_ps_save_hidden_filters' );
@@ -50,7 +50,7 @@ function bp_ps_set_request() {
 	if ( isset( $_REQUEST[ BP_PS_FORM ] ) ) {
 
 		$cookie = apply_filters( 'bp_ps_cookie_name', 'bp_ps_request' );
-		if ( $_REQUEST[ BP_PS_FORM ] != 'clear' ) {
+		if ( 'clear' !== $_REQUEST[ BP_PS_FORM ] ) {
 			$filtered_request = array_filter( $_REQUEST );
 
 			/*
@@ -115,22 +115,22 @@ function bp_ps_get_request( $type, $form = 0 ) {
 
 	switch ( $type ) {
 		case 'form':
-			if ( isset( $request[ BP_PS_FORM ] ) && $request[ BP_PS_FORM ] != $form ) {
+			if ( isset( $request[ BP_PS_FORM ] ) && $request[ BP_PS_FORM ] !== $form ) {
 				$request = array();
 			}
 			break;
 
 		case 'filters':
-			if ( isset( $request['bp_ps_directory'] ) && $request['bp_ps_directory'] != $current ) {
+			if ( isset( $request['bp_ps_directory'] ) && $request['bp_ps_directory'] !== $current ) {
 				$request = array();
 			}
 			break;
 
 		case 'search':
-			if ( isset( $request['bp_ps_directory'] ) && $request['bp_ps_directory'] != $current ) {
+			if ( isset( $request['bp_ps_directory'] ) && $request['bp_ps_directory'] !== $current ) {
 				$request = array();
 			}
-			if ( isset( $filters['bp_ps_directory'] ) && $filters['bp_ps_directory'] != $current ) {
+			if ( isset( $filters['bp_ps_directory'] ) && $filters['bp_ps_directory'] !== $current ) {
 				$filters = array();
 			}
 			foreach ( $filters as $key => $value ) {
@@ -158,13 +158,13 @@ function bp_ps_save_hidden_filters( $attr, $content ) {
 	if ( is_array( $attr ) ) {
 		foreach ( $attr as $key => $value ) {
 			$k = bp_ps_match_key( $key, $fields );
-			if ( $k === false ) {
+			if ( false === $k ) {
 				continue;
 			}
 
 			$f      = $fields[ $k ];
-			$filter = ( $key == $f->code ) ? '' : substr( $key, strlen( $f->code ) + 1 );
-			if ( ! bp_ps_Fields::is_filter( $f, $filter ) ) {
+			$filter = ( $key === $f->code ) ? '' : substr( $key, strlen( $f->code ) + 1 );
+			if ( ! BP_PS_Fields::is_filter( $f, $filter ) ) {
 				continue;
 			}
 
@@ -174,7 +174,7 @@ function bp_ps_save_hidden_filters( $attr, $content ) {
 				case '':
 				case 'like':
 					$value = trim( addslashes( $value ) );
-					if ( $value !== '' ) {
+					if ( '' !== $value ) {
 						$bp_ps_hidden_filters[ $key ] = $value;
 					}
 					break;
@@ -183,10 +183,12 @@ function bp_ps_save_hidden_filters( $attr, $content ) {
 				case 'age_range':
 					list ($min, $max) = explode( $split, $value );
 					$values           = array();
-					if ( ( $min = trim( $min ) ) !== '' ) {
+					$min              = trim( $min );
+					if ( '' !== $min ) {
 						$values['min'] = $min;
 					}
-					if ( ( $max = trim( $max ) ) !== '' ) {
+					$max = trim( $max );
+					if ( '' !== $max ) {
 						$values['max'] = $max;
 					}
 					if ( ! empty( $values ) ) {
@@ -241,7 +243,7 @@ function bp_ps_hidden_filters() {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_current_page() {
-	 $current = defined( 'DOING_AJAX' ) ?
+	$current = defined( 'DOING_AJAX' ) ?
 		parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH ) :
 		parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
@@ -297,7 +299,7 @@ function bp_ps_filter_members( $qs, $object ) {
 		if ( isset( $args['include'] ) ) {
 			$included = explode( ',', $args['include'] );
 			$users    = array_intersect( $users, $included );
-			if ( count( $users ) == 0 ) {
+			if ( 0 === count( $users ) ) {
 				$users = array( 0 );
 			}
 		}
@@ -343,12 +345,14 @@ function bp_ps_search( $request, $users = null ) {
 			foreach ( $copied_arr as $key => $user ) {
 				$field_visibility = xprofile_get_field_visibility_level( intval( $f->id ), intval( $user ) );
 				if ( 'adminsonly' === $field_visibility && ! current_user_can( 'administrator' ) ) {
-					if ( ( $key = array_search( $user, $found ) ) !== false ) {
+					$key = array_search( $user, $found );
+					if ( false !== $key ) {
 						unset( $found[ $key ] );
 					}
 				}
 				if ( 'friends' === $field_visibility && ! current_user_can( 'administrator' ) && false === friends_check_friendship( intval( $user ), bp_loggedin_user_id() ) ) {
-					if ( ( $key = array_search( $user, $found ) ) !== false ) {
+					$key = array_search( $user, $found );
+					if ( false !== $key ) {
 						unset( $found[ $key ] );
 					}
 				}
@@ -358,7 +362,7 @@ function bp_ps_search( $request, $users = null ) {
 		$match_all = apply_filters( 'bp_ps_match_all', true );
 		if ( $match_all ) {
 			$users = isset( $users ) ? array_intersect( $users, $found ) : $found;
-			if ( count( $users ) == 0 ) {
+			if ( 0 === count( $users ) ) {
 				return $results;
 			}
 		} else {

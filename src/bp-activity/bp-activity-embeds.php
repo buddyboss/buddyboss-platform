@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 2.6.0
  */
 function bp_activity_setup_oembed() {
-	buddypress()->activity->oembed = new BP_Activity_oEmbed_Extension();
+	buddypress()->activity->oembed = new BP_Activity_Oembed_Extension();
 }
 add_action( 'bp_loaded', 'bp_activity_setup_oembed' );
 
@@ -171,7 +171,7 @@ function bp_activity_get_embed_excerpt( $content = '' ) {
  */
 function bp_activity_embed_media() {
 	// Bail if oEmbed request explicitly hides media.
-	if ( isset( $_GET['hide_media'] ) && true == wp_validate_boolean( $_GET['hide_media'] ) ) {
+	if ( isset( $_GET['hide_media'] ) && true === wp_validate_boolean( $_GET['hide_media'] ) ) {
 		/**
 		 * Do something after media is rendered for an activity oEmbed item.
 		 *
@@ -251,7 +251,8 @@ function bp_activity_embed_media() {
 
 		// Display thumb and related oEmbed meta.
 		if ( true === isset( $thumbnail ) ) {
-			$play_icon = $caption = '';
+			$play_icon = '';
+			$caption   = '';
 
 			// Add play icon for non-photos.
 			if ( 'photo' !== $oembed->type ) {
@@ -292,6 +293,7 @@ EOD;
 				$anchor_text = sprintf( __( 'By %1$s on %2$s', 'buddyboss' ), $oembed->author_name, $oembed->provider_name );
 
 			} elseif ( isset( $oembed->provider_name ) ) {
+				/* translators: %s: oEmbed provider */
 				$anchor_text = sprintf( __( 'View on %s', 'buddyboss' ), $oembed->provider_name );
 			}
 

@@ -43,13 +43,16 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-group-invites' => array(
-			'file'         => 'js/buddypress-group-invites%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
-			'footer'       => true,
-		),
-	) );
+	return array_merge(
+		$scripts,
+		array(
+			'bp-nouveau-group-invites' => array(
+				'file'         => 'js/buddypress-group-invites%s.js',
+				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
+				'footer'       => true,
+			),
+		)
+	);
 }
 
 /**
@@ -60,12 +63,15 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 function bp_nouveau_groups_enqueue_scripts() {
 	// Neutralize Ajax when using BuddyBoss Groups & member widgets on default front page
 	if ( bp_is_group_home() && bp_nouveau_get_appearance_settings( 'group_front_page' ) ) {
-		wp_add_inline_style( 'bp-nouveau', '
+		wp_add_inline_style(
+			'bp-nouveau',
+			'
 			#group-front-widgets #groups-list-options,
 			#group-front-widgets #members-list-options {
 				display: none;
 			}
-		' );
+		'
+		);
 	}
 
 	if ( ! bp_is_group_invites() && ! ( bp_is_group_create() && bp_is_group_creation_step( 'group-invites' ) ) ) {
@@ -156,7 +162,7 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 		'is_group_create'    => bp_is_group_create(),
 		'nonces'             => array(
 			'uninvite'     => wp_create_nonce( 'groups_invite_uninvite_user' ),
-			'send_invites' => wp_create_nonce( 'groups_send_invites' )
+			'send_invites' => wp_create_nonce( 'groups_send_invites' ),
 		),
 	);
 
@@ -185,24 +191,28 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	$bp = buddypress();
 
 	$response = array(
-		'id'           => intval( $user->ID ),
-		'name'         => $user->display_name,
-		'avatar'       => htmlspecialchars_decode( bp_core_fetch_avatar( array(
-			'item_id' => $user->ID,
-			'object'  => 'user',
-			'type'    => 'thumb',
-			'width'   => 50,
-			'height'  => 50,
-			'html'    => false )
-		) ),
+		'id'     => intval( $user->ID ),
+		'name'   => $user->display_name,
+		'avatar' => htmlspecialchars_decode(
+			bp_core_fetch_avatar(
+				array(
+					'item_id' => $user->ID,
+					'object'  => 'user',
+					'type'    => 'thumb',
+					'width'   => 50,
+					'height'  => 50,
+					'html'    => false,
+				)
+			)
+		),
 	);
 
 	// Group id
-	$group_id = bp_get_current_group_id()?: (int) $_REQUEST['group_id'];
+	$group_id = bp_get_current_group_id() ?: (int) $_REQUEST['group_id'];
 
 	// Do extra queries only if needed
 	if ( ! empty( $bp->groups->invites_scope ) && 'invited' === $bp->groups->invites_scope ) {
-		$response['is_sent']  = (bool) groups_check_user_has_invite( $user->ID, $group_id );
+		$response['is_sent'] = (bool) groups_check_user_has_invite( $user->ID, $group_id );
 
 		$inviter_ids = bp_nouveau_groups_get_inviter_ids( $user->ID, $group_id );
 
@@ -214,15 +224,19 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 			}
 
 			$response['invited_by'][] = array(
-				'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
-					'item_id' => $inviter_id,
-					'object'  => 'user',
-					'type'    => 'thumb',
-					'width'   => 50,
-					'height'  => 50,
-					'html'    => false,
-					'class'   => $class,
-				) ) ),
+				'avatar'    => htmlspecialchars_decode(
+					bp_core_fetch_avatar(
+						array(
+							'item_id' => $inviter_id,
+							'object'  => 'user',
+							'type'    => 'thumb',
+							'width'   => 50,
+							'height'  => 50,
+							'html'    => false,
+							'class'   => $class,
+						)
+					)
+				),
 				'user_link' => bp_core_get_userlink( $inviter_id, false, true ),
 				'user_name' => bp_core_get_username( $inviter_id ),
 			);
@@ -252,16 +266,19 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_get_group_potential_invites( $args = array() ) {
-	$r = bp_parse_args( $args, array(
-		'group_id'     => bp_get_current_group_id(),
-		'type'         => 'alphabetical',
-		'per_page'     => 20,
-		'page'         => 1,
-		'search_terms' => false,
-		'member_type'  => false,
-		'user_id'      => 0,
-		'is_confirmed' => true,
-	) );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'group_id'     => bp_get_current_group_id(),
+			'type'         => 'alphabetical',
+			'per_page'     => 20,
+			'page'         => 1,
+			'search_terms' => false,
+			'member_type'  => false,
+			'user_id'      => 0,
+			'is_confirmed' => true,
+		)
+	);
 
 	if ( empty( $r['group_id'] ) ) {
 		return false;
@@ -284,7 +301,10 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 
 	$response = new stdClass();
 
-	$response->meta = array( 'total_page' => 0, 'current_page' => 0 );
+	$response->meta  = array(
+		'total_page'   => 0,
+		'current_page' => 0,
+	);
 	$response->users = array();
 
 	if ( ! empty( $query->results ) ) {
@@ -342,22 +362,24 @@ function bp_nouveau_group_setup_nav() {
 			bp_get_current_group_slug()
 		);
 
-	// Create the Subnav item for the group
+		// Create the Subnav item for the group
 	} else {
 		$current_group = groups_get_current_group();
 		$group_link    = bp_get_group_permalink( $current_group );
 
-		bp_core_new_subnav_item( array(
-			'name'            => __( 'Send Invites', 'buddyboss' ),
-			'slug'            => 'send-invites',
-			'parent_url'      => $group_link,
-			'parent_slug'     => $current_group->slug,
-			'screen_function' => 'groups_screen_group_invite',
-			'item_css_id'     => 'invite',
-			'position'        => 70,
-			'user_has_access' => $current_group->user_has_access,
-			'no_access_url'   => $group_link,
-		) );
+		bp_core_new_subnav_item(
+			array(
+				'name'            => __( 'Send Invites', 'buddyboss' ),
+				'slug'            => 'send-invites',
+				'parent_url'      => $group_link,
+				'parent_slug'     => $current_group->slug,
+				'screen_function' => 'groups_screen_group_invite',
+				'item_css_id'     => 'invite',
+				'position'        => 70,
+				'user_has_access' => $current_group->user_has_access,
+				'no_access_url'   => $group_link,
+			)
+		);
 	}
 }
 
@@ -377,11 +399,15 @@ function bp_nouveau_groups_invites_custom_message( $message = '' ) {
 		return $message;
 	}
 
-	$message = str_replace( '---------------------', "
+	$message = str_replace(
+		'---------------------',
+		"
 ---------------------\n
 " . $bp->groups->invites_message . "\n
 ---------------------
-	", $message );
+	",
+		$message
+	);
 
 	return $message;
 }
@@ -396,12 +422,14 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		return array();
 	}
 
-	$item_avatar_url = bp_core_fetch_avatar( array(
-		'item_id'    => $item->id,
-		'object'     => 'group',
-		'type'       => 'thumb',
-		'html'       => false
-	) );
+	$item_avatar_url = bp_core_fetch_avatar(
+		array(
+			'item_id' => $item->id,
+			'object'  => 'group',
+			'type'    => 'thumb',
+			'html'    => false,
+		)
+	);
 
 	return array(
 		'id'          => $item->id,
@@ -425,16 +453,19 @@ function bp_nouveau_groups_invites_restriction_nav() {
 		$user_domain = bp_displayed_user_domain();
 	}
 
-	bp_core_new_subnav_item( array(
-		'name'            => __( 'Group Invites', 'buddyboss' ),
-		'slug'            => 'invites',
-		'parent_url'      => trailingslashit( $user_domain . $slug ),
-		'parent_slug'     => $slug,
-		'screen_function' => 'bp_nouveau_groups_screen_invites_restriction',
-		'item_css_id'     => 'invites',
-		'position'        => 70,
-		'user_has_access' => bp_core_can_edit_settings(),
-	), 'members' );
+	bp_core_new_subnav_item(
+		array(
+			'name'            => __( 'Group Invites', 'buddyboss' ),
+			'slug'            => 'invites',
+			'parent_url'      => trailingslashit( $user_domain . $slug ),
+			'parent_slug'     => $slug,
+			'screen_function' => 'bp_nouveau_groups_screen_invites_restriction',
+			'item_css_id'     => 'invites',
+			'position'        => 70,
+			'user_has_access' => bp_core_can_edit_settings(),
+		),
+		'members'
+	);
 }
 
 /**
@@ -598,12 +629,16 @@ function bp_nouveau_get_groups_filters( $context = '' ) {
 	 * @param array  the members filters.
 	 * @param string the context.
 	 */
-	$filters = apply_filters( 'bp_nouveau_get_groups_filters', array(
-		'active'       => __( 'Recently Active', 'buddyboss' ),
-		'popular'      => __( 'Most Members', 'buddyboss' ),
-		'newest'       => __( 'Newly Created', 'buddyboss' ),
-		'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
-	), $context );
+	$filters = apply_filters(
+		'bp_nouveau_get_groups_filters',
+		array(
+			'active'       => __( 'Recently Active', 'buddyboss' ),
+			'popular'      => __( 'Most Members', 'buddyboss' ),
+			'newest'       => __( 'Newly Created', 'buddyboss' ),
+			'alphabetical' => __( 'Alphabetical', 'buddyboss' ),
+		),
+		$context
+	);
 
 	if ( $action ) {
 		return bp_nouveau_parse_hooked_options( $action, $filters );
@@ -698,14 +733,17 @@ function bp_nouveau_groups_front_page_description() {
  * @return array the Customizer sections to add.
  */
 function bp_nouveau_groups_customizer_sections( $sections = array() ) {
-	return array_merge( $sections, array(
-		'bp_nouveau_group_primary_nav' => array(
-			'title'       => __( 'Group Navigation', 'buddyboss' ),
-			'panel'       => 'bp_nouveau_panel',
-			'priority'    => 40,
-			'description' => __( 'Customize the navigation menu for groups. See your changes by navigating to a group in the live-preview window.', 'buddyboss' ),
-		),
-	) );
+	return array_merge(
+		$sections,
+		array(
+			'bp_nouveau_group_primary_nav' => array(
+				'title'       => __( 'Group Navigation', 'buddyboss' ),
+				'panel'       => 'bp_nouveau_panel',
+				'priority'    => 40,
+				'description' => __( 'Customize the navigation menu for groups. See your changes by navigating to a group in the live-preview window.', 'buddyboss' ),
+			),
+		)
+	);
 }
 
 /**
@@ -718,56 +756,59 @@ function bp_nouveau_groups_customizer_sections( $sections = array() ) {
  * @return array the settings to add.
  */
 function bp_nouveau_groups_customizer_settings( $settings = array() ) {
-	return array_merge( $settings, array(
-		'bp_nouveau_appearance[group_front_page]' => array(
-			'index'             => 'group_front_page',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_front_boxes]' => array(
-			'index'             => 'group_front_boxes',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_front_description]' => array(
-			'index'             => 'group_front_description',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_nav_display]' => array(
-			'index'             => 'group_nav_display',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_nav_order]' => array(
-			'index'             => 'group_nav_order',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[groups_dir_tabs]' => array(
-			'index'             => 'groups_dir_tabs',
-			'capability'        => 'bp_moderate',
-			'sanitize_callback' => 'absint',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-		'bp_nouveau_appearance[group_default_tab]' => array(
-			'index'             => 'group_default_tab',
-			'capability'        => 'bp_moderate',
-			'transport'         => 'refresh',
-			'type'              => 'option',
-		),
-	) );
+	return array_merge(
+		$settings,
+		array(
+			'bp_nouveau_appearance[group_front_page]'  => array(
+				'index'             => 'group_front_page',
+				'capability'        => 'bp_moderate',
+				'sanitize_callback' => 'absint',
+				'transport'         => 'refresh',
+				'type'              => 'option',
+			),
+			'bp_nouveau_appearance[group_front_boxes]' => array(
+				'index'             => 'group_front_boxes',
+				'capability'        => 'bp_moderate',
+				'sanitize_callback' => 'absint',
+				'transport'         => 'refresh',
+				'type'              => 'option',
+			),
+			'bp_nouveau_appearance[group_front_description]' => array(
+				'index'             => 'group_front_description',
+				'capability'        => 'bp_moderate',
+				'sanitize_callback' => 'absint',
+				'transport'         => 'refresh',
+				'type'              => 'option',
+			),
+			'bp_nouveau_appearance[group_nav_display]' => array(
+				'index'             => 'group_nav_display',
+				'capability'        => 'bp_moderate',
+				'sanitize_callback' => 'absint',
+				'transport'         => 'refresh',
+				'type'              => 'option',
+			),
+			'bp_nouveau_appearance[group_nav_order]'   => array(
+				'index'             => 'group_nav_order',
+				'capability'        => 'bp_moderate',
+				'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
+				'transport'         => 'refresh',
+				'type'              => 'option',
+			),
+			'bp_nouveau_appearance[groups_dir_tabs]'   => array(
+				'index'             => 'groups_dir_tabs',
+				'capability'        => 'bp_moderate',
+				'sanitize_callback' => 'absint',
+				'transport'         => 'refresh',
+				'type'              => 'option',
+			),
+			'bp_nouveau_appearance[group_default_tab]' => array(
+				'index'      => 'group_default_tab',
+				'capability' => 'bp_moderate',
+				'transport'  => 'refresh',
+				'type'       => 'option',
+			),
+		)
+	);
 }
 
 /**
@@ -783,27 +824,32 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 
 	// Default options for the groups default tab.
 	if ( bp_is_active( 'activity' ) ) {
-		$options = apply_filters( 'group_default_tab_options_list',
+		$options = apply_filters(
+			'group_default_tab_options_list',
 			array(
 				'members'  => __( 'Members', 'buddyboss' ),
 				'activity' => __( 'Feed', 'buddyboss' ),
-			) );
+			)
+		);
 	} else {
-		$options = apply_filters( 'group_default_tab_options_list',
+		$options = apply_filters(
+			'group_default_tab_options_list',
 			array(
 				'members' => __( 'Members', 'buddyboss' ),
-			) );
+			)
+		);
 	}
 
-	return array_merge( $controls,
+	return array_merge(
+		$controls,
 		array(
-			'group_nav_display'  => array(
+			'group_nav_display' => array(
 				'label'    => __( 'Display the group navigation vertically.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
 				'settings' => 'bp_nouveau_appearance[group_nav_display]',
 				'type'     => 'checkbox',
 			),
-			'group_default_tab'  => array(
+			'group_default_tab' => array(
 				'label'       => __( 'Group navigation order', 'buddyboss' ),
 				'description' => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
 				'section'     => 'bp_nouveau_group_primary_nav',
@@ -811,14 +857,15 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 				'type'        => 'select',
 				'choices'     => $options,
 			),
-			'group_nav_order'    => array(
+			'group_nav_order'   => array(
 				'class'    => 'BP_Nouveau_Nav_Customize_Control',
 				'label'    => __( 'Reorder the primary navigation for a group.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
 				'settings' => 'bp_nouveau_appearance[group_nav_order]',
 				'type'     => 'group',
 			),
-		) );
+		)
+	);
 }
 
 /**
@@ -893,10 +940,13 @@ function bp_nouveau_group_locate_template_part( $template = '' ) {
 			$bp_nouveau->groups->current_group_hierarchy[] = 'groups/single/%s-group-type-' . sanitize_file_name( $current_group_type ) . '.php';
 		}
 
-		$bp_nouveau->groups->current_group_hierarchy = array_merge( $bp_nouveau->groups->current_group_hierarchy, array(
-			'groups/single/%s-status-' . sanitize_file_name( $current_group->status ) . '.php',
-			'groups/single/%s.php'
-		) );
+		$bp_nouveau->groups->current_group_hierarchy = array_merge(
+			$bp_nouveau->groups->current_group_hierarchy,
+			array(
+				'groups/single/%s-status-' . sanitize_file_name( $current_group->status ) . '.php',
+				'groups/single/%s.php',
+			)
+		);
 	}
 
 	// Init the templates
@@ -972,10 +1022,13 @@ function bp_nouveau_group_is_home_widgets() {
  * @return array The Activities Template arguments.
  */
 function bp_nouveau_group_activity_widget_overrides( $args = array() ) {
-	return array_merge( $args, array(
-		'object'     => 'groups',
-		'primary_id' => bp_get_current_group_id(),
-	) );
+	return array_merge(
+		$args,
+		array(
+			'object'     => 'groups',
+			'primary_id' => bp_get_current_group_id(),
+		)
+	);
 }
 
 /**
@@ -988,9 +1041,12 @@ function bp_nouveau_group_activity_widget_overrides( $args = array() ) {
  * @return array The Groups Template arguments.
  */
 function bp_nouveau_group_groups_widget_overrides( $args = array() ) {
-	return array_merge( $args, array(
-		'include' => bp_get_current_group_id(),
-	) );
+	return array_merge(
+		$args,
+		array(
+			'include' => bp_get_current_group_id(),
+		)
+	);
 }
 
 /**
@@ -1009,9 +1065,12 @@ function bp_nouveau_group_members_widget_overrides( $args = array() ) {
 		return $args;
 	}
 
-	return array_merge( $args, array(
-		'include' => wp_list_pluck( $group_members['members'], 'ID' ),
-	) );
+	return array_merge(
+		$args,
+		array(
+			'include' => wp_list_pluck( $group_members['members'], 'ID' ),
+		)
+	);
 }
 
 /**
@@ -1063,16 +1122,16 @@ function bp_nouveau_groups_remove_home_widget_filters() {
 function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 	// screen id => dynamic part of the hooks, nonce & specific template to use.
 	$screens = array(
-		'group-details' => array(
+		'group-details'     => array(
 			'hook'     => 'group_details_creation_step',
 			'nonce'    => 'groups_create_save_group-details',
 			'template' => 'groups/single/admin/edit-details',
 		),
-		'group-settings' => array(
+		'group-settings'    => array(
 			'hook'  => 'group_settings_creation_step',
 			'nonce' => 'groups_create_save_group-settings',
 		),
-		'group-avatar' => array(
+		'group-avatar'      => array(
 			'hook'  => 'group_avatar_creation_step',
 			'nonce' => 'groups_create_save_group-avatar',
 		),
@@ -1080,7 +1139,7 @@ function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 			'hook'  => 'group_cover_image_creation_step',
 			'nonce' => 'groups_create_save_group-cover-image',
 		),
-		'group-invites' => array(
+		'group-invites'     => array(
 			'hook'     => 'group_invites_creation_step',
 			'nonce'    => 'groups_create_save_group-invites',
 			'template' => 'common/js-templates/invites/index',
@@ -1107,13 +1166,31 @@ function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 function bp_nouveau_group_get_core_manage_screens( $id = '' ) {
 	// screen id => dynamic part of the hooks & nonce.
 	$screens = array(
-		'edit-details'        => array( 'hook' => 'group_details_admin',             'nonce' => 'groups_edit_group_details'  ),
-		'group-settings'      => array( 'hook' => 'group_settings_admin',            'nonce' => 'groups_edit_group_settings' ),
+		'edit-details'        => array(
+			'hook'  => 'group_details_admin',
+			'nonce' => 'groups_edit_group_details',
+		),
+		'group-settings'      => array(
+			'hook'  => 'group_settings_admin',
+			'nonce' => 'groups_edit_group_settings',
+		),
 		'group-avatar'        => array(),
-		'group-cover-image'   => array( 'hook' => 'group_settings_cover_image',      'nonce' => ''                           ),
-		'manage-members'      => array( 'hook' => 'group_manage_members_admin',      'nonce' => ''                           ),
-		'membership-requests' => array( 'hook' => 'group_membership_requests_admin', 'nonce' => ''                           ),
-		'delete-group'        => array( 'hook' => 'group_delete_admin',              'nonce' => 'groups_delete_group'        ),
+		'group-cover-image'   => array(
+			'hook'  => 'group_settings_cover_image',
+			'nonce' => '',
+		),
+		'manage-members'      => array(
+			'hook'  => 'group_manage_members_admin',
+			'nonce' => '',
+		),
+		'membership-requests' => array(
+			'hook'  => 'group_membership_requests_admin',
+			'nonce' => '',
+		),
+		'delete-group'        => array(
+			'hook'  => 'group_delete_admin',
+			'nonce' => 'groups_delete_group',
+		),
 	);
 
 	if ( isset( $screens[ $id ] ) ) {

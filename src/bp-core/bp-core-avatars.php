@@ -397,7 +397,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	// Set image width.
 	if ( false !== $params['width'] ) {
 		// Width has been specified. No modification necessary.
-	} elseif ( 'thumb' == $params['type'] ) {
+	} elseif ( 'thumb' === $params['type'] ) {
 		$params['width'] = bp_core_avatar_thumb_width();
 	} else {
 		$params['width'] = bp_core_avatar_full_width();
@@ -407,7 +407,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 	// Set image height.
 	if ( false !== $params['height'] ) {
 		// Height has been specified. No modification necessary.
-	} elseif ( 'thumb' == $params['type'] ) {
+	} elseif ( 'thumb' === $params['type'] ) {
 		$params['height'] = bp_core_avatar_thumb_height();
 	} else {
 		$params['height'] = bp_core_avatar_full_height();
@@ -483,9 +483,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 	 * Set the file names to search for, to select the full size
 	 * or thumbnail image.
 	 */
-	$avatar_size              = ( 'full' == $params['type'] ) ? '-bpfull' : '-bpthumb';
-	$legacy_user_avatar_name  = ( 'full' == $params['type'] ) ? '-avatar2' : '-avatar1';
-	$legacy_group_avatar_name = ( 'full' == $params['type'] ) ? '-groupavatar-full' : '-groupavatar-thumb';
+	$avatar_size              = ( 'full' === $params['type'] ) ? '-bpfull' : '-bpthumb';
+	$legacy_user_avatar_name  = ( 'full' === $params['type'] ) ? '-avatar2' : '-avatar1';
+	$legacy_group_avatar_name = ( 'full' === $params['type'] ) ? '-groupavatar-full' : '-groupavatar-thumb';
 
 	// Check for directory.
 	if ( file_exists( $avatar_folder_dir ) ) {
@@ -493,11 +493,17 @@ function bp_core_fetch_avatar( $args = '' ) {
 		$avatar_url = '';
 
 		// Open directory.
-		if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+		$av_dir = opendir( $avatar_folder_dir );
+
+		if ( $av_dir ) {
 
 			// Stash files in an array once to check for one that matches.
 			$avatar_files = array();
-			while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+
+			// Read directory
+			$avatar_file = readdir( $av_dir );
+
+			while ( false !== $avatar_file ) {
 				// Only add files to the array (skip directories).
 				if ( 2 < strlen( $avatar_file ) ) {
 					$avatar_files[] = $avatar_file;
@@ -606,7 +612,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 		// Set gravatar type.
 		if ( empty( $bp->grav_default->{$params['object']} ) ) {
 			$default_grav = 'wavatar';
-		} elseif ( 'mystery' == $bp->grav_default->{$params['object']} ) {
+		} elseif ( 'mystery' === $bp->grav_default->{$params['object']} ) {
 
 			/**
 			 * Filters the Mystery person avatar src value.
@@ -623,9 +629,9 @@ function bp_core_fetch_avatar( $args = '' ) {
 
 		// Set gravatar object.
 		if ( empty( $params['email'] ) ) {
-			if ( 'user' == $params['object'] ) {
+			if ( 'user' === $params['object'] ) {
 				$params['email'] = bp_core_get_user_email( $params['item_id'] );
-			} elseif ( 'group' == $params['object'] || 'blog' == $params['object'] ) {
+			} elseif ( 'group' === $params['object'] || 'blog' === $params['object'] ) {
 				$params['email'] = $params['item_id'] . '-' . $params['object'] . '@' . bp_get_root_domain();
 			}
 		}
@@ -691,7 +697,7 @@ function bp_core_fetch_avatar( $args = '' ) {
 				$response  = get_headers( $gravcheck );
 				set_transient( $key, $response, DAY_IN_SECONDS );
 			}
-			if ( isset( $response[0] ) && $response[0] == 'HTTP/1.1 404 Not Found' ) {
+			if ( isset( $response[0] ) && 'HTTP/1.1 404 Not Found' === $response[0] ) {
 				$gravatar = apply_filters( 'bp_gravatar_not_found_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' );
 			} else {
 
@@ -773,7 +779,7 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	);
 
 	$args = wp_parse_args( $args, $defaults );
-	extract( $args, EXTR_SKIP );
+	extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	/**
 	 * Filters whether or not to handle deleting an existing avatar.
@@ -801,11 +807,11 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	}
 
 	if ( empty( $item_id ) ) {
-		if ( 'user' == $object ) {
+		if ( 'user' === $object ) {
 			$item_id = bp_displayed_user_id();
-		} elseif ( 'group' == $object ) {
+		} elseif ( 'group' === $object ) {
 			$item_id = buddypress()->groups->current_group->id;
-		} elseif ( 'blog' == $object ) {
+		} elseif ( 'blog' === $object ) {
 			$item_id = $current_blog->id;
 		}
 
@@ -818,11 +824,11 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 	}
 
 	if ( empty( $avatar_dir ) ) {
-		if ( 'user' == $object ) {
+		if ( 'user' === $object ) {
 			$avatar_dir = 'avatars';
-		} elseif ( 'group' == $object ) {
+		} elseif ( 'group' === $object ) {
 			$avatar_dir = 'group-avatars';
-		} elseif ( 'blog' == $object ) {
+		} elseif ( 'blog' === $object ) {
 			$avatar_dir = 'blog-avatars';
 		}
 
@@ -841,9 +847,12 @@ function bp_core_delete_existing_avatar( $args = '' ) {
 		return false;
 	}
 
-	if ( $av_dir = opendir( $avatar_folder_dir ) ) {
-		while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
-			if ( ( preg_match( '/-bpfull/', $avatar_file ) || preg_match( '/-bpthumb/', $avatar_file ) ) && '.' != $avatar_file && '..' != $avatar_file ) {
+	$av_dir = opendir( $avatar_folder_dir );
+
+	if ( $av_dir ) {
+		$avatar_file = readdir( $av_dir );
+		while ( false !== $avatar_file ) {
+			if ( ( preg_match( '/-bpfull/', $avatar_file ) || preg_match( '/-bpthumb/', $avatar_file ) ) && '.' !== $avatar_file && '..' !== $avatar_file ) {
 				@unlink( $avatar_folder_dir . '/' . $avatar_file );
 			}
 		}
@@ -1132,8 +1141,8 @@ function bp_avatar_ajax_upload() {
 		$bp->template_message      = false;
 		$bp->template_message_type = false;
 
-		@setcookie( 'bp-message', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-		@setcookie( 'bp-message-type', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+		@setcookie( 'bp-message', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		@setcookie( 'bp-message-type', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 	}
 
 	if ( empty( $avatar ) ) {
@@ -1160,7 +1169,7 @@ function bp_avatar_ajax_upload() {
 		bp_attachments_json_response( false, $is_html4 );
 	}
 
-	$uploaded_image = @getimagesize( $bp->avatar_admin->image->file );
+	$uploaded_image = @getimagesize( $bp->avatar_admin->image->file ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 	// Set the name of the file.
 	$name       = $_FILES['file']['name'];
@@ -1526,7 +1535,8 @@ function bp_core_get_avatar_data_url_filter( $retval, $id_or_email, $args ) {
 	}
 
 	// Get the BuddyPress avatar URL.
-	if ( $bp_avatar = bp_core_fetch_avatar( $args ) ) {
+	$bp_avatar = bp_core_fetch_avatar( $args );
+	if ( $bp_avatar ) {
 		return $bp_avatar;
 	}
 
@@ -1684,7 +1694,7 @@ function bp_core_get_upload_dir( $type = 'upload_path' ) {
 
 				// If $key is 'baseurl', check to see if we're on SSL
 				// Workaround for WP13941, WP15928, WP19037.
-				if ( $key == 'baseurl' && is_ssl() ) {
+				if ( 'baseurl' === $key && is_ssl() ) {
 					$retval = str_replace( 'http://', 'https://', $retval );
 				}
 			}
@@ -1757,7 +1767,7 @@ function bp_get_user_has_avatar( $user_id = 0 ) {
 			'html'    => false,
 			'type'    => 'full',
 		)
-	) != bp_core_avatar_default( 'local' ) ) {
+	) !== bp_core_avatar_default( 'local' ) ) {
 		$retval = true;
 	}
 

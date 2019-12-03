@@ -14,7 +14,7 @@
 	<?php else : ?>
 		<?php esc_html_e( 'Profile Photo', 'buddyboss' ); ?>
 	<?php endif; ?>
-			
+
 </h2>
 
 <?php bp_nouveau_member_hook( 'before', 'avatar_upload_content' ); ?>

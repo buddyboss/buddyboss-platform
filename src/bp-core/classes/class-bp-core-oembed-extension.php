@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 2.6.0
  */
-abstract class BP_Core_oEmbed_Extension {
+abstract class BP_Core_Oembed_Extension {
 
 	/** START PROPERTIES ****************************************************/
 

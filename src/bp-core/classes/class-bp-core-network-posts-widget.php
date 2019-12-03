@@ -94,7 +94,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 		}
 
 		if ( $blogs ) {
-			?> <ul id="network-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true"> 
+			?> <ul id="network-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
 			<?php
 			foreach ( $blogs as $blog_key ) {
 				switch_to_blog( $blog_key );
@@ -145,8 +145,8 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 							</span>
 									<?php if ( $show_image && has_post_thumbnail() ) { ?>
 										<div class="data-photo"><a href="<?php the_permalink(); ?>"
-																   title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>"
-																   class="entry-media entry-img">
+																title="<?php echo esc_attr( sprintf( __( 'Permalink to %s', 'buddyboss' ), the_title_attribute( 'echo=0' ) ) ); ?>"
+																class="entry-media entry-img">
 												<?php the_post_thumbnail(); ?>
 											</a>
 										</div>
@@ -166,7 +166,7 @@ class BP_Core_Network_Posts_Widget extends WP_Widget {
 				restore_current_blog();
 			}
 			?>
-			 </ul>
+			</ul>
 			<?php
 		}
 

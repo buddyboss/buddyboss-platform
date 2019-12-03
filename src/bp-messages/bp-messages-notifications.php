@@ -264,7 +264,8 @@ function messages_screen_notification_settings() {
 		return;
 	}
 
-	if ( ! $new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
+	$new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true );
+	if ( ! $new_messages ) {
 		$new_messages = 'yes';
 	} ?>
 
@@ -283,15 +284,15 @@ function messages_screen_notification_settings() {
 				<td></td>
 				<td><?php _e( 'A member sends you a new message', 'buddyboss' ); ?></td>
 				<td class="yes"><input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" value="yes" <?php checked( $new_messages, 'yes', true ); ?>/><label for="notification-messages-new-messages-yes" class="bp-screen-reader-text">
-																																												   <?php
+																																												<?php
 																																													/* translators: accessibility text */
 																																													_e( 'Yes, send email', 'buddyboss' );
-																																													?>
+																																												?>
 				</label></td>
 				<td class="no"><input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" value="no" <?php checked( $new_messages, 'no', true ); ?>/><label for="notification-messages-new-messages-no" class="bp-screen-reader-text">
 																																												<?php
-																																												/* translators: accessibility text */
-																																												_e( 'No, do not send email', 'buddyboss' );
+																																													/* translators: accessibility text */
+																																													_e( 'No, do not send email', 'buddyboss' );
 																																												?>
 				</label></td>
 			</tr>
