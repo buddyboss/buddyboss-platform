@@ -82,7 +82,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 				<?php endwhile; ?>
 			</div>
 			<?php if ( $following_count_number > $instance['max_users'] ) { ?>
-				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>#following" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
 			<?php echo $args['after_widget']; ?>

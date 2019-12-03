@@ -301,3 +301,49 @@ function bp_core_screen_signup() {
 	bp_core_load_template( apply_filters( 'bp_core_template_register', array( 'register', 'registration/register' ) ) );
 }
 add_action( 'bp_screens', 'bp_core_screen_signup' );
+
+/**
+ * for check email id exist or not on ajax submit.
+ *
+ * @since BuddyBoss 1.2.1
+ */
+function bp_signup_check_email_username() {
+	
+	$signup_username 	= '';
+	$signup_email 		= '';
+	$account_details 	= bp_core_validate_user_signup( bp_get_signup_username_value(), bp_get_signup_email_value() );
+	$email_opt    		= function_exists( 'bp_register_confirm_email' ) 	&& true === bp_register_confirm_email() 	? true : false;
+	$password_opt 		= function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() 	? true : false;
+	// If there are errors with account details, set them for display.
+	if ( ! empty( $account_details['errors']->errors['user_name'] ) ) {
+		$signup_username = $account_details['errors']->errors['user_name'][0];
+	}
+
+	if ( ! empty( $account_details['errors']->errors['user_email'] ) ) {
+		$signup_email = $account_details['errors']->errors['user_email'][0];
+	}
+	// if email opt enabled.
+	if ( true === $email_opt ) {
+
+		// Check that both password fields are filled in.
+		if ( empty( $_POST['signup_email'] ) || empty( $_POST['signup_email_confirm'] ) ) {
+			$signup_email = __( 'Please make sure to enter your email twice.', 'buddyboss' );
+		}
+
+		// Check that the passwords match.
+		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
+			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
+		}
+	}
+	$nickname_field = 'field_' . bp_xprofile_nickname_field_id();
+	$return = array(
+		'field_id'   		=> bp_xprofile_nickname_field_id(),
+	    'signup_email'  	=> $signup_email,
+	    'signup_username'  	=> $signup_username
+	    
+	);
+
+	wp_send_json( $return, true );
+}
+
+add_action( 'wp_ajax_nopriv_check_email', 'bp_signup_check_email_username' );

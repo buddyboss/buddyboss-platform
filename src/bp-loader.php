@@ -146,7 +146,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 
-                apply_filters( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
+                add_filter( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
 
                 if ( isset( $_REQUEST['checked'] ) ) {
                     add_action( 'load-plugins.php', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
@@ -197,7 +197,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function pre_update_option_active_plugins( $value ) {
+	function bp_pre_update_option_active_plugins( $value ) {
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite;
 		if ( $bp_is_multisite ) {
 			if ( isset( $value[ $bb_plugin_file ] ) ) {
@@ -222,12 +222,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 	}
 	// Filter for setting the spoofing of BuddyPress.
-	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
+	add_filter( 'pre_update_option_active_plugins', 'bp_pre_update_option_active_plugins' );
 
 	if ( $bp_is_multisite ) {
 		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
-		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
+		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
+		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 	}
 
 

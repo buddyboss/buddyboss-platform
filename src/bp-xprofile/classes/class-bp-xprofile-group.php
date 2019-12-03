@@ -760,7 +760,14 @@ class BP_XProfile_Group {
 		if ( false === $default_visibility_levels ) {
 			$bp = buddypress();
 
-			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
+			// @todo need to check like  why we are not getting the $bp->profile->table_name_meta into the plugins page.
+			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_meta ) ) {
+				$profile_meta_table = $bp->profile->table_name_meta;
+			} else {
+				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
+			}
+
+			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
 
 			// Arrange so that the field id is the key and the visibility level the value.
 			$default_visibility_levels = array();
