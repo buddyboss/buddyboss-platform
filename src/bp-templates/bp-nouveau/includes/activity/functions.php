@@ -58,6 +58,12 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+
+	// Enqueue activity form parts and js required for single activity
+	if ( bp_nouveau_current_user_can( 'publish_activity' ) && bp_is_single_activity() ) {
+		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
+		bp_get_template_part( 'common/js-templates/activity/form' );
+	}
 }
 
 /**
