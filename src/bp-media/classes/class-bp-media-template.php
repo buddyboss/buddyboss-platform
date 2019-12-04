@@ -153,6 +153,8 @@ class BP_Media_Template {
 			'album_id'     => false,
 			'group_id'     => false,
 			'privacy'      => false,
+			'album'        => false,
+			'user_directory'        => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -178,6 +180,8 @@ class BP_Media_Template {
 					'order_by'    => $order_by,
 					'user_id'     => $user_id,
 					'album_id'    => $album_id,
+					'album'       => $album,
+					'user_directory'       => $user_directory,
 				)
 			);
 
@@ -199,6 +203,8 @@ class BP_Media_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
+					'album'        => $album,
+					'user_directory'        => $user_directory,
 				)
 			);
 		}

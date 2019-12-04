@@ -680,6 +680,7 @@ function bp_core_install_media() {
 	   title text NOT NULL,
 	   privacy varchar(50) NULL DEFAULT 'public',
 	   type varchar(50) NULL DEFAULT 'media',
+	   parent bigint(20) NULL DEFAULT 0,
 	   PRIMARY KEY  (id)
    ) {$charset_collate};";
 

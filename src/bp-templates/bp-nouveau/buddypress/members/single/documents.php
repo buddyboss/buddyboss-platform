@@ -22,8 +22,6 @@
 
 			bp_nouveau_member_hook( 'before', 'media_document_content' );
 
-			bp_get_template_part( 'media/actions' );
-
 			?>
 
 			<div id="media-stream" class="media" data-bp-list="media" data-bp-media-type="document">

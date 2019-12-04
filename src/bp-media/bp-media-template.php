@@ -219,6 +219,8 @@ function bp_has_media( $args = '' ) {
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
 			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'album'        => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'user_directory' => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
@@ -1501,8 +1503,11 @@ function bp_media_name() {
 function bp_get_media_name() {
 	global $media_template;
 
-
-	$filename = basename ( get_attached_file( $media_template->media->attachment_id ) );
+	if ( isset($media_template->media ) && isset( $media_template->media->attachment_id ) && $media_template->media->attachment_id > 0 ) {
+		$filename = basename( get_attached_file( $media_template->media->attachment_id ) );
+	} else {
+		$filename = $media_template->media->title;
+	}
 
 	/**
 	 * Filters the media name being displayed.

@@ -307,30 +307,60 @@ function bp_media_get( $args = '' ) {
 			'privacy'      => false,        // privacy of media
 			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'  => false,
+			'album'        => false,
+			'user_directory'        => false,
 		),
 		'media_get'
 	);
 
-	$media = BP_Media::get(
-		array(
-			'page'         => $r['page'],
-			'type'         => $r['type'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'activity_id'  => $r['activity_id'],
-			'album_id'     => $r['album_id'],
-			'group_id'     => $r['group_id'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'order_by'     => $r['order_by'],
-			'search_terms' => $r['search_terms'],
-			'scope'        => $r['scope'],
-			'privacy'      => $r['privacy'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
-		)
-	);
+	if ( '1' === $r['album'] ) {
+		$media = BP_Media::documents(
+			array(
+				'page'         => $r['page'],
+				'type'         => $r['type'],
+				'per_page'     => $r['per_page'],
+				'user_id'      => $r['user_id'],
+				'activity_id'  => $r['activity_id'],
+				'album_id'     => $r['album_id'],
+				'group_id'     => $r['group_id'],
+				'max'          => $r['max'],
+				'sort'         => $r['sort'],
+				'order_by'     => $r['order_by'],
+				'search_terms' => $r['search_terms'],
+				'scope'        => $r['scope'],
+				'privacy'      => $r['privacy'],
+				'exclude'      => $r['exclude'],
+				'count_total'  => $r['count_total'],
+				'fields'       => $r['fields'],
+				'album'        => $r['album'],
+				'user_directory'        => $r['user_directory'],
+			)
+		);
+	} else {
+		$media = BP_Media::get(
+			array(
+				'page'         => $r['page'],
+				'type'         => $r['type'],
+				'per_page'     => $r['per_page'],
+				'user_id'      => $r['user_id'],
+				'activity_id'  => $r['activity_id'],
+				'album_id'     => $r['album_id'],
+				'group_id'     => $r['group_id'],
+				'max'          => $r['max'],
+				'sort'         => $r['sort'],
+				'order_by'     => $r['order_by'],
+				'search_terms' => $r['search_terms'],
+				'scope'        => $r['scope'],
+				'privacy'      => $r['privacy'],
+				'exclude'      => $r['exclude'],
+				'count_total'  => $r['count_total'],
+				'fields'       => $r['fields'],
+				'album'        => $r['album'],
+			)
+		);
+	}
+
+
 
 	/**
 	 * Filters the requested media item(s).
@@ -370,6 +400,7 @@ function bp_media_get_specific( $args = '' ) {
 			'per_page'  => false,      // Results per page.
 			'sort'      => 'DESC',     // Sort ASC or DESC
 			'order_by'  => false,     // Sort ASC or DESC
+			'album'     => false,
 		),
 		'media_get_specific'
 	);
@@ -382,6 +413,7 @@ function bp_media_get_specific( $args = '' ) {
 		'per_page' => $r['per_page'],
 		'sort'     => $r['sort'],
 		'order_by' => $r['order_by'],
+		'album'    => $r['album'],
 	);
 
 	/**
@@ -512,7 +544,7 @@ function bp_media_add_handler( $medias = array() ) {
 	}
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
-		// save media
+		// save  media
 		foreach ( $medias as $media ) {
 
 			$media_id = bp_media_add( array(
@@ -2286,8 +2318,11 @@ function bp_media_get_document_svg_icon( $extension ) {
 		case 'zip':
 			$svg = apply_filters( 'bp_media_get_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/zip.svg', $extension ) ;
 		break;
+		case 'folder':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
+			break;
 		default:
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_folder', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/csv.svg', $extension ) ;
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_folder', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
 	}
 
 	return apply_filters( 'bp_media_get_document_svg_icon', $svg, $extension );
