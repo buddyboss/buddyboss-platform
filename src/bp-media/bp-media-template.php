@@ -1551,3 +1551,36 @@ function bp_get_media_author() {
 	 */
 	return apply_filters( 'bp_get_media_author', $author );
 }
+
+/**
+ * Output the media name.
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_document_folder_link() {
+	echo bp_get_document_folder_link();
+}
+
+/**
+ * Return the media name.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media name.
+ */
+function bp_get_document_folder_link() {
+	global $media_template;
+
+	$link = $media_template->media->link;
+
+	/**
+	 * Filters the media name being displayed.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $id The media name.
+	 */
+	return apply_filters( 'bp_get_document_folder_link', $link );
+}

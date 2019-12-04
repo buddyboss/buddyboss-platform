@@ -1062,6 +1062,16 @@ class BP_Media {
 				$media->type         = $media->type;
 				$media->parent       = $media->parent;
 
+				if ( (int) $media->group_id > 0 ) {
+					$media->folder = 'group';
+					$group = groups_get_group( array( 'group_id' => $media->group_id ) );
+					$media->link = bp_get_group_permalink( $group ) . bp_get_document_slug() . '/folder/' . (int) $media->id;
+				} else {
+					$media->folder = 'profile';
+					$media->link = bp_core_get_user_domain( (int) $media->user_id ) . bp_get_document_slug() . '/folder/' . (int) $media->id;
+				}
+
+
 			}
 			$medias[] = $media;
 		}
