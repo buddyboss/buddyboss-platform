@@ -866,16 +866,14 @@ window.bp = window.bp || {};
 				// change the aria state from false to true
 				target.attr( 'aria-expanded', 'true' );
 
-				$.scrollTo(
-					form,
-					500,
-					{
-						offset:-100,
-						easing:'swing'
-					}
-				);
+				$('html, body').animate({
+					scrollTop: $(form).offset().top-100
+				},  {
+					duration: 'slow',
+					easing: 'swing'
+				});
 
-				$( '#ac-form-' + activity_id + ' textarea' ).focus();
+				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
 				if ( ! _.isUndefined( BP_Nouveau.media ) && ! _.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea(
