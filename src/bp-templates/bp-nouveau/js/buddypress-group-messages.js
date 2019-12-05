@@ -415,10 +415,10 @@ window.bp = window.bp || {};
 							var feedbackHtmlSuccess = '<div class="bp-feedback success bp-feedback-content-no-error remove-after-few-seconds"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + response.data.redirect_link  + ' </p></div>';
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').after( feedbackHtmlSuccess );
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').hide();
-                                                        setTimeout(function() {
-                                                            $('.remove-after-few-seconds').hide();
-                                                            $('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
-                                                        }, 3000);
+							setTimeout(function() {
+								$('.remove-after-few-seconds').hide();
+								$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
+							}, 3000);
 							window.group_messages_editor.setContent('');
 							if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
