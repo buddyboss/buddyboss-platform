@@ -833,9 +833,10 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 	if ( isset( $_POST['users'] ) && 'all' === $_POST['users'] ) {
 
 		$args = array(
-			'per_page' => 99999999999999,
-			'group'    => $_POST['group'],
-			'exclude'  => array( bp_loggedin_user_id() ),
+			'per_page'            => 99999999999999,
+			'group'               => $_POST['group'],
+			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude_admins_mods' => false,
 		);
 
 		$group_members = groups_get_group_members( $args );
