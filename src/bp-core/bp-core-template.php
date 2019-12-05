@@ -3947,7 +3947,7 @@ function bp_email_get_salutation( $settings = array() ) {
 	 * @param array  $settings Email Settings.
 	 * @param string $token    The Recipient token.
 	 */
-	return apply_filters( 'bp_email_get_salutation', sprintf( '%s' , $token ), $settings, $token );
+	return apply_filters( 'bp_email_get_salutation', sprintf( '%s', $token ), $settings, $token );
 }
 
 /**

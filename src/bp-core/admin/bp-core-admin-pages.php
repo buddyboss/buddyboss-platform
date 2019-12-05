@@ -158,7 +158,15 @@ function bp_core_admin_register_registration_page_fields() {
 
 	// add view tutorial button
 	$static_pages['button'] = array(
-		'link'  => bp_core_help_docs_link( 'components/registration/registration-pages.md' ),
+		'link'  => 	bp_get_admin_url( 
+				add_query_arg( 
+					array( 
+						'page' 		=> 'bp-help', 
+						'article' 	=> 62795,
+					),
+					'admin.php' 
+				)
+			),
 		'label' => __( 'View Tutorial', 'buddyboss' ),
 	);
 	$description            = '';

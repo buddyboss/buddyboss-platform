@@ -267,10 +267,10 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 
 			if ( bp_is_group_albums_support_enabled() ) {
 				$nav_items['albums'] = array(
-					'name'            => __( 'Albums', 'buddyboss' ),
-					'slug'            => 'albums',
-					'parent_slug'     => $this->group->slug,
-					'position'        => 85,
+					'name'        => __( 'Albums', 'buddyboss' ),
+					'slug'        => 'albums',
+					'parent_slug' => $this->group->slug,
+					'position'    => 85,
 				);
 			}
 		}

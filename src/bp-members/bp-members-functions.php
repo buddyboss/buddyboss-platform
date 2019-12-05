@@ -2897,6 +2897,20 @@ function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 		$display_name = $old_display_name;
 	}
 
+	if ( bp_loggedin_user_id() ) {
+
+		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id() );
+
+		if ( ! empty( $list_fields ) ) {
+			$last_name_field_id = bp_xprofile_lastname_field_id();
+
+			if ( in_array( $last_name_field_id, $list_fields ) ) {
+				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$display_name = str_replace( ' ' . $last_name, '', $display_name );
+			}
+		}
+	}
+
 	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
