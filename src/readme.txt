@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.2 =
 * Activity - Fixed certain link embeds URLs not rendering proper results
+* Profiles - Fixed member type not displaying in profile cards in 'My Connections' tab
 * Profiles - Fixed pagination of members when using [profile type=""] shortcode
 * Groups - Fixed pagination of groups when using [group type=""] shortcode
 * Groups - Added ability to re-order Photos and Albums tabs in customizer
