@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.2 =
+* Activity - Fixed certain link embeds not rendering proper results
 * Profiles - Fixed pagination of members when using [profile type=""] shortcode
 * Groups - Fixed pagination of groups when using [group type=""] shortcode
 * Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
