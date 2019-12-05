@@ -52,7 +52,6 @@ window.bp = window.bp || {};
 			var memberListUlLast 				 = $('.group-messages-members-listing .last');
 			var memberTotalText 				 = $('#item-body #group-messages-container .bb-groups-messages-left .total-members-text');
 			var searchText 						 = $( '#item-body #group-messages-container .bb-groups-messages-left #group_messages_search' ).val();
-			var messageRight 					 = $( '#item-body #group-messages-container .bb-groups-messages-right' );
 
 			$( '#item-body #group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 
@@ -72,6 +71,7 @@ window.bp = window.bp || {};
 			});
 
 			$group_messages_select.select2().prop( 'disabled', true );
+			$('.bp-select-members-wrap .select2-selection__choice__remove').hide();
 
 			var data = {
 				'action': 'groups_get_group_members_listing',
@@ -136,7 +136,8 @@ window.bp = window.bp || {};
 						$group_messages_select.val('all').trigger( 'change' );
 						$('.group-messages-members-listing #members-list li .action').hide();
 						$('.group-messages-members-listing #members-list li').removeClass( 'selected' );
-                                                $('.bb-groups-messages-right .bp-messages-feedback').show();
+						$('.bb-groups-messages-right .bp-messages-feedback').show();
+						$('.bp-select-members-wrap .select2-selection__choice__remove').hide();
 					} else {
 						$('.bb-groups-messages-right .bp-messages-feedback').hide();
 						$( '#group-messages-send-to-input option[value="all"]' ).each(function() {
@@ -145,6 +146,7 @@ window.bp = window.bp || {};
 						$group_messages_select.select2().prop( 'disabled', false );
 						$( '#group-messages-container .bb-groups-messages-right #send_group_message_form .bb-groups-messages-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 						$('.group-messages-members-listing #members-list li .action').show();
+						$('.bp-select-members-wrap .select2-selection__choice__remove').show();
 					}
 				}
 			});
