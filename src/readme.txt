@@ -66,6 +66,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
 * Forums - Fixed issue with pagination through forums in Forums index
 * Notices - Fixed site notices not clearing after closing them, for non-admin members
+* Registration - Fixed data not saving on register form when validating incomplete fields
 * Widgets - Changed 'More' link in 'Users I'm Following' widget to redirect to 'Following' tab
 * Compatibility - Fixed conflict with WP Ultimo while Network Search is enabled
 * Compatibility - Added support for 'bp_embed_oembed_html' filter in code
