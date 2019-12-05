@@ -65,6 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Added ability to re-order Photos and Albums tabs in customizer
 * Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
 * Forums - Fixed issue with pagination through forums in Forums index
+* Widgets - Changed 'More' link in 'Users I'm Following' widget to redirect to 'Following' tab
 * Documentation - Now syncing all docs in real time from BuddyBoss Resources website
 
 = 1.2.1 =
