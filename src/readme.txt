@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed pagination of members when using [profile type=""] shortcode
 * Groups - Fixed pagination of groups when using [group type=""] shortcode
 * Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
+* Documentation - Now syncing all docs in real time from BuddyBoss Resources website
 
 = 1.2.1 =
 * Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
