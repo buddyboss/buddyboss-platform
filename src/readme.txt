@@ -57,7 +57,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.2 =
 * Profiles - Fixed pagination of members when using [profile type=""] shortcode
-* Forums - Fixed issue with posting a forum reply consisting of just a GIF
+* Groups - Fixed pagination of groups when using [group type=""] shortcode
+* Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
 
 = 1.2.1 =
 * Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
