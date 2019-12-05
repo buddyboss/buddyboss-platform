@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-05 06:31:12+00:00\n"
+"POT-Creation-Date: 2019-12-05 07:09:36+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -877,7 +877,7 @@ msgid ""
 msgstr ""
 
 #: bp-activity/bp-activity-template.php:2681
-#: bp-core/bp-core-attachments.php:812 bp-forums/replies/template.php:2110
+#: bp-core/bp-core-attachments.php:810 bp-forums/replies/template.php:2110
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2703
@@ -3390,153 +3390,153 @@ msgstr ""
 msgid "Log Out"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:671
+#: bp-core/bp-core-attachments.php:669
 msgid "You have attempted to queue too many files."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:672
+#: bp-core/bp-core-attachments.php:670
 msgid "%s exceeds the maximum upload size for this site."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:673
+#: bp-core/bp-core-attachments.php:671
 msgid "This file is empty. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:674
+#: bp-core/bp-core-attachments.php:672
 msgid "This file type is not allowed. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:675
+#: bp-core/bp-core-attachments.php:673
 msgid "This file is not an image. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:676
+#: bp-core/bp-core-attachments.php:674
 msgid "Memory exceeded. Please try another smaller file."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:677
+#: bp-core/bp-core-attachments.php:675
 msgid "This is larger than the maximum size. Please try another."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:678
+#: bp-core/bp-core-attachments.php:676
 msgid "An error occurred. Please try again later."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:679
+#: bp-core/bp-core-attachments.php:677
 msgid "There was a configuration error. Please contact the server administrator."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:680
+#: bp-core/bp-core-attachments.php:678
 msgid "You may only upload 1 file."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:681
+#: bp-core/bp-core-attachments.php:679
 msgid "HTTP error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:682 bp-core/bp-core-avatars.php:1145
+#: bp-core/bp-core-attachments.php:680 bp-core/bp-core-avatars.php:1141
 msgid "Upload failed."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:683
+#: bp-core/bp-core-attachments.php:681
 msgid "Please try uploading this file with the %1$sbrowser uploader%2$s."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:684
+#: bp-core/bp-core-attachments.php:682
 msgid ""
 "%s exceeds the maximum upload size for the multi-file uploader when used in "
 "your browser."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:685
+#: bp-core/bp-core-attachments.php:683
 msgid "IO error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:686
+#: bp-core/bp-core-attachments.php:684
 msgid "Security error."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:687
+#: bp-core/bp-core-attachments.php:685
 msgid "File canceled."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:688
+#: bp-core/bp-core-attachments.php:686
 msgid "Upload stopped."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:689
+#: bp-core/bp-core-attachments.php:687
 msgid "Dismiss"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:690
+#: bp-core/bp-core-attachments.php:688
 msgid "Crunching&hellip;"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:691
+#: bp-core/bp-core-attachments.php:689
 msgid "Make sure to upload a unique file"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:692
+#: bp-core/bp-core-attachments.php:690
 msgid "\"%s\" has failed to upload."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:693
+#: bp-core/bp-core-attachments.php:691
 msgid ""
 "If you'd like to delete the existing profile photo but not upload a new "
 "one, please use the delete tab."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:805
+#: bp-core/bp-core-attachments.php:803
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
 #: bp-templates/bp-nouveau/includes/media/functions.php:122
 msgid "Upload"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:822
+#: bp-core/bp-core-attachments.php:820
 msgid "Take Photo"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:828
+#: bp-core/bp-core-attachments.php:826
 msgid "Please allow application access to your camera."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:829
+#: bp-core/bp-core-attachments.php:827
 msgid "Please wait while your camera connects."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:830
+#: bp-core/bp-core-attachments.php:828
 msgid "Camera loaded. Click \"Capture\" to take a photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:831
+#: bp-core/bp-core-attachments.php:829
 msgid "Webcam not found or permission was denied. Please upload a photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:832
+#: bp-core/bp-core-attachments.php:830
 msgid "Your browser is not supported. Please upload a photo instead."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:833
+#: bp-core/bp-core-attachments.php:831
 msgid "Video error. Please upload a photo instead."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:834
+#: bp-core/bp-core-attachments.php:832
 msgid "Your profile photo is ready. Click \"Save\" to use this photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:835
+#: bp-core/bp-core-attachments.php:833
 msgid "No photo captured. Click \"Capture\" to take your photo."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:884 bp-core/bp-core-avatars.php:1015
+#: bp-core/bp-core-attachments.php:882 bp-core/bp-core-avatars.php:1011
 msgid "For best results, upload an image that is %1$spx by %2$spx or larger."
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1431 bp-core/bp-core-avatars.php:1009
+#: bp-core/bp-core-attachments.php:1427 bp-core/bp-core-avatars.php:1005
 msgid "Upload Error: %s"
 msgstr ""
 
-#: bp-core/bp-core-attachments.php:1436
+#: bp-core/bp-core-attachments.php:1432
 msgid "There was a problem uploading the cover photo."
 msgstr ""
 
@@ -3548,7 +3548,7 @@ msgstr ""
 msgid "Profile Photo"
 msgstr ""
 
-#: bp-core/bp-core-avatars.php:981
+#: bp-core/bp-core-avatars.php:977
 msgid "Upload Failed! Error was: %s"
 msgstr ""
 
