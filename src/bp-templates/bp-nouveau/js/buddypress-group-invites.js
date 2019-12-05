@@ -351,6 +351,7 @@ window.bp = window.bp || {};
 							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 							feedbackSelectorLeftClass.addClass( 'info' );
 							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							$( '#group-invites-container .bb-groups-invites-right' ).show();
 						} else {
 							$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 							listSelector.html('');
@@ -358,6 +359,7 @@ window.bp = window.bp || {};
 							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 							feedbackSelectorLeftClass.addClass( response.data.type );
 							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							$( '#group-invites-container .bb-groups-invites-right' ).hide();
 						}
 					}
 				});
