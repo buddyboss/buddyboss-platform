@@ -1533,7 +1533,7 @@ window.bp = window.bp || {};
 				this.el.className += ' unread';
 			}
 
-			if ( this.model.get( 'is_group' ) ) {
+			if ( this.model.get( 'is_group' ) && 'all' === this.model.get( 'group_message_users' ) && 'open' === this.model.get( 'group_message_type' ) ) {
 				this.el.className += ' group-thread';
 			}
 
