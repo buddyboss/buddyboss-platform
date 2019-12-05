@@ -8,75 +8,54 @@ window.wp = window.wp || {};
 		return;
 	}
 
-	wp.customize.bind(
-		'ready',
-		function() {
-			var groupFrontPage = wp.customize.control( 'group_front_page' );
+	wp.customize.bind( 'ready', function() {
+		var groupFrontPage = wp.customize.control( 'group_front_page' );
 
-			// If the Main Group setting is disabled, hide all others
-			if ( 'undefined' !== typeof groupFrontPage ) {
-				$( groupFrontPage.selector ).on(
-					'click',
-					'input[type=checkbox]',
-					function( event ) {
-						var checked = $( event.currentTarget ).prop( 'checked' ), controller = $( event.delegateTarget ).prop( 'id' );
+		// If the Main Group setting is disabled, hide all others
+		if ( 'undefined' !== typeof groupFrontPage ) {
+			$( groupFrontPage.selector ).on( 'click', 'input[type=checkbox]', function( event ) {
+				var checked = $( event.currentTarget ).prop( 'checked' ), controller = $( event.delegateTarget ).prop( 'id' );
 
-						_.each(
-							wp.customize.section( 'bp_nouveau_group_front_page' ).controls(),
-							function( control ) {
-								if ( control.selector !== '#' + controller ) {
-									if ( true === checked ) {
-										$( control.selector ).show();
-									} else {
-										$( control.selector ).hide();
-									}
-								}
-							}
-						);
-					}
-				);
-			}
-
-			$( 'ul#customize-control-group_nav_order, ul#customize-control-user_nav_order' ).sortable(
-				{
-					cursor    : 'move',
-					axis      : 'y',
-					opacity   : 1,
-					items     : 'li:not(.ui-sortable-disabled)',
-					tolerance : 'intersect',
-
-					update: function() {
-						var order = [];
-
-						$( this ).find( '[data-bp-nav]' ).each(
-							function( s, slug ) {
-									order.push( $( slug ).data( 'bp-nav' ) );
-							}
-						);
-
-						if ( order.length ) {
-							$( '#bp_item_' + $( this ).data( 'bp-type' ) ).val( order.join() ).trigger( 'change' );
+				_.each( wp.customize.section( 'bp_nouveau_group_front_page' ).controls(), function( control ) {
+					if ( control.selector !== '#' + controller ) {
+						if ( true === checked ) {
+							$( control.selector ).show();
+						} else {
+							$( control.selector ).hide();
 						}
 					}
-				}
-			).disableSelection();
-
-			$( '#accordion-section-bp_nouveau_mail > h3' ).off( 'click' );
-			$( '#accordion-section-bp_nouveau_mail' ).on(
-				'click',
-				function() {
-					location.replace( BP_Customizer.emailCustomizerUrl );
-				}
-			);
-
-			$( '#sub-accordion-panel-bp_mailtpl' ).on(
-				'click',
-				'.customize-panel-back',
-				function() {
-					location.replace( BP_Customizer.platformCustomizerUrl );
-				}
-			);
+				} );
+			} );
 		}
-	);
+
+		$( 'ul#customize-control-group_nav_order, ul#customize-control-user_nav_order' ).sortable( {
+			cursor    : 'move',
+			axis      : 'y',
+			opacity   : 1,
+			items     : 'li:not(.ui-sortable-disabled)',
+			tolerance : 'intersect',
+
+			update: function() {
+				var order = [];
+
+				$( this ).find( '[data-bp-nav]' ).each( function( s, slug ) {
+					order.push( $( slug ).data( 'bp-nav' ) );
+				} );
+
+				if ( order.length ) {
+					$( '#bp_item_' + $( this ).data( 'bp-type' ) ).val( order.join() ).trigger( 'change' );
+				}
+			}
+		} ).disableSelection();
+
+		$( '#accordion-section-bp_nouveau_mail > h3' ).off( 'click' );
+		$( '#accordion-section-bp_nouveau_mail' ).on( 'click', function() {
+			location.replace( BP_Customizer.emailCustomizerUrl );
+		} );
+
+		$( '#sub-accordion-panel-bp_mailtpl' ).on( 'click', '.customize-panel-back', function() {
+			location.replace( BP_Customizer.platformCustomizerUrl );
+		} );
+	} );
 
 } )( window.wp, jQuery );

@@ -213,7 +213,7 @@ class BP_Email {
 	public function get( $property_name, $transform = 'raw' ) {
 
 		// "content" is replaced by HTML or plain text depending on $content_type.
-		if ( 'content' === $property_name ) {
+		if ( $property_name === 'content' ) {
 			$property_name = 'content_' . $this->get_content_type();
 
 			if ( ! in_array( $property_name, array( 'content_html', 'content_plaintext' ), true ) ) {
@@ -530,7 +530,7 @@ class BP_Email {
 	 * @return BP_Email
 	 */
 	public function set_bcc( $bcc_address, $name = '', $operation = 'replace' ) {
-		$bcc = ( 'replace' !== $operation ) ? $this->bcc : array();
+		$bcc = ( $operation !== 'replace' ) ? $this->bcc : array();
 
 		if ( is_array( $bcc_address ) ) {
 			foreach ( $bcc_address as $address ) {
@@ -577,7 +577,7 @@ class BP_Email {
 	 * @return BP_Email
 	 */
 	public function set_cc( $cc_address, $name = '', $operation = 'replace' ) {
-		$cc = ( 'replace' !== $operation ) ? $this->cc : array();
+		$cc = ( $operation !== 'replace' ) ? $this->cc : array();
 
 		if ( is_array( $cc_address ) ) {
 			foreach ( $cc_address as $address ) {
@@ -853,7 +853,7 @@ class BP_Email {
 	 * @return BP_Email
 	 */
 	public function set_to( $to_address, $name = '', $operation = 'replace' ) {
-		$to = ( 'replace' !== $operation ) ? $this->to : array();
+		$to = ( $operation !== 'replace' ) ? $this->to : array();
 
 		if ( is_array( $to_address ) ) {
 			foreach ( $to_address as $address ) {

@@ -154,7 +154,7 @@ function bp_core_exclude_pages_from_nav_menu_admin( $object = null ) {
 		return $object;
 	}
 
-	if ( 'page' !== $object->name ) {
+	if ( 'page' != $object->name ) {
 		return $object;
 	}
 
@@ -289,8 +289,7 @@ function bp_core_filter_comments( $comments, $post_id ) {
 
 	$user_ids = implode( ',', wp_parse_id_list( $user_ids ) );
 
-	$userdata = $wpdb->get_results( "SELECT ID as user_id, user_login, user_nicename FROM {$wpdb->users} WHERE ID IN ({$user_ids})" );
-	if ( ! $userdata ) {
+	if ( ! $userdata = $wpdb->get_results( "SELECT ID as user_id, user_login, user_nicename FROM {$wpdb->users} WHERE ID IN ({$user_ids})" ) ) {
 		return $comments;
 	}
 
@@ -423,7 +422,7 @@ add_filter( 'bp_email_get_property', 'bp_email_plaintext_entity_decode', 10, 3 )
 function bp_core_filter_user_welcome_email( $welcome_email ) {
 
 	// Don't touch the email when a user is registered by the site admin.
-	if ( ( is_admin() || is_network_admin() ) && buddypress()->members->admin->signups_page !== get_current_screen()->id ) {
+	if ( ( is_admin() || is_network_admin() ) && buddypress()->members->admin->signups_page != get_current_screen()->id ) {
 		return $welcome_email;
 	}
 
@@ -461,7 +460,7 @@ add_filter( 'update_welcome_user_email', 'bp_core_filter_user_welcome_email' );
 function bp_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, $password ) {
 
 	// Don't touch the email when a user is registered by the site admin.
-	if ( ( is_admin() || is_network_admin() ) && buddypress()->members->admin->signups_page !== get_current_screen()->id ) {
+	if ( ( is_admin() || is_network_admin() ) && buddypress()->members->admin->signups_page != get_current_screen()->id ) {
 		return $welcome_email;
 	}
 
@@ -544,7 +543,7 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 			 * And the super admin goes in pending accounts to resend it. In this case, as the
 			 * meta['password'] is not set, the activation url must be WordPress one.
 			 */
-		} elseif ( buddypress()->members->admin->signups_page === get_current_screen()->id ) {
+		} elseif ( buddypress()->members->admin->signups_page == get_current_screen()->id ) {
 			$is_hashpass_in_meta = maybe_unserialize( $meta );
 
 			if ( empty( $is_hashpass_in_meta['password'] ) ) {
@@ -998,7 +997,7 @@ add_filter( 'dynamic_sidebar_params', '_bp_core_inject_bp_widget_css_class' );
  * @return string Updated value.
  */
 function bp_email_add_link_color_to_template( $value, $property_name, $transform ) {
-	if ( 'template' !== $property_name || 'add-content' !== $transform ) {
+	if ( $property_name !== 'template' || $transform !== 'add-content' ) {
 		return $value;
 	}
 
@@ -1008,8 +1007,7 @@ function bp_email_add_link_color_to_template( $value, $property_name, $transform
 	// Find all links.
 	preg_match_all( '#<a[^>]+>#i', $value, $links, PREG_SET_ORDER );
 	foreach ( $links as $link ) {
-		$new_link = array_shift( $link );
-		$link     = $new_link;
+		$new_link = $link = array_shift( $link );
 
 		// Add/modify style property.
 		if ( strpos( $link, 'style="' ) !== false ) {
@@ -1045,7 +1043,7 @@ function bp_email_set_default_headers( $headers, $property, $transform, $email )
 	$tokens = $email->get_tokens();
 
 	// Add 'List-Unsubscribe' header if applicable.
-	if ( ! empty( $tokens['unsubscribe'] ) && wp_login_url() !== $tokens['unsubscribe'] ) {
+	if ( ! empty( $tokens['unsubscribe'] ) && $tokens['unsubscribe'] !== wp_login_url() ) {
 		$user = get_user_by( 'email', $tokens['recipient.email'] );
 
 		$link = bp_email_get_unsubscribe_link(
@@ -1209,10 +1207,10 @@ function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
 
 	$group_id = ! empty( $param['item_id'] ) ? absint( $param['item_id'] ) : 0;
 
-	if ( ! empty( $group_id ) && isset( $param['type'] ) && 'cover-image' === $param['type'] ) {
+	if ( ! empty( $group_id ) && isset( $param['type'] ) && 'cover-image' == $param['type'] ) {
 
 		// check in group
-		if ( isset( $param['object_dir'] ) && 'groups' === $param['object_dir'] ) {
+		if ( isset( $param['object_dir'] ) && 'groups' == $param['object_dir'] ) {
 			$cover_image = trim( groups_get_groupmeta( $group_id, 'cover-image' ) );
 			if ( ! empty( $cover_image ) ) {
 				$attachment_data = $cover_image;
@@ -1220,7 +1218,7 @@ function bp_dd_update_group_cover_images_url( $attachment_data, $param ) {
 		}
 
 		// check for user
-		if ( isset( $param['object_dir'] ) && 'members' === $param['object_dir'] ) {
+		if ( isset( $param['object_dir'] ) && 'members' == $param['object_dir'] ) {
 			$cover_image = trim( bp_get_user_meta( $group_id, 'cover-image', true ) );
 			if ( ! empty( $cover_image ) ) {
 				$attachment_data = $cover_image;
@@ -1277,14 +1275,14 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
 function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
 
 	if ( ! empty( $group_id ) ) {
-		if ( 'group-avatars' === $avatar_dir ) {
+		if ( 'group-avatars' == $avatar_dir ) {
 			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );
 			}
 		}
 
-		if ( 'avatars' === $avatar_dir ) {
+		if ( 'avatars' == $avatar_dir ) {
 			$avatars = trim( bp_get_user_meta( $group_id, 'avatars', true ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );
@@ -1313,7 +1311,7 @@ function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 	if ( ! empty( $item_id ) && isset( $params['avatar_dir'] ) ) {
 
 		// check for groups avatar
-		if ( 'group-avatars' === $params['avatar_dir'] ) {
+		if ( 'group-avatars' == $params['avatar_dir'] ) {
 			$cover_image = trim( groups_get_groupmeta( $item_id, 'avatars' ) );
 			if ( ! empty( $cover_image ) ) {
 				$avatar_url = $cover_image;
@@ -1321,7 +1319,7 @@ function bp_dd_fetch_dummy_avatar_url( $avatar_url, $params ) {
 		}
 
 		// check for user avatar
-		if ( 'avatars' === $params['avatar_dir'] ) {
+		if ( 'avatars' == $params['avatar_dir'] ) {
 			$cover_image = trim( bp_get_user_meta( $item_id, 'avatars', true ) );
 			if ( ! empty( $cover_image ) ) {
 				$avatar_url = $cover_image;
@@ -1346,12 +1344,12 @@ function bp_dd_delete_avatar( $args ) {
 	if ( ! empty( $item_id ) ) {
 
 		// check for user avatars getting deleted
-		if ( isset( $args['object'] ) && 'user' === $args['object'] ) {
+		if ( isset( $args['object'] ) && 'user' == $args['object'] ) {
 			bp_delete_user_meta( $item_id, 'avatars' );
 		}
 
 		// check for group avatars getting deleted
-		if ( isset( $args['object'] ) && 'group' === $args['object'] ) {
+		if ( isset( $args['object'] ) && 'group' == $args['object'] ) {
 			groups_delete_groupmeta( $item_id, 'avatars' );
 		}
 	}

@@ -282,7 +282,7 @@ class BP_Messages_Box_Template {
 	function message_threads() {
 		if ( $this->current_thread + 1 < $this->thread_count ) {
 			return true;
-		} elseif ( $this->current_thread + 1 === $this->thread_count ) {
+		} elseif ( $this->current_thread + 1 == $this->thread_count ) {
 
 			/**
 			 * Fires when at the end of threads to iterate over.
@@ -324,7 +324,7 @@ class BP_Messages_Box_Template {
 		}
 
 		// Loop has just started.
-		if ( 0 === $this->current_thread ) {
+		if ( 0 == $this->current_thread ) {
 
 			/**
 			 * Fires if at the start of the message thread loop.

@@ -116,7 +116,7 @@ function bp_ps_fields_box( $post ) {
 				}
 				?>
 				<a href="javascript:remove('field_div<?php echo $k; ?>')" class="delete"><?php _e( 'Remove', 'buddyboss' ); ?></a>
-
+			
 				<?php
 				if ( 'date_range' == $bp_ps_options['field_mode'][ $k ] ) {
 					global $wpdb;
@@ -131,7 +131,7 @@ function bp_ps_fields_box( $post ) {
 					}
 				}
 				?>
-			</div>
+			</div> 
 			<?php
 		}
 		?>
@@ -166,7 +166,7 @@ function _bp_ps_field_select( $groups, $name, $id, $value ) {
  * @since BuddyBoss 1.0.0
  */
 function _bp_ps_filter_select( $f, $name, $id, $value ) {
-	$filters = BP_PS_Fields::get_filters( $f );
+	$filters = bp_ps_Fields::get_filters( $f );
 
 	echo "<select class='bp_ps_col5' name='$name' id='$id'>\n";
 	foreach ( $filters as $key => $label ) {
@@ -215,7 +215,7 @@ function bp_ps_update_meta( $form, $post ) {
 			$meta['field_code'][]  = $code;
 			$meta['field_label'][] = isset( $posted['field_label'][ $k ] ) ? stripslashes( $posted['field_label'][ $k ] ) : '';
 			$meta['field_desc'][]  = isset( $posted['field_desc'][ $k ] ) ? stripslashes( $posted['field_desc'][ $k ] ) : '';
-			$meta['field_mode'][]  = BP_PS_Fields::valid_filter( $fields[ $code ], isset( $posted['field_mode'][ $k ] ) ? $posted['field_mode'][ $k ] : 'none' );
+			$meta['field_mode'][]  = bp_ps_Fields::valid_filter( $fields[ $code ], isset( $posted['field_mode'][ $k ] ) ? $posted['field_mode'][ $k ] : 'none' );
 
 		}
 	}
@@ -296,7 +296,7 @@ function bp_search_ajax_option() {
 			}
 		}
 		?>
-	</div>
+	</div> 
 	<?php
 
 	wp_die();

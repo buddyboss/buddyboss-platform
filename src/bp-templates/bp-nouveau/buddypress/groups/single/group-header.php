@@ -6,9 +6,9 @@
  * @version 3.1.0
  */
 
-$group_link       = bp_get_group_permalink();
-$admin_link       = trailingslashit( $group_link . 'admin' );
-$group_avatar     = trailingslashit( $admin_link . 'group-avatar' );
+$group_link = bp_get_group_permalink();
+$admin_link = trailingslashit( $group_link . 'admin' );
+$group_avatar = trailingslashit( $admin_link . 'group-avatar' );
 $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 ?>
 
@@ -17,7 +17,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 	<?php if ( ! bp_disable_group_avatar_uploads() ) : ?>
 		<div id="item-header-avatar">
 			<?php if ( bp_is_item_admin() ) { ?>
-				<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Change Group Photo', 'buddyboss' ); ?>">
+				<a href="<?php echo $group_avatar; ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Group Photo', 'buddyboss'); ?>">
 					<span class="dashicons dashicons-edit"></span>
 				</a>
 			<?php } ?>

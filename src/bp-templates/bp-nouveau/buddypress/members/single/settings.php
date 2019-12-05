@@ -11,7 +11,7 @@
 
 	<?php bp_get_template_part( 'members/single/parts/item-subnav' ); ?>
 
-	<?php
+<?php
 endif;
 
 switch ( bp_current_action() ) :

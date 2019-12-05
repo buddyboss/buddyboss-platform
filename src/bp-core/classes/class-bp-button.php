@@ -273,12 +273,12 @@ class BP_Button {
 		}
 
 		// No button for guests if must be logged in.
-		if ( true === $this->must_be_logged_in && ! is_user_logged_in() ) {
+		if ( true == $this->must_be_logged_in && ! is_user_logged_in() ) {
 			return false;
 		}
 
 		// The block_self property.
-		if ( true === $this->block_self ) {
+		if ( true == $this->block_self ) {
 			/*
 			 * No button if you are the current user in a members loop.
 			 *
@@ -286,7 +286,7 @@ class BP_Button {
 			 * profiles.
 			 */
 			if ( bp_get_member_user_id() ) {
-				if ( is_user_logged_in() && bp_loggedin_user_id() === bp_get_member_user_id() ) {
+				if ( is_user_logged_in() && bp_loggedin_user_id() == bp_get_member_user_id() ) {
 					return false;
 				}
 
@@ -331,8 +331,7 @@ class BP_Button {
 
 			// No parent element.
 		} else {
-			$before = '';
-			$after  = '';
+			$before = $after = '';
 		}
 
 		// Button properties.
@@ -396,8 +395,7 @@ class BP_Button {
 				continue;
 			}
 
-			$parent = false;
-			$child  = false;
+			$parent = $child = false;
 			$sep    = strpos( $prop, '_' );
 
 			// Check if this is an attribute.

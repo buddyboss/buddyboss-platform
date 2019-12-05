@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
 /**
  * BP Nouveau Notifications
  *

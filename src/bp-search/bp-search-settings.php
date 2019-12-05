@@ -379,7 +379,7 @@ function bp_search_settings_callback_number_of_results() {
 	?>
 
 	<input name="bp_search_number_of_results" id="bp_search_number_of_results" type="number" min="1" step="1"
-		value="<?php bp_search_form_option( 'bp_search_number_of_results', '5' ); ?>" class="small-text"/>
+		   value="<?php bp_search_form_option( 'bp_search_number_of_results', '5' ); ?>" class="small-text"/>
 	<label for="bp_search_number_of_results"><?php esc_html_e( 'results', 'buddyboss' ); ?></label>
 
 	<?php
@@ -600,7 +600,7 @@ function bp_search_settings_callback_post_type( $args ) {
 		<?php checked( bp_is_search_post_type_enable( $post_type, true ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php echo 'post' === $post_type ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
+		<?php echo $post_type === 'post' ? esc_html__( 'Blog Posts', 'buddyboss' ) : $post_type_obj->labels->name; ?>
 	</label>
 	<?php
 }

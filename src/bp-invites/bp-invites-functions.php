@@ -126,11 +126,9 @@ function bp_invites_member_invite_remove_registration_lock() {
 		return;
 	}
 
-	if ( ! isset( $_GET['email'] ) || empty( urldecode( $_GET['email'] ) ) ) {
+	if ( ! isset( $_GET['email'] ) || ! $email = urldecode( $_GET['email'] ) ) {
 		return;
 	}
-
-	$email = urldecode( $_GET['email'] );
 
 	// If the url takes the form register/?bp-invites=accept-member-invitation&email=username+extra%40gmail.com,
 	// urldecode returns a space in place of the +. (This is not typical,
@@ -160,9 +158,9 @@ function bp_invites_member_invite_remove_registration_lock() {
 	// site_options property in some cases
 	if ( is_multisite() ) {
 		$site_options = $bp->site_options;
-		if ( ! empty( $bp->site_options['registration'] ) && 'blog' === $bp->site_options['registration'] ) {
+		if ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'blog' ) {
 			$site_options['registration'] = 'all';
-		} elseif ( ! empty( $bp->site_options['registration'] ) && 'none' === $bp->site_options['registration'] ) {
+		} elseif ( ! empty( $bp->site_options['registration'] ) && $bp->site_options['registration'] == 'none' ) {
 			$site_options['registration'] = 'user';
 		}
 		$bp->site_options = $site_options;
@@ -198,7 +196,7 @@ function bp_invites_member_invite_register_screen_message() {
 		<div id="message" class="error"><p><?php _e( "It looks like you're trying to accept an invitation to join the site, but some information is missing. Please try again by clicking on the link in the invitation email.", 'buddyboss' ); ?></p></div>
 	<?php endif; ?>
 
-	<?php if ( 'request-details' === $bp->signup->step && ! empty( $email ) ) : ?>
+	<?php if ( $bp->signup->step == 'request-details' && ! empty( $email ) ) : ?>
 
 		<?php do_action( 'accept_email_invite_before' ); ?>
 

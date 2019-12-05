@@ -19,7 +19,7 @@
 		<?php
 		while ( bp_group_membership_requests() ) :
 			bp_group_the_membership_request();
-			?>
+		?>
 
 			<li>
 				<div class="item-avatar">
@@ -52,5 +52,5 @@
 
 	<?php bp_nouveau_user_feedback( 'group-requests-none' ); ?>
 
-	<?php
+<?php
 endif;

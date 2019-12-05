@@ -93,7 +93,7 @@ if ( ! class_exists( 'BP_Search_CPT' ) ) :
 			$sql = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'bp_search_cpt_sql',
+				'BP_Search_CPT_sql',
 				$sql,
 				array(
 					'post_type'           => $this->cpt_name,

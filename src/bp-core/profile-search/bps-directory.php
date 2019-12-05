@@ -29,7 +29,7 @@ function bp_ps_directories() {
 
 		$member_types = bp_get_member_types( array(), 'objects' );
 		foreach ( $member_types as $type ) {
-			if ( 1 === $type->has_directory ) {
+			if ( $type->has_directory == 1 ) {
 				$dirs[ $type->name ]        = new stdClass();
 				$dirs[ $type->name ]->label = $dirs[ $members ]->label . ' - ' . $type->labels['name'];
 				$dirs[ $type->name ]->link  = parse_url( bp_get_member_type_directory_permalink( $type->name ), PHP_URL_PATH );
@@ -66,7 +66,7 @@ function bp_ps_clear_directory() {
 	$current = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	foreach ( $dirs as $dir ) {
-		if ( $dir->link === $current ) {
+		if ( $dir->link == $current ) {
 			add_filter(
 				'bp_directory_members_search_form',
 				function ( $text ) {
@@ -101,7 +101,7 @@ function bp_ps_show_directory( $attr, $content ) {
 	$template = isset( $attr['template'] ) ? $attr['template'] : 'members/index';
 	bp_ps_call_template( $template );
 
-	if ( 'nouveau' === bp_get_theme_package_id() ) {
+	if ( bp_get_theme_package_id() == 'nouveau' ) {
 		printf(
 			'<p class="bp-ps-error">' . __( '%s: The shortcode [bp_ps_directory] is not compatible with the Nouveau template pack.', 'buddyboss' ) . '</p>',
 			'<strong>BP Profile Search ' . bp_get_version() . '</strong>'
@@ -138,11 +138,11 @@ function bp_ps_set_sort_options( $options ) {
 			continue;
 		}
 
-		if ( 'asc' === $order ) {
+		if ( $order == 'asc' ) {
 			$bp_ps_sort_options[ $code ] = $fields[ $code ]->name;
-		} elseif ( 'desc' === $order ) {
+		} elseif ( $order == 'desc' ) {
 			$bp_ps_sort_options[ '-' . $code ] = $fields[ $code ]->name;
-		} elseif ( 'both' === $order ) {
+		} elseif ( $order == 'both' ) {
 			$bp_ps_sort_options[ $code ]       = $fields[ $code ]->name . ' &#x21E1;';
 			$bp_ps_sort_options[ '-' . $code ] = $fields[ $code ]->name . ' &#x21E3;';
 		}
@@ -157,7 +157,7 @@ function bp_ps_set_sort_options( $options ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_display_sort_options() {
-	global $bp_ps_sort_options;
+	 global $bp_ps_sort_options;
 
 	$version = bp_get_version();
 	echo "\n<!-- BP Profile Search $version -->\n";
@@ -182,7 +182,7 @@ add_filter( 'bp_user_query_uid_clauses', 'bp_ps_uid_clauses', 99, 2 );
 function bp_ps_uid_clauses( $sql, $object ) {
 	$code  = $object->query_vars['type'];
 	$order = 'ASC';
-	if ( '-' === $code[0] ) {
+	if ( $code[0] == '-' ) {
 		$code  = substr( $code, 1 );
 		$order = 'DESC';
 	}
@@ -206,7 +206,7 @@ function bp_ps_directory_members_item() {
 	global $members_template;
 
 	$code = $members_template->type;
-	if ( '-' === $code[0] ) {
+	if ( $code[0] == '-' ) {
 		$code = substr( $code, 1 );
 	}
 

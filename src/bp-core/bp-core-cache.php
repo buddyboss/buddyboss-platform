@@ -211,7 +211,7 @@ function bp_update_meta_cache( $args = array() ) {
 		'cache_key_prefix' => '',       // Prefix to use when creating cache key names. Eg 'bp_groups_groupmeta'.
 	);
 	$r        = wp_parse_args( $args, $defaults );
-	extract( $r ); // phpcs:ignore WordPress.PHP.DontExtract
+	extract( $r );
 
 	if ( empty( $object_ids ) || empty( $object_type ) || empty( $meta_table ) || empty( $cache_group ) ) {
 		return false;

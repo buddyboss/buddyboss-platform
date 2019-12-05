@@ -76,7 +76,7 @@ function groups_action_create_group() {
 		// Check the nonce.
 		check_admin_referer( 'groups_create_save_' . bp_get_groups_current_create_step() );
 
-		if ( 'group-details' === bp_get_groups_current_create_step() ) {
+		if ( 'group-details' == bp_get_groups_current_create_step() ) {
 			if ( empty( $_POST['group-name'] ) || ! strlen( trim( $_POST['group-name'] ) ) ) {
 				bp_core_add_message( __( 'Please fill in all of the required fields', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
@@ -84,7 +84,7 @@ function groups_action_create_group() {
 
 			$new_group_id = isset( $bp->groups->new_group_id ) ? $bp->groups->new_group_id : 0;
 
-			$bp->groups->new_group_id = groups_create_group(
+			if ( ! $bp->groups->new_group_id = groups_create_group(
 				array(
 					'group_id'     => $new_group_id,
 					'name'         => $_POST['group-name'],
@@ -93,15 +93,13 @@ function groups_action_create_group() {
 					'date_created' => bp_core_current_time(),
 					'status'       => 'public',
 				)
-			);
-
-			if ( ! $bp->groups->new_group_id ) {
+			) ) {
 				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
 		}
 
-		if ( 'group-settings' === bp_get_groups_current_create_step() ) {
+		if ( 'group-settings' == bp_get_groups_current_create_step() ) {
 			$group_status       = 'public';
 			$group_enable_forum = 1;
 
@@ -109,24 +107,22 @@ function groups_action_create_group() {
 				$group_enable_forum = 0;
 			}
 
-			if ( 'private' === $_POST['group-status'] ) {
+			if ( 'private' == $_POST['group-status'] ) {
 				$group_status = 'private';
-			} elseif ( 'hidden' === $_POST['group-status'] ) {
+			} elseif ( 'hidden' == $_POST['group-status'] ) {
 				$group_status = 'hidden';
 			}
 
 			$parent_id = ( isset( $_POST['bp-groups-parent'] ) ) ? $_POST['bp-groups-parent'] : 0;
 
-			$bp->groups->new_group_id = groups_create_group(
+			if ( ! $bp->groups->new_group_id = groups_create_group(
 				array(
 					'group_id'     => $bp->groups->new_group_id,
 					'status'       => $group_status,
 					'enable_forum' => $group_enable_forum,
 					'parent_id'    => $parent_id,
 				)
-			);
-
-			if ( ! $bp->groups->new_group_id ) {
+			) ) {
 				bp_core_add_message( __( 'There was an error saving group details. Please try again.', 'buddyboss' ), 'error' );
 				bp_core_redirect( trailingslashit( bp_get_groups_directory_permalink() . 'create/step/' . bp_get_groups_current_create_step() ) );
 			}
@@ -245,7 +241,7 @@ function groups_action_create_group() {
 		// If we have completed all steps and hit done on the final step we
 		// can redirect to the completed group.
 		$keys = array_keys( $bp->groups->group_creation_steps );
-		if ( count( $bp->groups->completed_create_steps ) === count( $keys ) && bp_get_groups_current_create_step() === array_pop( $keys ) ) {
+		if ( count( $bp->groups->completed_create_steps ) == count( $keys ) && bp_get_groups_current_create_step() == array_pop( $keys ) ) {
 			unset( $bp->groups->current_create_step );
 			unset( $bp->groups->completed_create_steps );
 
@@ -278,7 +274,7 @@ function groups_action_create_group() {
 			 * we need to loop the step array and fetch the next step that way.
 			 */
 			foreach ( $keys as $key ) {
-				if ( bp_get_groups_current_create_step() === $key ) {
+				if ( $key == bp_get_groups_current_create_step() ) {
 					$next = 1;
 					continue;
 				}
@@ -312,7 +308,7 @@ function groups_action_create_group() {
 	}
 
 	// Group avatar is handled separately.
-	if ( 'group-avatar' === bp_get_groups_current_create_step() && isset( $_POST['upload'] ) ) {
+	if ( 'group-avatar' == bp_get_groups_current_create_step() && isset( $_POST['upload'] ) ) {
 		if ( ! isset( $bp->avatar_admin ) ) {
 			$bp->avatar_admin = new stdClass();
 		}

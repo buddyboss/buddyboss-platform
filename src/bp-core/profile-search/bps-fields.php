@@ -1,4 +1,4 @@
-<?php // phpcs:ignore PEAR.NamingConventions.ValidClassName
+<?php
 /**
  * BuddyBoss Profile Search Fields
  *
@@ -29,7 +29,7 @@ function bp_ps_get_fields() {
 		 * @since BuddyBoss 1.0.0
 		 */
 		do_action( 'bp_ps_edit_field', $f );
-		if ( ! BP_PS_Fields::set_filters( $f ) ) {
+		if ( ! bp_ps_Fields::set_filters( $f ) ) {
 			continue;
 		}
 
@@ -48,7 +48,7 @@ function bp_ps_get_fields() {
  *
  * @since BuddyBoss 1.0.0
  */
-class BP_PS_Fields {
+class bp_ps_Fields {
 
 	private static $display = array(
 		'text'      => array(
@@ -127,7 +127,7 @@ class BP_PS_Fields {
 	}
 
 	public static function set_display( $f, $filter ) {
-		$format   = isset( $f->format ) ? $f->format : 'none';
+		 $format  = isset( $f->format ) ? $f->format : 'none';
 		$enum     = ( isset( $f->options ) && is_array( $f->options ) ) ? count( $f->options ) : 0;
 		$selector = $format . ( $enum ? '/e' : '' );
 		if ( ! isset( self::$display[ $selector ][ $filter ] ) ) {
@@ -161,17 +161,17 @@ function bp_ps_parse_request( $request ) {
 	}
 
 	foreach ( $request as $key => $value ) {
-		if ( '' === $value ) {
+		if ( $value === '' ) {
 			continue;
 		}
 
 		$k = bp_ps_match_key( $key, $parsed );
-		if ( false === $k ) {
+		if ( $k === false ) {
 			continue;
 		}
 
 		$f      = $parsed[ $k ];
-		$filter = ( $key === $f->code ) ? '' : substr( $key, strlen( $f->code ) + 1 );
+		$filter = ( $key == $f->code ) ? '' : substr( $key, strlen( $f->code ) + 1 );
 		if ( ! bp_ps_is_filter( $filter, $f ) ) {
 			continue;
 		}
@@ -309,7 +309,7 @@ function bp_ps_parse_request( $request ) {
  */
 function bp_ps_match_key( $key, $fields ) {
 	foreach ( $fields as $k => $f ) {
-		if ( $key === $f->code || strpos( $key, $f->code . '_' ) === 0 ) {
+		if ( $key == $f->code || strpos( $key, $f->code . '_' ) === 0 ) {
 			return $k;
 		}
 	}
@@ -323,17 +323,17 @@ function bp_ps_match_key( $key, $fields ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_is_filter( $filter, $f ) {
-	if ( 'range_min' === $filter || 'range_max' === $filter ) {
+	if ( $filter == 'range_min' || $filter == 'range_max' ) {
 		$filter = 'range';
 	}
-	if ( 'date_range_min' === $filter || 'date_range_max' === $filter ) {
+	if ( $filter == 'date_range_min' || $filter == 'date_range_max' ) {
 		$filter = 'date_range';
 	}
-	if ( 'label' === $filter ) {
+	if ( $filter == 'label' ) {
 		return true;
 	}
 
-	return BP_PS_Fields::is_filter( $f, $filter );
+	return bp_ps_Fields::is_filter( $f, $filter );
 }
 
 /**
@@ -342,7 +342,7 @@ function bp_ps_is_filter( $filter, $f ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_escaped_form_data( $version = '' ) {
-	return bp_ps_escaped_form_data47( $version );
+	 return bp_ps_escaped_form_data47( $version );
 }
 
 /**
@@ -351,10 +351,10 @@ function bp_ps_escaped_form_data( $version = '' ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_ps_escaped_filters_data( $version = '4.7' ) {
-	if ( '4.7' === $version ) {
+	if ( $version == '4.7' ) {
 		return bp_ps_escaped_filters_data47();
 	}
-	if ( '4.8' === $version ) {
+	if ( $version == '4.8' ) {
 		return bp_ps_escaped_filters_data48();
 	}
 

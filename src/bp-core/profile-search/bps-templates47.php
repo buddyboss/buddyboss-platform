@@ -25,32 +25,32 @@ function bp_ps_escaped_form_data47( $version ) {
 		bp_get_version()
 	);
 
-	$form_data            = new stdClass();
-	$form_data->id        = $form;
-	$form_data->title     = get_the_title( $form );
-	$form_data->location  = $location;
-	$form_data->unique_id = bp_ps_unique_id( 'form_' . $form );
-	$form_data->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F            = new stdClass();
+	$F->id        = $form;
+	$F->title     = get_the_title( $form );
+	$F->location  = $location;
+	$F->unique_id = bp_ps_unique_id( 'form_' . $form );
+	$F->page      = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	$template_options = $meta['template_options'][ $meta['template'] ];
 	if ( isset( $template_options['header'] ) ) {
-		$form_data->header = $template_options['header'];
+		$F->header = $template_options['header'];
 	}
 	if ( isset( $template_options['toggle'] ) ) {
-		$form_data->toggle = ( 'Enabled' === $template_options['toggle'] );
+		$F->toggle = ( $template_options['toggle'] == 'Enabled' );
 	}
 	if ( isset( $template_options['button'] ) ) {
-		$form_data->toggle_text = $template_options['button'];
+		$F->toggle_text = $template_options['button'];
 	}
 
-	$form_data->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$F->action = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
 
 	if ( defined( 'DOING_AJAX' ) ) {
-		$form_data->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
+		$F->action = parse_url( $_SERVER['HTTP_REFERER'], PHP_URL_PATH );
 	}
 
-	$form_data->method = $meta['method'];
-	$form_data->fields = array();
+	$F->method = $meta['method'];
+	$F->fields = array();
 
 	foreach ( $meta['field_code'] as $k => $code ) {
 		if ( empty( $fields[ $code ] ) ) {
@@ -59,19 +59,19 @@ function bp_ps_escaped_form_data47( $version ) {
 
 		$f    = $fields[ $code ];
 		$mode = $meta['field_mode'][ $k ];
-		if ( ! BP_PS_Fields::set_display( $f, $mode ) ) {
+		if ( ! bp_ps_Fields::set_display( $f, $mode ) ) {
 			continue;
 		}
 
 		$f->label     = $f->name;
 		$custom_label = $meta['field_label'][ $k ];
 		if ( ! empty( $custom_label ) ) {
-			$f->label            = $custom_label;
-			$form_data->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
+			$f->label    = $custom_label;
+			$F->fields[] = bp_ps_set_hidden_field( $f->code . '_label', $f->label );
 		}
 
 		$custom_desc = $meta['field_desc'][ $k ];
-		if ( '-' === $custom_desc ) {
+		if ( $custom_desc == '-' ) {
 			$f->description = '';
 		} elseif ( ! empty( $custom_desc ) ) {
 			$f->description = $custom_desc;
@@ -99,11 +99,7 @@ function bp_ps_escaped_form_data47( $version ) {
 
 			case 'distance':
 				if ( ! isset( $f->value['location'] ) ) {
-					$f->value['distance'] = '';
-					$f->value['units']    = '';
-					$f->value['location'] = '';
-					$f->value['lat']      = '';
-					$f->value['lng']      = '';
+					$f->value['distance'] = $f->value['units'] = $f->value['location'] = $f->value['lat'] = $f->value['lng'] = '';
 				}
 				wp_enqueue_script( $f->script_handle );
 				wp_enqueue_script( 'bp-ps-template' );
@@ -113,7 +109,7 @@ function bp_ps_escaped_form_data47( $version ) {
 				if ( ! isset( $f->value ) ) {
 					$f->value = '';
 				}
-				if ( '4.9' === $version ) {
+				if ( $version == '4.9' ) {
 					$f->options = array( '' => '' ) + $f->options;
 				}
 				break;
@@ -135,7 +131,7 @@ function bp_ps_escaped_form_data47( $version ) {
 
 		$f->values = (array) $f->value;
 
-		$f->html_name  = ( '' === $mode ) ? $f->code : $f->code . '_' . $mode;
+		$f->html_name  = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;
 		$f->unique_id  = bp_ps_unique_id( $f->html_name );
 		$f->mode       = $mode;
 		$f->full_label = bp_ps_full_label( $f );
@@ -146,23 +142,23 @@ function bp_ps_escaped_form_data47( $version ) {
 		 * @since BuddyBoss 1.0.0
 		 */
 		do_action( 'bp_ps_field_before_search_form', $f );
-		$f->code             = ( '' === $mode ) ? $f->code : $f->code . '_' . $mode;        // to be removed
-		$form_data->fields[] = $f;
+		$f->code     = ( $mode == '' ) ? $f->code : $f->code . '_' . $mode;        // to be removed
+		$F->fields[] = $f;
 	}
 
-	$form_data->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
+	$F->fields[] = bp_ps_set_hidden_field( BP_PS_FORM, $form );
 	/**
 	 * @todo add title/description
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	do_action( 'bp_ps_before_search_form', $form_data );
+	do_action( 'bp_ps_before_search_form', $F );
 
-	foreach ( $form_data->fields as $f ) {
+	foreach ( $F->fields as $f ) {
 		if ( ! is_array( $f->value ) ) {
 			$f->value = esc_attr( stripslashes( $f->value ) );
 		}
-		if ( 'hidden' === $f->display ) {
+		if ( $f->display == 'hidden' ) {
 			continue;
 		}
 
@@ -178,7 +174,7 @@ function bp_ps_escaped_form_data47( $version ) {
 		$f->options = $options;
 	}
 
-	return $form_data;
+	return $F;
 }
 
 /**
@@ -189,18 +185,18 @@ function bp_ps_escaped_form_data47( $version ) {
 function bp_ps_escaped_filters_data47() {
 	list ( $request, $full ) = bp_ps_template_args();
 
-	$form_data         = new stdClass();
-	$action            = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
-	$action            = add_query_arg( BP_PS_FORM, 'clear', $action );
-	$form_data->action = $full ? esc_url( $action ) : '';
-	$form_data->fields = array();
+	$F         = new stdClass();
+	$action    = parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+	$action    = add_query_arg( BP_PS_FORM, 'clear', $action );
+	$F->action = $full ? esc_url( $action ) : '';
+	$F->fields = array();
 
 	$fields = bp_ps_parse_request( $request );
 	foreach ( $fields as $f ) {
 		if ( ! isset( $f->filter ) ) {
 			continue;
 		}
-		if ( ! BP_PS_Fields::set_display( $f, $f->filter ) ) {
+		if ( ! bp_ps_Fields::set_display( $f, $f->filter ) ) {
 			continue;
 		}
 
@@ -218,7 +214,7 @@ function bp_ps_escaped_filters_data47() {
 		 * @since BuddyBoss 1.0.0
 		 */
 		do_action( 'bp_ps_field_before_filters', $f );
-		$form_data->fields[] = $f;
+		$F->fields[] = $f;
 	}
 
 	/**
@@ -226,10 +222,10 @@ function bp_ps_escaped_filters_data47() {
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	do_action( 'bp_ps_before_filters', $form_data );
-	usort( $form_data->fields, 'bp_ps_sort_fields' );
+	do_action( 'bp_ps_before_filters', $F );
+	usort( $F->fields, 'bp_ps_sort_fields' );
 
-	foreach ( $form_data->fields as $f ) {
+	foreach ( $F->fields as $f ) {
 		$f->label = esc_attr( $f->label );
 		if ( ! is_array( $f->value ) ) {
 			$f->value = esc_attr( stripslashes( $f->value ) );
@@ -243,7 +239,7 @@ function bp_ps_escaped_filters_data47() {
 		}
 	}
 
-	return $form_data;
+	return $F;
 }
 
 /**
@@ -313,28 +309,28 @@ function bp_ps_print_filter( $f ) {
 				return sprintf( esc_html__( 'is like: %1$s', 'buddyboss' ), $f->value );
 
 			case 'one_of':
-				if ( 1 === count( $values ) ) {
+				if ( count( $values ) == 1 ) {
 					return sprintf( esc_html__( 'is: %1$s', 'buddyboss' ), $values[0] );
 				}
 
 				return sprintf( esc_html__( 'is one of: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'match_any':
-				if ( 1 === count( $values ) ) {
+				if ( count( $values ) == 1 ) {
 					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
 				}
 
 				return sprintf( esc_html__( 'match any: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'match_all':
-				if ( 1 === count( $values ) ) {
+				if ( count( $values ) == 1 ) {
 					return sprintf( esc_html__( 'match: %1$s', 'buddyboss' ), $values[0] );
 				}
 
 				return sprintf( esc_html__( 'match all: %1$s', 'buddyboss' ), implode( ', ', $values ) );
 
 			case 'distance':
-				if ( 'km' === $f->value['units'] ) {
+				if ( $f->value['units'] == 'km' ) {
 					return sprintf(
 						esc_html__( 'is within: %1$s km of %2$s', 'buddyboss' ),
 						$f->value['distance'],

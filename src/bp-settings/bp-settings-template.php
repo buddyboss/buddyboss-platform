@@ -75,7 +75,7 @@ function bp_settings_pending_email_notice() {
 		return;
 	}
 
-	if ( bp_get_displayed_user_email() === $pending_email['newemail'] ) {
+	if ( bp_get_displayed_user_email() == $pending_email['newemail'] ) {
 		return;
 	}
 

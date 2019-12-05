@@ -112,9 +112,9 @@ function bp_core_ajax_widget_members() {
 				<div class="item">
 					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
 					<div class="item-meta">
-						<?php if ( 'newest' === $settings['member_default'] ) : ?>
+						<?php if ( 'newest' == $settings['member_default'] ) : ?>
 							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
-						<?php elseif ( 'active' === $settings['member_default'] ) : ?>
+						<?php elseif ( 'active' == $settings['member_default'] ) : ?>
 							<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
 						<?php else : ?>
 							<span class="activity"><?php bp_member_total_friend_count(); ?></span>

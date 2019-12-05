@@ -99,7 +99,7 @@ function bp_blogs_post_pre_publish( $return = true, $blog_id = 0, $post_id = 0, 
 	 *
 	 * @param bool $value Current status of the sitewide tags activity.
 	 */
-	if ( (int) $blog_id === $tags_blog_id && apply_filters( 'bp_blogs_block_sitewide_tags_activity', true ) ) {
+	if ( (int) $blog_id == $tags_blog_id && apply_filters( 'bp_blogs_block_sitewide_tags_activity', true ) ) {
 		return false;
 	}
 

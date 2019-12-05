@@ -326,7 +326,7 @@ abstract class BP_XProfile_Field_Type {
 			return;
 		}
 
-		$class            = $current_field->type !== $type ? 'display: none;' : '';
+		$class            = $current_field->type != $type ? 'display: none;' : '';
 		$current_type_obj = bp_xprofile_create_field_type( $type );
 		?>
 
@@ -401,10 +401,10 @@ abstract class BP_XProfile_Field_Type {
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option sortable">
 							<span class="bp-option-icon grabber"></span>
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
-												<?php
+												   <?php
 													/* translators: accessibility text */
 													esc_html_e( 'Add an option', 'buddyboss' );
-												?>
+													?>
 							</label>
 							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">

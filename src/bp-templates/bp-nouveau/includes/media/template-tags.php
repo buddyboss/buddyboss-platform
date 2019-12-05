@@ -105,13 +105,13 @@ function bp_nouveau_media_timestamp() {
 	 *
 	 * @return integer The Media timestamp.
 	 */
-function bp_nouveau_get_media_timestamp() {
-	/**
-	 * Filter here to edit the media timestamp.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param integer $value The Media timestamp.
-	 */
-	return apply_filters( 'bp_nouveau_get_media_timestamp', strtotime( bp_get_media_date_created() ) );
-}
+	function bp_nouveau_get_media_timestamp() {
+		/**
+		 * Filter here to edit the media timestamp.
+		 *
+		 * @since BuddyBoss 1.0.0
+		 *
+		 * @param integer $value The Media timestamp.
+		 */
+		return apply_filters( 'bp_nouveau_get_media_timestamp', strtotime( bp_get_media_date_created() ) );
+	}

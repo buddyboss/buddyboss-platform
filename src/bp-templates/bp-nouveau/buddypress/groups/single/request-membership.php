@@ -25,7 +25,7 @@ bp_nouveau_group_hook( 'before', 'request_membership_content' ); ?>
 	</form><!-- #request-membership-form -->
 
 <?php else : ?>
-	<?php bp_nouveau_user_feedback( 'group-requested-membership' ); ?>
+    <?php bp_nouveau_user_feedback( 'group-requested-membership' ); ?>
 <?php endif; ?>
 
 <?php

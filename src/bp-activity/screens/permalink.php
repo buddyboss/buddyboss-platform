@@ -44,7 +44,7 @@ function bp_activity_action_permalink_router() {
 	$redirect = false;
 
 	// Redirect based on the type of activity.
-	if ( bp_is_active( 'groups' ) && buddypress()->groups->id === $activity->component ) {
+	if ( bp_is_active( 'groups' ) && $activity->component == buddypress()->groups->id ) {
 
 		// Activity is a user update.
 		if ( ! empty( $activity->user_id ) ) {
@@ -54,8 +54,7 @@ function bp_activity_action_permalink_router() {
 		} else {
 
 			// Set redirect to group activity feed.
-			$group = groups_get_group( $activity->item_id );
-			if ( $group ) {
+			if ( $group = groups_get_group( $activity->item_id ) ) {
 				$redirect = bp_get_group_permalink( $group ) . bp_get_activity_slug() . '/' . $activity->id . '/';
 			}
 		}
@@ -79,8 +78,7 @@ function bp_activity_action_permalink_router() {
 	 *
 	 * @param array $value Array with url to redirect to and activity related to the redirect.
 	 */
-	$redirect = apply_filters_ref_array( 'bp_activity_permalink_redirect_url', array( $redirect, &$activity ) );
-	if ( ! $redirect ) {
+	if ( ! $redirect = apply_filters_ref_array( 'bp_activity_permalink_redirect_url', array( $redirect, &$activity ) ) ) {
 		bp_core_redirect( bp_get_root_domain() );
 	}
 

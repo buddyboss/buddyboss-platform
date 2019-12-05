@@ -30,7 +30,7 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 				<?php
 				while ( bp_the_notifications() ) :
 					bp_the_notification();
-					?>
+				?>
 
 					<tr>
 						<td></td>
@@ -58,5 +58,4 @@ if ( bp_has_notifications( bp_ajax_querystring( 'notifications' ) ) ) :
 
 	<?php bp_nouveau_user_feedback( 'member-notifications-none' ); ?>
 
-	<?php
-endif;
+<?php endif;
