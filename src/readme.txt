@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.3.0
 Requires PHP: 5.6.20
-Stable tag: 1.2.1
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,23 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.2 =
+* Activity - Fixed certain link embeds URLs not rendering proper results
+* Profiles - Fixed member type not displaying in profile cards in 'My Connections' tab
+* Profiles - Fixed the 'Mutual Connections' tab incorrectly showing all members
+* Profiles - Fixed pagination of members when using [profile type=""] shortcode
+* Groups - Fixed pagination of groups when using [group type=""] shortcode
+* Groups - Fixed 'Read more' in group activity feed not working when Media component is disabled
+* Groups - Added ability to re-order Photos and Albums tabs in customizer
+* Forums - Fixed issue when posting a forum reply using only a GIF, with no text
+* Forums - Fixed issue with pagination through forums in Forums index
+* Notices - Fixed site notices not clearing after closing them, for non-admin members
+* Registration - Fixed data not saving on register form when validating incomplete fields
+* Widgets - Changed 'More' link in 'Users I'm Following' widget to redirect to 'Following' tab
+* Compatibility - Fixed conflict with WP Ultimo while Network Search is enabled
+* Compatibility - Added support for 'bp_embed_oembed_html' filter in code
+* Documentation - Now syncing all docs in real time from BuddyBoss Resources website
 
 = 1.2.1 =
 * Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
