@@ -204,7 +204,7 @@ class BP_Media_Query extends BP_Recursive_Query {
 					case 'BETWEEN':
 					case 'NOT BETWEEN':
 						$value = array_slice( $value, 0, 2 );
-						$where = $wpdb->prepare( '%s AND %s', $value ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
+						$where = $wpdb->prepare( '%s AND %s', $value );
 						break;
 
 					case 'LIKE':

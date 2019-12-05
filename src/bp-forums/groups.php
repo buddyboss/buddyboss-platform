@@ -1,4 +1,5 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
+
 /**
  * Forums BuddyBoss Group Extension Class
  *
@@ -1444,7 +1445,7 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 			if ( empty( $group ) ) {
 
 				// if recorded activity is a subforum activity, we need to manipulate it to register as group activity
-				if ( ! empty( $args['type'] ) && 'bbp_reply_create' === $args['type'] ) {
+				if ( ! empty( $args['type'] ) && 'bbp_reply_create' == $args['type'] ) {
 					$topic_id         = $args['secondary_item_id'];
 					$current_forum_id = bbp_get_topic_forum_id( $topic_id );
 				} else {

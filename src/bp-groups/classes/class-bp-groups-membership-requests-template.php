@@ -88,7 +88,6 @@ class BP_Groups_Membership_Requests_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
-			/* translators: 1: Method 2: File */
 			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -224,7 +223,7 @@ class BP_Groups_Membership_Requests_Template {
 		$tick = intval( $this->current_request + 1 );
 		if ( $tick < $this->request_count ) {
 			return true;
-		} elseif ( $tick === $this->request_count ) {
+		} elseif ( $tick == $this->request_count ) {
 
 			/**
 			 * Fires right before the rewinding of group membership requests list.
@@ -250,7 +249,7 @@ class BP_Groups_Membership_Requests_Template {
 		$this->request     = $this->next_request();
 
 		// Loop has just started.
-		if ( 0 === $this->current_request ) {
+		if ( 0 == $this->current_request ) {
 
 			/**
 			 * Fires if the current group membership request item is the first in the loop.

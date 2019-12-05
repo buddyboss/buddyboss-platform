@@ -179,8 +179,7 @@ class BP_Members_Component extends BP_Component {
 		$bp->loggedin_user->fullname = isset( $bp->loggedin_user->userdata->display_name ) ? $bp->loggedin_user->userdata->display_name : '';
 
 		// Hits the DB on single WP installs so get this separately.
-		$bp->loggedin_user->is_super_admin = is_super_admin( bp_loggedin_user_id() );
-		$bp->loggedin_user->is_site_admin  = $bp->loggedin_user->is_super_admin;
+		$bp->loggedin_user->is_super_admin = $bp->loggedin_user->is_site_admin = is_super_admin( bp_loggedin_user_id() );
 
 		// The domain for the user currently logged in. eg: http://example.com/members/andy.
 		$bp->loggedin_user->domain = bp_core_get_user_domain( bp_loggedin_user_id() );

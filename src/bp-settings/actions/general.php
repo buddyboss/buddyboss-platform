@@ -69,7 +69,7 @@ function bp_settings_action_general() {
 			$old_user_email = $bp->displayed_user->userdata->user_email;
 
 			// User is changing email address.
-			if ( $old_user_email !== $user_email ) {
+			if ( $old_user_email != $user_email ) {
 
 				// Run some tests on the email address.
 				$email_checks = bp_core_validate_email_address( $user_email );
@@ -131,10 +131,10 @@ function bp_settings_action_general() {
 
 		if ( ! empty( $_POST['pass1'] ) && ! empty( $_POST['pass2'] ) ) {
 
-			if ( ( $_POST['pass1'] === $_POST['pass2'] ) && ! strpos( ' ' . wp_unslash( $_POST['pass1'] ), '\\' ) ) {
+			if ( ( $_POST['pass1'] == $_POST['pass2'] ) && ! strpos( ' ' . wp_unslash( $_POST['pass1'] ), '\\' ) ) {
 
 				// Password change attempt is successful.
-				if ( ( ! empty( $_POST['pwd'] ) && $_POST['pwd'] !== $_POST['pass1'] ) || is_super_admin() ) {
+				if ( ( ! empty( $_POST['pwd'] ) && $_POST['pwd'] != $_POST['pass1'] ) || is_super_admin() ) {
 					$update_user->user_pass = $_POST['pass1'];
 					$pass_changed           = true;
 
@@ -221,7 +221,7 @@ function bp_settings_action_general() {
 	}
 
 	// No errors so show a simple success message.
-	if ( ( ( false === $email_error ) || ( false === $pass_error ) ) && ( ( true === $pass_changed ) || ( true === $email_changed ) ) ) {
+	if ( ( ( false === $email_error ) || ( false == $pass_error ) ) && ( ( true === $pass_changed ) || ( true === $email_changed ) ) ) {
 		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
 		$feedback_type = 'success';
 

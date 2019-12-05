@@ -101,7 +101,7 @@ class BP_Registration_Theme_Compat {
 		if ( bp_is_register_page() ) {
 			$title = __( 'Create an Account', 'buddyboss' );
 
-			if ( 'completed-confirmation' === bp_get_current_signup_step() ) {
+			if ( 'completed-confirmation' == bp_get_current_signup_step() ) {
 				$title = __( 'We\'re almost there!', 'buddyboss' );
 			}
 

@@ -22,8 +22,7 @@ defined( 'ABSPATH' ) || exit;
  * @return bool
  */
 function friends_clear_friend_object_cache( $friendship_id ) {
-	$friendship = new BP_Friends_Friendship( $friendship_id );
-	if ( ! $friendship ) {
+	if ( ! $friendship = new BP_Friends_Friendship( $friendship_id ) ) {
 		return false;
 	}
 

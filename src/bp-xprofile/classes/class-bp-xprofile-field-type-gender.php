@@ -122,7 +122,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
 			foreach ( $option_values as $i => $option_value ) {
-				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] !== $option_value ) {
+				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] != $option_value ) {
 					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
 						$option_values[ $i ] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 					}
@@ -181,10 +181,10 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		?>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
-															<?php
+															 <?php
 																/* translators: accessibility text */
 																esc_html_e( 'Select', 'buddyboss' );
-															?>
+																?>
 			</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
 			<?php bp_the_profile_field_options(); ?>
@@ -210,7 +210,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			return;
 		}
 
-		$class            = $current_field->type !== $type ? 'display: none;' : '';
+		$class            = $current_field->type != $type ? 'display: none;' : '';
 		$current_type_obj = bp_xprofile_create_field_type( $type );
 		?>
 
@@ -310,11 +310,11 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
 							<span class="bp-option-icon grabber"></span>
 							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
-												<?php
+												   <?php
 													/* translators: accessibility text */
 													esc_html_e( 'Add an option', 'buddyboss' );
-												?>
-							</label>
+													?>
+								</label>
 							<?php
 							if ( 1 === $j ) {
 								$key = sanitize_key( 'male' );

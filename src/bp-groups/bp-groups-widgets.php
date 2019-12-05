@@ -73,13 +73,11 @@ function groups_ajax_widget_groups_list() {
 					<div class="item-meta">
 						<span class="activity">
 						<?php
-						if ( 'newest' === $type ) {
-							/* translators: created [Group created date] */
+						if ( 'newest' == $type ) {
 							printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
-						} elseif ( 'popular' === $type ) {
+						} elseif ( 'popular' == $type ) {
 							bp_group_member_count();
 						} else {
-							/* translators: active [Group's last active] */
 							printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
 						}
 						?>

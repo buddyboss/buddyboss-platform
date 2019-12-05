@@ -140,7 +140,7 @@ function bp_profile_search_form_updated_messages( $messages ) {
  */
 function bp_profile_search_screen() {
 	global $current_screen;
-	return isset( $current_screen->post_type ) && 'bp_ps_form' === $current_screen->post_type;
+	return isset( $current_screen->post_type ) && $current_screen->post_type == 'bp_ps_form';
 }
 
 add_action( 'admin_head', 'bp_profile_search_admin_head' );
@@ -155,7 +155,7 @@ function bp_profile_search_admin_head() {
 		return;
 	}
 
-	if ( 'bp_ps_form' === $current_screen->id ) {
+	if ( $current_screen->id == 'bp_ps_form' ) {
 		_bp_profile_search_admin_js();
 	}
 	?>
@@ -235,7 +235,7 @@ function bp_users_admin_profile_search_listing_add_users_tab() {
 
 	if ( false === $is_profile_search_enabled ) {
 
-		if ( ( isset( $post->post_type ) && 'bp_ps_form' === $post->post_type && 'edit.php' === $pagenow ) || ( isset( $post->post_type ) && 'bp_ps_form' === $post->post_type && 'post-new.php' === $pagenow ) || ( isset( $post->post_type ) && 'bp_ps_form' === $post->post_type && 'post.php' === $pagenow ) ) {
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
 			?>
 			<div class="wrap">
 				<?php
@@ -265,7 +265,7 @@ function bp_profile_search_set_platform_tab_submenu_active( $parent_file ) {
 	global $pagenow, $current_screen, $post;
 
 	if ( false === bp_disable_advanced_profile_search() ) {
-		if ( ( isset( $post->post_type ) && 'bp_ps_form' === $post->post_type && 'edit.php' === $pagenow ) || ( isset( $post->post_type ) && 'bp_ps_form' === $post->post_type && 'post-new.php' === $pagenow ) || ( isset( $post->post_type ) && 'bp_ps_form' === $post->post_type && 'post.php' === $pagenow ) ) {
+		if ( ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'edit.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post-new.php' ) || ( isset( $post->post_type ) && $post->post_type == 'bp_ps_form' && $pagenow == 'post.php' ) ) {
 			$parent_file = 'buddyboss-platform';
 		}
 	}

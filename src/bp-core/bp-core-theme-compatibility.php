@@ -327,7 +327,7 @@ function bp_set_theme_compat_feature( $theme_id, $feature = array() ) {
 	$theme_compat_theme = $bp->theme_compat->theme;
 
 	// Bail if the Theme Compat theme is not in use.
-	if ( bp_get_theme_compat_id() !== $theme_id ) {
+	if ( $theme_id !== bp_get_theme_compat_id() ) {
 		return;
 	}
 
@@ -405,7 +405,7 @@ function bp_is_theme_compat_original_template( $template = '' ) {
 		return false;
 	}
 
-	return (bool) ( $bp->theme_compat->original_template === $template );
+	return (bool) ( $bp->theme_compat->original_template == $template );
 }
 
 /**

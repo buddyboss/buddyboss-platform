@@ -276,9 +276,9 @@ function bp_media_get_form_option( $option, $default = '', $slug = false ) {
 function bp_media_settings_callback_profile_media_support() {
 	?>
 	<input name="bp_media_profile_media_support"
-		id="bp_media_profile_media_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_profile_media_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_profile_media_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profile_media_support">
@@ -286,9 +286,9 @@ function bp_media_settings_callback_profile_media_support() {
 	</label>
 	<br/>
 	<input name="bp_media_profile_albums_support"
-		id="bp_media_profile_albums_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_profile_albums_support"
+		   type="checkbox"
+		   value="1"
 		<?php echo ! bp_is_profile_media_support_enabled() ? 'disabled="disabled"' : ''; ?>
 		<?php checked( bp_is_profile_albums_support_enabled() ); ?>
 	/>
@@ -332,9 +332,9 @@ function bp_is_profile_albums_support_enabled( $default = 1 ) {
 function bp_media_settings_callback_group_media_support() {
 	?>
 	<input name="bp_media_group_media_support"
-		id="bp_media_group_media_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_group_media_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_group_media_support_enabled() ); ?>
 	/>
 	<label for="bp_media_group_media_support">
@@ -342,9 +342,9 @@ function bp_media_settings_callback_group_media_support() {
 	</label>
 	<br/>
 	<input name="bp_media_group_albums_support"
-		id="bp_media_group_albums_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_group_albums_support"
+		   type="checkbox"
+		   value="1"
 		<?php echo ! bp_is_group_media_support_enabled() ? 'disabled="disabled"' : ''; ?>
 		<?php checked( bp_is_group_albums_support_enabled() ); ?>
 	/>
@@ -388,9 +388,9 @@ function bp_is_group_albums_support_enabled( $default = 1 ) {
 function bp_media_settings_callback_messages_media_support() {
 	?>
 	<input name="bp_media_messages_media_support"
-		id="bp_media_messages_media_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_messages_media_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_messages_media_support_enabled() ); ?>
 	/>
 	<label for="bp_media_messages_media_support">
@@ -420,9 +420,9 @@ function bp_is_messages_media_support_enabled( $default = 0 ) {
 function bp_media_settings_callback_forums_media_support() {
 	?>
 	<input name="bp_media_forums_media_support"
-		id="bp_media_forums_media_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_forums_media_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_forums_media_support_enabled() ); ?>
 	/>
 	<label for="bp_media_forums_media_support">
@@ -479,9 +479,9 @@ function bp_photo_uploading_tutorial() {
 function bp_media_settings_callback_profiles_emoji_support() {
 	?>
 	<input name="bp_media_profiles_emoji_support"
-		id="bp_media_profiles_emoji_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_profiles_emoji_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_profiles_emoji_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profiles_emoji_support">
@@ -498,9 +498,9 @@ function bp_media_settings_callback_profiles_emoji_support() {
 function bp_media_settings_callback_groups_emoji_support() {
 	?>
 	<input name="bp_media_groups_emoji_support"
-		id="bp_media_groups_emoji_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_groups_emoji_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_groups_emoji_support_enabled() ); ?>
 	/>
 	<label for="bp_media_groups_emoji_support">
@@ -517,9 +517,9 @@ function bp_media_settings_callback_groups_emoji_support() {
 function bp_media_settings_callback_messages_emoji_support() {
 	?>
 	<input name="bp_media_messages_emoji_support"
-		id="bp_media_messages_emoji_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_messages_emoji_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_messages_emoji_support_enabled() ); ?>
 	/>
 	<label for="bp_media_messages_emoji_support">
@@ -536,9 +536,9 @@ function bp_media_settings_callback_messages_emoji_support() {
 function bp_media_settings_callback_forums_emoji_support() {
 	?>
 	<input name="bp_media_forums_emoji_support"
-		id="bp_media_forums_emoji_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_forums_emoji_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_forums_emoji_support_enabled() ); ?>
 	/>
 	<label for="bp_media_forums_emoji_support">
@@ -634,11 +634,11 @@ function bp_emoji_tutorial() {
 function bp_media_settings_callback_gif_key() {
 	?>
 	<input type="text"
-		name="bp_media_gif_api_key"
-		id="bp_media_gif_api_key"
-		value="<?php echo bp_media_get_gif_api_key(); ?>"
-		placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>"
-		style="width: 300px;"
+		   name="bp_media_gif_api_key"
+		   id="bp_media_gif_api_key"
+		   value="<?php echo bp_media_get_gif_api_key(); ?>"
+		   placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>"
+		   style="width: 300px;"
 	/>
 	<p class="description"><?php _e( 'This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it above.', 'buddyboss' ); ?></p>
 	<?php
@@ -673,9 +673,9 @@ function bp_media_get_gif_api_key( $default = '' ) {
 function bp_media_settings_callback_profiles_gif_support() {
 	?>
 	<input name="bp_media_profiles_gif_support"
-		id="bp_media_profiles_gif_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_profiles_gif_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_profiles_gif_support_enabled() ); ?>
 	/>
 	<label for="bp_media_profiles_gif_support">
@@ -692,9 +692,9 @@ function bp_media_settings_callback_profiles_gif_support() {
 function bp_media_settings_callback_groups_gif_support() {
 	?>
 	<input name="bp_media_groups_gif_support"
-		id="bp_media_groups_gif_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_groups_gif_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_groups_gif_support_enabled() ); ?>
 	/>
 	<label for="bp_media_groups_gif_support">
@@ -711,9 +711,9 @@ function bp_media_settings_callback_groups_gif_support() {
 function bp_media_settings_callback_messages_gif_support() {
 	?>
 	<input name="bp_media_messages_gif_support"
-		id="bp_media_messages_gif_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_messages_gif_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_messages_gif_support_enabled() ); ?>
 	/>
 	<label for="bp_media_messages_gif_support">
@@ -730,9 +730,9 @@ function bp_media_settings_callback_messages_gif_support() {
 function bp_media_settings_callback_forums_gif_support() {
 	?>
 	<input name="bp_media_forums_gif_support"
-		id="bp_media_forums_gif_support"
-		type="checkbox"
-		value="1"
+		   id="bp_media_forums_gif_support"
+		   type="checkbox"
+		   value="1"
 		<?php checked( bp_is_forums_gif_support_enabled() ); ?>
 	/>
 	<label for="bp_media_forums_gif_support">

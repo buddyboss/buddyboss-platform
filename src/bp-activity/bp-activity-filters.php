@@ -440,7 +440,7 @@ function bp_activity_make_nofollow_filter_callback( $matches ) {
 	$base_url_host = parse_url( site_url(), PHP_URL_HOST );
 
 	// If site link then nothing to do.
-	if ( $url_host === $base_url_host || empty( $url_host ) ) {
+	if ( $url_host == $base_url_host || empty( $url_host ) ) {
 		return "<a $text rel=\"nofollow\">";
 		// Else open in new tab.
 	} else {
@@ -617,7 +617,7 @@ add_action( 'bp_nouveau_enqueue_scripts', 'bp_activity_enqueue_heartbeat_js' );
 function bp_activity_newest_class( $classes = '' ) {
 	$bp = buddypress();
 
-	if ( ! empty( $bp->activity->last_recorded ) && bp_get_activity_date_recorded() === $bp->activity->last_recorded ) {
+	if ( ! empty( $bp->activity->last_recorded ) && $bp->activity->last_recorded == bp_get_activity_date_recorded() ) {
 		$classes .= ' new-update';
 	}
 
@@ -845,7 +845,7 @@ function bp_activity_filter_just_me_scope( $retval = array(), $filter = array() 
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && bp_loggedin_user_id() !== $user_id ) {
+	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -900,7 +900,7 @@ function bp_activity_filter_favorites_scope( $retval = array(), $filter = array(
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && ( bp_loggedin_user_id() !== $user_id ) ) {
+	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -956,7 +956,7 @@ function bp_activity_filter_mentions_scope( $retval = array(), $filter = array()
 
 	// Should we show all items regardless of sitewide visibility?
 	$show_hidden = array();
-	if ( ! empty( $user_id ) && bp_loggedin_user_id() !== $user_id ) {
+	if ( ! empty( $user_id ) && $user_id !== bp_loggedin_user_id() ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
 			'value'  => 0,
@@ -1160,7 +1160,7 @@ function bp_activity_has_activity_filter( $has_activities, $activities ) {
 	if ( ! empty( $activities->activities ) ) {
 		foreach ( $activities->activities as $key => $activity ) {
 
-			if ( 'friends' === $activity->privacy ) {
+			if ( 'friends' == $activity->privacy ) {
 
 				$remove_from_stream = false;
 				$is_friend          = friends_check_friendship( bp_loggedin_user_id(), $activity->user_id );
@@ -1196,12 +1196,7 @@ function bp_activity_media_add( $media ) {
 
 	if ( ! empty( $media ) ) {
 
-		$activity_id = bp_activity_post_update(
-			array(
-				'hide_sitewide' => true,
-				'privacy'       => 'media',
-			)
-		);
+		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
 
 		if ( $activity_id ) {
 
@@ -1250,12 +1245,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
-			$activity_id = groups_post_update(
-				array(
-					'content'  => $content,
-					'group_id' => $group_id,
-				)
-			);
+			$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $group_id ) );
 		} else {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}

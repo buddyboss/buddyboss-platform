@@ -356,7 +356,7 @@ class BP_Media {
 
 		// Sorting.
 		$sort = $r['sort'];
-		if ( 'ASC' !== $sort && 'DESC' !== $sort ) {
+		if ( $sort != 'ASC' && $sort != 'DESC' ) {
 			$sort = 'DESC';
 		}
 
@@ -399,9 +399,9 @@ class BP_Media {
 		}
 
 		// existing-media check to query media which has no albums assigned
-		if ( ! empty( $r['album_id'] ) && 'existing-media' !== $r['album_id'] ) {
+		if ( ! empty( $r['album_id'] ) && 'existing-media' != $r['album_id'] ) {
 			$where_conditions['album'] = "m.album_id = {$r['album_id']}";
-		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' === $r['album_id'] ) {
+		} elseif ( ! empty( $r['album_id'] ) && 'existing-media' == $r['album_id'] ) {
 			$where_conditions['album'] = 'm.album_id = 0';
 		}
 
@@ -1015,7 +1015,7 @@ class BP_Media {
 					do_action( 'bp_activity_before_action_delete_activity', $activity->id, $activity->user_id );
 
 					// Deleting an activity comment.
-					if ( 'activity_comment' === $activity->type ) {
+					if ( 'activity_comment' == $activity->type ) {
 						if ( bp_activity_delete_comment( $activity->item_id, $activity->id ) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );

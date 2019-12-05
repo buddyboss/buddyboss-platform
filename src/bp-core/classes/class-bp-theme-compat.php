@@ -98,9 +98,10 @@ class BP_Theme_Compat {
 	 *
 	 * @param string $property Property name.
 	 * @param mixed  $value    Property value.
+	 * @return bool True on success, false on failure.
 	 */
 	public function __set( $property, $value ) {
-		$this->_data[ $property ] = $value;
+		return $this->_data[ $property ] = $value;
 	}
 
 	/**

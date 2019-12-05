@@ -116,7 +116,7 @@ function groups_create_group( $args = '' ) {
 		'groups_create_group'
 	);
 
-	extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
+	extract( $args, EXTR_SKIP );
 
 	// Pass an existing group ID.
 	if ( ! empty( $group_id ) ) {
@@ -250,7 +250,6 @@ function groups_edit_base_group_details( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || func_num_args() > 1 ) {
-		/* translators: 1: Method 2: File */
 		_deprecated_argument( __METHOD__, '2.9.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -287,7 +286,7 @@ function groups_edit_base_group_details( $args = array() ) {
 	if ( $r['name'] ) {
 		$group->name = $r['name'];
 	}
-	if ( $r['slug'] && $r['slug'] !== $group->slug ) {
+	if ( $r['slug'] && $r['slug'] != $group->slug ) {
 		$group->slug = groups_check_slug( $r['slug'] );
 	}
 
@@ -300,7 +299,7 @@ function groups_edit_base_group_details( $args = array() ) {
 	}
 
 	// Maybe update the "previous_slug" groupmeta.
-	if ( $group->slug !== $old_group->slug ) {
+	if ( $group->slug != $old_group->slug ) {
 		/*
 		 * If the old slug exists in this group's past, delete that entry.
 		 * Recent previous_slugs are preferred when selecting the current group
@@ -361,7 +360,7 @@ function groups_edit_group_settings( $group_id, $enable_forum, $status, $invite_
 	 * Before we potentially switch the group status, if it has been changed to public
 	 * from private and there are outstanding membership requests, auto-accept those requests.
 	 */
-	if ( 'private' === $group->status && 'public' === $status ) {
+	if ( 'private' == $group->status && 'public' == $status ) {
 		groups_accept_all_pending_membership_requests( $group->id );
 	}
 
@@ -481,7 +480,7 @@ function groups_check_slug( $slug ) {
 	// First, make the proposed slug work in a URL.
 	$slug = sanitize_title( $slug );
 
-	if ( 'wp' === substr( $slug, 0, 2 ) ) {
+	if ( 'wp' == substr( $slug, 0, 2 ) ) {
 		$slug = substr( $slug, 2, strlen( $slug ) - 2 );
 	}
 
@@ -626,7 +625,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 
 	$bp = buddypress();
 
-	if ( ! isset( $bp->groups->current_group ) || ! $bp->groups->current_group || $group_id !== $bp->groups->current_group->id ) {
+	if ( ! isset( $bp->groups->current_group ) || ! $bp->groups->current_group || $group_id != $bp->groups->current_group->id ) {
 		$group = groups_get_group( $group_id );
 	} else {
 		$group = $bp->groups->current_group;
@@ -742,7 +741,6 @@ function groups_get_group_members( $args = array() ) {
 
 	// Backward compatibility with old method of passing arguments.
 	if ( ! is_array( $args ) || func_num_args() > 1 ) {
-		/* translators: 1: Method 2: File */
 		_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 		$old_args_keys = array(
@@ -1060,7 +1058,7 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 		}
 
 		foreach ( $filters as $filter_name => $filter_value ) {
-			if ( ! isset( $membership->{$filter_name} ) || $filter_value !== $membership->{$filter_name} ) {
+			if ( ! isset( $membership->{$filter_name} ) || $filter_value != $membership->{$filter_name} ) {
 				continue 2;
 			}
 		}
@@ -1287,11 +1285,11 @@ function groups_is_user_allowed_posting( $user_id, $group_id ) {
 	$is_admin = groups_is_user_admin( $user_id, $group_id );
 	$is_mod   = groups_is_user_mod( $user_id, $group_id );
 
-	if ( 'members' === $status ) {
+	if ( 'members' == $status ) {
 		$is_allowed = true;
-	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' === $status && $is_admin ) {
+	} elseif ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
@@ -1327,11 +1325,11 @@ function groups_can_user_manage_media( $user_id, $group_id ) {
 	$is_admin = groups_is_user_admin( $user_id, $group_id );
 	$is_mod   = groups_is_user_mod( $user_id, $group_id );
 
-	if ( 'members' === $status ) {
+	if ( 'members' == $status ) {
 		$is_allowed = true;
-	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' === $status && $is_admin ) {
+	} elseif ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
@@ -1367,11 +1365,11 @@ function groups_can_user_manage_albums( $user_id, $group_id ) {
 	$is_admin = groups_is_user_admin( $user_id, $group_id );
 	$is_mod   = groups_is_user_mod( $user_id, $group_id );
 
-	if ( 'members' === $status ) {
+	if ( 'members' == $status ) {
 		$is_allowed = true;
-	} elseif ( 'mods' === $status && ( $is_mod || $is_admin ) ) {
+	} elseif ( 'mods' == $status && ( $is_mod || $is_admin ) ) {
 		$is_allowed = true;
-	} elseif ( 'admins' === $status && $is_admin ) {
+	} elseif ( 'admins' == $status && $is_admin ) {
 		$is_allowed = true;
 	}
 
@@ -1507,14 +1505,16 @@ function groups_post_update( $args = '' ) {
 		),
 		'groups_post_update'
 	);
-	extract( $r, EXTR_SKIP ); //phpcs:ignore WordPress.PHP.DontExtract
+	extract( $r, EXTR_SKIP );
 
 	if ( empty( $group_id ) && ! empty( $bp->groups->current_group->id ) ) {
 		$group_id = $bp->groups->current_group->id;
 	}
 
-	//if ( empty( $content ) || !strlen( trim( $content ) ) ||
-	if ( empty( $user_id ) || empty( $group_id ) ) {
+	if ( // empty( $content ) || !strlen( trim( $content ) ) ||
+		 empty( $user_id ) ||
+		 empty( $group_id )
+	) {
 		return false;
 	}
 
@@ -1526,7 +1526,6 @@ function groups_post_update( $args = '' ) {
 	}
 
 	// Record this in activity feeds.
-	// translators: [User link] posted an update in the group [Group link]
 	$activity_action  = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $bp->groups->current_group ) . '">' . esc_attr( $bp->groups->current_group->name ) . '</a>' );
 	$activity_content = $content;
 
@@ -1648,16 +1647,14 @@ function groups_invite_user( $args = '' ) {
 		),
 		'groups_invite_user'
 	);
-	extract( $args, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
+	extract( $args, EXTR_SKIP );
 
 	if ( ! $user_id || ! $group_id || ! $inviter_id ) {
 		return false;
 	}
 
 	// If the user has already requested membership, accept the request.
-	$membership_id = groups_check_for_membership_request( $user_id, $group_id );
-
-	if ( $membership_id ) {
+	if ( $membership_id = groups_check_for_membership_request( $user_id, $group_id ) ) {
 		groups_accept_membership_request( $membership_id, $user_id, $group_id );
 
 		// Otherwise, create a new invitation.
@@ -2254,8 +2251,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
  * @return bool True on success, false on failure.
  */
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-	$membership = groups_delete_membership_request( $membership_id, $user_id, $group_id );
-	if ( ! $membership ) {
+	if ( ! $membership = groups_delete_membership_request( $membership_id, $user_id, $group_id ) ) {
 		return false;
 	}
 
@@ -2646,8 +2642,7 @@ function bp_groups_register_group_type( $group_type, $args = array() ) {
 		$r['show_in_list'] = (bool) $r['show_in_list'];
 	}
 
-	$bp->groups->types[ $group_type ] = (object) $r;
-	$type                             = (object) $r;
+	$bp->groups->types[ $group_type ] = $type = (object) $r;
 
 	/**
 	 * Fires after a group type is registered.
@@ -2917,7 +2912,7 @@ function bp_is_my_groups_view() {
 		$retval = true;
 
 		// Could be the "my groups" filter on the main directory?
-	} elseif ( bp_is_groups_directory() && ( isset( $_COOKIE['bp-groups-scope'] ) && 'personal' === $_COOKIE['bp-groups-scope'] ) ) {
+	} elseif ( bp_is_groups_directory() && ( isset( $_COOKIE['bp-groups-scope'] ) && 'personal' == $_COOKIE['bp-groups-scope'] ) ) {
 		$retval = true;
 	}
 
@@ -2942,8 +2937,8 @@ add_action( 'groups_delete_group', 'bp_remove_group_type_on_group_delete' );
  *
  * @since BuddyBoss 1.0.0
  *
- * @param  int|bool $user_id ID of the user.
- * @param  int|bool $group_id ID of the group.
+ * @param  int $user_id ID of the user.
+ * @param  int $group_id ID of the group.
  * @return string
  */
 function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
@@ -2955,11 +2950,11 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	$role_title = '';
 
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$role_title = get_group_role_label( $group_id, 'organizer_singular_label_name' );
+		$role_title = __( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
 	} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-		$role_title = get_group_role_label( $group_id, 'moderator_singular_label_name' );
+		$role_title = __( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
 	} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-		$role_title = get_group_role_label( $group_id, 'member_singular_label_name' );
+		$role_title = __( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
 	}
 
 	/**
@@ -3375,7 +3370,7 @@ function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
 	$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 
-	if ( 'groups' !== $object ) {
+	if ( $object != 'groups' ) {
 		return $qs;
 	}
 

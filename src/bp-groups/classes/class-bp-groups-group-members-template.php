@@ -96,7 +96,6 @@ class BP_Groups_Group_Members_Template {
 
 		// Backward compatibility with old method of passing arguments.
 		if ( ! is_array( $args ) || func_num_args() > 1 ) {
-			/* translators: 1: Method 2: File */
 			_deprecated_argument( __METHOD__, '2.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
 			$old_args_keys = array(
@@ -139,7 +138,7 @@ class BP_Groups_Group_Members_Template {
 		 * It can differ when using {@link bp_group_has_members()} outside the Groups screens.
 		 */
 		$current_group = groups_get_current_group();
-		if ( empty( $current_group ) || ( $current_group && bp_get_current_group_id() !== $current_group->id ) ) {
+		if ( empty( $current_group ) || ( $current_group && $current_group->id !== bp_get_current_group_id() ) ) {
 			$current_group = groups_get_group( $r['group_id'] );
 		}
 
@@ -238,7 +237,7 @@ class BP_Groups_Group_Members_Template {
 		$tick = intval( $this->current_member + 1 );
 		if ( $tick < $this->member_count ) {
 			return true;
-		} elseif ( $tick === $this->member_count ) {
+		} elseif ( $tick == $this->member_count ) {
 
 			/**
 			 * Fires right before the rewinding of members list.
@@ -269,7 +268,7 @@ class BP_Groups_Group_Members_Template {
 		$this->member      = $this->next_member();
 
 		// Loop has just started.
-		if ( 0 === $this->current_member ) {
+		if ( 0 == $this->current_member ) {
 
 			/**
 			 * Fires if the current member item is the first in the members list.

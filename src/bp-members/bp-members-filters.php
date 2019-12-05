@@ -144,7 +144,7 @@ add_filter( 'login_form_defaults', 'bp_overwrite_login_form_email_field_label' )
  * @since BuddyBoss 1.0.0
  */
 function bp_overwrite_login_email_field_label( $translated_text, $text, $domain ) {
-	if ( 'Username or Email Address' === $text && 'default' === $domain ) {
+	if ( 'Username or Email Address' == $text && 'default' == $domain ) {
 		remove_filter( 'gettext', 'bp_overwrite_login_email_field_label' );
 		return __( 'Email Address', 'buddyboss' );
 	}

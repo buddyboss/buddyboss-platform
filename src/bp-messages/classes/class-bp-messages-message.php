@@ -88,8 +88,7 @@ class BP_Messages_Message {
 
 		$bp = buddypress();
 
-		$message = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE id = %d", $id ) );
-		if ( $message ) {
+		if ( $message = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE id = %d", $id ) ) ) {
 			$this->id        = (int) $message->id;
 			$this->thread_id = (int) $message->thread_id;
 			$this->sender_id = (int) $message->sender_id;
@@ -144,8 +143,7 @@ class BP_Messages_Message {
 			return false;
 		}
 
-		static::$last_inserted_id = $wpdb->insert_id;
-		$this->id                 = $wpdb->insert_id;
+		static::$last_inserted_id = $this->id = $wpdb->insert_id;
 
 		$recipient_ids = array();
 
@@ -212,8 +210,7 @@ class BP_Messages_Message {
 			$rec_un_count = count( $recipient_usernames );
 
 			for ( $i = 0, $count = $rec_un_count; $i < $count; ++ $i ) {
-				$rid = bp_core_get_userid( trim( $recipient_usernames[ $i ] ) );
-				if ( $rid ) {
+				if ( $rid = bp_core_get_userid( trim( $recipient_usernames[ $i ] ) ) ) {
 					$recipient_ids[] = $rid;
 				}
 			}
@@ -327,7 +324,7 @@ class BP_Messages_Message {
 		sort( $recipient_ids );
 
 		$results = $wpdb->get_results(
-			$wpdb->prepare(
+			$sql = $wpdb->prepare(
 				"SELECT
 				r.thread_id as thread_id,
 				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
@@ -349,8 +346,7 @@ class BP_Messages_Message {
 
 		$thread_id = $results[0]->thread_id;
 
-		$is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender );
-		if ( ! $is_active_recipient ) {
+		if ( ! $is_active_recipient = BP_Messages_Thread::is_thread_recipient( $thread_id, $sender ) ) {
 			return null;
 		}
 

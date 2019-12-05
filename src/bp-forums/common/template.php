@@ -204,11 +204,12 @@ function bbp_is_forum_edit() {
 	$retval = false;
 
 	// Check query
-	if ( ! empty( $wp_query->bbp_is_forum_edit ) && ( true === $wp_query->bbp_is_forum_edit ) ) {
+	if ( ! empty( $wp_query->bbp_is_forum_edit ) && ( $wp_query->bbp_is_forum_edit === true ) ) {
 		$retval = true;
+	}
 
-		// Editing in admin
-	} elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_forum_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	// Editing in admin
+	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_forum_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
 
@@ -306,14 +307,15 @@ function bbp_is_topic_edit() {
 	$retval = false;
 
 	// Check query
-	if ( ! empty( $wp_query->bbp_is_topic_edit ) && ( true === $wp_query->bbp_is_topic_edit ) ) {
+	if ( ! empty( $wp_query->bbp_is_topic_edit ) && ( $wp_query->bbp_is_topic_edit === true ) ) {
 		$retval = true;
 
-	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) === get_option( '_bbp_topic_slug', 'discussions' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() ) {
+	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_topic_slug', 'discussions' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() ) {
 		$retval = true;
+	}
 
-		// Editing in admin
-	} elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_topic_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	// Editing in admin
+	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_topic_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
 
@@ -414,9 +416,10 @@ function bbp_is_topic_tag_edit() {
 	// Check query
 	if ( ! empty( $wp_query->bbp_is_topic_tag_edit ) && ( true === $wp_query->bbp_is_topic_tag_edit ) ) {
 		$retval = true;
+	}
 
-		// Editing in admin
-	} elseif ( is_admin() && ( 'edit-tags.php' === $pagenow ) && ( bbp_get_topic_tag_tax_id() === $taxnow ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	// Editing in admin
+	elseif ( is_admin() && ( 'edit-tags.php' === $pagenow ) && ( bbp_get_topic_tag_tax_id() === $taxnow ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
 
@@ -497,11 +500,12 @@ function bbp_is_reply_edit() {
 	if ( ! empty( $wp_query->bbp_is_reply_edit ) && ( true === $wp_query->bbp_is_reply_edit ) ) {
 		$retval = true;
 
-	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) === get_option( '_bbp_reply_slug', 'reply' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() ) {
+	} elseif ( function_exists( 'bp_action_variable' ) && bp_action_variable( 0 ) == get_option( '_bbp_reply_slug', 'reply' ) && bp_action_variable( 2 ) === bbp_get_edit_rewrite_id() ) {
 		$retval = true;
+	}
 
-		// Editing in admin
-	} elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_reply_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
+	// Editing in admin
+	elseif ( is_admin() && ( 'post.php' === $pagenow ) && ( get_post_type() === bbp_get_reply_post_type() ) && ( ! empty( $_GET['action'] ) && ( 'edit' === $_GET['action'] ) ) ) {
 		$retval = true;
 	}
 
@@ -938,7 +942,7 @@ function bbp_is_edit() {
 	$retval = false;
 
 	// Check query
-	if ( ! empty( $wp_query->bbp_is_edit ) && ( true === $wp_query->bbp_is_edit ) ) {
+	if ( ! empty( $wp_query->bbp_is_edit ) && ( $wp_query->bbp_is_edit === true ) ) {
 		$retval = true;
 	}
 
@@ -2284,17 +2288,10 @@ function bbp_get_breadcrumb( $args = array() ) {
 	}
 
 	// Define variables
-	$front_id            = 0;
-	$root_id             = 0;
-	$ancestors           = array();
-	$crumbs              = array();
-	$tag_data            = array();
-	$pre_root_text       = '';
-	$pre_front_text      = '';
-	$pre_current_text    = '';
-	$pre_include_root    = true;
-	$pre_include_home    = true;
-	$pre_include_current = true;
+	$front_id         = $root_id                                 = 0;
+	$ancestors        = $crumbs           = $tag_data            = array();
+	$pre_root_text    = $pre_front_text   = $pre_current_text    = '';
+	$pre_include_root = $pre_include_home = $pre_include_current = true;
 
 	/** Home Text */
 
@@ -2337,7 +2334,7 @@ function bbp_get_breadcrumb( $args = array() ) {
 	}
 
 	// Don't show root if viewing page in place of forum archive
-	if ( ! empty( $root_id ) && ( ( is_single() || is_page() ) && ( get_the_ID() === $root_id ) ) ) {
+	if ( ! empty( $root_id ) && ( ( is_single() || is_page() ) && ( $root_id === get_the_ID() ) ) ) {
 		$pre_include_root = false;
 	}
 
@@ -2609,8 +2606,7 @@ function bbp_template_notices() {
 	}
 
 	// Define local variable(s)
-	$errors   = array();
-	$messages = array();
+	$errors = $messages = array();
 
 	// Get Forums
 	$bbp = bbpress();

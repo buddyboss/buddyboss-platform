@@ -9,7 +9,7 @@
 if ( bp_has_groups() ) :
 	while ( bp_groups() ) :
 		bp_the_group();
-		?>
+	?>
 
 		<?php bp_nouveau_group_hook( 'before', 'home_content' ); ?>
 
@@ -39,5 +39,5 @@ if ( bp_has_groups() ) :
 
 	<?php endwhile; ?>
 
-	<?php
+<?php
 endif;

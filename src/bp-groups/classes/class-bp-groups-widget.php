@@ -64,7 +64,7 @@ class BP_Groups_Widget extends WP_Widget {
 		 */
 		$user_id = apply_filters( 'bp_group_widget_user_id', '0' );
 
-		extract( $args ); // phpcs:ignore WordPress.PHP.DontExtract
+		extract( $args );
 
 		if ( empty( $instance['group_default'] ) ) {
 			$instance['group_default'] = 'popular';
@@ -119,21 +119,21 @@ class BP_Groups_Widget extends WP_Widget {
 			<div class="item-options" id="groups-list-options">
 				<a href="<?php bp_groups_directory_permalink(); ?>" id="newest-groups"
 																<?php
-																if ( 'newest' === $instance['group_default'] ) :
+																if ( $instance['group_default'] == 'newest' ) :
 																	?>
-																	class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
+					 class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
 				<a href="<?php bp_groups_directory_permalink(); ?>" id="recently-active-groups"
 																<?php
-																if ( 'active' === $instance['group_default'] ) :
+																if ( $instance['group_default'] == 'active' ) :
 																	?>
-																	class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
+					 class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups"
+				<a href="<?php bp_groups_directory_permalink(); ?>" id="popular-groups" 
 																<?php
-																if ( 'popular' === $instance['group_default'] ) :
+																if ( $instance['group_default'] == 'popular' ) :
 																	?>
-																	class="selected"<?php endif; ?>><?php _e( 'Popular', 'buddyboss' ); ?></a>
+					 class="selected"<?php endif; ?>><?php _e( 'Popular', 'buddyboss' ); ?></a>
 			</div>
 
 			<ul id="groups-list" class="item-list" aria-live="polite" aria-relevant="all" aria-atomic="true">
@@ -151,13 +151,11 @@ class BP_Groups_Widget extends WP_Widget {
 							<div class="item-meta">
 								<span class="activity">
 								<?php
-								if ( 'newest' === $instance['group_default'] ) {
-									/* translators: created [Group created date] */
+								if ( 'newest' == $instance['group_default'] ) {
 									printf( __( 'created %s', 'buddyboss' ), bp_get_group_date_created() );
-								} elseif ( 'popular' === $instance['group_default'] ) {
+								} elseif ( 'popular' == $instance['group_default'] ) {
 									bp_group_member_count();
 								} else {
-									/* translators: active [Group last active] */
 									printf( __( 'active %s', 'buddyboss' ), bp_get_group_last_active() );
 								}
 								?>
@@ -170,7 +168,7 @@ class BP_Groups_Widget extends WP_Widget {
 			</ul>
 			<?php wp_nonce_field( 'groups_widget_groups_list', '_wpnonce-groups' ); ?>
 			<input type="hidden" name="groups_widget_max" id="groups_widget_max" value="<?php echo esc_attr( $max_groups ); ?>" />
-
+			
 			<div class="more-block"><a href="<?php bp_groups_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 
 		<?php else : ?>

@@ -8,9 +8,9 @@
  * @version 3.0.0
  */
 
-?>
+	?>
 
-<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class(); ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
+<li id="acomment-<?php bp_activity_comment_id(); ?>" class="<?php bp_activity_comment_css_class() ?>" data-bp-activity-comment-id="<?php bp_activity_comment_id(); ?>">
 	<div class="acomment-avatar item-avatar">
 		<a href="<?php bp_activity_comment_user_link(); ?>">
 			<?php
@@ -31,10 +31,10 @@
 	</div>
 
 	<div class="acomment-content">
-		<?php bp_activity_comment_content(); ?>
+        <?php bp_activity_comment_content(); ?>
 
-		<?php do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() ); ?>
-	</div>
+        <?php do_action( 'bp_activity_after_comment_content', bp_get_activity_comment_id() ); ?>
+    </div>
 
 	<?php bp_nouveau_activity_comment_buttons( array( 'container' => 'div' ) ); ?>
 

@@ -442,8 +442,7 @@ function bp_core_get_userlink( $user_id, $no_anchor = false, $just_link = false 
 		return $display_name;
 	}
 
-	$url = bp_core_get_user_domain( $user_id );
-	if ( ! $url ) {
+	if ( ! $url = bp_core_get_user_domain( $user_id ) ) {
 		return false;
 	}
 
@@ -712,7 +711,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 		require_once ABSPATH . 'wp-admin/includes/ms.php';
 	}
 
-	$is_spam = ( 'spam' === $status );
+	$is_spam = ( 'spam' == $status );
 
 	// Only you can prevent infinite loops.
 	remove_action( 'make_spam_user', 'bp_core_mark_user_spam_admin' );
@@ -727,7 +726,7 @@ function bp_core_process_spammer_status( $user_id, $status, $do_wp_cleanup = tru
 		foreach ( (array) array_values( $blogs ) as $details ) {
 
 			// Do not mark the main or current root blog as spam.
-			if ( 1 === $details->userblog_id || bp_get_root_blog_id() === $details->userblog_id ) {
+			if ( 1 == $details->userblog_id || bp_get_root_blog_id() == $details->userblog_id ) {
 				continue;
 			}
 
@@ -896,7 +895,7 @@ function bp_is_user_spammer( $user_id = 0 ) {
 			$is_spammer = true;
 		}
 
-		if ( 1 === $user->user_status ) {
+		if ( 1 == $user->user_status ) {
 			$is_spammer = true;
 		}
 	}
@@ -962,7 +961,7 @@ function bp_is_user_deleted( $user_id = 0 ) {
 			$is_deleted = true;
 		}
 
-		if ( 2 === $user->user_status ) {
+		if ( 2 == $user->user_status ) {
 			$is_deleted = true;
 		}
 	}
@@ -1358,7 +1357,7 @@ function bp_core_boot_spammer( $user ) {
 
 	// The user exists; now do a check to see if the user is a spammer
 	// if the user is a spammer, stop them in their tracks!
-	if ( is_a( $user, 'WP_User' ) && ( ( is_multisite() && (int) $user->spam ) || 1 === $user->user_status ) ) {
+	if ( is_a( $user, 'WP_User' ) && ( ( is_multisite() && (int) $user->spam ) || 1 == $user->user_status ) ) {
 		return new WP_Error( 'invalid_username', __( '<strong>ERROR</strong>: Your account has been marked as a spammer.', 'buddyboss' ) );
 	}
 
@@ -1560,7 +1559,7 @@ function bp_core_validate_email_address( $user_email ) {
 	// Is the email on the Limited Email Domains list?
 	// Note: This check only works on Multisite.
 	$limited_email_domains = get_site_option( 'limited_email_domains' );
-	if ( is_array( $limited_email_domains ) && empty( $limited_email_domains ) === false ) {
+	if ( is_array( $limited_email_domains ) && empty( $limited_email_domains ) == false ) {
 		$emaildomain = substr( $user_email, 1 + strpos( $user_email, '@' ) );
 		if ( ! in_array( $emaildomain, $limited_email_domains ) ) {
 			$errors['domain_not_allowed'] = 1;
@@ -1673,7 +1672,7 @@ function bp_core_validate_user_signup( $user_name, $user_email ) {
 		// No usernames that are all numeric. @todo Why?
 		$match = array();
 		preg_match( '/[0-9]*/', $user_name, $match );
-		if ( $match[0] === $user_name ) {
+		if ( $match[0] == $user_name ) {
 			$errors->add( 'user_name', __( 'Sorry, usernames must have letters too!', 'buddyboss' ) );
 		}
 
@@ -1929,7 +1928,7 @@ function bp_core_activate_signup( $key ) {
 			$user_id = wp_create_user( $signup->user_login, $password, $signup->user_email );
 
 			// Otherwise, update the existing user's status.
-		} elseif ( bp_get_user_meta( $user_id, 'activation_key', true ) === $key || wp_hash( $user_id ) === $key ) {
+		} elseif ( $key === bp_get_user_meta( $user_id, 'activation_key', true ) || $key === wp_hash( $user_id ) ) {
 
 			// Change the user's status so they become active.
 			if ( ! $wpdb->query( $wpdb->prepare( "UPDATE {$wpdb->users} SET user_status = 0 WHERE ID = %d", $user_id ) ) ) {
@@ -2295,12 +2294,12 @@ function bp_core_signup_disable_inactive( $user = null, $username = '', $passwor
 	// An existing WP_User with a user_status of 2 is either a legacy
 	// signup, or is a user created for backward compatibility. See
 	// {@link bp_core_signup_user()} for more details.
-	if ( is_a( $user, 'WP_User' ) && 2 === $user->user_status ) {
+	if ( is_a( $user, 'WP_User' ) && 2 == $user->user_status ) {
 		$user_login = $user->user_login;
 
 		// If no WP_User is found corresponding to the username, this
 		// is a potential signup.
-	} elseif ( is_wp_error( $user ) && 'invalid_username' === $user->get_error_code() ) {
+	} elseif ( is_wp_error( $user ) && 'invalid_username' == $user->get_error_code() ) {
 		$user_login = $username;
 
 		// This is an activated user, so bail.
@@ -2387,7 +2386,7 @@ function bp_core_wpsignup_redirect() {
 	$action = ! empty( $_GET['action'] ) ? $_GET['action'] : '';
 
 	// Not at the WP core signup page and action is not register.
-	if ( ! empty( $_SERVER['SCRIPT_NAME'] ) && false === strpos( 'wp-signup.php', $_SERVER['SCRIPT_NAME'] ) && ( 'register' !== $action ) ) {
+	if ( ! empty( $_SERVER['SCRIPT_NAME'] ) && false === strpos( 'wp-signup.php', $_SERVER['SCRIPT_NAME'] ) && ( 'register' != $action ) ) {
 		return;
 	}
 
@@ -2616,8 +2615,7 @@ function bp_register_member_type( $member_type, $args = array() ) {
 		$r['has_directory']  = false;
 	}
 
-	$bp->members->types[ $member_type ] = (object) $r;
-	$type                               = (object) $r;
+	$bp->members->types[ $member_type ] = $type = (object) $r;
 
 	/**
 	 * Fires after a profile type is registered.
@@ -3385,7 +3383,7 @@ function bp_refresh_member_types_cache( $post_id, $post, $update ) {
 	}
 
 	// Force the cache refresh for active_member_types posts.
-	bp_get_active_member_types( true );
+	bp_get_active_member_types( $force_refresh = true );
 
 }
 add_action( 'save_post', 'bp_refresh_member_types_cache', 10, 3 );
@@ -3538,7 +3536,7 @@ function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, 
 	$exclude_user_ids = bp_get_users_of_removed_member_types();
 	// print_r($exclude_user_ids);
 
-	if ( 'members' !== $object ) {
+	if ( $object != 'members' ) {
 		return $qs;
 	}
 
@@ -3791,7 +3789,7 @@ function bp_member_type_add_request_filter() {
  */
 function bp_member_type_sort_items( $qv ) {
 
-	if ( ! isset( $qv['post_type'] ) || bp_get_member_type_post_type() !== $qv['post_type'] ) {
+	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_member_type_post_type() ) {
 		return $qv;
 	}
 
@@ -3833,7 +3831,7 @@ function bp_member_type_hide_quickedit( $actions, $post ) {
 		global $post;
 	}
 
-	if ( bp_get_member_type_post_type() === $post->post_type ) {
+	if ( bp_get_member_type_post_type() == $post->post_type ) {
 		unset( $actions['inline hide-if-no-js'] );
 	}
 
@@ -3933,7 +3931,7 @@ function bp_member_type_shortcode_filter( $query_string, $object ) {
 		return '';
 	}
 
-	if ( 'members' === $object && bp_current_component() !== 'members' ) {
+	if ( 'members' == $object && bp_current_component() !== 'members' ) {
 		$_COOKIE['bp-members-filter'] = 'alphabetical';
 		$_COOKIE['bp-members-scope']  = 'all';
 	}
@@ -4001,9 +3999,8 @@ function bp_get_user_member_type( $user_id ) {
 			// Get the profile type.
 			$type = bp_get_member_type( $user_id );
 
-				// Get the profile type object
-				$type_obj = bp_get_member_type_object( $type );
-			if ( $type_obj ) {
+			// Output the
+			if ( $type_obj = bp_get_member_type_object( $type ) ) {
 				$member_type = $type_obj->labels['singular_name'];
 			}
 
@@ -4014,6 +4011,7 @@ function bp_get_user_member_type( $user_id ) {
 	} else {
 		$string = '<span class="bp-member-type">' . $member_type . '</span>';
 	}
+
 
 	return apply_filters( 'bp_member_type_name_string', $string, $member_type, $user_id );
 }

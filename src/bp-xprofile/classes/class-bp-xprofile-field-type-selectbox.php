@@ -72,7 +72,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-
+		
 		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
@@ -122,7 +122,7 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
 			foreach ( $option_values as $i => $option_value ) {
-				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] !== $option_value ) {
+				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] != $option_value ) {
 					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
 						$option_values[ $i ] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 					}
@@ -173,10 +173,10 @@ class BP_XProfile_Field_Type_Selectbox extends BP_XProfile_Field_Type {
 		?>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
-															<?php
+															 <?php
 																/* translators: accessibility text */
 																esc_html_e( 'Select', 'buddyboss' );
-															?>
+																?>
 		</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
 			<?php bp_the_profile_field_options(); ?>

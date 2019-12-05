@@ -1,7 +1,7 @@
 <script type="text/html" id="tmpl-activity-link-preview">
 	<# if ( data.link_scrapping ) { #>
 	<# if ( data.link_loading ) { #>
-	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Processing...', 'buddyboss' ); ?></span>
+	<span class="activity-url-scrapper-loading activity-ajax-loader"><?php esc_html_e( 'Processing...', 'buddyboss' ) ?></span>
 	<# } #>
 	<# if ( data.link_success || data.link_error ) { #>
 	<div id="activity-url-scrapper" class="activity-link-preview-container">
@@ -18,7 +18,7 @@
 				<button type="button" id="activity-url-prevPicButton"><span class="dashicons dashicons-arrow-left-alt2"></span></button>
 				<button type="button" id="activity-url-nextPicButton"><span class="dashicons dashicons-arrow-right-alt2"></span></button>
 				<div id="activity-url-scrapper-img-count">
-					<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ); ?>&nbsp;<# print(data.link_images.length) #>
+					<# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
 				</div>
 			</div>
 			<# } #>

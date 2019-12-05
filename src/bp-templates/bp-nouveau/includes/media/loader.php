@@ -1,4 +1,4 @@
-<?php // phpcs:ignore WordPress.NamingConventions
+<?php
 /**
  * BP Nouveau Media
  *
@@ -49,16 +49,13 @@ class BP_Nouveau_Media {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-			// Load AJAX code only on AJAX requests.
+		// Load AJAX code only on AJAX requests.
 		} else {
-			add_action(
-				'admin_init',
-				function() {
-					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'media_' ) ) {
-						require $this->dir . 'ajax.php';
-					}
+			add_action( 'admin_init', function() {
+				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'media_' ) ) {
+					require $this->dir . 'ajax.php';
 				}
-			);
+			} );
 		}
 	}
 
@@ -69,7 +66,7 @@ class BP_Nouveau_Media {
 	 */
 	protected function setup_actions() {
 		// Enqueue the scripts for the new UI
-		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_media_enqueue_scripts' );
+		add_action( 'bp_nouveau_enqueue_scripts',                       'bp_nouveau_media_enqueue_scripts'                          );
 	}
 
 	/**

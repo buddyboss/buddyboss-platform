@@ -505,7 +505,7 @@ function bp_get_message_css_class() {
 
 	$class = false;
 
-	if ( 1 === $messages_template->current_thread % 2 ) {
+	if ( $messages_template->current_thread % 2 == 1 ) {
 		$class .= 'alt';
 	}
 
@@ -1784,7 +1784,7 @@ function bp_get_thread_recipients_list() {
 	$recipient_links = array();
 
 	foreach ( (array) $thread_template->thread->recipients as $recipient ) {
-		if ( bp_loggedin_user_id() !== (int) $recipient->user_id ) {
+		if ( (int) $recipient->user_id !== bp_loggedin_user_id() ) {
 			$recipient_link = bp_core_get_userlink( $recipient->user_id );
 
 			if ( empty( $recipient_link ) ) {
@@ -1869,7 +1869,7 @@ function bp_get_the_thread_message_css_class() {
 	$classes[] = 'sent-by-' . intval( $thread_template->message->sender_id );
 
 	// Whether the sender is the same as the logged-in user.
-	if ( bp_loggedin_user_id() === $thread_template->message->sender_id ) {
+	if ( bp_loggedin_user_id() == $thread_template->message->sender_id ) {
 		$classes[] = 'sent-by-me';
 	}
 
@@ -1899,7 +1899,7 @@ function bp_the_thread_message_alt_class() {
 function bp_get_the_thread_message_alt_class() {
 	global $thread_template;
 
-	if ( 1 === $thread_template->current_message % 2 ) {
+	if ( $thread_template->current_message % 2 == 1 ) {
 		$class = 'even alt';
 	} else {
 		$class = 'odd';

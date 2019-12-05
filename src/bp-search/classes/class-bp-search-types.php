@@ -35,8 +35,8 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 			'html_generated'    => false,
 		);
 
-		/**
-		 * Magic Methods
+		/*
+		 Magic Methods
 		 * ===================================================================
 		 */
 
@@ -115,7 +115,7 @@ if ( ! class_exists( 'Bp_Search_Type' ) ) :
 				$this->search_results['html_generated'] = true;// do once only
 			}
 
-			return isset( $this->search_results['items'][ $itemid ]['html'] ) ? $this->search_results['items'][ $itemid ]['html'] : '';
+			return isset( $this->search_results['items'][ $itemid ] ) ? @$this->search_results['items'][ $itemid ]['html'] : '';
 		}
 	}
 

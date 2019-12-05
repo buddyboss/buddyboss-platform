@@ -13,7 +13,7 @@
  */
 function groups_screen_group_members_all_members() {
 
-	if ( 'all-members' !== bp_get_group_current_members_tab() ) {
+	if ( 'all-members' != bp_get_group_current_members_tab() ) {
 		return false;
 	}
 

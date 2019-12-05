@@ -441,7 +441,7 @@ function bbp_make_spam_user( $user_id = 0 ) {
 		switch_to_blog( $blog_id );
 
 		// Get topics and replies
-		$posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_public_status_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
+		$posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_public_status_id() ) );
 
 		// Loop through posts and spam them
 		if ( ! empty( $posts ) ) {
@@ -532,7 +532,7 @@ function bbp_make_ham_user( $user_id = 0 ) {
 		switch_to_blog( $blog_id );
 
 		// Get topics and replies
-		$posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_spam_status_id() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
+		$posts = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_author = %d AND post_status = '%s' AND post_type IN ( {$post_types} )", $user_id, bbp_get_spam_status_id() ) );
 
 		// Loop through posts and spam them
 		if ( ! empty( $posts ) ) {

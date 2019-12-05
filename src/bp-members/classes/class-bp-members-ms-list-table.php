@@ -215,7 +215,7 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 				$signup_object->ID = $signup_object->id;
 			}
 
-			$style = ( ' class="alternate"' === $style ) ? '' : ' class="alternate"';
+			$style = ( ' class="alternate"' == $style ) ? '' : ' class="alternate"';
 			echo "\n\t" . $this->single_row( $signup_object, $style );
 		}
 	}
@@ -260,13 +260,13 @@ class BP_Members_MS_List_Table extends WP_MS_Users_List_Table {
 	public function column_cb( $signup_object = null ) {
 		?>
 		<label class="screen-reader-text" for="signup_<?php echo intval( $signup_object->id ); ?>">
-																<?php
+																 <?php
 																	printf(
 																		/* translators: accessibility text */
 																		esc_html__( 'Select user: %s', 'buddyboss' ),
 																		$signup_object->user_login
 																	);
-																?>
+																	?>
 		</label>
 		<input type="checkbox" id="signup_<?php echo intval( $signup_object->id ); ?>" name="allsignups[]" value="<?php echo esc_attr( $signup_object->id ); ?>" />
 		<?php
