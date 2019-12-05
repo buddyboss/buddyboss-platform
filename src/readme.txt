@@ -63,7 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed pagination of groups when using [group type=""] shortcode
 * Groups - Fixed 'Read more' in group activity feed not working when Media component is disabled
 * Groups - Added ability to re-order Photos and Albums tabs in customizer
-* Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
+* Forums - Fixed issue when posting a forum reply using only a GIF, with no text
 * Forums - Fixed issue with pagination through forums in Forums index
 * Notices - Fixed site notices not clearing after closing them, for non-admin members
 * Registration - Fixed data not saving on register form when validating incomplete fields
