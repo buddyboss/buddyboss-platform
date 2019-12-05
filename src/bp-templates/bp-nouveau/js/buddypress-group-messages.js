@@ -551,8 +551,7 @@ window.bp = window.bp || {};
 					}
 				);
 
-				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji) && $('#group_message_content').length ) {
-
+				if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji) && $('#group_message_content').length && BP_Nouveau.media.emoji.messages === true ) {
 					$('#group_message_content').emojioneArea({
 						standalone: true,
 						hideSource: false,
