@@ -1,7 +1,7 @@
 jQuery( document ).ready(
 	function() {
 
-			var $tagsSelect   = jQuery( 'body' ).find( '#bbp_topic_tags_dropdown' );
+			var $tagsSelect   = jQuery( 'body' ).find( '.bbp_topic_tags_dropdown' );
 			var tagsArrayData = [];
 
 	if ( $tagsSelect.length ) {
