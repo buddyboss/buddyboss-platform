@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Fixed certain link embeds URLs not rendering proper results
 * Profiles - Fixed pagination of members when using [profile type=""] shortcode
 * Groups - Fixed pagination of groups when using [group type=""] shortcode
+* Groups - Added ability to re-order Photos and Albums tabs in customizer
 * Forums - Fixed issue with posting a forum reply consisting of just a GIF with no text
 * Documentation - Now syncing all docs in real time from BuddyBoss Resources website
 
