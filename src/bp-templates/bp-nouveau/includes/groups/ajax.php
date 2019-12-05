@@ -917,6 +917,7 @@ function bp_nouveau_ajax_groups_get_group_members_send_message() {
 				'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
 				'content'    => $_POST['content'],
 				'error_type' => 'wp_error',
+				'append_thread' => false,
 			) );
 		}
 

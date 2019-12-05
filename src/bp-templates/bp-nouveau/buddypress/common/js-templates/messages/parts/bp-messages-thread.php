@@ -36,7 +36,7 @@
 		<div class="thread-content" data-thread-id="{{data.id}}">
 			<div class="thread-to">
 
-				<# if ( data.group_name.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
+				<# if ( data.group_name.length && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 
