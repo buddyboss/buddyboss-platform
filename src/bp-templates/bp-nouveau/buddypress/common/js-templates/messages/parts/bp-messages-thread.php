@@ -26,7 +26,9 @@
 					<img class="avatar" src="{{data.sender_avatar}}" alt="{{data.sender_name}}" />
 				<# } else { #>
 					<# var recipient = _.first(other_recipients)? _.first(other_recipients) : current_user; #>
-					<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+					<# if ( typeof( recipient ) != "undefined" && recipient !== null && recipient.avatar.length > 1 && recipient.user_name.length > 1 ) { #>
+						<img class="avatar" src="{{recipient.avatar}}" alt="{{recipient.user_name}}" />
+					<# } #>
 				<# } #>
 			<# } #>
 		</div>
