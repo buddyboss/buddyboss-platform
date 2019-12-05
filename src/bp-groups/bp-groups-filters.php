@@ -706,7 +706,9 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 		     $message_users_ids &&
 		     (int) $group === (int) $group_id &&
 		     'new' === $thread_type &&
-		     'group' === $message_from ) {
+		     'group' === $message_from
+
+		) {
 
 			$message_users_ids = explode( ',', $message_users_ids );
 			$group_name        = bp_get_group_name( groups_get_group( $group ) );
@@ -715,25 +717,34 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 				unset( $message_users_ids[$key] );
 			}
 			bp_messages_update_meta( $message_id, 'message_users_ids', implode( ',', $message_users_ids ) );
-			$new_reply = messages_new_message( array(
-				'sender_id' => $user_id,
-				'thread_id' => $group_message_thread_id,
-				'subject'   => '',
-				'content'   => '<p> </p>',
-				'date_sent' => $date_sent = bp_core_current_time(),
-				'error_type' => 'wp_error',
-			) );
-			if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
-				if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
-					while ( bp_message_threads() ) {
-						bp_message_thread();
-						$last_message_id = (int) $messages_template->thread->last_message_id;
-						bp_messages_update_meta( $last_message_id, 'group_message_group_left', 'yes' );
-						bp_messages_update_meta( $last_message_id, 'group_id', $group_id );
+			if ( 'all' === $message_users ) {
+				$new_reply = messages_new_message( array(
+					'sender_id'  => $user_id,
+					'thread_id'  => $group_message_thread_id,
+					'subject'    => '',
+					'content'    => '<p> </p>',
+					'date_sent'  => $date_sent = bp_core_current_time(),
+					'error_type' => 'wp_error',
+				) );
+				if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
+					if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+						while ( bp_message_threads() ) {
+							bp_message_thread();
+							$last_message_id = (int) $messages_template->thread->last_message_id;
+							bp_messages_update_meta( $last_message_id, 'group_message_group_left', 'yes' );
+							bp_messages_update_meta( $last_message_id, 'group_id', $group_id );
+						}
 					}
 				}
 			}
 			$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_message_thread_id ) );
 		}
 	}
+}
+
+function bp_threads_messages_show_more_messages( $total )  {
+
+	$total = 99999;
+
+	return $total;
 }

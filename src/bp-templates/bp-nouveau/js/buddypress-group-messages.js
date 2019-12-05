@@ -417,7 +417,9 @@ window.bp = window.bp || {};
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').hide();
 							setTimeout(function() {
 								$('.remove-after-few-seconds').hide();
-								$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
+								setTimeout(function() {
+									$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
+								}, 250);
 							}, 3000);
 							window.group_messages_editor.setContent('');
 							if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
