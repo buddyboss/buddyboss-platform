@@ -60,6 +60,7 @@
 			<div class="bb-groups-invites-right-top">
 				<div class="bb-title-wrap">
 					<h2 class="bb-title"><?php _e( 'New Group Invites', 'buddyboss' ); ?></h2>
+					<a href="#" class="bb-add-more-invites"><?php _e( 'Select Members', 'buddyboss' ); ?></a>
 				</div>
 				<div class="bp-invites-feedback">
 					<div class="bp-feedback">

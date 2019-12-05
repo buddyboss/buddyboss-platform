@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-02 14:51:36+00:00\n"
+"POT-Creation-Date: 2019-12-05 13:06:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15222,7 +15222,7 @@ msgid "Optional: Customize the message of your invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:4
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:74
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:75
 #: bp-templates/bp-nouveau/includes/messages/functions.php:115
 msgid "Type message"
 msgstr ""
@@ -15286,7 +15286,7 @@ msgid "Invite"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:13
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:70
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:71
 msgid "Type the names of one or more people"
 msgstr ""
 
@@ -15680,6 +15680,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:62
 msgid "New Group Invites"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:63
+msgid "Select Members"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/admin-subnav.php:10
