@@ -13,7 +13,7 @@
 <div id="whats-new-attachments">
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() ) : ?>
-		<div class="dropzone closed" id="forums-post-media-uploader"></div>
+		<div class="dropzone closed" id="forums-post-media-uploader" data-key="<?php echo wp_unique_id( 'forums-media-uploader-' ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 	<?php endif; ?>
 
