@@ -798,7 +798,6 @@ class BP_Media {
 			$media_ids_media = $cached_media;
 		}
 
-
 		if ( 'ids' === $r['fields'] ) {
 			$medias_album = array_map( 'intval', $media_ids_album );
 			$medias_media = array_map( 'intval', $media_ids_media );
@@ -821,7 +820,25 @@ class BP_Media {
 
 		self::array_sort_by_column( $medias, 'date_created');
 
-		$retval['medias'] = $medias;
+		$retval['has_more_items'] = !empty( $r['per_page'] ) && isset( $r['per_page'] ) && count( $medias ) > $r['per_page'];
+
+		if (
+			isset( $r['per_page'] )
+			&& isset( $r['page'] )
+			&& !empty( $r['per_page'] )
+			&& !empty( $r['page'] )
+			&& $retval['has_more_items']
+		) {
+			$total = count( $medias );
+			$current_page = $r['page'];
+			$item_per_page = $r['per_page'];
+			$start = ( $current_page -1 ) * $item_per_page;
+			$medias = array_slice( $medias, $start, $item_per_page );
+			$retval['has_more_items'] = $total > ( $current_page * $item_per_page );
+			$retval['medias'] = $medias;
+		} else {
+			$retval['medias'] = $medias;
+		}
 
 		return $retval;
 	}

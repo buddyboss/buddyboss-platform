@@ -29,16 +29,18 @@ bp_nouveau_before_loop();
 
 			endwhile;
 
-			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				</tbody>
-				</table>
+			if ( bp_media_has_more_items() ) : ?>
+				<tr class="pager">
+					<td colspan="4" class="dt-more-container load-more">
+						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					</td>
+				</tr>
 			<?php
 			endif;
 
-			if ( bp_media_has_more_items() ) : ?>
-				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-				</div>
+			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+				</tbody>
+				</table>
 			<?php
 			endif;
 
@@ -74,16 +76,18 @@ bp_nouveau_before_loop();
 
 			endwhile;
 
-			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				</tbody>
-				</table>
+			if ( bp_media_has_more_items() ) : ?>
+				<tr class="pager">
+					<td colspan="5" class="dt-more-container load-more">
+						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+					</td>
+				</tr>
 			<?php
 			endif;
 
-			if ( bp_media_has_more_items() ) : ?>
-				<div class="dt-more-container load-more">
-					<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-				</div>
+			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
+				</tbody>
+				</table>
 			<?php
 			endif;
 

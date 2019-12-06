@@ -122,7 +122,7 @@ window.bp = window.bp || {};
 
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
-			$( '.bp-nouveau [data-bp-media-type="document"]' ).on( 'click', 'div.dt-more-container.load-more', this.injectDocuments.bind( this ) );
+			$( '.bp-nouveau [data-bp-media-type="document"]' ).on( 'click', '.dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( '.bp-nouveau #albums-dir-list' ).on( 'click', 'li.load-more', this.appendAlbums.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.addSelectedClassToWrapper.bind( this ) );
@@ -1522,7 +1522,7 @@ window.bp = window.bp || {};
 					target              : '#buddypress [data-bp-media-type] table#media-folder-document-data-table'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
-						$( event.currentTarget ).remove();
+						$( event.currentTarget ).parent( '.pager' ).remove();
 
 						// Update the current page
 						self.current_page = next_page;
