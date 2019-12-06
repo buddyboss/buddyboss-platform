@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-05 13:06:53+00:00\n"
+"POT-Creation-Date: 2019-12-06 08:58:58+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2471,7 +2471,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-members-widget.php:298
 #: bp-members/classes/class-bp-members-component.php:37
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:442
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:20
 #: bp-templates/bp-nouveau/includes/groups/classes.php:241
 #: bp-templates/bp-nouveau/includes/groups/functions.php:790
 #: bp-templates/bp-nouveau/includes/groups/functions.php:796
@@ -11122,7 +11122,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:197
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:25
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
 #: bp-templates/bp-nouveau/includes/groups/functions.php:140
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
 #: bp-xprofile/classes/class-bp-xprofile-component.php:196
@@ -15211,9 +15211,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:19
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:20
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:23
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:33
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:34
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:37
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:35
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:38
 msgid "Search Members"
 msgstr ""
 
@@ -15222,7 +15222,7 @@ msgid "Optional: Customize the message of your invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:4
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:75
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:76
 #: bp-templates/bp-nouveau/includes/messages/functions.php:115
 msgid "Type message"
 msgstr ""
@@ -15286,7 +15286,7 @@ msgid "Invite"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:13
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:71
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:72
 msgid "Type the names of one or more people"
 msgstr ""
 
@@ -15678,11 +15678,16 @@ msgstr ""
 msgid "Change Group Photo"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:62
-msgid "New Group Invites"
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:54
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
+msgid "Done"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:63
+msgid "New Group Invites"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:64
 msgid "Select Members"
 msgstr ""
 
@@ -15772,10 +15777,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:73
 msgid "Add More Media"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
-msgid "Done"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:21

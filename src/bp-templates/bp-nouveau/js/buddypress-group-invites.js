@@ -414,7 +414,7 @@ window.bp = window.bp || {};
 				}
 			});
 
-			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-left #members-list li .action .group-add-remove-invite-button', function() {
+			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-left .group-add-remove-invite-button', function() {
 
 				var userId   = $( this ).attr( 'data-bp-user-id');
 				var userName = $( this ).attr( 'data-bp-user-name');
@@ -493,6 +493,16 @@ window.bp = window.bp || {};
 					}
 				});
 			} );
+
+                        $( document ).on( 'click', '.bb-more-invites-wrap .bb-add-invites', function(e) {
+                            e.preventDefault();
+                            $('.bb-groups-invites-left').addClass('bb-select-member-view');
+                        });
+
+                        $( document ).on( 'click', '.bb-close-invites-members', function(e) {
+                            e.preventDefault();
+                            $('.bb-groups-invites-left').removeClass('bb-select-member-view');
+                        });
 
 			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-left #group_invites_search', function() {
 				var searchText = $( '#group-invites-container .bb-groups-invites-left #group_invites_search' ).val();
@@ -625,7 +635,7 @@ window.bp = window.bp || {};
 				});
 			});
 
-			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-bottom #bp_invites_reset', function( e ) {
+			$( document ).on( 'click', '#group-invites-container #bp_invites_reset', function( e ) {
 				e.preventDefault();
 				feedbackDivHide.hide();
 				$group_invites_select.find('option').remove();
@@ -672,9 +682,9 @@ window.bp = window.bp || {};
 
 			});
 
-			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-left #group_invites_search_submit', function( e ) {
+			$( document ).on( 'click', '#group-invites-container #group_invites_search_submit', function( e ) {
 				e.preventDefault();
-				var searchText = $( '#group-invites-container .bb-groups-invites-left #group_invites_search' ).val();
+				var searchText = $( '#group-invites-container #group_invites_search' ).val();
 				if ( ''  === searchText )  {
 					return false;
 				}

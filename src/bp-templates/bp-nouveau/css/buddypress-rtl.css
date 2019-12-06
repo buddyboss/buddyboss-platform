@@ -3200,6 +3200,72 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
   padding: 20px;
 }
 
+.bb-groups-invites-right-top .bb-title-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bb-groups-invites-right-top .bb-add-invites {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.bb-invites-footer {
+  border-top: 1px solid #E7E9EC;
+  padding: 10px 20px;
+  text-align: left;
+}
+
+@media screen and (min-width: 768px) {
+  .bb-invites-footer,
+  .bb-groups-invites-right-top .bb-add-invites {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .bb-groups-invites-left {
+    display: none;
+  }
+  div#bp-group-invite-content #send-invites-control {
+    min-height: 100px;
+  }
+  .bb-groups-invites-left.bb-select-member-view {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.69);
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .bb-groups-invites-left.bb-select-member-view .bb-groups-invites-left-inner {
+    background: #fff;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
+  }
+  div.group-invites-members-listing {
+    padding-bottom: 0;
+  }
+  .group-invites-members-listing .bp-invites-feedback {
+    margin-bottom: 30px;
+  }
+}
+
+a.bb-close-invites-members.button {
+  min-width: 110px;
+}
+
 .bb-groups-invites-right-bottom {
   border-top: 1px solid #E7E9EC;
 }
