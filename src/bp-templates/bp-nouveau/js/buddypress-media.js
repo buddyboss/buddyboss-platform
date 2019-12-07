@@ -400,7 +400,7 @@ window.bp = window.bp || {};
 		},
 
 		resetForumsGifComponent: function(e) {
-			var self = this, target = $( e.currentTarget );
+			var self = this, target = $( e.target );
 			target.closest('form').find('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
 			target.closest('form').find('#whats-new-toolbar #forums-gif-button').removeClass('active');
 
@@ -676,7 +676,7 @@ window.bp = window.bp || {};
 					dropzone_container.removeClass('closed').addClass('open');
 
 					// reset gif component
-					self.resetForumsGifComponent();
+					self.resetForumsGifComponent(event);
 
 				} else {
 					self.resetForumsMediaComponent( dropzone_obj_key );
