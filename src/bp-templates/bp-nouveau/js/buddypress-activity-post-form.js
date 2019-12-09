@@ -843,9 +843,9 @@ window.bp = window.bp || {};
 		loadURLPreview: function(url) {
 			var self = this;
 
-			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-			url = $.trim( url );
-			if ( regexp.test( url ) ) {
+				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+				url = $.trim(url);
+				if (regexp.test(url)) {
 
 				if ( typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true ) {
 					return false;
@@ -877,31 +877,31 @@ window.bp = window.bp || {};
 
 						$('#whats-new-attachments').removeClass('empty');
 
-						if ( $('#whats-new-attachments').hasClass('activity-video-preview') ) {
-							$('#whats-new-attachments').removeClass('activity-video-preview');
-						}
+								if ($('#whats-new-attachments').hasClass('activity-video-preview')) {
+									$('#whats-new-attachments').removeClass('activity-video-preview');
+								}
 
-						if ( $('#whats-new-attachments').hasClass('activity-link-preview') ) {
-							$('#whats-new-attachments').removeClass('activity-link-preview');
-						}
+								if ($('#whats-new-attachments').hasClass('activity-link-preview')) {
+									$('#whats-new-attachments').removeClass('activity-link-preview');
+								}
 
-						if ( $('.activity-media-container').length ) {
-							if (  response.description.indexOf('iframe') > -1 ) {
-									$('#whats-new-attachments').addClass('activity-video-preview');
+								if ($('.activity-media-container').length) {
+									if (response.description.indexOf('iframe') > -1) {
+										$('#whats-new-attachments').addClass('activity-video-preview');
+									} else {
+										$('#whats-new-attachments').addClass('activity-link-preview');
+									}
+								}
 							} else {
-									$('#whats-new-attachments').addClass('activity-link-preview');
+								self.options.activity.set({
+									link_success: false,
+									link_error: true,
+									link_error_msg: response.error
+								});
 							}
-						}
-					} else {
-						self.options.activity.set( {
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error
-						} );
-					}
-				});
+						});
+				}
 			}
-		}
 	} );
 
 	bp.Views.WhatsNewPostIn = bp.View.extend( {

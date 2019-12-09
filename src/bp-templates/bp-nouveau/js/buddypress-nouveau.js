@@ -512,7 +512,10 @@ window.bp = window.bp || {};
 			$.each( this.objects, function( o, object ) {
 				objectData = self.getLocalStorage( 'bp-' + object );
 
-				if ( undefined !== objectData.scope ) {
+				var typeType = window.location.hash.substr(1);
+				if ( undefined !== typeType && typeType == 'following' ) {
+					scope = typeType;
+				} else if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
 				}
 

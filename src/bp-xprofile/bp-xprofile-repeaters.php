@@ -470,7 +470,7 @@ function xprofile_update_clones_on_template_update( $field ) {
 				}
 			}
 
-			if ( !empty( $field_member_types ) ) {
+			if ( ! empty( $field_member_types ) ) {
 				foreach ( $clone_ids as $clone_id ) {
 					foreach ( $field_member_types as $meta ) {
 						bp_xprofile_add_meta( $clone_id, 'field', $meta['meta_key'], $meta['meta_value'] );

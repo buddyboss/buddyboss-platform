@@ -453,7 +453,7 @@ class BuddyPress {
 		 *
 		 * @param string $value Group Type post type slug.
 		 */
-		$this->group_type_post_type     = apply_filters( 'bp_groups_group_type_post_type', 'bp-group-type' );
+		$this->group_type_post_type = apply_filters( 'bp_groups_group_type_post_type', 'bp-group-type' );
 
 		/**
 		 * Filters the taxonomy slug for the email type component.
@@ -554,7 +554,6 @@ class BuddyPress {
 		require $this->plugin_dir . 'bp-core/bp-core-learndash-emails.php';
 		require $this->plugin_dir . 'bp-core/bp-core-profile-search.php';
 		require $this->plugin_dir . 'bp-core/bp-core-gdpr.php';
-		require $this->plugin_dir . 'bp-core/bp-core-help.php';
 
 		// Maybe load deprecated buddypress functionality (this double negative is proof positive!)
 		if ( ! bp_get_option( '_bp_ignore_deprecated_code', ! $this->load_deprecated ) ) {
