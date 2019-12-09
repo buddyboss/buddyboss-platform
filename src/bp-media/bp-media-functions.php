@@ -2321,6 +2321,9 @@ function bp_media_get_document_svg_icon( $extension ) {
 		case 'folder':
 			$svg = apply_filters( 'bp_media_get_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
 			break;
+		case 'download':
+			$svg = apply_filters( 'bp_media_get_document_svg_icon_download', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/download.svg', $extension ) ;
+			break;
 		default:
 			$svg = apply_filters( 'bp_media_get_document_svg_icon_folder', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
 	}

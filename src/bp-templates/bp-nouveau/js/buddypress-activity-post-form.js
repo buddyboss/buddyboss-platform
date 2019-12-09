@@ -293,6 +293,102 @@ window.bp = window.bp || {};
 
 	});
 
+	// Activity Document
+	bp.Views.ActivityDocument = bp.View.extend({
+		tagName: 'div',
+		className: 'activity-document-container',
+		template: bp.template( 'activity-document' ),
+		media : [],
+
+		initialize: function () {
+
+			this.model.set( 'document', this.media );
+
+			document.addEventListener( 'activity_document_toggle', this.toggle_media_uploader.bind(this) );
+			document.addEventListener( 'activity_document_close', this.destroy.bind(this) );
+		},
+
+		toggle_media_uploader: function() {
+			var self = this;
+			if ( self.$el.find('#activity-post-document-uploader').hasClass('open') ) {
+				self.destroy();
+			} else {
+				self.open_media_uploader();
+			}
+		},
+
+		destroy: function() {
+			var self = this;
+			if ( ! _.isNull( bp.Nouveau.Activity.postForm.dropzone ) ) {
+				bp.Nouveau.Activity.postForm.dropzone.destroy();
+				self.$el.find('#activity-post-document-uploader').html('');
+			}
+			self.media = [];
+			self.$el.find('#activity-post-document-uploader').removeClass('open').addClass('closed');
+
+			document.removeEventListener( 'activity_document_toggle', this.toggle_media_uploader.bind(this) );
+			document.removeEventListener( 'activity_document_close', this.destroy.bind(this) );
+
+			$('#whats-new-attachments').addClass('empty');
+		},
+
+		open_media_uploader: function() {
+			var self = this;
+
+			if ( self.$el.find('#activity-post-document-uploader').hasClass('open') ) {
+				return false;
+			}
+			self.destroy();
+
+			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-document-uploader', bp.Nouveau.Activity.postForm.dropzone_options );
+
+			bp.Nouveau.Activity.postForm.dropzone.on('sending', function(file, xhr, formData) {
+				formData.append('action', 'document_upload');
+				formData.append('_wpnonce', BP_Nouveau.nonces.media);
+			});
+
+			bp.Nouveau.Activity.postForm.dropzone.on('success', function(file, response) {
+				if ( response.data.id ) {
+					file.id = response.data.id;
+					response.data.uuid = file.upload.uuid;
+					response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
+					response.data.saved = false;
+					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
+					self.media.push( response.data );
+					self.model.set( 'document', self.media );
+				}
+			});
+
+			bp.Nouveau.Activity.postForm.dropzone.on('error', function(file,response) {
+				if ( file.accepted ) {
+					if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+						$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+					}
+				} else {
+					bp.Nouveau.Activity.postForm.dropzone.removeFile(file);
+				}
+			});
+
+			bp.Nouveau.Activity.postForm.dropzone.on('removedfile', function(file) {
+				if ( self.media.length ) {
+					for ( var i in self.media ) {
+						if ( file.id === self.media[i].id ) {
+							if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
+								bp.Nouveau.Media.removeAttachment(file.id);
+							}
+							self.media.splice( i, 1 );
+							self.model.set( 'media', self.media );
+						}
+					}
+				}
+			});
+
+			self.$el.find('#activity-post-document-uploader').addClass('open').removeClass('closed');
+			$('#whats-new-attachments').removeClass('empty');
+		}
+
+	});
+
 	// Activity link preview
 	bp.Views.ActivityLinkPreview = bp.View.extend( {
 		tagName: 'div',
@@ -1116,6 +1212,7 @@ window.bp = window.bp || {};
 			'click #activity-link-preview-button': 'toggleURLInput',
 			'click #activity-gif-button': 'toggleGifSelector',
 			'click #activity-media-button': 'toggleMediaSelector',
+			'click #activity-document-button': 'toggleDocumentSelector',
 			'click .post-elements-buttons-item': 'activeButton'
 		},
 
@@ -1175,8 +1272,24 @@ window.bp = window.bp || {};
 			document.dispatchEvent(event);
 		},
 
+		toggleDocumentSelector: function( e ) {
+			e.preventDefault();
+
+			console.log(1);
+			this.closeURLInput();
+			this.closeGifSelector();
+			this.closeMediaSelector();
+			var event = new Event('activity_document_toggle');
+			document.dispatchEvent(event);
+		},
+
 		closeMediaSelector: function() {
 			var event = new Event('activity_media_close');
+			document.dispatchEvent(event);
+		},
+
+		closeDocumentSelector: function() {
+			var event = new Event('activity_document_close');
 			document.dispatchEvent(event);
 		},
 

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-04 12:43:36+00:00\n"
+"POT-Creation-Date: 2019-12-09 12:21:50+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -4774,7 +4774,7 @@ msgstr ""
 #: bp-members/classes/class-bp-members-list-table.php:156
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:16
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:60
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:62
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
@@ -11724,7 +11724,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1417
 #: bp-members/classes/class-bp-members-admin.php:1754
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:18
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:63
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:65
 #: bp-templates/bp-nouveau/buddypress/members/single/notifications/notifications-loop.php:24
 msgid "Actions"
 msgstr ""
@@ -15161,8 +15161,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:40
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:85
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:35
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:82
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:56
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:56
@@ -15272,6 +15272,10 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php:14
 msgid "Remove item"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
+msgid "Attach a document"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:16
@@ -15797,11 +15801,11 @@ msgid "Enter Folder Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:17
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:61
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:63
 msgid "Modified"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:62
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:64
 msgid "Uploaded by"
 msgstr ""
 
