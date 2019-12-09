@@ -292,7 +292,7 @@ function bp_nouveau_object_template_results_members_following_scope( $querystrin
 /**
  * Object template results members followers scope.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.3
  */
 function bp_nouveau_object_template_results_members_followers_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );

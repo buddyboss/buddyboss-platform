@@ -1029,7 +1029,7 @@ add_filter( 'bp_ajax_querystring', 'bp_add_member_follow_scope_filter', 20, 2 );
  * This is done so we can return users that:
  *   - the users are follow me (on a user page or member directory); 
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.3
  *
  * @param array|string $qs The querystring for the BP loop.
  * @param str          $object The current object for the querystring.
