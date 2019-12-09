@@ -717,6 +717,28 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			}
 
 			wp_enqueue_script( 'bp-fitvids-js' );
+			wp_enqueue_script( 'bp-wp-api-js' );
+			wp_enqueue_script( 'bp-help-js' );
+
+			$bp_help_base_url = bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+					),
+					'admin.php'
+				)
+			);
+
+			wp_localize_script(
+				'bp-help-js',
+				'BP_HELP',
+				array(
+					'ajax_url' => admin_url( 'admin-ajax.php' ),
+					'bb_help_url' => $bp_help_base_url,
+					'bb_help_title' => __( 'Docs', 'buddyboss' ),
+					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
+				)
+			);
 		}
 
 		/** About BuddyBoss and AppBoss ********************************************/
@@ -957,6 +979,19 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bp-fitvids-js'          => array(
 						'file'         => "{$url}fitvids{$min}.js",
 						'dependencies' => array(),
+						'footer'       => true,
+					),
+
+					'bp-wp-api-js'          => array(
+						'file'         => "{$url}lib/wpapi{$min}.js",
+						'dependencies' => array(),
+						'footer'       => true,
+					),
+
+					// 1.2.3
+					'bp-help-js'          => array(
+						'file'         => "{$url}help{$min}.js",
+						'dependencies' => array( 'jquery' ),
 						'footer'       => true,
 					),
 				)

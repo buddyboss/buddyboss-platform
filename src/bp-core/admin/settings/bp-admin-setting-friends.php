@@ -75,7 +75,15 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/connections/connection-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62835,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php

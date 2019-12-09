@@ -2897,6 +2897,20 @@ function bp_core_get_member_display_name( $display_name, $user_id = null ) {
 		$display_name = $old_display_name;
 	}
 
+	if ( !empty( $user_id ) ) {
+
+		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id );
+
+		if ( ! empty( $list_fields ) ) {
+			$last_name_field_id = bp_xprofile_lastname_field_id();
+
+			if ( in_array( $last_name_field_id, $list_fields ) ) {
+				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$display_name = str_replace( ' ' . $last_name, '', $display_name );
+			}
+		}
+	}
+
 	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
@@ -3866,7 +3880,8 @@ function bp_member_type_shortcode_callback( $atts ) {
 	bp_get_template_part( 'common/filters/grid-filters' );
 	echo '</div>';
 	echo '<div class="screen-content members-directory-content">';
-	echo '<div id="members-dir-list" class="members dir-list" data-bp-list="">';
+
+	echo '<div id="members-dir-list" class="members dir-list">';
 
 	if ( ! empty( $atts['type'] ) ) {
 
@@ -3976,52 +3991,27 @@ function bp_get_user_member_type( $user_id ) {
 		$user_id = bp_displayed_user_id();
 	}
 
-	$member_type = '';
+	$member_type = __( 'Member', 'buddyboss' );
 
-	if ( bp_is_members_directory() ) {
+	if ( true === bp_member_type_enable_disable() ) {
+		if ( true === bp_member_type_display_on_profile() ) {
 
-		$member_type = __( 'Member', 'buddyboss' );
+			// Get the profile type.
+			$type = bp_get_member_type( $user_id );
 
-		if ( true === bp_member_type_enable_disable() ) {
-			if ( true === bp_member_type_display_on_profile() ) {
-
-				// Get the profile type.
-				$type = bp_get_member_type( $user_id );
-
-				// Output the
-				if ( $type_obj = bp_get_member_type_object( $type ) ) {
-					$member_type = $type_obj->labels['singular_name'];
-				}
-
-				$string = '<span class="bp-member-type">' . $member_type . '</span>';
-			} else {
-				$string = '<span class="bp-member-type">' . $member_type . '</span>';
+			// Output the
+			if ( $type_obj = bp_get_member_type_object( $type ) ) {
+				$member_type = $type_obj->labels['singular_name'];
 			}
+
+			$string = '<span class="bp-member-type">' . $member_type . '</span>';
 		} else {
 			$string = '<span class="bp-member-type">' . $member_type . '</span>';
 		}
 	} else {
-
-		if ( true === bp_member_type_enable_disable() ) {
-			if ( true === bp_member_type_display_on_profile() ) {
-
-				// Get the profile type.
-				$type = bp_get_member_type( $user_id );
-
-				// Output the
-				if ( $type_obj = bp_get_member_type_object( $type ) ) {
-					$member_type = $type_obj->labels['singular_name'];
-					$string      = '<span class="bp-member-type">' . $member_type . '</span>';
-				} else {
-					$string = '';
-				}
-			} else {
-				$string = '';
-			}
-		} else {
-			$string = '';
-		}
+		$string = '<span class="bp-member-type">' . $member_type . '</span>';
 	}
+
 
 	return apply_filters( 'bp_member_type_name_string', $string, $member_type, $user_id );
 }
