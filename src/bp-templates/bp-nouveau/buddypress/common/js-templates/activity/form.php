@@ -15,6 +15,7 @@ $template_parts = apply_filters( 'bp_messages_js_template_parts', [
 	'parts/bp-activity-attached-gif',
 	'parts/bp-activity-link-preview',
 	'parts/bp-activity-media',
+	'parts/bp-activity-document',
 	'parts/bp-activity-post-form-avatar',
 	'parts/bp-activity-post-form-buttons',
 	'parts/bp-activity-post-form-feedback',
