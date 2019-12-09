@@ -13,16 +13,26 @@
 	<?php esc_html_e( 'Manage Group Members', 'buddyboss' ); ?>
 </h2>
 
-<p class="bp-help-text"><?php printf( __( 'Manage group members; promote to %s, co-%s, or demote or ban.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
+<p class="bp-help-text"><?php printf( __( 'Manage group members; promote to %s, co-%s, or demote or ban.',
+		'buddyboss' ),
+		strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ),
+		strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
 
 <dl class="groups-manage-members-list">
 
-	<dt class="admin-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), 'buddyboss' ); ?></dt>
+	<dt class="admin-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(),
+			'organizer_plural_label_name' ),
+			'buddyboss' ); ?></dt>
 
 	<?php if ( bp_has_members( '&include=' . bp_group_admin_ids() ) ) : ?>
 		<dd class="admin-listing">
 
-			<p><?php printf( __( '%s have total control over the contents and settings of a group. That includes all the abilities of %s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %s, and delete the group.', 'buddyboss' ), get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ) ); ?></p>
+			<p><?php printf( __( '%s have total control over the contents and settings of a group. That includes all the abilities of %s, as well as the ability to turn group forums on or off, change group status from public to private, change the group photo,  manage group %s, and delete the group.',
+					'buddyboss' ),
+					get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ),
+					strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ) ),
+					strtolower( get_group_role_label( bp_get_current_group_id(),
+						'member_plural_label_name' ) ) ); ?></p>
 
 			<ul id="admins-list" class="item-list single-line">
 
@@ -34,7 +44,7 @@
 							'type'    => 'thumb',
 							'width'   => 30,
 							'height'  => 30,
-							'alt'     => ''
+							'alt'     => '',
 						) ); ?>
 						<p class="list-title member-name">
 							<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
@@ -43,8 +53,10 @@
 						<?php if ( count( bp_group_admin_ids( false, 'array' ) ) > 1 ) : ?>
 
 							<p class="action text-links-list">
-								<a class="button confirm admin-demote-to-member"
-								   href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ) ); ?></a>
+								<a class="button confirm admin-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php printf( __( 'Demote to regular %s',
+										'buddyboss' ),
+										strtolower( get_group_role_label( bp_get_current_group_id(),
+											'member_singular_label_name' ) ) ); ?></a>
 							</p>
 
 						<?php endif; ?>
@@ -58,11 +70,17 @@
 
 	<?php if ( bp_group_has_moderators() ) : ?>
 
-		<dt class="moderator-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'moderator_plural_label_name' ), 'buddyboss' ); ?></dt>
+		<dt class="moderator-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(),
+				'moderator_plural_label_name' ),
+				'buddyboss' ); ?></dt>
 
 		<dd class="moderator-listing">
 
-			<p><?php printf( __( 'When a group member is promoted to be a %s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %s.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_singular_label_name' ) ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_plural_label_name' ) ) ); ?></p>
+			<p><?php printf( __( 'When a group member is promoted to be a %s of the group, the member gains the ability to edit and delete any forum discussion within the group and delete any activity feed items, excluding those posted by %s.',
+					'buddyboss' ),
+					strtolower( get_group_role_label( bp_get_current_group_id(), 'moderator_singular_label_name' ) ),
+					strtolower( get_group_role_label( bp_get_current_group_id(),
+						'organizer_plural_label_name' ) ) ); ?></p>
 
 			<?php if ( bp_has_members( '&include=' . bp_group_mod_ids() ) ) : ?>
 				<ul id="mods-list" class="item-list single-line">
@@ -75,17 +93,21 @@
 								'type'    => 'thumb',
 								'width'   => 30,
 								'height'  => 30,
-								'alt'     => ''
+								'alt'     => '',
 							) ); ?>
 							<p class="list-title member-name">
 								<a href="<?php bp_member_permalink(); ?>"> <?php bp_member_name(); ?></a>
 							</p>
 
 							<div class="members-manage-buttons action text-links-list">
-								<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => bp_get_member_user_id() ) ); ?>"
-								   class="button confirm mod-promote-to-admin"><?php printf( __( 'Promote to co-%s', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'organizer_singular_label_name' ) ) ); ?></a>
-								<a class="button confirm mod-demote-to-member"
-								   href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php printf( __( 'Demote to regular %s', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ) ); ?></a>
+								<a href="<?php bp_group_member_promote_admin_link( array( 'user_id' => bp_get_member_user_id() ) ); ?>" class="button confirm mod-promote-to-admin"><?php printf( __( 'Promote to co-%s',
+										'buddyboss' ),
+										strtolower( get_group_role_label( bp_get_current_group_id(),
+											'organizer_singular_label_name' ) ) ); ?></a>
+								<a class="button confirm mod-demote-to-member" href="<?php bp_group_member_demote_link( bp_get_member_user_id() ); ?>"><?php printf( __( 'Demote to regular %s',
+										'buddyboss' ),
+										strtolower( get_group_role_label( bp_get_current_group_id(),
+											'member_singular_label_name' ) ) ); ?></a>
 							</div>
 
 						</li>
@@ -99,11 +121,16 @@
 	<?php endif ?>
 
 
-	<dt class="gen-members-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ), 'buddyboss' ); ?></dt>
+	<dt class="gen-members-section section-title"><?php echo esc_html( get_group_role_label( bp_get_current_group_id(),
+			'member_plural_label_name' ),
+			'buddyboss' ); ?></dt>
 
 	<dd class="general-members-listing">
 
-		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %s role by default. %s are able to contribute to the group’s discussions, activity feeds, and view other group members.', 'buddyboss' ), strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ), get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
+		<p><?php printf( __( 'When a member joins a group, he or she is assigned the %s role by default. %s are able to contribute to the group’s discussions, activity feeds, and view other group members.',
+				'buddyboss' ),
+				strtolower( get_group_role_label( bp_get_current_group_id(), 'member_singular_label_name' ) ),
+				get_group_role_label( bp_get_current_group_id(), 'member_plural_label_name' ) ); ?></p>
 
 		<?php if ( bp_group_has_members( 'per_page=15&exclude_banned=0' ) ) : ?>
 
@@ -122,12 +149,10 @@
 					<p class="list-title member-name">
 						<?php bp_group_member_link(); ?>
 						<span class="banned warn">
-								<?php if ( bp_get_group_member_is_banned() ) : ?>
-									<?php
+								<?php if ( bp_get_group_member_is_banned() ) : ?><?php
 									/* translators: indicates a user is banned from a group, e.g. "Mike (banned)". */
 									esc_html_e( '(banned)', 'buddyboss' );
-									?>
-								<?php endif; ?>
+									?><?php endif; ?>
 							</span>
 					</p>
 
@@ -135,9 +160,9 @@
 						'container'         => 'div',
 						'container_classes' => array(
 							'members-manage-buttons',
-							'text-links-list'
+							'text-links-list',
 						),
-						'parent_element'    => '  '
+						'parent_element'    => '  ',
 					) ); ?>
 
 				</li>
@@ -147,8 +172,7 @@
 
 		<?php if ( bp_group_member_needs_pagination() ) : ?>
 
-			<?php bp_nouveau_pagination( 'bottom' ); ?>
-		<?php endif; ?>
+			<?php bp_nouveau_pagination( 'bottom' ); ?><?php endif; ?>
 	</dd>
 
 </dl>
