@@ -866,12 +866,10 @@ window.bp = window.bp || {};
 				// change the aria state from false to true
 				target.attr( 'aria-expanded', 'true' );
 
-				$('html, body').animate({
-					scrollTop: $(form).offset().top-100
-				},  {
-					duration: 'slow',
-					easing: 'swing'
-				});
+				$.scrollTo( form, 500, {
+					offset:-100,
+					easing:'swing'
+				} );
 
 				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
