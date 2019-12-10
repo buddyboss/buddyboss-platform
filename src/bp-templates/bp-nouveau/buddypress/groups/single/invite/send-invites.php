@@ -60,7 +60,7 @@
 		<form id="send_group_invite_form" class="standard-form" data-select2-id="send_group_invite_form">
 			<div class="bb-groups-invites-right-top">
 				<div class="bb-title-wrap">
-					<h2 class="bb-title"><?php _e( 'New Group Invites', 'buddyboss' ); ?></h2>
+					<h2 class="bb-title"><?php _e( 'Send Invites', 'buddyboss' ); ?></h2>
 					<div class="bb-more-invites-wrap"><a class="bb-add-invites" href="#"><span class="dashicons dashicons-plus-alt"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-invites-feedback">
@@ -73,7 +73,7 @@
 			</div>
 			<div class="bb-groups-invites-right-bottom">
 				<div id="bp-group-invite-content">
-					<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php _e( 'Type message','buddyboss' ); ?>"></textarea>
+					<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php _e( 'Customize the message of your invite.','buddyboss' ); ?>"></textarea>
 					<input type="hidden" id="group_invite_content_hidden" name="group_invite_content_hidden" value="">
 					<div id="whats-new-toolbar">
 						<div id="group-invites-new-submit" class="submit">
