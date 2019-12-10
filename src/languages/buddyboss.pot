@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-10 05:28:09+00:00\n"
+"POT-Creation-Date: 2019-12-10 06:59:48+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15717,6 +15717,11 @@ msgstr ""
 msgid "Select Members"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:69
+#: bp-templates/bp-nouveau/includes/groups/ajax.php:377
+msgid "Select members to invite by clicking the + button next to each member."
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:76
 msgid "Customize the message of your invite."
 msgstr ""
@@ -16789,10 +16794,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:333
 msgid "No members found in parent group."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/groups/ajax.php:377
-msgid "Select members to invite by clicking the + button next to each member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:382

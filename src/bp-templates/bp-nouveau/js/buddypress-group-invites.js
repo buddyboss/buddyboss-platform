@@ -46,8 +46,8 @@ window.bp = window.bp || {};
 			var feedbackParagraphTagClass 	 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback' );
 			var feedbackParagraphTagSelector 	 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback .bp-feedback p' );
 			var feedbackDivHide 				 = $( '#group-invites-container .bb-groups-invites-right .bp-invites-feedback' );
-			var feedbackInviteColumn = $( '#group-invites-container .group-invites-column .bp-invites-feedback .bp-feedback' );
-			var feedbackInvitePTag   = $( '#group-invites-container .group-invites-column .bp-invites-feedback .bp-feedback p' );
+			var feedbackInviteColumn 			 = $( '#group-invites-container .group-invites-column .bp-invites-feedback .bp-feedback' );
+			var feedbackInvitePTag   			 = $( '#group-invites-container .group-invites-column .bp-invites-feedback .bp-feedback p' );
 
 			// Feedback Selector left.
 			var feedbackSelectorLeftClass 		 = $( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback .bp-feedback' );
@@ -61,10 +61,10 @@ window.bp = window.bp || {};
 			feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
 			feedbackSelectorLeftClass.addClass( 'loading' );
 			feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_invites.loading );
-			feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
-			feedbackParagraphTagClass.addClass( 'help' );
-			feedbackParagraphTagSelector.html( '' );
-			feedbackParagraphTagSelector.html( BP_Nouveau.group_invites.invites_form );
+			// feedbackParagraphTagClass.attr( 'class', 'bp-feedback' );
+			// feedbackParagraphTagClass.addClass( 'help' );
+			// feedbackParagraphTagSelector.html( '' );
+			// feedbackParagraphTagSelector.html( BP_Nouveau.group_invites.invites_form );
 
 			$( '#group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field' ).prop( 'disabled', true );
 			$( document ).on( 'click', '#group-invites-container .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .select2-container .selection .select2-selection--multiple .select2-selection__rendered .select2-search--inline .select2-search__field', function() {
@@ -392,14 +392,16 @@ window.bp = window.bp || {};
 					data: param,
 					success: function (response) {
 						if ( response.success ) {
+							console.log(343);
 							listSelector.html('');
 							listSelector.html( response.data.html );
 							lastSelector.html('');
 							lastSelector.html( response.data.pagination );
-							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
-							feedbackSelectorLeftClass.addClass( 'info' );
-							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							//feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							//feedbackSelectorLeftClass.addClass( 'info' );
+							//feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 							$( '#group-invites-container .bb-groups-invites-right' ).show();
+							$( '.bb-groups-invites-right .bp-invites-feedback' ).show();
 						} else {
 							$( '#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback' ).show();
 							listSelector.html('');

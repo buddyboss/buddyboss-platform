@@ -64,9 +64,9 @@
 					<div class="bb-more-invites-wrap"><a class="bb-add-invites" href="#"><span class="dashicons dashicons-plus-alt"></span><?php _e( 'Select Members', 'buddyboss' ); ?></a></div>
 				</div>
 				<div class="bp-invites-feedback">
-					<div class="bp-feedback">
+					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
-						<p></p>
+						<p><?php esc_html_e( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ); ?></p>
 					</div>
 				</div>
 				<select name="group_invites_send_to[]" class="send-to-input select2-hidden-accessible" id="group-invites-send-to-input" placeholder="<?php _e( 'Type the names of one or more people','buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-invites-send-to-input" tabindex="-1" aria-hidden="true"></select>
