@@ -763,7 +763,7 @@ class BP_XProfile_Group {
 			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_meta ) ) {
 				$profile_meta_table = $bp->profile->table_name_meta;
 			} else {
-				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
+				$profile_meta_table = bp_core_get_table_prefix() . 'bp_xprofile_meta';
 			}
 
 			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
