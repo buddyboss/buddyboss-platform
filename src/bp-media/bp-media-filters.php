@@ -241,9 +241,8 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 
 		    if ( ! empty( $old_media_ids ) ) {
 		    	foreach ( $old_media_ids as $media_id ) {
-		    		$exist = array_search( $media_id, $media_ids );
 
-		    		if ( ! $exist ) {
+		    		if ( ! in_array( $media_id, $media_ids ) ) {
 		    			bp_media_delete( array( 'id' => $media_id ) );
 				    }
 			    }
