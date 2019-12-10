@@ -1191,47 +1191,49 @@ function bbp_get_reply_author_avatar( $reply_id = 0, $size = 40 ) {
 function bbp_reply_author_link( $args = '' ) {
 	echo bbp_get_reply_author_link( $args );
 }
-	/**
-	 * Return the author link of the reply
-	 *
-	 * @since bbPress (r2717)
-	 *
-	 * @param mixed $args Optional. If an integer, it is used as reply id.
-	 * @uses bbp_get_reply_id() To get the reply id
-	 * @uses bbp_is_reply_anonymous() To check if the reply is by an
-	 *                                 anonymous user
-	 * @uses bbp_get_reply_author_url() To get the reply author url
-	 * @uses bbp_get_reply_author_avatar() To get the reply author avatar
-	 * @uses bbp_get_reply_author_display_name() To get the reply author display
-	 *                                      name
-	 * @uses bbp_get_user_display_role() To get the reply author display role
-	 * @uses bbp_get_reply_author_id() To get the reply author id
-	 * @uses apply_filters() Calls 'bbp_get_reply_author_link' with the
-	 *                        author link and args
-	 * @return string Author link of reply
-	 */
+
+/**
+ * Return the author link of the reply
+ *
+ * @since bbPress (r2717)
+ *
+ * @param mixed $args Optional. If an integer, it is used as reply id.
+ * @uses bbp_get_reply_id() To get the reply id
+ * @uses bbp_is_reply_anonymous() To check if the reply is by an
+ *                                 anonymous user
+ * @uses bbp_get_reply_author_url() To get the reply author url
+ * @uses bbp_get_reply_author_avatar() To get the reply author avatar
+ * @uses bbp_get_reply_author_display_name() To get the reply author display
+ *                                      name
+ * @uses bbp_get_user_display_role() To get the reply author display role
+ * @uses bbp_get_reply_author_id() To get the reply author id
+ * @uses apply_filters() Calls 'bbp_get_reply_author_link' with the
+ *                        author link and args
+ * @return string Author link of reply
+ */
 function bbp_get_reply_author_link( $args = '' ) {
 
 	// Parse arguments against default values
 	$r = bbp_parse_args(
-		$args,
-		array(
-			'post_id'    => 0,
-			'link_title' => '',
-			'type'       => 'both',
-			'size'       => 80,
-			'sep'        => '&nbsp;',
-			'show_role'  => false,
-		),
-		'get_reply_author_link'
-	);
+        $args,
+        array(
+            'post_id'    => 0,
+            'link_title' => '',
+            'type'       => 'both',
+            'size'       => 80,
+            'sep'        => '&nbsp;',
+            'show_role'  => false,
+        ),
+        'get_reply_author_link'
+    );
+
+	// Default return value
+	$author_link = '';
 
 	// Used as reply_id
-	if ( is_numeric( $args ) ) {
-		$reply_id = bbp_get_reply_id( $args );
-	} else {
-		$reply_id = bbp_get_reply_id( $r['post_id'] );
-	}
+	$reply_id = is_numeric( $args )
+		? bbp_get_reply_id( $args )
+		: bbp_get_reply_id( $r['post_id'] );
 
 	// Reply ID is good
 	if ( ! empty( $reply_id ) ) {
@@ -1242,58 +1244,71 @@ function bbp_get_reply_author_link( $args = '' ) {
 
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
-			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), bbp_get_reply_author_display_name( $reply_id ) );
+			$author = bbp_get_reply_author_display_name( $reply_id );
+			$title  = empty( $anonymous )
+				? esc_attr__( "View %s's profile",  'buddyboss' )
+				: esc_attr__( "Visit %s's website", 'buddyboss' );
 
-			// Use what was passed if not
+			$link_title = sprintf( $title, $author );
+
+		// Use what was passed if not
 		} else {
 			$link_title = $r['link_title'];
 		}
 
 		// Setup title and author_links array
-		$link_title   = ! empty( $link_title ) ? ' title="' . esc_attr( $link_title ) . '"' : '';
 		$author_links = array();
+		$link_title   = ! empty( $link_title )
+			? ' title="' . esc_attr( $link_title ) . '"'
+			: '';
 
-		// Get avatar
-		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
+		// Get avatar (unescaped, because HTML)
+		if ( ( 'avatar' === $r['type'] ) || ( 'both' === $r['type'] ) ) {
 			$author_links['avatar'] = bbp_get_reply_author_avatar( $reply_id, $r['size'] );
 		}
 
-		// Get display name
-		if ( 'name' === $r['type'] || 'both' === $r['type'] ) {
-			$author_links['name'] = bbp_get_reply_author_display_name( $reply_id );
+		// Get display name (escaped, because never HTML)
+		if ( ( 'name' === $r['type'] ) || ( 'both' === $r['type'] ) ) {
+			$author_links['name'] = esc_html( bbp_get_reply_author_display_name( $reply_id ) );
 		}
 
-		// Link class
-		$link_class = ' class="bbp-author-' . esc_attr( $r['type'] ) . '"';
+		// Empty array
+		$links  = array();
+		$sprint = '<span %1$s>%2$s</span>';
 
-		// Add links if not anonymous and existing user
-		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_reply_author_id( $reply_id ) ) ) {
+		// Wrap each link
+		foreach ( $author_links as $link => $link_text ) {
+			$link_class = ' class="bbp-author-' . esc_attr( $link ) . '"';
+			$links[]    = sprintf( $sprint, $link_class, $link_text );
+		}
 
-			$author_link = array();
+		// Juggle
+		$author_links = $links;
+		unset( $links );
 
-			// Assemble the links
-			foreach ( $author_links as $link => $link_text ) {
-				$link_class    = ' class="bbp-author-' . $link . '"';
-				$author_link[] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, $link_class, $link_text );
-			}
-
-			if ( true === $r['show_role'] ) {
-				$author_link[] = bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
-			}
-
-			$author_link = implode( $r['sep'], array_filter( $author_link ) );
-
-			// No links if anonymous
+		// Filter sections if avatar size is 1 or type is name else assign the author links array itself. Added condition not to show verified badges on avatar.
+		if ( 1 == $r['size'] || 'name' === $r['type'] ) {
+			$sections    = apply_filters( 'bbp_get_reply_author_links', $author_links, $r, $args );
 		} else {
-			$author_link = implode( $r['sep'], array_filter( $author_links ) );
+			$sections    	 = $author_links;
 		}
 
-		// No replies so link is empty
-	} else {
-		$author_link = '';
+		// Assemble sections into author link
+		$author_link = implode( $r['sep'], $sections );
+
+		// Only wrap in link if profile exists
+		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_reply_author_id( $reply_id ) ) ) {
+			$author_link = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link );
+		}
+
+		// Role is not linked
+		if ( true === $r['show_role'] ) {
+			$author_link .= bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
+		}
 	}
 
-	return apply_filters( 'bbp_get_reply_author_link', $author_link, $r );
+	// Filter & return
+	return apply_filters( 'bbp_get_reply_author_link', $author_link, $r, $args );
 }
 
 /**
