@@ -7325,17 +7325,17 @@ function bp_groups_get_profile_stats( $args = '' ) {
 }
 
 /**
- * Echoes the current group invite tab slug.
+ * Echo the current group invite tab slug.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  */
 function bp_group_current_invite_tab() {
 	echo bp_get_group_current_invite_tab();
 }
 /**
- * Returns the current group admin tab slug.
+ * Returns the current group invite tab slug.
  *
- * @since BuddyPress 1.6.0
+ * @since BuddyBoss 1.2.3
  *
  * @return string $tab The current tab's slug.
  */
@@ -7347,11 +7347,11 @@ function bp_get_group_current_invite_tab() {
 	}
 
 	/**
-	 * Filters the current group admin tab slug.
+	 * Filters the current group invite tab slug.
 	 *
-	 * @since BuddyPress 1.6.0
+	 * @since BuddyBoss 1.2.3
 	 *
-	 * @param string $tab Current group admin tab slug.
+	 * @param string $tab Current group invite tab slug.
 	 */
 	return apply_filters( 'bp_get_group_current_invite_tab', $tab );
 }

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-10 06:59:48+00:00\n"
+"POT-Creation-Date: 2019-12-10 07:11:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -834,7 +834,7 @@ msgstr[1] ""
 #: bp-groups/bp-groups-template.php:3048 bp-groups/bp-groups-template.php:3078
 #: bp-groups/bp-groups-template.php:4649 bp-groups/bp-groups-template.php:4691
 #: bp-groups/bp-groups-template.php:4735 bp-groups/bp-groups-template.php:6529
-#: bp-groups/classes/class-bp-groups-component.php:1011
+#: bp-groups/classes/class-bp-groups-component.php:1008
 #: bp-groups/classes/class-bp-groups-invite-template.php:247
 #: bp-groups/classes/class-bp-groups-invite-template.php:260
 #: bp-groups/classes/class-bp-groups-invite-template.php:272
@@ -881,7 +881,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2703
-#: bp-groups/classes/class-bp-groups-component.php:885
+#: bp-groups/classes/class-bp-groups-component.php:882
 #: bp-groups/classes/class-bp-groups-list-table.php:404
 #: bp-groups/classes/class-bp-groups-list-table.php:568
 #: bp-members/classes/class-bp-members-list-table.php:177
@@ -1582,8 +1582,8 @@ msgstr ""
 #: bp-core/gdpr/class-bp-settings-export.php:29
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:426
 #: bp-groups/bp-groups-admin.php:166
-#: bp-groups/classes/class-bp-groups-component.php:412
-#: bp-groups/classes/class-bp-groups-component.php:834
+#: bp-groups/classes/class-bp-groups-component.php:409
+#: bp-groups/classes/class-bp-groups-component.php:831
 #: bp-integrations/compatibility/bp-compatibility-integration.php:61
 msgid "Settings"
 msgstr ""
@@ -2465,14 +2465,14 @@ msgstr ""
 #: bp-groups/bp-groups-functions.php:3591
 #: bp-groups/bp-groups-functions.php:3610
 #: bp-groups/bp-groups-functions.php:3627 bp-groups/bp-groups-template.php:5288
-#: bp-groups/classes/class-bp-groups-component.php:632
-#: bp-groups/classes/class-bp-groups-component.php:865
+#: bp-groups/classes/class-bp-groups-component.php:629
+#: bp-groups/classes/class-bp-groups-component.php:862
 #: bp-groups/classes/class-bp-groups-list-table.php:434
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:488
 #: bp-members/classes/class-bp-core-members-widget.php:298
 #: bp-members/classes/class-bp-members-component.php:37
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:454
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:20
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/includes/groups/classes.php:241
 #: bp-templates/bp-nouveau/includes/groups/functions.php:797
 #: bp-templates/bp-nouveau/includes/groups/functions.php:803
@@ -2517,8 +2517,8 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
 #: bp-groups/bp-groups-admin.php:1085 bp-groups/bp-groups-admin.php:1113
 #: bp-groups/bp-groups-admin.php:2227
-#: bp-groups/classes/class-bp-groups-component.php:563
-#: bp-groups/classes/class-bp-groups-component.php:935
+#: bp-groups/classes/class-bp-groups-component.php:560
+#: bp-groups/classes/class-bp-groups-component.php:932
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
 #: bp-media/bp-media-settings.php:100 bp-media/bp-media-settings.php:116
@@ -2927,7 +2927,7 @@ msgid "Default View"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
-#: bp-groups/classes/class-bp-groups-component.php:437
+#: bp-groups/classes/class-bp-groups-component.php:434
 #: bp-invites/bp-invites-admin.php:420 bp-invites/bp-invites-admin.php:421
 #: bp-invites/bp-invites-functions.php:58
 msgid "Invites"
@@ -3720,7 +3720,7 @@ msgid "BuddyPress (logged-out)"
 msgstr ""
 
 #: bp-core/bp-core-functions.php:778
-#: bp-groups/classes/class-bp-groups-component.php:772
+#: bp-groups/classes/class-bp-groups-component.php:769
 #: bp-media/classes/class-bp-media-component.php:60
 #: bp-media/classes/class-bp-media-component.php:248
 #: bp-media/classes/class-bp-media-component.php:311
@@ -4749,8 +4749,8 @@ msgid "You have posted an inappropriate word."
 msgstr ""
 
 #: bp-core/bp-core-options.php:34
-#: bp-groups/classes/class-bp-groups-component.php:408
-#: bp-groups/classes/class-bp-groups-component.php:825
+#: bp-groups/classes/class-bp-groups-component.php:405
+#: bp-groups/classes/class-bp-groups-component.php:822
 msgid "Details"
 msgstr ""
 
@@ -6057,7 +6057,7 @@ msgid "Edit Details"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/2.1.php:378
-#: bp-groups/classes/class-bp-groups-component.php:1026
+#: bp-groups/classes/class-bp-groups-component.php:1023
 msgid "Group Profile Photo"
 msgstr ""
 
@@ -6485,8 +6485,8 @@ msgid "Avatar"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:91
-#: bp-groups/classes/class-bp-groups-component.php:429
-#: bp-groups/classes/class-bp-groups-component.php:855
+#: bp-groups/classes/class-bp-groups-component.php:426
+#: bp-groups/classes/class-bp-groups-component.php:852
 #: bp-xprofile/classes/class-bp-xprofile-component.php:297
 #: bp-xprofile/classes/class-bp-xprofile-component.php:409
 msgid "Cover Photo"
@@ -11145,7 +11145,7 @@ msgstr ""
 #: bp-friends/classes/class-bp-friends-component.php:197
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:25
 #: bp-templates/bp-nouveau/includes/groups/functions.php:140
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
 #: bp-xprofile/classes/class-bp-xprofile-component.php:196
@@ -11283,7 +11283,7 @@ msgid "Mutual Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:219
-#: bp-groups/classes/class-bp-groups-component.php:875
+#: bp-groups/classes/class-bp-groups-component.php:872
 msgid "Requests"
 msgstr ""
 
@@ -12078,8 +12078,8 @@ msgid "Request Sent"
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:4152 bp-groups/bp-groups-template.php:4165
-#: bp-groups/classes/class-bp-groups-component.php:707
-#: bp-groups/classes/class-bp-groups-component.php:717
+#: bp-groups/classes/class-bp-groups-component.php:704
+#: bp-groups/classes/class-bp-groups-component.php:714
 msgid "Request Access"
 msgstr ""
 
@@ -12208,55 +12208,55 @@ msgstr ""
 msgid "You do not have access to this content."
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:269
+#: bp-groups/classes/class-bp-groups-component.php:266
 msgid "Search Groups&hellip;"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:422
-#: bp-groups/classes/class-bp-groups-component.php:844
+#: bp-groups/classes/class-bp-groups-component.php:419
+#: bp-groups/classes/class-bp-groups-component.php:841
 msgid "Photo"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:555
-#: bp-groups/classes/class-bp-groups-component.php:941
+#: bp-groups/classes/class-bp-groups-component.php:552
+#: bp-groups/classes/class-bp-groups-component.php:938
 #. translators: %s: Group count for the current user
 #. translators: %s: Group invitation count for the current user
 msgid "Groups %s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:584
-#: bp-groups/classes/class-bp-groups-component.php:618
-#: bp-groups/classes/class-bp-groups-component.php:964
-#: bp-groups/classes/class-bp-groups-component.php:1004
+#: bp-groups/classes/class-bp-groups-component.php:581
+#: bp-groups/classes/class-bp-groups-component.php:615
+#: bp-groups/classes/class-bp-groups-component.php:961
+#: bp-groups/classes/class-bp-groups-component.php:1001
 #: bp-templates/bp-nouveau/includes/groups/classes.php:234
 #: bp-templates/bp-nouveau/includes/groups/functions.php:543
 msgid "My Groups"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:595
+#: bp-groups/classes/class-bp-groups-component.php:592
 msgid "Invitations"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:632
+#: bp-groups/classes/class-bp-groups-component.php:629
 msgid " %s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:667
+#: bp-groups/classes/class-bp-groups-component.php:664
 #: bp-templates/bp-nouveau/includes/groups/classes.php:324
 #: bp-templates/bp-nouveau/includes/groups/functions.php:798
 msgid "Feed"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:683
+#: bp-groups/classes/class-bp-groups-component.php:680
 #: bp-templates/bp-nouveau/includes/groups/classes.php:291
 msgid "Subgroups"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:730
-#: bp-groups/classes/class-bp-groups-component.php:753
+#: bp-groups/classes/class-bp-groups-component.php:727
+#: bp-groups/classes/class-bp-groups-component.php:750
 #: bp-invites/classes/class-bp-invites-component.php:242
 #: bp-invites/classes/class-bp-invites-component.php:306
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:63
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:62
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:5
 #: bp-templates/bp-nouveau/includes/functions.php:1437
 #: bp-templates/bp-nouveau/includes/groups/classes.php:247
@@ -12266,14 +12266,14 @@ msgstr ""
 msgid "Send Invites"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:762
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:13
+#: bp-groups/classes/class-bp-groups-component.php:759
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:12
 #: bp-templates/bp-nouveau/includes/groups/functions.php:124
 #: bp-templates/bp-nouveau/includes/groups/functions.php:342
 msgid "Pending Invites"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:785
+#: bp-groups/classes/class-bp-groups-component.php:782
 #: bp-media/bp-media-filters.php:854
 #: bp-media/classes/class-bp-media-component.php:276
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
@@ -12281,25 +12281,25 @@ msgstr ""
 msgid "Albums"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:801
+#: bp-groups/classes/class-bp-groups-component.php:798
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 msgid "Manage"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:936
+#: bp-groups/classes/class-bp-groups-component.php:933
 msgid "No Pending Invites"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:947
+#: bp-groups/classes/class-bp-groups-component.php:944
 #. translators: %s: Group invitation count for the current user
 msgid "Pending Invites %s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:983
+#: bp-groups/classes/class-bp-groups-component.php:980
 msgid "Create Group"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:1031
+#: bp-groups/classes/class-bp-groups-component.php:1028
 msgid "No Group Profile Photo"
 msgstr ""
 
@@ -15235,12 +15235,12 @@ msgid "Group invitations menu"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:5
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:18
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:19
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:20
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:23
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:22
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:33
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:34
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:35
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:38
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:37
 msgid "Search Members"
 msgstr ""
 
@@ -15312,7 +15312,7 @@ msgid "Invite"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:13
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:72
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:71
 msgid "Type the names of one or more people"
 msgstr ""
 
@@ -15704,30 +15704,30 @@ msgstr ""
 msgid "Change Group Photo"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:36
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:35
 msgid "Loading Members. Please Wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:54
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:53
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
 msgid "Done"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:64
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:63
 msgid "Select Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:69
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:377
 msgid "Select members to invite by clicking the + button next to each member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:76
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:75
 msgid "Customize the message of your invite."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/admin-subnav.php:10
-#: bp-templates/bp-nouveau/buddypress/groups/single/parts/invite-subnav.php:10
+#: bp-templates/bp-nouveau/buddypress/groups/single/parts/invite-subnav.php:9
 #: bp-templates/bp-nouveau/buddypress/groups/single/parts/members-subnav.php:10
 msgid "Group administration menu"
 msgstr ""

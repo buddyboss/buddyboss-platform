@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyPress Single Groups Admin Navigation
+ * BuddyPress Single Groups Invites Navigation
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @since BuddyBoss 1.2.3
  */
 ?>
 

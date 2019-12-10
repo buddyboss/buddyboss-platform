@@ -202,9 +202,6 @@ class BP_Groups_Component extends BP_Component {
 
 				if ( bp_is_group_invites() && is_user_logged_in() ) {
 					require $this->path . 'bp-groups/screens/single/invite.php';
-//					if ( in_array( bp_get_group_current_invite_tab(), array( 'send-invites', 'pending-invites' ), true ) ) {
-//						require $this->path . 'bp-groups/screens/single/invite/' . bp_get_group_current_invite_tab() . '.php';
-//					}
 				}
 
 				// Admin nav items.

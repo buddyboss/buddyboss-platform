@@ -1,9 +1,8 @@
 <?php
 /**
- * BuddyBoss - Groups Send Invites
+ * BuddyBoss - Groups Pending Invites
  *
- * @since BuddyPress 3.0.0
- * @version 3.0.0
+ * @since BuddyBoss 1.2.3
  */
 
 ?>
