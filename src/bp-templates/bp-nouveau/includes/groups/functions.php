@@ -337,12 +337,19 @@ function bp_nouveau_group_setup_nav() {
 	// Simply change the name
 	if ( bp_is_active( 'friends' ) ) {
 		$bp = buddypress();
-
-		$bp->groups->nav->edit_nav(
-			array( 'name' => __( 'Send Invites', 'buddyboss' ) ),
-			'invite',
-			bp_get_current_group_slug()
-		);
+		if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
+			$bp->groups->nav->edit_nav(
+				array( 'name' => __( 'Pending Invites', 'buddyboss' ) ),
+				'invite',
+				bp_get_current_group_slug()
+			);
+		} else {
+			$bp->groups->nav->edit_nav(
+				array( 'name' => __( 'Send Invites', 'buddyboss' ) ),
+				'invite',
+				bp_get_current_group_slug()
+			);
+		}
 
 	// Create the Subnav item for the group
 	} else {
