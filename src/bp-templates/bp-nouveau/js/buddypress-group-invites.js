@@ -463,6 +463,54 @@ window.bp = window.bp || {};
 				}
 
 			});
+			$( document ).on( 'search', '.group-create.group-invites.create #group-invites-container #group_invites_search', function( e ) {
+				e.preventDefault();
+
+				if ( '' === this.value ) {
+					var scope = '';
+					if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+						scope = 'friends';
+					} else {
+						scope = 'members';
+					}
+
+					page = 1;
+					var param = {
+						'action'   : 'groups_get_group_potential_invites',
+						'nonce'    : BP_Nouveau.nonces.groups,
+						'group_id' : BP_Nouveau.group_invites.group_id,
+						'scope'    : scope,
+						'page'     : page
+					};
+
+					$.ajax({
+						type: 'POST',
+						url: BP_Nouveau.ajaxurl,
+						async: false,
+						data: param,
+						success: function (response) {
+							if ( response.success ) {
+								listSelector.html('');
+								listSelector.html( response.data.html );
+								lastSelector.html('');
+								lastSelector.html( response.data.pagination );
+								feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+								feedbackSelectorLeftClass.addClass( 'info' );
+								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+								$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback').hide();
+							} else {
+								$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback').show();
+								listSelector.html('');
+								lastSelector.html('');
+								feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+								feedbackSelectorLeftClass.addClass( response.data.type );
+								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							}
+						}
+					});
+				}
+
+			});
 
 			$( '#bp-group-send-invite-switch-checkbox' ).on( 'change', function () {
 
@@ -735,6 +783,54 @@ window.bp = window.bp || {};
 			});
 
 			$( document ).on( 'click', '.send-invites #group-invites-container #group_invites_search_submit', function( e ) {
+				e.preventDefault();
+
+				var searchText = $( '#group-invites-container #group_invites_search' ).val();
+				if ( ''  === searchText )  {
+					return false;
+				}
+				page  = 1;
+				if ( $( '#bp-group-send-invite-switch-checkbox' ).is( ':checked' ) ) {
+					scope = 'friends';
+				} else {
+					scope = 'members';
+				}
+				var data = {
+					'action'       : 'groups_get_group_potential_invites',
+					'nonce'        : BP_Nouveau.nonces.groups,
+					'group_id'     : BP_Nouveau.group_invites.group_id,
+					'scope'        : scope,
+					'page'     	   : page,
+					'search_terms' : searchText
+				};
+
+				$.ajax({
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if ( response.success ) {
+							listSelector.html('');
+							listSelector.html( response.data.html );
+							lastSelector.html('');
+							lastSelector.html( response.data.pagination );
+							//page = response.data.page;
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( 'info' );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback').hide();
+						} else {
+							listSelector.html('');
+							lastSelector.html('');
+							feedbackSelectorLeftClass.attr( 'class', 'bp-feedback' );
+							feedbackSelectorLeftClass.addClass( response.data.type );
+							feedbackParagraphTagSelectorLeft.html( response.data.feedback );
+							$( '.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback').show();
+						}
+					}
+				});
+			});
+			$( document ).on( 'click', '.group-create.group-invites.create #group-invites-container #group_invites_search_submit', function( e ) {
 				e.preventDefault();
 
 				var searchText = $( '#group-invites-container #group_invites_search' ).val();
