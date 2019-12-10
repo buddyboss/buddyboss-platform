@@ -339,7 +339,11 @@ function bp_has_members( $args = array() ) {
 	$type    = 'active';
 
 	// Mutual User filtering.
-	if ( isset( $args['type'] ) && 'online' != $args['type'] && bp_is_user_friends() && bp_is_user_mutual_friends() ) {
+	/**
+	 * Removed below from the IF condition becuase of mutual tab showing the all the user instead of mutual connections
+	 * isset( $args['type'] ) && 'online' != $args['type'] &&
+	 */
+	if ( bp_is_user_friends() && bp_is_user_mutual_friends() ) {
 		$include = bp_get_mutual_friendships();
 		$type    = 'alphabetical';
 	}

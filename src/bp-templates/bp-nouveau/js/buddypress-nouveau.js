@@ -333,7 +333,9 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					$( this ).find('.activity-inner > p:first a').hide();
+					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length ) {
+						$(this).find('.activity-inner > p:first a').hide();
+					}
 				}
 			}
 
@@ -454,8 +456,13 @@ window.bp = window.bp || {};
 					$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 				} else {
 					/* animate to top if called from bottom pagination */
-					if ( data.caller === 'pag-bottom' && $( '#subnav' ).length ) {
-						var top = $('#subnav').parent();
+					if ( data.caller === 'pag-bottom' ) {
+						var top = null;
+						if ( $( '#subnav' ).length ) {
+							top = $('#subnav').parent();
+						} else {
+							top = $( data.target );
+						}
 						$( 'html,body' ).animate( { scrollTop: top.offset().top }, 'slow', function() {
 							$( data.target ).fadeOut( 100, function() {
 								self.inject( this, response.data.contents, data.method );
@@ -503,7 +510,10 @@ window.bp = window.bp || {};
 			$.each( this.objects, function( o, object ) {
 				objectData = self.getLocalStorage( 'bp-' + object );
 
-				if ( undefined !== objectData.scope ) {
+				var typeType = window.location.hash.substr(1);
+				if ( undefined !== typeType && typeType == 'following' ) {
+					scope = typeType;
+				} else if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
 				}
 
@@ -1449,6 +1459,7 @@ window.bp = window.bp || {};
 				filter       : filter,
 				search_terms : search_terms,
 				extras       : extras,
+				caller       : navLink.closest( '[data-bp-pagination]' ).hasClass( 'bottom' ) ? 'pag-bottom' : '',
 				page         : self.getLinkParams( navLink.prop( 'href' ), pagArg ) || 1
 			};
 

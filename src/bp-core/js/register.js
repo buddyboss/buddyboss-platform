@@ -101,6 +101,8 @@ jQuery( document ).ready( function() {
 	// Profile Type field select box change action.
 	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
 
+
+
 		var registerSubmitButtonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
 		registerSubmitButtonSelector.prop( 'disabled', true );
 
@@ -187,7 +189,12 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						window.tinymce.execCommand('mceRepaint');
+
+						window.tinymce.on('init', function () {
+							if (window.tinymce.inline) {
+								window.tinymce.execCommand('mceRepaint');
+							}
+						});
 					}
 				} else {
 					registerSubmitButtonSelector.prop( 'disabled', false );
@@ -197,48 +204,106 @@ jQuery( document ).ready( function() {
 	});
 
 	//for form validation
-	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function() {
-
-		jQuery( '.required-field' ).each( function() {
-			var html_error = '<div class="bp-messages bp-feedback error">';
+	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
+		//e.preventDefault();
+		var html_error = '<div class="bp-messages bp-feedback error">';
 				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
 				html_error += '<p>' + BP_Register.required_field + '</p>';
 				html_error += '</div>';
+		var signup_email 			= jQuery( '#signup_email' ),
+			signup_email_confirm 	= jQuery( '#signup_email_confirm' ),
+			signup_password 		= jQuery( '#signup_password' ),
+			signup_password_confirm = jQuery( '#signup_password_confirm' );
+		var return_val = true;
+		jQuery( '.register-page .error' ).remove();
+
+		if ( jQuery( document ).find( signup_email_confirm ).length && jQuery( document ).find( signup_email_confirm ).val() == '' ) {
+			jQuery( document ).find( signup_email_confirm ).before( html_error );
+			return_val = false;
+		}
+		if ( jQuery( document ).find( signup_password ).length && jQuery( document ).find( signup_password ).val() == '' ) {
+			jQuery( document ).find( signup_password ).before( html_error );
+			return_val = false;
+		}
+		if ( jQuery( document ).find( signup_password_confirm ).length && jQuery( document ).find( signup_password_confirm ).val() == '' ) {
+			jQuery( document ).find( signup_password_confirm ).before( html_error );
+			return_val = false;
+		}
+		jQuery( '.required-field' ).each( function( index ) {
 
 			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
-				if ( 0 >= jQuery( this ).find( 'legend .error' ).length) {
-					jQuery( this ).find( 'legend' ).after( ).append( html_error );
-				}
-				return;
+				jQuery( this ).find( 'input[type="text"]' ).before( html_error );
+				return_val = false;
+			}
+			if ( jQuery( this ).find( 'input[type="number"]' ).length && jQuery( this ).find( 'input[type="number"] ').val() == '' ) {
+				jQuery( this ).find( 'input[type="number"]' ).before( html_error );
+				return_val = false;
 			}
 			if ( jQuery( this ).find( 'textarea' ).length && jQuery( this ).find( 'textarea' ).val() == '' ) {
-				if ( 0 >= jQuery( this ).find( 'legend .error' ).length ) {
-					jQuery( this ).find( 'legend' ).after().append( html_error );
-				}
-				return;
+					jQuery( this ).find( 'textarea' ).before( html_error );
+				return_val = false;
 			}
 			if ( jQuery( this ).find( 'select' ).length && jQuery( this ).find( 'select' ).val() == '' ) {
-				if ( 0 >= jQuery( this).find( 'legend .error' ).length ) {
-					jQuery( this ).find( 'legend' ).after().append( html_error );
-				}
-				return;
+					jQuery( this ).find( 'legend' ).next().append( html_error );
+				return_val = false;
 			}
 			if ( jQuery( this ).find( 'input[type="checkbox"]' ).length ) {
-				if ( 0 >= jQuery( this ).find( 'legend .error' ).length) {
 					var checked_check = 0;
 					jQuery( this ).find('input[type="checkbox"]' ).each( function() {
-					    if ( jQuery( this ).prop( 'checked' )==true ){
+					    if ( jQuery( this ).prop( 'checked' ) == true ){
 					        checked_check++;
 					    }
 					});
 					if ( 0 >= checked_check ) {
-						jQuery( this ).find( 'legend' ).after().append( html_error );
+						jQuery( this ).find( 'legend' ).next().append( html_error );
+						return_val = false;
 					}
-				}
-				return;
 			}
 		});
+		if ( jQuery( document ).find( signup_email ).length && jQuery( document ).find( signup_email ).val() == '' ) {
+			jQuery( document ).find( signup_email ).before( html_error );
+			return_val = false;
+		}else{
+			bp_register_validate_confirm_email();
 
+            jQuery.ajax({
+			    type: 'POST',
+			    url: ajaxurl,
+			    dataType: "json",
+			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + "&action=check_email",
+			    success: function ( response ) {
+			    	if (response.signup_email) {
+				    	var html_serror = '<div class="bp-messages bp-feedback error">';
+							html_serror += '<span class="bp-icon" aria-hidden="true"></span>';
+							html_serror += '<p>' + response.signup_email + '</p>';
+							html_serror += '</div>';
+
+                		jQuery( document ).find( signup_email ).before( html_serror );
+                		return_val = false;
+                	}
+                	var nickname = 'field_'+response.field_id;
+                	if (response.signup_username) {
+                		var html_uerror = '<div class="bp-messages bp-feedback error">';
+							html_uerror += '<span class="bp-icon" aria-hidden="true"></span>';
+							html_uerror += '<p>' + response.signup_username + '</p>';
+							html_uerror += '</div>';
+                		jQuery( document ).find( '#'+nickname ).before( html_uerror );
+                		return_val = false;
+                	}
+	                return true;
+	           	}
+			});
+		}
+		if ( ! return_val ) {
+			var target = jQuery( '.error' ).first();
+			if (target.length) {
+				jQuery('html,body').animate({
+					scrollTop: target.offset().top
+				}, 1000);
+				return false;
+			}
+		}
+		return return_val;
 	});
 
 	// Bind signup_email to keyup events in the email fields

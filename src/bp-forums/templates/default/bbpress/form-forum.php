@@ -25,13 +25,14 @@
 			<?php do_action( 'bbp_theme_before_forum_form' ); ?>
 
 			<fieldset class="bbp-form">
-				<h2 class="bbp-form-title entry-title"><?php
-					if ( bbp_is_forum_edit() ) {
-						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() );
-					} else {
-						bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Create New Forum', 'buddyboss' );
-					}
-					?>
+				<h2 class="bbp-form-title entry-title">
+				<?php
+				if ( bbp_is_forum_edit() ) {
+					printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() );
+				} else {
+					bbp_is_single_forum() ? printf( __( 'Create New Forum in &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Create New Forum', 'buddyboss' );
+				}
+				?>
 				</h2>
 
 				<?php do_action( 'bbp_theme_before_forum_form_notices' ); ?>

@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 	<div class="bp-hello-header" role="document">
 		<div class="bp-hello-close">
 			<button type="button" class="close-modal button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php esc_attr_e( 'Close pop-up', 'buddyboss' ); ?>">
-				<span class="screen-reader-text"><?php esc_html_e( 'Close pop-up', 'buddyboss' ); ?></span>
+				<?php esc_html_e( 'Close', 'buddyboss' ); ?>
 			</button>
 		</div>
 

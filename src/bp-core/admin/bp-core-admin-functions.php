@@ -468,9 +468,9 @@ function bp_check_for_legacy_theme() {
  */
 function bp_print_legacy_theme_deprecated_notice() {
 	$message = sprintf(
-		__( 'You are using a theme that relies on the older %1$s templates, and some things may not work properly. Consider switching to our <em>new</em> BuddyBoss Theme, a generic WordPress theme, or any newer theme that is compatible with the %2$s template pack.', 'buddyboss' ),
+		__( 'You are using an old theme and/or BuddyPress addon that relies on the older %1$s templates, and some things may not work properly. Consider switching to our %2$s and/or removing the BuddyPress addon that is using old methods.', 'buddyboss' ),
 		'<a href="https://www.buddyboss.com/resources/docs/development/theme-development/theme-compatibility/" target="_blank" rel="noopener">BuddyPress Legacy</a>',
-		'<a href="https://www.buddyboss.com/resources/docs/development/theme-development/theme-compatibility/" target="_blank" rel="noopener">BuddyBoss Nouveau</a>'
+		'<a href="https://www.buddyboss.com/pricing/" target="_blank" rel="noopener">BuddyBoss Theme</a>'
 	);
 
 	printf(
@@ -1301,7 +1301,15 @@ function bp_admin_email_add_codex_notice() {
 	bp_core_add_admin_notice(
 		sprintf(
 			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
-			bp_core_help_docs_link( 'components/emails/email-tokens.md' )
+			bp_get_admin_url( 
+				add_query_arg( 
+					array( 
+						'page' 		=> 'bp-help', 
+						'article' 	=> 62844,
+					),
+					'admin.php' 
+				)
+			)
 		),
 		'error'
 	);
