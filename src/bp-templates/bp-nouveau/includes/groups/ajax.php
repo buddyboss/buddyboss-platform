@@ -400,7 +400,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( empty( $potential_invites->users ) ) {
 		$error = array(
-			'feedback' => __( 'No members were found. Try another filter.', 'buddyboss' ),
+			'feedback' => __( 'No members were found.', 'buddyboss' ),
 			'type'     => 'info',
 		);
 
