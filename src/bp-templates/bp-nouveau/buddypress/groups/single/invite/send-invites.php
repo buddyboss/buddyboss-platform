@@ -17,6 +17,7 @@
 			<div class="bb-panel-head">
 				<div class="bb-panel-subhead">
 					<h4 class="total-members-text"><?php _e( 'Members', 'buddyboss' ); ?></h4>
+					<?php if ( bp_is_active( 'friends' ) ) { ?>
 					<div id="bp-invites-dropdown-options-loader" class="bp-invites-dropdown-options-loader-hide">
 						<i class="dashicons dashicons-update animate-spin"></i>
 					</div>
@@ -24,6 +25,7 @@
 						<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
 						<label for="bp-group-send-invite-switch-checkbox" class="bp-group-invite-label"><span class="select-members-text"><?php _e( 'My Connections', 'buddyboss' ); ?></span></label>
 					</div>
+					<?php } ?>
 				</div>
 			</div>
 

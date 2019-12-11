@@ -450,8 +450,8 @@ function bp_nouveau_ajax_get_users_to_invite() {
 							<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
 							<?php foreach ( $user['invited_by'] as $inviter ) { ?>
 							<li>
-								<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['user_name']; ?>">
-									<img src="<?php echo $inviter['avatar']; ?>" width="30px" class="avatar mini" alt="<?php echo $inviter['user_name']; ?>">
+								<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
+									<img src="<?php echo $inviter['avatar']; ?>" width="30px" class="avatar mini" alt="<?php echo $inviter['name']; ?>">
 								</a>
 							</li>
 							<?php } ?>
