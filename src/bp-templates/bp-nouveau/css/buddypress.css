@@ -1749,6 +1749,7 @@ input.search-query-input {
   max-width: 160px;
   margin-right: 20px;
   margin-bottom: 20px;
+  position: relative;
 }
 
 .activity-link-preview-image img {
