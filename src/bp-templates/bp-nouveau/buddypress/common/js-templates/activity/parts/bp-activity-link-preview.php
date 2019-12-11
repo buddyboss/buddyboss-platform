@@ -31,7 +31,7 @@
 		<# } #>
 
 		<# if ( data.link_success && ! data.link_error ) { #>
-		<div class="activity-link-preview-excerpt">{{{data.link_description}}}</div>
+		<div class="activity-link-preview-excerpt"><p>{{{data.link_description}}}</p></div>
 		<# } #>
 
 		<# if ( data.link_error && ! data.link_success ) { #>
