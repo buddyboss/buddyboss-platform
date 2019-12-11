@@ -552,22 +552,20 @@ function bp_activity_link_preview( $content, $activity ) {
 	);
 
 	$description = $preview_data['description'];
-	$read_more   = ' <a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Read more', 'buddyboss' ) . '...</a>';
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
 
 	$content = make_clickable( $content );
 
 	$content .= '<div class="activity-link-preview-container">';
+	$content .= '<div class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></div>';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
-		$content  .= '<div class="activity-link-preview-image-wrap"><div class="activity-link-preview-image">';
+		$content  .= '<div class="activity-link-preview-image">';
 		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
-		$content  .= '</div></div>';
+		$content  .= '</div>';
 	}
-	$content .= '<div class="activity-link-preview-content">';
-	$content .= '<div class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></div>';
-	$content .= '<div class="activity-link-preview-body">' . $description . '</div>';
-	$content .= '</div>';
+	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';
 
 	return $content;
