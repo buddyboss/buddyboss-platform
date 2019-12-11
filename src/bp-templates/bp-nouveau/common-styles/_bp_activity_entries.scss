@@ -477,11 +477,16 @@
 	font-weight: 600;
 	font-size: 22px;
 	line-height: 1.3;
+	color: #32373c;
 }
 
-.activity-link-preview-title,
-.activity-link-preview-title a {
+.activity-link-preview-title a,
+.activity-link-preview-title a:hover {
 	color: #32373c;
+}
+
+.activity-link-preview-title a:hover {
+	text-decoration: underline !important;
 }
 
 .activity-link-preview-excerpt {
@@ -489,8 +494,11 @@
 		font-size: 14px;
 		font-weight: 400;
 	}
-	.activity-link-preview-more {
+	a.activity-link-preview-more {
 		color: #b4b9be;
+	}
+	a.activity-link-preview-more:hover {
+		text-decoration: underline !important;	
 	}
 }
 

@@ -1767,11 +1767,16 @@ input.search-query-input {
   font-weight: 600;
   font-size: 22px;
   line-height: 1.3;
+  color: #32373c;
 }
 
-.activity-link-preview-title,
-.activity-link-preview-title a {
+.activity-link-preview-title a,
+.activity-link-preview-title a:hover {
   color: #32373c;
+}
+
+.activity-link-preview-title a:hover {
+  text-decoration: underline !important;
 }
 
 .activity-link-preview-excerpt p {
@@ -1779,8 +1784,12 @@ input.search-query-input {
   font-weight: 400;
 }
 
-.activity-link-preview-excerpt .activity-link-preview-more {
+.activity-link-preview-excerpt a.activity-link-preview-more {
   color: #b4b9be;
+}
+
+.activity-link-preview-excerpt a.activity-link-preview-more:hover {
+  text-decoration: underline !important;
 }
 
 .activity-url-thumb-nav {

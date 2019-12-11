@@ -7,7 +7,7 @@
 	<div class="activity-link-preview-container">		
 	
 		<# if ( data.link_success && ! data.link_error ) { #>
-		<div class="activity-link-preview-title">{{data.link_title}}</div>
+		<p class="activity-link-preview-title">{{data.link_title}}</p>
 		<# } #>
 
 		<# if ( data.link_images.length && data.link_success && ! data.link_error ) { #>
