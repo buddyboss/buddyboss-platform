@@ -35,7 +35,7 @@ class BP_Embed extends WP_Embed {
 		$this->handlers = $wp_embed->handlers;
 
 		if ( bp_use_embed_in_activity() ) {
-			add_filter( 'bp_get_activity_content_body', array( &$this, 'autoembed' ), 8, 2 );
+			add_filter( 'bp_get_activity_content_body', array( &$this, 'autoembed' ), 21, 2 );
 			add_filter( 'bp_get_activity_content_body', array( &$this, 'run_shortcode' ), 7, 2 );
 		}
 
@@ -273,7 +273,7 @@ class BP_Embed extends WP_Embed {
 					&& !empty( $preview_data = bp_activity_get_meta( $activity_id, '_link_preview_data', true ) )
 					&& !empty( $preview_data['url'] )
 				) {
-					return $content;
+					return apply_filters( 'bp_autoembed', $content );
 				}
 
 				// Find all the URLs from the content.
