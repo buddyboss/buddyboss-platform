@@ -437,6 +437,7 @@
 	background: #fff;
 	border: 1px solid #e5e5e5;
 	box-shadow: 0 1px 1px rgba(0,0,0,.05);
+	position: relative;
 	overflow: auto;
 	zoom: 1;
 
@@ -466,7 +467,7 @@
 	border: none;
 }
 
-.activity-video-preview & {
+.activity-video-preview {
 	padding: 0;
 }
 
@@ -475,10 +476,11 @@
 	font-weight: 600;
 	font-size: 22px;
 	line-height: 1.3;
+}
 
-	a {
-		color: #32373c;
-	}
+.activity-link-preview-title,
+.activity-link-preview-title a {
+	color: #32373c;
 }
 
 .activity-link-preview-excerpt {
@@ -537,7 +539,7 @@
 	font-size: 16px;
 	position: absolute;
 	right: 8px;
-	top: 0;
+	top: 8px;
 	text-decoration: none;
 
 	@include medium-small-max() {

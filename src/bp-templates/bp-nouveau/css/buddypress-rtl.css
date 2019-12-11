@@ -1722,10 +1722,12 @@ input.search-query-input {
 .activity-link-preview-container {
   padding: 25px;
   line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: #82878c;
   background: #fff;
   border: 1px solid #e5e5e5;
   box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
+  position: relative;
   overflow: auto;
   zoom: 1;
 }
@@ -1766,6 +1768,7 @@ input.search-query-input {
   line-height: 1.3;
 }
 
+.activity-link-preview-title,
 .activity-link-preview-title a {
   color: #32373c;
 }
@@ -1777,10 +1780,6 @@ input.search-query-input {
 
 .activity-link-preview-excerpt .activity-link-preview-more {
   color: #b4b9be;
-}
-
-.activity-link-preview-excerpt .activity-link-preview-more:hover {
-  text-decoration: underline;
 }
 
 .activity-url-thumb-nav {
@@ -1829,7 +1828,7 @@ input.search-query-input {
   font-size: 16px;
   position: absolute;
   left: 8px;
-  top: 0;
+  top: 8px;
   text-decoration: none;
 }
 
