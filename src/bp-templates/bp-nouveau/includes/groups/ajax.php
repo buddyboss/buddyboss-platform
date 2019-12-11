@@ -400,7 +400,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( empty( $potential_invites->users ) ) {
 		$error = array(
-			'feedback' => __( 'No members were found.', 'buddyboss' ),
+			'feedback' => __( 'All site members have already joined this group.', 'buddyboss' ),
 			'type'     => 'info',
 		);
 
