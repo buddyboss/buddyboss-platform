@@ -77,6 +77,7 @@ add_filter( 'xprofile_field_options_before_save', 'bp_xprofile_sanitize_field_op
 add_filter( 'xprofile_field_default_before_save', 'bp_xprofile_sanitize_field_default' );
 
 add_filter( 'bp_get_the_profile_field_name', 'xprofile_filter_field_edit_name' );
+add_filter( 'bp_core_get_user_displayname', 'xprofile_filter_get_user_display_name', 15, 2 );
 
 // Saving field value
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_nickname_value', 10, 4 );
@@ -84,10 +85,10 @@ add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_phone_value', 10, 4
 add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_value', 10, 4 );
 
 // Display name adjustment
-add_filter( 'set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
+add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
 add_filter( 'get_user_metadata', 'bp_xprofile_adjust_display_name', 10, 3 );
-add_filter( 'get_the_author_display_name', 'bp_xprofile_adjust_author_display_name', 10, 2 );
-add_filter( 'bp_core_get_core_userdata', 'bp_xprofile_adjust_display_user_display_name' );
+// add_filter( 'get_the_author_display_name', 'bp_xprofile_adjust_author_display_name', 10, 2 );
+// add_filter( 'bp_core_get_core_userdata', 'bp_xprofile_adjust_display_user_display_name' );
 
 // Email Username
 add_filter( 'new_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
@@ -669,6 +670,46 @@ function xprofile_filter_field_edit_name( $field_name ) {
 }
 
 /**
+ * Conditionally filters 'bp_core_get_user_displayname' to return user diaplay name from xprofile.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @global \BP_XProfile_Field_Type $field
+ *
+ * @param  string $full_name
+ * @param  int $user_id
+ * @return string
+ */
+function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
+
+	if ( empty( $user_id ) ) {
+		return $full_name;
+	}
+
+	if ( !empty( $user_id ) ) {
+
+		$display_name = bp_xprofile_get_member_display_name( $user_id );
+
+		if ( !empty( $display_name ) ) {
+			$full_name = $display_name;
+		}
+
+		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id );
+
+		if ( ! empty( $list_fields ) ) {
+			$last_name_field_id = bp_xprofile_lastname_field_id();
+
+			if ( in_array( $last_name_field_id, $list_fields ) ) {
+				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$full_name = str_replace( ' ' . $last_name, '', $full_name );
+			}
+		}
+	}
+
+	return $full_name;
+}
+
+/**
  * Validate nickname approved characters and format.
  *
  * @since BuddyBoss 1.0.0
@@ -826,7 +867,7 @@ function bp_xprofile_adjust_current_user_display_name() {
 	}
 
 	$name                             = empty( $current_user->display_name ) ? empty( $current_user->user_nicename ) ? $current_user->user_login : $current_user->user_nicename : $current_user->display_name;
-	$display_name                     = bp_core_get_member_display_name( $name, $current_user->ID );
+	$display_name                     = bp_core_get_user_displayname( $current_user->ID );
 	$current_user->data->display_name = empty( $display_name ) ? $name : $display_name;
 }
 
@@ -840,7 +881,7 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 		return $null;
 	}
 
-	return bp_core_get_member_display_name( $null, $object_id );
+	return bp_core_get_user_displayname( $object_id );
 }
 
 /**
@@ -849,7 +890,13 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
-	return bp_core_get_member_display_name( $display_name, $user_id );
+
+	if ( empty( $user_id ) ) {
+		return $display_name;
+	}
+
+
+	return bp_core_get_user_displayname( $user_id );
 }
 
 /**
@@ -861,7 +908,7 @@ function bp_xprofile_adjust_display_user_display_name( $userdata ) {
 	// Profile Fields.
 	$active_components = bp_get_option( 'bp-active-components' );
 	if ( ! empty( $active_components['xprofile'] ) ) {
-		$userdata->display_name = bp_core_get_member_display_name( $userdata->display_name, $userdata->ID );
+		$userdata->display_name = bp_core_get_user_displayname( $userdata->ID );
 	}
 
 	return $userdata;
@@ -883,7 +930,7 @@ function bp_xprofile_replace_username_to_display_name( $email_content, $user = n
 
 	return str_replace(
 		'###USERNAME###',
-		bp_core_get_member_display_name( $user['display_name'], $user['ID'] ),
+		bp_core_get_user_displayname( $user['ID'] ),
 		$email_content
 	);
 }
