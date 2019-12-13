@@ -549,7 +549,7 @@ window.bp = window.bp || {};
 								feedbackParagraphTagSelectorLeft.html( response.data.feedback );
 
 								var alreadySelected = $( '#group-invites-send-to-input' ).val();
-								if ( alreadySelected.length ) {
+								if ( $.isArray( alreadySelected ) && alreadySelected.length ) {
 									$.each( alreadySelected, function( index, value ) {
 										if ( value ) {
 											$( '#members-list li.' + value ).addClass( 'selected' );

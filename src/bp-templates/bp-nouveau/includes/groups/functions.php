@@ -1225,6 +1225,10 @@ function bp_nouveau_group_pending_invites_set_title_tag( $title ){
 
 	if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
 		$new_title = esc_html__( 'Pending Invites', 'buddyboss' );
+		$sep = apply_filters( 'document_title_separator', '-' );
+		$get_current_group = bp_get_current_group_name();
+
+		$new_title = $new_title . ' ' . $sep . ' ' . $get_current_group . ' ' . $sep . ' ' . bp_get_site_name();
 	}
 
 	//Combine the new title with the old (separator and tagline)
