@@ -1224,7 +1224,7 @@ div[class*="attached-gif-container"] .gif-play-button span.dashicons {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif-symbol.png) bottom right no-repeat;
+  background: url(../images/gif-symbol.png) bottom left no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -3155,6 +3155,8 @@ body.buddypress.bp-user #page #primary .entry-header {
   flex-flow: row wrap;
   list-style: none;
   padding: 0;
+  max-height: 120px;
+  overflow: auto;
 }
 
 #send_group_invite_form .select2-search.select2-search--inline {
@@ -3310,13 +3312,6 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   padding: 0;
 }
 
-#send_group_invite_form .select2-selection__rendered {
-  display: flex;
-  align-items: center;
-  flex-flow: row wrap;
-  padding: 0;
-}
-
 #send_group_invite_form .select2-search.select2-search--inline {
   flex: 1;
   min-width: 0;
@@ -3351,7 +3346,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   border: 0;
   resize: none;
   padding: 25px;
-  min-height: 345px;
+  /*min-height: 350px;*/
   height: auto;
   max-height: 32vh;
 }
@@ -3440,8 +3435,11 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   margin-left: 10px;
 }
 
-#group-invites-container form#send_group_invite_form {
+#group-invites-container #send_group_invite_form {
   margin-bottom: 0;
+  position: relative;
+  height: 100%;
+  padding-bottom: 55px;
 }
 
 #group-invites-container .bb-groups-invites-right > .bp-feedback {
