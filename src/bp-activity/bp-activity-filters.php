@@ -126,8 +126,6 @@ add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
 // Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
 
-add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
-
 add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
@@ -1140,50 +1138,6 @@ function bp_activity_media_fix_data() {
 			}
 		}
 	}
-}
-
-/**
- * Filter the activities of friends privacy
- *
- * @since BuddyBoss 1.0.0
- * @param $has_activities
- * @param $activities
- *
- * @return mixed
- */
-function bp_activity_has_activity_filter( $has_activities, $activities ) {
-
-	if ( ! bp_is_active( 'friends' ) || ! is_user_logged_in() || is_super_admin() ) {
-		return $has_activities;
-	}
-
-	if ( ! empty( $activities->activities ) ) {
-		foreach ( $activities->activities as $key => $activity ) {
-
-			if ( 'friends' == $activity->privacy ) {
-
-				$remove_from_stream = false;
-				$is_friend          = friends_check_friendship( bp_loggedin_user_id(), $activity->user_id );
-				if ( ! $is_friend ) {
-					$remove_from_stream = true;
-				}
-
-				if ( $remove_from_stream && isset( $activities->activity_count ) ) {
-					$activities->activity_count = $activities->activity_count - 1;
-
-					if ( isset( $activities->total_activity_count ) ) {
-						$activities->total_activity_count = $activities->total_activity_count - 1;
-					}
-
-					unset( $activities->activities[ $key ] );
-				}
-			}
-		}
-	}
-
-	$activities->activities = array_values( $activities->activities );
-
-	return $has_activities;
 }
 
 /**
