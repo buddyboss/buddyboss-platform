@@ -194,7 +194,7 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
 /**
  * Filters profile field values for whitelisted HTML.
  *
- * @since BuddyPress 5.0.0
+ * @since BuddyBoss 1.2.3
  *
  * @param string $value    Field value.
  * @param string $type     Field type.
