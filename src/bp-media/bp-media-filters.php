@@ -14,7 +14,9 @@ add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' )
 add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
 add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
+add_action( 'bp_activity_posted_update', 'bp_media_update_activity_document_meta', 10, 3 );
 add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_media_meta', 10, 4 );
+add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_document_meta', 10, 4 );
 add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
@@ -1004,4 +1006,74 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+}
+
+/**
+ * Update media for activity
+ *
+ * @param $content
+ * @param $user_id
+ * @param $activity_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_media_update_activity_document_meta( $content, $user_id, $activity_id ) {
+
+	if ( ! isset( $_POST['document'] ) || empty( $_POST['document'] ) ) {
+		return false;
+	}
+
+	$_POST['medias']             = $_POST['document'];
+	$_POST['bp_activity_update'] = true;
+
+	remove_action( 'bp_activity_posted_update', 'bp_media_update_activity_document_meta', 10, 3 );
+	remove_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_document_meta', 10, 4 );
+	remove_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_document_meta', 10, 3 );
+	remove_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_document_meta',      10, 3   );
+
+	$media_ids = bp_media_add_handler();
+
+	add_action( 'bp_activity_posted_update', 'bp_media_update_activity_document_meta', 10, 3 );
+	add_action( 'bp_groups_posted_update', 'bp_media_groups_activity_update_document_meta', 10, 4 );
+	add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_document_meta', 10, 3 );
+	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_document_meta',      10, 3   );
+
+	//save media meta for activity
+	if ( ! empty( $activity_id ) ) {
+		bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
+		bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
+	}
+}
+
+/**
+ * Update media for group activity
+ *
+ * @param $content
+ * @param $user_id
+ * @param $group_id
+ * @param $activity_id
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_media_groups_activity_update_document_meta( $content, $user_id, $group_id, $activity_id ) {
+	bp_media_update_activity_document_meta( $content, $user_id, $activity_id );
+}
+
+/**
+ * Update media for activity comment
+ *
+ * @param $comment_id
+ * @param $r
+ * @param $activity
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool
+ */
+function bp_media_activity_comments_update_document_meta( $comment_id, $r, $activity ) {
+	bp_media_update_activity_document_meta( false, false, $comment_id );
 }

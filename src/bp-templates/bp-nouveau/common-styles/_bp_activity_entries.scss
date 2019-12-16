@@ -614,3 +614,62 @@
 span.dashicons.dashicons-admin-file:before {
   content: '\e96a';
 }
+
+.bb-activity-media-wrap {
+  width: 100%;
+  .bb-activity-media-elem.document-activity {
+	border: 1px solid #999;
+	border-radius: 5px;
+	padding: 15px;
+	display: inline-block;
+	align-items: center;
+	width: 100%;
+	margin: 0 3px;
+	.description{
+	  padding-right: 10px;
+	  display: inline-block;
+	  width: calc(100% - 45px);
+	  vertical-align: middle;
+	  .entry-img {
+		display: inline-block;
+		width: 35px;
+		vertical-align: middle;
+		img{
+		  width: 35px;
+		  height: 35px;
+		  position: static;
+		  object-fit: inherit;
+		  min-height: inherit;
+		  min-width: inherit;
+		  float: left;
+		  display: inline-block;
+		}
+	  }
+	  .document-details{
+		padding-left: 10px;
+		width: calc(100% - 45px);
+		display: inline-block;
+		vertical-align: middle;
+		.document-title{
+		  text-overflow: ellipsis;
+		  overflow: hidden;
+		  white-space: nowrap;
+		  width: 100%;
+		  display: block;
+		}
+		.document-description{
+		  display: block;
+		}
+	  }
+	}
+	&>.entry-img{
+	  width: 35px;
+	  display: inline-block;
+	  vertical-align: middle;
+	  img{
+		width: 35px;
+		height: 35px;
+	  }
+	}
+  }
+}

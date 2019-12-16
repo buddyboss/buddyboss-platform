@@ -341,10 +341,20 @@ window.bp = window.bp || {};
 			}
 			self.destroy();
 
-			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-document-uploader', bp.Nouveau.Activity.postForm.dropzone_options );
+			var dropzone_options = {
+				url: BP_Nouveau.ajaxurl,
+				timeout: 3 * 60 * 60 * 1000,
+				acceptedFiles: '.csv,.doc,.docx,.gzip,.ics,.jar,.ods,.odt,.pdf,.psd,.ppt,.pptx,.rar,.tar,.txt,.xls,.xlsx,.zip',
+				autoProcessQueue: true,
+				addRemoveLinks: true,
+				uploadMultiple: false,
+				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
+			};
+
+			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-document-uploader', dropzone_options );
 
 			bp.Nouveau.Activity.postForm.dropzone.on('sending', function(file, xhr, formData) {
-				formData.append('action', 'document_upload');
+				formData.append('action', 'media_document_upload');
 				formData.append('_wpnonce', BP_Nouveau.nonces.media);
 			});
 
@@ -375,6 +385,7 @@ window.bp = window.bp || {};
 					for ( var i in self.media ) {
 						if ( file.id === self.media[i].id ) {
 							if ( typeof self.media[i].saved !== 'undefined' && ! self.media[i].saved ) {
+								console.log('removed');
 								bp.Nouveau.Media.removeAttachment(file.id);
 							}
 							self.media.splice( i, 1 );
@@ -1764,6 +1775,14 @@ window.bp = window.bp || {};
 						medias[k].saved = true;
 					}
 					self.model.set('media',medias);
+				}
+
+				var documents = self.model.get('document');
+				if ( typeof documents !== 'undefined' && documents.length ) {
+					for( var d = 0; d < documents.length; d++ ) {
+						documents[d].saved = true;
+					}
+					self.model.set('document',documents);
 				}
 
 				// Reset the form
