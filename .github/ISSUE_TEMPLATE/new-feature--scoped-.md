@@ -1,6 +1,6 @@
 ---
-name: Feature request
-about: Suggest an idea for this project
+name: New Feature (Scoped)
+about: Add a scoped and approved feature for this project
 title: ''
 labels: 'feature: enhancement'
 assignees: ''
