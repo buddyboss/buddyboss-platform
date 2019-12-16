@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.1.9\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-04 10:43:34+00:00\n"
+"POT-Creation-Date: 2019-12-16 09:10:28+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1076,23 +1076,28 @@ msgstr ""
 msgid "View all actions"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-list-table.php:491
-#: bp-activity/classes/class-bp-activity-list-table.php:596
-#: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/bp-core-admin-settings.php:812
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:333
-#: bp-core/bp-core-template.php:3951 bp-groups/bp-groups-admin.php:2141
-#: bp-groups/bp-groups-admin.php:2178 bp-groups/bp-groups-functions.php:2953
-#: bp-groups/bp-groups-functions.php:2955
-#: bp-groups/bp-groups-functions.php:2957
-#: bp-members/classes/class-bp-core-whos-online-widget.php:98
-#: bp-members/classes/class-bp-core-whos-online-widget.php:117
-#: bp-messages/bp-messages-functions.php:202
-#: bp-messages/bp-messages-template.php:2121
-#: bp-search/bp-search-settings.php:782 bp-settings/actions/export.php:35
-#: bp-templates/bp-nouveau/buddypress/common/filters/member-filters.php:51
-#: bp-xprofile/classes/class-bp-xprofile-field-type-social-networks.php:289
-msgid "%s"
+#: bp-activity/classes/class-bp-activity-list-table.php:488
+#: bp-core/admin/bp-core-admin-slugs.php:46
+#: bp-core/admin/bp-core-admin-slugs.php:48
+#: bp-core/admin/bp-core-admin-tools.php:166
+#: bp-core/admin/settings/bp-admin-setting-forums.php:21
+#: bp-core/bp-core-functions.php:782
+#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
+#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
+#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
+#: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1711
+#: bp-forums/admin.php:216 bp-forums/admin.php:267
+#: bp-forums/classes/class-bbpress.php:451
+#: bp-forums/classes/class-bp-forums-component.php:38
+#: bp-forums/classes/class-bp-forums-component.php:189
+#: bp-forums/classes/class-bp-forums-component.php:276
+#: bp-forums/classes/class-bp-forums-component.php:327
+#: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
+#: bp-media/bp-media-filters.php:866 bp-media/bp-media-settings.php:157
+#: bp-media/bp-media-settings.php:164 bp-media/bp-media-settings.php:171
+#: bp-search/bp-search-functions.php:369
+#: bp-templates/bp-nouveau/includes/customizer.php:173
+msgid "Forums"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:513
@@ -1231,6 +1236,14 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:78
 msgid "New post published"
+msgstr ""
+
+#: bp-blogs/bp-blogs-activity.php:106
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:333
+#: bp-core/bp-core-template.php:3951 bp-messages/bp-messages-functions.php:202
+#: bp-messages/bp-messages-template.php:2121
+#: bp-search/bp-search-settings.php:782 bp-settings/actions/export.php:35
+msgid "%s"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:136
@@ -2410,29 +2423,6 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
 msgid "Profile Dashboard"
-msgstr ""
-
-#: bp-core/admin/bp-core-admin-slugs.php:46
-#: bp-core/admin/bp-core-admin-slugs.php:48
-#: bp-core/admin/bp-core-admin-tools.php:166
-#: bp-core/admin/settings/bp-admin-setting-forums.php:21
-#: bp-core/bp-core-functions.php:782
-#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
-#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
-#: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
-#: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1711
-#: bp-forums/admin.php:216 bp-forums/admin.php:267
-#: bp-forums/classes/class-bbpress.php:451
-#: bp-forums/classes/class-bp-forums-component.php:38
-#: bp-forums/classes/class-bp-forums-component.php:189
-#: bp-forums/classes/class-bp-forums-component.php:276
-#: bp-forums/classes/class-bp-forums-component.php:327
-#: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:866 bp-media/bp-media-settings.php:157
-#: bp-media/bp-media-settings.php:164 bp-media/bp-media-settings.php:171
-#: bp-search/bp-search-functions.php:369
-#: bp-templates/bp-nouveau/includes/customizer.php:173
-msgid "Forums"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:92
