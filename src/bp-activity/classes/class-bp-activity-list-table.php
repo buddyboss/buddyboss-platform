@@ -485,10 +485,10 @@ class BP_Activity_List_Table extends WP_List_Table {
 					}
 
 					// Change `Bbpress` to `Forums`
-					$component_name = ( 'Bbpress' === $component_name ) ? 'Forums' : $component_name;
+					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss' ) : $component_name;
 					?>
 
-					<optgroup label="<?php printf( esc_html__( '%s', 'buddyboss' ), $component_name ); ?>">
+					<optgroup label="<?php echo $component_name; ?>">
 
 						<?php foreach ( $actions as $action_key => $action_values ) : ?>
 
@@ -593,7 +593,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			if ( strpos( $item['type'], 'new_blog_' ) !== false ) {
 				$get_action = bp_activity_get_meta( $item['id'], 'admin_filters' );
 				if ( '' !== $get_action ) {
-					printf( __( '%s', 'buddyboss' ), $get_action );
+					echo $get_action;
 				} else {
 					$split_cpt = explode( 'new_blog_', $item['type'] );
 

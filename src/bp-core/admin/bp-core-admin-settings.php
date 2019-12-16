@@ -809,7 +809,7 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 		<?php
 	} ?>
 	<input name="<?php echo esc_attr( 'bp-enable-send-invite-member-type-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false ) ); ?>/>
-	<label for="<?php echo esc_attr( $option_name ); ?>"><?php printf( esc_html__( '%s', 'buddyboss' ), $args['member_type_name'] ); ?></label>
+	<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['member_type_name'] ); ?></label>
 	<?php
 
 }

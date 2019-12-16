@@ -48,7 +48,7 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 					foreach ( $display_arr as $member ) {
 						?>
 						<option value="<?php echo $member['member_type_id']; ?>">
-							<?php printf( esc_html__( '%s', 'buddyboss' ), $member['name'] ); ?>
+							<?php echo $member['name']; ?>
 						</option>
 						<?php
 					}
