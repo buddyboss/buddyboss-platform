@@ -4652,6 +4652,7 @@ ul.bbp-stats .bbp-count {
   text-align: center;
   text-transform: none;
   width: 20%;
+  visibility: visible !important;
 }
 
 .buddypress-wrap form.bp-dir-search-form button[type="submit"] span,
@@ -11285,14 +11286,4 @@ img.emojioneemoji {
   height: 26px;
   width: 30px;
   margin: 0 auto 10px;
-}
-
-.buddypress-wrap form.bp-messages-search-form button[type="submit"]{
-  padding: 2px 10px!important;
-  color: #939597;
-  opacity: unset!important;
-  visibility: visible!important;
-}
-body .buddypress-wrap form.bp-messages-search-form input[type=search] {
-  background-image: none;;
 }
