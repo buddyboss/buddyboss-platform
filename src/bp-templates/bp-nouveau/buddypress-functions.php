@@ -248,7 +248,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 			return $classes;
 
 		if ( 'forum' === get_post_type() || 'topic' === get_post_type() ) {
-			unset($classes[array_search('current_page_parent',$classes)]);
+			// Unset current_page_parent class if exists.
+			if( in_array( 'current_page_parent', $classes ) ) {
+				unset($classes[array_search('current_page_parent',$classes)]);
+			}
 			if ( isset($item->url) ) {
 				if ( isset( $current_url ) && isset( $item->url ) && strstr( $current_url, $item->url ) ) {
 					$classes[] = 'current-menu-item';
