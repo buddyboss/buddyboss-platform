@@ -1011,14 +1011,6 @@ function bp_media_activity_update_media_privacy( $activity ) {
 		    $media = new BP_Media( $media_id );
 		    $media->privacy = $activity->privacy;
 		    $media->save();
-
-		    remove_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
-
-		    $activity = new BP_Activity_Activity( $media->activity_id );
-		    $activity->privacy = $media->privacy;
-		    $activity->save();
-
-			add_action( 'bp_activity_after_save', 'bp_media_activity_update_media_privacy', 2 );
         }
     }
 }
