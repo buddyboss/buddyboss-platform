@@ -113,6 +113,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 							<select name="<?php echo $name . '[min][year]'; ?>">
 								<?php
+
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['year'], 0, false ),
 									/* translators: no option picked in select box */
