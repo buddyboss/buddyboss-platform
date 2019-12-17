@@ -37,6 +37,10 @@
 			</div>
 		</div>
 
+		<div id="bp-pending-invites-loader" class="bp-pending-invites-loader-hide">
+			<i class="dashicons dashicons-update animate-spin"></i>
+		</div>
+
 		<div class="members bp-invites-content">
 			<ul id="members-list" class="item-list bp-list"></ul>
 		</div>

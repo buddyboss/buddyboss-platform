@@ -78,6 +78,9 @@
 					<input type="hidden" id="group_invite_content_hidden" name="group_invite_content_hidden" value="">
 					<div id="whats-new-toolbar">
 						<div id="group-invites-new-submit" class="submit">
+							<div id="bp-invites-submit-loader" class="bp-invites-submit-loader-hide">
+								<i class="dashicons dashicons-update animate-spin"></i>
+							</div>
 							<input type="submit" name="send_group_invite_button" value="Send" id="send_group_invite_button" class="small">
 							<input type="submit" name="bp_invites_reset" value="Cancel" id="bp_invites_reset" class="small">
 						</div>

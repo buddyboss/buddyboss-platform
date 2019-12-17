@@ -400,7 +400,7 @@ function bp_nouveau_ajax_get_users_to_invite() {
 
 	if ( empty( $potential_invites->users ) ) {
 		$error = array(
-			'feedback' => __( 'All site members have already joined this group.', 'buddyboss' ),
+			'feedback' => __( 'All Site Member already received Group Invitation.', 'buddyboss' ),
 			'type'     => 'info',
 		);
 
@@ -592,6 +592,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	}
 
 	if ( empty( $_POST['users'] ) ) {
+		$response['feedback'] = __( 'Please select members to send invitations for this group.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 

@@ -3473,6 +3473,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #group-invites-container .bb-groups-invites-left .bp-invites-dropdown-options-loader-hide,
+#group-invites-container .bb-groups-invites-right .bp-invites-submit-loader-hide,
 #group-invites-container .bb-groups-invites-left .group-invites-members-listing .last {
   display: none;
 }
@@ -3480,6 +3481,42 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback,
 .bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .bp-invites-feedback {
   display: none;
+}
+
+#bp-pending-invites-loader {
+  display: none;
+}
+
+#bp-pending-invites-loader {
+  position: relative;
+  text-align: center;
+}
+
+#bp-pending-invites-loader .dashicons-update:before {
+  content: '\e838';
+  font-family: 'bb-icons';
+  font-size: 20px;
+  display: block;
+  -webkit-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+
+#bp-invites-submit-loader {
+  margin-left: auto;
+  margin-right: 10px;
+  position: relative;
+  top: 10px;
+}
+
+#bp-invites-submit-loader .dashicons-update:before {
+  content: '\e838';
+  font-family: 'bb-icons';
+  font-size: 20px;
+  display: block;
+  -webkit-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
 }
 
 .group-invites-members-listing .bp-list li .item {
