@@ -19,7 +19,9 @@ function add_field () {
 	$select.addClass( 'new_field' );
 	var $option = jQuery( '<option>', {text: window.bp_ps_strings.field, value: 0} );
 	$option.appendTo( $select );
-	
+	/**
+	 * For fetch already selected value
+	 */
 	var $selectedvalue = [];
 	jQuery( '#field_box select.bp_ps_col2 :selected' ).each( function(){
 	    $selectedvalue.push( jQuery( this ).val() );
@@ -38,7 +40,9 @@ function add_field () {
 						options,
 						function (j, option) {
 							var $option = jQuery( '<option>', {text: option.name, value: option.id } );
-
+							/**
+							 * If dropdown value already selected then disable existing value
+							 */
 							if( jQuery.inArray( option.id, $selectedvalue ) !== -1 ){
 								$option.prop( 'disabled', true );
 							}else{
