@@ -1450,7 +1450,7 @@ function bp_group_layout_default_format( $default = 'grid' ) {
 /**
  * Are group messages disabled?
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.

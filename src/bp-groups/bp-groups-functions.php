@@ -3646,7 +3646,7 @@ function get_group_role_label( $group_id, $label_name ) {
 /**
  * Check whether a user is allowed to manage messages in a given group.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.

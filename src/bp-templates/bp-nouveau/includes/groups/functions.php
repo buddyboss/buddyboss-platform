@@ -1185,9 +1185,9 @@ function bp_nouveau_groups_notification_filters() {
 }
 
 /**
- * Localize the strings needed for the Group's Message UI
+ * Localize the strings needed for the Group's Message UI.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param array $params Associative array containing the JS Strings needed by scripts
  *
@@ -1232,7 +1232,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 /**
  * Enqueue the groups scripts
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  */
 function bp_nouveau_groups_messages_enqueue_scripts() {
 

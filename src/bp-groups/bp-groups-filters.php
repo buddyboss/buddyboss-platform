@@ -553,6 +553,15 @@ function bp_groups_filter_media_scope( $retval = array(), $filter = array() ) {
 	return $retval;
 }
 
+/**
+ * Add new message to a existing group thread when someone membership is accepted in group.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $user_id
+ * @param $group_id
+ * @param $accepted
+ */
 function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $accepted ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -616,6 +625,14 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 	}
 }
 
+/**
+ * Add new message to a existing group thread when someone join in group.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $group_id
+ * @param $user_id
+ */
 function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -679,6 +696,14 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 	}
 }
 
+/**
+ * Add new message to a existing group thread when someone remove from group.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $group_id
+ * @param $user_id
+ */
 function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -742,6 +767,17 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 	}
 }
 
+/**
+ * This function will get all the messages into the thread list because in thread it's fetching last 10
+ * messages and if in all  10 messages if there is no content then in thread it will showing blank to fix this
+ * we need maximum messages and if we find the text then will skip on thread loop.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $total
+ *
+ * @return int
+ */
 function bp_threads_messages_show_more_messages( $total )  {
 
 	$total = 99999;

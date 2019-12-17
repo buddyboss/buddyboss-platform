@@ -3953,7 +3953,7 @@ function bp_email_get_salutation( $settings = array() ) {
 /**
  * Is the current page a group's message page?
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @return bool True if the current page is a group's message page.
  */

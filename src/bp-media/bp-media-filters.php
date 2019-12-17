@@ -996,9 +996,9 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 }
 
 /**
- * Save group message meta
+ * Save group message meta.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param $message
  */
@@ -1067,9 +1067,9 @@ function bp_media_messages_save_group_data( &$message ) {
 }
 
 /**
- * Remove the mete if thread is deleted.
+ * Remove the meta if thread is deleted.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param $thread_id
  * @param $message_ids

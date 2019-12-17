@@ -7329,7 +7329,7 @@ function bp_groups_get_profile_stats( $args = '' ) {
  *
  * This function can be used either in or out of the loop.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param int|bool $group_id Optional. The ID of the group whose status you want to
  *                           check. Default: the displayed group, or the current group
@@ -7366,7 +7366,7 @@ function bp_group_get_message_status( $group_id = false ) {
 	 *
 	 * Message status in this case means who from the group can send messages.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.2.3
 	 *
 	 * @param string $message_status Membership level needed to manage messages.
 	 * @param int    $group_id      ID of the group whose status is being checked.
@@ -7377,7 +7377,7 @@ function bp_group_get_message_status( $group_id = false ) {
 /**
  * Output the 'checked' value, if needed, for a given message_status on the group create/admin screens
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.3
  *
  * @param string      $setting The setting you want to check against ('mods', or 'admins').
  * @param object|bool $group   Optional. Group object. Default: current group in loop.

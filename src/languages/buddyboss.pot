@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-17 17:49:53+00:00\n"
+"POT-Creation-Date: 2019-12-17 18:17:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -11897,11 +11897,11 @@ msgstr ""
 msgid "%s Group"
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:590 bp-groups/bp-groups-filters.php:653
+#: bp-groups/bp-groups-filters.php:599 bp-groups/bp-groups-filters.php:670
 msgid "Joined \"%s\" "
 msgstr ""
 
-#: bp-groups/bp-groups-filters.php:715
+#: bp-groups/bp-groups-filters.php:740
 msgid "Left \"%s\" "
 msgstr ""
 
@@ -14377,7 +14377,7 @@ msgid "Search Members&hellip;"
 msgstr ""
 
 #: bp-members/classes/class-bp-members-component.php:433
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:35
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:33
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-list.php:23
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:50
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:63
@@ -15346,18 +15346,18 @@ msgstr ""
 msgid "Looks like you haven't initiated a conversation with any other member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:30
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:28
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:45
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:50
 msgid ","
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:41
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:39
 msgid "Started"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:45
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:47
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:49
 msgid "Delete conversation"
 msgstr ""
 
@@ -17350,7 +17350,7 @@ msgstr ""
 msgid "New sitewide notice"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/functions.php:474
+#: bp-templates/bp-nouveau/includes/messages/functions.php:473
 msgid "New private messages"
 msgstr ""
 

@@ -1185,7 +1185,7 @@ function bp_group_directories_tutorial() {
 /**
  * Enable group messages field markup.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  */
 function bp_admin_setting_callback_group_messages() {
 	?>

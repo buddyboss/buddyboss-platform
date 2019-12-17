@@ -13,8 +13,6 @@
 	if (other_recipients.length == 0) {
 	include_you = true;
 	}
-
-
 	#>
 
 	<header class="single-message-thread-header">
