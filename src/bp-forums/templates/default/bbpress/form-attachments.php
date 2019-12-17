@@ -13,12 +13,12 @@
 <div id="whats-new-attachments">
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_media_support_enabled() ) : ?>
-		<div class="dropzone closed" id="forums-post-media-uploader"></div>
+		<div class="dropzone closed" id="forums-post-media-uploader" data-key="<?php echo esc_attr( wp_unique_id( 'forums_media_uploader_' ) ); ?>"></div>
 		<input name="bbp_media" id="bbp_media" type="hidden" value=""/>
 	<?php endif; ?>
 
 	<?php if ( bp_is_active( 'media' ) && bp_is_forums_gif_support_enabled() ) : ?>
-		<div class="forums-attached-gif-container closed">
+		<div class="forums-attached-gif-container closed" data-key="<?php echo esc_attr( wp_unique_id( 'forums_attached_gif_container_' ) ); ?>">
 			<div class="gif-image-container">
 				<img src="" alt="">
 			</div>
@@ -50,16 +50,14 @@
 					<span class="dashicons dashicons-smiley"></span>
 				</a>
 				<div class="gif-media-search-dropdown">
-					<div class="forums-attached-gif-container">
-						<div class="gif-search-content">
-							<div class="gif-search-query">
-								<input type="search" placeholder="<?php _e( 'Search GIFs', 'buddyboss' ); ?>" class="search-query-input" />
-								<span class="search-icon"></span>
-							</div>
-							<div class="gif-search-results" id="gif-search-results">
-								<ul class="gif-search-results-list" >
-								</ul>
-							</div>
+					<div class="gif-search-content">
+						<div class="gif-search-query">
+							<input type="search" placeholder="<?php _e( 'Search GIFs', 'buddyboss' ); ?>" class="search-query-input" />
+							<span class="search-icon"></span>
+						</div>
+						<div class="gif-search-results" id="gif-search-results">
+							<ul class="gif-search-results-list" >
+							</ul>
 						</div>
 					</div>
 				</div>

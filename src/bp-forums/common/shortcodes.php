@@ -72,7 +72,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 					'bbp-single-tag'   => array( $this, 'display_topics_of_tag' ), // Topics of Tag
 
 					/** Replies */
-					'bbp-reply-form'   => array( $this, 'display_reply_form'    ), // Reply form
+					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Reply form
 					'bbp-single-reply' => array( $this, 'display_reply' ), // Specific reply - pass an 'id' attribute
 
 					/** Views */

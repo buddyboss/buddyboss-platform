@@ -140,7 +140,7 @@ function bp_activity_find_mention_by_at_sign( $mentioned_users, $content ) {
 
 	return $mentioned_users;
 }
-add_filter('bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2);
+add_filter( 'bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2 );
 
 
 /**
@@ -5039,6 +5039,20 @@ function bp_activity_action_parse_url() {
 			if ( empty( $images ) ) {
 				$images = $parser->getImageSources( false );
 			}
+			if ( ! empty( $images ) ) {
+				$images_obj = [];
+
+				foreach ( $images as $key => $img ) {
+					if ( strpos( $url, 'youtube.com' ) > 0 ) {
+						$img = 'https://www.youtube.com' . $img;
+					}
+					if ( @fopen( $img, 'r' ) ) {
+						$images_obj[] = $img;
+					}
+				}
+				$images = $images_obj;
+			}
+
 			// Generate Image URL Previews
 			if ( empty( $images ) ) {
 				$content_type = wp_remote_retrieve_header( $body, 'content-type' );
