@@ -453,7 +453,9 @@ function bp_photo_uploading_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -461,7 +463,9 @@ function bp_photo_uploading_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -604,7 +608,9 @@ function bp_emoji_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -612,7 +618,9 @@ function bp_emoji_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -794,7 +802,9 @@ function bp_animated_gifs_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_get_admin_url(
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
@@ -802,7 +812,9 @@ function bp_animated_gifs_tutorial() {
 				),
 				'admin.php'
 			)
-		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php

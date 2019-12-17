@@ -3238,6 +3238,13 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	static $is_default_wpmail = null;
 	static $wp_html_emails    = null;
 
+	if ( function_exists( 'pmpro_wp_mail_content_type' ) ) {
+		/**
+		 * Removed Paid Memberships Pro plugin's filter.
+		 */
+		remove_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' );
+	}
+
 	// Has wp_mail() been filtered to send HTML emails?
 	if ( is_null( $wp_html_emails ) ) {
 		/** This filter is documented in wp-includes/pluggable.php */

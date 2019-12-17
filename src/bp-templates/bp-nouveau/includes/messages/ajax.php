@@ -988,7 +988,10 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	}
 
 	// Check capability.
-	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() ) {
+	if (
+		! is_user_logged_in()
+		// || ! bp_core_can_edit_settings()
+	) {
 		wp_send_json_error( $response );
 	}
 

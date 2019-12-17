@@ -1181,7 +1181,13 @@ function bp_private_network_template_redirect() {
 							$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 							if ( $actual_link !== wc_lostpassword_url() ) {
-								if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+								if (
+									'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
+									|| (
+										'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
+										&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+									)
+								) {
 
 									$redirect_url  = is_ssl() ? 'https://' : 'http://';
 									$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
@@ -1235,7 +1241,13 @@ function bp_private_network_template_redirect() {
 						$actual_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 						if ( $actual_link !== wc_lostpassword_url() ) {
-							if ( 'yes' !== get_option( 'woocommerce_enable_myaccount_registration' ) && $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) ) ) {
+							if (
+								'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
+								|| (
+									'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
+									&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+								)
+							) {
 
 								$redirect_url  = is_ssl() ? 'https://' : 'http://';
 								$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
