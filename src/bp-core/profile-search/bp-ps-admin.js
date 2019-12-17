@@ -19,7 +19,12 @@ function add_field () {
 	$select.addClass( 'new_field' );
 	var $option = jQuery( '<option>', {text: window.bp_ps_strings.field, value: 0} );
 	$option.appendTo( $select );
-
+	
+	var $selectedvalue = [];
+	jQuery( '#field_box select.bp_ps_col2 :selected' ).each( function(){
+	    $selectedvalue.push( jQuery( this ).val() );
+	});
+	
 	jQuery.each(
 		window.bp_ps_groups,
 		function (i, optgroups) {
@@ -32,7 +37,14 @@ function add_field () {
 					jQuery.each(
 						options,
 						function (j, option) {
-							var $option = jQuery( '<option>', {text: option.name, value: option.id} );
+							var $option = jQuery( '<option>', {text: option.name, value: option.id } );
+
+							if( jQuery.inArray( option.id, $selectedvalue ) !== -1 ){
+								$option.prop( 'disabled', true );
+							}else{
+								$option.prop( 'disabled', false );
+							}
+
 							$option.appendTo( $optgroup );
 						}
 					);
