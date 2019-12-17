@@ -589,7 +589,7 @@ function bp_nouveau_ajax_media_get_activity() {
 	remove_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 
 	ob_start();
-	if ( bp_has_activities( array( 'include' => $_POST['id'], 'show_hidden' => true ) ) ) {
+	if ( bp_has_activities( array( 'include' => $_POST['id'], 'show_hidden' => true, 'privacy' => array( 'media' ) ) ) ) {
 		while ( bp_activities() ) {
 			bp_the_activity();
 			bp_get_template_part( 'activity/entry' );
