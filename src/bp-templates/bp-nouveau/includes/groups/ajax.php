@@ -435,12 +435,16 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		?>
 		<li class="<?php  echo $user['id']; ?>">
 			<div class="item-avatar">
-				<img src="<?php echo $user['avatar']; ?>" class="avatar" alt="" />
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
+					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt="" />
+				</a>
 			</div>
 
 			<div class="item">
 				<div class="list-title member-name">
-					<?php echo $user['name']; ?>
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
+						<?php echo $user['name']; ?>
+					</a>
 				</div>
 
 				<?php if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] ) {  ?>
