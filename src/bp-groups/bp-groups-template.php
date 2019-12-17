@@ -4006,6 +4006,15 @@ function bp_get_group_join_button( $group = false ) {
 		return false;
 	}
 
+	// Don't Show the button if restrict invite is enabled and member is not a part of parent group.
+	$parent_group_id = bp_get_parent_group_id( $group->id );
+	if ( isset( $parent_group_id ) && $parent_group_id > 0 && true === bp_enable_group_hierarchies() && true === bp_enable_group_restrict_invites() ) {
+		$is_member = groups_is_user_member( bp_loggedin_user_id(), $parent_group_id );
+		if ( false === $is_member ) {
+			return false;
+		}
+	}
+
 	// Group creation was not completed or status is unknown.
 	if ( empty( $group->status ) ) {
 		return false;

@@ -804,8 +804,8 @@ window.bp = window.bp || {};
 								});
 							}
 						});
+				}
 			}
-		}
 	} );
 
 	bp.Views.WhatsNewPostIn = bp.View.extend( {
