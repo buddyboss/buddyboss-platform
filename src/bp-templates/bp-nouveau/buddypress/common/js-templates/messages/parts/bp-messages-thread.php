@@ -14,6 +14,12 @@
 	if (first_three.length == 0) {
 	include_you = true;
 	}
+
+	function html_entity_decode(str) {
+	var ta=document.createElement("textarea");
+	ta.innerHTML=str.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+	return ta.value;
+	}
 	#>
 
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
@@ -37,7 +43,7 @@
 			<div class="thread-to">
 
 				<# if ( data.group_name.length && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
-					<span class="user-name">{{data.group_name}}</span>
+					<span class="user-name">{{html_entity_decode(data.group_name)}}</span>
 				<# } else { #>
 
 					<# for ( i in first_three ) { #>

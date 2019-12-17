@@ -14,7 +14,11 @@
 	include_you = true;
 	}
 
-
+	function html_entity_decode(str) {
+	var ta=document.createElement("textarea");
+	ta.innerHTML=str.replace(/</g,"&lt;").replace(/>/g,"&gt;");
+	return ta.value;
+	}
 	#>
 
 	<header class="single-message-thread-header">
@@ -23,7 +27,7 @@
 		<dl class="thread-participants">
 			<dt>
 				<# if ( data.group_name.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
-				<span class="participants-name"><a href="{{data.group_link}}">{{data.group_name}}</a></span>
+				<span class="participants-name"><a href="{{data.group_link}}">{{html_entity_decode(data.group_name)}}</a></span>
 				<# } else { #>
 					<# for ( i in other_recipients ) { #>
 						<span class="participants-name">
