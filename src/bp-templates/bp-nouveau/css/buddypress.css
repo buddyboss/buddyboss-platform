@@ -3132,6 +3132,10 @@ body.buddypress.bp-user #page #primary .entry-header {
   flex: 0 0 360px;
 }
 
+.bb-groups-invites-left .bp-list li .item-avatar {
+  margin-right: 15px;
+}
+
 .bb-groups-invites-left .group-invites-search {
   padding: 20px;
 }
@@ -3372,9 +3376,10 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
   padding: 8px 20px;
 }
 
-#group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title {
-  color: #393e41;
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title,
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title a {
   font-size: 15px;
+  font-weight: 400;
   margin: 0 auto;
   width: 100%;
 }
