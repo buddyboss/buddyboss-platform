@@ -112,14 +112,7 @@
 							</span>
 					</p>
 
-					<?php bp_nouveau_groups_manage_members_buttons( array(
-						'container'         => 'div',
-						'container_classes' => array(
-							'members-manage-buttons',
-							'text-links-list',
-						),
-						'parent_element'    => '  ',
-					) ); ?>
+					<?php bp_nouveau_groups_manage_members_buttons( array( 'container'         => 'div', 'container_classes' => array( 'members-manage-buttons', 'text-links-list', ), 'parent_element'    => '  ', ) ); ?>
 
 				</li>
 
