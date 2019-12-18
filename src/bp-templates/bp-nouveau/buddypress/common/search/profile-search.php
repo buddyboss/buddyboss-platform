@@ -12,8 +12,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 	<h2 class="bps-form-title"><?php echo $F->title; ?></h2>
 
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>"
-	      class="bps-form standard-form">
+	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form standard-form">
 
 		<?php
 		if ( isset( $F->fields ) && ! empty( $F->fields ) && count( $F->fields ) > 1 ) {
@@ -33,8 +32,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 				}
 
 				if ( 'heading_contains' == $f->code ) { ?>
-					<div id="<?php echo $id; ?>_wrap"
-					     class="bp-field-wrap bp-heading-field-wrap bps-<?php echo $display; ?>">
+					<div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bp-heading-field-wrap bps-<?php echo $display; ?>">
 						<strong><?php echo $f->label; ?></strong><br>
 						<?php if ( ! empty( $f->description ) ) : ?>
 							<p class="bps-description"><?php echo stripslashes( $f->description ); ?></p>
@@ -50,11 +48,9 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 					<?php
 					switch ( $display ) {
 						case 'range': ?>
-							<input type="text" id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>"
-							       value="<?php echo $value['min']; ?>"/>
+							<input type="text" id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>" value="<?php echo $value['min']; ?>"/>
 							<span> - </span>
-							<input type="text" name="<?php echo $name . '[max]'; ?>"
-							       value="<?php echo $value['max']; ?>"/>
+							<input type="text" name="<?php echo $name . '[max]'; ?>" value="<?php echo $value['max']; ?>"/>
 							<?php
 							break;
 
@@ -65,8 +61,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								<?php
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['day'], 0, false ),
-									/* translators: no option picked in select box */
-									__( 'Select Day', 'buddyboss' ) );
+									/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
 
 								for ( $i = 1; $i < 32; ++ $i ) {
 									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
@@ -122,8 +117,14 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								$date_range_type = bp_xprofile_get_meta( $f->id, 'field', 'range_type', true );
 
 								if ( 'relative' === $date_range_type ) {
-									$range_relative_start = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_start', true );
-									$range_relative_end   = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_end', true );
+									$range_relative_start = bp_xprofile_get_meta( $f->id,
+										'field',
+										'range_relative_start',
+										true );
+									$range_relative_end   = bp_xprofile_get_meta( $f->id,
+										'field',
+										'range_relative_end',
+										true );
 
 									$start = date( 'Y' ) - abs( $range_relative_start );
 									$end   = date( 'Y' ) + $range_relative_end;
@@ -152,8 +153,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								<?php
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['day'], 0, false ),
-									/* translators: no option picked in select box */
-									__( 'Select Day', 'buddyboss' ) );
+									/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
 
 								for ( $i = 1; $i < 32; ++ $i ) {
 									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
@@ -216,14 +216,12 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 					break;
 
 					case 'textbox': ?>
-					<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>"
-					       value="<?php echo $value; ?>"/>
+					<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"/>
 					<?php
 					break;
 
 					case 'number': ?>
-					<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>"
-					       value="<?php echo $value; ?>"/>
+					<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"/>
 					<?php
 					break;
 
@@ -235,8 +233,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 					$icon_url    = plugins_url( 'bp-profile-search/templates/members/locator.png' );
 					$icon_title  = __( 'get current location', 'buddyboss' ); ?>
 
-					<input type="number" min="1" name="<?php echo $name . '[distance]'; ?>"
-					       value="<?php echo $value['distance']; ?>"/>
+					<input type="number" min="1" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>"/>
 
 						<select name="<?php echo $name . '[units]'; ?>">
 							<option value="km" <?php selected( $value['units'], "km" ); ?>><?php echo $km; ?></option>
@@ -246,22 +243,19 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						<span><?php echo $of; ?></span>
 
-					<input type="search" id="<?php echo $id; ?>" name="<?php echo $name . '[location]'; ?>"
-					       value="<?php echo $value['location']; ?>" placeholder="<?php echo $placeholder; ?>"/>
+					<input type="search" id="<?php echo $id; ?>" name="<?php echo $name . '[location]'; ?>" value="<?php echo $value['location']; ?>" placeholder="<?php echo $placeholder; ?>"/>
 					<img id="<?php echo $id; ?>_icon" src="<?php echo $icon_url; ?>" alt="<?php echo $icon_title; ?>"/>
 
-					<input type="hidden" id="<?php echo $id; ?>_lat" name="<?php echo $name . '[lat]'; ?>"
-					       value="<?php echo $value['lat']; ?>"/>
-					<input type="hidden" id="<?php echo $id; ?>_lng" name="<?php echo $name . '[lng]'; ?>"
-					       value="<?php echo $value['lng']; ?>"/>
+					<input type="hidden" id="<?php echo $id; ?>_lat" name="<?php echo $name . '[lat]'; ?>" value="<?php echo $value['lat']; ?>"/>
+					<input type="hidden" id="<?php echo $id; ?>_lng" name="<?php echo $name . '[lng]'; ?>" value="<?php echo $value['lng']; ?>"/>
 
 						<script>
-                            jQuery(function ($) {
-                                bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
-                                $('#<?php echo $id; ?>_icon').click(function () {
-                                    bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
-                                });
-                            });
+							jQuery(function ($) {
+								bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
+								$('#<?php echo $id; ?>_icon').click(function () {
+									bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
+								});
+							});
 						</script>                        <?php
 					break;
 
