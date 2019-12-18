@@ -377,9 +377,9 @@ class BP_Messages_Thread {
 		$messages = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-			SELECT * FROM {$bp->messages->table_name_messages}
-			WHERE thread_id = %d
-			ORDER BY date_sent DESC, id DESC
+			SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm
+			WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' )
+			ORDER BY m.date_sent DESC, m.id DESC
 			LIMIT 1
 		",
 				$thread_id

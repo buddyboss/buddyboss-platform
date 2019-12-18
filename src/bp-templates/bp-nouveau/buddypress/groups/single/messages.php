@@ -84,7 +84,7 @@ $group_members = groups_get_group_members( $args );
 				</div>
 			</div>
 
-			<?php if ( $group_members['count'] != 0 ) { ?>
+			<?php if ( 0 !== $group_members['count'] ) { ?>
 				<div class="bb-groups-messages-right-bottom">
 					<div id="bp-group-message-content">
 						<div id="group_message_content" name="group_message_content" tabindex="3"></div>

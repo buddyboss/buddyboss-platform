@@ -1461,7 +1461,7 @@ function bp_disable_group_messages( $default = false ) {
 	/**
 	 * Filters whether or not group organizer and moderator allowed to send group message.
 	 *
-	 * @since BuddyPress 2.4.0
+	 * @since BuddyBoss 1.2.3
 	 *
 	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
 	 */

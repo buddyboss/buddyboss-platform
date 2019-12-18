@@ -192,11 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( true === bp_disable_group_messages() ) {
-					$list_actions = array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups', 'messages' );
-				} else {
-					$list_actions = array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups' );
-				}
+				$list_actions = array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups', 'messages' );
 
 				if ( in_array( bp_current_action(), $list_actions, true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';

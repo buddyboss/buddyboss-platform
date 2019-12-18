@@ -56,7 +56,7 @@ function groups_screen_group_admin_settings() {
 		// Checked against a whitelist for security.
 		/** This filter is documented in bp-groups/bp-groups-admin.php */
 		$allowed_message_status = apply_filters( 'groups_allowed_message_status', array( 'mods', 'admins' ) );
-		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_album_status ) ? $_POST['group-message-status'] : 'mods';
+		$message_status         = isset( $_POST['group-message-status'] ) && in_array( $_POST['group-message-status'], (array) $allowed_message_status ) ? $_POST['group-message-status'] : 'mods';
 
 
 		// Check the nonce.

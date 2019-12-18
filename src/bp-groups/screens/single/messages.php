@@ -13,7 +13,7 @@
  */
 function groups_screen_group_messages() {
 
-	if ( ! bp_is_single_item() ) {
+	if ( ! bp_is_single_item() || ! bp_disable_group_messages() ) {
 		return false;
 	}
 

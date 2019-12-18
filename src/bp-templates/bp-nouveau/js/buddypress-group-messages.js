@@ -596,40 +596,7 @@ window.bp = window.bp || {};
 		addSelect2: function( $input ) {
 
 			var ArrayData = [];
-			$input.select2({
-				placeholder: $input.attr( 'placeholder' ),
-				minimumInputLength: 1,
-				ajax: {
-					url: bp.ajax.settings.url,
-					dataType: 'json',
-					delay: 250,
-					data: function(params) {
-						return $.extend( {}, params, {
-							nonce: BP_Nouveau.group_messages.nonces.retrieve_group_members,
-							action: 'groups_get_group_potential_user_send_messages',
-							group: BP_Nouveau.group_messages.group_id
-						});
-					},
-					cache: true,
-					processResults: function( data ) {
-
-						// Removed the element from results if already selected.
-						if ( false === jQuery.isEmptyObject( ArrayData ) ) {
-							$.each( ArrayData, function( index, value ) {
-								for(var i=0;i<data.data.results.length;i++){
-									if(data.data.results[i].id === value){
-										data.data.results.splice(i,1);
-									}
-								}
-							});
-						}
-
-						return {
-							results: data && data.success? data.data.results : []
-						};
-					}
-				}
-			});
+			$input.select2();
 
 			// Add element into the Arrdata array.
 			$input.on('select2:select', function(e) {

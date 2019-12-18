@@ -43,29 +43,23 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	if ( false === bp_disable_group_messages() ) {
-		return array_merge( $scripts, array(
-			'bp-nouveau-group-invites' => array(
-				'file'         => 'js/buddypress-group-invites%s.js',
-				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
-				'footer'       => true,
-			)
-		) );
-	} else {
-		return array_merge( $scripts, array(
-			'bp-nouveau-group-invites' => array(
-				'file'         => 'js/buddypress-group-invites%s.js',
-				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
-				'footer'       => true,
-			),
-			'bp-nouveau-group-messages' => array(
-				'file'         => 'js/buddypress-group-messages%s.js',
-				'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
-				'footer'       => true,
-			),
-		) );
+	$message_scripts = array();
+
+	$message_scripts['bp-nouveau-group-invites'] =  array(
+			'file'         => 'js/buddypress-group-invites%s.js',
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
+			'footer'       => true,
+		);
+
+	if ( true === bp_disable_group_messages() ) {
+		$message_scripts['bp-nouveau-group-messages'] = array(
+			'file'         => 'js/buddypress-group-messages%s.js',
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
+			'footer'       => true,
+		);
 	}
 
+	return array_merge( $scripts, $message_scripts );
 
 }
 

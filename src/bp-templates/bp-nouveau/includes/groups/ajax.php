@@ -19,9 +19,8 @@ add_action( 'admin_init', function() {
 		array( 'groups_reject_invite'                          => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
 		array( 'groups_request_membership'                     => array( 'function' => 'bp_nouveau_ajax_joinleave_group', 'nopriv' => false ) ),
 		array( 'groups_get_group_potential_invites'            => array( 'function' => 'bp_nouveau_ajax_get_users_to_invite', 'nopriv' => false ) ),
-		array( 'groups_get_group_potential_user_send_messages' => array( 'function' => 'bp_nouveau_ajax_group_get_users_to_send_message', 'nopriv' => false ) ),
 		array( 'groups_get_group_members_listing'              => array( 'function' => 'bp_nouveau_ajax_groups_get_group_members_listing', 'nopriv' => false ) ),
-		array( 'groups_get_group_members_send_message'         => array( 'function' => 'bp_nouveau_ajax_groups_get_group_members_send_message', 'nopriv' => false ) ),
+		array( 'groups_get_group_members_send_message'         => array( 'function' => 'bp_nouveau_ajax_groups_send_message', 'nopriv' => false ) ),
 		array( 'groups_send_group_invites'                     => array( 'function' => 'bp_nouveau_ajax_send_group_invites', 'nopriv' => false ) ),
 		array( 'groups_delete_group_invite'                    => array( 'function' => 'bp_nouveau_ajax_remove_group_invite', 'nopriv' => false ) ),
 	);
@@ -579,73 +578,6 @@ function bp_nouveau_ajax_remove_group_invite() {
 }
 
 /**
- * Send Group Messages to group members.
- *
- * @since BuddyBoss 1.2.3
- */
-function bp_nouveau_ajax_group_get_users_to_send_message() {
-
-	if ( false === bp_disable_group_messages() ) {
-		return;
-	}
-
-	if ( empty( $_GET['action'] ) ) {
-		wp_send_json_error();
-	}
-
-	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
-		'type'     => 'error',
-	);
-
-	if ( false === bp_is_active( 'messages' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	if ( empty( $_GET['nonce'] ) || ! wp_verify_nonce( $_GET['nonce'], 'retrieve_group_members' ) ) {
-		wp_send_json_error( $response );
-	}
-
-	$args          = array(
-		'per_page'     => 99999999999,
-		'group_id'     => $_GET['group'],
-		'search_terms' => $_GET['term'],
-	);
-	$group_members = groups_get_group_members( $args );
-
-	$result = array();
-
-	if ( empty( $group_members['members'] ) ) {
-		wp_send_json_success( [
-			'results' => array_map( function ( $result ) {
-				return [
-					'id'   => "@{$result->ID}",
-					'text' => $result->name,
-				];
-			},
-				$result ),
-		] );
-	} else {
-		foreach ( $group_members['members'] as $member ) {
-			$result[] = (object) array(
-				'id'   => $member->ID,
-				'name' => bp_core_get_user_displayname( $member->ID ),
-			);
-		}
-		$results = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message', $result );
-		wp_send_json_success( [
-			'results' => array_map( function ( $result ) {
-				return [
-					'id'   => "@{$result->ID}",
-					'text' => $result->name,
-				];
-			},
-				$results ),
-		] );
-	}
-}
-
-/**
  * Retrieve the possible members list to send group message.
  *
  * @since BuddyBoss 1.2.3
@@ -777,11 +709,11 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 		}
 
-		$html        = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_html', $html );
-		$total_page  = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_total_page', $total_page );
-		$page        = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_page', $page );
-		$paginate    = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_paginate', $paginate );
-		$total_count = apply_filters( 'bp_nouveau_ajax_group_get_users_to_send_message_total', $group_members['count'] );
+		$html        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_html', $html );
+		$total_page  = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total_page', $total_page );
+		$page        = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_page', $page );
+		$paginate    = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_paginate', $paginate );
+		$total_count = apply_filters( 'bp_nouveau_ajax_groups_get_group_members_listing_total', $group_members['count'] );
 
 		wp_send_json_success( [
 			'results'     => $html,
@@ -799,7 +731,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
  *
  * @since BuddyBoss 1.2.3
  */
-function bp_nouveau_ajax_groups_get_group_members_send_message() {
+function bp_nouveau_ajax_groups_send_message() {
 
 	if ( false === bp_disable_group_messages() ) {
 		return;
