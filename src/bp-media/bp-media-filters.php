@@ -27,7 +27,9 @@ add_action( 'bp_activity_after_save', 'bp_media_activity_save_gif_data',        
 // Forums
 add_action( 'bbp_template_after_single_topic', 'bp_media_add_theatre_template' );
 add_action( 'bbp_new_reply', 'bp_media_forums_new_post_media_save', 999 );
+add_action( 'bbp_new_reply', 'bp_media_forums_new_post_document_save', 999 );
 add_action( 'bbp_new_topic', 'bp_media_forums_new_post_media_save', 999 );
+add_action( 'bbp_new_topic', 'bp_media_forums_new_post_document_save', 999 );
 add_action( 'edit_post', 'bp_media_forums_new_post_media_save', 999 );
 add_action( 'bbp_new_reply', 'bp_media_forums_save_gif_data', 999 );
 add_action( 'bbp_new_topic', 'bp_media_forums_save_gif_data', 999 );
@@ -404,6 +406,101 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 		// save media meta for activity
 		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
 			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+		}
+
+		// delete medias which were not saved or removed from form
+		if ( ! empty( $existing_media_ids ) ) {
+            foreach ( $existing_media_ids as $media_id ) {
+                bp_media_delete( array( 'id' => $media_id ) );
+            }
+		}
+	}
+}
+
+/**
+ * Save document when new topic or reply is saved
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $post_id
+ */
+function bp_media_forums_new_post_document_save( $post_id ) {
+
+	if ( ! empty( $_POST['bbp_document'] ) ) {
+
+		// save activity id if it is saved in forums and enabled in platform settings
+		$main_activity_id = get_post_meta( $post_id, '_bbp_activity_id', true );
+
+		// save media
+		$medias = json_decode( stripslashes( $_POST['bbp_document'] ), true );
+
+		// fetch currently uploaded media ids
+		$existing_media                = array();
+		$existing_media_ids            = get_post_meta( $post_id, 'bp_media_ids', true );
+		$existing_media_attachment_ids = array();
+		if ( ! empty( $existing_media_ids ) ) {
+			$existing_media_ids = explode( ',', $existing_media_ids );
+
+			foreach ( $existing_media_ids as $existing_media_id ) {
+				$existing_media[ $existing_media_id ] = new BP_Media( $existing_media_id );
+
+				if ( ! empty( $existing_media[ $existing_media_id ]->attachment_id ) ) {
+					$existing_media_attachment_ids[] = $existing_media[ $existing_media_id ]->attachment_id;
+				}
+			}
+		}
+
+		$media_ids = array();
+		foreach ( $medias as $media ) {
+
+			$title             = ! empty( $media['name'] ) ? $media['name'] : '';
+			$attachment_id     = ! empty( $media['id'] ) ? $media['id'] : 0;
+			$attached_media_id = ! empty( $media['media_id'] ) ? $media['media_id'] : 0;
+			$album_id          = ! empty( $media['album_id'] ) ? $media['album_id'] : 0;
+			$group_id          = ! empty( $media['group_id'] ) ? $media['group_id'] : 0;
+			$menu_order        = ! empty( $media['menu_order'] ) ? $media['menu_order'] : 0;
+
+			if ( ! empty( $existing_media_attachment_ids ) ) {
+				$index = array_search( $attachment_id, $existing_media_attachment_ids );
+				if ( ! empty( $attachment_id ) && $index !== false && ! empty( $existing_media[ $attached_media_id ] ) ) {
+
+					$existing_media[ $attached_media_id ]->menu_order = $menu_order;
+					$existing_media[ $attached_media_id ]->save();
+
+					unset( $existing_media_ids[ $index ] );
+					$media_ids[] = $attached_media_id;
+					continue;
+				}
+			}
+
+			$media_id = bp_media_add(
+				array(
+					'attachment_id' => $attachment_id,
+					'title'         => $title,
+					'type'          => 'document',
+					'album_id'      => $album_id,
+					'group_id'      => $group_id,
+					'error_type'    => 'wp_error',
+				)
+			);
+
+			if ( ! is_wp_error( $media_id ) ) {
+				$media_ids[] = $media_id;
+
+				// save media is saved in attachment
+				update_post_meta( $attachment_id, 'bp_media_saved', true );
+			}
+		}
+
+		$media_ids = implode( ',', $media_ids );
+
+		// Save all attachment ids in forums post meta
+		update_post_meta( $post_id, 'bp_media_ids', $media_ids );
+		update_post_meta( $post_id, 'bp_media_type', 'document' );
+
+		// save media meta for activity
+		if ( ! empty( $main_activity_id ) && bp_is_active( 'activity' ) ) {
+			bp_activity_update_meta( $main_activity_id, 'bp_media_ids', $media_ids );
+			bp_activity_update_meta( $main_activity_id, 'bp_media_type', 'document' );
 		}
 
 		// delete medias which were not saved or removed from form

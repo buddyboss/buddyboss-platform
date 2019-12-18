@@ -1626,13 +1626,6 @@ window.bp = window.bp || {};
 
 		},
 
-		addMediaIdsToForumsForm: function() {
-			var self = this;
-			if( $('#bbp_media').length ) {
-				$('#bbp_media').val(JSON.stringify(self.dropzone_media));
-			}
-		},
-
 		/**
 		 * [injectQuery description]
 		 * @param  {[type]} event [description]
