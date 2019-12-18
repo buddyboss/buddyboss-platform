@@ -31,6 +31,32 @@ $total = bbp_get_topic_reply_count( $topic_id ) ?>
 					<?php bbp_topic_freshness_link( $topic_id ) ?>
 				</span>
 			</div>
+			<?php
+			$discussion_tags = get_the_terms( $topic_id, bbpress()->topic_tag_tax_id );
+
+			if ( ! empty( $discussion_tags ) ) {
+				?>
+				<div class="item-tags">
+					<span class="item-tag-cap">
+						<?php
+						esc_html_e( 'Tags:' );
+						?>
+					</span>
+					<?php
+					foreach ( $discussion_tags as $key => $discussion_tag ) {
+						?>
+						<span class="discussion-tag">
+							<?php
+							echo esc_html( $discussion_tag->name );
+							?>
+						</span>
+						<?php
+					}
+					?>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 	</div>
 </li>

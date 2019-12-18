@@ -19,6 +19,32 @@
             	//@todo remove %d?
 				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total ); ?>
 			</div>
+			<?php
+			$discussion_tags = get_the_terms( $topic_id, bbpress()->topic_tag_tax_id );
+
+			if ( ! empty( $discussion_tags ) ) {
+				?>
+				<div class="item-tags">
+					<span class="item-tag-cap">
+						<?php
+						esc_html_e( 'Tags:' );
+						?>
+					</span>
+					<?php
+					foreach ( $discussion_tags as $key => $discussion_tag ) {
+						?>
+						<span class="discussion-tag">
+							<?php
+							echo esc_html( $discussion_tag->name );
+							?>
+						</span>
+						<?php
+					}
+					?>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 	</a>
 </div>
