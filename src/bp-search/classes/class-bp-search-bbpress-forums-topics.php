@@ -33,13 +33,10 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$from = "{$wpdb->posts} p LEFT JOIN {$wpdb->postmeta} pm ON pm.post_id = p.ID AND pm.meta_key = '_bbp_forum_id'";
 
-			$tax        = array();
-			$taxonomies = get_object_taxonomies( $this->type );
+			$tax = array();
 
-			foreach ( $taxonomies as $taxonomy ) {
-				if ( bp_is_search_post_type_taxonomy_enable( $taxonomy, $this->type ) ) {
-					$tax[] = $taxonomy;
-				}
+			if ( bp_is_search_post_type_taxonomy_enable( 'topic-tag', $this->type ) ) {
+				$tax[] = 'topic-tag';
 			}
 
 			$where_clause = ' WHERE ';
@@ -64,7 +61,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 				$query_placeholder[] = '%' . $search_term . '%';
 				$query_placeholder[] = '%' . $search_term . '%';
-				$where_clause             = ' OR ';
+				$where_clause        = ' OR ';
 			}
 
 			$group_memberships = '';
