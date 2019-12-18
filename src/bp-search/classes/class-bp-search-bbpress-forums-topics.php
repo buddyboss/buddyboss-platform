@@ -35,8 +35,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$tax = array();
 
-			if ( bp_is_search_post_type_taxonomy_enable( 'topic-tag', $this->type ) ) {
-				$tax[] = 'topic-tag';
+			if ( bp_is_search_post_type_taxonomy_enable( bbpress()->topic_tag_tax_id, $this->type ) ) {
+				$tax[] = bbpress()->topic_tag_tax_id;
 			}
 
 			$where_clause = ' WHERE ';
