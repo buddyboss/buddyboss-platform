@@ -9,6 +9,10 @@ add_action( 'delete_attachment',                                     'bp_media_d
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
+
+/**
+ * Action for add media theatre template for single activity page
+ */
 add_action( 'bp_after_activity_entry', 'bp_media_add_theatre_template_single_activity' );
 add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
@@ -55,7 +59,7 @@ function bp_media_add_theatre_template() {
 }
 
 /**
- * Add media theatre template for activity pages
+ * Add media theatre template for single activity page
  */
 function bp_media_add_theatre_template_single_activity() {
 	if (bp_is_single_activity()) {
