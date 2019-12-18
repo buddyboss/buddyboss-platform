@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-16 14:34:37+00:00\n"
+"POT-Creation-Date: 2019-12-18 08:41:33+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10090,31 +10090,36 @@ msgstr ""
 msgid "Email (will not be published) (required):"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:39
+#: bp-forums/templates/default/bbpress/form-attachments.php:44
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:43
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:6
 msgid "Attach a photo"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:49
+#: bp-forums/templates/default/bbpress/form-attachments.php:54
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:50
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:15
 msgid "Post a GIF"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:55
+#: bp-forums/templates/default/bbpress/form-attachments.php:60
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 msgid "Search GIFs"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:69
+#: bp-forums/templates/default/bbpress/form-attachments.php:74
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:55
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:18
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:24
 msgid "Insert an emoji"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-attachments.php:80
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
+msgid "Attach a document"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:31
@@ -10610,56 +10615,56 @@ msgstr ""
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:442
-#: bp-forums/templates/default/bbpress-functions.php:455
+#: bp-forums/templates/default/bbpress-functions.php:530
+#: bp-forums/templates/default/bbpress-functions.php:543
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:484
-#: bp-forums/templates/default/bbpress-functions.php:620
+#: bp-forums/templates/default/bbpress-functions.php:572
+#: bp-forums/templates/default/bbpress-functions.php:708
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:489
+#: bp-forums/templates/default/bbpress-functions.php:577
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:498
-#: bp-forums/templates/default/bbpress-functions.php:566
-#: bp-forums/templates/default/bbpress-functions.php:634
+#: bp-forums/templates/default/bbpress-functions.php:586
+#: bp-forums/templates/default/bbpress-functions.php:654
+#: bp-forums/templates/default/bbpress-functions.php:722
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:506
+#: bp-forums/templates/default/bbpress-functions.php:594
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:511
-#: bp-forums/templates/default/bbpress-functions.php:579
-#: bp-forums/templates/default/bbpress-functions.php:647
+#: bp-forums/templates/default/bbpress-functions.php:599
+#: bp-forums/templates/default/bbpress-functions.php:667
+#: bp-forums/templates/default/bbpress-functions.php:735
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:519
-#: bp-forums/templates/default/bbpress-functions.php:587
-#: bp-forums/templates/default/bbpress-functions.php:655
+#: bp-forums/templates/default/bbpress-functions.php:607
+#: bp-forums/templates/default/bbpress-functions.php:675
+#: bp-forums/templates/default/bbpress-functions.php:743
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:552
+#: bp-forums/templates/default/bbpress-functions.php:640
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:557
+#: bp-forums/templates/default/bbpress-functions.php:645
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:574
-#: bp-forums/templates/default/bbpress-functions.php:642
+#: bp-forums/templates/default/bbpress-functions.php:662
+#: bp-forums/templates/default/bbpress-functions.php:730
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:625
+#: bp-forums/templates/default/bbpress-functions.php:713
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -15282,10 +15287,6 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-target-item.php:14
 msgid "Remove item"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
-msgid "Attach a document"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/index.php:16

@@ -272,30 +272,60 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_topic_edit() ) {
 					$params['bbp_is_topic_edit'] = true;
 
-					$media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
-					if ( ! empty( $media_ids ) && bp_has_media(
-						array(
-							'include'  => $media_ids,
-							'order_by' => 'menu_order',
-							'sort'     => 'ASC',
-						)
-					) ) {
-						$params['topic_edit_media'] = array();
-						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+					$media_ids  = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
+					$media_type = get_post_meta( bbp_get_topic_id(), 'bp_media_type', true );
 
-							$params['topic_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
-								'menu_order'    => $index,
-							);
-							$index ++;
+					if ( 'document' === $media_type ) {
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'type'     => 'document',
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['topic_edit_document'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['topic_edit_document'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									//'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									//'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					} else {
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['topic_edit_media'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['topic_edit_media'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
 						}
 					}
+
 
 					$gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
 
@@ -315,28 +345,57 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_reply_edit() ) {
 					$params['bbp_is_reply_edit'] = true;
 
-					$media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
-					if ( ! empty( $media_ids ) && bp_has_media(
-						array(
-							'include'  => $media_ids,
-							'order_by' => 'menu_order',
-							'sort'     => 'ASC',
-						)
-					) ) {
-						$params['reply_edit_media'] = array();
-						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+					$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
+					$media_type = get_post_meta( bbp_get_reply_id(), 'bp_media_type', true );
 
-							$params['reply_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
-								'menu_order'    => $index,
-							);
-							$index ++;
+					if ( 'document' === $media_type ) {
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'type'     => 'document',
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['reply_edit_document'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['reply_edit_document'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									//'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									//'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					} else {
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['reply_edit_media'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['reply_edit_media'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
 						}
 					}
 
@@ -358,28 +417,57 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_forum_edit() ) {
 					$params['bbp_is_forum_edit'] = true;
 
-					$media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
-					if ( ! empty( $media_ids ) && bp_has_media(
-						array(
-							'include'  => $media_ids,
-							'order_by' => 'menu_order',
-							'sort'     => 'ASC',
-						)
-					) ) {
-						$params['forum_edit_media'] = array();
-						$index                      = 0;
-						while ( bp_media() ) {
-							bp_the_media();
+					$media_ids  = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+					$media_type = get_post_meta( bbp_get_forum_id(), 'bp_media_type', true );
 
-							$params['forum_edit_media'][] = array(
-								'id'            => bp_get_media_id(),
-								'attachment_id' => bp_get_media_attachment_id(),
-								'name'          => bp_get_media_title(),
-								'thumb'         => bp_get_media_attachment_image_thumbnail(),
-								'url'           => bp_get_media_attachment_image(),
-								'menu_order'    => $index,
-							);
-							$index ++;
+					if ( 'document' === $media_type ) {
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'type'     => 'document',
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['forum_edit_document'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['forum_edit_document'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									//'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									//'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
+						}
+					}  else {
+						if ( ! empty( $media_ids ) && bp_has_media(
+								array(
+									'include'  => $media_ids,
+									'order_by' => 'menu_order',
+									'sort'     => 'ASC',
+								)
+							) ) {
+							$params['forum_edit_media'] = array();
+							$index                      = 0;
+							while ( bp_media() ) {
+								bp_the_media();
+
+								$params['forum_edit_media'][] = array(
+									'id'            => bp_get_media_id(),
+									'attachment_id' => bp_get_media_attachment_id(),
+									'name'          => bp_get_media_title(),
+									'thumb'         => bp_get_media_attachment_image_thumbnail(),
+									'url'           => bp_get_media_attachment_image(),
+									'menu_order'    => $index,
+								);
+								$index ++;
+							}
 						}
 					}
 
