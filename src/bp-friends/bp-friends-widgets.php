@@ -60,33 +60,19 @@ function bp_core_ajax_widget_friends() {
 			break;
 	}
 	
-	$id     = bp_displayed_user_id();
+	$user_id     = bp_displayed_user_id();
 	
-	global $bp;
-	
-	if ( ! $id ) {
+	if ( ! $user_id ) {
 		
 		// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
-		$id     = bp_loggedin_user_id();
+		$user_id     = bp_loggedin_user_id();
 		
-		// If $id still blank then return.
-		if ( ! $id ) {
-			return;
-		}
-
-		// Set the global $bp->displayed_user variables.
-		$bp->displayed_user->id       = $id;
-		$bp->displayed_user->userdata = bp_core_get_core_userdata( $id );
-		$bp->displayed_user->fullname = isset( $bp->displayed_user->userdata->display_name ) ? $bp->displayed_user->userdata->display_name : '';
-		$bp->displayed_user->domain   = bp_core_get_user_domain( $id );
 	}
 	
-	// If $id still blank then return.
-	if ( ! $id ) {
+	// If $user_id still blank then return.
+	if ( ! $user_id ) {
 		return;
 	}
-
-	$user_id = bp_displayed_user_id();
 
 	$members_args = array(
 		'user_id'         => absint( $user_id ),
