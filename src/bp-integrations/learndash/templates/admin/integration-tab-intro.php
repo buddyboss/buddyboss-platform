@@ -1,7 +1,11 @@
 <div class="wrap">
 	
 	<div class="bp-admin-card section-bp_ld-integration">
-		<h2><?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
+		<?php if( ! bp_is_active( 'groups' ) )  : ?>
+			<h2><?php _e( 'Social Group <span>&mdash; BuddyBoss component requires to activate.</span>', 'buddyboss' ); ?></h2>
+		<?php else: ?>
+			<h2><?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
+		<?php endif; ?>
 		<p>
 		<?php
 			printf(
