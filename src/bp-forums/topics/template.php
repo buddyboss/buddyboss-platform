@@ -1468,52 +1468,52 @@ function bbp_get_topic_author_avatar( $topic_id = 0, $size = 40 ) {
 function bbp_topic_author_link( $args = '' ) {
 	echo bbp_get_topic_author_link( $args );
 }
-
-/**
- * Return the author link of the topic
- *
- * @since bbPress (r2717)
- *
- * @param mixed|int $args If it is an integer, it is used as topic id.
- *                         Optional.
- * @uses bbp_get_topic_id() To get the topic id
- * @uses bbp_get_topic_author_display_name() To get the topic author
- * @uses bbp_is_topic_anonymous() To check if the topic is by an
- *                                 anonymous user
- * @uses bbp_get_topic_author_url() To get the topic author url
- * @uses bbp_get_topic_author_avatar() To get the topic author avatar
- * @uses bbp_get_topic_author_display_name() To get the topic author display
- *                                      name
- * @uses bbp_get_user_display_role() To get the topic author display role
- * @uses bbp_get_topic_author_id() To get the topic author id
- * @uses apply_filters() Calls 'bbp_get_topic_author_link' with the link
- *                        and args
- * @return string Author link of topic
- */
+	/**
+	 * Return the author link of the topic
+	 *
+	 * @since bbPress (r2717)
+	 *
+	 * @param mixed|int $args If it is an integer, it is used as topic id.
+	 *                         Optional.
+	 * @uses bbp_get_topic_id() To get the topic id
+	 * @uses bbp_get_topic_author_display_name() To get the topic author
+	 * @uses bbp_is_topic_anonymous() To check if the topic is by an
+	 *                                 anonymous user
+	 * @uses bbp_get_topic_author_url() To get the topic author url
+	 * @uses bbp_get_topic_author_avatar() To get the topic author avatar
+	 * @uses bbp_get_topic_author_display_name() To get the topic author display
+	 *                                      name
+	 * @uses bbp_get_user_display_role() To get the topic author display role
+	 * @uses bbp_get_topic_author_id() To get the topic author id
+	 * @uses apply_filters() Calls 'bbp_get_topic_author_link' with the link
+	 *                        and args
+	 * @return string Author link of topic
+	 */
 function bbp_get_topic_author_link( $args = '' ) {
 
 	// Parse arguments against default values
 	$r = bbp_parse_args(
-        $args,
-        array(
-            'post_id'    => 0,
-            'link_title' => '',
-            'type'       => 'both',
-            'size'       => 80,
-            'sep'        => '&nbsp;',
-            'show_role'  => false,
-        ),
-        'get_topic_author_link'
-    );
-
-
+		$args,
+		array(
+			'post_id'    => 0,
+			'link_title' => '',
+			'type'       => 'both',
+			'size'       => 80,
+			'sep'        => '&nbsp;',
+			'show_role'  => false,
+		),
+		'get_topic_author_link'
+	);
+	
 	// Default return value
 	$author_link = '';
 
 	// Used as topic_id
-	$topic_id = is_numeric( $args )
-		? bbp_get_topic_id( $args )
-		: bbp_get_topic_id( $r['post_id'] );
+	if ( is_numeric( $args ) ) {
+		$topic_id = bbp_get_topic_id( $args );
+	} else {
+		$topic_id = bbp_get_topic_id( $r['post_id'] );
+	}
 
 	// Topic ID is good
 	if ( ! empty( $topic_id ) ) {
@@ -1524,34 +1524,27 @@ function bbp_get_topic_author_link( $args = '' ) {
 
 		// Tweak link title if empty
 		if ( empty( $r['link_title'] ) ) {
-			$author = bbp_get_topic_author_display_name( $topic_id );
-			$title  = empty( $anonymous )
-				? esc_attr__( "View %s's profile",  'buddyboss' )
-				: esc_attr__( "Visit %s's website", 'buddyboss' );
+			$link_title = sprintf( empty( $anonymous ) ? __( 'View %s\'s profile', 'buddyboss' ) : __( 'Visit %s\'s website', 'buddyboss' ), bbp_get_topic_author_display_name( $topic_id ) );
 
-			$link_title = sprintf( $title, $author );
-
-		// Use what was passed if not
+			// Use what was passed if not
 		} else {
 			$link_title = $r['link_title'];
 		}
 
 		// Setup title and author_links array
+		$link_title   = ! empty( $link_title ) ? ' title="' . esc_attr( $link_title ) . '"' : '';
 		$author_links = array();
-		$link_title   = ! empty( $link_title )
-			? ' title="' . esc_attr( $link_title ) . '"'
-			: '';
 
-		// Get avatar (unescaped, because HTML)
-		if ( ( 'avatar' === $r['type'] ) || ( 'both' === $r['type'] ) ) {
+		// Get avatar
+		if ( 'avatar' === $r['type'] || 'both' === $r['type'] ) {
 			$author_links['avatar'] = bbp_get_topic_author_avatar( $topic_id, $r['size'] );
 		}
 
-		// Get display name (escaped, because never HTML)
-		if ( ( 'name' === $r['type'] ) || ( 'both' === $r['type'] ) ) {
-			$author_links['name'] = esc_html( bbp_get_topic_author_display_name( $topic_id ) );
+		// Get display name
+		if ( 'name' === $r['type'] || 'both' === $r['type'] ) {
+			$author_links['name'] = bbp_get_topic_author_display_name( $topic_id );
 		}
-
+		
 		// Empty array
 		$links  = array();
 		$sprint = '<span %1$s>%2$s</span>';
@@ -1567,12 +1560,12 @@ function bbp_get_topic_author_link( $args = '' ) {
 		unset( $links );
 
 		// Filter sections if avatar size is 1 or type is name else assign the author links array itself. Added condition not to show verified badges on avatar.
-		if ( 1 == $r['size'] || 'name' === $r['type'] ) {
-			$sections   = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
-		} else {
-			$sections   = $author_links;
-		}
-		
+        if ( 1 == $r['size'] || 'name' === $r['type'] ) {
+            $sections   = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
+        } else {
+            $sections   = $author_links;
+        }
+
 		// Assemble sections into author link
 		$author_link = implode( $r['sep'], $sections );
 
@@ -1588,7 +1581,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 	}
 
 	// Filter & return
-	return apply_filters( 'bbp_get_topic_author_link', $author_link, $r, $args );
+	return apply_filters( 'bbp_get_topic_author_link', $author_link, $args );
 }
 
 /**
