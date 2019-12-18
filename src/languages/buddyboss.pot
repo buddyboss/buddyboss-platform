@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-18 08:41:33+00:00\n"
+"POT-Creation-Date: 2019-12-18 08:43:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1408,7 +1408,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:6
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-filters.php:10
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:15
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:299
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:317
 #: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:20
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:26
 msgid "Search"
@@ -6821,27 +6821,27 @@ msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:129
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-activity-link-preview.php:21
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:211
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:229
 msgid "of"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:130
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:212
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:230
 msgid "km"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:131
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:213
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:231
 msgid "miles"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:132
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:214
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:232
 msgid "Start typing, then select a location"
 msgstr ""
 
 #: bp-core/profile-search/templates/members/bps-form-default.php:134
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:216
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:234
 msgid "get current location"
 msgstr ""
 
@@ -11233,7 +11233,7 @@ msgid_plural "%s connections"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-friends/bp-friends-widgets.php:96 bp-members/bp-members-widgets.php:131
+#: bp-friends/bp-friends-widgets.php:110 bp-members/bp-members-widgets.php:131
 msgid "There were no members found, please try another filter."
 msgstr ""
 
@@ -15404,93 +15404,93 @@ msgstr ""
 msgid "From"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:65
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:138
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:64
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:156
 #. translators: no option picked in select box
 msgid "Select Day"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:80
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:79
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:249
 msgid "January"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:81
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:80
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:250
 msgid "February"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:82
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:81
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:251
 msgid "March"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:83
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:82
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:252
 msgid "April"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:84
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:83
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:253
 msgid "May"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:85
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:84
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:254
 msgid "June"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:86
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:85
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:255
 msgid "July"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:87
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:86
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:256
 msgid "August"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:88
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:87
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:257
 msgid "September"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:89
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:88
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:258
 msgid "October"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:90
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:89
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:259
 msgid "November"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:91
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:90
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:260
 msgid "December"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:97
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:155
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:96
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:173
 #. translators: no option picked in select box
 msgid "Select Month"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:115
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:173
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:191
 #. translators: no option picked in select box
 msgid "Select Year"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:130
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:149
 msgid "To"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:297
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:315
 msgid "Reset"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:306
+#: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:324
 msgid "Please add fields to search members."
 msgstr ""
 

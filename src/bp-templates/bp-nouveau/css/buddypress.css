@@ -2735,6 +2735,11 @@ body.register .registration-popup .mfp-close:hover {
   margin: 5px 10px 10px 0;
 }
 
+.single-headers .group-description ul {
+  list-style: initial;
+  list-style-position: inside;
+}
+
 .single-headers .member-header-actions > .generic-button {
   display: inline-block;
   text-align: center;
