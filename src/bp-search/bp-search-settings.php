@@ -162,6 +162,17 @@ function bp_search_get_settings_fields() {
 			),
 		);
 
+		$fields['bp_search_settings_community']['bp_search_topic_tax_topic-tag'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_post_type_taxonomy',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'post_type' => 'topic',
+				'taxonomy'  =>'topic-tag',
+				'class'     => 'bp-search-child-field',
+			),
+		);
+
 		$fields['bp_search_settings_community']['bp_search_post_type_reply'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_post_type',
