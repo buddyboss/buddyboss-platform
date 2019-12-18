@@ -387,7 +387,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	}
 
 	// Simulate the loop.
-	add_filter( 'bp_messages_default_per_page', 'bp_threads_messages_show_more_messages' );
 	if ( ! bp_has_message_threads( bp_ajax_querystring( 'messages' ) ) ) {
 		// Remove the bp_current_action() override.
 		$bp->current_action = $reset_action;
@@ -397,7 +396,6 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'type'     => 'info'
 		) );
 	}
-	remove_filter( 'bp_messages_default_per_page', 'bp_threads_messages_show_more_messages' );
 
 	// remove the message thread filter.
 	if ( 'starred' === $bp->current_action ) {

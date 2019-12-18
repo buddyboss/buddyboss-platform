@@ -367,22 +367,3 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 		}
 	}
 }
-
-/**
- * This function will get all the messages into the thread list because in thread it's fetching last 10
- * messages and if in all  10 messages if there is no content then in thread it will showing blank to fix this
- * we need maximum messages and if we find the text then will skip on thread loop.
- *
- * @since BuddyBoss 1.2.3
- *
- * @param $total
- *
- * @return int
- */
-function bp_threads_messages_show_more_messages( $total )  {
-
-	$total = 99999;
-
-	return $total;
-}
-
