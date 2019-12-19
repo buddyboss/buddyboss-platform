@@ -533,8 +533,8 @@ function bp_nouveau_ajax_post_update() {
 	}
 
 	$privacy = 'public';
-	if ( ! empty( $_POST['bp-activity-privacy'] ) && in_array( $_POST['bp-activity-privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ) ) ) {
-		$privacy = $_POST['bp-activity-privacy'];
+	if ( ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'onlyme', 'loggedin', 'friends' ) ) ) {
+		$privacy = $_POST['privacy'];
 	}
 
 	if ( 'user' === $object && bp_is_active( 'activity' ) ) {
