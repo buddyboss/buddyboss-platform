@@ -10,15 +10,20 @@ bp_nouveau_before_loop();
 	if ( bp_is_user() ) {
 		if ( bp_has_media( bp_ajax_querystring( 'media' ) . '&album=' . true . '&user_directory=' . true ) ) :
 			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				<table id="media-folder-document-data-table" class="display" cellspacing="0" width="100%">
+				<!-- <table id="media-folder-document-data-table" class="display" cellspacing="0" width="100%">
 				<thead>
 				<tr>
-					<th colspan="2"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
-					<th><?php esc_html_e( 'Modified', 'buddyboss' ); ?></th>
-					<th><?php esc_html_e( 'Actions', 'buddyboss' ); ?></th>
+					<th colspan="2"><?php //esc_html_e( 'Name', 'buddyboss' ); ?></th>
+					<th><?php //esc_html_e( 'Modified', 'buddyboss' ); ?></th>
+					<th><?php //esc_html_e( 'Actions', 'buddyboss' ); ?></th>
 				</tr>
 				</thead>
-				<tbody>
+				<tbody> -->
+
+				<div id="media-folder-document-data-table">
+
+				
+
 			<?php
 			endif;
 
@@ -30,17 +35,16 @@ bp_nouveau_before_loop();
 			endwhile;
 
 			if ( bp_media_has_more_items() ) : ?>
-				<tr class="pager">
-					<td colspan="4" class="dt-more-container load-more">
+				<div class="pager">
+					<div class="dt-more-container load-more">
 						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-					</td>
-				</tr>
+					</div>
+				</div>
 			<?php
 			endif;
 
 			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				</tbody>
-				</table>
+				</div> <!-- #media-folder-document-data-table -->
 			<?php
 			endif;
 
@@ -56,16 +60,18 @@ bp_nouveau_before_loop();
 	} else {
 		if ( bp_has_media( bp_ajax_querystring( 'media' ) . '&album=' . true . '&user_directory=' . true ) ) :
 			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				<table id="media-folder-document-data-table" class="display" cellspacing="0" width="100%">
+				<!-- <table id="media-folder-document-data-table" class="display" cellspacing="0" width="100%">
 				<thead>
 				<tr>
-					<th colspan="2"><?php esc_html_e( 'Name', 'buddyboss' ); ?></th>
-					<th><?php esc_html_e( 'Modified', 'buddyboss' ); ?></th>
-					<th><?php esc_html_e( 'Uploaded by', 'buddyboss' ); ?></th>
-					<th><?php esc_html_e( 'Actions', 'buddyboss' ); ?></th>
+					<th colspan="2"><?php //esc_html_e( 'Name', 'buddyboss' ); ?></th>
+					<th><?php //esc_html_e( 'Modified', 'buddyboss' ); ?></th>
+					<th><?php //esc_html_e( 'Uploaded by', 'buddyboss' ); ?></th>
+					<th><?php //esc_html_e( 'Actions', 'buddyboss' ); ?></th>
 				</tr>
 				</thead>
-				<tbody>
+				<tbody> -->
+
+				<div id="media-folder-document-data-table">
 			<?php
 			endif;
 
@@ -77,17 +83,16 @@ bp_nouveau_before_loop();
 			endwhile;
 
 			if ( bp_media_has_more_items() ) : ?>
-				<tr class="pager">
-					<td colspan="5" class="dt-more-container load-more">
+				<div class="pager">
+					<div class="dt-more-container load-more">
 						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
-					</td>
-				</tr>
+					</div>
+				</div>
 			<?php
 			endif;
 
 			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				</tbody>
-				</table>
+				</div> <!-- #media-folder-document-data-table -->
 			<?php
 			endif;
 

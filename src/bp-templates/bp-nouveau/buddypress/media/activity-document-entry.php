@@ -19,12 +19,14 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 
 <div class="bb-activity-media-elem document-activity">
 
-	<div class="description">
+	<div class="document-description-wrap">
 		<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>">
 			<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon ); ?>" class="" alt="<?php bp_media_title(); ?>" />
 		</a>
-		<span class="document-title"><?php echo $filename; ?></span>
-		<span class="document-description"><?php echo $size; ?></span>
+		<div class="document-detail-wrap">
+			<span class="document-title"><?php echo $filename; ?></span>
+			<span class="document-description"><?php echo $size; ?></span>
+		</div>
 	</div>
 	<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>">
 		<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon_download ); ?>" class="" alt="<?php bp_media_title(); ?>" />

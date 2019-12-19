@@ -16,12 +16,22 @@ if ( isset( $attachment_id) ) {
 }
 
 ?>
-<tr>
-	<td class="svg-document-icon"><a href="<?php echo esc_url( $link ); ?>"><img src="<?php echo esc_url( $svg_icon ); ?>" /></a></td>
-	<td><a href="<?php echo esc_url( $link ); ?>"><?php bp_media_name(); ?></a></td>
-	<td><?php bp_media_date_created(); ?></td>
-	<?php if ( ! bp_is_user() ) { ?>
-	<td><?php bp_media_author(); ?></td>
-	<?php } ?>
-	<td>:</td>
-</tr>
+<div class="media-folder_items">
+	<div class="media-folder_icon">
+		<a href="<?php echo esc_url( $link ); ?>"><img src="<?php echo esc_url( $svg_icon ); ?>" /></a>
+	</div>
+	<div class="media-folder_details">
+		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>"><?php bp_media_name(); ?></a>
+			<div  class="media-folder_details__bottom">
+				<span class="media-folder_date"><?php bp_media_date_created(); ?></span>
+				<?php if ( ! bp_is_user() ) { ?>
+					<span class="media-folder_author"><?php bp_media_author(); ?></td>
+				<?php } ?>
+			</div>
+	</div>	
+	<div class="media-folder_actions">
+		<a href="#" class="media-folder_action__anchor">
+			<i class="bb-icon-menu-dots-v"></i>
+		</a>
+	</div>
+</div>
