@@ -62,7 +62,7 @@ function bp_media_add_theatre_template() {
  * Add media theatre template for single activity page
  */
 function bp_media_add_theatre_template_single_activity() {
-	if (bp_is_single_activity()) {
+	if ( bp_is_single_activity() ) {
 		bp_get_template_part( 'media/theatre' );
 	}
 }
