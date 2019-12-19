@@ -245,7 +245,7 @@
 		.activity-inner {
 
 			p {
-				word-wrap: break-word;
+				word-break: break-word;
 			}
 		}
 
@@ -323,6 +323,10 @@
 
 			.delete-activity:before {
 				content: "\f153";
+			}
+
+			.spam-activity:before {
+				content: "\f227";
 			}
 
 			.delete-activity:hover {
@@ -588,4 +592,21 @@
 .activity-inner .buddyboss-media-photo-link,
 .acomment-content .buddyboss-media-photo-link {
 	display: none !important;
+}
+@keyframes lazyAmination{
+    0%{
+        background-position: 100% 0
+    }
+    100%{
+        background-position: -300% 0
+    }
+}
+.activity-inner iframe.lazy{
+	animation-duration: 1.3s;
+    animation-fill-mode: forwards;
+    animation-iteration-count: infinite;
+    animation-name: lazyAmination;
+    animation-timing-function: linear;
+    background: #f6f7f8;
+    background-size: 800px 104px;
 }

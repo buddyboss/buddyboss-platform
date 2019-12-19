@@ -12,8 +12,9 @@
  * @since BuddyPress 1.2.0
  */
 function bp_activity_screen_groups() {
-	if ( !bp_is_active( 'groups' ) )
+	if ( ! bp_is_active( 'groups' ) ) {
 		return false;
+	}
 
 	bp_update_is_item_admin( bp_current_user_can( 'bp_moderate' ), 'activity' );
 

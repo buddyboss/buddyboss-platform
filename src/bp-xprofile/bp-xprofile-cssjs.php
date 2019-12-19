@@ -15,7 +15,7 @@ defined( 'ABSPATH' ) || exit;
  * @since BuddyPress 1.1.0
  */
 function xprofile_add_admin_css() {
-	if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {
+	if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {
 		$min = bp_core_get_minified_asset_suffix();
 
 		wp_enqueue_style( 'xprofile-admin-css', buddypress()->plugin_url . "bp-xprofile/admin/css/admin{$min}.css", array(), bp_get_version() );
@@ -36,13 +36,13 @@ add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_css' );
  * Removed autolink strings as autolink functionality is no longer used.
  */
 function xprofile_add_admin_js() {
-	if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {
-		wp_enqueue_script( 'jquery-ui-core'      );
-		wp_enqueue_script( 'jquery-ui-tabs'      );
-		wp_enqueue_script( 'jquery-ui-mouse'     );
+	if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-setup' ) !== false ) {
+		wp_enqueue_script( 'jquery-ui-core' );
+		wp_enqueue_script( 'jquery-ui-tabs' );
+		wp_enqueue_script( 'jquery-ui-mouse' );
 		wp_enqueue_script( 'jquery-ui-draggable' );
 		wp_enqueue_script( 'jquery-ui-droppable' );
-		wp_enqueue_script( 'jquery-ui-sortable'  );
+		wp_enqueue_script( 'jquery-ui-sortable' );
 
 		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script( 'xprofile-admin-js', buddypress()->plugin_url . "bp-xprofile/admin/js/admin{$min}.js", array( 'jquery', 'jquery-ui-sortable' ), bp_get_version() );
@@ -52,12 +52,12 @@ function xprofile_add_admin_js() {
 		// types that support options, for use in showing/hiding the
 		// "please enter options for this field" section.
 		$strings = array(
-			'do_settings_section_field_types'          => array(),
-			'social_networks_provider'                 => array(),
-			'social_networks_provider_value'           => array(),
-			'social_networks_duplicate_value_message'  => __( 'You have already selected this option previously.','buddyboss' ),
-			'confirm_delete_field_group'               => __( 'Are you sure you want to delete this field set and all of its included fields?','buddyboss' ),
-			'social_networks_provider_count'           => 0,
+			'do_settings_section_field_types'         => array(),
+			'social_networks_provider'                => array(),
+			'social_networks_provider_value'          => array(),
+			'social_networks_duplicate_value_message' => __( 'You have already selected this option previously.', 'buddyboss' ),
+			'confirm_delete_field_group'              => __( 'Are you sure you want to delete this field set and all of its included fields?', 'buddyboss' ),
+			'social_networks_provider_count'          => 0,
 		);
 
 		foreach ( bp_xprofile_get_field_types() as $field_type => $field_type_class ) {
@@ -67,7 +67,7 @@ function xprofile_add_admin_js() {
 			}
 		}
 
-		$providers = social_network_provider();
+		$providers                                 = bp_xprofile_social_network_provider();
 		$strings['social_networks_provider_count'] = count( $providers );
 		foreach ( $providers as $provider ) {
 			$strings['social_networks_provider'][]       = $provider->name;
@@ -81,10 +81,10 @@ function xprofile_add_admin_js() {
 
 		wp_localize_script( 'xprofile-admin-js', 'XProfileAdmin', $strings );
 	}
-    
-    if ( !empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-edit' ) !== false ) {
-        $min = bp_core_get_minified_asset_suffix();
+
+	if ( ! empty( $_GET['page'] ) && strpos( $_GET['page'], 'bp-profile-edit' ) !== false ) {
+		$min = bp_core_get_minified_asset_suffix();
 		wp_enqueue_script( 'jquery-mask', buddypress()->plugin_url . "bp-core/js/vendor/jquery.mask{$min}.js", array( 'jquery' ), '1.14.15' );
-    }
+	}
 }
 add_action( 'bp_admin_enqueue_scripts', 'xprofile_add_admin_js', 1 );

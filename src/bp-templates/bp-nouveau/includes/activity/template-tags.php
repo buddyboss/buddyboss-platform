@@ -224,13 +224,19 @@ function bp_nouveau_activity_state() {
 	$comment_count   = bp_activity_get_comment_count();
 	$favorited_users = bp_activity_get_favorite_users_tooltip_string( $activity_id );
 	?>
-	<div class="activity-state <?php echo $like_text ? 'has-likes' : '' ?> <?php echo $comment_count ? 'has-comments' : '' ?>">
+	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
         <a href="javascript:void(0);" class="activity-state-likes">
-            <span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users; ?>"><?php echo $like_text ?: '' ?></span>
+            <span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users; ?>"><?php echo $like_text ?: ''; ?></span>
         </a>
         <span class="ac-state-separator">&middot;</span>
 		<a href="#" class="activity-state-comments">
-			<span class="comments-count"><?php echo $comment_count ? sprintf( _n( '%d Comment', '%d Comments', $comment_count, 'buddyboss' ), $comment_count ) : '' ?></span>
+			<span class="comments-count">
+                <?php if ( $comment_count > 1 ) {
+                    echo $comment_count . ' ' . __( 'Comments', 'buddyboss' );
+                } else {
+	                echo $comment_count . ' ' . __( 'Comment', 'buddyboss' );
+                } ?>
+            </span>
 		</a>
 	</div>
 	<?php
@@ -532,12 +538,13 @@ function bp_nouveau_activity_entry_buttons( $args = array() ) {
 				'button_attr'       => array(
 					'class'           => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 					'id'              => 'activity_make_spam_' . $activity_id,
-					'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
+					//'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
 					'data-bp-tooltip-pos' => 'up',
 					),
 				'link_text'  => sprintf(
 					/** @todo: use a specific css rule for this *************************************************************/
-					'<span class="dashicons dashicons-flag" style="color:#a00;vertical-align:baseline;width:18px;height:18px" aria-hidden="true"></span><span class="bp-screen-reader-text">%s</span>',
+					'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
+					esc_html__( 'Spam', 'buddyboss' ),
 					esc_html__( 'Spam', 'buddyboss' )
 				),
 			);

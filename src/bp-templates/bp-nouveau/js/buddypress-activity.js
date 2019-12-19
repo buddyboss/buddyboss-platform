@@ -86,7 +86,9 @@ window.bp = window.bp || {};
 		 */
 		addListeners: function() {
 			// HeartBeat listeners
-			$( '#buddypress' ).on( 'bp_heartbeat_send', this.heartbeatSend.bind( this ) );
+			if ( !$( 'body' ).hasClass( 'activity-singular' ) ) {
+				$('#buddypress').on('bp_heartbeat_send', this.heartbeatSend.bind(this));
+			}
 			$( '#buddypress' ).on( 'bp_heartbeat_tick', this.heartbeatTick.bind( this ) );
 
 			// Inject Activities
@@ -276,7 +278,7 @@ window.bp = window.bp || {};
 				} );
 
 				// Now the stream is cleaned, prepend newest
-				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
+				$( event.delegateTarget ).find( '.activity-list' ).prepend( this.heartbeat_data.newest ).find( 'li.activity-item' ).each( bp.Nouveau.hideSingleUrl ).trigger( 'bp_heartbeat_prepend', this.heartbeat_data );
 
 				// Reset the newest activities now they're displayed
 				this.heartbeat_data.newest = '';
@@ -346,6 +348,9 @@ window.bp = window.bp || {};
 
 						// Update the current page
 						self.current_page = next_page;
+
+						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+						jQuery(window).scroll();
 					}
 				} );
 			}
@@ -699,6 +704,12 @@ window.bp = window.bp || {};
 					action : 'get_single_activity_content',
 					id     : item_id
 				}, 'activity' ).done( function( response ) {
+
+					//check for JSON output
+					if ( typeof response !== 'object' && target.closest( 'div' ).find( '.bb-activity-media-wrap' ).length > 0 ) {
+						response = JSON.parse(response);
+					}
+
 					$( readMore ).removeClass( 'loading' );
 
 					if ( content.parent().find( '.bp-feedback' ).length ) {
@@ -709,7 +720,10 @@ window.bp = window.bp || {};
 						content.after( response.data.feedback );
 						content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 					} else {
-						$( content ).slideUp( 300 ).html( response.data.contents ).slideDown( 300 );
+						$( content ).html( response.data.contents ).slideDown( 300 );
+
+						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+						jQuery(window).scroll();
 					}
 				} );
 			}
@@ -780,7 +794,6 @@ window.bp = window.bp || {};
 				}
 
 				form.slideDown( 200 );
-				$('#ac-form-'+activity_id).show();
 
 				// change the aria state from false to true
 				target.attr( 'aria-expanded', 'true' );
@@ -790,7 +803,7 @@ window.bp = window.bp || {};
 					easing:'swing'
 				} );
 
-				$( '#ac-form-' + activity_id + ' textarea' ).focus();
+				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
 				if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea( {
@@ -906,6 +919,8 @@ window.bp = window.bp || {};
 							activity_comments.parent().addClass( 'has-comments' );
 							activity_comments.parent().addClass( 'comments-loaded' );
 							activity_state.addClass( 'has-comments' );
+							//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
+							jQuery(window).scroll();
 						} );
 
 						// why, as it's already done a few lines ahead ???
@@ -1048,8 +1063,8 @@ window.bp = window.bp || {};
 							file.id = response.id;
 							response.data.uuid = file.upload.uuid;
 							response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
-							response.data.album_id = self.album_id;
-							response.data.group_id = self.group_id;
+							response.data.album_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.album_id !== 'undefined' ? BP_Nouveau.media.album_id : false;
+							response.data.group_id = typeof BP_Nouveau.media !== 'undefined' && typeof BP_Nouveau.media.group_id !== 'undefined' ? BP_Nouveau.media.group_id : false;
 							response.data.saved    = false;
 							self.dropzone_media.push( response.data );
 						}

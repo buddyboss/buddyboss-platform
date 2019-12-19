@@ -24,7 +24,7 @@ final class BP_Notification_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Notification_Export();
-			$instance->setup( "bp_notification", __( "Notifications", 'buddyboss' ) );
+			$instance->setup( 'bp_notification', __( 'Notifications', 'buddyboss' ) );
 		}
 
 		return $instance;
@@ -51,10 +51,10 @@ final class BP_Notification_Export extends BP_Export {
 
 		$data_items = $this->get_data( $user, $page );
 
-		foreach ( $data_items["items"] as $item ) {
+		foreach ( $data_items['items'] as $item ) {
 
-			$group_id    = "bp_notifications";
-			$group_label = __( "Notifications", 'buddyboss' );
+			$group_id    = 'bp_notifications';
+			$group_label = __( 'Notifications', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 
 			$notification = bp_notifications_get_notification( $item->id );
@@ -143,13 +143,14 @@ final class BP_Notification_Export extends BP_Export {
 	 */
 	function get_data( $user, $page ) {
 		global $wpdb;
+		global $bp;
 
 		$wpdb->show_errors( false );
 
-		$table              = "{$wpdb->prefix}bp_notifications item";
-		$query_select       = "item.*";
-		$query_select_count = "COUNT(item.id)";
-		$query_where        = "item.user_id=%d";
+		$table              = bp_core_get_table_prefix() . 'bp_notifications item';
+		$query_select       = 'item.*';
+		$query_select_count = 'COUNT(item.id)';
+		$query_where        = 'item.user_id=%d';
 
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
@@ -184,21 +185,25 @@ final class BP_Notification_Export extends BP_Export {
 
 		// Callback function exists.
 		if ( isset( $bp->{$notification->component_name}->notification_callback ) && is_callable( $bp->{$notification->component_name}->notification_callback ) ) {
-			$description = call_user_func( $bp->{$notification->component_name}->notification_callback,
+			$description = call_user_func(
+				$bp->{$notification->component_name}->notification_callback,
 				$notification->component_action,
 				$notification->item_id,
 				$notification->secondary_item_id,
 				1,
 				'string',
-				$notification->id );
+				$notification->id
+			);
 
 			// @deprecated format_notification_function - 1.5
 		} elseif ( isset( $bp->{$notification->component_name}->format_notification_function ) && function_exists( $bp->{$notification->component_name}->format_notification_function ) ) {
-			$description = call_user_func( $bp->{$notification->component_name}->format_notification_function,
+			$description = call_user_func(
+				$bp->{$notification->component_name}->format_notification_function,
 				$notification->component_action,
 				$notification->item_id,
 				$notification->secondary_item_id,
-				1 );
+				1
+			);
 
 			// Allow non BuddyPress components to hook in.
 		} else {

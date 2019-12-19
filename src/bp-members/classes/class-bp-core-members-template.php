@@ -134,18 +134,36 @@ class BP_Core_Members_Template {
 
 		$this->pag_arg  = sanitize_key( $page_arg );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $page_number );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $per_page    );
+		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $per_page );
 		$this->type     = $type;
 
-		if ( !empty( $_REQUEST['letter'] ) )
+		if ( ! empty( $_REQUEST['letter'] ) ) {
 			$this->members = BP_Core_User::get_users_by_letter( $_REQUEST['letter'], $this->pag_num, $this->pag_page, $populate_extras, $exclude );
-		else
-			$this->members = bp_core_get_users( array( 'type' => $this->type, 'per_page' => $this->pag_num, 'page' => $this->pag_page, 'user_id' => $user_id, 'include' => $include, 'search_terms' => $search_terms, 'populate_extras' => $populate_extras, 'exclude' => $exclude, 'meta_key' => $meta_key, 'meta_value' => $meta_value, 'member_type' => $member_type, 'member_type__in' => $member_type__in, 'member_type__not_in' => $member_type__not_in ) );
+		} else {
+			$this->members = bp_core_get_users(
+				array(
+					'type'                => $this->type,
+					'per_page'            => $this->pag_num,
+					'page'                => $this->pag_page,
+					'user_id'             => $user_id,
+					'include'             => $include,
+					'search_terms'        => $search_terms,
+					'populate_extras'     => $populate_extras,
+					'exclude'             => $exclude,
+					'meta_key'            => $meta_key,
+					'meta_value'          => $meta_value,
+					'member_type'         => $member_type,
+					'member_type__in'     => $member_type__in,
+					'member_type__not_in' => $member_type__not_in,
+				)
+			);
+		}
 
-		if ( !$max || $max >= (int) $this->members['total'] )
+		if ( ! $max || $max >= (int) $this->members['total'] ) {
 			$this->total_member_count = (int) $this->members['total'];
-		else
+		} else {
 			$this->total_member_count = (int) $max;
+		}
 
 		$this->members = $this->members['users'];
 
@@ -178,20 +196,22 @@ class BP_Core_Members_Template {
 			$add_args = array();
 
 			if ( ! empty( $search_terms ) ) {
-				$query_arg = bp_core_get_component_search_query_arg( 'members' );
+				$query_arg              = bp_core_get_component_search_query_arg( 'members' );
 				$add_args[ $query_arg ] = urlencode( $search_terms );
 			}
 
-			$this->pag_links = paginate_links( array(
-				'base'      => add_query_arg( $pag_args, $base ),
-				'format'    => '',
-				'total'     => ceil( (int) $this->total_member_count / (int) $this->pag_num ),
-				'current'   => (int) $this->pag_page,
-				'prev_text' => __( '&larr;', 'buddyboss' ),
-				'next_text' => __( '&rarr;', 'buddyboss' ),
-				'mid_size'  => 1,
-				'add_args'  => $add_args,
-			) );
+			$this->pag_links = paginate_links(
+				array(
+					'base'      => add_query_arg( $pag_args, $base ),
+					'format'    => '',
+					'total'     => ceil( (int) $this->total_member_count / (int) $this->pag_num ),
+					'current'   => (int) $this->pag_page,
+					'prev_text' => __( '&larr;', 'buddyboss' ),
+					'next_text' => __( '&rarr;', 'buddyboss' ),
+					'mid_size'  => 1,
+					'add_args'  => $add_args,
+				)
+			);
 		}
 	}
 
@@ -205,8 +225,9 @@ class BP_Core_Members_Template {
 	 * @return bool True if there are items in the loop, otherwise false.
 	 */
 	function has_members() {
-		if ( $this->member_count )
+		if ( $this->member_count ) {
 			return true;
+		}
 
 		return false;
 	}
@@ -220,7 +241,7 @@ class BP_Core_Members_Template {
 	 */
 	function next_member() {
 		$this->current_member++;
-		$this->member = $this->members[$this->current_member];
+		$this->member = $this->members[ $this->current_member ];
 
 		return $this->member;
 	}
@@ -260,7 +281,7 @@ class BP_Core_Members_Template {
 			 *
 			 * @since BuddyPress 1.5.0
 			 */
-			do_action('member_loop_end');
+			do_action( 'member_loop_end' );
 			// Do some cleaning up after the loop.
 			$this->rewind_members();
 		}

@@ -21,51 +21,84 @@ defined( 'ABSPATH' ) || exit;
  * @return array Associative array of allowed tags and attributes
  */
 function bbp_kses_allowed_tags() {
-	return apply_filters( 'bbp_kses_allowed_tags', array(
+	return apply_filters(
+		'bbp_kses_allowed_tags',
+		array(
 
-		//Paragraph
-		'p' => array(),
+			// Paragraph
+			'p'          => array(
+				'class' => array(),
+				'id'    => array(),
+				'style' => array(),
+			),
 
-		// Links
-		'a' => array(
-			'href'     => array(),
-			'title'    => array(),
-			'rel'      => array(),
-			'target'   => array()
-		),
+			'abbr'       => array( 'title' => true ),
 
-		// Quotes
-		'blockquote'   => array(
-			'cite'     => array()
-		),
+			'acronym'    => array( 'title' => true ),
 
-		// Code
-		'code'         => array(),
-		'pre'          => array(),
+			// Bold
+			'b'          => array(),
 
-		// Formatting
-		'em'           => array(),
-		'strong'       => array(),
-		'del'          => array(
-			'datetime' => true,
-		),
+			// Underline
+			'u'          => array(),
 
-		// Lists
-		'ul'           => array(),
-		'ol'           => array(
-			'start'    => true,
-		),
-		'li'           => array(),
+			// Italic
+			'i'          => array(),
 
-		// Images
-		'img'          => array(
-			'src'      => true,
-			'border'   => true,
-			'alt'      => true,
-			'height'   => true,
-			'width'    => true,
+			// Br
+			'br'         => array(),
+
+			// Links
+			'a'          => array(
+				'href'   => array(),
+				'title'  => array(),
+				'rel'    => array(),
+				'class'  => array(),
+				'id'     => array(),
+				'target' => array(),
+			),
+
+			// Span
+			'span'       => array(
+				'class' => array(),
+				'id'    => array(),
+			),
+
+			// Quotes
+			'blockquote' => array(
+				'cite' => array(),
+			),
+
+			// Code
+			'code'       => array(),
+			'pre'        => array(),
+
+			// Formatting
+			'em'         => array(),
+			'strong'     => array(),
+			'del'        => array(
+				'datetime' => true,
+			),
+
+			// Lists
+			'ul'         => array(),
+			'ol'         => array(
+				'start' => true,
+			),
+			'li'         => array(),
+
+			// Images
+			'img'        => array(
+				'src'             => true,
+				'border'          => true,
+				'alt'             => true,
+				'height'          => true,
+				'width'           => true,
+				'class'           => true,
+				'data-emoji-char' => true,
+			),
 		)
-	) );
+	);
 }
 
 /**
@@ -89,7 +122,7 @@ function bbp_filter_kses( $data = '' ) {
  * @return string Filtered content
  */
 function bbp_kses_data( $data = '' ) {
-	return wp_kses( $data , bbp_kses_allowed_tags() );
+	return wp_kses( $data, bbp_kses_allowed_tags() );
 }
 
 /** Formatting ****************************************************************/
@@ -104,7 +137,7 @@ function bbp_kses_data( $data = '' ) {
  */
 function bbp_code_trick( $content = '' ) {
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
-	$content = preg_replace_callback( "|(`)(.*?)`|",      'bbp_encode_callback', $content );
+	$content = preg_replace_callback( '|(`)(.*?)`|', 'bbp_encode_callback', $content );
 	$content = preg_replace_callback( "!(^|\n)`(.*?)`!s", 'bbp_encode_callback', $content );
 
 	return $content;
@@ -123,14 +156,14 @@ function bbp_code_trick_reverse( $content = '' ) {
 
 	// Setup variables
 	$openers = array( '<p>', '<br />' );
-	$content = preg_replace_callback( "!(<pre><code>|<code>)(.*?)(</code></pre>|</code>)!s", 'bbp_decode_callback', $content );
+	$content = preg_replace_callback( '!(<pre><code>|<code>)(.*?)(</code></pre>|</code>)!s', 'bbp_decode_callback', $content );
 
 	// Do the do
-	$content = str_replace( $openers,       '',       $content );
-	$content = str_replace( '</p>',         "\n",     $content );
+	$content = str_replace( $openers, '', $content );
+	$content = str_replace( '</p>', "\n", $content );
 	$content = str_replace( '<coded_br />', '<br />', $content );
-	$content = str_replace( '<coded_p>',    '<p>',    $content );
-	$content = str_replace( '</coded_p>',   '</p>',   $content );
+	$content = str_replace( '<coded_p>', '<p>', $content );
+	$content = str_replace( '</coded_p>', '</p>', $content );
 
 	return $content;
 }
@@ -157,7 +190,7 @@ function bbp_encode_bad( $content = '' ) {
 		'param' => true,
 		'area'  => true,
 		'col'   => true,
-		'embed' => true
+		'embed' => true,
 	);
 
 	// Loop through allowed tags and compare for empty and normal tags
@@ -165,8 +198,8 @@ function bbp_encode_bad( $content = '' ) {
 		$preg = $args ? "{$tag}(?:\s.*?)?" : $tag;
 
 		// Which walker to use based on the tag and arguments
-		if ( isset( $empty[$tag] ) ) {
-			array_walk( $content, 'bbp_encode_empty_callback',  $preg );
+		if ( isset( $empty[ $tag ] ) ) {
+			array_walk( $content, 'bbp_encode_empty_callback', $preg );
 		} else {
 			array_walk( $content, 'bbp_encode_normal_callback', $preg );
 		}
@@ -189,7 +222,7 @@ function bbp_encode_bad( $content = '' ) {
 function bbp_encode_callback( $matches = array() ) {
 
 	// Trim inline code, not pre blocks (to prevent removing indentation)
-	if ( "`" === $matches[1] ) {
+	if ( '`' === $matches[1] ) {
 		$content = trim( $matches[2] );
 	} else {
 		$content = $matches[2];
@@ -200,14 +233,14 @@ function bbp_encode_callback( $matches = array() ) {
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
 	$content = preg_replace( "|\n\n\n+|", "\n\n", $content );
 	$content = str_replace( '&amp;amp;', '&amp;', $content );
-	$content = str_replace( '&amp;lt;',  '&lt;',  $content );
-	$content = str_replace( '&amp;gt;',  '&gt;',  $content );
+	$content = str_replace( '&amp;lt;', '&lt;', $content );
+	$content = str_replace( '&amp;gt;', '&gt;', $content );
 
 	// Wrap in code tags
 	$content = '<code>' . $content . '</code>';
 
 	// Wrap blocks in pre tags
-	if ( "`" !== $matches[1] ) {
+	if ( '`' !== $matches[1] ) {
 		$content = "\n<pre>" . $content . "</pre>\n";
 	}
 
@@ -227,17 +260,17 @@ function bbp_decode_callback( $matches = array() ) {
 
 	// Setup variables
 	$trans_table = array_flip( get_html_translation_table( HTML_ENTITIES ) );
-	$amps        = array( '&#38;','&#038;', '&amp;' );
-	$single      = array( '&#39;','&#039;'          );
+	$amps        = array( '&#38;', '&#038;', '&amp;' );
+	$single      = array( '&#39;', '&#039;' );
 	$content     = $matches[2];
 	$content     = strtr( $content, $trans_table );
 
 	// Do the do
 	$content = str_replace( '<br />', '<coded_br />', $content );
-	$content = str_replace( '<p>',    '<coded_p>',    $content );
-	$content = str_replace( '</p>',   '</coded_p>',   $content );
-	$content = str_replace( $amps,    '&',            $content );
-	$content = str_replace( $single,  "'",            $content );
+	$content = str_replace( '<p>', '<coded_p>', $content );
+	$content = str_replace( '</p>', '</coded_p>', $content );
+	$content = str_replace( $amps, '&', $content );
+	$content = str_replace( $single, "'", $content );
 
 	// Return content wrapped in code tags
 	return '`' . $content . '`';
@@ -269,7 +302,7 @@ function bbp_encode_empty_callback( &$content = '', $key = '', $preg = '' ) {
  * @param type $key
  * @param type $preg
  */
-function bbp_encode_normal_callback( &$content = '', $key = '', $preg = '') {
+function bbp_encode_normal_callback( &$content = '', $key = '', $preg = '' ) {
 	if ( strpos( $content, '`' ) !== 0 ) {
 		$content = preg_replace( "|&lt;(/?{$preg})&gt;|i", '<$1>', $content );
 	}
@@ -349,12 +382,12 @@ function bbp_make_clickable( $text ) {
 			$ret = " {$piece} "; // Pad with whitespace to simplify the regexes
 			$ret = apply_filters( 'bbp_make_clickable', $ret );
 			$ret = substr( $ret, 1, -1 ); // Remove our whitespace padding.
-			$r .= $ret;
+			$r  .= $ret;
 		}
 	}
 
 	// Cleanup of accidental links within links
-	return preg_replace( '#(<a([ \r\n\t]+[^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i', "$1$3</a>", $r );
+	return preg_replace( '#(<a([ \r\n\t]+[^>]+?>|>))<a [^>]+?>([^>]+?)</a></a>#i', '$1$3</a>', $r );
 }
 
 /**

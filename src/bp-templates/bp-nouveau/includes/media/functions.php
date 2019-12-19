@@ -28,12 +28,6 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 			'dependencies' => array( 'bp-nouveau' ),
 			'footer'       => true,
 		),
-		'bp-nouveau-media-theatre' => array(
-			'file'         => 'js/buddypress-media-theatre%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'version'      => bp_get_version(),
-			'footer'       => true,
-		),
 	) );
 }
 
@@ -43,12 +37,36 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_media_enqueue_scripts() {
-	wp_enqueue_script( 'bp-nouveau-media' );
-	wp_enqueue_script( 'bp-nouveau-media-theatre' );
-	wp_enqueue_script( 'giphy' );
-	wp_enqueue_script( 'emojionearea' );
-	wp_enqueue_style( 'emojionearea' );
-	wp_enqueue_script( 'isInViewport' );
+
+	if ( bp_is_user_media() ||
+	     bp_is_single_album() ||
+	     bp_is_media_directory() ||
+	     bp_is_activity_component() ||
+	     bp_is_group_activity() ||
+	     bp_is_group_media() ||
+	     bp_is_group_albums() ||
+	     bp_is_messages_component()
+	) {
+
+		$gif = false;
+		if ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() ) {
+			wp_enqueue_script( 'giphy' );
+			$gif = true;
+		}
+
+		$emoji = false;
+		if ( bp_is_profiles_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() || bp_is_messages_emoji_support_enabled() ) {
+			wp_enqueue_script( 'emojionearea' );
+			wp_enqueue_style( 'emojionearea' );
+			$emoji = true;
+		}
+
+		if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji ) {
+			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_script( 'bp-nouveau-media' );
+			wp_enqueue_script( 'bp-exif' );
+		}
+	}
 }
 
 /**
@@ -61,8 +79,9 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
+	//initialize media vars because it is used globally
 	$params['media'] = array(
-		'max_upload_size' => bp_media_file_upload_max_size(),
+		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_media_support_enabled(),
 		'profile_album'   => bp_is_profile_albums_support_enabled(),
 		'group_media'     => bp_is_group_media_support_enabled(),
@@ -93,135 +112,6 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'forums'   => bp_is_forums_gif_support_enabled(),
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
-
-    if ( function_exists( 'is_bbpress' ) && is_bbpress() ) {
-
-        // check if topic edit
-	    if ( bbp_is_topic_edit() ) {
-		    $params['media']['bbp_is_topic_edit'] = true;
-
-		    $media_ids = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
-		    if ( ! empty( $media_ids ) && bp_has_media(
-				    array(
-					    'include'  => $media_ids,
-					    'order_by' => 'menu_order',
-					    'sort'     => 'ASC'
-				    ) ) ) {
-			    $params['media']['topic_edit_media'] = array();
-			    $index                               = 0;
-			    while ( bp_media() ) {
-				    bp_the_media();
-
-				    $params['media']['topic_edit_media'][] = array(
-					    'id'            => bp_get_media_id(),
-					    'attachment_id' => bp_get_media_attachment_id(),
-					    'name'          => bp_get_media_title(),
-					    'thumb'         => bp_get_media_attachment_image_thumbnail(),
-					    'url'           => bp_get_media_attachment_image(),
-					    'menu_order'    => $index,
-				    );
-				    $index ++;
-			    }
-		    }
-
-		    $gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
-
-		    if ( ! empty( $gif_data ) ) {
-			    $preview_url = wp_get_attachment_url( $gif_data['still'] );
-			    $video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-			    $params['media']['topic_edit_gif_data'] = array(
-				    'preview_url' => $preview_url,
-				    'video_url' => $video_url,
-				    'gif_raw_data' => get_post_meta( bbp_get_topic_id(), '_gif_raw_data', true ),
-			    );
-		    }
-	    }
-
-        // check if reply edit
-        if ( bbp_is_reply_edit() ) {
-	        $params['media']['bbp_is_reply_edit'] = true;
-
-	        $media_ids = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
-	        if ( ! empty( $media_ids ) && bp_has_media(
-			        array(
-				        'include'  => $media_ids,
-				        'order_by' => 'menu_order',
-				        'sort'     => 'ASC'
-			        ) ) ) {
-		        $params['media']['reply_edit_media'] = array();
-		        $index                               = 0;
-		        while ( bp_media() ) {
-			        bp_the_media();
-
-			        $params['media']['reply_edit_media'][] = array(
-				        'id'            => bp_get_media_id(),
-				        'attachment_id' => bp_get_media_attachment_id(),
-				        'name'          => bp_get_media_title(),
-				        'thumb'         => bp_get_media_attachment_image_thumbnail(),
-				        'url'           => bp_get_media_attachment_image(),
-				        'menu_order'    => $index,
-			        );
-			        $index ++;
-		        }
-	        }
-
-	        $gif_data = get_post_meta( bbp_get_reply_id(), '_gif_data', true );
-
-	        if ( ! empty( $gif_data ) ) {
-		        $preview_url = wp_get_attachment_url( $gif_data['still'] );
-		        $video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-		        $params['media']['reply_edit_gif_data'] = array(
-		        	'preview_url' => $preview_url,
-		        	'video_url' => $video_url,
-			        'gif_raw_data' => get_post_meta( bbp_get_reply_id(), '_gif_raw_data', true ),
-		        );
-	        }
-        }
-
-        // check if forum edit
-	    if ( bbp_is_forum_edit() ) {
-		    $params['media']['bbp_is_forum_edit'] = true;
-
-		    $media_ids = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
-		    if ( ! empty( $media_ids ) && bp_has_media(
-				    array(
-					    'include'  => $media_ids,
-					    'order_by' => 'menu_order',
-					    'sort'     => 'ASC'
-				    ) ) ) {
-			    $params['media']['forum_edit_media'] = array();
-			    $index                               = 0;
-			    while ( bp_media() ) {
-				    bp_the_media();
-
-				    $params['media']['forum_edit_media'][] = array(
-					    'id'            => bp_get_media_id(),
-					    'attachment_id' => bp_get_media_attachment_id(),
-					    'name'          => bp_get_media_title(),
-					    'thumb'         => bp_get_media_attachment_image_thumbnail(),
-					    'url'           => bp_get_media_attachment_image(),
-					    'menu_order'    => $index,
-				    );
-				    $index ++;
-			    }
-		    }
-
-		    $gif_data = get_post_meta( bbp_get_forum_id(), '_gif_data', true );
-
-		    if ( ! empty( $gif_data ) ) {
-			    $preview_url = wp_get_attachment_url( $gif_data['still'] );
-			    $video_url = wp_get_attachment_url( $gif_data['mp4'] );
-
-			    $params['media']['forum_edit_gif_data'] = array(
-				    'preview_url' => $preview_url,
-				    'video_url' => $video_url,
-				    'gif_raw_data' => get_post_meta( bbp_get_forum_id(), '_gif_raw_data', true ),
-			    );
-		    }
-        }
-    }
 
 	$params['media']['i18n_strings'] = array(
 		'select'               => __( 'Select', 'buddyboss' ),

@@ -54,6 +54,12 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+
+	// Enqueue activity form parts and js required for single activity
+	if ( bp_nouveau_current_user_can( 'publish_activity' ) && bp_is_single_activity() ) {
+		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
+		bp_get_template_part( 'common/js-templates/activity/form' );
+	}
 }
 
 /**
@@ -97,7 +103,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			) ),
 			'avatar_width'      => $width,
 			'avatar_height'     => $height,
-			'user_display_name' => bp_get_loggedin_user_fullname(),
+			'user_display_name' => bp_core_get_user_displayname( bp_loggedin_user_id() ),
 			'user_domain'       => bp_loggedin_user_domain(),
 			'avatar_alt'        => sprintf(
 			/* translators: %s = member name */
@@ -166,7 +172,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name&hellip;', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}
@@ -250,16 +256,74 @@ function bp_nouveau_get_activity_directory_nav_items() {
 		);
 
 		// If the user has favorite create a nav item
-		if ( bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) && bp_is_activity_like_active() ) {
+		if ( bp_is_activity_like_active() && bp_get_total_favorite_count_for_user( bp_loggedin_user_id() ) ) {
 			$nav_items['favorites'] = array(
 				'component' => 'activity',
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'My Likes', 'buddyboss' ),
+				'text'      => __( 'Likes', 'buddyboss' ),
 				'count'     => false,
-				'position'  => 35,
+				'position'  => 10,
 			);
+		}
+
+		if ( bp_is_activity_tabs_active() ) {
+
+			// The friends component is active and user has friends
+			if ( bp_is_active( 'friends' ) && bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
+				$nav_items['friends'] = array(
+					'component' => 'activity',
+					'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array( 'dynamic' ),
+					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
+					'text'      => __( 'Connections', 'buddyboss' ),
+					'count'     => false,
+					'position'  => 15,
+				);
+			}
+
+			// The groups component is active and user has groups
+			if ( bp_is_active( 'groups' ) && bp_get_total_group_count_for_user( bp_loggedin_user_id() ) ) {
+				$nav_items['groups'] = array(
+					'component' => 'activity',
+					'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array( 'dynamic' ),
+					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
+					'text'      => __( 'Groups', 'buddyboss' ),
+					'count'     => false,
+					'position'  => 25,
+				);
+			}
+
+			// Mentions are allowed
+			if ( bp_activity_do_mentions() ) {
+				$deprecated_hooks[] = array( 'bp_before_activity_type_tab_mentions', 'activity', 36 );
+
+				$nav_items['mentions'] = array(
+					'component' => 'activity',
+					'slug'      => 'mentions', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array( 'dynamic' ),
+					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/mentions/',
+					'text'      => __( 'Mentions', 'buddyboss' ),
+					'count'     => false,
+					'position'  => 45,
+				);
+			}
+
+			// Following tab
+			if ( bp_is_activity_follow_active() ) {
+
+				$nav_items['following'] = array(
+					'component' => 'activity',
+					'slug'      => 'following', // slug is used because BP_Core_Nav requires it, but it's the scope
+					'li_class'  => array( 'dynamic' ),
+					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/following/',
+					'text'      => __( 'Following', 'buddyboss' ),
+					'count'     => false,
+					'position'  => 55,
+				);
+			}
 		}
 	}
 

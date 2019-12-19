@@ -9,7 +9,7 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-//add shortcode support
+// add shortcode support
 add_shortcode( 'BBOSS_AJAX_SEARCH_FORM', 'bp_search_ajax_search_form_shortcode' );
 /**
  * Returns search buffer ajax template part
@@ -76,9 +76,9 @@ function bp_search_reply_intro( $character_limit = 50 ) {
 		if ( $search_term_position !== false ) {
 			$shortened_content = bp_search_result_match( $content, $search_term );
 
-			//highlight search keyword
+			// highlight search keyword
 
-			$shortened_content = str_ireplace( $search_term, "<strong>" . $search_term . "</strong>", $shortened_content );
+			$shortened_content = str_ireplace( $search_term, '<strong>' . $search_term . '</strong>', $shortened_content );
 		} else {
 			$shortened_content = substr( $content, 0, $character_limit );
 
@@ -99,7 +99,7 @@ function bp_search_reply_intro( $character_limit = 50 ) {
  * @since BuddyBoss 1.0.0
  *
  * @param $content
- * @param int $character_limit
+ * @param int     $character_limit
  *
  * @return mixed|void
  */
@@ -112,9 +112,9 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
 
 	if ( $search_term_position !== false ) {
 		$shortened_content = '&hellip;' . substr( $content, $search_term_position, $character_limit );
-		//highlight search keyword
+		// highlight search keyword
 
-		$shortened_content = str_ireplace( $search_term, "<strong>" . $search_term . "</strong>", $shortened_content );
+		$shortened_content = str_ireplace( $search_term, '<strong>' . $search_term . '</strong>', $shortened_content );
 	} else {
 		$shortened_content = substr( $content, 0, $character_limit );
 	}
@@ -135,7 +135,7 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
  *
  * @param $in
  * @param $wordToFind
- * @param int $numWordsToWrap
+ * @param int        $numWordsToWrap
  *
  * @return string
  */
@@ -145,7 +145,7 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 	$wordsToFind = preg_split( '/\s+/', $wordToFind );
 
 	foreach ( $wordsToFind as $key => $value ) {
-		$found_words = preg_grep( "/" . $value . ".*/i", $words );
+		$found_words = preg_grep( '/' . $value . '.*/i', $words );
 		$found_pos   = array_keys( $found_words );
 
 		if ( count( $found_pos ) ) {
@@ -160,9 +160,9 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 		$length = ( ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? $pos + ( $numWordsToWrap + 1 ) : count( $words ) ) - $start;
 		$slice  = array_slice( $words, $start, $length );
 
-		$pre_start = ( $start > 0 ) ? "&hellip;" : "";
+		$pre_start = ( $start > 0 ) ? '&hellip;' : '';
 
-		$post_end = ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? "&hellip;" : "";
+		$post_end = ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? '&hellip;' : '';
 
 		$out = $pre_start . implode( ' ', $slice ) . $post_end;
 
@@ -173,7 +173,7 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 
 }
 
-if ( ! function_exists( 'bp_search_pagination' ) ):
+if ( ! function_exists( 'bp_search_pagination' ) ) :
 
 	/**
 	 * Prints pagination links for given parameters with pagination value as a querystring parameter.
@@ -185,40 +185,41 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
-	 * @param int $total_items total number of items(grand total)
-	 * @param int $items_per_page number of items displayed per page
-	 * @param int $curr_paged current page number, 1 based index
+	 * @param int    $total_items total number of items(grand total)
+	 * @param int    $items_per_page number of items displayed per page
+	 * @param int    $curr_paged current page number, 1 based index
 	 * @param string $slug part of url to be appended after the home_url and before the '/?ke1=value1&...' part. withour any starting or trailing '/'
 	 * @param string $hashlink Optional, the '#' link to be appended ot url, optional
-	 * @param int $links_on_each_side Optional, how many links to be displayed on each side of current active page. Default 2.
+	 * @param int    $links_on_each_side Optional, how many links to be displayed on each side of current active page. Default 2.
 	 * @param string $param_key the name of the queystring paramter for page value. Default 'list'
 	 *
 	 * @return void
 	 */
-	function bp_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = "", $param_key = "list" ) {
+	function bp_search_pagination( $total_items, $items_per_page, $curr_paged, $slug, $links_on_each_side = 2, $hashlink = '', $param_key = 'list' ) {
 		$use_bootstrap = false;
 		if ( defined( 'BOOTSTRAP_ACTIVE' ) ) {
 			$use_bootstrap = true;
 		}
 
-		$s = $links_on_each_side; //no of tabs to show for previos/next paged links
+		$s = $links_on_each_side; // no of tabs to show for previos/next paged links
 		if ( $curr_paged == 0 ) {
 			$curr_paged = 1;
 		}
-		/* $elements : an array of arrays; each child array will have following structure
+		/*
+		 $elements : an array of arrays; each child array will have following structure
 		  $child[0] = text of the link
 		  $child[1] = page no of target page
 		  $child[2] = link type :: link|current|nolink
 		 */
 		$elements    = array();
 		$no_of_pages = ceil( $total_items / $items_per_page );
-		//prev lik
+		// prev lik
 		if ( $curr_paged > 1 ) {
 			$elements[] = array( '&larr;', $curr_paged - 1, 'link' );
 		}
-		//generating $s(2) links before the current one
+		// generating $s(2) links before the current one
 		if ( $curr_paged > 1 ) {
-			$rev_array = array(); //paged in reverse order
+			$rev_array = array(); // paged in reverse order
 			$i         = $curr_paged - 1;
 			$counter   = 0;
 			while ( $counter < $s && $i > 0 ) {
@@ -239,7 +240,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 			unset( $counter );
 		}
 
-		//generating $s+1(3) links after the current one (includes current)
+		// generating $s+1(3) links after the current one (includes current)
 		if ( $curr_paged <= $no_of_pages ) {
 			$i       = $curr_paged;
 			$counter = 0;
@@ -258,7 +259,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 			unset( $i );
 			unset( $counter );
 		}
-		//next link
+		// next link
 		if ( $curr_paged < $no_of_pages ) {
 			$elements[] = array( '&rarr;', $curr_paged + 1, 'link' );
 		}
@@ -266,15 +267,15 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 		if ( isset( $elements ) && count( $elements ) > 1 ) {
 			?>
 			<div class="pagination navigation">
-				<?php if ( $use_bootstrap ): ?>
+				<?php if ( $use_bootstrap ) : ?>
 				<div class='pagination-links'>
-					<?php else: ?>
+					<?php else : ?>
 					<div class="pagination-links">
 						<?php endif; ?>
 						<?php
 						foreach ( $elements as $e ) {
-							$link_html = "";
-							$class     = "";
+							$link_html = '';
+							$class     = '';
 							switch ( $e[2] ) {
 								case 'link':
 									unset( $_GET[ $param_key ] );
@@ -283,13 +284,13 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 										$base_link .= "$k=$v&";
 									}
 									$base_link .= "$param_key=$e[1]";
-									if ( isset( $hashlink ) && $hashlink != "" ) {
+									if ( isset( $hashlink ) && $hashlink != '' ) {
 										$base_link .= "#$hashlink";
 									}
 									$link_html = "<a href='$base_link' title='$e[0]' class='page-numbers' data-pagenumber='$e[1]'>$e[0]</a>";
 									break;
 								case 'current':
-									$class = "active";
+									$class = 'active';
 									if ( $use_bootstrap ) {
 										$link_html = "<span>$e[0] <span class='sr-only'>(current)</span></span>";
 									} else {
@@ -305,13 +306,13 @@ if ( ! function_exists( 'bp_search_pagination' ) ):
 									break;
 							}
 
-							//$link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
+							// $link_html = "<li class='" . esc_attr($class) . "'>" . $link_html . "</li>";
 							echo $link_html;
 						}
 						?>
-						<?php if ( $use_bootstrap ): ?>
+						<?php if ( $use_bootstrap ) : ?>
 					</div>
-					<?php else: ?>
+					<?php else : ?>
 				</div>
 			<?php endif; ?>
 			</div>
@@ -340,7 +341,7 @@ function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_
 	?>
 	<div class="pag-count bottom">
 		<div class="pag-data">
-			<?php printf( __( 'Viewing %d - %d of %d results', 'buddyboss' ), $from_num, min( $total_items, $to_num), $total_items ); ?>
+			<?php printf( __( 'Viewing %1$d - %2$d of %3$d results', 'buddyboss' ), $from_num, min( $total_items, $to_num ), $total_items ); ?>
 		</div>
 	</div>
 	<?php
@@ -363,23 +364,23 @@ function bp_search_items() {
 		'members'        => __( 'Members', 'buddyboss' ),
 	);
 
-	//forums?
+	// forums?
 
 	$items['forum'] = __( 'Forums', 'buddyboss' );
 	$items['topic'] = __( 'Forums Discussions', 'buddyboss' );
 	$items['reply'] = __( 'Forums Replies', 'buddyboss' );
 
-
-	//other buddypress components
+	// other buddypress components
 	$bp_components = array(
 		'groups'   => __( 'Groups', 'buddyboss' ),
 		'activity' => __( 'Activity', 'buddyboss' ),
 		'messages' => __( 'Messages', 'buddyboss' ),
-		/* should we search notifications as well?
+		/*
+		 should we search notifications as well?
 		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
 	);
 
-	//only the active ones please!
+	// only the active ones please!
 	foreach ( $bp_components as $component => $label ) {
 		if ( function_exists( 'bp_is_active' ) && bp_is_active( $component ) ) {
 			$items[ $component ] = $label;
@@ -419,7 +420,6 @@ function bb_gs_create_searchstring( $user_id, $posted_field_ids, $errors, $old_v
 		if ( in_array( 'xprofile_field_' . $key, $items_to_search ) ) {
 			$search_string = $search_string . ' ' . $value['value'];
 		}
-
 	}
 	update_user_meta( $user_id, 'bbgs_search_string', $search_string );
 
@@ -471,7 +471,6 @@ function bb_gs_create_group_searchstring( $groupid ) {
 		groups_update_groupmeta( $groupid, 'bbgs_group_search_string', $address . ' ' . $street . ' ' . $city . ' ' . $state . ' ' . $zip . ' ' . $country );
 	}
 
-
 }
 
 add_action( 'groups_create_group_step_save_group-details', 'bb_gs_create_group_searchstring' );
@@ -488,7 +487,7 @@ add_filter( 'body_class', 'bp_search_body_class', 10, 1 );
  */
 function bp_search_body_class( $wp_classes ) {
 
-	if ( bp_search_is_search() ) { //if search page.
+	if ( bp_search_is_search() ) { // if search page.
 		$wp_classes[] = 'buddypress';
 		$wp_classes[] = 'directory';
 	}
@@ -504,12 +503,12 @@ function bp_search_body_class( $wp_classes ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_get_search_user_fields() {
-	return [
+	return array(
 		'user_meta'    => __( 'User Meta', 'buddyboss' ),
 		'display_name' => __( 'Display Name', 'buddyboss' ),
 		'user_email'   => __( 'User Email', 'buddyboss' ),
-		'user_login'   => __( 'Username', 'buddyboss' )
-	];
+		'user_login'   => __( 'Username', 'buddyboss' ),
+	);
 }
 
 /**
@@ -519,27 +518,26 @@ function bp_get_search_user_fields() {
  */
 function bp_search_get_post_thumbnail_default( $post_type ) {
 
-	$default = [
-		'product'				=> buddypress()->plugin_url . 'bp-core/images/search/product.svg',
-		'sfwd-courses'			=> buddypress()->plugin_url . 'bp-core/images/search/course.svg',
-		'sfwd-lessons'			=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'sfwd-topic'			=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'sfwd-quiz'				=> buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
-		'post'					=> buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg',
-		'forum'					=> buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
-		'topic'					=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'reply'					=> buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
-		'bp-member-type'   		=> buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
-		'memberpressproduct'	=> buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
-		'wp-parser-function'	=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
-		'wp-parser-class'		=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
-		'wp-parser-hook'		=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
-		'wp-parser-method'		=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
-		'command'				=> buddypress()->plugin_url . 'bp-core/images/search/code.svg',
-	];
+	$default = array(
+		'product'            => buddypress()->plugin_url . 'bp-core/images/search/product.svg',
+		'sfwd-courses'       => buddypress()->plugin_url . 'bp-core/images/search/course.svg',
+		'sfwd-lessons'       => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'sfwd-topic'         => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'sfwd-quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
+		'post'               => buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg',
+		'forum'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
+		'topic'              => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'reply'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
+		'bp-member-type'     => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
+		'memberpressproduct' => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
+		'wp-parser-function' => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'wp-parser-class'    => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'wp-parser-hook'     => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'wp-parser-method'   => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+		'command'            => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
+	);
 
-	return
-		isset( $default[ $post_type ] ) ?
+	return isset( $default[ $post_type ] ) ?
 			$default[ $post_type ] :
 			buddypress()->plugin_url . 'bp-core/images/search/post-type.svg';
 }
@@ -574,7 +572,7 @@ function bp_search_get_total_topics_count( $lesson_id ) {
  */
 function bp_search_get_total_quizzes_count( $lesson_id ) {
 	$course_id = learndash_get_course_id( $lesson_id );
-	$quiz_ids = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-quiz' );
+	$quiz_ids  = learndash_course_get_children_of_step( $course_id, $lesson_id, 'sfwd-quiz' );
 
 	return count( $quiz_ids );
 }
@@ -587,4 +585,81 @@ function bp_search_get_total_quizzes_count( $lesson_id ) {
  */
 function bp_search_is_search() {
 	return ! is_admin() && is_search() && isset( $_REQUEST['bp_search'] );
+}
+
+if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
+
+	function bps_get_request( $type, $form = 0 ) {
+		$current        = bps_current_page();
+		$hidden_filters = bps_get_hidden_filters();
+
+		$cookie  = apply_filters( 'bps_cookie_name', 'bps_request' );
+		$request = isset( $_REQUEST['bps_form'] ) ? $_REQUEST : array();
+		if ( empty( $request ) && isset( $_COOKIE[ $cookie ] ) ) {
+			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $request );
+		}
+
+		switch ( $type ) {
+			case 'form':
+				if ( isset( $request['bps_form'] ) && $request['bps_form'] != $form ) {
+					$request = array();
+				}
+				break;
+
+			case 'filters':
+				if ( isset( $request['bps_directory'] ) && $request['bps_directory'] != $current ) {
+					$request = array();
+				}
+				foreach ( $hidden_filters as $key => $value ) {
+					unset( $request[ $key ] );
+				}
+				break;
+
+			case 'search':
+				if ( isset( $request['bps_directory'] ) && $request['bps_directory'] != $current ) {
+					$request = array();
+				}
+				foreach ( $hidden_filters as $key => $value ) {
+					$request[ $key ] = $value;
+				}
+				break;
+		}
+
+		return apply_filters( 'bps_request', $request, $type, $form );
+	}
+
+	function bps_current_page() {
+		$current = defined( 'DOING_AJAX' ) ? parse_url(
+			$_SERVER['HTTP_REFERER'],
+			PHP_URL_PATH
+		) : parse_url( $_SERVER['REQUEST_URI'], PHP_URL_PATH );
+
+		return apply_filters( 'bps_current_page', $current );        // published interface, 20190324
+	}
+
+	function bps_get_hidden_filters() {
+		$data = bps_get_directory_data();
+		unset( $data['page'], $data['template'], $data['ajax_template'], $data['show'], $data['order_by'] );
+
+		return apply_filters( 'bps_hidden_filters', $data );
+	}
+
+	function bps_get_directory_data() {
+		global $bps_directory_data;
+
+		$data   = array();
+		$cookie = apply_filters( 'bps_cookie_name', 'bps_directory' );
+
+		if ( ! defined( 'DOING_AJAX' ) ) {
+			$data = isset( $bps_directory_data ) ? $bps_directory_data : array();
+		} elseif ( isset( $_COOKIE[ $cookie ] ) ) {
+			$current = bps_current_page();
+			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $data );
+			if ( $data['page'] != $current ) {
+				$data = array();
+			}
+		}
+
+		return apply_filters( 'bps_directory_data', $data );
+	}
 }

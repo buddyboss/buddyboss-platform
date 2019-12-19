@@ -30,28 +30,29 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function settings_save() {
 		parent::settings_save();
 
-		$bp = buddypress();
+		$bp                = buddypress();
 		$active_components = $bp->active_components;
 
 		// Flag for activate the blogs component
 		$is_blog_component_active = false;
 
 		// Get all active custom post type.
-		$post_types = get_post_types( [ 'public' => true ] );
+		$post_types = get_post_types( array( 'public' => true ) );
 
 		foreach ( $post_types as $cpt ) {
 			// Exclude all the custom post type which is already in BuddyPress Activity support.
-			if ( in_array( $cpt,
-				[ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ] ) ) {
+			if ( in_array(
+				$cpt,
+				array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' )
+			) ) {
 				continue;
 			}
 
-			$enable_blog_feeds = isset( $_POST["bp-feed-custom-post-type-$cpt"] );
+			$enable_blog_feeds = isset( $_POST[ "bp-feed-custom-post-type-$cpt" ] );
 
 			if ( $enable_blog_feeds ) {
 				$is_blog_component_active = true;
 			}
-
 		}
 
 		if ( $is_blog_component_active ) {
@@ -61,8 +62,8 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		}
 
 		// Save settings and upgrade schema.
-		require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-		require_once( $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
+		require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+		require_once $bp->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
 
 		$bp->active_components = $active_components;
 		bp_core_install( $bp->active_components );
@@ -74,16 +75,14 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 	public function register_fields() {
 		$this->add_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ) );
 
-		// Blog Feeds Option (will sync with "blogs" component)
-//		$this->add_checkbox_field( 'bp-enable-blog-feeds', __( 'Blog Posts', 'buddyboss' ), [
-//			'input_text' => __( 'Automatically publish new blog posts into the activity feed', 'buddyboss' )
-//		] );
-
 		// Allow subscriptions setting.
 		$this->add_field( '_bp_enable_heartbeat_refresh', __( 'Activity auto-refresh', 'buddyboss' ), 'bp_admin_setting_callback_heartbeat', 'intval' );
 
-		// Allow autoload
+		// Allow auto-load.
 		$this->add_field( '_bp_enable_activity_autoload', __( 'Activity auto-load', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_autoload', 'intval' );
+
+		// Allow scopes/tabs.
+		$this->add_field( '_bp_enable_activity_tabs', __( 'Activity tabs', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_tabs', 'intval' );
 
 		// Allow follow.
 		$this->add_field( '_bp_enable_activity_follow', __( 'Follow', 'buddyboss' ), 'bp_admin_setting_callback_enable_activity_follow', 'intval' );
@@ -100,26 +99,26 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		}
 
 		// Activity Settings Tutorial
-		$this->add_field( 'bp-activity-settings-tutorial','', 'bp_activity_settings_tutorial' );
+		$this->add_field( 'bp-activity-settings-tutorial', '', 'bp_activity_settings_tutorial' );
 
 		$this->add_section( 'bp_custom_post_type', __( 'Posts in Activity Feeds', 'buddyboss' ) );
 
 		// create field for default Platform activity feed.
 		$get_default_platform_activity_types = bp_platform_default_activity_types();
-		$is_first = true;
+		$is_first                            = true;
 		foreach ( $get_default_platform_activity_types as $type ) {
-			$name = $type['activity_name'];
-			$class = ( true === $is_first ) ? 'child-no-padding-first' : 'child-no-padding';
+			$name          = $type['activity_name'];
+			$class         = ( true === $is_first ) ? 'child-no-padding-first' : 'child-no-padding';
 			$type['class'] = $class;
 			$this->add_field( "bp-feed-platform-$name", ( true === $is_first ) ? __( 'BuddyBoss Platform', 'buddyboss' ) : '', 'bp_feed_settings_callback_platform', 'intval', $type );
 			$is_first = false;
 		}
 
 		// Get all active custom post type.
-		$post_types = get_post_types( [ 'public' => true ] );
+		$post_types = get_post_types( array( 'public' => true ) );
 
 		// Exclude BP CPT
-		$bp_exclude_cpt = [ 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' ];
+		$bp_exclude_cpt = array( 'forum', 'topic', 'reply', 'page', 'attachment', 'bp-group-type', 'bp-member-type' );
 
 		$bp_excluded_cpt = array();
 		foreach ( $post_types as $post_type ) {
@@ -137,12 +136,12 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		foreach ( $bp_excluded_cpt as $key => $post_type ) {
 
-			$fields = [];
+			$fields = array();
 
-			$fields['args'] = [
-					'post_type' => $post_type,
-					'description' => false,
-			];
+			$fields['args'] = array(
+				'post_type'   => $post_type,
+				'description' => false,
+			);
 
 			if ( 'post' === $post_type ) {
 				// create field for each of custom post type.
@@ -152,7 +151,7 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 			} else {
 				if ( 0 === $description ) {
 					$fields['args']['description'] = true;
-					$description =1;
+					$description                   = 1;
 				}
 				if ( 0 === $count ) {
 					$fields['args']['class'] = 'child-no-padding-first';
@@ -168,9 +167,9 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 		}
 
 		// Posts in Activity Tutorial
-		$this->add_field( 'bp-posts-in-activity-tutorial','', 'bp_posts_in_activity_tutorial' );
+		$this->add_field( 'bp-posts-in-activity-tutorial', '', 'bp_posts_in_activity_tutorial' );
 	}
 
 }
 
-return new BP_Admin_Setting_Activity;
+return new BP_Admin_Setting_Activity();

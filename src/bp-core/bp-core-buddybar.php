@@ -48,7 +48,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 		'site_admin_only'         => false, // Can only site admins see this nav item?
 		'position'                => 99,    // Index of where this nav item should be positioned.
 		'screen_function'         => false, // The name of the function to run when clicked.
-		'default_subnav_slug'     => false  // The slug of the default subnav item to select when clicked.
+		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -66,7 +66,7 @@ function bp_core_new_nav_item( $args, $component = 'members' ) {
 
 	// Then, hook the screen function for the added nav item.
 	$hooked = bp_core_register_nav_screen_function( $nav_item );
-	if ( false === $hooked ){
+	if ( false === $hooked ) {
 		return false;
 	}
 
@@ -120,7 +120,7 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		'site_admin_only'         => false, // Can only site admins see this nav item?
 		'position'                => 99,    // Index of where this nav item should be positioned.
 		'screen_function'         => false, // The name of the function to run when clicked.
-		'default_subnav_slug'     => false  // The slug of the default subnav item to select when clicked.
+		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -139,15 +139,18 @@ function bp_core_create_nav_link( $args = '', $component = 'members' ) {
 		$r['item_css_id'] = $r['slug'];
 	}
 
-	$nav_item = array(
-		'name'                    => $r['name'],
-		'slug'                    => $r['slug'],
-		'link'                    => trailingslashit( bp_loggedin_user_domain() . $r['slug'] ),
-		'css_id'                  => $r['item_css_id'],
-		'show_for_displayed_user' => $r['show_for_displayed_user'],
-		'position'                => $r['position'],
-		'screen_function'         => &$r['screen_function'],
-		'default_subnav_slug'	  => $r['default_subnav_slug']
+	$nav_item = apply_filters(
+		'bp_core_create_nav_link',
+		array(
+			'name'                    => $r['name'],
+			'slug'                    => $r['slug'],
+			'link'                    => trailingslashit( bp_loggedin_user_domain() . $r['slug'] ),
+			'css_id'                  => $r['item_css_id'],
+			'show_for_displayed_user' => $r['show_for_displayed_user'],
+			'position'                => $r['position'],
+			'screen_function'         => &$r['screen_function'],
+			'default_subnav_slug'     => $r['default_subnav_slug'],
+		)
 	);
 
 	// Add the item to the nav.
@@ -202,7 +205,7 @@ function bp_core_register_nav_screen_function( $args = '' ) {
 		'site_admin_only'         => false, // Can only site admins see this nav item?
 		'position'                => 99,    // Index of where this nav item should be positioned.
 		'screen_function'         => false, // The name of the function to run when clicked.
-		'default_subnav_slug'     => false  // The slug of the default subnav item to select when clicked.
+		'default_subnav_slug'     => false,  // The slug of the default subnav item to select when clicked.
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -299,7 +302,7 @@ function bp_core_new_nav_default( $args = '' ) {
 	$defaults = array(
 		'parent_slug'     => false, // Slug of the parent.
 		'screen_function' => false, // The name of the function to run when clicked.
-		'subnav_slug'     => false  // The slug of the subnav item to select when clicked.
+		'subnav_slug'     => false,  // The slug of the subnav item to select when clicked.
 	);
 
 	$r = wp_parse_args( $args, $defaults );
@@ -308,7 +311,7 @@ function bp_core_new_nav_default( $args = '' ) {
 	$parent_nav = $bp->members->nav->get_primary( array( 'slug' => $r['parent_slug'] ), false );
 
 	if ( ! $parent_nav ) {
-		return ;
+		return;
 	}
 
 	$parent_nav = reset( $parent_nav );
@@ -321,10 +324,13 @@ function bp_core_new_nav_default( $args = '' ) {
 	}
 
 	// Edit the screen function for the parent nav.
-	$bp->members->nav->edit_nav( array(
-		'screen_function'     => &$r['screen_function'],
-		'default_subnav_slug' => $r['subnav_slug'],
-	), $parent_nav->slug );
+	$bp->members->nav->edit_nav(
+		array(
+			'screen_function'     => &$r['screen_function'],
+			'default_subnav_slug' => $r['subnav_slug'],
+		),
+		$parent_nav->slug
+	);
 
 	if ( bp_is_current_component( $parent_nav->slug ) ) {
 
@@ -333,8 +339,8 @@ function bp_core_new_nav_default( $args = '' ) {
 		$component_uri_key = array_search( $parent_nav->slug, $bp->unfiltered_uri );
 
 		if ( false !== $component_uri_key ) {
-			if ( ! empty( $bp->unfiltered_uri[$component_uri_key + 1] ) ) {
-				$unfiltered_action = $bp->unfiltered_uri[$component_uri_key + 1];
+			if ( ! empty( $bp->unfiltered_uri[ $component_uri_key + 1 ] ) ) {
+				$unfiltered_action = $bp->unfiltered_uri[ $component_uri_key + 1 ];
 			}
 		}
 
@@ -349,14 +355,14 @@ function bp_core_new_nav_default( $args = '' ) {
 				unset( $bp->canonical_stack['action'] );
 			}
 
-		// The URL is explicitly requesting the new subnav item, but should be
-		// directed to the canonical URL.
+			// The URL is explicitly requesting the new subnav item, but should be
+			// directed to the canonical URL.
 		} elseif ( $unfiltered_action == $r['subnav_slug'] ) {
 			unset( $bp->canonical_stack['action'] );
 
-		// In all other cases (including the case where the original subnav item
-		// is explicitly called in the URL), the canonical URL will contain the
-		// subnav slug.
+			// In all other cases (including the case where the original subnav item
+			// is explicitly called in the URL), the canonical URL will contain the
+			// subnav slug.
 		} else {
 			$bp->canonical_stack['action'] = bp_current_action();
 		}
@@ -393,7 +399,7 @@ function bp_core_new_nav_default( $args = '' ) {
  *     @type bool        $show_in_admin_bar Optional. Whether the nav item should be added into the group's "Edit"
  *                                          Admin Bar menu for group admins. Default: false.
  * }
- * @param string|null    $component The component the navigation is attached to. Defaults to 'members'.
+ * @param string|null  $component The component the navigation is attached to. Defaults to 'members'.
  * @return null|false Returns false on failure.
  */
 function bp_core_new_subnav_item( $args, $component = null ) {
@@ -479,24 +485,28 @@ function bp_core_new_subnav_item( $args, $component = null ) {
 function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args( $args, array(
-		'name'              => false, // Display name for the nav item.
-		'slug'              => false, // URL slug for the nav item.
-		'parent_slug'       => false, // URL slug of the parent nav item.
-		'parent_url'        => false, // URL of the parent item.
-		'item_css_id'       => false, // The CSS ID to apply to the HTML of the nav item.
-		'user_has_access'   => true,  // Can the logged in user see this nav item?
-		'no_access_url'     => '',
-		'site_admin_only'   => false, // Can only site admins see this nav item?
-		'position'          => 90,    // Index of where this nav item should be positioned.
-		'screen_function'   => false, // The name of the function to run when clicked.
-		'link'              => '',    // The link for the subnav item; optional, not usually required.
-		'show_in_admin_bar' => false, // Show the Manage link in the current group's "Edit" Admin Bar menu.
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'name'              => false, // Display name for the nav item.
+			'slug'              => false, // URL slug for the nav item.
+			'parent_slug'       => false, // URL slug of the parent nav item.
+			'parent_url'        => false, // URL of the parent item.
+			'item_css_id'       => false, // The CSS ID to apply to the HTML of the nav item.
+			'user_has_access'   => true,  // Can the logged in user see this nav item?
+			'no_access_url'     => '',
+			'site_admin_only'   => false, // Can only site admins see this nav item?
+			'position'          => 90,    // Index of where this nav item should be positioned.
+			'screen_function'   => false, // The name of the function to run when clicked.
+			'link'              => '',    // The link for the subnav item; optional, not usually required.
+			'show_in_admin_bar' => false, // Show the Manage link in the current group's "Edit" Admin Bar menu.
+		)
+	);
 
 	// If we don't have the required info we need, don't create this subnav item.
-	if ( empty( $r['name'] ) || empty( $r['slug'] ) || empty( $r['parent_slug'] ) || empty( $r['parent_url'] ) || empty( $r['screen_function'] ) )
+	if ( empty( $r['name'] ) || empty( $r['slug'] ) || empty( $r['parent_slug'] ) || empty( $r['parent_url'] ) || empty( $r['screen_function'] ) ) {
 		return false;
+	}
 
 	// Link was not forced, so create one.
 	if ( empty( $r['link'] ) ) {
@@ -575,14 +585,17 @@ function bp_core_create_subnav_link( $args = '', $component = 'members' ) {
 function bp_core_register_subnav_screen_function( $args = '', $component = 'members' ) {
 	$bp = buddypress();
 
-	$r = wp_parse_args( $args, array(
-		'slug'              => false, // URL slug for the screen.
-		'parent_slug'       => false, // URL slug of the parent screen.
-		'user_has_access'   => true,  // Can the user visit this screen?
-		'no_access_url'     => '',
-		'site_admin_only'   => false, // Can only site admins visit this screen?
-		'screen_function'   => false, // The name of the function to run when clicked.
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'slug'            => false, // URL slug for the screen.
+			'parent_slug'     => false, // URL slug of the parent screen.
+			'user_has_access' => true,  // Can the user visit this screen?
+			'no_access_url'   => '',
+			'site_admin_only' => false, // Can only site admins visit this screen?
+			'screen_function' => false, // The name of the function to run when clicked.
+		)
+	);
 
 	/*
 	 * Hook the screen function for the added subnav item. But this only needs to
@@ -608,8 +621,8 @@ function bp_core_register_subnav_screen_function( $args = '', $component = 'memb
 
 	$parent_nav = $bp->{$component}->nav->get_primary( array( 'slug' => $r['parent_slug'] ), false );
 	if ( is_array( $parent_nav ) ) {
- 		$parent_nav = reset( $parent_nav );
- 	}
+		$parent_nav = reset( $parent_nav );
+	}
 
 	// If we *do* meet condition (2), then the added subnav item is currently being requested.
 	if ( ( bp_current_action() && bp_is_current_action( $r['slug'] ) ) || ( bp_is_user() && ! bp_current_action() && ! empty( $parent_nav->screen_function ) && $r['screen_function'] == $parent_nav->screen_function ) ) {
@@ -657,14 +670,14 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 		if ( ! is_callable( $subnav_item['screen_function'] ) ) {
 			$retval['status'] = 'failure';
 
-		// Success - hook to bp_screens.
+			// Success - hook to bp_screens.
 		} else {
 			add_action( 'bp_screens', $subnav_item['screen_function'], 3 );
 			$retval['status'] = 'success';
 		}
 
-	// User doesn't have access. Determine redirect arguments based on
-	// user status.
+		// User doesn't have access. Determine redirect arguments based on
+		// user status.
 	} else {
 		$retval['status'] = 'failure';
 
@@ -677,8 +690,8 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 				$message     = __( 'You do not have access to this page.', 'buddyboss' );
 				$redirect_to = trailingslashit( $subnav_item['no_access_url'] );
 
-			// In the case of a user page, we try to assume a
-			// redirect URL.
+				// In the case of a user page, we try to assume a
+				// redirect URL.
 			} elseif ( bp_is_user() ) {
 
 				$parent_nav_default = $bp->{$component}->nav->get_primary( array( 'slug' => $bp->default_component ), false );
@@ -693,22 +706,22 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 					$message     = __( 'You do not have access to this page.', 'buddyboss' );
 					$redirect_to = bp_displayed_user_domain();
 
-				// In some cases, the default tab is not accessible to
-				// the logged-in user. So we fall back on a tab that we
-				// know will be accessible.
+					// In some cases, the default tab is not accessible to
+					// the logged-in user. So we fall back on a tab that we
+					// know will be accessible.
 				} else {
 					// Try 'activity' first.
 					if ( bp_is_active( 'activity' ) && isset( $bp->pages->activity ) ) {
 						$redirect_to = trailingslashit( bp_displayed_user_domain() . bp_get_activity_slug() );
-					// Then try 'profile'.
+						// Then try 'profile'.
 					} else {
 						$redirect_to = trailingslashit( bp_displayed_user_domain() . ( 'xprofile' == $bp->profile->id ? 'profile' : $bp->profile->id ) );
 					}
 
-					$message     = '';
+					$message = '';
 				}
 
-			// Fall back to the home page.
+				// Fall back to the home page.
 			} else {
 				$message     = __( 'You do not have access to this page.', 'buddyboss' );
 				$redirect_to = bp_get_root_domain();
@@ -718,7 +731,7 @@ function bp_core_maybe_hook_new_subnav_screen_function( $subnav_item, $component
 				'message'  => $message,
 				'root'     => $redirect_to,
 				'redirect' => false,
-				'mode'     => 1
+				'mode'     => 1,
 			);
 
 		} else {
@@ -890,7 +903,7 @@ function bp_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
 		return;
 	}
 
-	foreach( $subnav_items as $subnav_item ) {
+	foreach ( $subnav_items as $subnav_item ) {
 		$bp->{$component}->nav->delete_nav( $subnav_item->slug, $parent_slug );
 	}
 }
@@ -909,8 +922,9 @@ function bp_core_reset_subnav_items( $parent_slug, $component = 'members' ) {
  */
 function bp_get_admin_bar_pref( $context, $user = 0 ) {
 	$pref = get_user_option( "show_admin_bar_{$context}", $user );
-	if ( false === $pref )
+	if ( false === $pref ) {
 		return true;
+	}
 
 	return 'true' === $pref;
 }

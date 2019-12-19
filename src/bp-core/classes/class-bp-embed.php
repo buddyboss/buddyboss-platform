@@ -74,11 +74,12 @@ class BP_Embed extends WP_Embed {
 	 * @return string The embed HTML on success, otherwise the original URL.
 	 */
 	public function shortcode( $attr, $url = '' ) {
-		if ( empty( $url ) )
+		if ( empty( $url ) ) {
 			return '';
+		}
 
 		$rawattr = $attr;
-		$attr = wp_parse_args( $attr, wp_embed_defaults() );
+		$attr    = wp_parse_args( $attr, wp_embed_defaults() );
 
 		// Use kses to convert & into &amp; and we need to undo this
 		// See https://core.trac.wordpress.org/ticket/11311.
@@ -136,22 +137,24 @@ class BP_Embed extends WP_Embed {
 		$attr['discover'] = ( apply_filters( 'bp_embed_oembed_discover', $default_discovery ) && $unfiltered_html );
 
 		// Set up a new WP oEmbed object to check URL with registered oEmbed providers.
-		require_once( ABSPATH . WPINC . '/class-oembed.php' );
+		require_once ABSPATH . WPINC . '/class-oembed.php';
 		$oembed_obj = _wp_oembed_get_object();
 
 		// If oEmbed discovery is true, skip oEmbed provider check.
 		$is_oembed_link = false;
-		if ( !$attr['discover'] ) {
+		if ( ! $attr['discover'] ) {
 			foreach ( (array) $oembed_obj->providers as $provider_matchmask => $provider ) {
 				$regex = ( $is_regex = $provider[1] ) ? $provider_matchmask : '#' . str_replace( '___wildcard___', '(.+)', preg_quote( str_replace( '*', '___wildcard___', $provider_matchmask ), '#' ) ) . '#i';
 
-				if ( preg_match( $regex, $url ) )
+				if ( preg_match( $regex, $url ) ) {
 					$is_oembed_link = true;
+				}
 			}
 
 			// If url doesn't match a WP oEmbed provider, stop parsing.
-			if ( !$is_oembed_link )
+			if ( ! $is_oembed_link ) {
 				return $this->maybe_make_link( $url );
+			}
 		}
 
 		return $this->parse_oembed( $id, $url, $attr, $rawattr );
@@ -197,7 +200,7 @@ class BP_Embed extends WP_Embed {
 			$cache = apply_filters( 'bp_embed_get_cache', $cache, $id, $cachekey, $url, $attr, $rawattr );
 
 			// Grab cache and return it if available.
-			if ( !empty( $cache ) ) {
+			if ( ! empty( $cache ) ) {
 
 				/**
 				 * Filters the found cache for the provided URL.
@@ -211,9 +214,9 @@ class BP_Embed extends WP_Embed {
 				 */
 				return apply_filters( 'bp_embed_oembed_html', $cache, $url, $attr, $rawattr );
 
-			// If no cache, ping the oEmbed provider and cache the result.
+				// If no cache, ping the oEmbed provider and cache the result.
 			} else {
-				$html = wp_oembed_get( $url, $attr );
+				$html  = wp_oembed_get( $url, $attr );
 				$cache = ( $html ) ? $html : $url;
 
 				/**
@@ -254,52 +257,61 @@ class BP_Embed extends WP_Embed {
 
 		if ( isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type ) ) {
 			// Check if WordPress already embed the link then return the original content.
-			if (strpos($content,'<iframe') !== false) {
-				return $content;
+			if ( strpos( $content, '<iframe' ) !== false ) {
+				return apply_filters( 'bp_autoembed', $content );
 			} else {
 				// Find all the URLs from the content.
-				preg_match_all('#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match);
+				preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match );
 				// Check if URL found.
-				if( isset( $match[0] ) ) {
+				if ( isset( $match[0] ) ) {
 					$html = '';
 					// Remove duplicate from array and run the loop
 					foreach ( array_unique( $match[0] ) as $url ) {
 						// Store oembed iframe in database cache for 1 day
 						if ( false === ( $embed_code = get_transient( $url ) ) ) {
 
-                            // Fetch the oembed code for URL.
-                            $embed_code = wp_oembed_get( $url );
+							// Fetch the oembed code for URL.
+							$embed_code = wp_oembed_get( $url );
 
-                            set_transient( $url, $embed_code, DAY_IN_SECONDS );
+							set_transient( $url, $embed_code, DAY_IN_SECONDS );
 
-                        }
+						}
 						// If oembed found then store into the $html
-						if (strpos($embed_code,'<iframe') !== false) {
-							$html .= '<p>'.$embed_code.'</p>';
+						if ( strpos( $embed_code, '<iframe' ) !== false ) {
+							$html .= '<p>' . $embed_code . '</p>';
 						}
 					}
 					// If $html blank return original content
 					if ( '' === $html ) {
-						return $content;
+						return apply_filters( 'bp_autoembed', $content );
 						// Return the new content by adding oembed after the content.
 					} else {
-						return $content.$html;
+
+						$html = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $html );
+
+						// add the lazy class to the img element
+						if ( preg_match( '/class=["\']/i', $html ) ) {
+							$html = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $html );
+						} else {
+							$html = preg_replace( '/<iframe/is', '<iframe class="lazy"', $html );
+						}
+
+						return apply_filters( 'bp_autoembed', $content . $html );
 					}
 					// Else return original content.
 				} else {
-					return $content;
+					return apply_filters( 'bp_autoembed', $content );
 				}
 			}
 		}
 
 		// Replace line breaks from all HTML elements with placeholders.
-		$content = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
+		$content     = wp_replace_in_html_tags( $content, array( "\n" => '<!-- wp-line-break -->' ) );
 		$old_content = $content;
 		if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
 
-			$url = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
-			$content = preg_replace($url, '<p>$0</p>', $content);
-
+			$url     = '@(http(s)?)?(://)?(([a-zA-Z])([-\w]+\.)+([^\s\.]+[^\s]*)+[^,.\s])@';
+			$content = preg_replace( $url, '<p>$0</p>', $content );
 
 			// Find URLs on their own line.
 			$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
@@ -307,14 +319,13 @@ class BP_Embed extends WP_Embed {
 			$content = preg_replace_callback( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', array( $this, 'autoembed_callback' ), $content );
 		}
 
-
-		if (strpos($content,'<iframe') !== false) {
+		if ( strpos( $content, '<iframe' ) !== false ) {
 
 		} else {
 			$content = $old_content;
 		}
 
 		// Put the line breaks back.
-		return str_replace( '<!-- wp-line-break -->', "\n", $content );
+		return apply_filters( 'bp_autoembed', str_replace( '<!-- wp-line-break -->', "\n", $content ) );
 	}
 }

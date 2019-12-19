@@ -52,16 +52,16 @@ function bp_settings_action_general() {
 	$feedback      = array();      // array of strings for feedback.
 
 	// Nonce check.
-	check_admin_referer('bp_settings_general');
+	check_admin_referer( 'bp_settings_general' );
 
 	// Validate the user again for the current password when making a big change.
-	if ( ( is_super_admin() ) || ( !empty( $_POST['pwd'] ) && wp_check_password( $_POST['pwd'], $bp->displayed_user->userdata->user_pass, bp_displayed_user_id() ) ) ) {
+	if ( ( is_super_admin() ) || ( ! empty( $_POST['pwd'] ) && wp_check_password( $_POST['pwd'], $bp->displayed_user->userdata->user_pass, bp_displayed_user_id() ) ) ) {
 
 		$update_user = get_userdata( bp_displayed_user_id() );
 
 		/* Email Change Attempt ******************************************/
 
-		if ( !empty( $_POST['email'] ) ) {
+		if ( ! empty( $_POST['email'] ) ) {
 
 			// What is missing from the profile page vs signup -
 			// let's double check the goodies.
@@ -114,46 +114,46 @@ function bp_settings_action_general() {
 					// We mark that the change has taken place so as to ensure a
 					// success message, even though verification is still required.
 					$_POST['email'] = $update_user->user_email;
-					$email_changed = true;
+					$email_changed  = true;
 				}
 
-			// No change.
+				// No change.
 			} else {
 				$email_error = false;
 			}
 
-		// Email address cannot be empty.
+			// Email address cannot be empty.
 		} else {
 			$email_error = 'empty';
 		}
 
 		/* Password Change Attempt ***************************************/
 
-		if ( !empty( $_POST['pass1'] ) && !empty( $_POST['pass2'] ) ) {
+		if ( ! empty( $_POST['pass1'] ) && ! empty( $_POST['pass2'] ) ) {
 
-			if ( ( $_POST['pass1'] == $_POST['pass2'] ) && !strpos( " " . wp_unslash( $_POST['pass1'] ), "\\" ) ) {
+			if ( ( $_POST['pass1'] == $_POST['pass2'] ) && ! strpos( ' ' . wp_unslash( $_POST['pass1'] ), '\\' ) ) {
 
 				// Password change attempt is successful.
-				if ( ( ! empty( $_POST['pwd'] ) && $_POST['pwd'] != $_POST['pass1'] ) || is_super_admin() )  {
+				if ( ( ! empty( $_POST['pwd'] ) && $_POST['pwd'] != $_POST['pass1'] ) || is_super_admin() ) {
 					$update_user->user_pass = $_POST['pass1'];
-					$pass_changed = true;
+					$pass_changed           = true;
 
-				// The new password is the same as the current password.
+					// The new password is the same as the current password.
 				} else {
 					$pass_error = 'same';
 				}
 
-			// Password change attempt was unsuccessful.
+				// Password change attempt was unsuccessful.
 			} else {
 				$pass_error = 'mismatch';
 			}
 
-		// Both password fields were empty.
+			// Both password fields were empty.
 		} elseif ( empty( $_POST['pass1'] ) && empty( $_POST['pass2'] ) ) {
 			$pass_error = false;
 
-		// One of the password boxes was left empty.
-		} elseif ( ( empty( $_POST['pass1'] ) && !empty( $_POST['pass2'] ) ) || ( !empty( $_POST['pass1'] ) && empty( $_POST['pass2'] ) ) ) {
+			// One of the password boxes was left empty.
+		} elseif ( ( empty( $_POST['pass1'] ) && ! empty( $_POST['pass2'] ) ) || ( ! empty( $_POST['pass1'] ) && empty( $_POST['pass2'] ) ) ) {
 			$pass_error = 'empty';
 		}
 
@@ -177,45 +177,45 @@ function bp_settings_action_general() {
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( bp_displayed_user_id() );
 		}
 
-	// Password Error.
+		// Password Error.
 	} else {
 		$pass_error = 'invalid';
 	}
 
 	// Email feedback.
 	switch ( $email_error ) {
-		case 'invalid' :
-			$feedback['email_invalid']  = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
+		case 'invalid':
+			$feedback['email_invalid'] = __( 'That email address is invalid. Check the formatting and try again.', 'buddyboss' );
 			break;
-		case 'blocked' :
-			$feedback['email_blocked']  = __( 'That email address is currently unavailable for use.', 'buddyboss' );
+		case 'blocked':
+			$feedback['email_blocked'] = __( 'That email address is currently unavailable for use.', 'buddyboss' );
 			break;
-		case 'taken' :
-			$feedback['email_taken']    = __( 'That email address is already taken.', 'buddyboss' );
+		case 'taken':
+			$feedback['email_taken'] = __( 'That email address is already taken.', 'buddyboss' );
 			break;
-		case 'empty' :
-			$feedback['email_empty']    = __( 'Email address cannot be empty.', 'buddyboss' );
+		case 'empty':
+			$feedback['email_empty'] = __( 'Email address cannot be empty.', 'buddyboss' );
 			break;
-		case false :
+		case false:
 			// No change.
 			break;
 	}
 
 	// Password feedback.
 	switch ( $pass_error ) {
-		case 'invalid' :
-			$feedback['pass_error']    = __( 'Your current password is invalid.', 'buddyboss' );
+		case 'invalid':
+			$feedback['pass_error'] = __( 'Your current password is invalid.', 'buddyboss' );
 			break;
-		case 'mismatch' :
+		case 'mismatch':
 			$feedback['pass_mismatch'] = __( 'The new password fields did not match.', 'buddyboss' );
 			break;
-		case 'empty' :
-			$feedback['pass_empty']    = __( 'One of the password fields was empty.', 'buddyboss' );
+		case 'empty':
+			$feedback['pass_empty'] = __( 'One of the password fields was empty.', 'buddyboss' );
 			break;
-		case 'same' :
-			$feedback['pass_same'] 	   = __( 'The new password must be different from the current password.', 'buddyboss' );
+		case 'same':
+			$feedback['pass_same'] = __( 'The new password must be different from the current password.', 'buddyboss' );
 			break;
-		case false :
+		case false:
 			// No change.
 			break;
 	}
@@ -225,7 +225,7 @@ function bp_settings_action_general() {
 		$feedback[]    = __( 'Your settings have been saved.', 'buddyboss' );
 		$feedback_type = 'success';
 
-	// Some kind of errors occurred.
+		// Some kind of errors occurred.
 	} elseif ( ( ( false === $email_error ) || ( false === $pass_error ) ) && ( ( false === $pass_changed ) || ( false === $email_changed ) ) ) {
 		if ( bp_is_my_profile() ) {
 			$feedback['nochange'] = __( 'No changes were made to your account.', 'buddyboss' );
@@ -274,10 +274,12 @@ function bp_settings_verify_email_change() {
 			return;
 		}
 
-		$email_changed = wp_update_user( array(
-			'ID'         => bp_displayed_user_id(),
-			'user_email' => trim( $pending_email['newemail'] ),
-		) );
+		$email_changed = wp_update_user(
+			array(
+				'ID'         => bp_displayed_user_id(),
+				'user_email' => trim( $pending_email['newemail'] ),
+			)
+		);
 
 		if ( $email_changed ) {
 
@@ -294,7 +296,7 @@ function bp_settings_verify_email_change() {
 		bp_core_redirect( $redirect_to );
 		die();
 
-	// Email change is being dismissed.
+		// Email change is being dismissed.
 	} elseif ( ! empty( $_GET['dismiss_email_change'] ) ) {
 		$nonce_check = isset( $_GET['_wpnonce'] ) && wp_verify_nonce( wp_unslash( $_GET['_wpnonce'] ), 'bp_dismiss_email_change' );
 

@@ -68,19 +68,20 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			<?php bp_the_profile_field_name(); ?>
 			<?php if ( bp_is_register_page() ) : ?>
 				<?php bp_the_profile_field_optional_label(); ?>
-			<?php else: ?>
+			<?php else : ?>
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
 
-        <?php if ( bp_get_the_profile_field_description() ) : ?>
+		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
 
 		<?php
 
 		/** This action is documented in bp-xprofile/bp-xprofile-classes */
-		do_action( bp_get_the_profile_field_errors_action() ); ?>
+		do_action( bp_get_the_profile_field_errors_action() );
+		?>
 
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) ); ?>
@@ -110,8 +111,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 		$options = $this->field_obj->get_children();
 		$html    = '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';
 
-		if ( empty( $original_option_values ) && !empty( $_POST['field_' . $this->field_obj->id] ) ) {
-			$original_option_values = sanitize_text_field(  $_POST['field_' . $this->field_obj->id] );
+		if ( empty( $original_option_values ) && ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+			$original_option_values = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 		}
 
 		$option_values = ( $original_option_values ) ? (array) $original_option_values : array();
@@ -120,20 +121,20 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
-			foreach( $option_values as $i => $option_value ) {
-				if ( isset( $_POST['field_' . $this->field_obj->id] ) && $_POST['field_' . $this->field_obj->id] != $option_value ) {
-					if ( ! empty( $_POST['field_' . $this->field_obj->id] ) ) {
-						$option_values[$i] = sanitize_text_field( $_POST['field_' . $this->field_obj->id] );
+			foreach ( $option_values as $i => $option_value ) {
+				if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $_POST[ 'field_' . $this->field_obj->id ] != $option_value ) {
+					if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+						$option_values[ $i ] = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 					}
 				}
 			}
 
-			if ( '1' === $options[$k]->option_order ) {
-				$option_value = 'his_'. $options[$k]->name;
-			} elseif ( '2' === $options[$k]->option_order ) {
-				$option_value = 'her_'. $options[$k]->name;
+			if ( '1' === $options[ $k ]->option_order ) {
+				$option_value = 'his_' . $options[ $k ]->name;
+			} elseif ( '2' === $options[ $k ]->option_order ) {
+				$option_value = 'her_' . $options[ $k ]->name;
 			} else {
-				$option_value = 'their_'. $options[$k]->name;
+				$option_value = 'their_' . $options[ $k ]->name;
 			}
 
 			// Run the allowed option name through the before_save filter, so
@@ -146,11 +147,9 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			}
 
 			// Then, if the user has not provided a value, check for defaults.
-			if ( ! is_array( $original_option_values ) && empty( $option_values ) && $options[$k]->is_default_option ) {
+			if ( ! is_array( $original_option_values ) && empty( $option_values ) && $options[ $k ]->is_default_option ) {
 				$selected = ' selected="selected"';
 			}
-
-
 
 			/**
 			 * Filters the HTML output for options in a select input.
@@ -163,7 +162,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			 * @param string $selected Current selected value.
 			 * @param string $k        Current index in the foreach loop.
 			 */
-			$html .= apply_filters( 'bp_get_the_profile_field_options_select_gender', '<option' . $selected . ' value="' . esc_attr( stripslashes( $option_value ) ) . '">' . esc_html( stripslashes( $options[$k]->name ) ) . '</option>', $options[$k], $this->field_obj->id, $selected, $k );
+			$html .= apply_filters( 'bp_get_the_profile_field_options_select_gender', '<option' . $selected . ' value="' . esc_attr( stripslashes( $option_value ) ) . '">' . esc_html( stripslashes( $options[ $k ]->name ) ) . '</option>', $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
 		echo $html;
@@ -181,10 +180,12 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 	public function admin_field_html( array $raw_properties = array() ) {
 		?>
 
-		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text"><?php
-			/* translators: accessibility text */
-			esc_html_e( 'Select', 'buddyboss' );
-			?></label>
+		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
+															 <?php
+																/* translators: accessibility text */
+																esc_html_e( 'Select', 'buddyboss' );
+																?>
+			</label>
 		<select <?php echo $this->get_edit_field_html_elements( $raw_properties ); ?>>
 			<?php bp_the_profile_field_options(); ?>
 		</select>
@@ -219,9 +220,9 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				<p style="display: none;">
 					<label for="sort_order_<?php echo esc_attr( $type ); ?>"><?php esc_html_e( 'Sort Order:', 'buddyboss' ); ?></label>
 					<select name="sort_order_<?php echo esc_attr( $type ); ?>" id="sort_order_<?php echo esc_attr( $type ); ?>" >
-						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom',     'buddyboss' ); ?></option>
-						<option value="asc"    <?php selected( 'asc',    $current_field->order_by ); ?>><?php esc_html_e( 'Ascending',  'buddyboss' ); ?></option>
-						<option value="desc"   <?php selected( 'desc',   $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
+						<option value="custom" <?php selected( 'custom', $current_field->order_by ); ?>><?php esc_html_e( 'Custom', 'buddyboss' ); ?></option>
+						<option value="asc"    <?php selected( 'asc', $current_field->order_by ); ?>><?php esc_html_e( 'Ascending', 'buddyboss' ); ?></option>
+						<option value="desc"   <?php selected( 'desc', $current_field->order_by ); ?>><?php esc_html_e( 'Descending', 'buddyboss' ); ?></option>
 					</select>
 				</p>
 
@@ -231,7 +232,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				$options = $current_field->get_children( true );
 
 				if ( empty( $options ) ) {
-					$options = array();
+					$options   = array();
 					$options[] = (object) array(
 						'id'                => 1,
 						'is_default_option' => false,
@@ -256,13 +257,13 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 					$options = array();
 					$i       = 1;
 
-					while ( isset( $_POST[$type . '_option'][$i] ) ) {
+					while ( isset( $_POST[ $type . '_option' ][ $i ] ) ) {
 
 						// Multiselectbox and checkboxes support MULTIPLE default options; all other core types support only ONE.
-						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST["isDefault_{$type}_option"][$i] ) && (int) $_POST["isDefault_{$type}_option"] === $i ) {
+						if ( $current_type_obj->supports_options && ! $current_type_obj->supports_multiple_defaults && isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) && (int) $_POST[ "isDefault_{$type}_option" ] === $i ) {
 							$is_default_option = true;
-						} elseif ( isset( $_POST["isDefault_{$type}_option"][$i] ) ) {
-							$is_default_option = (bool) $_POST["isDefault_{$type}_option"][$i];
+						} elseif ( isset( $_POST[ "isDefault_{$type}_option" ][ $i ] ) ) {
+							$is_default_option = (bool) $_POST[ "isDefault_{$type}_option" ][ $i ];
 						} else {
 							$is_default_option = false;
 						}
@@ -271,7 +272,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 						$options[] = (object) array(
 							'id'                => -1,
 							'is_default_option' => $is_default_option,
-							'name'              => sanitize_text_field( stripslashes( $_POST[$type . '_option'][$i] ) ),
+							'name'              => sanitize_text_field( stripslashes( $_POST[ $type . '_option' ][ $i ] ) ),
 						);
 
 						++$i;
@@ -308,10 +309,12 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 
 						<div id="<?php echo esc_attr( "{$type}_div{$j}" ); ?>" class="bp-option <?php echo esc_attr( $class ); ?>">
 							<span class="bp-option-icon grabber"></span>
-							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text"><?php
-								/* translators: accessibility text */
-								esc_html_e( 'Add an option', 'buddyboss' );
-								?></label>
+							<label for="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" class="screen-reader-text">
+												   <?php
+													/* translators: accessibility text */
+													esc_html_e( 'Add an option', 'buddyboss' );
+													?>
+								</label>
 							<?php
 							if ( 1 === $j ) {
 								$key = sanitize_key( 'male' );
@@ -321,7 +324,7 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 								$key = sanitize_key( 'other' );
 							}
 							?>
-							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}_{$key}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[$i]->name ) ); ?>" />
+							<input type="text" name="<?php echo esc_attr( "{$type}_option[{$j}_{$key}]" ); ?>" id="<?php echo esc_attr( "{$type}_option{$j}" ); ?>" value="<?php echo esc_attr( stripslashes( $options[ $i ]->name ) ); ?>" />
 							<label for="<?php echo esc_attr( "{$type}_option{$default_name}" ); ?>">
 								<?php
 								if ( 1 === $j ) {
@@ -359,7 +362,8 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 				 *
 				 * @param BP_XProfile_Field $current_field Current field being rendered.
 				 */
-				do_action( 'bp_xprofile_admin_new_field_additional_settings_gender', $current_field ) ?>
+				do_action( 'bp_xprofile_admin_new_field_additional_settings_gender', $current_field )
+				?>
 			</div>
 		</div>
 
@@ -381,11 +385,12 @@ class BP_XProfile_Field_Type_Gender extends BP_XProfile_Field_Type {
 			return true;
 		}
 
-		$split_value = explode('_', $values );
+		$split_value = explode( '_', $values, 2 );
 		if ( 2 === count( $split_value ) ) {
 			if ( '' !== $split_value[1] && '' !== $split_value[0] ) {
-				$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
-				$count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$wpdb->prefix}bp_xprofile_fields WHERE type = %s AND name = %s AND parent_id = %d ", 'option', $split_value[1], $get_parent_id_of_gender_field ) );
+				$table_name                    = bp_core_get_table_prefix() . 'bp_xprofile_fields';
+				$get_parent_id_of_gender_field = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$table_name} WHERE type = %s AND parent_id = %d ", 'gender', 0 ) );
+				$count                         = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(id) FROM {$table_name} WHERE type = %s AND name = %s AND parent_id = %d ", 'option', $split_value[1], $get_parent_id_of_gender_field ) );
 				if ( '1' === $count ) {
 					return true;
 				} else {

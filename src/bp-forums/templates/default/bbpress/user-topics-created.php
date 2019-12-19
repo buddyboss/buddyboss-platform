@@ -18,13 +18,16 @@
 
 				<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
-				<?php bbp_get_template_part( 'loop',       'topics' ); ?>
+				<?php bbp_get_template_part( 'loop', 'topics' ); ?>
 
 				<?php bbp_get_template_part( 'pagination', 'topics' ); ?>
 
 			<?php else : ?>
 
-				<p><?php bbp_is_user_home() ? _e( 'You have not created any discussions.', 'buddyboss' ) : _e( 'This user has not created any discussions.', 'buddyboss' ); ?></p>
+				<aside class="bp-feedback bp-messages info">
+					<span class="bp-icon" aria-hidden="true"></span>
+					<p><?php bbp_is_user_home() ? _e( 'You have not created any discussions.', 'buddyboss' ) : _e( 'This user has not created any discussions.', 'buddyboss' ); ?></p>
+				</aside>
 
 			<?php endif; ?>
 

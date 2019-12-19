@@ -38,5 +38,4 @@ class BP_Search_Component extends BP_Component {
 	public function setup_globals( $args = array() ) {
 		parent::setup_globals( $args );
 	}
-
 }

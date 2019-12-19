@@ -15,9 +15,9 @@ defined( 'ABSPATH' ) || exit;
  * @deprecated BuddyPress 2.6.0
  */
 function bp_core_print_generation_time() {
-?>
+	?>
 
-<!-- Generated in <?php timer_stop(1); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
+<!-- Generated in <?php timer_stop( 1 ); ?> seconds. (<?php echo get_num_queries(); ?> q) -->
 
 	<?php
 }

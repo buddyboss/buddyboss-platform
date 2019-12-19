@@ -189,6 +189,9 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
+			
+			//show compose message screen
+			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
 
 		threadsView: function() {
@@ -1122,6 +1125,8 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
+                                dropdownCssClass: 'bb-select-dropdown',
+                                containerCssClass: 'bb-select-container',
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',
@@ -1430,7 +1435,8 @@ window.bp = window.bp || {};
 
 			if ( ( target[0].scrollHeight - ( target.scrollTop() ) ) == target.innerHeight() &&
 				this.collection.length &&
-				this.collection.options.page < this.collection.options.total_page
+				this.collection.options.page < this.collection.options.total_page &&
+				! target.find('.bp-user-messages-loading').length
 			) {
 				this.collection.options.page = this.collection.options.page + 1;
 
@@ -1730,7 +1736,7 @@ window.bp = window.bp || {};
                 navigateToList: function( event ) {
                         event.preventDefault();
                         bp.Nouveau.Messages.router.navigate( '/' );
-                        $('.bp-messages-container').removeClass('bp-view-message');
+                        $('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
                 },
 
 		doAction: function( event ) {

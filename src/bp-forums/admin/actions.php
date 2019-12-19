@@ -39,22 +39,22 @@ defined( 'ABSPATH' ) || exit;
  *
  *           v--WordPress Actions       v--Forums Sub-actions
  */
-add_action( 'admin_menu',              'bbp_admin_menu'                    );
-add_action( 'admin_init',              'bbp_admin_init'                    );
-add_action( 'admin_head',              'bbp_admin_head'                    );
-add_action( 'admin_notices',           'bbp_admin_notices'                 );
-add_action( 'custom_menu_order',       'bbp_admin_custom_menu_order'       );
-add_action( 'menu_order',              'bbp_admin_menu_order'              );
-add_action( 'wpmu_new_blog',           'bbp_new_site',               10, 6 );
+add_action( 'admin_menu', 'bbp_admin_menu' );
+add_action( 'admin_init', 'bbp_admin_init' );
+add_action( 'admin_head', 'bbp_admin_head' );
+add_action( 'admin_notices', 'bbp_admin_notices' );
+add_action( 'custom_menu_order', 'bbp_admin_custom_menu_order' );
+add_action( 'menu_order', 'bbp_admin_menu_order' );
+add_action( 'wpmu_new_blog', 'bbp_new_site', 10, 6 );
 
 // Hook on to admin_init
-add_action( 'bbp_admin_init', 'bbp_admin_forums'                );
-add_action( 'bbp_admin_init', 'bbp_admin_topics'                );
-add_action( 'bbp_admin_init', 'bbp_admin_replies'               );
-add_action( 'bbp_admin_init', 'bbp_setup_updater',          999 );
-add_action( 'bbp_admin_init', 'bbp_register_importers'          );
-add_action( 'bbp_admin_init', 'bbp_register_admin_style'        );
-add_action( 'bbp_admin_init', 'bbp_register_admin_settings'     );
+add_action( 'bbp_admin_init', 'bbp_admin_forums' );
+add_action( 'bbp_admin_init', 'bbp_admin_topics' );
+add_action( 'bbp_admin_init', 'bbp_admin_replies' );
+add_action( 'bbp_admin_init', 'bbp_setup_updater', 999 );
+add_action( 'bbp_admin_init', 'bbp_register_importers' );
+add_action( 'bbp_admin_init', 'bbp_register_admin_style' );
+add_action( 'bbp_admin_init', 'bbp_register_admin_settings' );
 
 // Initialize the admin area
 add_action( 'bbp_init', 'bbp_admin' );
@@ -63,12 +63,12 @@ add_action( 'bbp_init', 'bbp_admin' );
 add_action( 'bbp_admin_menu', 'bbp_admin_separator' );
 
 // Activation
-add_action( 'bbp_activation', 'bbp_delete_rewrite_rules'        );
+add_action( 'bbp_activation', 'bbp_delete_rewrite_rules' );
 add_action( 'bbp_activation', 'bbp_make_current_user_keymaster' );
 
 // Deactivation
-add_action( 'bbp_deactivation', 'bbp_remove_caps'          );
-add_action( 'bbp_deactivation', 'bbp_remove_roles'         );
+add_action( 'bbp_deactivation', 'bbp_remove_caps' );
+add_action( 'bbp_deactivation', 'bbp_remove_roles' );
 add_action( 'bbp_deactivation', 'bbp_delete_rewrite_rules' );
 
 // New Site
@@ -79,7 +79,7 @@ add_action( 'load-settings_page_bbpress', 'bbp_admin_settings_help' );
 
 // Handle submission of Tools pages
 add_action( 'load-tools_page_bbp-repair', 'bbp_admin_repair_handler' );
-add_action( 'load-tools_page_bbp-reset',  'bbp_admin_reset_handler'  );
+add_action( 'load-tools_page_bbp-reset', 'bbp_admin_reset_handler' );
 
 // Add sample permalink filter
 add_filter( 'post_type_link', 'bbp_filter_sample_permalink', 10, 4 );
@@ -90,18 +90,19 @@ add_filter( 'post_type_link', 'bbp_filter_sample_permalink', 10, 4 );
  *
  * @since bbPress (r3283)
  *
- * @param int $blog_id
- * @param int $user_id
- * @param string $domain
- * @param string $path
- * @param int $site_id
+ * @param int     $blog_id
+ * @param int     $user_id
+ * @param string  $domain
+ * @param string  $path
+ * @param int     $site_id
  * @param array() $meta
  */
 function bbp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 
 	// Bail if plugin is not network activated
-	if ( ! is_plugin_active_for_network( bbpress()->basename ) )
+	if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
 		return;
+	}
 
 	// Switch to the new blog
 	switch_to_blog( $blog_id );

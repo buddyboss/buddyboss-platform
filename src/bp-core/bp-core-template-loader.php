@@ -114,7 +114,7 @@ function bp_locate_template( $template_names, $load = false, $require_once = tru
 		}
 
 		// Trim off any slashes from the template name.
-		$template_name  = ltrim( $template_name, '/' );
+		$template_name = ltrim( $template_name, '/' );
 
 		// Loop through template stack.
 		foreach ( (array) $template_locations as $template_location ) {
@@ -176,17 +176,17 @@ function bp_locate_template_asset( $filename ) {
 	}
 
 	// Set up data array.
-	$data = array();
+	$data         = array();
 	$data['file'] = $data['uri'] = $located;
 
 	$find = array(
 		get_theme_root(),
-		bp_get_theme_compat_dir()
+		bp_get_theme_compat_dir(),
 	);
 
 	$replace = array(
 		get_theme_root_uri(),
-		bp_get_theme_compat_url()
+		bp_get_theme_compat_url(),
 	);
 
 	// Make sure URI path is relative to site URL.
@@ -286,7 +286,7 @@ function bp_get_template_stack() {
 
 	// Loop through 'bp_template_stack' filters, and call callback functions.
 	do {
-		foreach( (array) current( $filter ) as $the_ ) {
+		foreach ( (array) current( $filter ) as $the_ ) {
 			if ( ! is_null( $the_['function'] ) ) {
 				$args[1] = $stack;
 				$stack[] = call_user_func_array( $the_['function'], array_slice( $args, 1, (int) $the_['accepted_args'] ) );
@@ -307,7 +307,7 @@ function bp_get_template_stack() {
 	 *
 	 * @param array $stack Array of registered directories for template locations.
 	 */
-	return (array) apply_filters( 'bp_get_template_stack', $stack ) ;
+	return (array) apply_filters( 'bp_get_template_stack', $stack );
 }
 
 /**
@@ -409,7 +409,7 @@ function bp_get_template_locations( $templates = array() ) {
 	$locations = array(
 		'buddypress',
 		'community',
-		''
+		'',
 	);
 
 	/**
@@ -602,16 +602,19 @@ function bp_load_theme_functions() {
  * @return string Possible root level wrapper template files.
  */
 function bp_get_theme_compat_templates() {
-	return bp_get_query_template( 'buddypress', array(
-		'plugin-buddypress.php',
-		'buddypress.php',
-		'community.php',
-		'generic.php',
-		'page.php',
-		'single.php',
-		'singular.php',
-		'index.php'
-	) );
+	return bp_get_query_template(
+		'buddypress',
+		array(
+			'plugin-buddypress.php',
+			'buddypress.php',
+			'community.php',
+			'generic.php',
+			'page.php',
+			'single.php',
+			'singular.php',
+			'index.php',
+		)
+	);
 }
 
 /**
@@ -619,22 +622,25 @@ function bp_get_theme_compat_templates() {
  * BuddyBoss > Settings > General > General Settings.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_show_hide_toolbar() {
 
 	if ( is_user_logged_in() ) {
 
-		$old_user = BP_Core_Members_Switching::get_old_user();
-		$user     = wp_get_current_user();
+		$old_user = false;
+		if ( class_exists( 'BP_Core_Members_Switching' ) ) {
+			$old_user = BP_Core_Members_Switching::get_old_user();
+		}
+
+		$user = wp_get_current_user();
 
 		if ( ! empty( $old_user ) ) {
 			if ( $user->ID != $old_user->ID ) {
-				$userdata = get_userdata( $user->ID );
+				$userdata          = get_userdata( $user->ID );
 				$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
 			}
 		} else {
-			$userdata = get_userdata( $user->ID );
+			$userdata          = get_userdata( $user->ID );
 			$current_user_caps = isset( $userdata->allcaps ) ? $userdata->allcaps : array();
 		}
 

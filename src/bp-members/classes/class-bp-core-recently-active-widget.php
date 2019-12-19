@@ -24,11 +24,15 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	public function __construct() {
 		$name        = __( '(BB) Recently Active Members', 'buddyboss' );
 		$description = __( 'Profile photos of recently active members', 'buddyboss' );
-		parent::__construct( false, $name, array(
-			'description'                 => $description,
-			'classname'                   => 'widget_bp_core_recently_active_widget buddypress widget',
-			'customize_selective_refresh' => true,
-		) );
+		parent::__construct(
+			false,
+			$name,
+			array(
+				'description'                 => $description,
+				'classname'                   => 'widget_bp_core_recently_active_widget buddypress widget',
+				'customize_selective_refresh' => true,
+			)
+		);
 	}
 
 	/**
@@ -58,11 +62,11 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		 * @param string $id_base  Root ID for all widgets of this type.
 		 */
 		$title = apply_filters( 'widget_title', $settings['title'], $settings, $this->id_base );
-        
-        $refresh_recent_users =  '<a href="" class="bs-widget-reload bs-heartbeat-reload hide"><i class="bb-icon-spin6"></i></a>';
+
+		$refresh_recent_users = '<a href="" class="bs-widget-reload bs-heartbeat-reload hide"><i class="bb-icon-spin6"></i></a>';
 
 		echo $args['before_widget'];
-        echo $args['before_title'] . $title . $refresh_recent_users . $args['after_title'];
+		echo $args['before_title'] . $title . $refresh_recent_users . $args['after_title'];
 
 		// Setup args for querying members.
 		$members_args = array(
@@ -78,31 +82,35 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		$old_members_template = $members_template;
 
 		?>
-        <div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
-    		<?php if ( bp_has_members( $members_args ) ) : ?>
-    
-    			<div class="avatar-block">
-    
-    				<?php while ( bp_members() ) : bp_the_member(); ?>
-    
-    					<div class="item-avatar">
-    						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
-    					</div>
-    
-    				<?php endwhile; ?>
-    
-    			</div>
-                <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
-    
-    		<?php else: ?>
-    
-    			<div class="widget-error">
-    				<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
-    			</div>
-    
-    		<?php endif; ?>
-        </div>
-		<?php echo $args['after_widget'];
+		<div id="boss_recently_active_widget_heartbeat" data-max="<?php echo $settings['max_members']; ?>">
+			<?php if ( bp_has_members( $members_args ) ) : ?>
+	
+				<div class="avatar-block">
+	
+					<?php
+					while ( bp_members() ) :
+						bp_the_member();
+						?>
+	
+						<div class="item-avatar">
+							<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+						</div>
+	
+					<?php endwhile; ?>
+	
+				</div>
+				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+	
+			<?php else : ?>
+	
+				<div class="widget-error">
+					<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
+				</div>
+	
+			<?php endif; ?>
+		</div>
+		<?php
+		echo $args['after_widget'];
 
 		// Restore the global.
 		$members_template = $old_members_template;
@@ -138,7 +146,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 		// Get widget settings.
 		$settings    = $this->parse_settings( $instance );
 		$title       = strip_tags( $settings['title'] );
-		$max_members = strip_tags( $settings['max_members'] ); ?>
+		$max_members = strip_tags( $settings['max_members'] );
+		?>
 
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>">
@@ -154,7 +163,7 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 			</label>
 		</p>
 
-	<?php
+		<?php
 	}
 
 	/**
@@ -166,10 +175,14 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
 	 * @return array
 	 */
 	public function parse_settings( $instance = array() ) {
-		return bp_parse_args( $instance, array(
-			'title' 	     => __( 'Recently Active Members', 'buddyboss' ),
-			'max_members' 	 => 15,
-		), 'recently_active_members_widget_settings' );
+		return bp_parse_args(
+			$instance,
+			array(
+				'title'       => __( 'Recently Active Members', 'buddyboss' ),
+				'max_members' => 15,
+			),
+			'recently_active_members_widget_settings'
+		);
 	}
 }
 
@@ -177,9 +190,8 @@ class BP_Core_Recently_Active_Widget extends WP_Widget {
  * Periodically update members list for recently active members widget.
  *
  * @since BuddyBoss 1.0.0
- *
  */
-function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), $data = array()  ){
+function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), $data = array() ) {
 	global $members_template;
 
 	if ( empty( $data['boss_recently_active_widget'] ) ) {
@@ -207,24 +219,27 @@ function buddyboss_theme_recently_active_widget_heartbeat( $response = array(), 
 
 	<?php if ( bp_has_members( $members_args ) ) : ?>
 
-        <div class="avatar-block">
+		<div class="avatar-block">
 
-			<?php while ( bp_members() ) : bp_the_member(); ?>
+			<?php
+			while ( bp_members() ) :
+				bp_the_member();
+				?>
 
-                <div class="item-avatar">
-                    <a href="<?php bp_member_permalink(); ?>" title="<?php bp_member_name(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
-                </div>
+				<div class="item-avatar">
+					<a href="<?php bp_member_permalink(); ?>" title="<?php bp_member_name(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>"><?php bp_member_avatar(); ?></a>
+				</div>
 
 			<?php endwhile; ?>
 
-        </div>
-        <div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
+		</div>
+		<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 
-	<?php else: ?>
+	<?php else : ?>
 
-        <div class="widget-error">
+		<div class="widget-error">
 			<?php esc_html_e( 'There are no recently active members', 'buddyboss' ); ?>
-        </div>
+		</div>
 
 	<?php endif; ?>
 

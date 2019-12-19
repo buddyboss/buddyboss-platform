@@ -53,7 +53,14 @@
 
 		<?php do_action( 'bbp_theme_before_topic_author_details' ); ?>
 
-		<?php bbp_topic_author_link( array( 'sep' => '<br />', 'show_role' => true ) ); ?>
+		<?php
+		bbp_topic_author_link(
+			array(
+				'sep'       => '<br />',
+				'show_role' => true,
+			)
+		);
+		?>
 
 		<?php do_action( 'bbp_theme_after_topic_author_details' ); ?>
 

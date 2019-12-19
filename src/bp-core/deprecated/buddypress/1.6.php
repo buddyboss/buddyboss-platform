@@ -145,13 +145,25 @@ function bp_core_add_ajax_hook() {
  */
 function bp_friends_header_tabs() {
 	_deprecated_function( __FUNCTION__, '1.6', 'Since BuddyPress 1.2, BP has not supported ordering of friend lists by URL parameters.' );
-?>
+	?>
 
-	<li<?php if ( !bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/recently-active' ) ?>"><?php _e( 'Recently Active', 'buddyboss' ) ?></a></li>
-	<li<?php if ( bp_is_action_variable( 'newest', 0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/newest' ) ?>"><?php _e( 'Newest', 'buddyboss' ) ?></a></li>
-	<li<?php if ( bp_is_action_variable( 'alphabetically', 0 ) ) : ?> class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/alphabetically' ) ?>"><?php _e( 'Alphabetically', 'buddyboss' ) ?></a></li>
+	<li
+	<?php
+	if ( ! bp_action_variable( 0 ) || bp_is_action_variable( 'recently-active', 0 ) ) :
+		?>
+		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/recently-active' ); ?>"><?php _e( 'Recently Active', 'buddyboss' ); ?></a></li>
+	<li
+	<?php
+	if ( bp_is_action_variable( 'newest', 0 ) ) :
+		?>
+		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/newest' ); ?>"><?php _e( 'Newest', 'buddyboss' ); ?></a></li>
+	<li
+	<?php
+	if ( bp_is_action_variable( 'alphabetically', 0 ) ) :
+		?>
+		 class="current"<?php endif; ?>><a href="<?php echo trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() . '/my-friends/alphabetically' ); ?>"><?php _e( 'Alphabetically', 'buddyboss' ); ?></a></li>
 
-<?php
+	<?php
 	do_action( 'friends_header_tabs' );
 }
 
@@ -167,7 +179,8 @@ function bp_friends_filter_title() {
 	$current_filter = bp_action_variable( 0 );
 
 	switch ( $current_filter ) {
-		case 'recently-active': default:
+		case 'recently-active':
+		default:
 			_e( 'Recently Active', 'buddyboss' );
 			break;
 		case 'newest':

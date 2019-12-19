@@ -622,30 +622,6 @@ function bp_nouveau_get_appearance_settings( $option = '' ) {
 }
 
 /**
- * Returns the choices for the Layout option of the customizer
- * or the list of corresponding css classes.
- *
- * @since BuddyPress 3.0.0
- *
- * @param string $type 'option' to get the labels, 'classes' to get the classes
- *
- * @return array The list of labels or classes preserving keys.
- */
-function bp_nouveau_customizer_grid_choices( $type = 'option' ) {
-	$columns = array(
-		array( 'key' => '2', 'label' => __( 'Two columns', 'buddyboss'   ), 'class' => 'two'   ),
-		array( 'key' => '3', 'label' => __( 'Three columns', 'buddyboss' ), 'class' => 'three' ),
-		array( 'key' => '4', 'label' => __( 'Four columns', 'buddyboss'  ), 'class' => 'four'  ),
-	);
-
-	if ( 'option' === $type ) {
-		return wp_list_pluck( $columns, 'label', 'key' );
-	}
-
-	return wp_list_pluck( $columns, 'class', 'key' );
-}
-
-/**
  * Sanitize a list of slugs to save it as an array
  *
  * @since BuddyPress 3.0.0
@@ -1057,60 +1033,263 @@ function bp_nouveau_get_signup_fields( $section = '' ) {
 	 *
 	 * @param array $value The list of fields organized into sections.
 	 */
-	$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
-		'account_details' => array(
-			'signup_email' => array(
-				'label'          => __( 'Email', 'buddyboss' ),
-				'required'       => true,
-				'value'          => 'bp_get_signup_email_value',
-				'attribute_type' => 'email',
-				'type'           => 'email',
-				'class'          => '',
+
+	$email_opt    = function_exists( 'bp_register_confirm_email' ) && true === bp_register_confirm_email() ? true : false;
+	$password_opt = function_exists( 'bp_register_confirm_password' ) && true === bp_register_confirm_password() ? true : false;
+
+	if ( true === $email_opt && true === $password_opt ) {
+		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
+			'account_details' => array(
+				'signup_email' => array(
+					'label'          => __( 'Email', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_email_value',
+					'attribute_type' => 'email',
+					'type'           => 'email',
+					'class'          => '',
+				),
+				'signup_email_confirm' => array(
+					'label'          => __( 'Confirm Email', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_confirm_email_value',
+					'attribute_type' => 'email',
+					'type'           => 'email',
+					'class'          => '',
+				),
+				'signup_password' => array(
+					'label'          => __( 'Password', 'buddyboss' ),
+					'required'       => true,
+					'value'          => '',
+					'attribute_type' => 'password',
+					'type'           => 'password',
+					'class'          => 'password-entry',
+				),
+				'signup_password_confirm' => array(
+					'label'          => __( 'Confirm Password', 'buddyboss' ),
+					'required'       => true,
+					'value'          => '',
+					'attribute_type' => 'password',
+					'type'           => 'password',
+					'class'          => 'password-entry-confirm',
+				)
 			),
-			'signup_password' => array(
-				'label'          => __( 'Password', 'buddyboss' ),
-				'required'       => true,
-				'value'          => '',
-				'attribute_type' => 'password',
-				'type'           => 'password',
-				'class'          => 'password-entry',
-			)
-		),
-		'blog_details' => array(
-			'signup_blog_url' => array(
-				'label'          => __( 'Site URL', 'buddyboss' ),
-				'required'       => true,
-				'value'          => 'bp_get_signup_blog_url_value',
-				'attribute_type' => 'slug',
-				'type'           => 'text',
-				'class'          => '',
+			'blog_details' => array(
+				'signup_blog_url' => array(
+					'label'          => __( 'Site URL', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_url_value',
+					'attribute_type' => 'slug',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_title' => array(
+					'label'          => __( 'Site Title', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_title_value',
+					'attribute_type' => 'title',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_privacy_public' => array(
+					'label'          => __( 'Yes', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'public',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
+				'signup_blog_privacy_private' => array(
+					'label'          => __( 'No', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'private',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
 			),
-			'signup_blog_title' => array(
-				'label'          => __( 'Site Title', 'buddyboss' ),
-				'required'       => true,
-				'value'          => 'bp_get_signup_blog_title_value',
-				'attribute_type' => 'title',
-				'type'           => 'text',
-				'class'          => '',
+		) );
+	} elseif ( false === $email_opt && true === $password_opt ) {
+		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
+			'account_details' => array(
+				'signup_email' => array(
+					'label'          => __( 'Email', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_email_value',
+					'attribute_type' => 'email',
+					'type'           => 'email',
+					'class'          => '',
+				),
+				'signup_password' => array(
+					'label'          => __( 'Password', 'buddyboss' ),
+					'required'       => true,
+					'value'          => '',
+					'attribute_type' => 'password',
+					'type'           => 'password',
+					'class'          => 'password-entry',
+				),
+				'signup_password_confirm' => array(
+					'label'          => __( 'Confirm Password', 'buddyboss' ),
+					'required'       => true,
+					'value'          => '',
+					'attribute_type' => 'password',
+					'type'           => 'password',
+					'class'          => 'password-entry-confirm',
+				)
 			),
-			'signup_blog_privacy_public' => array(
-				'label'          => __( 'Yes', 'buddyboss' ),
-				'required'       => false,
-				'value'          => 'public',
-				'attribute_type' => '',
-				'type'           => 'radio',
-				'class'          => '',
+			'blog_details' => array(
+				'signup_blog_url' => array(
+					'label'          => __( 'Site URL', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_url_value',
+					'attribute_type' => 'slug',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_title' => array(
+					'label'          => __( 'Site Title', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_title_value',
+					'attribute_type' => 'title',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_privacy_public' => array(
+					'label'          => __( 'Yes', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'public',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
+				'signup_blog_privacy_private' => array(
+					'label'          => __( 'No', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'private',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
 			),
-			'signup_blog_privacy_private' => array(
-				'label'          => __( 'No', 'buddyboss' ),
-				'required'       => false,
-				'value'          => 'private',
-				'attribute_type' => '',
-				'type'           => 'radio',
-				'class'          => '',
+		) );
+	} elseif ( true === $email_opt && false === $password_opt ) {
+		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
+			'account_details' => array(
+				'signup_email' => array(
+					'label'          => __( 'Email', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_email_value',
+					'attribute_type' => 'email',
+					'type'           => 'email',
+					'class'          => '',
+				),
+				'signup_email_confirm' => array(
+					'label'          => __( 'Confirm Email', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_confirm_email_value',
+					'attribute_type' => 'email',
+					'type'           => 'email',
+					'class'          => '',
+				),
+				'signup_password' => array(
+					'label'          => __( 'Password', 'buddyboss' ),
+					'required'       => true,
+					'value'          => '',
+					'attribute_type' => 'password',
+					'type'           => 'password',
+					'class'          => 'password-entry',
+				)
 			),
-		),
-	) );
+			'blog_details' => array(
+				'signup_blog_url' => array(
+					'label'          => __( 'Site URL', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_url_value',
+					'attribute_type' => 'slug',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_title' => array(
+					'label'          => __( 'Site Title', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_title_value',
+					'attribute_type' => 'title',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_privacy_public' => array(
+					'label'          => __( 'Yes', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'public',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
+				'signup_blog_privacy_private' => array(
+					'label'          => __( 'No', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'private',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
+			),
+		) );
+	} else {
+		$fields = apply_filters( 'bp_nouveau_get_signup_fields', array(
+			'account_details' => array(
+				'signup_email' => array(
+					'label'          => __( 'Email', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_email_value',
+					'attribute_type' => 'email',
+					'type'           => 'email',
+					'class'          => '',
+				),
+				'signup_password' => array(
+					'label'          => __( 'Password', 'buddyboss' ),
+					'required'       => true,
+					'value'          => '',
+					'attribute_type' => 'password',
+					'type'           => 'password',
+					'class'          => 'password-entry',
+				)
+			),
+			'blog_details' => array(
+				'signup_blog_url' => array(
+					'label'          => __( 'Site URL', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_url_value',
+					'attribute_type' => 'slug',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_title' => array(
+					'label'          => __( 'Site Title', 'buddyboss' ),
+					'required'       => true,
+					'value'          => 'bp_get_signup_blog_title_value',
+					'attribute_type' => 'title',
+					'type'           => 'text',
+					'class'          => '',
+				),
+				'signup_blog_privacy_public' => array(
+					'label'          => __( 'Yes', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'public',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
+				'signup_blog_privacy_private' => array(
+					'label'          => __( 'No', 'buddyboss' ),
+					'required'       => false,
+					'value'          => 'private',
+					'attribute_type' => '',
+					'type'           => 'radio',
+					'class'          => '',
+				),
+			),
+		) );
+	}
 
 	if ( ! bp_get_blog_signup_allowed() ) {
 		unset( $fields['blog_details'] );

@@ -17,8 +17,6 @@ function groups_screen_group_subgroups() {
 		return false;
 	}
 
-
-
 	/**
 	 * Fires before the loading of a single group's subgroups page.
 	 *

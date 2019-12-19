@@ -26,7 +26,7 @@ final class BP_Settings_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Settings_Export();
-			$instance->setup( "bp_settings", __( 'Settings', 'buddyboss' ) );
+			$instance->setup( 'bp_settings', __( 'Settings', 'buddyboss' ) );
 		}
 
 		return $instance;

@@ -184,6 +184,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_styles' ) ); // Enqueue theme CSS
 		add_action( 'bp_enqueue_scripts', array( $this, 'enqueue_scripts' ) ); // Enqueue theme JS
 		add_filter( 'bp_enqueue_scripts', array( $this, 'localize_scripts' ) ); // Enqueue theme script localization
+		add_filter( 'wp_enqueue_scripts', array( $this, 'check_heartbeat_api' ), 99999 );
 
 		// Register login and forgot password popup link
 		add_action( 'login_enqueue_scripts', array( $this, 'register_scripts' ), 2 );
@@ -199,9 +200,6 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 		// Register directory nav items
 		add_action( 'bp_screens', array( $this, 'setup_directory_nav' ), 15 );
-
-		// Register the Primary Object nav widget
-		add_action( 'bp_widgets_init', array( 'BP_Nouveau_Object_Nav_Widget', 'register_widget' ) );
 
 		// Set the BP Uri for the Ajax customizer preview
 		add_filter( 'bp_uri', array( $this, 'customizer_set_uri' ), 10, 1 );
@@ -491,7 +489,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-		wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	    if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
+		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+	    }
 
 		wp_enqueue_script( 'bp-nouveau' );
 
@@ -503,6 +503,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 			wp_enqueue_script( 'comment-reply' );
 		}
 
+		wp_enqueue_script( 'heartbeat' );
+
 		/**
 		 * Fires after all of the BuddyPress Nouveau scripts have been enqueued.
 		 *
@@ -510,6 +512,19 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		do_action( 'bp_nouveau_enqueue_scripts' );
 	}
+
+	/**
+	 * Check the Heartbeat API if it is enabled or not on front end
+     *
+     * @since BuddyBoss 1.1.2
+	 */
+	public function check_heartbeat_api() {
+		if ( ! wp_script_is( 'heartbeat', 'registered' ) && ! is_admin() ) {
+			update_option( 'bp_wp_heartbeat_disabled', '1' );
+		} else {
+			update_option( 'bp_wp_heartbeat_disabled', '0' );
+        }
+    }
 
 	/**
 	 * Adds the no-js class to the body tag.
@@ -564,6 +579,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 */
 		$supported_objects = (array) apply_filters( 'bp_nouveau_supported_components', bp_core_get_packaged_component_ids() );
 		$object_nonces     = array();
+		$group_sub_objects = false;
 
 		foreach ( $supported_objects as $key_object => $object ) {
 			if ( ! bp_is_active( $object ) || 'forums' === $object ) {
@@ -572,10 +588,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 			}
 
 			if ( 'groups' === $object ) {
-				$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
+				$group_sub_objects = true;
 			}
 
 			$object_nonces[ $object ] = wp_create_nonce( 'bp_nouveau_' . $object );
+		}
+
+		if ( true === $group_sub_objects ) {
+			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 		}
 
 		// Add components & nonces

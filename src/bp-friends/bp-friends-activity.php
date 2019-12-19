@@ -38,18 +38,21 @@ function friends_record_activity( $args = '' ) {
 		return false;
 	}
 
-	$r = wp_parse_args( $args, array(
-		'user_id'           => bp_loggedin_user_id(),
-		'action'            => '',
-		'content'           => '',
-		'primary_link'      => '',
-		'component'         => buddypress()->friends->id,
-		'type'              => false,
-		'item_id'           => false,
-		'secondary_item_id' => false,
-		'recorded_time'     => bp_core_current_time(),
-		'hide_sitewide'     => false
-	) );
+	$r = wp_parse_args(
+		$args,
+		array(
+			'user_id'           => bp_loggedin_user_id(),
+			'action'            => '',
+			'content'           => '',
+			'primary_link'      => '',
+			'component'         => buddypress()->friends->id,
+			'type'              => false,
+			'item_id'           => false,
+			'secondary_item_id' => false,
+			'recorded_time'     => bp_core_current_time(),
+			'hide_sitewide'     => false,
+		)
+	);
 
 	return bp_activity_add( $r );
 }
@@ -75,12 +78,14 @@ function friends_delete_activity( $args ) {
 		return;
 	}
 
-	bp_activity_delete_by_item_id( array(
-		'component' => buddypress()->friends->id,
-		'item_id'   => $args['item_id'],
-		'type'      => $args['type'],
-		'user_id'   => $args['user_id']
-	) );
+	bp_activity_delete_by_item_id(
+		array(
+			'component' => buddypress()->friends->id,
+			'item_id'   => $args['item_id'],
+			'type'      => $args['type'],
+			'user_id'   => $args['user_id'],
+		)
+	);
 }
 
 /**
@@ -90,7 +95,7 @@ function friends_delete_activity( $args ) {
  */
 function friends_register_activity_actions() {
 
-	if ( !bp_is_active( 'activity' ) ) {
+	if ( ! bp_is_active( 'activity' ) ) {
 		return false;
 	}
 
@@ -222,11 +227,13 @@ function bp_friends_prefetch_activity_object_data( $activities ) {
 
 	if ( ! empty( $friend_ids ) ) {
 		// Fire a user query to prime user caches.
-		new BP_User_Query( array(
-			'user_ids'          => $friend_ids,
-			'populate_extras'   => false,
-			'update_meta_cache' => false,
-		) );
+		new BP_User_Query(
+			array(
+				'user_ids'          => $friend_ids,
+				'populate_extras'   => false,
+				'update_meta_cache' => false,
+			)
+		);
 	}
 
 	return $activities;
@@ -266,19 +273,19 @@ function bp_friends_filter_activity_scope( $retval = array(), $filter = array() 
 		array(
 			'column'  => 'user_id',
 			'compare' => 'IN',
-			'value'   => (array) $friends
+			'value'   => (array) $friends,
 		),
 
 		// We should only be able to view sitewide activity content for friends.
 		array(
 			'column' => 'hide_sitewide',
-			'value'  => 0
+			'value'  => 0,
 		),
 
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),
-			'show_hidden' => true
+			'show_hidden' => true,
 		),
 	);
 
@@ -351,7 +358,7 @@ function bp_friends_filter_activity_just_me_scope( $retval = array(), $filter = 
 				'column' => 'secondary_item_id',
 				'value'  => $user_id,
 			),
-		)
+		),
 	);
 
 	// Juggle back override value.
@@ -380,12 +387,14 @@ function bp_friends_friendship_accepted_activity( $friendship_id, $initiator_use
 	}
 
 	// Record in activity feeds for the initiator.
-	friends_record_activity( array(
-		'user_id'           => $initiator_user_id,
-		'type'              => 'friendship_created',
-		'item_id'           => $friendship_id,
-		'secondary_item_id' => $friend_user_id
-	) );
+	friends_record_activity(
+		array(
+			'user_id'           => $initiator_user_id,
+			'type'              => 'friendship_created',
+			'item_id'           => $friendship_id,
+			'secondary_item_id' => $friend_user_id,
+		)
+	);
 }
 add_action( 'friends_friendship_accepted', 'bp_friends_friendship_accepted_activity', 10, 4 );
 
@@ -401,11 +410,13 @@ function bp_friends_delete_activity_on_user_delete( $user_id = 0 ) {
 		return;
 	}
 
-	bp_activity_delete( array(
-		'component'         => buddypress()->friends->id,
-		'type'              => 'friendship_created',
-		'secondary_item_id' => $user_id
-	) );
+	bp_activity_delete(
+		array(
+			'component'         => buddypress()->friends->id,
+			'type'              => 'friendship_created',
+			'secondary_item_id' => $user_id,
+		)
+	);
 }
 add_action( 'friends_remove_data', 'bp_friends_delete_activity_on_user_delete' );
 
@@ -417,6 +428,12 @@ add_action( 'friends_remove_data', 'bp_friends_delete_activity_on_user_delete' )
  * @param int $friendship_id ID of the friendship.
  */
 function bp_friends_delete_activity_on_friendship_delete( $friendship_id ) {
-	friends_delete_activity( array( 'item_id' => $friendship_id, 'type' => 'friendship_created', 'user_id' => 0 ) );
+	friends_delete_activity(
+		array(
+			'item_id' => $friendship_id,
+			'type'    => 'friendship_created',
+			'user_id' => 0,
+		)
+	);
 }
 add_action( 'friends_friendship_deleted', 'bp_friends_delete_activity_on_friendship_delete' );

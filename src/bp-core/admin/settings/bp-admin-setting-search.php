@@ -46,8 +46,8 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 			// Loop through fields for this section
 			foreach ( (array) $fields as $field_id => $field ) {
 				if ( ! empty( $field['callback'] ) && ! empty( $field['title'] ) ) {
-					$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : [];
-					$args = isset( $field['args'] ) ? $field['args'] : array();
+					$sanitize_callback = isset( $field['sanitize_callback'] ) ? $field['sanitize_callback'] : array();
+					$args              = isset( $field['args'] ) ? $field['args'] : array();
 					$this->add_field( $field_id, $field['title'], $field['callback'], $sanitize_callback, $args );
 				}
 			}
@@ -56,4 +56,4 @@ class BP_Admin_Setting_Search extends BP_Admin_Setting_tab {
 
 }
 
-return new BP_Admin_Setting_Search;
+return new BP_Admin_Setting_Search();

@@ -28,6 +28,13 @@ function bp_core_install( $active_components = false ) {
 
 		/** This filter is documented in bp-core/admin/bp-core-admin-components.php */
 		$active_components = apply_filters( 'bp_active_components', bp_get_option( 'bp-active-components' ) );
+
+		// check for xprofile is active component in db or not if not then update it
+		if ( empty( $active_components['xprofile'] ) ) {
+			$active_components['xprofile'] = 1;
+
+			bp_update_option( 'bp-active-components', $active_components );
+		}
 	}
 
 	// Install Activity Feeds even when inactive (to store last_activity data).
@@ -37,47 +44,47 @@ function bp_core_install( $active_components = false ) {
 	bp_core_maybe_install_signups();
 
 	// Notifications.
-	if ( !empty( $active_components['notifications'] ) ) {
+	if ( ! empty( $active_components['notifications'] ) ) {
 		bp_core_install_notifications();
 	}
 
 	// Connections.
-	if ( !empty( $active_components['friends'] ) ) {
+	if ( ! empty( $active_components['friends'] ) ) {
 		bp_core_install_friends();
 	}
 
 	// Follow.
-	if ( !empty( $active_components['activity'] ) ) {
+	if ( ! empty( $active_components['activity'] ) ) {
 		bp_core_install_follow();
 	}
 
 	// Extensible Groups.
-	if ( !empty( $active_components['groups'] ) ) {
+	if ( ! empty( $active_components['groups'] ) ) {
 		bp_core_install_groups();
 	}
 
 	// Private Messaging.
-	if ( !empty( $active_components['messages'] ) ) {
+	if ( ! empty( $active_components['messages'] ) ) {
 		bp_core_install_private_messaging();
 	}
 
 	// Profile Fields.
-	if ( !empty( $active_components['xprofile'] ) ) {
+	if ( ! empty( $active_components['xprofile'] ) ) {
 		bp_core_install_extended_profiles();
 	}
 
 	// Blog tracking.
-	if ( !empty( $active_components['blogs'] ) ) {
+	if ( ! empty( $active_components['blogs'] ) ) {
 		bp_core_install_blog_tracking();
 	}
 
 	// Discussion forums
-	if ( !empty( $active_components['forums'] ) ) {
+	if ( ! empty( $active_components['forums'] ) ) {
 		bp_core_install_discussion_forums();
 	}
 
 	// Media
-	if ( !empty( $active_components['media'] ) ) {
+	if ( ! empty( $active_components['media'] ) ) {
 		bp_core_install_media();
 	}
 
@@ -90,7 +97,7 @@ function bp_core_install( $active_components = false ) {
  */
 function bp_core_uninstall( $uninstalled_components ) {
 	// Discussion forums
-	if ( !empty( $uninstalled_components['forums'] ) ) {
+	if ( ! empty( $uninstalled_components['forums'] ) ) {
 		bp_core_uninstall_discussion_forums();
 	}
 }
@@ -139,7 +146,6 @@ function bp_core_install_notifications() {
  * Install database tables for the Activity component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_activity_streams() {
 	$sql             = array();
@@ -190,7 +196,6 @@ function bp_core_install_activity_streams() {
  * Install database tables for the Friends component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_friends() {
 	$sql             = array();
@@ -215,7 +220,6 @@ function bp_core_install_friends() {
  * Install database tables for the Follow component.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_core_install_follow() {
 	$sql             = array();
@@ -236,7 +240,6 @@ function bp_core_install_follow() {
  * Install database tables for the Groups component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_groups() {
 	$sql             = array();
@@ -295,7 +298,6 @@ function bp_core_install_groups() {
  * Install database tables for the Messages component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_private_messaging() {
 	$sql             = array();
@@ -352,7 +354,6 @@ function bp_core_install_private_messaging() {
  * Install database tables for the Profiles component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_extended_profiles() {
 	$sql             = array();
@@ -450,80 +451,156 @@ function bp_core_install_default_profiles_fields() {
 	$base_group_id = bp_xprofile_base_group_id();
 	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_groups WHERE id = {$base_group_id}" ) ) {
 
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_groups", [
-			'name'        => bp_get_option( 'bp-xprofile-base-group-name' ),
-			'description' => '',
-			'can_delete'  => 0,
-		] );
+		$result = $wpdb->insert(
+			"{$bp_prefix}bp_xprofile_groups",
+			array(
+				'name'        => bp_get_option( 'bp-xprofile-base-group-name' ),
+				'description' => '',
+				'can_delete'  => 0,
+			)
+		);
 
-		$base_group_id = $wpdb->insert_id;
-		if ( $is_multisite ) {
-			add_site_option( 'bp-xprofile-base-group-id', $base_group_id );
+		if ( $result ) {
+			$base_group_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-base-group-id', $base_group_id );
+			}
 		}
 	}
 	bp_update_option( 'bp-xprofile-base-group-id', $base_group_id );
 
 	// First name
 	$first_name_id = bp_xprofile_firstname_field_id();
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$first_name_id}" ) ) {
 
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
-			'group_id'    => $base_group_id,
-			'parent_id'   => 0,
-			'type'        => 'textbox',
-			'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
-			'description' => '',
-			'is_required' => 1,
-			'can_delete'  => 0,
-		] );
-
-		$first_name_id = $wpdb->insert_id;
-		if ( $is_multisite ) {
-			add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+	if ( $first_name_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$first_name_id}" ) ) {
+			$result = $wpdb->insert(
+				"{$bp_prefix}bp_xprofile_fields",
+				array(
+					'group_id'    => $base_group_id,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				)
+			);
+			if ( $result ) {
+				$first_name_id = $wpdb->insert_id;
+				if ( $is_multisite ) {
+					add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+				}
+			}
 		}
-
+	} else {
+		$result = $wpdb->insert(
+			"{$bp_prefix}bp_xprofile_fields",
+			array(
+				'group_id'    => $base_group_id,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-firstname-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			)
+		);
+		if ( $result ) {
+			$first_name_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-firstname-field-id', $first_name_id );
+			}
+		}
 	}
 	bp_update_option( 'bp-xprofile-firstname-field-id', $first_name_id );
 
 	// Last name
 	$last_name_id = bp_xprofile_lastname_field_id();
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$last_name_id}" ) ) {
-
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
-			'group_id'    => $base_group_id,
-			'parent_id'   => 0,
-			'type'        => 'textbox',
-			'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
-			'description' => '',
-			'is_required' => 1,
-			'can_delete'  => 0,
-		] );
-
-		$last_name_id = $wpdb->insert_id;
-		if ( $is_multisite ) {
-			add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+	if ( $last_name_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$last_name_id}" ) ) {
+			$result = $wpdb->insert(
+				"{$bp_prefix}bp_xprofile_fields",
+				array(
+					'group_id'    => $base_group_id,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				)
+			);
+			if ( $result ) {
+				$last_name_id = $wpdb->insert_id;
+				if ( $is_multisite ) {
+					add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+				}
+			}
 		}
-
+	} else {
+		$result = $wpdb->insert(
+			"{$bp_prefix}bp_xprofile_fields",
+			array(
+				'group_id'    => $base_group_id,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-lastname-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			)
+		);
+		if ( $result ) {
+			$last_name_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-lastname-field-id', $last_name_id );
+			}
+		}
 	}
 	bp_update_option( 'bp-xprofile-lastname-field-id', $last_name_id );
 
 	// Nickname
 	$nickname_id = bp_xprofile_nickname_field_id();
-	if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$nickname_id}" ) ) {
-
-		$re = $wpdb->insert( "{$bp_prefix}bp_xprofile_fields", [
-			'group_id'    => $base_group_id,
-			'parent_id'   => 0,
-			'type'        => 'textbox',
-			'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
-			'description' => '',
-			'is_required' => 1,
-			'can_delete'  => 0,
-		] );
-
-		$nickname_id = $wpdb->insert_id;
-		if ( $is_multisite ) {
-			add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+	if ( $last_name_id > 0 ) {
+		if ( ! $wpdb->get_var( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE id = {$nickname_id}" ) ) {
+			$result = $wpdb->insert(
+				"{$bp_prefix}bp_xprofile_fields",
+				array(
+					'group_id'    => $base_group_id,
+					'parent_id'   => 0,
+					'type'        => 'textbox',
+					'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+					'description' => '',
+					'is_required' => 1,
+					'can_delete'  => 0,
+				)
+			);
+			if ( $result ) {
+				$nickname_id = $wpdb->insert_id;
+				if ( $is_multisite ) {
+					add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+				}
+			}
+		}
+	} else {
+		$result = $wpdb->insert(
+			"{$bp_prefix}bp_xprofile_fields",
+			array(
+				'group_id'    => $base_group_id,
+				'parent_id'   => 0,
+				'type'        => 'textbox',
+				'name'        => bp_get_option( 'bp-xprofile-nickname-field-name' ),
+				'description' => '',
+				'is_required' => 1,
+				'can_delete'  => 0,
+			)
+		);
+		if ( $result ) {
+			$nickname_id = $wpdb->insert_id;
+			if ( $is_multisite ) {
+				add_site_option( 'bp-xprofile-nickname-field-id', $nickname_id );
+			}
 		}
 	}
 	bp_update_option( 'bp-xprofile-nickname-field-id', $nickname_id );
@@ -533,7 +610,6 @@ function bp_core_install_default_profiles_fields() {
  * Install database tables for the Sites component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function bp_core_install_blog_tracking() {
 	$sql             = array();
@@ -644,8 +720,8 @@ function bp_core_install_signups() {
 	global $wpdb;
 
 	// Signups is not there and we need it so let's create it.
-	require_once( buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php' );
-	require_once( ABSPATH                  . 'wp-admin/includes/upgrade.php'     );
+	require_once buddypress()->plugin_dir . '/bp-core/admin/bp-core-admin-schema.php';
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
 
 	// Never use bp_core_get_table_prefix() for any global users tables.
 	$wpdb->signups = $wpdb->base_prefix . 'signups';
@@ -659,7 +735,7 @@ function bp_core_install_signups() {
 
 	// Filter out all the queries except wp_signups.
 	foreach ( $create_queries as $key => $query ) {
-		if ( preg_match( "|CREATE TABLE ([^ ]*)|", $query, $matches ) ) {
+		if ( preg_match( '|CREATE TABLE ([^ ]*)|', $query, $matches ) ) {
 			if ( trim( $matches[1], '`' ) !== $wpdb->signups ) {
 				unset( $create_queries[ $key ] );
 			}
@@ -733,9 +809,13 @@ function bp_core_install_emails() {
 		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
 			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
-			wp_update_term( (int) $term->term_id, bp_get_email_tax_type(), array(
-				'description' => $descriptions[ $id ],
-			) );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
 		}
 	}
 
@@ -783,9 +863,13 @@ function bp_core_install_bbp_emails() {
 		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
 			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
-			wp_update_term( (int) $term->term_id, bp_get_email_tax_type(), array(
-				'description' => $descriptions[ $id ],
-			) );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
 		}
 	}
 
@@ -833,9 +917,13 @@ function bp_core_install_invites_email() {
 		$tt_ids = wp_set_object_terms( $post_id, $id, bp_get_email_tax_type() );
 		foreach ( $tt_ids as $tt_id ) {
 			$term = get_term_by( 'term_taxonomy_id', (int) $tt_id, bp_get_email_tax_type() );
-			wp_update_term( (int) $term->term_id, bp_get_email_tax_type(), array(
-				'description' => $descriptions[ $id ],
-			) );
+			wp_update_term(
+				(int) $term->term_id,
+				bp_get_email_tax_type(),
+				array(
+					'description' => $descriptions[ $id ],
+				)
+			);
 		}
 	}
 

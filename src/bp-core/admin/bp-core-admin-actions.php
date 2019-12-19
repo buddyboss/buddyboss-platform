@@ -36,28 +36,29 @@ defined( 'ABSPATH' ) || exit;
  *
  *          v--WordPress Actions       v--BuddyPress Sub-actions
  */
-add_action( 'admin_menu',                         'bp_admin_menu'                    );
-add_action( 'admin_init',                         'bp_admin_init'                    );
-add_action( 'admin_head',                         'bp_admin_head'                    );
-add_action( 'admin_notices',                      'bp_admin_notices'                 );
-add_action( 'admin_enqueue_scripts',              'bp_admin_enqueue_scripts'         );
-add_action( 'customize_controls_enqueue_scripts', 'bp_admin_enqueue_scripts', 8      );
-add_action( 'network_admin_menu',                 'bp_admin_menu'                    );
-add_action( 'custom_menu_order',                  'bp_admin_custom_menu_order'       );
-add_action( 'menu_order',                         'bp_admin_menu_order'              );
-add_action( 'wpmu_new_blog',                      'bp_new_site',               10, 6 );
+add_action( 'admin_menu', 'bp_admin_menu' );
+add_action( 'admin_init', 'bp_admin_init' );
+add_action( 'admin_head', 'bp_admin_head' );
+add_action( 'admin_notices', 'bp_admin_notices' );
+add_action( 'admin_enqueue_scripts', 'bp_admin_enqueue_scripts' );
+add_action( 'customize_controls_enqueue_scripts', 'bp_admin_enqueue_scripts', 8 );
+add_action( 'network_admin_menu', 'bp_admin_menu' );
+add_action( 'custom_menu_order', 'bp_admin_custom_menu_order' );
+add_action( 'menu_order', 'bp_admin_menu_order' );
+add_action( 'wpmu_new_blog', 'bp_new_site', 10, 6 );
 
 // Hook on to admin_init.
-add_action( 'bp_admin_init', 'bp_setup_updater',          1000 );
+add_action( 'bp_admin_init', 'bp_setup_updater', 1000 );
 add_action( 'bp_admin_init', 'bp_core_activation_notice', 1010 );
-add_action( 'bp_admin_init', 'bp_register_importers'           );
-add_action( 'bp_admin_init', 'bp_register_admin_style'         );
-add_action( 'bp_admin_init', 'bp_register_admin_settings'      );
-add_action( 'bp_admin_init', 'bp_register_admin_integrations'  );
-add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1    );
-add_action( 'bp_admin_init', 'bp_check_for_legacy_theme');
+add_action( 'bp_admin_init', 'bp_register_importers' );
+add_action( 'bp_admin_init', 'bp_register_admin_style' );
+add_action( 'bp_admin_init', 'bp_register_admin_settings' );
+add_action( 'bp_admin_init', 'bp_register_admin_integrations' );
+add_action( 'bp_admin_init', 'bp_do_activation_redirect', 1 );
+add_action( 'bp_admin_init', 'bp_check_for_legacy_theme' );
 
-if ( false === bp_enable_profile_gravatar() ) {
+// Hide the Gravatar metabox from the WordPress discussion page.
+if ( function_exists( 'bp_enable_profile_gravatar ' ) && false === bp_enable_profile_gravatar() ) {
 	add_action( 'admin_head', 'bp_remove_avatar_settings_from_options_discussion_page' );
 }
 
@@ -80,8 +81,9 @@ add_action( 'bp_admin_menu', 'bp_admin_separator' );
 function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
 
 	// Bail if plugin is not network activated.
-	if ( ! is_plugin_active_for_network( buddypress()->basename ) )
+	if ( ! is_plugin_active_for_network( buddypress()->basename ) ) {
 		return;
+	}
 
 	// Switch to the new blog.
 	switch_to_blog( $blog_id );
@@ -110,7 +112,6 @@ function bp_new_site( $blog_id, $user_id, $domain, $path, $site_id, $meta ) {
  * Piggy back admin_init action.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_admin_init() {
 
@@ -126,7 +127,6 @@ function bp_admin_init() {
  * Piggy back admin_menu action.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_admin_menu() {
 
@@ -142,7 +142,6 @@ function bp_admin_menu() {
  * Piggy back admin_head action.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_admin_head() {
 
@@ -158,7 +157,6 @@ function bp_admin_head() {
  * Piggy back admin_notices action.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_admin_notices() {
 
@@ -194,7 +192,6 @@ function bp_admin_enqueue_scripts( $hook_suffix = '' ) {
  * Dedicated action to register BuddyPress importers.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_register_importers() {
 
@@ -212,7 +209,6 @@ function bp_register_importers() {
  * Dedicated action to register admin styles.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_register_admin_style() {
 
@@ -228,7 +224,6 @@ function bp_register_admin_style() {
  * Dedicated action to register admin settings.
  *
  * @since BuddyPress 1.7.0
- *
  */
 function bp_register_admin_settings() {
 
@@ -244,7 +239,6 @@ function bp_register_admin_settings() {
  * Dedicated action to register admin integrations.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_register_admin_integrations() {
 

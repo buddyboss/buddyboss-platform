@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Escape commonly used fullname output functions.
  */
-add_filter( 'bp_displayed_user_fullname',    'esc_html' );
+add_filter( 'bp_displayed_user_fullname', 'esc_html' );
 add_filter( 'bp_get_loggedin_user_fullname', 'esc_html' );
 
 // Filter the user registration URL to point to BuddyPress's registration page.
@@ -33,7 +33,7 @@ add_filter( 'register_url', 'bp_get_signup_page' );
 function bp_members_signup_sanitization() {
 
 	// Filters on sign-up fields.
-	$fields = array (
+	$fields = array(
 		'bp_get_signup_username_value',
 		'bp_get_signup_email_value',
 		'bp_get_signup_with_blog_value',
@@ -44,10 +44,10 @@ function bp_members_signup_sanitization() {
 	);
 
 	// Add the filters to each field.
-	foreach( $fields as $filter ) {
-		add_filter( $filter, 'esc_html',       1 );
+	foreach ( $fields as $filter ) {
+		add_filter( $filter, 'esc_html', 1 );
 		add_filter( $filter, 'wp_filter_kses', 2 );
-		add_filter( $filter, 'stripslashes',   3 );
+		add_filter( $filter, 'stripslashes', 3 );
 	}
 
 	// Sanitize email.
@@ -74,7 +74,7 @@ function bp_members_signup_with_subdirectory_blog( $illegal_names = array() ) {
 	}
 
 	if ( is_network_admin() && isset( $_POST['blog'] ) ) {
-		$blog = $_POST['blog'];
+		$blog   = $_POST['blog'];
 		$domain = '';
 
 		if ( preg_match( '|^([a-zA-Z0-9-])$|', $blog['domain'] ) ) {
@@ -84,7 +84,6 @@ function bp_members_signup_with_subdirectory_blog( $illegal_names = array() ) {
 		if ( username_exists( $domain ) ) {
 			$illegal_names[] = $domain;
 		}
-
 	} else {
 		$illegal_names[] = buddypress()->signup->username;
 	}
@@ -164,3 +163,39 @@ function bp_overwrite_login_email_field_label_hook() {
 add_action( 'login_form_retrievepassword', 'bp_overwrite_login_email_field_label_hook' );
 add_action( 'login_form_lostpassword', 'bp_overwrite_login_email_field_label_hook' );
 add_action( 'login_form_login', 'bp_overwrite_login_email_field_label_hook' );
+
+/**
+ * Set up media arguments for use with the 'personal' scope.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param array $retval Empty array by default.
+ * @param array $filter Current activity arguments.
+ * @return array
+ */
+function bp_members_filter_media_personal_scope( $retval = array(), $filter = array() ) {
+
+	// Determine the user_id.
+	if ( ! empty( $filter['user_id'] ) ) {
+		$user_id = $filter['user_id'];
+	} else {
+		$user_id = bp_displayed_user_id()
+			? bp_displayed_user_id()
+			: bp_loggedin_user_id();
+	}
+
+	$retval = array(
+		'relation' => 'AND',
+		array(
+			'column' => 'user_id',
+			'value'  => $user_id,
+		),
+		array(
+			'column' => 'privacy',
+			'value'  => 'onlyme',
+		),
+	);
+
+	return $retval;
+}
+add_filter( 'bp_media_set_personal_scope_args', 'bp_members_filter_media_personal_scope', 10, 2 );
