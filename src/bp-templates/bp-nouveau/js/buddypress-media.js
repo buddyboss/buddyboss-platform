@@ -124,8 +124,10 @@ window.bp = window.bp || {};
 			// albums
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-folder', this.openCreateFolderModal.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bb-create-folder-child', this.openCreateFolderChildModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
+			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
 
@@ -1145,6 +1147,88 @@ window.bp = window.bp || {};
 			}
 		},
 
+		openDocumentFolderChildUploader: function(event) {
+			var self = this;
+			event.preventDefault();
+
+			if ( typeof window.Dropzone !== 'undefined' && $('div#bp-media-create-child-folder').length ) {
+
+				$('#bp-media-create-child-folder').show();
+
+				self.dropzone_obj = new Dropzone('div#media-uploader-child-folder', self.options );
+
+				self.dropzone_obj.on('sending', function(file, xhr, formData) {
+					formData.append('action', 'media_document_upload');
+					formData.append('_wpnonce', BP_Nouveau.nonces.media);
+				});
+
+				self.dropzone_obj.on('addedfile', function() {
+					setTimeout(function(){
+						if ( self.dropzone_obj.getAcceptedFiles().length ) {
+							$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf(BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length)).show();
+						}
+					},1000);
+				});
+
+				self.dropzone_obj.on('error', function(file,response) {
+					if ( file.accepted ) {
+						if ( typeof response !== 'undefined' && typeof response.data !== 'undefined' && typeof response.data.feedback !== 'undefined' ) {
+							$(file.previewElement).find('.dz-error-message span').text(response.data.feedback);
+						}
+					} else {
+						self.dropzone_obj.removeFile(file);
+					}
+				});
+
+				self.dropzone_obj.on('queuecomplete', function() {
+					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.upload);
+				});
+
+				self.dropzone_obj.on('processing', function() {
+					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
+				});
+
+				self.dropzone_obj.on('success', function(file, response) {
+					if ( response.data.id ) {
+						file.id = response.id;
+						response.data.uuid = file.upload.uuid;
+						response.data.menu_order = self.dropzone_media.length;
+						response.data.album_id = self.album_id;
+						response.data.group_id = self.group_id;
+						response.data.saved    = false;
+						self.dropzone_media.push( response.data );
+					}
+					$('#bp-media-document-add-more').show();
+					$('#bp-media-document-submit').show();
+					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
+					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
+				});
+
+				self.dropzone_obj.on('removedfile', function(file) {
+					if ( self.dropzone_media.length ) {
+						for ( var i in self.dropzone_media ) {
+							if ( file.upload.uuid == self.dropzone_media[i].uuid ) {
+
+								if ( typeof self.dropzone_media[i].saved !== 'undefined' && ! self.dropzone_media[i].saved ) {
+									self.removeAttachment(self.dropzone_media[i].id);
+								}
+
+								self.dropzone_media.splice( i, 1 );
+								break;
+							}
+						}
+					}
+					if ( ! self.dropzone_obj.getAcceptedFiles().length ) {
+						$('#bp-media-uploader-modal-status-text').text('');
+						$('#bp-media-document-add-more').hide();
+						$('#bp-media-document-submit').hide();
+					} else {
+						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
+					}
+				});
+			}
+		},
+
 		removeAttachment: function( id ) {
 			var data = {
 				'action': 'media_delete_attachment',
@@ -1186,6 +1270,13 @@ window.bp = window.bp || {};
 
 			this.openDocumentFolderUploader(event);
 			$('#bp-media-create-folder').show();
+		},
+
+		openCreateFolderChildModal: function(event){
+			event.preventDefault();
+
+			this.openDocumentFolderChildUploader(event);
+			$('#bp-media-create-child-folder').show();
 		},
 
 		closeCreateAlbumModal: function(event){
@@ -1349,14 +1440,14 @@ window.bp = window.bp || {};
 						if (response.success) {
 
 							// It's the very first media, let's make sure the container can welcome it!
-							if (!$('#media-stream table#media-folder-document-data-table').length) {
-								$('#media-stream').html($('<table></table>').addClass( 'display' ) );
-								$('#media-stream table').attr( 'id', 'media-folder-document-data-table' );
+							if (!$('#media-stream div#media-folder-document-data-table').length) {
+								$('#media-stream').html($('<div></div>').addClass( 'display' ) );
+								$('#media-stream div').attr( 'id', 'media-folder-document-data-table' );
 								$('.bb-photos-actions').show();
 							}
 
 							// Prepend the activity.
-							bp.Nouveau.inject('#media-stream table#media-folder-document-data-table', response.data.media, 'prepend');
+							bp.Nouveau.inject('#media-stream div#media-folder-document-data-table', response.data.media, 'prepend');
 
 							for( var i = 0; i < self.dropzone_media.length; i++ ) {
 								self.dropzone_media[i].saved = true;
@@ -1571,6 +1662,69 @@ window.bp = window.bp || {};
 
 		},
 
+		saveChildFolder: function(event) {
+			var target = $( event.currentTarget ), self = this, title = $('#bb-album-child-title'), privacy = $('#bb-folder-child-privacy'), parent = $('#parent_id');
+			event.preventDefault();
+
+			if( $.trim(title.val()) === '' ) {
+				title.addClass('error');
+				return false;
+			} else {
+				title.removeClass('error');
+			}
+
+			if( ! self.group_id && $.trim(privacy.val()) === '' ) {
+				privacy.addClass('error');
+				return false;
+			} else {
+				privacy.removeClass('error');
+			}
+
+			target.prop('disabled',true);
+
+			var data = {
+				'action'	: 'media_folder_save',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'title'		: title.val(),
+				'medias'	: self.dropzone_media,
+				'privacy'	: privacy.val(),
+				'parent'	: parent.val()
+			};
+
+			if ( self.album_id ) {
+				data.album_id = self.album_id;
+			}
+
+			if ( self.group_id ) {
+				data.group_id = self.group_id;
+			}
+
+			//remove all feedback erros from the DOM
+			$('.bb-single-album-header .bp-feedback').remove();
+			$('#boss-media-create-album-popup .bp-feedback').remove();
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: data,
+				success: function (response) {
+					setTimeout(function () {
+						target.prop('disabled',false);
+					},500);
+					if ( response.success ) {
+						window.location.href = response.data.redirect_url;
+					} else {
+						if ( self.album_id ) {
+							$('#bp-media-single-album').prepend(response.data.feedback);
+						} else {
+							$('#boss-media-create-album-popup .bb-model-header').after(response.data.feedback);
+						}
+					}
+				}
+			});
+
+		},
+
 		deleteAlbum: function(event) {
 			event.preventDefault();
 
@@ -1708,7 +1862,7 @@ window.bp = window.bp || {};
 					search_terms        : search_terms,
 					page                : next_page,
 					method              : 'append',
-					target              : '#buddypress [data-bp-media-type] table#media-folder-document-data-table'
+					target              : '#buddypress [data-bp-media-type] div#media-folder-document-data-table'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
 						$( event.currentTarget ).parent( '.pager' ).remove();

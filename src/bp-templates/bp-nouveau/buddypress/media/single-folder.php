@@ -51,6 +51,10 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             <?php _e( 'Add Documents', 'buddyboss' ); ?>
                         </a>
 
+	                    <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">+ <?php _e( 'Create Folder', 'buddyboss' ); ?></a>
+
+
+
 	                    <?php if ( bp_is_my_profile() && ! bp_is_group() ) : ?>
 
                             <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
@@ -66,6 +70,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                     </div>
 
 	            <?php bp_get_template_part( 'media/document-uploader' ); ?>
+	            <?php bp_get_template_part( 'media/create-child-folder' ); ?>
 
 	            <?php endif; ?>
 

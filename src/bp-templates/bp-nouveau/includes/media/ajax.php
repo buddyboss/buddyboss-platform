@@ -980,8 +980,13 @@ function bp_nouveau_ajax_media_folder_save() {
 	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
 	$title    = $_POST['title'];
 	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$parent   = ! empty( $_POST['parent'] ) ? (int) $_POST['parent'] : 0;
 
-	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id, 'type' => 'document' ) );
+	if ( $parent > 0 ) {
+		$id = false;
+	}
+
+	$album_id = bp_album_add( array( 'id' => $id, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id, 'type' => 'document', 'parent' => $parent ) );
 
 	if ( ! $album_id ) {
 		$response['feedback'] = sprintf(
