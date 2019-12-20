@@ -22,8 +22,14 @@
 			case 'documents':
 
 				if ( bp_is_group_document() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
-					bp_get_template_part( 'media/add-document' );
-					bp_get_template_part( 'media/add-folder' );
+					?>
+					<div class="bp-media-header-wrap">
+						<?php
+							bp_get_template_part( 'media/add-document' );
+							bp_get_template_part( 'media/add-folder' );
+						?>
+					</div>
+					<?php
 				endif;
 
 				bp_nouveau_group_hook( 'before', 'media_content' );

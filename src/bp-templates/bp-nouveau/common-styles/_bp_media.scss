@@ -1468,3 +1468,34 @@ img.emojioneemoji {
 		}
 	}
 }
+
+.bp-media-header-wrap{
+	h2{
+		float: left;
+	}
+	.bb-media-actions-wrap{
+		float: right;
+		margin-left: 10px;
+		.bb-media-actions a i{
+			margin-right: 6px;
+		}
+	}
+	@media screen and (max-width: 782px){
+		h2{
+			float: none;
+		}
+		.bb-media-actions-wrap{
+			float: right;
+		}
+	}
+	@media screen and (max-width: 460px){
+		.bb-media-actions-wrap{
+			float: none;
+			margin-bottom: 10px;
+			flex-direction: column;
+			.bb-media-actions a{
+				width: 100%;
+			}
+		}
+	}
+}

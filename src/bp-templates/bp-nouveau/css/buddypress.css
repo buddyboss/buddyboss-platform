@@ -11054,6 +11054,39 @@ img.emojioneemoji {
   }
 }
 
+.bp-media-header-wrap h2 {
+  float: left;
+}
+
+.bp-media-header-wrap .bb-media-actions-wrap {
+  float: right;
+  margin-left: 10px;
+}
+
+.bp-media-header-wrap .bb-media-actions-wrap .bb-media-actions a i {
+  margin-right: 6px;
+}
+
+@media screen and (max-width: 782px) {
+  .bp-media-header-wrap h2 {
+    float: none;
+  }
+  .bp-media-header-wrap .bb-media-actions-wrap {
+    float: right;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .bp-media-header-wrap .bb-media-actions-wrap {
+    float: none;
+    margin-bottom: 10px;
+    flex-direction: column;
+  }
+  .bp-media-header-wrap .bb-media-actions-wrap .bb-media-actions a {
+    width: 100%;
+  }
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 15.0 - Media Dropzone

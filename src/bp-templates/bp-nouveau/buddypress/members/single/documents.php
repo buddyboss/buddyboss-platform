@@ -16,9 +16,14 @@
 
 		// Home/Media
 		case 'my-document':
-
-			bp_get_template_part( 'media/add-document' );
-			bp_get_template_part( 'media/add-folder' );
+			?>
+				<div class="bp-media-header-wrap">
+					<?php
+						bp_get_template_part( 'media/add-document' );
+						bp_get_template_part( 'media/add-folder' );
+					?>
+				</div>
+			<?php
 
 			bp_nouveau_member_hook( 'before', 'media_document_content' );
 
