@@ -136,10 +136,14 @@ window.bp = window.bp || {};
 						$group_messages_select.val('all').trigger( 'change' );
 						$('.group-messages-members-listing #members-list li .action').hide();
 						$('.group-messages-members-listing #members-list li').removeClass( 'selected' );
-						$('.bb-groups-messages-right .bp-messages-feedback').show();
+						if ( $( '#item-body #group-messages-container .bb-groups-messages-right .remove-after-few-seconds' ).length === 0 ) {
+							$('.bb-groups-messages-right .bp-messages-feedback').show();
+							$('.bb-groups-messages-right .bp-messages-feedback .bp-feedback p').html( BP_Nouveau.group_messages.feedback_select_all );
+						}
 						$('.bp-select-members-wrap .select2-selection__choice__remove').hide();
 					} else {
-						$('.bb-groups-messages-right .bp-messages-feedback').hide();
+						$('.bb-groups-messages-right .bp-messages-feedback .bp-feedback p').html( BP_Nouveau.group_messages.feedback_individual );
+						$('.bb-groups-messages-right .bp-messages-feedback').show();
 						$( '#group-messages-send-to-input option[value="all"]' ).each(function() {
 							$(this).remove();
 						});
@@ -413,14 +417,9 @@ window.bp = window.bp || {};
 						if ( response.success ) {
 							$('#item-body #group-messages-container .remove-after-few-seconds').remove();
 							var feedbackHtmlSuccess = '<div class="bp-feedback success bp-feedback-content-no-error remove-after-few-seconds"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + response.data.redirect_link  + ' </p></div>';
-							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').after( feedbackHtmlSuccess );
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').hide();
-							setTimeout(function() {
-								$('.remove-after-few-seconds').hide();
-								setTimeout(function() {
-									$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
-								}, 250);
-							}, 3000);
+							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').after( feedbackHtmlSuccess );
+
 							window.group_messages_editor.setContent('');
 							if ( typeof window.Dropzone !== 'undefined' && dropzone_container.length ) {
 
@@ -443,8 +442,17 @@ window.bp = window.bp || {};
 								$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 							}
 
+							setTimeout(function() {
+								$( '#item-body #group-messages-container .bb-groups-messages-right .remove-after-few-seconds').remove();
+								$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').show();
+							}, 3000);
+
 							if ( ! $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
 								$( '#bp-group-message-switch-checkbox' ).trigger( 'click' );
+							}
+
+							if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
+								$('.bb-groups-messages-right .bp-messages-feedback .bp-feedback p').html( BP_Nouveau.group_messages.feedback_select_all );
 							}
 
 							if ( containerAttachment.length ) {
@@ -461,11 +469,11 @@ window.bp = window.bp || {};
 							$('#item-body #group-messages-container .remove-after-few-seconds').remove();
 							var feedbackHtml = '<div class="bp-feedback error bp-feedback-content-no-error remove-after-few-seconds"><span class="bp-icon" aria-hidden="true"></span><p> ' + response.data.feedback + ' </p></div>';
 							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').after(feedbackHtml);
-                                                        $('#item-body .bb-groups-messages-right-top .bp-messages-feedback').hide();
-                                                        setTimeout(function() {
-                                                            $('.remove-after-few-seconds').hide();
-                                                            $('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
-                                                        }, 3000);
+							$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').hide();
+							setTimeout(function() {
+								$('.remove-after-few-seconds').hide();
+								$('#item-body .bb-groups-messages-right-top .bp-messages-feedback').removeAttr('style');
+							}, 3000);
 						}
 					}
 				});

@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-18 16:42:21+00:00\n"
+"POT-Creation-Date: 2019-12-20 04:58:05+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -17045,6 +17045,7 @@ msgid "all"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/functions.php:1208
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1213
 msgid "This message will be delivered to all members of this group."
 msgstr ""
 
@@ -17053,6 +17054,10 @@ msgid ""
 "Select group members to message by clicking the + button next to each "
 "member. Once you've made a selection, click \"Send Message\" to create a "
 "new group message."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1214
+msgid "Select individual recipients by clicking the + button next to each member."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:394
