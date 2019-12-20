@@ -362,7 +362,8 @@ window.bp = window.bp || {};
 				link_image_index: 0,
 				link_title: '',
 				link_description: '',
-				link_url: ''
+				link_url: '',
+				link_embed: false
 			});
 			document.removeEventListener( 'activity_link_preview_open', this.open.bind(this) );
 			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
@@ -632,6 +633,7 @@ window.bp = window.bp || {};
 			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
 			contenteditable: true
 		},
+		loadURLAjax : null,
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
@@ -744,68 +746,75 @@ window.bp = window.bp || {};
 			return urlString;
 		},
 
-		loadURLPreview: function(url) {
+		loadURLPreview: function (url) {
 			var self = this;
 
-				var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-				url = $.trim(url);
-				if (regexp.test(url)) {
+			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			url = $.trim(url);
+			if (regexp.test(url)) {
 
-				if ( typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true ) {
+				if (typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true) {
 					return false;
 				}
 
-				self.options.activity.set( {
+				if (self.loadURLAjax != null) {
+					self.loadURLAjax.abort();
+				}
+
+				self.options.activity.set({
 					link_scrapping: true,
 					link_loading: true,
 					link_error: false,
 					link_url: url
-				} );
+				});
 
-				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
+				self.loadURLAjax = bp.ajax.post('bp_activity_parse_url', {url: url}).always(function (response) {
 					self.options.activity.set('link_loading', false);
 
-					if ( response.title === '' && response.images === '' ) {
-						self.options.activity.set( 'link_scrapping', false );
+					if (response.title === '' && response.images === '') {
+						self.options.activity.set('link_scrapping', false);
 						return;
 					}
 
-					if ( response.error === '' ) {
-						self.options.activity.set( {
+					if (response.error === '') {
+						self.options.activity.set({
 							link_success: true,
 							link_title: response.title,
 							link_description: response.description,
 							link_images: response.images,
 							link_image_index: 0
-						} );
+						});
 
 						$('#whats-new-attachments').removeClass('empty');
 
-								if ($('#whats-new-attachments').hasClass('activity-video-preview')) {
-									$('#whats-new-attachments').removeClass('activity-video-preview');
-								}
+						if ($('#whats-new-attachments').hasClass('activity-video-preview')) {
+							$('#whats-new-attachments').removeClass('activity-video-preview');
+						}
 
-								if ($('#whats-new-attachments').hasClass('activity-link-preview')) {
-									$('#whats-new-attachments').removeClass('activity-link-preview');
-								}
+						if ($('#whats-new-attachments').hasClass('activity-link-preview')) {
+							$('#whats-new-attachments').removeClass('activity-link-preview');
+						}
 
-								if ($('.activity-media-container').length) {
-									if (response.description.indexOf('iframe') > -1) {
-										$('#whats-new-attachments').addClass('activity-video-preview');
-									} else {
-										$('#whats-new-attachments').addClass('activity-link-preview');
-									}
-								}
-							} else {
+						if ($('.activity-media-container').length) {
+							if (response.description.indexOf('iframe') > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
+								$('#whats-new-attachments').addClass('activity-video-preview');
 								self.options.activity.set({
-									link_success: false,
-									link_error: true,
-									link_error_msg: response.error
+									link_embed: true
 								});
+							} else {
+								$('#whats-new-attachments').addClass('activity-link-preview');
 							}
+						}
+					} else {
+						self.options.activity.set({
+							link_success: false,
+							link_error: true,
+							link_error_msg: response.error
 						});
-				}
+					}
+				});
 			}
+		}
 	} );
 
 	bp.Views.WhatsNewPostIn = bp.View.extend( {
