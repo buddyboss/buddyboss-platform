@@ -33,5 +33,11 @@ if ( isset( $attachment_id) ) {
 		<a href="#" class="media-folder_action__anchor">
 			<i class="bb-icon-menu-dots-v"></i>
 		</a>
+		<div class="media-folder_action__list">
+			<ul>
+				<li><a href="#">Rename</a></li>
+				<li><a href="#">Delete</a></li>
+			</ul>
+		</div>
 	</div>
 </div>
