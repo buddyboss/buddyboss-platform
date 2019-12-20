@@ -217,7 +217,9 @@ function bp_activity_save_link_data( $activity ) {
 
 	// check if link url is set or not
 	if ( empty( $_POST['link_url'] ) ) {
-		bp_activity_update_meta( $activity->id, '_link_embed', '0' );
+		if ( isset( $_POST['link_embed'] ) && false === (bool) $_POST['link_embed'] ) {
+			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
+		}
 		return;
 	}
 
