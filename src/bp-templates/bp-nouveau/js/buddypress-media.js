@@ -50,7 +50,7 @@ window.bp = window.bp || {};
 			this.documentOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: '.csv,.doc,.docx,.gzip,.ics,.jar,.ods,.odt,.pdf,.psd,.ppt,.pptx,.rar,.tar,.txt,.xls,.xlsx,.zip',
+				acceptedFiles: '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip',
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
@@ -61,7 +61,7 @@ window.bp = window.bp || {};
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
-					acceptedFiles: '.csv,.doc,.docx,.gzip,.ics,.jar,.ods,.odt,.pdf,.psd,.ppt,.pptx,.rar,.tar,.txt,.xls,.xlsx,.zip',
+					acceptedFiles: '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip',
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
@@ -616,6 +616,22 @@ window.bp = window.bp || {};
 			}
 		},
 
+		resetForumsDocumentComponent: function( dropzone_container_key ) {
+			var self = this;
+
+			if ( typeof dropzone_container_key !== 'undefined' ) {
+
+				if (typeof self.dropzone_obj[dropzone_container_key] !== 'undefined') {
+					self.dropzone_obj[dropzone_container_key].destroy();
+					self.dropzone_obj.splice(dropzone_container_key, 1);
+					self.dropzone_media.splice(dropzone_container_key, 1);
+				}
+
+				$('div#forums-post-document-uploader[data-key="' + dropzone_container_key + '"]').html('');
+				$('div#forums-post-document-uploader[data-key="' + dropzone_container_key + '"]').addClass('closed').removeClass('open');
+			}
+		},
+
 		openForumsUploader: function(event) {
 			var self = this, target = $( event.currentTarget ), dropzone_container = target.closest( 'form' ).find( '#forums-post-media-uploader' ), edit_medias = [];
 			event.preventDefault();
@@ -847,7 +863,7 @@ window.bp = window.bp || {};
 					self.resetForumsGifComponent(event);
 
 				} else {
-					self.resetForumsMediaComponent( dropzone_obj_key );
+					self.resetForumsDocumentComponent( dropzone_obj_key );
 				}
 
 			}

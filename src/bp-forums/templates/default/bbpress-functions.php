@@ -293,8 +293,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => bp_get_media_title(),
-									//'thumb'         => bp_get_media_attachment_image_thumbnail(),
-									//'url'           => bp_get_media_attachment_image(),
+									'thumb'         => '',
+									'url'           => '',
 									'menu_order'    => $index,
 								);
 								$index ++;
@@ -366,8 +366,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => bp_get_media_title(),
-									//'thumb'         => bp_get_media_attachment_image_thumbnail(),
-									//'url'           => bp_get_media_attachment_image(),
+									'thumb'         => '',
+									'url'           => '',
 									'menu_order'    => $index,
 								);
 								$index ++;
@@ -438,8 +438,8 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
 									'name'          => bp_get_media_title(),
-									//'thumb'         => bp_get_media_attachment_image_thumbnail(),
-									//'url'           => bp_get_media_attachment_image(),
+									'thumb'         => '',
+									'url'           => '',
 									'menu_order'    => $index,
 								);
 								$index ++;

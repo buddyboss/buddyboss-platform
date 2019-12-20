@@ -344,7 +344,7 @@ window.bp = window.bp || {};
 			var dropzone_options = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: '.csv,.doc,.docx,.gzip,.ics,.jar,.ods,.odt,.pdf,.psd,.ppt,.pptx,.rar,.tar,.txt,.xls,.xlsx,.zip',
+				acceptedFiles: '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip',
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
