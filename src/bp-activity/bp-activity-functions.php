@@ -4982,26 +4982,25 @@ add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 )
  * @since BuddyBoss 1.0.0
  */
 function bp_activity_action_parse_url() {
+	$url = $_POST['url'];
+
+	// Fetch the oembed code for URL.
+	$embed_code = wp_oembed_get( $url );
+	if ( ! empty( $embed_code ) ) {
+		$json_data['title']       = ' ';
+		$json_data['description'] = $embed_code;
+		$json_data['images']      = '';
+		$json_data['error']       = '';
+		$json_data['wp_embed']    = true;
+		wp_send_json( $json_data );
+	}
+
+	// include wensite parser
 	require_once trailingslashit( buddypress()->plugin_dir . 'bp-activity/vendors' ) . '/website-parser/website_parser.php';
 
 	// curling
 	$json_data = array();
 	if ( class_exists( 'WebsiteParser' ) ) {
-
-		$url = $_POST['url'];
-
-		if ( strpos( $url, 'youtube' ) > 0 || strpos( $url, 'youtu' ) > 0 || strpos( $url, 'vimeo' ) > 0 ) {
-
-			// Fetch the oembed code for URL.
-			$embed_code = wp_oembed_get( $url );
-			if ( $embed_code ) {
-				$json_data['title']       = ' ';
-				$json_data['description'] = $embed_code;
-				$json_data['images']      = '';
-				$json_data['error']       = '';
-				wp_send_json( $json_data );
-			}
-		}
 
 		$parser = new WebsiteParser( $url );
 		$body   = wp_remote_get( $url );
