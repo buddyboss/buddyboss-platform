@@ -20,6 +20,21 @@ bp_nouveau_before_loop();
 				</thead>
 				<tbody> -->
 
+
+				<div class="media-folder-document-filters">
+					<div id="search-documents-form" class="media-search-form">
+						<label for="media_document_search" class="bp-screen-reader-text">Search</label>
+						<input type="text" name="search" id="media_document_search" value="" placeholder="Search Documents" class="">
+					</div>
+					<div class="select-wrap">
+						<select id="documents-order-by">
+							<option value="last">Last Updated</option>
+							<option value="newest">Newly Added</option>
+							<option value="alphabetical">Alphabetical</option>
+						</select>
+					</div>
+				</div><!-- .media-folder-document-filters -->
+
 				<div id="media-folder-document-data-table">
 
 				
@@ -70,6 +85,20 @@ bp_nouveau_before_loop();
 				</tr>
 				</thead>
 				<tbody> -->
+
+				<div class="media-folder-document-filters">
+					<div id="search-documents-form" class="media-search-form">
+						<label for="media_document_search" class="bp-screen-reader-text">Search</label>
+						<input type="text" name="search" id="media_document_search" value="" placeholder="Search Documents" class="">
+					</div>
+					<div class="select-wrap">
+						<select id="documents-order-by">
+							<option value="last">Last Updated</option>
+							<option value="newest">Newly Added</option>
+							<option value="alphabetical">Alphabetical</option>
+						</select>
+					</div>
+				</div><!-- .media-folder-document-filters -->
 
 				<div id="media-folder-document-data-table">
 			<?php

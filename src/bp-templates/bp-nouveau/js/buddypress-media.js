@@ -165,6 +165,11 @@ window.bp = window.bp || {};
 			$( document ).find( 'form #whats-new-attachments .forums-attached-gif-container, .forum form #whats-new-attachments .forums-attached-gif-container' ).on( 'click', '.gif-image-remove', this.removeSelectedGif.bind( this ) );
 
 			$(document).on('click', '.gif-image-container', this.playVideo.bind( this ) );
+
+			//Documents
+			$( document ).on( 'click', '.media-folder_items .media-folder_action__anchor', this.fileActionButton.bind( this ) );
+			
+			
 			// Gifs autoplay
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -2017,6 +2022,13 @@ window.bp = window.bp || {};
 					$button.show();
 				}
 			} );
+		},
+		/**
+		 * File action Button
+		 */
+		fileActionButton: function (event) {
+			event.preventDefault();
+			$(event.currentTarget).closest('.media-folder_items').toggleClass('is-visible').siblings('.media-folder_items').removeClass('is-visible');
 		}
 	};
 
