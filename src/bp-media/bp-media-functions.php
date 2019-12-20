@@ -1005,6 +1005,7 @@ function bp_album_add( $args = '' ) {
 			'privacy'      => 'public',                  // Optional: privacy of the media e.g. public.
 			'date_created' => bp_core_current_time(), // The GMT time that this media was recorded
 			'error_type'   => 'bool',
+			'parent'       => 0,
 		),
 		'album_add'
 	);
@@ -1018,6 +1019,7 @@ function bp_album_add( $args = '' ) {
 	$album->privacy      = $r['privacy'];
 	$album->date_created = $r['date_created'];
 	$album->error_type   = $r['error_type'];
+	$album->parent       = $r['parent'];
 
 	if ( ! empty( $album->group_id ) ) {
 		$album->privacy = 'grouponly';

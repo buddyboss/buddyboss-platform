@@ -97,6 +97,14 @@ class BP_Media_Album {
 	public $error_type = 'bool';
 
 	/**
+	 * Parent ID of the folder.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 * @var int
+	 */
+	public $parent;
+
+	/**
 	 * Constructor method.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -144,6 +152,7 @@ class BP_Media_Album {
 		$this->privacy      = $row->privacy;
 		$this->type         = $row->type;
 		$this->date_created = $row->date_created;
+		$this->parent       = $row->parent;
 	}
 
 	/**
@@ -166,6 +175,7 @@ class BP_Media_Album {
 		$this->privacy      = apply_filters_ref_array( 'bp_media_privacy_before_save', array( $this->privacy, &$this ) );
 		$this->type         = apply_filters_ref_array( 'bp_media_type_before_save', array( $this->type, &$this ) );
 		$this->date_created = apply_filters_ref_array( 'bp_media_date_created_before_save', array( $this->date_created, &$this ) );
+		$this->parent       = apply_filters_ref_array( 'bp_media_parent_before_save', array( $this->parent, &$this ) );
 
 		/**
 		 * Fires before the current album gets saved.
@@ -184,9 +194,9 @@ class BP_Media_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->type, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s, parent = %d WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->type, $this->parent, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type ) VALUES ( %d, %d, %s, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->type );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->type, $this->parent );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
