@@ -215,16 +215,16 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
+	// check if link url is set or not
 	if ( empty( $_POST['link_url'] ) ) {
+		bp_activity_update_meta( $activity->id, '_link_embed', '0' );
 		return;
 	}
 
-	// Ignore YouTube and Vimeo Preview link.
-	if ( strpos( $_POST['link_url'], 'youtube' ) > 0 || strpos( $_POST['link_url'], 'youtu' ) > 0 || strpos( $_POST['link_url'], 'vimeo' ) > 0 ) {
-		$embed_code = wp_oembed_get( $_POST['link_url'] );
-		if ( $embed_code ) {
-			return;
-		}
+	// check if link embed was used
+	if ( isset( $_POST['link_embed'] ) && true === (bool) $_POST['link_embed'] && ! empty( $_POST['link_url'] ) ) {
+		bp_activity_update_meta( $activity->id, '_link_embed', '1' );
+		return;
 	}
 
 	$preview_data['url'] = $_POST['link_url'];
