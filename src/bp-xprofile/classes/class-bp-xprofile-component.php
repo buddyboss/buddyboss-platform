@@ -71,6 +71,7 @@ class BP_XProfile_Component extends BP_Component {
 			'template',
 			'functions',
 			'repeaters',
+			'widgets',
 		);
 
 		// Conditional includes.
