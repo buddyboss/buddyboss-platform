@@ -215,35 +215,43 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
+	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+
 	// check if link url is set or not
-	if ( empty( $_POST['link_url'] ) ) {
-		if ( isset( $_POST['link_embed'] ) && false === (bool) $_POST['link_embed'] ) {
+	if ( empty( $link_url ) ) {
+		if ( false === $link_embed ) {
 			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
 		}
+
 		return;
 	}
 
+	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
+	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
+	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
+
 	// check if link embed was used
-	if ( isset( $_POST['link_embed'] ) && true === (bool) $_POST['link_embed'] && ! empty( $_POST['link_url'] ) ) {
+	if ( true === $link_embed && ! empty( $link_url ) ) {
 		bp_activity_update_meta( $activity->id, '_link_embed', '1' );
 		return;
 	}
 
-	$preview_data['url'] = $_POST['link_url'];
+	$preview_data['url'] = $link_url;
 
-	if ( ! empty( $_POST['link_image'] ) ) {
-		$attachment_id = bp_activity_media_sideload_attachment( $_POST['link_image'] );
+	if ( ! empty( $link_image ) ) {
+		$attachment_id = bp_activity_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		}
 	}
 
-	if ( ! empty( $_POST['link_title'] ) ) {
-		$preview_data['title'] = $_POST['link_title'];
+	if ( ! empty( $link_title ) ) {
+		$preview_data['title'] = $link_title;
 	}
 
-	if ( ! empty( $_POST['link_description'] ) ) {
-		$preview_data['description'] = $_POST['link_description'];
+	if ( ! empty( $link_description ) ) {
+		$preview_data['description'] = $link_description;
 	}
 
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
