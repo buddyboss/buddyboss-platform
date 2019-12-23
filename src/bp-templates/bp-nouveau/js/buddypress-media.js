@@ -168,6 +168,7 @@ window.bp = window.bp || {};
 
 			//Documents
 			$( document ).on( 'click', '.media-folder_items .media-folder_action__anchor', this.fileActionButton.bind( this ) );
+			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more', this.fileActivityActionButton.bind( this ) );
 			
 			
 			// Gifs autoplay
@@ -2023,12 +2024,24 @@ window.bp = window.bp || {};
 				}
 			} );
 		},
+		
 		/**
 		 * File action Button
 		 */
 		fileActionButton: function (event) {
 			event.preventDefault();
 			$(event.currentTarget).closest('.media-folder_items').toggleClass('is-visible').siblings('.media-folder_items').removeClass('is-visible');
+		},
+
+		/**
+		 * File Activity action Button
+		 */
+		fileActivityActionButton: function (event) {
+			event.preventDefault();
+			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible');
+			if(!$('.bb-activity-media-elem.document-activity').closest('.activity-inner').hasClass('documemt-activity')){
+				$('.bb-activity-media-elem.document-activity').closest('.activity-content').addClass('documemt-activity');
+			}
 		}
 	};
 
