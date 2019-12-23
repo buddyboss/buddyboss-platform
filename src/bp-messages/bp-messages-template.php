@@ -745,6 +745,23 @@ function bp_get_message_thread_avatar( $args = '' ) {
 	);
 
 	/**
+	 * For finding who is sender for single recipient
+	 *
+	 */
+	$last_sender_id = $messages_template->thread->last_sender_id;
+	if ( isset( $messages_template->thread->recipients ) ) {
+		$key_msg = [];
+		foreach ( $messages_template->thread->recipients as $key => $value) {
+			$key_msg[] = $key;
+		}
+		
+		if ( count( $key_msg ) == 2 ) {
+			$last_sender_id = $key_msg[0] == bp_loggedin_user_id() ? $key_msg[1] : $key_msg[0];
+		}
+		 
+	}
+
+	/**
 	 * Filters the avatar for the last sender in the current message thread.
 	 *
 	 * @since BuddyPress 1.0.0
@@ -757,7 +774,7 @@ function bp_get_message_thread_avatar( $args = '' ) {
 		'bp_get_message_thread_avatar',
 		bp_core_fetch_avatar(
 			array(
-				'item_id' => $messages_template->thread->last_sender_id,
+				'item_id' => $last_sender_id,
 				'type'    => $r['type'],
 				'alt'     => $r['alt'],
 				'css_id'  => $r['id'],
