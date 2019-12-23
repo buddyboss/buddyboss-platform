@@ -86,6 +86,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			bp_get_template_part( 'members/single/profile/widget' );
 			$bp_nouveau->xprofile->profile_completion_widget_para = array();
 
+			/**
+			 * Fires after showing widget content.
+			 * 
+			 * @since BuddyBoss 1.0.0
+			 */
+			do_action( 'xprofile_profile_completion_widget' );
 			
 		echo $args['after_widget'];
 		
@@ -279,8 +285,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$progress_details['total_fields'] = $grand_total_fields;
 			$progress_details['completed_fields'] = $grand_completed_fields;
 
-
-			return $progress_details;
+			/**
+			 * Filter returns User Progress array.
+			 * 
+			 * @since BuddyBoss 1.0.0
+			 */
+			return apply_filters( 'xprofile_pc_user_progress', $progress_details );
 		}
 
 
@@ -296,7 +306,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 			// Calculate Total Progress percentage.
 			$profile_completion_percentage = round( ( $user_progress_arr['completed_fields']*100 ) / $user_progress_arr['total_fields'] );
-			$user_prgress_formmatted = array(
+			$user_prgress_formatted = array(
 				'completion_percentage' => $profile_completion_percentage
 			);
 
@@ -306,7 +316,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 				$group_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/'.$group_id );
 
-				$user_prgress_formmatted['groups'][] = array(
+				$user_prgress_formatted['groups'][] = array(
 					'number'	=> $listing_number,
 					'label'		=> $group_details['group_name'],
 					'link'		=> $group_link,
@@ -326,7 +336,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				$change_avatar_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-avatar' );
 				$is_profile_uploaded = ($user_progress_arr['photo_type']['profile_photo']['is_uploaded'] == 1 );
 
-				$user_prgress_formmatted['groups'][] = array(
+				$user_prgress_formatted['groups'][] = array(
 					'number'	=> $listing_number,
 					'label'		=> $user_progress_arr['photo_type']['profile_photo']['name'],
 					'link'		=> $change_avatar_link,
@@ -346,7 +356,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				$change_cover_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-cover-image' );
 				$is_cover_uploaded = ($user_progress_arr['photo_type']['cover_photo']['is_uploaded'] == 1 );
 
-				$user_prgress_formmatted['groups'][] = array(
+				$user_prgress_formatted['groups'][] = array(
 					'number'	=> $listing_number,
 					'label'		=> $user_progress_arr['photo_type']['cover_photo']['name'],
 					'link'		=> $change_cover_link,
@@ -358,7 +368,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				$listing_number++;	
 			}
 
-			return $user_prgress_formmatted;
+			/**
+			 * Filter returns User Progress array in the template friendly format.
+			 * 
+			 * @since BuddyBoss 1.0.0
+			 */
+			return apply_filters( 'xprofile_pc_user_progress_formatted', $user_prgress_formatted );
 		}
 
 
@@ -373,10 +388,15 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
 		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
 
-		$pc_transient_name = $this->get_pc_transient_name();
-		delete_transient( $pc_transient_name );
+		// Delete Transient
+		$this->delete_pc_transient();
 		
-		return $instance;
+		/**
+		 * Fires when updating widget form settings.
+		 * 
+		 * @since BuddyBoss 1.0.0
+		 */
+		return apply_filters( 'xprofile_profile_completion_form_update', $instance );
 	}
 
 	
@@ -463,6 +483,15 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		</p>
 		<?php endif; ?>
 
+		<?php 
+		/**
+		 * Fires after showing last field in the Widget form.
+		 * 
+		 * @since BuddyBoss 1.0.0
+		 */
+		do_action( 'xprofile_profile_completion_form' );
+		?>
+		
 		<p><small><?php _e( 'Note: This widget is only displayed if a member is logged in.', 'buddyboss' ); ?></small></p>
 
 		<?php
