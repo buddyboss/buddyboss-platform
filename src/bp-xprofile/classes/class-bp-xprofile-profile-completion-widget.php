@@ -1,16 +1,16 @@
 <?php
 /**
- * BuddyBoss Follow Following Widget.
+ * BuddyBoss Profile Completion Widget.
  *
- * @package BuddyBoss\Connections
- * @since BuddyPress 1.9.0
+ * @package BuddyBoss\XProfile\Classes
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Follow_Following widget for the logged-in user
+ * Profile Completion widget for the logged-in user
  *
  * @subpackage Widgets
  */
@@ -20,10 +20,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 * Constructor.
 	 */
 	function __construct() {
+		
 		// Set up optional widget args
 		$widget_ops = array(
 			'classname'   => 'widget_bp_profile_completion_widget widget buddypress',
-			'description' => __( 'Show Profile Completion Progress.', 'buddyboss' ),
+			'description' => __( 'Show Logged in user Profile Completion Progress.', 'buddyboss' ),
 		);
 
 		// Set up the widget
@@ -34,6 +35,8 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		);
 	}
 
+	
+	
 	/**
 	 * Displays the widget.
 	 */
@@ -43,6 +46,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		if ( ! is_user_logged_in() ) {
 			return;
 		}
+		
 		
 		/* Widget VARS */
 		
@@ -67,275 +71,247 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		
 		echo $args['before_widget'];
 			
-		// Widget Title 
-		echo $args['before_title'];
-		echo $instance['title'];
-		echo $args['after_title'];
+			// Widget Title 
+			echo $args['before_title'];
+			echo $instance['title'];
+			echo $args['after_title'];
 
-		
-		
-		// Widget Content
-		
-		/**
-		 * Globalize the Profile Completion widget arguments. Used in the template called below.
-		 */
-		$bp_nouveau = bp_nouveau();
-		$bp_nouveau->xprofile->profile_completion_widget_arg = $user_progress_formmatted;
-		bp_get_template_part( 'members/single/profile/widget' );
-		$bp_nouveau->xprofile->profile_completion_widget_arg = array();
-		
+
+
+			// Widget Content
+
+			// Globalize the Profile Completion widget arguments. Used in the template called below.
+			$bp_nouveau = bp_nouveau();
+			$bp_nouveau->xprofile->profile_completion_widget_para = $user_progress_formmatted;
+			bp_get_template_part( 'members/single/profile/widget' );
+			$bp_nouveau->xprofile->profile_completion_widget_para = array();
+
 			
 		echo $args['after_widget'];
 		
 	}
 
-	/**
-	 * 
-	 * Return Format
-	 * 
-	$progress_details = array(
+		/**
+		 * Function returns logged in user progress based on options selected in the widget form.
+		 * 
+		 * @param type $group_ids
+		 * @param type $photo_types
+		 * @return int
+		 */
+		function get_user_progress( $group_ids, $photo_types ){
 
-		'total_fields' => 10,
-		'completed_fields' => 6,
+			/* User Progress specific VARS. */
+			$user_id = get_current_user_id();
+			$progress_details = array();
+			$grand_total_fields = 0;
+			$grand_completed_fields = 0;
 
-		'groups' => array(
-			1 => array(
-				'group_name' => 'Group 1',
-				'group_total_fields' => 5,
-				'group_completed_fields' => 3,
-			),
-			2 => array(
-				'group_name' => 'Group 2',
-				'group_total_fields' => 3,
-				'group_completed_fields' => 2,
-			)
-		),
 
-		'photo_type' => array(
 
-			'profile_photo' => array(
-				'is_uploaded' => 1,
-				'name' => __('Profile Photo', 'buddyboss' )
-			),
-			'cover_photo' => array(
-				'is_uploaded' => 0,
-				'name' => __('Cover Photo', 'buddyboss' )
-			)
+			/* Profile Photo */
+			if( in_array('profile_photo', $photo_types) ){
 
-		)
-	);
-	 * 
-	 * @param type $group_ids
-	 * @param type $photo_types
-	 * @return type
-	 */
-	function get_user_progress( $group_ids, $photo_types ){
-		
-		/* User Progress specific VARS. */
-		$user_id = get_current_user_id();
-		$progress_details = array();
-		$grand_total_fields = 0;
-		$grand_completed_fields = 0;
-		
-		
-		
-		/* Profile Photo */
-		if( in_array('profile_photo', $photo_types) ){
-			
-			++$grand_total_fields;
-			
-			$is_profile_photo_uploaded = ( bp_get_user_has_avatar($user_id) ) ? 1 : 0;
-			
-			if( $is_profile_photo_uploaded ){
-				++$grand_completed_fields;
+				++$grand_total_fields;
+
+				$is_profile_photo_uploaded = ( bp_get_user_has_avatar($user_id) ) ? 1 : 0;
+
+				if( $is_profile_photo_uploaded ){
+					++$grand_completed_fields;
+				}
+
+				$progress_details['photo_type']['profile_photo'] = array(
+					'is_uploaded' => $is_profile_photo_uploaded,
+					'name' => __('Profile Photo', 'buddyboss' )
+				);
+
 			}
-			
-			$progress_details['photo_type']['profile_photo'] = array(
-				'is_uploaded' => $is_profile_photo_uploaded,
-				'name' => __('Profile Photo', 'buddyboss' )
+
+
+
+			/* Cover Photo */
+			if( in_array('cover_photo', $photo_types) ){
+
+				++$grand_total_fields;
+
+				$is_cover_photo_uploaded = ( bp_attachments_get_user_has_cover_image($user_id) ) ? 1 : 0;
+
+				if( $is_profile_photo_uploaded ){
+					++$grand_completed_fields;
+				}
+
+				$progress_details['photo_type']['cover_photo'] = array(
+					'is_uploaded' => $is_cover_photo_uploaded,
+					'name' => __('Cover Photo', 'buddyboss' )
+				);
+
+			}
+
+
+
+			/* Groups Fields */
+
+			// Get Groups and Group fields with Loggedin user data.
+			$profile_groups =  bp_xprofile_get_groups(
+				array(
+					'fetch_fields'                   => true,
+					'fetch_field_data'               => true,
+					'user_id'						 => $user_id
+				)
 			);
-			
-		}
-		
-		
-		
-		/* Cover Photo */
-		if( in_array('cover_photo', $photo_types) ){
-			
-			++$grand_total_fields;
-			
-			$is_cover_photo_uploaded = ( bp_attachments_get_user_has_cover_image($user_id) ) ? 1 : 0;
-			
-			if( $is_profile_photo_uploaded ){
-				++$grand_completed_fields;
-			}
-			
-			$progress_details['photo_type']['cover_photo'] = array(
-				'is_uploaded' => $is_cover_photo_uploaded,
-				'name' => __('Cover Photo', 'buddyboss' )
-			);
-			
-		}
-		
-		
-		
-		/* Groups Fields */
-		
-		// Get Groups and Group fields with Loggedin user data.
-		$profile_groups =  bp_xprofile_get_groups(
-			array(
-				'fetch_fields'                   => true,
-				'fetch_field_data'               => true,
-				'user_id'						 => $user_id
-			)
-		);
-		
-		foreach( $profile_groups as $single_group_details ){
-			
-			/* Single Group Specific VARS */
-			$group_id = $single_group_details->id;
-			
-			// Consider only selected Groups ids from the widget form settings, skip all others.
-			if( !in_array( $group_id, $group_ids) ){
-				continue;
-			}
-			
-			$single_group_progress = array();
-			
-			// Check if Current Group is repeater if YES then get number of fields inside current group.
-			$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
-			$is_group_repeater = ( $is_group_repeater_str == 'on' ) ? true : false;
-			$repeater_field_count = 0;
-			if( $is_group_repeater ){
-				$repeater_fields = bp_get_repeater_template_field_ids( $group_id );
-				$repeater_field_count = count( $repeater_fields );
-			}
-			
-			
-			/* Loop through all the fields and check if fields completed or not. */
-			$group_total_fields = 0;
-			$group_completed_fields = 0;
-			foreach( $single_group_details->fields as $array_index => $group_single_field ){
-				
-				// If current group is repeater then check only first set of fields.
-				if( $is_group_repeater && ($array_index > $repeater_field_count) ){
+
+			foreach( $profile_groups as $single_group_details ){
+
+				/* Single Group Specific VARS */
+
+				$group_id = $single_group_details->id;
+				$single_group_progress = array();
+
+				// Consider only selected Groups ids from the widget form settings, skip all others.
+				if( !in_array( $group_id, $group_ids) ){
 					continue;
 				}
-				
-				$field_data_value = maybe_unserialize( $group_single_field->data->value );
-				
-				if( !empty( $field_data_value ) ){
-					++$group_completed_fields;
+
+				// Check if Current Group is repeater if YES then get number of fields inside current group.
+				$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
+				$is_group_repeater = ( $is_group_repeater_str == 'on' ) ? true : false;
+				$repeater_field_count = 0;
+				if( $is_group_repeater ){
+					$repeater_fields = bp_get_repeater_template_field_ids( $group_id );
+					$repeater_field_count = count( $repeater_fields );
 				}
-				
-				++$group_total_fields;
+
+
+				/* Loop through all the fields and check if fields completed or not. */
+				$group_total_fields = 0;
+				$group_completed_fields = 0;
+				foreach( $single_group_details->fields as $array_index => $group_single_field ){
+
+					// If current group is repeater then only check first set of fields.
+					if( $is_group_repeater && ($array_index > $repeater_field_count) ){
+						continue;
+					}
+
+					$field_data_value = maybe_unserialize( $group_single_field->data->value );
+
+					if( !empty( $field_data_value ) ){
+						++$group_completed_fields;
+					}
+
+					++$group_total_fields;
+				}
+
+
+				/* Prepare array to return group specific progress details */
+				$single_group_progress['group_name'] = $single_group_details->name;
+				$single_group_progress['group_total_fields'] = $group_total_fields;
+				$single_group_progress['group_completed_fields'] = $group_completed_fields;
+
+				$grand_total_fields += $group_total_fields;
+				$grand_completed_fields += $group_completed_fields;
+
+				$progress_details['groups'][ $group_id ] = $single_group_progress;
+
 			}
-			
-			
-			/* Prepare array to return group specific progress details */
-			$single_group_progress['group_name'] = $single_group_details->name;
-			$single_group_progress['group_total_fields'] = $group_total_fields;
-			$single_group_progress['group_completed_fields'] = $group_completed_fields;
-			
-			$grand_total_fields += $group_total_fields;
-			$grand_completed_fields += $group_completed_fields;
-			
-			$progress_details['groups'][ $group_id ] = $single_group_progress;
-			
+
+
+
+			/* Total Fields vs completed fields to calculate progress percentage. */
+			$progress_details['total_fields'] = $grand_total_fields;
+			$progress_details['completed_fields'] = $grand_completed_fields;
+
+
+			return $progress_details;
 		}
-		
-		
-		
-		/* Total Fields vs completed fields to calculate progress percentage. */
-		$progress_details['total_fields'] = $grand_total_fields;
-		$progress_details['completed_fields'] = $grand_completed_fields;
-		
-		
-		return $progress_details;
-	}
-	
-	
-	/**
-	 * 
-	 * 
-	 * @param type $user_progress_arr
-	 */
-	function get_user_progress_formatted( $user_progress_arr ){
-		
-		// Groups
-		$profile_completion_percentage = round( ( $user_progress_arr['completed_fields']*100 ) / $user_progress_arr['total_fields'] );
-		$user_prgress_formmatted = array(
-			'completion_percentage' => $profile_completion_percentage
-		);
-		$listing_number = 1;
-		foreach ( $user_progress_arr['groups'] as $group_id => $group_details ){
-			
-			$group_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/'.$group_id );
-			
-			$user_prgress_formmatted['groups'][] = array(
-				'number'	=> $listing_number,
-				'label'		=> $group_details['group_name'],
-				'link'		=> $group_link,
-				'is_group_completed' => ( $group_details['group_total_fields'] == $group_details['group_completed_fields'] ) ? true : false,
-				'total'		=> $group_details['group_total_fields'],
-				'completed' => $group_details['group_completed_fields'],
+
+
+		/**
+		 * Function formats user progress to pass on to templates.
+		 * 
+		 * @param type $user_progress_arr
+		 * @return int
+		 */
+		function get_user_progress_formatted( $user_progress_arr ){
+
+			/* Groups */
+
+			// Calculate Total Progress percentage.
+			$profile_completion_percentage = round( ( $user_progress_arr['completed_fields']*100 ) / $user_progress_arr['total_fields'] );
+			$user_prgress_formmatted = array(
+				'completion_percentage' => $profile_completion_percentage
 			);
-			
-			$listing_number++;	
+
+			// Group specific details
+			$listing_number = 1;
+			foreach ( $user_progress_arr['groups'] as $group_id => $group_details ){
+
+				$group_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/'.$group_id );
+
+				$user_prgress_formmatted['groups'][] = array(
+					'number'	=> $listing_number,
+					'label'		=> $group_details['group_name'],
+					'link'		=> $group_link,
+					'is_group_completed' => ( $group_details['group_total_fields'] == $group_details['group_completed_fields'] ) ? true : false,
+					'total'		=> $group_details['group_total_fields'],
+					'completed' => $group_details['group_completed_fields'],
+				);
+
+				$listing_number++;	
+			}
+
+
+			/* Profile Photo */
+
+			if( isset( $user_progress_arr['photo_type']['profile_photo'] ) ){
+
+				$change_avatar_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-avatar' );
+				$is_profile_uploaded = ($user_progress_arr['photo_type']['profile_photo']['is_uploaded'] == 1 );
+
+				$user_prgress_formmatted['groups'][] = array(
+					'number'	=> $listing_number,
+					'label'		=> $user_progress_arr['photo_type']['profile_photo']['name'],
+					'link'		=> $change_avatar_link,
+					'is_group_completed' => ( $is_profile_uploaded ) ? true : false,
+					'total'		=> 1,
+					'completed' => ( $is_profile_uploaded ) ? 1 : 0,
+				);
+
+				$listing_number++;	
+			}
+
+
+			/* Cover Photo */
+
+			if( isset( $user_progress_arr['photo_type']['cover_photo'] ) ){
+
+				$change_cover_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-cover-image' );
+				$is_cover_uploaded = ($user_progress_arr['photo_type']['cover_photo']['is_uploaded'] == 1 );
+
+				$user_prgress_formmatted['groups'][] = array(
+					'number'	=> $listing_number,
+					'label'		=> $user_progress_arr['photo_type']['cover_photo']['name'],
+					'link'		=> $change_cover_link,
+					'is_group_completed' => ( $is_cover_uploaded ) ? true : false,
+					'total'		=> 1,
+					'completed' => ( $is_cover_uploaded ) ? 1 : 0,
+				);
+
+				$listing_number++;	
+			}
+
+			return $user_prgress_formmatted;
 		}
-		
-		
-		// Profile Photo
-		if( isset( $user_progress_arr['photo_type']['profile_photo'] ) ){
-			
-			$change_avatar_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-avatar' );
-			$is_profile_uploaded = ($user_progress_arr['photo_type']['profile_photo']['is_uploaded'] == 1 );
-			
-			$user_prgress_formmatted['groups'][] = array(
-				'number'	=> $listing_number,
-				'label'		=> $user_progress_arr['photo_type']['profile_photo']['name'],
-				'link'		=> $change_avatar_link,
-				'is_group_completed' => ( $is_profile_uploaded ) ? true : false,
-				'total'		=> 1,
-				'completed' => ( $is_profile_uploaded ) ? 1 : 0,
-			);
-			
-			$listing_number++;	
-		}
-		
-		
-		// Cover Photo
-		if( isset( $user_progress_arr['photo_type']['cover_photo'] ) ){
-			
-			$change_cover_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-cover-image' );
-			$is_cover_uploaded = ($user_progress_arr['photo_type']['cover_photo']['is_uploaded'] == 1 );
-			
-			$user_prgress_formmatted['groups'][] = array(
-				'number'	=> $listing_number,
-				'label'		=> $user_progress_arr['photo_type']['cover_photo']['name'],
-				'link'		=> $change_cover_link,
-				'is_group_completed' => ( $is_cover_uploaded ) ? true : false,
-				'total'		=> 1,
-				'completed' => ( $is_cover_uploaded ) ? 1 : 0,
-			);
-			
-			$listing_number++;	
-		}
-		
-		return $user_prgress_formmatted;
-	}
-	
-	
-	
+
+
+
 	
 	/**
 	 * Callback to save widget settings.
 	 */
 	function update( $new_instance, $old_instance ) {
-		$instance              = $old_instance;
-		$instance['title']     = strip_tags( $new_instance['title'] );
-		$instance['profile_groups_enabled']     = $new_instance['profile_groups_enabled'];
-		$instance['profile_photos_enabled']     = $new_instance['profile_photos_enabled'];
+		$instance							= $old_instance;
+		$instance['title']					= strip_tags( $new_instance['title'] );
+		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
+		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
 
 		return $instance;
 	}
@@ -371,7 +347,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		
 		
 		
-		/* Form HTML */
+		/* Widget Form HTML */
 		?>
 		<p>
 			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>

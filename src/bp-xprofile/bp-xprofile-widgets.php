@@ -2,8 +2,10 @@
 /**
  * BuddyBoss xProfile Component Widgets.
  *
- * @package BuddyBoss\XProfile\Classes
- * @since BuddyPress 1.0.0
+ * Functions here registers Profile Completion Widget.
+ * 
+ * @package BuddyBoss\XProfile
+ * @since BuddyBoss 1.0.0
  */
 
 // Exit if accessed directly.
