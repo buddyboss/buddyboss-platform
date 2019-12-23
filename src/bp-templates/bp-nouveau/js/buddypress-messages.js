@@ -1736,7 +1736,7 @@ window.bp = window.bp || {};
                 navigateToList: function( event ) {
                         event.preventDefault();
                         bp.Nouveau.Messages.router.navigate( '/' );
-                        $('.bp-messages-container').removeClass('bp-view-message');
+                        $('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
                 },
 
 		doAction: function( event ) {

@@ -32,7 +32,7 @@ class Core {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		 $this->registerAutoloader();
+		$this->registerAutoloader();
 
 		$this->admin        = new Admin();
 		$this->dependencies = new Dependencies();
@@ -44,6 +44,285 @@ class Core {
 		$this->pluginName = __( 'BuddyBoss LearnDash', 'buddyboss' );
 
 		add_action( 'bp_ld_sync/requirements_checked', array( $this, 'init' ) );
+		$this->registerCourseComponent();
+	}
+
+	/**
+	 * Add Course tab in profile menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function registerCourseComponent() {
+		if ( $this->settings->get( 'course.courses_visibility' ) ) {
+			/**
+			 * Load first
+			 */
+			add_action( 'bp_setup_nav', array( $this, 'setup_nav' ), 100 );
+
+			/**
+			 * Load second
+			 */
+			add_action( 'bp_setup_admin_bar', array( $this, 'setup_admin_bar' ), 75 );
+
+			/**
+			 * Load third
+			 */
+			add_action( 'buddyboss_theme_after_bb_groups_menu', array( $this, 'setup_user_profile_bar' ), 10 );
+		}
+	}
+
+	/**
+	 * Add Menu in Profile section.
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param $menus
+	 */
+	function setup_user_profile_bar() {
+		?>
+        <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->course_slug ); ?>" class="menupop">
+            <a class="ab-item" aria-haspopup="true"
+               href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>">
+                <span class="wp-admin-bar-arrow" aria-hidden="true"></span><?php echo esc_attr( $this->course_name ); ?>
+            </a>
+
+            <div class="ab-sub-wrapper">
+                <ul id="wp-admin-bar-my-account-courses-default" class="ab-submenu">
+                    <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->my_courses_slug ); ?>">
+                        <a class="ab-item"
+                           href="<?php echo esc_url( $this->adminbar_nav_link( $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_courses_name ); ?></a>
+                    </li>
+					<?php
+					if ( $this->certificates_enables ) {
+						?>
+                        <li id="wp-admin-bar-my-account-<?php echo esc_attr( $this->certificates_tab_slug ); ?>">
+                            <a class="ab-item"
+                               href="<?php echo esc_url( $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ) ); ?>"><?php echo esc_attr( $this->my_certificates_tab_name ); ?></a>
+                        </li>
+						<?php
+					}
+					?>
+                </ul>
+            </div>
+        </li>
+		<?php
+	}
+
+	/**
+	 * Add Course tab in profile menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function setup_nav() {
+		$this->course_name              = \LearnDash_Custom_Label::get_label( 'courses' );
+		$this->my_courses_name          = sprintf( __( 'My %s', 'buddyboss' ), $this->course_name );
+		$this->create_courses_name      = sprintf( __( 'Create a %s', 'buddyboss' ), $this->course_name );
+		$this->create_courses_slug      = apply_filters( 'bp_learndash_profile_create_courses_slug', 'create-courses' );
+		$this->course_slug              = apply_filters( 'bp_learndash_profile_courses_slug', \LearnDash_Settings_Section::get_section_setting('LearnDash_Settings_Section_Permalinks', 'courses' ) );
+		$this->my_courses_slug          = apply_filters( 'bp_learndash_profile_courses_slug', 'my-courses' );
+		$this->course_access            = bp_core_can_edit_settings();
+		$this->certificates_enables     = bp_core_learndash_certificates_enables();
+		$this->my_certificates_tab_name = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'My Certificates', 'buddyboss' ) );
+		$this->certificates_tab_name    = apply_filters( 'bp_learndash_profile_certificates_tab_name', __( 'Certificates', 'buddyboss' ) );
+		$this->certificates_tab_slug    = apply_filters( 'bp_learndash_profile_certificates_slug', 'certificates' );
+
+		$this->bp_displayed_user_id = bp_displayed_user_id();
+		$this->bp_loggedin_user_id  = bp_loggedin_user_id();
+		$this->user_same            = ( $this->bp_displayed_user_id == $this->bp_loggedin_user_id ? true : false );
+
+		$atts         = apply_filters( 'bp_learndash_user_courses_atts', array() );
+		$user_courses = apply_filters( 'bp_learndash_user_courses', ld_get_mycourses( $this->bp_displayed_user_id, $atts ) );
+
+		$user_courses_count = is_array( $user_courses ) ? count( $user_courses ) : 0;
+
+		// Only grab count if we're on a user page.
+		if ( bp_is_user() ) {
+			$class = ( 0 === $user_courses_count ) ? 'no-count' : 'count';
+
+			$nav_name = sprintf(
+			/* translators: %s: Group count for the current user */
+				__( '%s %s', 'buddyboss' ),
+				$this->course_name,
+				sprintf(
+					'<span class="%s">%s</span>',
+					esc_attr( $class ),
+					$user_courses_count
+				)
+			);
+		} else {
+			$nav_name = $this->course_name;
+		}
+
+		bp_core_new_nav_item( array(
+			'name'                    => $nav_name,
+			'slug'                    => $this->course_slug,
+			'screen_function'         => array( $this, 'course_page' ),
+			'position'                => 75,
+			'default_subnav_slug'     => $this->my_courses_slug,
+			'show_for_displayed_user' => $this->course_access,
+		) );
+
+		$all_subnav_items = array(
+			array(
+				'name'            => empty( $this->user_same ) ? $this->course_name : $this->my_courses_name,
+				'slug'            => $this->my_courses_slug,
+				'parent_url'      => $this->get_nav_link( $this->course_slug ),
+				'parent_slug'     => $this->course_slug,
+				'screen_function' => array( $this, 'course_page' ),
+				'position'        => 75,
+				'user_has_access' => $this->course_access,
+			),
+		);
+
+		if ( $this->certificates_enables ) {
+			$all_subnav_items[] = array(
+				'name'            => empty( $this->user_same ) ? $this->certificates_tab_name : $this->my_certificates_tab_name,
+				'slug'            => $this->certificates_tab_slug,
+				'parent_url'      => $this->get_nav_link( $this->course_slug ),
+				'parent_slug'     => $this->course_slug,
+				'screen_function' => array( $this, 'certificates_page' ),
+				'user_has_access' => $this->course_access,
+			);
+		}
+
+		foreach ( $all_subnav_items as $all_subnav_item ) {
+			bp_core_new_subnav_item( $all_subnav_item );
+		}
+
+	}
+
+	/**
+	 * Add Course tab in admin menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function setup_admin_bar() {
+
+		$all_post_types = array(
+			array(
+				'name'     => $this->course_name,
+				'slug'     => $this->course_slug,
+				'parent'   => 'buddypress',
+				'nav_link' => $this->adminbar_nav_link( $this->course_slug ),
+				'position' => 1,
+			),
+			array(
+				'name'     => $this->my_courses_name,
+				'slug'     => $this->my_courses_slug,
+				'parent'   => $this->course_slug,
+				'nav_link' => $this->adminbar_nav_link( $this->course_slug ),
+				'position' => 1,
+			),
+		);
+
+		if ( $this->certificates_enables ) {
+			$all_post_types[] = array(
+				'name'     => $this->my_certificates_tab_name,
+				'slug'     => $this->certificates_tab_slug,
+				'parent'   => $this->course_slug,
+				'nav_link' => $this->adminbar_nav_link( $this->certificates_tab_slug, $this->course_slug ),
+				'position' => 2,
+			);
+		}
+
+		global $wp_admin_bar;
+		foreach ( $all_post_types as $single ) {
+			$wp_admin_bar->add_menu( array(
+				'parent'   => 'my-account-' . $single['parent'],
+				'id'       => 'my-account-' . $single['slug'],
+				'title'    => $single['name'],
+				'href'     => $single['nav_link'],
+				'position' => $single['position'],
+			) );
+		}
+	}
+
+	/**
+	 * Add Menu and Sub menu navigation link for profile menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param $slug
+	 * @param string $parent_slug
+	 *
+	 * @return string
+	 */
+	public function get_nav_link( $slug, $parent_slug = '' ) {
+		$displayed_user_id = bp_displayed_user_id();
+		$user_domain       = ( ! empty( $displayed_user_id ) ) ? bp_displayed_user_domain() : bp_loggedin_user_domain();
+		if ( ! empty( $parent_slug ) ) {
+			$nav_link = trailingslashit( $user_domain . $parent_slug . '/' . $slug );
+		} else {
+			$nav_link = trailingslashit( $user_domain . $slug );
+		}
+
+		return $nav_link;
+	}
+
+	/**
+	 * Add Menu and Sub menu navigation link for admin menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 *
+	 * @param $slug
+	 * @param string $parent_slug
+	 *
+	 * @return string
+	 */
+	public function adminbar_nav_link( $slug, $parent_slug = '' ) {
+		$user_domain = bp_loggedin_user_domain();
+		if ( ! empty( $parent_slug ) ) {
+			$nav_link = trailingslashit( $user_domain . $parent_slug . '/' . $slug );
+		} else {
+			$nav_link = trailingslashit( $user_domain . $slug );
+		}
+
+		return $nav_link;
+	}
+
+	/**
+	 * Display Certificates Page Content in Profile course menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function certificates_page() {
+		add_action( 'bp_template_content', array( $this, 'certificates_page_content' ) );
+		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
+	}
+
+	/**
+	 * Display Certificates Page Content
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	function certificates_page_content() {
+		do_action( 'template_notices' );
+		do_action( 'bp_learndash_before_certificates_page_content' );
+		bp_get_template_part( 'members/single/courses/certificates' );
+	}
+
+	/**
+	 * Display Course Page Content in Profile course menu
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function course_page() {
+		add_action( 'bp_template_content', array( $this, 'courses_page_content' ) );
+		bp_core_load_template( apply_filters( 'bp_core_template_plugin', 'members/single/plugins' ) );
+	}
+
+	/**
+	 * Display Courses in My Course Profile Page
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	function courses_page_content() {
+
+		do_action( 'template_notices' );
+
+		do_action( 'bp_learndash_before_courses_page_content' );
+
+		bp_get_template_part( 'members/single/courses/courses' );
 	}
 
 	/**
@@ -93,6 +372,7 @@ class Core {
 		}
 
 		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+
 		return $key == '*' ? $merged : ( isset( $merged[ $key ] ) ? $merged[ $key ] : $default );
 	}
 
@@ -107,6 +387,7 @@ class Core {
 		}
 
 		$merged = array_merge( $_GET, $_POST, $_REQUEST );
+
 		return isset( $merged[ $key ] );
 	}
 
@@ -117,14 +398,14 @@ class Core {
 	 */
 	public function registerAutoloader() {
 		spl_autoload_register(
-			function( $class ) {
+			function ( $class ) {
 				$psr4 = array(
-					'Buddyboss\LearndashIntegration\Core' => 'core',
-					'Buddyboss\LearndashIntegration\Library' => 'library',
-					'Buddyboss\LearndashIntegration\Buddypress' => 'buddypress',
+					'Buddyboss\LearndashIntegration\Core'                  => 'core',
+					'Buddyboss\LearndashIntegration\Library'               => 'library',
+					'Buddyboss\LearndashIntegration\Buddypress'            => 'buddypress',
 					'Buddyboss\LearndashIntegration\Buddypress\Generators' => 'buddypress/generators',
 					'Buddyboss\LearndashIntegration\Buddypress\Components' => 'buddypress/components',
-					'Buddyboss\LearndashIntegration\Learndash' => 'learndash',
+					'Buddyboss\LearndashIntegration\Learndash'             => 'learndash',
 				);
 
 				$segments  = explode( '\\', $class );
@@ -355,6 +636,7 @@ class Core {
 
 				$lession_list = learndash_get_lesson_list( $course_id );
 				$url          = bp_ld_sync()->bp_ld_custom_continue_url_arr( $course_id, $lession_list );
+
 				return $url;
 			}
 		}
@@ -367,7 +649,7 @@ class Core {
 	 *
 	 * @param $course_id
 	 * @param $lession_list
-	 * @param string       $course_quizzes_list
+	 * @param string $course_quizzes_list
 	 *
 	 * @return array | string
 	 */
@@ -451,177 +733,12 @@ class Core {
 		if ( '' !== $key && isset( $navigation_urls[ $key ] ) ) {
 			return $navigation_urls[ $key ]['url'];
 		}
+
 		return '';
 	}
 
 	public function bp_ld_prepare_price_str( $price ) {
-		if ( ! empty( $price ) ) {
-			$currency_symbols = array(
-				'AED' => '&#1583;.&#1573;', // ?
-				'AFN' => '&#65;&#102;',
-				'ALL' => '&#76;&#101;&#107;',
-				'AMD' => '',
-				'ANG' => '&#402;',
-				'AOA' => '&#75;&#122;', // ?
-				'ARS' => '&#36;',
-				'AUD' => '&#36;',
-				'AWG' => '&#402;',
-				'AZN' => '&#1084;&#1072;&#1085;',
-				'BAM' => '&#75;&#77;',
-				'BBD' => '&#36;',
-				'BDT' => '&#2547;', // ?
-				'BGN' => '&#1083;&#1074;',
-				'BHD' => '.&#1583;.&#1576;', // ?
-				'BIF' => '&#70;&#66;&#117;', // ?
-				'BMD' => '&#36;',
-				'BND' => '&#36;',
-				'BOB' => '&#36;&#98;',
-				'BRL' => '&#82;&#36;',
-				'BSD' => '&#36;',
-				'BTN' => '&#78;&#117;&#46;', // ?
-				'BWP' => '&#80;',
-				'BYR' => '&#112;&#46;',
-				'BZD' => '&#66;&#90;&#36;',
-				'CAD' => '&#36;',
-				'CDF' => '&#70;&#67;',
-				'CHF' => '&#67;&#72;&#70;',
-				'CLF' => '', // ?
-				'CLP' => '&#36;',
-				'CNY' => '&#165;',
-				'COP' => '&#36;',
-				'CRC' => '&#8353;',
-				'CUP' => '&#8396;',
-				'CVE' => '&#36;', // ?
-				'CZK' => '&#75;&#269;',
-				'DJF' => '&#70;&#100;&#106;', // ?
-				'DKK' => '&#107;&#114;',
-				'DOP' => '&#82;&#68;&#36;',
-				'DZD' => '&#1583;&#1580;', // ?
-				'EGP' => '&#163;',
-				'ETB' => '&#66;&#114;',
-				'EUR' => '&#8364;',
-				'FJD' => '&#36;',
-				'FKP' => '&#163;',
-				'GBP' => '&#163;',
-				'GEL' => '&#4314;', // ?
-				'GHS' => '&#162;',
-				'GIP' => '&#163;',
-				'GMD' => '&#68;', // ?
-				'GNF' => '&#70;&#71;', // ?
-				'GTQ' => '&#81;',
-				'GYD' => '&#36;',
-				'HKD' => '&#36;',
-				'HNL' => '&#76;',
-				'HRK' => '&#107;&#110;',
-				'HTG' => '&#71;', // ?
-				'HUF' => '&#70;&#116;',
-				'IDR' => '&#82;&#112;',
-				'ILS' => '&#8362;',
-				'INR' => '&#8377;',
-				'IQD' => '&#1593;.&#1583;', // ?
-				'IRR' => '&#65020;',
-				'ISK' => '&#107;&#114;',
-				'JEP' => '&#163;',
-				'JMD' => '&#74;&#36;',
-				'JOD' => '&#74;&#68;', // ?
-				'JPY' => '&#165;',
-				'KES' => '&#75;&#83;&#104;', // ?
-				'KGS' => '&#1083;&#1074;',
-				'KHR' => '&#6107;',
-				'KMF' => '&#67;&#70;', // ?
-				'KPW' => '&#8361;',
-				'KRW' => '&#8361;',
-				'KWD' => '&#1583;.&#1603;', // ?
-				'KYD' => '&#36;',
-				'KZT' => '&#1083;&#1074;',
-				'LAK' => '&#8365;',
-				'LBP' => '&#163;',
-				'LKR' => '&#8360;',
-				'LRD' => '&#36;',
-				'LSL' => '&#76;', // ?
-				'LTL' => '&#76;&#116;',
-				'LVL' => '&#76;&#115;',
-				'LYD' => '&#1604;.&#1583;', // ?
-				'MAD' => '&#1583;.&#1605;.', // ?
-				'MDL' => '&#76;',
-				'MGA' => '&#65;&#114;', // ?
-				'MKD' => '&#1076;&#1077;&#1085;',
-				'MMK' => '&#75;',
-				'MNT' => '&#8366;',
-				'MOP' => '&#77;&#79;&#80;&#36;', // ?
-				'MRO' => '&#85;&#77;', // ?
-				'MUR' => '&#8360;', // ?
-				'MVR' => '.&#1923;', // ?
-				'MWK' => '&#77;&#75;',
-				'MXN' => '&#36;',
-				'MYR' => '&#82;&#77;',
-				'MZN' => '&#77;&#84;',
-				'NAD' => '&#36;',
-				'NGN' => '&#8358;',
-				'NIO' => '&#67;&#36;',
-				'NOK' => '&#107;&#114;',
-				'NPR' => '&#8360;',
-				'NZD' => '&#36;',
-				'OMR' => '&#65020;',
-				'PAB' => '&#66;&#47;&#46;',
-				'PEN' => '&#83;&#47;&#46;',
-				'PGK' => '&#75;', // ?
-				'PHP' => '&#8369;',
-				'PKR' => '&#8360;',
-				'PLN' => '&#122;&#322;',
-				'PYG' => '&#71;&#115;',
-				'QAR' => '&#65020;',
-				'RON' => '&#108;&#101;&#105;',
-				'RSD' => '&#1044;&#1080;&#1085;&#46;',
-				'RUB' => '&#1088;&#1091;&#1073;',
-				'RWF' => '&#1585;.&#1587;',
-				'SAR' => '&#65020;',
-				'SBD' => '&#36;',
-				'SCR' => '&#8360;',
-				'SDG' => '&#163;', // ?
-				'SEK' => '&#107;&#114;',
-				'SGD' => '&#36;',
-				'SHP' => '&#163;',
-				'SLL' => '&#76;&#101;', // ?
-				'SOS' => '&#83;',
-				'SRD' => '&#36;',
-				'STD' => '&#68;&#98;', // ?
-				'SVC' => '&#36;',
-				'SYP' => '&#163;',
-				'SZL' => '&#76;', // ?
-				'THB' => '&#3647;',
-				'TJS' => '&#84;&#74;&#83;', // ? TJS (guess)
-				'TMT' => '&#109;',
-				'TND' => '&#1583;.&#1578;',
-				'TOP' => '&#84;&#36;',
-				'TRY' => '&#8356;', // New Turkey Lira (old symbol used)
-				'TTD' => '&#36;',
-				'TWD' => '&#78;&#84;&#36;',
-				'TZS' => '',
-				'UAH' => '&#8372;',
-				'UGX' => '&#85;&#83;&#104;',
-				'USD' => '&#36;',
-				'UYU' => '&#36;&#85;',
-				'UZS' => '&#1083;&#1074;',
-				'VEF' => '&#66;&#115;',
-				'VND' => '&#8363;',
-				'VUV' => '&#86;&#84;',
-				'WST' => '&#87;&#83;&#36;',
-				'XAF' => '&#70;&#67;&#70;&#65;',
-				'XCD' => '&#36;',
-				'XDR' => '',
-				'XOF' => '',
-				'XPF' => '&#70;',
-				'YER' => '&#65020;',
-				'ZAR' => '&#82;',
-				'ZMK' => '&#90;&#75;', // ?
-				'ZWL' => '&#90;&#36;',
-			);
-
-			return html_entity_decode( $currency_symbols[ $price['code'] ] ) . $price['value'];
-		}
-
-		return '';
+		return learndash_integration_prepare_price_str( $price );
 	}
 
 }

@@ -1224,7 +1224,7 @@ div[class*="attached-gif-container"] .gif-play-button span.dashicons {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif-symbol.png) bottom left no-repeat;
+  background: url(../images/gif-symbol.png) bottom right no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -2661,6 +2661,11 @@ body.register .registration-popup .mfp-close:hover {
   display: inline-block;
   text-align: center;
   margin: 5px 0 10px 10px;
+}
+
+.single-headers .group-description ul {
+  list-style: initial;
+  list-style-position: inside;
 }
 
 .single-headers .member-header-actions > .generic-button {

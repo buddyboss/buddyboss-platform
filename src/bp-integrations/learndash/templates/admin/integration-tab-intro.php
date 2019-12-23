@@ -16,7 +16,15 @@
 		</p>
 		<br />
 		<div class="bp-admin-card-bottom">
-			<a class="button-secondary" href="<?php echo bp_core_help_docs_link( 'integrations/learndash/overview.md' ); ?>"><?php _e( 'View Tutorials', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62873,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorials', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 

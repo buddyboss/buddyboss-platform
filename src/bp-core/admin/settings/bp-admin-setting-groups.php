@@ -91,8 +91,8 @@ class BP_Admin_Setting_Groups extends BP_Admin_Setting_tab {
 		$args['class'] = 'group-default-layout group-layout-options';
 		$this->add_field( 'bp-group-layout-default-format', __( 'Default View', 'buddyboss' ), 'bp_admin_setting_group_layout_default_option',  'radio', $args );
 
-
-		$this->add_field( 'bp-group-hierarchies-tutorial', '', 'bp_group_hierarchies_tutorial' );
+		// Group Directories Tutorial
+		$this->add_field( 'bp-group-directories-tutorial', '', 'bp_group_directories_tutorial' );
 	}
 }
 
