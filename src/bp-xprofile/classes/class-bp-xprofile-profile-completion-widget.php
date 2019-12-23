@@ -34,10 +34,15 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$widget_ops
 		);
 		
-		// Delete Profile Completion Transient when Profile updated, New Field added/update, field deleted.
-		add_action('xprofile_updated_profile', array( $this, 'delete_pc_transient' ) );
-		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) );
-		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) );
+		
+		// Delete Profile Completion Transient when Profile updated, New Field added/update, field deleted etc..
+		
+		add_action('xprofile_updated_profile', array( $this, 'delete_pc_transient' ) ); // On Profile updated from frontend.
+		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) ); // On field added/updated
+		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) ); // On field deleted
+		add_action('xprofile_groups_deleted_group', array( $this, 'delete_pc_transient' ) ); // On profile group deleted.
+		add_action('update_option_bp-disable-avatar-uploads', array( $this, 'delete_pc_transient' ) ); // When avatar photo setting updated in profile.
+		add_action('update_option_bp-disable-cover-image-uploads', array( $this, 'delete_pc_transient' ) ); // When cover photo setting updated in profile.
 	}
 
 	
@@ -177,7 +182,10 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 
 			/* Profile Photo */
-			if( in_array('profile_photo', $photo_types) ){
+			
+			// check if profile photo option still enabled.
+			$is_profile_photo_disabled = bp_disable_avatar_uploads();
+			if( !$is_profile_photo_disabled && in_array('profile_photo', $photo_types) ){
 
 				++$grand_total_fields;
 
@@ -197,7 +205,10 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 
 			/* Cover Photo */
-			if( in_array('cover_photo', $photo_types) ){
+			
+			// check if cover photo option still enabled.
+			$is_cover_photo_disabled = bp_disable_cover_image_uploads();
+			if( !$is_cover_photo_disabled && in_array('cover_photo', $photo_types) ){
 
 				++$grand_total_fields;
 
