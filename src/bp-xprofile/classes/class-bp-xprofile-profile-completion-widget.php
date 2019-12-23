@@ -34,7 +34,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$widget_ops
 		);
 		
-		// Delete Profile Completion Transient.
+		// Delete Profile Completion Transient when Profile updated, New Field added/update, field deleted.
 		add_action('xprofile_updated_profile', array( $this, 'delete_pc_transient' ) );
 		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) );
 		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) );
