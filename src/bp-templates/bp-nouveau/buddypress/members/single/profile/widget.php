@@ -24,8 +24,8 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 		<div class="progress_text_wrap" >
 			<span class="progress_text" ><?php echo $progress_label; ?></span>
 		</div>
-		<div class="progress_container" style="border: 1px solid black;" >
-			<div class="pc_progress" style="height: 10px; width: <?php echo $user_progress['completion_percentage']; ?>%; background-color: #007cff;" ></div>
+		<div class="progress_container" >
+			<div class="pc_progress" style="width: <?php echo $user_progress['completion_percentage']; ?>%;" ></div>
 		</div>
 	</div>
 	
@@ -36,7 +36,7 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 		<?php // Loop through all sections and show progress. ?>
 		<?php foreach( $user_progress['groups'] as $single_section_details ): ?>
 		
-		<li class="single_section_wrap" >
+		<li class="single_section_wrap <?php echo ( $single_section_details['is_group_completed'] ) ? 'completed' : 'incomplete' ?>" >
 			<span class="section_number" >
 				<?php echo $single_section_details['number']; ?>
 			</span>
@@ -44,7 +44,7 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 				<a href="<?php echo $single_section_details['link']; ?>" class="group_link" ><?php echo $single_section_details['label']; ?></a>
 			</span>
 			<span class="progress" >
-				<span class="completed_staus <?php echo ( $single_section_details['is_group_completed'] ) ? 'completed' : 'incomplete' ?>" >
+				<span class="completed_staus" >
 				<span class="completed_steps" ><?php echo $single_section_details['completed']; ?></span> / <span class="total_steps" ><?php echo $single_section_details['total']; ?></span>
 				</span>
 			</span>
