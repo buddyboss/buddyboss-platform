@@ -242,21 +242,20 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				// Check if Current Group is repeater if YES then get number of fields inside current group.
 				$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
 				$is_group_repeater = ( $is_group_repeater_str == 'on' ) ? true : false;
-				$repeater_field_count = 0;
-				if( $is_group_repeater ){
-					$repeater_fields = bp_get_repeater_template_field_ids( $group_id );
-					$repeater_field_count = count( $repeater_fields );
-				}
 
-
+				
 				/* Loop through all the fields and check if fields completed or not. */
 				$group_total_fields = 0;
 				$group_completed_fields = 0;
-				foreach( $single_group_details->fields as $array_index => $group_single_field ){
+				foreach( $single_group_details->fields as $group_single_field ){
 
-					// If current group is repeater then only check first set of fields.
-					if( $is_group_repeater && ($array_index > $repeater_field_count) ){
-						continue;
+					// If current group is repeater then only consider first set of fields.
+					if( $is_group_repeater ){
+						
+						// If field not a "clone number 1" then stop. That means proceed with the first set of fields and restrict others.
+						$field_id = $group_single_field->id;
+						$clone_number = bp_xprofile_get_meta( $field_id, 'field', '_clone_number', true );
+						if( $clone_number > 1 ){ continue; }
 					}
 
 					$field_data_value = maybe_unserialize( $group_single_field->data->value );

@@ -19,7 +19,6 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 ?>
 <div class="profile_completion_wrap" >
 	
-	<?php // Temporary CSS and Background color added for DEMO purpose only. Frontend team will work and finalize styling for Platform as well as Buddyboss theme ?>
 	<div class="pc_progress_wrap" >
 		<div class="progress_text_wrap" >
 			<span class="progress_text" ><?php echo $progress_label; ?></span>
