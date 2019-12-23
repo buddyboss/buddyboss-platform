@@ -112,7 +112,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		
 		// Check if data avail in transient
 		$pc_transient_name = $this->get_pc_transient_name();
-		$pc_transient_data = get_transient( $this->get_pc_transient_name() );
+		$pc_transient_data = get_transient( $pc_transient_name );
 		
 		if( !empty( $pc_transient_data ) ){
 			
@@ -139,9 +139,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function delete_pc_transient(){
 		
-		$pc_transient_name = $this->get_pc_transient_name();
-		delete_transient( $pc_transient_name );
-		
+		// Delete all users transients from options table.
+		$transient_name_prefix = '%_transient_bbprofilecompletion%';
+		global $wpdb;
+		$delete_transient_query = $wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE '%s' ", $transient_name_prefix );
+		$wpdb->query( $delete_transient_query );
 	}
 	
 	/**
