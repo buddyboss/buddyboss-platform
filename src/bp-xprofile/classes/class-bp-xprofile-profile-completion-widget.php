@@ -33,6 +33,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			__( "(BB) Profile Completion", 'buddyboss' ),
 			$widget_ops
 		);
+		
+		// Delete Profile Completion Transient.
+		add_action('xprofile_updated_profile', array( $this, 'delete_pc_transient' ) );
+		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) );
+		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) );
 	}
 
 	
@@ -59,11 +64,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		
 		$profile_phototype_selected = !empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
 		
-		// Get logged in user Progress.
-		$user_progress_arr = $this->get_user_progress($profile_groups_selected, $profile_phototype_selected);
-		
-		// Format User Progress array to pass on to the template.
-		$user_progress_formmatted = $this->get_user_progress_formatted( $user_progress_arr );
+		$user_progress = $this->get_progress_data( $profile_groups_selected, $profile_phototype_selected );
 		
 		
 		
@@ -77,12 +78,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			echo $args['after_title'];
 
 
-
 			// Widget Content
 
 			// Globalize the Profile Completion widget arguments. Used in the template called below.
 			$bp_nouveau = bp_nouveau();
-			$bp_nouveau->xprofile->profile_completion_widget_para = $user_progress_formmatted;
+			$bp_nouveau->xprofile->profile_completion_widget_para = $user_progress;
 			bp_get_template_part( 'members/single/profile/widget' );
 			$bp_nouveau->xprofile->profile_completion_widget_para = array();
 
@@ -91,6 +91,66 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		
 	}
 
+	/**
+	 * Function returns user progress data by checking if data already exists in transient first. IF NO then follow checking the progress logic.
+	 * 
+	 * Clear transient when 1) Widget form settings update. 2) When Logged user profile updated. 3) When new profile fields added/updated/deleted.
+	 * 
+	 * @param type $profile_groups
+	 * @param type $profile_phototype
+	 * @return type
+	 */
+	function get_progress_data( $profile_groups, $profile_phototype ){
+		
+		$user_progress_formmatted =  array();
+		
+		// Check if data avail in transient
+		$pc_transient_name = $this->get_pc_transient_name();
+		$pc_transient_data = get_transient( $this->get_pc_transient_name() );
+		
+		if( !empty( $pc_transient_data ) ){
+			
+			$user_progress_formmatted = $pc_transient_data;
+			
+		}else{
+		
+			// Get logged in user Progress.
+			$user_progress_arr = $this->get_user_progress($profile_groups, $profile_phototype);
+
+			// Format User Progress array to pass on to the template.
+			$user_progress_formmatted = $this->get_user_progress_formatted( $user_progress_arr );
+			
+			// set Transient here
+			set_transient($pc_transient_name, $user_progress_formmatted);
+		}
+		
+		return $user_progress_formmatted;
+	}
+	
+	/**
+	 * Function trigger when profile updated. Profile field added/updated/deleted.
+	 * Deletes Profile Completion Transient here.
+	 */
+	function delete_pc_transient(){
+		
+		$pc_transient_name = $this->get_pc_transient_name();
+		delete_transient( $pc_transient_name );
+		
+	}
+	
+	/**
+	 * Return Transient name using logged in User ID.
+	 * 
+	 * @return string
+	 */
+	function get_pc_transient_name(){
+		
+		$user_id = get_current_user_id();
+		$pc_transient_name = 'bbprofilecompletion'.$user_id;
+		return $pc_transient_name;
+		
+	}
+	
 		/**
 		 * Function returns logged in user progress based on options selected in the widget form.
 		 * 
@@ -313,6 +373,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
 		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
 
+		$pc_transient_name = $this->get_pc_transient_name();
+		delete_transient( $pc_transient_name );
+		
 		return $instance;
 	}
 
