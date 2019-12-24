@@ -1414,9 +1414,8 @@ img.emojioneemoji {
 		}
 		.media-folder_actions{
 			position: absolute;
-			right: 20px;
-			top: 50%;
-			transform: translateY(-50%);
+			right: 0;
+			top: 19px;
 			.media-folder_action__list{
 				right: -3px;
 				&:after{
@@ -1460,7 +1459,7 @@ img.emojioneemoji {
 			appearance: menulist;
 		}
 	}
-	@media screen and (max-width: 460px){
+	@media screen and (max-width: 640px){
 		.media-search-form,
 		.select-wrap{
 			float: none;
@@ -1488,7 +1487,7 @@ img.emojioneemoji {
 			float: right;
 		}
 	}
-	@media screen and (max-width: 460px){
+	@media screen and (max-width: 640px){
 		.bb-media-actions-wrap{
 			float: none;
 			margin-bottom: 10px;
@@ -1498,4 +1497,181 @@ img.emojioneemoji {
 			}
 		}
 	}
+}
+#bp-media-single-folder{
+	.album-single-view .bp-media-header-wrap{
+		.bb-single-album-header{
+			float: left;
+			padding: 0;
+			width: 40%;
+			.bb-title{
+				max-width: 100%;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				white-space: nowrap;
+				text-align: left;
+    			padding-top: 5px;
+			}
+		}
+		.bb-media-actions{
+			float: right;
+			&>a{
+				margin-left: 10px;
+			}
+			&>select{
+				margin-left: 10px;
+				height: 34px;
+				font-size: 14px;
+			}
+		}
+	}
+	.bp-media-header-wrap{
+		margin-bottom: 15px;
+		display: inline-block;
+		width: 100%;
+		.media-folder_items{
+			display: inline-block;
+			position: relative;
+			.media-folder_action__anchor{
+				display: inline-block;
+				position: relative;
+				vertical-align: middle;
+				i{
+					font-size: 21px;
+				}
+			}
+			.media-folder_action__list{
+				position: absolute;
+				top: 30px;
+				right: -5px;
+				background: #fff;
+				box-shadow: 0 2px 7px 1px rgba(0,0,0,.05), 0 6px 32px 0 rgba(18,43,70,.1);
+				border-radius: 4px;
+				width: 168px;
+				z-index: 1;
+				opacity: 0;
+				visibility: hidden;
+				&:after {
+					content: ' ';
+					position: absolute;
+					width: 0;
+					height: 0;
+					top: 0;
+					margin: 0 auto;
+					right: 10px;
+					box-sizing: border-box;
+					border: 8px solid #000;
+					border-color: #fff #fff transparent transparent;
+					-webkit-transform-origin: 0 0;
+					-ms-transform-origin: 0 0;
+					transform-origin: 0 0;
+					-webkit-transform: rotate(-45deg);
+					-ms-transform: rotate(-45deg);
+					transform: rotate(-45deg);
+					box-shadow: 2px -3px 3px 0 rgba(0,0,0,.02);
+					z-index: 101;
+					opacity: 1;
+					visibility: visible;
+				}
+				ul {
+					list-style: none;
+					margin: 10px 0;
+					li {
+						.media-edit-folder{
+							display: inline-block;
+							width: 100%;
+							input{
+								width: calc(100% - 20px);
+								margin: 0 10px;
+								padding: 3px 7px;
+								height: 34px;
+								font-size: 14px;
+							}
+							#bp-save-folder-title{
+								float: right;
+								margin: 5px 10px 0 0;
+								width: calc(50% - 10px);
+								text-align: center;
+							}
+							#bp-cancel-edit-album-title{
+								float: left;
+								margin: 5px 0 0 10px;
+								text-align: center;
+								width: calc(50% - 10px);
+							}
+						}
+						a {
+							padding: 5px 10px;
+							display: block;
+							font-size: 13px;
+							&:hover {
+								background-color: #f5f5f5;
+							}
+							i{
+								margin-right: 10px;
+							}
+						}
+					}
+				}
+			}
+			&.is-visible{
+				.media-folder_action__list{
+					opacity: 1;
+					visibility: visible;
+					z-index: 11;
+				}
+			}
+		}
+	}
+	
+	@media screen and (max-width: 1120px){
+		.album-single-view{
+			.bp-media-header-wrap {
+				.bb-single-album-header{
+					width: 100%;
+				}
+				.bb-media-actions{
+					float: left;
+					width: 100%;
+					position: relative;
+					padding-right: 25px;
+					margin-top: 15px;
+					&>select{
+						float: right;
+					}
+					.media-folder_items{
+						position: absolute;
+						right: 0;
+						top: 3px;
+					}
+					&>a{
+						margin-left: 0;
+						margin-right: 10px;
+					}
+				}
+			}
+		}
+	}
+
+	@media screen and (max-width: 640px){
+		.album-single-view{
+			.bp-media-header-wrap {
+				.bb-media-actions{
+					padding-right: 0;
+					&>a,&>select{
+						width: 100%;
+						margin: 5px 0;
+					}
+					.media-folder_items{
+						top: -46px;
+					}
+				}
+				.bb-single-album-header .bb-title{
+					padding-right: 25px;
+				}
+			}
+		}
+	}
+
+	
 }

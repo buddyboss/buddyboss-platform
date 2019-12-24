@@ -167,7 +167,7 @@ window.bp = window.bp || {};
 			$(document).on('click', '.gif-image-container', this.playVideo.bind( this ) );
 
 			//Documents
-			$( document ).on( 'click', '.media-folder_items .media-folder_action__anchor', this.fileActionButton.bind( this ) );
+			$( document ).on( 'click', '.bb-media-container .media-folder_action__anchor', this.fileActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more', this.fileActivityActionButton.bind( this ) );
 
 
@@ -326,9 +326,9 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			$('#bb-album-title').hide();
-			$('#bp-save-album-title').hide();
+			$('#bp-save-album-title,#bp-save-folder-title').hide();
 			$('#bp-cancel-edit-album-title').hide();
-			$('#bp-edit-album-title').show();
+			$('#bp-edit-album-title,#bp-edit-folder-title').show();
 			$('#bp-media-single-album #bp-single-album-title').show();
 		},
 
