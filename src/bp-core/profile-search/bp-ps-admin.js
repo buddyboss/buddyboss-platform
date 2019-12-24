@@ -92,7 +92,9 @@ function disableAlreadySelectedOption () {
     //collect the values from selected;
     var arr = jQuery.map (
 	        jQuery("#field_box select.bp_ps_col2 option:selected"), function (n) {
-	            return n.value;
+	        	if ( n.value !== 'heading' ) {
+	            	return n.value;
+	        	}
 	        }
         );
 
