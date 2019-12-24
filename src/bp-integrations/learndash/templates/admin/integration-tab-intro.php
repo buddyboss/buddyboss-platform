@@ -2,7 +2,7 @@
 	
 	<div class="bp-admin-card section-bp_ld-integration">
 		<?php if( ! bp_is_active( 'groups' ) && is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) )  : ?>
-			<h2><?php _e( 'Social groups</span>', 'buddyboss' ); ?></h2>
+			<h2><?php _e( 'Social Groups</span>', 'buddyboss' ); ?></h2>
 			<p>
 			<?php
 				printf(
