@@ -31,10 +31,17 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 			<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
 		</a>
 	</div>
+	<?php if ( 'mp3' === $extension ) { ?>
+		<audio controls>
+			<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
+			Your browser does not support the audio element.
+		</audio>
+	<?php } ?>
 	<div class="document-action-wrap">
 		<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="Download">
 			<i class="bb-icon-download"></i>
 		</a>
+
 		<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="More actions">
 			<i class="bb-icon-menu-dots-h"></i>
 		</a>
