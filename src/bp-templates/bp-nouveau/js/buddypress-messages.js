@@ -1935,6 +1935,10 @@ window.bp = window.bp || {};
 			} else {
 				$('#bp-message-thread-list').animate({ scrollTop: this.firstLi.position().top - this.firstLi.outerHeight()}, 0);
 			}
+                        
+                        if( $('.bp-single-message-wrap').hasClass('group-messages-highlight') ) {
+                            $('.bp-single-message-wrap').parents('#bp-message-thread-list').addClass('group-message-thread');
+                        }
 
 			$('#bp-message-load-more').removeClass('loading');
 

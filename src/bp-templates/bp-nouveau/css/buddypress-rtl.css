@@ -1224,7 +1224,7 @@ div[class*="attached-gif-container"] .gif-play-button span.dashicons {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif-symbol.png) bottom right no-repeat;
+  background: url(../images/gif-symbol.png) bottom left no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -11624,10 +11624,14 @@ span.icons:before {
 
 .bp-single-message-wrap.group-messages-highlight {
   background: #fffced;
-  padding: 5px;
+  padding: 12px;
   border: 1px solid #f9efca;
   border-radius: 5px;
-  margin: -5px -5px 0;
+}
+
+#bp-message-thread-list.group-message-thread .bp-single-message-wrap {
+  padding-right: 12px;
+  padding-left: 12px;
 }
 
 #group-messages-container .select2-container--default.select2-container--disabled .select2-selection--multiple {
@@ -11683,6 +11687,8 @@ span.icons:before {
   font-style: italic;
   color: #939597;
   letter-spacing: -0.21px;
+  line-height: 1;
+  margin-top: 6px;
 }
 
 #buddypress .bb-group-message-info a {
@@ -11778,6 +11784,7 @@ span.icons:before {
   font-size: 14px;
   position: absolute;
   background: #fff;
+  color: #939597;
   border-radius: 50%;
   border: 1px solid;
   display: flex;
