@@ -13,9 +13,9 @@ defined( 'ABSPATH' ) || exit;
 
 add_filter( 'bp_get_the_profile_group_name', 'wp_filter_kses', 1 );
 add_filter( 'bp_get_the_profile_group_description', 'wp_filter_kses', 1 );
-add_filter( 'bp_get_the_profile_field_value', 'xprofile_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_field_value', 'xprofile_sanitize_data_value_before_display', 1, 3 );
 add_filter( 'bp_get_the_profile_field_name', 'wp_filter_kses', 1 );
-add_filter( 'bp_get_the_profile_field_edit_value', 'wp_filter_kses', 1 );
+add_filter( 'bp_get_the_profile_field_edit_value', 'xprofile_sanitize_data_value_before_display', 1, 3 );
 add_filter( 'bp_get_the_profile_field_description', 'wp_filter_kses', 1 );
 
 add_filter( 'bp_get_the_profile_field_value', 'wptexturize' );
@@ -136,16 +136,21 @@ function bp_xprofile_sanitize_field_default( $field_default = '' ) {
  *
  * @param string      $content  Content to filter.
  * @param object|null $data_obj The BP_XProfile_ProfileData object.
+ * @param int|null                     $field_id Optional. The ID of the profile field.
  * @return string $content
  */
-function xprofile_filter_kses( $content, $data_obj = null ) {
+function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
 	global $allowedtags;
 
 	$xprofile_allowedtags             = $allowedtags;
 	$xprofile_allowedtags['a']['rel'] = array();
+	
+	if ( null === $field_id && $data_obj instanceof BP_XProfile_ProfileData ) {
+		$field_id = $data_obj->field_id;
+	}
 
 	// If the field supports rich text, we must allow tags that appear in wp_editor().
-	if ( $data_obj instanceof BP_XProfile_ProfileData && bp_xprofile_is_richtext_enabled_for_field( $data_obj->field_id ) ) {
+	if ( $field_id && bp_xprofile_is_richtext_enabled_for_field( $field_id ) ) {
 		$richtext_tags = array(
 			'img'  => array(
 				'id'     => 1,
@@ -182,8 +187,21 @@ function xprofile_filter_kses( $content, $data_obj = null ) {
 	 * @param array                   $xprofile_allowedtags Array of allowed tags for profile field values.
 	 * @param BP_XProfile_ProfileData $data_obj             The BP_XProfile_ProfileData object.
 	 */
-	$xprofile_allowedtags = apply_filters( 'xprofile_allowed_tags', $xprofile_allowedtags, $data_obj );
+	$xprofile_allowedtags = apply_filters( 'xprofile_allowed_tags', $xprofile_allowedtags, $data_obj, $field_id );
 	return wp_kses( $content, $xprofile_allowedtags );
+}
+
+/**
+ * Filters profile field values for whitelisted HTML.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param string $value    Field value.
+ * @param string $type     Field type.
+ * @param int    $field_id Field ID.
+ */
+function xprofile_sanitize_data_value_before_display( $value, $type, $field_id ) {
+	return xprofile_filter_kses( $value, null, $field_id );
 }
 
 /**

@@ -120,7 +120,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		public function bbp_set_hidden_forum_states( $states, $post ) {
 			global $post;
 
-			if ( bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
+			if ( is_array( $post ) && bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
 
 				$states[] = __( 'Hidden', 'buddyboss' );
 

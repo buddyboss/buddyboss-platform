@@ -2390,7 +2390,9 @@ function bp_core_wpsignup_redirect() {
 		return;
 	}
 
-	bp_core_redirect( bp_get_signup_page() );
+	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) ) {
+		bp_core_redirect( bp_get_signup_page() );
+	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
 
@@ -3856,7 +3858,11 @@ function bp_member_type_shortcode_add_body_class( $class ) {
 		$class[] = 'members';
 		$class[] = 'buddypress';
 		$class[] = 'buddyboss';
-		$class[] = 'bb-buddypanel';
+		/**
+		 *This class commented because this class will add when buddypanel enable
+		 *and this condition already in the theme
+		 */
+		//$class[] = 'bb-buddypanel';
 	}
 	return $class;
 }
