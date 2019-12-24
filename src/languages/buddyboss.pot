@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.1\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-11-29 13:32:50+00:00\n"
+"POT-Creation-Date: 2019-12-24 14:13:39+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -548,19 +548,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:494
+#: bp-activity/bp-activity-filters.php:492
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:498
+#: bp-activity/bp-activity-filters.php:496
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:555
+#: bp-activity/bp-activity-filters.php:553
 msgid "Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:815
+#: bp-activity/bp-activity-filters.php:813
 msgid "Load Newest"
 msgstr ""
 
@@ -683,16 +683,16 @@ msgstr ""
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2894
+#: bp-activity/bp-activity-functions.php:2896
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:346
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2922
+#: bp-activity/bp-activity-functions.php:2924
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3552
+#: bp-activity/bp-activity-functions.php:3554
 msgid "Thumbnail"
 msgstr ""
 
@@ -1120,7 +1120,7 @@ msgstr ""
 msgid "Embedded Activity Item"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:297
+#: bp-activity/classes/class-bp-activity-template.php:298
 #: bp-blogs/classes/class-bp-blogs-template.php:152
 #: bp-groups/classes/class-bp-groups-template.php:298
 #: bp-media/classes/class-bp-media-album-template.php:225
@@ -1131,7 +1131,7 @@ msgstr ""
 msgid "&larr;"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:298
+#: bp-activity/classes/class-bp-activity-template.php:299
 #: bp-blogs/classes/class-bp-blogs-template.php:153
 #: bp-groups/classes/class-bp-groups-template.php:299
 #: bp-media/classes/class-bp-media-album-template.php:226

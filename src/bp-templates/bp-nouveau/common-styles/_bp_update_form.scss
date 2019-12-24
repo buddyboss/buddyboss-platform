@@ -232,19 +232,33 @@
     position: relative;
 
     .privacy-wrap {
-        display: block;
-        height: 20px;
-        width: 20px;
-        cursor: pointer;
+        display: inline-block;
     }
 
     .privacy {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        border: 1px solid #E7E9EC;
+        line-height: 1;
+        padding: 2px 2px 2px 4px;
+        border-radius: 3px;
+
         &:before {
             content: "\f11f";
             font-family: dashicons;
             font-size: 18px;
             vertical-align: middle;
             display: inline-block;
+        }
+
+        &:after {
+            content: "\f140";
+            font-family: dashicons;
+            font-size: 11px;
+            vertical-align: middle;
+            display: inline-block;
+            line-height: 1;
         }
 
         &.onlyme:before {
@@ -303,6 +317,12 @@
             margin: 0;
             padding: 10px 15px;
             position: relative;
+            display: flex;
+            align-items: center;
+
+            &:hover {
+                background: $off-white;
+            }
         }
 
         .selected {
@@ -312,6 +332,31 @@
 
     .activity-privacy.bb-open {
         display: block;
+    }
+}
+
+.activity-privacy {
+    > li {
+        &:before {
+            content: "\f11f";
+            font-family: dashicons;
+            font-size: 16px;
+            vertical-align: middle;
+            display: inline-block;
+            margin-right: 8px;
+        }
+
+        &.onlyme:before {
+            content: "\f160";
+        }
+
+        &.loggedin:before {
+            content: "\f307";
+        }
+
+        &.friends:before {
+            content: "\f110";
+        }
     }
 }
 
