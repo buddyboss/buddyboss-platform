@@ -35,14 +35,30 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		);
 		
 		
-		// Delete Profile Completion Transient when Profile updated, New Field added/update, field deleted etc..
+		// Delete Transient hooks
+		$this->delete_transient_hooks();
+	}
+	
+	/**
+	 * Function add hook to delete transient on various wp-admin and profile settings change.
+	 * IF transient not deleted then it will show outdated content.
+	 */
+	function delete_transient_hooks(){
 		
+		// Delete loggedin user transient only..
+		add_action('xprofile_avatar_uploaded', array( $this, 'delete_pc_loggedin_transient' ) ); // When profile photo uploaded from profile in Frontend.
+		add_action('xprofile_cover_image_uploaded', array( $this, 'delete_pc_loggedin_transient' ) ); // When cover photo uploaded from profile in Frontend.
+		add_action('bp_core_delete_existing_avatar', array( $this, 'delete_pc_loggedin_transient' ) ); // When profile photo deleted from profile in Frontend.
+		add_action('xprofile_cover_image_deleted', array( $this, 'delete_pc_loggedin_transient' ) ); // When cover photo deleted from profile in Frontend.
+		
+		
+		// Delete Profile Completion Transient when Profile updated, New Field added/update, field deleted etc..
 		add_action('xprofile_updated_profile', array( $this, 'delete_pc_transient' ) ); // On Profile updated from frontend.
-		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) ); // On field added/updated
-		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) ); // On field deleted
-		add_action('xprofile_groups_deleted_group', array( $this, 'delete_pc_transient' ) ); // On profile group deleted.
-		add_action('update_option_bp-disable-avatar-uploads', array( $this, 'delete_pc_transient' ) ); // When avatar photo setting updated in profile.
-		add_action('update_option_bp-disable-cover-image-uploads', array( $this, 'delete_pc_transient' ) ); // When cover photo setting updated in profile.
+		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) ); // On field added/updated in wp-admin > Profile
+		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) ); // On field deleted in wp-admin > profile.
+		add_action('xprofile_groups_deleted_group', array( $this, 'delete_pc_transient' ) ); // On profile group deleted in wp-admin.
+		add_action('update_option_bp-disable-avatar-uploads', array( $this, 'delete_pc_transient' ) ); // When avatar photo setting updated in wp-admin > buddybpss > profile.
+		add_action('update_option_bp-disable-cover-image-uploads', array( $this, 'delete_pc_transient' ) ); // When cover photo setting updated in wp-admin > buddybpss > profile.
 	}
 
 	
@@ -136,6 +152,17 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		}
 		
 		return $user_progress_formmatted;
+	}
+	
+	/**
+	 * Function trigger when profile updated. Profile field added/updated/deleted.
+	 * Deletes Profile Completion Transient here.
+	 */
+	function delete_pc_loggedin_transient(){
+		
+		// Delete logged in user transient from options table.
+		$transient_name = $this->get_pc_transient_name();
+		delete_transient( $transient_name );
 	}
 	
 	/**
