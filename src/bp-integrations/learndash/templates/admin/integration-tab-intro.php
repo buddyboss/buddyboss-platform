@@ -2,7 +2,7 @@
 	
 	<div class="bp-admin-card section-bp_ld-integration">
 		<?php if( ! bp_is_active( 'groups' ) && is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) )  : ?>
-			<h2><?php _e( 'Social Group <span>&mdash; BuddyBoss component requires to activate.</span>', 'buddyboss' ); ?></h2>
+			<h2><?php _e( 'Social Groups <span>&mdash; BuddyBoss component requires to activate.</span>', 'buddyboss' ); ?></h2>
 		<?php else: ?>
 			<h2><?php _e( 'LearnDash <span>&mdash; requires plugin to activate</span>', 'buddyboss' ); ?></h2>
 		<?php endif; ?>
