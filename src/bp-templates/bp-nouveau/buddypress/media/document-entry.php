@@ -25,10 +25,10 @@ if ( isset( $attachment_id) ) {
 			<div  class="media-folder_details__bottom">
 				<span class="media-folder_date"><?php bp_media_date_created(); ?></span>
 				<?php if ( ! bp_is_user() ) { ?>
-					<span class="media-folder_author"><?php bp_media_author(); ?></td>
+					<span class="media-folder_author"><?php bp_media_author(); ?></td></span>
 				<?php } ?>
 			</div>
-	</div>	
+	</div>
 	<div class="media-folder_actions">
 		<a href="#" class="media-folder_action__anchor">
 			<i class="bb-icon-menu-dots-v"></i>

@@ -289,12 +289,14 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							while ( bp_media() ) {
 								bp_the_media();
 
+								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
 								$params['topic_edit_document'][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
-									'name'          => bp_get_media_title(),
+									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
 									'thumb'         => '',
-									'url'           => '',
+									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
+									'size'          => $size,
 									'menu_order'    => $index,
 								);
 								$index ++;
@@ -362,12 +364,14 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							while ( bp_media() ) {
 								bp_the_media();
 
+								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
 								$params['reply_edit_document'][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
-									'name'          => bp_get_media_title(),
+									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
 									'thumb'         => '',
-									'url'           => '',
+									'size'          => $size,
+									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
 									'menu_order'    => $index,
 								);
 								$index ++;
@@ -434,12 +438,14 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							while ( bp_media() ) {
 								bp_the_media();
 
+								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
 								$params['forum_edit_document'][] = array(
 									'id'            => bp_get_media_id(),
 									'attachment_id' => bp_get_media_attachment_id(),
-									'name'          => bp_get_media_title(),
+									'name'          => basename( get_attached_file( bp_get_media_attachment_id() ) ),
 									'thumb'         => '',
-									'url'           => '',
+									'size'          => $size,
+									'url'           => wp_get_attachment_url( bp_get_media_attachment_id() ),
 									'menu_order'    => $index,
 								);
 								$index ++;

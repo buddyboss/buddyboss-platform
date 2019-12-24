@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-24 06:57:13+00:00\n"
+"POT-Creation-Date: 2019-12-24 09:04:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -10614,56 +10614,56 @@ msgstr ""
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:530
-#: bp-forums/templates/default/bbpress-functions.php:543
+#: bp-forums/templates/default/bbpress-functions.php:536
+#: bp-forums/templates/default/bbpress-functions.php:549
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:572
-#: bp-forums/templates/default/bbpress-functions.php:708
+#: bp-forums/templates/default/bbpress-functions.php:578
+#: bp-forums/templates/default/bbpress-functions.php:714
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:577
+#: bp-forums/templates/default/bbpress-functions.php:583
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:586
-#: bp-forums/templates/default/bbpress-functions.php:654
-#: bp-forums/templates/default/bbpress-functions.php:722
+#: bp-forums/templates/default/bbpress-functions.php:592
+#: bp-forums/templates/default/bbpress-functions.php:660
+#: bp-forums/templates/default/bbpress-functions.php:728
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:594
+#: bp-forums/templates/default/bbpress-functions.php:600
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:599
-#: bp-forums/templates/default/bbpress-functions.php:667
-#: bp-forums/templates/default/bbpress-functions.php:735
+#: bp-forums/templates/default/bbpress-functions.php:605
+#: bp-forums/templates/default/bbpress-functions.php:673
+#: bp-forums/templates/default/bbpress-functions.php:741
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:607
-#: bp-forums/templates/default/bbpress-functions.php:675
-#: bp-forums/templates/default/bbpress-functions.php:743
+#: bp-forums/templates/default/bbpress-functions.php:613
+#: bp-forums/templates/default/bbpress-functions.php:681
+#: bp-forums/templates/default/bbpress-functions.php:749
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:640
+#: bp-forums/templates/default/bbpress-functions.php:646
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:645
+#: bp-forums/templates/default/bbpress-functions.php:651
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:662
-#: bp-forums/templates/default/bbpress-functions.php:730
+#: bp-forums/templates/default/bbpress-functions.php:668
+#: bp-forums/templates/default/bbpress-functions.php:736
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:713
+#: bp-forums/templates/default/bbpress-functions.php:719
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -15767,7 +15767,7 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:29
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:31
 msgid "- Click to Download"
 msgstr ""
 

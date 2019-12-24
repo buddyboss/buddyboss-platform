@@ -183,6 +183,11 @@ window.bp = window.bp || {};
 			}
 
 			if ( ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) &&
+				( this.bbp_reply_edit_document.length || this.bbp_topic_edit_document.length || this.bbp_forum_edit_document.length ) ) {
+				$('#forums-document-button').trigger('click');
+			}
+
+			if ( ( this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit ) &&
 				( Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length ) ) {
 				this.editGifPreview();
 			}
@@ -836,20 +841,25 @@ window.bp = window.bp || {};
 								self.dropzone_media[dropzone_obj_key].push({
 									'id': edit_documents[d].attachment_id,
 									'media_id': edit_documents[d].id,
-									'name': edit_documents[d].title,
-									'thumb': edit_documents[d].thumb,
-									'url': edit_documents[d].full,
+									'name': edit_documents[d].name,
+									'title': edit_documents[d].name,
+									'size': edit_documents[d].size,
+									//'thumb': edit_documents[d].thumb,
+									'url': edit_documents[d].url,
 									'uuid': edit_documents[d].id,
 									'menu_order': d,
 									'saved': true
 								});
 
 								mock_file = {
-									name: edit_documents[d].title,
+									name: edit_documents[d].name,
+									size: edit_documents[d].size,
 									accepted: true,
 									kind: 'document',
 									upload: {
-										filename: edit_documents[d].title,
+										name: edit_documents[d].name,
+										title: edit_documents[d].name,
+										size: edit_documents[d].size,
 										uuid: edit_documents[d].id
 									},
 									dataURL: edit_documents[d].url,
@@ -858,7 +868,8 @@ window.bp = window.bp || {};
 
 								self.dropzone_obj[dropzone_obj_key].files.push(mock_file);
 								self.dropzone_obj[dropzone_obj_key].emit('addedfile', mock_file);
-								self.createDocumentThumbnailFromUrl(mock_file,dropzone_container);
+								self.dropzone_obj[dropzone_obj_key].emit('complete', mock_file);
+								//self.createDocumentThumbnailFromUrl(mock_file,dropzone_container);
 							}
 							self.addDocumentIdsToForumsForm(dropzone_container);
 						}

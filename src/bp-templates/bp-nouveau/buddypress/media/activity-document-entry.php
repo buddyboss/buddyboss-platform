@@ -15,6 +15,8 @@ $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
 
+
+
 ?>
 
 <div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
@@ -42,7 +44,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 				<li><a href="#">Delete</a></li>
 			</ul>
 		</div>
-		
+
 	</div>
-	
+
 </div>
