@@ -122,32 +122,53 @@ function bp_media_activity_entry() {
  */
 function bp_media_activity_append_media( $content, $activity ) {
 	global $media_template;
-	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-		?>
-		<?php ob_start(); ?>
-		<div class="bb-activity-media-wrap
-		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
-		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
-		?>
-		">
-													  <?php
-														while ( bp_media() ) {
-															bp_the_media();
-															bp_get_template_part( 'media/activity-entry' );
-														}
-														?>
-		</div>
-		<?php
-		$content .= ob_get_clean();
+	$media_ids           = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
+	$media_activity_type = bp_activity_get_meta( $activity->id, 'bp_media_type', true );
+
+	if ( 'document' === $media_activity_type ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+				'type'     => 'document',
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			) ) ) { ?><?php ob_start(); ?>
+			<div class="bb-activity-media-wrap bb-media-length-1 ">
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-document-entry' );
+				}
+				?>
+			</div>
+			<?php
+			$content .= ob_get_clean();
+		}
+	} else {
+
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+					'include'  => $media_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				) ) ) {
+			?><?php ob_start(); ?>
+			<div class="bb-activity-media-wrap
+			<?php
+			echo 'bb-media-length-' . $media_template->media_count;
+			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
+			?>
+			">
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
+				?>
+			</div>
+			<?php
+			$content .= ob_get_clean();
+		}
+
 	}
 	return $content;
 }
@@ -157,30 +178,50 @@ function bp_media_activity_append_media( $content, $activity ) {
  */
 function bp_media_activity_comment_entry( $comment_id ) {
 	global $media_template;
-	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-		?>
-		<div class="bb-activity-media-wrap
+	$media_ids           = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
+	$media_activity_type = bp_activity_get_meta( $comment_id, 'bp_media_type', true );
+
+	if ( 'document' === $media_activity_type ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+				'type'     => 'document',
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			) ) ) { ?>
+			<div class="bb-activity-media-wrap bb-media-length-1 ">
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-document-entry' );
+				}
+				?>
+			</div>
+			<?php
+		}
+	} else {
+
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+					'include'  => $media_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				) ) ) {
+			?>
+			<div class="bb-activity-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
-		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
-		?>
+			echo 'bb-media-length-' . $media_template->media_count;
+			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
+			?>
 		">
-													  <?php
-														while ( bp_media() ) {
-															bp_the_media();
-															bp_get_template_part( 'media/activity-entry' );
-														}
-														?>
-		</div>
-		<?php
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
+				?>
+			</div>
+			<?php
+		}
 	}
 }
 
@@ -529,32 +570,53 @@ function bp_media_forums_embed_attachments( $content, $id ) {
 		return $content;
 	}
 
-	$media_ids = get_post_meta( $id, 'bp_media_ids', true );
+	$media_ids           = get_post_meta( $id, 'bp_media_ids', true );
+	$media_activity_type = get_post_meta( $id, 'bp_media_type', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-		ob_start();
-		?>
-		<div class="bb-activity-media-wrap forums-media-wrap
+	if ( 'document' === $media_activity_type ) {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+				'type'     => 'document',
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			) ) ) {
+			ob_start();
+			?>
+			<div class="bb-activity-media-wrap bb-media-length-1 ">
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-document-entry' );
+				}
+				?>
+			</div>
+			<?php
+			$content .= ob_get_clean();
+		}
+	} else {
+		if ( ! empty( $media_ids ) && bp_has_media( array(
+					'include'  => $media_ids,
+					'order_by' => 'menu_order',
+					'sort'     => 'ASC',
+				) ) ) {
+			ob_start();
+			?>
+			<div class="bb-activity-media-wrap forums-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
-		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
-		?>
+			echo 'bb-media-length-' . $media_template->media_count;
+			echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
+			?>
 		">
-																		<?php
-																		while ( bp_media() ) {
-																			bp_the_media();
-																			bp_get_template_part( 'media/activity-entry' );
-																		}
-																		?>
-		</div>
-		<?php
-		$content .= ob_get_clean();
+				<?php
+				while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				}
+				?>
+			</div>
+			<?php
+			$content .= ob_get_clean();
+		}
 	}
 
 	return $content;

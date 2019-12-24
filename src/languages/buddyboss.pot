@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-18 08:43:09+00:00\n"
+"POT-Creation-Date: 2019-12-24 06:57:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1690,7 +1690,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:479
 #: bp-core/classes/class-bp-admin.php:480 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:831
+#: bp-media/bp-media-filters.php:990
 msgid "Tools"
 msgstr ""
 
@@ -1771,7 +1771,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1238
 #: bp-search/bp-search-settings.php:424 bp-search/bp-search-settings.php:438
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:14
-#: bp-templates/bp-nouveau/includes/media/functions.php:133
+#: bp-templates/bp-nouveau/includes/media/functions.php:136
 msgid "Select All"
 msgstr ""
 
@@ -1995,7 +1995,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2343
-#: bp-media/bp-media-filters.php:930
+#: bp-media/bp-media-filters.php:1089
 msgid "Run Migration"
 msgstr ""
 
@@ -2431,7 +2431,7 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:276
 #: bp-forums/classes/class-bp-forums-component.php:327
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:882 bp-media/bp-media-settings.php:201
+#: bp-media/bp-media-filters.php:1041 bp-media/bp-media-settings.php:201
 #: bp-media/bp-media-settings.php:208 bp-media/bp-media-settings.php:215
 #: bp-media/bp-media-settings.php:222 bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
@@ -2442,7 +2442,7 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:763
 #: bp-media/classes/class-bp-media-component.php:327
 #: bp-media/classes/class-bp-media-component.php:412
-#: bp-templates/bp-nouveau/buddypress/media/add-document.php:12
+#: bp-templates/bp-nouveau/buddypress/media/add-document.php:11
 msgid "Documents"
 msgstr ""
 
@@ -2551,7 +2551,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
-#: bp-media/bp-media-filters.php:888
+#: bp-media/bp-media-filters.php:1047
 #: bp-templates/bp-nouveau/includes/groups/classes.php:281
 msgid "Discussions"
 msgstr ""
@@ -2567,7 +2567,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:894
+#: bp-media/bp-media-filters.php:1053
 msgid "Replies"
 msgstr ""
 
@@ -2965,7 +2965,7 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:876
+#: bp-media/bp-media-filters.php:1035
 msgid "Media"
 msgstr ""
 
@@ -3502,7 +3502,7 @@ msgstr ""
 #: bp-core/bp-core-attachments.php:803
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
-#: bp-templates/bp-nouveau/includes/media/functions.php:136
+#: bp-templates/bp-nouveau/includes/media/functions.php:139
 msgid "Upload"
 msgstr ""
 
@@ -4772,8 +4772,6 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-list-table.php:431
 #: bp-members/classes/class-bp-members-list-table.php:156
 #: bp-members/classes/class-bp-members-ms-list-table.php:143
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:16
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:62
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:65
 #: bp-templates/bp-nouveau/includes/members/functions.php:457
 msgid "Name"
@@ -5467,27 +5465,27 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-media/bp-media-functions.php:117 bp-media/bp-media-functions.php:2194
+#: bp-media/bp-media-functions.php:117 bp-media/bp-media-functions.php:2196
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-media/bp-media-functions.php:118 bp-media/bp-media-functions.php:2195
+#: bp-media/bp-media-functions.php:118 bp-media/bp-media-functions.php:2197
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-media/bp-media-functions.php:120 bp-media/bp-media-functions.php:2197
+#: bp-media/bp-media-functions.php:120 bp-media/bp-media-functions.php:2199
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-media/bp-media-functions.php:121 bp-media/bp-media-functions.php:2198
+#: bp-media/bp-media-functions.php:121 bp-media/bp-media-functions.php:2200
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-media/bp-media-functions.php:122 bp-media/bp-media-functions.php:2199
+#: bp-media/bp-media-functions.php:122 bp-media/bp-media-functions.php:2201
 msgid "File upload stopped by extension."
 msgstr ""
 
@@ -7737,6 +7735,7 @@ msgstr ""
 
 #: bp-forums/admin/replies.php:622
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:21
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:33
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:21
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:27
 #: bp-templates/bp-nouveau/buddypress/media/single-folder.php:33
@@ -9154,7 +9153,7 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2430
+#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2431
 #: bp-groups/bp-groups-admin.php:1411 bp-groups/bp-groups-functions.php:3595
 #: bp-groups/bp-groups-functions.php:3614
 #: bp-groups/bp-groups-functions.php:3631
@@ -9486,7 +9485,7 @@ msgstr ""
 #: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:416
 #: bp-forums/groups.php:340 bp-forums/groups.php:520
 #: bp-forums/notifications.php:182 bp-forums/replies/functions.php:124
-#: bp-forums/replies/functions.php:547 bp-forums/replies/functions.php:1305
+#: bp-forums/replies/functions.php:548 bp-forums/replies/functions.php:1306
 #: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:552
 #: bp-forums/topics/functions.php:1211 bp-forums/topics/functions.php:1531
 #: bp-forums/topics/functions.php:1906 bp-forums/topics/functions.php:1951
@@ -9523,7 +9522,7 @@ msgid ""
 "new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:212 bp-forums/replies/functions.php:299
+#: bp-forums/forums/functions.php:212 bp-forums/replies/functions.php:300
 #: bp-forums/topics/functions.php:277
 msgid "<strong>ERROR</strong>: Slow down; you move too fast."
 msgstr ""
@@ -9743,158 +9742,158 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Forum does not exist."
 msgstr ""
 
-#: bp-forums/replies/functions.php:235 bp-forums/replies/functions.php:599
+#: bp-forums/replies/functions.php:235 bp-forums/replies/functions.php:600
 msgid ""
 "<strong>ERROR</strong>: This forum is a category. No replies can be created "
 "in this forum."
 msgstr ""
 
-#: bp-forums/replies/functions.php:242 bp-forums/replies/functions.php:606
+#: bp-forums/replies/functions.php:242 bp-forums/replies/functions.php:607
 msgid "<strong>ERROR</strong>: This forum has been closed to new replies."
 msgstr ""
 
-#: bp-forums/replies/functions.php:248 bp-forums/replies/functions.php:612
+#: bp-forums/replies/functions.php:248 bp-forums/replies/functions.php:613
 msgid ""
 "<strong>ERROR</strong>: This forum is private and you do not have the "
 "capability to read or create new replies in it."
 msgstr ""
 
-#: bp-forums/replies/functions.php:254 bp-forums/replies/functions.php:618
+#: bp-forums/replies/functions.php:254 bp-forums/replies/functions.php:619
 msgid ""
 "<strong>ERROR</strong>: This forum is hidden and you do not have the "
 "capability to read or create new replies in it."
 msgstr ""
 
-#: bp-forums/replies/functions.php:293 bp-forums/replies/functions.php:644
+#: bp-forums/replies/functions.php:294 bp-forums/replies/functions.php:645
 msgid "<strong>ERROR</strong>: Your reply cannot be empty."
 msgstr ""
 
-#: bp-forums/replies/functions.php:313
+#: bp-forums/replies/functions.php:314
 msgid ""
 "<strong>ERROR</strong>: Duplicate reply detected; it looks as though you've "
 "already said that!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:319
+#: bp-forums/replies/functions.php:320
 msgid "<strong>ERROR</strong>: Your reply cannot be created at this time."
 msgstr ""
 
-#: bp-forums/replies/functions.php:344
+#: bp-forums/replies/functions.php:345
 msgid "<strong>ERROR</strong>: Discussion is closed."
 msgstr ""
 
-#: bp-forums/replies/functions.php:407 bp-forums/replies/functions.php:741
+#: bp-forums/replies/functions.php:408 bp-forums/replies/functions.php:742
 msgid "<strong>ERROR</strong>: There was a problem adding the tags to the topic."
 msgstr ""
 
-#: bp-forums/replies/functions.php:536
+#: bp-forums/replies/functions.php:537
 msgid "<strong>ERROR</strong>: Reply ID not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:553
+#: bp-forums/replies/functions.php:554
 msgid "<strong>ERROR</strong>: The reply you want to edit was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:564
+#: bp-forums/replies/functions.php:565
 msgid "<strong>ERROR</strong>: You do not have permission to edit that reply."
 msgstr ""
 
-#: bp-forums/replies/functions.php:650
+#: bp-forums/replies/functions.php:651
 msgid "<strong>ERROR</strong>: Your reply cannot be edited at this time."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1281
+#: bp-forums/replies/functions.php:1282
 msgid "<strong>ERROR</strong>: Reply ID to move not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1290
+#: bp-forums/replies/functions.php:1291
 msgid "<strong>ERROR</strong>: The reply you want to move was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1300
+#: bp-forums/replies/functions.php:1301
 msgid "<strong>ERROR</strong>: The discussion you want to move from was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1311 bp-forums/topics/functions.php:1222
+#: bp-forums/replies/functions.php:1312 bp-forums/topics/functions.php:1222
 #: bp-forums/topics/functions.php:1537
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the source "
 "discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1321
+#: bp-forums/replies/functions.php:1322
 msgid "<strong>ERROR</strong>: You need to choose a valid move option."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1333 bp-forums/topics/functions.php:1559
+#: bp-forums/replies/functions.php:1334 bp-forums/topics/functions.php:1559
 msgid "<strong>ERROR</strong>: Destination discussion ID not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1343
+#: bp-forums/replies/functions.php:1344
 msgid "<strong>ERROR</strong>: The discussion you want to move to was not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1348 bp-forums/topics/functions.php:1574
+#: bp-forums/replies/functions.php:1349 bp-forums/topics/functions.php:1574
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the "
 "destination discussion!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1358 bp-forums/replies/template.php:589
+#: bp-forums/replies/functions.php:1359 bp-forums/replies/template.php:589
 #: bp-forums/templates/default/bbpress/form-reply.php:28
 #: bp-forums/topics/functions.php:1364 bp-forums/topics/functions.php:1736
 msgid "Reply To: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1405 bp-forums/topics/functions.php:1613
+#: bp-forums/replies/functions.php:1406 bp-forums/topics/functions.php:1613
 msgid ""
 "<strong>ERROR</strong>: There was a problem converting the reply into the "
 "discussion. Please try again."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1410
+#: bp-forums/replies/functions.php:1411
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to create new "
 "discussions. The reply could not be converted into a discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1599
+#: bp-forums/replies/functions.php:1600
 msgid "<strong>ERROR:</strong> You do not have the permission to do that!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1612
+#: bp-forums/replies/functions.php:1613
 msgid "<strong>ERROR</strong>: There was a problem unmarking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1612
+#: bp-forums/replies/functions.php:1613
 msgid "<strong>ERROR</strong>: There was a problem marking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1631
+#: bp-forums/replies/functions.php:1632
 msgid "<strong>ERROR</strong>: There was a problem trashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1639
+#: bp-forums/replies/functions.php:1640
 msgid "<strong>ERROR</strong>: There was a problem untrashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1647
+#: bp-forums/replies/functions.php:1648
 msgid "<strong>ERROR</strong>: There was a problem deleting the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2118
+#: bp-forums/replies/functions.php:2119
 msgid "All Posts"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2120 bp-forums/replies/template.php:51
+#: bp-forums/replies/functions.php:2121 bp-forums/replies/template.php:51
 msgid "All Replies"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2166 bp-forums/topics/functions.php:3654
+#: bp-forums/replies/functions.php:2167 bp-forums/topics/functions.php:3654
 msgid "Replies: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2400 bp-forums/users/template.php:517
+#: bp-forums/replies/functions.php:2401 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1412 bp-groups/bp-groups-functions.php:3597
 #: bp-groups/bp-groups-functions.php:3616
 #: bp-groups/bp-groups-functions.php:3633
@@ -9905,11 +9904,11 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2421 bp-forums/users/template.php:503
+#: bp-forums/replies/functions.php:2422 bp-forums/users/template.php:503
 msgid "Guest"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2426
+#: bp-forums/replies/functions.php:2427
 msgid "Administrator"
 msgstr ""
 
@@ -11736,8 +11735,6 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1417
 #: bp-members/classes/class-bp-members-admin.php:1754
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:18
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:65
 #: bp-templates/bp-nouveau/buddypress/members/single/notifications/notifications-loop.php:24
 msgid "Actions"
 msgstr ""
@@ -12288,7 +12285,7 @@ msgid "Send Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:748
-#: bp-media/bp-media-filters.php:870
+#: bp-media/bp-media-filters.php:1029
 #: bp-media/classes/class-bp-media-component.php:287
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/includes/groups/classes.php:270
@@ -13456,43 +13453,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:773 bp-media/bp-media-filters.php:789
-#: bp-media/bp-media-filters.php:790 bp-media/bp-media-filters.php:843
-#: bp-media/bp-media-filters.php:978
+#: bp-media/bp-media-filters.php:932 bp-media/bp-media-filters.php:948
+#: bp-media/bp-media-filters.php:949 bp-media/bp-media-filters.php:1002
+#: bp-media/bp-media-filters.php:1137
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:848
+#: bp-media/bp-media-filters.php:1007
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:865
+#: bp-media/bp-media-filters.php:1024
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:867
+#: bp-media/bp-media-filters.php:1026
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:872 bp-media/bp-media-filters.php:878
-#: bp-media/bp-media-filters.php:884 bp-media/bp-media-filters.php:890
-#: bp-media/bp-media-filters.php:896
+#: bp-media/bp-media-filters.php:1031 bp-media/bp-media-filters.php:1037
+#: bp-media/bp-media-filters.php:1043 bp-media/bp-media-filters.php:1049
+#: bp-media/bp-media-filters.php:1055
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:908 bp-media/bp-media-filters.php:922
+#: bp-media/bp-media-filters.php:1067 bp-media/bp-media-filters.php:1081
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:917 bp-media/bp-media-functions.php:2118
+#: bp-media/bp-media-filters.php:1076 bp-media/bp-media-functions.php:2120
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:929
+#: bp-media/bp-media-filters.php:1088
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -13500,7 +13497,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:976
+#: bp-media/bp-media-filters.php:1135
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -13509,12 +13506,12 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:29 bp-media/bp-media-functions.php:2136
+#: bp-media/bp-media-functions.php:29 bp-media/bp-media-functions.php:2138
 msgid "Please login in order to upload file media."
 msgstr ""
 
 #: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
-#: bp-media/bp-media-functions.php:2192 bp-media/bp-media-functions.php:2193
+#: bp-media/bp-media-functions.php:2194 bp-media/bp-media-functions.php:2195
 msgid "The uploaded file exceeds "
 msgstr ""
 
@@ -13522,11 +13519,11 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2119
+#: bp-media/bp-media-functions.php:2121
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2217
+#: bp-media/bp-media-functions.php:2219
 msgid "Error while uploading document."
 msgstr ""
 
@@ -13662,7 +13659,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:385
 #: bp-media/classes/class-bp-media-component.php:441
-#: bp-templates/bp-nouveau/includes/media/functions.php:174
+#: bp-templates/bp-nouveau/includes/media/functions.php:177
 msgid "My Photos"
 msgstr ""
 
@@ -14716,7 +14713,7 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:21
-#: bp-templates/bp-nouveau/includes/media/functions.php:131
+#: bp-templates/bp-nouveau/includes/media/functions.php:134
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -15176,8 +15173,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:35
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:82
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:55
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:117
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:56
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:56
@@ -15770,6 +15767,10 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:29
+msgid "- Click to Download"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:24
 msgid "More Photos"
 msgstr ""
@@ -15780,8 +15781,11 @@ msgid "Add Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-folder.php:13
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:28
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:57
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:16
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:44
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:54
 msgid "Create Folder"
 msgstr ""
 
@@ -15807,17 +15811,9 @@ msgstr ""
 msgid "Enter Album Title"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:22
 msgid "Enter Folder Title"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:17
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:63
-msgid "Modified"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:64
-msgid "Uploaded by"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:18
@@ -17155,51 +17151,51 @@ msgstr ""
 msgid "Please enter title of folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:989
+#: bp-templates/bp-nouveau/includes/media/ajax.php:994
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:132
+#: bp-templates/bp-nouveau/includes/media/functions.php:135
 msgid "Unselect"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:134
+#: bp-templates/bp-nouveau/includes/media/functions.php:137
 msgid "Unselect All"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:135
+#: bp-templates/bp-nouveau/includes/media/functions.php:138
 msgid "Sorry, no photos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:137
+#: bp-templates/bp-nouveau/includes/media/functions.php:140
 msgid "Uploading"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:138
+#: bp-templates/bp-nouveau/includes/media/functions.php:141
 msgid "%d out of %d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:139
+#: bp-templates/bp-nouveau/includes/media/functions.php:142
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:140
+#: bp-templates/bp-nouveau/includes/media/functions.php:143
 msgid ""
 "Are you sure you want to delete this folder? Documents in this folder will "
 "also be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:141
+#: bp-templates/bp-nouveau/includes/media/functions.php:144
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:142
+#: bp-templates/bp-nouveau/includes/media/functions.php:145
 msgid "There was a problem deleting the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:163
+#: bp-templates/bp-nouveau/includes/media/functions.php:166
 msgid "All Photos"
 msgstr ""
 

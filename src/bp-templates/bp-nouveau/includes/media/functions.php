@@ -97,6 +97,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_media'     => bp_is_group_media_support_enabled(),
 		'group_album'     => bp_is_group_albums_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
+		'document_type'   => apply_filters( 'bp_media_allowed_document_type', '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip' ),
 	);
 
 	if ( bp_is_single_album() || bp_is_single_document_folder() ) {
@@ -116,6 +117,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'groups'   => bp_is_groups_emoji_support_enabled(),
 		'messages' => bp_is_messages_emoji_support_enabled(),
 		'forums'   => bp_is_forums_emoji_support_enabled(),
+		'document' => bp_is_forums_document_support_enabled(),
 	);
 	$params['media']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
 
@@ -124,6 +126,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'groups'   => bp_is_groups_gif_support_enabled(),
 		'messages' => bp_is_messages_gif_support_enabled(),
 		'forums'   => bp_is_forums_gif_support_enabled(),
+		'document' => bp_is_forums_document_support_enabled(),
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 

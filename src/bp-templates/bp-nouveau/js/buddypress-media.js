@@ -50,7 +50,7 @@ window.bp = window.bp || {};
 			this.documentOptions = {
 				url: BP_Nouveau.ajaxurl,
 				timeout: 3 * 60 * 60 * 1000,
-				acceptedFiles: '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip',
+				acceptedFiles: BP_Nouveau.media.document_type,
 				autoProcessQueue: true,
 				addRemoveLinks: true,
 				uploadMultiple: false,
@@ -61,7 +61,7 @@ window.bp = window.bp || {};
 				this.options = {
 					url: BP_Nouveau.ajaxurl,
 					timeout: 3 * 60 * 60 * 1000,
-					acceptedFiles: '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip',
+					acceptedFiles: BP_Nouveau.media.document_type,
 					autoProcessQueue: true,
 					addRemoveLinks: true,
 					uploadMultiple: false,
@@ -169,8 +169,8 @@ window.bp = window.bp || {};
 			//Documents
 			$( document ).on( 'click', '.media-folder_items .media-folder_action__anchor', this.fileActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more', this.fileActivityActionButton.bind( this ) );
-			
-			
+
+
 			// Gifs autoplay
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -2024,7 +2024,7 @@ window.bp = window.bp || {};
 				}
 			} );
 		},
-		
+
 		/**
 		 * File action Button
 		 */

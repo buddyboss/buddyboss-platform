@@ -1912,6 +1912,15 @@ span.dashicons.dashicons-admin-file:before {
   content: '\e96a';
 }
 
+.activity-list .activity-item .activity-content.documemt-activity {
+  z-index: 1;
+  position: relative;
+}
+
+.activity-list .activity-item .activity-content.documemt-activity .activity-inner {
+  overflow: visible;
+}
+
 .bb-activity-media-wrap {
   width: 100%;
 }
@@ -1927,12 +1936,19 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap {
-  width: calc(100% - 70px);
-  display: inline-block;
-  vertical-align: middle;
+  width: 100%;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: row;
+  flex-direction: row;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img {
+  -ms-flex-preferred-size: 70px;
+  flex-basis: 70px;
   width: 70px;
   text-align: center;
   padding: 15px 0;
@@ -1951,36 +1967,179 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
-  width: calc(100% - 75px);
+  -ms-flex-preferred-size: calc(100% - 70px);
+  flex-basis: calc(100% - 70px);
+  width: calc(100% - 70px);
   display: inline-block;
   vertical-align: middle;
-  padding-right: 15px;
+  padding: 10px 15px 10px 0;
+  color: #122B46;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-title {
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  width: 100%;
+  width: calc(100% - 70px);
   display: block;
   font-weight: bold;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
-  display: block;
+  display: inline-block;
   color: #7F868F;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity > .entry-img {
-  width: 65px;
-  display: inline-block;
-  vertical-align: middle;
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
+  position: relative;
+  top: -10px;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity > .entry-img img {
-  width: 35px;
-  height: 35px;
-  object-fit: contain;
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap {
+  position: absolute;
+  left: 15px;
+  -webkit-transform: translateY(-50%);
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
+  top: 50%;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a {
+  display: inline-block;
+  margin-right: 8px;
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i {
+  font-size: 22px;
+  color: #122B46;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a:hover i {
+  opacity: 0.8;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a[data-balloon]:after {
+  margin-top: 4px;
+  font-size: 12px;
+  padding: 5px 10px;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a[data-balloon][data-balloon-pos='down']:before {
+  margin-top: -1px;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list {
+  position: absolute;
+  top: 26px;
+  left: -4px;
+  opacity: 0;
+  visibility: hidden;
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  width: 168px;
+  z-index: 1;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul {
+  list-style: none;
+  margin: 10px 0;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li {
+  margin: 0;
+  padding: 0;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a {
+  padding: 5px 10px;
+  display: block;
+  font-size: 13px;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:hover {
+  background-color: #f5f5f5;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list:after {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 0;
+  margin: 0 auto;
+  left: 10px;
+  box-sizing: border-box;
+  border: 8px solid #000;
+  border-color: #fff transparent transparent #fff;
+  -webkit-transform-origin: 100% 0;
+  -ms-transform-origin: 100% 0;
+  transform-origin: 100% 0;
+  -webkit-transform: rotate(45deg);
+  -ms-transform: rotate(45deg);
+  transform: rotate(45deg);
+  box-shadow: -2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+  z-index: 101;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-action-wrap {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-detail-wrap .document-helper-text {
+  top: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-detail-wrap {
+  color: #007cff;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_list {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-detail-wrap .document-helper-text {
+  top: 0;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-detail-wrap {
+  color: #007cff;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-action-wrap {
+  top: 28px;
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-description-wrap .document-detail-wrap .document-description,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-description-wrap .document-detail-wrap .document-helper-text {
+  font-size: 12px;
+  top: 0;
+  opacity: 1;
+  visibility: visible;
 }
 
 /**
@@ -10785,15 +10944,15 @@ img.emojioneemoji {
   height: 24px !important;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-image {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-image, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-image, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-image, #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-image {
   padding-top: 0;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details, #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details, #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -10808,17 +10967,17 @@ img.emojioneemoji {
   justify-content: center;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-size, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size, #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0px;
   font-size: 12px;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename, #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
   display: block;
   width: 100%;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder .dz-preview.dz-file-preview .dz-details .dz-filename span, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span, #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0px;
 }
 
@@ -11051,6 +11210,39 @@ img.emojioneemoji {
   .media-folder-document-filters .select-wrap {
     float: none;
     margin-bottom: 10px;
+  }
+}
+
+.bp-media-header-wrap h2 {
+  float: right;
+}
+
+.bp-media-header-wrap .bb-media-actions-wrap {
+  float: left;
+  margin-right: 10px;
+}
+
+.bp-media-header-wrap .bb-media-actions-wrap .bb-media-actions a i {
+  margin-left: 6px;
+}
+
+@media screen and (max-width: 782px) {
+  .bp-media-header-wrap h2 {
+    float: none;
+  }
+  .bp-media-header-wrap .bb-media-actions-wrap {
+    float: left;
+  }
+}
+
+@media screen and (max-width: 460px) {
+  .bp-media-header-wrap .bb-media-actions-wrap {
+    float: none;
+    margin-bottom: 10px;
+    flex-direction: column;
+  }
+  .bp-media-header-wrap .bb-media-actions-wrap .bb-media-actions a {
+    width: 100%;
   }
 }
 
