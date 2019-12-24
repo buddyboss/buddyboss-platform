@@ -212,11 +212,11 @@ function bp_core_admin_components_options() {
 
 	<div class="tablenav top">
 		<div class="alignleft actions bulkactions">
-			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+			<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'buddyboss' ); ?></label>
 			<select name="action" id="bulk-action-selector-top">
-				<option value="">Bulk Actions</option>
-				<option value="active" class="hide-if-no-js">Activate</option>
-				<option value="inactive">Deactivate</option>
+				<option value=""><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
+				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
 		</div>
