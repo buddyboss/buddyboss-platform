@@ -225,16 +225,16 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			)
 		);
 
-		// Register View Tutorial button.
-		$this->add_field( 'bp-privacy-tutorial-bb-to-ld-sync', '', array( $this, 'bp_privacy_tutorial_bb_to_ld_sync' ) );
+		// Social Group Sync View Tutorial button.
+		$this->add_field( 'bp-tutorial-social-group-sync', '', array( $this, 'bp_tutorial_social_group_sync' ) );
 	}
 
 	/**
-	 * Register View Tutorial button.
+	 * Social Group Sync View Tutorial button.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function bp_privacy_tutorial_bb_to_ld_sync() {
+	public function bp_tutorial_social_group_sync() {
 		?>
 
 		<p>
@@ -368,16 +368,16 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			)
 		);
 
-		// Register View Tutorial button.
-		$this->add_field( 'bp-privacy-tutorial-ld-to-bb-sync', '', array( $this, 'bp_privacy_tutorial_ld_to_bb_sync' ) );
+		// LearnDash Group Sync View Tutorial button.
+		$this->add_field( 'bp-tutorial-learndash-group-sync', '', array( $this, 'bp_tutorial_learndash_group_sync' ) );
 	}
 
 	/**
-	 * Register View Tutorial button.
+	 * LearnDash Group Sync View Tutorial button.
 	 *
 	 * @since BuddyBoss 1.0.0
 	 */
-	public function bp_privacy_tutorial_ld_to_bb_sync() {
+	public function bp_tutorial_learndash_group_sync() {
 		?>
 
 		<p>
@@ -462,12 +462,12 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			]
 		);
 
-		// Register View Tutorial button.
-		$this->add_field( 'bp-privacy-tutorial-bb-to-ld-sync', '', array( $this, 'bp_profiles_tutorial_my_courses' ) );
+		// My Courses Tab View Tutorial button.
+		$this->add_field( 'bp-tutorial-my-courses-tab', '', array( $this, 'bp_profiles_tutorial_my_courses' ) );
 	}
 
 	/**
-	 * Register View Tutorial button.
+	 * My Courses Tab View Tutorial button.
 	 *
 	 * @since BuddyBoss 1.2.3
 	 */
