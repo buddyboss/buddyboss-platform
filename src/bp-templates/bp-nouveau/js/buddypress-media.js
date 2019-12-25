@@ -1286,14 +1286,40 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			this.openDocumentFolderUploader(event);
-			$('#bp-media-create-folder').show();
+			this.folderLocationUI();
+			$('#bp-media-create-folder').show();			
 		},
 
 		openCreateFolderChildModal: function(event){
 			event.preventDefault();
 
 			this.openDocumentFolderChildUploader(event);
+			this.folderLocationUI();
 			$('#bp-media-create-child-folder').show();
+		},
+		
+		folderLocationUI: function(event){
+			if($('#bb-folder-location').length > 0){
+				if($('#bb-folder-location').parent('.bb-dropdown-wrap').find('.bb-folder-location-select').length == 0){
+					var bb_folder_location = '';
+					$('#bb-folder-location option').each(function(){
+						bb_folder_location += '<li class="'+ $(this).attr('class') +'">'+ $(this).text() +'</li>';
+					});
+					$('#bb-folder-location').parent().append('<div class="bb-folder-location-select"><span class="bb-folder-location-selected">'+$('#bb-folder-location option:first-child').text()+'</span><ul class="bb-folder-location-select-list">'+bb_folder_location+'</select>');
+
+					$(document).on('click','.bb-folder-location-select li',function(){
+						var selected_option = $('#bb-folder-location option:nth-child('+($(this).index()+1)+')');
+						$(this).addClass('selected').siblings().removeClass('selected');
+						$('#bb-folder-location option').removeAttr('selected');
+						selected_option.attr('selected','selected');
+						$('.bb-folder-location-select .bb-folder-location-selected').text(selected_option.text());
+						$('.bb-folder-location-select-list').slideUp();
+					});
+					$(document).on('click','.bb-folder-location-select .bb-folder-location-selected',function(index){
+						$('.bb-folder-location-select-list').slideToggle();
+					});
+				}
+			}			
 		},
 
 		closeCreateAlbumModal: function(event){

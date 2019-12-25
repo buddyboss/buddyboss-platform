@@ -2106,10 +2106,6 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-detail-wrap {
-  color: #007cff;
-}
-
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap,
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action_list {
   opacity: 1;
@@ -11432,6 +11428,107 @@ img.emojioneemoji {
   #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-single-album-header .bb-title {
     padding-left: 25px;
   }
+}
+
+#bp-media-create-folder #bb-folder-location,
+#bp-media-create-child-folder #bb-folder-location {
+  display: none;
+}
+
+#bp-media-create-folder .bb-folder-location-select,
+#bp-media-create-child-folder .bb-folder-location-select {
+  background-repeat: no-repeat;
+  background-position: left 1rem center;
+  display: inline-block;
+  font-family: inherit;
+  font-style: inherit;
+  font-size: 15px;
+  height: 40px;
+  outline: 0;
+  vertical-align: middle;
+  background-color: #fff;
+  border: 1px solid #dedfe2;
+  border-radius: 3px;
+  box-shadow: none;
+  color: #4d5c6d;
+  display: block;
+  position: relative;
+}
+
+#bp-media-create-folder .bb-folder-location-select:after,
+#bp-media-create-child-folder .bb-folder-location-select:after {
+  content: '<';
+  color: #dedfe2;
+  position: absolute;
+  left: 1em;
+  top: 50%;
+  transform: translateY(-50%) rotate(90deg);
+  -webkit-transform: translateY(-50%) rotate(90deg);
+  -moz-transform: translateY(-50%) rotate(90deg);
+  pointer-events: none;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-selected,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-selected {
+  line-height: 1.6875rem;
+  padding: 5px 10px 7px 40px;
+  display: block;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list {
+  position: absolute;
+  right: -1px;
+  left: -1px;
+  bottom: 40px;
+  margin: 0;
+  background-color: #fff;
+  border-radius: 4px;
+  box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.08);
+  list-style: none;
+  display: none;
+  max-height: 400px;
+  overflow: auto;
+  padding: 0;
+  z-index: 11;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li {
+  cursor: pointer;
+  padding: 5px 10px;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li:hover, #bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.selected,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li:hover,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.selected {
+  color: #007cff;
+  background-color: #f5f5f5;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1 {
+  padding-right: 25px;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1 {
+  padding-right: 50px;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1_1,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1_1 {
+  padding-right: 75px;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1_1_1,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1_1_1 {
+  padding-right: 100px;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1_1_1_1,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1_1_1_1_1 {
+  padding-right: 125px;
 }
 
 /**
