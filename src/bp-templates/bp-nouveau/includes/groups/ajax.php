@@ -385,10 +385,20 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	if ( 'invited' === $request['scope'] ) {
 
 		if ( ! bp_group_has_invites( array( 'user_id' => 'any', 'group_id' => $request['group_id'] ) ) ) {
-			wp_send_json_error( array(
-				'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
-				'type'     => 'info',
-			) );
+
+			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
+				// This message displays if you search in pending invites screen and if no results found in search.
+				wp_send_json_error( array(
+					'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
+					'type'     => 'info',
+				) );
+			} else {
+				// This message displays when pending invites screen doesn't have any users invitation.
+				wp_send_json_error( array(
+					'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
+					'type'     => 'info',
+				) );
+			}
 		}
 
 		$request['is_confirmed'] = false;
@@ -399,17 +409,51 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$potential_invites = bp_nouveau_get_group_potential_invites( $request );
 
 	if ( empty( $potential_invites->users ) ) {
-		$error = array(
-			'feedback' => __( 'No members found.', 'buddyboss' ),
-			'type'     => 'info',
-		);
-
-		if ( 'friends' === $bp->groups->invites_scope ) {
+		if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
+			// This message displays if you search in Pending Invites screen and if no results found.
 			$error = array(
-				'feedback' => __( 'All your connections are already members of this group or have already received an invite to join this group or have requested to join it.', 'buddyboss' ),
+				'feedback' => __( 'No members found.', 'buddyboss' ),
 				'type'     => 'info',
 			);
+		} else {
+			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] && 'members' === $bp->groups->invites_scope ) {
+				// This message displays in Send Invites screen in Members tab, if you search members and if no results found.
+				$error = array(
+					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			} elseif ( isset( $request ) && ! isset( $request['search_terms'] ) && 'members' === $bp->groups->invites_scope ) {
+				// This message displays when all site members are in the group, already invited or already requested to join.
+				$error = array(
+					'feedback' => __( 'All site members are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			} else {
+				// General default message.
+				$error = array(
+					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			}
 
+		}
+
+		if ( 'friends' === $bp->groups->invites_scope ) {
+			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
+				// This message displays if you search in Send Invites screen and if no results found.
+				$error = array(
+					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			} else {
+				// This message displays when all of your connections are in the group, already invited or already requested to join.
+				$error = array(
+					'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			}
+
+			// This message displays if you have no connections.
 			if ( 0 === (int) bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
 				$error = array(
 					'feedback' => __( 'You have no connections.', 'buddyboss' ),
