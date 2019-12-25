@@ -1985,7 +1985,8 @@ span.dashicons.dashicons-admin-file:before {
   font-weight: bold;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
   display: inline-block;
   color: #7F868F;
 }
