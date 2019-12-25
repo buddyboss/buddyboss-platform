@@ -637,8 +637,13 @@ class BP_Friends_Friendship {
 		$fetch = array();
 		foreach ( $possible_friend_ids as $friend_id ) {
 			// Check for cached items in both friendship directions.
-			if ( false === bp_core_get_incremented_cache( $user_id . ':' . $friend_id, 'bp_friends' )
-				|| false === bp_core_get_incremented_cache( $friend_id . ':' . $user_id, 'bp_friends' ) ) {
+			/**
+			 * Added below for skip logged id with friend id
+			 * $friend_id !== bp_loggedin_user_id()
+			 */
+			if ( ( false === bp_core_get_incremented_cache( $user_id . ':' . $friend_id, 'bp_friends' )
+				|| false === bp_core_get_incremented_cache( $friend_id . ':' . $user_id, 'bp_friends' ) ) 
+				&& ( $friend_id !== bp_loggedin_user_id() ) ) {
 				$fetch[] = $friend_id;
 			}
 		}
