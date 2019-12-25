@@ -1,9 +1,10 @@
 <div class="wrap">
-	
+
 	<div class="bp-admin-card section-bp_ld-integration">
 		<?php if( ! bp_is_active( 'groups' ) && is_plugin_active( 'sfwd-lms/sfwd_lms.php' ) )  : ?>
 			<h2><?php _e( 'Social Groups</span>', 'buddyboss' ); ?></h2>
 			<p>
+			<style>p.submit .button-primary{display: none;}</style>
 			<?php
 				printf(
 					__( 'You need to activate the <a href="%s">Social Groups component</a> in order to sync LearnDash groups with Social groups.', 'buddyboss' ),
