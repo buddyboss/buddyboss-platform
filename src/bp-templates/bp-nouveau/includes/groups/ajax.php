@@ -412,20 +412,20 @@ function bp_nouveau_ajax_get_users_to_invite() {
 		if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 			// This message will display if you search in pending invites screen and if no results found in search.
 			$error = array(
-				'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
+				'feedback' => __( 'No members found.', 'buddyboss' ),
 				'type'     => 'info',
 			);
 		} else {
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] && 'members' === $bp->groups->invites_scope ) {
-				// This message will display if you are in send invites screen and if you in Members tab and search the member and if there is no result found.
+				// This message will display if you are in send invites screen in Members tab and search members and if there are no results found.
 				$error = array(
 					'feedback' => __( 'No members found.', 'buddyboss' ),
 					'type'     => 'info',
 				);
 			} elseif ( isset( $request ) && ! isset( $request['search_terms'] ) && 'members' === $bp->groups->invites_scope ) {
-				// This message will display if you are in send invites screen and if you in Members tab and if there is no any members found.
+				// This message will display if you are in send invites screen in Members tab and if there are no members listed.
 				$error = array(
-					'feedback' => __( 'All site members already received invitations.', 'buddyboss' ),
+					'feedback' => __( 'All site members are already members of this group or have already received an invite to join this group or have requested to join it.', 'buddyboss' ),
 					'type'     => 'info',
 				);
 			} else {
@@ -442,18 +442,18 @@ function bp_nouveau_ajax_get_users_to_invite() {
 			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
 				// This message will display if you search in send invites screen and if no results found in search.
 				$error = array(
-					'feedback' => __( 'All of your connections already received invitations.', 'buddyboss' ),
+					'feedback' => __( 'No members found.', 'buddyboss' ),
 					'type'     => 'info',
 				);
 			} else {
-				// This message will appear when all of your connections are invited OR there is no any users found.
+				// This message will appear when all of your connections are invited OR there are no users found.
 				$error = array(
 					'feedback' => __( 'All your connections are already members of this group or have already received an invite to join this group or have requested to join it.', 'buddyboss' ),
 					'type'     => 'info',
 				);
 			}
 
-			// This message will  display if you don't have any connections.
+			// This message will display if you don't have any connections.
 			if ( 0 === (int) bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
 				$error = array(
 					'feedback' => __( 'You have no connections.', 'buddyboss' ),
