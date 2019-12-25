@@ -693,10 +693,7 @@ span.dashicons.dashicons-admin-file:before {
 	.document-action-wrap{
 		position: absolute;
 		right: 15px;
-		-webkit-transform: translateY(-50%);
-		-ms-transform: translateY(-50%);
-		transform: translateY(-50%);
-		top: 50%;
+		top: 24px;
 		opacity: 0;
 		visibility: hidden;
 		-webkit-transition: all 0.3s ease;
@@ -820,6 +817,16 @@ span.dashicons.dashicons-admin-file:before {
 				opacity:1;
 				visibility:visible;
 			}
+		}
+	}
+	.document-audio-wrap{
+		padding: 10px 15px;
+		width: 100%;
+		float: left;
+		audio{
+			width: 100%;
+			float: left;
+			outline: 0;
 		}
 	}
   }

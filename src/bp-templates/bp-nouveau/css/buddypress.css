@@ -2004,10 +2004,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap {
   position: absolute;
   right: 15px;
-  -webkit-transform: translateY(-50%);
-  -ms-transform: translateY(-50%);
-  transform: translateY(-50%);
-  top: 50%;
+  top: 24px;
   opacity: 0;
   visibility: hidden;
   -webkit-transition: all 0.3s ease;
@@ -2141,6 +2138,18 @@ span.dashicons.dashicons-admin-file:before {
   top: 0;
   opacity: 1;
   visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-audio-wrap {
+  padding: 10px 15px;
+  width: 100%;
+  float: left;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-audio-wrap audio {
+  width: 100%;
+  float: left;
+  outline: 0;
 }
 
 /**
