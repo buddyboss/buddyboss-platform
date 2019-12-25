@@ -978,6 +978,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'loading',
 			'message' => __( 'Loading photos from the community. Please wait.', 'buddyboss' ),
 		),
+		'directory-media-document-loading' => array(
+			'type'    => 'loading',
+			'message' => __( 'Loading documents from the community. Please wait.', 'buddyboss' ),
+		),
 	) );
 
 	if ( ! isset( $feedback_messages[ $feedback_id ] ) ) {

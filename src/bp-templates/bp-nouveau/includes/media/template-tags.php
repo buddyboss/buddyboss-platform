@@ -30,6 +30,27 @@ function bp_nouveau_before_media_directory_content() {
 }
 
 /**
+ * Before Media's directory content legacy do_action hooks wrapper
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_before_media_directory_document_content() {
+	/**
+	 * Fires at the begining of the templates BP injected content.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_before_directory_media_document' );
+
+	/**
+	 * Fires before the media directory display content.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_before_directory_media_document_content' );
+}
+
+/**
  * After Media's directory content legacy do_action hooks wrapper
  *
  * @since BuddyBoss 1.0.0
@@ -60,6 +81,41 @@ function bp_nouveau_after_media_directory_content() {
 	 * @since BuddyBoss 1.0.0
 	 */
 	do_action( 'bp_after_directory_media' );
+
+	//bp_get_template_part( 'common/js-templates/media/comments' );
+}
+
+/**
+ * After Media's directory content legacy do_action hooks wrapper
+ *
+ * @since BuddyBoss 1.0.0
+ */
+function bp_nouveau_after_media_directory_document_content() {
+	/**
+	 * Fires after the display of the media list.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_after_directory_media_document_list' );
+
+	/**
+	 * Fires inside and displays the media directory display content.
+	 */
+	do_action( 'bp_directory_media_document_content' );
+
+	/**
+	 * Fires after the media directory display content.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_after_directory_media_document_content' );
+
+	/**
+	 * Fires after the media directory listing.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 */
+	do_action( 'bp_after_directory_document_media' );
 
 	//bp_get_template_part( 'common/js-templates/media/comments' );
 }

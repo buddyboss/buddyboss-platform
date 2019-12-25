@@ -820,6 +820,30 @@ function bp_get_total_media_count() {
 }
 
 /**
+ * Return the total media count in your BP instance.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return int Media count.
+ */
+function bp_get_total_document_count() {
+
+	add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+	bp_has_media( bp_ajax_querystring( 'media' ) . '&type=document' );
+	remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
+	$count = $GLOBALS['media_template']->total_media_count;
+
+	/**
+	 * Filters the total number of media.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param int $count Total number of media.
+	 */
+	return apply_filters( 'bp_get_total_media_count', (int) $count );
+}
+
+/**
  * Media results all scope.
  *
  * @since BuddyBoss 1.1.9

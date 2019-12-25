@@ -1683,7 +1683,7 @@ function bp_is_current_component( $component = '' ) {
 		$component = 'profile';
 	}
 
-	if ( 'documents' === $component ) {
+	if ( 'documents' === $component || 'document' === $component ) {
 		$component = 'media';
 	}
 
@@ -1691,6 +1691,11 @@ function bp_is_current_component( $component = '' ) {
 
 	// Only check if BuddyPress found a current_component.
 	if ( ! empty( $bp->current_component ) ) {
+
+		if ( 'documents' === $bp->current_component || 'document' === $bp->current_component ) {
+			$component = 'media';
+			$bp->current_component = 'media';
+		}
 
 		// First, check to see whether $component_name and the current
 		// component are a simple match.
@@ -2747,6 +2752,7 @@ function bp_is_user_media() {
  * @return bool True if the current page is the media directory.
  */
 function bp_is_media_directory() {
+
 	if ( ! bp_displayed_user_id() && bp_is_media_component() && ! bp_current_action() ) {
 		return true;
 	}

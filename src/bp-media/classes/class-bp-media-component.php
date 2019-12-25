@@ -148,6 +148,10 @@ class BP_Media_Component extends BP_Component {
 			define( 'BP_MEDIA_SLUG', $this->id );
 		}
 
+		if ( ! defined( 'BP_MEDIA_DOCUMENT_SLUG' ) ) {
+			define( 'BP_MEDIA_DOCUMENT_SLUG', 'documents' );
+		}
+
 		// Global tables for media component.
 		$global_tables = array(
 			'table_name'        => $bp->table_prefix . 'bp_media',
@@ -155,8 +159,9 @@ class BP_Media_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[ $this->id ];
+		$default_directory_titles         = bp_core_get_directory_page_default_titles();
+		$default_directory_title          = $default_directory_titles[ $this->id ];
+		$default_document_directory_title = $default_directory_titles['document'];
 
 		// All globals for media component.
 		// Note that global_tables is included in this array.
@@ -171,10 +176,10 @@ class BP_Media_Component extends BP_Component {
 			),
 			array(
 				'slug'                                    => 'documents',
-				'root_slug'                               => 'documents',
+				'root_slug'                               => isset( $bp->pages->document->slug ) ? $bp->pages->document->slug : BP_MEDIA_DOCUMENT_SLUG,
 				'has_directory'                           => true,
 				'global_tables'                           => $global_tables,
-				'directory_title'                         => 'Documents',
+				'directory_title'                         => isset( $bp->pages->document->title ) ? $bp->pages->document->title : $default_document_directory_title,
 				'search_string'                           => __( 'Search Documents&hellip;', 'buddyboss' ),
 			)
 		);
@@ -327,7 +332,7 @@ class BP_Media_Component extends BP_Component {
 				$nav_name = __( 'Documents', 'buddyboss' );
 			}
 
-			// Add 'Photos' to the main navigation.
+			// Add 'Documents' to the main navigation.
 			$main_nav = array(
 				'name'                => $nav_name,
 				'slug'                => $slug,
@@ -349,7 +354,9 @@ class BP_Media_Component extends BP_Component {
 			);
 		}
 
-		parent::setup_nav( $main_nav, $sub_nav );
+		if ( bp_is_user() ) {
+			parent::setup_nav( $main_nav, $sub_nav );
+		}
 
 	}
 
