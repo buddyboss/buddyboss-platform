@@ -57,7 +57,6 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	    if ( ! bp_is_active( 'groups' ) ) {
 		    unset( $fields['buddypress'] );
 		    unset( $fields['learndash'] );
-		    unset( $fields['coursetab'] );
         }
 
 		$fields = apply_filters( 'bp_integrations_learndash_fields', $fields, $this );
