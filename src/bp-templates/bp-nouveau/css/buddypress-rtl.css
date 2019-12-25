@@ -10535,26 +10535,44 @@ body.bb-model-open {
   margin-top: -25px;
   margin-bottom: 20px;
   padding-top: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
 }
 
 .bb-album-actions select {
   margin-right: auto;
-  margin-right: auto;
   font-size: 14px;
   color: #939597;
-  border: 0;
-  text-align: left;
-  direction: ltr;
   background-position: left 10px center;
   padding-left: 26px;
   width: 160px;
   height: 30px !important;
 }
 
+@media (max-width: 480px) {
+  .bb-album-actions select {
+    margin: 20px auto 0;
+  }
+}
+
 .bb-album-actions > a:first-of-type {
   margin-right: 0;
+}
+
+@media (max-width: 480px) {
+  .bb-album-actions {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+  }
 }
 
 div#buddypress div.bb-album-actions .button {

@@ -832,26 +832,40 @@ body.bb-model-open {
 	margin-top: -25px;
 	margin-bottom: 20px;
 	padding-top: 10px;
-	display: flex;
-	align-items: center;
+	display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+	-webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-orient: horizontal;
+        -webkit-box-direction: normal;
+        -ms-flex-flow: row wrap;
+        flex-flow: row wrap;
 
 	select {
 		margin-left: auto;
-		margin-left: auto;
 		font-size: 14px;
 		color: #939597;
-		border: 0;
-		text-align: right;
-		direction: rtl;
 		background-position: right 10px center;
 		padding-right: 26px;
 		width: 160px;
 		height: 30px !important;
+
+                @media (max-width: 480px) {
+                    margin: 20px auto 0;
+                }
 	}
 
 	> a:first-of-type {
 		margin-left: 0;
 	}
+        
+        @media (max-width: 480px) {
+            -webkit-box-pack: center;
+            -ms-flex-pack: center;
+            justify-content: center;
+        }
 }
 
 div#buddypress div.bb-album-actions .button {
