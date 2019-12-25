@@ -8,7 +8,7 @@
 <div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
-            <div class="modal-wrapper bb-large">
+            <div class="modal-wrapper">
                 <div class="modal-container">
 
                     <header class="bb-model-header bg-white">
