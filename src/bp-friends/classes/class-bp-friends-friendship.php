@@ -645,6 +645,11 @@ class BP_Friends_Friendship {
 		if ( empty( $fetch ) ) {
 			return;
 		}
+		
+		// Set tables for the friends component.
+		if( empty( $bp->friends->table_name ) ) {
+			$bp->friends->table_name = $bp->table_prefix . 'bp_friends';
+		}
 
 		$friend_ids_sql = implode( ',', array_unique( $fetch ) );
 		$sql            = $wpdb->prepare( "SELECT initiator_user_id, friend_user_id, is_confirmed FROM {$bp->friends->table_name} WHERE (initiator_user_id = %d AND friend_user_id IN ({$friend_ids_sql}) ) OR (initiator_user_id IN ({$friend_ids_sql}) AND friend_user_id = %d )", $user_id, $user_id );
