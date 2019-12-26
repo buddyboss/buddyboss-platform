@@ -66,6 +66,48 @@ function bp_nouveau_after_activity_directory_content() {
 }
 
 /**
+ * Before Single Activity content legacy do_action hooks wrapper
+ *
+ * @since BuddyBoss 1.2.2
+ */
+function bp_nouveau_before_single_activity_content() {
+	/**
+	 * Fires at the begining of the templates BP injected content.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_before_single_activity' );
+
+	/**
+	 * Fires before the single activity display content.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_before_single_activity_content' );
+}
+
+/**
+ * After Single Activity content legacy do_action hooks wrapper
+ *
+ * @since BuddyBoss 1.2.2
+ */
+function bp_nouveau_after_single_activity_content() {
+	/**
+	 * Fires after the single activity display content.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_after_single_activity_content' );
+
+	/**
+	 * Fires after the single activity listing.
+	 *
+	 * @since BuddyBoss 1.2.2
+	 */
+	do_action( 'bp_after_single_activity' );
+}
+
+/**
  * Enqueue needed scripts for the Activity Post Form
  *
  * @since BuddyPress 3.0.0

@@ -11,6 +11,7 @@ add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_member_activity_content', 'bp_media_add_theatre_template' );
 add_action( 'bp_after_group_activity_content', 'bp_media_add_theatre_template' );
+add_action( 'bp_after_single_activity', 'bp_media_add_theatre_template' );
 add_action( 'bp_activity_entry_content', 'bp_media_activity_entry' );
 add_action( 'bp_activity_after_comment_content', 'bp_media_activity_comment_entry' );
 add_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
