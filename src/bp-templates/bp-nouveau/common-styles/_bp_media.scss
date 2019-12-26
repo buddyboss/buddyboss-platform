@@ -1517,6 +1517,9 @@ img.emojioneemoji {
 			float: right;
 			&>a{
 				margin-left: 10px;
+				&>i{
+					margin-right: 6px;
+				}
 			}
 			&>select{
 				margin-left: 10px;
@@ -1676,9 +1679,13 @@ img.emojioneemoji {
 
 
 #bp-media-create-folder,
-#bp-media-create-child-folder{
+#bp-media-edit-child-folder,
+#bp-media-create-child-folder,{
 	#bb-folder-location{
 		display: none;
+	}
+	.bb-dropdown-wrap select{
+		width: 100%;
 	}
 	.bb-folder-location-select{
 		background-repeat: no-repeat;
@@ -1694,7 +1701,7 @@ img.emojioneemoji {
 		border: 1px solid #dedfe2;
 		border-radius: 3px;
 		box-shadow: none;
-		color: #4d5c6d;
+		color: #393e41;
 		display: block;
 		position: relative;
 		&:after{

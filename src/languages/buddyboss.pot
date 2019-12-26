@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-25 11:53:49+00:00\n"
+"POT-Creation-Date: 2019-12-26 12:37:18+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5972,13 +5972,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -7738,7 +7738,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:33
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:21
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:27
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:87
 msgid "Title"
 msgstr ""
 
@@ -11472,6 +11471,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:58
 #: bp-templates/bp-nouveau/includes/functions.php:1377
 #: bp-templates/bp-nouveau/includes/functions.php:1429
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1275
@@ -15777,16 +15777,16 @@ msgid "More Photos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-document.php:14
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:53
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:52
 msgid "Add Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-folder.php:13
 #: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:28
-#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:57
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:77
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:44
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:58
+#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:64
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:56
 msgid "Create Folder"
 msgstr ""
 
@@ -15814,6 +15814,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:34
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:22
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:34
 msgid "Enter Folder Title"
 msgstr ""
 
@@ -15838,17 +15839,23 @@ msgstr ""
 msgid "Done"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:28
+msgid "Edit Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:33
+msgid "Rename Folder"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:28
 msgid "edit"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:29
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:89
 msgid "save"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:30
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:90
 msgid "cancel"
 msgstr ""
 
@@ -15857,10 +15864,6 @@ msgid "Delete Album"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/single-folder.php:88
-msgid "Edit Folder Name"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:93
 msgid "Delete Folder"
 msgstr ""
 

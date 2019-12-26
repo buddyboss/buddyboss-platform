@@ -49,19 +49,13 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             </a> -->
 
                             <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-                                <i class="bb-icon-upload"></i>
-                                <?php _e( 'Add Documents', 'buddyboss' ); ?>
+                                <i class="bb-icon-upload"></i><?php _e( 'Add Documents', 'buddyboss' ); ?>
                             </a>
 
                             <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
-                                <i class="bb-icon-plus"></i>
-                                <?php _e( 'Create Folder', 'buddyboss' ); ?>
+                                <i class="bb-icon-plus"></i><?php _e( 'Create Folder', 'buddyboss' ); ?>
                             </a>
                             
-                                
-
-
-
                             <?php if ( bp_is_my_profile() && ! bp_is_group() ) : ?>
 
                                 <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
@@ -83,12 +77,13 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                                     <div class="media-folder_action__list">
                                         <ul>
                                             <li>
-                                                <div class="media-edit-folder">
-                                                    <input type="text" value="<?php bp_album_title(); ?>" placeholder="<?php _e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-                                                    <a href="#" id="bp-edit-folder-title"><i class="bb-icon-edit"></i><?php _e( 'Edit Folder Name', 'buddyboss' ); ?></a>
-                                                    <a href="#" id="bp-save-folder-title" style="display: none;" ><?php _e( 'save', 'buddyboss' ); ?></a>
-                                                    <a href="#" id="bp-cancel-edit-album-title" style="display: none;" ><?php _e( 'cancel', 'buddyboss' ); ?></a>
-                                                </div>
+                                                <!-- <div class="media-edit-folder">
+                                                    <input type="text" value="<?php //bp_album_title(); ?>" placeholder="<?php //_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
+                                                    <a href="#" id="bp-edit-folder-title"><i class="bb-icon-edit"></i><?php //_e( 'Edit Folder Name', 'buddyboss' ); ?></a>
+                                                    <a href="#" id="bp-save-folder-title" style="display: none;" ><?php //_e( 'save', 'buddyboss' ); ?></a>
+                                                    <a href="#" id="bp-cancel-edit-album-title" style="display: none;" ><?php //_e( 'cancel', 'buddyboss' ); ?></a>
+                                                </div> -->
+                                                <a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> Edit Folder</a>
                                             </li>
                                             <li><a href="#" id="bb-delete-folder"><i class="bb-icon-trash"></i><?php _e( 'Delete Folder', 'buddyboss' ); ?></a></li>
                                         </ul>
@@ -100,6 +95,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
 
                     <?php bp_get_template_part( 'media/document-uploader' ); ?>
                     <?php bp_get_template_part( 'media/create-child-folder' ); ?>
+                    <?php bp_get_template_part( 'media/edit-child-folder' ); ?>
 
                     <?php endif; ?>
                 </div> <!-- .bp-media-header-wrap -->
