@@ -1611,6 +1611,14 @@ window.bp = window.bp || {};
 				data.content = '&#8203;';
 			}
 
+			/**
+			 * Add group id when add media in group
+			 */
+			if ( typeof data.media !== 'undefined' && (typeof data.item_id !== 'undefined' && data.item_id !== 0 )) {
+				_.each( data.media, function( view,index ) {
+				 	data.media[index].group_id = data.item_id;
+			 	});
+			}
 			bp.ajax.post( 'post_update', data ).done( function( response ) {
 				var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 					searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
