@@ -129,8 +129,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
 
-		$plugin_string = '/wp-admin/plugins.php';
-		$ajax_string   = '/wp-admin/admin-ajax.php';
+		$plugins_path = '/wp-admin/plugins.php';
+		$ajax_path    = '/wp-admin/admin-ajax.php';
 
 		// Hide My WP plugin compatibility
 		if ( class_exists( 'HideMyWP' ) ) {
@@ -142,24 +142,23 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				$options = get_option( 'hide_my_wp' );
 			}
 
-			$admin_path = $options['new_admin_path'];
-			$ajax_path  = $options['replace_admin_ajax'];
+			$new_admin_path     = ! empty( $options['new_admin_path'] ) ? $options['new_admin_path'] : '';
+			$replace_admin_ajax = ! empty( $options['replace_admin_ajax'] ) ? $options['replace_admin_ajax'] : '';
 
-			if ( '' !== $admin_path ) {
-				$plugin_string = '/' . $admin_path . '/plugins.php';
+			if ( '' !== $new_admin_path ) {
+				$plugins_path = '/' . $new_admin_path . '/plugins.php';
 			}
 
-			if ( '' !== $admin_path && '' !== $ajax_path ) {
-				$ajax_string = '/' . $admin_path . '/' . $ajax_path;
-			} elseif ( '' !== $admin_path && '' === $ajax_path ) {
-				$ajax_string = '/' . $admin_path . '/admin-ajax.php';
+			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
+				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
+			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
+				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
 			}
-
 		}
 
 		if ( is_network_admin()
-			 || strpos( $_SERVER['REQUEST_URI'], $plugin_string ) !== false
-			 || strpos( $_SERVER['REQUEST_URI'], $ajax_string ) !== false
+			 || strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
+			 || strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
 		) {
 
 			/**
