@@ -87,8 +87,6 @@ add_filter( 'xprofile_validate_field', 'bp_xprofile_validate_social_networks_val
 // Display name adjustment
 add_filter( 'bp_set_current_user', 'bp_xprofile_adjust_current_user_display_name' );
 add_filter( 'get_user_metadata', 'bp_xprofile_adjust_display_name', 10, 3 );
-// add_filter( 'get_the_author_display_name', 'bp_xprofile_adjust_author_display_name', 10, 2 );
-// add_filter( 'bp_core_get_core_userdata', 'bp_xprofile_adjust_display_user_display_name' );
 
 // Email Username
 add_filter( 'new_admin_email_content', 'bp_xprofile_replace_username_to_display_name', 10, 2 );
@@ -882,36 +880,6 @@ function bp_xprofile_adjust_display_name( $null, $object_id, $meta_key ) {
 	}
 
 	return bp_core_get_user_displayname( $object_id );
-}
-
-/**
- * Change member display_name for author.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_xprofile_adjust_author_display_name( $display_name, $user_id ) {
-
-	if ( empty( $user_id ) ) {
-		return $display_name;
-	}
-
-
-	return bp_core_get_user_displayname( $user_id );
-}
-
-/**
- * Change display_name for core_userdata.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_xprofile_adjust_display_user_display_name( $userdata ) {
-	// Profile Fields.
-	$active_components = bp_get_option( 'bp-active-components' );
-	if ( ! empty( $active_components['xprofile'] ) ) {
-		$userdata->display_name = bp_core_get_user_displayname( $userdata->ID );
-	}
-
-	return $userdata;
 }
 
 /**
