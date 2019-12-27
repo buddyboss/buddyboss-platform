@@ -3544,7 +3544,7 @@ function bbp_topic_content_autoembed_paragraph( $content ) {
 	$embed_urls = array();
 	$embeds = array();
 
-	if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
+	if ( preg_match( '#(^|\s|>)https?://#i', strip_tags( $content ) ) ) {
 		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
 	}
 
