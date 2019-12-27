@@ -286,64 +286,6 @@ class BP_Activity_Activity {
 			}
 		}
 
-		// Exclude Lessons, Quiz, Topic, Certificates and Assignment if Course set to future publish date
-		if (
-		    !empty( $this->component )
-		    && !empty( $this->type )
-		    && !empty( $this->secondary_item_id )
-		    && 'blogs' == $this->component
-		    && (
-		        'new_blog_sfwd-lessons' == $this->type
-		        || 'new_blog_sfwd-quiz' == $this->type
-		        || 'new_blog_sfwd-topic' == $this->type
-		        || 'new_blog_sfwd-certificates' == $this->type
-		        || 'new_blog_sfwd-assignment' == $this->type
-		    )
-		) {
-
-			$post = get_post( $this->secondary_item_id );
-			if (
-				!empty( $post )
-				&& (
-					'sfwd-certificates' == $post->post_type
-				)
-			) {
-
-				return false;
-
-			} else if (
-				!empty( $post )
-				&& (
-					'sfwd-lessons' == $post->post_type
-					|| 'sfwd-quiz' == $post->post_type
-					|| 'sfwd-topic' == $post->post_type
-					|| 'sfwd-assignment' == $post->post_type
-				)
-				&& (
-					empty( get_post_meta( $post->ID, 'course_id', true ) )
-					|| (
-						!empty( get_post_meta( $post->ID, 'course_id', true ) )
-						&& 'future' === get_post_status( get_post_meta( $post->ID, 'course_id', true ) )
-					)
-					|| (
-						(
-							'sfwd-topic' == $post->post_type
-							|| 'sfwd-assignment' == $post->post_type
-						)
-						&& (
-							empty( get_post_meta( $post->ID, 'lesson_id', true ) )
-							|| (
-								!empty( get_post_meta( $post->ID, 'lesson_id', true ) )
-								&& 'future' === get_post_status( get_post_meta( $post->ID, 'lesson_id', true ) )
-							)
-						)
-					)
-				)
-			) {
-				return false;
-			}
-		}
-
 		if ( empty( $this->primary_link ) ) {
 			$this->primary_link = bp_loggedin_user_domain();
 		}

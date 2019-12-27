@@ -4225,6 +4225,10 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		return;
 	}
 
+	if ( false === apply_filters( 'bp_activity_pre_transition_post_type_status', true, $new_status, $old_status, $post ) ) {
+		return;
+	}
+
 	// This is an edit.
 	if ( $new_status === $old_status ) {
 		// An edit of an existing post should update the existing activity item.
