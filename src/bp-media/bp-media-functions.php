@@ -2260,6 +2260,9 @@ function bp_media_document_allowed_mimes( $mime_types ) {
 		'txt' => 'text/plain',
 		// archives
 		'zip' => 'application/zip',
+		'rar' => 'application/x-rar-compressed',
+		'gzip'=> 'application/gzip',
+		'tar' => 'application/x-tar',
 		// adobe
 		'pdf' => 'application/pdf',
 		'psd' => 'image/vnd.adobe.photoshop',
@@ -2268,10 +2271,37 @@ function bp_media_document_allowed_mimes( $mime_types ) {
 		'rtf' => 'application/rtf',
 		'xls' => 'application/vnd.ms-excel',
 		'ppt' => 'application/vnd.ms-powerpoint',
+		'pptx'=> 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		'pps' => 'application/mspowerpoint',
+		'ppsx'=> 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+		'pptm'=> 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+		'potx'=> 'application/vnd.openxmlformats-officedocument.presentationml.template',
+		'potm'=> 'application/vnd.ms-powerpoint.template.macroenabled.12',
+		'xlsx'=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'xlsm'=> 'application/vnd.ms-excel.sheet.macroenabled.12',
+		'xltm'=> 'application/vnd.ms-excel.template.macroenabled.12',
+		'xltx'=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+		'docm'=> 'application/vnd.ms-word.document.macroenabled.12',
+		'docx'=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'dotx'=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+		'dotm'=> 'application/vnd.ms-word.template.macroenabled.12',
 		// open office
 		'odt' => 'application/vnd.oasis.opendocument.text',
 		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-		'mp3' => 'audio',
+		//audio files
+		'mp3' => 'audio/mpeg',
+		'ogg' => 'application/ogg',
+		'wav' => 'audio/wav',
+
+		'csv' => 'text/csv',
+		'css' => 'text/css',
+
+		'htm' => 'text/html',
+		'html'=> 'text/html',
+		'ics' => 'text/calendar',
+		'ico' => 'image/vnd.microsoft.icon',
+		'jar' => 'application/java-archive',
+		'js'  => 'text/javascript'
 	);
 
 	return $mime_types;

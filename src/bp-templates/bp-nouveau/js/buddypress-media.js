@@ -27,6 +27,10 @@ window.bp = window.bp || {};
 
 			// Listen to events ("Add hooks!")
 			this.addListeners();
+			
+			$( window ).on( 'scroll resize',function(){
+				bp.Nouveau.Media.documentCodeMirror();
+			});
 
 		},
 
@@ -172,6 +176,8 @@ window.bp = window.bp || {};
 			//Documents
 			$( document ).on( 'click', '.bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more', this.fileActivityActionButton.bind( this ) );
+			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
+			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_collapse', this.collapseCodePreview.bind( this ) );
 
 
 			// Gifs autoplay
@@ -2093,10 +2099,46 @@ window.bp = window.bp || {};
 		fileActivityActionButton: function (event) {
 			event.preventDefault();
 			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible');
+		},
+
+		/**
+		 * Text File Activity Preview
+		 */
+		documentCodeMirror: function(){
+			$('.document-text:not(.loaded)').each(function(){
+				var $this = $(this);
+				var myCodeMirror = CodeMirror($this[0], {
+					value: $this.find('.document-text-file-data-hidden').text(),
+					mode:  $this.attr('data-extension'),
+					lineNumbers: true,
+					theme: 'default',
+					readOnly: true,
+					lineWrapping: true,
+				});
+				$this.addClass('loaded');
+				if($this.parent().height() > 150){
+					$this.closest('.document-text-wrap').addClass('is_large');
+				}
+				
+			});
 			if(!$('.bb-activity-media-elem.document-activity').closest('.activity-inner').hasClass('documemt-activity')){
 				$('.bb-activity-media-elem.document-activity').closest('.activity-content').addClass('documemt-activity');
 			}
-		}
+		},
+		/**
+		 * Text File Expand
+		 */
+		expandCodePreview : function(event){
+			event.preventDefault();
+			$(event.currentTarget).closest('.document-text-wrap').addClass('code-full-view');
+		},
+		/**
+		 * Text File Collapse
+		 */
+		collapseCodePreview : function(event){
+			event.preventDefault();
+			$(event.currentTarget).closest('.document-text-wrap').removeClass('code-full-view');
+		},
 	};
 
 	/**

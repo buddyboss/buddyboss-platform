@@ -696,6 +696,7 @@ span.dashicons.dashicons-admin-file:before {
 		top: 24px;
 		opacity: 0;
 		visibility: hidden;
+		z-index: 111;
 		-webkit-transition: all 0.3s ease;
 		-o-transition: all 0.3s ease;
 		transition: all 0.3s ease;
@@ -706,12 +707,15 @@ span.dashicons.dashicons-admin-file:before {
 			-o-transition: all 0.3s ease;
 			transition: all 0.3s ease;
 			i{
-				font-size: 22px;
-				color: #122B46;
+				font-size: 19px;
+				color: #122b46;
+				background-color: rgba(255, 255, 255, 0.9);
+				border-radius: 3px;
+				padding: 3px;
 			}
 			&:hover{
 				i{
-					opacity: 0.8;
+					background-color: #fff;
 				}
 			}
 			&[data-balloon]:after{
@@ -721,6 +725,12 @@ span.dashicons.dashicons-admin-file:before {
 			}
 			&[data-balloon][data-balloon-pos='down']:before{
 				margin-top: -1px;
+			}
+			&.document-action_collapse{
+				i{
+					background-color: #122b46;
+					color: #fff;
+				}
 			}
 		  }
 		  .document-action_list{
@@ -774,6 +784,32 @@ span.dashicons.dashicons-admin-file:before {
 				}	
 		  }
 	  }
+	  .document-expand {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 0;
+		bottom: 0;
+		z-index: 11;
+		visibility: hidden;
+		opacity: 0;
+		.document-expand-anchor{
+			position: absolute;
+			top: 50%;
+			transform: translate(-50%,-50%);
+			left: 50%;
+			background-color: #122b46;
+			color: #fff;
+			border-radius: 30px;
+			padding: 5px 10px;
+			z-index: 11;
+			font-size: 12px;
+			opacity: 0;
+			visibility: hidden;
+			margin-top: 25px;
+			transition: all ease 0.3s;
+		  }
+	  }
 	&:hover{
 		.document-action-wrap{
 			opacity: 1;
@@ -783,6 +819,11 @@ span.dashicons.dashicons-admin-file:before {
 			top: 0;
 			opacity:1;
 			visibility:visible;
+		}
+		.document-expand .document-expand-anchor{
+			opacity: 1;
+			visibility: visible;
+			margin-top: 0;
 		}
 	}
 	&.is-visible{
@@ -805,6 +846,32 @@ span.dashicons.dashicons-admin-file:before {
 			top: 28px;
 			opacity: 1;
 			visibility: visible;
+			
+		}
+		.document-text-wrap.is_large{
+			&.code-full-view{
+				.document-action_collapse{
+					opacity: 1;
+					visibility: visible;
+				}
+				.document-expand{
+					opacity: 0;
+					visibility: hidden;
+					.document-expand-anchor{
+						opacity: 0;
+						visibility: hidden;
+					}
+				}
+			}
+			.document-expand{
+				opacity: 1;
+				visibility: visible;
+				.document-expand-anchor{
+					opacity: 1;
+					visibility: visible;
+					font-size: 11px;
+				}
+			}
 		}
 		.document-description-wrap .document-detail-wrap {
 			.document-description,
@@ -826,5 +893,85 @@ span.dashicons.dashicons-admin-file:before {
 			outline: 0;
 		}
 	}
+	.document-text-wrap{
+		.CodeMirror{
+			height: auto;
+		}
+	}
+	
   }
+  .document-text-wrap{
+	position: relative;
+	.document-action-wrap{
+		.document-action_collapse{
+			opacity: 0;
+			visibility: hidden;
+		}
+	}
+	&.is_large{
+		.document-text{
+			max-height: 150px;
+			overflow: hidden;
+			&:after{
+				content: '';
+				background: linear-gradient(0deg, white, transparent);
+				position: absolute;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				z-index: 11;
+				height: 75px;
+			}
+		}
+		
+		.document-expand{
+			opacity: 1;
+			visibility: visible;
+		}
+		.CodeMirror{
+			height: auto;
+			.CodeMirror-vscrollbar{
+				display: none !important;
+			}
+			.CodeMirror-sizer{
+				min-height: auto !important;
+			}
+			.CodeMirror-scroll{
+				height: auto;
+				overflow: hidden !important;
+				padding-bottom: 50px;
+				width: 100%;
+			}
+		}
+		&.code-full-view{
+			.document-text {
+				max-height: inherit;
+				overflow: initial;
+				&:after{
+					display: none !important;
+				}
+			}
+			.document-action-wrap{
+				.document-action_collapse{
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+			.document-expand {
+				opacity: 0 !important;
+				visibility: hidden !important;
+				.document-expand-anchor{
+					opacity: 0 !important;
+					visibility: hidden !important;
+				}
+			}
+		}
+	}
+	}
+	  
+}
+.bb-activity-media-wrap .document-filename{
+	margin: 0 0 0 4px !important;
+	font-weight: 500;
+    font-size: 13px;
 }
