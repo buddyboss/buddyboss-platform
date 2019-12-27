@@ -1381,7 +1381,8 @@ window.bp = window.bp || {};
 			if ( ( typeof BP_Nouveau.activity !== 'undefined' &&
 				typeof self.current_media.activity_id !== 'undefined' &&
 				self.current_media.activity_id != 0 ) ||
-				self.group_id
+				self.group_id ||
+				self.current_media.is_forum
 			) {
 				$('.bb-media-section #bb-media-theatre-privacy').hide();
 			}
