@@ -802,7 +802,7 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
 		<?php checked( bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->singular_name ); ?>
+		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->name ); ?>
 	</label>
 	<?php
 }
