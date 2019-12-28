@@ -129,6 +129,7 @@ function bp_member_invite_submit() {
 		$args        = array(
 			'tokens' => array(
 				'inviter.name' => $inviter_name,
+				'inviter.url' => $inviter_url,
 				'invitee.url'  => $accept_link,
 			),
 		);

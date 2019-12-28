@@ -2951,7 +2951,7 @@ function bp_is_group_leaders() {
  * @return bool True if the current page is a group's Send Invites page.
  */
 function bp_is_group_invites() {
-	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'send-invites' ) );
+	return (bool) ( bp_is_groups_component() && bp_is_current_action( 'invite' ) );
 }
 
 /**
@@ -3534,6 +3534,14 @@ function bp_get_the_body_class( $wp_classes = array(), $custom_classes = false )
 
 	if ( bp_is_group_invites() ) {
 		$bp_classes[] = 'group-invites';
+
+		if ( 'send-invites' === bp_get_group_current_invite_tab() ) {
+			$bp_classes[] = 'send-invites';
+		}
+
+		if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
+			$bp_classes[] = 'pending-invites';
+		}
 	}
 
 	if ( bp_is_group_members() ) {
