@@ -15,6 +15,8 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
 	$album_id = (int) bp_action_variable( 0 );
 }
 
+$bradcrumbs = bp_media_document_bradcrumb( $album_id );
+
 ?>
 
 <?php if ( bp_has_albums( array( 'include' => $album_id, 'type' => 'document' ) ) ) : ?>
@@ -29,6 +31,15 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                 <div class="bp-media-header-wrap">
                     <div class="bb-single-album-header text-center">
                         <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
+	                    <?php
+	                        if ( '' !== $bradcrumbs ) {
+	                        	?>
+		                        <ul>
+			                        <?php echo  $bradcrumbs; ?>
+		                        </ul>
+	                        	<?php
+	                        }
+	                    ?>
                         <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
                             <!-- <input type="text" value="<?php //bp_album_title(); ?>" placeholder="<?php //_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
                             <a href="#" id="bp-edit-folder-title"><?php //_e( 'edit', 'buddyboss' ); ?></a>
@@ -55,7 +66,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
                                 <i class="bb-icon-plus"></i><?php _e( 'Create Folder', 'buddyboss' ); ?>
                             </a>
-                            
+
                             <?php if ( bp_is_my_profile() && ! bp_is_group() ) : ?>
 
                                 <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
@@ -68,7 +79,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                                 </select>
 
                             <?php endif; ?>
-                            
+
                             <div class="media-folder_items">
                                 <div class="media-folder_actions">
                                     <a href="#" class="media-folder_action__anchor">

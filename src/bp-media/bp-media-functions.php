@@ -2387,3 +2387,71 @@ function bp_media_get_document_svg_icon( $extension ) {
 
 	return apply_filters( 'bp_media_get_document_svg_icon', $svg, $extension );
 }
+
+function bp_media_user_document_folder_tree_view_li_html( $user_id ) {
+
+	global $wpdb, $bp;
+
+	$buddyboss_media_albums_table = $bp->table_prefix . 'bp_media_albums';
+	$documents_folder_query       = $wpdb->prepare( "SELECT * FROM {$buddyboss_media_albums_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, 0, 'document' );
+	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
+
+	// Build array of item references:
+	foreach($data as $key => &$item) {
+		$itemsByReference[$item['id']] = &$item;
+		// Children array:
+		$itemsByReference[$item['id']]['children'] = array();
+		// Empty data class (so that json_encode adds "data: {}" )
+		$itemsByReference[$item['id']]['data'] = new StdClass();
+	}
+
+	// Set items as children of the relevant parent item.
+	foreach($data as $key => &$item)
+		if($item['parent'] && isset($itemsByReference[$item['parent']]))
+			$itemsByReference [$item['parent']]['children'][] = &$item;
+
+	// Remove items that were added to parents elsewhere:
+	foreach($data as $key => &$item) {
+		if($item['parent'] && isset($itemsByReference[$item['parent']]))
+			unset($data[$key]);
+	}
+
+	return bp_media_user_document_folder_recursive_li_list( $data );
+
+}
+
+function bp_media_user_document_folder_recursive_li_list( $array, $output = '', $class = 'folder_l' ) {
+	$class = $class . '_1';
+	if ( empty( $array ) ) return '';
+	foreach ( $array as $value ) {
+		if ( '0' === $value['parent'] ) {
+			$output .= '<option class="' . esc_attr( $class ) . '" value="' . esc_attr( $value['parent'] ) . '">' . $value['title']  . '</option>';
+		} else {
+			$output = '<option class="' . esc_attr( $class ) . '" value="' . esc_attr( $value['parent'] ) . '">' . $value['title']  . '</option>';
+		}
+
+		if ( !empty( $value['children'] ) ) {
+			$output .= bp_media_user_document_folder_recursive_li_list( $value['children'], $output, $class );
+		}
+	}
+	return $output;
+}
+
+function bp_media_document_bradcrumb( $album_id ) {
+
+	global $wpdb, $bp;
+
+	$buddyboss_media_albums_table = $bp->table_prefix . 'bp_media_albums';
+	$documents_folder_query       = $wpdb->prepare( "SELECT * FROM {$buddyboss_media_albums_table} WHERE parent = %d AND type = '%s'  ", $album_id, 'document' );
+	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
+	$html                         = '';
+
+	if ( !empty( $data ) ) {
+		$html .= '<ul>';
+		foreach ( $data as $element ) {
+			$html .= '<li></li>';
+		}
+		$html .= '</ul>';
+	}
+
+}

@@ -56,21 +56,20 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                                 </div>
                             </div>
 
-                            <div class="bb-field-wrap">
-                                <div class="bb-dropdown-wrap">
-                                    <label for="bb-folder-location" class="bb-label">Destination Folder</label>
-                                    <select id="bb-folder-location">
-                                        <option class="folder_l_1" value="folder">Documents</option>
-                                        <option class="folder_l_1_1" value="sub_folder">folder</option>
-                                        <option class="folder_l_1_1" value="sub_sub_folder">subfolder</option>
-                                        <option class="folder_l_1_1" value="sub_sub_folder">subfolder</option>
-                                        <option class="folder_l_1_1_1" value="sub_sub_sub_folder">subsubfolder</option>
-                                        <option class="folder_l_1" value="sub_folder">folder</option>
-                                        <option class="folder_l_1_1" value="sub_sub_folder">subfolder</option>
-                                        <option class="folder_l_1_1" value="sub_sub_folder">subfolder</option>
-                                    </select>
-                                </div>
-                            </div>
+	                        <?php
+	                        $li = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+	                        if ( '' !== $li ) {
+		                        ?>
+		                        <div class="bb-field-wrap">
+		                        <div class="bb-dropdown-wrap">
+			                        <label for="bb-folder-location" class="bb-label">Destination Folder</label>
+			                        <select id="bb-folder-location">
+				                        <?php echo $li; ?>
+			                        </select>
+		                        </div>
+		                        </div><?php
+	                        }
+	                        ?>
 
                         <?php endif; ?>
 	                    <input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $album_id ); ?>">
