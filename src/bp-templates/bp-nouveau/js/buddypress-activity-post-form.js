@@ -316,7 +316,7 @@ window.bp = window.bp || {};
 
 		render: function() {
 			// do not re render if post form is submitting
-			if ( typeof this.model.attributes.posting !== 'undefined' && this.model.attributes.posting == true ) {
+			if ( this.model.get( 'posting' ) == true ) {
 				return;
 			}
 
