@@ -308,6 +308,7 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.model.set( 'link_scrapping', false );
+			this.model.set( 'link_embed', false );
 			this.listenTo( this.model, 'change', this.render );
 			document.addEventListener( 'activity_link_preview_open', this.open.bind(this) );
 			document.addEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
@@ -320,6 +321,13 @@ window.bp = window.bp || {};
 			}
 
 			this.$el.html( this.template( this.model.toJSON() ) );
+
+			// if link embed is used then add class to container
+			if ( this.model.get( 'link_embed' ) == true ) {
+				this.$el.addClass('activity-post-form-link-wp-embed');
+			} else {
+				this.$el.removeClass('activity-post-form-link-wp-embed');
+			}
 			return this;
 		},
 
