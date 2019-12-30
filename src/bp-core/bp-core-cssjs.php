@@ -211,6 +211,29 @@ function bp_core_register_common_scripts() {
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
+
+	$bp_select2 = array( 'lang' => '' );
+
+	if ( !function_exists( 'wp_get_available_translations') ) {
+		require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+		$translations = wp_get_available_translations();
+
+		if ( isset( $translations[ get_locale() ] ) ) {
+			$translation = $translations[ get_locale() ];
+			$bp_select2['lang'] = current( $translation['iso'] );
+		} else {
+			$bp_select2['lang'] = get_bloginfo( 'language' );
+		}
+
+		$file_path = buddypress()->plugin_dir . 'bp-core/js/';
+		if ( !empty( $bp_select2['lang'] ) && file_exists( $file_path . 'vendor/i18n/' . $bp_select2['lang'] . '.js' ) ) {
+			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
+		}
+
+		wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
+
+	}
+
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
