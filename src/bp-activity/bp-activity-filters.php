@@ -233,7 +233,7 @@ function bp_activity_save_link_data( $activity ) {
 
 	// check if link embed was used
 	if ( true === $link_embed && ! empty( $link_url ) ) {
-		bp_activity_update_meta( $activity->id, '_link_embed', '1' );
+		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
 		return;
 	}
 
