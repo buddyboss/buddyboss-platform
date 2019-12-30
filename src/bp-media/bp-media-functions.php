@@ -2442,16 +2442,28 @@ function bp_media_document_bradcrumb( $album_id ) {
 	global $wpdb, $bp;
 
 	$buddyboss_media_albums_table = $bp->table_prefix . 'bp_media_albums';
-	$documents_folder_query       = $wpdb->prepare( "SELECT * FROM {$buddyboss_media_albums_table} WHERE parent = %d AND type = '%s'  ", $album_id, 'document' );
+	$documents_folder_query       = $wpdb->prepare( "SELECT c.*
+    FROM (
+        SELECT
+            @r AS _id,
+            (SELECT @r := parent FROM {$buddyboss_media_albums_table} WHERE id = _id) AS parent,
+            @l := @l + 1 AS level
+        FROM
+            (SELECT @r := %d, @l := 0) vars, {$buddyboss_media_albums_table} m
+        WHERE @r <> 0) d
+    JOIN {$buddyboss_media_albums_table} c
+    ON d._id = c.id ORDER BY c.id ASC", $album_id );
 	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
 	$html                         = '';
 
 	if ( !empty( $data ) ) {
 		$html .= '<ul>';
 		foreach ( $data as $element ) {
-			$html .= '<li></li>';
+			$html .= '<li> ' . $element['title'] . '</li>';
 		}
 		$html .= '</ul>';
 	}
+
+	return $html;
 
 }
