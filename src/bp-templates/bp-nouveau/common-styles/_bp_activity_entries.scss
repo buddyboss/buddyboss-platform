@@ -631,6 +631,13 @@ span.dashicons.dashicons-admin-file:before {
 	width: 100%;
 	margin: 3px;
 	padding: 0;
+	.document-text:not(.loaded):after{
+		content: '\e838';
+		font-family: bb-icons;
+		display: block;
+		text-align: center;
+		margin: 10px 0;
+	}
 	.document-description-wrap{
 		width: 100%;
 		display: -webkit-box;
@@ -712,6 +719,17 @@ span.dashicons.dashicons-admin-file:before {
 				background-color: rgba(255, 255, 255, 0.9);
 				border-radius: 3px;
 				padding: 3px;
+				font-family: dashicons;
+				&.document-icon-download:before{
+					content: "\f316";
+				}
+				&.document-icon-download-more:before{
+					content: "\f333";
+				}
+				&.document-icon-collapse:before{
+					content: "\f342";
+				}
+				
 			}
 			&:hover{
 				i{
@@ -820,10 +838,17 @@ span.dashicons.dashicons-admin-file:before {
 			opacity:1;
 			visibility:visible;
 		}
-		.document-expand .document-expand-anchor{
+		.is_large .document-expand .document-expand-anchor{
 			opacity: 1;
 			visibility: visible;
 			margin-top: 0;
+			i.document-icon-plus{
+				font-family: dashicons;
+				vertical-align: middle;
+				&:before{
+					content: "\f132";
+				}
+			}
 		}
 	}
 	&.is-visible{

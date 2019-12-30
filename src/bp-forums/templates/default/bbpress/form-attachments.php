@@ -78,7 +78,7 @@
 
 		<div class="post-elements-buttons-item post-media">
 			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a document', 'buddyboss' ); ?>">
-				<span class="dashicons dashicons-admin-media"></span>
+				<span class="dashicons dashicons-paperclip"></span>
 			</a>
 		</div>
 

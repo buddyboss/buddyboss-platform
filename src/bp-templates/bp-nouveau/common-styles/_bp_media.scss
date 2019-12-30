@@ -1731,7 +1731,8 @@ img.emojioneemoji {
 			box-shadow: 0 6px 24px 0 rgba(18,43,70,.08);
 			list-style: none;
 			display: none;
-			max-height: 400px;
+			max-height: 320px;
+			max-height: 45vh;
 			overflow: auto;
 			padding: 0;
 			z-index: 11;
@@ -1741,6 +1742,10 @@ img.emojioneemoji {
 				&:hover, &.selected{
 					color: #007cff;
 					background-color: #f5f5f5;
+				}
+				&:before{
+					font-family: dashicons;
+					content: "\f318";
 				}
 				&.folder_l_1_1{
 					padding-left: 25px;

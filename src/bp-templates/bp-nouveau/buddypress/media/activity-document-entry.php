@@ -70,13 +70,13 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 			</div>
 		</div>
 		<div class="document-action-wrap">
-			<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="Collapse"><i class="bb-icon-arrow-up"></i></a>
+			<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="Collapse"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
 			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="Download">
-				<i class="bb-icon-download"></i>
+				<i class="bb-icon-download document-icon-download"></i>
 			</a>
 
 			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="More actions">
-				<i class="bb-icon-menu-dots-h"></i>
+				<i class="bb-icon-menu-dots-h document-icon-download-more"></i>
 			</a>
 			<div class="document-action_list">
 				<ul>
@@ -87,7 +87,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 		</div>
 
 		<div class="document-expand">
-			<a href="#" class="document-expand-anchor"><i class="bb-icon-plus"></i> Click to expand</a>
+			<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> Click to expand</a>
 		</div>
 
 	</div> <!-- .document-text-wrap -->

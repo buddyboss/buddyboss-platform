@@ -59,8 +59,13 @@ window.bp = window.bp || {};
 
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
+			
+			//Text File Activity Preview
+			bp.Nouveau.documentCodeMirror();
+
 			$( window ).on( 'scroll resize',function(){
 				bp.Nouveau.lazyLoad('.lazy');
+				bp.Nouveau.documentCodeMirror();
 			});
 		},
 
@@ -479,6 +484,12 @@ window.bp = window.bp || {};
 										bp.Nouveau.lazyLoad( '.lazy' );
 									},1000);
 								}
+								//Text File Activity Preview
+								if(bp.Nouveau.documentCodeMirror){
+									setTimeout(function(){
+										bp.Nouveau.documentCodeMirror();
+									},500);
+								}
 							} );
 						} );
 
@@ -495,6 +506,12 @@ window.bp = window.bp || {};
 								setTimeout(function(){ // Waiting to load dummy image
 									bp.Nouveau.lazyLoad( '.lazy' );
 								},1000);
+							}
+							// Text File Activity Preview
+							if(bp.Nouveau.documentCodeMirror){
+								setTimeout(function(){
+									bp.Nouveau.documentCodeMirror();
+								},500);
 							}
 						} );
 					}
@@ -1588,7 +1605,33 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		}
+		},
+
+		/**
+		 * Text File Activity Preview
+		 */
+		documentCodeMirror: function(){
+			$('.document-text:not(.loaded)').each(function(){
+				var $this = $(this);
+				var myCodeMirror = CodeMirror($this[0], {
+					value: $this.find('.document-text-file-data-hidden').text(),
+					mode:  $this.attr('data-extension'),
+					lineNumbers: true,
+					theme: 'default',
+					readOnly: true,
+					lineWrapping: true,
+				});
+				
+				$this.addClass('loaded');
+				if($this.parent().height() > 150){
+					$this.closest('.document-text-wrap').addClass('is_large');
+				}
+				
+			});
+			if(!$('.bb-activity-media-elem.document-activity').closest('.activity-inner').hasClass('documemt-activity')){
+				$('.bb-activity-media-elem.document-activity').closest('.activity-content').addClass('documemt-activity');
+			}
+		},
 	};
 
 	// Launch BP Nouveau

@@ -1935,6 +1935,14 @@ span.dashicons.dashicons-admin-file:before {
   padding: 0;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text:not(.loaded):after {
+  content: '\e838';
+  font-family: bb-icons;
+  display: block;
+  text-align: center;
+  margin: 10px 0;
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap {
   width: 100%;
   display: -webkit-box;
@@ -2027,6 +2035,19 @@ span.dashicons.dashicons-admin-file:before {
   background-color: rgba(255, 255, 255, 0.9);
   border-radius: 3px;
   padding: 3px;
+  font-family: dashicons;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i.document-icon-download:before {
+  content: "\f316";
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i.document-icon-download-more:before {
+  content: "\f333";
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i.document-icon-collapse:before {
+  content: "\f342";
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a:hover i {
@@ -2143,10 +2164,19 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-expand .document-expand-anchor {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor {
   opacity: 1;
   visibility: visible;
   margin-top: 0;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor i.document-icon-plus {
+  font-family: dashicons;
+  vertical-align: middle;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .is_large .document-expand .document-expand-anchor i.document-icon-plus:before {
+  content: "\f132";
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-action-wrap,
@@ -11654,7 +11684,8 @@ img.emojioneemoji {
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.08);
   list-style: none;
   display: none;
-  max-height: 400px;
+  max-height: 320px;
+  max-height: 45vh;
   overflow: auto;
   padding: 0;
   z-index: 11;
@@ -11674,6 +11705,13 @@ img.emojioneemoji {
 #bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li.selected {
   color: #007cff;
   background-color: #f5f5f5;
+}
+
+#bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li:before,
+#bp-media-edit-child-folder .bb-folder-location-select .bb-folder-location-select-list li:before,
+#bp-media-create-child-folder .bb-folder-location-select .bb-folder-location-select-list li:before {
+  font-family: dashicons;
+  content: "\f318";
 }
 
 #bp-media-create-folder .bb-folder-location-select .bb-folder-location-select-list li.folder_l_1_1,
