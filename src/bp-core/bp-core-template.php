@@ -1693,8 +1693,10 @@ function bp_is_current_component( $component = '' ) {
 	if ( ! empty( $bp->current_component ) ) {
 
 		if ( 'documents' === $bp->current_component || 'document' === $bp->current_component ) {
-			$component = 'media';
-			$bp->current_component = 'media';
+			if ( ! bp_is_user() && ! bp_is_group_single() ) {
+				$component             = 'media';
+				$bp->current_component = 'media';
+			}
 		}
 
 		// First, check to see whether $component_name and the current
