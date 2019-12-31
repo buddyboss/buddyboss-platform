@@ -1495,7 +1495,7 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	 *
 	 * @param int $user_id ID of the user being deleted.
 	 */
-	bp_delete_liked_activity_meta( $user_id );
+	bp_remove_user_liked_activity_meta( $user_id );
 
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
@@ -3185,7 +3185,7 @@ function bp_activity_delete( $args = '' ) {
  * @param int To delete user id.
  * @return bool True on success, false on failure.
  */
-function bp_delete_liked_activity_meta( $user_id = 0 ) {
+function bp_remove_user_liked_activity_meta( $user_id = 0 ) {
 
 	if ( empty( $user_id ) ) {
 		return false;
