@@ -52,18 +52,46 @@ function groups_screen_group_invite() {
 
 	} elseif ( ! bp_action_variable( 0 ) ) {
 
+		if ( false === bp_get_group_current_invite_tab() && 'invite' === bp_current_action() ) {
+			bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'invite/send-invites/' );
+		}
+
+		add_action( 'bp_template_content', 'bp_groups_send_invite_screen_content' );
+
 		/**
 		 * Filters the template to load for a group's Send Invites page.
 		 *
+		 * @param string $value Path to a group's Send Invites template.
+		 *
 		 * @since BuddyPress 1.0.0
 		 *
-		 * @param string $value Path to a group's Send Invites template.
 		 */
 		bp_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
 
+	} elseif ( in_array( bp_get_group_current_invite_tab(), array( 'invite', 'send-invites', 'pending-invites' ), true ) ) {
+
+		if ( false === bp_get_group_current_invite_tab() && 'invite' === bp_current_action() ) {
+			bp_core_redirect( bp_get_group_permalink( groups_get_current_group() ) . 'invite/send-invites/' );
+		}
+
+		add_action( 'bp_template_content', 'bp_groups_send_invite_screen_content' );
+
+		/**
+		 * Filters the template to load for a group's Send Invites page.
+		 *
+		 * @param string $value Path to a group's Send Invites template.
+		 *
+		 * @since BuddyPress 1.0.0
+		 *
+		 */
+		bp_core_load_template( apply_filters( 'groups_template_group_invite', 'groups/single/home' ) );
 	} else {
 		bp_do_404();
 	}
+}
+
+function bp_groups_send_invite_screen_content() {
+	bp_get_template_part( 'groups/single/invite' );
 }
 
 /**

@@ -588,7 +588,12 @@ window.bp = window.bp || {};
 					}
 				});
 
-				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
+				if (!_.isUndefined(BP_Nouveau.media) 
+						&& !_.isUndefined(BP_Nouveau.media.emoji) 
+						&& ( !_.isUndefined(BP_Nouveau.media.emoji.messages) 
+							&& BP_Nouveau.media.emoji.messages
+							) 
+					) {
 					$('#message_content').emojioneArea({
 						standalone: true,
 						hideSource: false,

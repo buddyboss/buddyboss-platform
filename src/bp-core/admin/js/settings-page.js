@@ -195,6 +195,14 @@
 						} else {
 							$( '#bp_search_select_all_components' ).prop( 'checked', false );
 						}
+
+						if( 'bp_search_topic_tax_topic-tag' === $(this).attr('id') && true === $(this).prop('checked')  && false === $('#bp_search_post_type_topic').prop('checked') ){
+							$( '#bp_search_post_type_topic' ).prop( 'checked', true );
+						}
+
+						if( 'bp_search_post_type_topic' === $(this).attr('id') && true !== $(this).prop('checked')  && true === $('#bp_search_topic_tax_topic-tag').prop('checked') ){
+							$( '#bp_search_topic_tax_topic-tag' ).prop( 'checked', false );
+						}
 					}
 				);
 			}
