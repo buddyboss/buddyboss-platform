@@ -944,7 +944,7 @@ function xprofile_sync_bp_profile( &$errors, $update, &$user ) {
 		xprofile_set_field_data( bp_xprofile_nickname_field_id(), $user->ID, $user->nickname );
 	}
 
-	$user->display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
+	$user->display_name = bp_core_get_user_displayname( $user->ID );
 }
 add_action( 'user_profile_update_errors', 'xprofile_sync_bp_profile', 20, 3 );
 
@@ -957,7 +957,7 @@ function bp_xprofile_update_display_name( $user_id ) {
 	wp_update_user(
 		array(
 			'ID'           => $user_id,
-			'display_name' => bp_core_get_member_display_name( get_user_by( 'ID', $user_id )->display_name, $user_id ),
+			'display_name' => bp_core_get_user_displayname( $user_id ),
 		)
 	);
 }
@@ -1595,10 +1595,10 @@ function bp_at_mention_default_options() {
 	return apply_filters(
 		'bp_at_mention_js_options',
 		array(
-			'selectors'   => array( '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ),
-			'insert_tpl'  => '@${ID}',
-			'display_tpl' => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>',
-			'extra_options' => array()
+			'selectors'     => array( '.bp-suggestions', '#comments form textarea', '.wp-editor-area' ),
+			'insert_tpl'    => '@${ID}',
+			'display_tpl'   => '<li data-value="@${ID}"><img src="${image}" /><span class="username">@${ID}</span><small>${name}</small></li>',
+			'extra_options' => array(),
 		)
 	);
 }
@@ -1938,4 +1938,3 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 	return apply_filters( 'bp_xprofile_get_member_display_name', trim( $display_name ), $user_id );
 }
-

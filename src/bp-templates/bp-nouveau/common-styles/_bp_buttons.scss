@@ -331,7 +331,8 @@
 
 	.filter label:before,
 	.feed a:before,
-	.bp-invites-filters  .invite-button span.icons:before,
+        span.icons:before,
+	.bp-invites-filters .invite-button span.icons:before,
 	.bp-messages-filters li a.messages-button:before,
 	.bp-invites-content li .invite-button span.icons:before {
 		font-family: dashicons;

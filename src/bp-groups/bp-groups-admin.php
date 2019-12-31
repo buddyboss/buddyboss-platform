@@ -1528,9 +1528,11 @@ function bp_groups_admin_edit_metabox_group_type( BP_Groups_Group $group = null 
 			<?php
 
 			foreach ( $types as $type ) :
+				if ( isset( $type->labels['singular_name'] ) && !empty( $type->labels['singular_name'] ) ) :
 				?>
-				<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
+					<option value="<?php echo esc_attr( $type->name ); ?>" <?php selected( $current_types[0], $type->name ); ?>><?php echo esc_html( $type->labels['singular_name'] ); ?></option>
 				<?php
+				endif;
 			endforeach;
 
 			?>
@@ -2138,7 +2140,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 				<tr>
 					<td colspan="2">
 						<input type='checkbox' name='bp-member-type-group-invites[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
-						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
+						<?php echo get_the_title( $member_type ); ?>
 					</td>
 				</tr>
 
@@ -2175,7 +2177,7 @@ function bp_group_type_permissions_meta_box( $post ) {
 				<tr>
 					<td colspan="2">
 						<input type='checkbox' name='bp-member-type[]' value='<?php echo esc_attr( $member_type_key ); ?>' <?php checked( in_array( $member_type_key, $get_selected_member_types ) ); ?> />
-						<?php _e( get_the_title( $member_type ), 'buddyboss' ); ?>
+						<?php echo get_the_title( $member_type ); ?>
 					</td>
 				</tr>
 

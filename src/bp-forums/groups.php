@@ -1226,6 +1226,10 @@ if ( ! class_exists( 'BBP_Forums_Group_Extension' ) && class_exists( 'BP_Group_E
 				return $url;
 			}
 
+			if ( ! bp_is_active( 'groups') ) {
+				return $url;
+			}
+
 			// @todo Multiple group forums/forum groups
 			$group_id = $group_ids[0];
 			$group    = groups_get_group( array( 'group_id' => $group_id ) );
