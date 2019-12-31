@@ -586,6 +586,9 @@ function bp_update_to_3_1_1() {
  */
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
+
+	// Fix current forums media privacy to 'forums'
+	bp_core_fix_forums_media();
 }
 
 /**
@@ -944,5 +947,16 @@ function bp_core_update_activity_favorites() {
 function bp_core_fix_media_activities() {
 	if ( bp_is_active( 'activity' ) ) {
 		bp_activity_media_fix_data();
+	}
+}
+
+/**
+ * Fix forums media
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_core_fix_forums_media() {
+	if ( bp_is_active( 'forums' ) && bp_is_active( 'media' ) ) {
+		bbp_fix_forums_media();
 	}
 }
