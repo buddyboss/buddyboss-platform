@@ -2663,6 +2663,11 @@ body.register .registration-popup .mfp-close:hover {
   margin: 5px 0 10px 10px;
 }
 
+.single-headers .group-description ul {
+  list-style: initial;
+  list-style-position: inside;
+}
+
 .single-headers .member-header-actions > .generic-button {
   display: inline-block;
   text-align: center;
@@ -3112,160 +3117,420 @@ body.buddypress.bp-user #page #primary .entry-header {
 * @subsection 5.2.1.3 - Group Invites List
 *-----------------------------------------
 */
-/*
- * bp-nouveau styling: invite members, sent invites
- * @version 3.0.0
- */
-.buddypress .bp-invites-content ul.item-list {
-  border-top: 0;
+#group-invites-container {
+  background: #fff;
+  border: 1px solid #E7E9EC;
+  border-radius: 4px;
+  margin-bottom: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
 }
 
-.buddypress .bp-invites-content ul.item-list li {
-  border: 1px solid #eaeaea;
-  margin: 0 0 1%;
-  padding-right: 5px;
-  padding-left: 5px;
-  position: relative;
-  width: auto;
+.bb-groups-invites-right {
+  flex: 1;
 }
 
-.buddypress .bp-invites-content ul.item-list li .list-title {
-  font-size: 22px;
-  margin: 10px 0 0;
-  width: 80%;
+.bb-groups-invites-left {
+  border-left: 1px solid #E7E9EC;
+  min-width: 0;
+  flex: 0 0 360px;
 }
 
-.buddypress .bp-invites-content ul.item-list li .action {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+.bb-groups-invites-left .bp-list li .item-avatar {
+  margin-left: 15px;
 }
 
-.buddypress .bp-invites-content ul.item-list li .action a.button.invite-button {
-  border: 0;
+.bb-groups-invites-left .group-invites-search {
+  padding: 20px;
 }
 
-.buddypress .bp-invites-content ul.item-list li .action a.button.invite-button:focus, .buddypress .bp-invites-content ul.item-list li .action a.button.invite-button:hover {
-  color: #1fb3dd;
+#item-body #group-invites-container li.selected {
+  background: #f5f5f5;
 }
 
-.buddypress .bp-invites-content ul.item-list li.selected {
-  -webkit-box-shadow: inset 0 0 12px 0 rgba(237, 187, 52, 0.2);
-  -moz-box-shadow: inset 0 0 12px 0 rgba(237, 187, 52, 0.2);
-  box-shadow: inset 0 0 12px 0 rgba(237, 187, 52, 0.2);
-}
-
-.buddypress .bp-invites-content .item-list .item-meta span,
-.buddypress .bp-invites-content .group-inviters li {
-  color: #767676;
-}
-
-.buddypress .bp-invites-content li ul.group-inviters {
-  clear: both;
-  margin: 0;
-}
-
-.buddypress .bp-invites-content li ul.group-inviters li {
-  border: 0;
-  float: right;
-  font-size: 20px;
-  width: inherit;
-}
-
-.buddypress .bp-invites-content li .status {
-  font-size: 20px;
-  font-style: italic;
-  clear: both;
-  color: #555;
-  margin: 10px 0;
-}
-
-.buddypress .bp-invites-content #send-invites-editor ul:before,
-.buddypress .bp-invites-content #send-invites-editor ul:after {
-  content: " ";
-  display: table;
-}
-
-.buddypress .bp-invites-content #send-invites-editor ul:after {
-  clear: both;
-}
-
-.buddypress .bp-invites-content #send-invites-editor textarea {
-  width: 100%;
-}
-
-.buddypress .bp-invites-content #send-invites-editor ul {
-  clear: both;
-  list-style: none;
-  margin: 10px 0;
-}
-
-.buddypress .bp-invites-content #send-invites-editor ul li {
-  float: right;
-  margin: 0.5%;
-  max-height: 50px;
-  max-width: 50px;
-}
-
-.buddypress .bp-invites-content #send-invites-editor #bp-send-invites-form {
-  clear: both;
-  margin-top: 10px;
-}
-
-.buddypress .bp-invites-content #send-invites-editor .action {
-  margin-top: 10px;
-  padding-top: 10px;
-}
-
-.buddypress .bp-invites-content #send-invites-editor.bp-hide {
+#group-invites-container .bb-groups-invites-right .bp-invites-feedback-hide {
   display: none;
 }
 
-@media screen and (min-width: 46.8em) {
-  .buddypress .bp-invites-content ul.item-list > li {
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border: 1px solid #eaeaea;
-    float: right;
-    padding-right: 0.7em;
-    padding-left: 0.7em;
-    width: 49.5%;
-  }
-  .buddypress .bp-invites-content ul.item-list > li:nth-child(odd) {
-    margin-left: 0.5%;
-  }
-  .buddypress .bp-invites-content ul.item-list > li:nth-child(even) {
-    margin-right: 0.5%;
-  }
-  .buddypress .bp-invites-content ul.item-list ul.group-inviters {
-    float: right;
-    width: auto;
+#send_group_invite_form .select2-selection--multiple {
+  border-color: transparent;
+  padding: 0;
+}
+
+#send_group_invite_form .select2-selection__rendered {
+  display: flex;
+  align-items: center;
+  flex-flow: row wrap;
+  list-style: none;
+  padding: 0;
+  max-height: 120px;
+  overflow: auto;
+}
+
+#send_group_invite_form .select2-search.select2-search--inline {
+  flex: 1;
+  min-width: 0;
+}
+
+#buddypress #send_group_invite_form .select2-search__field {
+  background: transparent;
+  border-width: 0;
+  min-width: 100%;
+  width: 100% !important;
+  padding-right: 0;
+}
+
+body.groups.group-invites .select2-dropdown .select2-results__option {
+  border-radius: 3px;
+  margin-bottom: 0;
+  font-size: 14px;
+  padding: 2px 5px;
+}
+
+body.groups.group-invites li.select2-results__option.select2-results__invite {
+  border-radius: 3px;
+  margin-bottom: 0;
+  font-size: 14px;
+  list-style: none;
+  padding: 2px 5px;
+}
+
+body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  border: 0;
+  padding: 5px 10px;
+  margin-left: 0;
+  max-width: 300px;
+  display: none;
+}
+
+.bb-groups-invites-right-top {
+  padding: 20px;
+}
+
+.bb-groups-invites-right-top .bb-title-wrap {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bb-groups-invites-right-top .bb-add-invites {
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.bb-invites-footer {
+  border-top: 1px solid #E7E9EC;
+  padding: 10px 20px;
+  text-align: left;
+}
+
+@media screen and (min-width: 768px) {
+  .bb-invites-footer,
+  .bb-groups-invites-right-top .bb-add-invites {
+    display: none;
   }
 }
 
-@media screen and (min-width: 46.8em) {
-  :not(.vertical) + .item-body #group-invites-container {
-    display: -ms-grid;
-    display: grid;
-    -ms-grid-columns: 25% auto;
-    grid-template-columns: 25% auto;
-    grid-template-areas: "group-invites-nav group-invites-column";
+@media screen and (max-width: 767px) {
+  .bb-groups-invites-left {
+    display: none;
   }
-  :not(.vertical) + .item-body #group-invites-container .bp-invites-nav {
-    -ms-grid-row: 1;
-    -ms-grid-column: 1;
-    grid-area: group-invites-nav;
+  div#bp-group-invite-content #send-invites-control {
+    min-height: 100px;
   }
-  :not(.vertical) + .item-body #group-invites-container .bp-invites-nav li {
-    display: block;
-    float: none;
+  .bb-groups-invites-left.bb-select-member-view {
+    position: fixed;
+    background: rgba(0, 0, 0, 0.69);
+    content: '';
+    width: 100%;
+    height: 100%;
+    top: 0;
+    right: 0;
+    z-index: 999999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
   }
-  :not(.vertical) + .item-body #group-invites-container .group-invites-column {
-    -ms-grid-row: 1;
-    -ms-grid-column: 2;
-    grid-area: group-invites-column;
+  .bb-groups-invites-left.bb-select-member-view .bb-groups-invites-left-inner {
+    background: #fff;
+    border-radius: 5px;
+    width: 90%;
+    max-width: 500px;
+    overflow: hidden;
   }
+  div.group-invites-members-listing {
+    padding-bottom: 0;
+  }
+  .group-invites-members-listing .bp-invites-feedback {
+    margin-bottom: 30px;
+  }
+}
+
+a.bb-close-invites-members.button {
+  min-width: 110px;
+}
+
+.bb-groups-invites-right-bottom {
+  border-top: 1px solid #E7E9EC;
+}
+
+body.groups.group-invites #send_group_invite_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
+  background-color: #4D5C6D;
+  border-color: #4D5C6D;
+  font-size: 14px;
+  color: #FFF;
+  letter-spacing: -0.24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -ms-flex-flow: row-reverse;
+  flex-flow: row-reverse;
+  padding: 0 8px;
+}
+
+#send_group_invite_form li.select2-selection__choice {
+  margin-left: 10px;
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
+#send_group_invite_form .select2-selection__choice__remove {
+  line-height: 1;
+  margin: 0 8px 0 0;
+  width: 16px;
+  height: 16px;
+  background: #fff;
+  border-radius: 50%;
+  color: #333;
+  font-size: 14px;
+  text-align: center;
+}
+
+#send_group_invite_form .select2-selection--multiple {
+  border-color: transparent;
+  padding: 0;
+}
+
+#send_group_invite_form .select2-search.select2-search--inline {
+  flex: 1;
+  min-width: 0;
+}
+
+#send_group_invite_form #group-invites-toolbar {
+  position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  padding: 20px;
+}
+
+#send_group_invite_form #group-invites-toolbar .post-elements-buttons-item {
+  margin-left: 10px;
+  position: relative;
+}
+
+#group-invites-toolbar .post-elements-buttons-item {
+  margin-left: 10px;
+  position: relative;
+}
+
+#bp-group-invite-content .medium-editor-element, #bp-group-invite-content .medium-editor-placeholder {
+  font-size: 16px;
+}
+
+#bp-group-invite-content #send-invites-control {
+  border: 0;
+  resize: none;
+  padding: 25px;
+  /*min-height: 350px;*/
+  height: auto;
+  max-height: 32vh;
+}
+
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback-hide {
+  display: none;
+}
+
+#group-invites-container .bb-groups-invites-left .item-list li {
+  border: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-flow: row wrap;
+  flex-flow: row wrap;
+  position: relative;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  border-radius: 0;
+  margin: 0 -20px 1px;
+  width: auto;
+  padding: 8px 20px;
+}
+
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title,
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .list-title a {
+  font-size: 15px;
+  font-weight: 400;
+  margin: 0 auto;
+  width: 100%;
+}
+
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .action button {
+  height: auto;
+  min-height: 10px;
+  padding: 0;
+  min-width: 40px;
+  border: 0;
+  color: inherit;
+  background: transparent;
+  box-shadow: none;
+}
+
+#group-invites-container .bb-groups-invites-left .last {
+  text-align: center;
+  float: left;
+}
+
+#group-invites-container .bb-groups-invites-left .bp-group-invites-filters .button.group-invite-button {
+  background-color: transparent;
+  border: 0;
+  padding-right: 5px;
+  padding-left: 5px;
+}
+
+#group-invites-container .bb-groups-invites-left #group-group-invites-container .button.group-invite-button {
+  min-height: 34px;
+  padding: 5px 16px;
+}
+
+#group-invites-container .bb-groups-invites-left .button.group-invite-button {
+  min-height: 26px;
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.bp-single-invite-wrap.group-invites-highlight {
+  background: #fffced;
+  padding: 10px;
+  border: 1px solid #f9efca;
+  border-radius: 5px;
+}
+
+#group-invites-container .select2-container--default.select2-container--disabled .select2-selection--multiple {
+  background-color: transparent !important;
+  cursor: default;
+}
+
+#group-invites-container div#group-invites-new-submit {
+  margin-right: auto;
+  display: flex;
+}
+
+#group-invites-container select.group-invites-type {
+  margin-left: 10px;
+}
+
+#group-invites-container #send_group_invite_form {
+  margin-bottom: 0;
+  position: relative;
+  height: 100%;
+  padding-bottom: 55px;
+}
+
+#group-invites-container .bb-groups-invites-right > .bp-feedback {
+  margin: 20px;
+}
+
+.bp-single-invite-content .bp-invite-content-wrap p.joined {
+  color: #847d7d;
+  font-style: italic;
+  font-weight: bold;
+}
+
+.group-invites-members-listing {
+  padding-bottom: 20px;
+}
+
+#group-invites-container .bb-groups-invites-left #members-list {
+  max-height: 55vh;
+  overflow: auto;
+  margin: 0;
+  padding: 0 20px;
+}
+
+.group-invites.pending-invites.invite #group-invites-container .group-invites-column .group-subnav-filters div .last {
+  display: none;
+}
+
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing #members-list .load-more .center {
+  width: 100%;
+  text-align: center;
+}
+
+#group-invites-container .bb-groups-invites-left .bp-invites-dropdown-options-loader-hide,
+#group-invites-container .bb-groups-invites-right .bp-invites-submit-loader-hide,
+#group-invites-container .bb-groups-invites-left .group-invites-members-listing .last {
+  display: none;
+}
+
+.bb-groups-invites-left .group-invites-members-listing .bp-invites-feedback,
+.bb-groups-invites-right #send_group_invite_form .bb-groups-invites-right-top .bp-invites-feedback {
+  display: none;
+}
+
+#bp-pending-invites-loader {
+  display: none;
+}
+
+#bp-pending-invites-loader {
+  position: relative;
+  text-align: center;
+}
+
+#bp-pending-invites-loader .dashicons-update:before {
+  content: '\e838';
+  font-family: 'bb-icons';
+  font-size: 20px;
+  display: block;
+  -webkit-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+
+#bp-invites-submit-loader {
+  margin-right: auto;
+  margin-left: 10px;
+  position: relative;
+  top: 10px;
+}
+
+#bp-invites-submit-loader .dashicons-update:before {
+  content: '\e838';
+  font-family: 'bb-icons';
+  font-size: 20px;
+  display: block;
+  -webkit-transform: scale(0.8);
+  -ms-transform: scale(0.8);
+  transform: scale(0.8);
+}
+
+.group-invites-members-listing .bp-list li .item {
+  overflow: initial;
 }
 
 /*
@@ -5157,6 +5422,7 @@ ul.bbp-stats .bbp-count {
 
 .buddypress-wrap .filter label:before,
 .buddypress-wrap .feed a:before,
+.buddypress-wrap span.icons:before,
 .buddypress-wrap .bp-invites-filters .invite-button span.icons:before,
 .buddypress-wrap .bp-messages-filters li a.messages-button:before,
 .buddypress-wrap .bp-invites-content li .invite-button span.icons:before {
@@ -8618,7 +8884,7 @@ AJAX SEARCH
   align-self: center;
 }
 
-.bp-search-ajax-item .item .item-desc {
+.bp-search-ajax-item .item .item-desc, .bp-search-ajax-item .item .item-tags {
   margin-top: 5px;
   font-size: 80%;
   color: #a9a9a9;

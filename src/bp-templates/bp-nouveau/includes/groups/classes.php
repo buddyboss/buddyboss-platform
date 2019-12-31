@@ -245,7 +245,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 			),
 			'invites' => array(
 				'name'        => __( 'Send Invites', 'buddyboss' ),
-				'slug'        => 'send-invites',
+				'slug'        => 'invite',
 				'parent_slug' => $this->group->slug,
 				'position'    => 70,
 			),

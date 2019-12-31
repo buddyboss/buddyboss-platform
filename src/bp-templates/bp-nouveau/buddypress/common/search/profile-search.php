@@ -116,7 +116,6 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								$date_range_type = bp_xprofile_get_meta( $f->id, 'field', 'range_type', true );
 
 								if ( 'relative' === $date_range_type ) {
-
 									$range_relative_start = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_start', true );
 									$range_relative_end   = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_end', true );
 									$start                = date( 'Y' ) - abs( $range_relative_start );
