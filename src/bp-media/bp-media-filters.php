@@ -357,6 +357,7 @@ function bp_media_forums_new_post_media_save( $post_id ) {
 					'title'         => $title,
 					'album_id'      => $album_id,
 					'group_id'      => $group_id,
+					'privacy'       => 'forums',
 					'error_type'    => 'wp_error',
 				)
 			);
