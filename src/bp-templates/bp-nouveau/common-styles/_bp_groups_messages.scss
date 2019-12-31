@@ -323,19 +323,20 @@ div#bp-group-message-content {
 }
 
 span.icons:before {
-        font-family: dashicons;
+    font-family: dashicons;
 }
 
-.bp-single-message-wrap.group-messages-highlight {
-	background: #fffced;
-	padding: 12px;
-	border: 1px solid #f9efca;
-	border-radius: 5px;
-}
-
-#bp-message-thread-list.group-message-thread .bp-single-message-wrap {
-    padding-left: 12px;
-    padding-right: 12px;
+#bp-message-thread-list.group-message-thread {
+    .bp-single-message-wrap {
+        padding-left: 12px;
+        padding-right: 12px;
+    }
+    .bp-single-message-wrap.group-messages-highlight {
+        background: #fffced;
+        padding: 12px 11px;
+        border: 1px solid #f9efca;
+        border-radius: 5px;
+    }
 }
 
 #group-messages-container .select2-container--default.select2-container--disabled .select2-selection--multiple {
