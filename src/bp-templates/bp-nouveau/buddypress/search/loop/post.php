@@ -1,5 +1,5 @@
 <?php
-$result = bp_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
+$result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'post' );
 ?>
 <li class="bp-search-item bp-search-item_post <?php echo esc_attr( $result['post_class'] ); ?>">
 	<div class="list-wrap">

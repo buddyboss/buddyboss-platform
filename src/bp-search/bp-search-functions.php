@@ -673,7 +673,7 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_o
  *
  * @return array
  */
-function bp_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post' ) {
+function bp_search_is_post_restricted( $post_id = 0, $user_id = 0, $type = 'post' ) {
 
 	$restricted_post_data = array();
 

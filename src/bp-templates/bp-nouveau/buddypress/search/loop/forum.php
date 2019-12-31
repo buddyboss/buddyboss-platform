@@ -2,7 +2,7 @@
 $forum_id    = get_the_ID();
 $total_topic = bbp_get_forum_topic_count( $forum_id );
 $total_reply = bbp_get_forum_reply_count( $forum_id );
-$result      = bp_is_post_restricted( $forum_id, get_current_user_id(), 'forum' );
+$result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), 'forum' );
 ?>
 <li class="bp-search-item bp-search-item_forum">
 	<div class="list-wrap">
