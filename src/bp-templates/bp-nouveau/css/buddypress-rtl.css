@@ -8884,7 +8884,7 @@ AJAX SEARCH
   align-self: center;
 }
 
-.bp-search-ajax-item .item .item-desc {
+.bp-search-ajax-item .item .item-desc, .bp-search-ajax-item .item .item-tags {
   margin-top: 5px;
   font-size: 80%;
   color: #a9a9a9;
