@@ -1488,6 +1488,15 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
 
+	/**
+	 * Removed users liked activity meta
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param int $user_id ID of the user being deleted.
+	 */
+	bp_delete_liked_activity_meta( $user_id );
+
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
 	bp_delete_user_meta( $user_id, 'bp_favorite_activities' );
@@ -3125,44 +3134,6 @@ function bp_activity_delete( $args = '' ) {
 	 */
 	do_action( 'bp_before_activity_delete', $args );
 	
-	/**
-	 * For removed user id from other liked activity
-	 */
-	if ( isset( $args['user_id'] ) && !empty( $args['user_id'] ) ) {
-	
-		$activity_ids = bp_get_user_meta( $args['user_id'], 'bp_favorite_activities', true );
-		
-		// Loop through activity ids and attempt to delete favorite.
-		if ( is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
-			foreach ( $activity_ids as $activity_id ) {
-				// Attempt to delete meta value.
-				if ( (int)$activity_id > 0 ) {
-					
-					// Update the users who have favorited this activity.
-					$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
-					if ( empty( $users ) || ! is_array( $users ) ) {
-						$users = array();
-					}
-
-					if ( in_array( $args['user_id'], $users ) ) {
-						$pos = array_search( $args['user_id'], $users );
-						unset( $users[ $pos ] );
-					}
-
-					// Update activity meta
-					bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
-					
-					// Update the total number of users who have favorited this activity.
-					$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
-
-					if ( ! empty( $fav_count ) ) {
-						bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
-					}
-				}
-			}
-		}
-	}
-
 	// Adjust the new mention count of any mentioned member.
 	bp_activity_adjust_mention_count( $args['id'], 'delete' );
 
@@ -3206,6 +3177,56 @@ function bp_activity_delete( $args = '' ) {
 	return true;
 }
 
+/**
+ * Delete users liked activity meta.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param int To delete user id.
+ * @return bool True on success, false on failure.
+ */
+function bp_delete_liked_activity_meta( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	/**
+	 * For delete user id from other liked activity
+	 */
+	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+	
+	// Loop through activity ids and attempt to delete favorite.
+	if ( is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+		foreach ( $activity_ids as $activity_id ) {
+			// Attempt to delete meta value.
+			if ( (int)$activity_id > 0 ) {
+				
+				// Update the users who have favorited this activity.
+				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				if ( empty( $users ) || ! is_array( $users ) ) {
+					$users = array();
+				}
+
+				if ( in_array( $user_id, $users ) ) {
+					$pos = array_search( $user_id, $users );
+					unset( $users[ $pos ] );
+				}
+
+				// Update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
+				
+				// Update the total number of users who have favorited this activity.
+				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+				if ( ! empty( $fav_count ) ) {
+					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
+				}
+			}
+		}
+	}
+	return true;
+}
 	/**
 	 * Delete an activity item by activity id.
 	 *
