@@ -806,7 +806,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			} elseif ( $group_message_users && $group_message_type && 'all' === $group_message_users && 'private' === $group_message_type ) {
 				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> individually to all group members.', 'buddyboss' ), $group_link, $group_name );
 			} elseif ( $group_message_users && $group_message_type && 'individual' === $group_message_users && 'private' === $group_message_type ) {
-				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> to specific members.', 'buddyboss' ), $group_link, $group_name );
+				$group_text  = sprintf( __( 'Sent from group <a href="%s">%s</a> to individual members.', 'buddyboss' ), $group_link, $group_name );
 			}
 
 			$content  = '';
