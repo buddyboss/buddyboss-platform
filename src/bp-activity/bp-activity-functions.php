@@ -3124,6 +3124,44 @@ function bp_activity_delete( $args = '' ) {
 	 * @param array $args Array of arguments to be used with the activity deletion.
 	 */
 	do_action( 'bp_before_activity_delete', $args );
+	
+	/**
+	 * For removed user id from other liked activity
+	 */
+	if ( isset( $args['user_id'] ) && !empty( $args['user_id'] ) ) {
+	
+		$activity_ids = bp_get_user_meta( $args['user_id'], 'bp_favorite_activities', true );
+		
+		// Loop through activity ids and attempt to delete favorite.
+		if ( is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+			foreach ( $activity_ids as $activity_id ) {
+				// Attempt to delete meta value.
+				if ( (int)$activity_id > 0 ) {
+					
+					// Update the users who have favorited this activity.
+					$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+					if ( empty( $users ) || ! is_array( $users ) ) {
+						$users = array();
+					}
+
+					if ( in_array( $args['user_id'], $users ) ) {
+						$pos = array_search( $args['user_id'], $users );
+						unset( $users[ $pos ] );
+					}
+
+					// Update activity meta
+					bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
+					
+					// Update the total number of users who have favorited this activity.
+					$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+					if ( ! empty( $fav_count ) ) {
+						bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
+					}
+				}
+			}
+		}
+	}
 
 	// Adjust the new mention count of any mentioned member.
 	bp_activity_adjust_mention_count( $args['id'], 'delete' );
