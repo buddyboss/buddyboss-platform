@@ -47,7 +47,7 @@ function bp_learndash_get_group_courses( $bpGroupId ) {
 	$generator = bp_ld_sync( 'buddypress' )->sync->generator( $bpGroupId );
 
 	if ( ! $generator->hasLdGroup() ) {
-		return array();
+		return [];
 	}
 
 	return learndash_group_enrolled_courses( $generator->getLdGroupId() );
@@ -246,6 +246,697 @@ function learndash_integration_prepare_price_str( $price ) {
 	}
 
 	return '';
+}
+
+function bp_get_user_course_lesson_data( $couser_id, $user_id ) {
+	// Get Lessons
+	$lessons_list           = learndash_get_course_lessons_list( $couser_id, $user_id, [ 'num' => - 1 ] );
+	$lesson_order           = 0;
+	$topic_order            = 0;
+	$lessons                = [];
+	$status                 = [];
+	$status['completed']    = 1;
+	$status['notcompleted'] = 0;
+	$course_id              = $couser_id;
+	$data                   = [];
+	$topics                 = [];
+	$lesson_topics          = [];
+	foreach ( $lessons_list as $lesson ) {
+		$lessons[ $lesson_order ] = [
+			'name'   => $lesson['post']->post_title,
+			'id'     => $lesson['post']->ID,
+			'status' => $status[ $lesson['status'] ],
+		];
+
+		$course_quiz_list[] = learndash_get_lesson_quiz_list( $lesson['post']->ID, $user_id, $course_id );
+		$lesson_topics      = learndash_get_topic_list( $lesson['post']->ID, $course_id ) ?: [];
+
+		foreach ( $lesson_topics as $topic ) {
+
+			$course_quiz_list[] = learndash_get_lesson_quiz_list( $topic->ID, $user_id, $course_id );
+
+			$topic_progress = learndash_get_course_progress( $user_id, $topic->ID, $course_id );
+
+			$topics[ $topic_order ] = [
+				'name'              => $topic->post_title,
+				'status'            => $status['notcompleted'],
+				'id'                => $topic->ID,
+				'associated_lesson' => $lesson['post']->post_title,
+			];
+
+			if ( ( isset( $topic_progress['posts'] ) ) && ( ! empty( $topic_progress['posts'] ) ) ) {
+				foreach ( $topic_progress['posts'] as $topic_progress ) {
+
+					if ( $topic->ID !== $topic_progress->ID ) {
+						continue;
+					}
+
+					if ( 1 === $topic_progress->completed ) {
+						$topics[ $topic_order ]['status'] = $status['completed'];
+					}
+				}
+			}
+			$topic_order ++;
+		}
+		$lesson_order ++;
+	}
+	$total_lesson     = count( $lessons );
+	$completed_lesson = count( wp_list_filter( $lessons, array( 'status' => 1 ) ) );
+	$pending_lesson   = count( wp_list_filter( $lessons, array( 'status' => 0 ) ) );
+	if ( $total_lesson > 0 ) {
+		$percentage = intval( $completed_lesson * 100 / $total_lesson );
+		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
+	} else {
+		$percentage = 0;
+	}
+
+	$total_topics     = count( $topics );
+	$completed_topics = count( wp_list_filter( $topics, array( 'status' => 1 ) ) );
+	$pending_topics   = count( wp_list_filter( $topics, array( 'status' => 0 ) ) );
+	if ( $total_topics > 0 ) {
+		$topics_percentage = intval( $completed_topics * 100 / $total_topics );
+		$topics_percentage = ( $topics_percentage > 100 ) ? 100 : $topics_percentage;
+	} else {
+		$topics_percentage = 0;
+	}
+
+	$data['all_lesson'] = $lessons;
+	$data['total']      = $total_lesson;
+	$data['complete']   = $completed_lesson;
+	$data['pending']    = $pending_lesson;
+	$data['percentage'] = $percentage;
+	$data['topics']     = array(
+		'all_topics' => $topics,
+		'total'      => $total_topics,
+		'complete'   => $completed_topics,
+		'pending'    => $pending_topics,
+		'percentage' => $topics_percentage,
+
+	);
+
+	return $data;
+}
+
+function bp_get_user_course_quiz_data( $course_id, $user_id ) {
+	global $wpdb;
+	$course_quiz_list   = [];
+	$quizzes            = [];
+	$course_quiz_list[] = learndash_get_course_quiz_list( $course_id );
+
+	$quiz_query_string = "
+			SELECT a.activity_id, a.course_id, a.post_id, a.activity_status, a.activity_completed, m.activity_meta_value as activity_percentage
+			FROM {$wpdb->prefix}learndash_user_activity a
+			LEFT JOIN {$wpdb->prefix}learndash_user_activity_meta m ON a.activity_id = m.activity_id
+			WHERE a.user_id = {$user_id}
+			AND a.course_id = {$course_id}
+			AND a.activity_type = 'quiz'
+			AND m.activity_meta_key = 'percentage'
+		";
+
+	$user_activities = $wpdb->get_results( $quiz_query_string );
+
+	foreach ( $course_quiz_list as $module_quiz_list ) {
+		if ( empty( $module_quiz_list ) ) {
+			continue;
+		}
+
+		foreach ( $module_quiz_list as $quiz ) {
+			if ( isset( $quiz['post'] ) ) {
+				foreach ( $user_activities as $activity ) {
+					if ( $activity->post_id == $quiz['post']->ID ) {
+						$quizzes[] = [
+							'name'   => $quiz['post']->post_title,
+							'id'     => $quiz['post']->ID,
+							'score'  => $activity->activity_percentage,
+							'status' => 1,
+						];
+					} else {
+						$quizzes[] = [
+							'name'   => $quiz['post']->post_title,
+							'id'     => $quiz['post']->ID,
+							'score'  => $activity->activity_percentage,
+							'status' => 0,
+						];
+					}
+				}
+			}
+		}
+	}
+
+	$total_quizzes     = count( $quizzes );
+	$completed_quizzes = count( wp_list_filter( $quizzes, array( 'status' => 1 ) ) );
+	$pending_quizzes   = count( wp_list_filter( $quizzes, array( 'status' => 0 ) ) );
+	if ( $total_quizzes > 0 ) {
+		$percentage = intval( $completed_quizzes * 100 / $total_quizzes );
+		$percentage = ( $percentage > 100 ) ? 100 : $percentage;
+	} else {
+		$percentage = 0;
+	}
+
+	$data['all_quizzes'] = $quizzes;
+	$data['total']       = $total_quizzes;
+	$data['complete']    = $completed_quizzes;
+	$data['pending']     = $pending_quizzes;
+	$data['percentage']  = $percentage;
+
+	return $data;
+}
+
+function bp_ld_time_spent( $course_activity ) {
+
+	$course_time_begin = 0;
+	$course_time_end   = 0;
+	$header_output     = '';
+	$display_flag      = 0;
+
+	if ( is_object( $course_activity ) ) {
+		if ( ( property_exists(
+			$course_activity,
+			'activity_started'
+		) ) || ( ! empty( $course_activity->activity_started ) ) ) {
+			$course_time_begin = $course_activity->activity_started;
+		}
+
+		if ( ( property_exists(
+			$course_activity,
+			'activity_updated'
+		) ) || ( ! empty( $course_activity->activity_updated ) ) ) {
+			$course_time_end = $course_activity->activity_updated;
+		}
+
+		if ( property_exists( $course_activity, 'activity_status' ) ) {
+			if ( $course_activity->activity_status == true ) {
+				if ( ( property_exists(
+					$course_activity,
+					'activity_completed'
+				) ) || ( ! empty( $course_activity->activity_completed ) ) ) {
+					//$course_time_end = learndash_adjust_date_time_display( $activity->activity_completed, 'Y-m-d' );
+					$course_time_end = $course_activity->activity_completed;
+				}
+			}
+		}
+	} else {
+		if ( ! empty( $course_activity['activity_started'] ) ) {
+			$course_time_begin = $course_activity['activity_started'];
+		}
+
+		if ( ! empty( $course_activity['activity_updated'] ) ) {
+			$course_time_end = $course_activity['activity_updated'];
+		}
+
+		if ( ! empty( $course_activity['activity_status'] ) && $course_activity['activity_status'] == '1' ) {
+			if ( ! empty( $course_activity['activity_completed'] ) ) {
+				//$course_time_end = learndash_adjust_date_time_display( $activity->activity_completed, 'Y-m-d' );
+				$course_time_end = $course_activity->activity_completed;
+			}
+		}
+	}
+
+	if ( ( ! empty( $course_time_begin ) ) && ( ! empty( $course_time_end ) ) ) {
+		$course_time_diff = $course_time_end - $course_time_begin;
+		if ( $course_time_diff > 0 ) {
+
+			if ( $course_time_diff > 86400 ) {
+				if ( ! empty( $header_output ) ) {
+					$header_output .= ' ';
+				}
+				$header_output    .= sprintf(
+					'%d %s',
+					floor( $course_time_diff / 86400 ),
+					_n( 'day', 'days', floor( $course_time_diff / 86400 ), 'buddyboss' )
+				);
+				if ( '' !== trim( $header_output ) ) {
+					$display_flag =  $display_flag +  1;
+				}
+				$course_time_diff %= 86400;
+			}
+
+			if ( $course_time_diff > 3600 ) {
+				if ( ! empty( $header_output ) ) {
+					$header_output .= ' ';
+				}
+				$header_output    .= sprintf(
+					'%d %s',
+					floor( $course_time_diff / 3600 ),
+					_n( 'hr', 'hrs', floor( $course_time_diff / 3600 ), 'buddyboss' )
+				);
+				if ( '' !== trim( $header_output ) ) {
+					$display_flag =  $display_flag +  1;
+				}
+				$course_time_diff %= 3600;
+			}
+
+			if ( $course_time_diff > 60 ) {
+				if ( ! empty( $header_output ) ) {
+					$header_output .= ' ';
+				}
+				if ( $display_flag < 1 ) {
+					$header_output .= sprintf( '%d %s',
+						floor( $course_time_diff / 60 ),
+						_n( 'min', 'min', floor( $course_time_diff / 60 ), 'buddyboss' ) );
+				}
+				if ( '' !== trim( $header_output ) ) {
+					$display_flag =  $display_flag +  1;
+				}
+				$course_time_diff %= 60;
+			}
+
+			if ( $course_time_diff > 0 ) {
+				if ( ! empty( $header_output ) ) {
+					$header_output .= ' ';
+				}
+				if ( $display_flag < 2 ) {
+					$header_output .= sprintf( '%d %s',
+						$course_time_diff,
+						_n( 'sec', 'sec', $course_time_diff, 'buddyboss' ) );
+				}
+			}
+		} else {
+			$header_output = 0;
+		}
+
+		if ( $header_output === 0 ) {
+			$header_output = '-';
+		}
+	} else {
+		$header_output = '-';
+	}
+
+	return $header_output;
+}
+
+function bp_ld_remove_post_ids_param( $query_args ) {
+	if ( isset( $query_args['post_ids'] ) ) {
+		unset( $query_args['post_ids'] );
+	}
+
+	return $query_args;
+
+}
+
+function bpLdCoursePointsEarned( $activity ) {
+
+	if ( is_null( $activity ) ) {
+		return 0;
+	}
+
+	$assignments = learndash_get_user_assignments( $activity->post_id, $activity->user_id );
+	if ( ! empty( $assignments ) ) {
+		foreach ( $assignments as $assignment ) {
+			$assignment_points = learndash_get_points_awarded_array( $assignment->ID );
+			if ( $assignment_points || learndash_is_assignment_approved_by_meta( $assignment->ID ) ) {
+				if ( $assignment_points ) {
+					return (int) $assignment_points['current'];
+				}
+			}
+		}
+	}
+
+	$post_settings = learndash_get_setting( $activity->post_id );
+
+	if ( isset( $activity->post_type ) && ( 'sfwd-topic' === $activity->post_type || 'sfwd-lessons' === $activity->post_type ) ) {
+
+		if ( 0 === $activity->activity_status ) {
+			return 0;
+		}
+
+		if ( isset( $post_settings['lesson_assignment_points_enabled'] ) && 'on' === $post_settings['lesson_assignment_points_enabled'] && isset( $post_settings['lesson_assignment_points_amount'] ) && $post_settings['lesson_assignment_points_amount'] > 0 ) {
+			return (int) $post_settings['lesson_assignment_points_amount'];
+		} else {
+			return 0;
+		}
+	} elseif ( isset( $activity->post_type ) && 'sfwd-courses' === $activity->post_type ) {
+
+		if ( 0 === $activity->activity_status ) {
+			return 0;
+		}
+
+		if ( isset( $post_settings['course_points_enabled'] ) && 'on' === $post_settings['course_points_enabled'] && isset( $post_settings['course_points'] ) && $post_settings['course_points'] > 0 ) {
+			return (int) $post_settings['course_points'];
+		} else {
+			return 0;
+		}
+	}
+
+	return 0;
+}
+
+function bp_ld_course_points_earned( $course, $user ) {
+	global $learndash_post_types;
+	$param                    = [];
+	$param['course_ids']      = $course;
+	$param['post_types']      = $learndash_post_types;
+	$param['user_ids']        = $user;
+	$param['activity_status'] = 'COMPLETED';
+	$param['per_page']        = '';
+
+	add_filter( 'learndash_get_activity_query_args', 'bp_ld_remove_post_ids_param', 10, 1 );
+	$data = learndash_reports_get_activity( $param );
+	remove_filter( 'learndash_get_activity_query_args', 'bp_ld_remove_post_ids_param', 10 );
+	$points = 0;
+	if ( ! empty( $data ) ) {
+		foreach ( $data['results'] as $activity ) {
+			$points = $points + bpLdCoursePointsEarned( $activity );
+		}
+	}
+
+	if ( $points > 0 ) {
+		return $points;
+	} else {
+		return '-';
+	}
+
+}
+
+function bp_ld_get_course_all_steps( $course_id, $user_id, $type = 'all' ) {
+
+	global $wpdb;
+
+	$lesson_list    = learndash_get_lesson_list( $course_id );
+	$steps          = array();
+	$circle         = '';
+	$total_steps    = 0;
+	$finished_steps = 0;
+	$pending_steps  = 0;
+	$total_points   = 0;
+
+	foreach ( $lesson_list as $lesson ) {
+
+		$sql_str  = $wpdb->prepare(
+			'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+			$user_id,
+			$course_id,
+			$lesson->ID,
+			'lesson',
+			1
+		);
+		$activity = $wpdb->get_row( $sql_str );
+		if ( empty( $activity ) ) {
+			$sql_str  = $wpdb->prepare(
+				'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+				$user_id,
+				$course_id,
+				$lesson->ID,
+				'lesson',
+				0
+			);
+			$activity = $wpdb->get_row( $sql_str );
+		}
+
+		if ( $activity ) {
+			$activity->post_type = get_post_type( $lesson->ID );
+			$activity->post_id = $lesson->ID;
+			$activity->user_id = $user_id;
+		}
+
+		if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+			//$finished_steps = $finished_steps + 1;
+			$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+		} else {
+			//$pending_steps = $pending_steps + 1;
+			$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+		}
+
+		if ( 'all' === $type || 'lesson' === $type ) {
+			$steps[] = array(
+				'id'       => $lesson->ID,
+				'title'    => $circle . $lesson->post_title,
+				'activity' => $activity,
+				'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
+			);
+			//$total_steps  = $total_steps + 1;
+			//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
+		}
+
+		$lesson_topics = learndash_get_topic_list( $lesson->ID, $course_id );
+
+		if ( ! empty( $lesson_topics ) ) {
+			foreach ( $lesson_topics as $lesson_topic ) {
+
+				$sql_str  = $wpdb->prepare(
+					'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+					$user_id,
+					$course_id,
+					$lesson_topic->ID,
+					'topic',
+					1
+				);
+				$activity = $wpdb->get_row( $sql_str );
+				if ( empty( $activity ) ) {
+					$sql_str  = $wpdb->prepare(
+						'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+						$user_id,
+						$course_id,
+						$lesson_topic->ID,
+						'topic',
+						0
+					);
+					$activity = $wpdb->get_row( $sql_str );
+				}
+
+				if ( $activity ) {
+					$activity->post_type = get_post_type( $lesson_topic->ID );
+					$activity->post_id   = $lesson_topic->ID;
+					$activity->user_id   = $user_id;
+				}
+
+				if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+					//$finished_steps = $finished_steps + 1;
+					$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+				} else {
+					//$pending_steps = $pending_steps + 1;
+					$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+				}
+
+				if ( 'all' === $type || 'topic' === $type ) {
+					$steps[] = array(
+						'id'       => $lesson_topic->ID,
+						'title'    => $circle . $lesson_topic->post_title,
+						'activity' => $activity,
+						'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
+					);
+					//$total_steps  = $total_steps + 1;
+					//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
+				}
+			}
+		}
+
+		$lesson_quizzes = learndash_get_lesson_quiz_list( $lesson->ID, $user_id, $course_id );
+
+		if ( ! empty( $lesson_quizzes ) ) {
+			foreach ( $lesson_quizzes as $lesson_quiz ) {
+
+				$sql_str  = $wpdb->prepare(
+					'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+					$user_id,
+					$course_id,
+					$lesson_quiz['post']->ID,
+					'quiz',
+					1
+				);
+				$activity = $wpdb->get_row( $sql_str );
+				if ( empty( $activity ) ) {
+					$sql_str  = $wpdb->prepare(
+						'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+						$user_id,
+						$course_id,
+						$lesson_quiz['post']->ID,
+						'quiz',
+						0
+					);
+					$activity = $wpdb->get_row( $sql_str );
+				}
+
+				if ( $activity ) {
+					$activity->post_type = get_post_type( $lesson_quiz['post']->ID );
+					$activity->post_id   = $lesson_quiz['post']->ID;
+					$activity->user_id   = $user_id;
+				}
+
+				if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+					//$finished_steps = $finished_steps + 1;
+					$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+				} else {
+					$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+					//$pending_steps = $pending_steps + 1;
+				}
+
+				$attempt = learndash_get_user_quiz_attempts_count( $user_id, $lesson_quiz['post']->ID );
+
+				if ( 'all' === $type || 'quiz' === $type ) {
+					$steps[] = array(
+						'id'       => $lesson_quiz['post']->ID,
+						'title'    => $circle . $lesson_quiz['post']->post_title,
+						'activity' => $activity,
+						'attempt'  => ( $attempt ) ? $attempt : '-',
+						'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
+
+					);
+					//$total_steps  = $total_steps + 1;
+					//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
+				}
+			}
+		}
+	}
+
+	$course_quizzes = learndash_get_course_quiz_list( $course_id, $user_id );
+
+	if ( ! empty( $course_quizzes ) ) {
+		foreach ( $course_quizzes as $course_quiz ) {
+
+			$sql_str  = $wpdb->prepare(
+				'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+				$user_id,
+				$course_id,
+				$course_quiz['post']->ID,
+				'quiz',
+				1
+			);
+			$activity = $wpdb->get_row( $sql_str );
+			if ( empty( $activity ) ) {
+				$sql_str  = $wpdb->prepare(
+					'SELECT * FROM ' . LDLMS_DB::get_table_name( 'user_activity' ) . ' WHERE user_id=%d AND course_id=%d AND post_id=%d AND activity_type=%s AND activity_status=%d LIMIT 1',
+					$user_id,
+					$course_id,
+					$course_quiz['post']->ID,
+					'quiz',
+					0
+				);
+				$activity = $wpdb->get_row( $sql_str );
+			}
+
+			if ( isset( $activity ) && isset( $activity->activity_status ) && $activity->activity_status == '1' ) {
+				//$finished_steps = $finished_steps + 1;
+				$circle = '<div class="i-progress i-progress-completed"><i class="bb-icon-check"></i></div>';
+			} else {
+				//$pending_steps = $pending_steps + 1;
+				$circle = '<div class="i-progress i-progress-not-completed"><i class="bb-icon-circle"></i></div>';
+			}
+
+			$score = '-';
+			if ( $activity ) {
+				$activity->post_type = get_post_type( $course_quiz['post']->ID );
+				$activity->post_id   = $course_quiz['post']->ID;
+				$activity->user_id   = $user_id;
+				$activity_fields     = learndash_get_activity_meta_fields( $activity->activity_id );
+				$score               = bp_ld_quiz_activity_points_percentage( $activity_fields );
+			}
+
+			$attempt = learndash_get_user_quiz_attempts_count( $user_id, $course_quiz['post']->ID );
+
+			if ( 'all' === $type || 'quiz' === $type ) {
+				$steps[] = array(
+					'id'       => $course_quiz['post']->ID,
+					'title'    => $circle . $course_quiz['post']->post_title,
+					'activity' => $activity,
+					'attempt'  => ( $attempt ) ? $attempt : '-',
+					'score'    => $score,
+					'points'   => ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0,
+				);
+				//$total_steps  = $total_steps + 1;
+				//$total_points = $total_points + ( bpLdCoursePointsEarned( $activity ) ) ? bpLdCoursePointsEarned( $activity ) : 0;
+			}
+		}
+	}
+
+	if ( 'assignment' === $type ) {
+
+		$approved_args = array(
+			'posts_per_page' => - 1,
+			'post_type'      => learndash_get_post_type_slug( 'assignment' ),
+			'post_status'    => 'publish',
+			'author'         => $user_id,
+			'meta_query'     => array(
+				array(
+					'key'   => 'course_id',
+					'value' => $course_id,
+				),
+			),
+		);
+
+		$approved_args['meta_query'][] = array(
+			'key'   => 'approval_status',
+			'value' => 1,
+		);
+
+		$approved_assignments = new WP_Query( $approved_args );
+
+		$pending_args = array(
+			'posts_per_page' => - 1,
+			'post_type'      => learndash_get_post_type_slug( 'assignment' ),
+			'post_status'    => 'publish',
+			'author'         => $user_id,
+			'meta_query'     => array(
+				array(
+					'key'   => 'course_id',
+					'value' => $course_id,
+				),
+			),
+		);
+
+		$pending_args['meta_query'][] = array(
+			'key'     => 'approval_status',
+			'compare' => 'NOT EXISTS',
+		);
+
+		$pending_assignments = new WP_Query( $pending_args );
+
+		$assignments = array_merge( $approved_assignments->posts, $pending_assignments->posts );
+
+		foreach ( $assignments as $assignment ) {
+			$steps[] = array(
+				'id'     => $assignment->ID,
+				'title'  => $assignment->post_content,
+				'graded' => '',
+				'score'  => '',
+			);
+		}
+	}
+
+	$data                   = array();
+	$data['steps']          = $steps;
+//	$data['total_points']   = $total_steps;
+//	$data['total_steps']    = $total_points;
+//	$data['pending_steps']  = $pending_steps;
+//	$data['finished_steps'] = $finished_steps;
+
+	return $data;
+
+}
+
+function bp_ld_quiz_activity_points_percentage( $activity ) {
+	$awarded_points = intval( bp_ld_quiz_activity_awarded_points( $activity ) );
+	$total_points   = intval( bp_ld_quiz_activity_total_points( $activity ) );
+	if ( ( ! empty( $awarded_points ) ) && ( ! empty( $total_points ) ) ) {
+		return round( 100 * ( intval( $awarded_points ) / intval( $total_points ) ) );
+	}
+}
+
+/**
+ * @param $activity
+ *
+ * @return mixed
+ */
+function bp_ld_quiz_activity_total_points( $activity ) {
+	if ( ! empty( $activity ) ) {
+		if ( isset( $activity['total_points'] ) ) {
+			return intval( $activity['total_points'] );
+		}
+	}
+}
+
+
+/**
+ * @param $activity
+ *
+ * @return mixed
+ */
+function bp_ld_quiz_activity_awarded_points( $activity ) {
+	if ( ( ! empty( $activity ) ) ) {
+		if ( isset( $activity['points'] ) ) {
+			return intval( $activity['points'] );
+		}
+	}
 }
 
 /**

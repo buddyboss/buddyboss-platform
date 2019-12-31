@@ -8,6 +8,37 @@
 			this.$report_tables = jQuery( '.bp_ld_report_table' );
 
 			this.fetch_table_data();
+
+			$( '.bp-ld-reports-progress-bar' ).loading();
+
+			$( '.admin-show-all' ).DataTable(
+				{
+					searching    : false,
+					lengthChange : false,
+					info         : false
+				}
+			);
+
+			var dropDownUser = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="user"]' );
+			var dropDownStep = $( '.bp-learndash-reports-filters-form .bp-learndash-reports-filters select[name="step"]' );
+			if ( dropDownUser.length ) {
+				if ( '' === dropDownUser.val() ) {
+					dropDownStep.prop( 'disabled', true );
+				}
+				$( dropDownUser ).on(
+					'change',
+					function() {
+						if ( '' === $( this ).val() ) {
+							dropDownStep.prop( 'disabled', true );
+							dropDownStep.prop( 'disabled', true );
+							dropDownStep.val( 'all' );
+						} else {
+							dropDownStep.prop( 'disabled', false );
+						}
+
+					}
+				);
+			}
 		},
 
 		fetch_table_data: function() {
@@ -115,10 +146,8 @@
 			}
 
 			var export_args = {
-				start   : 0,
-				length : BP_LD_REPORTS_DATA.config.perpage,
 				nonce   : BP_LD_REPORTS_DATA.nonce,
-				action  : 'bp_ld_group_get_reports',
+				action  : 'bp_ld_group_export_reports',
 				group   : BP_LD_REPORTS_DATA.current_group,
 				'export'  : true
 			};
@@ -148,20 +177,8 @@
 						$( '.export-indicator' ).text( BP_LD_REPORTS_DATA.text.export_failed );
 						return;
 					}
-
-					if (data.data.has_more) {
-						export_args.start = export_args.start + export_args.length;
-						export_args.hash  = data.data.hash;
-						$target.data( 'export_args', export_args );
-						$( '.export-indicator' ).show();
-						$( '.export-indicator .export-current-step' ).text( data.data.page );
-						$( '.export-indicator .export-total-step' ).text( data.data.total );
-						self.startExport( $target );
-						return;
-					}
-
-					$target.data( 'exported', true );
-					$target.data( 'export_url', data.data.url );
+					//$target.data( 'exported', true );
+					//$target.data( 'export_url', data.data.url );
 					window.location.href = data.data.url;
 					$( '.export-indicator' ).hide();
 				},
@@ -176,6 +193,7 @@
 		function() {
 			BP_LD_Report.init();
 			$( '.ld-report-export-csv' ).on( 'click', BP_LD_Report.prepareExport );
+			window.history.replaceState( null, null, window.location.pathname );
 		}
 	);
 })( jQuery );

@@ -168,7 +168,7 @@ class AssignmentsReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	protected function unregisterQueryHooks() {
-		 remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
+		remove_filter( 'posts_fields', array( $this, 'addAdditionalFields' ) );
 		remove_filter( 'posts_join_paged', array( $this, 'addAdditionalJoins' ) );
 		remove_filter( 'posts_orderby', array( $this, 'addAdditionalOrderBy' ) );
 	}

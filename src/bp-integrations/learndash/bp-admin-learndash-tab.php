@@ -50,8 +50,8 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 	    $fields = array(
 		    'buddypress' => array( $this, 'registerBuddypressSettings' ),
 		    'learndash'  => array( $this, 'registerLearnDashSettings' ),
-		    'coursetab' => [$this, 'registerCourseTab'],
-		    // 'reports' => [$this, 'registerReportsSettings'],
+		    'coursetab' => array( $this, 'registerCourseTab' ),
+		    'reports' => array( $this, 'registerReportsSettings' ),
 	    );
 
 	    if ( ! bp_is_active( 'groups' ) ) {
@@ -84,6 +84,8 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			if ( is_file( $this->intro_template ) ) {
 				require $this->intro_template;
 			}
+
+			return;
 		}
 
 		parent::form_html();
@@ -407,17 +409,17 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 		 */
 		$this->add_section(
 			'bp_ld_sync-reports',
-			__( 'Group Reports Settings', 'buddyboss' ),
-			array( $this, 'learndash_groups_report_description' )
+			__( 'Group Reports', 'buddyboss' )
 		);
 
 		$this->add_checkbox_field(
 			'enabled',
 			__( 'Group Reports', 'buddyboss' ),
-			array(
-				'input_text'   => __( 'Enable Social Group Report for LearnDash', 'buddyboss' ),
-				'input_run_js' => 'reports_enabled',
-			)
+			[
+				'input_text'        => __( 'Enable LearnDash group reports', 'buddyboss' ),
+				'input_description' => __( 'For every social group synced to a LearnDash group, enable  reporting of group course progress.', 'buddyboss' ),
+				'input_run_js'      => 'reports_enabled',
+			]
 		);
 
 		$this->add_field(
@@ -430,15 +432,15 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			)
 		);
 
-		$this->add_input_field(
-			'per_page',
-			__( 'Report Results Per Page', 'buddyboss' ),
-			array(
-				'input_type'        => 'number',
-				'input_description' => __( 'Number of report results displayed per page', 'buddyboss' ),
-				'class'             => 'js-show-on-reports_enabled',
-			)
-		);
+//		$this->add_input_field(
+//			'per_page',
+//			__( 'Report Results Per Page', 'buddyboss' ),
+//			[
+//				'input_type'        => 'number',
+//				'input_description' => __( '', 'buddyboss' ),
+//				'class'             => 'js-show-on-reports_enabled',
+//			]
+//		);
 	}
 
 	/**
@@ -518,11 +520,9 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			$checked = in_array( $key, $input_value ) ? 'checked' : '';
 			printf(
 				'
-        		<p>
-	        		<label>
-	        			<input type="checkbox" name="%s[]" value="%s" %s>%s</option>
-	        		</label>
-	        	</p>
+    			<input type="checkbox" name="%s[]" value="%s" %s>
+    			<label>%s</label>
+    			<br /><br />
         	',
 				$input_name,
 				$key,
@@ -531,7 +531,7 @@ class BP_LearnDash_Admin_Integration_Tab extends BP_Admin_Integration_tab {
 			);
 		}
 
-		echo $this->render_input_description( __( 'Select which roles can view reports', 'buddyboss' ) );
+		echo $this->render_input_description( __( 'Select which group roles can view reports. Organizers and Moderators can view all reports, while Members can only view reports for their own course progress.', 'buddyboss' ) );
 	}
 
 	/**

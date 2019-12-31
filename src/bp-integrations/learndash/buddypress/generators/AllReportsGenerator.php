@@ -26,7 +26,8 @@ class AllReportsGenerator extends ReportsGenerator {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function __construct() {
-		 $this->completed_table_title  = __( 'Completed Steps', 'buddyboss' );
+
+		$this->completed_table_title   = __( 'Completed Steps', 'buddyboss' );
 		$this->incompleted_table_title = __( 'Incomplete Steps', 'buddyboss' );
 
 		parent::__construct();

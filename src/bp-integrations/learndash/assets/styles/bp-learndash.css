@@ -1,17 +1,26 @@
-.bp-learndash-reports-filters-form {
-	text-align: right;
+table.dataTable th,
+table.dataTable td {
+	vertical-align: middle;
 }
 
-.bp_ld_report_table_wrapper {
-	margin-bottom: 30px;
+table.dataTable a {
+	display: inline-flex;
+	align-items: center;
+	font-weight: 500;
+}
+
+table.dataTable a .i-progress {
+	margin-right: 10px;
+        min-width: 22px;
+}
+
+.bp-learndash-reports-filters-form {
+	text-align: right;
+        margin-bottom: 10px;
 }
 
 .bp_ld_report_table_wrapper.no-data {
 	display: none !important;
-}
-
-.dataTables_paginate {
-
 }
 
 .dataTables_paginate .button {
@@ -20,6 +29,44 @@
 
 .dataTables_paginate .disabled {
 	display: none !important;
+}
+
+.dataTables_wrapper .dataTables_paginate {
+        float: none;
+        padding: 0;
+        text-align: center;
+}
+
+#buddypress .dataTables_paginate a.button {
+    margin: 0 5px 20px;
+}
+
+.user-points {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        justify-content: center;
+}
+
+.user-points-text {
+        display: flex;
+        flex-flow: column;
+        margin-left: 20px;
+}
+
+.user-points-text b {
+        font-size: 22px;
+        color: #122B46;
+        letter-spacing: -0.2px;
+}
+
+.user-points-text span {
+        font-size: 14px;
+        color: #939597;
+        letter-spacing: -0.24px;
 }
 
 /* only have 1 page */
@@ -32,12 +79,31 @@
 	flex-flow: row wrap;
 	align-items: center;
 	background: #fff;
-	border: 1px solid #dedfe2;
+	border: 1px solid #E7E9EC;
 	margin-bottom: 15px;
+        padding: 20px 0;
+}
+
+.ld-report-user-stats .member-name {
+    font-size: 20px;
 }
 
 .ld-report-user-stats > * {
-	padding: 15px;
+        flex: 1;
+	padding: 0 30px;
+        min-height: 100px;
+}
+
+.ld-report-user-stats .user-message {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
 }
 
 .ld-report-user-stats p {
@@ -50,16 +116,25 @@
 	min-width: 20%;
 }
 
+.ld-report-user-stats > div:not(:last-child) {
+    border-right: 1px solid #E7E9EC;
+}
+
 .ld-report-user-stats .user-avatar {
 	margin-right: 15px;
 }
 
 .ld-report-user-stats .avatar {
-	max-width: 52px;
+	max-width: 80px;
 }
 
-.ld-report-user-stats .user-message {
-	margin-left: auto;
+.ld-report-user-stats .send-message {
+        max-width: 130px;
+        margin: auto;
+}
+
+.ld-report-user-stats #send-private-message {
+        float: right;
 }
 
 .ld-report-user-stats .user-name h5 {
@@ -96,4 +171,152 @@
 
 .export-indicator {
 	display: none;
+}
+
+.ld-report-user-stats .user-steps {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: center;
+        -ms-flex-pack: center;
+        justify-content: center;
+}
+
+.bp-ld-reports-progress-bar {
+	position: relative;
+	height: 100px;
+	width: 100px;
+        transform: scale(0.8);
+        margin-right: 10px;
+        margin-left: -10px;
+}
+
+.reports-progress-info b {
+    font-size: 22px;
+    color: #122B46;
+    letter-spacing: -0.2px;
+}
+
+.reports-progress-info span {
+    text-transform: capitalize;
+    font-size: 14px;
+    color: #939597;
+    letter-spacing: -0.24px;
+    display: block;
+}
+
+.bp-ld-reports-progress-bar div {
+	position: absolute;
+	height: 100px;
+	width: 100px;
+	border-radius: 50%;
+}
+
+.bp-ld-reports-progress-bar div span {
+	position: absolute;
+	font-size: 25px;
+	line-height: 75px;
+	height: 75px;
+	width: 75px;
+	left: 12.5px;
+	top: 12.5px;
+	text-align: center;
+	border-radius: 50%;
+	background-color: white;
+}
+
+.bp-ld-reports-progress-bar .background { background-color: #b3cef6; }
+
+.bp-ld-reports-progress-bar .rotate {
+	clip: rect(0 50px 100px 0);
+	background-color: #4b86db;
+}
+
+.bp-ld-reports-progress-bar .left {
+	clip: rect(0 50px 100px 0);
+	opacity: 1;
+	background-color: #b3cef6;
+}
+
+.bp-ld-reports-progress-bar .right {
+	clip: rect(0 50px 100px 0);
+	transform: rotate(180deg);
+	opacity: 0;
+	background-color: #4b86db;
+}
+
+.bp_ld_report_container {
+        background: #fff;
+	border: 0;
+	border-collapse: collapse;
+	border-radius: 4px;
+	overflow: hidden;
+	box-shadow: 0 0 0 1px #E7EAEC;
+	width: 100% !important;
+        margin-bottom: 30px;
+        padding: 0 20px;
+}
+
+.bp_ld_report_table_wrapper .admin-show-all thead th {
+	font-size: 13px;
+	outline: none;
+	font-weight: normal;
+	color: #A3A5A9;    
+        letter-spacing: 0.35px;
+        text-transform: uppercase;
+}
+
+.bp_ld_report_table_wrapper .admin-show-all th,
+.bp_ld_report_table_wrapper .admin-show-all td {
+	font-size: 14px;
+	padding: 15px 20px;
+        letter-spacing: -0.24px;
+}
+
+.bp_ld_report_table_wrapper .dataTable thead th:first-child,
+.bp_ld_report_table_wrapper .dataTable td:first-child {
+    padding-left: 0;
+}
+
+table.dataTable.no-footer.admin-show-all {
+	border-bottom: 0;
+}
+
+table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+    border-bottom: 0;
+}
+
+table.dataTable thead th,
+table.dataTable thead td,
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
+    border-color: #E7E9EC;
+}
+
+table.dataTable tbody tr, table.dataTable.display tbody tr.odd>.sorting_1, table.dataTable.order-column.stripe tbody tr.odd>.sorting_1, table.dataTable.display tbody tr.even>.sorting_1, table.dataTable.order-column.stripe tbody tr.even>.sorting_1 {
+	background-color: #ffffff !important;
+        border-color: #E7E9EC;
+        border-bottom: 0;
+        
+}
+
+#admin-show-all tbody tr td span img {
+	vertical-align: middle;
+	margin-right: 15px;
+}
+
+@keyframes toggle {
+
+	0% {
+		opacity: 0;
+	}
+
+	100% {
+		opacity: 1;
+	}
 }
