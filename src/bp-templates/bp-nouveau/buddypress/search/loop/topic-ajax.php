@@ -28,7 +28,7 @@
 				<div class="item-tags">
 					<span class="item-tag-cap">
 						<?php
-						esc_html_e( 'Tags:' );
+						esc_html_e( 'Tags:', 'buddyboss' );
 						?>
 					</span>
 					<?php
