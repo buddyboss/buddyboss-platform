@@ -7325,6 +7325,38 @@ function bp_groups_get_profile_stats( $args = '' ) {
 }
 
 /**
+ * Echo the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_group_current_invite_tab() {
+	echo bp_get_group_current_invite_tab();
+}
+/**
+ * Returns the current group invite tab slug.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return string $tab The current tab's slug.
+ */
+function bp_get_group_current_invite_tab() {
+	if ( bp_is_groups_component() && bp_is_current_action( 'invite' ) ) {
+		$tab = bp_action_variable( 0 );
+	} else {
+		$tab = '';
+	}
+
+	/**
+	 * Filters the current group invite tab slug.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $tab Current group invite tab slug.
+	 */
+	return apply_filters( 'bp_get_group_current_invite_tab', $tab );
+}
+
+/**
  * Get the message status of a group.
  *
  * This function can be used either in or out of the loop.

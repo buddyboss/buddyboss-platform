@@ -2,7 +2,7 @@
 
 * [ ] Have you followed the [BuddyBoss Contributing guideline](https://github.com/buddyboss/buddyboss-platform/blob/dev/contributing.md)?
 * [ ] Does your code follow the [WordPress' Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/)?
-* [ ] Have you checked to ensure there aren't other open [Pull Requests](../../../pulls) for the same update/change?
+* [ ] Have you checked to ensure there aren't other open [Pull Requests](../pulls) for the same update/change?
 
 <!-- Mark completed items with an [x] -->
 

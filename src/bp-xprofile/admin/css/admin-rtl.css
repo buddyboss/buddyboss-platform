@@ -163,6 +163,12 @@ div.field-group {
 	padding: 0 20px 20px;
 }
 
+
+#profile-field-form .field-group {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .field-group .xprofile-field {
 	position: relative;
 }
@@ -174,6 +180,11 @@ div.field-group {
 	margin: 20px 0 0;
 	padding: 10px 0 0;
 	border-radius: 3px;
+}
+#profile-field-form .field-group fieldset{
+	padding: 10px 10px 0;
+	width: 100%;
+    box-sizing: border-box;
 }
 
 .field-group fieldset.sortable {
@@ -190,6 +201,12 @@ div.field-group {
 	top: 14px;
 	right: 14px;
 	padding: 0;
+}
+
+#profile-field-form .field-group fieldset legend{
+	position: static;
+	float: right;
+    margin-bottom: 10px;
 }
 
 fieldset .field-name {
