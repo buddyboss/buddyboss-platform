@@ -1016,14 +1016,27 @@ function bp_nouveau_ajax_groups_send_message() {
 				) );
 			}
 		} else {
-			// Attempt to send the message.
-			$send = messages_new_message( array(
-				'recipients' => $members,
-				'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
-				'content'    => $_POST['content'],
-				'error_type' => 'wp_error',
-				'append_thread' => false,
-			) );
+
+			$previous_thread = BP_Messages_Message::get_existing_thread( $members, bp_loggedin_user_id() );
+			if ( $previous_thread ) {
+				// Attempt to send the message.
+				$send = messages_new_message( array(
+					'recipients' => $members,
+					'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
+					'content'    => $_POST['content'],
+					'error_type' => 'wp_error',
+				) );
+			} else {
+				// Attempt to send the message.
+				$send = messages_new_message( array(
+					'recipients' => $members,
+					'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
+					'content'    => $_POST['content'],
+					'error_type' => 'wp_error',
+					'append_thread' => false,
+				) );
+			}
+
 		}
 
 		if ( is_wp_error( $send ) ) {
