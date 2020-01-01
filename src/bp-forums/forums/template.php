@@ -99,6 +99,21 @@ function bbp_get_forum_post_type_supports() {
 	);
 }
 
+/**
+ * Register forum pagination query vars
+ *
+ * @since Buddyboss 1.2.3
+ *
+ * @return array
+ */
+function forum_pagination_query_vars( $vars ) {
+   
+	$vars[] = 'forum_paged';
+   
+    return $vars;
+}
+add_filter( 'query_vars', 'forum_pagination_query_vars' );
+
 /** Forum Loop ****************************************************************/
 
 /**
@@ -136,6 +151,9 @@ function bbp_has_forums( $args = '' ) {
 		$default_post_parent = bbp_get_forum_id();
 	}
 
+	// Check query paged
+	$paged = ( get_query_var( 'forum_paged' ) ) ? get_query_var( 'forum_paged' ) : 1;
+
 	// Parse arguments with default forum query for most circumstances
 	$bbp_f = bbp_parse_args(
 		$args,
@@ -147,7 +165,7 @@ function bbp_has_forums( $args = '' ) {
 			'ignore_sticky_posts' => true,
 			'orderby'             => 'menu_order title',
 			'order'               => 'ASC',
-			'paged'               => bbp_get_paged(),           // Page Number
+			'paged'               => (int) $paged,           // Page Number
 		),
 		'has_forums'
 	);
@@ -168,7 +186,7 @@ function bbp_has_forums( $args = '' ) {
 			$bbp->forum_query->found_posts = $bbp->forum_query->max_num_pages * $bbp->forum_query->post_count;
 		}
 
-		$base = $base = add_query_arg( 'paged', '%#%', bbp_get_forums_url() );
+		$base = $base = add_query_arg( 'forum_paged', '%#%' );
 
 		// Pagination settings with filter
 		$bbp_topic_pagination = apply_filters(
