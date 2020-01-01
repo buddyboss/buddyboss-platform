@@ -1328,25 +1328,28 @@ function bp_private_network_template_redirect() {
 			}
 		}else{
 			/**
-			 * The private network has not enabled that time to redirect on the login page
+			 * The private network has not enabled that time to redirect on the login page for the invite component
 			 *
 			 */
-			$redirect_url  = is_ssl() ? 'https://' : 'http://';
-			$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
-			$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
+			
+			if ( bp_is_invites_component() ) {
+				$redirect_url  = is_ssl() ? 'https://' : 'http://';
+				$redirect_url .= isset( $_SERVER['HTTP_HOST'] ) ? $_SERVER['HTTP_HOST'] : '';
+				$redirect_url .= isset( $_SERVER['REQUEST_URI'] ) ? $_SERVER['REQUEST_URI'] : '';
 
-			$defaults = array(
-				'mode'     => 2,
-				// 1 = $root, 2 = wp-login.php.
-				'redirect' => $redirect_url,
-				// the URL you get redirected to when a user successfully logs in.
-				'root'     => bp_get_root_domain(),
-				// the landing page you get redirected to when a user doesn't have access.
-				'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
-			);
+				$defaults = array(
+					'mode'     => 2,
+					// 1 = $root, 2 = wp-login.php.
+					'redirect' => $redirect_url,
+					// the URL you get redirected to when a user successfully logs in.
+					'root'     => bp_get_root_domain(),
+					// the landing page you get redirected to when a user doesn't have access.
+					'message'  => __( 'You must log in to access the page you requested.', 'buddyboss' ),
+				);
 
-			bp_core_no_access( $defaults );
-			exit();
+				bp_core_no_access( $defaults );
+				exit();
+			}
 		}
 	}
 }
