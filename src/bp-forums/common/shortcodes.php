@@ -72,7 +72,7 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 					'bbp-single-tag'   => array( $this, 'display_topics_of_tag' ), // Topics of Tag
 
 					/** Replies */
-
+					'bbp-reply-form'   => array( $this, 'display_reply_form' ), // Reply form
 					'bbp-single-reply' => array( $this, 'display_reply' ), // Specific reply - pass an 'id' attribute
 
 					/** Views */
@@ -484,6 +484,26 @@ if ( ! class_exists( 'BBP_Shortcodes' ) ) :
 			} elseif ( bbp_is_forum_private( $forum_id, false ) ) {
 				bbp_get_template_part( 'feedback', 'no-access' );
 			}
+
+			// Return contents of output buffer
+			return $this->end();
+		}
+
+		/**
+		 * Display the reply form in an output buffer and return to ensure
+		 * post/page contents are displayed first.
+		 *
+		 * @since bbPress (r3031)
+		 *
+		 * @uses get_template_part()
+		 */
+		public function display_reply_form() {
+
+			// Start output buffer
+			$this->start( 'bbp_reply_form' );
+
+			// Output templates
+			bbp_get_template_part( 'form', 'reply' );
 
 			// Return contents of output buffer
 			return $this->end();

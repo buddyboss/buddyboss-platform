@@ -75,7 +75,15 @@ function bp_admin_setting_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/network-settings/general-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62792,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -128,7 +136,15 @@ function bp_privacy_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/network-settings/private-network.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62793,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -173,7 +189,15 @@ function bp_posts_in_activity_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/activity/posts-in-activity-feeds.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62823,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -285,7 +309,15 @@ function bp_activity_settings_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/activity/activity-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62822,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -343,7 +375,15 @@ function bp_profile_photos_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-photos.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 72341,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -399,7 +439,15 @@ function bp_group_setting_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62811,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -423,7 +471,7 @@ function bp_admin_setting_callback_group_type_creation() {
 				__( 'Enable <a href="%s">group types</a> to better organize groups', 'buddyboss' ),
 				add_query_arg(
 					array(
-						'post_type' => bp_get_group_type_post_type(),
+						'post_type' => bp_groups_get_group_type_post_type(),
 					),
 					admin_url( 'edit.php' )
 				)
@@ -478,7 +526,15 @@ function bp_group_types_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-types.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62816,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -520,7 +576,15 @@ function bp_group_hierarchies_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/groups/group-hierarchies.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62817,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -807,10 +871,9 @@ function bp_admin_setting_callback_enable_send_invite_member_type( $args ) {
 		?>
 		<p class="description"><?php _e( 'Only allow the selected profile types to send invites.', 'buddyboss' ); ?></p>
 		<?php
-	}
-	?>
+	} ?>
 	<input name="<?php echo esc_attr( 'bp-enable-send-invite-member-type-' . $option_name ); ?>" id="<?php echo esc_attr( $option_name ); ?>" type="checkbox" value="1" <?php checked( bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $option_name, false ) ); ?>/>
-	<label for="<?php echo esc_attr( $option_name ); ?>"><?php esc_html_e( $args['member_type_name'], 'buddyboss' ); ?></label>
+	<label for="<?php echo esc_attr( $option_name ); ?>"><?php echo esc_html( $args['member_type_name'] ); ?></label>
 	<?php
 
 }
@@ -836,7 +899,15 @@ function bp_email_invites_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/invites/invites-settings.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62838,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -944,7 +1015,15 @@ function bp_profile_names_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-names.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 72340,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -1024,7 +1103,7 @@ function bp_admin_setting_callback_register_show_confirm_password() {
 }
 
 /**
- * Admin Settings for Settings > Groups > Group Lists
+ * Admin Settings for Settings > Groups > Group Directories
  *
  * @since BuddyBoss 1.2.0
  */
@@ -1049,12 +1128,12 @@ function bp_admin_setting_callback_group_layout_type_format() {
 	printf( '</select>' );
 
 	?>
-	<p class="description"><?php _e( 'Choose if group lists should display in Grid or List View in all group directories.', 'buddyboss' ); ?></p>
+	<p class="description"><?php _e( 'Display group directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
 	<?php
 }
 
 /**
- * Admin Settings for Settings > Groups > Group Lists > Default Format
+ * Admin Settings for Settings > Groups > Group Directories > Default Format
  *
  * @since BuddyBoss 1.2.0
  */
@@ -1077,4 +1156,27 @@ function bp_admin_setting_group_layout_default_option() {
 	}
 	printf( '</select>' );
 
+}
+
+/**
+ * Link to Group Directories tutorial
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_group_directories_tutorial() {
+	?>
+
+	<p>
+		<a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => '',
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+	</p>
+
+	<?php
 }

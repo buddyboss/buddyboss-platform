@@ -45,8 +45,12 @@ if ( isset( $display_arr ) && !empty( $display_arr )) {
 			<div class="select-wrap">
 				<select id="member-type-order-by" data-bp-member-type-filter="members">
 					<option value=""><?php _e( 'All Types', 'buddyboss' ); ?></option><?php
-					foreach ( $display_arr as $member ) { ?>
-						<option value="<?php echo $member['member_type_id']; ?>"><?php esc_html_e( $member['name'], 'buddyboss'); ?></option><?php
+					foreach ( $display_arr as $member ) {
+						?>
+						<option value="<?php echo $member['member_type_id']; ?>">
+							<?php echo $member['name']; ?>
+						</option>
+						<?php
 					}
 					?>
 				</select>

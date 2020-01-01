@@ -339,7 +339,11 @@ function bp_has_members( $args = array() ) {
 	$type    = 'active';
 
 	// Mutual User filtering.
-	if ( isset( $args['type'] ) && 'online' != $args['type'] && bp_is_user_friends() && bp_is_user_mutual_friends() ) {
+	/**
+	 * Removed below from the IF condition becuase of mutual tab showing the all the user instead of mutual connections
+	 * isset( $args['type'] ) && 'online' != $args['type'] &&
+	 */
+	if ( bp_is_user_friends() && bp_is_user_mutual_friends() ) {
 		$include = bp_get_mutual_friendships();
 		$type    = 'alphabetical';
 	}
@@ -2713,78 +2717,6 @@ function bp_get_add_switch_button( $user_id, $button_args = array() ) {
 	 * @param string $button HTML markup for follow button.
 	 */
 	return bp_get_button( apply_filters( 'bp_get_add_switch_button', $button ) );
-}
-
-/**
- * Output the latest update of the current member in the loop.
- *
- * @since 1.2.0
- *
- * @param array|string $args {@see bp_get_member_latest_update()}.
- */
-function bp_member_latest_update( $args = '' ) {
-	echo bp_get_member_latest_update( $args );
-}
-
-	/**
-	 * Get the latest update from the current member in the loop.
-	 *
-	 * @since 1.2.0
-	 *
-	 * @param array|string $args {
-	 *     Array of optional arguments.
-	 *     @type int  $length    Truncation length. Default: 225.
-	 *     @type bool $view_link Whether to provide a 'View' link for
-	 *                           truncated entries. Default: false.
-	 * }
-	 * @return string
-	 */
-function bp_get_member_latest_update( $args = '' ) {
-	global $members_template;
-
-	$defaults = array(
-		'length'    => 225,
-		'view_link' => true,
-	);
-
-	$r = wp_parse_args( $args, $defaults );
-	extract( $r );
-
-	if ( ! bp_is_active( 'activity' ) || empty( $members_template->member->latest_update ) || ! $update = maybe_unserialize( $members_template->member->latest_update ) ) {
-		return false;
-	}
-
-	/**
-	 * Filters the excerpt of the latest update for current member in the loop.
-	 *
-	 * @since 1.2.5
-	 * @since 2.6.0 Added the `$r` parameter.
-	 *
-	 * @param string $value Excerpt of the latest update for current member in the loop.
-	 * @param array  $r     Array of parsed arguments.
-	 */
-	$update_content = apply_filters( 'bp_get_activity_latest_update_excerpt', trim( strip_tags( bp_create_excerpt( $update['content'], $length ) ) ), $r );
-
-	$update_content = sprintf( _x( '- &quot;%s&quot;', 'member latest update in member directory', 'buddyboss' ), $update_content );
-
-	// If $view_link is true and the text returned by bp_create_excerpt() is different from the original text (ie it's
-	// been truncated), add the "View" link.
-	if ( $view_link && ( $update_content != $update['content'] ) ) {
-		$view = __( 'View', 'buddyboss' );
-
-		$update_content .= '<span class="activity-read-more"><a href="' . bp_activity_get_permalink( $update['id'] ) . '" rel="nofollow">' . $view . '</a></span>';
-	}
-
-	/**
-	 * Filters the latest update from the current member in the loop.
-	 *
-	 * @since 1.2.0
-	 * @since 2.6.0 Added the `$r` parameter.
-	 *
-	 * @param string $update_content Formatted latest update for current member.
-	 * @param array  $r              Array of parsed arguments.
-	 */
-	return apply_filters( 'bp_get_member_latest_update', $update_content, $r );
 }
 
 /**

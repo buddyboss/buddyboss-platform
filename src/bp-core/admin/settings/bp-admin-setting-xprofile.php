@@ -155,20 +155,22 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		$this->add_field( 'bp-profile-search-tutorial', '', array( $this, 'bp_profile_search_tutorial' ) );
 
 		// Section for profile list.
-		$this->add_section( 'bp_profile_list_settings', __( 'Profile Lists', 'buddyboss' ) );
+		$this->add_section( 'bp_profile_list_settings', __( 'Profile Directories', 'buddyboss' ) );
 
-		// Admin Settings for Settings > Profile > Profile Lists > Enabled Views
+		// Admin Settings for Settings > Profile > Profile Directories > Enabled Views
 		$this->add_field(
 			'bp-profile-layout-format',
 			__( 'Enabled View(s)', 'buddyboss' ),
 			[ $this, 'bp_admin_setting_profile_layout_type_format']
 		);
 
-		// Admin Settings for Settings > Profiles > Profile Lists > Default View
+		// Admin Settings for Settings > Profiles > Profile Directories > Default View
 		$args = array();
 		$args['class'] = 'profile-default-layout profile-layout-options';
 		$this->add_field( 'bp-profile-layout-default-format', __( 'Default View', 'buddyboss' ), [$this, 'bp_admin_setting_profile_layout_default_option' ],  'radio', $args );
 
+		// Profile Directories Tutorial
+		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
 	}
 
@@ -315,32 +317,26 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			?>
 			<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
 				<option value=""><?php esc_html_e( '----', 'buddyboss' ); ?></option>
-												   <?php
-													foreach ( $member_types as $member_type_id ) {
-														$type_name = bp_get_member_type_key( $member_type_id );
-														// $type_id = bp_member_type_term_taxonomy_id( $type_name );
-														$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
-														// if ( ! empty( $type_id ) ) {
-														?>
+					<?php
+					foreach ( $member_types as $member_type_id ) {
+						$type_name = bp_get_member_type_key( $member_type_id );
+						// $type_id = bp_member_type_term_taxonomy_id( $type_name );
+						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+						// if ( ! empty( $type_id ) ) {
+						?>
 						<option
-														<?php
-														selected(
-															$existing_selected,
-															$type_name
-														);
-														?>
+								<?php
+								selected(
+									$existing_selected,
+									$type_name
+								);
+								?>
 							 value="<?php echo $type_name; ?>">
-														<?php
-														esc_html_e(
-															$member_type_name,
-															'buddyboss'
-														);
-														?>
+								<?php printf( esc_html__( '%s', 'buddyboss' ), $member_type_name ); ?>
 							</option>
-																<?php
-																// }
-													}
-													?>
+					<?php
+					}
+					?>
 			</select>
 			<?php
 			printf(
@@ -372,7 +368,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-types.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62802,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -416,14 +420,22 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62803,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
 	}
 
 	/**
-	 * Admin Settings for Settings > Profiles > Profile Lists > Default Format
+	 * Admin Settings for Settings > Profiles > Profile Directories > Default Format
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
@@ -448,12 +460,12 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		printf( '</select>' );
 
 		?>
-		<p class="description"><?php _e( 'Choose if profile lists should display in Grid or List View in all profile/member directories.', 'buddyboss' ); ?></p>
+		<p class="description"><?php _e( 'Display profile/member directories in Grid View, List View, or allow toggling between both views.', 'buddyboss' ); ?></p>
 		<?php
 	}
 
 	/**
-	 * Admin Settings for Settings > Profiles > Profile Lists > Default Format
+	 * Admin Settings for Settings > Profiles > Profile Directories > Default Format
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
@@ -475,6 +487,29 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			);
 		}
 		printf( '</select>' );
+	}
+
+	/**
+	 * Link to Profile Directories tutorial
+	 *
+	 * @since BuddyBoss 1.2.0
+	 */
+	public function bp_profile_directories_tutorial() {
+		?>
+
+		<p>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => '',
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		</p>
+
+		<?php
 	}
 }
 

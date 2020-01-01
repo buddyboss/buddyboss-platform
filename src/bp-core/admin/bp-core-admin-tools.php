@@ -761,7 +761,7 @@ function xprofile_update_display_names() {
 	if ( ! empty( $users ) ) {
 
 		foreach ( $users as $user ) {
-			$display_name = bp_core_get_member_display_name( $user->display_name, $user->ID );
+			$display_name = bp_core_get_user_displayname( $user->ID );
 
 			wp_update_user(
 				$args = array(

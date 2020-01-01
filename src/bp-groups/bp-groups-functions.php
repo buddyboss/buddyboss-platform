@@ -2140,13 +2140,13 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 
 			$group_type = bp_groups_get_group_type( $group_id );
 
-			$group_type_id = bp_get_group_type_post_id( $group_type );
+			$group_type_id = bp_group_get_group_type_id( $group_type );
 
 			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
 
 			$get_requesting_user_member_type = bp_get_member_type( $requesting_user_id );
 
-			if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
 				groups_accept_invite( $requesting_user_id, $group_id );
 				return true;
 			}
@@ -2950,11 +2950,11 @@ function bp_get_user_group_role_title( $user_id = false, $group_id = false ) {
 	$role_title = '';
 
 	if ( groups_is_user_admin( $user_id, $group_id ) ) {
-		$role_title = __( get_group_role_label( $group_id, 'organizer_singular_label_name' ), 'buddyboss' );
+		$role_title = get_group_role_label( $group_id, 'organizer_singular_label_name' );
 	} elseif ( groups_is_user_mod( $user_id, $group_id ) ) {
-		$role_title = __( get_group_role_label( $group_id, 'moderator_singular_label_name' ), 'buddyboss' );
+		$role_title = get_group_role_label( $group_id, 'moderator_singular_label_name' );
 	} elseif ( groups_is_user_member( $user_id, $group_id ) ) {
-		$role_title = __( get_group_role_label( $group_id, 'member_singular_label_name' ), 'buddyboss' );
+		$role_title = get_group_role_label( $group_id, 'member_singular_label_name' );
 	}
 
 	/**
@@ -3054,8 +3054,8 @@ add_action( 'groups_remove_member', 'bp_groups_clear_invite_message_on_uninvite'
  *
  * @return string   custom post type of group type.
  */
-function bp_group_type_post_type() {
-	echo bp_get_group_type_post_type();
+function bp_groups_group_type_post_type() {
+	echo bp_groups_get_group_type_post_type();
 }
 
 /**
@@ -3065,7 +3065,7 @@ function bp_group_type_post_type() {
  *
  * @return string The name of the group type post type.
  */
-function bp_get_group_type_post_type() {
+function bp_groups_get_group_type_post_type() {
 
 	/**
 	 * Filters the name of the group type post type.
@@ -3074,7 +3074,7 @@ function bp_get_group_type_post_type() {
 	 *
 	 * @param string $value group Type post type name.
 	 */
-	return apply_filters( 'bp_get_group_type_post_type', buddypress()->group_type_post_type );
+	return apply_filters( 'bp_groups_get_group_type_post_type', buddypress()->group_type_post_type );
 }
 
 /**
@@ -3084,7 +3084,7 @@ function bp_get_group_type_post_type() {
  *
  * @return array
  */
-function bp_get_group_type_post_type_labels() {
+function bp_groups_get_group_type_post_type_labels() {
 
 	/**
 	 * Filters group type post type labels.
@@ -3094,7 +3094,7 @@ function bp_get_group_type_post_type_labels() {
 	 * @param array $value Associative array (name => label).
 	 */
 	return apply_filters(
-		'bp_get_group_type_post_type_labels',
+		'bp_groups_get_group_type_post_type_labels',
 		array(
 			'add_new_item'       => __( 'New Group Type', 'buddyboss' ),
 			'all_items'          => __( 'Group Types', 'buddyboss' ),
@@ -3117,7 +3117,7 @@ function bp_get_group_type_post_type_labels() {
  *
  * @return array
  */
-function bp_get_group_type_post_type_supports() {
+function bp_groups_get_group_type_post_type_supports() {
 
 	/**
 	 * Filters the features that the group type post type supports.
@@ -3127,7 +3127,7 @@ function bp_get_group_type_post_type_supports() {
 	 * @param array $value Supported features.
 	 */
 	return apply_filters(
-		'bp_get_group_type_post_type_supports',
+		'bp_groups_get_group_type_post_type_supports',
 		array(
 			'page-attributes',
 			'title',
@@ -3143,7 +3143,7 @@ function bp_get_group_type_post_type_supports() {
  * @param $post_id
  * @return mixed|string
  */
-function bp_get_group_type_key( $post_id ) {
+function bp_group_get_group_type_key( $post_id ) {
 
 	if ( empty( $post_id ) ) {
 		return '';
@@ -3164,7 +3164,7 @@ function bp_get_group_type_key( $post_id ) {
 		update_post_meta( $post_id, '_bp_group_type_key', sanitize_key( $key ) );
 	}
 
-	return apply_filters( 'bp_get_group_type_key', $key );
+	return apply_filters( 'bp_group_get_group_type_key', $key );
 }
 
 /**
@@ -3178,7 +3178,7 @@ function bp_get_active_group_types() {
 	$query = new WP_Query(
 		array(
 			'posts_per_page' => -1,
-			'post_type'      => bp_get_group_type_post_type(),
+			'post_type'      => bp_groups_get_group_type_post_type(),
 			'post_status'    => 'publish',
 			'fields'         => 'ids',
 			'orderby'        => 'menu_order',
@@ -3200,7 +3200,7 @@ if ( true === bp_disable_group_type_creation() ) {
 	add_filter( 'body_class', 'bp_group_type_short_code_add_body_class' );
 
 	// remove groups of a specific group type from groups directory
-	add_action( 'bp_ajax_querystring', 'bp_group_type_exclude_groups_from_directory_and_searches', 999, 2 );
+	add_action( 'bp_ajax_querystring', 'bp_groups_exclude_group_type', 999, 2 );
 
 }
 
@@ -3248,7 +3248,7 @@ function bp_register_active_group_types() {
  * @param string $group_type The group type.
  * @param string $taxonomy The group taxonomy.
  */
-function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
+function bp_group_get_count_by_group_type( $group_type = '', $taxonomy = 'bp_group_type' ) {
 
 	global $wpdb;
 
@@ -3258,21 +3258,19 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 		return false;
 	}
 
-	$bp_get_group_type_count = wp_cache_get( 'bp_get_total_count_by_group_types', 'bp_group_type_total_count_group' );
-
-	if ( ! $bp_get_group_type_count ) {
-		if ( ! bp_is_root_blog() ) {
-			switch_to_blog( bp_get_root_blog_id() );
-		}
-		$bp_group_type_query     = array(
-			'select' => "SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t",
-			'on'     => 'ON tt.term_id = t.term_id',
-			'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
-		);
-		$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
-		wp_cache_set( 'bp_get_total_count_by_group_types', $bp_get_group_type_count, 'bp_group_type_total_count_group' );
-		restore_current_blog();
+	if ( ! bp_is_root_blog() ) {
+		switch_to_blog( bp_get_root_blog_id() );
 	}
+
+	$bp_group_type_query     = array(
+		'select' => "SELECT t.slug, tt.count FROM {$wpdb->term_taxonomy} tt LEFT JOIN {$wpdb->terms} t",
+		'on'     => 'ON tt.term_id = t.term_id',
+		'where'  => $wpdb->prepare( 'WHERE tt.taxonomy = %s', $taxonomy ),
+	);
+	$bp_get_group_type_count = $wpdb->get_results( join( ' ', $bp_group_type_query ) );
+
+	restore_current_blog();
+
 	$bp_group_type_count = wp_filter_object_list( $bp_get_group_type_count, array( 'slug' => $group_type ), 'and', 'count' );
 	$bp_group_type_count = array_values( $bp_group_type_count );
 	if ( empty( $bp_group_type_count ) ) {
@@ -3282,7 +3280,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
 }
 
 /**
- * Sisplays shortcode data.
+ * Displays shortcode data.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3300,7 +3298,7 @@ function bp_group_type_short_code_callback( $atts ) {
 				<div class="subnav-filters filters no-ajax" id="subnav-filters">
 					<?php bp_get_template_part( 'common/filters/grid-filters' ); ?>
 				</div>
-				<div id="groups-dir-list" class="groups dir-list" data-bp-list="">
+				<div id="groups-dir-list" class="groups dir-list">
 					<?php
 					$atts['group_type'] = $atts['type'];
 
@@ -3359,7 +3357,7 @@ function bp_group_type_short_code_add_body_class( $class ) {
 }
 
 /**
- * Excluds specific group types from search and listing.
+ * Excludes specific group types from search and listing.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3368,9 +3366,9 @@ function bp_group_type_short_code_add_body_class( $class ) {
  *
  * @return bool|string
  */
-function bp_group_type_exclude_groups_from_directory_and_searches( $qs = false, $object = false ) {
+function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
-	$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
+	$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
 
 	if ( $object != 'groups' ) {
 		return $qs;
@@ -3398,12 +3396,12 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs = false, 
  *
  * @return array
  */
-function bp_get_groups_of_removed_group_types() {
+function bp_groups_get_excluded_group_ids_by_type() {
 
 	$group_id = array();
 
 	// get removed group type post ids
-	$bp_group_type_ids = bp_get_removed_group_types();
+	$bp_group_type_ids = bp_groups_get_excluded_group_types();
 
 	// get removed group type names/slugs
 	$bp_group_type_names = array();
@@ -3427,6 +3425,7 @@ function bp_get_groups_of_removed_group_types() {
 	}
 
 	return bp_group_ids_array_flatten( $group_id );
+
 }
 
 /**
@@ -3454,16 +3453,16 @@ function bp_group_ids_array_flatten( $array ) {
 }
 
 /**
- * Get removed group types.
+ * Get excluded group types.
  *
  * @since BuddyBoss 1.0.0
  *
  * @return array
  */
-function bp_get_removed_group_types() {
+function bp_groups_get_excluded_group_types() {
 
 	$bp_group_type_ids  = array();
-	$post_type          = bp_get_group_type_post_type();
+	$post_type          = bp_groups_get_group_type_post_type();
 	$bp_group_type_args = array(
 		'post_type'  => $post_type,
 		'meta_query' => array(
@@ -3482,7 +3481,7 @@ function bp_get_removed_group_types() {
 			$bp_group_type_query->the_post();
 
 			$post_id             = get_the_ID();
-			$name                = bp_get_group_type_key( $post_id );
+			$name                = bp_group_get_group_type_key( $post_id );
 			$bp_group_type_ids[] = array(
 				'ID'   => $post_id,
 				'name' => $name,
@@ -3533,7 +3532,7 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
 }
 
 /**
- * Gets the post id of particular profile type.
+ * Gets the post id of particular group type.
  *
  * @since BuddyBoss 1.0.0
  *
@@ -3541,7 +3540,7 @@ function bp_get_group_ids_by_group_types( $group_type = '', $taxonomy = 'bp_grou
  *
  * @return mixed
  */
-function bp_get_group_type_post_id( $group_type = '' ) {
+function bp_group_get_group_type_id( $group_type = '' ) {
 
 	$args             = array(
 		'post_type'  => 'bp-group-type',
@@ -3577,6 +3576,8 @@ function get_group_role_label( $group_id, $label_name ) {
 		return '';
 	}
 
+	$label = '';
+
 	// Get group type of given group id.
 	$get_group_type = bp_groups_get_group_type( $group_id );
 
@@ -3597,7 +3598,7 @@ function get_group_role_label( $group_id, $label_name ) {
 		}
 	} else {
 
-		$group_type_post_id = bp_get_group_type_post_id( $get_group_type );
+		$group_type_post_id = bp_group_get_group_type_id( $get_group_type );
 
 		if ( '' === $group_type_post_id ) {
 

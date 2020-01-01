@@ -1225,6 +1225,9 @@ function bbp_get_reply_author_link( $args = '' ) {
 		),
 		'get_reply_author_link'
 	);
+	
+	// Default return value
+	$author_link = '';
 
 	// Used as reply_id
 	if ( is_numeric( $args ) ) {
@@ -1263,36 +1266,43 @@ function bbp_get_reply_author_link( $args = '' ) {
 			$author_links['name'] = bbp_get_reply_author_display_name( $reply_id );
 		}
 
-		// Link class
-		$link_class = ' class="bbp-author-' . esc_attr( $r['type'] ) . '"';
+		// Empty array
+		$links  = array();
+		$sprint = '<span %1$s>%2$s</span>';
 
-		// Add links if not anonymous and existing user
-		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_reply_author_id( $reply_id ) ) ) {
-
-			$author_link = array();
-
-			// Assemble the links
-			foreach ( $author_links as $link => $link_text ) {
-				$link_class    = ' class="bbp-author-' . $link . '"';
-				$author_link[] = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, $link_class, $link_text );
-			}
-
-			if ( true === $r['show_role'] ) {
-				$author_link[] = bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
-			}
-
-			$author_link = implode( $r['sep'], array_filter( $author_link ) );
-
-			// No links if anonymous
-		} else {
-			$author_link = implode( $r['sep'], array_filter( $author_links ) );
+		// Wrap each link
+		foreach ( $author_links as $link => $link_text ) {
+			$link_class = ' class="bbp-author-' . esc_attr( $link ) . '"';
+			$links[]    = sprintf( $sprint, $link_class, $link_text );
 		}
 
-		// No replies so link is empty
-	} else {
-		$author_link = '';
+		// Juggle
+		$author_links = $links;
+		unset( $links );
+
+		// Filter sections if avatar size is 1 or type is name else assign the author links array itself. Added condition not to show verified badges on avatar.
+        if ( 1 == $r['size'] || 'name' === $r['type'] ) {
+            $sections   = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
+        } else {
+            $sections   = $author_links;
+        }
+
+		// Assemble sections into author link
+		$author_link = implode( $r['sep'], $sections );
+
+		// Only wrap in link if profile exists
+		if ( empty( $anonymous ) && bbp_user_has_profile( bbp_get_reply_author_id( $reply_id ) ) ) {
+			$author_link = sprintf( '<a href="%1$s"%2$s%3$s>%4$s</a>', esc_url( $author_url ), $link_title, ' class="bbp-author-link"', $author_link );
+		}
+
+		// Role is not linked
+		if ( true === $r['show_role'] ) {
+			$author_link .= bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
+		}
+
 	}
 
+	// Filter & return
 	return apply_filters( 'bbp_get_reply_author_link', $author_link, $r );
 }
 

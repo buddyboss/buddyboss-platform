@@ -63,6 +63,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 
 			// Metabox actions
 			add_action( 'add_meta_boxes', array( $this, 'attributes_metabox' ) );
+			add_action( 'add_meta_boxes', array( $this, 'comments_metabox'      ) );
 			add_action( 'save_post', array( $this, 'attributes_metabox_save' ) );
 
 			// Column headers.
@@ -119,7 +120,7 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 		public function bbp_set_hidden_forum_states( $states, $post ) {
 			global $post;
 
-			if ( bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
+			if ( is_array( $post ) && bbp_get_forum_post_type() === get_post_type( $post->ID ) && bbp_get_hidden_status_id() === bbp_get_forum_visibility( $post->ID ) ) {
 
 				$states[] = __( 'Hidden', 'buddyboss' );
 
@@ -292,6 +293,18 @@ if ( ! class_exists( 'BBP_Forums_Admin' ) ) :
 			);
 
 			do_action( 'bbp_forum_attributes_metabox' );
+		}
+
+		/**
+		 * Remove comments & discussion meta-boxes if comments are not supported
+		 *
+		 * @since 2.6.0 bbPress (r6186)
+		 */
+		public function comments_metabox() {
+			if ( ! post_type_supports( $this->post_type, 'comments' ) ) {
+				remove_meta_box( 'commentstatusdiv', $this->post_type, 'normal' );
+				remove_meta_box( 'commentsdiv',      $this->post_type, 'normal' );
+			}
 		}
 
 		/**

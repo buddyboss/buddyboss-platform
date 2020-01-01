@@ -40,7 +40,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Rank Math SEO
 	 */
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
-		require buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php';
+		require buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
 	}
 
 	/**
@@ -67,6 +67,36 @@ function bp_helper_plugins_loaded_callback() {
 		 * This action to update the first and last name usermeta
 		 */
 		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
+	}
+
+	/**
+	 * Include fix when WPML plugin is activated
+	 *
+	 * Support WPML Multilingual CMS
+	 */
+	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
+
+		/**
+		 * Add fix for wpml redirect issue
+		 *
+		 * @since BuddyBoss 1.2.3
+		 *
+		 * @param array $q
+		 */
+		function bp_core_fix_wpml_redirection( $q ) {
+
+			if ( ! bp_is_my_profile() || ! bp_current_component() ) {
+				return $q;
+			}
+
+			if ( in_array( bp_current_component(), array( 'forums', 'photos', 'groups' ) ) ) {
+				if ( isset( bp_core_get_directory_pages()->members->id ) ) {
+					$q->set( 'page_id', bp_core_get_directory_pages()->members->id );
+				}
+			}
+		}
+
+		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
 	}
 }
 

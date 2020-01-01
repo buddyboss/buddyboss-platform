@@ -956,7 +956,7 @@ class BP_Email_Tokens {
 																		<tr>
 																			<td height="34px" style="vertical-align: middle;">
 																				<?php
-																				$friend_count    = friends_get_total_friend_count( $member_id );
+																				$friend_count    = function_exists( 'friends_get_total_friend_count' ) ? friends_get_total_friend_count( $member_id ) : 0;
 																				$connection_text = ( $friend_count > 1 ) ? __( 'connections', 'buddyboss' ) : __( 'connection', 'buddyboss' );
 																				?>
 																				<div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;font-size: <?php echo esc_attr( floor( $settings['body_text_size'] * 0.8125 ) . 'px' ); ?>; color: <?php echo esc_attr( $settings['body_text_color'] ); ?>;">
