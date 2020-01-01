@@ -4917,6 +4917,7 @@ ul.bbp-stats .bbp-count {
   text-align: center;
   text-transform: none;
   width: 20%;
+  visibility: visible !important;
 }
 
 .buddypress-wrap form.bp-dir-search-form button[type="submit"] span,
