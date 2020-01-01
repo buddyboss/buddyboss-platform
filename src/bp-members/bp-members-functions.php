@@ -4782,3 +4782,48 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 
 }
 add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
+
+/**
+ * Function to add the content on top of members listing
+ */
+function bp_members_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['members'] ) ) {
+		$members_page_content = get_post_field('post_content',$page_ids['members'] );
+		echo apply_filters( 'the_content', $members_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
+
+/**
+ * Function to add the content on activate page
+ */
+function bp_activate_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['activate'] ) ) {
+		$activate_page_content = get_post_field('post_content',$page_ids['activate'] );
+		echo apply_filters( 'the_content', $activate_page_content );
+	}
+}
+
+add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
+
+/**
+ * Function to add the content on register page
+ */
+function bp_register_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['register'] ) ) {
+		$register_page_content = get_post_field('post_content',$page_ids['register'] );
+		echo apply_filters( 'the_content', $register_page_content );
+	}
+}
+
+add_action( 'bp_before_register_page', 'bp_register_page_content' );

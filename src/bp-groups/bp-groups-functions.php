@@ -3637,3 +3637,18 @@ function get_group_role_label( $group_id, $label_name ) {
 	return apply_filters( 'bp_' . $label_name, $label, $group_id, $label_name );
 
 }
+
+/**
+ * Function to add the content on top of group listing
+ */
+function bp_group_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['groups'] ) ) {
+		$group_page_content = get_post_field('post_content',$page_ids['groups'] );
+		echo apply_filters( 'the_content', $group_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );

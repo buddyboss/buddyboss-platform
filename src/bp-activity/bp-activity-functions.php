@@ -5256,3 +5256,18 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 
 	return $id;
 }
+
+/**
+ * Function to add the content on top of activity listing
+ */
+function bp_activity_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['activity'] ) ) {
+		$activity_page_content = get_post_field('post_content',$page_ids['activity'] );
+		echo apply_filters( 'the_content', $activity_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );
