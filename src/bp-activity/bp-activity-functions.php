@@ -5259,6 +5259,8 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 
 /**
  * Function to add the content on top of activity listing
+ *
+ * @since BuddyBoss 1.2.9
  */
 function bp_activity_directory_page_content() {
 
