@@ -252,14 +252,11 @@ window.bp = window.bp || {};
 		 * [ajax description]
 		 * @param  {[type]} post_data [description]
 		 * @param  {[type]} object    [description]
+		 * @param  {[type]} button    [description]
 		 * @return {[type]}           [description]
 		 */
-		ajax: function( post_data, object ) {
-			if (
-				this.ajax_request && 'follow' != object && 'friends' != object && (
-					( 'activity' == object && 'activity_filter' == post_data.action ) || ( 'members' == object && 'members_filter' == post_data.action ) || ( 'groups' == object && 'groups_filter' == post_data.action )
-				)
-			) {
+		ajax: function( post_data, object, button ) {
+			if ( this.ajax_request && typeof button === 'undefined' ) {
 				this.ajax_request.abort();
 			}
 
@@ -1255,7 +1252,7 @@ window.bp = window.bp || {};
 				action   : object + '_' + action,
 				item_id  : item_id,
 				_wpnonce : nonce
-			}, object ).done( function( response ) {
+			}, object, true ).done( function( response ) {
 				if ( false === response.success ) {
 					item_inner.prepend( response.data.feedback );
 					target.removeClass( 'pending loading' );
@@ -1343,7 +1340,7 @@ window.bp = window.bp || {};
 		buttonRevert: function( event ) {
 			var target = $( event.currentTarget );
 
-			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) && ! target.hasClass( 'follow-button' ) ) {
+			if ( target.hasClass( 'bp-toggle-action-button-clicked' ) && ! target.hasClass( 'loading' ) ) {
 
 				//support for buddyboss theme for button actions and icons and texts
 				if ( $(document.body).hasClass('buddyboss-theme') && typeof target.data('balloon') !== 'undefined' ) {
