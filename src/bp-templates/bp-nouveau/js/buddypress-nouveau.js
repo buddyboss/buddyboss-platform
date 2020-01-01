@@ -252,10 +252,11 @@ window.bp = window.bp || {};
 		 * [ajax description]
 		 * @param  {[type]} post_data [description]
 		 * @param  {[type]} object    [description]
+		 * @param  {[type]} button    [description]
 		 * @return {[type]}           [description]
 		 */
-		ajax: function( post_data, object ) {
-			if ( this.ajax_request ) {
+		ajax: function( post_data, object, button ) {
+			if ( this.ajax_request && typeof button === 'undefined' ) {
 				this.ajax_request.abort();
 			}
 
@@ -510,7 +511,10 @@ window.bp = window.bp || {};
 			$.each( this.objects, function( o, object ) {
 				objectData = self.getLocalStorage( 'bp-' + object );
 
-				if ( undefined !== objectData.scope ) {
+				var typeType = window.location.hash.substr(1);
+				if ( undefined !== typeType && typeType == 'following' ) {
+					scope = typeType;
+				} else if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
 				}
 
@@ -615,6 +619,7 @@ window.bp = window.bp || {};
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
@@ -1257,7 +1262,7 @@ window.bp = window.bp || {};
 				action   : object + '_' + action,
 				item_id  : item_id,
 				_wpnonce : nonce
-			}, object ).done( function( response ) {
+			}, object, true ).done( function( response ) {
 				if ( false === response.success ) {
 					item_inner.prepend( response.data.feedback );
 					target.removeClass( 'pending loading' );

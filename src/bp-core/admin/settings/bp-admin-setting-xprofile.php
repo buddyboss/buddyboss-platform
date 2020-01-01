@@ -317,32 +317,26 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			?>
 			<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
 				<option value=""><?php esc_html_e( '----', 'buddyboss' ); ?></option>
-												   <?php
-													foreach ( $member_types as $member_type_id ) {
-														$type_name = bp_get_member_type_key( $member_type_id );
-														// $type_id = bp_member_type_term_taxonomy_id( $type_name );
-														$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
-														// if ( ! empty( $type_id ) ) {
-														?>
+					<?php
+					foreach ( $member_types as $member_type_id ) {
+						$type_name = bp_get_member_type_key( $member_type_id );
+						// $type_id = bp_member_type_term_taxonomy_id( $type_name );
+						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+						// if ( ! empty( $type_id ) ) {
+						?>
 						<option
-														<?php
-														selected(
-															$existing_selected,
-															$type_name
-														);
-														?>
+								<?php
+								selected(
+									$existing_selected,
+									$type_name
+								);
+								?>
 							 value="<?php echo $type_name; ?>">
-														<?php
-														esc_html_e(
-															$member_type_name,
-															'buddyboss'
-														);
-														?>
+								<?php printf( esc_html__( '%s', 'buddyboss' ), $member_type_name ); ?>
 							</option>
-																<?php
-																// }
-													}
-													?>
+					<?php
+					}
+					?>
 			</select>
 			<?php
 			printf(
@@ -374,7 +368,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-types.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62802,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -418,7 +420,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => 62803,
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php
@@ -488,7 +498,15 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		?>
 
 		<p>
-			<a class="button" href="<?php echo bp_core_help_docs_link( 'components/profiles/profile-directories.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+			<a class="button" href="<?php echo bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'    => 'bp-help',
+						'article' => '',
+					),
+					'admin.php'
+				)
+			); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 		</p>
 
 		<?php

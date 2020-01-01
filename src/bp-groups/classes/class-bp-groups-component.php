@@ -192,12 +192,16 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
 				if ( in_array( bp_get_group_current_members_tab(), array( 'all-members', 'leaders' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/members/' . bp_get_group_current_members_tab() . '.php';
+				}
+
+				if ( bp_is_group_invites() && is_user_logged_in() ) {
+					require $this->path . 'bp-groups/screens/single/invite.php';
 				}
 
 				// Admin nav items.
@@ -366,6 +370,8 @@ class BP_Groups_Component extends BP_Component {
 				'create',
 				'invites',
 				'send-invites',
+				'invite',
+				'pending-invites',
 				'forum',
 				'delete',
 				'add',
@@ -689,20 +695,37 @@ class BP_Groups_Component extends BP_Component {
 			// show a "Request Membership" nav item.
 			if ( groups_check_for_membership_request( bp_loggedin_user_id(), $this->current_group->id ) || bp_current_user_can( 'groups_request_membership', array( 'group_id' => $this->current_group->id ) ) ) {
 
-				$sub_nav[] = array(
-					'name'            => __( 'Request Access', 'buddyboss' ),
-					'slug'            => 'request-membership',
-					'parent_url'      => $group_link,
-					'parent_slug'     => $this->current_group->slug,
-					'screen_function' => 'groups_screen_group_request_membership',
-					'position'        => 30,
-				);
+				// Don't Show the menu if restrict invite is enabled and member is not a part of parent group.
+				$parent_group_id = bp_get_parent_group_id( $this->current_group->id );
+				if ( isset( $parent_group_id ) && $parent_group_id > 0 && true === bp_enable_group_hierarchies() && true === bp_enable_group_restrict_invites() ) {
+					$is_member = groups_is_user_member( bp_loggedin_user_id(), $parent_group_id );
+					if ( false !== $is_member ) {
+						$sub_nav[] = array(
+							'name'            => __( 'Request Access', 'buddyboss' ),
+							'slug'            => 'request-membership',
+							'parent_url'      => $group_link,
+							'parent_slug'     => $this->current_group->slug,
+							'screen_function' => 'groups_screen_group_request_membership',
+							'position'        => 30,
+						);
+					}
+				} else {
+					$sub_nav[] = array(
+						'name'            => __( 'Request Access', 'buddyboss' ),
+						'slug'            => 'request-membership',
+						'parent_url'      => $group_link,
+						'parent_slug'     => $this->current_group->slug,
+						'screen_function' => 'groups_screen_group_request_membership',
+						'position'        => 30,
+					);
+				}
+
 			}
 
 			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Send Invites', 'buddyboss' ),
-					'slug'            => 'send-invites',
+					'slug'            => 'invite',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_invite',
@@ -710,6 +733,34 @@ class BP_Groups_Component extends BP_Component {
 					'position'        => 70,
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
+				);
+
+				$admin_link_invite = trailingslashit( $group_link . 'invite' );
+				// Common params to all nav items.
+				$default_params_invite = array(
+					'parent_url'        => $admin_link_invite,
+					'parent_slug'       => $this->current_group->slug . '_invite',
+					'screen_function'   => 'groups_screen_group_invite',
+					'user_has_access'   => $this->current_group->user_has_access,
+					'show_in_admin_bar' => true,
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Send Invites', 'buddyboss' ),
+						'slug'     => 'send-invites',
+						'position' => 0,
+					),
+					$default_params_invite
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Pending Invites', 'buddyboss' ),
+						'slug'     => 'pending-invites',
+						'position' => 1,
+					),
+					$default_params_invite
 				);
 			}
 

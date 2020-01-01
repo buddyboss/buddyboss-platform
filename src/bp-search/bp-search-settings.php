@@ -162,6 +162,17 @@ function bp_search_get_settings_fields() {
 			),
 		);
 
+		$fields['bp_search_settings_community']['bp_search_topic_tax_topic-tag'] = array(
+			'title'             => '&#65279;',
+			'callback'          => 'bp_search_settings_callback_post_type_taxonomy',
+			'sanitize_callback' => 'intval',
+			'args'              => array(
+				'post_type' => 'topic',
+				'taxonomy'  =>'topic-tag',
+				'class'     => 'bp-search-child-field',
+			),
+		);
+
 		$fields['bp_search_settings_community']['bp_search_post_type_reply'] = array(
 			'title'             => '&#65279;',
 			'callback'          => 'bp_search_settings_callback_post_type',
@@ -394,7 +405,19 @@ function bp_search_settings_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/network-search.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62840,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -779,7 +802,7 @@ function bp_search_settings_callback_post_type_taxonomy( $args ) {
 		<?php checked( bp_is_search_post_type_taxonomy_enable( $taxonomy, $post_type ) ); ?>
 	/>
 	<label for="<?php echo $option_name; ?>">
-		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->singular_name ); ?>
+		<?php printf( esc_html__( '%s', 'buddyboss' ), $taxonomy_obj->labels->name ); ?>
 	</label>
 	<?php
 }
