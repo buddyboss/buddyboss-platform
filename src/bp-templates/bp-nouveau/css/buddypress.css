@@ -11640,14 +11640,16 @@ img.emojioneemoji {
 #bp-media-create-child-folder .location-folder-list-wrap-main:after {
   content: "\f347";
   font-family: dashicons;
-  color: #dedfe2;
+  color: #c4cbd1;
   position: absolute;
   right: 1em;
+  margin-right: 3px;
   top: 50%;
   pointer-events: none;
   transform: translateY(-50%);
   -webkit-transform: translateY(-50%);
   -moz-transform: translateY(-50%);
+  font-size: 12px;
 }
 
 #bp-media-create-folder .location-folder-list-wrap-main .bb-folder-destination,
@@ -11663,7 +11665,7 @@ img.emojioneemoji {
   bottom: 40px;
   left: 0;
   right: 0;
-  background-color: #ffff;
+  background-color: #fbfbfc;
   border-radius: 4px;
   box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.08);
   z-index: 11;
@@ -11673,9 +11675,9 @@ img.emojioneemoji {
 #bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-title,
 #bp-media-edit-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-title,
 #bp-media-create-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-title {
-  padding: 15px 0;
+  padding: 8px 0;
   display: inline-block;
-  margin-left: 10px;
+  margin-left: 8px;
   vertical-align: middle;
 }
 
@@ -11704,6 +11706,7 @@ img.emojioneemoji {
   list-style: none;
   margin: 0;
   padding: 0;
+  background-color: #fff;
 }
 
 #bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li,
