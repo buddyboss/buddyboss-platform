@@ -4791,7 +4791,7 @@ function bp_members_directory_page_content() {
 	$page_ids = bp_core_get_directory_page_ids();
 
 	if ( ! empty( $page_ids['members'] ) ) {
-		$members_page_content = get_post_field('post_content',$page_ids['members'] );
+		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
 		echo apply_filters( 'the_content', $members_page_content );
 	}
 }
