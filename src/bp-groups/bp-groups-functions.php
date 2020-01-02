@@ -3641,7 +3641,7 @@ function get_group_role_label( $group_id, $label_name ) {
 /**
  * Function to add the content on top of group listing
  *
- * @since BuddyBoss 1.2.9
+ * @since BuddyBoss 1.2.3
  */
 function bp_group_directory_page_content() {
 

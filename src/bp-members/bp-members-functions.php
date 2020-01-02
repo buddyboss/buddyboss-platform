@@ -4816,7 +4816,7 @@ add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
 /**
  * Function to add the content on register page
  *
- * @since BuddyBoss 1.2.9
+ * @since BuddyBoss 1.2.3
  */
 function bp_register_page_content() {
 
