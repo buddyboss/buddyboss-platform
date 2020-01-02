@@ -99,29 +99,35 @@ class BP_Groups_Membership_Requests_Template {
 			$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 		}
 
-		$r = bp_parse_args( $args, array(
-			'page'     => 1,
-			'per_page' => 10,
-			'page_arg' => 'mrpage',
-			'max'      => false,
-			'type'     => 'first_joined',
-			'group_id' => bp_get_current_group_id(),
-		), 'groups_membership_requests_template' );
+		$r = bp_parse_args(
+			$args,
+			array(
+				'page'     => 1,
+				'per_page' => 10,
+				'page_arg' => 'mrpage',
+				'max'      => false,
+				'type'     => 'first_joined',
+				'group_id' => bp_get_current_group_id(),
+			),
+			'groups_membership_requests_template'
+		);
 
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
-		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page']     );
-		$this->pag_num  = bp_sanitize_pagination_arg( 'num',          $r['per_page'] );
+		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
+		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
 
-		$mquery = new BP_Group_Member_Query( array(
-			'group_id' => $r['group_id'],
-			'type'     => $r['type'],
-			'per_page' => $this->pag_num,
-			'page'     => $this->pag_page,
+		$mquery = new BP_Group_Member_Query(
+			array(
+				'group_id'     => $r['group_id'],
+				'type'         => $r['type'],
+				'per_page'     => $this->pag_num,
+				'page'         => $this->pag_page,
 
-			// These filters ensure we only get pending requests.
-			'is_confirmed' => false,
-			'inviter_id'   => 0,
-		) );
+				// These filters ensure we only get pending requests.
+				'is_confirmed' => false,
+				'inviter_id'   => 0,
+			)
+		);
 
 		$this->requests      = array_values( $mquery->results );
 		$this->request_count = count( $this->requests );
@@ -135,7 +141,7 @@ class BP_Groups_Membership_Requests_Template {
 			$this->requests[ $rk ]->id      = $rv->membership_id;
 
 			// Miscellaneous values.
-			$this->requests[ $rk ]->group_id   = $r['group_id'];
+			$this->requests[ $rk ]->group_id = $r['group_id'];
 		}
 
 		if ( empty( $r['max'] ) || ( $r['max'] >= (int) $mquery->total_users ) ) {
@@ -150,16 +156,18 @@ class BP_Groups_Membership_Requests_Template {
 			$this->request_count = (int) $r['max'];
 		}
 
-		$this->pag_links = paginate_links( array(
-			'base'      => add_query_arg( $this->pag_arg, '%#%' ),
-			'format'    => '',
-			'total'     => ceil( $this->total_request_count / $this->pag_num ),
-			'current'   => $this->pag_page,
-			'prev_text' => '&larr;',
-			'next_text' => '&rarr;',
-			'mid_size'  => 1,
-			'add_args'  => array(),
-		) );
+		$this->pag_links = paginate_links(
+			array(
+				'base'      => add_query_arg( $this->pag_arg, '%#%' ),
+				'format'    => '',
+				'total'     => ceil( $this->total_request_count / $this->pag_num ),
+				'current'   => $this->pag_page,
+				'prev_text' => '&larr;',
+				'next_text' => '&rarr;',
+				'mid_size'  => 1,
+				'add_args'  => array(),
+			)
+		);
 	}
 
 	/**

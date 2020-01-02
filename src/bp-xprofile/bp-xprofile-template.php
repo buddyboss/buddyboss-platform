@@ -53,20 +53,24 @@ function bp_has_profile( $args = '' ) {
 	}
 
 	// Parse arguments.
-	$r = bp_parse_args( $args, array(
-		'user_id'                => bp_displayed_user_id(),
-		'member_type'            => 'any',
-		'profile_group_id'       => false,
-		'hide_empty_groups'      => true,
-		'hide_empty_fields'      => $hide_empty_fields_default,
-		'fetch_fields'           => true,
-		'fetch_field_data'       => true,
-		'fetch_visibility_level' => $fetch_visibility_level_default,
-		'exclude_groups'         => false, // Comma-separated list of profile field group IDs to exclude.
-		'exclude_fields'         => false, // Comma-separated list of profile field IDs to exclude.
-		'include_fields'         => false, // Comma-separated list of profile field IDs to include.
-		'update_meta_cache'      => true,
-	), 'has_profile' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'                => bp_displayed_user_id(),
+			'member_type'            => 'any',
+			'profile_group_id'       => false,
+			'hide_empty_groups'      => true,
+			'hide_empty_fields'      => $hide_empty_fields_default,
+			'fetch_fields'           => true,
+			'fetch_field_data'       => true,
+			'fetch_visibility_level' => $fetch_visibility_level_default,
+			'exclude_groups'         => false, // Comma-separated list of profile field group IDs to exclude.
+			'exclude_fields'         => false, // Comma-separated list of profile field IDs to exclude.
+			'include_fields'         => false, // Comma-separated list of profile field IDs to include.
+			'update_meta_cache'      => true,
+		),
+		'has_profile'
+	);
 
 	// Populate the template loop global.
 	$profile_template = new BP_XProfile_Data_Template( $r );
@@ -141,60 +145,60 @@ function bp_field_css_class( $class = false ) {
 	 * @param string|bool $class Extra classes to append to class attribute.
 	 * @return string
 	 */
-	function bp_get_field_css_class( $class = false ) {
-		global $profile_template;
+function bp_get_field_css_class( $class = false ) {
+	global $profile_template;
 
-		$css_classes = array();
+	$css_classes = array();
 
-		if ( ! empty( $class ) ) {
-			if ( ! is_array( $class ) ) {
-				$class = preg_split( '#\s+#', $class );
-			}
-			$css_classes = array_map( 'sanitize_html_class', $class );
+	if ( ! empty( $class ) ) {
+		if ( ! is_array( $class ) ) {
+			$class = preg_split( '#\s+#', $class );
 		}
-
-		// Set a class with the field ID.
-		$css_classes[] = 'field_' . $profile_template->field->id;
-
-		// Set a class with the field name (sanitized).
-		$css_classes[] = 'field_' . sanitize_title( $profile_template->field->name );
-
-		$css_classes[] = 'field_order_' . $profile_template->field->field_order;
-
-		// Set a class indicating whether the field is required or optional.
-		if ( ! empty( $profile_template->field->is_required ) ) {
-			$css_classes[] = 'required-field';
-		} else {
-			$css_classes[] = 'optional-field';
-		}
-
-		// Add the field visibility level.
-		$css_classes[] = 'visibility-' . esc_attr( bp_get_the_profile_field_visibility_level() );
-
-		if ( $profile_template->current_field % 2 == 1 ) {
-			$css_classes[] = 'alt';
-		}
-
-		$css_classes[] = 'field_type_' . sanitize_title( $profile_template->field->type );
-
-		/**
-		 * Filters the field classes to be applied to a field.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param array $css_classes Array of classes to be applied to field. Passed by reference.
-		 */
-		$css_classes = apply_filters_ref_array( 'bp_field_css_classes', array( &$css_classes ) );
-
-		/**
-		 * Filters the class HTML attribute to be used on a field.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $value class HTML attribute with imploded classes.
-		 */
-		return apply_filters( 'bp_get_field_css_class', ' class="' . implode( ' ', $css_classes ) . '"' );
+		$css_classes = array_map( 'sanitize_html_class', $class );
 	}
+
+	// Set a class with the field ID.
+	$css_classes[] = 'field_' . $profile_template->field->id;
+
+	// Set a class with the field name (sanitized).
+	$css_classes[] = 'field_' . sanitize_title( $profile_template->field->name );
+
+	$css_classes[] = 'field_order_' . $profile_template->field->field_order;
+
+	// Set a class indicating whether the field is required or optional.
+	if ( ! empty( $profile_template->field->is_required ) ) {
+		$css_classes[] = 'required-field';
+	} else {
+		$css_classes[] = 'optional-field';
+	}
+
+	// Add the field visibility level.
+	$css_classes[] = 'visibility-' . esc_attr( bp_get_the_profile_field_visibility_level() );
+
+	if ( $profile_template->current_field % 2 == 1 ) {
+		$css_classes[] = 'alt';
+	}
+
+	$css_classes[] = 'field_type_' . sanitize_title( $profile_template->field->type );
+
+	/**
+	 * Filters the field classes to be applied to a field.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param array $css_classes Array of classes to be applied to field. Passed by reference.
+	 */
+	$css_classes = apply_filters_ref_array( 'bp_field_css_classes', array( &$css_classes ) );
+
+	/**
+	 * Filters the class HTML attribute to be used on a field.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $value class HTML attribute with imploded classes.
+	 */
+	return apply_filters( 'bp_get_field_css_class', ' class="' . implode( ' ', $css_classes ) . '"' );
+}
 
 /**
  * Whether or not the XProfile field has data to display.
@@ -262,18 +266,18 @@ function bp_the_profile_group_id() {
 	 *
 	 * @return int
 	 */
-	function bp_get_the_profile_group_id() {
-		global $group;
+function bp_get_the_profile_group_id() {
+	global $group;
 
-		/**
-		 * Filters the XProfile group ID.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param int $id ID for the profile group.
-		 */
-		return (int) apply_filters( 'bp_get_the_profile_group_id', $group->id );
-	}
+	/**
+	 * Filters the XProfile group ID.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param int $id ID for the profile group.
+	 */
+	return (int) apply_filters( 'bp_get_the_profile_group_id', $group->id );
+}
 
 /**
  * Output the XProfile group name.
@@ -291,18 +295,18 @@ function bp_the_profile_group_name() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_group_name() {
-		global $group;
+function bp_get_the_profile_group_name() {
+	global $group;
 
-		/**
-		 * Filters the XProfile group name.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $name Name for the profile group.
-		 */
-		return apply_filters( 'bp_get_the_profile_group_name', $group->name );
-	}
+	/**
+	 * Filters the XProfile group name.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $name Name for the profile group.
+	 */
+	return apply_filters( 'bp_get_the_profile_group_name', $group->name );
+}
 
 /**
  * Output the XProfile group slug.
@@ -320,18 +324,18 @@ function bp_the_profile_group_slug() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_group_slug() {
-		global $group;
+function bp_get_the_profile_group_slug() {
+	global $group;
 
-		/**
-		 * Filters the XProfile group slug.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $value Slug for the profile group.
-		 */
-		return apply_filters( 'bp_get_the_profile_group_slug', sanitize_title( $group->name ) );
-	}
+	/**
+	 * Filters the XProfile group slug.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $value Slug for the profile group.
+	 */
+	return apply_filters( 'bp_get_the_profile_group_slug', sanitize_title( $group->name ) );
+}
 
 /**
  * Output the XProfile group description.
@@ -349,18 +353,18 @@ function bp_the_profile_group_description() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_group_description() {
-		global $group;
+function bp_get_the_profile_group_description() {
+	global $group;
 
-		/**
-		 * Filters the XProfile group description.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $description Description for the profile group.
-		 */
-		return apply_filters( 'bp_get_the_profile_group_description', $group->description );
-	}
+	/**
+	 * Filters the XProfile group description.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $description Description for the profile group.
+	 */
+	return apply_filters( 'bp_get_the_profile_group_description', $group->description );
+}
 
 /**
  * Output the XProfile group edit form action.
@@ -378,22 +382,22 @@ function bp_the_profile_group_edit_form_action() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_group_edit_form_action() {
-		global $group;
+function bp_get_the_profile_group_edit_form_action() {
+	global $group;
 
-		// Build the form action URL.
-		$form_action = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . $group->id );
+	// Build the form action URL.
+	$form_action = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . $group->id );
 
-		/**
-		 * Filters the action for the XProfile group edit form.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $value URL for the action attribute on the
-		 *                      profile group edit form.
-		 */
-		return apply_filters( 'bp_get_the_profile_group_edit_form_action', $form_action );
-	}
+	/**
+	 * Filters the action for the XProfile group edit form.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $value URL for the action attribute on the
+	 *                      profile group edit form.
+	 */
+	return apply_filters( 'bp_get_the_profile_group_edit_form_action', $form_action );
+}
 
 /**
  * Output the XProfile group field IDs.
@@ -411,19 +415,19 @@ function bp_the_profile_group_field_ids() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_group_field_ids() {
-		global $group;
+function bp_get_the_profile_group_field_ids() {
+	global $group;
 
-		$field_ids = '';
+	$field_ids = '';
 
-		if ( !empty( $group->fields ) ) {
-			foreach ( (array) $group->fields as $field ) {
-				$field_ids .= $field->id . ',';
-			}
+	if ( ! empty( $group->fields ) ) {
+		foreach ( (array) $group->fields as $field ) {
+			$field_ids .= $field->id . ',';
 		}
-
-		return substr( $field_ids, 0, -1 );
 	}
+
+	return substr( $field_ids, 0, -1 );
+}
 
 /**
  * Output a comma-separated list of field IDs that are to be submitted on profile edit.
@@ -440,57 +444,57 @@ function bp_the_profile_field_ids() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_ids() {
-		global $profile_template;
+function bp_get_the_profile_field_ids() {
+	global $profile_template;
 
-		$field_ids = array();
-		foreach ( $profile_template->groups as $group ) {
-			if ( ! empty( $group->fields ) ) {
-				$field_ids = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
-			}
+	$field_ids = array();
+	foreach ( $profile_template->groups as $group ) {
+		if ( ! empty( $group->fields ) ) {
+			$field_ids = array_merge( $field_ids, wp_list_pluck( $group->fields, 'id' ) );
 		}
+	}
 
-		// Remove member type field if already added in DB and if profile type is disabled.
-		if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-			if ( function_exists( 'bp_get_xprofile_member_type_field_id') ) {
-				$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
-			}
-		}
-
-		// Remove member type field if there is no any member type in options.
-		if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
+	// Remove member type field if already added in DB and if profile type is disabled.
+	if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+		if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) ) {
 			$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
 		}
-
-		// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
-		$current_value = bp_get_option( 'bp-display-name-format' );
-
-		// If First Name selected then do not add last name field.
-		if ( 'first_name' === $current_value  ) {
-			if ( function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
-				$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
-			}
-		// If Nick Name selected then do not add first & last name field.
-		} elseif ( 'nickname' === $current_value ) {
-			if ( function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
-				$field_ids = array_diff( $field_ids, array( bp_xprofile_firstname_field_id() ) );
-			}
-			if ( function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
-				$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
-			}
-		}
-
-		$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
-
-		/**
-		 * Filters the comma-separated list of field IDs.
-		 *
-		 * @since BuddyPress 2.1.0
-		 *
-		 * @param string $field_ids Comma-separated field IDs.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_ids', $field_ids );
 	}
+
+	// Remove member type field if there is no any member type in options.
+	if ( function_exists( 'bp_check_member_type_field_have_options' ) && false === bp_check_member_type_field_have_options() ) {
+		$field_ids = array_diff( $field_ids, array( bp_get_xprofile_member_type_field_id() ) );
+	}
+
+	// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
+	$current_value = bp_get_option( 'bp-display-name-format' );
+
+	// If First Name selected then do not add last name field.
+	if ( 'first_name' === $current_value ) {
+		if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
+			$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
+		}
+		// If Nick Name selected then do not add first & last name field.
+	} elseif ( 'nickname' === $current_value ) {
+		if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
+			$field_ids = array_diff( $field_ids, array( bp_xprofile_firstname_field_id() ) );
+		}
+		if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
+			$field_ids = array_diff( $field_ids, array( bp_xprofile_lastname_field_id() ) );
+		}
+	}
+
+	$field_ids = implode( ',', wp_parse_id_list( $field_ids ) );
+
+	/**
+	 * Filters the comma-separated list of field IDs.
+	 *
+	 * @since BuddyPress 2.1.0
+	 *
+	 * @param string $field_ids Comma-separated field IDs.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_ids', $field_ids );
+}
 
 /**
  * Return the XProfile fields.
@@ -532,18 +536,18 @@ function bp_the_profile_field_id() {
 	 *
 	 * @return int
 	 */
-	function bp_get_the_profile_field_id() {
-		global $field;
+function bp_get_the_profile_field_id() {
+	global $field;
 
-		/**
-		 * Filters the XProfile field ID.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param int $id ID for the profile field.
-		 */
-		return (int) apply_filters( 'bp_get_the_profile_field_id', $field->id );
-	}
+	/**
+	 * Filters the XProfile field ID.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param int $id ID for the profile field.
+	 */
+	return (int) apply_filters( 'bp_get_the_profile_field_id', $field->id );
+}
 
 /**
  * Outputs the XProfile field name.
@@ -561,42 +565,42 @@ function bp_the_profile_field_name() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_name() {
-		global $field;
+function bp_get_the_profile_field_name() {
+	global $field;
 
-		/**
-		 * Filters the XProfile field name.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $name Name for the profile field.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_name', $field->name );
-	}
+	/**
+	 * Filters the XProfile field name.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $name Name for the profile field.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_name', $field->name );
+}
 
 /**
  * Returns the XProfile field's alternate name, if added, empty otherwise.
- * 
+ *
  * @global \BP_XProfile_Field_Type $field
  * @since BuddyBoss 1.0.0
- * 
+ *
  * @param \BP_XProfile_Field_Type $the_field field object. Optional. Defaults to global $field object.
- * @return string 
+ * @return string
  */
 function bp_get_the_profile_field_alternate_name( $the_field = false ) {
-    if ( !$the_field ) {
-        global $field;
-        $the_field = $field;
-    }
-    
-    /**
-     * Filters the XProfile field's alternate name.
-     *
-     * @since BuddyBoss 1.0.0
-     *
-     * @param string Alternate name for the profile field.
-     */
-    return apply_filters( 'bp_get_the_profile_field_alternate_name', $the_field->get_alternate_name() );
+	if ( ! $the_field ) {
+		global $field;
+		$the_field = $field;
+	}
+
+	/**
+	 * Filters the XProfile field's alternate name.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param string Alternate name for the profile field.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_alternate_name', $the_field->get_alternate_name() );
 }
 
 /**
@@ -615,56 +619,55 @@ function bp_the_profile_field_value() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_value() {
-		global $field;
+function bp_get_the_profile_field_value() {
+	global $field;
 
-		$field->data->value = bp_unserialize_profile_field( $field->data->value );
+	$field->data->value = bp_unserialize_profile_field( $field->data->value );
 
-		if ( 'gender' === $field->type ) {
-			$split_string = explode( '_', $field->data->value, 2 );
-			$field->data->value = $split_string[1];
-		}
+	if ( 'gender' === $field->type ) {
+		$split_string       = explode( '_', $field->data->value, 2 );
+		$field->data->value = $split_string[1];
+	}
 
-		if ( 'membertypes' === $field->type ) {
+	if ( 'membertypes' === $field->type ) {
 
-			// Check member type function exists.
-			if ( function_exists( 'bp_get_member_type') ) {
+		// Check member type function exists.
+		if ( function_exists( 'bp_get_member_type' ) ) {
 
-				// Get member existing member type.
-				$member_type = bp_get_member_type( bp_displayed_user_id() );
-				if ( '' === trim( $member_type ) ) {
-					$field->data->value = '---';
-					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-						xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), '');
-					}
-				} else {
-					if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
-						xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), bp_member_type_post_by_type( $member_type ) );
-					}
-					$member_type_name = get_post_meta( $field->data->value,'_bp_member_type_label_singular_name',true );
-					if ( '' === $member_type_name || false === $member_type_name ) {
-						$field->data->value = '---';
-					} else {
-						$field->data->value = $member_type_name;
-					}
+			// Get member existing member type.
+			$member_type = bp_get_member_type( bp_displayed_user_id() );
+			if ( '' === trim( $member_type ) ) {
+				$field->data->value = '---';
+				if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+					xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), '' );
 				}
 			} else {
-				$field->data->value = '---';
+				if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_xprofile_member_type_field_id() > 0 ) {
+					xprofile_set_field_data( bp_get_xprofile_member_type_field_id(), bp_displayed_user_id(), bp_member_type_post_by_type( $member_type ) );
+				}
+				$member_type_name = get_post_meta( $field->data->value, '_bp_member_type_label_singular_name', true );
+				if ( '' === $member_type_name || false === $member_type_name ) {
+					$field->data->value = '---';
+				} else {
+					$field->data->value = $member_type_name;
+				}
 			}
-
+		} else {
+			$field->data->value = '---';
 		}
-
-		/**
-		 * Filters the XProfile field value.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param string $value Value for the profile field.
-		 * @param string $type  Type for the profile field.
-		 * @param int    $id    ID for the profile field.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_value', $field->data->value, $field->type, $field->id );
 	}
+
+	/**
+	 * Filters the XProfile field value.
+	 *
+	 * @since BuddyPress 1.0.0
+	 *
+	 * @param string $value Value for the profile field.
+	 * @param string $type  Type for the profile field.
+	 * @param int    $id    ID for the profile field.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_value', $field->data->value, $field->type, $field->id );
+}
 
 /**
  * Outputs the XProfile field edit value.
@@ -682,37 +685,37 @@ function bp_the_profile_field_edit_value() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_edit_value() {
-		global $field;
+function bp_get_the_profile_field_edit_value() {
+	global $field;
 
-		// Make sure field data object exists
-		if ( ! isset( $field->data ) ) {
-			$field->data = new stdClass;
-		}
-
-		// Default to empty value
-		if ( ! isset( $field->data->value ) ) {
-			$field->data->value = '';
-		}
-
-		// Was a new value posted? If so, use it instead.
-		if ( isset( $_POST['field_' . $field->id] ) ) {
-
-			// This is sanitized via the filter below (based on the field type)
-			$field->data->value = $_POST['field_' . $field->id];
-		}
-
-		/**
-		 * Filters the XProfile field edit value.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $field_value Current field edit value.
-		 * @param string $type        Type for the profile field.
-		 * @param int    $id          ID for the profile field.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_edit_value', $field->data->value, $field->type, $field->id );
+	// Make sure field data object exists
+	if ( ! isset( $field->data ) ) {
+		$field->data = new stdClass();
 	}
+
+	// Default to empty value
+	if ( ! isset( $field->data->value ) ) {
+		$field->data->value = '';
+	}
+
+	// Was a new value posted? If so, use it instead.
+	if ( isset( $_POST[ 'field_' . $field->id ] ) ) {
+
+		// This is sanitized via the filter below (based on the field type)
+		$field->data->value = $_POST[ 'field_' . $field->id ];
+	}
+
+	/**
+	 * Filters the XProfile field edit value.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $field_value Current field edit value.
+	 * @param string $type        Type for the profile field.
+	 * @param int    $id          ID for the profile field.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_edit_value', $field->data->value, $field->type, $field->id );
+}
 
 /**
  * Outputs the XProfile field type.
@@ -730,18 +733,18 @@ function bp_the_profile_field_type() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_type() {
-		global $field;
+function bp_get_the_profile_field_type() {
+	global $field;
 
-		/**
-		 * Filters the XProfile field type.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $type Type for the profile field.
-		 */
-		return apply_filters( 'bp_the_profile_field_type', $field->type );
-	}
+	/**
+	 * Filters the XProfile field type.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $type Type for the profile field.
+	 */
+	return apply_filters( 'bp_the_profile_field_type', $field->type );
+}
 
 /**
  * Outputs the XProfile field description.
@@ -759,18 +762,18 @@ function bp_the_profile_field_description() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_description() {
-		global $field;
+function bp_get_the_profile_field_description() {
+	global $field;
 
-		/**
-		 * Filters the XProfile field description.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $description Description for the profile field.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_description', $field->description );
-	}
+	/**
+	 * Filters the XProfile field description.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $description Description for the profile field.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_description', $field->description );
+}
 
 /**
  * Outputs the XProfile field input name.
@@ -788,18 +791,18 @@ function bp_the_profile_field_input_name() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_input_name() {
-		global $field;
+function bp_get_the_profile_field_input_name() {
+	global $field;
 
-		/**
-		 * Filters the profile field input name.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $value Value used for the name attribute on an input.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_input_name', 'field_' . $field->id );
-	}
+	/**
+	 * Filters the profile field input name.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $value Value used for the name attribute on an input.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_input_name', 'field_' . $field->id );
+}
 
 /**
  * Returns the action name for any signup errors related to this profile field.
@@ -845,37 +848,41 @@ function bp_the_profile_field_options( $args = array() ) {
 	 *
 	 * @return string $vaue Field options markup.
 	 */
-	function bp_get_the_profile_field_options( $args = array() ) {
-		global $field;
+function bp_get_the_profile_field_options( $args = array() ) {
+	global $field;
 
-		$args = bp_parse_args( $args, array(
+	$args = bp_parse_args(
+		$args,
+		array(
 			'type'    => false,
 			'user_id' => bp_displayed_user_id(),
-		), 'get_the_profile_field_options' );
+		),
+		'get_the_profile_field_options'
+	);
 
-		/**
-		 * In some cases, the $field global is not an instantiation of the BP_XProfile_Field class.
-		 * However, we have to make sure that all data originally in $field gets merged back in, after reinstantiation.
-		 */
-		if ( ! method_exists( $field, 'get_children' ) ) {
-			$field_obj = xprofile_get_field( $field->id );
+	/**
+	 * In some cases, the $field global is not an instantiation of the BP_XProfile_Field class.
+	 * However, we have to make sure that all data originally in $field gets merged back in, after reinstantiation.
+	 */
+	if ( ! method_exists( $field, 'get_children' ) ) {
+		$field_obj = xprofile_get_field( $field->id );
 
-			foreach ( $field as $field_prop => $field_prop_value ) {
-				if ( ! isset( $field_obj->{$field_prop} ) ) {
-					$field_obj->{$field_prop} = $field_prop_value;
-				}
+		foreach ( $field as $field_prop => $field_prop_value ) {
+			if ( ! isset( $field_obj->{$field_prop} ) ) {
+				$field_obj->{$field_prop} = $field_prop_value;
 			}
-
-			$field = $field_obj;
 		}
 
-		ob_start();
-		$field->type_obj->edit_field_options_html( $args );
-		$html = ob_get_contents();
-		ob_end_clean();
-
-		return $html;
+		$field = $field_obj;
 	}
+
+	ob_start();
+	$field->type_obj->edit_field_options_html( $args );
+	$html = ob_get_contents();
+	ob_end_clean();
+
+	return $html;
+}
 
 /**
  * Render whether or not a profile field is required.
@@ -893,26 +900,26 @@ function bp_the_profile_field_is_required() {
 	 *
 	 * @return bool
 	 */
-	function bp_get_the_profile_field_is_required() {
-		global $field;
+function bp_get_the_profile_field_is_required() {
+	global $field;
 
-		$retval = false;
+	$retval = false;
 
-		if ( isset( $field->is_required ) ) {
-			$retval = $field->is_required;
-		}
-
-		/**
-		 * Filters whether or not a profile field is required.
-		 *
-		 * @since BuddyPress 1.1.0
-		 * @since BuddyPress 2.8.0 Added field ID.
-		 *
-		 * @param bool   $retval Whether or not the field is required.
-		 * @param string $value  Field ID that may be required.
-		 */
-		return (bool) apply_filters( 'bp_get_the_profile_field_is_required', $retval, $field->id );
+	if ( isset( $field->is_required ) ) {
+		$retval = $field->is_required;
 	}
+
+	/**
+	 * Filters whether or not a profile field is required.
+	 *
+	 * @since BuddyPress 1.1.0
+	 * @since BuddyPress 2.8.0 Added field ID.
+	 *
+	 * @param bool   $retval Whether or not the field is required.
+	 * @param string $value  Field ID that may be required.
+	 */
+	return (bool) apply_filters( 'bp_get_the_profile_field_is_required', $retval, $field->id );
+}
 
 /**
  * Output the visibility level of this field.
@@ -930,27 +937,27 @@ function bp_the_profile_field_visibility_level() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_visibility_level() {
-		global $field;
+function bp_get_the_profile_field_visibility_level() {
+	global $field;
 
-		// On the registration page, values stored in POST should take
-		// precedence over default visibility, so that submitted values
-		// are not lost on failure.
-		if ( bp_is_register_page() && ! empty( $_POST['field_' . $field->id . '_visibility'] ) ) {
-			$retval = esc_attr( $_POST['field_' . $field->id . '_visibility'] );
-		} else {
-			$retval = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
-		}
-
-		/**
-		 * Filters the profile field visibility level.
-		 *
-		 * @since BuddyPress 1.6.0
-		 *
-		 * @param string $retval Field visibility level.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_visibility_level', $retval );
+	// On the registration page, values stored in POST should take
+	// precedence over default visibility, so that submitted values
+	// are not lost on failure.
+	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) {
+		$retval = esc_attr( $_POST[ 'field_' . $field->id . '_visibility' ] );
+	} else {
+		$retval = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}
+
+	/**
+	 * Filters the profile field visibility level.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param string $retval Field visibility level.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_visibility_level', $retval );
+}
 
 /**
  * Echo the visibility level label of this field.
@@ -968,31 +975,31 @@ function bp_the_profile_field_visibility_level_label() {
 	 *
 	 * @return string
 	 */
-	function bp_get_the_profile_field_visibility_level_label() {
-		global $field;
+function bp_get_the_profile_field_visibility_level_label() {
+	global $field;
 
-		// On the registration page, values stored in POST should take
-		// precedence over default visibility, so that submitted values
-		// are not lost on failure.
-		if ( bp_is_register_page() && ! empty( $_POST['field_' . $field->id . '_visibility'] ) ) {
-			$level = esc_html( $_POST['field_' . $field->id . '_visibility'] );
-		} else {
-			$level = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
-		}
-
-		$fields = bp_xprofile_get_visibility_levels();
-
-		/**
-		 * Filters the profile field visibility level label.
-		 *
-		 * @since BuddyPress 1.6.0
-		 * @since BuddyPress 2.6.0 Added the `$level` parameter.
-		 *
-		 * @param string $retval Field visibility level label.
-		 * @param string $level  Field visibility level.
-		 */
-		return apply_filters( 'bp_get_the_profile_field_visibility_level_label', $fields[ $level ]['label'], $level );
+	// On the registration page, values stored in POST should take
+	// precedence over default visibility, so that submitted values
+	// are not lost on failure.
+	if ( bp_is_register_page() && ! empty( $_POST[ 'field_' . $field->id . '_visibility' ] ) ) {
+		$level = esc_html( $_POST[ 'field_' . $field->id . '_visibility' ] );
+	} else {
+		$level = ! empty( $field->visibility_level ) ? $field->visibility_level : 'public';
 	}
+
+	$fields = bp_xprofile_get_visibility_levels();
+
+	/**
+	 * Filters the profile field visibility level label.
+	 *
+	 * @since BuddyPress 1.6.0
+	 * @since BuddyPress 2.6.0 Added the `$level` parameter.
+	 *
+	 * @param string $retval Field visibility level label.
+	 * @param string $level  Field visibility level.
+	 */
+	return apply_filters( 'bp_get_the_profile_field_visibility_level_label', $fields[ $level ]['label'], $level );
+}
 
 /**
  * Return unserialized profile field data, and combine any array items into a
@@ -1004,8 +1011,8 @@ function bp_the_profile_field_visibility_level_label() {
  * @return string
  */
 function bp_unserialize_profile_field( $value ) {
-	if ( is_serialized($value) ) {
-		$field_value = @unserialize($value);
+	if ( is_serialized( $value ) ) {
+		$field_value = @unserialize( $value );
 		$field_value = implode( ', ', $field_value );
 		return $field_value;
 	}
@@ -1037,24 +1044,27 @@ function bp_profile_field_data( $args = '' ) {
 	 * }
 	 * @return mixed
 	 */
-	function bp_get_profile_field_data( $args = '' ) {
+function bp_get_profile_field_data( $args = '' ) {
 
-		$r = wp_parse_args( $args, array(
+	$r = wp_parse_args(
+		$args,
+		array(
 			'field'   => false, // Field name or ID.
-			'user_id' => bp_displayed_user_id()
-		) );
+			'user_id' => bp_displayed_user_id(),
+		)
+	);
 
-		/**
-		 * Filters the profile field data.
-		 *
-		 * @since BuddyPress 1.2.0
-		 * @since BuddyPress 2.6.0 Added the `$r` parameter.
-		 *
-		 * @param mixed $value Profile data for a specific field for the user.
-		 * @param array $r     Array of parsed arguments.
-		 */
-		return apply_filters( 'bp_get_profile_field_data', xprofile_get_field_data( $r['field'], $r['user_id'] ), $r );
-	}
+	/**
+	 * Filters the profile field data.
+	 *
+	 * @since BuddyPress 1.2.0
+	 * @since BuddyPress 2.6.0 Added the `$r` parameter.
+	 *
+	 * @param mixed $value Profile data for a specific field for the user.
+	 * @param array $r     Array of parsed arguments.
+	 */
+	return apply_filters( 'bp_get_profile_field_data', xprofile_get_field_data( $r['field'], $r['user_id'] ), $r );
+}
 
 /**
  * Get all profile field groups.
@@ -1147,7 +1157,7 @@ function bp_get_profile_group_tabs() {
 		}
 
 		// Build the profile field group link.
-		$link   = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . $groups[ $i ]->id );
+		$link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/' . $groups[ $i ]->id );
 
 		// Add tab to end of tabs array.
 		$tabs[] = sprintf(
@@ -1196,28 +1206,28 @@ function bp_profile_group_name( $deprecated = true ) {
 	 *
 	 * @return string
 	 */
-	function bp_get_profile_group_name() {
+function bp_get_profile_group_name() {
 
-		// Check action variable.
-		$group_id = bp_action_variable( 1 );
-		if ( empty( $group_id ) || ! is_numeric( $group_id ) ) {
-			$group_id = 1;
-		}
-
-		// Check for cached group.
-		$group = new BP_XProfile_Group( $group_id );
-
-		/**
-		 * Filters the profile group name.
-		 *
-		 * @since BuddyPress 1.0.0
-		 * @since BuddyPress 2.6.0 Added the `$group_id` parameter
-		 *
-		 * @param string $name     Name of the profile group.
-		 * @param int    $group_id ID of the profile group.
-		 */
-		return apply_filters( 'bp_get_profile_group_name', $group->name, $group_id );
+	// Check action variable.
+	$group_id = bp_action_variable( 1 );
+	if ( empty( $group_id ) || ! is_numeric( $group_id ) ) {
+		$group_id = 1;
 	}
+
+	// Check for cached group.
+	$group = new BP_XProfile_Group( $group_id );
+
+	/**
+	 * Filters the profile group name.
+	 *
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 2.6.0 Added the `$group_id` parameter
+	 *
+	 * @param string $name     Name of the profile group.
+	 * @param int    $group_id ID of the profile group.
+	 */
+	return apply_filters( 'bp_get_profile_group_name', $group->name, $group_id );
+}
 
 /**
  * Render a formatted string displaying when a profile was last updated.
@@ -1242,24 +1252,24 @@ function bp_profile_last_updated() {
 	 *
 	 * @return bool|string
 	 */
-	function bp_get_profile_last_updated() {
+function bp_get_profile_last_updated() {
 
-		$last_updated = bp_get_user_meta( bp_displayed_user_id(), 'profile_last_updated', true );
+	$last_updated = bp_get_user_meta( bp_displayed_user_id(), 'profile_last_updated', true );
 
-		if ( ! empty( $last_updated ) ) {
+	if ( ! empty( $last_updated ) ) {
 
-			/**
-			 * Filters the formatted string used to display when a profile was last updated.
-			 *
-			 * @since BuddyPress 1.0.0
-			 *
-			 * @param string $value Formatted last updated indicator string.
-			 */
-			return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
-		}
-
-		return false;
+		/**
+		 * Filters the formatted string used to display when a profile was last updated.
+		 *
+		 * @since BuddyPress 1.0.0
+		 *
+		 * @param string $value Formatted last updated indicator string.
+		 */
+		return apply_filters( 'bp_get_profile_last_updated', sprintf( __( 'Profile updated %s', 'buddyboss' ), bp_core_time_since( strtotime( $last_updated ) ) ) );
 	}
+
+	return false;
+}
 
 /**
  * Display the current profile group ID.
@@ -1277,23 +1287,23 @@ function bp_current_profile_group_id() {
 	 *
 	 * @return int
 	 */
-	function bp_get_current_profile_group_id() {
-		$profile_group_id = bp_action_variable( 1 );
-		if ( empty( $profile_group_id ) ) {
-			$profile_group_id = 1;
-		}
-
-		/**
-		 * Filters the current profile group ID.
-		 *
-		 * Possible values are admin/profile/edit/[group-id].
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param int $profile_group_id Current profile group ID.
-		 */
-		return (int) apply_filters( 'bp_get_current_profile_group_id', $profile_group_id );
+function bp_get_current_profile_group_id() {
+	$profile_group_id = bp_action_variable( 1 );
+	if ( empty( $profile_group_id ) ) {
+		$profile_group_id = 1;
 	}
+
+	/**
+	 * Filters the current profile group ID.
+	 *
+	 * Possible values are admin/profile/edit/[group-id].
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param int $profile_group_id Current profile group ID.
+	 */
+	return (int) apply_filters( 'bp_get_current_profile_group_id', $profile_group_id );
+}
 
 /**
  * Render an avatar delete link.
@@ -1311,17 +1321,17 @@ function bp_avatar_delete_link() {
 	 *
 	 * @return string
 	 */
-	function bp_get_avatar_delete_link() {
+function bp_get_avatar_delete_link() {
 
-		/**
-		 * Filters the link used for deleting an avatar.
-		 *
-		 * @since BuddyPress 1.1.0
-		 *
-		 * @param string $value Nonced URL used for deleting an avatar.
-		 */
-		return apply_filters( 'bp_get_avatar_delete_link', wp_nonce_url( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-avatar/delete-avatar/', 'bp_delete_avatar_link' ) );
-	}
+	/**
+	 * Filters the link used for deleting an avatar.
+	 *
+	 * @since BuddyPress 1.1.0
+	 *
+	 * @param string $value Nonced URL used for deleting an avatar.
+	 */
+	return apply_filters( 'bp_get_avatar_delete_link', wp_nonce_url( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-avatar/delete-avatar/', 'bp_delete_avatar_link' ) );
+}
 
 /**
  * Render an edit profile button.
@@ -1329,15 +1339,17 @@ function bp_avatar_delete_link() {
  * @since BuddyPress 1.0.0
  */
 function bp_edit_profile_button() {
-	bp_button( array(
-		'id'                => 'edit_profile',
-		'component'         => 'xprofile',
-		'must_be_logged_in' => true,
-		'block_self'        => true,
-		'link_href'         => trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit' ),
-		'link_class'        => 'edit',
-		'link_text'         => __( 'Edit Profile', 'buddyboss' ),
-	) );
+	bp_button(
+		array(
+			'id'                => 'edit_profile',
+			'component'         => 'xprofile',
+			'must_be_logged_in' => true,
+			'block_self'        => true,
+			'link_href'         => trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit' ),
+			'link_class'        => 'edit',
+			'link_text'         => __( 'Edit Profile', 'buddyboss' ),
+		)
+	);
 }
 
 /** Visibility ****************************************************************/
@@ -1369,33 +1381,37 @@ function bp_profile_visibility_radio_buttons( $args = '' ) {
 	 * }
 	 * @return string $retval
 	 */
-	function bp_profile_get_visibility_radio_buttons( $args = '' ) {
+function bp_profile_get_visibility_radio_buttons( $args = '' ) {
 
-		// Parse optional arguments.
-		$r = bp_parse_args( $args, array(
+	// Parse optional arguments.
+	$r = bp_parse_args(
+		$args,
+		array(
 			'field_id'     => bp_get_the_profile_field_id(),
 			'before'       => '<div class="radio">',
 			'after'        => '</div>',
 			'before_radio' => '',
 			'after_radio'  => '',
-			'class'        => 'bp-xprofile-visibility'
-		), 'xprofile_visibility_radio_buttons' );
+			'class'        => 'bp-xprofile-visibility',
+		),
+		'xprofile_visibility_radio_buttons'
+	);
 
-		// Empty return value, filled in below if a valid field ID is found.
-		$retval = '';
+	// Empty return value, filled in below if a valid field ID is found.
+	$retval = '';
 
-		// Only do-the-do if there's a valid field ID.
-		if ( ! empty( $r['field_id'] ) ) :
+	// Only do-the-do if there's a valid field ID.
+	if ( ! empty( $r['field_id'] ) ) :
 
-			// Start the output buffer.
-			ob_start();
+		// Start the output buffer.
+		ob_start();
 
-			// Output anything before.
-			echo $r['before']; ?>
+		// Output anything before.
+		echo $r['before']; ?>
 
 			<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
-				<?php foreach( bp_xprofile_get_visibility_levels() as $level ) : ?>
+				<?php foreach ( bp_xprofile_get_visibility_levels() as $level ) : ?>
 
 					<?php printf( $r['before_radio'], esc_attr( $level['id'] ) ); ?>
 
@@ -1408,7 +1424,8 @@ function bp_profile_visibility_radio_buttons( $args = '' ) {
 
 				<?php endforeach; ?>
 
-			<?php endif;
+				<?php
+			endif;
 
 			// Output anything after.
 			echo $r['after'];
@@ -1417,17 +1434,17 @@ function bp_profile_visibility_radio_buttons( $args = '' ) {
 			$retval = ob_get_clean();
 		endif;
 
-		/**
-		 * Filters the radio buttons for setting visibility.
-		 *
-		 * @since BuddyPress 1.6.0
-		 *
-		 * @param string $retval HTML output for the visibility radio buttons.
-		 * @param array  $r      Parsed arguments to be used with display.
-		 * @param array  $args   Original passed in arguments to be used with display.
-		 */
-		return apply_filters( 'bp_profile_get_visibility_radio_buttons', $retval, $r, $args );
-	}
+	/**
+	 * Filters the radio buttons for setting visibility.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 * @param string $retval HTML output for the visibility radio buttons.
+	 * @param array  $r      Parsed arguments to be used with display.
+	 * @param array  $args   Original passed in arguments to be used with display.
+	 */
+	return apply_filters( 'bp_profile_get_visibility_radio_buttons', $retval, $r, $args );
+}
 
 /**
  * Output the XProfile field visibility select list for settings.
@@ -1459,42 +1476,49 @@ function bp_profile_settings_visibility_select( $args = '' ) {
 	 * }
 	 * @return string $retval
 	 */
-	function bp_profile_get_settings_visibility_select( $args = '' ) {
+function bp_profile_get_settings_visibility_select( $args = '' ) {
 
-		// Parse optional arguments.
-		$r = bp_parse_args( $args, array(
-			'field_id'         => bp_get_the_profile_field_id(),
-			'before'           => '',
-			'before_controls'  => '',
-			'after'            => '',
-			'after_controls'   => '',
-			'class'            => 'bp-xprofile-visibility',
-			'label_class'      => 'bp-screen-reader-text',
-			'notoggle_tag'     => 'span',
-			'notoggle_class'   => 'field-visibility-settings-notoggle',
-		), 'xprofile_settings_visibility_select' );
+	// Parse optional arguments.
+	$r = bp_parse_args(
+		$args,
+		array(
+			'field_id'        => bp_get_the_profile_field_id(),
+			'before'          => '',
+			'before_controls' => '',
+			'after'           => '',
+			'after_controls'  => '',
+			'class'           => 'bp-xprofile-visibility',
+			'label_class'     => 'bp-screen-reader-text',
+			'notoggle_tag'    => 'span',
+			'notoggle_class'  => 'field-visibility-settings-notoggle',
+		),
+		'xprofile_settings_visibility_select'
+	);
 
-		// Empty return value, filled in below if a valid field ID is found.
-		$retval = '';
+	// Empty return value, filled in below if a valid field ID is found.
+	$retval = '';
 
-		// Only do-the-do if there's a valid field ID.
-		if ( ! empty( $r['field_id'] ) ) :
+	// Only do-the-do if there's a valid field ID.
+	if ( ! empty( $r['field_id'] ) ) :
 
-			// Start the output buffer.
-			ob_start();
+		// Start the output buffer.
+		ob_start();
 
-			// Output anything before.
-			echo $r['before']; ?>
+		// Output anything before.
+		echo $r['before'];
+		?>
 
 			<?php if ( bp_current_user_can( 'bp_xprofile_change_field_visibility' ) ) : ?>
 
-			<?php echo $r['before_controls']; ?>
+				<?php echo $r['before_controls']; ?>
 
-				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ) ; ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>"><?php
-					/* translators: accessibility text */
-					_e( 'Select visibility', 'buddyboss' );
-				?></label>
-				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ) ; ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ) ; ?>_visibility">
+				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
+									   <?php
+										/* translators: accessibility text */
+										_e( 'Select visibility', 'buddyboss' );
+										?>
+				</label>
+				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 
 					<?php foreach ( bp_xprofile_get_visibility_levels() as $level ) : ?>
 
@@ -1504,13 +1528,14 @@ function bp_profile_settings_visibility_select( $args = '' ) {
 
 				</select>
 
-			<?php echo $r['after_controls']; ?>
+				<?php echo $r['after_controls']; ?>
 
 			<?php else : ?>
 
 				<<?php echo esc_html( $r['notoggle_tag'] ); ?> class="<?php echo esc_attr( $r['notoggle_class'] ); ?>"><?php bp_the_profile_field_visibility_level_label(); ?></<?php echo esc_html( $r['notoggle_tag'] ); ?>>
 
-			<?php endif;
+				<?php
+			endif;
 
 			// Output anything after.
 			echo $r['after'];
@@ -1519,17 +1544,17 @@ function bp_profile_settings_visibility_select( $args = '' ) {
 			$retval = ob_get_clean();
 		endif;
 
-		/**
-		 * Filters the dropdown list for setting visibility.
-		 *
-		 * @since BuddyPress 2.0.0
-		 *
-		 * @param string $retval HTML output for the visibility dropdown list.
-		 * @param array  $r      Parsed arguments to be used with display.
-		 * @param array  $args   Original passed in arguments to be used with display.
-		 */
-		return apply_filters( 'bp_profile_settings_visibility_select', $retval, $r, $args );
-	}
+	/**
+	 * Filters the dropdown list for setting visibility.
+	 *
+	 * @since BuddyPress 2.0.0
+	 *
+	 * @param string $retval HTML output for the visibility dropdown list.
+	 * @param array  $r      Parsed arguments to be used with display.
+	 * @param array  $args   Original passed in arguments to be used with display.
+	 */
+	return apply_filters( 'bp_profile_settings_visibility_select', $retval, $r, $args );
+}
 
 /**
  * Output the 'required' markup in extended profile field labels.
@@ -1547,20 +1572,20 @@ function bp_the_profile_field_required_label() {
 	 *
 	 * @return string HTML for the required label.
 	 */
-	function bp_get_the_profile_field_required_label() {
-		$retval = '';
+function bp_get_the_profile_field_required_label() {
+	$retval = '';
 
-		if ( bp_get_the_profile_field_is_required() ) {
-			$translated_string = __( '(required)', 'buddyboss' );
+	if ( bp_get_the_profile_field_is_required() ) {
+		$translated_string = __( '(required)', 'buddyboss' );
 
-			$retval = ' <span class="bp-required-field-label">';
-			$retval .= apply_filters( 'bp_get_the_profile_field_required_label', $translated_string, bp_get_the_profile_field_id() );
-			$retval .= '</span>';
+		$retval  = ' <span class="bp-required-field-label">';
+		$retval .= apply_filters( 'bp_get_the_profile_field_required_label', $translated_string, bp_get_the_profile_field_id() );
+		$retval .= '</span>';
 
-		}
-
-		return $retval;
 	}
+
+	return $retval;
+}
 
 /**
  * Output the 'optional' markup in extended profile field labels.
@@ -1586,7 +1611,7 @@ function bp_get_the_profile_field_optional_label() {
 		// @note Removed (optional) text from here for the future reference.
 		$translated_string = __( '(optional)', 'buddyboss' );
 
-		$retval = ' <span class="bp-optional-field-label">';
+		$retval  = ' <span class="bp-optional-field-label">';
 		$retval .= apply_filters( 'bp_get_the_profile_field_optional_label', $translated_string, bp_get_the_profile_field_id() );
 		$retval .= '</span>';
 
@@ -1616,29 +1641,28 @@ function bp_field_data_attribute( $attribute = false ) {
 	 * @param string|bool $attribute Extra data to append to data attribute.
 	 * @return string
 	 */
-	function bp_get_field_data_attribute( $attribute = false ) {
-		global $profile_template;
+function bp_get_field_data_attribute( $attribute = false ) {
+	global $profile_template;
 
-		$data_attribute = array();
+	$data_attribute = array();
 
+	$data_attribute[] = ' data-index="' . $profile_template->field->field_order . '" ';
 
-		$data_attribute[] = ' data-index="' . $profile_template->field->field_order . '" ';
+	/**
+	 * Filters the field data to be applied to a field.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param array $data_attribute Array of data attribute to be applied to field. Passed by reference.
+	 */
+	$data_attribute = apply_filters_ref_array( 'bp_field_data_attribute', array( &$data_attribute ) );
 
-		/**
-		 * Filters the field data to be applied to a field.
-		 *
-		 * @since BuddyBoss 1.1.6
-		 *
-		 * @param array $data_attribute Array of data attribute to be applied to field. Passed by reference.
-		 */
-		$data_attribute = apply_filters_ref_array( 'bp_field_data_attribute', array( &$data_attribute ) );
-
-		/**
-		 * Filters the data HTML attribute to be used on a field.
-		 *
-		 * @since BuddyBoss 1.1.6
-		 *
-		 * @param string $value data HTML attribute with imploded data attributes.
-		 */
-		return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
-	}
+	/**
+	 * Filters the data HTML attribute to be used on a field.
+	 *
+	 * @since BuddyBoss 1.1.6
+	 *
+	 * @param string $value data HTML attribute with imploded data attributes.
+	 */
+	return apply_filters( 'bp_get_field_data_attribute', implode( ' ', $data_attribute ) . '"' );
+}

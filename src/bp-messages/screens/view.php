@@ -37,7 +37,7 @@ function messages_screen_conversation() {
 			bp_core_no_access();
 			return;
 
-		// Redirect away.
+			// Redirect away.
 		} else {
 			bp_core_add_message( __( 'You do not have access to that conversation.', 'buddyboss' ), 'error' );
 			bp_core_redirect( trailingslashit( bp_loggedin_user_domain() . bp_get_messages_slug() ) );
@@ -50,12 +50,15 @@ function messages_screen_conversation() {
 	// Decrease the unread count in the nav before it's rendered.
 	$count    = bp_get_total_unread_messages_count();
 	$class    = ( 0 === $count ) ? 'no-count' : 'count';
-	$nav_name = sprintf( __( 'Messages <span class="%s">%s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
+	$nav_name = sprintf( __( 'Messages <span class="%1$s">%2$s</span>', 'buddyboss' ), esc_attr( $class ), bp_core_number_format( $count ) );
 
 	// Edit the Navigation name.
-	$bp->members->nav->edit_nav( array(
-		'name' => $nav_name,
-	), $bp->messages->slug );
+	$bp->members->nav->edit_nav(
+		array(
+			'name' => $nav_name,
+		),
+		$bp->messages->slug
+	);
 
 	/**
 	 * Fires right before the loading of the Messages view screen template file.

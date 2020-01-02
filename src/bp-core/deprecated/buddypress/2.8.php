@@ -129,7 +129,7 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 	if ( function_exists( 'wp_get_ext_types' ) ) {
 		$p = '<p>%s</p>';
 
-	// WP < 4.6.
+		// WP < 4.6.
 	} else {
 		$p = '%s';
 
@@ -139,7 +139,8 @@ function bp_core_admin_php52_plugin_row( $file, $plugin_data ) {
 
 	echo '<tr class="plugin-update-tr' . $active_class . '" id="' . esc_attr( $response->slug . '-update' ) . '" data-slug="' . esc_attr( $response->slug ) . '" data-plugin="' . esc_attr( $file ) . '"><td colspan="' . esc_attr( $wp_list_table->get_column_count() ) . '" class="plugin-update colspanchange"><div class="update-message inline notice notice-error notice-alt">';
 
-	printf( $p,
+	printf(
+		$p,
 		esc_html__( 'A BuddyPress update is available, but your system is not compatible.', 'buddyboss' ) . ' ' .
 		sprintf( __( 'See <a href="%s">the Codex guide</a> for more information.', 'buddyboss' ), 'https://codex.buddypress.org/getting-started/buddypress-2-8-will-require-php-5-3/' )
 	);

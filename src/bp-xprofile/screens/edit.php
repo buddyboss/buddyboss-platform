@@ -11,7 +11,6 @@
  * Also checks to make sure this can only be accessed for the logged in users profile.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function xprofile_screen_edit_profile() {
 
@@ -42,7 +41,7 @@ function xprofile_screen_edit_profile() {
 		check_admin_referer( 'bp_xprofile_edit' );
 
 		// First, clear the data for deleted fields, if any
-		if ( isset( $_POST['deleted_field_ids'] ) && !empty( $_POST['deleted_field_ids'] ) ) {
+		if ( isset( $_POST['deleted_field_ids'] ) && ! empty( $_POST['deleted_field_ids'] ) ) {
 			$deleted_field_ids = wp_parse_id_list( $_POST['deleted_field_ids'] );
 			foreach ( $deleted_field_ids as $deleted_field_id ) {
 				xprofile_delete_field_data( $deleted_field_id, bp_displayed_user_id() );
@@ -56,17 +55,17 @@ function xprofile_screen_edit_profile() {
 
 		// Explode the posted field IDs into an array so we know which
 		// fields have been submitted.
-		$posted_field_ids = wp_parse_id_list( $_POST['field_ids'] );
-		$is_required      = array();
-		$validations      = array();
-		$is_required_fields_error      = array();
+		$posted_field_ids         = wp_parse_id_list( $_POST['field_ids'] );
+		$is_required              = array();
+		$validations              = array();
+		$is_required_fields_error = array();
 
 		// Loop through the posted fields formatting any datebox values then validate the field.
 		foreach ( (array) $posted_field_ids as $field_id ) {
 			bp_xprofile_maybe_format_datebox_post_data( $field_id );
 
 			$is_required[ $field_id ] = xprofile_check_is_required_field( $field_id );
-			if ( $is_required[$field_id] && empty( $_POST['field_' . $field_id] ) ) {
+			if ( $is_required[ $field_id ] && empty( $_POST[ 'field_' . $field_id ] ) ) {
 				$errors                     = true;
 				$field                      = new BP_XProfile_Field( $field_id );
 				$field_name                 = $field->name;
@@ -76,61 +75,65 @@ function xprofile_screen_edit_profile() {
 			$field = new BP_XProfile_Field( $field_id );
 			if ( 'membertypes' === $field->type ) {
 
-				$member_type_name = bp_get_member_type_key( $_POST['field_' . $field_id] );
+				$member_type_name = bp_get_member_type_key( $_POST[ 'field_' . $field_id ] );
 
 				// Get selected profile type role.
-				$selected_member_type_wp_roles = get_post_meta( $_POST['field_' . $field_id], '_bp_member_type_wp_roles', true );
+				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
-				if ( 'administrator' !== $selected_member_type_wp_roles[0] && current_user_can('administrator') ) {
-					$errors = true;
-					$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
-					$validations[] = $bp_error_message_string;
-				} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor','administrator')) && current_user_can('editor') ) {
-					$errors = true;
-					$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
-					$validations[] = $bp_error_message_string;
-				} else {
-					bp_set_member_type( bp_displayed_user_id(), '' );
-					bp_set_member_type( bp_displayed_user_id(), $member_type_name );
+				if (
+					! empty( $selected_member_type_wp_roles )
+					&& 'none' !== $selected_member_type_wp_roles[0]
+				) {
 
-					if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
-						$bp_current_user = new WP_User( bp_displayed_user_id() );
+					if ( 'administrator' !== $selected_member_type_wp_roles[0] && current_user_can( 'administrator' ) ) {
+						$errors                  = true;
+						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
+						$validations[]           = $bp_error_message_string;
+					} elseif ( ! in_array( $selected_member_type_wp_roles[0], array( 'editor', 'administrator' ) ) && current_user_can( 'editor' ) ) {
+						$errors                  = true;
+						$bp_error_message_string = __( 'Changing this profile type would remove your Editor role and lock you out of the WordPress admin.', 'buddyboss' );
+						$validations[]           = $bp_error_message_string;
+					} else {
+						bp_set_member_type( bp_displayed_user_id(), '' );
+						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
 
-						foreach ( $bp_current_user->roles as $role ) {
-							// Remove role
-							$bp_current_user->remove_role( $role );
+						if ( isset( $selected_member_type_wp_roles[0] ) && 'none' !== $selected_member_type_wp_roles[0] ) {
+							$bp_current_user = new WP_User( bp_displayed_user_id() );
+
+							foreach ( $bp_current_user->roles as $role ) {
+								// Remove role
+								$bp_current_user->remove_role( $role );
+							}
+
+							// Add role
+							$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
 						}
-
-						// Add role
-						$bp_current_user->add_role( $selected_member_type_wp_roles[0] );
 					}
 				}
-
 			}
 
-
 			if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], bp_displayed_user_id() ) ) {
-				$errors = true;
+				$errors        = true;
 				$validations[] = $message;
 			}
 		}
 
 		// There are validation errors.
-		if ( !empty( $errors ) && $validations ) {
+		if ( ! empty( $errors ) && $validations ) {
 			foreach ( $validations as $validation ) {
 				bp_core_add_message( $validation, 'error' );
 			}
 
-		// There are errors.
-		} else if ( !empty( $errors ) ) {
+			// There are errors.
+		} elseif ( ! empty( $errors ) ) {
 			if ( count( $is_required_fields_error ) > 1 ) {
-				bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ),'error' );
+				bp_core_add_message( __( 'Your changes have not been saved. Please fill in all required fields, and save your changes again.', 'buddyboss' ), 'error' );
 			} else {
-				$message_error = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode(', ', $is_required_fields_error ) );
+				$message_error = sprintf( __( '%s is required and not allowed to be empty.', 'buddyboss' ), implode( ', ', $is_required_fields_error ) );
 				bp_core_add_message( $message_error, 'error' );
 			}
 
-		// No errors.
+			// No errors.
 		} else {
 
 			// Reset the errors var.
@@ -141,9 +144,9 @@ function xprofile_screen_edit_profile() {
 			foreach ( (array) $posted_field_ids as $field_id ) {
 
 				// Certain types of fields (checkboxes, multiselects) may come through empty. Save them as an empty array so that they don't get overwritten by the default on the next edit.
-				$value = isset( $_POST['field_' . $field_id] ) ? $_POST['field_' . $field_id] : '';
+				$value = isset( $_POST[ 'field_' . $field_id ] ) ? $_POST[ 'field_' . $field_id ] : '';
 
-				$visibility_level = !empty( $_POST['field_' . $field_id . '_visibility'] ) ? $_POST['field_' . $field_id . '_visibility'] : 'public';
+				$visibility_level = ! empty( $_POST[ 'field_' . $field_id . '_visibility' ] ) ? $_POST[ 'field_' . $field_id . '_visibility' ] : 'public';
 
 				// Save the old and new values. They will be
 				// passed to the filter and used to determine
@@ -193,7 +196,7 @@ function xprofile_screen_edit_profile() {
 			do_action( 'xprofile_updated_profile', bp_displayed_user_id(), $posted_field_ids, $errors, $old_values, $new_values );
 
 			// Set the feedback messages.
-			if ( !empty( $errors ) ) {
+			if ( ! empty( $errors ) ) {
 				bp_core_add_message( __( 'There was a problem updating some of your profile information. Please try again.', 'buddyboss' ), 'error' );
 			} else {
 				bp_core_add_message( __( 'Changes saved.', 'buddyboss' ) );

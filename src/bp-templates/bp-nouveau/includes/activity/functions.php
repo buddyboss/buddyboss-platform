@@ -54,6 +54,12 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+
+	// Enqueue activity form parts and js required for single activity
+	if ( bp_nouveau_current_user_can( 'publish_activity' ) && bp_is_single_activity() ) {
+		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
+		bp_get_template_part( 'common/js-templates/activity/form' );
+	}
 }
 
 /**
@@ -97,7 +103,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 			) ),
 			'avatar_width'      => $width,
 			'avatar_height'     => $height,
-			'user_display_name' => bp_get_loggedin_user_fullname(),
+			'user_display_name' => bp_core_get_user_displayname( bp_loggedin_user_id() ),
 			'user_domain'       => bp_loggedin_user_domain(),
 			'avatar_alt'        => sprintf(
 			/* translators: %s = member name */
@@ -166,7 +172,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name&hellip;', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}
@@ -256,7 +262,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 				'slug'      => 'favorites', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/favorites/',
-				'text'      => __( 'My Likes', 'buddyboss' ),
+				'text'      => __( 'Likes', 'buddyboss' ),
 				'count'     => false,
 				'position'  => 10,
 			);
@@ -271,7 +277,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 					'slug'      => 'friends', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array( 'dynamic' ),
 					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_friends_slug() . '/',
-					'text'      => __( 'My Connections', 'buddyboss' ),
+					'text'      => __( 'Connections', 'buddyboss' ),
 					'count'     => false,
 					'position'  => 15,
 				);
@@ -284,7 +290,7 @@ function bp_nouveau_get_activity_directory_nav_items() {
 					'slug'      => 'groups', // slug is used because BP_Core_Nav requires it, but it's the scope
 					'li_class'  => array( 'dynamic' ),
 					'link'      => bp_loggedin_user_domain() . bp_get_activity_slug() . '/' . bp_get_groups_slug() . '/',
-					'text'      => __( 'My Groups', 'buddyboss' ),
+					'text'      => __( 'Groups', 'buddyboss' ),
 					'count'     => false,
 					'position'  => 25,
 				);

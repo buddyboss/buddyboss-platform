@@ -29,10 +29,6 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 		),
-		'select2' => array(
-			'file'         => buddypress()->plugin_url . 'bp-core/css/select2.min.css',
-			'dependencies' => []
-		)
 	) );
 }
 
@@ -51,10 +47,6 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
-		'bp-nouveau-select2' => array(
-			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/select2.min.js',
-			'footer'       => false,
-		),
 		'bp-nouveau-messages-at' => array(
 			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
 			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
@@ -63,7 +55,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 		),
 		'bp-nouveau-messages' => array(
 			'file'         => 'js/buddypress-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-nouveau-select2' ),
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
 			'footer'       => true,
 		),
 	) );
@@ -80,7 +72,7 @@ function bp_nouveau_messages_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-messages' );
-	wp_enqueue_script( 'select2' );
+	wp_enqueue_script( 'bp-select2' );
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -280,7 +272,7 @@ function bp_nouveau_unregister_notices_widget() {
  */
 function bp_nouveau_push_sitewide_notices() {
 	// Do not show notices if user is not logged in.
-	if ( ! is_user_logged_in() || ! bp_is_my_profile() ) {
+	if ( ! is_user_logged_in() ) {
 		return;
 	}
 

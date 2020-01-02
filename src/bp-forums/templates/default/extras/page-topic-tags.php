@@ -12,7 +12,10 @@ get_header(); ?>
 
 	<?php do_action( 'bbp_template_notices' ); ?>
 
-	<?php while ( have_posts() ) : the_post(); ?>
+	<?php
+	while ( have_posts() ) :
+		the_post();
+		?>
 
 		<div id="bbp-topic-tags" class="bbp-topic-tags">
 			<h1 class="entry-title"><?php the_title(); ?></h1>
@@ -26,7 +29,16 @@ get_header(); ?>
 
 					<div id="bbp-topic-hot-tags">
 
-						<?php wp_tag_cloud( array( 'smallest' => 9, 'largest' => 38, 'number' => 80, 'taxonomy' => bbp_get_topic_tag_tax_id() ) ); ?>
+						<?php
+						wp_tag_cloud(
+							array(
+								'smallest' => 9,
+								'largest'  => 38,
+								'number'   => 80,
+								'taxonomy' => bbp_get_topic_tag_tax_id(),
+							)
+						);
+						?>
 
 					</div>
 				</div>

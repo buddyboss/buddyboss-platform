@@ -25,7 +25,7 @@ class BP_RankMath_Title implements IPaper {
 	public function title() {
 		if ( bp_is_user() ) {
 			$title = get_user_meta( bp_displayed_user_id(), 'first_name', true );
-			if ( empty( $title )) {
+			if ( empty( $title ) ) {
 				$title = get_user_meta( bp_displayed_user_id(), 'nickname', true );
 			}
 		} else {
@@ -42,6 +42,15 @@ class BP_RankMath_Title implements IPaper {
 	 */
 	public function description() {
 		return isset( buddypress()->groups->current_group->description ) ? buddypress()->groups->current_group->description : '';
+	}
+
+	/**
+	 * Retrieves the Advanced Robots.
+	 *
+	 * @return string
+	 */
+	public function advanced_robots() {
+		return array();
 	}
 
 	/**

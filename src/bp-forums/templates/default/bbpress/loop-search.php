@@ -4,7 +4,7 @@
  * Search Loop
  *
  * @package BuddyBoss\Theme
-*/
+ */
 
 ?>
 
@@ -14,7 +14,7 @@
 
 	<li class="bbp-header">
 
-		<div class="bbp-search-author"><?php  _e( 'Author',  'buddyboss' ); ?></div><!-- .bbp-reply-author -->
+		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div><!-- .bbp-reply-author -->
 
 		<div class="bbp-search-content">
 
@@ -26,7 +26,10 @@
 
 	<li class="bbp-body">
 
-		<?php while ( bbp_search_results() ) : bbp_the_search_result(); ?>
+		<?php
+		while ( bbp_search_results() ) :
+			bbp_the_search_result();
+			?>
 
 			<?php bbp_get_template_part( 'loop', 'search-' . get_post_type() ); ?>
 
@@ -36,7 +39,7 @@
 
 	<li class="bbp-footer">
 
-		<div class="bbp-search-author"><?php  _e( 'Author',  'buddyboss' ); ?></div>
+		<div class="bbp-search-author"><?php _e( 'Author', 'buddyboss' ); ?></div>
 
 		<div class="bbp-search-content">
 

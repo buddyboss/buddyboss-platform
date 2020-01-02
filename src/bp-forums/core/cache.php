@@ -26,7 +26,6 @@ defined( 'ABSPATH' ) || exit;
  * cache invalidations to occur on a single edit, which is no good for anyone.
  *
  * @since bbPress (r4011)
- *
  */
 class BBP_Skip_Children {
 
@@ -66,8 +65,9 @@ class BBP_Skip_Children {
 	public function pre_post_update( $post_id = 0 ) {
 
 		// Bail if post ID is not a Forums post type
-		if ( empty( $post_id ) || ! bbp_is_custom_post_type( $post_id ) )
+		if ( empty( $post_id ) || ! bbp_is_custom_post_type( $post_id ) ) {
 			return;
+		}
 
 		// Store the $post_id
 		$this->updating_post = $post_id;
@@ -89,8 +89,9 @@ class BBP_Skip_Children {
 	public function skip_related_posts( $post_id = 0 ) {
 
 		// Bail if this post is not the current Forums post
-		if ( empty( $post_id ) || ( $this->updating_post !== $post_id ) )
+		if ( empty( $post_id ) || ( $this->updating_post !== $post_id ) ) {
 			return;
+		}
 
 		// Stash the current cache invalidation value in a variable, so we can
 		// restore back to it nicely in the future.
@@ -133,10 +134,11 @@ function bbp_clean_post_cache( $_post = '' ) {
 
 	// Bail if no post
 	$_post = get_post( $_post );
-	if ( empty( $_post ) )
+	if ( empty( $_post ) ) {
 		return;
+	}
 
-	wp_cache_delete( $_post->ID, 'posts'     );
+	wp_cache_delete( $_post->ID, 'posts' );
 	wp_cache_delete( $_post->ID, 'post_meta' );
 
 	clean_object_term_cache( $_post->ID, $_post->post_type );
@@ -147,16 +149,16 @@ function bbp_clean_post_cache( $_post = '' ) {
 	$post_types = array(
 		bbp_get_topic_post_type(),
 		bbp_get_forum_post_type(),
-		bbp_get_reply_post_type()
+		bbp_get_reply_post_type(),
 	);
 
 	// Loop through query types and clean caches
 	foreach ( $post_types as $post_type ) {
-		wp_cache_delete( 'bbp_get_forum_'     . $_post->ID . '_reply_id',                              'bbpress_posts' );
-		wp_cache_delete( 'bbp_parent_'        . $_post->ID . '_type_' . $post_type . '_child_last_id', 'bbpress_posts' );
-		wp_cache_delete( 'bbp_parent_'        . $_post->ID . '_type_' . $post_type . '_child_count',   'bbpress_posts' );
-		wp_cache_delete( 'bbp_parent_public_' . $_post->ID . '_type_' . $post_type . '_child_ids',     'bbpress_posts' );
-		wp_cache_delete( 'bbp_parent_all_'    . $_post->ID . '_type_' . $post_type . '_child_ids',     'bbpress_posts' );
+		wp_cache_delete( 'bbp_get_forum_' . $_post->ID . '_reply_id', 'bbpress_posts' );
+		wp_cache_delete( 'bbp_parent_' . $_post->ID . '_type_' . $post_type . '_child_last_id', 'bbpress_posts' );
+		wp_cache_delete( 'bbp_parent_' . $_post->ID . '_type_' . $post_type . '_child_count', 'bbpress_posts' );
+		wp_cache_delete( 'bbp_parent_public_' . $_post->ID . '_type_' . $post_type . '_child_ids', 'bbpress_posts' );
+		wp_cache_delete( 'bbp_parent_all_' . $_post->ID . '_type_' . $post_type . '_child_ids', 'bbpress_posts' );
 	}
 
 	// Invalidate parent caches

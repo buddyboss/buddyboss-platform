@@ -29,6 +29,15 @@ function groups_register_activity_actions() {
 
 	bp_activity_set_action(
 		$bp->groups->id,
+		'activity_update',
+		__( 'Posted a status update', 'buddyboss' ),
+		'bp_groups_format_activity_action_activity_update',
+		__( 'Updates', 'buddyboss' ),
+		array( 'activity', 'group', 'member', 'member_groups' )
+	);
+
+	bp_activity_set_action(
+		$bp->groups->id,
 		'created_group',
 		__( 'Created a group', 'buddyboss' ),
 		'bp_groups_format_activity_action_created_group',
@@ -78,7 +87,7 @@ function bp_groups_format_activity_action_created_group( $action, $activity ) {
 	$group      = groups_get_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
-	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss'), $user_link, $group_link );
+	$action = sprintf( __( '%1$s created the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
 	/**
 	 * Filters the 'created_group' activity actions.
@@ -131,6 +140,34 @@ function bp_groups_format_activity_action_joined_group( $action, $activity ) {
 }
 
 /**
+ * Format groups 'activity_update' activity actions.
+ *
+ * @since BuddyBoss 1.1.9
+ *
+ * @param string $action   Static activity action.
+ * @param object $activity Activity data object.
+ * @return string
+ */
+function bp_groups_format_activity_action_activity_update( $action, $activity ) {
+	$user_link = bp_core_get_userlink( $activity->user_id );
+
+	$group      = groups_get_group( $activity->item_id );
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+
+	$action = sprintf( __( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
+
+	/**
+	 * Filters the groups 'activity_update' activity actions.
+	 *
+	 * @since BuddyBoss 1.1.9
+	 *
+	 * @param string $action   The groups 'activity_update' activity actions.
+	 * @param object $activity Activity data object.
+	 */
+	return apply_filters( 'bp_groups_format_activity_action_activity_update', $action, $activity );
+}
+
+/**
  * Format 'group_details_updated' activity actions.
  *
  * @since BuddyPress 2.2.0
@@ -155,15 +192,15 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 	if ( empty( $changed ) ) {
 		$action = sprintf( __( '%1$s updated details for the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
-	// Name and description changed - to keep things short, don't describe changes in detail.
+		// Name and description changed - to keep things short, don't describe changes in detail.
 	} elseif ( isset( $changed['name'] ) && isset( $changed['description'] ) ) {
 		$action = sprintf( __( '%1$s changed the name and description of the group %2$s', 'buddyboss' ), $user_link, $group_link );
 
-	// Name only.
+		// Name only.
 	} elseif ( ! empty( $changed['name']['old'] ) && ! empty( $changed['name']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the name of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['name']['old'] ), esc_html( $changed['name']['new'] ) );
 
-	// Description only.
+		// Description only.
 	} elseif ( ! empty( $changed['description']['old'] ) && ! empty( $changed['description']['new'] ) ) {
 		$action = sprintf( __( '%1$s changed the description of the group %2$s from "%3$s" to "%4$s"', 'buddyboss' ), $user_link, $group_link, esc_html( $changed['description']['old'] ), esc_html( $changed['description']['new'] ) );
 
@@ -222,9 +259,9 @@ function bp_groups_prefetch_activity_object_data( $activities ) {
 
 		if ( ! empty( $uncached_ids ) ) {
 			global $wpdb;
-			$bp = buddypress();
+			$bp               = buddypress();
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
-			$groups = $wpdb->get_results( "SELECT * FROM {$bp->groups->table_name} WHERE id IN ({$uncached_ids_sql})" );
+			$groups           = $wpdb->get_results( "SELECT * FROM {$bp->groups->table_name} WHERE id IN ({$uncached_ids_sql})" );
 			foreach ( $groups as $group ) {
 				wp_cache_set( $group->id, $group, 'bp_groups' );
 			}
@@ -266,7 +303,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 	if ( ! empty( $user_id ) && ( $user_id !== bp_loggedin_user_id() ) ) {
 		$show_hidden = array(
 			'column' => 'hide_sitewide',
-			'value'  => 0
+			'value'  => 0,
 		);
 	}
 
@@ -276,12 +313,12 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 			'relation' => 'AND',
 			array(
 				'column' => 'component',
-				'value'  => buddypress()->groups->id
+				'value'  => buddypress()->groups->id,
 			),
 			array(
 				'column'  => 'item_id',
 				'compare' => 'IN',
-				'value'   => (array) $groups['groups']
+				'value'   => (array) $groups['groups'],
 			),
 		),
 		$show_hidden,
@@ -289,7 +326,7 @@ function bp_groups_filter_activity_scope( $retval = array(), $filter = array() )
 		// Overrides.
 		'override' => array(
 			'filter'      => array( 'user_id' => 0 ),
-			'show_hidden' => true
+			'show_hidden' => true,
 		),
 	);
 
@@ -327,7 +364,7 @@ function groups_record_activity( $args = '' ) {
 
 	// Set the default for hide_sitewide by checking the status of the group.
 	$hide_sitewide = false;
-	if ( !empty( $args['item_id'] ) ) {
+	if ( ! empty( $args['item_id'] ) ) {
 		if ( bp_get_current_group_id() == $args['item_id'] ) {
 			$group = groups_get_current_group();
 		} else {
@@ -339,21 +376,25 @@ function groups_record_activity( $args = '' ) {
 		}
 	}
 
-	$r = bp_parse_args( $args, array(
-		'id'                => false,
-		'user_id'           => bp_loggedin_user_id(),
-		'action'            => '',
-		'content'           => '',
-		'primary_link'      => '',
-		'component'         => buddypress()->groups->id,
-		'type'              => false,
-		'item_id'           => false,
-		'secondary_item_id' => false,
-		'recorded_time'     => bp_core_current_time(),
-		'hide_sitewide'     => $hide_sitewide,
-		'privacy'           => 'public',
-		'error_type'        => 'bool'
-	), 'groups_record_activity' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'id'                => false,
+			'user_id'           => bp_loggedin_user_id(),
+			'action'            => '',
+			'content'           => '',
+			'primary_link'      => '',
+			'component'         => buddypress()->groups->id,
+			'type'              => false,
+			'item_id'           => false,
+			'secondary_item_id' => false,
+			'recorded_time'     => bp_core_current_time(),
+			'hide_sitewide'     => $hide_sitewide,
+			'privacy'           => 'public',
+			'error_type'        => 'bool',
+		),
+		'groups_record_activity'
+	);
 
 	return bp_activity_add( $r );
 }
@@ -380,7 +421,7 @@ function bp_groups_filter_activity_can_comment( $retval, $activity = null ) {
 		$component = $activity->component;
 		$group_id  = $activity->item_id;
 
-	// Use activity info from current activity item in the loop.
+		// Use activity info from current activity item in the loop.
 	} else {
 		$component = bp_get_activity_object_name();
 		$group_id  = bp_get_activity_item_id();
@@ -458,12 +499,14 @@ function bp_groups_membership_accepted_add_activity( $user_id, $group_id ) {
 	$action = apply_filters_ref_array( 'groups_activity_membership_accepted_action', array( sprintf( __( '%1$s joined the group %2$s', 'buddyboss' ), bp_core_get_userlink( $user_id ), '<a href="' . bp_get_group_permalink( $group ) . '">' . esc_attr( $group->name ) . '</a>' ), $user_id, &$group ) );
 
 	// Record in activity feeds.
-	groups_record_activity( array(
-		'action'  => $action,
-		'type'    => 'joined_group',
-		'item_id' => $group_id,
-		'user_id' => $user_id
-	) );
+	groups_record_activity(
+		array(
+			'action'  => $action,
+			'type'    => 'joined_group',
+			'item_id' => $group_id,
+			'user_id' => $user_id,
+		)
+	);
 }
 add_action( 'groups_membership_accepted', 'bp_groups_membership_accepted_add_activity', 10, 2 );
 
@@ -493,9 +536,11 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 		return;
 	}
 
-	$group = groups_get_group( array(
-		'group_id' => $group_id,
-	) );
+	$group = groups_get_group(
+		array(
+			'group_id' => $group_id,
+		)
+	);
 
 	/*
 	 * Store the changed data, which will be used to generate the activity
@@ -535,13 +580,15 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 	groups_update_groupmeta( $group_id, 'updated_details_' . $time, $changed );
 
 	// Record in activity feeds.
-	return groups_record_activity( array(
-		'type'          => 'group_details_updated',
-		'item_id'       => $group_id,
-		'user_id'       => bp_loggedin_user_id(),
-		'recorded_time' => $time,
+	return groups_record_activity(
+		array(
+			'type'          => 'group_details_updated',
+			'item_id'       => $group_id,
+			'user_id'       => bp_loggedin_user_id(),
+			'recorded_time' => $time,
 
-	) );
+		)
+	);
 
 }
 add_action( 'groups_details_updated', 'bp_groups_group_details_updated_add_activity', 10, 3 );
@@ -555,10 +602,12 @@ add_action( 'groups_details_updated', 'bp_groups_group_details_updated_add_activ
  */
 function bp_groups_delete_group_delete_all_activity( $group_id ) {
 	if ( bp_is_active( 'activity' ) ) {
-		bp_activity_delete_by_item_id( array(
-			'item_id'   => $group_id,
-			'component' => buddypress()->groups->id
-		) );
+		bp_activity_delete_by_item_id(
+			array(
+				'item_id'   => $group_id,
+				'component' => buddypress()->groups->id,
+			)
+		);
 	}
 }
 add_action( 'groups_delete_group', 'bp_groups_delete_group_delete_all_activity', 10 );
@@ -587,14 +636,16 @@ function bp_groups_leave_group_delete_recent_activity( $group_id, $user_id ) {
 
 	// Check the time period, and maybe delete their recent group activity.
 	if ( time() <= strtotime( '+5 minutes', (int) strtotime( $membership->date_modified ) ) ) {
-		bp_activity_delete( array(
-			'component' => buddypress()->groups->id,
-			'type'      => 'joined_group',
-			'user_id'   => $user_id,
-			'item_id'   => $group_id
-		) );
+		bp_activity_delete(
+			array(
+				'component' => buddypress()->groups->id,
+				'type'      => 'joined_group',
+				'user_id'   => $user_id,
+				'item_id'   => $group_id,
+			)
+		);
 	}
 }
-add_action( 'groups_leave_group',   'bp_groups_leave_group_delete_recent_activity', 10, 2 );
+add_action( 'groups_leave_group', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
 add_action( 'groups_remove_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );
-add_action( 'groups_ban_member',    'bp_groups_leave_group_delete_recent_activity', 10, 2 );
+add_action( 'groups_ban_member', 'bp_groups_leave_group_delete_recent_activity', 10, 2 );

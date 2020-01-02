@@ -54,7 +54,7 @@ window.bp = window.bp || {};
 
 			$.ajaxPrefilter( this.memberPreFilter );
 			$.ajaxPrefilter( this.groupPreFilter );
-			
+
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
 			$( window ).on( 'scroll resize',function(){
@@ -156,6 +156,49 @@ window.bp = window.bp || {};
 		},
 
 		/**
+		 * [setLocalStorage description]
+		 * @param {[type]} type     [description]
+		 * @param {[type]} property [description]
+		 * @param {[type]} value    [description]
+		 */
+		setLocalStorage: function( type, property, value ) {
+			var store = this.getLocalStorage( type );
+
+			if ( undefined === value && undefined !== store[ property ] ) {
+				delete store[ property ];
+			} else {
+				// Set property
+				store[ property ] = value;
+			}
+
+			localStorage.setItem( type, JSON.stringify( store ) );
+
+			return localStorage.getItem( type ) !== null;
+		},
+
+		/**
+		 * [getLocalStorage description]
+		 * @param  {[type]} type     [description]
+		 * @param  {[type]} property [description]
+		 * @return {[type]}          [description]
+		 */
+		getLocalStorage: function( type, property ) {
+			var store = localStorage.getItem( type );
+
+			if ( store ) {
+				store = JSON.parse( store );
+			} else {
+				store = {};
+			}
+
+			if ( undefined !== property ) {
+				return store[property] || false;
+			}
+
+			return store;
+		},
+
+		/**
 		 * [getLinkParams description]
 		 * @param  {[type]} url   [description]
 		 * @param  {[type]} param [description]
@@ -209,10 +252,11 @@ window.bp = window.bp || {};
 		 * [ajax description]
 		 * @param  {[type]} post_data [description]
 		 * @param  {[type]} object    [description]
+		 * @param  {[type]} button    [description]
 		 * @return {[type]}           [description]
 		 */
-		ajax: function( post_data, object ) {
-			if ( this.ajax_request ) {
+		ajax: function( post_data, object, button ) {
+			if ( this.ajax_request && typeof button === 'undefined' ) {
 				this.ajax_request.abort();
 			}
 
@@ -242,20 +286,61 @@ window.bp = window.bp || {};
 			 * - prepend: the content will be added before selector's content
 			 */
 			method = method || 'reset';
-
 			if ( 'append' === method ) {
-				$( selector ).append( content );
+				$( selector ).append( content ).find( 'li.activity-item' ).each( this.hideSingleUrl	);
 			} else if ( 'prepend' === method ) {
-				$( selector ).prepend( content );
+				$( selector ).prepend( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			} else {
-				$( selector ).html( content );
+				$( selector ).html( content ).find( 'li.activity-item' ).each( this.hideSingleUrl );
 			}
 
 			if ( 'undefined' !== typeof bp_mentions || 'undefined' !== typeof bp.mentions ) {
 				$( '.bp-suggestions' ).bp_mentions( bp.mentions.users );
 			}
 		},
+		/**
+		 * [hideSingleUrl description]
+		 * @param  {[type]} event [description]
+		 * @param  {[type]} request [description]
+		 * @param  {[type]} settings [description]
+		 * @return {[type]}       [description]
+		 */
+		hideSingleUrl: function() {
+			var _findtext 	= 	$( this ).find('.activity-inner > p').removeAttr('br').removeAttr('a').text();
+			var	_url	 	= 	'',
+				_newString	=	'',
+				startIndex  =   '',
+				_is_exist 	=	0;
+			if ( 0 <= _findtext.indexOf( 'http://' )) {
+				startIndex 	= 	_findtext.indexOf( 'http://' );
+				_is_exist	=	1;
+			} else if (0 	<= _findtext.indexOf( 'https://' )) {
+				startIndex 	= 	_findtext.indexOf( 'https://' );
+				_is_exist	=	1;
+			} else if (0 	<= _findtext.indexOf( 'www.' )) {
+				startIndex 	= 	_findtext.indexOf( 'www' );
+				_is_exist	=	1;
+			}
+			if ( 1 === _is_exist ) {
+				for ( var i = startIndex; i < _findtext.length; i ++ ) {
+					if ( _findtext[i] === ' ' || _findtext[i] === '\n' ) {
+						break;
+					} else {
+						_url += _findtext[i];
+					}
+				}
 
+				if( _url !== '' ){
+					_newString = $.trim(_findtext.replace(_url, ''));
+				}
+				if(0 >= _newString.length){
+					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length ) {
+						$(this).find('.activity-inner > p:first a').hide();
+					}
+				}
+			}
+
+        },
 		/**
 		 * [objectRequest description]
 		 * @param  {[type]} data [description]
@@ -287,6 +372,11 @@ window.bp = window.bp || {};
 				data.target = '#buddypress [data-bp-list] ul.bp-list:not(#bb-media-model-container ul.bp-list)';
 			}
 
+			// if object is activity and object nav does not exists fallback to scope = all
+			if ( data.object == 'activity' && ! $( this.objectNavParent + ' [data-bp-scope="' + data.scope + '"]' ).length ) {
+				data.scope = 'all';
+			}
+
 			// Prepare the search terms for the request
 			if ( data.search_terms ) {
 				data.search_terms = data.search_terms.replace( /</g, '&lt;' ).replace( />/g, '&gt;' );
@@ -302,7 +392,7 @@ window.bp = window.bp || {};
 			}
 
 			if ( null !== data.extras ) {
-				this.setStorage( 'bp-' + data.object, 'extras', data.extras );
+				this.setLocalStorage( 'bp-' + data.object, 'extras', data.extras );
 			}
 
 			/* Set the correct selected nav and filter */
@@ -367,8 +457,13 @@ window.bp = window.bp || {};
 					$( data.target ).trigger( 'bp_ajax_' + data.method, $.extend( data, { response: response.data } ) );
 				} else {
 					/* animate to top if called from bottom pagination */
-					if ( data.caller === 'pag-bottom' && $( '#subnav' ).length ) {
-						var top = $('#subnav').parent();
+					if ( data.caller === 'pag-bottom' ) {
+						var top = null;
+						if ( $( '#subnav' ).length ) {
+							top = $('#subnav').parent();
+						} else {
+							top = $( data.target );
+						}
 						$( 'html,body' ).animate( { scrollTop: top.offset().top }, 'slow', function() {
 							$( data.target ).fadeOut( 100, function() {
 								self.inject( this, response.data.contents, data.method );
@@ -393,7 +488,7 @@ window.bp = window.bp || {};
 
 							// Inform other scripts the list of objects has been refreshed.
 							$( data.target ).trigger( 'bp_ajax_request', $.extend( data, { response: response.data } ) );
-							
+
 							//Lazy Load Images
 							if(bp.Nouveau.lazyLoad){
 								setTimeout(function(){ // Waiting to load dummy image
@@ -414,9 +509,12 @@ window.bp = window.bp || {};
 			var self = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null, filter = null;
 
 			$.each( this.objects, function( o, object ) {
-				objectData = self.getStorage( 'bp-' + object );
+				objectData = self.getLocalStorage( 'bp-' + object );
 
-				if ( undefined !== objectData.scope ) {
+				var typeType = window.location.hash.substr(1);
+				if ( undefined !== typeType && typeType == 'following' ) {
+					scope = typeType;
+				} else if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
 				}
 
@@ -521,6 +619,7 @@ window.bp = window.bp || {};
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			// Close notice
@@ -550,7 +649,7 @@ window.bp = window.bp || {};
                 object = 'members';
             }
 
-            var objectData = _this.getStorage( 'bp-' + object );
+            var objectData = _this.getLocalStorage( 'bp-' + object );
 
             var extras = {};
             if ( undefined !== objectData.extras ) {
@@ -558,7 +657,7 @@ window.bp = window.bp || {};
 
                 if ( undefined !== extras.layout ) {
 	                $('.grid-filters .layout-view').removeClass('active');
-	                if ( extras.layout == 'list' ) {
+	                if ( extras.layout === 'list' ) {
 		                $('.grid-filters .layout-list-view').addClass('active');
 	                } else {
 		                $('.grid-filters .layout-grid-view').addClass('active');
@@ -583,9 +682,9 @@ window.bp = window.bp || {};
 
                 // Added this condition to fix the list and grid view on Groups members page pagination.
 				if ( true === $( 'body' ).hasClass('group-members' ) ) {
-					_this.setStorage( 'bp-group_members', 'extras', extras );
+					_this.setLocalStorage( 'bp-group_members', 'extras', extras );
 				} else {
-					_this.setStorage( 'bp-' + object, 'extras', extras );
+					_this.setLocalStorage( 'bp-' + object, 'extras', extras );
 				}
             });
 		},
@@ -839,7 +938,7 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
-			var objectData = self.getStorage( 'bp-' + object );
+			var objectData = self.getLocalStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -893,7 +992,7 @@ window.bp = window.bp || {};
 				object = 'members';
 			}
 
-			var objectData = self.getStorage( 'bp-' + object );
+			var objectData = self.getLocalStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -1033,7 +1132,7 @@ window.bp = window.bp || {};
 				scope = $( self.objectNavParent + ' [data-bp-object="' + object + '"].selected' ).data( 'bp-scope' );
 			}
 
-			var objectData = self.getStorage( 'bp-' + object );
+			var objectData = self.getLocalStorage( 'bp-' + object );
 
 			// Notifications always need to start with Newest ones
 			if ( undefined !== objectData.extras && 'notifications' !== object ) {
@@ -1163,7 +1262,7 @@ window.bp = window.bp || {};
 				action   : object + '_' + action,
 				item_id  : item_id,
 				_wpnonce : nonce
-			}, object ).done( function( response ) {
+			}, object, true ).done( function( response ) {
 				if ( false === response.success ) {
 					item_inner.prepend( response.data.feedback );
 					target.removeClass( 'pending loading' );
@@ -1336,7 +1435,7 @@ window.bp = window.bp || {};
 
 			// Set the scope & filter
 			if ( null !== object ) {
-				objectData = self.getStorage( 'bp-' + object );
+				objectData = self.getLocalStorage( 'bp-' + object );
 
 				if ( undefined !== objectData.scope ) {
 					scope = objectData.scope;
@@ -1362,6 +1461,7 @@ window.bp = window.bp || {};
 				filter       : filter,
 				search_terms : search_terms,
 				extras       : extras,
+				caller       : navLink.closest( '[data-bp-pagination]' ).hasClass( 'bottom' ) ? 'pag-bottom' : '',
 				page         : self.getLinkParams( navLink.prop( 'href' ), pagArg ) || 1
 			};
 
@@ -1445,15 +1545,12 @@ window.bp = window.bp || {};
 			}
 		},
 		/**
-		 * Lazy Load Images of Activity Feed
+		 * Lazy Load Images and iframes
 		 * @param event
 		 */
 		lazyLoad: function( lazyTarget ){
 			var lazy = $( lazyTarget );
 			if( lazy.length ){
-				function cleanLazy() {
-					lazy = Array.prototype.filter.call( lazy, function( l ){ return l.getAttribute( 'data-src' );} );
-				}
 				for( var i=0; i<lazy.length; i++ ) {
 					var isInViewPort = false;
 					try {
@@ -1470,10 +1567,17 @@ window.bp = window.bp || {};
 					if ( isInViewPort && lazy[i].getAttribute('data-src') ) {
 						lazy[i].src = lazy[i].getAttribute('data-src');
 						lazy[i].removeAttribute('data-src');
+						/* jshint ignore:start */
+						$(lazy[i]).on('load', function () {
+							$(this).removeClass('lazy');
+						});
+						/* jshint ignore:end */
+
+						// Inform other scripts about the lazy load.
+						$( document ).trigger( 'bp_nouveau_lazy_load', { element: lazy[i] } );
 					}
 				}
-				cleanLazy();
-			}			
+			}
 		}
 	};
 

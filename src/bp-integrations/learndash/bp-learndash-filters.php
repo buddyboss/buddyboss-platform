@@ -14,12 +14,32 @@ defined( 'ABSPATH' ) || exit;
 // Apply WordPress defined filters.
 add_filter( 'bp_activity_pre_transition_post_type_status', 'bp_activity_pre_transition_post_type_status', 10, 4 );
 
+add_filter( 'bp_core_wpsignup_redirect', 'bp_ld_popup_register_redirect', 10 );
+
 /* Actions *******************************************************************/
 add_action( 'add_meta_boxes', 'bp_activity_add_meta_boxes', 50 );
 
-
-
 /** Functions *****************************************************************/
+
+/**
+ * Do not redirect to user on register page if user doing registration on LD Popup.
+ *
+ * @param bool $bool
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_ld_popup_register_redirect( $bool ) {
+
+	if (
+		isset( $_POST )
+		&& isset( $_POST['learndash-registration-form'] )
+		&& 'true' === $_POST['learndash-registration-form']
+	) {
+		return false;
+	}
+
+	return $bool;
+}
 
 /**
  * Stop to add featured course's Lessons, Quizzes and Topics acvitity

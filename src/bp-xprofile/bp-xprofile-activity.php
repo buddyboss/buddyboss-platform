@@ -16,7 +16,6 @@ defined( 'ABSPATH' ) || exit;
  * Register the activity actions for the Extended Profile component.
  *
  * @since BuddyPress 1.0.0
- *
  */
 function xprofile_register_activity_actions() {
 
@@ -59,7 +58,7 @@ add_action( 'bp_register_activity_actions', 'xprofile_register_activity_actions'
  */
 function bp_xprofile_format_activity_action_new_avatar( $action, $activity ) {
 	$userlink = bp_core_get_userlink( $activity->user_id );
-	$action   = sprintf( __( '%s changed %s photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $activity->user_id  ) );
+	$action   = sprintf( __( '%1$s changed %2$s photo', 'buddyboss' ), $userlink, bp_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	// Legacy filter - pass $user_id instead of $activity.
 	if ( has_filter( 'bp_xprofile_new_avatar_action' ) ) {
@@ -93,7 +92,7 @@ function bp_xprofile_format_activity_action_updated_profile( $action, $activity 
 	// your language doesn't have this restriction, feel free to use a more
 	// natural translation.
 	$profile_link = trailingslashit( bp_core_get_user_domain( $activity->user_id ) . bp_get_profile_slug() );
-	$action	      = sprintf( __( "%s updated %s profile", 'buddyboss' ), '<a href="' . $profile_link . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>', bp_get_user_gender_pronoun_type( $activity->user_id  ) );
+	$action       = sprintf( __( '%1$s updated %2$s profile', 'buddyboss' ), '<a href="' . $profile_link . '">' . bp_core_get_user_displayname( $activity->user_id ) . '</a>', bp_get_user_gender_pronoun_type( $activity->user_id ) );
 
 	/**
 	 * Filters the formatted 'updated_profile' activity feed action.
@@ -123,18 +122,21 @@ function xprofile_record_activity( $args = '' ) {
 	}
 
 	// Parse the arguments.
-	$r = bp_parse_args( $args, array(
-		'user_id'           => bp_loggedin_user_id(),
-		'action'            => '',
-		'content'           => '',
-		'primary_link'      => '',
-		'component'         => buddypress()->profile->id,
-		'type'              => false,
-		'item_id'           => false,
-		'secondary_item_id' => false,
-		'recorded_time'     => bp_core_current_time(),
-		'hide_sitewide'     => false
-	) );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'user_id'           => bp_loggedin_user_id(),
+			'action'            => '',
+			'content'           => '',
+			'primary_link'      => '',
+			'component'         => buddypress()->profile->id,
+			'type'              => false,
+			'item_id'           => false,
+			'secondary_item_id' => false,
+			'recorded_time'     => bp_core_current_time(),
+			'hide_sitewide'     => false,
+		)
+	);
 
 	return bp_activity_add( $r );
 }
@@ -156,9 +158,13 @@ function xprofile_delete_activity( $args = '' ) {
 	}
 
 	// Parse the arguments.
-	$r = bp_parse_args( $args, array(
-		'component' => buddypress()->profile->id
-	), 'xprofile_delete_activity' );
+	$r = bp_parse_args(
+		$args,
+		array(
+			'component' => buddypress()->profile->id,
+		),
+		'xprofile_delete_activity'
+	);
 
 	// Delete the activity item.
 	bp_activity_delete_by_item_id( $r );
@@ -222,11 +228,13 @@ function bp_xprofile_new_avatar_activity( $user_id = 0 ) {
 	$user_id = apply_filters( 'bp_xprofile_new_avatar_user_id', $user_id );
 
 	// Add the activity.
-	bp_activity_add( array(
-		'user_id'   => $user_id,
-		'component' => 'profile',
-		'type'      => 'new_avatar'
-	) );
+	bp_activity_add(
+		array(
+			'user_id'   => $user_id,
+			'component' => 'profile',
+			'type'      => 'new_avatar',
+		)
+	);
 }
 add_action( 'xprofile_avatar_uploaded', 'bp_xprofile_new_avatar_activity' );
 
@@ -281,14 +289,16 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 	}
 
 	// Throttle to one activity of this type per 2 hours.
-	$existing = bp_activity_get( array(
-		'max'    => 1,
-		'filter' => array(
-			'user_id' => $user_id,
-			'object'  => buddypress()->profile->id,
-			'action'  => 'updated_profile',
-		),
-	) );
+	$existing = bp_activity_get(
+		array(
+			'max'    => 1,
+			'filter' => array(
+				'user_id' => $user_id,
+				'object'  => buddypress()->profile->id,
+				'action'  => 'updated_profile',
+			),
+		)
+	);
 
 	// Default throttle time is 2 hours. Filter to change (in seconds).
 	if ( ! empty( $existing['activities'] ) ) {
@@ -313,12 +323,14 @@ function bp_xprofile_updated_profile_activity( $user_id, $field_ids = array(), $
 	// If we've reached this point, assemble and post the activity item.
 	$profile_link = trailingslashit( bp_core_get_user_domain( $user_id ) . bp_get_profile_slug() );
 
-	return (bool) xprofile_record_activity( array(
-		'user_id'      => $user_id,
-		'primary_link' => $profile_link,
-		'component'    => buddypress()->profile->id,
-		'type'         => 'updated_profile',
-	) );
+	return (bool) xprofile_record_activity(
+		array(
+			'user_id'      => $user_id,
+			'primary_link' => $profile_link,
+			'component'    => buddypress()->profile->id,
+			'type'         => 'updated_profile',
+		)
+	);
 }
 add_action( 'xprofile_updated_profile', 'bp_xprofile_updated_profile_activity', 10, 5 );
 
@@ -331,7 +343,7 @@ add_action( 'xprofile_updated_profile', 'bp_xprofile_updated_profile_activity', 
 function xprofile_activity_filter_options() {
 	?>
 
-	<option value="updated_profile"><?php _e( 'Profile Updates', 'buddyboss' ) ?></option>
+	<option value="updated_profile"><?php _e( 'Profile Updates', 'buddyboss' ); ?></option>
 
 	<?php
 }

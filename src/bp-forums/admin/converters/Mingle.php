@@ -21,16 +21,16 @@ class Mingle extends BBP_Converter_Base {
 	/**
 	 * Sets up the field mappings
 	 */
-	public function setup_globals()	{
+	public function setup_globals() {
 
-		/** Forum Section ******************************************************/
+		/** Forum Section */
 
 		// Forum id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'forum_forums',
 			'from_fieldname' => 'id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_id'
+			'to_fieldname'   => '_bbp_forum_id',
 		);
 
 		// Forum parent id (If no parent, then 0. Stored in postmeta)
@@ -38,7 +38,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'forum_forums',
 			'from_fieldname' => 'parent_id',
 			'to_type'        => 'forum',
-			'to_fieldname'   => '_bbp_forum_parent_id'
+			'to_fieldname'   => '_bbp_forum_parent_id',
 		);
 
 		// Forum title.
@@ -46,7 +46,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'forum_forums',
 			'from_fieldname' => 'name',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Forum slug (Clean name to avoid confilcts)
@@ -55,7 +55,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'name',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 		// Forum description.
 		$this->field_map[] = array(
@@ -63,7 +63,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'description',
 			'to_type'         => 'forum',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_null'
+			'callback_method' => 'callback_null',
 		);
 
 		// Forum display order (Starts from 1)
@@ -71,39 +71,39 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'forum_forums',
 			'from_fieldname' => 'sort',
 			'to_type'        => 'forum',
-			'to_fieldname'   => 'menu_order'
+			'to_fieldname'   => 'menu_order',
 		);
 
 		// Forum dates.
 		$this->field_map[] = array(
-			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_date',
-			'default'        => date_i18n('Y-m-d H:i:s')
+			'to_type'      => 'forum',
+			'to_fieldname' => 'post_date',
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
-			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_date_gmt',
-			'default'        => date_i18n('Y-m-d H:i:s')
+			'to_type'      => 'forum',
+			'to_fieldname' => 'post_date_gmt',
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
-			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_modified',
-			'default'        => date_i18n('Y-m-d H:i:s')
+			'to_type'      => 'forum',
+			'to_fieldname' => 'post_modified',
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 		$this->field_map[] = array(
-			'to_type'        => 'forum',
-			'to_fieldname'   => 'post_modified_gmt',
-			'default'        => date_i18n('Y-m-d H:i:s')
+			'to_type'      => 'forum',
+			'to_fieldname' => 'post_modified_gmt',
+			'default'      => date_i18n( 'Y-m-d H:i:s' ),
 		);
 
-		/** Topic Section ******************************************************/
+		/** Topic Section */
 
 		// Topic id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'forum_threads',
 			'from_fieldname' => 'id',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_topic_id'
+			'to_fieldname'   => '_bbp_topic_id',
 		);
 
 		// Topic parent forum id (If no parent, then 0. Stored in postmeta)
@@ -112,7 +112,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'parent_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Topic author.
@@ -121,7 +121,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'starter',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Topic content.
@@ -134,14 +134,14 @@ class Mingle extends BBP_Converter_Base {
 			'join_expression' => 'ON forum_posts.parent_id = forum_threads.id GROUP BY forum_threads.id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 		// Topic title.
 		$this->field_map[] = array(
 			'from_tablename' => 'forum_threads',
 			'from_fieldname' => 'subject',
 			'to_type'        => 'topic',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Topic slug (Clean name to avoid conflicts)
@@ -150,7 +150,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'subject',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Topic parent forum id (If no parent, then 0)
@@ -159,7 +159,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'parent_id',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_forumid'
+			'callback_method' => 'callback_forumid',
 		);
 
 		// Sticky status (Stored in postmeta))
@@ -168,39 +168,39 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'status',
 			'to_type'         => 'topic',
 			'to_fieldname'    => '_bbp_old_sticky_status',
-			'callback_method' => 'callback_sticky_status'
+			'callback_method' => 'callback_sticky_status',
 		);
 
 		// Topic dates.
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum_threads',
-			'from_fieldname'  => 'date',
-			'to_type'         => 'topic',
-			'to_fieldname'    => 'post_date'
+			'from_tablename' => 'forum_threads',
+			'from_fieldname' => 'date',
+			'to_type'        => 'topic',
+			'to_fieldname'   => 'post_date',
 		);
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum_threads',
-			'from_fieldname'  => 'date',
-			'to_type'         => 'topic',
-			'to_fieldname'    => 'post_date_gmt'
-		);
-		$this->field_map[] = array(
-			'from_tablename'  => 'forum_threads',
-			'from_fieldname'  => 'last_post',
-			'to_type'         => 'topic',
-			'to_fieldname'    => 'post_modified'
-		);
-		$this->field_map[] = array(
-			'from_tablename'  => 'forum_threads',
-			'from_fieldname'  => 'last_post',
-			'to_type'         => 'topic',
-			'to_fieldname'    => 'post_modified_gmt'
+			'from_tablename' => 'forum_threads',
+			'from_fieldname' => 'date',
+			'to_type'        => 'topic',
+			'to_fieldname'   => 'post_date_gmt',
 		);
 		$this->field_map[] = array(
 			'from_tablename' => 'forum_threads',
 			'from_fieldname' => 'last_post',
 			'to_type'        => 'topic',
-			'to_fieldname'   => '_bbp_last_active_time'
+			'to_fieldname'   => 'post_modified',
+		);
+		$this->field_map[] = array(
+			'from_tablename' => 'forum_threads',
+			'from_fieldname' => 'last_post',
+			'to_type'        => 'topic',
+			'to_fieldname'   => 'post_modified_gmt',
+		);
+		$this->field_map[] = array(
+			'from_tablename' => 'forum_threads',
+			'from_fieldname' => 'last_post',
+			'to_type'        => 'topic',
+			'to_fieldname'   => '_bbp_last_active_time',
 		);
 
 		// Topic status (Open or Closed)
@@ -209,23 +209,23 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'closed',
 			'to_type'         => 'topic',
 			'to_fieldname'    => 'post_status',
-			'callback_method' => 'callback_topic_status'
+			'callback_method' => 'callback_topic_status',
 		);
 
-		/** Tags Section ******************************************************/
+		/** Tags Section */
 
 		/**
 		 * Mingle Forums do not support topic tags
-         */
+		 */
 
-		/** Reply Section ******************************************************/
+		/** Reply Section */
 
 		// Reply id (Stored in postmeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'forum_posts',
 			'from_fieldname' => 'id',
 			'to_type'        => 'reply',
-			'to_fieldname'   => '_bbp_post_id'
+			'to_fieldname'   => '_bbp_post_id',
 		);
 
 		// Setup reply section table joins
@@ -238,7 +238,7 @@ class Mingle extends BBP_Converter_Base {
 			'join_expression' => 'ON forum_posts.parent_id = forum_threads.id',
 			'from_expression' => 'WHERE forum_threads.subject != forum_posts.subject',
 			'to_type'         => 'reply',
-			'to_fieldname'    => '_bbp_last_active_time'
+			'to_fieldname'    => '_bbp_last_active_time',
 		);
 
 		// Reply parent forum id (If no parent, then 0. Stored in postmeta)
@@ -247,7 +247,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'parent_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_forum_id',
-			'callback_method' => 'callback_topicid_to_forumid'
+			'callback_method' => 'callback_topicid_to_forumid',
 		);
 
 		// Reply parent topic id (If no parent, then 0. Stored in postmeta)
@@ -256,7 +256,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'parent_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => '_bbp_topic_id',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply author.
@@ -265,7 +265,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'author_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_author',
-			'callback_method' => 'callback_userid'
+			'callback_method' => 'callback_userid',
 		);
 
 		// Reply title.
@@ -273,7 +273,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'forum_posts',
 			'from_fieldname' => 'subject',
 			'to_type'        => 'reply',
-			'to_fieldname'   => 'post_title'
+			'to_fieldname'   => 'post_title',
 		);
 
 		// Reply slug (Clean name to avoid conflicts)
@@ -282,7 +282,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'subject',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_name',
-			'callback_method' => 'callback_slug'
+			'callback_method' => 'callback_slug',
 		);
 
 		// Reply content.
@@ -291,7 +291,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'text',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_content',
-			'callback_method' => 'callback_html'
+			'callback_method' => 'callback_html',
 		);
 
 		// Reply parent topic id (If no parent, then 0)
@@ -300,43 +300,43 @@ class Mingle extends BBP_Converter_Base {
 			'from_fieldname'  => 'parent_id',
 			'to_type'         => 'reply',
 			'to_fieldname'    => 'post_parent',
-			'callback_method' => 'callback_topicid'
+			'callback_method' => 'callback_topicid',
 		);
 
 		// Reply dates.
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum_posts',
-			'from_fieldname'  => 'date',
-			'to_type'         => 'reply',
-			'to_fieldname'    => 'post_date'
+			'from_tablename' => 'forum_posts',
+			'from_fieldname' => 'date',
+			'to_type'        => 'reply',
+			'to_fieldname'   => 'post_date',
 		);
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum_posts',
-			'from_fieldname'  => 'date',
-			'to_type'         => 'reply',
-			'to_fieldname'    => 'post_date_gmt'
+			'from_tablename' => 'forum_posts',
+			'from_fieldname' => 'date',
+			'to_type'        => 'reply',
+			'to_fieldname'   => 'post_date_gmt',
 		);
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum_posts',
-			'from_fieldname'  => 'date',
-			'to_type'         => 'reply',
-			'to_fieldname'    => 'post_modified'
+			'from_tablename' => 'forum_posts',
+			'from_fieldname' => 'date',
+			'to_type'        => 'reply',
+			'to_fieldname'   => 'post_modified',
 		);
 		$this->field_map[] = array(
-			'from_tablename'  => 'forum_posts',
-			'from_fieldname'  => 'date',
-			'to_type'         => 'reply',
-			'to_fieldname'    => 'post_modified_gmt'
+			'from_tablename' => 'forum_posts',
+			'from_fieldname' => 'date',
+			'to_type'        => 'reply',
+			'to_fieldname'   => 'post_modified_gmt',
 		);
 
-		/** User Section ******************************************************/
+		/** User Section */
 
 		// Store old User id (Stored in usermeta)
 		$this->field_map[] = array(
 			'from_tablename' => 'users',
 			'from_fieldname' => 'ID',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_user_id'
+			'to_fieldname'   => '_bbp_user_id',
 		);
 
 		// Store old User password (Stored in usermeta)
@@ -344,7 +344,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_pass',
 			'to_type'        => 'user',
-			'to_fieldname'   => '_bbp_password'
+			'to_fieldname'   => '_bbp_password',
 		);
 
 		// User name.
@@ -352,7 +352,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_login',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_login'
+			'to_fieldname'   => 'user_login',
 		);
 
 		// User nice name.
@@ -360,7 +360,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_nicename',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_nicename'
+			'to_fieldname'   => 'user_nicename',
 		);
 
 		// User email.
@@ -368,7 +368,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_email',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_email'
+			'to_fieldname'   => 'user_email',
 		);
 
 		// User homepage.
@@ -376,7 +376,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_url',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_url'
+			'to_fieldname'   => 'user_url',
 		);
 
 		// User registered.
@@ -384,7 +384,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_registered',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_registered'
+			'to_fieldname'   => 'user_registered',
 		);
 
 		// User status.
@@ -392,7 +392,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'user_status',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'user_status'
+			'to_fieldname'   => 'user_status',
 		);
 
 		// User display name.
@@ -400,7 +400,7 @@ class Mingle extends BBP_Converter_Base {
 			'from_tablename' => 'users',
 			'from_fieldname' => 'display_name',
 			'to_type'        => 'user',
-			'to_fieldname'   => 'display_name'
+			'to_fieldname'   => 'display_name',
 		);
 	}
 
@@ -437,12 +437,12 @@ class Mingle extends BBP_Converter_Base {
 	 */
 	public function callback_topic_status( $status = 0 ) {
 		switch ( $status ) {
-			case 1 :
+			case 1:
 				$status = 'closed';
 				break;
 
-			case 0  :
-			default :
+			case 0:
+			default:
 				$status = 'publish';
 				break;
 		}
@@ -457,12 +457,12 @@ class Mingle extends BBP_Converter_Base {
 	 */
 	public function callback_sticky_status( $status = 0 ) {
 		switch ( $status ) {
-			case 'sticky' :
+			case 'sticky':
 				$status = 'sticky';       // Mingle Sticky 'status = sticky'
 				break;
 
-			case 'open'  :
-			default :
+			case 'open':
+			default:
 				$status = 'normal';       // Mingle Normal Topic 'status = open'
 				break;
 		}
@@ -470,11 +470,11 @@ class Mingle extends BBP_Converter_Base {
 	}
 
 	/**
-	* This callback processes any custom BBCodes with parser.php
-	*/
+	 * This callback processes any custom BBCodes with parser.php
+	 */
 	protected function callback_html( $field ) {
-		require_once( bbpress()->admin->admin_dir . 'parser.php' );
-		$bbcode = BBCode::getInstance();
+		require_once bbpress()->admin->admin_dir . 'parser.php';
+		$bbcode                 = BBCode::getInstance();
 		$bbcode->enable_smileys = false;
 		$bbcode->smiley_regex   = false;
 		return html_entity_decode( $bbcode->Parse( $field ) );

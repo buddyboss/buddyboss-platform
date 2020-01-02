@@ -12,7 +12,7 @@
  * @since BuddyPress 2.3.0
  */
 function bp_messages_star_bulk_manage_handler() {
-	if ( empty( $_POST['messages_bulk_nonce' ] ) ) {
+	if ( empty( $_POST['messages_bulk_nonce'] ) ) {
 		return;
 	}
 
@@ -37,32 +37,36 @@ function bp_messages_star_bulk_manage_handler() {
 
 	// It's star time!
 	switch ( $action ) {
-		case 'star' :
+		case 'star':
 			$count = count( $threads );
 
 			// If we're starring a thread, we only star the first message in the thread.
 			foreach ( $threads as $thread ) {
 				$thread = new BP_Messages_thread( $thread );
-				$mids = wp_list_pluck( $thread->messages, 'id' );
+				$mids   = wp_list_pluck( $thread->messages, 'id' );
 
-				bp_messages_star_set_action( array(
-					'action'     => 'star',
-					'message_id' => $mids[0],
-				) );
+				bp_messages_star_set_action(
+					array(
+						'action'     => 'star',
+						'message_id' => $mids[0],
+					)
+				);
 			}
 
 			bp_core_add_message( sprintf( _n( '%s message was successfully starred', '%s messages were successfully starred', $count, 'buddyboss' ), $count ) );
 			break;
 
-		case 'unstar' :
+		case 'unstar':
 			$count = count( $threads );
 
 			foreach ( $threads as $thread ) {
-				bp_messages_star_set_action( array(
-					'action'    => 'unstar',
-					'thread_id' => $thread,
-					'bulk'      => true
-				) );
+				bp_messages_star_set_action(
+					array(
+						'action'    => 'unstar',
+						'thread_id' => $thread,
+						'bulk'      => true,
+					)
+				);
 			}
 
 			bp_core_add_message( sprintf( _n( '%s message was successfully unstarred', '%s messages were successfully unstarred', $count, 'buddyboss' ), $count ) );

@@ -24,7 +24,7 @@ final class BP_Group_Export extends BP_Export {
 
 		if ( null === $instance ) {
 			$instance = new BP_Group_Export();
-			$instance->setup( "bp_groups", __( "Groups", 'buddyboss' ) );
+			$instance->setup( 'bp_groups', __( 'Groups', 'buddyboss' ) );
 		}
 
 		return $instance;
@@ -53,28 +53,32 @@ final class BP_Group_Export extends BP_Export {
 
 		foreach ( $data_items['items'] as $item ) {
 
-			$group_id    = "bp_groups";
-			$group_label = __( "Groups", 'buddyboss' );
+			$group_id    = 'bp_groups';
+			$group_label = __( 'Groups', 'buddyboss' );
 			$item_id     = "{$this->exporter_name}-{$group_id}-{$item->id}";
 			$avatar      = false;
 			$cover_photo = false;
 
 			if ( function_exists( 'bp_core_fetch_avatar' ) ) {
-				$avatar = bp_core_fetch_avatar( array(
-					'item_id' => $item->id,
-					'object'  => 'group',
-					'type'    => 'full',
-					'html'    => false,
-				) );
+				$avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => $item->id,
+						'object'  => 'group',
+						'type'    => 'full',
+						'html'    => false,
+					)
+				);
 			}
 
 			if ( function_exists( 'bp_attachments_get_attachment' ) ) {
-				$cover_photo = bp_attachments_get_attachment( 'url',
+				$cover_photo = bp_attachments_get_attachment(
+					'url',
 					array(
 						'item_id'    => $item->id,
 						'type'       => 'cover-image',
 						'object_dir' => 'groups',
-					) );
+					)
+				);
 			}
 
 			if ( empty( $avatar ) || ! $avatar ) {
@@ -156,7 +160,6 @@ final class BP_Group_Export extends BP_Export {
 
 		}
 
-
 		$done = $data_items['total'] < $data_items['offset'];
 
 		return $this->response( $export_items, $done );
@@ -218,14 +221,21 @@ final class BP_Group_Export extends BP_Export {
 		do_action( 'buddyboss_bp_gdpr_group_additional_group_items_delete', $group_id );
 
 		// delete cover photo
-		bp_attachments_delete_file( array(
-			'item_id'    => $group_id,
-			'object_dir' => 'groups',
-			'type'       => 'cover-image',
-		) );
+		bp_attachments_delete_file(
+			array(
+				'item_id'    => $group_id,
+				'object_dir' => 'groups',
+				'type'       => 'cover-image',
+			)
+		);
 
 		// delete group avatar
-		bp_core_delete_existing_avatar( array( 'item_id' => $group_id, 'object' => "group" ) );
+		bp_core_delete_existing_avatar(
+			array(
+				'item_id' => $group_id,
+				'object'  => 'group',
+			)
+		);
 
 	}
 
@@ -243,14 +253,14 @@ final class BP_Group_Export extends BP_Export {
 		global $wpdb, $bp;
 
 		$wpdb->show_errors( false );
-		$group_table         = $bp->groups->global_tables["table_name"];
+		$group_table         = $bp->groups->global_tables['table_name'];
 		$group_members_table = $bp->groups->table_name_members;
 
 		$table = "{$group_table} item, {$group_members_table} item2";
 
-		$query_select       = "*";
-		$query_select_count = "COUNT(item.id)";
-		$query_where        = "item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1";
+		$query_select       = '*';
+		$query_select_count = 'COUNT(item.id)';
+		$query_where        = 'item2.user_id=%d AND item2.group_id=item.id AND item2.is_admin=1';
 
 		$offset = ( $page - 1 ) * $this->items_per_batch;
 		$limit  = "LIMIT {$this->items_per_batch} OFFSET {$offset}";
@@ -267,9 +277,9 @@ final class BP_Group_Export extends BP_Export {
 		$items = $this->merge_metas( $items );
 
 		return array(
-			"total"  => $count,
-			"offset" => $offset,
-			"items"  => $items,
+			'total'  => $count,
+			'offset' => $offset,
+			'items'  => $items,
 		);
 
 	}
@@ -286,7 +296,7 @@ final class BP_Group_Export extends BP_Export {
 	function merge_metas( $items ) {
 		global $wpdb, $bp;
 
-		$group_meta_table = $bp->groups->global_tables["table_name_groupmeta"];
+		$group_meta_table = $bp->groups->global_tables['table_name_groupmeta'];
 
 		// get all ids
 		$group_ids = array();

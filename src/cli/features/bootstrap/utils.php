@@ -28,9 +28,11 @@ function extract_from_phar( $path ) {
 
 	copy( $path, $tmp_path );
 
-	register_shutdown_function( function() use ( $tmp_path ) {
-		@unlink( $tmp_path );
-	} );
+	register_shutdown_function(
+		function() use ( $tmp_path ) {
+				@unlink( $tmp_path );
+		}
+	);
 
 	return $tmp_path;
 }
@@ -55,14 +57,14 @@ function load_dependencies() {
 		}
 	}
 
-	if ( !$has_autoload ) {
+	if ( ! $has_autoload ) {
 		fputs( STDERR, "Internal error: Can't find Composer autoloader.\nTry running: composer install\n" );
-		exit(3);
+		exit( 3 );
 	}
 }
 
 function get_vendor_paths() {
-	$vendor_paths = array(
+	$vendor_paths        = array(
 		WP_CLI_ROOT . '/../../../vendor',  // part of a larger project / installed via Composer (preferred)
 		WP_CLI_ROOT . '/vendor',           // top-level project / installed as Git clone
 	);
@@ -113,7 +115,7 @@ function iterator_map( $it, $fn ) {
 		$it = new \ArrayIterator( $it );
 	}
 
-	if ( !method_exists( $it, 'add_transform' ) ) {
+	if ( ! method_exists( $it, 'add_transform' ) ) {
 		$it = new Transform( $it );
 	}
 
@@ -126,6 +128,7 @@ function iterator_map( $it, $fn ) {
 
 /**
  * Search for file by walking up the directory tree until the first file is found or until $stop_check($dir) returns true
+ *
  * @param string|array The files (or file) to search for
  * @param string|null The directory to start searching from; defaults to CWD
  * @param callable Function which is passed the current dir each time a directory level is traversed
@@ -150,7 +153,7 @@ function find_file_upward( $files, $dir = null, $stop_check = null ) {
 		}
 
 		$parent_dir = dirname( $dir );
-		if ( empty($parent_dir) || $parent_dir === $dir ) {
+		if ( empty( $parent_dir ) || $parent_dir === $dir ) {
 			break;
 		}
 		$dir = $parent_dir;
@@ -160,8 +163,9 @@ function find_file_upward( $files, $dir = null, $stop_check = null ) {
 
 function is_path_absolute( $path ) {
 	// Windows
-	if ( isset($path[1]) && ':' === $path[1] )
+	if ( isset( $path[1] ) && ':' === $path[1] ) {
 		return true;
+	}
 
 	return $path[0] === '/';
 }
@@ -188,8 +192,8 @@ function assoc_args_to_str( $assoc_args ) {
 	foreach ( $assoc_args as $key => $value ) {
 		if ( true === $value ) {
 			$str .= " --$key";
-		} elseif( is_array( $value ) ) {
-			foreach( $value as $_ => $v ) {
+		} elseif ( is_array( $value ) ) {
+			foreach ( $value as $_ => $v ) {
 				$str .= assoc_args_to_str( array( $key => $v ) );
 			}
 		} else {
@@ -205,8 +209,9 @@ function assoc_args_to_str( $assoc_args ) {
  * returns the final command, with the parameters escaped.
  */
 function esc_cmd( $cmd ) {
-	if ( func_num_args() < 2 )
+	if ( func_num_args() < 2 ) {
 		trigger_error( 'esc_cmd() requires at least two arguments.', E_USER_WARNING );
+	}
 
 	$args = func_get_args();
 
@@ -219,15 +224,17 @@ function locate_wp_config() {
 	static $path;
 
 	if ( null === $path ) {
-		if ( file_exists( ABSPATH . 'wp-config.php' ) )
+		if ( file_exists( ABSPATH . 'wp-config.php' ) ) {
 			$path = ABSPATH . 'wp-config.php';
-		elseif ( file_exists( ABSPATH . '../wp-config.php' ) && ! file_exists( ABSPATH . '/../wp-settings.php' ) )
+		} elseif ( file_exists( ABSPATH . '../wp-config.php' ) && ! file_exists( ABSPATH . '/../wp-settings.php' ) ) {
 			$path = ABSPATH . '../wp-config.php';
-		else
+		} else {
 			$path = false;
+		}
 
-		if ( $path )
+		if ( $path ) {
 			$path = realpath( $path );
+		}
 	}
 
 	return $path;
@@ -277,14 +284,14 @@ function wp_version_compare( $since, $operator ) {
  * @access public
  * @category Output
  *
- * @param string        $format     Format to use: 'table', 'json', 'csv', 'yaml', 'ids', 'count'
- * @param array         $items      An array of items to output.
- * @param array|string  $fields     Named fields for each item of data. Can be array or comma-separated list.
+ * @param string       $format     Format to use: 'table', 'json', 'csv', 'yaml', 'ids', 'count'
+ * @param array        $items      An array of items to output.
+ * @param array|string $fields     Named fields for each item of data. Can be array or comma-separated list.
  * @return null
  */
 function format_items( $format, $items, $fields ) {
 	$assoc_args = compact( 'format', 'fields' );
-	$formatter = new \WP_CLI\Formatter( $assoc_args );
+	$formatter  = new \WP_CLI\Formatter( $assoc_args );
 	$formatter->display_items( $items );
 }
 
@@ -336,7 +343,7 @@ function pick_fields( $item, $fields ) {
  * @access public
  * @category Input
  *
- * @param  string  $content  Some form of text to edit (e.g. post content)
+ * @param  string $content  Some form of text to edit (e.g. post content)
  * @return string|bool       Edited text, if file is saved from editor; false, if no change to file.
  */
 function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
@@ -346,11 +353,11 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 	$tmpdir = get_temp_dir();
 
 	do {
-		$tmpfile = basename( $filename );
-		$tmpfile = preg_replace( '|\.[^.]*$|', '', $tmpfile );
+		$tmpfile  = basename( $filename );
+		$tmpfile  = preg_replace( '|\.[^.]*$|', '', $tmpfile );
 		$tmpfile .= '-' . substr( md5( rand() ), 0, 6 );
-		$tmpfile = $tmpdir . $tmpfile . '.tmp';
-		$fp = @fopen( $tmpfile, 'x' );
+		$tmpfile  = $tmpdir . $tmpfile . '.tmp';
+		$fp       = @fopen( $tmpfile, 'x' );
 		if ( ! $fp && is_writable( $tmpdir ) && file_exists( $tmpfile ) ) {
 			$tmpfile = '';
 			continue;
@@ -358,7 +365,7 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 		if ( $fp ) {
 			fclose( $fp );
 		}
-	} while( ! $tmpfile );
+	} while ( ! $tmpfile );
 
 	if ( ! $tmpfile ) {
 		\WP_CLI::error( 'Error creating temporary file.' );
@@ -368,16 +375,17 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 	file_put_contents( $tmpfile, $input );
 
 	$editor = getenv( 'EDITOR' );
-	if ( !$editor ) {
-		if ( isset( $_SERVER['OS'] ) && false !== strpos( $_SERVER['OS'], 'indows' ) )
+	if ( ! $editor ) {
+		if ( isset( $_SERVER['OS'] ) && false !== strpos( $_SERVER['OS'], 'indows' ) ) {
 			$editor = 'notepad';
-		else
+		} else {
 			$editor = 'vi';
+		}
 	}
 
 	$descriptorspec = array( STDIN, STDOUT, STDERR );
-	$process = proc_open( "$editor " . escapeshellarg( $tmpfile ), $descriptorspec, $pipes );
-	$r = proc_close( $process );
+	$process        = proc_open( "$editor " . escapeshellarg( $tmpfile ), $descriptorspec, $pipes );
+	$r              = proc_close( $process );
 	if ( $r ) {
 		exit( $r );
 	}
@@ -386,8 +394,9 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 
 	unlink( $tmpfile );
 
-	if ( $output === $input )
+	if ( $output === $input ) {
 		return false;
+	}
 
 	return $output;
 }
@@ -399,14 +408,14 @@ function launch_editor_for_input( $input, $filename = 'WP-CLI' ) {
 function mysql_host_to_cli_args( $raw_host ) {
 	$assoc_args = array();
 
-	$host_parts = explode( ':',  $raw_host );
+	$host_parts = explode( ':', $raw_host );
 	if ( count( $host_parts ) == 2 ) {
 		list( $assoc_args['host'], $extra ) = $host_parts;
-		$extra = trim( $extra );
+		$extra                              = trim( $extra );
 		if ( is_numeric( $extra ) ) {
-			$assoc_args['port'] = intval( $extra );
+			$assoc_args['port']     = intval( $extra );
 			$assoc_args['protocol'] = 'tcp';
-		} else if ( $extra !== '' ) {
+		} elseif ( $extra !== '' ) {
 			$assoc_args['socket'] = $extra;
 		}
 	} else {
@@ -419,8 +428,9 @@ function mysql_host_to_cli_args( $raw_host ) {
 function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 	check_proc_available( 'run_mysql_command' );
 
-	if ( !$descriptors )
+	if ( ! $descriptors ) {
 		$descriptors = array( STDIN, STDOUT, STDERR );
+	}
 
 	if ( isset( $assoc_args['host'] ) ) {
 		$assoc_args = array_merge( $assoc_args, mysql_host_to_cli_args( $assoc_args['host'] ) );
@@ -435,14 +445,17 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
 	$final_cmd = force_env_on_nix_systems( $cmd ) . assoc_args_to_str( $assoc_args );
 
 	$proc = proc_open( $final_cmd, $descriptors, $pipes );
-	if ( !$proc )
-		exit(1);
+	if ( ! $proc ) {
+		exit( 1 );
+	}
 
 	$r = proc_close( $proc );
 
 	putenv( 'MYSQL_PWD=' . $old_pass );
 
-	if ( $r ) exit( $r );
+	if ( $r ) {
+		exit( $r );
+	}
 }
 
 /**
@@ -451,14 +464,18 @@ function run_mysql_command( $cmd, $assoc_args, $descriptors = null ) {
  * IMPORTANT: Automatic HTML escaping is disabled!
  */
 function mustache_render( $template_name, $data = array() ) {
-	if ( ! file_exists( $template_name ) )
+	if ( ! file_exists( $template_name ) ) {
 		$template_name = WP_CLI_ROOT . "/templates/$template_name";
+	}
 
 	$template = file_get_contents( $template_name );
 
-	$m = new \Mustache_Engine( array(
-		'escape' => function ( $val ) { return $val; },
-	) );
+	$m = new \Mustache_Engine(
+		array(
+			'escape' => function ( $val ) {
+				return $val; },
+		)
+	);
 
 	return $m->render( $template, $data );
 }
@@ -492,8 +509,9 @@ function mustache_render( $template_name, $data = array() ) {
  * @return cli\progress\Bar|WP_CLI\NoOp
  */
 function make_progress_bar( $message, $count ) {
-	if ( \cli\Shell::isPiped() )
-		return new \WP_CLI\NoOp;
+	if ( \cli\Shell::isPiped() ) {
+		return new \WP_CLI\NoOp();
+	}
 
 	return new \cli\progress\Bar( $message, $count );
 }
@@ -501,7 +519,7 @@ function make_progress_bar( $message, $count ) {
 function parse_url( $url ) {
 	$url_parts = \parse_url( $url );
 
-	if ( !isset( $url_parts['scheme'] ) ) {
+	if ( ! isset( $url_parts['scheme'] ) ) {
 		$url_parts = parse_url( 'http://' . $url );
 	}
 
@@ -514,7 +532,7 @@ function parse_url( $url ) {
  * @return bool
  */
 function is_windows() {
-	return false !== ( $test_is_windows = getenv( 'WP_CLI_TEST_IS_WINDOWS' ) ) ? (bool) $test_is_windows : strtoupper(substr(PHP_OS, 0, 3)) === 'WIN';
+	return false !== ( $test_is_windows = getenv( 'WP_CLI_TEST_IS_WINDOWS' ) ) ? (bool) $test_is_windows : strtoupper( substr( PHP_OS, 0, 3 ) ) === 'WIN';
 }
 
 /**
@@ -553,8 +571,8 @@ function replace_path_consts( $source, $path ) {
  *
  * @param string $method    HTTP method (GET, POST, DELETE, etc.)
  * @param string $url       URL to make the HTTP request to.
- * @param array $headers    Add specific headers to the request.
- * @param array $options
+ * @param array  $headers    Add specific headers to the request.
+ * @param array  $options
  * @return object
  */
 function http_request( $method, $url, $data = null, $headers = array(), $options = array() ) {
@@ -563,23 +581,24 @@ function http_request( $method, $url, $data = null, $headers = array(), $options
 	if ( inside_phar() ) {
 		// cURL can't read Phar archives
 		$options['verify'] = extract_from_phar(
-		WP_CLI_VENDOR_DIR . $cert_path );
+			WP_CLI_VENDOR_DIR . $cert_path
+		);
 	} else {
-		foreach( get_vendor_paths() as $vendor_path ) {
+		foreach ( get_vendor_paths() as $vendor_path ) {
 			if ( file_exists( $vendor_path . $cert_path ) ) {
 				$options['verify'] = $vendor_path . $cert_path;
 				break;
 			}
 		}
-		if ( empty( $options['verify'] ) ){
-			WP_CLI::error( "Cannot find SSL certificate." );
+		if ( empty( $options['verify'] ) ) {
+			WP_CLI::error( 'Cannot find SSL certificate.' );
 		}
 	}
 
 	try {
 		$request = \Requests::request( $url, $headers, $data, $method, $options );
 		return $request;
-	} catch( \Requests_Exception $ex ) {
+	} catch ( \Requests_Exception $ex ) {
 		// CURLE_SSL_CACERT_BADFILE only defined for PHP >= 7.
 		if ( 'curlerror' !== $ex->getType() || ! in_array( curl_errno( $ex->getData() ), array( CURLE_SSL_CONNECT_ERROR, CURLE_SSL_CERTPROBLEM, 77 /*CURLE_SSL_CACERT_BADFILE*/ ), true ) ) {
 			\WP_CLI::error( sprintf( "Failed to get url '%s': %s.", $url, $ex->getMessage() ) );
@@ -589,7 +608,7 @@ function http_request( $method, $url, $data = null, $headers = array(), $options
 		$options['verify'] = false;
 		try {
 			return \Requests::request( $url, $headers, $data, $method, $options );
-		} catch( \Requests_Exception $ex ) {
+		} catch ( \Requests_Exception $ex ) {
 			\WP_CLI::error( sprintf( "Failed to get non-verified url '%s' %s.", $url, $ex->getMessage() ) );
 		}
 	}
@@ -665,7 +684,7 @@ function get_named_sem_ver( $new_version, $original_version ) {
 	}
 
 	$parts = explode( '-', $original_version );
-	$bits = explode( '.', $parts[0] );
+	$bits  = explode( '.', $parts[0] );
 	$major = $bits[0];
 	if ( isset( $bits[1] ) ) {
 		$minor = $bits[1];
@@ -676,7 +695,7 @@ function get_named_sem_ver( $new_version, $original_version ) {
 
 	if ( ! is_null( $minor ) && Semver::satisfies( $new_version, "{$major}.{$minor}.x" ) ) {
 		return 'patch';
-	} else if ( Semver::satisfies( $new_version, "{$major}.x.x" ) ) {
+	} elseif ( Semver::satisfies( $new_version, "{$major}.x.x" ) ) {
 		return 'minor';
 	} else {
 		return 'major';
@@ -780,7 +799,7 @@ function get_temp_dir() {
 function parse_ssh_url( $url, $component = -1 ) {
 	preg_match( '#^((docker|docker\-compose|ssh|vagrant):)?(([^@:]+)@)?([^:/~]+)(:([\d]*))?((/|~)(.+))?$#', $url, $matches );
 	$bits = array();
-	foreach( array(
+	foreach ( array(
 		2 => 'scheme',
 		4 => 'user',
 		5 => 'host',
@@ -820,8 +839,8 @@ function parse_ssh_url( $url, $component = -1 ) {
  * @param integer $failures  Number of failures.
  */
 function report_batch_operation_results( $noun, $verb, $total, $successes, $failures ) {
-	$plural_noun = $noun . 's';
-	$past_tense_verb = past_tense_verb( $verb );
+	$plural_noun           = $noun . 's';
+	$past_tense_verb       = past_tense_verb( $verb );
 	$past_tense_verb_upper = ucfirst( $past_tense_verb );
 	if ( $failures ) {
 		if ( $successes ) {
@@ -849,17 +868,20 @@ function report_batch_operation_results( $noun, $verb, $total, $successes, $fail
  * @return array
  */
 function parse_str_to_argv( $arguments ) {
-	preg_match_all ('/(?<=^|\s)([\'"]?)(.+?)(?<!\\\\)\1(?=$|\s)/', $arguments, $matches );
+	preg_match_all( '/(?<=^|\s)([\'"]?)(.+?)(?<!\\\\)\1(?=$|\s)/', $arguments, $matches );
 	$argv = isset( $matches[0] ) ? $matches[0] : array();
-	$argv = array_map( function( $arg ){
-		foreach( array( '"', "'" ) as $char ) {
-			if ( $char === substr( $arg, 0, 1 ) && $char === substr( $arg, -1 ) ) {
-				$arg = substr( $arg, 1, -1 );
-				break;
+	$argv = array_map(
+		function( $arg ) {
+			foreach ( array( '"', "'" ) as $char ) {
+				if ( $char === substr( $arg, 0, 1 ) && $char === substr( $arg, -1 ) ) {
+					$arg = substr( $arg, 1, -1 );
+					break;
+				}
 			}
-		}
-		return $arg;
-	}, $argv );
+				return $arg;
+		},
+		$argv
+	);
 	return $argv;
 }
 
@@ -893,12 +915,12 @@ function basename( $path, $suffix = '' ) {
  * @return bool
  */
 function isPiped() {
-	$shellPipe = getenv('SHELL_PIPE');
+	$shellPipe = getenv( 'SHELL_PIPE' );
 
-	if ($shellPipe !== false) {
-		return filter_var($shellPipe, FILTER_VALIDATE_BOOLEAN);
+	if ( $shellPipe !== false ) {
+		return filter_var( $shellPipe, FILTER_VALIDATE_BOOLEAN );
 	} else {
-		return (function_exists('posix_isatty') && !posix_isatty(STDOUT));
+		return ( function_exists( 'posix_isatty' ) && ! posix_isatty( STDOUT ) );
 	}
 }
 
@@ -948,7 +970,7 @@ function expand_globs( $paths, $flags = 'default' ) {
  * @license   http://framework.zend.com/license/new-bsd New BSD License
  *
  * @param string $pattern Filename pattern.
- * @param void $dummy_flags Not used.
+ * @param void   $dummy_flags Not used.
  *
  * @return array Array of paths.
  */
@@ -958,8 +980,8 @@ function glob_brace( $pattern, $dummy_flags = null ) {
 	if ( ! $next_brace_sub ) {
 		// Find the end of the subpattern in a brace expression.
 		$next_brace_sub = function ( $pattern, $current ) {
-			$length  = strlen( $pattern );
-			$depth   = 0;
+			$length = strlen( $pattern );
+			$depth  = 0;
 
 			while ( $current < $length ) {
 				if ( '\\' === $pattern[ $current ] ) {
@@ -1006,7 +1028,7 @@ function glob_brace( $pattern, $dummy_flags = null ) {
 	}
 
 	$paths = array();
-	$p = $begin + 1;
+	$p     = $begin + 1;
 
 	// For each comma-separated subpattern.
 	do {
@@ -1050,7 +1072,7 @@ function get_suggestion( $target, array $options, $threshold = 2 ) {
 		return '';
 	}
 	foreach ( $options as $option ) {
-		$distance = levenshtein( $option, $target );
+		$distance               = levenshtein( $option, $target );
 		$levenshtein[ $option ] = $distance;
 	}
 
@@ -1107,9 +1129,9 @@ function is_bundled_command( $command ) {
 	static $classes;
 
 	if ( null === $classes ) {
-		$classes = array();
+		$classes   = array();
 		$class_map = WP_CLI_VENDOR_DIR . '/composer/autoload_commands_classmap.php';
-		if ( file_exists( WP_CLI_VENDOR_DIR . '/composer/') ) {
+		if ( file_exists( WP_CLI_VENDOR_DIR . '/composer/' ) ) {
 			$classes = include $class_map;
 		}
 	}
@@ -1132,7 +1154,7 @@ function is_bundled_command( $command ) {
  * @return string
  */
 function force_env_on_nix_systems( $command ) {
-	$env_prefix = '/usr/bin/env ';
+	$env_prefix     = '/usr/bin/env ';
 	$env_prefix_len = strlen( $env_prefix );
 	if ( is_windows() ) {
 		if ( 0 === strncmp( $command, $env_prefix, $env_prefix_len ) ) {

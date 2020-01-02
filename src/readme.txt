@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.2.2
+Tested up to: 5.3.0
 Requires PHP: 5.6.20
-Stable tag: 1.1.7
+Stable tag: 1.2.2
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,109 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.2 =
+* Activity - Fixed certain link embeds URLs not rendering proper results
+* Profiles - Fixed member type not displaying in profile cards in 'My Connections' tab
+* Profiles - Fixed the 'Mutual Connections' tab incorrectly showing all members
+* Profiles - Fixed pagination of members when using [profile type=""] shortcode
+* Groups - Fixed pagination of groups when using [group type=""] shortcode
+* Groups - Fixed 'Read more' in group activity feed not working when Media component is disabled
+* Groups - Added ability to re-order Photos and Albums tabs in customizer
+* Forums - Fixed issue when posting a forum reply using only a GIF, with no text
+* Forums - Fixed issue with pagination through forums in Forums index
+* Notices - Fixed site notices not clearing after closing them, for non-admin members
+* Registration - Fixed data not saving on register form when validating incomplete fields
+* Widgets - Changed 'More' link in 'Users I'm Following' widget to redirect to 'Following' tab
+* Compatibility - Fixed conflict with WP Ultimo while Network Search is enabled
+* Compatibility - Added support for 'bp_embed_oembed_html' filter in code
+* Documentation - Now syncing all docs in real time from BuddyBoss Resources website
+
+= 1.2.1 =
+* Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled
+* Profiles - Fixed pagination of members directory not scrolling back to top of page in mobile
+* Groups - Fixed pagination of groups directory not scrolling back to top of page in mobile
+* Groups - Fixed option to 'Restrict Invites' into sub-groups, to only members of the parent group
+* Forums - Fixed marking discussion as Favorite not always saving after page refresh
+* Forums - New settings section to customize 'Forum Profile Slugs'
+* Media - Fixed photos added into newly created group album not saving
+
+= 1.2.0 =
+* Groups - When logged out users visit a private group, now redirects to Login instead of 404 error
+* Groups - New option to display group directories in Grid View, List View, or both with a toggle
+* Profiles - New option to display profile directories in Grid View, List View, or both with a toggle
+* Profiles - Fixed display of 'Phone' profile field type when added into a Repeater set
+* Profiles - Fixed issue with saving international numbers in 'Phone' profile field type
+* Profiles - Fixed issue with saving Visibility when editing 'Profile Type' profile field type
+* Forums - Added full support for all bbPress forum shortcodes
+* Forums - Fixed issue with restoring trashed discussions in WordPress admin
+* Forums - Fixed pagination issues when viewing the last page of discussions
+* Forums - Fixed displaying original text formatting when editing a forum post
+* Media - Now displaying the number of photos in social group 'Photos' tabs
+* Media - Fixed syncing of photo deletion between frontend and admin Media Library
+* Media - Fixed photo lazy loading when selecting from existing photos to add into an album
+* Notices - Now displaying site notices on all WordPress pages
+* Notices - Added support for entering shortcodes into site notices
+* Email Invites - Removed the avatar and name from email template sent to invited recipients
+* Widgets - Added tooltips to display the name of each member in both 'Following' widgets
+* Akismet - Improved styling for 'Spam' icon in activity feed when Akismet is configured
+* LearnDash - New option to display 'My Courses' menu for logged in members
+* LearnDash - Fixed 'Courses' tab on groups not applying custom label for 'Courses' text
+* Compatibility - Improved support for many plugins that 'Require bbPress' and 'Require BuddyPress'
+* Coding Standards - General code refactoring, validated through PHP_CodeSniffer
+* Translations - Added Hungarian language files, credits to Tamas Prepost
+* Documentation - Profile Grid vs List View
+* Documentation - Group Grid vs List View
+* Documentation - Forum Shortcodes
+* Documentation - New Forum Shortcode
+* Documentation - My Courses Profile Menu
+
+= 1.1.9 =
+* Performance - Lazy load iframes (video embeds) in Activity
+* Activity - New option to display activity in separate tabs based on activity type
+* Activity - New widget '(BB) Users Following Me' to display all members following the logged-in user
+* Activity - When embedding links with no additional text, show the content preview and hide link URL
+* Activity - When embedding a Youtube link that cannot fetch a video preview, fall back to image preview
+* Activity - Fixed link previews when embedding links from a Facebook url
+* Activity - Fixed link previews when embedding links from an AMP url
+* Profiles - When hiding members of a profile type from Members Directory, hide from '(BB) Members' widget
+* Groups - Fixed issue with deleting members from a group, when LearnDash is enabled
+* Groups - Fixed filtering group types set to be hidden from Groups directory, in all scenarios 
+* Groups - When a group member changes their Name, now updates their name in previous group activity feeds
+* Groups - When editing groups from backend, fixed dropdown list of available Group Types
+* Groups - When auto-creating a group from a LearnDash group, the group members now show correct join date
+* Forums - When adding tags to a discussion or reply, now showing suggested tags as you type
+* Forums - When replying to a sub-forum in a group, now displaying an activity post in the group feed
+* Media - Fixed issue with deleting albums from groups
+* Media - Fixed displaying photos uploaded into groups in the global Photos page, based on group privacy
+* Media - When deleting an image from activity, fixed auto-deleting the image from photos tab
+* Email Invites - If an invited email is already a member, providing proper validation now
+* Email Invites - Fixed 'Email Invites' tab showing on other member profiles, when viewing as Admin
+* Email Invites - Fixed WordPress error when sending invites, on some servers
+* Registration - Reduced character minimum for 'Nickname' to 3 characters, previously was 4
+* Registration - Added validation telling users that underscores are not allowed for 'Nickname'
+* Registration - Fixed validation when 'Profile Type' field is required and in a non-signup field set
+* Registration - Nicer 'Mismatch' validation when Email and Confirm Email do not match
+* Registration - Fixed activation email not sending in multisite, in some servers
+* MemberPress + BuddyPress Integration - Fixed Name fields when registering to a member level
+* MemberPress + BuddyPress Integration - Added the 'Membership' links into profile dropdown
+* Compatibility - Improved support for plugins that 'Require bbPress' and 'Require BuddyPress'
+* Documentation - Forum Settings
+* Documentation - Activity Tabs
+* Documentation - Registration Confirm Email/Password
+* Documentation - Theme Header (Mobile)
+
+= 1.1.8 =
+* Profiles - Allow Uppercase letters in Nicknames, and auto-convert them to lowercase for Usernames
+* Profiles - Fixed display of name fields that include unicode characters
+* Profiles - Fixed empty results in Profile Search form for 'Date' field type
+* Groups - When adding a photo, an activity post will now show in the group feed
+* Groups - Fixed loading of group members, when Activity Feeds and Network Search are both disabled
+* Groups - Fixed loading of 3rd party plugin options added to 'Manage > Details' group page
+* Blog - Fixed conflict with WordPress 'Categories' widget on blog archive
+* Tools - 'Repair Community' tool now runs in batch processes via AJAX
+* Tools - 'Repair Forums' tool now runs in batch processes via AJAX
+* Compatibility - Improved support for 'BuddyPress for LearnDash' plugin
 
 = 1.1.7 =
 * Profiles - Fixed issues with duplicate Name fields in some installations

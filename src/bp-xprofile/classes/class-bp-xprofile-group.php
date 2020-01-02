@@ -90,9 +90,11 @@ class BP_XProfile_Group {
 	public function populate( $id ) {
 
 		// Get this group.
-		$group = self::get( array(
-			'profile_group_id' => $id
-		) );
+		$group = self::get(
+			array(
+				'profile_group_id' => $id,
+			)
+		);
 
 		// Bail if group not found.
 		if ( empty( $group ) ) {
@@ -123,7 +125,7 @@ class BP_XProfile_Group {
 		global $wpdb;
 
 		// Filter the field group attributes.
-		$this->name        = apply_filters( 'xprofile_group_name_before_save',        $this->name,        $this->id );
+		$this->name        = apply_filters( 'xprofile_group_name_before_save', $this->name, $this->id );
 		$this->description = apply_filters( 'xprofile_group_description_before_save', $this->description, $this->id );
 
 		/**
@@ -159,9 +161,9 @@ class BP_XProfile_Group {
 			$this->id = $wpdb->insert_id;
 		}
 
-        // Save metadata
-        $repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
-        self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );
+		// Save metadata
+		$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
+		self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );
 
 		/**
 		 * Fires after the current group instance gets saved.
@@ -216,7 +218,7 @@ class BP_XProfile_Group {
 			// Remove profile data for the groups fields.
 			if ( ! empty( $this->fields ) ) {
 				for ( $i = 0, $count = count( $this->fields ); $i < $count; ++$i ) {
-					BP_XProfile_ProfileData::delete_for_field( $this->fields[$i]->id );
+					BP_XProfile_ProfileData::delete_for_field( $this->fields[ $i ]->id );
 				}
 			}
 		}
@@ -271,21 +273,24 @@ class BP_XProfile_Group {
 		global $wpdb;
 
 		// Parse arguments.
-		$r = wp_parse_args( $args, array(
-			'profile_group_id'       => false,
-			'user_id'                => bp_displayed_user_id(),
-			'member_type'            => false,
-			'hide_empty_groups'      => false,
-			'hide_empty_fields'      => false,
-			'fetch_fields'           => false,
-			'fetch_field_data'       => false,
-			'fetch_visibility_level' => false,
-			'exclude_groups'         => false,
-			'exclude_fields'         => false,
-			'include_fields'         => false,
-			'update_meta_cache'      => true,
-            'repeater_show_main_fields_only' => false,
-		) );
+		$r = wp_parse_args(
+			$args,
+			array(
+				'profile_group_id'               => false,
+				'user_id'                        => bp_displayed_user_id(),
+				'member_type'                    => false,
+				'hide_empty_groups'              => false,
+				'hide_empty_fields'              => false,
+				'fetch_fields'                   => false,
+				'fetch_field_data'               => false,
+				'fetch_visibility_level'         => false,
+				'exclude_groups'                 => false,
+				'exclude_fields'                 => false,
+				'include_fields'                 => false,
+				'update_meta_cache'              => true,
+				'repeater_show_main_fields_only' => false,
+			)
+		);
 
 		// Keep track of object IDs for cache-priming.
 		$object_ids = array(
@@ -338,35 +343,35 @@ class BP_XProfile_Group {
 		// Support arrays and comma-separated strings.
 		$exclude_fields_cs = wp_parse_id_list( $r['exclude_fields'] );
 
-        /**
-         * For each group, check if it is a repeater set.
-         * If so,
-         *  - get the number of sets, user has created.
-         *  - create as many set of clones for each such field in the group, if not created already
-         *  - include those field ids in loop
-         */
-        foreach ( $group_ids as $group_id ) {
-            $is_repeater_enabled = 'on' == BP_XProfile_Group::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
-            if ( $is_repeater_enabled ) {
-                $clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $group_id );
+		/**
+		 * For each group, check if it is a repeater set.
+		 * If so,
+		 *  - get the number of sets, user has created.
+		 *  - create as many set of clones for each such field in the group, if not created already
+		 *  - include those field ids in loop
+		 */
+		foreach ( $group_ids as $group_id ) {
+			$is_repeater_enabled = 'on' == self::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+			if ( $is_repeater_enabled ) {
+				$clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $group_id );
 
-                if ( $r['repeater_show_main_fields_only'] ) {
-                    //exclude clones
-                    $exclude_fields_cs  = array_merge( $exclude_fields_cs, $clone_field_ids_all );
-                } else {
-                    //exclude template fields
-                    $template_field_ids = bp_get_repeater_template_field_ids( $group_id );
-                    $exclude_fields_cs  = array_merge( $exclude_fields_cs, $template_field_ids );
+				if ( $r['repeater_show_main_fields_only'] ) {
+					// exclude clones
+					$exclude_fields_cs = array_merge( $exclude_fields_cs, $clone_field_ids_all );
+				} else {
+					// exclude template fields
+					$template_field_ids = bp_get_repeater_template_field_ids( $group_id );
+					$exclude_fields_cs  = array_merge( $exclude_fields_cs, $template_field_ids );
 
-                    //include only the subset of clones the current user has data in
-                    $user_field_set_count = bp_get_profile_field_set_count( $group_id, $r['user_id'] );
-                    $clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $group_id, $user_field_set_count );
-                    $clones_to_exclude = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
+					// include only the subset of clones the current user has data in
+					$user_field_set_count     = bp_get_profile_field_set_count( $group_id, $r['user_id'] );
+					$clone_field_ids_has_data = bp_get_repeater_clone_field_ids_subset( $group_id, $user_field_set_count );
+					$clones_to_exclude        = array_diff( $clone_field_ids_all, $clone_field_ids_has_data );
 
-                    $exclude_fields_cs  = array_merge( $exclude_fields_cs, $clones_to_exclude );
-                }
-            }
-        }
+					$exclude_fields_cs = array_merge( $exclude_fields_cs, $clones_to_exclude );
+				}
+			}
+		}
 
 		// Visibility - Handled here so as not to be overridden by sloppy use of the
 		// exclude_fields parameter. See bp_xprofile_get_hidden_fields_for_user().
@@ -396,7 +401,7 @@ class BP_XProfile_Group {
 				}
 
 				$member_types_fields = BP_XProfile_Field::get_fields_for_member_type( $member_types );
-				$include_field_ids += array_keys( $member_types_fields );
+				$include_field_ids  += array_keys( $member_types_fields );
 			}
 		}
 
@@ -408,13 +413,13 @@ class BP_XProfile_Group {
 		$in_sql = '';
 		if ( ! empty( $include_field_ids ) ) {
 			$include_field_ids_cs = implode( ',', array_map( 'intval', $include_field_ids ) );
-			$in_sql = " AND id IN ({$include_field_ids_cs}) ";
+			$in_sql               = " AND id IN ({$include_field_ids_cs}) ";
 		}
 
 		// Fetch the fields.
 		$field_ids = $wpdb->get_col( "SELECT id FROM {$bp->profile->table_name_fields} WHERE group_id IN ( {$group_ids_in} ) AND parent_id = 0 {$exclude_fields_sql} {$in_sql} ORDER BY field_order" );
 
-		foreach( $groups as $group ) {
+		foreach ( $groups as $group ) {
 			$group->fields = array();
 		}
 
@@ -438,8 +443,8 @@ class BP_XProfile_Group {
 
 		// If social networks field found then remove from the $field_ids array.
 		if ( $social_networks_key > 0 ) {
-			if (($key = array_search($social_networks_key, $field_ids)) !== false) {
-				unset($field_ids[$key]);
+			if ( ( $key = array_search( $social_networks_key, $field_ids ) ) !== false ) {
+				unset( $field_ids[ $key ] );
 			}
 		}
 
@@ -449,7 +454,7 @@ class BP_XProfile_Group {
 		$uncached_field_ids = bp_get_non_cached_ids( $field_ids, 'bp_xprofile_fields' );
 		if ( ! empty( $uncached_field_ids ) ) {
 			$_uncached_field_ids = implode( ',', array_map( 'intval', $uncached_field_ids ) );
-			$uncached_fields = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id IN ({$_uncached_field_ids})" );
+			$uncached_fields     = $wpdb->get_results( "SELECT * FROM {$bp->profile->table_name_fields} WHERE id IN ({$_uncached_field_ids})" );
 			foreach ( $uncached_fields as $uncached_field ) {
 				$fid = intval( $uncached_field->id );
 				wp_cache_set( $fid, $uncached_field, 'bp_xprofile_fields' );
@@ -477,7 +482,7 @@ class BP_XProfile_Group {
 			if ( ! empty( $r['hide_empty_fields'] ) && ! empty( $field_ids ) && ! empty( $field_data ) ) {
 
 				// Loop through the results and find the fields that have data.
-				foreach( (array) $field_data as $data ) {
+				foreach ( (array) $field_data as $data ) {
 
 					// Empty fields may contain a serialized empty array.
 					$maybe_value = maybe_unserialize( $data->value );
@@ -491,7 +496,7 @@ class BP_XProfile_Group {
 				}
 
 				// The remaining members of $field_ids are empty. Remove them.
-				foreach( $fields as $field_key => $field ) {
+				foreach ( $fields as $field_key => $field ) {
 					if ( in_array( $field->id, $field_ids ) ) {
 						unset( $fields[ $field_key ] );
 					}
@@ -505,14 +510,14 @@ class BP_XProfile_Group {
 			if ( ! empty( $fields ) && ! empty( $field_data ) && ! is_wp_error( $field_data ) ) {
 
 				// Loop through fields.
-				foreach( (array) $fields as $field_key => $field ) {
+				foreach ( (array) $fields as $field_key => $field ) {
 
 					// Loop through the data in each field.
-					foreach( (array) $field_data as $data ) {
+					foreach ( (array) $field_data as $data ) {
 
 						// Assign correct data value to the field.
 						if ( $field->id == $data->field_id ) {
-							$fields[ $field_key ]->data        = new stdClass;
+							$fields[ $field_key ]->data        = new stdClass();
 							$fields[ $field_key ]->data->value = $data->value;
 							$fields[ $field_key ]->data->id    = $data->id;
 						}
@@ -535,12 +540,12 @@ class BP_XProfile_Group {
 		}
 
 		// Merge the field array back in with the group array.
-		foreach( (array) $groups as $group ) {
+		foreach ( (array) $groups as $group ) {
 			// Indexes may have been shifted after previous deletions, so we get a
 			// fresh one each time through the loop.
 			$index = array_search( $group, $groups );
 
-			foreach( (array) $fields as $field ) {
+			foreach ( (array) $fields as $field ) {
 				if ( $group->id === $field->group_id ) {
 					$groups[ $index ]->fields[] = $field;
 				}
@@ -587,7 +592,7 @@ class BP_XProfile_Group {
 			if ( false !== $group_data ) {
 				$groups[ $group_id ] = $group_data;
 
-			// Otherwise leave a placeholder so we don't lose the order.
+				// Otherwise leave a placeholder so we don't lose the order.
 			} else {
 				$groups[ $group_id ] = '';
 
@@ -606,7 +611,7 @@ class BP_XProfile_Group {
 			$table_name = buddypress()->profile->table_name_groups;
 
 			// Fetch data, preserving order.
-			$queried_gdata = $wpdb->get_results( "SELECT * FROM {$table_name} WHERE id IN ({$uncached_gids_sql}) ORDER BY FIELD( id, {$uncached_gids_sql} )");
+			$queried_gdata = $wpdb->get_results( "SELECT * FROM {$table_name} WHERE id IN ({$uncached_gids_sql}) ORDER BY FIELD( id, {$uncached_gids_sql} )" );
 
 			// Make sure query returned valid data.
 			if ( ! empty( $queried_gdata ) && ! is_wp_error( $queried_gdata ) ) {
@@ -635,13 +640,13 @@ class BP_XProfile_Group {
 		return array_values( $groups );
 	}
 
-    public static function get_group_meta ( $group_id, $meta_key = '', $single = true ) {
-        return bp_xprofile_get_meta( $group_id, 'group', $meta_key, $single );
-    }
+	public static function get_group_meta( $group_id, $meta_key = '', $single = true ) {
+		return bp_xprofile_get_meta( $group_id, 'group', $meta_key, $single );
+	}
 
-    public static function update_group_meta ( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
-        return bp_xprofile_update_meta( $group_id, 'group', $meta_key, $meta_value, $prev_value );
-    }
+	public static function update_group_meta( $group_id, $meta_key, $meta_value, $prev_value = '' ) {
+		return bp_xprofile_update_meta( $group_id, 'group', $meta_key, $meta_value, $prev_value );
+	}
 
 	/**
 	 * Validate field group when form submitted.
@@ -704,7 +709,7 @@ class BP_XProfile_Group {
 		// Get the user's visibility level preferences.
 		$visibility_levels = bp_get_user_meta( $user_id, 'bp_xprofile_visibility_levels', true );
 
-		foreach( (array) $fields as $key => $field ) {
+		foreach ( (array) $fields as $key => $field ) {
 
 			// Does the admin allow this field to be customized?
 			$visibility   = bp_xprofile_get_meta( $field->id, 'field', 'allow_custom_visibility' );
@@ -714,7 +719,7 @@ class BP_XProfile_Group {
 			if ( ( true === $allow_custom ) && isset( $visibility_levels[ $field->id ] ) ) {
 				$field_visibility = $visibility_levels[ $field->id ];
 
-			// If no admin-set default is saved, fall back on a global default.
+				// If no admin-set default is saved, fall back on a global default.
 			} else {
 				$fallback_visibility = bp_xprofile_get_meta( $field->id, 'field', 'default_visibility' );
 
@@ -754,16 +759,23 @@ class BP_XProfile_Group {
 		if ( false === $default_visibility_levels ) {
 			$bp = buddypress();
 
-			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$bp->profile->table_name_meta} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
+			// @todo need to check like  why we are not getting the $bp->profile->table_name_meta into the plugins page.
+			if ( isset( $bp->profile ) && isset( $bp->profile->table_name_meta ) ) {
+				$profile_meta_table = $bp->profile->table_name_meta;
+			} else {
+				$profile_meta_table = $bp->table_prefix . 'bp_xprofile_meta';
+			}
+
+			$levels = $wpdb->get_results( "SELECT object_id, meta_key, meta_value FROM {$profile_meta_table} WHERE object_type = 'field' AND ( meta_key = 'default_visibility' OR meta_key = 'allow_custom_visibility' )" );
 
 			// Arrange so that the field id is the key and the visibility level the value.
 			$default_visibility_levels = array();
 			foreach ( $levels as $level ) {
 				switch ( $level->meta_key ) {
-					case 'default_visibility' :
-						$default_visibility_levels[ $level->object_id ]['default']      = $level->meta_value;
+					case 'default_visibility':
+						$default_visibility_levels[ $level->object_id ]['default'] = $level->meta_value;
 						break;
-					case 'allow_custom_visibility' :
+					case 'allow_custom_visibility':
 						$default_visibility_levels[ $level->object_id ]['allow_custom'] = $level->meta_value;
 						break;
 				}
@@ -791,28 +803,37 @@ class BP_XProfile_Group {
 		$users_url = bp_get_admin_url( 'admin.php' );
 
 		// URL to cancel to
-		$cancel_url = add_query_arg( array(
-			'page' => 'bp-profile-setup'
-		), $users_url );
+		$cancel_url = add_query_arg(
+			array(
+				'page' => 'bp-profile-setup',
+			),
+			$users_url
+		);
 
 		// New field group.
 		if ( empty( $this->id ) ) {
-			$title	= __( 'New Field Set', 'buddyboss' );
-			$button	= __( 'Save',                'buddyboss' );
-			$action	= add_query_arg( array(
-				'page' => 'bp-profile-setup',
-				'mode' => 'add_group'
-			), $users_url );
+			$title  = __( 'New Field Set', 'buddyboss' );
+			$button = __( 'Save', 'buddyboss' );
+			$action = add_query_arg(
+				array(
+					'page' => 'bp-profile-setup',
+					'mode' => 'add_group',
+				),
+				$users_url
+			);
 
-		// Existing field group.
+			// Existing field group.
 		} else {
 			$title  = __( 'Edit Field Set', 'buddyboss' );
-			$button	= __( 'Update',           'buddyboss' );
-			$action	= add_query_arg( array(
-				'page'     => 'bp-profile-setup',
-				'mode'     => 'edit_group',
-				'group_id' => (int) $this->id
-			), $users_url );
+			$button = __( 'Update', 'buddyboss' );
+			$action = add_query_arg(
+				array(
+					'page'     => 'bp-profile-setup',
+					'mode'     => 'edit_group',
+					'group_id' => (int) $this->id,
+				),
+				$users_url
+			);
 		} ?>
 
 		<div class="wrap">
@@ -820,7 +841,8 @@ class BP_XProfile_Group {
 			$users_tab = count( bp_core_get_users_admin_tabs() );
 			if ( $users_tab > 1 ) {
 				?>
-				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2><?php
+				<h2 class="nav-tab-wrapper"><?php bp_core_admin_users_tabs( __( 'Profile Fields', 'buddyboss' ) ); ?></h2>
+																			<?php
 			}
 			?>
 			<h1><?php echo esc_html( $title ); ?></h1>
@@ -839,17 +861,19 @@ class BP_XProfile_Group {
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
-									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss') ?></label>
+									<label id="title-prompt-text" for="title"><?php esc_html_e( 'Field Set Name (required)', 'buddyboss' ); ?></label>
 									<input type="text" name="group_name" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off" />
 								</div>
 							</div>
 							<div class="postbox">
 								<h2><?php esc_html_e( 'Field Set Description', 'buddyboss' ); ?></h2>
 								<div class="inside">
-									<label for="group_description" class="screen-reader-text"><?php
+									<label for="group_description" class="screen-reader-text">
+									<?php
 										/* translators: accessibility text */
 										esc_html_e( 'Add description', 'buddyboss' );
-									?></label>
+									?>
+									</label>
 									<textarea name="group_description" id="group_description" rows="8" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
 								</div>
 							</div>
@@ -863,7 +887,8 @@ class BP_XProfile_Group {
 							 *
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
-							do_action( 'xprofile_group_admin_after_description', $this ); ?>
+							do_action( 'xprofile_group_admin_after_description', $this );
+							?>
 
 						</div><!-- #post-body-content -->
 
@@ -878,7 +903,8 @@ class BP_XProfile_Group {
 							 *
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
-							do_action( 'xprofile_group_before_submitbox', $this ); ?>
+							do_action( 'xprofile_group_before_submitbox', $this );
+							?>
 
 							<div id="submitdiv" class="postbox">
 								<h2><?php _e( 'Submit', 'buddyboss' ); ?></h2>
@@ -898,7 +924,8 @@ class BP_XProfile_Group {
 											 *
 											 * @param BP_XProfile_Group $this Current XProfile group.
 											 */
-											do_action( 'xprofile_group_submitbox_start', $this ); ?>
+											do_action( 'xprofile_group_submitbox_start', $this );
+											?>
 
 											<input type="hidden" name="group_order" id="group_order" value="<?php echo esc_attr( $this->group_order ); ?>" />
 											<div id="publishing-action">
@@ -922,29 +949,31 @@ class BP_XProfile_Group {
 							 *
 							 * @param BP_XProfile_Group $this Current XProfile group.
 							 */
-							do_action( 'xprofile_group_after_submitbox', $this ); ?>
+							do_action( 'xprofile_group_after_submitbox', $this );
+							?>
 
-                            <?php
-                            /**
-                             * The main profile field group, used in registration form,
-                             * can not be a repeater.
-                             */
-                            if ( empty( $this->id ) || $this->can_delete ) : ?>
+							<?php
+							/**
+							 * The main profile field group, used in registration form,
+							 * can not be a repeater.
+							 */
+							if ( empty( $this->id ) || $this->can_delete ) :
+								?>
 
-                                <?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
+								<?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
 
-                                <div id="repeatersetdiv" class="postbox">
-                                    <h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
-                                    <div class="inside">
-                                    	<p style="margin-top: 0;"><?php _e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss' );?></p>
-                                		<select name="group_is_repeater" id="group_is_repeater" >
-                                            <option value="off" <?php selected( $enabled, 'off' );?>><?php _e( 'Disabled', 'buddyboss' );?></option>
-                                            <option value="on" <?php selected( $enabled, 'on' );?>><?php _e( 'Enabled', 'buddyboss' );?></option>
-                                        </select>
-                                    </div>
-                                </div>
+								<div id="repeatersetdiv" class="postbox">
+									<h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>
+									<div class="inside">
+										<p style="margin-top: 0;"><?php _e( 'Allow the profile fields within this set to be repeated again and again, so the user can add multiple instances of their data.', 'buddyboss' ); ?></p>
+										<select name="group_is_repeater" id="group_is_repeater" >
+											<option value="off" <?php selected( $enabled, 'off' ); ?>><?php _e( 'Disabled', 'buddyboss' ); ?></option>
+											<option value="on" <?php selected( $enabled, 'on' ); ?>><?php _e( 'Enabled', 'buddyboss' ); ?></option>
+										</select>
+									</div>
+								</div>
 
-                            <?php endif; ?>
+							<?php endif; ?>
 
 						</div>
 					</div>
@@ -952,6 +981,6 @@ class BP_XProfile_Group {
 			</form>
 		</div>
 
-	<?php
+		<?php
 	}
 }
