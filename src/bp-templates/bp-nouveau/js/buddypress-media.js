@@ -1312,27 +1312,65 @@ window.bp = window.bp || {};
 		},
 		
 		folderLocationUI: function(a){
-			if($(a).find('#bb-folder-location').length > 0){
-				if($(a).find('#bb-folder-location').parent('.bb-dropdown-wrap').find('.bb-folder-location-select').length == 0){
-					var bb_folder_location = '';
-					$(a).find('#bb-folder-location option').each(function(){
-						bb_folder_location += '<li class="'+ $(this).attr('class') +'">'+ $(this).text() +'</li>';
-					});
-					$(a).find('#bb-folder-location').parent().append('<div class="bb-folder-location-select"><span class="bb-folder-location-selected">'+$(a).find('#bb-folder-location option:first-child').text()+'</span><ul class="bb-folder-location-select-list">'+bb_folder_location+'</select>');
+			// if($(a).find('#bb-folder-location').length > 0){
+			// 	if($(a).find('#bb-folder-location').parent('.bb-dropdown-wrap').find('.bb-folder-location-select').length == 0){
+			// 		var bb_folder_location = '';
+			// 		$(a).find('#bb-folder-location option').each(function(){
+			// 			bb_folder_location += '<li class="'+ $(this).attr('class') +'">'+ $(this).text() +'</li>';
+			// 		});
+			// 		$(a).find('#bb-folder-location').parent().append('<div class="bb-folder-location-select"><span class="bb-folder-location-selected">'+$(a).find('#bb-folder-location option:first-child').text()+'</span><ul class="bb-folder-location-select-list">'+bb_folder_location+'</select>');
 
-					$(document).on('click',a+' .bb-folder-location-select li',function(){
-						var selected_option = $(a).find('#bb-folder-location option:nth-child('+($(this).index()+1)+')');
-						$(this).addClass('selected').siblings().removeClass('selected');
-						$(a).find('#bb-folder-location option').removeAttr('selected');
-						selected_option.attr('selected','selected');
-						$(a).find('.bb-folder-location-select .bb-folder-location-selected').text(selected_option.text());
-						$(a).find('.bb-folder-location-select-list').slideUp(300);
+			// 		$(document).on('click',a+' .bb-folder-location-select li',function(){
+			// 			var selected_option = $(a).find('#bb-folder-location option:nth-child('+($(this).index()+1)+')');
+			// 			$(this).addClass('selected').siblings().removeClass('selected');
+			// 			$(a).find('#bb-folder-location option').removeAttr('selected');
+			// 			selected_option.attr('selected','selected');
+			// 			$(a).find('.bb-folder-location-select .bb-folder-location-selected').text(selected_option.text());
+			// 			$(a).find('.bb-folder-location-select-list').slideUp(300);
+			// 		});
+			// 		$(document).on('click',a+' .bb-folder-location-select .bb-folder-location-selected',function(index){
+			// 			$(a).find('.bb-folder-location-select-list').slideToggle(300);
+			// 		});
+			// 	}
+			// }
+			if($(a).find('.bb-folder-destination').length > 0){
+				$(document).on('click', a +' .bb-folder-destination', function(){
+					$(this).parent().find('.location-folder-list-wrap').slideToggle();
+				});
+				if(!$(a).find('.location-folder-list-wrap').hasClass('is_loaded')){
+					$(a).find('.location-folder-list-wrap').addClass('is_loaded');
+					$(a).find('.location-folder-list li').each(function(){
+						$(this).children('ul').parent().addClass('has-ul').append('<i class="dashicons dashicons-arrow-right-alt2 sub-menu-anchor"></i>'); 
 					});
-					$(document).on('click',a+' .bb-folder-location-select .bb-folder-location-selected',function(index){
-						$(a).find('.bb-folder-location-select-list').slideToggle(300);
+					$(document).on('click', a + ' .location-folder-list li i', function(){
+						$(this).closest('.location-folder-list-wrap').find('.location-folder-title').text($(this).siblings('span').text()).siblings('.location-folder-back').css('display', 'inline-block');
+						$(this).siblings('ul').show().siblings('span, i').hide().parent().siblings().hide();
+						$(this).closest('.is_active').removeClass('is_active');
+						$(this).parent().addClass('is_active');
+					});
+					$(document).on('click', a + ' .location-folder-back', function(){
+						// location-folder-list
+						if($(this).siblings('.location-folder-list').find('li.is_active').parent().hasClass('location-folder-list')){
+							$(this).siblings('.location-folder-list').find('li.is_active').find('ul').hide().siblings('span, i').show().parent().removeClass('is_active').siblings().show();
+							$(this).siblings('.location-folder-title').text('Documents');
+							$(this).hide();
+						}else{
+							$(this).siblings('.location-folder-list').find('li.is_active').find('ul').hide().siblings('span, i').show().parent().removeClass('is_active').addClass('is_active_old').siblings().show().parent().parent().closest('.has-ul').addClass('is_active');
+							$(this).siblings('.location-folder-list').find('li.is_active.is_active_old').removeClass('is_active is_active_old');
+							$(this).siblings('.location-folder-title').text($(this).parent().find('li.is_active>span').text());
+						}        
+					});
+
+					$(document).on('click', a + ' .location-folder-list li span', function(){
+						$(this).closest('.location-folder-list-wrap-main').find('.location-folder-list li span').removeClass('selected');
+						$(this).addClass('selected')
+						$(this).closest('.location-folder-list-wrap-main').find('.bb-folder-destination').val($(this).text()).next('.location-folder-list-wrap').slideToggle();
+
+						
 					});
 				}
-			}			
+				
+			}
 		},
 
 		closeCreateAlbumModal: function(event){
