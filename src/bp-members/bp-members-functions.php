@@ -4823,7 +4823,7 @@ function bp_register_page_content() {
 	$page_ids = bp_core_get_directory_page_ids();
 
 	if ( ! empty( $page_ids['register'] ) ) {
-		$register_page_content = get_post_field('post_content',$page_ids['register'] );
+		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
 		echo apply_filters( 'the_content', $register_page_content );
 	}
 }
