@@ -4806,7 +4806,7 @@ function bp_activate_page_content() {
 	$page_ids = bp_core_get_directory_page_ids();
 
 	if ( ! empty( $page_ids['activate'] ) ) {
-		$activate_page_content = get_post_field('post_content',$page_ids['activate'] );
+		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
 		echo apply_filters( 'the_content', $activate_page_content );
 	}
 }
