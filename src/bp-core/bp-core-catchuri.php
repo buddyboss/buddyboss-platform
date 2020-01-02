@@ -1326,7 +1326,7 @@ function bp_private_network_template_redirect() {
 
 				}
 			}
-		}else{
+		} else {
 			/**
 			 * The private network has not enabled that time to redirect on the login page for the invite component
 			 *
