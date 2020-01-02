@@ -367,8 +367,8 @@ function bp_search_items() {
 	// forums?
 
 	$items['forum'] = __( 'Forums', 'buddyboss' );
-	$items['topic'] = __( 'Forums Discussions', 'buddyboss' );
-	$items['reply'] = __( 'Forums Replies', 'buddyboss' );
+	$items['topic'] = __( 'Forum Discussions', 'buddyboss' );
+	$items['reply'] = __( 'Forum Replies', 'buddyboss' );
 
 	// other buddypress components
 	$bp_components = array(
