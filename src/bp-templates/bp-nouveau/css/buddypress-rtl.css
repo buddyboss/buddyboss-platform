@@ -1410,7 +1410,7 @@ div[class*="attached-gif-container"] .gif-play-button span.dashicons {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif-symbol.png) bottom left no-repeat;
+  background: url(../images/gif-symbol.png) bottom right no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
