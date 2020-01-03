@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_get_group_type_post_id( $group_type = '' ) {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_group_get_group_type_id' );
 
 	$args = array(
 		'post_type'		=>	'bp-group-type',
@@ -48,7 +48,7 @@ function bp_get_group_type_post_id( $group_type = '' ) {
  */
 function bp_get_removed_group_types(){
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_excluded_group_types' );
 
 	$bp_group_type_ids = array();
 	$post_type = bp_get_group_type_post_type();
@@ -94,7 +94,7 @@ function bp_get_removed_group_types(){
  */
 function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $object=false ) {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_exclude_group_type' );
 
 	$exclude_group_ids = array_unique( bp_get_groups_of_removed_group_types() );
 
@@ -121,7 +121,7 @@ function bp_group_type_exclude_groups_from_directory_and_searches( $qs=false, $o
  */
 function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_group_type' ) {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_group_get_count_by_group_type' );
 
 	global $wpdb;
 
@@ -162,7 +162,7 @@ function bp_get_total_count_by_group_types( $group_type = '', $taxonomy = 'bp_gr
  */
 function bp_get_group_type_key( $post_id ) {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_group_get_group_type_key' );
 
 	if ( empty( $post_id) ) {
 		return '';
@@ -195,7 +195,7 @@ function bp_get_group_type_key( $post_id ) {
  */
 function bp_get_group_type_post_type_supports() {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_group_type_post_type_supports' );
 
 	/**
 	 * Filters the features that the group type post type supports.
@@ -219,7 +219,7 @@ function bp_get_group_type_post_type_supports() {
  */
 function bp_get_group_type_post_type_labels() {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_group_type_post_type_labels' );
 
 	/**
 	 * Filters group type post type labels.
@@ -251,7 +251,7 @@ function bp_get_group_type_post_type_labels() {
  */
 function bp_get_group_type_post_type() {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_group_type_post_type' );
 
 	/**
 	 * Filters the name of the group type post type.
@@ -272,7 +272,7 @@ function bp_get_group_type_post_type() {
  */
 function bp_group_type_post_type() {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_group_type_post_type' );
 
 	echo bp_get_group_type_post_type();
 }
@@ -286,7 +286,7 @@ function bp_group_type_post_type() {
  */
 function bp_get_groups_of_removed_group_types() {
 
-	_deprecated_function( __FUNCTION__, '1.1.9' );
+	_deprecated_function( __FUNCTION__, '1.1.9', 'bp_groups_get_excluded_group_ids_by_type' );
 
 	$group_id = array();
 
