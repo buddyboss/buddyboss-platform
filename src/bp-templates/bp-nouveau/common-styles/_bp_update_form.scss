@@ -239,10 +239,7 @@
         display: flex;
         align-items: center;
         cursor: pointer;
-        border: 1px solid #E7E9EC;
         line-height: 1;
-        padding: 2px 2px 2px 4px;
-        border-radius: 3px;
 
         &:before {
             content: "\f11f";
@@ -315,7 +312,7 @@
             cursor: pointer;
             line-height: 1;
             margin: 0;
-            padding: 10px 15px;
+            padding: 10px 14px;
             position: relative;
             display: flex;
             align-items: center;
@@ -343,7 +340,9 @@
             font-size: 16px;
             vertical-align: middle;
             display: inline-block;
-            margin-right: 8px;
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
         }
 
         &.onlyme:before {
