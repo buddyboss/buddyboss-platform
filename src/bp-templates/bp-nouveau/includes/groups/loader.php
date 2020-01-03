@@ -67,9 +67,11 @@ class BP_Nouveau_Groups {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_actions() {
-		if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
+		//if ( ! is_admin() || ( defined( 'DOING_AJAX' ) && DOING_AJAX ) ) {
 			add_action( 'groups_setup_nav', 'bp_nouveau_group_setup_nav' );
-		}
+			add_filter( 'document_title_parts', 'bp_nouveau_group_pending_invites_set_page_title');
+			add_filter( 'pre_get_document_title', 'bp_nouveau_group_pending_invites_set_title_tag', 999, 1);
+		//}
 
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_groups_enqueue_scripts' );
 

@@ -611,7 +611,7 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
 		$is_current = (bool) ( $tab_data['name'] == $active_tab );
-		$tab_class  = $is_current ? $tab_data['class'] . ' ' . $active_class : $tab_data['class'] . ' ' . $idle_class;
+		$tab_class  = $is_current && isset( $tab_data ) && isset( $tab_data['class'] ) ? $tab_data['class'] . ' ' . $active_class : isset( $tab_data['class'] ) ? $tab_data['class'] . ' ' . $idle_class : $idle_class;
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
@@ -749,7 +749,7 @@ function bp_core_admin_integration_tabs( $active_tab = '' ) {
 
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
-		$is_current = (bool) ( $tab_data['slug'] == $active_tab );
+		$is_current = (bool) ( isset( $tab_data['slug'] ) && $tab_data['slug'] == $active_tab );
 		$tab_class  = $is_current ? $active_class : $idle_class;
 
 		if ( $i === $count ) {
@@ -1301,13 +1301,13 @@ function bp_admin_email_add_codex_notice() {
 	bp_core_add_admin_notice(
 		sprintf(
 			__( 'Phrases wrapped in braces <code>{{ }}</code> are email tokens. <a href="%s">Learn about email tokens</a>.', 'buddyboss' ),
-			bp_get_admin_url( 
-				add_query_arg( 
-					array( 
-						'page' 		=> 'bp-help', 
+			bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' 		=> 'bp-help',
 						'article' 	=> 62844,
 					),
-					'admin.php' 
+					'admin.php'
 				)
 			)
 		),
@@ -1677,7 +1677,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
 	$meta = get_post_custom( $post->ID );
 	?>
-	
+
 	<?php
 	$enable_filter        = isset( $meta['_bp_member_type_enable_filter'] ) ? $meta['_bp_member_type_enable_filter'][0] : 0; // disabled by default
 	$enable_profile_field = isset( $meta['_bp_member_type_enable_profile_field'] ) ? $meta['_bp_member_type_enable_profile_field'][0] : 1; // enable by default
@@ -1694,7 +1694,7 @@ function bp_member_type_permissions_metabox( $post ) {
 		<tbody>
 		<tr>
 			<td colspan="2">
-				<input type='checkbox' name='bp-member-type[enable_filter]' value='1' 
+				<input type='checkbox' name='bp-member-type[enable_filter]' value='1'
 				<?php
 				checked(
 					$enable_filter,
@@ -1710,7 +1710,7 @@ function bp_member_type_permissions_metabox( $post ) {
 				<?php
 				$enable_remove = isset( $meta['_bp_member_type_enable_remove'] ) ? $meta['_bp_member_type_enable_remove'][0] : 0; // enabled by default
 				?>
-				<input type='checkbox' name='bp-member-type[enable_remove]' value='1' 
+				<input type='checkbox' name='bp-member-type[enable_remove]' value='1'
 				<?php
 				checked(
 					$enable_remove,
@@ -1783,7 +1783,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
 				<tr>
 					<td colspan="2">
-						<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>' 
+						<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( 'none' ); ?>'
 																													  <?php
 																														checked(
 																															in_array(
@@ -1806,7 +1806,7 @@ function bp_member_type_permissions_metabox( $post ) {
 
 					<tr>
 						<td colspan="2">
-							<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>' 
+							<input class="group-type-checkboxes" type='checkbox' name='bp-group-type[]' value='<?php echo esc_attr( $group_type_key ); ?>'
 																														  <?php
 																															checked(
 																																in_array(

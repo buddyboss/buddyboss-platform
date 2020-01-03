@@ -4330,6 +4330,23 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		return;
 	}
 
+	/**
+	 * Fires before post type transition catch in activity
+	 *
+	 * @param bool true True for default.
+	 * @param string $new_status New status for the post.
+	 * @param string $old_status Old status for the post.
+	 * @param WP_Post $post Post data.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 */
+	$pre_transition = apply_filters( 'bp_activity_pre_transition_post_type_status', true, $new_status, $old_status, $post );
+
+	if ( false === $pre_transition ) {
+		return;
+	}
+
 	// This is an edit.
 	if ( $new_status === $old_status ) {
 		// An edit of an existing post should update the existing activity item.
