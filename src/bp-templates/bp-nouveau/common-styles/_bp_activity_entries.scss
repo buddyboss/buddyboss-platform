@@ -443,7 +443,6 @@
 	color: #82878c;
 	background: #fff;
 	border: 1px solid #e5e5e5;
-	box-shadow: 0 1px 1px rgba(0,0,0,.05);
 	position: relative;
 	overflow: auto;
 	zoom: 1;
@@ -466,14 +465,18 @@
 	float: left;
 	max-width: 160px;
 	margin-right: 20px;
-	margin-bottom: 30px;
+	margin-bottom: 20px;
 	position: relative;
+
+	img {
+		width: 100%;
+		height: auto;
+		border: none;
+	}
 }
 
-.activity-link-preview-image img {
-	width: 100%;
-	height: auto;
-	border: none;
+.activity-url-scrapper-container .activity-link-preview-image {
+	margin-bottom: 30px;
 }
 
 .activity-video-preview {

@@ -1733,7 +1733,6 @@ input.search-query-input {
   color: #82878c;
   background: #fff;
   border: 1px solid #e5e5e5;
-  box-shadow: 0 1px 1px rgba(0, 0, 0, 0.05);
   position: relative;
   overflow: auto;
   zoom: 1;
@@ -1758,7 +1757,7 @@ input.search-query-input {
   float: right;
   max-width: 160px;
   margin-left: 20px;
-  margin-bottom: 30px;
+  margin-bottom: 20px;
   position: relative;
 }
 
@@ -1766,6 +1765,10 @@ input.search-query-input {
   width: 100%;
   height: auto;
   border: none;
+}
+
+.activity-url-scrapper-container .activity-link-preview-image {
+  margin-bottom: 30px;
 }
 
 .activity-video-preview {
