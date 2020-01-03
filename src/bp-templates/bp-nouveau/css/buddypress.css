@@ -11724,21 +11724,21 @@ img.emojioneemoji {
   cursor: pointer;
 }
 
+#bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before,
+#bp-media-edit-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before,
+#bp-media-create-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:before {
+  font-family: dashicons;
+  content: "\f318";
+  vertical-align: middle;
+  margin-right: 10px;
+}
+
 #bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover, #bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected,
 #bp-media-edit-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover,
 #bp-media-edit-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected,
 #bp-media-create-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span:hover,
 #bp-media-create-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span.selected {
-  background-color: #ccc;
-}
-
-#bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span :before,
-#bp-media-edit-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span :before,
-#bp-media-create-child-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li span :before {
-  font-family: dashicons;
-  content: "\f318";
-  vertical-align: middle;
-  margin-right: 5px;
+  background-color: #fbfbfc;
 }
 
 #bp-media-create-folder .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li:hover > .sub-menu-anchor,
@@ -11755,7 +11755,7 @@ img.emojioneemoji {
   right: 5px;
   top: 50%;
   bottom: 0;
-  background-color: #ccc;
+  background-color: #fbfbfc;
   padding: 2px 3px;
   line-height: 1;
   visibility: hidden;

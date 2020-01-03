@@ -20,7 +20,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 ?>
 
 
-<?php if ( 'css' !== $extension && 'txt' !== $extension ) { ?>
+<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'js' !== $extension ) { ?>
 <div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 	<div class="document-description-wrap">
 		<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>">
@@ -64,10 +64,10 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 	<div class="document-text-wrap">
 		
 		<div class="document-text" data-extension="<?php echo $extension; ?>">
-			<div class="document-text-file-data-hidden" style="display: none;"><?php
+			<textarea class="document-text-file-data-hidden" style="display: none;"><?php
 					readfile($url, 'r');
 				 ?>
-			</div>
+			</textarea>
 		</div>
 		<div class="document-action-wrap">
 			<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="Collapse"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>

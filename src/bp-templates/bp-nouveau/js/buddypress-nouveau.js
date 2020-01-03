@@ -1613,17 +1613,33 @@ window.bp = window.bp || {};
 		documentCodeMirror: function(){
 			$('.document-text:not(.loaded)').each(function(){
 				var $this = $(this);
-				var myCodeMirror = CodeMirror($this[0], {
-					value: $this.find('.document-text-file-data-hidden').text(),
-					mode:  $this.attr('data-extension'),
-					lineNumbers: true,
-					theme: 'default',
-					readOnly: true,
-					lineWrapping: true,
-				});
+				var data_extension = $this.attr('data-extension');
+				var fileMode = '';
+				if(data_extension == 'html'){ // HTML file need specific mode.
+					fileMode = 'text/html';
+				}
+				if(data_extension == 'js'){ //mode not needed for javascript file.
+					var myCodeMirror = CodeMirror($this[0], {
+						value: $this.find('.document-text-file-data-hidden').val(),
+						lineNumbers: true,
+						theme: 'default',
+						readOnly: true,
+						lineWrapping: true,
+					});
+				}else{
+					var myCodeMirror = CodeMirror($this[0], {
+						value: $this.find('.document-text-file-data-hidden').val(),
+						mode:  fileMode,
+						lineNumbers: true,
+						theme: 'default',
+						readOnly: true,
+						lineWrapping: true,
+					});
+				}
+				
 				
 				$this.addClass('loaded');
-				if($this.parent().height() > 150){
+				if($this.parent().height() > 150){ //If file is bigger add controls to Expand/Collapse.
 					$this.closest('.document-text-wrap').addClass('is_large');
 				}
 				

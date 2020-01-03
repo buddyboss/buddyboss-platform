@@ -1,14 +1,14 @@
-# Copyright (C) 2019 BuddyBoss
+# Copyright (C) 2020 BuddyBoss
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2019-12-26 12:37:18+00:00\n"
+"POT-Creation-Date: 2020-01-03 13:02:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
+"PO-Revision-Date: 2020-MO-DA HO:MI+ZONE\n"
 "Last-Translator: BuddyBoss <support@buddyboss.com>\n"
 "Language-Team: BuddyBoss <support@buddyboss.com>\n"
 "Language: en\n"
@@ -1377,7 +1377,7 @@ msgstr ""
 #: bp-blogs/bp-blogs-template.php:1317 bp-blogs/bp-blogs-template.php:1416
 #: bp-blogs/classes/class-bp-blogs-component.php:301
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:184
-#: bp-core/bp-core-template.php:3393
+#: bp-core/bp-core-template.php:3395
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:53
 msgid "Create a Site"
 msgstr ""
@@ -1771,7 +1771,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-functions.php:1238
 #: bp-search/bp-search-settings.php:424 bp-search/bp-search-settings.php:438
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:14
-#: bp-templates/bp-nouveau/includes/media/functions.php:136
+#: bp-templates/bp-nouveau/includes/media/functions.php:148
 msgid "Select All"
 msgstr ""
 
@@ -3502,7 +3502,7 @@ msgstr ""
 #: bp-core/bp-core-attachments.php:803
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
-#: bp-templates/bp-nouveau/includes/media/functions.php:139
+#: bp-templates/bp-nouveau/includes/media/functions.php:151
 msgid "Upload"
 msgstr ""
 
@@ -4809,21 +4809,21 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3373
+#: bp-core/bp-core-template.php:3375
 msgid "Directory"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3381
+#: bp-core/bp-core-template.php:3383
 #: bp-members/classes/class-bp-registration-theme-compat.php:102
 msgid "Create an Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3385
+#: bp-core/bp-core-template.php:3387
 #: bp-members/classes/class-bp-registration-theme-compat.php:110
 msgid "Activate Your Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3389 bp-groups/bp-groups-template.php:4214
+#: bp-core/bp-core-template.php:3391 bp-groups/bp-groups-template.php:4214
 #: bp-templates/bp-nouveau/includes/groups/functions.php:547
 msgid "Create a Group"
 msgstr ""
@@ -13659,7 +13659,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:392
 #: bp-media/classes/class-bp-media-component.php:448
-#: bp-templates/bp-nouveau/includes/media/functions.php:181
+#: bp-templates/bp-nouveau/includes/media/functions.php:193
 msgid "My Photos"
 msgstr ""
 
@@ -13669,7 +13669,7 @@ msgstr ""
 
 #: bp-media/classes/class-bp-media-component.php:427
 #: bp-media/classes/class-bp-media-component.php:460
-#: bp-templates/bp-nouveau/includes/media/functions.php:205
+#: bp-templates/bp-nouveau/includes/media/functions.php:217
 msgid "My Documents"
 msgstr ""
 
@@ -14714,7 +14714,7 @@ msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
 #: bp-templates/bp-nouveau/buddypress/media/entry.php:21
-#: bp-templates/bp-nouveau/includes/media/functions.php:134
+#: bp-templates/bp-nouveau/includes/media/functions.php:146
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -15768,7 +15768,7 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:31
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:32
 msgid "- Click to Download"
 msgstr ""
 
@@ -15777,16 +15777,16 @@ msgid "More Photos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-document.php:14
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:52
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:63
 msgid "Add Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-folder.php:13
 #: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:28
-#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:77
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:76
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:64
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:56
+#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:118
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:67
 msgid "Create Folder"
 msgstr ""
 
@@ -15863,7 +15863,7 @@ msgstr ""
 msgid "Delete Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:88
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:99
 msgid "Delete Folder"
 msgstr ""
 
@@ -17160,51 +17160,51 @@ msgstr ""
 msgid "There was a problem when trying to create the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:135
+#: bp-templates/bp-nouveau/includes/media/functions.php:147
 msgid "Unselect"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:137
+#: bp-templates/bp-nouveau/includes/media/functions.php:149
 msgid "Unselect All"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:138
+#: bp-templates/bp-nouveau/includes/media/functions.php:150
 msgid "Sorry, no photos were found"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:140
+#: bp-templates/bp-nouveau/includes/media/functions.php:152
 msgid "Uploading"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:141
+#: bp-templates/bp-nouveau/includes/media/functions.php:153
 msgid "%d out of %d uploaded"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:142
+#: bp-templates/bp-nouveau/includes/media/functions.php:154
 msgid ""
 "Are you sure you want to delete this album? Photos in this album will also "
 "be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:143
+#: bp-templates/bp-nouveau/includes/media/functions.php:155
 msgid ""
 "Are you sure you want to delete this folder? Documents in this folder will "
 "also be deleted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:144
+#: bp-templates/bp-nouveau/includes/media/functions.php:156
 msgid "There was a problem deleting the album."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:145
+#: bp-templates/bp-nouveau/includes/media/functions.php:157
 msgid "There was a problem deleting the folder."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:170
+#: bp-templates/bp-nouveau/includes/media/functions.php:182
 msgid "All Photos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/functions.php:194
+#: bp-templates/bp-nouveau/includes/media/functions.php:206
 msgid "All Documents"
 msgstr ""
 

@@ -1825,15 +1825,15 @@ img.emojioneemoji {
 						border-bottom: 1px solid #ccc;
 						display: block;
 						cursor: pointer;
-						&:hover,&.selected{
-							background-color: #ccc;
-						}
-						:before{
+						&:before{
 							font-family: dashicons;
 							content: "\f318";
 							vertical-align: middle;
-							margin-right: 5px
-						}	
+							margin-right: 10px;
+						}
+						&:hover,&.selected{
+							background-color: #fbfbfc;
+						}		
 					}
 					&:hover > .sub-menu-anchor{
 						visibility: visible;
@@ -1844,7 +1844,7 @@ img.emojioneemoji {
 						right: 5px;
 						top: 50%;
 						bottom: 0;
-						background-color: #ccc;
+						background-color: #fbfbfc;
 						padding: 2px 3px;
 						line-height: 1;
 						visibility: hidden;
