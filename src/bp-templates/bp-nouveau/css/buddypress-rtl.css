@@ -1837,7 +1837,7 @@ input.search-query-input {
   color: rgba(0, 0, 0, 0.4);
   font-size: 16px;
   position: absolute;
-  left: 8px;
+  right: 8px;
   top: 8px;
   text-decoration: none;
 }
