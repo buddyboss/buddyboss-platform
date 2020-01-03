@@ -1722,7 +1722,6 @@ input.search-query-input {
 .activity-link-preview-container {
   padding: 25px;
   line-height: 1.5;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
   color: #82878c;
   background: #fff;
   border: 1px solid #e5e5e5;
@@ -1736,6 +1735,7 @@ input.search-query-input {
   border: 0;
   border-radius: 0;
   margin: 0;
+  padding: 0;
   max-width: 640px;
 }
 
@@ -1840,6 +1840,17 @@ input.search-query-input {
   right: 8px;
   top: 8px;
   text-decoration: none;
+}
+
+.activity-post-form-link-wp-embed #activity-close-link-suggestion {
+  top: 30px;
+  left: 8px;
+  right: auto;
+  background: #fff;
+  z-index: 11;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 @media screen and (max-width: 32em) {
