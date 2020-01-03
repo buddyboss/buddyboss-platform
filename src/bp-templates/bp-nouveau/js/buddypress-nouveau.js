@@ -1614,7 +1614,7 @@ window.bp = window.bp || {};
 			$('.document-text:not(.loaded)').each(function(){
 				var $this = $(this);
 				var data_extension = $this.attr('data-extension');
-				var fileMode = '';
+				var fileMode = $this.attr('data-extension');
 				if(data_extension == 'html'){ // HTML file need specific mode.
 					fileMode = 'text/html';
 				}
