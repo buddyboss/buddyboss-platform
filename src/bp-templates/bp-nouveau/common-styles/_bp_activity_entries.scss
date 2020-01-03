@@ -435,8 +435,7 @@
 	margin: 12px 0 10px;
 }
 
-.activity-link-preview-container,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content {
+.activity-link-preview-container {
 	padding: 25px;
 	line-height: 1.5;
 	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -483,8 +482,7 @@
 	padding: 0;
 }
 
-.activity-link-preview-title,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p {
+.activity-link-preview-title {
 	font-weight: 600;
 	font-size: 22px;
 	line-height: 1.3;
@@ -495,19 +493,12 @@
 	margin: 0 0 15px;	
 }
 
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p {
-	margin: 0;
-}
-
 .activity-link-preview-title a,
-.activity-link-preview-title a:hover,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p a,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p a:hover {
+.activity-link-preview-title a:hover {
 	color: #32373c;
 }
 
-.activity-link-preview-title a:hover,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p a:hover {
+.activity-link-preview-title a:hover {
 	text-decoration: underline !important;
 }
 

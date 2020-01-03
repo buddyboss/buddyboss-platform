@@ -1725,8 +1725,7 @@ input.search-query-input {
   margin: 12px 0 10px;
 }
 
-.activity-link-preview-container,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content {
+.activity-link-preview-container {
   padding: 25px;
   line-height: 1.5;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
@@ -1738,8 +1737,7 @@ input.search-query-input {
   zoom: 1;
 }
 
-.activity-video-preview .activity-link-preview-container, .activity-video-preview
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content {
+.activity-video-preview .activity-link-preview-container {
   border: 0;
   border-radius: 0;
   margin: 0;
@@ -1747,8 +1745,7 @@ input.search-query-input {
   max-width: 640px;
 }
 
-.activity-link-preview-container div.fluid-width-video-wrapper,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content div.fluid-width-video-wrapper {
+.activity-link-preview-container div.fluid-width-video-wrapper {
   margin-top: 0;
   margin-bottom: 0;
 }
@@ -1775,8 +1772,7 @@ input.search-query-input {
   padding: 0;
 }
 
-.activity-link-preview-title,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p {
+.activity-link-preview-title {
   font-weight: 600;
   font-size: 22px;
   line-height: 1.3;
@@ -1787,19 +1783,12 @@ input.search-query-input {
   margin: 0 0 15px;
 }
 
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p {
-  margin: 0;
-}
-
 .activity-link-preview-title a,
-.activity-link-preview-title a:hover,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p a,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p a:hover {
+.activity-link-preview-title a:hover {
   color: #32373c;
 }
 
-.activity-link-preview-title a:hover,
-.activity-list .activity-item .activity-content blockquote.wp-embedded-content p a:hover {
+.activity-link-preview-title a:hover {
   text-decoration: underline !important;
 }
 
