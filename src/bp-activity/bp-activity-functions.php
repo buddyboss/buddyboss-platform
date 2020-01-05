@@ -4999,7 +4999,14 @@ add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 )
  * @since BuddyBoss 1.0.0
  */
 function bp_activity_action_parse_url() {
-	$url = $_POST['url'];
+	$url       = $_POST['url'];
+	$json_data = array();
+
+	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+	$data      = get_transient( $cache_key );
+	if ( ! empty( $data ) ) {
+		wp_send_json( $data );
+	}
 
 	// Fetch the oembed code for URL.
 	$embed_code = wp_oembed_get( $url );
@@ -5009,6 +5016,9 @@ function bp_activity_action_parse_url() {
 		$json_data['images']      = '';
 		$json_data['error']       = '';
 		$json_data['wp_embed']    = true;
+
+		set_transient( $cache_key, $json_data, DAY_IN_SECONDS );
+
 		wp_send_json( $json_data );
 	}
 
@@ -5016,7 +5026,6 @@ function bp_activity_action_parse_url() {
 	require_once trailingslashit( buddypress()->plugin_dir . 'bp-activity/vendors' ) . '/website-parser/website_parser.php';
 
 	// curling
-	$json_data = array();
 	if ( class_exists( 'WebsiteParser' ) ) {
 
 		$parser = new WebsiteParser( $url );
