@@ -680,7 +680,7 @@ function bp_nouveau_ajax_spam_activity() {
 /**
  * Update activity privacy via a POST request.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @return string JSON reply
  */

@@ -899,7 +899,7 @@ function bp_get_media_directory_permalink() {
 /**
  * Output the media privacy.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  */
 function bp_media_privacy() {
 	echo bp_get_media_privacy();
@@ -908,7 +908,7 @@ function bp_media_privacy() {
 /**
  * Return the media privacy.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @global object $media_template {@link BP_Media_Template}
  *
@@ -920,7 +920,7 @@ function bp_get_media_privacy() {
 	/**
 	 * Filters the media privacy being displayed.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.2.3
 	 *
 	 * @param string $id The media privacy.
 	 */

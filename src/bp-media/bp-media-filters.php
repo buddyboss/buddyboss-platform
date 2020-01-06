@@ -985,7 +985,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 /**
  * Update media privacy when activity is updated.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  * @param BP_Activity_Activity $activity Activity object.
  */

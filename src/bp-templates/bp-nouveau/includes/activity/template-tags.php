@@ -1001,7 +1001,7 @@ function bp_nouveau_activity_comment_buttons( $args = array() ) {
 /**
  * Output the privacy option inside an Activity Loop.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.2.3
  *
  */
 function bp_nouveau_activity_privacy() {
