@@ -1421,7 +1421,7 @@ window.bp = window.bp || {};
 
 		paginateAction: function( event ) {
 			var self  = event.data, navLink = $( event.currentTarget ), pagArg,
-			    scope = null, object, objectData, objectDataStorage, filter = null, search_terms = null, extras = null;
+			    scope = null, object, objectData, filter = null, search_terms = null, extras = null;
 
 			pagArg = navLink.closest( '[data-bp-pagination]' ).data( 'bp-pagination' ) || null;
 
@@ -1433,23 +1433,32 @@ window.bp = window.bp || {};
 
 			object = $( event.delegateTarget ).data( 'bp-list' ) || null;
 
-			// Set the scope & filter
+			// Set the scope & filter for local storage
 			if ( null !== object ) {
-
-				// For List OR Grid View
 				objectData = self.getLocalStorage( 'bp-' + object );
 
-				// For current scope & Filter
-				objectDataStorage = self.getStorage( 'bp-' + object );
-
-				if ( undefined !== objectDataStorage.scope ) {
-					scope = objectDataStorage.scope;
+				if ( undefined !== objectData.scope ) {
+					scope = objectData.scope;
 				}
 
-				if ( undefined !== objectDataStorage.filter ) {
-					filter = objectDataStorage.filter;
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
 				}
 
+				if ( undefined !== objectData.extras ) {
+					extras = objectData.extras;
+				}
+			}
+
+			// Set the scope & filter for session storage.
+			if ( null !== object ) {
+				objectData = self.getStorage( 'bp-' + object );
+				if ( undefined !== objectData.scope ) {
+					scope = objectData.scope;
+				}
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
+				}
 				if ( undefined !== objectData.extras ) {
 					extras = objectData.extras;
 				}
