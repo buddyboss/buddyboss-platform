@@ -31,9 +31,8 @@
                     <footer class="bb-model-footer">
                         <?php if ( ! bp_is_group() ) : ?>
                             <div class="bb-dropdown-wrap">
-                                <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
                                 <select id="bb-album-privacy">
-                                    <?php foreach ( $privacy_options as $k => $option ) {
+                                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
                                         ?>
                                         <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
                                         <?php

@@ -77,9 +77,8 @@
 
 	                    <?php if ( ! bp_is_group() && ! bp_is_single_album() ) : ?>
                             <div class="bb-dropdown-wrap">
-			                    <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
                                 <select id="bb-media-privacy">
-				                    <?php foreach ( $privacy_options as $k => $option ) {
+				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
 					                    ?>
                                         <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
 					                    <?php

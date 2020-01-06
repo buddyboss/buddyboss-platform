@@ -50,6 +50,16 @@ class BP_Media_Component extends BP_Component {
 	public $forbidden_names;
 
 	/**
+	 * The acceptable visibility levels for media.
+	 *
+	 * @see bp_media_get_visibility_levels()
+	 *
+	 * @since BuddyBoss 1.2.3
+	 * @var array
+	 */
+	public $visibility_levels = array();
+
+	/**
 	 * Start the media component creation process.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -147,6 +157,18 @@ class BP_Media_Component extends BP_Component {
 		if ( ! defined( 'BP_MEDIA_SLUG' ) ) {
 			define( 'BP_MEDIA_SLUG', $this->id );
 		}
+
+		// Register the visibility levels. See bp_media_get_visibility_levels() to filter.
+		$this->visibility_levels = array(
+			'public'   => __( 'Public', 'buddyboss' ),
+			'loggedin' => __( 'All Members', 'buddyboss' ),
+		);
+
+		if ( bp_is_active( 'friends' ) ) {
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		}
+
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
 
 		// Global tables for media component.
 		$global_tables = array(

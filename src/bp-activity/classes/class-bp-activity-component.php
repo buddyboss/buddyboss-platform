@@ -19,6 +19,16 @@ defined( 'ABSPATH' ) || exit;
 class BP_Activity_Component extends BP_Component {
 
 	/**
+	 * The acceptable visibility levels for activity.
+	 *
+	 * @see bp_activity_get_visibility_levels()
+	 *
+	 * @since BuddyBoss 1.2.3
+	 * @var array
+	 */
+	public $visibility_levels = array();
+
+	/**
 	 * Start the activity component setup process.
 	 *
 	 * @since BuddyPress 1.5.0
@@ -161,6 +171,18 @@ class BP_Activity_Component extends BP_Component {
 		if ( ! defined( 'BP_FOLLOW_SLUG' ) ) {
 			define( 'BP_FOLLOW_SLUG', $this->id . '_follow' );
 		}
+
+		// Register the visibility levels. See bp_activity_get_visibility_levels() to filter.
+		$this->visibility_levels = array(
+			'public'   => __( 'Public', 'buddyboss' ),
+			'loggedin' => __( 'All Members', 'buddyboss' ),
+		);
+
+		if ( bp_is_active( 'friends' ) ) {
+			$this->visibility_levels['friends'] = __( 'My Connections', 'buddyboss' );
+		}
+
+		$this->visibility_levels['onlyme'] = __( 'Only Me', 'buddyboss' );
 
 		// Global tables for activity component.
 		$global_tables = array(

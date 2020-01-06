@@ -679,7 +679,7 @@ function bp_nouveau_ajax_media_update_privacy() {
 	}
 
 	$privacy = $_POST['privacy'];
-	if ( ! in_array( $privacy, array_keys( BP_Media_Privacy::instance()->get_visibility_options() ) ) ) {
+	if ( ! in_array( $privacy, array_keys( bp_media_get_visibility_levels() ) ) ) {
 		$response['feedback'] = sprintf(
 			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
 			esc_html__( 'Privacy option is not valid.', 'buddyboss' )

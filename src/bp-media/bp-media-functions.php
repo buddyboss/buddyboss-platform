@@ -507,7 +507,7 @@ function bp_media_add_handler( $medias = array() ) {
 		$medias = $_POST['medias'];
 	}
 
-	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( BP_Media_Privacy::instance()->get_visibility_options() ) ) ? $_POST['privacy'] : 'public';
+	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_media_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 		// save media
@@ -634,6 +634,25 @@ function bp_media_remove_all_user_data( $user_id = 0 ) {
 }
 add_action( 'wpmu_delete_user',  'bp_media_remove_all_user_data' );
 add_action( 'delete_user',       'bp_media_remove_all_user_data' );
+
+/**
+ * Get media visibility levels out of the $bp global.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return array
+ */
+function bp_media_get_visibility_levels() {
+
+	/**
+	 * Filters the media visibility levels out of the $bp global.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param array $visibility_levels Array of visibility levels.
+	 */
+	return apply_filters( 'bp_media_get_visibility_levels', buddypress()->media->visibility_levels );
+}
 
 /**
  * Return the media activity.

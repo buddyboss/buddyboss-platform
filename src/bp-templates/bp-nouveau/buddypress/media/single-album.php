@@ -47,10 +47,8 @@ $album_id = (int) bp_action_variable( 0 );
 
 	                    <?php if ( bp_is_my_profile() && ! bp_is_group() ) : ?>
 
-                            <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
-
                             <select id="bb-album-privacy">
-                                <?php foreach ( $privacy_options as $k => $option ) { ?>
+                                <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) { ?>
                                     <?php $selected = ''; if ( $k == bp_get_album_privacy() ) $selected = 'selected="selectred"' ; ?>
                                     <option <?php echo $selected; ?> value="<?php echo $k; ?>"><?php echo $option; ?></option>
                                 <?php } ?>

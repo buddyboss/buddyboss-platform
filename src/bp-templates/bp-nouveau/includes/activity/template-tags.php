@@ -1043,12 +1043,7 @@ function bp_nouveau_activity_privacy() {
 	    	return;
 	    }
 
-	    $privacy_items = array(
-		    'public'   => __( 'Public', 'buddyboss' ),
-		    'onlyme'   => __( 'Only Me', 'buddyboss' ),
-		    'loggedin' => __( 'All Members', 'buddyboss' ),
-		    'friends'  => __( 'My Connections', 'buddyboss' ),
-	    );
+	    $privacy_items = bp_activity_get_visibility_levels();
 
 	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
 	    	?>

@@ -180,10 +180,6 @@ class BP_XProfile_Component extends BP_Component {
 				'id'    => 'public',
 				'label' => __( 'Public', 'buddyboss' ),
 			),
-			'adminsonly' => array(
-				'id'    => 'adminsonly',
-				'label' => __( 'Only Me', 'buddyboss' ),
-			),
 			'loggedin'   => array(
 				'id'    => 'loggedin',
 				'label' => __( 'All Members', 'buddyboss' ),
@@ -196,6 +192,11 @@ class BP_XProfile_Component extends BP_Component {
 				'label' => __( 'My Connections', 'buddyboss' ),
 			);
 		}
+
+		$this->visibility_levels['adminsonly'] = array(
+			'id'    => 'adminsonly',
+			'label' => __( 'Only Me', 'buddyboss' ),
+		);
 
 		// Tables.
 		$global_tables = array(

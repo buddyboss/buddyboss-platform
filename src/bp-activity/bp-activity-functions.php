@@ -1350,6 +1350,25 @@ function bp_activity_total_favorites_for_user( $user_id = 0 ) {
 	return BP_Activity_Activity::total_favorite_count( $user_id );
 }
 
+/**
+ * Get activity visibility levels out of the $bp global.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return array
+ */
+function bp_activity_get_visibility_levels() {
+
+	/**
+	 * Filters the activity visibility levels out of the $bp global.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param array $visibility_levels Array of visibility levels.
+	 */
+	return apply_filters( 'bp_activity_get_visibility_levels', buddypress()->activity->visibility_levels );
+}
+
 /** Meta *********************************************************************/
 
 /**
