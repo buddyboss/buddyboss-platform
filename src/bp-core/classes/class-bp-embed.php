@@ -256,6 +256,13 @@ class BP_Embed extends WP_Embed {
 	public function autoembed( $content, $type = '' ) {
 
 		if ( isset( $type->component ) && ( 'activity_update' === $type->type || 'activity_comment' === $type->type ) ) {
+
+			// check if preview url saved or not for activity, if saved we don't need embed
+			$preview_data = bp_activity_get_meta( $type->id, '_link_preview_data', true );
+			if ( ! empty( $preview_data['url'] ) ) {
+				return apply_filters( 'bp_autoembed', $content );
+			}
+
 			// Check if WordPress already embed the link then return the original content.
 			if ( strpos( $content, '<iframe' ) !== false ) {
 				return apply_filters( 'bp_autoembed', $content );
