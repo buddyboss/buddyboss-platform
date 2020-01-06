@@ -26,13 +26,14 @@
 
 	            <div class="bb-dropdown-wrap">
 		            <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
-		            <select id="bb-media-theatre-privacy">
-			            <?php foreach ( $privacy_options as $k => $option ) {
-				            ?>
-				            <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
-				            <?php
-			            } ?>
-		            </select>
+		            <div class="bb-media-privacy-wrap" style="display: none;">
+			            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip=""><span class="privacy selected"></span></span>
+			            <ul class="media-privacy">
+				            <?php foreach( $privacy_options as $item_key => $privacy_item ) {
+					            ?><li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?>"><?php echo $privacy_item; ?></li><?php
+				            } ?>
+			            </ul>
+		            </div>
 	            </div>
 
             </div>

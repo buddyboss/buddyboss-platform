@@ -1285,7 +1285,7 @@ window.bp = window.bp || {};
 			$(document).on('click', '.bb-prev-media', this.previous.bind(this));
 			$(document).on('click', '.bb-next-media', this.next.bind(this));
 			$(document).on('bp_activity_ajax_delete_request', this.activityDeleted.bind(this));
-			$(document).on('change', '#bb-media-theatre-privacy', this.mediaPrivacyChange.bind(this));
+			$(document).on( 'click', '#bb-media-model-container .media-privacy>li', this.mediaPrivacyChange.bind( this ) );
 
 		},
 
@@ -1406,17 +1406,26 @@ window.bp = window.bp || {};
 			$('.bb-media-model-wrapper .bb-media-section').find('img').attr('src',self.current_media.attachment+'?'+new Date().getTime());
 
 			//privacy
-			$('.bb-media-section #bb-media-theatre-privacy').show();
-			$('.bb-media-section #bb-media-theatre-privacy').val(self.current_media.privacy);
+			var media_privacy_wrap = $('.bb-media-section .bb-media-privacy-wrap');
 
-			// hide privacy setting of media if activity is present
-			if ( ( typeof BP_Nouveau.activity !== 'undefined' &&
-				typeof self.current_media.activity_id !== 'undefined' &&
-				self.current_media.activity_id != 0 ) ||
-				self.group_id ||
-				self.current_media.is_forum
-			) {
-				$('.bb-media-section #bb-media-theatre-privacy').hide();
+			if ( media_privacy_wrap.length ) {
+				media_privacy_wrap.show();
+				media_privacy_wrap.find( 'ul.media-privacy li' ).removeClass('selected');
+				media_privacy_wrap.find( '.bp-tooltip' ).attr( 'data-bp-tooltip', '' );
+				var selected_media_privacy_elem = media_privacy_wrap.find( 'ul.media-privacy' ).find('li[data-value='+ self.current_media.privacy +']');
+				selected_media_privacy_elem.addClass('selected');
+				media_privacy_wrap.find( '.bp-tooltip' ).attr( 'data-bp-tooltip', selected_media_privacy_elem.text() );
+				media_privacy_wrap.find( '.privacy' ).removeClass('public').removeClass('loggedin').removeClass('onlyme').removeClass('friends').addClass(self.current_media.privacy);
+
+				// hide privacy setting of media if activity is present
+				if ( ( typeof BP_Nouveau.activity !== 'undefined' &&
+					typeof self.current_media.activity_id !== 'undefined' &&
+					self.current_media.activity_id != 0 ) ||
+					self.group_id ||
+					self.current_media.is_forum
+				) {
+					media_privacy_wrap.hide();
+				}
 			}
 
 			//update navigation
@@ -1540,9 +1549,17 @@ window.bp = window.bp || {};
 		},
 
 		mediaPrivacyChange: function( event ) {
-			var target = $( event.target ), self = this;
+			var target = $( event.target ), self = this, privacy = target.data('value');
 
 			event.preventDefault();
+
+			if ( target.hasClass( 'selected' ) ) {
+				return false;
+			}
+
+			target.closest( '.bb-media-privacy-wrap' ).find( '.privacy' ).addClass( 'loading' );
+			target.closest( '.bb-media-privacy-wrap' ).find( 'ul.media-privacy li' ).removeClass( 'selected' );
+			target.addClass( 'selected' );
 
 			$.ajax({
 				type: 'POST',
@@ -1551,7 +1568,15 @@ window.bp = window.bp || {};
 					action: 'media_update_privacy',
 					id: self.current_media.id,
 					_wpnonce: BP_Nouveau.nonces.media,
-					privacy: target.val(),
+					privacy: privacy,
+				},
+				success: function() {
+					target.closest( '.bb-media-privacy-wrap' ).find( '.privacy' ).removeClass( 'loading' );
+					target.closest( '.bb-media-privacy-wrap' ).find( '.privacy' ).addClass( privacy );
+					target.closest( '.bb-media-privacy-wrap' ).find( '.bp-tooltip' ).attr( 'data-bp-tooltip', target.text() );
+				},
+				error: function() {
+					target.closest( '.bb-media-privacy-wrap' ).find( '.privacy' ).removeClass( 'loading' );
 				}
 			});
 		},
