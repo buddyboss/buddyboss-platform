@@ -16,6 +16,9 @@ defined( 'ABSPATH' ) || exit;
  */
 class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	
+	public $widget_id = false;
+	public $transient_key = 'bbprofilecompletion';
+	
 	/**
 	 * Constructor.
 	 */
@@ -69,7 +72,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 		
 		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() ) {
+		if ( ! is_user_logged_in() || !bp_is_my_profile() ) {
 			return;
 		}
 		
@@ -83,6 +86,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			return;
 		}
 		
+		$this->widget_id = $args['widget_id'];
 		$profile_phototype_selected = !empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
 		
 		$user_progress = $this->get_progress_data( $profile_groups_selected, $profile_phototype_selected );
@@ -160,9 +164,10 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function delete_pc_loggedin_transient(){
 		
-		// Delete logged in user transient from options table.
-		$transient_name = $this->get_pc_transient_name();
-		delete_transient( $transient_name );
+		// Delete logged in user all widgets transients from options table.
+		$user_id = get_current_user_id();
+		$transient_name_prefix = '%_transient_'.$this->transient_key.$user_id.'%';
+		$this->delete_transient_query( $transient_name_prefix );
 	}
 	
 	/**
@@ -171,12 +176,24 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function delete_pc_transient(){
 		
-		// Delete all users transients from options table.
-		$transient_name_prefix = '%_transient_bbprofilecompletion%';
+		// Delete all users all widhets transients from options table.
+		$transient_name_prefix = '%_transient_'.$this->transient_key.'%';
+		$this->delete_transient_query( $transient_name_prefix );
+	}
+	
+	
+	/**
+	 * Function deletes Transient based on the transient name specified.
+	 * 
+	 * @global type $wpdb
+	 * @param type $transient_name_prefix
+	 */
+	function delete_transient_query( $transient_name_prefix ){
 		global $wpdb;
 		$delete_transient_query = $wpdb->prepare("DELETE FROM {$wpdb->options} WHERE option_name LIKE '%s' ", $transient_name_prefix );
 		$wpdb->query( $delete_transient_query );
 	}
+	
 	
 	/**
 	 * Return Transient name using logged in User ID.
@@ -186,7 +203,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	function get_pc_transient_name(){
 		
 		$user_id = get_current_user_id();
-		$pc_transient_name = 'bbprofilecompletion'.$user_id;
+		$pc_transient_name = $this->transient_key.$user_id.$this->widget_id;
 		return $pc_transient_name;
 		
 	}
@@ -241,7 +258,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 				$is_cover_photo_uploaded = ( bp_attachments_get_user_has_cover_image($user_id) ) ? 1 : 0;
 
-				if( $is_profile_photo_uploaded ){
+				if( $is_cover_photo_uploaded ){
 					++$grand_completed_fields;
 				}
 
