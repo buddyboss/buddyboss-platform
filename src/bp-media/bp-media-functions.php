@@ -2433,7 +2433,7 @@ function bp_media_user_document_folder_recursive_li_list( $array, $first = false
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li><span>' . $item["title"] . '</span>' . bp_media_user_document_folder_recursive_li_list( $item["children"], true ) . '</li>';
+		$output .= '<li data-id="'. $item["id"] .'"><span>' . $item["title"] . '</span>' . bp_media_user_document_folder_recursive_li_list( $item["children"], true ) . '</li>';
 	}
 	$output .= '</ul>';
 
@@ -2460,7 +2460,7 @@ function bp_media_document_bradcrumb( $album_id ) {
 	$html                         = '';
 
 	if ( !empty( $data ) ) {
-		$html .= '<ul>';
+		$html .= '<ul class="document-breadcrumb">';
 		foreach ( $data as $element ) {
 			$html .= '<li> ' . $element['title'] . '</li>';
 		}

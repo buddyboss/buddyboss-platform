@@ -63,6 +63,7 @@
                                             <span class="location-folder-title">Documents</span>
                                             <?php echo $ul; ?>
                                         </div><!-- .location-folder-list-wrap -->
+                                        <input type="hidden" class="bb-folder-selected-id" value="" readonly/>
                                     </div><!-- .location-folder-list-wrap-main -->
 	                            </div>
 	                            </div><?php

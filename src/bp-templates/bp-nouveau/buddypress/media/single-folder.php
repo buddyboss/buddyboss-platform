@@ -34,9 +34,9 @@ $bradcrumbs = bp_media_document_bradcrumb( $album_id );
 	                    <?php
 	                        if ( '' !== $bradcrumbs ) {
 	                        	?>
-		                        <ul>
-			                        <?php echo  $bradcrumbs; ?>
-		                        </ul>
+		                        
+                                <?php echo  $bradcrumbs; ?>         
+                                
 	                        	<?php
 	                        }
 	                    ?>

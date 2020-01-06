@@ -62,8 +62,16 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
 		                        ?>
 		                        <div class="bb-field-wrap">
 		                        <div class="bb-dropdown-wrap">
-			                        <label for="bb-folder-location" class="bb-label">Destination Folder</label>
-			                        <?php echo $ul; ?>
+                                    <label for="bb-folder-location" class="bb-label">Destination Folder</label>
+                                    <div class="location-folder-list-wrap-main">
+                                        <input type="text" class="bb-folder-destination" value="Select Folder" readonly/>
+                                        <div class="location-folder-list-wrap">
+                                            <span class="location-folder-back"><i class="dashicons dashicons-arrow-left-alt2"></i></span>
+                                            <span class="location-folder-title">Documents</span>
+                                            <?php echo $ul; ?>
+                                        </div> <!-- .location-folder-list-wrap -->
+                                        <input type="hidden" class="bb-folder-selected-id" value="" readonly/>
+                                    </div>
 		                        </div>
 		                        </div><?php
 	                        }

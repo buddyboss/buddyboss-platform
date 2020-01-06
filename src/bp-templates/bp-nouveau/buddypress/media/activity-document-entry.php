@@ -20,7 +20,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 ?>
 
 
-<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'js' !== $extension ) { ?>
+<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'js' !== $extension && 'csv' !== $extension ) { ?>
 <div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 	<div class="document-description-wrap">
 		<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>">
@@ -43,7 +43,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 		</a>
 		<div class="document-action_list">
 			<ul>
-				<li><a href="#">Move</a></li>
+				<li><a href="#" class="ac-document-move">Move</a></li>
 				<li><a href="#">Delete</a></li>
 			</ul>
 		</div>
@@ -80,7 +80,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<li><a href="#">Move</a></li>
+					<li><a href="#" class="ac-document-move">Move</a></li>
 					<li><a href="#">Delete</a></li>
 				</ul>
 			</div>
@@ -92,4 +92,5 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 
 	</div> <!-- .document-text-wrap -->
 </div> <!-- .bb-activity-media-elem -->
-<?php } ?>
+<?php }
+ bp_get_template_part( 'media/activity-document-move' ); ?>
