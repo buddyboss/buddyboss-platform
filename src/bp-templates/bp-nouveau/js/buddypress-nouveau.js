@@ -1421,7 +1421,7 @@ window.bp = window.bp || {};
 
 		paginateAction: function( event ) {
 			var self  = event.data, navLink = $( event.currentTarget ), pagArg,
-			    scope = null, object, objectData, filter = null, search_terms = null, extras = null;
+			    scope = null, object, objectData, objectDataStorage, filter = null, search_terms = null, extras = null;
 
 			pagArg = navLink.closest( '[data-bp-pagination]' ).data( 'bp-pagination' ) || null;
 
@@ -1435,23 +1435,23 @@ window.bp = window.bp || {};
 
 			// Set the scope & filter
 			if ( null !== object ) {
+
+				// For List OR Grid View
 				objectData = self.getLocalStorage( 'bp-' + object );
 
-				if ( undefined !== objectData.scope ) {
-					scope = objectData.scope;
+				// For current scope & Filter
+				objectDataStorage = self.getStorage( 'bp-' + object );
+
+				if ( undefined !== objectDataStorage.scope ) {
+					scope = objectDataStorage.scope;
 				}
 
-				if ( undefined !== objectData.filter ) {
-					filter = objectData.filter;
+				if ( undefined !== objectDataStorage.filter ) {
+					filter = objectDataStorage.filter;
 				}
 
 				if ( undefined !== objectData.extras ) {
 					extras = objectData.extras;
-				}
-
-				// Fixed pagination on My Groups Tab.
-				if( scope === null && $( '.directory.groups.buddypress' ).length ){
-					scope = $( 'ul.component-navigation.groups-nav li.selected').attr( 'data-bp-scope' );
 				}
 			}
 
