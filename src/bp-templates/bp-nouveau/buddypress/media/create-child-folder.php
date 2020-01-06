@@ -57,15 +57,13 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             </div>
 
 	                        <?php
-	                        $li = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-	                        if ( '' !== $li ) {
+	                        $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+	                        if ( '' !== $ul ) {
 		                        ?>
 		                        <div class="bb-field-wrap">
 		                        <div class="bb-dropdown-wrap">
 			                        <label for="bb-folder-location" class="bb-label">Destination Folder</label>
-			                        <select id="bb-folder-location">
-				                        <?php echo $li; ?>
-			                        </select>
+			                        <?php echo $ul; ?>
 		                        </div>
 		                        </div><?php
 	                        }

@@ -2416,24 +2416,27 @@ function bp_media_user_document_folder_tree_view_li_html( $user_id ) {
 			unset($data[$key]);
 	}
 
-	return bp_media_user_document_folder_recursive_li_list( $data );
+	return bp_media_user_document_folder_recursive_li_list( $data, false );
 
 }
 
-function bp_media_user_document_folder_recursive_li_list( $array, $output = '', $class = 'folder_l' ) {
-	$class = $class . '_1';
-	if ( empty( $array ) ) return '';
-	foreach ( $array as $value ) {
-		if ( '0' === $value['parent'] ) {
-			$output .= '<option class="' . esc_attr( $class ) . '" value="' . esc_attr( $value['parent'] ) . '">' . $value['title']  . '</option>';
-		} else {
-			$output = '<option class="' . esc_attr( $class ) . '" value="' . esc_attr( $value['parent'] ) . '">' . $value['title']  . '</option>';
-		}
+function bp_media_user_document_folder_recursive_li_list( $array, $first = false ) {
 
-		if ( !empty( $value['children'] ) ) {
-			$output .= bp_media_user_document_folder_recursive_li_list( $value['children'], $output, $class );
-		}
+	//Base case: an empty array produces no list
+	if (empty($array)) return '';
+
+	//Recursive Step: make a list with child lists
+	if ( $first ) {
+		$output = '<ul class="">';
+	} else {
+		$output = '<ul class="location-folder-list">';
 	}
+
+	foreach ( $array as $item ) {
+		$output .= '<li><span>' . $item["title"] . '</span>' . bp_media_user_document_folder_recursive_li_list( $item["children"], true ) . '</li>';
+	}
+	$output .= '</ul>';
+
 	return $output;
 }
 

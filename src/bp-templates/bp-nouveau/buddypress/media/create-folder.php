@@ -45,8 +45,8 @@
                             </div>
 
 	                        <?php
-                            $li = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-                            if ( '' !== $li ) {
+                            $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+                            if ( '' !== $ul ) {
 	                            ?>
 	                            <div class="bb-field-wrap">
 	                            <div class="bb-dropdown-wrap">
@@ -57,56 +57,11 @@
 
                                     <div class="location-folder-list-wrap-main">
                                         <input type="text" class="bb-folder-destination" value="Select Folder" readonly/>
-                                    
+
                                         <div class="location-folder-list-wrap">
                                             <span class="location-folder-back"><i class="dashicons dashicons-arrow-left-alt2"></i></span>
                                             <span class="location-folder-title">Documents</span>
-                                            <ul class="location-folder-list">
-                                                <li><span>Item 1</span>
-                                                    <ul>
-                                                        <li><span>sub Item 1</span></li>
-                                                        <li><span>sub Item 2</span>
-                                                            <ul>
-                                                                <li><span>sub Item 1</span></li>
-                                                                <li><span>sub Item 2</span>
-                                                                    <ul>
-                                                                        <li><span>sub Item 1</span></li>
-                                                                        <li><span>sub Item 2</span></li>
-                                                                        <li><span>sub Item 3</span></li>
-                                                                    </ul>
-                                                                </li>
-                                                                <li><span>sub Item 3</span></li>
-                                                                <li><span>sub Item 4</span></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><span>sub Item 3</span></li>
-                                                        <li><span>sub Item 4</span></li>
-                                                        <li><span>sub Item 5</span></li>
-                                                    </ul>
-                                                </li>
-                                                <li><span>Item 2</span></li>
-                                                <li><span>Item 3</span>
-                                                    <ul>
-                                                        <li><span>sub Item 1</span></li>
-                                                        <li><span>sub Item 2</span></li>
-                                                        <li><span>sub Item 3</span></li>
-                                                    </ul>
-                                                </li>
-                                                <li><span>Item 4</span></li>
-                                                <li><span>Item 5</span>
-                                                    <ul>
-                                                        <li><span>sub Item 1</span></li>
-                                                        <li><span>sub Item 2</span>
-                                                            <ul>
-                                                                <li><span>sub Item 1</span></li>
-                                                                <li><span>sub Item 2</span></li>
-                                                                <li><span>sub Item 3</span></li>
-                                                            </ul>
-                                                        </li>
-                                                        <li><span>sub Item 3</span></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
+                                            <?php echo $ul; ?>
                                         </div><!-- .location-folder-list-wrap -->
                                     </div><!-- .location-folder-list-wrap-main -->
 	                            </div>
