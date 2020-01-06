@@ -200,6 +200,9 @@ class BP_Admin {
 
 		add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
 
+		add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
+		add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
+
 	}
 
 	/**
@@ -351,6 +354,43 @@ class BP_Admin {
 			'bp-credits',
 			array( $this, 'bp_credits_screen' )
 		);
+	}
+
+	/**
+	 * Register network-admin nav menu elements.
+	 *
+	 * Contextually hooked to network-admin depending on current configuration.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 */
+	
+	public function bp_add_main_menu_page_admin_menu() {
+
+		global $menu;
+
+		// Bail if user cannot moderate.
+		if ( ! bp_current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
+		if ( bp_current_user_can( 'manage_options' ) ) {
+			$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
+			$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
+		}
+		
+		$hooks = array();
+		if ( is_multisite() && bp_is_network_activated() ) {
+			$hooks[] = add_menu_page(
+				__( 'BuddyBoss', 'buddyboss' ),
+				__( 'BuddyBoss', 'buddyboss' ),
+				$this->capability,
+				$this->settings_page,
+				'bp_core_admin_backpat_menu',
+				buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
+				3
+			);
+		}
+
 	}
 
 	/**
@@ -625,7 +665,7 @@ class BP_Admin {
 		if ( is_multisite() && bp_is_network_activated() ) {
 			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
 			// Add our screen.
-			$hook = add_submenu_page( 'buddyboss-settings',
+			$hook = add_submenu_page( 'buddyboss-platform',
 				__( 'Emails', 'buddyboss' ),
 				__( 'Emails', 'buddyboss' ),
 				'bp_moderate',

@@ -41,7 +41,7 @@ function bp_forums_add_sub_menu_page_admin_menu() {
 	if ( is_multisite() && bp_is_network_activated() ) {
 		$forum_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bbp_get_forum_post_type() ); // buddyboss-settings
 		// Add our screen.
-		$hook = add_submenu_page( 'buddyboss-settings',
+		$hook = add_submenu_page( 'buddyboss-platform',
 			__( 'Forums', 'buddyboss' ),
 			__( 'Forums', 'buddyboss' ),
 			'bbp_forums_admin',

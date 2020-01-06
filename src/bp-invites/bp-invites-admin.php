@@ -427,7 +427,7 @@ function bp_invites_add_sub_menu_page_admin_menu() {
 	if ( is_multisite() && bp_is_network_activated() ) {
 		$invites_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_invite_post_type() ); // buddyboss-settings
 		// Add our screen.
-		$hook = add_submenu_page( 'buddyboss-settings',
+		$hook = add_submenu_page( 'buddyboss-platform',
 			__( 'Invites', 'buddyboss' ),
 			__( 'Invites', 'buddyboss' ),
 			'bp_moderate',
