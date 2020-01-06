@@ -1448,6 +1448,11 @@ window.bp = window.bp || {};
 				if ( undefined !== objectData.extras ) {
 					extras = objectData.extras;
 				}
+
+				// Fixed pagination on My Groups Tab.
+				if( scope === null && $( '.directory.groups.buddypress' ).length ){
+					scope = $( 'ul.component-navigation.groups-nav li.selected').attr( 'data-bp-scope' );
+				}
 			}
 
 			// Set the search terms
