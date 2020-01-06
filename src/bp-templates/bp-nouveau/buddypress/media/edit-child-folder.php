@@ -31,7 +31,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
 
                     <div class="bb-field-wrap">
                         <label for="bb-album-child-title" class="bb-label"><?php _e( 'Rename Folder', 'buddyboss' ); ?></label>
-                        <input id="bb-album-child-title" type="text" value="<?php  bp_album_title(); ?>" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
+                        <input id="bb-edit-album-child-title" type="text" value="<?php  bp_album_title(); ?>" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
                     </div>
 
                     <footer class="bb-model-footer">
