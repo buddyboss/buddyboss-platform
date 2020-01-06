@@ -17,6 +17,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Handles media privacy information.
  *
  * @since BuddyBoss 1.0.0
+ * @deprecated BuddyBoss 1.2.3 No longer used by internal code and not recommended.
  */
 
 class BP_Media_Privacy {
