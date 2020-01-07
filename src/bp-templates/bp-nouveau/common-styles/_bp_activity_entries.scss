@@ -505,6 +505,10 @@
 	.activity-video-preview & {
 		padding: 0;
 	}
+
+	.activity-link-preview-body{
+		word-break: break-word;
+	}
 }
 
 .activity-url-thumb-nav {
@@ -558,6 +562,7 @@
 
 .activity-link-preview-title a {
 	color: inherit;
+	word-break: break-word;
 }
 
 #activity-close-link-suggestion {
