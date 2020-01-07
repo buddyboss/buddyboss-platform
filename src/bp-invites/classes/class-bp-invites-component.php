@@ -128,7 +128,7 @@ class BP_Invites_Component extends BP_Component {
 			) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
-		}else{
+		} else {
 			bp_core_no_access();
 			return;
 		}
