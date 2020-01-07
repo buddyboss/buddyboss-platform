@@ -110,10 +110,8 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-media-button', this.openCommentsMediaUploader.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-reply-gif-button', this.openGifPicker.bind( this ) );
 
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-document-move', this.openDocumentMove.bind( this ) );
-
-
-			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', '.ac-document-close-button', this.closeDocumentMove.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move', this.openDocumentMove.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button', this.closeDocumentMove.bind( this ) );
 						
 
 			
@@ -1153,9 +1151,13 @@ window.bp = window.bp || {};
 
 		openDocumentMove: function( event ) {
 			event.preventDefault();
-
-			var currentTarget = '#' + $(event.currentTarget).closest('li.activity').find('.bp-media-move-file').attr('id');
-
+			
+			var currentTarget;
+			if($(event.currentTarget).closest('li.activity').length > 0){
+				currentTarget = '#' + $(event.currentTarget).closest('li.activity').find('.bp-media-move-file').attr('id');
+			} else if($(event.currentTarget).closest('.media-folder_items').length > 0) {
+				currentTarget = '#' + $(event.currentTarget).closest('.media-folder_items').find('.bp-media-move-file').attr('id');
+			}
 			if(bp.Nouveau.Media.folderLocationUI){
 				bp.Nouveau.Media.folderLocationUI(currentTarget);
 			}
@@ -1165,10 +1167,7 @@ window.bp = window.bp || {};
 
 		closeDocumentMove: function( event ) {
 			event.preventDefault();
-
-			var currentTarget = '#' + $(event.currentTarget).closest('li.activity').find('.bp-media-move-file').attr('id');
-			
-			$(currentTarget).hide();
+			$(event.currentTarget).closest('.bp-media-move-file').hide();
 		},
 
 		toggleMultiMediaOptions: function(form,target) {

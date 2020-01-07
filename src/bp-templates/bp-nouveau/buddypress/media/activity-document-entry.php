@@ -134,4 +134,4 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
 		</div> <!-- .bb-activity-media-elem -->
 	<?php }
 }
- bp_get_template_part( 'media/activity-document-move' ); ?>
+bp_get_template_part( 'media/activity-document-move' ); ?>

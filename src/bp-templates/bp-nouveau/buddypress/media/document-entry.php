@@ -36,8 +36,10 @@ if ( isset( $attachment_id) ) {
 		<div class="media-folder_action__list">
 			<ul>
 				<li><a href="#">Rename</a></li>
+				<li><a href="#" class="ac-document-move">Move</a></li>
 				<li><a href="#">Delete</a></li>
 			</ul>
 		</div>
 	</div>
+	<?php bp_get_template_part( 'media/activity-document-move' ); ?>
 </div>

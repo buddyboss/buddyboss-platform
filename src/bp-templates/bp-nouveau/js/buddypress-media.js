@@ -1011,6 +1011,10 @@ window.bp = window.bp || {};
 
 			if ( typeof window.Dropzone !== 'undefined' && $('div#media-uploader').length ) {
 
+				if($('#bp-media-uploader').hasClass('bp-media-document-uploader')){
+					this.folderLocationUI('#bp-media-uploader');
+				}
+
 				$('#bp-media-uploader').show();
 
 				self.dropzone_obj = new Dropzone('div#media-uploader', self.options );

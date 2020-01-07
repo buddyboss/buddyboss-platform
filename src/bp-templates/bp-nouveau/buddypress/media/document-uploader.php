@@ -25,16 +25,39 @@
 						</a>
                     </header>
 
-                    <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
-                        <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
-                        <div class="media-uploader-post-content">
-                            <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? _e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : _e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
-                        </div>
-                        <?php endif; ?>
-                        <div class="media-uploader-wrapper">
-                            <div class="dropzone" id="media-uploader"></div>
+                    <div class="bb-field-wrap">
+                        <div class="bb-dropzone-wrap bp-media-upload-tab-content" id="bp-dropzone-content">
+                            <?php if ( bp_is_active('forums') && ! bbp_is_single_forum() && ! bbp_is_single_topic() && ! bp_is_messages_component() ) : ?>
+                            <div class="media-uploader-post-content">
+                                <textarea name="bp-media-post-content" id="bp-media-post-content" placeholder="<?php bp_is_group() ? _e( 'Write something about your documents, to be shown on the group feed', 'buddyboss' ) : _e( 'Write something about your documents, to be shown on your timeline', 'buddyboss' ); ?>"></textarea>
+                            </div>
+                            <?php endif; ?>
+                            <div class="media-uploader-wrapper">
+                                <div class="dropzone" id="media-uploader"></div>
+                            </div>
                         </div>
                     </div>
+
+                    <?php
+                        $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+                        if ( '' !== $ul ) {
+                            ?>
+                            <div class="bb-field-wrap">
+                            <div class="bb-dropdown-wrap">
+                                <label for="bb-folder-location" class="bb-label">Destination Folder</label>
+                                <div class="location-folder-list-wrap-main">
+                                    <input type="text" class="bb-folder-destination" value="Select Folder" readonly/>
+                                    <div class="location-folder-list-wrap">
+                                        <span class="location-folder-back"><i class="dashicons dashicons-arrow-left-alt2"></i></span>
+                                        <span class="location-folder-title">Documents</span>
+                                        <?php echo $ul; ?>
+                                    </div> <!-- .location-folder-list-wrap -->
+                                    <input type="hidden" class="bb-folder-selected-id" value="" readonly/>
+                                </div>
+                            </div>
+                            </div><?php
+                        }
+                    ?>
 
 	                <?php if ( bp_is_single_album() ) : ?>
                         <div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
