@@ -71,8 +71,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 		
-		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() || !bp_is_my_profile() ) {
+		// do not do anything if user isn't logged in OR IF user is viewing other members profile.
+		if ( 
+			!is_user_logged_in() 
+			|| 
+			( bp_is_user() && !bp_is_my_profile() ) 
+		) {
 			return;
 		}
 		
@@ -360,6 +364,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 			/* Groups */
 
+			$loggedin_user_domain = bp_loggedin_user_domain();
+			$profile_slug = bp_get_profile_slug();
+			
 			// Calculate Total Progress percentage.
 			$profile_completion_percentage = round( ( $user_progress_arr['completed_fields']*100 ) / $user_progress_arr['total_fields'] );
 			$user_prgress_formatted = array(
@@ -370,7 +377,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$listing_number = 1;
 			foreach ( $user_progress_arr['groups'] as $group_id => $group_details ){
 
-				$group_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/edit/group/'.$group_id );
+				$group_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/edit/group/'.$group_id );
 
 				$user_prgress_formatted['groups'][] = array(
 					'number'	=> $listing_number,
@@ -389,7 +396,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 			if( isset( $user_progress_arr['photo_type']['profile_photo'] ) ){
 
-				$change_avatar_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-avatar' );
+				$change_avatar_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/change-avatar' );
 				$is_profile_uploaded = ($user_progress_arr['photo_type']['profile_photo']['is_uploaded'] == 1 );
 
 				$user_prgress_formatted['groups'][] = array(
@@ -409,7 +416,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 			if( isset( $user_progress_arr['photo_type']['cover_photo'] ) ){
 
-				$change_cover_link = trailingslashit( bp_displayed_user_domain() . bp_get_profile_slug() . '/change-cover-image' );
+				$change_cover_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/change-cover-image' );
 				$is_cover_uploaded = ($user_progress_arr['photo_type']['cover_photo']['is_uploaded'] == 1 );
 
 				$user_prgress_formatted['groups'][] = array(
