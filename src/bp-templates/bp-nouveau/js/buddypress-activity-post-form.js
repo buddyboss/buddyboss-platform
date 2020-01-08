@@ -330,6 +330,11 @@ window.bp = window.bp || {};
 					window.instgrm.Embeds.process();
 				}
 
+				// support for facebook embed after ajax
+				if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+					window.FB.XFBML.parse(this.el);
+				}
+
 				this.$el.addClass('activity-post-form-link-wp-embed');
 			} else {
 				this.$el.removeClass('activity-post-form-link-wp-embed');
@@ -1704,10 +1709,9 @@ window.bp = window.bp || {};
 					self.model.set('media',medias);
 				}
 
+				var link_embed = false;
 				if ( self.model.get( 'link_embed' ) == true ) {
-					if ( typeof window.instgrm !== 'undefined' ) {
-						window.instgrm.Embeds.process();
-					}
+					link_embed = true;
 				}
 
 				// Reset the form
@@ -1730,6 +1734,15 @@ window.bp = window.bp || {};
 
 					//replace dummy image with original image by faking scroll event
 					jQuery(window).scroll();
+
+					if ( link_embed ) {
+						if ( typeof window.instgrm !== 'undefined' ) {
+							window.instgrm.Embeds.process();
+						}
+						if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+							window.FB.XFBML.parse(document.getElementById('activity-' + response.id));
+						}
+					}
 				}
 			} ).fail( function( response ) {
 
