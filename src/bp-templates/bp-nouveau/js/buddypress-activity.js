@@ -104,7 +104,7 @@ window.bp = window.bp || {};
 			// Activity actions
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', '.activity-privacy>li', bp.Nouveau, this.activityPrivacyChange.bind( this ) );
-			$( '#buddypress [data-bp-list="activity"]' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
+			$( '#buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list' ).on( 'click', 'span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
 			$( '#bb-media-model-container .activity-list' ).on( 'click', '.activity-item', bp.Nouveau, this.activityActions.bind( this ) );
 			$( document ).keydown( this.commentFormAction );
 			$( document ).click( this.togglePopupDropdown );
@@ -481,6 +481,10 @@ window.bp = window.bp || {};
 			// Stop event propagation
 			event.preventDefault();
 
+			if ( typeof target.data('value') === 'undefined' || $.trim( target.data('value') ) == '' ) {
+				return false;
+			}
+
 			activity_item.find('.privacy').addClass( 'loading' );
 
 			parent.ajax( { action: 'activity_update_privacy', 'id': activity_id, 'privacy': target.data('value') }, 'activity' ).done( function( response ) {
@@ -504,7 +508,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			// close other dropdowns
-			$( 'ul.activity-privacy' ).removeClass( 'bb-open' );
+			$( 'ul.activity-privacy' ).not(activity_item.find('.activity-privacy')).removeClass( 'bb-open' );
 
 			activity_item.find('.activity-privacy').toggleClass('bb-open');
 		},
