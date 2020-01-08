@@ -1584,3 +1584,49 @@ function bp_get_document_folder_link() {
 	 */
 	return apply_filters( 'bp_get_document_folder_link', $link );
 }
+
+/**
+ * Output the media folder ID.
+ *
+ * @since BuddyBoss 1.2.4
+ */
+function bp_media_folder_id() {
+	echo bp_get_media_folder_id();
+}
+
+/**
+ * Return the media folder ID.
+ *
+ * @since BuddyBoss 1.2.4
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media folder ID.
+ */
+function bp_get_media_folder_id() {
+	global $media_template;
+
+	/**
+	 * Filters the folder ID being displayed.
+	 *
+	 * @since BuddyBoss 1.2.4
+	 *
+	 * @param int $id The media folder ID.
+	 */
+	return apply_filters( 'bp_get_media_folder_id', $media_template->media->id );
+}
+
+function bp_media_is_group_folder( $folder_id ) {
+
+	$default = false;
+
+	return apply_filters( 'bp_media_is_group_folder', $default );
+}
+
+function bp_media_is_group_document( $document_id ) {
+
+	$default = false;
+
+	return apply_filters( 'bp_media_is_group_document', $default );
+}
+

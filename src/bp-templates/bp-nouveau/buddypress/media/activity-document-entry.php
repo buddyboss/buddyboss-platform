@@ -56,7 +56,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
 		<?php } ?>
 	</div> <!-- .bb-activity-media-elem -->
 
-<?php }else{ ?>
+<?php } else { ?>
 
 	<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'js' !== $extension && 'csv' !== $extension ) { ?>
 		<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
@@ -97,12 +97,12 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
 			<?php } ?>
 		</div> <!-- .bb-activity-media-elem -->
 
-	<?php }else{ ?>
+	<?php } else { ?>
 
 		<p class="document-filename"><?php echo $filename; ?></strong></p>
 		<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 			<div class="document-text-wrap">
-				
+
 				<div class="document-text" data-extension="<?php echo $extension; ?>">
 					<textarea class="document-text-file-data-hidden" style="display: none;"><?php
 							readfile($url, 'r');
@@ -134,4 +134,9 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
 		</div> <!-- .bb-activity-media-elem -->
 	<?php }
 }
-bp_get_template_part( 'media/activity-document-move' ); ?>
+
+if ( isset( $attachment_id) ) {
+	bp_get_template_part( 'media/activity-document-move' );
+} else {
+	bp_get_template_part( 'media/activity-document-folder-move' );
+}

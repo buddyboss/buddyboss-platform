@@ -314,28 +314,26 @@ function bp_media_get( $args = '' ) {
 	);
 
 	if ( '1' === $r['album'] ) {
-		$media = BP_Media::documents(
-			array(
-				'page'         => $r['page'],
-				'type'         => $r['type'],
-				'per_page'     => $r['per_page'],
-				'user_id'      => $r['user_id'],
-				'activity_id'  => $r['activity_id'],
-				'album_id'     => $r['album_id'],
-				'group_id'     => $r['group_id'],
-				'max'          => $r['max'],
-				'sort'         => $r['sort'],
-				'order_by'     => $r['order_by'],
-				'search_terms' => $r['search_terms'],
-				'scope'        => $r['scope'],
-				'privacy'      => $r['privacy'],
-				'exclude'      => $r['exclude'],
-				'count_total'  => $r['count_total'],
-				'fields'       => $r['fields'],
-				'album'        => $r['album'],
-				'user_directory'        => $r['user_directory'],
-			)
-		);
+		$media = BP_Media::documents( array(
+				'page'           => $r['page'],
+				'type'           => $r['type'],
+				'per_page'       => $r['per_page'],
+				'user_id'        => $r['user_id'],
+				'activity_id'    => $r['activity_id'],
+				'album_id'       => $r['album_id'],
+				'group_id'       => $r['group_id'],
+				'max'            => $r['max'],
+				'sort'           => $r['sort'],
+				'order_by'       => $r['order_by'],
+				'search_terms'   => $r['search_terms'],
+				'scope'          => $r['scope'],
+				'privacy'        => $r['privacy'],
+				'exclude'        => $r['exclude'],
+				'count_total'    => $r['count_total'],
+				'fields'         => $r['fields'],
+				'album'          => $r['album'],
+				'user_directory' => $r['user_directory'],
+			) );
 	} else {
 		$media = BP_Media::get(
 			array(
@@ -2393,7 +2391,8 @@ function bp_media_user_document_folder_tree_view_li_html( $user_id ) {
 	global $wpdb, $bp;
 
 	$buddyboss_media_albums_table = $bp->table_prefix . 'bp_media_albums';
-	$documents_folder_query       = $wpdb->prepare( "SELECT * FROM {$buddyboss_media_albums_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, 0, 'document' );
+	$group_id                     = ( function_exists( 'bp_get_current_group_id' )) ? bp_get_current_group_id() : 0;
+	$documents_folder_query       = $wpdb->prepare( "SELECT * FROM {$buddyboss_media_albums_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, $group_id, 'document' );
 	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
 
 	// Build array of item references:

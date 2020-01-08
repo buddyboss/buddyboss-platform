@@ -8,11 +8,13 @@
 
 <?php
 
-$id = bp_get_media_attachment_id();
+
+$id = bp_get_media_folder_id();
+
 
 ?>
 
-<div class="bp-media-move-file" id="<?php echo 'bp-media-move-file-' . $id; ?>" style="display: none;">
+<div class="bp-media-move-folder" id="<?php echo 'bp-media-move-file-' . $id; ?>" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap">
             <div class="modal-wrapper">
@@ -45,7 +47,7 @@ $id = bp_get_media_attachment_id();
 	                        }
 	                        ?>
                         <?php endif; ?>
-                        <a class="button bp-document-move" id="<?php echo $id; ?>" href="#"><?php _e( 'Move', 'buddyboss' ); ?></a>
+                        <a class="button bp-folder-move" id="<?php echo $id; ?>" href="#"><?php _e( 'Move', 'buddyboss' ); ?></a>
                     </footer>
 
                 </div>

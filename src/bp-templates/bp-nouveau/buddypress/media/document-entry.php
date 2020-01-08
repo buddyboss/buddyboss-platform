@@ -41,5 +41,11 @@ if ( isset( $attachment_id) ) {
 			</ul>
 		</div>
 	</div>
-	<?php bp_get_template_part( 'media/activity-document-move' ); ?>
+	<?php
+	if ( isset( $attachment_id) ) {
+		bp_get_template_part( 'media/activity-document-move' );
+	} else {
+		bp_get_template_part( 'media/activity-document-folder-move' );
+	}
+	?>
 </div>
