@@ -647,6 +647,7 @@ window.bp = window.bp || {};
 			contenteditable: true
 		},
 		loadURLAjax : null,
+		loadedURLs : [],
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
@@ -770,6 +771,16 @@ window.bp = window.bp || {};
 					return false;
 				}
 
+				var urlResponse = false;
+				if ( self.loadedURLs.length ) {
+					$.each( self.loadedURLs, function( index, urlObj ) {
+						if ( urlObj.url == url ) {
+							urlResponse = urlObj.response;
+							return false;
+						}
+					});
+				}
+
 				if (self.loadURLAjax != null) {
 					self.loadURLAjax.abort();
 				}
@@ -781,50 +792,63 @@ window.bp = window.bp || {};
 					link_url: url
 				});
 
-				self.loadURLAjax = bp.ajax.post('bp_activity_parse_url', {url: url}).always(function (response) {
-					self.options.activity.set('link_loading', false);
+				if ( ! urlResponse ) {
+					self.loadURLAjax = bp.ajax.post('bp_activity_parse_url', {url: url}).always(function (response) {
+						self.setURLResponse( response, url );
+					});
+				} else {
+					self.setURLResponse( urlResponse, url );
+				}
+			}
+		},
 
-					if (response.title === '' && response.images === '') {
-						self.options.activity.set('link_scrapping', false);
-						return;
-					}
+		setURLResponse : function( response, url ) {
+			var self = this;
 
-					if (response.error === '') {
+			self.options.activity.set('link_loading', false);
+
+			if (response.title === '' && response.images === '') {
+				self.options.activity.set('link_scrapping', false);
+				return;
+			}
+
+			if (response.error === '') {
+				self.options.activity.set({
+					link_success: true,
+					link_title: response.title,
+					link_description: response.description,
+					link_images: response.images,
+					link_image_index: 0
+				});
+
+				$('#whats-new-attachments').removeClass('empty');
+
+				if ($('#whats-new-attachments').hasClass('activity-video-preview')) {
+					$('#whats-new-attachments').removeClass('activity-video-preview');
+				}
+
+				if ($('#whats-new-attachments').hasClass('activity-link-preview')) {
+					$('#whats-new-attachments').removeClass('activity-link-preview');
+				}
+
+				if ($('.activity-media-container').length) {
+					if (response.description.indexOf('iframe') > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
+						$('#whats-new-attachments').addClass('activity-video-preview');
 						self.options.activity.set({
-							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
-							link_images: response.images,
-							link_image_index: 0
+							link_embed: true
 						});
-
-						$('#whats-new-attachments').removeClass('empty');
-
-						if ($('#whats-new-attachments').hasClass('activity-video-preview')) {
-							$('#whats-new-attachments').removeClass('activity-video-preview');
-						}
-
-						if ($('#whats-new-attachments').hasClass('activity-link-preview')) {
-							$('#whats-new-attachments').removeClass('activity-link-preview');
-						}
-
-						if ($('.activity-media-container').length) {
-							if (response.description.indexOf('iframe') > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
-								$('#whats-new-attachments').addClass('activity-video-preview');
-								self.options.activity.set({
-									link_embed: true
-								});
-							} else {
-								$('#whats-new-attachments').addClass('activity-link-preview');
-							}
-						}
 					} else {
-						self.options.activity.set({
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error
-						});
+						$('#whats-new-attachments').addClass('activity-link-preview');
 					}
+				}
+
+				self.loadedURLs.push({'url': url, 'response': response});
+
+			} else {
+				self.options.activity.set({
+					link_success: false,
+					link_error: true,
+					link_error_msg: response.error
 				});
 			}
 		}
@@ -1483,12 +1507,12 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji) 
-				&& ( ( !_.isUndefined(BP_Nouveau.media.emoji.profile) && BP_Nouveau.media.emoji.profile ) 
-					|| ( !_.isUndefined(BP_Nouveau.media.emoji.groups) && BP_Nouveau.media.emoji.groups ) 
+			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)
+				&& ( ( !_.isUndefined(BP_Nouveau.media.emoji.profile) && BP_Nouveau.media.emoji.profile )
+					|| ( !_.isUndefined(BP_Nouveau.media.emoji.groups) && BP_Nouveau.media.emoji.groups )
 					)
 				) {
-				
+
 				$('#whats-new').emojioneArea({
 					standalone: true,
 					hideSource: false,
