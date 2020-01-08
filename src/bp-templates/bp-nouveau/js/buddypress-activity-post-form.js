@@ -324,6 +324,12 @@ window.bp = window.bp || {};
 
 			// if link embed is used then add class to container
 			if ( this.model.get( 'link_embed' ) == true ) {
+
+				// support for instgram embed after ajax
+				if ( typeof window.instgrm !== 'undefined' ) {
+					window.instgrm.Embeds.process();
+				}
+
 				this.$el.addClass('activity-post-form-link-wp-embed');
 			} else {
 				this.$el.removeClass('activity-post-form-link-wp-embed');
@@ -1696,6 +1702,12 @@ window.bp = window.bp || {};
 						medias[k].saved = true;
 					}
 					self.model.set('media',medias);
+				}
+
+				if ( self.model.get( 'link_embed' ) == true ) {
+					if ( typeof window.instgrm !== 'undefined' ) {
+						window.instgrm.Embeds.process();
+					}
 				}
 
 				// Reset the form
