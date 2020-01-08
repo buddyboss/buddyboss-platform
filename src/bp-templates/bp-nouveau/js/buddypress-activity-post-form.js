@@ -789,7 +789,8 @@ window.bp = window.bp || {};
 					link_scrapping: true,
 					link_loading: true,
 					link_error: false,
-					link_url: url
+					link_url: url,
+					link_embed: false
 				});
 
 				if ( ! urlResponse ) {
@@ -818,7 +819,8 @@ window.bp = window.bp || {};
 					link_title: response.title,
 					link_description: response.description,
 					link_images: response.images,
-					link_image_index: 0
+					link_image_index: 0,
+					link_embed: typeof response.wp_embed !== 'undefined' && response.wp_embed
 				});
 
 				$('#whats-new-attachments').removeClass('empty');
@@ -834,9 +836,6 @@ window.bp = window.bp || {};
 				if ($('.activity-media-container').length) {
 					if (response.description.indexOf('iframe') > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
 						$('#whats-new-attachments').addClass('activity-video-preview');
-						self.options.activity.set({
-							link_embed: true
-						});
 					} else {
 						$('#whats-new-attachments').addClass('activity-link-preview');
 					}
