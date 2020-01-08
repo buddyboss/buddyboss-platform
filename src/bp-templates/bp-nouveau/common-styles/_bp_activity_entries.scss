@@ -995,8 +995,15 @@ span.dashicons.dashicons-admin-file:before {
 	}
 	  
 }
-.bb-activity-media-wrap .document-filename{
-	margin: 0 0 0 4px !important;
-	font-weight: 500;
-    font-size: 13px;
+.bb-activity-media-wrap {
+	.document-filename {
+		margin: 0 0 0 4px !important;
+		font-weight: 500;
+		font-size: 13px;
+	}
+	.more_text_view {
+		padding: 6px 10px;
+		background-color: #f7f7f7;
+		word-break: break-word;
+	}
 }

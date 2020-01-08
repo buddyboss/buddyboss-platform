@@ -16,7 +16,7 @@ $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
 
 
-if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
+if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 
 	<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 		<div class="document-description-wrap">
@@ -98,14 +98,23 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
 		</div> <!-- .bb-activity-media-elem -->
 
 	<?php } else { ?>
-
+		<?php
+			$file_open = fopen($url, 'r');
+			$file_data = fread($file_open, 10000);
+			$more_text = false;
+			if(strlen($file_data) >= 9999){
+				$file_data.='...';
+				$more_text = true;
+			}
+			fclose($file_open);
+		?>
 		<p class="document-filename"><?php echo $filename; ?></strong></p>
 		<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 			<div class="document-text-wrap">
-
+				
 				<div class="document-text" data-extension="<?php echo $extension; ?>">
 					<textarea class="document-text-file-data-hidden" style="display: none;"><?php
-							readfile($url, 'r');
+						 echo $file_data;	
 						?>
 					</textarea>
 				</div>
@@ -131,6 +140,11 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 0.5  ) { ?>
 				</div>
 
 			</div> <!-- .document-text-wrap -->
+			<?php
+				if($more_text == true){
+					echo '<div class="more_text_view">This file is truncated, Please <a href="'.$url.'">download</a> to view the full file.</div>';
+				}
+			?>
 		</div> <!-- .bb-activity-media-elem -->
 	<?php }
 }

@@ -171,7 +171,7 @@ window.bp = window.bp || {};
 
 			//Documents
 			$( document ).on( 'click', '.bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
-			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more', this.fileActivityActionButton.bind( this ) );
+			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more, .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li a', this.fileActivityActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_collapse', this.collapseCodePreview.bind( this ) );
 
@@ -2115,7 +2115,11 @@ window.bp = window.bp || {};
 		 */
 		fileActivityActionButton: function (event) {
 			event.preventDefault();
-			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible');
+
+			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible').closest('.activity_update').siblings().find('.bb-activity-media-elem').removeClass('is-visible');
+			if(event.currentTarget.tagName.toLowerCase() == 'a' && !$(event.currentTarget).hasClass('document-action_more')){
+				$(event.currentTarget).closest('.bb-activity-media-elem').removeClass('is-visible');
+			}
 		},
 
 		/**

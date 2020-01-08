@@ -2330,6 +2330,12 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 13px;
 }
 
+.bb-activity-media-wrap .more_text_view {
+  padding: 6px 10px;
+  background-color: #f7f7f7;
+  word-break: break-word;
+}
+
 /**
 *-----------------------------------------------------
 * @section 3.1.3 - Activity Comments
@@ -11658,19 +11664,19 @@ img.emojioneemoji {
   width: 100%;
 }
 
-.bp-media-move-file .ac-document-close-button {
+.bp-media-move-file-folder .ac-document-close-button {
   margin-right: auto;
   line-height: 1;
   font-size: 24px;
   color: rgba(17, 49, 80, 0.4);
 }
 
-.bp-media-move-file .ac-document-close-button .dashicons {
+.bp-media-move-file-folder .ac-document-close-button .dashicons {
   font-size: 22px;
 }
 
 @media screen and (max-height: 900px) {
-  .bp-media-move-file .location-folder-list-wrap-main .location-folder-list-wrap {
+  .bp-media-move-file-folder .location-folder-list-wrap-main .location-folder-list-wrap {
     position: fixed;
     top: 50%;
     transform: translate(50%, -50%);

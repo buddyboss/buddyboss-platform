@@ -12,7 +12,7 @@ $id = bp_get_media_attachment_id();
 
 ?>
 
-<div class="bp-media-move-file" id="<?php echo 'bp-media-move-file-' . $id; ?>" style="display: none;">
+<div class="bp-media-move-file-folder" id="<?php echo 'bp-media-move-file-' . $id; ?>" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap">
             <div class="modal-wrapper">
