@@ -142,7 +142,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 			</div> <!-- .document-text-wrap -->
 			<?php
 				if($more_text == true){
-					echo '<div class="more_text_view">This file is truncated, Please <a href="'.$url.'">download</a> to view the full file.</div>';
+					echo '<div class="more_text_view">This file was truncated for preview, Please <a href="'.$url.'">download</a> to view the full file.</div>';
 				}
 			?>
 		</div> <!-- .bb-activity-media-elem -->
