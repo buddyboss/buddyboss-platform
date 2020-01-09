@@ -6,14 +6,6 @@ body {
 
 	#buddypress { // needs the weight of the id here
 
-		* {
-			// some WP themes add anchor border bottom :(
-			a {
-				box-shadow: none;
-				text-decoration: none;
-			}
-		} // close * the kitchen sink of elements
-
 		// Some themes have a negative left margin on the blockquote element??
 		#item-body,
 		.bp-lists {

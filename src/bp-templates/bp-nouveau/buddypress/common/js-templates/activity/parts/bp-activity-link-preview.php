@@ -37,7 +37,7 @@
 		<# if ( data.link_error && ! data.link_success ) { #>
 		<div id="activity-url-error" class="activity-url-error">{{data.link_error_msg}}</div>
 		<# } #>
-		<a title="<?php _e( 'Cancel Preview' ); ?>" href="#" id="activity-close-link-suggestion"><i class="dashicons dashicons-no-alt"></i></a>
+		<a title="<?php _e( 'Cancel Preview', 'buddyboss' ); ?>" href="#" id="activity-close-link-suggestion"><i class="dashicons dashicons-no-alt"></i></a>
 	</div>
 	<# } #>
 	<# } #>
