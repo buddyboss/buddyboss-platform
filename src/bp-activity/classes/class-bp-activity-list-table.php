@@ -221,9 +221,14 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * @return array Column headers.
 	 */
 	function get_column_info() {
+
+		$screen         = get_current_screen();
+		$hidden_columns = get_hidden_columns( $screen );
+		$hidden_columns = ( ! empty( $hidden_columns ) ) ? $hidden_columns : array();
+
 		$this->_column_headers = array(
 			$this->get_columns(),
-			array(),
+			$hidden_columns,
 			$this->get_sortable_columns(),
 			$this->get_default_primary_column_name(),
 		);
