@@ -26,22 +26,22 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-detail-wrap">
 				<span class="document-title"><?php echo $filename; ?></span>
 				<span class="document-description"><?php echo $size; ?></span>
-				<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
+				<span class="document-helper-text"><?php _e( '- Click to Download', 'buddyboss' ); ?></span>
 			</a>
 		</div>
 
 		<div class="document-action-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="Download">
+			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 				<i class="bb-icon-download"></i>
 			</a>
 
-			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="More actions">
+			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icon-menu-dots-h"></i>
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<li><a href="#" class="ac-document-move">Move</a></li>
-					<li><a href="#">Delete</a></li>
+					<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+					<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
 		</div>
@@ -50,7 +50,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 			<div class="document-audio-wrap">
 				<audio controls>
 					<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
-					Your browser does not support the audio element.
+					<?php _e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 				</audio>
 			</div>
 		<?php } ?>
@@ -67,22 +67,22 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-detail-wrap">
 					<span class="document-title"><?php echo $filename; ?></span>
 					<span class="document-description"><?php echo $size; ?></span>
-					<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
+					<span class="document-helper-text"><?php _e( '- Click to Download', 'buddyboss' ); ?></span>
 				</a>
 			</div>
 
 			<div class="document-action-wrap">
-				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="Download">
+				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 					<i class="bb-icon-download"></i>
 				</a>
 
-				<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="More actions">
+				<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-h"></i>
 				</a>
 				<div class="document-action_list">
 					<ul>
-						<li><a href="#" class="ac-document-move">Move</a></li>
-						<li><a href="#">Delete</a></li>
+						<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+						<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 					</ul>
 				</div>
 			</div>
@@ -91,7 +91,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 				<div class="document-audio-wrap">
 					<audio controls>
 						<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
-						Your browser does not support the audio element.
+						<?php _e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 					</audio>
 				</div>
 			<?php } ?>
@@ -119,30 +119,30 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 					</textarea>
 				</div>
 				<div class="document-action-wrap">
-					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="Collapse"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
-					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="Download">
+					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php _e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 						<i class="bb-icon-download document-icon-download"></i>
 					</a>
 
-					<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="More actions">
+					<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-menu-dots-h document-icon-download-more"></i>
 					</a>
 					<div class="document-action_list">
 						<ul>
-							<li><a href="#" class="ac-document-move">Move</a></li>
-							<li><a href="#">Delete</a></li>
+							<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+							<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 						</ul>
 					</div>
 				</div>
 
 				<div class="document-expand">
-					<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> Click to expand</a>
+					<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php _e( 'Click to expand', 'buddyboss' ); ?></a>
 				</div>
 
 			</div> <!-- .document-text-wrap -->
 			<?php
 				if($more_text == true){
-					echo '<div class="more_text_view">This file was truncated for preview. Please <a href="'.$url.'">download</a> to view the full file.</div>';
+					echo _e( '<div class="more_text_view">This file was truncated for preview. Please <a href="'.$url.'">download</a> to view the full file. </div>', 'buddyboss' );
 				}
 			?>
 		</div> <!-- .bb-activity-media-elem -->

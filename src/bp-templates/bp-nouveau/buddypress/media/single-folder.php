@@ -54,10 +54,6 @@ $bradcrumbs = bp_media_document_bradcrumb( $album_id );
                     <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
 
                         <div class="bb-media-actions">
-                            <!-- <a class="bb-delete button small outline error" id="bb-delete-folder" href="#">
-                                <i class="bb-icon-upload"></i>
-                                <?php //_e( 'Delete Folder', 'buddyboss' ); ?>
-                            </a> -->
 
                             <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
                                 <i class="bb-icon-upload"></i><?php _e( 'Add Documents', 'buddyboss' ); ?>
@@ -88,13 +84,7 @@ $bradcrumbs = bp_media_document_bradcrumb( $album_id );
                                     <div class="media-folder_action__list">
                                         <ul>
                                             <li>
-                                                <!-- <div class="media-edit-folder">
-                                                    <input type="text" value="<?php //bp_album_title(); ?>" placeholder="<?php //_e( 'Title', 'buddyboss' ); ?>" id="bb-album-title" style="display: none;" />
-                                                    <a href="#" id="bp-edit-folder-title"><i class="bb-icon-edit"></i><?php //_e( 'Edit Folder Name', 'buddyboss' ); ?></a>
-                                                    <a href="#" id="bp-save-folder-title" style="display: none;" ><?php //_e( 'save', 'buddyboss' ); ?></a>
-                                                    <a href="#" id="bp-cancel-edit-album-title" style="display: none;" ><?php //_e( 'cancel', 'buddyboss' ); ?></a>
-                                                </div> -->
-                                                <a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> Edit Folder</a>
+                                                <a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> <?php _e( 'Edit Folder', 'buddyboss' ); ?></a>
                                             </li>
                                             <li><a href="#" id="bb-delete-folder"><i class="bb-icon-trash"></i><?php _e( 'Delete Folder', 'buddyboss' ); ?></a></li>
                                         </ul>

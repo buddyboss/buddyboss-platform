@@ -10,27 +10,17 @@ bp_nouveau_before_loop();
 	if ( bp_is_user() ) {
 		if ( bp_has_media( bp_ajax_querystring( 'media' ) . '&album=' . true . '&user_directory=' . true ) ) :
 			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				<!-- <table id="media-folder-document-data-table" class="display" cellspacing="0" width="100%">
-				<thead>
-				<tr>
-					<th colspan="2"><?php //esc_html_e( 'Name', 'buddyboss' ); ?></th>
-					<th><?php //esc_html_e( 'Modified', 'buddyboss' ); ?></th>
-					<th><?php //esc_html_e( 'Actions', 'buddyboss' ); ?></th>
-				</tr>
-				</thead>
-				<tbody> -->
-
 
 				<div class="media-folder-document-filters">
 					<div id="search-documents-form" class="media-search-form">
-						<label for="media_document_search" class="bp-screen-reader-text">Search</label>
-						<input type="text" name="search" id="media_document_search" value="" placeholder="Search Documents" class="">
+						<label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
+						<input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
 					</div>
 					<div class="select-wrap">
 						<select id="documents-order-by">
-							<option value="last">Last Updated</option>
-							<option value="newest">Newly Added</option>
-							<option value="alphabetical">Alphabetical</option>
+							<option value="last"><?php _e( 'Last Updated', 'buddyboss' ); ?></option>
+							<option value="newest"><?php _e( 'Newly Added', 'buddyboss' ); ?></option>
+							<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 						</select>
 					</div>
 				</div><!-- .media-folder-document-filters -->
@@ -52,7 +42,7 @@ bp_nouveau_before_loop();
 			if ( bp_media_has_more_items() ) : ?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
-						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 			<?php
@@ -75,27 +65,17 @@ bp_nouveau_before_loop();
 	} else {
 		if ( bp_has_media( bp_ajax_querystring( 'media' ) . '&album=' . true . '&user_directory=' . true ) ) :
 			if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
-				<!-- <table id="media-folder-document-data-table" class="display" cellspacing="0" width="100%">
-				<thead>
-				<tr>
-					<th colspan="2"><?php //esc_html_e( 'Name', 'buddyboss' ); ?></th>
-					<th><?php //esc_html_e( 'Modified', 'buddyboss' ); ?></th>
-					<th><?php //esc_html_e( 'Uploaded by', 'buddyboss' ); ?></th>
-					<th><?php //esc_html_e( 'Actions', 'buddyboss' ); ?></th>
-				</tr>
-				</thead>
-				<tbody> -->
 
 				<div class="media-folder-document-filters">
 					<div id="search-documents-form" class="media-search-form">
-						<label for="media_document_search" class="bp-screen-reader-text">Search</label>
-						<input type="text" name="search" id="media_document_search" value="" placeholder="Search Documents" class="">
+						<label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
+						<input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
 					</div>
 					<div class="select-wrap">
 						<select id="documents-order-by">
-							<option value="last">Last Updated</option>
-							<option value="newest">Newly Added</option>
-							<option value="alphabetical">Alphabetical</option>
+							<option value="last"><?php _e( 'Last Updated', 'buddyboss' ); ?></option>
+							<option value="newest"><?php _e( 'Newly Added', 'buddyboss' ); ?></option>
+							<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
 						</select>
 					</div>
 				</div><!-- .media-folder-document-filters -->
@@ -114,7 +94,7 @@ bp_nouveau_before_loop();
 			if ( bp_media_has_more_items() ) : ?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
-						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
+						<a class="button outline full" href="<?php bp_media_load_more_link(); ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 			<?php

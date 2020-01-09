@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-06 12:56:02+00:00\n"
+"POT-Creation-Date: 2020-01-09 15:28:12+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -893,6 +893,10 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:787
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:44
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:85
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:133
+#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:40
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:491
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:492
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:845
@@ -1410,6 +1414,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:15
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:317
 #: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:20
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:16
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:71
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:26
 msgid "Search"
 msgstr ""
@@ -2442,7 +2448,13 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:763
 #: bp-media/classes/class-bp-media-component.php:332
 #: bp-media/classes/class-bp-media-component.php:419
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:40
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:38
 #: bp-templates/bp-nouveau/buddypress/media/add-document.php:11
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:70
+#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:60
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:52
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:51
 msgid "Documents"
 msgstr ""
 
@@ -5465,27 +5477,27 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
-#: bp-media/bp-media-functions.php:117 bp-media/bp-media-functions.php:2220
+#: bp-media/bp-media-functions.php:117 bp-media/bp-media-functions.php:2218
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
-#: bp-media/bp-media-functions.php:118 bp-media/bp-media-functions.php:2221
+#: bp-media/bp-media-functions.php:118 bp-media/bp-media-functions.php:2219
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
-#: bp-media/bp-media-functions.php:120 bp-media/bp-media-functions.php:2223
+#: bp-media/bp-media-functions.php:120 bp-media/bp-media-functions.php:2221
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
-#: bp-media/bp-media-functions.php:121 bp-media/bp-media-functions.php:2224
+#: bp-media/bp-media-functions.php:121 bp-media/bp-media-functions.php:2222
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
-#: bp-media/bp-media-functions.php:122 bp-media/bp-media-functions.php:2225
+#: bp-media/bp-media-functions.php:122 bp-media/bp-media-functions.php:2223
 msgid "File upload stopped by extension."
 msgstr ""
 
@@ -9971,7 +9983,12 @@ msgid "Unspam"
 msgstr ""
 
 #: bp-forums/replies/template.php:2290
-#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:42
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:43
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:84
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:132
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:50
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:48
+#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:39
 msgid "Move"
 msgstr ""
 
@@ -10097,28 +10114,28 @@ msgid "Attach a photo"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-attachments.php:54
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:11
+msgid "Attach a document"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-attachments.php:64
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:50
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:19
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:15
 msgid "Post a GIF"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:60
+#: bp-forums/templates/default/bbpress/form-attachments.php:70
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 msgid "Search GIFs"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:74
+#: bp-forums/templates/default/bbpress/form-attachments.php:84
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:55
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:18
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:25
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:24
 msgid "Insert an emoji"
-msgstr ""
-
-#: bp-forums/templates/default/bbpress/form-attachments.php:80
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:22
-msgid "Attach a document"
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-forum.php:31
@@ -10399,6 +10416,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
+#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:38
 msgid "Rename"
 msgstr ""
 
@@ -12151,6 +12169,8 @@ msgid "Group Activity"
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:5317
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:23
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:78
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:110
 #: bp-templates/bp-nouveau/includes/groups/functions.php:605
 #: bp-templates/bp-nouveau/includes/members/functions.php:97
@@ -13484,7 +13504,7 @@ msgstr ""
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:1076 bp-media/bp-media-functions.php:2144
+#: bp-media/bp-media-filters.php:1076 bp-media/bp-media-functions.php:2142
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
@@ -13507,12 +13527,12 @@ msgid ""
 "are still using it."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:29 bp-media/bp-media-functions.php:2162
+#: bp-media/bp-media-functions.php:29 bp-media/bp-media-functions.php:2160
 msgid "Please login in order to upload file media."
 msgstr ""
 
 #: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
-#: bp-media/bp-media-functions.php:2218 bp-media/bp-media-functions.php:2219
+#: bp-media/bp-media-functions.php:2216 bp-media/bp-media-functions.php:2217
 msgid "The uploaded file exceeds "
 msgstr ""
 
@@ -13520,11 +13540,11 @@ msgstr ""
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2145
+#: bp-media/bp-media-functions.php:2143
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2243
+#: bp-media/bp-media-functions.php:2241
 msgid "Error while uploading document."
 msgstr ""
 
@@ -15175,9 +15195,9 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:55
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:117
-#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:56
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:45
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:97
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:79
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:56
 #: bp-templates/bp-nouveau/includes/media/ajax.php:156
@@ -15769,12 +15789,57 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:32
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:29
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:70
 msgid "- Click to Download"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:16
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:34
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:75
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:123
+msgid "Download"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:38
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:79
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:127
+msgid "More actions"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:53
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:94
+msgid "Your browser does not support the audio element."
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:122
+msgid "Collapse"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:139
+msgid "Click to expand"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:24
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:22
 msgid "Move file"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:35
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:33
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:65
+#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:53
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:47
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:46
+msgid "Destination Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:37
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:35
+#: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:67
+#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:56
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:49
+#: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:48
+msgid "Select Folder"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:24
@@ -15782,7 +15847,7 @@ msgid "More Photos"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/add-document.php:14
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:63
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:59
 msgid "Add Documents"
 msgstr ""
 
@@ -15790,8 +15855,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:28
 #: bp-templates/bp-nouveau/buddypress/media/create-child-folder.php:82
 #: bp-templates/bp-nouveau/buddypress/media/create-folder.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:73
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:67
+#: bp-templates/bp-nouveau/buddypress/media/create-folder.php:71
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:63
 msgid "Create Folder"
 msgstr ""
 
@@ -15823,28 +15888,44 @@ msgstr ""
 msgid "Enter Folder Title"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:17
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:72
+msgid "Search Documents"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:21
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:76
+msgid "Last Updated"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:22
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:77
+msgid "Newly Added"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:18
 msgid "Select Documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:31
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:32
 msgid "Write something about your documents, to be shown on the group feed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:31
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:32
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:73
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:96
 msgid "Add more documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:74
+#: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:97
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
 msgid "Done"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:28
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:87
 msgid "Edit Folder"
 msgstr ""
 
@@ -15868,7 +15949,7 @@ msgstr ""
 msgid "Delete Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:99
+#: bp-templates/bp-nouveau/buddypress/media/single-folder.php:89
 msgid "Delete Folder"
 msgstr ""
 

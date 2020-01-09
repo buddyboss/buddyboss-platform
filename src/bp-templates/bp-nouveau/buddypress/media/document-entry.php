@@ -35,9 +35,9 @@ if ( isset( $attachment_id) ) {
 		</a>
 		<div class="media-folder_action__list">
 			<ul>
-				<li><a href="#">Rename</a></li>
-				<li><a href="#" class="ac-document-move">Move</a></li>
-				<li><a href="#">Delete</a></li>
+				<li><a href="#"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
+				<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+				<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 			</ul>
 		</div>
 	</div>
