@@ -56,7 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.3 =
-*
+* Groups - Updated the 'Send Invites' interface to be more intuitive
 
 = 1.2.2 =
 * Activity - Fixed certain link embeds URLs not rendering proper results
