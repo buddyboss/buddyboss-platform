@@ -188,11 +188,11 @@ class BP_Messages_Thread {
 			return false;
 		}
 
-		$this->last_message_id      = $this->last_message->id;
-		$this->last_message_date    = $this->last_message->date_sent;
-		$this->last_sender_id       = $this->last_message->sender_id;
-		$this->last_message_subject = $this->last_message->subject;
-		$this->last_message_content = $this->last_message->message;
+		$this->last_message_id      = ( isset( $this->last_message ) && $this->last_message->id ) ? $this->last_message->id : '';
+		$this->last_message_date    = ( isset( $this->last_message ) && $this->last_message->date_sent ) ? $this->last_message->date_sent : '';
+		$this->last_sender_id       = ( isset( $this->last_message ) && $this->last_message->sender_id ) ? $this->last_message->sender_id : '';
+		$this->last_message_subject = ( isset( $this->last_message ) && $this->last_message->subject ) ? $this->last_message->subject : '';
+		$this->last_message_content = ( isset( $this->last_message ) && $this->last_message->message ) ? $this->last_message->message : '';
 
 		$this->first_message_date = self::get_messages_started( $this->thread_id );
 

@@ -187,7 +187,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 		     $message_type &&
 		     $message_users &&
 		     $group &&
-		     $message_users_ids &&
+		     //$message_users_ids &&
 		     (int) $group === (int) $group_id &&
 		     'all' === $message_users &&
 		     'open' === $message_type &&
@@ -258,7 +258,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 		     $message_type &&
 		     $message_users &&
 		     $group &&
-		     $message_users_ids &&
+		     //$message_users_ids &&
 		     (int) $group === (int) $group_id &&
 		     'all' === $message_users &&
 		     'open' === $message_type &&
@@ -329,7 +329,7 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 		     $message_type &&
 		     $message_users &&
 		     $group &&
-		     $message_users_ids &&
+		     //$message_users_ids &&
 		     (int) $group === (int) $group_id &&
 		     'new' === $thread_type &&
 		     'group' === $message_from

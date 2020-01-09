@@ -915,7 +915,8 @@ function bp_nouveau_ajax_groups_send_message() {
 	}
 
 	$response = array(
-		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.', 'buddyboss' ) . '</p></div>',
+		'feedback' => '<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>' . __( 'There was a problem loading recipients. Please try again.',
+				'buddyboss' ) . '</p></div>',
 		'type'     => 'error',
 	);
 
@@ -928,11 +929,11 @@ function bp_nouveau_ajax_groups_send_message() {
 	}
 
 	if ( isset( $_POST['gif'] ) && '' !== $_POST['gif'] ) {
-		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $_POST[ 'gif' ] ), true );
+		$_POST['gif_data'] = json_decode( wp_kses_stripslashes( $_POST['gif'] ), true );
 	}
 
 	if ( isset( $_POST['media'] ) && '' !== $_POST['media'] ) {
-		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST[ 'media' ] ), true );
+		$_POST['media'] = json_decode( wp_kses_stripslashes( $_POST['media'] ), true );
 	}
 
 	if ( isset( $_POST['users'] ) && 'all' === $_POST['users'] ) {
@@ -945,12 +946,125 @@ function bp_nouveau_ajax_groups_send_message() {
 		);
 
 		$group_members = groups_get_group_members( $args );
-		$members            = wp_list_pluck( $group_members['members'], 'ID' );
+		$members       = wp_list_pluck( $group_members['members'], 'ID' );
+
+		// Send Message to individual for private message.
+	} elseif ( isset( $_POST['users'] ) && 'private' === $_POST['type'] ) {
+
+		$members = $_POST['users_list'];
+
+		if ( is_array( $members ) ) {
+			foreach ( $members as $member ) {
+
+				$meta = array(
+					array(
+						'key'   => 'group_id',
+						'value' => $_POST['group'],
+					),
+					array(
+						'key'   => 'group_message_users',
+						'value' => $_POST['users'],
+					),
+					array(
+						'key'     => 'group_message_type',
+						'value'   => 'private',
+						'compare' => '=',
+					),
+				);
+
+				if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+
+					$thread_id                    = 0;
+					$_POST['message_thread_type'] = 'reply';
+
+					while ( bp_message_threads() ) :
+						bp_message_thread();
+						$thread_id = bp_get_message_thread_id();
+						break;
+					endwhile;
+
+					$thread            = new BP_Messages_Thread( $thread_id );
+					$thread_recipients = $thread->get_recipients();
+
+					$recipient_id_arr = wp_list_pluck( $thread_recipients, 'user_id' );
+
+					if ( in_array( (int) $member, $recipient_id_arr ) ) {
+						$new_reply = messages_new_message( array(
+							'thread_id'  => $thread_id,
+							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'  => $date_sent = bp_core_current_time(),
+							'error_type' => 'wp_error',
+						) );
+					} else {
+						$new_reply = messages_new_message( array(
+							'recipients' => $member,
+							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'  => $date_sent = bp_core_current_time(),
+							'error_type' => 'wp_error',
+						) );
+					}
+
+
+				} else {
+
+					$meta = array(
+						array(
+							'key'   => 'group_id',
+							'value' => $_POST['group'],
+						),
+						array(
+							'key'   => 'group_message_type',
+							'value' => 'private',
+						),
+					);
+
+					if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+
+						$thread_id                    = 0;
+						$_POST['message_thread_type'] = 'reply';
+
+						while ( bp_message_threads() ) :
+							bp_message_thread();
+							$thread_id = bp_get_message_thread_id();
+							break;
+						endwhile;
+
+						$new_reply = messages_new_message( array(
+							'thread_id'  => $thread_id,
+							'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+							'date_sent'  => $date_sent = bp_core_current_time(),
+							'error_type' => 'wp_error',
+						) );
+
+					} else {
+						// Attempt to send the message.
+						$send = messages_new_message( array(
+							'recipients'    => $member,
+							'subject'       => wp_trim_words( $_POST['content'],
+								messages_get_default_subject_length() ),
+							'content'       => $_POST['content'],
+							'error_type'    => 'wp_error',
+							'append_thread' => false,
+						) );
+					}
+				}
+			}
+
+			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.',
+					'buddyboss' ) . '</a>';
+			$response['type']          = 'success';
+			wp_send_json_success( $response );
+		}
+
 	} elseif ( isset( $_POST['users'] ) && 'individual' === $_POST['users'] ) {
-		$members            = $_POST['users_list'];
+		$members = $_POST['users_list'];
 	}
 
-	$message_users_ids = implode( ',', $members );
+	$message_users_ids                = implode( ',', $members );
 	$_POST['message_meta_users_list'] = $message_users_ids;
 
 	$meta = array(
@@ -983,25 +1097,121 @@ function bp_nouveau_ajax_groups_send_message() {
 			break;
 		endwhile;
 
-		$new_reply = messages_new_message( array(
-			'thread_id' => $thread_id,
-			'subject'   => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-			'content'   => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
-			'date_sent' => $date_sent = bp_core_current_time(),
-			'error_type' => 'wp_error',
-		) );
+		$thread            = new BP_Messages_Thread( $thread_id );
+		$thread_recipients = $thread->get_recipients();
+		$previous_ids      = array();
+		foreach ( $thread_recipients as $thread_recipient ) {
+			if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+				$previous_ids[] = $thread_recipient->user_id;
+			}
+		}
+
+		$recipient_id_arrs = $members;
+		$members           = array();
+		foreach ( $recipient_id_arrs as $recipient_id_arr ) {
+			$members[] = (int) $recipient_id_arr;
+		}
+
+		$arraysAreEqual = ( $previous_ids == $members );
+		if ( $arraysAreEqual ) {
+			$new_reply = messages_new_message( array(
+				'thread_id'  => $thread_id,
+				'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+				'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+				'date_sent'  => $date_sent = bp_core_current_time(),
+				'error_type' => 'wp_error',
+			) );
+		} else {
+
+
+			$meta = array(
+				array(
+					'key'   => 'group_id',
+					'value' => $_POST['group'],
+				),
+				array(
+					'key'   => 'group_message_users',
+					'value' => $_POST['users'],
+				),
+				array(
+					'key'   => 'group_message_type',
+					'value' => $_POST['type'],
+				),
+				array(
+					'key'   => 'message_users_ids',
+					'value' => $message_users_ids,
+				),
+			);
+
+			if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+
+				$thread_id                    = 0;
+				$_POST['message_thread_type'] = 'reply';
+
+				while ( bp_message_threads() ) :
+					bp_message_thread();
+					$thread_id = bp_get_message_thread_id();
+					break;
+				endwhile;
+
+				$thread            = new BP_Messages_Thread( $thread_id );
+				$thread_recipients = $thread->get_recipients();
+				$previous_ids      = array();
+				foreach ( $thread_recipients as $thread_recipient ) {
+					if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+						$previous_ids[] = $thread_recipient->user_id;
+					}
+				}
+
+				$recipient_id_arrs = $members;
+				$members           = array();
+				foreach ( $recipient_id_arrs as $recipient_id_arr ) {
+					$members[] = (int) $recipient_id_arr;
+				}
+
+				$arraysAreEqual = ( $previous_ids == $members );
+				if ( $arraysAreEqual ) {
+					$new_reply = messages_new_message( array(
+						'thread_id'  => $thread_id,
+						'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'date_sent'  => $date_sent = bp_core_current_time(),
+						'error_type' => 'wp_error',
+					) );
+				} else {
+					$new_reply = messages_new_message( array(
+						'recipients' => $members,
+						'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'date_sent'  => $date_sent = bp_core_current_time(),
+						'error_type' => 'wp_error',
+					) );
+				}
+			} else {
+				$new_reply = messages_new_message( array(
+					'recipients' => $members,
+					'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+					'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+					'date_sent'  => $date_sent = bp_core_current_time(),
+					'error_type' => 'wp_error',
+				) );
+			}
+
+		}
+
 
 		if ( is_wp_error( $new_reply ) ) {
 			$response['feedback'] = $new_reply->get_error_message();
 			wp_send_json_error( $response );
-		}  elseif ( !empty( $new_reply ) ) {
+		} elseif ( ! empty( $new_reply ) ) {
 			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.',
+					'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 			wp_send_json_success( $response );
 		}
 
-	} else  {
+	} else {
 
 		$_POST['message_thread_type'] = 'new';
 
@@ -1010,31 +1220,177 @@ function bp_nouveau_ajax_groups_send_message() {
 				// Attempt to send the message.
 				$send = messages_new_message( array(
 					'recipients' => $member,
-					'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
+					'subject'    => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
 					'content'    => $_POST['content'],
 					'error_type' => 'wp_error',
 				) );
 			}
 		} else {
 
-			$previous_thread = BP_Messages_Message::get_existing_thread( $members, bp_loggedin_user_id() );
-			if ( $previous_thread ) {
-				// Attempt to send the message.
-				$send = messages_new_message( array(
-					'recipients' => $members,
-					'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
-					'content'    => $_POST['content'],
-					'error_type' => 'wp_error',
-				) );
+			if ( 'individual' === $_POST['users'] && 'open' === $_POST['type'] ) {
+
+				$message_users_ids                = implode( ',', $members );
+				$_POST['message_meta_users_list'] = $message_users_ids;
+
+				$meta = array(
+					array(
+						'key'   => 'group_id',
+						'value' => $_POST['group'],
+					),
+					array(
+						'key'   => 'group_message_users',
+						'value' => 'individual',
+					),
+					array(
+						'key'   => 'group_message_type',
+						'value' => 'open',
+					),
+					array(
+						'key'   => 'message_users_ids',
+						'value' => $message_users_ids,
+					),
+				);
+
+				if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+
+					$thread_id                    = 0;
+					$_POST['message_thread_type'] = 'reply';
+
+					while ( bp_message_threads() ) :
+						bp_message_thread();
+						$thread_id = bp_get_message_thread_id();
+						break;
+					endwhile;
+
+					$new_reply = messages_new_message( array(
+						'thread_id'  => $thread_id,
+						'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+						'date_sent'  => $date_sent = bp_core_current_time(),
+						'error_type' => 'wp_error',
+					) );
+
+					if ( is_wp_error( $new_reply ) ) {
+						$response['feedback'] = $new_reply->get_error_message();
+						wp_send_json_error( $response );
+					} elseif ( ! empty( $new_reply ) ) {
+						$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+						$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.',
+								'buddyboss' ) . '</a>';
+						$response['type']          = 'success';
+						wp_send_json_success( $response );
+					}
+
+				} else {
+
+					$meta = array(
+						array(
+							'key'   => 'group_id',
+							'value' => $_POST['group'],
+						),
+						array(
+							'key'   => 'group_message_users',
+							'value' => 'individual',
+						),
+						array(
+							'key'   => 'group_message_type',
+							'value' => 'private',
+						),
+					);
+
+					if ( bp_has_message_threads( array( 'meta_query' => $meta ) ) ) {
+
+						$thread_id                    = 0;
+						$_POST['message_thread_type'] = 'reply';
+
+						while ( bp_message_threads() ) :
+							bp_message_thread();
+							$thread_id = bp_get_message_thread_id();
+							break;
+						endwhile;
+
+						$thread            = new BP_Messages_Thread( $thread_id );
+						$thread_recipients = $thread->get_recipients();
+						$previous_ids      = array();
+						foreach ( $thread_recipients as $thread_recipient ) {
+							if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+								$previous_ids[] = $thread_recipient->user_id;
+							}
+						}
+
+						$recipient_id_arrs = $members;
+						$members           = array();
+						foreach ( $recipient_id_arrs as $recipient_id_arr ) {
+							$members[] = (int) $recipient_id_arr;
+						}
+
+						$arraysAreEqual = ( $previous_ids == $members );
+
+						if ( $arraysAreEqual ) {
+							$new_reply = messages_new_message( array(
+								'thread_id'  => $thread_id,
+								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'  => $date_sent = bp_core_current_time(),
+								'error_type' => 'wp_error',
+							) );
+						} else {
+							$new_reply = messages_new_message( array(
+								'recipients' => $members,
+								'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'content'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
+								'date_sent'  => $date_sent = bp_core_current_time(),
+								'error_type' => 'wp_error',
+							) );
+						}
+
+						if ( is_wp_error( $new_reply ) ) {
+							$response['feedback'] = $new_reply->get_error_message();
+							wp_send_json_error( $response );
+						} elseif ( ! empty( $new_reply ) ) {
+							$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+							$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.',
+									'buddyboss' ) . '</a>';
+							$response['type']          = 'success';
+							wp_send_json_success( $response );
+						}
+
+					} else {
+						// Attempt to send the message.
+						$send = messages_new_message( array(
+							'recipients'    => $members,
+							'subject'       => wp_trim_words( $_POST['content'],
+								messages_get_default_subject_length() ),
+							'content'       => $_POST['content'],
+							'error_type'    => 'wp_error',
+							'append_thread' => false,
+						) );
+					}
+
+
+				}
+
 			} else {
-				// Attempt to send the message.
-				$send = messages_new_message( array(
-					'recipients' => $members,
-					'subject'    => wp_trim_words($_POST['content'], messages_get_default_subject_length()),
-					'content'    => $_POST['content'],
-					'error_type' => 'wp_error',
-					'append_thread' => false,
-				) );
+
+				$previous_thread = BP_Messages_Message::get_existing_thread( $members, bp_loggedin_user_id() );
+				if ( $previous_thread ) {
+					// Attempt to send the message.
+					$send = messages_new_message( array(
+						'recipients' => $members,
+						'subject'    => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
+						'content'    => $_POST['content'],
+						'error_type' => 'wp_error',
+					) );
+				} else {
+					// Attempt to send the message.
+					$send = messages_new_message( array(
+						'recipients'    => $members,
+						'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
+						'content'       => $_POST['content'],
+						'error_type'    => 'wp_error',
+						'append_thread' => false,
+					) );
+				}
 			}
 
 		}
@@ -1042,9 +1398,10 @@ function bp_nouveau_ajax_groups_send_message() {
 		if ( is_wp_error( $send ) ) {
 			$response['feedback'] = $send->get_error_message();
 			wp_send_json_error( $response );
-		}  elseif ( !empty( $send ) ) {
+		} elseif ( ! empty( $send ) ) {
 			$response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
-			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+			$response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.',
+					'buddyboss' ) . '</a>';
 			$response['type']          = 'success';
 
 			wp_send_json_success( $response );
