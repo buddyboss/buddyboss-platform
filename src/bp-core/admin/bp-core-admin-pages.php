@@ -28,12 +28,19 @@ function bp_core_admin_pages_settings() {
 			settings_fields( 'bp-pages' );
 			bp_custom_pages_do_settings_sections( 'bp-pages' );
 
-			printf(
-				'<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="%s" />
-			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
-			);
+			// Check WPML Active
+			if ( class_exists( 'SitePress' ) ) {
+				$wpml_options = get_option( 'icl_sitepress_settings' );
+				$default_lang = $wpml_options['default_language'];
+				$current_lang = ICL_LANGUAGE_CODE;
+
+				// Show the "Save Settings" button only if the current language is the default language.
+				if  ( $current_lang === $default_lang ) {
+					printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+				}
+			} else {
+				printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+			}
 			?>
 		</form>
 	</div>
@@ -158,13 +165,13 @@ function bp_core_admin_register_registration_page_fields() {
 
 	// add view tutorial button
 	$static_pages['button'] = array(
-		'link'  => 	bp_get_admin_url( 
-				add_query_arg( 
-					array( 
-						'page' 		=> 'bp-help', 
+		'link'  => 	bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' 		=> 'bp-help',
 						'article' 	=> 62795,
 					),
-					'admin.php' 
+					'admin.php'
 				)
 			),
 		'label' => __( 'View Tutorial', 'buddyboss' ),
