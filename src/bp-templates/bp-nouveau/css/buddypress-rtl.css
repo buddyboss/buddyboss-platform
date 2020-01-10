@@ -2666,6 +2666,7 @@ body.register .registration-popup .mfp-close:hover {
 .single-headers .group-description ul {
   list-style: initial;
   list-style-position: inside;
+  margin-bottom: 1rem;
 }
 
 .single-headers .member-header-actions > .generic-button {
