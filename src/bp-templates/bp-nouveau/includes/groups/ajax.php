@@ -1123,7 +1123,35 @@ function bp_nouveau_ajax_groups_send_message() {
 					$thread_id = bp_get_message_thread_id();
 
 					if ( $thread_id ) {
-						break;
+
+						// get the thread recipients.
+						$thread                     = new BP_Messages_Thread( $thread_id );
+						$thread_recipients          = $thread->get_recipients();
+						$previous_thread_recipients = array();
+
+						// Store thread recipients to $previous_ids array.
+						foreach ( $thread_recipients as $thread_recipient ) {
+							if ( $thread_recipient->user_id !== bp_loggedin_user_id() ) {
+								$previous_thread_recipients[] = $thread_recipient->user_id;
+							}
+						}
+
+						$current_recipients   = array();
+						$current_recipients = $members;
+						$members_recipients   = array();
+
+						// Store current recipients to $members array.
+						foreach ( $current_recipients as $single_recipients ) {
+							$members_recipients[] = (int) $single_recipients;
+						}
+
+						// check both previous and current recipients are same.
+						$is_recipient_match = ( $previous_thread_recipients == $members_recipients );
+
+						// If recipients are matched.
+						if ( $is_recipient_match ) {
+							break;
+						}
 					}
 
 				endwhile;
@@ -1143,17 +1171,17 @@ function bp_nouveau_ajax_groups_send_message() {
 						}
 					}
 
-					$current_recipients = array();
-					$current_recipients = $members;
-					$members           = array();
+					$current_recipients   = array();
+					$current_recipients   = $members;
+					$members_recipients   = array();
 
 					// Store current recipients to $members array.
 					foreach ( $current_recipients as $single_recipients ) {
-						$members[] = (int) $single_recipients;
+						$members_recipients[] = (int) $single_recipients;
 					}
 
 					// check both previous and current recipients are same.
-					$is_recipient_match = ( $previous_thread_recipients == $members );
+					$is_recipient_match = ( $previous_thread_recipients == $members_recipients );
 
 					// If recipients are matched.
 					if ( $is_recipient_match ) {
@@ -1201,15 +1229,15 @@ function bp_nouveau_ajax_groups_send_message() {
 
 							$current_recipients = array();
 							$current_recipients = $members;
-							$members           = array();
+							$members_recipients = array();
 
 							// Store current recipients to $members array.
 							foreach ( $current_recipients as $single_recipients ) {
-								$members[] = (int) $single_recipients;
+								$members_recipients[] = (int) $single_recipients;
 							}
 
 							// check both previous and current recipients are same.
-							$is_recipient_match = ( $previous_thread_recipients == $members );
+							$is_recipient_match = ( $previous_thread_recipients == $members_recipients );
 
 							// If recipients are matched.
 							if ( $is_recipient_match ) {
@@ -1531,6 +1559,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				)
 			);
 
+			$thread_loop_message_member = $member;
 			$thread_loop_message_sent = false;
 
 			// Find existing thread which are private.
@@ -1557,16 +1586,16 @@ function bp_nouveau_ajax_groups_send_message() {
 						}
 
 						$current_recipients   = array();
-						$current_recipients[] = $member;
-						$member               = array();
+						$current_recipients[] = $thread_loop_message_member;
+						$member_arr           = array();
 
 						// Store current recipients to $members array.
 						foreach ( $current_recipients as $single_recipients ) {
-							$member[] = (int) $single_recipients;
+							$member_arr[] = (int) $single_recipients;
 						}
 
 						// check both previous and current recipients are same.
-						$is_recipient_match = ( $previous_thread_recipients == $members );
+						$is_recipient_match = ( $previous_thread_recipients == $member_arr );
 
 						// If recipients are matched.
 						if ( $is_recipient_match ) {
@@ -1597,7 +1626,7 @@ function bp_nouveau_ajax_groups_send_message() {
 				// If there is no any thread matched.
 				if ( false === $thread_loop_message_sent ) {
 
-					$previous_thread = BP_Messages_Message::get_existing_thread( $member, bp_loggedin_user_id() );
+					$previous_thread = BP_Messages_Message::get_existing_thread( array( $member ), bp_loggedin_user_id() );
 
 					// If $thread_id found then add as a reply to that thread.
 					if ( $previous_thread ) {
