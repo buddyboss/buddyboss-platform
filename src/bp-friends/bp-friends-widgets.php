@@ -105,16 +105,16 @@ function bp_core_ajax_widget_friends() {
 			$contents .= '</div>';
 			$contents .= '</li>';
 		endwhile; 
-		$total_page_count 	= ceil( (int) $members_template->total_member_count / (int) $members_template->pag_num );
-		$total_member_count = (int) $members_template->total_member_count;
-		$next_page 			= ( $total_page_count !== $current_page) ?  $current_page + 1 : 0;
+		$total_page_count	= ceil( (int) $members_template->total_member_count / (int) $members_template->pag_num );
+		$total_member_count	= (int) $members_template->total_member_count;
+		$next_page			= ( $total_page_count !== $current_page) ?  $current_page + 1 : 0;
 
-		$json_data['status']    			= true;
-		$json_data['contents'] 				= $contents;
-		$json_data['total_member_count']    = $total_member_count;
-		$json_data['total_page_count']    	= $total_page_count;
-		$json_data['current_page']    		= $current_page;
-		$json_data['next_page']    			= $next_page;
+		$json_data['status']			= true;
+		$json_data['contents']			= $contents;
+		$json_data['total_member_count']= $total_member_count;
+		$json_data['total_page_count']	= $total_page_count;
+		$json_data['current_page']		= $current_page;
+		$json_data['next_page']			= $next_page;
 	else : 
 		$json_data['status']    = false;
 		$contents .= '<li>'. _e( 'There were no members found, please try another filter.', 'buddyboss' ) .'</li>';
