@@ -64,10 +64,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
 * Activity - Fixed clicking 'Comment' or 'Reply' on an activity post not scrolling down to the comment box
 * Profiles - Fixed issue when trying to follow multiple members in a row on Members directory
-* Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
 * Profiles - Fixed extra space when adding a profile type shortcode to a page while BuddyPanel is disabled
+* Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
 * Profiles - Fixed incorrect date ranges when 'Date' profile field type is added to Profile Search form
 * Profiles - Fixed issues with selecting 'Profile Type' profile field and getting incorrect error notices
+* Profiles - Fixed 'First Name' and 'Last Name' appearing in Account Privacy settings when they are disabled
 * Profiles - Added proper formatting for lists and underline when using 'Paragraph Text' profile field type
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Forums - When receiving a notification about a forum reply, the link now scrolls down to the specific reply
