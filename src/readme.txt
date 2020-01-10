@@ -74,6 +74,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 * Compatibility - Fixed conficts with plugin 'WordPress SEO Plugin - Rank Math'
 * Compatibility - Fixed conficts with plugin 'Hide My WP'
+* Translations - Fixed incorrect textdomains
 
 = 1.2.2 =
 * Activity - Fixed certain link embeds URLs not rendering proper results
