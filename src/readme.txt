@@ -67,7 +67,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed extra space when adding a profile type shortcode to a page while BuddyPanel is disabled
 * Profiles - Added proper formatting for lists and underline when using 'Paragraph Text' profile field type
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
-* Messages - Fixed the Back button not working right after componsing a message, on mobile
+* Messages - Fixed the Back button not working right after composing a message, on mobile devices
 * Network Search - Added an option to search forums based on their Discussion Tags
 * Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
 * Email Invites - Fixed conflict with invitation email and plugin 'Paid Memberships Pro'
