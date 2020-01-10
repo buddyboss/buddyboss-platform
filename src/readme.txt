@@ -69,9 +69,10 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Messages - Fixed the Back button not working right after componsing a message, on mobile
 * Network Search - Added an option to search forums based on their Discussion Tags
-* Emails - Fixed shortcode {{{inviter.url}}} not working in invitation email template
+* Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
+* Email Invites - Fixed conflict with invitation email and plugin 'Paid Memberships Pro'
 * Widgets - Fixed '(BB) Connections' widget incorrectly sorting members when added to Activity Feed
-* Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in WooCommerce
+* Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in 'WooCommerce'
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 * LearnDash - Fixed scheduled courses, lessons and topics from posting into Activity Feed
 * Compatibility - Fixed verified badge not showing in forums with plugin 'Verified Member for BuddyPress'
