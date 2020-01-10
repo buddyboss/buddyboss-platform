@@ -71,6 +71,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed the Back button not working right after composing a message, on mobile devices
 * Network Search - Added an option to search forums based on their Discussion Tags
 * Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
+* Email Invites - Fixed 404 error when trying to log out right after sending email invites
 * Email Invites - Fixed conflict with invitation email and plugin 'Paid Memberships Pro'
 * Widgets - Fixed '(BB) Connections' widget incorrectly sorting members when added to Activity Feed
 * Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in 'WooCommerce'
