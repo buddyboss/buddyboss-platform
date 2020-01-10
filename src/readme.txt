@@ -65,6 +65,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Messages - Fixed the Back button not working right after componsing a message, on mobile
+* Network Search - Added an option to search forums based on their Discussion Tags
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 
 = 1.2.2 =
