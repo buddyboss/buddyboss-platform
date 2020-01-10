@@ -59,8 +59,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Updated the 'Send Invites' interface to be more intuitive
 * Groups - Added proper formatting for ordered and bulleted lists added into group description
 * Groups - Added pagination to Manage Members screen when there are more than 15 group members
-* Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly 
+* Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly
 * Groups - Fixed 'Restrict Invitations' logic for invites into subgroups before joining the parent group
+* Groups - Fixed issues with not being able to select a group type when editing a group
 * Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
 * Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
 * Activity - Fixed clicking 'Comment' or 'Reply' on an activity post not scrolling down to the comment box
