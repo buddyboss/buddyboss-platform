@@ -45,6 +45,7 @@ add_action( 'bp_register_widgets', 'bp_friends_register_widgets' );
 function bp_core_ajax_widget_friends() {
 
 	check_ajax_referer( 'bp_core_widget_friends' );
+	global $members_template;
 
 	switch ( $_POST['filter'] ) {
 		case 'newest-friends':
@@ -73,44 +74,54 @@ function bp_core_ajax_widget_friends() {
 	if ( ! $user_id ) {
 		return;
 	}
-
+	$current_page 		= isset( $_POST['page'] ) ? ceil( (int) $_POST['page'] ) : 1;
 	$members_args = array(
 		'user_id'         => absint( $user_id ),
 		'type'            => $type,
 		'max'             => absint( $_POST['max-friends'] ),
+		'page'            => absint( $current_page ),
 		'populate_extras' => 1,
 	);
+	$contents = '';
+	if ( bp_has_members( $members_args ) ) : 
 
-	if ( bp_has_members( $members_args ) ) : ?>
-		<?php echo '0[[SPLIT]]'; // Return valid result. TODO: remove this. ?>
-		<?php
 		while ( bp_members() ) :
 			bp_the_member();
-			?>
-			<li class="vcard">
-				<div class="item-avatar">
-					<a href="<?php bp_member_permalink(); ?>"><?php bp_member_avatar(); ?></a>
-				</div>
+			
+			$contents .= '<li class="vcard">';
+			$contents .= '<div class="item-avatar">';
+			$contents .= '<a href="'. bp_get_member_permalink() .'">'. bp_get_member_avatar() .'</a>';
+			$contents .= '</div>';
 
-				<div class="item">
-					<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
-					<?php if ( 'active' == $type ) : ?>
-						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span></div>
-					<?php elseif ( 'newest' == $type ) : ?>
-						<div class="item-meta"><span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span></div>
-					<?php elseif ( bp_is_active( 'friends' ) ) : ?>
-						<div class="item-meta"><span class="activity"><?php bp_member_total_friend_count(); ?></span></div>
-					<?php endif; ?>
-				</div>
-			</li>
-		<?php endwhile; ?>
+			$contents .= '<div class="item">';
+			$contents .= '<div class="item-title fn"><a href="'. bp_get_member_permalink() .'">'. bp_get_member_name() .'</a></div>';
+			if ( 'active' == $type ) :
+				$contents .= '<div class="item-meta"><span class="activity" data-livestamp="'. bp_core_get_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ) .'">'. bp_get_member_last_active() .'</span></div>';
+			elseif ( 'newest' == $type ) :
+				$contents .= '<div class="item-meta"><span class="activity" data-livestamp="'. bp_core_get_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ) .'">'. bp_get_member_registered() .'</span></div>';
+			elseif ( bp_is_active( 'friends' ) ) :
+				$contents .= '<div class="item-meta"><span class="activity">'. bp_get_member_total_friend_count() .'</span></div>';
+			endif;
+			$contents .= '</div>';
+			$contents .= '</li>';
+		endwhile; 
+		$total_page_count 	= ceil( (int) $members_template->total_member_count / (int) $members_template->pag_num );
+		$total_member_count = (int) $members_template->total_member_count;
+		$next_page 			= ( $total_page_count !== $current_page) ?  $current_page + 1 : 0;
 
-	<?php else : ?>
-		<?php echo '-1[[SPLIT]]<li>'; ?>
-		<?php _e( 'There were no members found, please try another filter.', 'buddyboss' ); ?>
-		<?php echo '</li>'; ?>
-		<?php
+		$json_data['status']    			= true;
+		$json_data['contents'] 				= $contents;
+		$json_data['total_member_count']    = $total_member_count;
+		$json_data['total_page_count']    	= $total_page_count;
+		$json_data['current_page']    		= $current_page;
+		$json_data['next_page']    			= $next_page;
+	else : 
+		$json_data['status']    = false;
+		$contents .= '<li>'. _e( 'There were no members found, please try another filter.', 'buddyboss' ) .'</li>';
 	endif;
+	$json_data['contents'] 	= $contents;
+	echo wp_send_json( $json_data );
+	exit;
 }
 add_action( 'wp_ajax_widget_friends', 'bp_core_ajax_widget_friends' );
 add_action( 'wp_ajax_nopriv_widget_friends', 'bp_core_ajax_widget_friends' );

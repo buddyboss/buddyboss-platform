@@ -184,6 +184,21 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 				<?php endwhile; ?>
 			</ul>
+			<?php
+				/**
+				 *This is for more button it is redirect to members page 
+				 */
+				$profiles_count = $members_template->total_member_count;
+				if ( $profiles_count > $instance['max_friends'] ) { 
+					$pag_num = $members_template->pag_page+1;
+					?>
+					<div class="more-block">
+						<a href="<?php bp_members_directory_permalink(); ?>" data-page="<?php echo $pag_num;?>" class="count-more more-connection"><?php _e( 'More', 'buddyboss' ); ?>
+							<i class="bb-icon-angle-right"></i>
+						</a>
+					</div>
+				<?php 
+				} ?>
 			<?php wp_nonce_field( 'bp_core_widget_friends', '_wpnonce-friends' ); ?>
 			<input type="hidden" name="friends_widget_max" id="friends_widget_max" value="<?php echo absint( $instance['max_friends'] ); ?>" />
 

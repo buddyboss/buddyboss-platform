@@ -159,12 +159,19 @@ class BP_Core_Members_Template {
 			);
 		}
 
-		if ( ! $max || $max >= (int) $this->members['total'] ) {
-			$this->total_member_count = (int) $this->members['total'];
-		} else {
-			$this->total_member_count = (int) $max;
-		}
 
+		/**
+		 * Comment cause not getting total member count when widget max pass
+		 
+			if ( ! $max || $max >= (int) $this->members['total'] ) {
+				$this->total_member_count = (int) $this->members['total'];
+			} else {
+			 	$this->total_member_count = (int) $max;
+			}
+		*/
+		
+		$this->total_member_count = (int) $this->members['total'];
+		
 		$this->members = $this->members['users'];
 
 		if ( $max ) {
