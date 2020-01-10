@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.3 =
 * Groups - Updated the 'Send Invites' interface to be more intuitive
+* Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
 * Messages - Fixed the Back button not working right after componsing a message, on mobile
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 
