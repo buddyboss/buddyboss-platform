@@ -72,6 +72,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in WooCommerce
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 * Compatibility - Fixed conficts with plugin 'WordPress SEO Plugin - Rank Math'
+* Compatibility - Fixed conficts with plugin 'Hide My WP'
 
 = 1.2.2 =
 * Activity - Fixed certain link embeds URLs not rendering proper results
