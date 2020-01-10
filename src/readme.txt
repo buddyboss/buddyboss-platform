@@ -69,6 +69,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Messages - Fixed the Back button not working right after componsing a message, on mobile
 * Network Search - Added an option to search forums based on their Discussion Tags
+* Emails - Fixed shortcode {{{inviter.url}}} not working in invitation email template
 * Widgets - Fixed '(BB) Connections' widget incorrectly sorting members when added to Activity Feed
 * Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in WooCommerce
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
