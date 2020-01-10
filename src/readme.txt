@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly 
 * Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
 * Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
+* Activity - Fixed clicking 'Comment' or 'Reply' on an activity post not scrolling down to the comment box
 * Profiles - Fixed issue when trying to follow multiple members in a row on Members directory
 * Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
