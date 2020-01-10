@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.3\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-10 03:53:22+00:00\n"
+"POT-Creation-Date: 2020-01-10 08:04:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2117,7 +2117,7 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
 #: bp-media/bp-media-settings.php:468 bp-media/bp-media-settings.php:623
-#: bp-media/bp-media-settings.php:817 bp-search/bp-search-settings.php:420
+#: bp-media/bp-media-settings.php:828 bp-search/bp-search-settings.php:420
 msgid "View Tutorial"
 msgstr ""
 
@@ -5547,7 +5547,6 @@ msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:87
 #: bp-core/classes/class-bp-core-follow-following-widget.php:87
-#: bp-friends/classes/class-bp-core-friends-widget.php:194
 #: bp-groups/classes/class-bp-groups-widget.php:172
 #: bp-members/classes/class-bp-core-members-widget.php:186
 #: bp-members/classes/class-bp-core-recently-active-widget.php:102
@@ -5989,7 +5988,7 @@ msgstr ""
 #: bp-core/deprecated/buddypress/1.6.php:159
 #: bp-core/deprecated/buddypress/1.6.php:187
 #: bp-friends/classes/class-bp-core-friends-widget.php:148
-#: bp-friends/classes/class-bp-core-friends-widget.php:265
+#: bp-friends/classes/class-bp-core-friends-widget.php:252
 #: bp-groups/bp-groups-template.php:5310
 #: bp-groups/classes/class-bp-groups-widget.php:124
 #: bp-groups/classes/class-bp-groups-widget.php:241
@@ -11236,7 +11235,7 @@ msgid "(BB) Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:153
-#: bp-friends/classes/class-bp-core-friends-widget.php:266
+#: bp-friends/classes/class-bp-core-friends-widget.php:253
 #: bp-groups/classes/class-bp-groups-widget.php:130
 #: bp-groups/classes/class-bp-groups-widget.php:242
 #: bp-members/classes/class-bp-core-members-widget.php:129
@@ -11246,7 +11245,7 @@ msgid "Active"
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:158
-#: bp-friends/classes/class-bp-core-friends-widget.php:267
+#: bp-friends/classes/class-bp-core-friends-widget.php:254
 #: bp-groups/classes/class-bp-groups-widget.php:136
 #: bp-groups/classes/class-bp-groups-widget.php:243
 #: bp-members/classes/class-bp-core-members-widget.php:137
@@ -11254,20 +11253,20 @@ msgstr ""
 msgid "Popular"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:206
+#: bp-friends/classes/class-bp-core-friends-widget.php:193
 msgid "Sorry, no connections were found."
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:258
+#: bp-friends/classes/class-bp-core-friends-widget.php:245
 #: bp-members/classes/class-bp-core-members-widget.php:251
 msgid "Link widget title to Members directory"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:260
+#: bp-friends/classes/class-bp-core-friends-widget.php:247
 msgid "Max connections to show:"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:263
+#: bp-friends/classes/class-bp-core-friends-widget.php:250
 msgid "Default connections to show:"
 msgstr ""
 
@@ -13591,29 +13590,33 @@ msgstr ""
 msgid "Allow members to use emoji in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:643
-msgid ""
-"This feature requires an account at <a "
-"href=\"https://developers.giphy.com/\">GIPHY</a>. Create your account, and "
-"then click \"Create an App\". Once done, copy the API key and paste it "
-"above."
+#: bp-media/bp-media-settings.php:647
+msgid "This feature requires an account at"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:682
+#: bp-media/bp-media-settings.php:649
+msgid "Create your account, and then click"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:651
+msgid "Once done, copy the API key and paste it in the field above."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:693
 msgid ""
 "Allow members to use animated GIFs in <strong>profile activity "
 "posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:701
+#: bp-media/bp-media-settings.php:712
 msgid "Allow members to use animated GIFs in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:720
+#: bp-media/bp-media-settings.php:731
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:739
+#: bp-media/bp-media-settings.php:750
 msgid "Allow members to use animated GIFs in <strong>forum discussions</strong>"
 msgstr ""
 
