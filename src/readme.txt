@@ -71,6 +71,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed incorrect date ranges when 'Date' profile field type is added to Profile Search form
 * Profiles - Fixed issues with selecting 'Profile Type' profile field and getting incorrect error notices
 * Profiles - Fixed 'First Name' and 'Last Name' appearing in Account Privacy settings when they are disabled
+* Profiles - Fixed 'Last Name' visibility options when Display Name Format is set to 'First Name & Last Name'
 * Profiles - Added proper formatting for lists and underline when using 'Paragraph Text' profile field type
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Forums - When receiving a notification about a forum reply, the link now scrolls down to the specific reply
@@ -79,12 +80,12 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Network Search - Added an option to search forums based on their Discussion Tags
 * Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
 * Email Invites - Fixed 404 error when trying to log out right after sending email invites
-* Email Invites - Fixed conflict with invitation email and plugin 'Paid Memberships Pro'
-* Widgets - Fixed '(BB) Connections' widget incorrectly sorting members when added to Activity Feed
-* Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in 'WooCommerce'
+* Widgets - Fixed '(BB) Connections' widget sorting members incorrectly when added to Activity Feed
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
-* LearnDash - Fixed scheduled courses, lessons and topics from posting into Activity Feed
+* LearnDash - Fixed scheduled courses, lessons and topics incorrectly posting into Activity Feed
 * LearnDash - Fixed emails not sending to users registering to the site via enrollment into a Free course
+* Compatibility - Fixed conflict when enabling 'Private Network' while allowing account creation in 'WooCommerce'
+* Compatibility - Fixed conflict with Email Invites email link when using plugin 'Paid Memberships Pro'
 * Compatibility - Fixed Network Search displaying results that are restricted via plugin 'Paid Memberships Pro'
 * Compatibility - Fixed verified badge not showing in forums with plugin 'Verified Member for BuddyPress'
 * Compatibility - Fixed redirect issues for Forums, Photos and Groups tabs with plugin 'WPML'
