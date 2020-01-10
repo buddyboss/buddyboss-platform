@@ -59,6 +59,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Updated the 'Send Invites' interface to be more intuitive
 * Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly
 * Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
+* Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
 * Messages - Fixed the Back button not working right after componsing a message, on mobile
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 
