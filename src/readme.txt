@@ -57,7 +57,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.3 =
 * Groups - Updated the 'Send Invites' interface to be more intuitive
-* Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly
+* Groups - Added proper formatting for ordered and bulleted lists in group description
+* Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly 
 * Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
 * Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
 * Profiles - Fixed issue when trying to follow multiple members in a row on Members directory
