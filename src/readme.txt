@@ -69,6 +69,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Forums - When receiving a notification about a forum reply, the link now scrolls down to the specific reply
 * Messages - Fixed the Back button not working right after composing a message, on mobile devices
+* Media - Fixed GIF not working when replying to a single activity post on its permalink screen
 * Network Search - Added an option to search forums based on their Discussion Tags
 * Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
 * Email Invites - Fixed 404 error when trying to log out right after sending email invites
