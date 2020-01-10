@@ -84,6 +84,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 * LearnDash - Fixed scheduled courses, lessons and topics from posting into Activity Feed
 * LearnDash - Fixed emails not sending to users registering to the site via enrollment into a Free course
+* Compatibility - Fixed Network Search displaying results that are restricted via plugin 'Paid Memberships Pro'
 * Compatibility - Fixed verified badge not showing in forums with plugin 'Verified Member for BuddyPress'
 * Compatibility - Fixed redirect issues for Forums, Photos and Groups tabs with plugin 'WPML'
 * Compatibility - Fixed conficts with plugin 'WordPress SEO Plugin - Rank Math'
