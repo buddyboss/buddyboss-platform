@@ -72,6 +72,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Widgets - Fixed '(BB) Connections' widget incorrectly sorting members when added to Activity Feed
 * Privacy - Fixed conflict when enabling 'Private Network' while allowing account creation in WooCommerce
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
+* Compatibility - Fixed verified badge not showing in forums with plugin 'Verified Member for BuddyPress'
 * Compatibility - Fixed conficts with plugin 'WordPress SEO Plugin - Rank Math'
 * Compatibility - Fixed conficts with plugin 'Hide My WP'
 * Translations - Fixed text instances that could not be translated
