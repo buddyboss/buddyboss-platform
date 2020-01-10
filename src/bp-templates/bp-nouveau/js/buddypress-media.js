@@ -1286,6 +1286,8 @@ window.bp = window.bp || {};
 			$(document).on('click', '.bb-next-media', this.next.bind(this));
 			$(document).on('bp_activity_ajax_delete_request', this.activityDeleted.bind(this));
 			$(document).on( 'click', '#bb-media-model-container .media-privacy>li', this.mediaPrivacyChange.bind( this ) );
+			$(document).on( 'click', '#bb-media-model-container .bb-media-section span.privacy', bp.Nouveau, this.togglePrivacyDropdown.bind( this ) );
+			$( document ).click( this.togglePopupDropdown );
 
 		},
 
@@ -1546,6 +1548,47 @@ window.bp = window.bp || {};
 					self.next(event);
 				}
 			}
+		},
+
+		/**
+		 * [togglePopupDropdown description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		togglePopupDropdown: function( event ) {
+			var element;
+
+			event = event || window.event;
+
+			if ( event.target ) {
+				element = event.target;
+			} else if ( event.srcElement) {
+				element = event.srcElement;
+			}
+
+			if ( element.nodeType === 3 ) {
+				element = element.parentNode;
+			}
+
+			if ( event.altKey === true || event.metaKey === true ) {
+				return event;
+			}
+
+			// if privacy dropdown items, return
+			if ( $( element ).hasClass( 'privacy-wrap' ) || $( element ).parent().hasClass( 'privacy-wrap' ) ) {
+				return event;
+			}
+
+			$( 'ul.media-privacy' ).removeClass( 'bb-open' );
+		},
+
+		togglePrivacyDropdown: function( event ) {
+			var target = $( event.target );
+
+			// Stop event propagation
+			event.preventDefault();
+
+			target.closest('.bb-media-privacy-wrap').find('.media-privacy').toggleClass('bb-open');
 		},
 
 		mediaPrivacyChange: function( event ) {
