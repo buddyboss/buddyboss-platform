@@ -1318,14 +1318,15 @@ a.layout-grid-view {
   position: relative;
   display: flex;
   align-items: center;
+  margin-bottom: 1px;
 }
 
 .bb-media-privacy-wrap .activity-privacy li:hover {
-  background: #fafafa;
+  background: #f5f5f5;
 }
 
 .bb-media-privacy-wrap .activity-privacy .selected {
-  background: #fafafa;
+  background: #f5f5f5;
 }
 
 .bb-media-privacy-wrap .activity-privacy.bb-open {
@@ -1353,6 +1354,16 @@ a.layout-grid-view {
 
 .activity-privacy > li.friends:before {
   content: "\f110";
+}
+
+.bb-media-model-container .bb-media-privacy-wrap .activity-privacy {
+  left: auto;
+  right: 0;
+}
+
+.bb-media-model-container .bb-media-privacy-wrap .activity-privacy:before {
+  left: auto;
+  right: 24px;
 }
 
 .gif-media-search {
@@ -11178,6 +11189,106 @@ img.emojioneemoji {
   margin: 3px;
   width: 24px !important;
   height: 24px !important;
+}
+
+.bb-media-only-privacy {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 11;
+}
+
+.bb-media-only-privacy .privacy {
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 2px 1px 2px 6px;
+}
+
+.bb-media-only-privacy .bb-media-privacy-wrap:before {
+  display: none;
+}
+
+.bb-media-only-privacy .privacy-wrap {
+  display: inline-block;
+}
+
+.bb-media-only-privacy .media-privacy {
+  display: none;
+  margin: 0;
+  position: absolute;
+  background: #fff;
+  box-shadow: 0 2px 7px 1px rgba(0, 0, 0, 0.05), 0 6px 32px 0 rgba(18, 43, 70, 0.1);
+  border-radius: 4px;
+  padding: 5px 0;
+  min-width: 200px;
+  right: 0;
+  top: 35px;
+  z-index: 11;
+}
+
+.bb-media-only-privacy .media-privacy:before {
+  content: ' ';
+  position: absolute;
+  width: 0;
+  height: 0;
+  top: 0;
+  right: 25px;
+  border: 6px solid black;
+  border-color: #fff #fff transparent transparent;
+  -webkit-transform-origin: 0 0;
+  -ms-transform-origin: 0 0;
+  transform-origin: 0 0;
+  -webkit-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+  box-shadow: 2px -3px 3px 0 rgba(0, 0, 0, 0.02);
+  z-index: 1002;
+}
+
+.bb-media-only-privacy .media-privacy li {
+  cursor: pointer;
+  line-height: 1;
+  margin: 0;
+  padding: 10px 14px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin-bottom: 1px;
+}
+
+.bb-media-only-privacy .media-privacy li:hover {
+  background: #f5f5f5;
+}
+
+.bb-media-only-privacy .media-privacy .selected {
+  background: #f5f5f5;
+}
+
+.bb-media-only-privacy .media-privacy.bb-open {
+  display: block;
+}
+
+.media-privacy > li:before {
+  content: "\f11f";
+  font-family: dashicons;
+  font-size: 16px;
+  vertical-align: middle;
+  display: inline-block;
+  margin-right: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+.media-privacy > li.onlyme:before {
+  content: "\f160";
+}
+
+.media-privacy > li.loggedin:before {
+  content: "\f307";
+}
+
+.media-privacy > li.friends:before {
+  content: "\f110";
 }
 
 /**

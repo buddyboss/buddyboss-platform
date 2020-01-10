@@ -24,9 +24,9 @@
                     <img src="" alt="" />
                 </figure>
 
-	            <div class="bb-dropdown-wrap">
+	            <div class="bb-dropdown-wrap bb-media-only-privacy">
 		            <div class="bb-media-privacy-wrap" style="display: none;">
-			            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip=""><span class="privacy selected"></span></span>
+			            <span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="left" data-bp-tooltip=""><span class="privacy selected"></span></span>
 			            <ul class="media-privacy">
 				            <?php foreach( bp_media_get_visibility_levels() as $item_key => $privacy_item ) {
 					            ?><li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?>"><?php echo $privacy_item; ?></li><?php

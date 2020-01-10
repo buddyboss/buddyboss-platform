@@ -1050,7 +1050,7 @@ function bp_nouveau_activity_privacy() {
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			    <ul class="activity-privacy">
-				    <li><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
+				    <li class="bb-edit-privacy"><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
 			    </ul>
 			</div><?php
 	    } else { ?>
