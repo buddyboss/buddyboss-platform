@@ -62,6 +62,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
 * Profiles - Fixed issue when trying to follow multiple members in a row on Members directory
 * Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
+* Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
 * Messages - Fixed the Back button not working right after componsing a message, on mobile
 * Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
 
