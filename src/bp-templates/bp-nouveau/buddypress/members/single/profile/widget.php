@@ -44,7 +44,7 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 			</span>
 			<span class="progress" >
 				<span class="completed_staus" >
-				<span class="completed_steps" ><?php echo $single_section_details['completed']; ?></span> / <span class="total_steps" ><?php echo $single_section_details['total']; ?></span>
+				<span class="completed_steps" ><?php echo $single_section_details['completed']; ?></span>/<span class="total_steps" ><?php echo $single_section_details['total']; ?></span>
 				</span>
 			</span>
 		</li>
