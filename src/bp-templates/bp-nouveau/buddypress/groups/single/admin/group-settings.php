@@ -105,9 +105,9 @@
 	<?php if ( bp_is_active( 'media' ) && bp_is_group_media_support_enabled() ) : ?>
 
         <fieldset class="radio group-media">
-            <legend><?php esc_html_e( 'Group Media', 'buddyboss' ); ?></legend>
+            <legend><?php esc_html_e( 'Group Photos', 'buddyboss' ); ?></legend>
 
-            <p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage media?', 'buddyboss' ); ?></p>
+            <p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to manage photos?', 'buddyboss' ); ?></p>
 
             <label for="group-media-status-members">
                 <input type="radio" name="group-media-status" id="group-media-status-members" value="members"<?php bp_group_show_media_status_setting( 'members' ); ?> />

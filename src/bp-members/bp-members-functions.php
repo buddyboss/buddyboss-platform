@@ -553,7 +553,6 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
-add_filter( 'bp_core_get_user_displayname', 'bp_core_get_member_display_name', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2390,7 +2389,9 @@ function bp_core_wpsignup_redirect() {
 		return;
 	}
 
-	bp_core_redirect( bp_get_signup_page() );
+	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) ) {
+		bp_core_redirect( bp_get_signup_page() );
+	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
 
@@ -2871,47 +2872,6 @@ function bp_get_current_member_type() {
 	 * @param string $value "Current" profile type.
 	 */
 	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
-}
-
-/**
- * Get the display_name for member based on user_id
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $display_name
- * @param int    $user_id
- *
- * @return string
- */
-function bp_core_get_member_display_name( $display_name, $user_id = null ) {
-	// some cases it calls the filter directly, therefore no user id is passed
-	if ( ! $user_id ) {
-		return $display_name;
-	}
-
-	$old_display_name = $display_name;
-
-	$display_name = bp_xprofile_get_member_display_name( $user_id );
-
-	if ( empty( $display_name ) ) {
-		$display_name = $old_display_name;
-	}
-
-	if ( bp_loggedin_user_id() ) {
-
-		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id, bp_loggedin_user_id() );
-
-		if ( ! empty( $list_fields ) ) {
-			$last_name_field_id = bp_xprofile_lastname_field_id();
-
-			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
-				$display_name = str_replace( ' ' . $last_name, '', $display_name );
-			}
-		}
-	}
-
-	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
 /**
@@ -3856,7 +3816,11 @@ function bp_member_type_shortcode_add_body_class( $class ) {
 		$class[] = 'members';
 		$class[] = 'buddypress';
 		$class[] = 'buddyboss';
-		$class[] = 'bb-buddypanel';
+		/**
+		 *This class commented because this class will add when buddypanel enable
+		 *and this condition already in the theme
+		 */
+		//$class[] = 'bb-buddypanel';
 	}
 	return $class;
 }

@@ -141,17 +141,17 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 			<div class="item-options" id="friends-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends" 
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends"
 																 <?php
 																	if ( $instance['friend_default'] == 'newest' ) :
 																		?>
 					class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends" 
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends"
 																   <?php
 																	if ( $instance['friend_default'] == 'active' ) :
 																		?>
 					class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends" 
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends"
 																   <?php
 																	if ( $instance['friend_default'] == 'popular' ) :
 																		?>

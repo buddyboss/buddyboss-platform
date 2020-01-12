@@ -118,6 +118,20 @@
 
 	}
 
+	.group-description {
+		ul,
+		ol {
+			list-style-position: inside !important;
+			margin: 0 0 1rem;
+		}
+		ul {
+			list-style: initial;
+		}
+		ol {
+			list-style: decimal;
+		}
+	}
+
 	.member-header-actions {
 
 		> .generic-button {
