@@ -1,5 +1,5 @@
 ---
-name: Bug Report
+name: "\U0001F41E Bug Report"
 about: Report a bug if something isn't working as expected in the core BuddyBoss Platform
   plugin.
 title: ''
