@@ -80,7 +80,7 @@
                                 <select id="bb-media-privacy">
 				                    <?php foreach ( bp_media_get_visibility_levels() as $k => $option ) {
 					                    ?>
-                                        <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
+                                        <option value="<?php echo esc_attr( $k ); ?>"><?php echo esc_attr( $option ); ?></option>
 					                    <?php
 				                    } ?>
                                 </select>

@@ -77,7 +77,7 @@ function bp_media_activity_entry() {
 			'sort'     => 'ASC',
 		)
 	) ) { ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; ?> <?php echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ) ) ? 'forums-media-wrap' : ''; ?>">
+		<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count ); ?> <?php echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ) ) ? esc_attr( 'forums-media-wrap' ) : ''; ?>">
 			<?php while ( bp_media() ) {
 				bp_the_media();
 				bp_get_template_part( 'media/activity-entry' );
@@ -139,8 +139,8 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		?>
 		<div class="bb-activity-media-wrap
 		<?php
-		echo 'bb-media-length-' . $media_template->media_count;
-		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
+		echo esc_attr( 'bb-media-length-' . $media_template->media_count );
+		echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : '';
 		?>
 		">
 													  <?php
