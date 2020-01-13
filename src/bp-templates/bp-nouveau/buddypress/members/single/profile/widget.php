@@ -34,8 +34,10 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 		
 		<?php // Loop through all sections and show progress. ?>
 		<?php foreach( $user_progress['groups'] as $single_section_details ): ?>
-		
-		<li class="single_section_wrap <?php echo ( $single_section_details['is_group_completed'] ) ? 'completed' : 'incomplete' ?>" >
+
+		<?php $user_progress_status = ($single_section_details['completed'] == 0 && $single_section_details['total'] > 0) ? 'progress_not_started' : ''; ?>
+
+		<li class="single_section_wrap <?php echo ( $single_section_details['is_group_completed'] ) ? 'completed ' : 'incomplete '; echo $user_progress_status; ?>" >
 			<span class="section_number" >
 				<?php echo $single_section_details['number']; ?>
 			</span>
