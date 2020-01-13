@@ -1433,7 +1433,7 @@ window.bp = window.bp || {};
 
 			object = $( event.delegateTarget ).data( 'bp-list' ) || null;
 
-			// Set the scope & filter
+			// Set the scope & filter for local storage
 			if ( null !== object ) {
 				objectData = self.getLocalStorage( 'bp-' + object );
 
@@ -1445,6 +1445,20 @@ window.bp = window.bp || {};
 					filter = objectData.filter;
 				}
 
+				if ( undefined !== objectData.extras ) {
+					extras = objectData.extras;
+				}
+			}
+
+			// Set the scope & filter for session storage.
+			if ( null !== object ) {
+				objectData = self.getStorage( 'bp-' + object );
+				if ( undefined !== objectData.scope ) {
+					scope = objectData.scope;
+				}
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
+				}
 				if ( undefined !== objectData.extras ) {
 					extras = objectData.extras;
 				}

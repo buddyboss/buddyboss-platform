@@ -1420,7 +1420,7 @@ div[class*="attached-gif-container"] .gif-play-button span.dashicons {
 }
 
 div[class*="attached-gif-container"] .gif-icon {
-  background: url(../images/gif-symbol.png) bottom left no-repeat;
+  background: url(../images/gif-symbol.png) bottom right no-repeat;
   position: absolute;
   width: 100%;
   height: 100%;
@@ -2860,9 +2860,18 @@ body.register .registration-popup .mfp-close:hover {
   margin: 5px 0 10px 10px;
 }
 
+.single-headers .group-description ul,
+.single-headers .group-description ol {
+  list-style-position: inside !important;
+  margin: 0 0 1rem;
+}
+
 .single-headers .group-description ul {
   list-style: initial;
-  list-style-position: inside;
+}
+
+.single-headers .group-description ol {
+  list-style: decimal;
 }
 
 .single-headers .member-header-actions > .generic-button {

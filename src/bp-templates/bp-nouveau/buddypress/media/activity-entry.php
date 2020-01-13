@@ -6,9 +6,15 @@
  */
 ?>
 
-<?php global $media_template; ?>
+<?php
+global $media_template;
 
-<div class="bb-activity-media-elem <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $media_template->media->attachment_data->meta['width'] > $media_template->media->attachment_data->meta['height'] ? 'bb-horizontal-layout' : ''; echo $media_template->media->attachment_data->meta['height'] > $media_template->media->attachment_data->meta['width'] || $media_template->media->attachment_data->meta['width'] == $media_template->media->attachment_data->meta['height'] ? 'bb-vertical-layout' : ''; ?>">
+$width  =  isset( $media_template->media->attachment_data->meta['width'] ) ? $media_template->media->attachment_data->meta['width'] : 0;
+$height =  isset( $media_template->media->attachment_data->meta['height'] ) ? $media_template->media->attachment_data->meta['height'] : 0;
+
+?>
+
+<div class="bb-activity-media-elem <?php echo $media_template->current_media > 4 ? 'hide' : ''; echo $media_template->media_count == 1 || $media_template->media_count > 1 && $media_template->current_media == 0 ? 'act-grid-1-1 ' : ''; echo $media_template->media_count > 1 && $media_template->current_media > 0 ? 'act-grid-1-2 ' : ''; echo $width > $height ? 'bb-horizontal-layout' : ''; echo $height > $width || $width == $height ? 'bb-vertical-layout' : ''; ?>">
 	<a href="#"
 	   class="bb-open-media-theatre entry-img"
 	   data-id="<?php bp_media_id(); ?>"
