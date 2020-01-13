@@ -1133,7 +1133,7 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str = __( 'You like this', 'buddyboss' );
 		} else {
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str        = $user_display_name . ' ' . __( 'likes this', 'buddyboss' );
 		}
 	} elseif ( 2 == $like_count ) {
@@ -1141,15 +1141,15 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str .= __( 'You and', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
 		} else {
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
 		}
 	} elseif ( 3 == $like_count ) {
@@ -1158,18 +1158,18 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 
 			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
 		} else {
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ', ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 
 			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
@@ -1182,15 +1182,15 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 		} else {
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ', ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 		}
 
@@ -1231,9 +1231,9 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 			$favorited_users,
 			function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
 				if ( $user_id != $current_user_id ) {
-					$user_data = get_userdata( $user_id );
-					if ( strpos( $like_text, $user_data->display_name ) === false ) {
-						$carry .= $user_data->display_name . '&#10;';
+					$user_display_name = bp_core_get_user_displayname( $user_id );
+					if ( strpos( $like_text, $user_display_name ) === false ) {
+						$carry .= $user_display_name . '&#10;';
 					}
 				}
 
