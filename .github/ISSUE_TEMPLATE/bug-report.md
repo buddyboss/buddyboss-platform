@@ -1,6 +1,7 @@
 ---
-name: :beetle: Bug Report
-about: Report a bug if something isn't working as expected in the core BuddyBoss Plattform plugin.
+name: Bug Report
+about: Report a bug if something isn't working as expected in the core BuddyBoss Platform
+  plugin.
 title: ''
 labels: bug
 assignees: ''
