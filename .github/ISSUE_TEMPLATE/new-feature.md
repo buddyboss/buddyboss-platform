@@ -1,5 +1,5 @@
 ---
-name: New Feature (Scoped)
+name: "\U0001F680 New Feature (Scoped)"
 about: Add a scoped and approved feature for this project
 title: ''
 labels: 'feature: enhancement'
