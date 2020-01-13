@@ -108,7 +108,6 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 							<select name="<?php echo $name . '[min][year]'; ?>">
 								<?php
-
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['year'], 0, false ),
 									/* translators: no option picked in select box */
@@ -117,17 +116,10 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								$date_range_type = bp_xprofile_get_meta( $f->id, 'field', 'range_type', true );
 
 								if ( 'relative' === $date_range_type ) {
-									$range_relative_start = bp_xprofile_get_meta( $f->id,
-										'field',
-										'range_relative_start',
-										true );
-									$range_relative_end   = bp_xprofile_get_meta( $f->id,
-										'field',
-										'range_relative_end',
-										true );
-
-									$start = date( 'Y' ) - abs( $range_relative_start );
-									$end   = date( 'Y' ) + $range_relative_end;
+									$range_relative_start = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_start', true );
+									$range_relative_end   = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_end', true );
+									$start                = date( 'Y' ) - abs( $range_relative_start );
+									$end                  = date( 'Y' ) + $range_relative_end;
 								} elseif ( 'absolute' === $date_range_type ) {
 									$start = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_start', true );
 									$end   = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_end', true );

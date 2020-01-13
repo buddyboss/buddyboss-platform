@@ -182,7 +182,7 @@ div.field-group {
 	border-radius: 3px;
 }
 #profile-field-form .field-group fieldset{
-	padding: 10px 10px 0;
+	padding: 14px 16px 14px 14px;
 	width: 100%;
     box-sizing: border-box;
 }
@@ -206,7 +206,7 @@ div.field-group {
 #profile-field-form .field-group fieldset legend{
 	position: static;
 	float: left;
-    margin-bottom: 10px;
+    margin-bottom: 5px;
 }
 
 fieldset .field-name {
@@ -219,7 +219,14 @@ fieldset.clear-value {
 }
 
 fieldset div.field-wrapper {
-	padding: 29px 14px 14px;
+	clear: left;
+}
+
+fieldset div.field-wrapper p.description {
+	color: #999;
+	font-style: normal;
+	margin-bottom: 5px;
+	font-size: 14px;
 }
 
 fieldset span.bp-signup-field-label {
