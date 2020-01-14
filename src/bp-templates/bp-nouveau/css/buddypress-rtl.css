@@ -3568,11 +3568,13 @@ div.profile_completion_wrap .progress_text_wrap {
 
 div.profile_completion_wrap .progress_container {
   border: 1px solid black;
+  border-radius: 12px;
 }
 
 div.profile_completion_wrap .progress_container .pc_progress {
-  height: 20px;
+  height: 8px;
   background-color: #0b80a4;
+  border-radius: 0 12px 12px 0;
 }
 
 div.profile_completion_wrap ul.pc_detailed_progress li {
@@ -3589,7 +3591,7 @@ div.profile_completion_wrap ul.pc_detailed_progress li span.completed_staus {
 }
 
 div.profile_completion_wrap ul.pc_detailed_progress li.completed span.completed_staus {
-  background-color: #438c48;
+  background-color: #8a2;
 }
 
 div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.section_name a {
