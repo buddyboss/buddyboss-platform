@@ -211,6 +211,28 @@ function bp_core_register_common_scripts() {
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
+
+	/**
+	 * Translate Dropzone
+	 */
+	wp_localize_script(
+		'bp-media-dropzone',
+		'bp_media_dropzone',
+		array(
+			'dictDefaultMessage' => __( "Drop files here to upload", 'buddyboss' ),
+			'dictFallbackMessage' => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
+			'dictFallbackText' => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
+			'dictFileTooBig' => __( "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
+			'dictInvalidFileType' => __( "You can't upload files of this type.", 'buddyboss' ),
+			'dictResponseError' => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
+			'dictCancelUpload' => __( "Cancel upload", 'buddyboss' ),
+			'dictUploadCanceled' => __( "Upload canceled.", 'buddyboss' ),
+			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss' ),
+			'dictRemoveFile' => __( "Remove file", 'buddyboss' ),
+			'dictMaxFilesExceeded' => __( "You can not upload any more files.", 'buddyboss' ),
+		)
+	);
+
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
