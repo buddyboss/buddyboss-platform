@@ -1713,16 +1713,9 @@ img.emojioneemoji {
 		width: 100%;
 	}
 }
-.bp-media-move-file-folder{
-	.ac-document-close-button{
-		margin-left: auto;
-		line-height: 1;
-		font-size: 24px;
-		color: rgba(17,49,80,.4);
-		.dashicons{
-			font-size: 22px;
-		}
-	}
+
+.bp-media-move-folder,
+.bp-media-move-file{
 	@media screen and (max-height: 900px){
 		.location-folder-list-wrap-main .location-folder-list-wrap{
 			position: fixed;
@@ -1735,6 +1728,17 @@ img.emojioneemoji {
 		}
 	}
 }
+.bp-media-move-file .ac-document-close-button,
+.bp-media-move-folder .ac-folder-close-button{
+	margin-left: auto;
+	line-height: 1;
+	font-size: 24px;
+	color: rgba(17,49,80,.4);
+	.dashicons{
+		font-size: 22px;
+	}
+}
+
 .location-folder-list-wrap-main{
 	position: relative;
 	&:after{

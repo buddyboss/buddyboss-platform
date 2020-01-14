@@ -26,8 +26,10 @@ bp_nouveau_before_loop();
 				</div><!-- .media-folder-document-filters -->
 
 				<div id="media-folder-document-data-table">
-
-				
+				<?php
+					bp_get_template_part( 'media/activity-document-move' );
+					bp_get_template_part( 'media/activity-document-folder-move' );
+				?>
 
 			<?php
 			endif;
@@ -81,6 +83,10 @@ bp_nouveau_before_loop();
 				</div><!-- .media-folder-document-filters -->
 
 				<div id="media-folder-document-data-table">
+				<?php
+					bp_get_template_part( 'media/activity-document-move' );
+					bp_get_template_part( 'media/activity-document-folder-move' );
+				?>
 			<?php
 			endif;
 

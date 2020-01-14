@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.2\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-09 15:28:12+00:00\n"
+"POT-Creation-Date: 2020-01-14 08:33:43+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -896,7 +896,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:44
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:85
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:133
-#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:40
+#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:42
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:491
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:492
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:845
@@ -1415,7 +1415,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:317
 #: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:20
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:16
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:71
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:73
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:26
 msgid "Search"
 msgstr ""
@@ -9988,7 +9988,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-entry.php:132
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:50
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:48
-#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:39
+#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:41
 msgid "Move"
 msgstr ""
 
@@ -10416,7 +10416,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:38
+#: bp-templates/bp-nouveau/buddypress/media/document-entry.php:40
 msgid "Rename"
 msgstr ""
 
@@ -12170,7 +12170,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-template.php:5317
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:23
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:78
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:80
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:110
 #: bp-templates/bp-nouveau/includes/groups/functions.php:605
 #: bp-templates/bp-nouveau/includes/members/functions.php:97
@@ -15195,8 +15195,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:45
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:97
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:47
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:103
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:79
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:56
@@ -15820,8 +15820,7 @@ msgid "Click to expand"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:24
-#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:22
-msgid "Move file"
+msgid "Move folder"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-document-folder-move.php:35
@@ -15840,6 +15839,10 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/media/document-uploader.php:49
 #: bp-templates/bp-nouveau/buddypress/media/edit-child-folder.php:48
 msgid "Select Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/media/activity-document-move.php:22
+msgid "Move file"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:24
@@ -15889,17 +15892,17 @@ msgid "Enter Folder Title"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:17
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:72
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:74
 msgid "Search Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:21
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:76
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:78
 msgid "Last Updated"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/media/document-loop.php:22
-#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:77
+#: bp-templates/bp-nouveau/buddypress/media/document-loop.php:79
 msgid "Newly Added"
 msgstr ""
 

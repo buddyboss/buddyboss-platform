@@ -10,9 +10,11 @@ if ( isset( $attachment_id) ) {
 	$extension = bp_media_get_document_extension( $attachment_id );
 	$svg_icon  = bp_media_get_document_svg_icon( $extension );
 	$link = wp_get_attachment_url( $attachment_id );
+	$move_class = 'ac-document-move';
 } else {
 	$svg_icon  = bp_media_get_document_svg_icon('folder' );
 	$link = bp_get_document_folder_link();
+	$move_class = 'ac-folder-move';
 }
 
 ?>
@@ -36,16 +38,10 @@ if ( isset( $attachment_id) ) {
 		<div class="media-folder_action__list">
 			<ul>
 				<li><a href="#"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
-				<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+				<li><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 				<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 			</ul>
 		</div>
 	</div>
-	<?php
-	if ( isset( $attachment_id) ) {
-		bp_get_template_part( 'media/activity-document-move' );
-	} else {
-		bp_get_template_part( 'media/activity-document-folder-move' );
-	}
-	?>
+	
 </div>

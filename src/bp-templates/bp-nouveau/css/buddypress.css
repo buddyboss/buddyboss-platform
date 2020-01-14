@@ -11664,19 +11664,9 @@ img.emojioneemoji {
   width: 100%;
 }
 
-.bp-media-move-file-folder .ac-document-close-button {
-  margin-left: auto;
-  line-height: 1;
-  font-size: 24px;
-  color: rgba(17, 49, 80, 0.4);
-}
-
-.bp-media-move-file-folder .ac-document-close-button .dashicons {
-  font-size: 22px;
-}
-
 @media screen and (max-height: 900px) {
-  .bp-media-move-file-folder .location-folder-list-wrap-main .location-folder-list-wrap {
+  .bp-media-move-folder .location-folder-list-wrap-main .location-folder-list-wrap,
+  .bp-media-move-file .location-folder-list-wrap-main .location-folder-list-wrap {
     position: fixed;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -11685,6 +11675,19 @@ img.emojioneemoji {
     max-width: 80%;
     bottom: inherit;
   }
+}
+
+.bp-media-move-file .ac-document-close-button,
+.bp-media-move-folder .ac-folder-close-button {
+  margin-left: auto;
+  line-height: 1;
+  font-size: 24px;
+  color: rgba(17, 49, 80, 0.4);
+}
+
+.bp-media-move-file .ac-document-close-button .dashicons,
+.bp-media-move-folder .ac-folder-close-button .dashicons {
+  font-size: 22px;
 }
 
 .location-folder-list-wrap-main {

@@ -14,15 +14,15 @@ $id = bp_get_media_folder_id();
 
 ?>
 
-<div class="bp-media-move-file-folder" id="<?php echo 'bp-media-move-file-' . $id; ?>" style="display: none;">
+<div class="bp-media-move-folder" id="bp-media-move-folder" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap">
             <div class="modal-wrapper">
                 <div id="boss-media-create-album-popup" class="modal-container">
 
                     <header class="bb-model-header">
-                        <h4><?php _e( 'Move file', 'buddyboss' ); ?></h4>
-                        <a class="ac-document-close-button" href="#"><span class="dashicons dashicons-no-alt"></span></a>
+                        <h4><?php _e( 'Move folder', 'buddyboss' ); ?></h4>
+                        <a class="ac-folder-close-button" href="#"><span class="dashicons dashicons-no-alt"></span></a>
                     </header>
 
                     <footer class="bb-model-footer">
