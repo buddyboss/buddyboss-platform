@@ -287,6 +287,10 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			);
 
 			foreach( $profile_groups as $single_group_details ){
+				
+				if( empty( $single_group_details->fields ) ){
+					continue;
+				}
 
 				/* Single Group Specific VARS */
 
