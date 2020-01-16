@@ -110,6 +110,7 @@ add_filter( 'bp_activity_get_embed_excerpt', 'bp_activity_embed_excerpt_onclick_
 add_filter( 'bp_after_has_activities_parse_args', 'bp_activity_display_all_types_on_just_me' );
 
 add_filter( 'bp_get_activity_content_body', 'bp_activity_link_preview', 20, 2 );
+add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
 
 /* Actions *******************************************************************/
 
@@ -1138,6 +1139,50 @@ function bp_activity_media_fix_data() {
 			}
 		}
 	}
+}
+
+/**
+ * Filter the activities of friends privacy
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $has_activities
+ * @param $activities
+ *
+ * @return mixed
+ */
+function bp_activity_has_activity_filter( $has_activities, $activities ) {
+
+	if ( ! bp_is_active( 'friends' ) || ! is_user_logged_in() || is_super_admin() ) {
+		return $has_activities;
+	}
+
+	if ( ! empty( $activities->activities ) ) {
+		foreach ( $activities->activities as $key => $activity ) {
+
+			if ( 'friends' == $activity->privacy ) {
+
+				$remove_from_stream = false;
+				$is_friend          = friends_check_friendship( bp_loggedin_user_id(), $activity->user_id );
+				if ( ! $is_friend ) {
+					$remove_from_stream = true;
+				}
+
+				if ( $remove_from_stream && isset( $activities->activity_count ) ) {
+					$activities->activity_count = $activities->activity_count - 1;
+
+					if ( isset( $activities->total_activity_count ) ) {
+						$activities->total_activity_count = $activities->total_activity_count - 1;
+					}
+
+					unset( $activities->activities[ $key ] );
+				}
+			}
+		}
+	}
+
+	$activities->activities = array_values( $activities->activities );
+
+	return $has_activities;
 }
 
 /**
