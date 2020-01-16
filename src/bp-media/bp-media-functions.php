@@ -1130,7 +1130,7 @@ function albums_check_album_access( $album_id ) {
 			return true;
 		}
 
-		if ( is_user_logged_in() && 'friends' == $album->privacy && friends_check_friendship( get_current_user_id(), $album->user_id ) ) {
+		if ( bp_is_active( 'friends' ) && is_user_logged_in() && 'friends' == $album->privacy && friends_check_friendship( get_current_user_id(), $album->user_id ) ) {
 			return true;
 		}
 
