@@ -62,21 +62,59 @@ function bp_media_add_theatre_template() {
  */
 function bp_media_activity_entry() {
 	global $media_template;
-	$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 
 	// Add Media to single activity page.
 	$media_activity = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_activity', true );
 	if ( bp_is_single_activity() && ! empty( $media_activity ) && '1' == $media_activity && empty( $media_ids ) ) {
 		$media_ids = BP_Media::get_activity_media_id( bp_get_activity_id() );
+	} else {
+		$media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
 	}
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) { ?>
+	if ( empty( $media_ids ) ) {
+		return;
+	}
+
+	$args = array(
+		'include'  => $media_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+			$privacy[] = 'friends';
+		}
+
+		if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
+
+			// get the login user id.
+			$current_user_id = get_current_user_id();
+
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, bp_get_activity_user_id() );
+
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == bp_get_activity_user_id() ) {
+				$privacy[] = 'friends';
+			}
+		}
+	}
+
+	$args['privacy'] = $privacy;
+
+	if ( 'groups' === bp_get_activity_object_name() ) {
+		$args['privacy'] = array( 'grouponly' );
+	}
+
+	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) { ?>
 		<div class="bb-activity-media-wrap <?php echo esc_attr( 'bb-media-length-' . $media_template->media_count ); ?> <?php echo $media_template->media_count > 5 ? esc_attr( ' bb-media-length-more' ) : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ) ) ? esc_attr( 'forums-media-wrap' ) : ''; ?>">
 			<?php while ( bp_media() ) {
 				bp_the_media();
@@ -101,24 +139,66 @@ function bp_media_activity_append_media( $content, $activity ) {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
+	if ( ! empty( $media_ids ) ) {
+
+		$args = array(
+			'include' => $media_ids,
 			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
-		?>
-		<?php ob_start(); ?>
-		<div class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; ?> <?php echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array( 'bbp_forum_create', 'bbp_topic_create', 'bbp_reply_create' ) ) ? 'forums-media-wrap' : ''; ?>">
-			<?php while ( bp_media() ) {
-				bp_the_media();
-				bp_get_template_part( 'media/activity-entry' );
-			} ?>
-		</div>
-		<?php
-		$content .= ob_get_clean();
+			'sort' => 'ASC',
+		);
+
+		$privacy = array( 'public' );
+		if ( is_user_logged_in() ) {
+			$privacy[] = 'loggedin';
+
+			if ( bp_is_my_profile() ) {
+				$privacy[] = 'onlyme';
+				$privacy[] = 'friends';
+			}
+
+			if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
+
+				// get the login user id.
+				$current_user_id = get_current_user_id();
+
+				// check if the login user is friends of the display user
+				$is_friend = friends_check_friendship( $current_user_id, $activity->user_id );
+
+				/**
+				 * check if the login user is friends of the display user
+				 * OR check if the login user and the display user is the same
+				 */
+				if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $activity->user_id ) {
+					$privacy[] = 'friends';
+				}
+			}
+		}
+
+		$args['privacy'] = $privacy;
+
+		if ( 'groups' === $activity->component ) {
+			$args['privacy'] = array( 'grouponly' );
+		}
+
+		if ( bp_has_media( $args ) ) {
+			?>
+			<?php ob_start(); ?>
+			<div
+				class="bb-activity-media-wrap <?php echo 'bb-media-length-' . $media_template->media_count; ?> <?php echo $media_template->media_count > 5 ? ' bb-media-length-more' : ''; ?> <?php echo bp_is_active( 'forums' ) && in_array( bp_get_activity_type(), array(
+					'bbp_forum_create',
+					'bbp_topic_create',
+					'bbp_reply_create'
+				) ) ? 'forums-media-wrap' : ''; ?>">
+				<?php while ( bp_media() ) {
+					bp_the_media();
+					bp_get_template_part( 'media/activity-entry' );
+				} ?>
+			</div>
+			<?php
+			$content .= ob_get_clean();
+		}
 	}
+
 	return $content;
 }
 
@@ -129,13 +209,53 @@ function bp_media_activity_comment_entry( $comment_id ) {
 	global $media_template;
 	$media_ids = bp_activity_get_meta( $comment_id, 'bp_media_ids', true );
 
-	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+	if ( empty( $media_ids ) ) {
+		return;
+	}
+
+	$comment  = new BP_Activity_Activity( $comment_id );
+	$activity = new BP_Activity_Activity( $comment->item_id );
+
+	$args = array(
+		'include'  => $media_ids,
+		'order_by' => 'menu_order',
+		'sort'     => 'ASC',
+	);
+
+	$privacy = array( 'public' );
+	if ( is_user_logged_in() ) {
+		$privacy[] = 'loggedin';
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+			$privacy[] = 'friends';
+		}
+
+		if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
+
+			// get the login user id.
+			$current_user_id = get_current_user_id();
+
+			// check if the login user is friends of the display user
+			$is_friend = friends_check_friendship( $current_user_id, $activity->user_id );
+
+			/**
+			 * check if the login user is friends of the display user
+			 * OR check if the login user and the display user is the same
+			 */
+			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $activity->user_id ) {
+				$privacy[] = 'friends';
+			}
+		}
+	}
+
+	$args['privacy'] = $privacy;
+
+	if ( 'groups' === $activity->component ) {
+		$args['privacy'] = array( 'grouponly' );
+	}
+
+	if ( ! empty( $media_ids ) && bp_has_media( $args ) ) {
 		?>
 		<div class="bb-activity-media-wrap
 		<?php

@@ -1048,14 +1048,14 @@ function bp_nouveau_activity_privacy() {
 	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
 	    	?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[$privacy] ) ? $privacy_items[$privacy] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			    <ul class="activity-privacy">
 				    <li class="bb-edit-privacy"><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
 			    </ul>
 			</div><?php
 	    } else { ?>
 			<div class="bb-media-privacy-wrap">
-				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $privacy_items[$privacy]; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
+				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[$privacy] ) ? $privacy_items[$privacy] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 				<ul class="<?php echo $media_activity ? 'media-privacy' : 'activity-privacy'; ?>">
 					<?php foreach( $privacy_items as $item_key => $privacy_item ) {
 						?><li data-value="<?php echo $item_key; ?>" class="<?php echo $item_key; ?> <?php echo $item_key === $privacy ? 'selected' : ''; ?>"><?php echo $privacy_item; ?></li><?php

@@ -145,7 +145,13 @@ function bp_has_media( $args = '' ) {
 	$privacy = array( 'public' );
 	if ( is_user_logged_in() ) {
 		$privacy[] = 'loggedin';
-		if ( bp_is_active( 'friends' ) ) {
+
+		if ( bp_is_my_profile() ) {
+			$privacy[] = 'onlyme';
+			$privacy[] = 'friends';
+		}
+
+		if ( ! in_array( 'friends', $privacy ) && bp_is_active( 'friends' ) ) {
 
 			// get the login user id.
 			$current_user_id = get_current_user_id();
@@ -160,10 +166,6 @@ function bp_has_media( $args = '' ) {
 			if ( $is_friend || ! empty( $current_user_id ) && $current_user_id == $user_id ) {
 				$privacy[] = 'friends';
 			}
-		}
-
-		if ( bp_is_my_profile() ) {
-			$privacy[] = 'onlyme';
 		}
 	}
 

@@ -1055,7 +1055,11 @@ class BP_Media {
 		$privacy = array( 'public' );
 		if ( is_user_logged_in() ) {
 			$privacy[] = 'loggedin';
-			if ( bp_is_active( 'friends' ) ) {
+			if ( bp_is_my_profile() ) {
+				$privacy[] = 'friends';
+				$privacy[] = 'onlyme';
+			}
+			if ( bp_is_active( 'friends' ) && ! in_array( 'friends', $privacy ) ) {
 				$is_friend = friends_check_friendship( get_current_user_id(), $user_id );
 				if ( $is_friend ) {
 					$privacy[] = 'friends';
