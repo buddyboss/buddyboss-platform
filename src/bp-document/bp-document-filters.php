@@ -150,6 +150,7 @@ function bp_document_update_activity_document_meta( $content, $user_id, $activit
 	}
 
 	$_POST['documents'] = $_POST['document'];
+	$_POST['medias'] = $_POST['document'];
 	$_POST['bp_activity_update'] = true;
 
 	remove_action( 'bp_activity_posted_update', 'bp_document_update_activity_document_meta', 10, 3 );
