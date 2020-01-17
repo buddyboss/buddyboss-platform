@@ -29,7 +29,7 @@ window.bp = window.bp || {};
 			// Adjust Document/Forms properties
 			this.prepareDocument();
 
-			$.ajaxPrefilter( this.mediaPreFilter );
+			//$.ajaxPrefilter( this.mediaPreFilter );
 
 			// Init the BuddyPress objects
 			this.initObjects();
@@ -59,7 +59,7 @@ window.bp = window.bp || {};
 
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
-			
+
 			//Text File Activity Preview
 			bp.Nouveau.documentCodeMirror();
 
@@ -976,7 +976,7 @@ window.bp = window.bp || {};
 			}else{
 				$(event.currentTarget).closest('.bp-media-move-folder').hide();
 			}
-			
+
 		},
 
 		/**
@@ -1683,13 +1683,13 @@ window.bp = window.bp || {};
 						lineWrapping: true,
 					});
 				}
-				
-				
+
+
 				$this.addClass('loaded');
 				if($this.parent().height() > 150){ //If file is bigger add controls to Expand/Collapse.
 					$this.closest('.document-text-wrap').addClass('is_large');
 				}
-				
+
 			});
 			if(!$('.bb-activity-media-elem.document-activity').closest('.activity-inner').hasClass('documemt-activity')){
 				$('.bb-activity-media-elem.document-activity').closest('.activity-content').addClass('documemt-activity');

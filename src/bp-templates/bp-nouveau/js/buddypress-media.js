@@ -118,8 +118,7 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bb-delete-media', this.deleteMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bb-select-deselect-all-media', this.toggleSelectAllMedia.bind( this ) );
 			$( '#buddypress [data-bp-list="media"]' ).on('bp_ajax_request',this.bp_ajax_media_request);
-
-			$('#media-folder-document-data-table').DataTable();
+			//$( '#buddypress [data-bp-list="document"]' ).on('bp_ajax_request',this.bp_ajax_media_request);
 
 			// albums
 			$( '.bp-nouveau' ).on( 'click', '#bb-create-album', this.openCreateAlbumModal.bind( this ) );
@@ -141,7 +140,7 @@ window.bp = window.bp || {};
 
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
-			$( '.bp-nouveau [data-bp-media-type="document"]' ).on( 'click', '.dt-more-container.load-more', this.injectDocuments.bind( this ) );
+			$( '.bp-nouveau [data-bp-list="documet"]' ).on( 'click', '.dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( '.bp-nouveau #albums-dir-list' ).on( 'click', 'li.load-more', this.appendAlbums.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.addSelectedClassToWrapper.bind( this ) );
@@ -784,7 +783,7 @@ window.bp = window.bp || {};
 					self.dropzone_media[dropzone_obj_key] = [];
 
 					self.dropzone_obj[dropzone_obj_key].on('sending', function(file, xhr, formData) {
-						formData.append('action', 'media_document_upload');
+						formData.append('action', 'document_document_upload');
 						formData.append('_wpnonce', BP_Nouveau.nonces.media);
 					});
 
@@ -1020,7 +1019,7 @@ window.bp = window.bp || {};
 				self.dropzone_obj = new Dropzone('div#media-uploader', self.options );
 
 				self.dropzone_obj.on('sending', function(file, xhr, formData) {
-					formData.append('action', 'media_document_upload');
+					formData.append('action', 'document_document_upload');
 					formData.append('_wpnonce', BP_Nouveau.nonces.media);
 				});
 
@@ -1055,7 +1054,7 @@ window.bp = window.bp || {};
 						file.id = response.id;
 						response.data.uuid = file.upload.uuid;
 						response.data.menu_order = self.dropzone_media.length;
-						response.data.album_id = self.album_id;
+						response.data.folder_id = self.album_id;
 						response.data.group_id = self.group_id;
 						response.data.saved    = false;
 						self.dropzone_media.push( response.data );
@@ -1102,7 +1101,7 @@ window.bp = window.bp || {};
 				self.dropzone_obj = new Dropzone('div#media-uploader-folder', self.options );
 
 				self.dropzone_obj.on('sending', function(file, xhr, formData) {
-					formData.append('action', 'media_document_upload');
+					formData.append('action', 'document_document_upload');
 					formData.append('_wpnonce', BP_Nouveau.nonces.media);
 				});
 
@@ -1137,7 +1136,7 @@ window.bp = window.bp || {};
 						file.id = response.id;
 						response.data.uuid = file.upload.uuid;
 						response.data.menu_order = self.dropzone_media.length;
-						response.data.album_id = self.album_id;
+						response.data.folder_id = self.album_id;
 						response.data.group_id = self.group_id;
 						response.data.saved    = false;
 						self.dropzone_media.push( response.data );
@@ -1184,7 +1183,7 @@ window.bp = window.bp || {};
 				self.dropzone_obj = new Dropzone('div#media-uploader-child-folder', self.options );
 
 				self.dropzone_obj.on('sending', function(file, xhr, formData) {
-					formData.append('action', 'media_document_upload');
+					formData.append('action', 'document_document_upload');
 					formData.append('_wpnonce', BP_Nouveau.nonces.media);
 				});
 
@@ -1219,7 +1218,7 @@ window.bp = window.bp || {};
 						file.id = response.id;
 						response.data.uuid = file.upload.uuid;
 						response.data.menu_order = self.dropzone_media.length;
-						response.data.album_id = self.album_id;
+						response.data.folder_id = self.album_id;
 						response.data.group_id = self.group_id;
 						response.data.saved    = false;
 						self.dropzone_media.push( response.data );
@@ -1293,7 +1292,6 @@ window.bp = window.bp || {};
 
 		openCreateFolderModal: function(event){
 			event.preventDefault();
-
 			this.openDocumentFolderUploader(event);
 			this.folderLocationUI('#bp-media-create-folder');
 			$('#bp-media-create-folder').show();
@@ -1505,11 +1503,11 @@ window.bp = window.bp || {};
 
 				var post_content = $('#bp-media-post-content').val();
 				data = {
-					'action': 'media_document_save',
+					'action': 'document_document_save',
 					'_wpnonce': BP_Nouveau.nonces.media,
 					'medias': self.dropzone_media,
 					'content' : post_content,
-					'album_id' : self.album_id,
+					'folder_id' : self.album_id,
 					'group_id' : self.group_id
 				};
 
@@ -1696,7 +1694,7 @@ window.bp = window.bp || {};
 			target.prop('disabled',true);
 
 			var data = {
-				'action': 'media_folder_save',
+				'action': 'document_folder_save',
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'title': title.val(),
 				'medias': self.dropzone_media,
@@ -1766,7 +1764,7 @@ window.bp = window.bp || {};
 			target.prop('disabled',true);
 
 			var data = {
-				'action'	: 'media_folder_save',
+				'action'	: 'document_folder_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,
 				'title'		: title.val(),
 				'medias'	: self.dropzone_media,
@@ -1775,7 +1773,7 @@ window.bp = window.bp || {};
 			};
 
 			if ( self.album_id ) {
-				data.album_id = self.album_id;
+				data.folder_id = self.album_id;
 			}
 
 			if ( self.group_id ) {
@@ -1939,13 +1937,13 @@ window.bp = window.bp || {};
 				}
 
 				bp.Nouveau.objectRequest( {
-					object              : 'media',
+					object              : 'document',
 					scope               : scope,
 					filter              : filter,
 					search_terms        : search_terms,
 					page                : next_page,
 					method              : 'append',
-					target              : '#buddypress [data-bp-media-type] div#media-folder-document-data-table'
+					target              : '#buddypress [data-bp-list] div#media-folder-document-data-table'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
 						$( event.currentTarget ).parent( '.pager' ).remove();

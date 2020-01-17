@@ -354,7 +354,7 @@ window.bp = window.bp || {};
 			bp.Nouveau.Activity.postForm.dropzone = new window.Dropzone('#activity-post-document-uploader', dropzone_options );
 
 			bp.Nouveau.Activity.postForm.dropzone.on('sending', function(file, xhr, formData) {
-				formData.append('action', 'media_document_upload');
+				formData.append('action', 'document_document_upload');
 				formData.append('_wpnonce', BP_Nouveau.nonces.media);
 			});
 

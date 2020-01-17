@@ -137,7 +137,6 @@ class BP_Media_Template {
 
 		$defaults = array(
 			'page'         => 1,
-			'type'         => 'media',
 			'per_page'     => 20,
 			'page_arg'     => 'acpage',
 			'max'          => false,
@@ -153,8 +152,6 @@ class BP_Media_Template {
 			'album_id'     => false,
 			'group_id'     => false,
 			'privacy'      => false,
-			'album'        => false,
-			'user_directory'        => false,
 		);
 		$r        = wp_parse_args( $args, $defaults );
 		extract( $r );
@@ -180,8 +177,6 @@ class BP_Media_Template {
 					'order_by'    => $order_by,
 					'user_id'     => $user_id,
 					'album_id'    => $album_id,
-					'album'       => $album,
-					'user_directory'       => $user_directory,
 				)
 			);
 
@@ -193,7 +188,6 @@ class BP_Media_Template {
 					'count_total'  => $count_total,
 					'per_page'     => $this->pag_num,
 					'page'         => $this->pag_page,
-					'type'         => $type,
 					'sort'         => $sort,
 					'order_by'     => $order_by,
 					'search_terms' => $search_terms,
@@ -203,8 +197,6 @@ class BP_Media_Template {
 					'group_id'     => $group_id,
 					'exclude'      => $exclude,
 					'privacy'      => $privacy,
-					'album'        => $album,
-					'user_directory'        => $user_directory,
 				)
 			);
 		}

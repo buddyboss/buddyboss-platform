@@ -137,7 +137,6 @@ class BP_Media_Album_Template {
 
 		$defaults = array(
 			'page'         => 1,
-			'type'         => 'media',
 			'per_page'     => 20,
 			'page_arg'     => 'acpage',
 			'max'          => false,
@@ -156,7 +155,6 @@ class BP_Media_Album_Template {
 		$this->pag_arg  = sanitize_key( $r['page_arg'] );
 		$this->pag_page = bp_sanitize_pagination_arg( $this->pag_arg, $r['page'] );
 		$this->pag_num  = bp_sanitize_pagination_arg( 'num', $r['per_page'] );
-		$this->type     = $r['type'];
 
 		// Get an array of the logged in user's favorite album.
 		$this->my_favs = bp_get_user_meta( bp_loggedin_user_id(), 'bp_favorite_album', true );
@@ -169,7 +167,6 @@ class BP_Media_Album_Template {
 					'max'         => $max,
 					'count_total' => $count_total,
 					'page'        => $this->pag_page,
-					'type'        => $this->type,
 					'per_page'    => $this->pag_num,
 					'sort'        => $sort,
 					'user_id'     => $user_id,
@@ -184,7 +181,6 @@ class BP_Media_Album_Template {
 					'count_total'  => $count_total,
 					'per_page'     => $this->pag_num,
 					'page'         => $this->pag_page,
-					'type'         => $this->type,
 					'sort'         => $sort,
 					'search_terms' => $search_terms,
 					'user_id'      => $user_id,

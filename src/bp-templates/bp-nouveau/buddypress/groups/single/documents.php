@@ -9,12 +9,12 @@
 <div class="bb-media-container group-media">
 
 	<?php
-	$is_group_single_folder = bp_is_action_variable( 'folder', 0 );
 
-	if ( true === $is_group_single_folder ) {
-		bp_get_template_part( 'media/single-folder' );
+	bp_get_template_part( 'document/theatre' );
+
+	if ( bp_is_single_folder() ) {
+		bp_get_template_part( 'document/single-folder' );
 	} else {
-		bp_get_template_part( 'media/theatre' );
 
 		switch ( bp_current_action() ) :
 
@@ -25,26 +25,26 @@
 					?>
 					<div class="bp-media-header-wrap">
 						<?php
-							bp_get_template_part( 'media/add-document' );
-							bp_get_template_part( 'media/add-folder' );
+							bp_get_template_part( 'document/add-document' );
+							bp_get_template_part( 'document/add-folder' );
 						?>
 					</div>
 					<?php
 				endif;
 
-				bp_nouveau_group_hook( 'before', 'media_content' );
+				bp_nouveau_group_hook( 'before', 'document_content' );
 
-				bp_get_template_part( 'media/actions' );
+				bp_get_template_part( 'document/actions' );
 
 				?>
-				<div id="media-stream" class="media" data-bp-list="media" data-bp-media-type="document">
+				<div id="media-stream" class="media" data-bp-list="document">
 
 					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'group-document-loading' ); ?></div>
 
 				</div><!-- .media -->
 				<?php
 
-				bp_nouveau_group_hook( 'after', 'media_content' );
+				bp_nouveau_group_hook( 'after', 'document_content' );
 
 				break;
 
@@ -54,7 +54,6 @@
 				break;
 		endswitch;
 	}
-
 
 	?>
 </div>

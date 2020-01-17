@@ -615,6 +615,7 @@ class BuddyPress {
 			'forums',
 			'search',
 			'media',
+			'document',
 			'gdpr',
 			'invites',
 		);

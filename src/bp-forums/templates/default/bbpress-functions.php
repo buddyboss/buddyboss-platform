@@ -272,22 +272,23 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_topic_edit() ) {
 					$params['bbp_is_topic_edit'] = true;
 
-					$media_ids  = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
 					$media_type = get_post_meta( bbp_get_topic_id(), 'bp_media_type', true );
 
 					if ( 'document' === $media_type ) {
-						if ( ! empty( $media_ids ) && bp_has_media(
+
+						$document_ids  = get_post_meta( bbp_get_topic_id(), 'bp_document_ids', true );
+
+						if ( ! empty( $document_ids ) && bp_has_document(
 								array(
-									'type'     => 'document',
-									'include'  => $media_ids,
+									'include'  => $document_ids,
 									'order_by' => 'menu_order',
 									'sort'     => 'ASC',
 								)
 							) ) {
 							$params['topic_edit_document'] = array();
 							$index                      = 0;
-							while ( bp_media() ) {
-								bp_the_media();
+							while ( bp_document() ) {
+								bp_the_document();
 
 								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
 								$params['topic_edit_document'][] = array(
@@ -303,6 +304,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							}
 						}
 					} else {
+
+						$media_ids  = get_post_meta( bbp_get_topic_id(), 'bp_media_ids', true );
+
 						if ( ! empty( $media_ids ) && bp_has_media(
 								array(
 									'include'  => $media_ids,
@@ -328,7 +332,6 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 						}
 					}
 
-
 					$gif_data = get_post_meta( bbp_get_topic_id(), '_gif_data', true );
 
 					if ( ! empty( $gif_data ) ) {
@@ -347,22 +350,23 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_reply_edit() ) {
 					$params['bbp_is_reply_edit'] = true;
 
-					$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
 					$media_type = get_post_meta( bbp_get_reply_id(), 'bp_media_type', true );
 
 					if ( 'document' === $media_type ) {
-						if ( ! empty( $media_ids ) && bp_has_media(
+
+						$document_ids  = get_post_meta( bbp_get_reply_id(), 'bp_document_ids', true );
+
+						if ( ! empty( $document_ids ) && bp_has_document(
 								array(
-									'type'     => 'document',
-									'include'  => $media_ids,
+									'include'  => $document_ids,
 									'order_by' => 'menu_order',
 									'sort'     => 'ASC',
 								)
 							) ) {
 							$params['reply_edit_document'] = array();
 							$index                      = 0;
-							while ( bp_media() ) {
-								bp_the_media();
+							while ( bp_document() ) {
+								bp_the_document();
 
 								$size = filesize( get_attached_file(  bp_get_media_attachment_id() ) );
 								$params['reply_edit_document'][] = array(
@@ -378,6 +382,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							}
 						}
 					} else {
+
+						$media_ids  = get_post_meta( bbp_get_reply_id(), 'bp_media_ids', true );
+
 						if ( ! empty( $media_ids ) && bp_has_media(
 								array(
 									'include'  => $media_ids,
@@ -421,14 +428,16 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 				if ( bbp_is_forum_edit() ) {
 					$params['bbp_is_forum_edit'] = true;
 
-					$media_ids  = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+
 					$media_type = get_post_meta( bbp_get_forum_id(), 'bp_media_type', true );
 
 					if ( 'document' === $media_type ) {
-						if ( ! empty( $media_ids ) && bp_has_media(
+
+						$document_ids  = get_post_meta( bbp_get_forum_id(), 'bp_document_ids', true );
+
+						if ( ! empty( $document_ids ) && bp_has_document(
 								array(
-									'type'     => 'document',
-									'include'  => $media_ids,
+									'include'  => $document_ids,
 									'order_by' => 'menu_order',
 									'sort'     => 'ASC',
 								)
@@ -452,6 +461,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 							}
 						}
 					}  else {
+
+						$media_ids  = get_post_meta( bbp_get_forum_id(), 'bp_media_ids', true );
+
 						if ( ! empty( $media_ids ) && bp_has_media(
 								array(
 									'include'  => $media_ids,

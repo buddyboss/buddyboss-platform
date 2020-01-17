@@ -9,7 +9,7 @@
 <?php
 global $media_album_template;
 $album_id = 0;
-if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_document_folder() ) {
+if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();
 	$album_id = (int) $action_variables[1];
 } else  {
@@ -25,20 +25,20 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                 <div id="boss-media-create-album-popup" class="modal-container">
 
                     <header class="bb-model-header">
-                        <h4><?php _e( 'Edit Folder', 'buddyboss' ); ?> '<?php  bp_album_title(); ?>'</h4>
+                        <h4><?php _e( 'Edit Folder', 'buddyboss' ); ?> '<?php  bp_folder_title(); ?>'</h4>
                         <a class="bb-model-close-button" id="bp-media-edit-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
                     </header>
 
                     <div class="bb-field-wrap">
                         <label for="bb-album-child-title" class="bb-label"><?php _e( 'Rename Folder', 'buddyboss' ); ?></label>
-                        <input id="bb-edit-album-child-title" type="text" value="<?php  bp_album_title(); ?>" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
+                        <input id="bb-edit-album-child-title" type="text" value="<?php  bp_folder_title(); ?>" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
                     </div>
 
                     <footer class="bb-model-footer">
                         <?php if ( ! bp_is_group() ) : ?>
 
                             <?php
-	                        $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+	                        $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	                        if ( '' !== $ul ) {
 		                        ?>
 		                        <div class="bb-field-wrap">

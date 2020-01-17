@@ -4,13 +4,6 @@
  *
  * @since BuddyBoss 1.0.0
  */
-?>
-
-<?php
-
-
-$id = bp_get_media_folder_id();
-
 
 ?>
 
@@ -27,7 +20,7 @@ $id = bp_get_media_folder_id();
 
                     <footer class="bb-model-footer">
                         <?php if ( ! bp_is_group() ) :
-                            $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+                            $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	                        if ( '' !== $ul ) {
 		                        ?>
 		                        <div class="bb-field-wrap">
@@ -47,7 +40,7 @@ $id = bp_get_media_folder_id();
 	                        }
 	                        ?>
                         <?php endif; ?>
-                        <a class="button bp-folder-move" id="<?php echo $id; ?>" href="#"><?php _e( 'Move', 'buddyboss' ); ?></a>
+                        <a class="button bp-folder-move" id="" href="#"><?php _e( 'Move', 'buddyboss' ); ?></a>
                     </footer>
 
                 </div>

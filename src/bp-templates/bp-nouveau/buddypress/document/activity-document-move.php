@@ -6,13 +6,7 @@
  */
 ?>
 
-<?php
-
-$id = bp_get_media_attachment_id();
-
-?>
-
-<div class="bp-media-move-file" id="<?php echo 'bp-media-move-file-'.$id; ?>" style="display: none;">
+<div class="bp-media-move-file" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap">
             <div class="modal-wrapper">
@@ -25,7 +19,7 @@ $id = bp_get_media_attachment_id();
 
                     <footer class="bb-model-footer">
                         <?php if ( ! bp_is_group() ) :
-                            $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+                            $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	                        if ( '' !== $ul ) {
 		                        ?>
 		                        <div class="bb-field-wrap">
@@ -45,7 +39,7 @@ $id = bp_get_media_attachment_id();
 	                        }
 	                        ?>
                         <?php endif; ?>
-                        <a class="button bp-document-move" id="<?php echo $id; ?>" href="#"><?php _e( 'Move', 'buddyboss' ); ?></a>
+                        <a class="button bp-document-move" id="" href="#"><?php _e( 'Move', 'buddyboss' ); ?></a>
                     </footer>
 
                 </div>

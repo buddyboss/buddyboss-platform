@@ -137,7 +137,7 @@ function bp_has_media( $args = '' ) {
 
 	// Album filtering
 	if ( ! isset( $args['album_id'] ) ) {
-		$album_id = bp_is_single_album() || bp_is_single_document_folder() ? (int) bp_action_variable( 0 ) : false;
+		$album_id = bp_is_single_album() ? (int) bp_action_variable( 0 ) : false;
 	} else {
 		$album_id = $args['album_id'];
 	}
@@ -204,7 +204,6 @@ function bp_has_media( $args = '' ) {
 			'sort'         => 'DESC',          // Sort DESC or ASC.
 			'order_by'     => false,           // Order by. Default: date_created
 			'page'         => 1,               // Which page to load.
-			'type'         => 'media',         // Which type to load media/document.
 			'per_page'     => 20,              // Number of items per page.
 			'page_arg'     => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
 			'max'          => false,           // Max number to return.
@@ -219,8 +218,6 @@ function bp_has_media( $args = '' ) {
 			'album_id'     => $album_id,       // album_id to filter on.
 			'group_id'     => $group_id,       // group_id to filter on.
 			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-			'album'        => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-			'user_directory' => false,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
 			'search_terms' => $search_terms_default,
@@ -235,10 +232,6 @@ function bp_has_media( $args = '' ) {
 	// Search terms.
 	if ( ! empty( $_REQUEST['s'] ) && empty( $r['search_terms'] ) ) {
 		$r['search_terms'] = $_REQUEST['s'];
-	}
-
-	if ( ! empty( $_REQUEST['type'] ) ) {
-		$r['type'] = $_REQUEST['type'];
 	}
 
 	// Do not exceed the maximum per page.
@@ -1015,7 +1008,6 @@ function bp_has_albums( $args = '' ) {
 			'exclude'      => false,        // Pass an activity_id or string of IDs comma-separated.
 			'sort'         => 'DESC',       // Sort DESC or ASC.
 			'page'         => 1,            // Which page to load.
-			'type'         => 'media',      // Which page to load.
 			'per_page'     => 20,           // Number of items per page.
 			'page_arg'     => 'acpage',     // See https://buddypress.trac.wordpress.org/ticket/3679.
 			'max'          => false,        // Max number to return.
@@ -1461,172 +1453,3 @@ function bp_album_user_can_delete( $album = false ) {
 	 */
 	return (bool) apply_filters( 'bp_album_user_can_delete', $can_delete, $album );
 }
-
-/**
- * Return the media component slug.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return string
- */
-function bp_get_document_slug() {
-
-	/**
-	 * Filters the media component slug.
-	 *
-	 * @param string $slug Media component slug.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 */
-	return apply_filters( 'bp_get_document_slug', 'documents' );
-}
-
-/**
- * Output the media name.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_name() {
-	echo bp_get_media_name();
-}
-
-/**
- * Return the media name.
- *
- * @since BuddyBoss 1.0.0
- *
- * @global object $media_template {@link BP_Media_Template}
- *
- * @return int The media name.
- */
-function bp_get_media_name() {
-	global $media_template;
-
-	if ( isset($media_template->media ) && isset( $media_template->media->attachment_id ) && $media_template->media->attachment_id > 0 ) {
-		$filename = basename( get_attached_file( $media_template->media->attachment_id ) );
-	} else {
-		$filename = $media_template->media->title;
-	}
-
-	/**
-	 * Filters the media name being displayed.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param int $id The media name.
-	 */
-	return apply_filters( 'bp_get_media_name', $filename );
-}
-
-/**
- * Output the media name.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_media_author() {
-	echo bp_get_media_author();
-}
-
-/**
- * Return the media name.
- *
- * @since BuddyBoss 1.0.0
- *
- * @global object $media_template {@link BP_Media_Template}
- *
- * @return int The media name.
- */
-function bp_get_media_author() {
-	global $media_template;
-
-	$author = bp_core_get_user_displayname( $media_template->media->user_id );
-
-	/**
-	 * Filters the media name being displayed.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param int $id The media name.
-	 */
-	return apply_filters( 'bp_get_media_author', $author );
-}
-
-/**
- * Output the media name.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_document_folder_link() {
-	echo bp_get_document_folder_link();
-}
-
-/**
- * Return the media name.
- *
- * @since BuddyBoss 1.0.0
- *
- * @global object $media_template {@link BP_Media_Template}
- *
- * @return int The media name.
- */
-function bp_get_document_folder_link() {
-	global $media_template;
-
-	$link = $media_template->media->link;
-
-	/**
-	 * Filters the media name being displayed.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param int $id The media name.
-	 */
-	return apply_filters( 'bp_get_document_folder_link', $link );
-}
-
-/**
- * Output the media folder ID.
- *
- * @since BuddyBoss 1.2.4
- */
-function bp_media_folder_id() {
-	echo bp_get_media_folder_id();
-}
-
-/**
- * Return the media folder ID.
- *
- * @since BuddyBoss 1.2.4
- *
- * @global object $media_template {@link BP_Media_Template}
- *
- * @return int The media folder ID.
- */
-function bp_get_media_folder_id() {
-	global $media_template;
-
-	/**
-	 * Filters the folder ID being displayed.
-	 *
-	 * @since BuddyBoss 1.2.4
-	 *
-	 * @param int $id The media folder ID.
-	 */
-	return apply_filters( 'bp_get_media_folder_id', $media_template->media->id );
-}
-
-function bp_media_is_group_folder( $folder_id ) {
-
-	$default = false;
-
-	return apply_filters( 'bp_media_is_group_folder', $default );
-}
-
-function bp_media_is_group_document( $document_id ) {
-
-	$default = false;
-
-	return apply_filters( 'bp_media_is_group_document', $default );
-}
-

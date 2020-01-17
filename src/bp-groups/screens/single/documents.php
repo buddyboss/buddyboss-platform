@@ -1,15 +1,15 @@
 <?php
 /**
- * Groups: Single group "Photos" screen handler
+ * Groups: Single group "Documents" screen handler
  *
  * @package BuddyBoss\Groups\Screens
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.5
  */
 
 /**
- * Handle the loading of a single group's photos.
+ * Handle the loading of a single group's documents.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.5
  */
 function groups_screen_group_document() {
 
@@ -18,16 +18,16 @@ function groups_screen_group_document() {
 	}
 
 	/**
-	 * Fires before the loading of a single group's photos page.
+	 * Fires before the loading of a single group's documents page.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.2.5
 	 */
 	do_action( 'groups_screen_group_document' );
 
 	/**
-	 * Filters the template to load for a single group's photos page.
+	 * Filters the template to load for a single group's documents page.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param string $value Path to a single group's template to load.
 	 */

@@ -34,24 +34,9 @@
 
 		<?php bp_get_template_part( 'media/theatre' ); ?>
 
-		<?php
-			global $wp_query;
-			$page_ids   = bp_core_get_directory_page_ids();
-			if ( $page_ids['media'] === $wp_query->post->ID ) {
-				?>
-				<div id="media-stream" class="media" data-bp-list="media">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-loading' ); ?></div>
-				</div><!-- .media -->
-				<?php
-			} else {
-				?>
-				<div id="media-stream" class="media" data-bp-list="media" data-bp-media-type="document">
-					<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-document-loading' ); ?></div>
-				</div><!-- .media -->
-				<?php
-			}
-
-		?>
+		<div id="media-stream" class="media" data-bp-list="media">
+			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-loading' ); ?></div>
+		</div><!-- .media -->
 
 		<?php bp_nouveau_after_media_directory_content(); ?>
 

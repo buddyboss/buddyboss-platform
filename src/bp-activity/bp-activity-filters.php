@@ -1266,7 +1266,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
 
-			if ( 'media_document_save' === $_POST['action'] ) {
+			if ( 'document_document_save' === $_POST['action'] ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
 			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['document'] ) ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );

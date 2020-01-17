@@ -63,14 +63,6 @@ class BP_Media_Album {
 	var $privacy;
 
 	/**
-	 * type of the album.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var string
-	 */
-	var $type;
-
-	/**
 	 * Upload date of the album.
 	 *
 	 * @since BuddyBoss 1.0.0
@@ -95,14 +87,6 @@ class BP_Media_Album {
 	 * @var string
 	 */
 	public $error_type = 'bool';
-
-	/**
-	 * Parent ID of the folder.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 * @var int
-	 */
-	public $parent;
 
 	/**
 	 * Constructor method.
@@ -148,11 +132,8 @@ class BP_Media_Album {
 		$this->user_id      = (int) $row->user_id;
 		$this->group_id     = (int) $row->group_id;
 		$this->title        = $row->title;
-		$this->type         = $row->type;
 		$this->privacy      = $row->privacy;
-		$this->type         = $row->type;
 		$this->date_created = $row->date_created;
-		$this->parent       = $row->parent;
 	}
 
 	/**
@@ -173,9 +154,7 @@ class BP_Media_Album {
 		$this->group_id     = apply_filters_ref_array( 'bp_media_group_id_before_save', array( $this->group_id, &$this ) );
 		$this->title        = apply_filters_ref_array( 'bp_media_title_before_save', array( $this->title, &$this ) );
 		$this->privacy      = apply_filters_ref_array( 'bp_media_privacy_before_save', array( $this->privacy, &$this ) );
-		$this->type         = apply_filters_ref_array( 'bp_media_type_before_save', array( $this->type, &$this ) );
 		$this->date_created = apply_filters_ref_array( 'bp_media_date_created_before_save', array( $this->date_created, &$this ) );
-		$this->parent       = apply_filters_ref_array( 'bp_media_parent_before_save', array( $this->parent, &$this ) );
 
 		/**
 		 * Fires before the current album gets saved.
@@ -194,9 +173,9 @@ class BP_Media_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s, parent = %d WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->type, $this->parent, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s, parent = %d WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'media', 0, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->type, $this->parent );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'media', 0 );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -255,7 +234,6 @@ class BP_Media_Album {
 			$args,
 			array(
 				'page'         => 1,               // The current page.
-				'type'         => 'media',         // The current page.
 				'per_page'     => 20,              // albums per page.
 				'max'          => false,           // Max number of items to return.
 				'fields'       => 'all',           // Fields to include.
@@ -337,9 +315,7 @@ class BP_Media_Album {
 			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
 		}
 
-		if ( ! empty( $r['type'] ) ) {
-			$where_conditions['type'] = "m.type = '{$r['type']}'";
-		}
+		$where_conditions['type'] = "m.type = 'media'";
 
 		if ( ! empty( $r['group_id'] ) ) {
 			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
@@ -433,7 +409,7 @@ class BP_Media_Album {
 		if ( 'ids' === $r['fields'] ) {
 			$albums = array_map( 'intval', $album_ids );
 		} else {
-			$albums = self::get_album_data( $album_ids, $r['type'] );
+			$albums = self::get_album_data( $album_ids );
 		}
 
 		if ( 'ids' !== $r['fields'] ) {
@@ -487,7 +463,7 @@ class BP_Media_Album {
 	 * @param array $album_ids Array of media IDs.
 	 * @return array
 	 */
-	protected static function get_album_data( $album_ids = array(), $type = 'media' ) {
+	protected static function get_album_data( $album_ids = array() ) {
 		global $wpdb;
 
 		// Bail if no media ID's passed.
@@ -528,7 +504,6 @@ class BP_Media_Album {
 
 			$album->media = bp_media_get( array(
 					'album_id'    => $album->id,
-					'type'        => $type,
 					'count_total' => true,
 				) );
 
@@ -568,14 +543,13 @@ class BP_Media_Album {
 	 * @param string $type     type to check.
 	 * @return int|bool Album ID if found; false if not.
 	 */
-	public static function album_exists( $id, $type = 'media' ) {
+	public static function album_exists( $id ) {
 		if ( empty( $id ) ) {
 			return false;
 		}
 
 		$args = array(
 			'in'   => $id,
-			'type' => $type,
 		);
 
 		$albums = self::get( $args );

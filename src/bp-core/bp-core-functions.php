@@ -483,6 +483,7 @@ function bp_core_get_packaged_component_ids() {
 		'xprofile',
 		'friends',
 		'media',
+		'document',
 		'messages',
 		'settings',
 		'notifications',
@@ -520,7 +521,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// 'register', 'activate', 'terms' and 'privacy' do not have components, but should be whitelisted.
-		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard', 'new_forums_page', 'document' ), true ) ) {
+		if ( in_array( $component_name, array( 'register', 'activate', 'terms', 'privacy', 'profile_dashboard', 'new_forums_page' ), true ) ) {
 			continue;
 		}
 
@@ -2576,6 +2577,20 @@ function bp_core_get_components( $type = 'all' ) {
 				)
 			),
 			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'document'         => array(
+			'title'       => __( 'Document Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages'      => array(

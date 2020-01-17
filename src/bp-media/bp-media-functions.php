@@ -291,7 +291,6 @@ function bp_media_get( $args = '' ) {
 			'max'          => false,        // Maximum number of results to return.
 			'fields'       => 'all',
 			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'type'         => 'media',            // Page 1 without a per_page will result in no pagination.
 			'per_page'     => false,        // results per page
 			'sort'         => 'DESC',       // sort ASC or DESC
 			'order_by'     => false,       // order by
@@ -307,58 +306,29 @@ function bp_media_get( $args = '' ) {
 			'privacy'      => false,        // privacy of media
 			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
 			'count_total'  => false,
-			'album'        => false,
-			'user_directory'        => false,
 		),
 		'media_get'
 	);
 
-	if ( '1' === $r['album'] ) {
-		$media = BP_Media::documents( array(
-				'page'           => $r['page'],
-				'type'           => $r['type'],
-				'per_page'       => $r['per_page'],
-				'user_id'        => $r['user_id'],
-				'activity_id'    => $r['activity_id'],
-				'album_id'       => $r['album_id'],
-				'group_id'       => $r['group_id'],
-				'max'            => $r['max'],
-				'sort'           => $r['sort'],
-				'order_by'       => $r['order_by'],
-				'search_terms'   => $r['search_terms'],
-				'scope'          => $r['scope'],
-				'privacy'        => $r['privacy'],
-				'exclude'        => $r['exclude'],
-				'count_total'    => $r['count_total'],
-				'fields'         => $r['fields'],
-				'album'          => $r['album'],
-				'user_directory' => $r['user_directory'],
-			) );
-	} else {
-		$media = BP_Media::get(
-			array(
-				'page'         => $r['page'],
-				'type'         => $r['type'],
-				'per_page'     => $r['per_page'],
-				'user_id'      => $r['user_id'],
-				'activity_id'  => $r['activity_id'],
-				'album_id'     => $r['album_id'],
-				'group_id'     => $r['group_id'],
-				'max'          => $r['max'],
-				'sort'         => $r['sort'],
-				'order_by'     => $r['order_by'],
-				'search_terms' => $r['search_terms'],
-				'scope'        => $r['scope'],
-				'privacy'      => $r['privacy'],
-				'exclude'      => $r['exclude'],
-				'count_total'  => $r['count_total'],
-				'fields'       => $r['fields'],
-				'album'        => $r['album'],
-			)
-		);
-	}
-
-
+	$media = BP_Media::get(
+		array(
+			'page'         => $r['page'],
+			'per_page'     => $r['per_page'],
+			'user_id'      => $r['user_id'],
+			'activity_id'  => $r['activity_id'],
+			'album_id'     => $r['album_id'],
+			'group_id'     => $r['group_id'],
+			'max'          => $r['max'],
+			'sort'         => $r['sort'],
+			'order_by'     => $r['order_by'],
+			'search_terms' => $r['search_terms'],
+			'scope'        => $r['scope'],
+			'privacy'      => $r['privacy'],
+			'exclude'      => $r['exclude'],
+			'count_total'  => $r['count_total'],
+			'fields'       => $r['fields'],
+		)
+	);
 
 	/**
 	 * Filters the requested media item(s).
@@ -394,11 +364,9 @@ function bp_media_get_specific( $args = '' ) {
 			'media_ids' => false,      // A single media_id or array of IDs.
 			'max'       => false,      // Maximum number of results to return.
 			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
-			'type'      => 'media',    // Page 1 without a per_page will result in no pagination.
 			'per_page'  => false,      // Results per page.
 			'sort'      => 'DESC',     // Sort ASC or DESC
 			'order_by'  => false,     // Sort ASC or DESC
-			'album'     => false,
 		),
 		'media_get_specific'
 	);
@@ -407,11 +375,9 @@ function bp_media_get_specific( $args = '' ) {
 		'in'       => $r['media_ids'],
 		'max'      => $r['max'],
 		'page'     => $r['page'],
-		'type'     => $r['type'],
 		'per_page' => $r['per_page'],
 		'sort'     => $r['sort'],
 		'order_by' => $r['order_by'],
-		'album'    => $r['album'],
 	);
 
 	/**
@@ -463,7 +429,6 @@ function bp_media_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of media being added.
-			'type'          => 'media',                 // title of media being added.
 			'album_id'      => false,                   // Optional: ID of the album.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
@@ -481,7 +446,6 @@ function bp_media_add( $args = '' ) {
 	$media->attachment_id = $r['attachment_id'];
 	$media->user_id       = (int) $r['user_id'];
 	$media->title         = $r['title'];
-	$media->type          = $r['type'];
 	$media->album_id      = (int) $r['album_id'];
 	$media->group_id      = (int) $r['group_id'];
 	$media->activity_id   = (int) $r['activity_id'];
@@ -550,7 +514,6 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
 				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'type'          => ! empty( $media['type'] ) ? $media['type'] : 'media',
 			) );
 
 			if ( $media_id ) {
@@ -711,16 +674,16 @@ function bp_media_get_media_activity( $activity_id ) {
  * @param int $user_id ID of the user whose media are being counted.
  * @return int media count of the user.
  */
-function bp_media_get_total_media_count( $user_id = 0, $type =  'media' ) {
+function bp_media_get_total_media_count( $user_id = 0 ) {
 	if ( empty( $user_id ) ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	$count = wp_cache_get( 'bp_total_media_for_user_' . $user_id . '_' . $type, 'bp' );
+	$count = wp_cache_get( 'bp_total_media_for_user_' . $user_id, 'bp' );
 
 	if ( false === $count ) {
-		$count = BP_Media::total_media_count( $user_id, $type );
-		wp_cache_set( 'bp_total_media_for_user_' . $user_id . '_' . $type, $count, 'bp' );
+		$count = BP_Media::total_media_count( $user_id );
+		wp_cache_set( 'bp_total_media_for_user_' . $user_id, $count, 'bp' );
 	}
 
 	/**
@@ -803,31 +766,7 @@ function bp_media_get_total_group_album_count( $group_id = 0 ) {
 function bp_get_total_media_count() {
 
 	add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
-	bp_has_media( bp_ajax_querystring( 'media' ) . '&type=media' );
-	remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
-	$count = $GLOBALS['media_template']->total_media_count;
-
-	/**
-	 * Filters the total number of media.
-	 *
-	 * @since BuddyBoss 1.0.0
-	 *
-	 * @param int $count Total number of media.
-	 */
-	return apply_filters( 'bp_get_total_media_count', (int) $count );
-}
-
-/**
- * Return the total media count in your BP instance.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return int Media count.
- */
-function bp_get_total_document_count() {
-
-	add_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
-	bp_has_media( bp_ajax_querystring( 'media' ) . '&type=document' );
+	bp_has_media( bp_ajax_querystring( 'media' ) );
 	remove_filter( 'bp_ajax_querystring', 'bp_media_object_results_media_all_scope', 20 );
 	$count = $GLOBALS['media_template']->total_media_count;
 
@@ -896,7 +835,6 @@ function bp_album_get( $args = '' ) {
 			'max'          => false,                    // Maximum number of results to return.
 			'fields'       => 'all',
 			'page'         => 1,                        // Page 1 without a per_page will result in no pagination.
-			'type'         => 'media',                        // Page 1 without a per_page will result in no pagination.
 			'per_page'     => false,                    // results per page
 			'sort'         => 'DESC',                   // sort ASC or DESC
 
@@ -914,7 +852,6 @@ function bp_album_get( $args = '' ) {
 	$album = BP_Media_Album::get(
 		array(
 			'page'         => $r['page'],
-			'type'         => $r['type'],
 			'per_page'     => $r['per_page'],
 			'user_id'      => $r['user_id'],
 			'group_id'     => $r['group_id'],
@@ -962,7 +899,6 @@ function bp_album_get_specific( $args = '' ) {
 			'album_ids'         => false,      // A single album id or array of IDs.
 			'max'               => false,      // Maximum number of results to return.
 			'page'              => 1,          // Page 1 without a per_page will result in no pagination.
-			'type'              => 'media',    // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,      // Results per page.
 			'sort'              => 'DESC',     // Sort ASC or DESC
 			'update_meta_cache' => true,
@@ -974,7 +910,6 @@ function bp_album_get_specific( $args = '' ) {
 	$get_args = array(
 		'in'          => $r['album_ids'],
 		'max'         => $r['max'],
-		'type'        => $r['type'],
 		'page'        => $r['page'],
 		'per_page'    => $r['per_page'],
 		'sort'        => $r['sort'],
@@ -1021,13 +956,11 @@ function bp_album_add( $args = '' ) {
 		array(
 			'id'           => false,                  // Pass an existing album ID to update an existing entry.
 			'user_id'      => bp_loggedin_user_id(),                     // User ID
-			'type'         => 'media',                     // User ID
 			'group_id'     => false,                  // attachment id.
 			'title'        => '',                     // title of album being added.
 			'privacy'      => 'public',                  // Optional: privacy of the media e.g. public.
 			'date_created' => bp_core_current_time(), // The GMT time that this media was recorded
 			'error_type'   => 'bool',
-			'parent'       => 0,
 		),
 		'album_add'
 	);
@@ -1037,11 +970,9 @@ function bp_album_add( $args = '' ) {
 	$album->user_id      = (int) $r['user_id'];
 	$album->group_id     = (int) $r['group_id'];
 	$album->title        = $r['title'];
-	$album->type         = $r['type'];
 	$album->privacy      = $r['privacy'];
 	$album->date_created = $r['date_created'];
 	$album->error_type   = $r['error_type'];
-	$album->parent       = $r['parent'];
 
 	if ( ! empty( $album->group_id ) ) {
 		$album->privacy = 'grouponly';
@@ -2143,329 +2074,4 @@ function bp_media_import_status_request() {
 			'error_msg'     => __( 'BuddyBoss Media data update is failing!', 'buddyboss' ),
 		)
 	);
-}
-
-/**
- * Create and upload the media file
- *
- * @since BuddyBoss 1.0.0
- *
- * @return array|null|WP_Error|WP_Post
- */
-function bp_media_upload_document() {
-	/**
-	 * Make sure user is logged in
-	 */
-	if ( ! is_user_logged_in() ) {
-		return new WP_Error( 'not_logged_in', __( 'Please login in order to upload file media.', 'buddyboss' ), array( 'status' => 500 ) );
-	}
-
-	$attachment = bp_media_upload_document_handler();
-
-	if ( is_wp_error( $attachment ) ) {
-		return $attachment;
-	}
-
-	$name = $attachment->post_title;
-
-	$result = array(
-		'id'    => (int) $attachment->ID,
-		'url'   => esc_url( $attachment->guid ),
-		'name'  => esc_attr( $name ),
-		'type'  => esc_attr( 'document' ),
-	);
-
-	return $result;
-}
-
-/**
- * Media upload handler
- *
- * @param string $file_id
- *
- * @since BuddyBoss 1.0.0
- *
- * @return array|int|null|WP_Error|WP_Post
- */
-function bp_media_upload_document_handler( $file_id = 'file' ) {
-
-	/**
-	 * Include required files
-	 */
-
-	if ( ! function_exists( 'wp_generate_attachment_metadata' ) ) {
-		require_once ABSPATH . 'wp-admin' . '/includes/image.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/file.php';
-		require_once ABSPATH . 'wp-admin' . '/includes/media.php';
-	}
-
-	if ( ! function_exists( 'media_handle_upload' ) ) {
-		require_once ABSPATH . 'wp-admin/includes/admin.php';
-	}
-
-	//add_filter( 'upload_mimes', 'bp_media_document_allowed_mimes', 9, 1 );
-
-	$aid = media_handle_upload(
-		$file_id,
-		0,
-		array(),
-		array(
-			'test_form'            => false,
-			'upload_error_strings' => array(
-				false,
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
-				__( 'The uploaded file exceeds ', 'buddyboss' ) . bp_media_file_upload_max_size( true ),
-				__( 'The uploaded file was only partially uploaded.', 'buddyboss' ),
-				__( 'No file was uploaded.', 'buddyboss' ),
-				'',
-				__( 'Missing a temporary folder.', 'buddyboss' ),
-				__( 'Failed to write file to disk.', 'buddyboss' ),
-				__( 'File upload stopped by extension.', 'buddyboss' ),
-			),
-		)
-	);
-
-	// if has wp error then throw it.
-	if ( is_wp_error( $aid ) ) {
-		return $aid;
-	}
-
-	$attachment = get_post( $aid );
-
-	if ( ! empty( $attachment ) ) {
-		update_post_meta( $attachment->ID, 'bp_media_upload', true );
-		update_post_meta( $attachment->ID, 'bp_media_saved', '0' );
-		return $attachment;
-	}
-
-	return new WP_Error( 'error_uploading', __( 'Error while uploading document.', 'buddyboss' ), array( 'status' => 500 ) );
-
-}
-
-/**
- * Mine type for uploader allowed by buddyboss media for security reason
- *
- * @param  Array $mime_types carry mime information
- * @since BuddyBoss 1.0.0
- *
- * @return Array
- */
-function bp_media_document_allowed_mimes( $mime_types ) {
-
-	// Creating a new array will reset the allowed file types
-	$mime_types = array(
-
-		'txt' => 'text/plain',
-		// archives
-		'zip' => 'application/zip',
-		'rar' => 'application/x-rar-compressed',
-		'gzip'=> 'application/gzip',
-		'tar' => 'application/x-tar',
-		// adobe
-		'pdf' => 'application/pdf',
-		'psd' => 'image/vnd.adobe.photoshop',
-		// ms office
-		'doc' => 'application/msword',
-		'rtf' => 'application/rtf',
-		'xls' => 'application/vnd.ms-excel',
-		'ppt' => 'application/vnd.ms-powerpoint',
-		'pptx'=> 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-		'pps' => 'application/mspowerpoint',
-		'ppsx'=> 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-		'pptm'=> 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
-		'potx'=> 'application/vnd.openxmlformats-officedocument.presentationml.template',
-		'potm'=> 'application/vnd.ms-powerpoint.template.macroenabled.12',
-		'xlsx'=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		'xlsm'=> 'application/vnd.ms-excel.sheet.macroenabled.12',
-		'xltm'=> 'application/vnd.ms-excel.template.macroenabled.12',
-		'xltx'=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-		'docm'=> 'application/vnd.ms-word.document.macroenabled.12',
-		'docx'=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-		'dotx'=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-		'dotm'=> 'application/vnd.ms-word.template.macroenabled.12',
-		// open office
-		'odt' => 'application/vnd.oasis.opendocument.text',
-		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-		//audio files
-		'mp3' => 'audio/mpeg',
-		'ogg' => 'application/ogg',
-		'wav' => 'audio/wav',
-
-		'csv' => 'text/csv',
-		'css' => 'text/css',
-
-		'htm' => 'text/html',
-		'html'=> 'text/html',
-		'ics' => 'text/calendar',
-		'ico' => 'image/vnd.microsoft.icon',
-		'jar' => 'application/java-archive',
-		'js'  => 'text/javascript'
-	);
-
-	return $mime_types;
-}
-
-function bp_media_get_document_extension( $attachment_id ) {
-
-	$file_url  = wp_get_attachment_url( $attachment_id );
-	$file_type = wp_check_filetype( $file_url );
-
-	return $file_type['ext'];
-
-}
-
-function bp_media_get_document_svg_icon( $extension ) {
-
-	$svg = '';
-
-	switch ( $extension ) {
-		case 'csv':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_csv', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/csv.svg', $extension ) ;
-        break;
-		case 'doc':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_doc', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/doc.svg', $extension ) ;
-        break;
-		case 'docx':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_docx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/docx.svg', $extension ) ;
-        break;
-		case 'gzip':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_gzip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/gzip.svg', $extension ) ;
-		break;
-		case 'ics':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_ics', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ics.svg', $extension ) ;
-		break;
-		case 'jar':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_jar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/jar.svg', $extension ) ;
-		break;
-		case 'ods':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_ods', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ods.svg', $extension ) ;
-		break;
-		case 'odt':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_odt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/odt.svg', $extension ) ;
-		break;
-		case 'pdf':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_pdf', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/pdf.svg', $extension ) ;
-		break;
-		case 'psd':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_psd', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/psd.svg', $extension ) ;
-		break;
-		case 'ppt':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_ppt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ppt.svg', $extension ) ;
-		break;
-		case 'pptx':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_pptx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/pptx.svg', $extension ) ;
-		break;
-		case 'rar':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_rar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/rar.svg', $extension ) ;
-		break;
-		case 'tar':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_tar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/tar.svg', $extension ) ;
-		break;
-		case 'txt':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_txt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/txt.svg', $extension ) ;
-		break;
-		case 'xls':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_xls', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/xls.svg', $extension ) ;
-		break;
-		case 'xlsx':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_xlsx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/xlsx.svg', $extension ) ;
-			break;
-		case 'zip':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/zip.svg', $extension ) ;
-		break;
-		case 'folder':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
-			break;
-		case 'download':
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_download', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/download.svg', $extension ) ;
-			break;
-		default:
-			$svg = apply_filters( 'bp_media_get_document_svg_icon_folder', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
-	}
-
-	return apply_filters( 'bp_media_get_document_svg_icon', $svg, $extension );
-}
-
-function bp_media_user_document_folder_tree_view_li_html( $user_id ) {
-
-	global $wpdb, $bp;
-
-	$buddyboss_media_albums_table = $bp->table_prefix . 'bp_media_albums';
-	$group_id                     = ( function_exists( 'bp_get_current_group_id' )) ? bp_get_current_group_id() : 0;
-	$documents_folder_query       = $wpdb->prepare( "SELECT * FROM {$buddyboss_media_albums_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, $group_id, 'document' );
-	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
-
-	// Build array of item references:
-	foreach($data as $key => &$item) {
-		$itemsByReference[$item['id']] = &$item;
-		// Children array:
-		$itemsByReference[$item['id']]['children'] = array();
-		// Empty data class (so that json_encode adds "data: {}" )
-		$itemsByReference[$item['id']]['data'] = new StdClass();
-	}
-
-	// Set items as children of the relevant parent item.
-	foreach($data as $key => &$item)
-		if($item['parent'] && isset($itemsByReference[$item['parent']]))
-			$itemsByReference [$item['parent']]['children'][] = &$item;
-
-	// Remove items that were added to parents elsewhere:
-	foreach($data as $key => &$item) {
-		if($item['parent'] && isset($itemsByReference[$item['parent']]))
-			unset($data[$key]);
-	}
-
-	return bp_media_user_document_folder_recursive_li_list( $data, false );
-
-}
-
-function bp_media_user_document_folder_recursive_li_list( $array, $first = false ) {
-
-	//Base case: an empty array produces no list
-	if (empty($array)) return '';
-
-	//Recursive Step: make a list with child lists
-	if ( $first ) {
-		$output = '<ul class="">';
-	} else {
-		$output = '<ul class="location-folder-list">';
-	}
-
-	foreach ( $array as $item ) {
-		$output .= '<li data-id="'. $item["id"] .'"><span>' . $item["title"] . '</span>' . bp_media_user_document_folder_recursive_li_list( $item["children"], true ) . '</li>';
-	}
-	$output .= '</ul>';
-
-	return $output;
-}
-
-function bp_media_document_bradcrumb( $album_id ) {
-
-	global $wpdb, $bp;
-
-	$buddyboss_media_albums_table = $bp->table_prefix . 'bp_media_albums';
-	$documents_folder_query       = $wpdb->prepare( "SELECT c.*
-    FROM (
-        SELECT
-            @r AS _id,
-            (SELECT @r := parent FROM {$buddyboss_media_albums_table} WHERE id = _id) AS parent,
-            @l := @l + 1 AS level
-        FROM
-            (SELECT @r := %d, @l := 0) vars, {$buddyboss_media_albums_table} m
-        WHERE @r <> 0) d
-    JOIN {$buddyboss_media_albums_table} c
-    ON d._id = c.id ORDER BY c.id ASC", $album_id );
-	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
-	$html                         = '';
-
-	if ( !empty( $data ) ) {
-		$html .= '<ul class="document-breadcrumb">';
-		foreach ( $data as $element ) {
-			$html .= '<li> ' . $element['title'] . '</li>';
-		}
-		$html .= '</ul>';
-	}
-
-	return $html;
-
 }

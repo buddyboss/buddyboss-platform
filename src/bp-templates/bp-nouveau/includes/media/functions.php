@@ -23,11 +23,6 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
-		'bp-nouveau-media-document-data-table' => array(
-			'file'         => 'js/jquery.dataTables%s.js',
-			'dependencies' => array( 'jquery' ),
-			'footer'       => true,
-		),
 		'bp-nouveau-media' => array(
 			'file'         => 'js/buddypress-media%s.js',
 			'dependencies' => array( 'bp-nouveau' ),
@@ -63,6 +58,7 @@ function bp_nouveau_media_enqueue_scripts() {
 	     bp_is_group_media() ||
 	     bp_is_group_albums() ||
 	     bp_is_group_document() ||
+	     bp_is_group_folders() ||
 	     bp_is_messages_component()
 	) {
 
@@ -112,12 +108,12 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'document_type'   => apply_filters( 'bp_media_allowed_document_type', '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip' ),
 	);
 
-	if ( bp_is_single_album() || bp_is_single_document_folder() ) {
+	if ( bp_is_single_album() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
 	}
 
-	if ( bp_is_group_document_folder() ) {
-		$params['media']['album_id'] = (int) bp_action_variable( 1 );
+	if ( bp_is_single_folder() ) {
+		$params['document']['folder_id'] = (int) bp_action_variable( 0 );
 	}
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
@@ -199,7 +195,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 	} else {
 
 		$nav_items['all'] = array(
-			'component' => 'media',
+			'component' => 'document',
 			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 			'li_class'  => array(),
 			'link'      => bp_get_media_directory_permalink(),
@@ -210,7 +206,7 @@ function bp_nouveau_get_media_directory_nav_items() {
 
 		if ( is_user_logged_in() ) {
 			$nav_items['personal'] = array(
-				'component' => 'media',
+				'component' => 'document',
 				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
 				'li_class'  => array(),
 				'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',

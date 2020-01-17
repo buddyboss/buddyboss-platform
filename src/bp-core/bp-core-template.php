@@ -1683,21 +1683,10 @@ function bp_is_current_component( $component = '' ) {
 		$component = 'profile';
 	}
 
-	if ( 'documents' === $component || 'document' === $component ) {
-		$component = 'media';
-	}
-
 	$bp = buddypress();
 
 	// Only check if BuddyPress found a current_component.
 	if ( ! empty( $bp->current_component ) ) {
-
-		if ( 'documents' === $bp->current_component || 'document' === $bp->current_component ) {
-			if ( ! bp_is_user() && ! bp_is_group_single() ) {
-				$component             = 'media';
-				$bp->current_component = 'media';
-			}
-		}
 
 		// First, check to see whether $component_name and the current
 		// component are a simple match.
@@ -1707,8 +1696,6 @@ function bp_is_current_component( $component = '' ) {
 			// Since the current component is based on the visible URL slug let's
 			// check the component being passed and see if its root_slug matches.
 		} elseif ( isset( $bp->{$component}->root_slug ) && $bp->{$component}->root_slug == $bp->current_component ) {
-			$is_current_component = true;
-		} elseif ( isset( $bp->{$component}->slug ) && ( $bp->{$component}->slug === bp_get_media_slug() ) && bp_get_document_slug() === $bp->current_component ) {
 			$is_current_component = true;
 
 			// Because slugs can differ from root_slugs, we should check them too.
@@ -1739,6 +1726,10 @@ function bp_is_current_component( $component = '' ) {
 				}
 			}
 		}
+	}
+
+	if ( bp_is_active( 'media' ) && 'document' === $component ) {
+		$is_current_component = true;
 	}
 
 	/**
@@ -2290,6 +2281,17 @@ function bp_is_media_component() {
 }
 
 /**
+ * Check whether the current page is part of the Document component.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is part of the Media component.
+ */
+function bp_is_document_component() {
+	return (bool) bp_is_current_component( 'document' );
+}
+
+/**
  * Is the current component an active core component?
  *
  * Use this function when you need to check if the current component is an
@@ -2747,6 +2749,20 @@ function bp_is_user_media() {
 }
 
 /**
+ * Is this a user's media page?
+ *
+ * Eg http://example.com/members/joe/media/ (or a subpage thereof).
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is a user's media page.
+ */
+function bp_is_user_document() {
+	return (bool) ( bp_is_user() && bp_is_document_component() );
+}
+
+
+/**
  * Is the current page the media directory?
  *
  * @since BuddyBoss 1.0.0
@@ -2754,8 +2770,22 @@ function bp_is_user_media() {
  * @return bool True if the current page is the media directory.
  */
 function bp_is_media_directory() {
-
 	if ( ! bp_displayed_user_id() && bp_is_media_component() && ! bp_current_action() ) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * Is the current page the media directory?
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return bool True if the current page is the media directory.
+ */
+function bp_is_document_directory() {
+	if ( ! bp_displayed_user_id() && bp_is_document_component() && ! bp_current_action() ) {
 		return true;
 	}
 
@@ -2785,13 +2815,13 @@ function bp_is_single_album() {
  *
  * @return bool True if the current page is a single album item permalink.
  */
-function bp_is_single_document_folder() {
+function bp_is_single_folder() {
 
-	if ( bp_is_active( 'groups' ) && bp_is_group() && bp_is_group_document_folder() && is_numeric( bp_action_variable( 0 ) ) ) {
+	if ( bp_is_active( 'groups' ) && bp_is_group() && is_numeric( bp_action_variable( 1 ) ) ) {
 		return true;
 	}
 
-	return (bool) ( bp_is_media_component() && 'folder' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
+	return (bool) ( bp_is_document_component() && 'folders' == bp_current_action() && is_numeric( bp_action_variable( 0 ) ) );
 }
 
 
@@ -3113,17 +3143,33 @@ function bp_is_group_albums() {
 }
 
 /**
- * Is the current page a group's activity page?
+ * Is the current page a group's document page?
+ *
+ * @since BuddyPress 1.2.3
+ *
+ * @return bool True if the current page is a group's document page.
+ */
+function bp_is_group_document() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}
+
+/**
+ * Is the current page a group's folder page?
  *
  * @since BuddyPress 1.2.1
  *
- * @return bool True if the current page is a group's activity page.
+ * @return bool True if the current page is a group's folder page.
  */
-function bp_is_group_document_folder() {
+function bp_is_group_folders() {
 	$retval = false;
 
-	$action_variables = bp_action_variables();
-	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) && is_array( $action_variables ) && isset( $action_variables[1] ) && (int) $action_variables[1] > 0 ) {
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
 		$retval = true;
 	}
 
@@ -3287,7 +3333,9 @@ function bp_get_title_parts( $seplocation = 'right' ) {
 
 		if ( ! empty( $bp->members->nav ) ) {
 			$primary_nav_item = $bp->members->nav->get_primary( array( 'slug' => $component_id ), false );
-			$primary_nav_item = reset( $primary_nav_item );
+			if ( is_array( $primary_nav_item ) ) {
+				$primary_nav_item = reset( $primary_nav_item );
+			}
 		}
 
 		// Use the component nav name.
@@ -4013,21 +4061,4 @@ function bp_email_get_salutation( $settings = array() ) {
 	 * @param string $token    The Recipient token.
 	 */
 	return apply_filters( 'bp_email_get_salutation', sprintf( '%s', $token ), $settings, $token );
-}
-
-/**
- * Is the current page a group's document page?
- *
- * @since BuddyPress 1.2.3
- *
- * @return bool True if the current page is a group's document page.
- */
-function bp_is_group_document() {
-	$retval = false;
-
-	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'documents' ) ) {
-		$retval = true;
-	}
-
-	return $retval;
 }

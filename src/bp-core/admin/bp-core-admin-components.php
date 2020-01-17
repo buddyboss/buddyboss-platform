@@ -69,6 +69,9 @@ function bp_core_admin_components_options() {
 	// Merge optional and required together.
 	$all_components = $required_components + $optional_components;
 
+	// We are not displaying document component in listing it's automatically active if media component is active.
+	unset( $all_components['document'] );
+
 	// If this is an upgrade from before BuddyPress 1.5, we'll have to convert
 	// deactivated components into activated ones.
 	if ( empty( $active_components ) ) {
@@ -145,7 +148,7 @@ function bp_core_admin_components_options() {
 			)
 		);
 		?>
-						" 
+						"
 	<?php
 	if ( $action === 'all' ) :
 		?>
@@ -162,7 +165,7 @@ function bp_core_admin_components_options() {
 			)
 		);
 		?>
-						" 
+						"
 	<?php
 	if ( $action === 'active' ) :
 		?>
@@ -179,7 +182,7 @@ function bp_core_admin_components_options() {
 			)
 		);
 		?>
-						" 
+						"
 	<?php
 	if ( $action === 'inactive' ) :
 		?>
@@ -196,7 +199,7 @@ function bp_core_admin_components_options() {
 			)
 		);
 		?>
-						" 
+						"
 	<?php
 	if ( $action === 'mustuse' ) :
 		?>

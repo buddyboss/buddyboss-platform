@@ -9,7 +9,7 @@
 <?php
 global $media_album_template;
 $album_id = 0;
-if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_document_folder() ) {
+if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
 	$action_variables = bp_action_variables();
 	$album_id = (int) $action_variables[1];
 } else  {
@@ -45,7 +45,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
 
                             <div class="bb-field-wrap">
                                 <div class="bb-dropdown-wrap">
-                                    <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+                                    <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
                                     <select id="bb-folder-child-privacy">
                                         <?php foreach ( $privacy_options as $k => $option ) {
                                             ?>
@@ -57,7 +57,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             </div>
 
 	                        <?php
-	                        $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+	                        $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
 	                        if ( '' !== $ul ) {
 		                        ?>
 		                        <div class="bb-field-wrap">

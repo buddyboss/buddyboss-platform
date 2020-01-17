@@ -7,36 +7,34 @@
 ?>
 
 <?php
-global $media_album_template;
-if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_document_folder() ) {
-	$action_variables = bp_action_variables();
-	$album_id = (int) $action_variables[1];
+global $document_folder_template;
+if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_group_folders() ) {
+	//$action_variables = bp_action_variables();
+	$album_id = (int) bp_action_variable( 1 );
 } else  {
 	$album_id = (int) bp_action_variable( 0 );
 }
 
-$bradcrumbs = bp_media_document_bradcrumb( $album_id );
+$bradcrumbs = bp_document_folder_bradcrumb( $album_id );
 
-?>
+if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
 
-<?php if ( bp_has_albums( array( 'include' => $album_id, 'type' => 'document' ) ) ) : ?>
-	<?php
-	while ( bp_album() ) :
-		bp_the_album();
+	while ( bp_folder() ) :
+		bp_the_folder();
 
-	    $total_media = $media_album_template->album->media['total'];
+	    $total_media = $document_folder_template->folder->document['total'];
 		?>
         <div id="bp-media-single-folder">
             <div class="album-single-view" <?php echo $total_media == 0 ? 'no-photos' : ''; ?>>
                 <div class="bp-media-header-wrap">
                     <div class="bb-single-album-header text-center">
-                        <h4 class="bb-title" id="bp-single-album-title"><?php bp_album_title(); ?></h4>
+                        <h4 class="bb-title" id="bp-single-album-title"><?php bp_folder_title(); ?></h4>
 	                    <?php
 	                        if ( '' !== $bradcrumbs ) {
 	                        	?>
-		                        
-                                <?php echo  $bradcrumbs; ?>         
-                                
+
+                                <?php echo  $bradcrumbs; ?>
+
 	                        	<?php
 	                        }
 	                    ?>
@@ -65,11 +63,11 @@ $bradcrumbs = bp_media_document_bradcrumb( $album_id );
 
                             <?php if ( bp_is_my_profile() && ! bp_is_group() ) : ?>
 
-                                <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+                                <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
 
                                 <select id="bb-folder-privacy">
                                     <?php foreach ( $privacy_options as $k => $option ) { ?>
-                                        <?php $selected = ''; if ( $k == bp_get_album_privacy() ) $selected = 'selected="selectred"' ; ?>
+                                        <?php $selected = ''; if ( $k == bp_get_folder_privacy() ) $selected = 'selected="selectred"' ; ?>
                                         <option <?php echo $selected; ?> value="<?php echo $k; ?>"><?php echo $option; ?></option>
                                     <?php } ?>
                                 </select>
@@ -94,16 +92,16 @@ $bradcrumbs = bp_media_document_bradcrumb( $album_id );
 
                         </div> <!-- .bb-media-actions -->
 
-                    <?php bp_get_template_part( 'media/document-uploader' ); ?>
-                    <?php bp_get_template_part( 'media/create-child-folder' ); ?>
-                    <?php bp_get_template_part( 'media/edit-child-folder' ); ?>
+                    <?php bp_get_template_part( 'document/document-uploader' ); ?>
+                    <?php bp_get_template_part( 'document/create-child-folder' ); ?>
+                    <?php bp_get_template_part( 'document/edit-child-folder' ); ?>
 
                     <?php endif; ?>
                 </div> <!-- .bp-media-header-wrap -->
 
                 <?php //bp_get_template_part( 'media/actions' ); ?>
 
-                <div id="media-stream" class="media" data-bp-list="media" data-bp-media-type="document">
+                <div id="media-stream" class="media" data-bp-list="document">
 
                     <div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'member-document-loading' ); ?></div>
 
@@ -112,4 +110,5 @@ $bradcrumbs = bp_media_document_bradcrumb( $album_id );
             </div>
         </div>
 	<?php endwhile; ?>
-<?php endif; ?>
+<?php
+endif;

@@ -33,7 +33,7 @@
 
                             <div class="bb-field-wrap">
                                 <div class="bb-dropdown-wrap">
-                                    <?php $privacy_options = BP_Media_Privacy::instance()->get_visibility_options(); ?>
+                                    <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
                                     <select id="bb-folder-privacy">
                                         <?php foreach ( $privacy_options as $k => $option ) {
                                             ?>
@@ -45,7 +45,7 @@
                             </div>
 
 	                        <?php
-                            $ul = bp_media_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+                            $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
                             if ( '' !== $ul ) {
 	                            ?>
 	                            <div class="bb-field-wrap">

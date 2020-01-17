@@ -100,11 +100,6 @@ function bp_nouveau_ajax_object_template_loader() {
 	// Get the template path based on the 'template' variable via the AJAX request.
 	$template = isset( $_POST['template'] ) ? wp_unslash( $_POST['template'] ) : '';
 
-	$type = isset( $_POST['type'] ) ? wp_unslash( $_POST['type'] ) : '';
-	if ( '' === $template && 'media' === $object && 'document' === $type ) {
-		$template = 'document';
-	}
-
 	switch ( $template ) {
 		case 'group_members' :
 		case 'groups/single/members' :
@@ -118,10 +113,6 @@ function bp_nouveau_ajax_object_template_loader() {
 		case 'member_notifications' :
 			$template_part = 'members/single/notifications/notifications-loop.php';
 		break;
-
-		case 'document' :
-			$template_part = $object . '/document-loop.php';
-			break;
 
 		default :
 			$template_part = $object . '/' . $object . '-loop.php';

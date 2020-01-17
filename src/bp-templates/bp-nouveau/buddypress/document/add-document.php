@@ -15,6 +15,6 @@
         </div>
     </div>
 
-<?php bp_get_template_part( 'media/document-uploader' ); ?>
+<?php bp_get_template_part( 'document/document-uploader' ); ?>
 
 <?php endif; ?>

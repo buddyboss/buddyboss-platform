@@ -5,12 +5,12 @@
  * @since BuddyBoss 1.0.0
  */
 
-global $media_template;
+global $document_template;
 
-$attachment_id     = bp_get_media_attachment_id();
-$extension         = bp_media_get_document_extension( $attachment_id );
-$svg_icon          = bp_media_get_document_svg_icon( $extension );
-$svg_icon_download = bp_media_get_document_svg_icon( 'download' );
+$attachment_id     = bp_get_document_attachment_id();
+$extension         = bp_document_extension( $attachment_id );
+$svg_icon          = bp_document_svg_icon( $extension );
+$svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
@@ -20,8 +20,8 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 
 	<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 		<div class="document-description-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>">
-				<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon ); ?>" class="" alt="<?php bp_media_title(); ?>" />
+			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
+				<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon ); ?>" class="" alt="<?php bp_document_title(); ?>" />
 			</a>
 			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-detail-wrap">
 				<span class="document-title"><?php echo $filename; ?></span>
@@ -31,7 +31,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 		</div>
 
 		<div class="document-action-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 				<i class="bb-icon-download"></i>
 			</a>
 
@@ -61,8 +61,8 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 	<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'js' !== $extension && 'csv' !== $extension ) { ?>
 		<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 			<div class="document-description-wrap">
-				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>">
-					<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon ); ?>" class="" alt="<?php bp_media_title(); ?>" />
+				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
+					<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon ); ?>" class="" alt="<?php bp_document_title(); ?>" />
 				</a>
 				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-detail-wrap">
 					<span class="document-title"><?php echo $filename; ?></span>
@@ -72,7 +72,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 			</div>
 
 			<div class="document-action-wrap">
-				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 					<i class="bb-icon-download"></i>
 				</a>
 
@@ -111,16 +111,16 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 		<p class="document-filename"><?php echo $filename; ?></strong></p>
 		<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 			<div class="document-text-wrap">
-				
+
 				<div class="document-text" data-extension="<?php echo $extension; ?>">
 					<textarea class="document-text-file-data-hidden" style="display: none;"><?php
-						 echo $file_data;	
+						 echo $file_data;
 						?>
 					</textarea>
 				</div>
 				<div class="document-action-wrap">
 					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php _e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
-					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_media_id(); ?>" data-activity-id="<?php bp_media_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 						<i class="bb-icon-download document-icon-download"></i>
 					</a>
 
@@ -150,7 +150,7 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 }
 
 if ( isset( $attachment_id) ) {
-	bp_get_template_part( 'media/activity-document-move' );
+	bp_get_template_part( 'document/activity-document-move' );
 } else {
-	bp_get_template_part( 'media/activity-document-folder-move' );
+	bp_get_template_part( 'document/activity-document-folder-move' );
 }

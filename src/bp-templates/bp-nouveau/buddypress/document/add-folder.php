@@ -14,6 +14,6 @@
 		</div>
 	</div>
 
-	<?php bp_get_template_part( 'media/create-folder' ); ?>
+	<?php bp_get_template_part( 'document/create-folder' ); ?>
 
 <?php endif; ?>

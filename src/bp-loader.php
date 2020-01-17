@@ -34,6 +34,13 @@ global $bp_sitewide_plugins;
 global $bp_plugins;
 global $bp_is_multisite;
 
+add_filter( 'option_bp-active-components', function( $component ){
+	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] ) {
+		$component['document'] = '1';
+	}
+	return $component;
+});
+
 $is_bp_active   = false;
 $bp_plugin_file = 'buddypress/bp-loader.php';
 

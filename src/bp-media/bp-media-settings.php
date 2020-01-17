@@ -117,7 +117,7 @@ function bp_media_get_settings_fields() {
 		),
 	);
 
-	$fields['bp_media_settings_documents']['bp_media_profiles_document_support'] = array(
+	$fields['bp_media_settings_documents']['bp_media_profile_document_support'] = array(
 		'title'             => __( 'Profiles', 'buddyboss' ),
 		'callback'          => 'bp_media_settings_callback_profile_document_support',
 		'sanitize_callback' => 'absint',
@@ -974,13 +974,13 @@ function bp_is_forums_document_support_enabled( $default = 0 ) {
  */
 function bp_media_settings_callback_profile_document_support() {
 	?>
-	<input name="bp_media_profiles_document_support"
-	       id="bp_media_profiles_document_support"
+	<input name="bp_media_profile_document_support"
+	       id="bp_media_profile_document_support"
 	       type="checkbox"
 	       value="1"
-		<?php checked( bp_is_profiles_document_support_enabled() ); ?>
+		<?php checked( bp_is_profile_document_support_enabled() ); ?>
 	/>
-	<label for="bp_media_profiles_document_support">
+	<label for="bp_media_profile_document_support">
 		<?php _e( 'Allow members to upload documents in <strong>profiles</strong>', 'buddyboss' ); ?>
 	</label>
 	<?php
@@ -995,7 +995,7 @@ function bp_media_settings_callback_profile_document_support() {
  *
  * @return bool Is media forums document support enabled or not
  */
-function bp_is_profiles_document_support_enabled( $default = 0 ) {
-	return (bool) apply_filters( 'bp_is_profiles_document_support_enabled', (bool) get_option( 'bp_media_profiles_document_support', $default ) );
+function bp_is_profile_document_support_enabled( $default = 0 ) {
+	return (bool) apply_filters( 'bp_is_profile_document_support_enabled', (bool) get_option( 'bp_media_profile_document_support', $default ) );
 }
 

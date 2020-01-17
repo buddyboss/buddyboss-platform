@@ -954,6 +954,10 @@ function bp_nouveau_get_user_feedback( $feedback_id = '' ) {
 			'type'    => 'info',
 			'message' => __( 'Sorry, no photos were found.', 'buddyboss' ),
 		),
+		'document-loop-none' => array(
+			'type'    => 'info',
+			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
+		),
 		'media-loop-document-none' => array(
 			'type'    => 'info',
 			'message' => __( 'Sorry, no documents were found.', 'buddyboss' ),
