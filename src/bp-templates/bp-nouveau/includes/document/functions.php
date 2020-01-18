@@ -48,32 +48,17 @@ function bp_nouveau_document_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_document_enqueue_scripts() {
 
-	if ( bp_is_user_media() ||
-	     bp_is_single_album() ||
-	     bp_is_media_directory() ||
+	if ( bp_is_user_document() ||
+	     bp_is_single_folder() ||
+	     bp_is_document_directory() ||
 	     bp_is_activity_component() ||
 	     bp_is_group_activity() ||
-	     bp_is_group_media() ||
-	     bp_is_group_albums() ||
 	     bp_is_group_document() ||
 	     bp_is_group_folders() ||
 	     bp_is_messages_component()
 	) {
 
-		$gif = false;
-		if ( bp_is_profiles_gif_support_enabled() || bp_is_groups_gif_support_enabled() || bp_is_messages_gif_support_enabled() ) {
-			wp_enqueue_script( 'giphy' );
-			$gif = true;
-		}
-
-		$emoji = false;
-		if ( bp_is_profiles_emoji_support_enabled() || bp_is_groups_emoji_support_enabled() || bp_is_messages_emoji_support_enabled() ) {
-			wp_enqueue_script( 'emojionearea' );
-			wp_enqueue_style( 'emojionearea' );
-			$emoji = true;
-		}
-
-		if ( bp_is_profile_media_support_enabled() || bp_is_group_document_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji ) {
+		if ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() || bp_is_messages_document_support_enabled() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_script( 'bp-nouveau-codemirror' );
 			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
@@ -97,11 +82,9 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	//initialize media vars because it is used globally
 	$params['media'] = array(
-		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
-		'profile_media'   => bp_is_profile_media_support_enabled(),
-		'profile_album'   => bp_is_profile_albums_support_enabled(),
-		'group_media'     => bp_is_group_media_support_enabled(),
-		'group_album'     => bp_is_group_albums_support_enabled(),
+		'max_upload_size' => bp_document_file_upload_max_size( false, 'MB' ),
+		'profile_media'   => bp_is_profile_document_support_enabled(),
+		'group_media'     => bp_is_group_document_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
 		'document_type'   => apply_filters( 'bp_media_allowed_document_type', '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip' ),
 	);

@@ -50,6 +50,7 @@ if ( bp_is_active( 'media' ) && bp_is_messages_media_support_enabled() ) {
         'parts/bp-messages-single',
         'parts/bp-messages-editor-toolbar',
         'parts/bp-messages-media',
+        'parts/bp-messages-document',
         'parts/bp-messages-attached-gif',
         'parts/bp-messages-gif-media-search-dropdown',
         'parts/bp-messages-gif-result-item',

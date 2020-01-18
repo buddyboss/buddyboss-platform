@@ -48,6 +48,24 @@
 			</div>
 			<# } #>
 
+			<# if ( data.document ) { #>
+			<div class="bb-activity-media-wrap bb-media-length-{{data.document.length}}">
+				<# for ( i in data.document ) { #>
+				<div class="document-description-wrap">
+					<a href="{{data.document[i].url}}" target="_blank" class="entry-img" data-id="{{data.document[i].id}}" data-activity-id="{{data.document[i].id}}">
+						<img style="width: 40px;" width="40" height="40" src="{{data.document[i].svg_icon}}" class="" alt="{{data.document[i].id}}" />
+					</a>
+					<a href="{{data.document[i].id}}" target="_blank" class="document-detail-wrap">
+						<span class="document-title">{{data.document[i].title}}</span>
+						<span class="document-helper-text">{{data.document[i].download_text}}</span>
+					</a>
+				</div>
+
+				<# } #>
+			</div>
+
+			<# } #>
+
             <# if ( data.gif ) { #>
             <div class="activity-attached-gif-container">
                 <div class="gif-image-container">

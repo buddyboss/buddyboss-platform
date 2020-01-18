@@ -244,7 +244,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 	}
 
 	// Get the message by pretending we're in the message loop.
-	global $thread_template, $media_template;
+	global $thread_template, $media_template, $document_template;
 
 	$bp           = buddypress();
 	$reset_action = $bp->current_action;
@@ -308,6 +308,38 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
 					'full'      => bp_get_media_attachment_image(),
 					'meta'      => $media_template->media->attachment_data->meta,
+				);
+			}
+		}
+	}
+
+	if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+		$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
+
+		if ( ! empty( $document_ids ) && bp_has_document( array( 'include' => $document_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
+			$reply['document'] = array();
+			while ( bp_document() ) {
+				bp_the_document();
+
+				$attachment_id     = bp_get_document_attachment_id();
+				$extension         = bp_document_extension( $attachment_id );
+				$svg_icon          = bp_document_svg_icon( $extension );
+				$svg_icon_download = bp_document_svg_icon( 'download' );
+				$url               = wp_get_attachment_url( $attachment_id );
+				$filename          = basename( get_attached_file( $attachment_id ) );
+				$size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
+
+				$reply['document'][] = array(
+					'id'                => bp_get_document_id(),
+					'title'             => bp_get_document_title(),
+					'url'               => $url,
+					'extension'         => $extension,
+					'svg_icon'          => $svg_icon,
+					'svg_icon_download' => $svg_icon_download,
+					'filename'          => $filename,
+					'size'              => $size,
+					'meta'              => $document_template->document->attachment_data->meta,
+					'download_text'     => '- Click to Download',
 				);
 			}
 		}
@@ -567,7 +599,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
-	global $thread_template, $media_template;
+	global $thread_template, $media_template, $document_template;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
@@ -718,6 +750,38 @@ function bp_nouveau_ajax_get_thread_messages() {
 						'thumbnail' => bp_get_media_attachment_image_thumbnail(),
 						'full'      => bp_get_media_attachment_image(),
 						'meta'      => $media_template->media->attachment_data->meta,
+					);
+				}
+			}
+		}
+
+		if ( bp_is_active( 'media' ) && bp_is_messages_document_support_enabled() ) {
+			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
+
+			if ( ! empty( $document_ids ) && bp_has_document( array( 'include' => $document_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
+				$reply['document'] = array();
+				while ( bp_document() ) {
+					bp_the_document();
+
+					$attachment_id     = bp_get_document_attachment_id();
+					$extension         = bp_document_extension( $attachment_id );
+					$svg_icon          = bp_document_svg_icon( $extension );
+					$svg_icon_download = bp_document_svg_icon( 'download' );
+					$url               = wp_get_attachment_url( $attachment_id );
+					$filename          = basename( get_attached_file( $attachment_id ) );
+					$size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
+
+					$reply['document'][] = array(
+						'id'                => bp_get_document_id(),
+						'title'             => bp_get_document_title(),
+						'url'               => $url,
+						'extension'         => $extension,
+						'svg_icon'          => $svg_icon,
+						'svg_icon_download' => $svg_icon_download,
+						'filename'          => $filename,
+						'size'              => $size,
+						'meta'              => $document_template->document->attachment_data->meta,
+						'download_text'     => '- Click to Download',
 					);
 				}
 			}
