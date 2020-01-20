@@ -136,6 +136,9 @@ function bp_has_document( $args = '' ) {
 	// folder filtering
 	if ( ! isset( $args['folder_id'] ) ) {
 		$folder_id = bp_is_single_folder() ? (int) bp_action_variable( 0 ) : false;
+		if ( bp_is_group_single() && bp_is_group_folders() ) {
+			$folder_id = (int) bp_action_variable( 1 );
+		}
 	} else {
 		$folder_id = $args['folder_id'];
 	}
@@ -1044,6 +1047,10 @@ function bp_has_folders( $args = '' ) {
 		'has_documents'
 	);
 
+	if ( bp_is_group_single() && bp_is_group_folders() && false === $r['include'] ) {
+		$r['include'] = (int) bp_action_variable( 1 );
+	}
+
 	/*
 	 * Smart Overrides.
 	 */
@@ -1407,7 +1414,7 @@ function bp_get_folder_link() {
 		if ( '' === $group_link ) {
 			$group_link = bp_get_group_permalink( $document_template->document->group_id );
 		}
-		$url        = trailingslashit( $group_link . 'document/folders/' . bp_get_folder_id() );
+		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
 	} else {
 		$url = trailingslashit( bp_displayed_user_domain() . 'document/folders/' . bp_get_folder_id() );
 	}

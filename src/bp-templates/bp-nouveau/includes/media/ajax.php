@@ -18,12 +18,6 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
-			'document_filter' => array(
-				'function' => 'bp_nouveau_ajax_object_template_loader',
-				'nopriv'   => true,
-			),
-		),
-		array(
 			'media_albums_loader' => array(
 				'function' => 'bp_nouveau_ajax_albums_loader',
 				'nopriv'   => true,

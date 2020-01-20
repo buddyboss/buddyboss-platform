@@ -93,6 +93,10 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
 	}
 
+	if ( bp_is_group_single() && bp_is_group_folders() ) {
+		$params['media']['album_id'] = (int) bp_action_variable( 1 );
+	}
+
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
 		$params['media']['group_id'] = bp_get_current_group_id();
     }
