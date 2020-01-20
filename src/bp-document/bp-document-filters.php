@@ -57,7 +57,6 @@ function bp_document_activity_entry() {
 	}
 
 	if ( ! empty( $document_ids ) && bp_has_document( array(
-			'type'     => 'document',
 			'include'  => $document_ids,
 			'order_by' => 'menu_order',
 			'sort'     => 'ASC',

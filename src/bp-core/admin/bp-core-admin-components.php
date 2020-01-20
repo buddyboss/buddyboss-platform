@@ -70,7 +70,7 @@ function bp_core_admin_components_options() {
 	$all_components = $required_components + $optional_components;
 
 	// We are not displaying document component in listing it's automatically active if media component is active.
-	//unset( $all_components['document'] );
+	unset( $all_components['document'] );
 
 	// If this is an upgrade from before BuddyPress 1.5, we'll have to convert
 	// deactivated components into activated ones.

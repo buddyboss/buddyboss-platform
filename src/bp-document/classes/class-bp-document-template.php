@@ -167,21 +167,20 @@ class BP_Document_Template {
 
 		// Fetch specific document items based on ID's.
 		if ( ! empty( $include ) ) {
-			$this->documents = bp_document_get_specific(
-				array(
+
+			$this->documents = bp_document_get_specific( array(
 					'document_ids'   => explode( ',', $include ),
-					'max'         => $max,
-					'count_total' => $count_total,
-					'page'        => $this->pag_page,
-					'per_page'    => $this->pag_num,
-					'sort'        => $sort,
-					'order_by'    => $order_by,
-					'user_id'     => $user_id,
-					'folder_id'    => $folder_id,
-					'folder'       => $folder,
-					'user_directory'       => $user_directory,
-				)
-			);
+					'max'            => $max,
+					'count_total'    => $count_total,
+					'page'           => $this->pag_page,
+					'per_page'       => $this->pag_num,
+					'sort'           => $sort,
+					'order_by'       => $order_by,
+					'user_id'        => $user_id,
+					'folder_id'      => $folder_id,
+					'folder'         => $folder,
+					'user_directory' => $user_directory,
+				) );
 
 			// Fetch all activity items.
 		} else {

@@ -34,22 +34,6 @@ global $bp_sitewide_plugins;
 global $bp_plugins;
 global $bp_is_multisite;
 
-//add_filter( 'option_bp-active-components', function( $component ){
-//	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] ) {
-//		$component['document'] = '1';
-//	}
-//	return $component;
-//});
-
-//add_action( 'init', function(){
-//	$component = get_option( 'bp-active-components' );
-//	if ( isset( $component ) && isset( $component['media'] ) && '1' === $component['media'] && '1' !== $component['document'] ) {
-//		$component['document'] = '1';
-//		update_option( 'bp-active-components', $component );
-//	}
-//});
-
-
 $is_bp_active   = false;
 $bp_plugin_file = 'buddypress/bp-loader.php';
 

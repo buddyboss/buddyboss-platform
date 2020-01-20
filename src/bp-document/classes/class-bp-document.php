@@ -709,6 +709,7 @@ class BP_Document {
 		}
 
 		$where_conditions_folder['type'] = "a.type = 'document'";
+		$where_conditions_document['type'] = "m.type = 'document'";
 
 		if ( ! empty( $r['privacy'] ) ) {
 			$privacy                              = "'" . implode( "', '", $r['privacy'] ) . "'";
