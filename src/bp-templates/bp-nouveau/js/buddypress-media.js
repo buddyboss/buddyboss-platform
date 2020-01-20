@@ -1373,6 +1373,8 @@ window.bp = window.bp || {};
 							activity_id: media_element.data('activity-id'),
 							privacy: media_element.data('privacy'),
 							parent_activity_id: media_element.data('parent-activity-id'),
+							album_id: media_element.data('album-id'),
+							group_id: media_element.data('group-id'),
 							is_forum: false
 						};
 
@@ -1424,7 +1426,9 @@ window.bp = window.bp || {};
 					typeof self.current_media.activity_id !== 'undefined' &&
 					self.current_media.activity_id != 0 ) ||
 					self.group_id ||
-					self.current_media.is_forum
+					self.current_media.is_forum ||
+					self.current_media.group_id ||
+					self.current_media.album_id
 				) {
 					media_privacy_wrap.hide();
 				}

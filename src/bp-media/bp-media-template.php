@@ -717,6 +717,37 @@ function bp_get_media_album_id() {
 }
 
 /**
+ * Output the media group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_media_group_id() {
+	echo bp_get_media_group_id();
+}
+
+/**
+ * Return the media group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $media_template {@link BP_Media_Template}
+ *
+ * @return int The media group ID.
+ */
+function bp_get_media_group_id() {
+	global $media_template;
+
+	/**
+	 * Filters the media group ID being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param int $id The media group ID.
+	 */
+	return apply_filters( 'bp_get_media_group_id', $media_template->media->group_id );
+}
+
+/**
  * Output the media activity ID.
  *
  * @since BuddyBoss 1.0.0

@@ -15,6 +15,8 @@
            data-activity-id="<?php bp_media_activity_id(); ?>"
            data-privacy="<?php bp_media_privacy(); ?>"
            data-parent-activity-id="<?php bp_media_parent_activity_id(); ?>"
+           data-album-id="<?php bp_media_album_id(); ?>"
+           data-group-id="<?php bp_media_group_id(); ?>"
            href="#">
            <img src="<?php echo buddypress()->plugin_url; ?>bp-templates/bp-nouveau/images/placeholder.png" data-src="<?php bp_media_attachment_image_thumbnail(); ?>" alt="<?php bp_media_title(); ?>" class="lazy"/>
         </a>

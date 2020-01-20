@@ -1016,18 +1016,51 @@ function bp_nouveau_activity_privacy() {
 	    $parent_activity_id        = false;
 	    $parent_activity_permalink = false;
 	    $group_id                  = false;
+	    $album_id                  = false;
+	    $album_url                 = '';
 
 	    // Get media privacy to show
-	    if ( $media_activity && bp_is_active( 'media' ) ) {
-		    $media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
-		    $media    = new BP_Media( $media_id );
+	    if ( bp_is_active( 'media' ) ) {
+	    	if ( $media_activity ) {
+			    $media_id = BP_Media::get_activity_media_id( bp_get_activity_id() );
+			    $media    = new BP_Media( $media_id );
 
-		    if ( ! empty( $media ) ) {
-			    $privacy  = $media->privacy;
-			    $group_id = $media->group_id;
+			    if ( ! empty( $media ) ) {
+				    $privacy  = $media->privacy;
+				    $group_id = $media->group_id;
+				    $album_id = $media->album_id;
 
-			    $parent_activity_id = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
-			    $parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+				    if ( ! empty( $album_id ) ) {
+					    $album     = new BP_Media_Album( $album_id );
+					    $album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+				    } else {
+					    $parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
+					    $parent_activity_permalink = bp_activity_get_permalink( $parent_activity_id );
+				    }
+			    }
+		    }
+
+		    $activity_album_id = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_album_activity', true );
+		    if ( ! empty( $activity_album_id ) ) {
+			    $album_id       = $activity_album_id;
+			    $album          = new BP_Media_Album( $album_id );
+			    $album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+			    $media_activity = true;
+		    } else {
+			    $media_ids = bp_activity_get_meta( bp_get_activity_id(), 'bp_media_ids', true );
+			    if ( ! empty( $media_ids ) ) {
+				    $media_ids = explode( ',', $media_ids );
+				    $media_id  = ! empty( $media_ids ) ? $media_ids[0] : false;
+				    $media     = new BP_Media( $media_id );
+
+				    if ( ! empty( $media->album_id ) ) {
+					    $album_id       = $media->album_id;
+					    $album          = new BP_Media_Album( $album_id );
+					    $album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
+					    $media_activity = true;
+					    bp_activity_update_meta( bp_get_activity_id(), 'bp_media_album_activity', $album_id );
+				    }
+			    }
 		    }
 	    }
 
@@ -1045,12 +1078,16 @@ function bp_nouveau_activity_privacy() {
 
 	    $privacy_items = bp_activity_get_visibility_levels();
 
-	    if ( $media_activity && $parent_activity_id && $parent_activity_permalink ) {
+	    if ( $media_activity && ( ( $parent_activity_id && $parent_activity_permalink ) || ( $album_id && ! empty( $album_url ) ) ) ) {
 	    	?>
 			<div class="bb-media-privacy-wrap">
 				<span class="bp-tooltip privacy-wrap" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo ! empty( $privacy_items[$privacy] ) ? $privacy_items[$privacy] : $privacy; ?>"><span class="privacy selected <?php echo $privacy; ?>"></span></span>
 			    <ul class="activity-privacy">
-				    <li class="bb-edit-privacy"><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
+				    <?php if ( $album_id && ! empty( $album_url ) ) : ?>
+					    <li class="bb-edit-privacy"><a href="<?php echo $album_url; ?>"><?php _e( 'Edit Album Privacy', 'buddyboss' ); ?></a></li>
+		            <?php elseif ( $parent_activity_id && $parent_activity_permalink ) : ?>
+					    <li class="bb-edit-privacy"><a href="<?php echo $parent_activity_permalink; ?>"><?php _e( 'Edit Post Privacy', 'buddyboss' ); ?></a></li>
+				    <?php endif; ?>
 			    </ul>
 			</div><?php
 	    } else { ?>

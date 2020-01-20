@@ -1247,6 +1247,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 		}
 
 		$group_id = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+		$album_id = false;
 
 		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
 			$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $group_id ) );
@@ -1264,11 +1265,21 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 				// get one of the media's privacy for the activity privacy
 				$privacy = $media->privacy;
 
+				// get media album id
+				if ( ! empty( $media->album_id ) ) {
+					$album_id = $media->album_id;
+				}
+
 				//save parent activity id in attachment meta
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $activity_id );
 			}
 
 			bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $added_media_ids ) );
+
+			// if media is from album then save album id in activity media
+			if ( ! empty( $album_id ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $album_id );
+			}
 
 			if ( empty( $group_id ) ) {
 				$main_activity = new BP_Activity_Activity( $activity_id );
