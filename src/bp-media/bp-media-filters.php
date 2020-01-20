@@ -404,6 +404,8 @@ function bp_media_update_media_privacy( &$album ) {
 		}
 
 		if ( ! empty( $activity_ids ) ) {
+			$activity_ids = array_unique( $activity_ids );
+
 			foreach ( $activity_ids as $activity_id ) {
 				$activity = new BP_Activity_Activity( $activity_id );
 

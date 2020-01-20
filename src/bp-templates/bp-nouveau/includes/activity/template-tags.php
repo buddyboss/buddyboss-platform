@@ -1032,6 +1032,7 @@ function bp_nouveau_activity_privacy() {
 
 				    if ( ! empty( $album_id ) ) {
 					    $album     = new BP_Media_Album( $album_id );
+					    $privacy   = $album->privacy;
 					    $album_url = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
 				    } else {
 					    $parent_activity_id        = get_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', true );
@@ -1044,6 +1045,7 @@ function bp_nouveau_activity_privacy() {
 		    if ( ! empty( $activity_album_id ) ) {
 			    $album_id       = $activity_album_id;
 			    $album          = new BP_Media_Album( $album_id );
+			    $privacy        = $album->privacy;
 			    $album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
 			    $media_activity = true;
 		    } else {
@@ -1056,6 +1058,7 @@ function bp_nouveau_activity_privacy() {
 				    if ( ! empty( $media->album_id ) ) {
 					    $album_id       = $media->album_id;
 					    $album          = new BP_Media_Album( $album_id );
+					    $privacy        = $album->privacy;
 					    $album_url      = trailingslashit( bp_core_get_user_domain( $album->user_id ) . bp_get_media_slug() . '/albums/' . $album_id );
 					    $media_activity = true;
 					    bp_activity_update_meta( bp_get_activity_id(), 'bp_media_album_activity', $album_id );
