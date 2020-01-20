@@ -61,8 +61,8 @@ class BP_Compatibility_Integration extends BP_Integration {
 		$extractedLinks = array();
 
 		if ( !empty( $links ) ) {
-			foreach ( $links as $link ) {
-				$extractedLinks[] = $link->getAttribute('href');
+			foreach ( $links as $link_obj ) {
+				$extractedLinks[] = $link_obj->getAttribute('href');
 			}
 		}
 
