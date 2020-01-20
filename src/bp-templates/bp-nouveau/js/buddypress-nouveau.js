@@ -259,10 +259,11 @@ window.bp = window.bp || {};
 		 * [ajax description]
 		 * @param  {[type]} post_data [description]
 		 * @param  {[type]} object    [description]
+		 * @param  {[type]} button    [description]
 		 * @return {[type]}           [description]
 		 */
-		ajax: function( post_data, object ) {
-			if ( this.ajax_request ) {
+		ajax: function( post_data, object, button ) {
+			if ( this.ajax_request && typeof button === 'undefined' ) {
 				this.ajax_request.abort();
 			}
 
@@ -637,6 +638,7 @@ window.bp = window.bp || {};
 			// Buttons
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
 			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+
 			$( document ).on( 'keyup', this, this.keyUp );
 
 			//Document move option
@@ -1326,7 +1328,7 @@ window.bp = window.bp || {};
 				action   : object + '_' + action,
 				item_id  : item_id,
 				_wpnonce : nonce
-			}, object ).done( function( response ) {
+			}, object, true ).done( function( response ) {
 				if ( false === response.success ) {
 					item_inner.prepend( response.data.feedback );
 					target.removeClass( 'pending loading' );
@@ -1497,7 +1499,7 @@ window.bp = window.bp || {};
 
 			object = $( event.delegateTarget ).data( 'bp-list' ) || null;
 
-			// Set the scope & filter
+			// Set the scope & filter for local storage
 			if ( null !== object ) {
 				objectData = self.getLocalStorage( 'bp-' + object );
 
@@ -1509,6 +1511,20 @@ window.bp = window.bp || {};
 					filter = objectData.filter;
 				}
 
+				if ( undefined !== objectData.extras ) {
+					extras = objectData.extras;
+				}
+			}
+
+			// Set the scope & filter for session storage.
+			if ( null !== object ) {
+				objectData = self.getStorage( 'bp-' + object );
+				if ( undefined !== objectData.scope ) {
+					scope = objectData.scope;
+				}
+				if ( undefined !== objectData.filter ) {
+					filter = objectData.filter;
+				}
 				if ( undefined !== objectData.extras ) {
 					extras = objectData.extras;
 				}

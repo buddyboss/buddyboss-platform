@@ -1590,7 +1590,12 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
+			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji) 
+				&& ( ( !_.isUndefined(BP_Nouveau.media.emoji.profile) && BP_Nouveau.media.emoji.profile ) 
+					|| ( !_.isUndefined(BP_Nouveau.media.emoji.groups) && BP_Nouveau.media.emoji.groups ) 
+					)
+				) {
+				
 				$('#whats-new').emojioneArea({
 					standalone: true,
 					hideSource: false,

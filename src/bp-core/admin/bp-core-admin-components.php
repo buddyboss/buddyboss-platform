@@ -152,7 +152,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'all' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( _n( 'All <span class="count">(%s)</span>', 'All <span class="count">(%s)</span>', $all_count, 'buddyboss' ), number_format_i18n( $all_count ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'All <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( $all_count ) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
@@ -169,7 +169,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'active' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( _n( 'Active <span class="count">(%s)</span>', 'Active <span class="count">(%s)</span>', count( $active_components ), 'buddyboss' ), number_format_i18n( count( $active_components ) ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'Active <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( count( $active_components ) ) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
@@ -186,7 +186,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'inactive' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( _n( 'Inactive <span class="count">(%s)</span>', 'Inactive <span class="count">(%s)</span>', count( $inactive_components ), 'buddyboss' ), number_format_i18n( count( $inactive_components ) ) ); ?></a> | </li>
+		class="current"<?php endif; ?>><?php printf( __( 'Inactive <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( count( $inactive_components ) ) ); ?></a> | </li>
 		<li><a href="
 		<?php
 		echo esc_url(
@@ -203,7 +203,7 @@ function bp_core_admin_components_options() {
 	<?php
 	if ( $action === 'mustuse' ) :
 		?>
-		class="current"<?php endif; ?>><?php printf( _n( 'Required <span class="count">(%s)</span>', 'Required <span class="count">(%s)</span>', count( $required_components ), 'buddyboss' ), number_format_i18n( count( $required_components ) ) ); ?></a></li>
+		class="current"<?php endif; ?>><?php printf( __( 'Required <span class="count">(%s)</span>', 'buddyboss' ), number_format_i18n( count( $required_components ) ) ); ?></a></li>
 	</ul>
 
 	<h3 class="screen-reader-text">
@@ -215,11 +215,11 @@ function bp_core_admin_components_options() {
 
 	<div class="tablenav top">
 		<div class="alignleft actions bulkactions">
-			<label for="bulk-action-selector-top" class="screen-reader-text">Select bulk action</label>
+			<label for="bulk-action-selector-top" class="screen-reader-text"><?php _e( 'Select bulk action', 'buddyboss' ); ?></label>
 			<select name="action" id="bulk-action-selector-top">
-				<option value="">Bulk Actions</option>
-				<option value="active" class="hide-if-no-js">Activate</option>
-				<option value="inactive">Deactivate</option>
+				<option value=""><?php _e( 'Bulk Actions', 'buddyboss' ); ?></option>
+				<option value="active" class="hide-if-no-js"><?php _e( 'Activate', 'buddyboss' ); ?></option>
+				<option value="inactive"><?php _e( 'Deactivate', 'buddyboss' ); ?></option>
 			</select>
 			<input type="submit" id="doaction" class="button action" name="bp-admin-component-submit" value="Apply">
 		</div>

@@ -1155,7 +1155,7 @@ function bbp_admin_setting_callback_group_forums_root_id() {
 	?>
 
 	<label for="_bbp_group_forums_root_id"><?php esc_html_e( 'is the parent for all group forums', 'buddyboss' ); ?></label>
-	<p class="description"><?php esc_html_e( 'Using the Forums Directory is not recommended. Changing this does not move existing forums.', 'buddyboss' ); ?></p>
+	<p class="description"><?php esc_html_e( 'Changing this does not move existing forums.', 'buddyboss' ); ?></p>
 
 	<?php
 }
