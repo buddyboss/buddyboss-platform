@@ -171,7 +171,6 @@ class BP_Media_Template {
 					'max'         => $max,
 					'count_total' => $count_total,
 					'page'        => $this->pag_page,
-					'type'        => $type,
 					'per_page'    => $this->pag_num,
 					'sort'        => $sort,
 					'order_by'    => $order_by,

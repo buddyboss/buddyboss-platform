@@ -1728,10 +1728,6 @@ function bp_is_current_component( $component = '' ) {
 		}
 	}
 
-	if ( bp_is_active( 'media' ) && 'document' === $component ) {
-		$is_current_component = true;
-	}
-
 	/**
 	 * Filters whether the current page belongs to the specified component.
 	 *
