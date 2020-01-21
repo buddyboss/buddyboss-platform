@@ -240,11 +240,66 @@ class BP_Document {
 			}
 		}
 
+		// Generate PDF file preview image.
+		$attachment_id         = $this->attachment_id;
+		$extension             = bp_document_extension( $attachment_id );
+		$preview_attachment_id = 0;
+
+		if ( 'pdf' === $extension ) {
+
+			$file          = get_attached_file( $attachment_id );
+			$upload_dir    = wp_upload_dir();
+			$output_format = "jpeg";
+			$antialiasing  = "4";
+			$preview_page  = "1";
+			$resolution    = "300";
+			$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
+			$exec_command  = "gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=" . $output_format . " ";
+			$exec_command  .= "-dTextAlphaBits=" . $antialiasing . " -dGraphicsAlphaBits=" . $antialiasing . " ";
+			$exec_command  .= "-dFirstPage=" . $preview_page . " -dLastPage=" . $preview_page . " ";
+			$exec_command  .= "-r" . $resolution . " ";
+			$exec_command  .= "-sOutputFile=" . $output_file . " '" . $file . "'";
+
+			exec( $exec_command, $command_output, $return_val );
+
+			if ( file_exists( $output_file ) ) {
+				$image_data = file_get_contents( $output_file );
+
+				$filename = basename( $output_file );
+
+				if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+					$file = $upload_dir['path'] . '/' . $filename;
+				} else {
+					$file = $upload_dir['basedir'] . '/' . $filename;
+				}
+
+				file_put_contents( $file, $image_data );
+
+				$wp_filetype = wp_check_filetype( $filename, null );
+
+				$attachment = array(
+					'post_mime_type' => $wp_filetype['type'],
+					'post_title'     => sanitize_file_name( $filename ),
+					'post_content'   => '',
+					'post_status'    => 'inherit'
+				);
+
+				$preview_attachment_id = wp_insert_attachment( $attachment, $file );
+				require_once( ABSPATH . 'wp-admin/includes/image.php' );
+				$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
+				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+
+				unlink( $output_file );
+
+			}
+		}
+
+
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s,  type = %s WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET blog_id = %d, attachment_id = %d, user_id = %d, title = %s, album_id = %d, activity_id = %d, group_id = %d, privacy = %s, menu_order = %d, date_created = %s, type = %s, preview_attachment_id = %d WHERE id = %d", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document' );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->document->table_name} ( blog_id, attachment_id, user_id, title, album_id, activity_id, group_id, privacy, menu_order, date_created, type, preview_attachment_id ) VALUES ( %d, %d, %d, %s, %d, %d, %d, %s, %d, %s, %s, %d )", $this->blog_id, $this->attachment_id, $this->user_id, $this->title, $this->folder_id, $this->activity_id, $this->group_id, $this->privacy, $this->menu_order, $this->date_created, 'document', $preview_attachment_id );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
