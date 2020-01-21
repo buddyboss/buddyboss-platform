@@ -768,6 +768,7 @@ body.bb-model-open {
 			display: inline-block;
 			font-weight: 600;
 			vertical-align: middle;
+			color: #939597;
 			&:after{
 				content: "\f345";
 				font-family: dashicons;
@@ -776,12 +777,21 @@ body.bb-model-open {
 				font-size: 15px;
 				margin-right: 6px;
 				margin-left: 6px;
+				color: inherit;
+				font-weight: 400;
 			}
 			&:last-child{
-				opacity: 0.8;
+				a{
+					color: #393e41;
+					font-weight: bold;
+				}
 				&:after{
 					display: none;
 				}
+			}
+			a{
+				color: #939597;
+				font-weight: normal;
 			}
 		}
 	}

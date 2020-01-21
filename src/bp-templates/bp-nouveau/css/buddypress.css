@@ -11002,6 +11002,7 @@ body.bb-model-open {
   display: inline-block;
   font-weight: 600;
   vertical-align: middle;
+  color: #939597;
 }
 
 .bb-single-album-header .document-breadcrumb li:after {
@@ -11012,14 +11013,22 @@ body.bb-model-open {
   font-size: 15px;
   margin-right: 6px;
   margin-left: 6px;
+  color: inherit;
+  font-weight: 400;
 }
 
-.bb-single-album-header .document-breadcrumb li:last-child {
-  opacity: 0.8;
+.bb-single-album-header .document-breadcrumb li:last-child a {
+  color: #393e41;
+  font-weight: bold;
 }
 
 .bb-single-album-header .document-breadcrumb li:last-child:after {
   display: none;
+}
+
+.bb-single-album-header .document-breadcrumb li a {
+  color: #939597;
+  font-weight: normal;
 }
 
 .bb-album-photos-list {
