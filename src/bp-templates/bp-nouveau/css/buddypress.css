@@ -11457,7 +11457,9 @@ img.emojioneemoji {
 body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-image,
 body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-image,
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-image,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-image {
+#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-image,
+.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-image,
+.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-image {
   padding-top: 0;
 }
 
@@ -11470,7 +11472,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details,
 body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details,
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details {
+#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
+.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
+.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
 
@@ -11483,7 +11487,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details,
 body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details,
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details {
+#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
+.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
+.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details {
   border-radius: 4px;
   position: relative;
   overflow: hidden;
@@ -11507,7 +11513,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
 body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details .dz-size,
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size {
+#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
+.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size,
+.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0px;
   font-size: 12px;
 }
@@ -11521,7 +11529,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
 body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details .dz-filename,
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename {
+#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
+.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename,
+.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename {
   display: block;
   width: 100%;
 }
@@ -11535,7 +11545,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 body.documents #buddypress #item-body #media-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
 body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.dz-file-preview .dz-details .dz-filename span,
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
-#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span {
+#new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
+.bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span,
+.modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0px;
 }
 
@@ -11551,16 +11563,28 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   max-width: 40px;
 }
 
+.modal-container.has-folderlocationUI .dropzone .dz-success-mark,
+.modal-container.has-folderlocationUI .dropzone .dz-progress,
+.modal-container.has-folderlocationUI .dropzone .dz-error-mark,
 .bp-media-document-uploader .dropzone .dz-preview .dz-success-mark,
 .bp-media-document-uploader .dropzone .dz-preview .dz-progress,
 .bp-media-document-uploader .dropzone .dz-preview .dz-error-mark,
+#whats-new-attachments #forums-post-document-uploader .dz-success-mark,
+#whats-new-attachments #forums-post-document-uploader .dz-progress,
+#whats-new-attachments #forums-post-document-uploader .dz-error-mark,
+#messages-post-document-uploader .dz-success-mark,
+#messages-post-document-uploader .dz-progress,
+#messages-post-document-uploader .dz-error-mark,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-success-mark,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-progress,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-error-mark {
   top: 70%;
 }
 
+.modal-container.has-folderlocationUI .dropzone .dz-filename,
 .bp-media-document-uploader .dropzone .dz-preview .dz-filename,
+#whats-new-attachments #forums-post-document-uploader .dz-filename,
+#messages-post-document-uploader .dz-filename,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader .dz-filename {
   font-size: 14px;
 }
