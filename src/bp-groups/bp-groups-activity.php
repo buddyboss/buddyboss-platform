@@ -532,9 +532,13 @@ function bp_groups_group_details_updated_add_activity( $group_id, $old_group, $n
 	}
 
 	// If the admin has opted not to notify members, don't post an activity item either.
-	if ( empty( $notify_members ) ) {
-		return;
-	}
+	/*
+	 * Commented cause If user not selected "Notify group members of these changes via email" option 
+	 * that time activity should show in the activity area and widget area
+	 */
+	//if ( empty( $notify_members ) ) {
+	//	return;
+	//}
 
 	$group = groups_get_group(
 		array(
