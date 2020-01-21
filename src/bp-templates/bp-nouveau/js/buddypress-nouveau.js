@@ -973,12 +973,22 @@ window.bp = window.bp || {};
 		 */
 		closeDocumentMove: function( event ) {
 			event.preventDefault();
+			var closest_parent = jQuery(event.currentTarget).closest('.has-folderlocationUI');
 			if($(event.currentTarget).hasClass('ac-document-close-button')){
 				$(event.currentTarget).closest('.bp-media-move-file').hide();
 			}else{
 				$(event.currentTarget).closest('.bp-media-move-folder').hide();
 			}
-
+			closest_parent.find('.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li').each(function(){
+				jQuery(this).removeClass('is_active').find('span.selected').removeClass('selected');
+				jQuery(this).find('ul').hide();
+			});
+			closest_parent.find('.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list > li').show();
+			closest_parent.find('.location-folder-title').text('Documents');
+			closest_parent.find('.location-folder-back').hide().closest('.has-folderlocationUI').find('.bb-folder-selected-id').val('');
+			closest_parent.find('.ac_document_search_folder').val('');
+			closest_parent.find('.bb-model-header h4 span').text('...');
+			closest_parent.find('.ac_document_search_folder_list ul').html('').parent().hide().siblings('.location-folder-list-wrap').find('.location-folder-list').show();
 		},
 
 		/**

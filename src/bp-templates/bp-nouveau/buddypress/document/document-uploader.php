@@ -5,7 +5,7 @@
  * @since BuddyBoss 1.0.0
  */
 ?>
-<div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
+<div id="bp-media-uploader" class="bp-media-document-uploader has-folderlocationUI" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
             <div class="modal-wrapper">

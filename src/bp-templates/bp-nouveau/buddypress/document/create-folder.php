@@ -10,7 +10,7 @@
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap">
             <div class="modal-wrapper">
-                <div id="boss-media-create-album-popup" class="modal-container">
+                <div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 
                     <header class="bb-model-header">
                         <h4><?php _e( 'Create Folder', 'buddyboss' ); ?></h4>

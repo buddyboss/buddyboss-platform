@@ -1349,7 +1349,7 @@ window.bp = window.bp || {};
 							$(this).siblings('.location-folder-title').text($(this).parent().find('li.is_active>span').text());
 						}
 
-						$(this).closest('#boss-media-create-album-popup').find('.ac_document_search_folder').val('').trigger('change');
+						$(this).closest('.has-folderlocationUI').find('.ac_document_search_folder').val('').trigger('change');
 
 					});
 
@@ -1357,7 +1357,7 @@ window.bp = window.bp || {};
 
 						if($(this).hasClass('selected')){
 							$(this).removeClass('selected');
-							$(this).closest('#boss-media-create-album-popup').find('.bb-model-header h4 span').text('...');
+							$(this).closest('.has-folderlocationUI').find('.bb-model-header h4 span').text('...');
 							$(this).closest('.location-folder-list-wrap-main').find('.bb-folder-destination').val('');
 							$(this).closest('.location-folder-list-wrap-main').find('.bb-folder-selected-id').val('');
 						} else {
@@ -1365,7 +1365,7 @@ window.bp = window.bp || {};
 							$(this).addClass('selected');
 							$(this).closest('.location-folder-list-wrap-main').find('.bb-folder-destination').val($(this).text());
 							$(this).closest('.location-folder-list-wrap-main').find('.bb-folder-selected-id').val($(this).parent().attr('data-id'));
-							$(this).closest('#boss-media-create-album-popup').find('.bb-model-header h4 span').text(' '+$(this).text());
+							$(this).closest('.has-folderlocationUI').find('.bb-model-header h4 span').text(' '+$(this).text());
 						}
 
 					});
@@ -1375,27 +1375,26 @@ window.bp = window.bp || {};
 						var keyword = $(this).val();
 						if(keyword == ''){
 
-							$(this).closest('#boss-media-create-album-popup').find('.location-folder-list-wrap .location-folder-list').show().parent().siblings('.ac_document_search_folder_list').hide();
+							
+							$(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap .location-folder-list').show().parent().siblings('.ac_document_search_folder_list').hide();
 
 						} else {
-							$(this).closest('#boss-media-create-album-popup').find('.ac_document_search_folder_list ul').html(' ');
-
-							var find_folder_selector;
-							if( $(this).closest('#boss-media-create-album-popup').find('.location-folder-list-wrap ul.location-folder-list li.is_active').length > 0 ) {
-								find_folder_selector = '.location-folder-list-wrap ul.location-folder-list li.is_active,.location-folder-list-wrap ul.location-folder-list li.is_active li';
-							} else {
-								find_folder_selector = '.location-folder-list-wrap ul.location-folder-list li';
+							$(this).closest('.has-folderlocationUI').find('.ac_document_search_folder_list ul').html(' ');
+							
+							var find_folder_selector = '';
+							if( $(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap ul.location-folder-list li.is_active').length > 0 ) {
+								find_folder_selector = '.is_active li';
 							}
 
-							$(this).closest('#boss-media-create-album-popup').find(find_folder_selector).each( function () {
-
+							$(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap ul.location-folder-list li'+find_folder_selector).each( function () {
+								
 								if ( $(this).children('span').text().search( new RegExp(keyword, "i") ) >= 0 ) {
-									$(this).closest('#boss-media-create-album-popup').find('.ac_document_search_folder_list ul').append('<li data-id="'+ $(this).attr('data-id') +'"><span>'+ $(this).children('span').text() +'</span></li>') ;
+									$(this).closest('.has-folderlocationUI').find('.ac_document_search_folder_list ul').append('<li data-id="'+ $(this).attr('data-id') +'"><span>'+ $(this).children('span').text() +'</span></li>') ;
 								}
 
 							});
 
-							$(this).closest('#boss-media-create-album-popup').find('.location-folder-list-wrap .location-folder-list').hide().parent().siblings('.ac_document_search_folder_list').show();
+							$(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap .location-folder-list').hide().parent().siblings('.ac_document_search_folder_list').show();
 
 							keyword = '';
 						}
