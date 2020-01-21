@@ -154,7 +154,7 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 					}
 
 					if ( ! empty( $selected_xprofile_fields ) ) {
-						// u.id IN ( SELECT user_id FROM {$bp->profile->table_name_data} WHERE value LIKE %s )
+
 						$data_clause_xprofile_table  = "( SELECT field_id, user_id FROM {$bp->profile->table_name_data} WHERE ( ExtractValue(value, '//text()') LIKE %s AND field_id IN ( ";
 						$data_clause_xprofile_table .= implode( ',', $selected_xprofile_fields['char_search'] );
 						$data_clause_xprofile_table .= ") ) OR ( value REGEXP '[[:<:]]{$search_term}[[:>:]]' AND field_id IN ( ";
@@ -166,18 +166,24 @@ if ( ! class_exists( 'Bp_Search_Members' ) ) :
 
 						$user_ids = array();
 
+						// check visiblity for field id with current user.
 						if ( !empty( $sql_xprofile_result ) ) {
 							foreach ( $sql_xprofile_result as $field_data ) {
-								$field = bp_get_profile_field_data( array( 'field' => $field_data->field_id, 'user_id' => get_current_user_id() ) );
-								if ( !empty( strip_tags( $field ) ) ) {
-									$user_ids[] =  $field_data->user_id;
+								$hidden_fields = bp_xprofile_get_hidden_fields_for_user( $field_data->user_id, bp_loggedin_user_id() );
+
+								if (
+									!empty( $hidden_fields )
+									&& !in_array( $field_data->field_id, $hidden_fields )
+								) {
+									$user_ids[] = $field_data->user_id;
 								}
 							}
 						}
 
+						// Added user when visbility matched.
 						if ( !empty( $user_ids ) ) {
 							$user_ids = array_unique( $user_ids );
-							$where_fields[]      = "u.id IN ( " . implode( ',', $user_ids )  ." )";
+							$where_fields[] = "u.id IN ( " . implode( ',', $user_ids )  ." )";
 						}
 					}
 				}
