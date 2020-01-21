@@ -695,6 +695,7 @@ function bp_core_install_media() {
 		activity_id bigint(20) NULL DEFAULT NULL ,
 		privacy varchar(50) NULL DEFAULT 'public',
 		type varchar(50) NULL DEFAULT 'media',
+		preview_attachment_id bigint(20) NULL DEFAULT 0,
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
