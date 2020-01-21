@@ -1425,8 +1425,29 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 
 	if ( !empty( $data ) ) {
 		$html .= '<ul class="document-breadcrumb">';
+		if ( bp_is_group() && bp_is_group_single() ) {
+			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
+			$link = bp_get_group_permalink( $group ) . bp_get_document_root_slug();
+			$html .= '<li><a href=" ' . $link . ' "> ' .  __( 'Documents', 'buddyboss' ) . '</a></li>';
+		} else {
+			$link = bp_displayed_user_domain() . bp_get_document_root_slug();
+			$html .= '<li><a href=" ' . $link . ' "> ' .  __( 'Documents', 'buddyboss' ) . '</a></li>';
+		}
+
+		if ( count( $data) > 3 ) {
+			$html .= '<li>' .  __( '...', 'buddyboss' ) . '</li>';
+			$data = array_slice( $data, -3 );
+		}
 		foreach ( $data as $element ) {
-			$html .= '<li> ' . $element['title'] . '</li>';
+			$link = '';
+			$group_id = (int) $element['group_id'];
+			if ( 0 === $group_id ) {
+				$link = bp_displayed_user_domain() . bp_get_document_root_slug() . '/folders/' . $element['id'];
+			} else {
+				$group = groups_get_group( array( 'group_id' => $group_id ) );
+				$link = bp_get_group_permalink( $group ) . bp_get_document_root_slug() . '/folders/' . $element['id'];
+			}
+			$html .= '<li> <a href=" ' . $link . ' ">' . $element['title'] . '</a></li>';
 		}
 		$html .= '</ul>';
 	}

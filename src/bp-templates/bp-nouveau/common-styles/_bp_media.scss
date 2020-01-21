@@ -1248,7 +1248,16 @@ img.emojioneemoji {
 	height: 24px !important;
 }
 
-.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader, .documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder, .documents.folder #buddypress #item-body #bp-media-uploader #media-uploader, .groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder, .groups.documents #buddypress #item-body #bp-media-uploader #media-uploader, .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader, #new-post #whats-new-attachments #forums-post-document-uploader {
+.documents.my-document #buddypress #item-body #bp-media-uploader #media-uploader,
+.documents.my-document #buddypress #item-body #bp-media-create-folder #media-uploader-folder,
+.documents.folder #buddypress #item-body #bp-media-uploader #media-uploader,
+.groups.documents #buddypress #item-body #bp-media-create-folder #media-uploader-folder,
+.groups.documents #buddypress #item-body #bp-media-uploader #media-uploader,
+.activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader,
+body.documents #buddypress #item-body #media-uploader,
+body.documents #buddypress #item-body #media-uploader-child-folder,
+body.messages #buddypress #item-body #messages-post-document-uploader,
+#new-post #whats-new-attachments #forums-post-document-uploader {
 
 	.dz-preview.dz-file-preview .dz-image {
 		padding-top: 0;
@@ -1651,7 +1660,7 @@ img.emojioneemoji {
 			}
 		}
 	}
-	
+
 	@media screen and (max-width: 1120px){
 		.album-single-view{
 			.bp-media-header-wrap {
@@ -1753,7 +1762,7 @@ img.emojioneemoji {
 	}
 }
 .location-folder-list-wrap-main{
-	
+
 	.bb-folder-destination{
 		cursor: pointer;
 	}
@@ -1825,7 +1834,7 @@ img.emojioneemoji {
 					width: auto;
 					transition: all ease 0.3s;
 				}
-				
+
 				ul{
 					display: none;
 					margin: 0;

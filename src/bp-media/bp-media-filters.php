@@ -533,7 +533,7 @@ function bp_media_forums_save_gif_data( $post_id ) {
  */
 function bp_media_attach_media_to_message( &$message ) {
 
-	if ( bp_is_messages_media_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['media'] ) ) {
+	if ( bp_is_messages_media_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['media'] ) && empty( $_POST['document']) ) {
 		$media_list = $_POST['media'];
 		$media_ids  = array();
 
