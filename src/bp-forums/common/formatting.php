@@ -137,6 +137,10 @@ function bbp_kses_data( $data = '' ) {
  */
 function bbp_code_trick( $content = '' ) {
 	$content = str_replace( array( "\r\n", "\r" ), "\n", $content );
+	/**
+	 * Added for convert &nbsp; to space fron content
+	 */
+	$content = str_replace( '&nbsp;', " ", $content );
 	$content = preg_replace_callback( '|(`)(.*?)`|', 'bbp_encode_callback', $content );
 	$content = preg_replace_callback( "!(^|\n)`(.*?)`!s", 'bbp_encode_callback', $content );
 
