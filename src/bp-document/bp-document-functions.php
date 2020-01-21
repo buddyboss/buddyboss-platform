@@ -1455,22 +1455,3 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 	return $html;
 
 }
-
-function bp_document_create_pdf_preview ( $file ) {
-
-	$file = get_attached_file( $file );
-	$filename_only = basename( get_attached_file( $file ) ); // Just the file name
-	$output_format = "jpeg";
-	$preview_page = "1";
-	$resolution = "300";
-	$output_file = "/srv/www/platform-site/public_html/imagick_preview.jpg";
-
-
-	$img_data = new Imagick();
-	$img_data->setResolution( $resolution, $resolution );
-	$img_data->readImage( $file . "[" . ($preview_page - 1) . "]" );
-	$img_data->setImageFormat( $output_format );
-
-	file_put_contents( $output_file, $img_data, FILE_USE_INCLUDE_PATH );
-}
-
