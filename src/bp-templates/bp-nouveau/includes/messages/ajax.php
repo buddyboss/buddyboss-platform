@@ -759,7 +759,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			$document_ids = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_document_ids', true );
 
 			if ( ! empty( $document_ids ) && bp_has_document( array( 'include' => $document_ids, 'order_by' => 'menu_order', 'sort' => 'ASC' ) ) ) {
-				$reply['document'] = array();
+				$thread->messages[ $i ]['document'] = array();
 				while ( bp_document() ) {
 					bp_the_document();
 
@@ -771,7 +771,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 					$filename          = basename( get_attached_file( $attachment_id ) );
 					$size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
 
-					$reply['document'][] = array(
+					$thread->messages[ $i ]['document'][] = array(
 						'id'                => bp_get_document_id(),
 						'title'             => bp_get_document_title(),
 						'url'               => $url,
