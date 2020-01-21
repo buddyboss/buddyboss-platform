@@ -352,6 +352,8 @@ window.bp = window.bp || {};
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
 
+			this.clearFolderLocationUI(event);
+
 		},
 
 		loadMoreGif: function(e) {
@@ -1405,6 +1407,25 @@ window.bp = window.bp || {};
 			}
 		},
 
+		clearFolderLocationUI: function(event){
+
+			var closest_parent = jQuery(event.currentTarget).closest('.has-folderlocationUI');
+			if(closest_parent.length > 0){
+
+				closest_parent.find('.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li').each(function(){
+					jQuery(this).removeClass('is_active').find('span.selected').removeClass('selected');
+					jQuery(this).find('ul').hide();
+				});
+
+				closest_parent.find('.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li').show().children('span, i').show();
+				closest_parent.find('.location-folder-title').text('Documents');
+				closest_parent.find('.location-folder-back').hide().closest('.has-folderlocationUI').find('.bb-folder-selected-id').val('');
+				closest_parent.find('.ac_document_search_folder').val('');
+				closest_parent.find('.bb-model-header h4 span').text('...');
+				closest_parent.find('.ac_document_search_folder_list ul').html('').parent().hide().siblings('.location-folder-list-wrap').find('.location-folder-list').show();	
+			}
+		},
+
 		closeCreateAlbumModal: function(event){
 			event.preventDefault();
 
@@ -1419,12 +1440,15 @@ window.bp = window.bp || {};
 			this.closeUploader(event);
 			$('#bp-media-create-folder, #bp-media-create-child-folder').hide();
 			$('#bb-album-title').val('');
+			
 		},
 
 		closeEditFolderModal: function(event){
 			event.preventDefault();
 
 			$('#bp-media-edit-child-folder').hide();
+			this.clearFolderLocationUI(event);
+			
 		},
 
 		submitMedia: function(event) {

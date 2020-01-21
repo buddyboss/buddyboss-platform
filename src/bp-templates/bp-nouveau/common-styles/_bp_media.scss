@@ -1267,7 +1267,9 @@ img.emojioneemoji {
 body.documents #buddypress #item-body #media-uploader,
 body.documents #buddypress #item-body #media-uploader-child-folder,
 body.messages #buddypress #item-body #messages-post-document-uploader,
-#new-post #whats-new-attachments #forums-post-document-uploader {
+#new-post #whats-new-attachments #forums-post-document-uploader,
+.bp-media-document-uploader.has-folderlocationUI,
+.modal-container.has-folderlocationUI {
 
 	.dz-preview.dz-file-preview .dz-image {
 		padding-top: 0;
@@ -1317,7 +1319,10 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 #media-folder-document-data-table td img {
 	max-width: 40px;
 }
+.modal-container.has-folderlocationUI .dropzone ,
 .bp-media-document-uploader .dropzone .dz-preview,
+#whats-new-attachments #forums-post-document-uploader, 
+#messages-post-document-uploader,
 .activity-update-form #whats-new-attachments .activity-document-container #activity-post-document-uploader{
 	.dz-success-mark,
 	.dz-progress,
