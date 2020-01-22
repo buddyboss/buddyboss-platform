@@ -365,6 +365,11 @@
 .bb-icon-rounded-xing:before { content: '\e954'; }
 .bb-icon-youtube-logo:before { content: '\e955'; }
 .bb-icon-question-thin:before { content: '\e956'; }
+.bb-icon-code:before { content: '\e958'; }
+.bb-icon-mp3:before { content: '\e959'; }
+.bb-icon-pdf:before { content: '\e95a'; }
+.bb-icon-zip:before { content: '\e95b'; }
+.bb-icon-sort:before { content: '\e95c'; }
 .bb-icon-graduation-cap:before { content: '\e957'; }
 .bb-icon-edit-thin:before { content: '\e965'; }
 .bb-icon-all-results:before { content: '\e966'; }
@@ -392,11 +397,13 @@
 .bb-icon-moon-circle:before { content: '\e97d'; }
 .bb-icon-play-circle-fill:before { content: '\e97e'; }
 .bb-icon-play-thin:before { content: '\e97f'; }
+.bb-icon-folder-stacked:before { content: '\e980'; }
 .bb-icon-rocket:before { content: '\e981'; }
 .bb-icon-text:before { content: '\e982'; }
 .bb-icon-tools:before { content: '\e983'; }
 .bb-icon-triangle-fill:before { content: '\e984'; }
 .bb-icon-watch-alarm:before { content: '\e985'; }
+.bb-icon-doc:before { content: '\e986'; }
 .bb-icon-trash-small:before { content: '\eaea'; }
 .bb-icon-rounded-instagram:before { content: '\eaec'; }
 .bb-icon-rounded-facebook:before { content: '\eaed'; }
