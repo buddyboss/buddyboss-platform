@@ -398,4 +398,4 @@ function bp_core_memberpress_the_content( $content ) {
 
 	return $content;
 }
-add_filter( 'the_content', 'bb_memberpress_the_content', 999 );
+add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );
