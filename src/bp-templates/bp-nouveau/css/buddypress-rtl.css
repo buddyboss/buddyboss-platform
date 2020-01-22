@@ -11623,6 +11623,12 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   color: #122B46;
 }
 
+#media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit {
+  height: 32px;
+  display: none;
+  margin-bottom: 8px;
+}
+
 #media-folder-document-data-table .media-folder_items .media-folder_details__bottom {
   display: block;
   font-size: 13px;

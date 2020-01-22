@@ -644,6 +644,9 @@ window.bp = window.bp || {};
 			//Document move option
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
+
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 
 			// Close notice
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
@@ -981,6 +984,62 @@ window.bp = window.bp || {};
 			}
 
 			bp.Nouveau.Media.clearFolderLocationUI(event);
+
+		},
+
+		/**
+		 * [renameDocument description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocument: function( event ) {
+
+			var current_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
+			var current_name_text = '';
+
+			if( $(event.currentTarget).closest('.media-folder_items').hasClass('ac-document-list') ){
+				var current_name_text = current_name.text().split('.').slice(0, -1).join('.');
+			} else {
+				var current_name_text = current_name.text();
+			}
+			
+			$(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').hide().siblings('.media-folder_name_edit').show().val(current_name_text).focus().select();
+
+		},
+
+		/**
+		 * [renameDocumentSubmit description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocumentSubmit: function( event ) {
+
+			var document_edit = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
+			var document_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
+			var file_extension = '';
+
+			if(event.keyCode == 13 || event.keyCode == 27){
+				
+				if(event.keyCode == 13) {
+
+					if( document_edit.val() == '' ){
+						return;
+					}
+					
+					if( $(event.currentTarget).closest('.media-folder_items').hasClass('ac-document-list') ){
+
+						file_extension = '.' + document_name.text().split('.')[1]; // Add back extension to name
+
+					}
+					document_name.text( document_edit.val() + file_extension);
+					
+					//make an ajax call to save the new name here
+
+				}
+				
+				document_edit.hide().siblings('.media-folder_name').show();
+
+			}
 
 		},
 
