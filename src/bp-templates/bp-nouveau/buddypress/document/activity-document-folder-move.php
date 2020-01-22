@@ -26,10 +26,10 @@
                             </div>
                             <div class="bb-field-wrap">
                                 <div class="bb-dropdown-wrap">
-                                    <div class="location-folder-list-wrap-main">
+                                    <div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
                                         <input type="hidden" class="bb-folder-destination" value="<?php _e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
                                         <div class="location-folder-list-wrap">
-                                            <span class="location-folder-back"><i class="dashicons dashicons-arrow-left-alt2"></i></span>
+                                            <span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
                                             <span class="location-folder-title"><?php _e( 'Documents', 'buddyboss' ); ?></span>
                                             <?php echo $ul; ?>
                                         </div> <!-- .location-folder-list-wrap -->

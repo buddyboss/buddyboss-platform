@@ -5,11 +5,11 @@
  * @since BuddyBoss 1.0.0
  */
 ?>
-<div id="bp-media-uploader" class="bp-media-document-uploader has-folderlocationUI" style="display: none;">
+<div id="bp-media-uploader" class="bp-media-document-uploader" style="display: none;">
     <transition name="modal">
         <div class="modal-mask bb-white bbm-model-wrap bbm-uploader-model-wrap">
             <div class="modal-wrapper">
-                <div class="modal-container">
+                <div class="modal-container has-folderlocationUI">
 
                     <header class="bb-model-header bg-white">
                         <a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
@@ -81,10 +81,10 @@
                            </div>
                            <div class="bb-field-wrap">
                                <div class="bb-dropdown-wrap">
-                                   <div class="location-folder-list-wrap-main">
+                                   <div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
                                        <input type="hidden" class="bb-folder-destination" value="<?php _e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
                                        <div class="location-folder-list-wrap">
-                                           <span class="location-folder-back"><i class="dashicons dashicons-arrow-left-alt2"></i></span>
+                                           <span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
                                            <span class="location-folder-title"><?php _e( 'Documents', 'buddyboss' ); ?></span>
                                            <?php echo $ul; ?>
                                        </div> <!-- .location-folder-list-wrap -->

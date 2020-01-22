@@ -718,18 +718,7 @@ span.dashicons.dashicons-admin-file:before {
 				color: #122b46;
 				background-color: rgba(255, 255, 255, 0.9);
 				border-radius: 3px;
-				padding: 3px;
-				font-family: dashicons;
-				&.document-icon-download:before{
-					content: "\f316";
-				}
-				&.document-icon-download-more:before{
-					content: "\f333";
-				}
-				&.document-icon-collapse:before{
-					content: "\f342";
-				}
-				
+				padding: 3px;				
 			}
 			&:hover{
 				i{
@@ -765,6 +754,7 @@ span.dashicons.dashicons-admin-file:before {
 				ul{
 					list-style: none;
 					margin: 10px 0;
+					padding: 0;
 					li{
 						margin: 0;
 						padding: 0;
@@ -916,6 +906,7 @@ span.dashicons.dashicons-admin-file:before {
 			width: 100%;
 			float: left;
 			outline: 0;
+			border-radius: 35px;
 		}
 	}
 	.document-text-wrap{

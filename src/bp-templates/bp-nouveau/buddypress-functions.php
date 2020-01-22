@@ -365,6 +365,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 		) );
 
+		$current_theme = wp_get_theme();
+		$current_theme_buddyboss = true;
+		
+		if (get_template_directory() === get_stylesheet_directory()) {
+			if ( 'BuddyBoss Theme' !== $current_theme->get( 'Theme Name' ) ) {
+				$current_theme_buddyboss = false;
+			}
+		} else {
+			if ( 'buddyboss-theme' !== $current_theme->get( 'Template' ) ) {
+				$current_theme_buddyboss = false;
+			}
+		}
+
+		if ( !$current_theme_buddyboss ) {
+			$font = array(
+				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+			);
+			$styles = array_merge( array( 'bp-nouveau-icons' => $font ), $styles );
+		}
+
 		if ( $styles ) {
 
 			foreach ( $styles as $handle => $style ) {

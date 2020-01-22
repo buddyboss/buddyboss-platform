@@ -17,7 +17,6 @@
                         <a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
                     </header>
 
-                    <div class="documents-steps-1">
                         <div class="bb-field-wrap">
                             <label for="bb-album-title" class="bb-label"><?php _e( 'Title', 'buddyboss' ); ?></label>
                             <input id="bb-album-title" type="text" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
@@ -43,12 +42,6 @@
                                     </select>
                                 </div>
                             </div>
-                        <?php endif; ?>
-                    </div>
-
-                    <div class="documents-steps-2">
-
-                        <?php if ( ! bp_is_group() ) : ?>
 
                             <?php
                             $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
@@ -60,10 +53,10 @@
                                 </div>
                                 <div class="bb-field-wrap">
                                     <div class="bb-dropdown-wrap">
-                                        <div class="location-folder-list-wrap-main">
+                                        <div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
                                             <input type="hidden" class="bb-folder-destination" value="<?php _e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
                                             <div class="location-folder-list-wrap">
-                                                <span class="location-folder-back"><i class="dashicons dashicons-arrow-left-alt2"></i></span>
+                                                <span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
                                                 <span class="location-folder-title"><?php _e( 'Documents', 'buddyboss' ); ?></span>
                                                 <?php echo $ul; ?>
                                             </div> <!-- .location-folder-list-wrap -->
@@ -78,7 +71,6 @@
                             ?>
 
                         <?php endif; ?>
-                    </div>
 
                     <footer class="bb-model-footer">
                         <a class="button" id="bp-media-create-folder-submit" href="#"><?php _e( 'Create Folder', 'buddyboss' ); ?></a>

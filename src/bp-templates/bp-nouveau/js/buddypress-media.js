@@ -1328,7 +1328,7 @@ window.bp = window.bp || {};
 					$(a).find('.location-folder-list-wrap').addClass('is_loaded');
 
 					$(a).find('.location-folder-list li').each(function(){
-						$(this).children('ul').parent().addClass('has-ul').append('<i class="dashicons dashicons-arrow-right-alt2 sub-menu-anchor"></i>');
+						$(this).children('ul').parent().addClass('has-ul').append('<i class="bb-icon-angle-right sub-menu-anchor"></i>');
 					});
 
 					$(document).on('click', a + ' .location-folder-list li i', function(){

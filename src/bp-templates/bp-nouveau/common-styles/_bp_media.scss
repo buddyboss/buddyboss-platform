@@ -264,6 +264,10 @@
 	border-radius: 4px;
 	box-shadow: 0 6px 24px 0 rgba(18, 43, 70, 0.08);
 	transition: all 0.3s ease;
+	&.has-folderlocationUI{
+		max-height: 90vh;
+		overflow: auto;
+	}
 }
 
 .bb-model-wrap {
@@ -1435,7 +1439,8 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 			}
 			ul{
 				list-style: none;
-				margin: 10px 0;
+				margin: 10px 0; 
+				padding: 0;
 				li{
 					a{
 						padding: 5px 10px;
@@ -1628,6 +1633,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 				ul {
 					list-style: none;
 					margin: 10px 0;
+					padding: 0;
 					li {
 						.media-edit-folder{
 							display: inline-block;
@@ -1758,7 +1764,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		}
 	}
 }
-.bb-field-wrap-search{
+.has-folderlocationUI .bb-field-wrap-search{
 	position: relative;
 	&:after{
 		content: '\e81f';
@@ -1768,7 +1774,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		opacity: .4;
 		position: absolute;
 		left: 12px;
-		top: 6px;
+		top: 12px;
+		line-height: 1;
+		font-size: 16px;
 	}
 	.ac_document_search_folder{
 		border-radius: 30px;
@@ -1790,12 +1798,16 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		}
 		.location-folder-back{
 			display: none;
-			margin-left: 10px;
 			cursor: pointer;
 			vertical-align: middle;
 			i{
 				display: inline-block;
 				vertical-align: middle;
+				font-size: 34px;
+				height: 25px;
+				line-height: 25px;
+				width: 20px;
+				user-select: none;
 			}
 		}
 		.location-folder-list{
@@ -1820,8 +1832,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 					cursor: pointer;
 					font-size: 15px;
 					&:before{
-						font-family: dashicons;
-						content: "\f318";
+						content: '\e8ec';
+						font-family: "bb-icons";
+						color: #939597;
 						margin-right: 10px;
 					}
 					&.selected{
@@ -1836,8 +1849,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 					position: absolute;
 					right: 5px;
 					top: 50%;
-					bottom: 0;
-					padding: 2px 3px;
+					font-size: 34px;
 					line-height: 1;
 					visibility: hidden;
 					opacity: 0;
@@ -1852,6 +1864,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 				ul{
 					display: none;
 					margin: 0;
+					padding: 0;
 					list-style: none;
 				}
 				&:last-child{
@@ -1867,6 +1880,12 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 				background-color: #a4acb4;
 				border-radius: 10px;
 			}
+		}
+	}
+	&.is-mobile{
+		.location-folder-list-wrap .location-folder-list li .sub-menu-anchor{
+			visibility: visible;
+			opacity: 1;
 		}
 	}
 }
