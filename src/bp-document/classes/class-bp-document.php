@@ -244,11 +244,11 @@ class BP_Document {
 		$attachment_id         = $this->attachment_id;
 		$extension             = bp_document_extension( $attachment_id );
 		$preview_attachment_id = 0;
+		$file                  = get_attached_file( $attachment_id );
+		$upload_dir            = wp_upload_dir();
 
 		if ( 'pdf' === $extension ) {
 
-			$file          = get_attached_file( $attachment_id );
-			$upload_dir    = wp_upload_dir();
 			$output_format = "jpeg";
 			$antialiasing  = "4";
 			$preview_page  = "1";
@@ -292,6 +292,64 @@ class BP_Document {
 				unlink( $output_file );
 
 			}
+		} elseif ( 'docx' === $extension ) {
+
+			$command = "export /usr/bin/libreoffic --headless -convert-to pdf --outdir /srv/www/plarform/public_html/doc/";
+			$command .= " $file";
+
+			$output = shell_exec( $command );
+
+			error_log( 'chetan');
+			error_log( $output );
+			error_log( print_r( $output, true ) );
+
+//			$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
+//
+//			$osm = new COM( "com.sun.star.ServiceManager" ) or die ( "Please be sure that OpenOffice.org is installed.\n" );
+//			//Set the application to remain hidden to avoid flashing the document onscreen
+//			$args = array( MakePropertyValue( "Hidden", true, $osm ) );
+//			//Launch the desktop
+//			$oDesktop = $osm->createInstance( "com.sun.star.frame.Desktop" );
+//			//Load the .doc file, and pass in the "Hidden" property from above
+//			$oWriterDoc = $oDesktop->loadComponentFromURL( $file, "_blank", 0, $args );
+//			//Set up the arguments for the PDF output
+//			$export_args = array( MakePropertyValue( "FilterName", "writer_pdf_Export", $osm ) );
+//			//print_r($export_args);
+//			//Write out the PDF
+//			$oWriterDoc->storeToURL( $output_file, $export_args);
+//			$oWriterDoc->close( true );
+
+//			if ( file_exists( $output_file ) ) {
+//				$image_data = file_get_contents( $output_file );
+//
+//				$filename = basename( $output_file );
+//
+//				if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+//					$file = $upload_dir['path'] . '/' . $filename;
+//				} else {
+//					$file = $upload_dir['basedir'] . '/' . $filename;
+//				}
+//
+//				file_put_contents( $file, $image_data );
+//
+//				$wp_filetype = wp_check_filetype( $filename, null );
+//
+//				$attachment = array(
+//					'post_mime_type' => $wp_filetype['type'],
+//					'post_title'     => sanitize_file_name( $filename ),
+//					'post_content'   => '',
+//					'post_status'    => 'inherit'
+//				);
+//
+//				$preview_attachment_id = wp_insert_attachment( $attachment, $file );
+//				require_once( ABSPATH . 'wp-admin/includes/image.php' );
+//				$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
+//				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+//
+//				unlink( $output_file );
+//
+//			}
+
 		}
 
 

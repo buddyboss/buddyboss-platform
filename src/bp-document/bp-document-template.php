@@ -1552,3 +1552,34 @@ function bp_get_document_author() {
 	 */
 	return apply_filters( 'bp_get_document_author', $author );
 }
+
+/**
+ * Output the document preview attachment id.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_document_preview_attachment_id() {
+	echo bp_get_document_preview_attachment_id();
+}
+
+/**
+ * Return the document preview attachment id.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return int The document preview attachment id.
+ */
+function bp_get_document_preview_attachment_id() {
+	global $document_template;
+
+	/**
+	 * Filters the document preview attachment id being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param int $id The document preview attachment id.
+	 */
+	return apply_filters( 'bp_get_document_preview_attachment_id', $document_template->document->preview_attachment_id );
+}
