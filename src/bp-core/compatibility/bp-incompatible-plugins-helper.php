@@ -364,7 +364,7 @@ add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_ad
  *
  * @return mixed
  */
-function bb_memberpress_the_content( $content ) {
+function bp_core_memberpress_the_content( $content ) {
 	if ( class_exists( 'MeprBaseModel' ) ) {
 		global $post;
 		$page_ids = bp_core_get_directory_page_ids();
