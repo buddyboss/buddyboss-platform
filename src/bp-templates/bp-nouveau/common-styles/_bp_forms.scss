@@ -164,6 +164,10 @@
 			width: auto;
 		}
 
+                label[for=delete-account-understand] {
+			display: inline-block;
+                }
+
 		a.clear-value {
 			display: block;
 			margin-top: $marg-xsml;
@@ -287,6 +291,8 @@
 	}
 
 } // close .buddypress-wrap
+
+
 
 // These rules do not belong here really but it's
 // where original styles placed them
