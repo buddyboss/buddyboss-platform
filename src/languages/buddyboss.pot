@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-23 11:41:20+00:00\n"
+"POT-Creation-Date: 2020-01-23 12:26:25+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -15627,7 +15627,13 @@ msgid "Please add fields to search members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:17
-msgid "Move folder to "
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:16
+msgid "Move "
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:17
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:16
+msgid " to "
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:25
@@ -15646,10 +15652,6 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:85
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:50
 msgid "Select Folder"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:16
-msgid "Move file to"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:29

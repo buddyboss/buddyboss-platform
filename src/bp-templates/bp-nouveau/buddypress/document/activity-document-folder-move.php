@@ -14,7 +14,7 @@
                 <div id="boss-media-create-album-popup" class="modal-container has-folderlocationUI">
 
                     <header class="bb-model-header">
-                        <h4><?php _e( 'Move folder to ', 'buddyboss' ); ?><span>...</span></h4>
+                        <h4><?php _e( 'Move ', 'buddyboss' ); ?> <span class="target_name"></span> <?php _e( ' to ', 'buddyboss' ); ?><span class="target_folder">...</span></h4>
                     </header>
 
                     <?php if ( ! bp_is_group() ) :

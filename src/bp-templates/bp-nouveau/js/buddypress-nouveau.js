@@ -950,6 +950,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var currentTarget;
+			var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
 			if($(event.currentTarget).hasClass('ac-document-move')){
 				currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').find('.bp-media-move-file').attr('id');
 			}else{
@@ -965,6 +966,8 @@ window.bp = window.bp || {};
 			if(bp.Nouveau.Media.folderLocationUI){
 				bp.Nouveau.Media.folderLocationUI(currentTarget);
 			}
+			
+			$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
 
 			$(currentTarget).show();
 		},
@@ -1039,7 +1042,7 @@ window.bp = window.bp || {};
 				document_name.text( document_name_val );
 				
 				// Make ajax call to save new file name here.
-				//use variable 'makeAllowedName' as a new name while making an ajax call.
+				//use variable 'document_name_val' as a new name while making an ajax call.
 
 				document_edit.hide().siblings('.media-folder_name').show();
 
