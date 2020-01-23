@@ -1367,6 +1367,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		flex-flow: column;
 		.media-folder_name{
 			color: #122B46;
+			& > span {
+				white-space: pre;
+			}
 		}
 		.media-folder_name_edit{
 			height: 32px;

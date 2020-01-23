@@ -1773,7 +1773,7 @@ window.bp = window.bp || {};
 			var data = {
 				'action'	: 'document_folder_save',
 				'_wpnonce'	: BP_Nouveau.nonces.media,
-				'title'		: title.val(),
+				'title'		: title.val().trim(),
 				'medias'	: self.dropzone_media,
 				'privacy'	: privacy.val(),
 				'parent'	: parent

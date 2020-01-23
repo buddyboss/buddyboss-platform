@@ -6,6 +6,7 @@
  */
 
 $attachment_id = bp_get_document_attachment_id();
+$extension = '';
 if ( $attachment_id ) {
 	$extension = bp_document_extension( $attachment_id );
 	$svg_icon  = bp_document_svg_icon( $extension );
@@ -25,7 +26,9 @@ if ( $attachment_id ) {
 		<a href="<?php echo esc_url( $link ); ?>"><img src="<?php echo esc_url( $svg_icon ); ?>" /></a>
 	</div>
 	<div class="media-folder_details">
-		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>"><?php bp_document_name(); ?></a>
+		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">
+			<span><?php bp_document_title(); ?></span><?php echo $extension ? '.' . $extension : ''; ?>
+		</a>
 		<input type="text" value="" class="media-folder_name_edit" />
 		<div  class="media-folder_details__bottom">
 			<span class="media-folder_date"><?php bp_document_date_created(); ?></span>
