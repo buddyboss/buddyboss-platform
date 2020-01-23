@@ -925,6 +925,7 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: '',
 				minimumInputLength: 1,
+				language: bp_select2.lang,
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',
