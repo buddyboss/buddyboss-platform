@@ -345,7 +345,7 @@ function bp_document_add( $args = '' ) {
  *
  * @return mixed|void
  */
-function bp_document_add_handler( $documents = array() ) {
+function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 	$document_ids = array();
 
 	if ( empty( $documents ) && ! empty( $_POST['medias'] ) ) {
@@ -357,9 +357,10 @@ function bp_document_add_handler( $documents = array() ) {
 		foreach ( $documents as $document ) {
 
 			$document_id = bp_document_add( array(
+				'activity_id'   => $activity_id,
 				'attachment_id' => $document['id'],
 				'title'         => $document['name'],
-				'folder_id'      => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
+				'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
 				'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
 			) );
 
@@ -1351,12 +1352,16 @@ function bp_document_svg_icon( $extension ) {
 	return apply_filters( 'bp_document_svg_icon', $svg, $extension );
 }
 
-function bp_document_user_document_folder_tree_view_li_html( $user_id ) {
+function bp_document_user_document_folder_tree_view_li_html( $user_id, $group_id = 0 ) {
 
 	global $wpdb, $bp;
 
-	$document_folder_table      = $bp->table_prefix . 'bp_media_albums';
-	$group_id                   = ( function_exists( 'bp_get_current_group_id' )) ? bp_get_current_group_id() : 0;
+	$document_folder_table = $bp->table_prefix . 'bp_media_albums';
+
+	if ( 0 === $group_id ) {
+		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
+	}
+
 	$documents_folder_query     = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, $group_id, 'document' );
 	$data                       = $wpdb->get_results( $documents_folder_query, ARRAY_A );
 
@@ -1454,4 +1459,21 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 
 	return $html;
 
+}
+
+function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
+
+	global $wpdb, $bp;
+
+	if ( 0 === $document_id || 0 === $folder_id ) {
+		return false;
+	}
+
+	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET album_id = %d WHERE id = %d", $folder_id, $document_id );
+
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	return $document_id;
 }

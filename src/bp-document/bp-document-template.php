@@ -1583,3 +1583,34 @@ function bp_get_document_preview_attachment_id() {
 	 */
 	return apply_filters( 'bp_get_document_preview_attachment_id', $document_template->document->preview_attachment_id );
 }
+
+/**
+ * Output the document group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_document_group_id() {
+	echo bp_get_document_group_id();
+}
+
+/**
+ * Return the document group ID.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return int The document group ID.
+ */
+function bp_get_document_group_id() {
+	global $document_template;
+
+	/**
+	 * Filters the document group ID being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param int $id The document group ID.
+	 */
+	return apply_filters( 'bp_get_document_group_id', $document_template->document->group_id );
+}

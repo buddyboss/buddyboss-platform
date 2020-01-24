@@ -24,18 +24,6 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
-			'media_albums_loader' => array(
-				'function' => 'bp_nouveau_ajax_albums_loader',
-				'nopriv'   => true,
-			),
-		),
-		array(
-			'media_upload' => array(
-				'function' => 'bp_nouveau_ajax_media_upload',
-				'nopriv'   => true,
-			),
-		),
-		array(
 			'document_document_upload' => array(
 				'function' => 'bp_nouveau_ajax_document_upload',
 				'nopriv'   => true,
@@ -48,59 +36,17 @@ add_action( 'admin_init', function() {
 			),
 		),
 		array(
-			'media_save' => array(
-				'function' => 'bp_nouveau_ajax_media_save',
-				'nopriv'   => true,
-			),
-		),
-		array(
-			'media_delete' => array(
-				'function' => 'bp_nouveau_ajax_media_delete',
-				'nopriv'   => true,
-			),
-		),
-		array(
-			'media_move_to_album' => array(
-				'function' => 'bp_nouveau_ajax_media_move_to_album',
-				'nopriv'   => true,
-			),
-		),
-		array(
-			'media_album_save' => array(
-				'function' => 'bp_nouveau_ajax_media_album_save',
-				'nopriv'   => true,
-			),
-		),
-		array(
 			'document_folder_save' => array(
 				'function' => 'bp_nouveau_ajax_document_folder_save',
 				'nopriv'   => true,
 			),
 		),
 		array(
-			'media_album_delete' => array(
-				'function' => 'bp_nouveau_ajax_media_album_delete',
+			'document_folder_move' => array(
+				'function' => 'bp_nouveau_ajax_document_folder_move',
 				'nopriv'   => true,
 			),
-		),
-		array(
-			'media_folder_delete' => array(
-				'function' => 'bp_nouveau_ajax_media_folder_delete',
-				'nopriv'   => true,
-			),
-		),
-		array(
-			'media_get_activity' => array(
-				'function' => 'bp_nouveau_ajax_media_get_activity',
-				'nopriv'   => true,
-			),
-		),
-		array(
-			'media_delete_attachment' => array(
-				'function' => 'bp_nouveau_ajax_media_delete_attachment',
-				'nopriv'   => true,
-			),
-		),
+		)
 	);
 
 	foreach ( $ajax_actions as $ajax_action ) {
@@ -1120,4 +1066,51 @@ function bp_nouveau_ajax_document_folder_save() {
 	wp_send_json_success( array(
 		'redirect_url'     => $redirect_url,
 	) );
+}
+
+function bp_nouveau_ajax_document_folder_move() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Move document
+	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) $_POST['folder_id'] : 0;
+	$document_id = ! empty( $_POST['document_id'] ) ? (int) $_POST['document_id'] : 0;
+
+	if ( 0 === $document_id || 0 === $folder_id ) {
+		wp_send_json_error( $response );
+	}
+
+	$document = bp_document_move_to_folder( $document_id, $folder_id );
+
+	if ( $document > 0 ) {
+		wp_send_json_success( array(
+			'message'     => 'success',
+		) );
+	} else {
+		wp_send_json_error( $response );
+	}
+
 }

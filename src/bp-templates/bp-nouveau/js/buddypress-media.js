@@ -140,7 +140,6 @@ window.bp = window.bp || {};
 
 			// Fetch Media
 			$( '.bp-nouveau [data-bp-list="media"]' ).on( 'click', 'li.load-more', this.injectMedias.bind( this ) );
-			$( '.bp-nouveau [data-bp-list="documet"]' ).on( 'click', '.dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( '.bp-nouveau #albums-dir-list' ).on( 'click', 'li.load-more', this.appendAlbums.bind( this ) );
 			$( '.bp-existing-media-wrap' ).on( 'click', 'li.load-more', this.appendMedia.bind( this ) );
 			$( '.bp-nouveau' ).on( 'change', '.bb-media-check-wrap [name="bb-media-select"]', this.addSelectedClassToWrapper.bind( this ) );
@@ -173,6 +172,8 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more, .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li a', this.fileActivityActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_collapse', this.collapseCodePreview.bind( this ) );
+			$( document ).on( 'click', '.activity .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
+			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
 
 
 			// Gifs autoplay
@@ -217,6 +218,32 @@ window.bp = window.bp || {};
 					$( '.bp-nouveau #bb-select-deselect-all-media' ).removeClass('selected');
 				}
 			}
+		},
+
+		moveDocumentIntoFolder: function(event) {
+			var target = $(event.currentTarget);
+			event.preventDefault();
+
+			var document_id = target.attr('id');
+			var folder_id 	= $( '#bp-media-move-file-' + document_id + ' .bb-folder-selected-id').val();
+
+			var data = {
+				'action'		: 'document_folder_move',
+				'_wpnonce'		: BP_Nouveau.nonces.media,
+				'document_id'	: document_id,
+				'folder_id'		: folder_id
+			};
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: data,
+				success: function (response) {
+					if (response.success) {
+						$( '#bp-media-move-file-' + document_id + ' .ac-document-close-button').trigger( 'click' );
+					}
+				}
+			});
 		},
 
 		deleteMedia: function(event) {
@@ -1377,19 +1404,19 @@ window.bp = window.bp || {};
 						var keyword = $(this).val();
 						if(keyword == ''){
 
-							
+
 							$(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap .location-folder-list').show().parent().siblings('.ac_document_search_folder_list').hide();
 
 						} else {
 							$(this).closest('.has-folderlocationUI').find('.ac_document_search_folder_list ul').html(' ');
-							
+
 							var find_folder_selector = '';
 							if( $(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap ul.location-folder-list li.is_active').length > 0 ) {
 								find_folder_selector = '.is_active li';
 							}
 
 							$(this).closest('.has-folderlocationUI').find('.location-folder-list-wrap ul.location-folder-list li'+find_folder_selector).each( function () {
-								
+
 								if ( $(this).children('span').text().search( new RegExp(keyword, "i") ) >= 0 ) {
 									$(this).closest('.has-folderlocationUI').find('.ac_document_search_folder_list ul').append('<li data-id="'+ $(this).attr('data-id') +'"><span>'+ $(this).children('span').text() +'</span></li>') ;
 								}
@@ -1422,7 +1449,7 @@ window.bp = window.bp || {};
 				closest_parent.find('.location-folder-back').hide().closest('.has-folderlocationUI').find('.bb-folder-selected-id').val('');
 				closest_parent.find('.ac_document_search_folder').val('');
 				closest_parent.find('.bb-model-header h4 span').text('...');
-				closest_parent.find('.ac_document_search_folder_list ul').html('').parent().hide().siblings('.location-folder-list-wrap').find('.location-folder-list').show();	
+				closest_parent.find('.ac_document_search_folder_list ul').html('').parent().hide().siblings('.location-folder-list-wrap').find('.location-folder-list').show();
 			}
 		},
 
@@ -1440,7 +1467,7 @@ window.bp = window.bp || {};
 			this.closeUploader(event);
 			$('#bp-media-create-folder, #bp-media-create-child-folder').hide();
 			$('#bb-album-title').val('');
-			
+
 		},
 
 		closeEditFolderModal: function(event){
@@ -1448,7 +1475,7 @@ window.bp = window.bp || {};
 
 			$('#bp-media-edit-child-folder').hide();
 			this.clearFolderLocationUI(event);
-			
+
 		},
 
 		submitMedia: function(event) {
@@ -1999,6 +2026,7 @@ window.bp = window.bp || {};
 		},
 
 		injectDocuments: function( event ) {
+
 			var store = bp.Nouveau.getStorage( 'bp-media' ),
 				scope = store.scope || null, filter = store.filter || null;
 

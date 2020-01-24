@@ -35,15 +35,18 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 				<i class="bb-icon-download"></i>
 			</a>
 
+			<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
 			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icon-menu-dots-h"></i>
 			</a>
+
 			<div class="document-action_list">
 				<ul>
 					<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 					<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
+			<?php } ?>
 		</div>
 
 		<?php if ( 'mp3' === $extension || 'wav' === $extension || 'ogg' === $extension ) { ?>
@@ -76,15 +79,18 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 					<i class="bb-icon-download"></i>
 				</a>
 
+				<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
 				<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 					<i class="bb-icon-menu-dots-h"></i>
 				</a>
+
 				<div class="document-action_list">
 					<ul>
 						<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 						<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 					</ul>
 				</div>
+				<?php } ?>
 			</div>
 
 			<?php if ( 'mp3' === $extension || 'wav' === $extension || 'ogg' === $extension ) { ?>
@@ -123,16 +129,18 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 						<i class="bb-icon-download document-icon-download"></i>
 					</a>
-
+					<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
 					<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
 						<i class="bb-icon-menu-dots-h document-icon-download-more"></i>
 					</a>
+
 					<div class="document-action_list">
 						<ul>
 							<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 							<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 						</ul>
 					</div>
+					<?php } ?>
 				</div>
 
 				<div class="document-expand">
