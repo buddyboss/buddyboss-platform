@@ -227,6 +227,10 @@ window.bp = window.bp || {};
 			var document_id = target.attr('id');
 			var folder_id 	= $( '#bp-media-move-file-' + document_id + ' .bb-folder-selected-id').val();
 
+			if ( '' === document_id || '' === folder_id ) {
+				return false;
+			}
+
 			var data = {
 				'action'		: 'document_folder_move',
 				'_wpnonce'		: BP_Nouveau.nonces.media,

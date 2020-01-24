@@ -1169,7 +1169,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	//add_filter( 'upload_mimes', 'bp_media_document_allowed_mimes', 9, 1 );
+	//add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 1, 1 );
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -1263,7 +1263,6 @@ function bp_document_allowed_mimes( $mime_types ) {
 		'htm' => 'text/html',
 		'html'=> 'text/html',
 		'ics' => 'text/calendar',
-		'ico' => 'image/vnd.microsoft.icon',
 		'jar' => 'application/java-archive',
 		'js'  => 'text/javascript'
 	);

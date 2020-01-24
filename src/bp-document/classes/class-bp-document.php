@@ -292,7 +292,7 @@ class BP_Document {
 				unlink( $output_file );
 
 			}
-		} elseif ( 'doc' === $extension || 'docx' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'xlr' === $extension || 'wps' === $extension || 'wpd' === $extension || 'rtf' === $extension || 'pptx' === $extension || 'ppt' === $extension || 'pps' === $extension ) {
+		} elseif ( 'xlsm' === $extension || 'potx' === $extension || 'pps' === $extension || 'docm' === $extension || 'dotx' === $extension || 'doc' === $extension || 'docx' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'xlr' === $extension || 'wps' === $extension || 'wpd' === $extension || 'rtf' === $extension || 'pptx' === $extension || 'ppt' === $extension || 'pps' === $extension ) {
 
 			$dir     = $upload_dir['basedir'] . '/doc' . $attachment_id;
 			$pattern = $dir . '/*.*';
