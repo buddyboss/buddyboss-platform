@@ -1180,7 +1180,7 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 /**
  * Get the Group roles.
  *
- * @since BuddyPress 5.0.0
+ * @since BuddyBoss 1.2.5
  *
  * @return array The list of Group role objects.
  */
