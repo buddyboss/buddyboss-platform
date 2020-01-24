@@ -1189,7 +1189,7 @@ function bp_groups_get_group_roles() {
 	return array(
 		'admin' => (object) array(
 			'id'           => 'admin',
-			'name'         => __( 'Administrator', 'buddypress' ),
+			'name'         => __( 'Organizer', 'buddypress' ),
 			'is_admin'     => true,
 			'is_banned'    => false,
 			'is_confirmed' => true,
