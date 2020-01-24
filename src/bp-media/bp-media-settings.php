@@ -1017,15 +1017,38 @@ function bp_media_admin_setting_callback_document_section() {
 
 	if ( ! extension_loaded( 'imagick' ) && empty( $command_output ) && !empty( $return_val ) ) {
 		?>
-		<p><?php echo sprintf( __( 'Server needs %1$s and %2$s extensions to be activated for the documents previews.', 'buddyboss' ), 'Imagick', 'libreoffice' ); ?></p>
+		<p><?php
+
+			echo sprintf(
+			/* translators: 1: Imagick status, 2: libreoffice status */
+				_x( 'Server needs %1$s and %2$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
+				'Imagick',
+				'libreoffice'
+			);
+
+		?></p>
 		<?php
 	} elseif ( extension_loaded( 'imagick' ) && empty( $command_output ) && !empty( $return_val ) ) {
 		?>
-		<p><?php echo sprintf( __( 'Server need %1$s extension to be activated for the documents previews.', 'buddyboss' ),'libreoffice' ); ?></p>
+		<p><?php
+
+			echo sprintf(
+			/* translators: 1: libreoffice status */
+				_x( 'Server needs %1$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
+				'libreoffice'
+			);
+
+			?></p>
 		<?php
 	} elseif ( !extension_loaded( 'imagick' ) && !empty( $command_output ) && empty( $return_val ) ) {
 		?>
-		<p><?php echo sprintf( __( 'Server need %1$s extension to be activated for the documents previews.', 'buddyboss' ),'Imagick' ); ?></p>
+		<p><?php
+			echo sprintf(
+			/* translators: 1: Imagick status */
+				_x( 'Server needs %1$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
+				'Imagick'
+			);
+			?></p>
 		<?php
 	}
 
