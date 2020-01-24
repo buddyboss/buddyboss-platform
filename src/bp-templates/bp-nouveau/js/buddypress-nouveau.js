@@ -1747,7 +1747,7 @@ window.bp = window.bp || {};
 				var $this = $(this);
 				var data_extension = $this.attr('data-extension');
 				var fileMode = $this.attr('data-extension');
-				if(data_extension == 'html'){ // HTML file need specific mode.
+				if(data_extension == 'html' || data_extension == 'htm'){ // HTML file need specific mode.
 					fileMode = 'text/html';
 				}
 				if(data_extension == 'js'){ //mode not needed for javascript file.

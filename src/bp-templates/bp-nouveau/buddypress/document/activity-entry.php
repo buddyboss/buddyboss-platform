@@ -31,22 +31,24 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 		</div>
 
 		<div class="document-action-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 				<i class="bb-icon-download"></i>
 			</a>
 
 			<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
-			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
-				<i class="bb-icon-menu-dots-h"></i>
-			</a>
 
+			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
+				<i class="bb-icon-menu-dots-v"></i>
+			</a>
 			<div class="document-action_list">
 				<ul>
 					<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 					<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
+
 			<?php } ?>
+
 		</div>
 
 		<?php if ( 'mp3' === $extension || 'wav' === $extension || 'ogg' === $extension ) { ?>
@@ -56,12 +58,20 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 					<?php _e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 				</audio>
 			</div>
+		<?php }
+		if('pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension )  { 
+			$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id()  );
+		?>
+			<div class="document-preview-wrap">
+				<img src="<?php echo $attachment_url; ?>" alt="" />
+			</div><!-- .document-preview-wrap -->
+
 		<?php } ?>
 	</div> <!-- .bb-activity-media-elem -->
 
 <?php } else { ?>
 
-	<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'js' !== $extension && 'csv' !== $extension ) { ?>
+	<?php if ( 'css' !== $extension && 'txt' !== $extension && 'html' !== $extension && 'htm' !== $extension && 'js' !== $extension && 'csv' !== $extension ) { ?>
 		<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
 			<div class="document-description-wrap">
 				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
@@ -75,15 +85,15 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 			</div>
 
 			<div class="document-action-wrap">
-				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+				<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 					<i class="bb-icon-download"></i>
 				</a>
 
 				<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
-				<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
-					<i class="bb-icon-menu-dots-h"></i>
-				</a>
 
+				<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
+					<i class="bb-icon-menu-dots-v"></i>
+				</a>
 				<div class="document-action_list">
 					<ul>
 						<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
@@ -100,6 +110,14 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 						<?php _e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 					</audio>
 				</div>
+			<?php }
+			if('pdf' === $extension || 'pptx' === $extension || 'pps' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'pps' === $extension || 'ppt' === $extension || 'pptx' === $extension || 'doc' === $extension || 'docx' === $extension || 'dot' === $extension || 'rtf' === $extension || 'wps' === $extension || 'wpt' === $extension || 'dotx' === $extension || 'potx' === $extension || 'xlsm' === $extension )  { 
+				$attachment_url = wp_get_attachment_url( bp_get_document_preview_attachment_id()  );
+			?>
+				<div class="document-preview-wrap">
+					<img src="<?php echo $attachment_url; ?>" alt="" />
+				</div><!-- .document-preview-wrap -->
+	
 			<?php } ?>
 		</div> <!-- .bb-activity-media-elem -->
 
@@ -126,14 +144,14 @@ if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 > 3 ) { ?>
 				</div>
 				<div class="document-action-wrap">
 					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php _e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
-					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="down" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
 						<i class="bb-icon-download document-icon-download"></i>
 					</a>
 					<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
-					<a href="#" target="_blank" class="document-action_more" data-balloon-pos="down" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
-						<i class="bb-icon-menu-dots-h document-icon-download-more"></i>
-					</a>
 
+					<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
+						<i class="bb-icon-menu-dots-v document-icon-download-more"></i>
+					</a>
 					<div class="document-action_list">
 						<ul>
 							<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>

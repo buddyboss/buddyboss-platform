@@ -1934,6 +1934,20 @@ span.dashicons.dashicons-admin-file:before {
   padding: 0;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover {
+  background-color: #f5f6f7;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-audio-wrap audio::-webkit-media-controls-panel {
+  background-color: #fff;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity:hover .document-description-wrap .entry-img:after {
+  opacity: 1;
+  visibility: visible;
+  bottom: 10px;
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text:not(.loaded):after {
   content: '\e838';
   font-family: bb-icons;
@@ -1952,17 +1966,18 @@ span.dashicons.dashicons-admin-file:before {
   -webkit-box-direction: normal;
   -ms-flex-direction: row;
   flex-direction: row;
+  padding: 5px 15px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img {
-  -ms-flex-preferred-size: 70px;
-  flex-basis: 70px;
-  width: 70px;
+  -ms-flex-preferred-size: 40px;
+  flex-basis: 40px;
+  width: 40px;
   text-align: center;
   padding: 15px 0;
   display: inline-block;
   vertical-align: middle;
-  background-color: #f2f2f2;
+  position: relative;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img img {
@@ -1972,6 +1987,30 @@ span.dashicons.dashicons-admin-file:before {
   object-fit: inherit;
   min-height: inherit;
   min-width: inherit;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .entry-img:after {
+  content: '\e861';
+  font-family: 'bb-icons';
+  font-style: normal;
+  font-weight: normal;
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  position: absolute;
+  bottom: 16px;
+  right: 0;
+  font-size: 11px;
+  color: #fff;
+  background-color: #000;
+  border-radius: 50%;
+  height: 20px;
+  width: 20px;
+  border: 2px solid #f2f2f2;
+  opacity: 0;
+  visibility: hidden;
+  -webkit-transition: all .3s ease;
+  transition: all .3s ease;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
@@ -1990,13 +2029,15 @@ span.dashicons.dashicons-admin-file:before {
   white-space: nowrap;
   width: calc(100% - 70px);
   display: block;
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 16px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-description,
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
   display: inline-block;
-  color: #7F868F;
+  color: #939597;
+  font-size: 13px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap .document-helper-text {
@@ -2022,8 +2063,7 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a {
-  display: inline-block;
-  margin-left: 8px;
+  float: left;
   -webkit-transition: all 0.3s ease;
   -o-transition: all 0.3s ease;
   transition: all 0.3s ease;
@@ -2031,14 +2071,15 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a i {
   font-size: 19px;
-  color: #122b46;
-  background-color: rgba(255, 255, 255, 0.9);
-  border-radius: 3px;
-  padding: 3px;
+  color: #9CA8B4;
+  background-color: #fff;
+  padding: 7px;
+  border: 1px solid #E7E9EC;
+  border-left-width: 0;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a:hover i {
-  background-color: #fff;
+  color: #461212;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a[data-balloon]:after {
@@ -2051,15 +2092,19 @@ span.dashicons.dashicons-admin-file:before {
   margin-top: -1px;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a.document-action_collapse i {
-  background-color: #122b46;
-  color: #fff;
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a.document-action_more i {
+  border-radius: 0 3px 3px 0;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap > a.document-action_download i {
+  border-left-width: 1px;
+  border-radius: 3px 0 0 3px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list {
   position: absolute;
-  top: 26px;
-  right: -4px;
+  top: 36px;
+  right: 1px;
   opacity: 0;
   visibility: hidden;
   background: #fff;
@@ -2179,10 +2224,6 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-visible .document-detail-wrap {
-  color: #007cff;
-}
-
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-action-wrap {
   top: 28px;
   opacity: 1;
@@ -2234,6 +2275,14 @@ span.dashicons.dashicons-admin-file:before {
   float: left;
   outline: 0;
   border-radius: 35px;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-preview-wrap {
+  height: 200px;
+  overflow: hidden;
+  margin: 0 15px 15px;
+  border: 1px solid #e7e9ec;
+  border-radius: 4px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text-wrap .CodeMirror {
@@ -2301,6 +2350,17 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-action-wrap .document-action_collapse {
   opacity: 1;
   visibility: visible;
+}
+
+.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-action-wrap .document-action_collapse i {
+  border-right-width: 0;
+  border-left-width: 1px;
+  color: #461212;
+}
+
+.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-action-wrap .document-action_collapse + .document-action_download i {
+  border-left-width: 1px;
+  border-radius: 0;
 }
 
 .bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-expand {
