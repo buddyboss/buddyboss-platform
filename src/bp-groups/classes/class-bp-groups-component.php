@@ -793,7 +793,21 @@ class BP_Groups_Component extends BP_Component {
 				}
 			}
 
-			if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) && groups_can_user_manage_messages( bp_loggedin_user_id(), $this->current_group->id ) ) {
+			$message_status = groups_get_groupmeta( $this->current_group->id, 'message_status' );
+			$show = false;
+			if ( 'mods' === $message_status ) {
+				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				$moderator = groups_is_user_mod( bp_loggedin_user_id(), $this->current_group->id );
+				if ( $admin || $moderator ) {
+					$show = true;
+				}
+			} else {
+				$admin = groups_is_user_admin( bp_loggedin_user_id(), $this->current_group->id );
+				if ( $admin ) {
+					$show = true;
+				}
+			}
+			if ( true === bp_disable_group_messages() && bp_is_active( 'messages' ) && $show ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Send Messages', 'buddyboss' ),
 					'slug'            => 'messages',
