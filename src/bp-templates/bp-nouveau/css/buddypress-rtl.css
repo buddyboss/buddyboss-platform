@@ -2014,9 +2014,9 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
-  -ms-flex-preferred-size: calc(100% - 70px);
-  flex-basis: calc(100% - 70px);
-  width: calc(100% - 70px);
+  -ms-flex-preferred-size: calc(100% - 40px);
+  flex-basis: calc(100% - 40px);
+  width: calc(100% - 40px);
   display: inline-block;
   vertical-align: middle;
   padding: 10px 15px 10px 0;
@@ -2230,17 +2230,17 @@ span.dashicons.dashicons-admin-file:before {
   visibility: visible;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-text-wrap.is_large.code-full-view .document-action_collapse {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile.code-full-view .document-text-wrap.is_large .document-action_collapse {
   opacity: 1;
   visibility: visible;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-text-wrap.is_large.code-full-view .document-expand {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile.code-full-view .document-text-wrap.is_large .document-expand {
   opacity: 0;
   visibility: hidden;
 }
 
-.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile .document-text-wrap.is_large.code-full-view .document-expand .document-expand-anchor {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.is-mobile.code-full-view .document-text-wrap.is_large .document-expand .document-expand-anchor {
   opacity: 0;
   visibility: hidden;
 }
@@ -2289,18 +2289,58 @@ span.dashicons.dashicons-admin-file:before {
   height: auto;
 }
 
-.bb-activity-media-wrap .document-text-wrap {
-  position: relative;
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-text {
+  max-height: inherit;
+  overflow: initial;
 }
 
-.bb-activity-media-wrap .document-text-wrap .document-action-wrap .document-action_collapse {
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-text:after {
+  display: none !important;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-action-wrap .document-action_collapse {
+  opacity: 1;
+  visibility: visible;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-action-wrap .document-action_collapse i {
+  border-left-width: 0;
+  border-right-width: 1px;
+  color: #461212;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-action-wrap .document-action_collapse + .document-action_download i {
+  border-right-width: 1px;
+  border-radius: 0;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-expand {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity.code-full-view .document-expand .document-expand-anchor {
+  opacity: 0 !important;
+  visibility: hidden !important;
+}
+
+.bb-activity-media-wrap .document-action-wrap .document-action_collapse {
   opacity: 0;
   visibility: hidden;
+}
+
+.bb-activity-media-wrap .document-text-wrap {
+  border: 1px solid #E7E9EC;
+  border-width: 1px 1px 0px 1px;
+  border-radius: 4px 4px 0 0;
+  margin: 0 15px;
+  position: relative;
 }
 
 .bb-activity-media-wrap .document-text-wrap.is_large .document-text {
   max-height: 150px;
   overflow: hidden;
+  position: relative;
 }
 
 .bb-activity-media-wrap .document-text-wrap.is_large .document-text:after {
@@ -2338,41 +2378,6 @@ span.dashicons.dashicons-admin-file:before {
   width: 100%;
 }
 
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-text {
-  max-height: inherit;
-  overflow: initial;
-}
-
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-text:after {
-  display: none !important;
-}
-
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-action-wrap .document-action_collapse {
-  opacity: 1;
-  visibility: visible;
-}
-
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-action-wrap .document-action_collapse i {
-  border-left-width: 0;
-  border-right-width: 1px;
-  color: #461212;
-}
-
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-action-wrap .document-action_collapse + .document-action_download i {
-  border-right-width: 1px;
-  border-radius: 0;
-}
-
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-expand {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
-.bb-activity-media-wrap .document-text-wrap.is_large.code-full-view .document-expand .document-expand-anchor {
-  opacity: 0 !important;
-  visibility: hidden !important;
-}
-
 .bb-activity-media-wrap .document-filename {
   margin: 0 4px 0 0 !important;
   font-weight: 500;
@@ -2380,9 +2385,39 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .more_text_view {
-  padding: 6px 10px;
-  background-color: #f7f7f7;
+  padding: 7px 15px;
+  background-color: #E7E9EC;
   word-break: break-word;
+  margin: 0 15px 15px;
+  border: 1px solid #E7E9EC;
+  border-width: 0 1px 1px;
+  border-radius: 0 0 4px 4px;
+}
+
+@media screen and (max-width: 375px) {
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap {
+    padding: 5px 10px;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-description-wrap .document-detail-wrap {
+    padding-right: 10px;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text-wrap {
+    margin: 0 10px;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap {
+    left: 13px;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .more_text_view,
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-preview-wrap {
+    font-size: 14px;
+    margin: 0 10px 10px;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor {
+    padding: 5px 6px;
+  }
+  .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text {
+    font-size: 12px;
+  }
 }
 
 /**
@@ -12290,7 +12325,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 /* GUTTER */
 .CodeMirror-gutters {
   border-left: 1px solid #ddd;
-  background-color: #f7f7f7;
+  background-color: #ECEDEE;
   white-space: nowrap;
 }
 

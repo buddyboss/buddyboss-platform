@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-24 11:55:50+00:00\n"
+"POT-Creation-Date: 2020-01-24 15:35:30+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -897,9 +897,8 @@ msgstr ""
 #: bp-notifications/bp-notifications-template.php:787
 #: bp-notifications/bp-notifications-template.php:1038
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:13
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:46
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:100
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:158
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:44
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:114
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:48
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:491
@@ -2455,8 +2454,8 @@ msgid "Profile Dashboard"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
-#: bp-document/bp-document-functions.php:1436
-#: bp-document/bp-document-functions.php:1439
+#: bp-document/bp-document-functions.php:1435
+#: bp-document/bp-document-functions.php:1438
 #: bp-document/classes/class-bp-document-component.php:60
 #: bp-document/classes/class-bp-document-component.php:244
 #: bp-document/classes/class-bp-document-component.php:299
@@ -6917,7 +6916,7 @@ msgstr ""
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1443
+#: bp-document/bp-document-functions.php:1442
 msgid "..."
 msgstr ""
 
@@ -10112,9 +10111,8 @@ msgstr ""
 #: bp-forums/replies/template.php:2300
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:49
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:51
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:45
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:99
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:157
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:43
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:113
 #: bp-templates/bp-nouveau/buddypress/document/document-entry.php:47
 msgid "Move"
 msgstr ""
@@ -15655,34 +15653,30 @@ msgstr ""
 msgid "Select Folder"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:29
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:83
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:27
 msgid "- Click to Download"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:34
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:88
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:147
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:32
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:102
 msgid "Download"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:40
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:94
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:152
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:38
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:108
 msgid "More actions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:58
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:110
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:56
 msgid "Your browser does not support the audio element."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:146
-msgid "Collapse"
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:93
+msgid "Click to expand"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:165
-msgid "Click to expand"
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:100
+msgid "Collapse"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/add-document.php:14

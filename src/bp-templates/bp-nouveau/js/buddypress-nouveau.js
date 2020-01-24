@@ -959,8 +959,11 @@ window.bp = window.bp || {};
 			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
 				if($(event.currentTarget).hasClass('ac-document-move')){
 					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
+					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
 				}else{
 					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
+					$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+					
 				}
 			}
 			if(bp.Nouveau.Media.folderLocationUI){
@@ -981,9 +984,10 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			var closest_parent = jQuery(event.currentTarget).closest('.has-folderlocationUI');
 			if($(event.currentTarget).hasClass('ac-document-close-button')){
-				$(event.currentTarget).closest('.bp-media-move-file').hide();
+				$(event.currentTarget).closest('.bp-media-move-file').hide().find('.bp-document-move').attr('id','');
+
 			}else{
-				$(event.currentTarget).closest('.bp-media-move-folder').hide();
+				$(event.currentTarget).closest('.bp-media-move-folder').hide().find('.bp-folder-move').attr('id','');
 			}
 
 			bp.Nouveau.Media.clearFolderLocationUI(event);

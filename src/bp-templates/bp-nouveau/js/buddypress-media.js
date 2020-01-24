@@ -172,7 +172,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more, .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li a', this.fileActivityActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_collapse', this.collapseCodePreview.bind( this ) );
-			$( document ).on( 'click', '.activity .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
+			$( document ).on( 'click', '.activity .bp-document-move-activity, #media-stream .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
 
 
@@ -225,7 +225,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var document_id = target.attr('id');
-			var folder_id 	= $( '#bp-media-move-file-' + document_id + ' .bb-folder-selected-id').val();
+			var folder_id 	= target.closest('.bp-media-move-file').find('.bb-folder-selected-id').val();
 
 			if ( '' === document_id || '' === folder_id ) {
 				return false;
@@ -244,7 +244,7 @@ window.bp = window.bp || {};
 				data: data,
 				success: function (response) {
 					if (response.success) {
-						$( '#bp-media-move-file-' + document_id + ' .ac-document-close-button').trigger( 'click' );
+						target.closest('.bp-media-move-file').find('.ac-document-close-button').trigger( 'click' );
 					}
 				}
 			});
@@ -2235,14 +2235,14 @@ window.bp = window.bp || {};
 		 */
 		expandCodePreview : function(event){
 			event.preventDefault();
-			$(event.currentTarget).closest('.document-text-wrap').addClass('code-full-view');
+			$(event.currentTarget).closest('.document-activity').addClass('code-full-view');
 		},
 		/**
 		 * Text File Collapse
 		 */
 		collapseCodePreview : function(event){
 			event.preventDefault();
-			$(event.currentTarget).closest('.document-text-wrap').removeClass('code-full-view');
+			$(event.currentTarget).closest('.document-activity').removeClass('code-full-view');
 		},
 	};
 
