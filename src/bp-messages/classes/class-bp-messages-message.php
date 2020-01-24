@@ -352,4 +352,37 @@ class BP_Messages_Message {
 
 		return $thread_id;
 	}
+
+	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		// add the sender into the recipient list and order by id ascending
+		$recipient_ids[] = $sender;
+		$recipient_ids   = array_filter( array_unique( array_values( $recipient_ids ) ) );
+		sort( $recipient_ids );
+
+		$results = $wpdb->get_results(
+			$sql = $wpdb->prepare(
+				"SELECT
+				r.thread_id as thread_id,
+				GROUP_CONCAT(DISTINCT user_id ORDER BY user_id separator ',') as recipient_list,
+				MAX(m.date_sent) AS date_sent
+			FROM {$bp->messages->table_name_recipients} r
+			INNER JOIN {$bp->messages->table_name_messages} m ON m.thread_id = r.thread_id
+			GROUP BY r.thread_id
+			HAVING recipient_list = %s
+			ORDER BY date_sent DESC
+			",
+				implode( ',', $recipient_ids )
+			)
+		);
+
+		if ( ! $results ) {
+			return null;
+		}
+
+		return $results;
+	}
 }
