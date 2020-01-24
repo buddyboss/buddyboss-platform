@@ -27,6 +27,7 @@ function bp_media_get_settings_sections() {
 		'bp_media_settings_documents' => array(
 			'page'  => 'doc',
 			'title' => __( 'Document Uploading', 'buddyboss' ),
+			'callback' => 'bp_media_admin_setting_callback_document_section',
 		),
 		'bp_media_settings_emoji'  => array(
 			'page'  => 'media',
@@ -701,7 +702,7 @@ function bp_media_settings_callback_gif_key() {
 				esc_url( 'https://developers.giphy.com/dashboard/?create=true' ),
 				__( 'Once done, copy the API key and paste it in the field above.', 'buddyboss' )
 			);
-		?>	
+		?>
 	</p>
 	<?php
 }
@@ -1010,3 +1011,22 @@ function bp_is_profile_document_support_enabled( $default = 0 ) {
 	return (bool) apply_filters( 'bp_is_profile_document_support_enabled', (bool) get_option( 'bp_media_profile_document_support', $default ) );
 }
 
+function bp_media_admin_setting_callback_document_section() {
+
+	exec( 'whereis libreoffice', $command_output, $return_val );
+
+	if ( ! extension_loaded( 'imagick' ) && empty( $command_output ) && !empty( $return_val ) ) {
+		?>
+		<p><?php echo sprintf( __( 'Server needs %1$s and %2$s extensions to be activated for the documents previews.', 'buddyboss' ), 'Imagick', 'libreoffice' ); ?></p>
+		<?php
+	} elseif ( extension_loaded( 'imagick' ) && empty( $command_output ) && !empty( $return_val ) ) {
+		?>
+		<p><?php echo sprintf( __( 'Server need %1$s extension to be activated for the documents previews.', 'buddyboss' ),'libreoffice' ); ?></p>
+		<?php
+	} elseif ( !extension_loaded( 'imagick' ) && !empty( $command_output ) && empty( $return_val ) ) {
+		?>
+		<p><?php echo sprintf( __( 'Server need %1$s extension to be activated for the documents previews.', 'buddyboss' ),'Imagick' ); ?></p>
+		<?php
+	}
+
+}
