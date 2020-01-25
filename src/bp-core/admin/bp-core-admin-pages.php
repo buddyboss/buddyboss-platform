@@ -34,9 +34,13 @@ function bp_core_admin_pages_settings() {
 				$default_lang = $wpml_options['default_language'];
 				$current_lang = ICL_LANGUAGE_CODE;
 
-				// Show the "Save Settings" button only if the current language is the default language.
 				if  ( $current_lang === $default_lang ) {
+					// Show the "Save Settings" button only if the current language is the default language.
 					printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+				} else {
+					// Show a disabled "Save Settings" button if the current language is not the default language.
+					printf( '<div class="submit"><p class="button-primary disabled">%s</p></div>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+					printf( '<p class="description">%s</p>', esc_attr__( 'You need to switch to your Default language in WPML to save these settings.', 'buddyboss' ) );
 				}
 			} else {
 				printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
