@@ -22,7 +22,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		// Set up optional widget args
 		$widget_ops = array(
 			'classname'   => 'widget_bp_follow_following_widget widget buddypress',
-			'description' => __( 'Show a list of member avatars that the logged-in user is following.', 'buddyboss' ),
+			'description' => __( 'A list of member avatars that the logged-in user is following.', 'buddyboss' ),
 		);
 
 		// Set up the widget
