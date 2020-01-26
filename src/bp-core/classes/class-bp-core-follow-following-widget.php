@@ -28,7 +28,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		// Set up the widget
 		parent::__construct(
 			false,
-			__( "(BB) - Users I'm Following", 'buddyboss' ),
+			__( "(BB) Users I'm Following", 'buddyboss' ),
 			$widget_ops
 		);
 	}
