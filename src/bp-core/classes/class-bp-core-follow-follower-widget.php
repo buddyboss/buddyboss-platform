@@ -113,7 +113,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		$instance = wp_parse_args(
 			(array) $instance,
 			array(
-				'title'     => __( 'Members Following Me', 'buddyboss' ),
+				'title'     => __( 'My Followers', 'buddyboss' ),
 				'max_users' => 16,
 			)
 		);
