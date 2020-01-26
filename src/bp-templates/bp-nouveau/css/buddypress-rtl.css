@@ -55,11 +55,6 @@ Hello, this is the BuddyPress Nouveau stylesheet.
 * @section 1.0 - BP Generic, Typography & Imagery
 *-------------------------------------------------------------------------------
 */
-body #buddypress * a {
-  box-shadow: none;
-  text-decoration: none;
-}
-
 body #buddypress #item-body blockquote,
 body #buddypress .bp-lists blockquote {
   margin-right: 10px;
@@ -1516,14 +1511,6 @@ input.search-query-input {
   margin-bottom: 10px;
 }
 
-.activity-list .activity-item .activity-content .activity-inner,
-.activity-list .activity-item .activity-content blockquote {
-  background: #fafafa;
-  margin: 15px 0 10px;
-  overflow: hidden;
-  padding: 1em;
-}
-
 .activity-list .activity-item .activity-content p {
   margin: 0;
 }
@@ -1720,26 +1707,22 @@ input.search-query-input {
 }
 
 .activity-link-preview-container {
-  border: 1px solid rgba(0, 0, 0, 0.07);
-  border-radius: 4px;
-  background-color: rgba(250, 250, 250, 0.2);
-  margin: 20px 0 10px;
-  overflow: hidden;
+  padding: 25px;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  color: #82878c;
+  background: #fff;
+  border: 1px solid #e5e5e5;
   position: relative;
-  max-width: 420px;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-orient: horizontal;
-  -webkit-box-direction: normal;
-  -ms-flex-flow: row wrap;
-  flex-flow: row wrap;
+  overflow: auto;
+  zoom: 1;
 }
 
 .activity-video-preview .activity-link-preview-container {
   border: 0;
   border-radius: 0;
   margin: 0;
+  padding: 0;
   max-width: 640px;
 }
 
@@ -1748,61 +1731,64 @@ input.search-query-input {
   margin-bottom: 0;
 }
 
-.activity-link-preview-image-wrap {
-  flex: 0 0 auto;
-  min-width: 0;
-  width: 180px;
-  min-height: 200px;
-  position: relative;
-}
-
-@media screen and (max-width: 32em) {
-  .activity-link-preview-image-wrap {
-    width: 100%;
-  }
-}
-
 .activity-link-preview-image {
-  border-radius: 0 3px 3px 0;
+  float: right;
+  max-width: 160px;
+  margin-left: 20px;
+  margin-bottom: 20px;
   position: relative;
-  overflow: hidden;
-  background: #809ab4;
-  height: 100%;
 }
 
 .activity-link-preview-image img {
-  max-width: 100%;
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  right: 0;
-  left: 0;
-  margin: auto;
-  z-index: 0;
-  min-height: 100%;
-  width: auto;
-  min-width: 100%;
-  object-fit: cover;
+  width: 100%;
+  height: auto;
+  border: none;
 }
 
-.activity-link-preview-content {
-  flex: 1;
-  min-width: 0;
-  padding: 40px 20px;
-  font-size: 13px;
-  color: #939597;
-  letter-spacing: -0.24px;
-  line-height: 1.38;
-  align-self: center;
+.activity-url-scrapper-container .activity-link-preview-image {
+  margin-bottom: 30px;
 }
 
-.activity-video-preview .activity-link-preview-content {
+.activity-video-preview {
   padding: 0;
+}
+
+.activity-link-preview-title {
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.3;
+  color: #32373c;
+}
+
+.activity-link-preview-title {
+  margin: 0 0 15px;
+}
+
+.activity-link-preview-title a,
+.activity-link-preview-title a:hover {
+  color: #32373c;
+}
+
+.activity-link-preview-title a:hover {
+  text-decoration: underline !important;
+}
+
+.activity-link-preview-excerpt p {
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.activity-link-preview-excerpt a.activity-link-preview-more {
+  color: #b4b9be;
+}
+
+.activity-link-preview-excerpt a.activity-link-preview-more:hover {
+  text-decoration: underline !important;
 }
 
 .activity-url-thumb-nav {
   position: absolute;
-  bottom: 0;
+  bottom: 3px;
   right: 0;
   left: 0;
   margin: auto;
@@ -1812,8 +1798,8 @@ input.search-query-input {
 #buddypress .activity-url-thumb-nav button {
   cursor: pointer;
   width: auto;
-  padding: 2px 10px;
-  margin: 0 5px;
+  padding: 0 6px;
+  margin: 0 3px;
   height: auto;
   min-height: 10px;
 }
@@ -1822,7 +1808,7 @@ input.search-query-input {
   font-size: 14px;
   line-height: 1;
   position: relative;
-  top: 2px;
+  top: 3px;
 }
 
 #activity-url-scrapper-img-count {
@@ -1840,27 +1826,25 @@ input.search-query-input {
   font-size: 14px;
 }
 
-.activity-link-preview-title {
-  color: #122b46;
-  font-size: 15px;
-  font-weight: 500;
-  letter-spacing: -0.24px;
-  line-height: 1.21;
-  margin: 0 0 10px;
-}
-
-.activity-link-preview-title a {
-  color: inherit;
-}
-
 #activity-close-link-suggestion {
   border: 0;
   color: rgba(0, 0, 0, 0.4);
   font-size: 16px;
   position: absolute;
-  left: 8px;
-  top: 0;
+  right: 3px;
+  top: 8px;
   text-decoration: none;
+}
+
+.activity-post-form-link-wp-embed #activity-close-link-suggestion {
+  top: 30px;
+  right: 8px;
+  left: auto;
+  background: #fff;
+  z-index: 11;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }
 
 @media screen and (max-width: 32em) {
@@ -1889,13 +1873,31 @@ input.search-query-input {
   display: none !important;
 }
 
-@keyframes lazyAmination {
-  0% {
-    background-position: 0% 0;
-  }
-  100% {
-    background-position: 400% 0;
-  }
+blockquote.wp-embedded-content {
+  padding: 25px;
+  line-height: 1.5;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  color: #82878c;
+  background: #fff;
+  border: 1px solid #e5e5e5;
+  position: relative;
+  margin: 0;
+}
+
+blockquote.wp-embedded-content > a,
+blockquote.wp-embedded-content > p:first-child > a {
+  color: #32373c;
+  font-weight: 600;
+  font-size: 22px;
+  line-height: 1.3;
+  color: #32373c;
+}
+
+blockquote.wp-embedded-content > a:hover,
+blockquote.wp-embedded-content > p:first-child > a:hover {
+  text-decoration: underline;
 }
 
 .activity-inner iframe.lazy {
@@ -1906,6 +1908,15 @@ input.search-query-input {
   animation-timing-function: linear;
   background: #f6f7f8;
   background-size: 800px 104px;
+}
+
+@keyframes lazyAmination {
+  0% {
+    background-position: 0% 0;
+  }
+  100% {
+    background-position: 400% 0;
+  }
 }
 
 /**
