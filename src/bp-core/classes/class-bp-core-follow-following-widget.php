@@ -28,7 +28,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		// Set up the widget
 		parent::__construct(
 			false,
-			__( "(BB) Users I'm Following", 'buddyboss' ),
+			__( "(BB) Members I'm Following", 'buddyboss' ),
 			$widget_ops
 		);
 	}
@@ -113,7 +113,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		$instance = wp_parse_args(
 			(array) $instance,
 			array(
-				'title'     => __( "Users I'm Following", 'buddyboss' ),
+				'title'     => __( "Members I'm Following", 'buddyboss' ),
 				'max_users' => 16,
 			)
 		);
