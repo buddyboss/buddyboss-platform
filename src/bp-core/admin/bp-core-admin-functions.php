@@ -611,7 +611,13 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
 		$is_current = (bool) ( $tab_data['name'] == $active_tab );
-		$tab_class  = $is_current && isset( $tab_data ) && isset( $tab_data['class'] ) ? $tab_data['class'] . ' ' . $active_class : isset( $tab_data['class'] ) ? $tab_data['class'] . ' ' . $idle_class : $idle_class;
+		if ( $is_current && isset( $tab_data ) && isset( $tab_data['class'] ) ) {
+			$tab_class = $tab_data['class'] . ' ' . $active_class;
+		} elseif ( isset( $tab_data ) && isset( $tab_data['class'] ) ) {
+			$tab_class = $tab_data['class'] . ' ' . $idle_class;
+		} else {
+			$tab_class = $idle_class;
+		}
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 
