@@ -455,7 +455,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$instance['title']					= strip_tags( $new_instance['title'] );
 		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
 		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
-		$instance['joined_group']			= ( !empty( $new_instance['joined_group'] ) ) ? $new_instance['joined_group'] : 'no';
 
 		// Delete Transient
 		$this->delete_pc_transient();
@@ -497,7 +496,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$photos_enabled_arr['cover_photo'] = __('Cover Photo', 'buddyboss' );
 		}
 		
-		$is_social_group_enabled = bp_is_active( 'groups' );
 		
 		
 		/* Widget Form HTML */
@@ -548,26 +546,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				</li>
 				
 				<?php endforeach; ?>
-			</ul>
-			
-		</p>
-		<?php endif; ?>
-		
-		<?php if( $is_social_group_enabled ): ?>
-		<p>
-			<label><?php _e( 'Social Groups:', 'buddyboss' ); ?></label>
-			
-			<ul>
-				<li>
-					<label>
-						<input  class="widefat" type="checkbox" 
-							    name="<?php echo $this->get_field_name( 'joined_group' ); ?>" 
-							    value="yes" 
-								<?php checked( (!empty( $instance['joined_group'] ) && $instance['joined_group'] == 'yes' ) ); ?>
-						/>
-						<?php _e( 'Joined a group', 'buddyboss' ); ?>
-					</label>
-				</li>
 			</ul>
 			
 		</p>
