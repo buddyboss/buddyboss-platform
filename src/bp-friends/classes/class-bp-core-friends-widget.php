@@ -257,6 +257,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 				<option value="popular"  <?php selected( $friend_default, 'popular' ); ?>><?php _e( 'Popular', 'buddyboss' ); ?></option>
 			</select>
 		</p>
+		<p><small><?php _e( 'Note: This widget is only displayed if a member has some connections.', 'buddyboss' ); ?></small></p>
 
 		<?php
 	}

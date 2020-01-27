@@ -161,7 +161,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		?>
 
 		<p><label for="bp-follow-widget-users-max"><?php _e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_users' ); ?>" name="<?php echo $this->get_field_name( 'max_users' ); ?>" type="text" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is logged in and if the logged-in user is following some users.', 'buddyboss' ); ?></small></p>
+		<p><small><?php _e( 'Note: This widget is only displayed if a member is following other members.', 'buddyboss' ); ?></small></p>
 
 		<?php
 	}
