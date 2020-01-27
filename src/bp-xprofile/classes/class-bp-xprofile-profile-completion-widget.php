@@ -60,8 +60,9 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		add_action('xprofile_fields_saved_field', array( $this, 'delete_pc_transient' ) ); // On field added/updated in wp-admin > Profile
 		add_action('xprofile_fields_deleted_field', array( $this, 'delete_pc_transient' ) ); // On field deleted in wp-admin > profile.
 		add_action('xprofile_groups_deleted_group', array( $this, 'delete_pc_transient' ) ); // On profile group deleted in wp-admin.
-		add_action('update_option_bp-disable-avatar-uploads', array( $this, 'delete_pc_transient' ) ); // When avatar photo setting updated in wp-admin > buddybpss > profile.
-		add_action('update_option_bp-disable-cover-image-uploads', array( $this, 'delete_pc_transient' ) ); // When cover photo setting updated in wp-admin > buddybpss > profile.
+		add_action('update_option_bp-disable-avatar-uploads', array( $this, 'delete_pc_transient' ) ); // When avatar photo setting updated in wp-admin > Settings > profile.
+		add_action('update_option_bp-disable-cover-image-uploads', array( $this, 'delete_pc_transient' ) ); // When cover photo setting updated in wp-admin > Settings > profile.
+		add_action('wp_ajax_xprofile_reorder_fields', array( $this, 'delete_pc_transient' ) ); // When fields inside fieldset are dragged and dropped in wp-admin > buddybpss > profile.
 	}
 
 	
