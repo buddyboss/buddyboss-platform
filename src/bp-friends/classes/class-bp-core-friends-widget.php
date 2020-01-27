@@ -86,7 +86,6 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			// Set the global $bp->displayed_user variables.
 			$bp->displayed_user->id       = $id;
 			$bp->displayed_user->userdata = bp_core_get_core_userdata( $id );
-			$bp->displayed_user->fullname = isset( $bp->displayed_user->userdata->display_name ) ? $bp->displayed_user->userdata->display_name : '';
 			$bp->displayed_user->domain   = bp_core_get_user_domain( $id );
 		}
 
@@ -103,7 +102,11 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		}
 
 		$link              = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
-		$instance['title'] = sprintf( __( "%s's Connections", 'buddyboss' ), bp_get_displayed_user_fullname() );
+		$instance['title'] = (
+			bp_loggedin_user_id() === $user_id
+			? __( "My Connections", 'buddyboss' )
+			: sprintf( __( "%s's Connections", 'buddyboss' ), bp_core_get_user_displayname( bp_displayed_user_id() ) )
+		);
 
 		if ( empty( $instance['friend_default'] ) ) {
 			$instance['friend_default'] = 'active';

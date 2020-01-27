@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-26 00:43:25+00:00\n"
+"POT-Creation-Date: 2020-01-27 06:15:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -843,7 +843,7 @@ msgstr[1] ""
 #: bp-members/bp-members-template.php:800
 #: bp-members/bp-members-template.php:1523
 #: bp-members/bp-members-template.php:1581
-#: bp-members/classes/class-bp-members-component.php:440
+#: bp-members/classes/class-bp-members-component.php:447
 #: bp-messages/bp-messages-template.php:733
 #: bp-messages/classes/class-bp-messages-component.php:370
 #: bp-notifications/classes/class-bp-notifications-component.php:293
@@ -917,7 +917,7 @@ msgstr ""
 #: bp-forums/admin/topics.php:827
 #: bp-groups/classes/class-bp-groups-list-table.php:576
 #: bp-invites/bp-invites-admin.php:268
-#: bp-members/classes/class-bp-members-component.php:354
+#: bp-members/classes/class-bp-members-component.php:361
 #: bp-templates/bp-nouveau/includes/members/functions.php:229
 #: bp-xprofile/classes/class-bp-xprofile-component.php:262
 #: bp-xprofile/classes/class-bp-xprofile-component.php:380
@@ -2053,8 +2053,8 @@ msgstr ""
 #: bp-core/admin/settings/bp-admin-setting-groups.php:55
 #: bp-core/deprecated/buddyboss/1.1.8.php:233
 #: bp-core/deprecated/buddyboss/1.1.8.php:236
-#: bp-groups/bp-groups-admin.php:2495 bp-groups/bp-groups-functions.php:3100
-#: bp-groups/bp-groups-functions.php:3103
+#: bp-groups/bp-groups-admin.php:2495 bp-groups/bp-groups-functions.php:3145
+#: bp-groups/bp-groups-functions.php:3148
 msgid "Group Types"
 msgstr ""
 
@@ -2469,9 +2469,9 @@ msgstr ""
 #: bp-core/bp-core-template.php:556 bp-core/bp-core-update.php:658
 #: bp-core/classes/class-bp-email-tokens.php:394 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1355 bp-groups/bp-groups-admin.php:2011
-#: bp-groups/bp-groups-functions.php:3591
-#: bp-groups/bp-groups-functions.php:3610
-#: bp-groups/bp-groups-functions.php:3627 bp-groups/bp-groups-template.php:5288
+#: bp-groups/bp-groups-functions.php:3636
+#: bp-groups/bp-groups-functions.php:3655
+#: bp-groups/bp-groups-functions.php:3672 bp-groups/bp-groups-template.php:5288
 #: bp-groups/classes/class-bp-groups-component.php:629
 #: bp-groups/classes/class-bp-groups-component.php:862
 #: bp-groups/classes/class-bp-groups-list-table.php:439
@@ -3570,24 +3570,24 @@ msgstr ""
 msgid "Special community roles no longer exist. Use mapped capabilities instead"
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:339
+#: bp-core/bp-core-catchuri.php:350
 msgid ""
 "This user has been marked as a spammer. Only site admins can view this "
 "profile."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:656 bp-core/bp-core-catchuri.php:766
-#: bp-core/bp-core-catchuri.php:1200
+#: bp-core/bp-core-catchuri.php:667 bp-core/bp-core-catchuri.php:777
+#: bp-core/bp-core-catchuri.php:1211
 msgid "Please login to access this website."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:764
+#: bp-core/bp-core-catchuri.php:775
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1216 bp-core/bp-core-catchuri.php:1232
-#: bp-core/bp-core-catchuri.php:1260 bp-core/bp-core-catchuri.php:1277
-#: bp-core/bp-core-catchuri.php:1301 bp-core/bp-core-catchuri.php:1321
+#: bp-core/bp-core-catchuri.php:1227 bp-core/bp-core-catchuri.php:1243
+#: bp-core/bp-core-catchuri.php:1271 bp-core/bp-core-catchuri.php:1288
+#: bp-core/bp-core-catchuri.php:1312 bp-core/bp-core-catchuri.php:1332
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -3885,7 +3885,7 @@ msgstr ""
 
 #: bp-core/bp-core-functions.php:2529
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
-#: bp-groups/bp-groups-functions.php:3102
+#: bp-groups/bp-groups-functions.php:3147
 #: bp-groups/bp-groups-notifications.php:1178
 #: bp-groups/classes/class-bp-groups-component.php:104
 #: bp-groups/classes/class-bp-groups-theme-compat.php:183
@@ -5581,15 +5581,23 @@ msgid ""
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:25
-msgid "Show a list of member avatars that are following the logged-in user."
+msgid "A list of member avatars that are following the logged-in user."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:31
-msgid "(BB) - Users Following Me"
+msgid "(BB) Members Following Me"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:86
+msgid "My Followers"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-follower-widget.php:87
-#: bp-core/classes/class-bp-core-follow-following-widget.php:87
+msgid "%s's Followers"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:129
+#: bp-core/classes/class-bp-core-follow-following-widget.php:130
 #: bp-groups/classes/class-bp-groups-widget.php:172
 #: bp-members/classes/class-bp-core-members-widget.php:186
 #: bp-members/classes/class-bp-core-recently-active-widget.php:102
@@ -5600,54 +5608,37 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:116
-msgid "Users Following Me"
-msgstr ""
-
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:122
-#: bp-core/classes/class-bp-core-follow-following-widget.php:122
-#: bp-core/classes/class-bp-core-login-widget.php:189
-#: bp-core/classes/class-bp-core-network-posts-widget.php:213
-#: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
-#: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
-#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
-#: bp-forums/common/widgets.php:1360
-#: bp-groups/classes/class-bp-groups-widget.php:232
-#: bp-members/classes/class-bp-core-members-widget.php:243
-#: bp-members/classes/class-bp-core-recently-active-widget.php:154
-#: bp-members/classes/class-bp-core-whos-online-widget.php:229
-#: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:183
-msgid "Title:"
-msgstr ""
-
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:125
-#: bp-core/classes/class-bp-core-follow-following-widget.php:125
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:162
+#: bp-core/classes/class-bp-core-follow-following-widget.php:163
 #: bp-members/classes/class-bp-core-members-widget.php:257
 #: bp-members/classes/class-bp-core-recently-active-widget.php:161
 #: bp-members/classes/class-bp-core-whos-online-widget.php:236
 msgid "Max members to show:"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:126
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:163
 msgid ""
 "Note: This widget is only displayed if a member is logged in and if the "
 "logged-in user is followed by other users."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:25
-msgid "Show a list of member avatars that the logged-in user is following."
+msgid "A list of member avatars that the logged-in user is following."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:31
-msgid "(BB) - Users I'm Following"
+msgid "(BB) Members I'm Following"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-following-widget.php:116
-msgid "Users I'm Following"
+#: bp-core/classes/class-bp-core-follow-following-widget.php:87
+msgid "I'm Following"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-following-widget.php:126
+#: bp-core/classes/class-bp-core-follow-following-widget.php:88
+msgid "%s Following"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-following-widget.php:164
 msgid ""
 "Note: This widget is only displayed if a member is logged in and if the "
 "logged-in user is following some users."
@@ -5683,6 +5674,21 @@ msgstr ""
 #: bp-core/classes/class-bp-core-login-widget.php:116
 #: bp-forums/common/widgets.php:105
 msgid "Remember Me"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-login-widget.php:189
+#: bp-core/classes/class-bp-core-network-posts-widget.php:213
+#: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
+#: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
+#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
+#: bp-forums/common/widgets.php:1360
+#: bp-groups/classes/class-bp-groups-widget.php:232
+#: bp-members/classes/class-bp-core-members-widget.php:243
+#: bp-members/classes/class-bp-core-recently-active-widget.php:154
+#: bp-members/classes/class-bp-core-whos-online-widget.php:229
+#: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:183
+msgid "Title:"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-network-posts-widget.php:29
@@ -5940,34 +5946,34 @@ msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:232
 #: bp-core/deprecated/buddyboss/1.1.8.php:237
-#: bp-groups/bp-groups-functions.php:3099
-#: bp-groups/bp-groups-functions.php:3104
+#: bp-groups/bp-groups-functions.php:3144
+#: bp-groups/bp-groups-functions.php:3149
 msgid "New Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:234
-#: bp-groups/bp-groups-functions.php:3101
+#: bp-groups/bp-groups-functions.php:3146
 msgid "Edit Group Type"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:238
-#: bp-groups/bp-groups-functions.php:3105
+#: bp-groups/bp-groups-functions.php:3150
 msgid "No Group Types found"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:239
-#: bp-groups/bp-groups-functions.php:3106
+#: bp-groups/bp-groups-functions.php:3151
 msgid "No Group Types found in trash"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:240
-#: bp-groups/bp-groups-functions.php:3107
+#: bp-groups/bp-groups-functions.php:3152
 msgid "Search Group Types"
 msgstr ""
 
 #: bp-core/deprecated/buddyboss/1.1.8.php:241 bp-groups/bp-groups-admin.php:175
 #: bp-groups/bp-groups-admin.php:1910 bp-groups/bp-groups-admin.php:2223
-#: bp-groups/bp-groups-functions.php:3108
+#: bp-groups/bp-groups-functions.php:3153
 #: bp-groups/classes/class-bp-groups-list-table.php:744
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:180
 msgid "Group Type"
@@ -6010,13 +6016,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -6030,8 +6036,8 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:159
 #: bp-core/deprecated/buddypress/1.6.php:187
-#: bp-friends/classes/class-bp-core-friends-widget.php:148
-#: bp-friends/classes/class-bp-core-friends-widget.php:252
+#: bp-friends/classes/class-bp-core-friends-widget.php:151
+#: bp-friends/classes/class-bp-core-friends-widget.php:255
 #: bp-groups/bp-groups-template.php:5310
 #: bp-groups/classes/class-bp-groups-widget.php:124
 #: bp-groups/classes/class-bp-groups-widget.php:241
@@ -6050,7 +6056,7 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/2.1.php:73
 #: bp-core/deprecated/buddypress/2.1.php:270
-#: bp-members/classes/class-bp-members-component.php:368
+#: bp-members/classes/class-bp-members-component.php:375
 #: bp-templates/bp-nouveau/includes/members/functions.php:221
 msgid "Dashboard"
 msgstr ""
@@ -9178,9 +9184,10 @@ msgid ""
 msgstr ""
 
 #: bp-forums/common/locale.php:43 bp-groups/bp-groups-admin.php:1410
-#: bp-groups/bp-groups-functions.php:3593
-#: bp-groups/bp-groups-functions.php:3612
-#: bp-groups/bp-groups-functions.php:3629
+#: bp-groups/bp-groups-functions.php:1192
+#: bp-groups/bp-groups-functions.php:3638
+#: bp-groups/bp-groups-functions.php:3657
+#: bp-groups/bp-groups-functions.php:3674
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:343
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:359
 #. translators: user role
@@ -9188,9 +9195,10 @@ msgid "Organizer"
 msgstr ""
 
 #: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2430
-#: bp-groups/bp-groups-admin.php:1411 bp-groups/bp-groups-functions.php:3595
-#: bp-groups/bp-groups-functions.php:3614
-#: bp-groups/bp-groups-functions.php:3631
+#: bp-groups/bp-groups-admin.php:1411 bp-groups/bp-groups-functions.php:1200
+#: bp-groups/bp-groups-functions.php:3640
+#: bp-groups/bp-groups-functions.php:3659
+#: bp-groups/bp-groups-functions.php:3676
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:344
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:360
 #. translators: user role
@@ -9928,9 +9936,10 @@ msgid "Replies: %s"
 msgstr ""
 
 #: bp-forums/replies/functions.php:2400 bp-forums/users/template.php:517
-#: bp-groups/bp-groups-admin.php:1412 bp-groups/bp-groups-functions.php:3597
-#: bp-groups/bp-groups-functions.php:3616
-#: bp-groups/bp-groups-functions.php:3633
+#: bp-groups/bp-groups-admin.php:1412 bp-groups/bp-groups-functions.php:1208
+#: bp-groups/bp-groups-functions.php:3642
+#: bp-groups/bp-groups-functions.php:3661
+#: bp-groups/bp-groups-functions.php:3678
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:345
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:361
 #: bp-members/bp-members-functions.php:3958
@@ -10560,7 +10569,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/user-profile.php:14
 #: bp-members/classes/class-bp-members-admin.php:833
 #: bp-members/classes/class-bp-members-admin.php:1046
-#: bp-members/classes/class-bp-members-component.php:338
+#: bp-members/classes/class-bp-members-component.php:345
 #: bp-templates/bp-nouveau/includes/customizer.php:161
 #: bp-xprofile/classes/class-bp-xprofile-component.php:252
 #: bp-xprofile/classes/class-bp-xprofile-component.php:372
@@ -11192,6 +11201,7 @@ msgid "%s sent you an invitation to connect"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
+#: bp-friends/classes/class-bp-core-friends-widget.php:107
 #: bp-friends/classes/class-bp-friends-component.php:197
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
@@ -11203,7 +11213,7 @@ msgid "My Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
-#: bp-friends/classes/class-bp-core-friends-widget.php:106
+#: bp-friends/classes/class-bp-core-friends-widget.php:108
 msgid "%s's Connections"
 msgstr ""
 
@@ -11268,17 +11278,16 @@ msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:26
 msgid ""
-"A dynamic list of recently active, popular, and newest Connections of "
-"current logged in member if widget is added outside members profile pages "
-"else it will display the displayed member."
+"A list of members that are connected to the logged-in user or member "
+"profile containing the widget."
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:30
 msgid "(BB) Connections"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:153
-#: bp-friends/classes/class-bp-core-friends-widget.php:253
+#: bp-friends/classes/class-bp-core-friends-widget.php:156
+#: bp-friends/classes/class-bp-core-friends-widget.php:256
 #: bp-groups/classes/class-bp-groups-widget.php:130
 #: bp-groups/classes/class-bp-groups-widget.php:242
 #: bp-members/classes/class-bp-core-members-widget.php:129
@@ -11287,8 +11296,8 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:158
-#: bp-friends/classes/class-bp-core-friends-widget.php:254
+#: bp-friends/classes/class-bp-core-friends-widget.php:161
+#: bp-friends/classes/class-bp-core-friends-widget.php:257
 #: bp-groups/classes/class-bp-groups-widget.php:136
 #: bp-groups/classes/class-bp-groups-widget.php:243
 #: bp-members/classes/class-bp-core-members-widget.php:137
@@ -11296,20 +11305,20 @@ msgstr ""
 msgid "Popular"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:193
+#: bp-friends/classes/class-bp-core-friends-widget.php:196
 msgid "Sorry, no connections were found."
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:245
+#: bp-friends/classes/class-bp-core-friends-widget.php:248
 #: bp-members/classes/class-bp-core-members-widget.php:251
 msgid "Link widget title to Members directory"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:247
+#: bp-friends/classes/class-bp-core-friends-widget.php:250
 msgid "Max connections to show:"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:250
+#: bp-friends/classes/class-bp-core-friends-widget.php:253
 msgid "Default connections to show:"
 msgstr ""
 
@@ -11461,7 +11470,7 @@ msgstr ""
 msgid "%1$s joined the group %2$s"
 msgstr ""
 
-#: bp-groups/bp-groups-activity.php:157 bp-groups/bp-groups-functions.php:1529
+#: bp-groups/bp-groups-activity.php:157 bp-groups/bp-groups-functions.php:1574
 #: cli/components/activity.php:763
 msgid "%1$s posted an update in the group %2$s"
 msgstr ""
@@ -11676,9 +11685,9 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1189 bp-groups/bp-groups-admin.php:1210
 #: bp-groups/bp-groups-admin.php:1222 bp-groups/bp-groups-admin.php:1349
-#: bp-groups/bp-groups-admin.php:1955 bp-groups/bp-groups-functions.php:3587
-#: bp-groups/bp-groups-functions.php:3606
-#: bp-groups/bp-groups-functions.php:3623
+#: bp-groups/bp-groups-admin.php:1955 bp-groups/bp-groups-functions.php:3632
+#: bp-groups/bp-groups-functions.php:3651
+#: bp-groups/bp-groups-functions.php:3668
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:512
 msgid "Organizers"
 msgstr ""
@@ -11735,9 +11744,9 @@ msgid "Enter a comma-separated list of user logins."
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1352 bp-groups/bp-groups-admin.php:1983
-#: bp-groups/bp-groups-functions.php:3589
-#: bp-groups/bp-groups-functions.php:3608
-#: bp-groups/bp-groups-functions.php:3625
+#: bp-groups/bp-groups-functions.php:3634
+#: bp-groups/bp-groups-functions.php:3653
+#: bp-groups/bp-groups-functions.php:3670
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:513
 msgid "Moderators"
 msgstr ""
@@ -11759,7 +11768,7 @@ msgstr ""
 msgid "Roles"
 msgstr ""
 
-#: bp-groups/bp-groups-admin.php:1414
+#: bp-groups/bp-groups-admin.php:1414 bp-groups/bp-groups-functions.php:1216
 msgid "Banned"
 msgstr ""
 
@@ -11936,11 +11945,11 @@ msgstr ""
 msgid "You successfully left the group."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:2572
+#: bp-groups/bp-groups-functions.php:2617
 msgid "Group type already exists."
 msgstr ""
 
-#: bp-groups/bp-groups-functions.php:2603
+#: bp-groups/bp-groups-functions.php:2648
 msgid "You may not register a group type with this name."
 msgstr ""
 
@@ -14013,7 +14022,7 @@ msgid "(BB) Members"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-members-widget.php:28
-msgid "A dynamic list of recently active, popular, and newest members"
+msgid "A dynamic list of recently active, popular, and newest members."
 msgstr ""
 
 #: bp-members/classes/class-bp-core-members-widget.php:191
@@ -14403,7 +14412,7 @@ msgstr ""
 msgid "Search Members&hellip;"
 msgstr ""
 
-#: bp-members/classes/class-bp-members-component.php:433
+#: bp-members/classes/class-bp-members-component.php:440
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-header.php:30
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-single-list.php:17
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-thread.php:38

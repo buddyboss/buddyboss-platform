@@ -37,8 +37,29 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 	 * Displays the widget.
 	 */
 	function widget( $args, $instance ) {
+
+		$id = bp_displayed_user_id();
+		$filter = false;
+
+		if ( ! $id ) {
+			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
+			add_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
+			$id     = bp_displayed_user_id();
+			$filter = true;
+
+			// If $id still blank then return.
+			if ( ! $id ) {
+				return;
+			}
+
+			// Set the global $bp->displayed_user variables.
+			$bp->displayed_user->id       = $id;
+			$bp->displayed_user->userdata = bp_core_get_core_userdata( $id );
+			$bp->displayed_user->domain   = bp_core_get_user_domain( $id );
+		}
+
 		// do not do anything if user isn't logged in
-		if ( ! is_user_logged_in() ) {
+		if ( ! bp_displayed_user_id() ) {
 			return;
 		}
 
@@ -47,14 +68,36 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		}
 
 		// logged-in user isn't following anyone, so stop!
-		if ( ! $following = bp_get_following_ids( array( 'user_id' => bp_loggedin_user_id() ) ) ) {
+		if ( ! $following = bp_get_following_ids( array( 'user_id' => bp_displayed_user_id() ) ) ) {
 			return false;
 		}
 
-		$following_ids          = bp_get_following_ids( array( 'user_id' => bp_loggedin_user_id() ) );
+		$following_ids          = bp_get_following_ids( array( 'user_id' => bp_displayed_user_id() ) );
 		$following_array        = explode( ',', $following_ids );
 		$following_count        = '<span class="widget-num-count">' . count( $following_array ) . '</span>';
 		$following_count_number = count( $following_array );
+
+		// Remove the filter.
+		if ( $filter ) {
+			remove_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
+		}
+
+		$instance['title'] = (
+			bp_loggedin_user_id() === bp_displayed_user_id()
+			? __( "I'm Following", 'buddyboss' )
+			: sprintf( __( "%s Following", 'buddyboss' ), bp_core_get_user_displayname( bp_displayed_user_id() ) )
+		);
+
+		/**
+		 * Filters the Connections widget title.
+		 *
+		 * @since BuddyBoss 1.2.5 Added 'instance' and 'id_base' to arguments passed to filter.
+		 *
+		 * @param string $title    The widget title.
+		 * @param array  $instance The settings for the particular instance of the widget.
+		 * @param string $id_base  Root ID for all widgets of this type.
+		 */
+		$title = apply_filters( 'widget_title', $instance['title'], $instance, $this->id_base );
 
 		// show the users the logged-in user is following
 		if ( bp_has_members(
@@ -68,7 +111,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 
 			echo $args['before_widget'];
 			echo $args['before_title']
-			   . $instance['title']
+			   . $title
 			   . $following_count
 			   . $args['after_title'];
 			?>
@@ -100,7 +143,6 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 	 */
 	function update( $new_instance, $old_instance ) {
 		$instance              = $old_instance;
-		$instance['title']     = strip_tags( $new_instance['title'] );
 		$instance['max_users'] = (int) $new_instance['max_users'];
 
 		return $instance;
@@ -113,18 +155,26 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		$instance = wp_parse_args(
 			(array) $instance,
 			array(
-				'title'     => __( "I'm Following", 'buddyboss' ),
 				'max_users' => 16,
 			)
 		);
 		?>
 
-		<p><label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
-		<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" /></p>
-
 		<p><label for="bp-follow-widget-users-max"><?php _e( 'Max members to show:', 'buddyboss' ); ?> <input class="widefat" id="<?php echo $this->get_field_id( 'max_users' ); ?>" name="<?php echo $this->get_field_name( 'max_users' ); ?>" type="text" value="<?php echo esc_attr( (int) $instance['max_users'] ); ?>" style="width: 30%" /></label></p>
 		<p><small><?php _e( 'Note: This widget is only displayed if a member is logged in and if the logged-in user is following some users.', 'buddyboss' ); ?></small></p>
 
 		<?php
+	}
+
+	/**
+	 * Set Display user_id to loggedin_user_id if someone added the widget on outside bp pages.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 */
+	public function set_display_user( $id ) {
+		if ( ! $id ) {
+			$id = bp_loggedin_user_id();
+		}
+		return $id;
 	}
 }
