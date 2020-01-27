@@ -14,7 +14,7 @@ if( !isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ){
 
 $user_progress = $bp_nouveau->xprofile->profile_completion_widget_para;
 
-$progress_label = sprintf( __( '%s Completed', 'buddyboss' ), $user_progress['completion_percentage'].'%' );
+$progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['completion_percentage'].'%' );
 
 ?>
 <div class="profile_completion_wrap" >

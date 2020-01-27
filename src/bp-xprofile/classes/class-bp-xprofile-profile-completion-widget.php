@@ -507,7 +507,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>" />
 		</p>
 		<p>
-			<label><?php _e( 'Profile field groups:', 'buddyboss' ); ?></label>
+			<label><?php _e( 'Profile field sets:', 'buddyboss' ); ?></label>
 			
 			<ul>
 			<?php foreach( $profile_groups as $single_group_details ): ?>
