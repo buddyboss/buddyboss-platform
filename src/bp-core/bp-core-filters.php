@@ -1380,11 +1380,11 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 }
 
 /**
- * Removed the non-component pages from buddyboss.
+ * Removed the non-component pages from $bp->pages from bp_core_set_uri_globals function.
  *
  * @since BuddyBoss 1.2.5
  */
-function bp_pages( $pages ) {
+function bp_pages_terms_and_privacy_exclude( $pages ) {
 
 	if ( !empty( $pages ) ) {
 
@@ -1401,4 +1401,4 @@ function bp_pages( $pages ) {
 
 	return $pages;
 }
-add_filter( 'bp_pages', 'bp_pages' );
+add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
