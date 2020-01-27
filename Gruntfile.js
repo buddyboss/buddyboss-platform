@@ -197,7 +197,8 @@ module.exports = function( grunt ) {
 			}
 		},
 		clean: {
-			all: [ BUILD_DIR ]
+			all: [ BUILD_DIR ],
+			bp_rest: [ BUILD_DIR + '/buddyboss-platform-api' ]
 		},
 		copy: {
 			files: {
@@ -215,6 +216,44 @@ module.exports = function( grunt ) {
 						expand: true,
 						src: ['composer.json']
 					}
+				]
+			},
+			bp_rest_components: {
+				cwd: BUILD_DIR + 'buddyboss-platform-api/includes/',
+				dest: BUILD_DIR,
+				dot: true,
+				expand: true,
+				src: [
+					'**/bp-activity/**',
+					'**/bp-blogs/**',
+					'**/bp-friends/**',
+					'**/bp-groups/**',
+					'**/bp-members/**',
+					'**/bp-messages/**',
+					'**/bp-notifications/**',
+					'**/bp-settings/**',
+					'**/bp-xprofile/**'
+				],
+			},
+			bp_rest_core: {
+				cwd: BUILD_DIR + 'buddyboss-platform-api/includes/',
+				dest: BUILD_DIR + 'bp-core/classes/',
+				dot: true,
+				expand: true,
+				flatten: true,
+				filter: 'isFile',
+				src: [
+					'**',
+					'!functions.php',
+					'!**/bp-activity/**',
+					'!**/bp-blogs/**',
+					'!**/bp-friends/**',
+					'!**/bp-groups/**',
+					'!**/bp-members/**',
+					'!**/bp-messages/**',
+					'!**/bp-notifications/**',
+					'!**/bp-settings/**',
+					'!**/bp-xprofile/**'
 				]
 			}
 		},
@@ -283,6 +322,11 @@ module.exports = function( grunt ) {
 				command: 'git add .; git commit -am "grunt release build";',
 				cwd: '.',
 				stdout: false
+			},
+			rest_api: {
+				command: 'svn export --force https://github.com/buddyboss/buddyboss-platform-api.git/trunk buddyboss-platform-api',
+				cwd: BUILD_DIR,
+				stdout: false
 			}
 		},
 		jsvalidate:{
@@ -319,7 +363,8 @@ module.exports = function( grunt ) {
 	 * Register tasks.
 	 */
 	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
-	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
+	grunt.registerTask( 'bp_rest', ['exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest'] );
+	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'bp_rest', 'compress', 'clean:all'] );
 	grunt.registerTask( 'release', ['src', 'build'] );
 
 	// Testing tasks.
