@@ -334,7 +334,7 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length ) {
+					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length || $( this ).hasClass( 'wp-link-embed' ) ) {
 						$(this).find('.activity-inner > p:first a').hide();
 					}
 				}

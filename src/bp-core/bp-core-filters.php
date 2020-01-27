@@ -1378,3 +1378,27 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 
 	return $src;
 }
+
+/**
+ * Removed the non-component pages from $bp->pages from bp_core_set_uri_globals function.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_pages_terms_and_privacy_exclude( $pages ) {
+
+	if ( !empty( $pages ) ) {
+
+		// Removed terms page as non component page.
+		if ( property_exists( $pages, 'terms' ) ) {
+			unset( $pages->terms );
+		}
+
+		// Removed privacy policy page as non component page.
+		if ( property_exists( $pages, 'privacy' ) ) {
+			unset( $pages->privacy );
+		}
+	}
+
+	return $pages;
+}
+add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
