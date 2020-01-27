@@ -212,6 +212,56 @@ function bp_core_register_common_scripts() {
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
 
+
+	/**
+	 * Translation for select2 script text.
+	 */
+	if ( !function_exists( 'wp_get_available_translations' ) ) {
+
+		$bp_select2 = array( 'lang' => '' );
+		require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+		$translations = wp_get_available_translations();
+
+		$file_path = buddypress()->plugin_dir . 'bp-core/js/';
+		if (
+			isset( $translations[ get_locale() ] )
+			&&  !empty( current( $translations[ get_locale() ]['iso'] ) )
+			&& file_exists( $file_path . 'vendor/i18n/' . current( $translations[ get_locale() ]['iso'] ) . '.js' )
+		) {
+			$lang = current( $translations[ get_locale() ]['iso'] );
+			$bp_select2['lang'] = $lang;
+			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
+		} else if (
+			!empty( get_bloginfo( 'language' ) )
+			&& file_exists( $file_path . 'vendor/i18n/' . get_bloginfo( 'language' ) . '.js' )
+		) {
+			$bp_select2['lang'] = get_bloginfo( 'language' );
+			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
+		}
+
+		wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
+
+	}
+
+	/**
+	 * Translate EmojineArea
+	 */
+	$bp_emojionearea = array(
+		'recent'            => __( 'Recent', 'buddyboss' ),
+		'smileys_people'    => __( 'Smileys & People', 'buddyboss' ),
+		'animals_nature'    => __( 'Animals & Nature', 'buddyboss' ),
+		'food_drink'        => __( 'Food & Drink', 'buddyboss' ),
+		'activity'          => __( 'Activity', 'buddyboss' ),
+		'travel_places'     => __( 'Travel & Places', 'buddyboss' ),
+		'objects'           => __( 'Objects', 'buddyboss' ),
+		'symbols'           => __( 'Symbols', 'buddyboss' ),
+		'flags'             => __( 'Flags', 'buddyboss' ),
+		'tones'             => __( 'Diversity', 'buddyboss' ),
+		'searchPlaceholder' => __( 'Search', 'buddyboss' ),
+	);
+
+	wp_localize_script( 'emojionearea', 'bp_emojionearea', $bp_emojionearea );
+
 	/**
 	 * Translate Dropzone
 	 */
@@ -232,7 +282,6 @@ function bp_core_register_common_scripts() {
 			'dictMaxFilesExceeded' => __( "You can not upload any more files.", 'buddyboss' ),
 		)
 	);
-
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
