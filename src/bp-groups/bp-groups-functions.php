@@ -1178,6 +1178,51 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 /** Group Member Status Checks ************************************************/
 
 /**
+ * Get the Group roles.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @return array The list of Group role objects.
+ */
+
+function bp_groups_get_group_roles() {
+	return array(
+		'admin' => (object) array(
+			'id'           => 'admin',
+			'name'         => __( 'Organizer', 'buddyboss' ),
+			'is_admin'     => true,
+			'is_banned'    => false,
+			'is_confirmed' => true,
+			'is_mod'       => false,
+		),
+		'mod' => (object) array(
+			'id'           => 'mod',
+			'name'         => __( 'Moderator', 'buddyboss' ),
+			'is_admin'     => false,
+			'is_banned'    => false,
+			'is_confirmed' => true,
+			'is_mod'       => true,
+		),
+		'member' => (object) array(
+			'id'           => 'member',
+			'name'         => __( 'Member', 'buddyboss' ),
+			'is_admin'     => false,
+			'is_banned'    => false,
+			'is_confirmed' => true,
+			'is_mod'       => false,
+		),
+		'banned' => (object) array(
+			'id'           => 'banned',
+			'name'         => __( 'Banned', 'buddyboss' ),
+			'is_admin'     => false,
+			'is_banned'    => true,
+			'is_confirmed' => true,
+			'is_mod'       => false,
+		),
+	);
+}
+
+/**
  * Check whether a user is an admin of a given group.
  *
  * @since BuddyPress 1.0.0
