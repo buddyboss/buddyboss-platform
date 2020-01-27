@@ -152,7 +152,7 @@ function bp_core_register_common_scripts() {
 		'bp-exif'             => array( 'file' => "{$url}vendor/exif.js" ),
 
 		'bp-media-dropzone'   => array(
-			'file'         => "{$url}vendor/dropzone.min.js",
+			'file'         => "{$url}vendor/dropzone{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
