@@ -334,7 +334,7 @@ window.bp = window.bp || {};
 					_newString = $.trim(_findtext.replace(_url, ''));
 				}
 				if(0 >= _newString.length){
-					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length ) {
+					if ( $( this ).find('.activity-inner > .activity-link-preview-container ').length || $( this ).hasClass( 'wp-link-embed' ) ) {
 						$(this).find('.activity-inner > p:first a').hide();
 					}
 				}
@@ -617,8 +617,8 @@ window.bp = window.bp || {};
 			$( '#buddypress [data-bp-search] form' ).on( 'search', 'input[type=search]', this.resetSearch );
 
 			// Buttons
-			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
-			$( '#buddypress [data-bp-list], #buddypress #item-header' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'click', '[data-bp-btn-action]', this, this.buttonAction );
+			$( '#buddypress [data-bp-list], #buddypress #item-header, #buddypress.bp-shortcode-wrap .dir-list' ).on( 'blur', '[data-bp-btn-action]', this, this.buttonRevert );
 
 			$( document ).on( 'keyup', this, this.keyUp );
 

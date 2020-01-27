@@ -23,7 +23,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 */
 	function __construct() {
 		$widget_ops                       = array(
-			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of current logged in member if widget is added outside members profile pages else it will display the displayed member.', 'buddyboss' ),
+			'description'                 => __( 'A list of members that are connected to the logged-in user or member profile containing the widget.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
