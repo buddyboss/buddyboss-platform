@@ -169,11 +169,11 @@ function bp_core_admin_register_registration_page_fields() {
 
 	// add view tutorial button
 	$static_pages['button'] = array(
-		'link'  => 	bp_get_admin_url(
+		'link'  => bp_get_admin_url(
 				add_query_arg(
 					array(
-						'page' 		=> 'bp-help',
-						'article' 	=> 62795,
+						'page'      => 'bp-help',
+						'article'   => 62795,
 					),
 					'admin.php'
 				)
@@ -301,7 +301,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 			);
 		} else {
 			printf(
-				'<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'<a href="%s" class="button-secondary create-background-page" data-name="%s">%s</a>',
 				'javascript:void(0);',
 				esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' )
@@ -335,7 +335,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 			);
 		} else {
 			printf(
-				'<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'<a href="%s" class="button-secondary create-background-page" data-name="%s">%s</a>',
 				'javascript:void(0);',
 				esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' )
