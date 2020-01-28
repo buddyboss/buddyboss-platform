@@ -4784,7 +4784,9 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
 
 /**
- * Function to add the content on top of members listing
+ * Function to add the content on top of members listing.
+ *
+ * @since BuddyBoss 1.2.5
  */
 function bp_members_directory_page_content() {
 
@@ -4795,11 +4797,12 @@ function bp_members_directory_page_content() {
 		echo apply_filters( 'the_content', $members_page_content );
 	}
 }
-
 add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
 
 /**
- * Function to add the content on activate page
+ * Function to add the content on activate page.
+ *
+ * @since BuddyBoss 1.2.5
  */
 function bp_activate_page_content() {
 
@@ -4810,13 +4813,12 @@ function bp_activate_page_content() {
 		echo apply_filters( 'the_content', $activate_page_content );
 	}
 }
-
 add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
 
 /**
  * Function to add the content on register page
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.5
  */
 function bp_register_page_content() {
 
@@ -4827,5 +4829,4 @@ function bp_register_page_content() {
 		echo apply_filters( 'the_content', $register_page_content );
 	}
 }
-
 add_action( 'bp_before_register_page', 'bp_register_page_content' );

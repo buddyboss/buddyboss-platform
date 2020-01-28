@@ -2077,7 +2077,7 @@ function bp_media_import_status_request() {
 /**
  * Function to add the content on top of media listing
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.5
  */
 function bp_media_directory_page_content() {
 
