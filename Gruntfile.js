@@ -198,7 +198,7 @@ module.exports = function( grunt ) {
 		},
 		clean: {
 			all: [ BUILD_DIR ],
-			bp_rest: [ BUILD_DIR + '/buddyboss-platform-api' ]
+			bp_rest: [ SOURCE_DIR + 'buddyboss-platform-api/' ]
 		},
 		copy: {
 			files: {
@@ -219,8 +219,8 @@ module.exports = function( grunt ) {
 				]
 			},
 			bp_rest_components: {
-				cwd: BUILD_DIR + 'buddyboss-platform-api/includes/',
-				dest: BUILD_DIR,
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
+				dest: SOURCE_DIR,
 				dot: true,
 				expand: true,
 				src: [
@@ -236,8 +236,8 @@ module.exports = function( grunt ) {
 				],
 			},
 			bp_rest_core: {
-				cwd: BUILD_DIR + 'buddyboss-platform-api/includes/',
-				dest: BUILD_DIR + 'bp-core/classes/',
+				cwd: SOURCE_DIR + 'buddyboss-platform-api/includes/',
+				dest: SOURCE_DIR + 'bp-core/classes/',
 				dot: true,
 				expand: true,
 				flatten: true,
@@ -325,7 +325,7 @@ module.exports = function( grunt ) {
 			},
 			rest_api: {
 				command: 'svn export --force https://github.com/buddyboss/buddyboss-platform-api.git/trunk buddyboss-platform-api',
-				cwd: BUILD_DIR,
+				cwd: SOURCE_DIR,
 				stdout: false
 			}
 		},
@@ -364,7 +364,7 @@ module.exports = function( grunt ) {
 	 */
 	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
 	grunt.registerTask( 'bp_rest', ['exec:rest_api', 'copy:bp_rest_components', 'copy:bp_rest_core', 'clean:bp_rest'] );
-	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'bp_rest', 'compress', 'clean:all'] );
+	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
 	grunt.registerTask( 'release', ['src', 'build'] );
 
 	// Testing tasks.
