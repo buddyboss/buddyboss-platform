@@ -304,9 +304,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Check if blog & forum activity stream commenting is off
-			// Commented below from the condition because getting bool value
-			// ( false === $activities_template->disable_blogforum_replies )
-			if ( !empty( (int) $activities_template->disable_blogforum_replies ) ) {
+			if ( !empty( $activities_template->disable_blogforum_replies ) ) {
 
 				// Get the current action name
 				$action_name = bp_get_activity_action_name();
