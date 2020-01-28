@@ -1491,7 +1491,7 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	/**
 	 * Removed users liked activity meta
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param int $user_id ID of the user being deleted.
 	 */
@@ -3180,7 +3180,7 @@ function bp_activity_delete( $args = '' ) {
 /**
  * Delete users liked activity meta.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.5
  *
  * @param int To delete user id.
  * @return bool True on success, false on failure.
