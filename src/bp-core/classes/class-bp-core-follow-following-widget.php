@@ -85,7 +85,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
 			? __( "I'm Following", 'buddyboss' )
-			: sprintf( __( "%s Following", 'buddyboss' ), bp_core_get_user_displayname( bp_displayed_user_id() ) )
+			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( bp_displayed_user_id() ) )
 		);
 
 		/**
@@ -176,5 +176,31 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			$id = bp_loggedin_user_id();
 		}
 		return $id;
+	}
+
+	/**
+	 * Display user name to 'First Name' when they have selected 'First Name & Last Name' in display format.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 */
+	public function get_user_display_name( $user_id ) {
+
+		if ( ! $user_id ) {
+			return;
+		}
+
+		$format = bp_get_option( 'bp-display-name-format' );
+
+		if (
+			'first_name' === $format
+			|| 'first_last_name' === $format
+		) {
+			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
+			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+		} else {
+			$display_name = bp_core_get_user_displayname( $user_id );
+		}
+
+		return apply_filters( 'bp_core_widget_user_display_name', $display_name, $user_id );
 	}
 }
