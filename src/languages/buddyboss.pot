@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-27 11:01:09+00:00\n"
+"POT-Creation-Date: 2020-01-28 08:31:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -779,35 +779,35 @@ msgstr ""
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:420
-#: bp-activity/bp-activity-notifications.php:438
+#: bp-activity/bp-activity-notifications.php:419
+#: bp-activity/bp-activity-notifications.php:433
 #: bp-friends/bp-friends-notifications.php:274
 #: bp-friends/bp-friends-notifications.php:290
-#: bp-groups/bp-groups-notifications.php:1191
-#: bp-groups/bp-groups-notifications.php:1207
-#: bp-groups/bp-groups-notifications.php:1223
-#: bp-groups/bp-groups-notifications.php:1239
-#: bp-groups/bp-groups-notifications.php:1255
-#: bp-messages/bp-messages-notifications.php:288
+#: bp-groups/bp-groups-notifications.php:1190
+#: bp-groups/bp-groups-notifications.php:1202
+#: bp-groups/bp-groups-notifications.php:1214
+#: bp-groups/bp-groups-notifications.php:1226
+#: bp-groups/bp-groups-notifications.php:1238
+#: bp-messages/bp-messages-notifications.php:287
 #. translators: accessibility text
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:426
-#: bp-activity/bp-activity-notifications.php:444
+#: bp-activity/bp-activity-notifications.php:423
+#: bp-activity/bp-activity-notifications.php:437
 #: bp-friends/bp-friends-notifications.php:280
 #: bp-friends/bp-friends-notifications.php:296
-#: bp-groups/bp-groups-notifications.php:1197
-#: bp-groups/bp-groups-notifications.php:1213
-#: bp-groups/bp-groups-notifications.php:1229
-#: bp-groups/bp-groups-notifications.php:1245
-#: bp-groups/bp-groups-notifications.php:1261
-#: bp-messages/bp-messages-notifications.php:294
+#: bp-groups/bp-groups-notifications.php:1194
+#: bp-groups/bp-groups-notifications.php:1206
+#: bp-groups/bp-groups-notifications.php:1218
+#: bp-groups/bp-groups-notifications.php:1230
+#: bp-groups/bp-groups-notifications.php:1242
+#: bp-messages/bp-messages-notifications.php:291
 #. translators: accessibility text
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:434
+#: bp-activity/bp-activity-notifications.php:430
 #: bp-core/gdpr/class-bp-settings-export.php:155
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
@@ -6509,22 +6509,22 @@ msgid "A member invites you to join a group"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:166
-#: bp-groups/bp-groups-notifications.php:1203
+#: bp-groups/bp-groups-notifications.php:1199
 msgid "Group information is updated"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:167
-#: bp-groups/bp-groups-notifications.php:1219
+#: bp-groups/bp-groups-notifications.php:1211
 msgid "You are promoted to a group organizer or moderator"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:168
-#: bp-groups/bp-groups-notifications.php:1235
+#: bp-groups/bp-groups-notifications.php:1223
 msgid "A member requests to join a private group you organize"
 msgstr ""
 
 #: bp-core/gdpr/class-bp-settings-export.php:169
-#: bp-groups/bp-groups-notifications.php:1251
+#: bp-groups/bp-groups-notifications.php:1235
 msgid "Your request to join a group has been approved or denied"
 msgstr ""
 
@@ -17723,49 +17723,49 @@ msgstr ""
 msgid "Example:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:550
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:547
 msgid "Documentation on date and time formatting"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:559
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:565
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:556
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:562
 msgid "Range"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:572
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:569
 msgid "Absolute"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:577
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:593
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:574
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:590
 msgid "Start:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:579
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:612
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:576
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:609
 msgid "End:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:588
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:585
 msgid "Relative"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:601
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:619
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:598
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:616
 msgid "Select range"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:606
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:624
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:603
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:621
 msgid "years ago"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:608
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:626
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:605
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:623
 msgid "years from now"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:688
+#: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:685
 msgid "F j, Y"
 msgstr ""
 
