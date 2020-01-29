@@ -24,19 +24,20 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function __construct() {
 
-		// Set up optional widget args
+		// Set up optional widget args.
 		$widget_ops = array(
 			'classname'   => 'widget_bp_profile_completion_widget widget buddypress',
 			'description' => __( 'Show Logged in user Profile Completion Progress.', 'buddyboss' ),
 		);
 
-		// Set up the widget
-		parent::__construct( false,
-			__( "(BB) Profile Completion", 'buddyboss' ),
-			$widget_ops );
+		// Set up the widget.
+		parent::__construct(
+			false,
+			__( '(BB) Profile Completion', 'buddyboss' ),
+			$widget_ops
+		);
 
-
-		// Delete Transient hooks
+		// Delete Transient hooks.
 		$this->delete_transient_hooks();
 	}
 
@@ -51,7 +52,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		add_action( 'xprofile_cover_image_uploaded', array( $this, 'delete_pc_loggedin_transient' ) ); // When cover photo uploaded from profile in Frontend.
 		add_action( 'bp_core_delete_existing_avatar', array( $this, 'delete_pc_loggedin_transient' ) ); // When profile photo deleted from profile in Frontend.
 		add_action( 'xprofile_cover_image_deleted', array( $this, 'delete_pc_loggedin_transient' ) ); // When cover photo deleted from profile in Frontend.
-
 
 		// Delete Profile Completion Transient when Profile updated, New Field added/update, field deleted etc..
 		add_action( 'xprofile_updated_profile', array( $this, 'delete_pc_transient' ) ); // On Profile updated from frontend.
@@ -73,7 +73,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		if ( ! is_user_logged_in() || ( bp_is_user() && ! bp_is_my_profile() ) ) {
 			return;
 		}
-
 
 		/* Widget VARS */
 
@@ -97,11 +96,10 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		echo $instance['title'];
 		echo $args['after_title'];
 
-
 		// Widget Content
 
 		// Globalize the Profile Completion widget arguments. Used in the template called below.
-		$bp_nouveau                                           = bp_nouveau();
+		$bp_nouveau = bp_nouveau();
 		$bp_nouveau->xprofile->profile_completion_widget_para = $user_progress;
 		bp_get_template_part( 'members/single/profile/widget' );
 		$bp_nouveau->xprofile->profile_completion_widget_para = array();
@@ -131,7 +129,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		$user_progress_formmatted = array();
 
-		// Check if data avail in transient
+		// Check if data avail in transient.
 		$pc_transient_name = $this->get_pc_transient_name();
 		$pc_transient_data = get_transient( $pc_transient_name );
 
@@ -147,7 +145,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			// Format User Progress array to pass on to the template.
 			$user_progress_formmatted = $this->get_user_progress_formatted( $user_progress_arr );
 
-			// set Transient here
+			// set Transient here.
 			set_transient( $pc_transient_name, $user_progress_formmatted );
 		}
 
@@ -187,7 +185,10 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function delete_transient_query( $transient_name_prefix ) {
 		global $wpdb;
-		$delete_transient_query = $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE '%s' ", $transient_name_prefix );
+		$delete_transient_query = $wpdb->prepare(
+			"DELETE FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
+			$transient_name_prefix
+		);
 		$wpdb->query( $delete_transient_query );
 	}
 
@@ -222,7 +223,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$grand_total_fields     = 0;
 		$grand_completed_fields = 0;
 
-
 		/* Profile Photo */
 
 		// check if profile photo option still enabled.
@@ -243,7 +243,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			);
 
 		}
-
 
 		/* Cover Photo */
 
@@ -266,15 +265,16 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		}
 
-
 		/* Groups Fields */
 
 		// Get Groups and Group fields with Loggedin user data.
-		$profile_groups = bp_xprofile_get_groups( array(
+		$profile_groups = bp_xprofile_get_groups(
+			array(
 				'fetch_fields'     => true,
 				'fetch_field_data' => true,
 				'user_id'          => $user_id,
-			) );
+			)
+		);
 
 		foreach ( $profile_groups as $single_group_details ) {
 
@@ -283,7 +283,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			}
 
 			/* Single Group Specific VARS */
-
 			$group_id              = $single_group_details->id;
 			$single_group_progress = array();
 
@@ -294,8 +293,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 			// Check if Current Group is repeater if YES then get number of fields inside current group.
 			$is_group_repeater_str = bp_xprofile_get_meta( $group_id, 'group', 'is_repeater_enabled', true );
-			$is_group_repeater     = ( $is_group_repeater_str == 'on' ) ? true : false;
-
+			$is_group_repeater     = ( 'on' === $is_group_repeater_str ) ? true : false;
 
 			/* Loop through all the fields and check if fields completed or not. */
 			$group_total_fields     = 0;
@@ -322,7 +320,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				++ $group_total_fields;
 			}
 
-
 			/* Prepare array to return group specific progress details */
 			$single_group_progress['group_name']             = $single_group_details->name;
 			$single_group_progress['group_total_fields']     = $group_total_fields;
@@ -334,7 +331,6 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$progress_details['groups'][ $group_id ] = $single_group_progress;
 
 		}
-
 
 		/* Total Fields vs completed fields to calculate progress percentage. */
 		$progress_details['total_fields']     = $grand_total_fields;
@@ -379,7 +375,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 				'number'             => $listing_number,
 				'label'              => $group_details['group_name'],
 				'link'               => $group_link,
-				'is_group_completed' => ( $group_details['group_total_fields'] == $group_details['group_completed_fields'] ) ? true : false,
+				'is_group_completed' => ( $group_details['group_total_fields'] === $group_details['group_completed_fields'] ) ? true : false,
 				'total'              => $group_details['group_total_fields'],
 				'completed'          => $group_details['group_completed_fields'],
 			);
@@ -387,13 +383,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$listing_number ++;
 		}
 
-
 		/* Profile Photo */
 
 		if ( isset( $user_progress_arr['photo_type']['profile_photo'] ) ) {
 
 			$change_avatar_link  = trailingslashit( $loggedin_user_domain . $profile_slug . '/change-avatar' );
-			$is_profile_uploaded = ( $user_progress_arr['photo_type']['profile_photo']['is_uploaded'] == 1 );
+			$is_profile_uploaded = ( 1 === $user_progress_arr['photo_type']['profile_photo']['is_uploaded'] );
 
 			$user_prgress_formatted['groups'][] = array(
 				'number'             => $listing_number,
@@ -407,13 +402,12 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$listing_number ++;
 		}
 
-
 		/* Cover Photo */
 
 		if ( isset( $user_progress_arr['photo_type']['cover_photo'] ) ) {
 
 			$change_cover_link = trailingslashit( $loggedin_user_domain . $profile_slug . '/change-cover-image' );
-			$is_cover_uploaded = ( $user_progress_arr['photo_type']['cover_photo']['is_uploaded'] == 1 );
+			$is_cover_uploaded = ( 1 === $user_progress_arr['photo_type']['cover_photo']['is_uploaded'] );
 
 			$user_prgress_formatted['groups'][] = array(
 				'number'             => $listing_number,
@@ -441,11 +435,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function update( $new_instance, $old_instance ) {
 		$instance                           = $old_instance;
-		$instance['title']                  = strip_tags( $new_instance['title'] );
+		$instance['title']                  = wp_strip_all_tags( $new_instance['title'] );
 		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
 		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
 
-		// Delete Transient
+		// Delete Transient.
 		$this->delete_pc_transient();
 
 		/**
@@ -456,17 +450,17 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		return apply_filters( 'xprofile_profile_completion_form_update', $instance );
 	}
 
-
 	/**
 	 * Widget settings form.
 	 */
 	function form( $instance ) {
 
-		$instance = wp_parse_args( (array) $instance,
+		$instance = wp_parse_args(
+			(array) $instance,
 			array(
-				'title' => __( "Complete Your Profile", 'buddyboss' ),
-			) );
-
+				'title' => __( 'Complete Your Profile', 'buddyboss' ),
+			)
+		);
 
 		/* Profile Groups and Profile Cover Photo VARS. */
 		$profile_groups = bp_xprofile_get_groups();
@@ -483,25 +477,24 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			$photos_enabled_arr['cover_photo'] = __( 'Cover Photo', 'buddyboss' );
 		}
 
-
 		/* Widget Form HTML */ ?>
 		<p>
-			<label for="<?php echo $this->get_field_id( 'title' ); ?>"><?php _e( 'Title:', 'buddyboss' ); ?></label>
-			<input class="widefat" id="<?php echo $this->get_field_id( 'title' ); ?>" name="<?php echo $this->get_field_name( 'title' ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>"/>
-		</p>		<p>
-			<label><?php _e( 'Profile field sets:', 'buddyboss' ); ?></label>
+			<label for="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>"><?php esc_html_e( 'Title:', 'buddyboss' ); ?></label>
+			<input class="widefat" id="<?php echo esc_attr( $this->get_field_id( 'title' ) ); ?>" name="<?php echo esc_attr( $this->get_field_name( 'title' ) ); ?>" type="text" value="<?php echo esc_attr( $instance['title'] ); ?>"/>
+		</p>        <p>
+			<label><?php esc_html_e( 'Profile field sets:', 'buddyboss' ); ?></label>
 
 		<ul>
-			<?php foreach ( $profile_groups as $single_group_details ): ?><?php
-				$is_checked = ( ! empty( $instance['profile_groups_enabled'] ) && in_array( $single_group_details->id,
-						$instance['profile_groups_enabled'] ) );
+			<?php
+			foreach ( $profile_groups as $single_group_details ) :
+					$is_checked = ( ! empty( $instance['profile_groups_enabled'] ) && in_array( $single_group_details->id, $instance['profile_groups_enabled'] ) );
 				?>
 				<li>
 					<label>
-						<input class="widefat" type="checkbox" name="<?php echo $this->get_field_name( 'profile_groups_enabled' ); ?>[]" value="<?php echo $single_group_details->id; ?>"
+						<input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_groups_enabled' ) ); ?>[]" value="<?php echo esc_attr( $single_group_details->id ); ?>"
 							<?php checked( $is_checked ); ?>
 						/>
-						<?php echo $single_group_details->name; ?>
+						<?php echo esc_html( $single_group_details->name ); ?>
 					</label>
 				</li>
 			<?php endforeach; ?>
@@ -509,19 +502,17 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		</p>
 
-		<?php if ( ! empty( $photos_enabled_arr ) ): ?>
+		<?php if ( ! empty( $photos_enabled_arr ) ) : ?>
 			<p>
-				<label><?php _e( 'Profile photos:', 'buddyboss' ); ?></label>
+				<label><?php esc_html_e( 'Profile photos:', 'buddyboss' ); ?></label>
 
 			<ul>
-				<?php foreach ( $photos_enabled_arr as $photos_value => $photos_label ): ?>
+				<?php foreach ( $photos_enabled_arr as $photos_value => $photos_label ) : ?>
 
 					<li>
 						<label>
-							<input class="widefat" type="checkbox" name="<?php echo $this->get_field_name( 'profile_photos_enabled' ); ?>[]" value="<?php echo $photos_value; ?>"
-								<?php checked( ( ! empty( $instance['profile_groups_enabled'] ) && in_array( $photos_value, $instance['profile_photos_enabled'] ) ) ); ?>
-							/>
-							<?php echo $photos_label; ?>
+							<input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_photos_enabled' ) ); ?>[]" value="<?php echo esc_attr( $photos_value ); ?>" <?php checked( ( ! empty( $instance['profile_groups_enabled'] ) && in_array( $photos_value, $instance['profile_photos_enabled'] ) ) ); ?>/>
+							<?php echo esc_html( $photos_label ); ?>
 						</label>
 					</li>
 
@@ -540,7 +531,14 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		do_action( 'xprofile_profile_completion_form' );
 		?>
 
-		<p><small><?php _e( 'Note: This widget is only displayed if a member is logged in.', 'buddyboss' ); ?></small>
+		<p><small>
+		<?php
+		esc_html_e(
+			'Note: This widget is only displayed if a member is logged in.',
+			'buddyboss'
+		);
+		?>
+					</small>
 		</p>
 
 		<?php

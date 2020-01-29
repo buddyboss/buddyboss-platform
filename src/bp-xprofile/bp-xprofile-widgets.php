@@ -5,7 +5,7 @@
  * Functions here registers Profile Completion Widget.
  *
  * @package BuddyBoss\XProfile
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.5
  */
 
 // Exit if accessed directly.
@@ -21,9 +21,12 @@ function bp_xprofile_register_widgets() {
 	/**
 	 * Profile Completion Widget
 	 */
-	add_action( 'widgets_init', function () {
-		register_widget( 'BP_Xprofile_Profile_Completion_Widget' );
-	} );
+	add_action(
+		'widgets_init',
+		function () {
+			register_widget( 'BP_Xprofile_Profile_Completion_Widget' );
+		}
+	);
 
 }
 

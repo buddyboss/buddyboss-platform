@@ -12,8 +12,7 @@ if ( ! isset( $bp_nouveau->xprofile->profile_completion_widget_para ) ) {
 	return;
 }
 
-$user_progress = $bp_nouveau->xprofile->profile_completion_widget_para;
-
+$user_progress  = $bp_nouveau->xprofile->profile_completion_widget_para;
 $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['completion_percentage'] . '%' );
 
 ?>
@@ -21,10 +20,10 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 
 	<div class="pc_progress_wrap">
 		<div class="progress_text_wrap">
-			<span class="progress_text"><?php echo $progress_label; ?></span>
+			<span class="progress_text"><?php echo esc_html( $progress_label ); ?></span>
 		</div>
 		<div class="progress_container">
-			<div class="pc_progress" style="width: <?php echo $user_progress['completion_percentage']; ?>%;"></div>
+			<div class="pc_progress" style="width: <?php echo esc_attr( $user_progress['completion_percentage'] ); ?>%;"></div>
 		</div>
 	</div>
 
@@ -32,17 +31,24 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 
 		<ul class="pc_detailed_progress">
 
-			<?php // Loop through all sections and show progress. ?>
-			<?php foreach ( $user_progress['groups'] as $single_section_details ): ?>
+			<?php
+			// Loop through all sections and show progress.
+			foreach ( $user_progress['groups'] as $single_section_details ) :
 
-				<?php $user_progress_status = ( $single_section_details['completed'] == 0 && $single_section_details['total'] > 0 ) ? 'progress_not_started' : ''; ?>
+				$user_progress_status = ( 0 === $single_section_details['completed'] && $single_section_details['total'] > 0 ) ? 'progress_not_started' : '';
+				?>
 
-				<li class="single_section_wrap <?php echo ( $single_section_details['is_group_completed'] ) ? 'completed ' : 'incomplete '; echo $user_progress_status; ?>">
+				<li class="single_section_wrap 
+				<?php
+				echo ( $single_section_details['is_group_completed'] ) ? esc_attr( 'completed ' ) : esc_attr( 'incomplete ' );
+				echo esc_attr( $user_progress_status );
+				?>
+				">
 					<span class="section_number">
-						<?php echo $single_section_details['number']; ?>
+						<?php echo esc_html( $single_section_details['number'] ); ?>
 					</span>
 					<span class="section_name">
-						<a href="<?php echo esc_url( $single_section_details['link'] ); ?>" class="group_link"><?php echo $single_section_details['label']; ?></a>
+						<a href="<?php echo esc_url( $single_section_details['link'] ); ?>" class="group_link"><?php echo esc_html( $single_section_details['label'] ); ?></a>
 					</span>
 					<span class="progress">
 						<span class="completed_staus">
@@ -50,8 +56,9 @@ $progress_label = sprintf( __( '%s Complete', 'buddyboss' ), $user_progress['com
 						</span>
 					</span>
 				</li>
-
-			<?php endforeach; ?>
+				<?php
+			endforeach;
+			?>
 
 		</ul>
 
