@@ -23,7 +23,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 */
 	function __construct() {
 		$widget_ops                       = array(
-			'description'                 => __( 'A dynamic list of recently active, popular, and newest Connections of current logged in member if widget is added outside members profile pages else it will display the displayed member.', 'buddyboss' ),
+			'description'                 => __( 'A list of members that are connected to the logged-in user or member profile containing the widget.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
 		);
@@ -141,17 +141,17 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 			<div class="item-options" id="friends-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends" 
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-friends"
 																 <?php
 																	if ( $instance['friend_default'] == 'newest' ) :
 																		?>
 					class="selected"<?php endif; ?>><?php _e( 'Newest', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends" 
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-friends"
 																   <?php
 																	if ( $instance['friend_default'] == 'active' ) :
 																		?>
 					class="selected"<?php endif; ?>><?php _e( 'Active', 'buddyboss' ); ?></a>
-				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends" 
+				| <a href="<?php bp_members_directory_permalink(); ?>" id="popular-friends"
 																   <?php
 																	if ( $instance['friend_default'] == 'popular' ) :
 																		?>
@@ -184,19 +184,6 @@ class BP_Core_Friends_Widget extends WP_Widget {
 
 				<?php endwhile; ?>
 			</ul>
-			<?php
-			/**
-			 *This is for more button it is redirect to members page 
-			 */
-			$profiles_count = bp_get_total_member_count();
-			if ( $profiles_count > $instance['max_friends'] ) { ?>
-				<div class="more-block">
-					<a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?>
-						<i class="bb-icon-angle-right"></i>
-					</a>
-				</div>
-			<?php 
-			} ?>
 			<?php wp_nonce_field( 'bp_core_widget_friends', '_wpnonce-friends' ); ?>
 			<input type="hidden" name="friends_widget_max" id="friends_widget_max" value="<?php echo absint( $instance['max_friends'] ); ?>" />
 

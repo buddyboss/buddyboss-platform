@@ -1,9 +1,12 @@
-<?php $total = bbp_get_forum_topic_count( get_the_ID() ) ?>
+<?php
+$total = bbp_get_forum_topic_count( get_the_ID() );
+$result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'forum' );
+?>
 <div class="bp-search-ajax-item bp-search-ajax-item_forum">
 	<a href="<?php echo esc_url(add_query_arg( array( 'no_frame' => '1' ), bbp_get_forum_permalink( get_the_ID()) )); ?>">
 		<div class="item-avatar">
 			<img
-				src="<?php echo bbp_get_forum_thumbnail_src( get_the_ID() ) ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
+				src="<?php echo $result['post_thumbnail']; ?>"
 				class="avatar forum-avatar"
 				height="150"
 				width="150"

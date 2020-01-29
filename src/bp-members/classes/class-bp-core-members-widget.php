@@ -25,7 +25,7 @@ class BP_Core_Members_Widget extends WP_Widget {
 
 		// Setup widget name & description.
 		$name        = __( '(BB) Members', 'buddyboss' );
-		$description = __( 'A dynamic list of recently active, popular, and newest members', 'buddyboss' );
+		$description = __( 'A dynamic list of recently active, popular, and newest members.', 'buddyboss' );
 
 		// Call WP_Widget constructor.
 		parent::__construct(

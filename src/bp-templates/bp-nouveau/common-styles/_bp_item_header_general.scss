@@ -117,9 +117,19 @@
 		}
 
 	}
-	.group-description ul{
-		list-style: initial;
-		list-style-position: inside;
+
+	.group-description {
+		ul,
+		ol {
+			list-style-position: inside !important;
+			margin: 0 0 1rem;
+		}
+		ul {
+			list-style: initial;
+		}
+		ol {
+			list-style: decimal;
+		}
 	}
 
 	.member-header-actions {

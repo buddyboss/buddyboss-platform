@@ -189,7 +189,7 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
-			
+
 			//show compose message screen
 			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
@@ -588,7 +588,12 @@ window.bp = window.bp || {};
 					}
 				});
 
-				if (!_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
+				if (!_.isUndefined(BP_Nouveau.media) 
+						&& !_.isUndefined(BP_Nouveau.media.emoji) 
+						&& ( !_.isUndefined(BP_Nouveau.media.emoji.messages) 
+							&& BP_Nouveau.media.emoji.messages
+							) 
+					) {
 					$('#message_content').emojioneArea({
 						standalone: true,
 						hideSource: false,
@@ -1125,8 +1130,9 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
-                                dropdownCssClass: 'bb-select-dropdown',
-                                containerCssClass: 'bb-select-container',
+				dropdownCssClass: 'bb-select-dropdown',
+				containerCssClass: 'bb-select-container',
+				language: bp_select2.lang,
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',

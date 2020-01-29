@@ -22,13 +22,13 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		// Set up optional widget args
 		$widget_ops = array(
 			'classname'   => 'widget_bp_follow_follower_widget widget buddypress',
-			'description' => __( 'Show a list of member avatars that are following the logged-in user.', 'buddyboss' ),
+			'description' => __( 'A list of member avatars that are following the logged-in user.', 'buddyboss' ),
 		);
 
 		// Set up the widget
 		parent::__construct(
 			false,
-			__( '(BB) - Users Following Me', 'buddyboss' ),
+			__( '(BB) Members Following Me', 'buddyboss' ),
 			$widget_ops
 		);
 	}
@@ -113,7 +113,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		$instance = wp_parse_args(
 			(array) $instance,
 			array(
-				'title'     => __( 'Users Following Me', 'buddyboss' ),
+				'title'     => __( 'My Followers', 'buddyboss' ),
 				'max_users' => 16,
 			)
 		);

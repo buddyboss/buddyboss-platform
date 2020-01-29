@@ -50,6 +50,17 @@ function bp_core_set_uri_globals() {
 		$bp->pages = bp_core_get_directory_pages();
 	}
 
+	/**
+	 * Filters the BuddyPress global pages
+	 *
+	 * - This filter is documented in bp-core/bp-core-filters.php
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param object
+	 */
+	$bp->pages = apply_filters( 'bp_pages', $bp->pages );
+
 	// Ajax or not?
 	if ( defined( 'DOING_AJAX' ) && DOING_AJAX || strpos( $_SERVER['REQUEST_URI'], 'wp-load.php' ) ) {
 		$path = bp_get_referer_path();
@@ -246,7 +257,7 @@ function bp_core_set_uri_globals() {
 	}
 
 	// Search doesn't have an associated page, so we check for it separately.
-	if ( ! empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
+	if ( isset( $_POST['search-terms'] ) && ! empty( $bp_uri[0] ) && ( bp_get_search_slug() == $bp_uri[0] ) ) {
 		$matches[]   = 1;
 		$match       = new stdClass();
 		$match->key  = 'search';

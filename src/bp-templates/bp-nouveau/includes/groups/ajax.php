@@ -374,21 +374,31 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	}
 
 	$bp->groups->invites_scope = 'members';
-	$message = __( 'Select members to invite by clicking the + button next to each member. Once you\'ve made a selection, use the "Send Invites" navigation item to customize the invite.', 'buddyboss' );
+	$message = __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' );
 
 	if ( 'friends' === $request['scope'] ) {
 		$request['user_id'] = bp_loggedin_user_id();
 		$bp->groups->invites_scope = 'friends';
-		$message = __( 'Select which connections to invite by clicking the + button next to each member. Once you\'ve made a selection, use the "Send Invites" navigation item to customize the invite.', 'buddyboss' );
+		$message = __( 'Select which connections to invite by clicking the + button next to each member.', 'buddyboss' );
 	}
 
 	if ( 'invited' === $request['scope'] ) {
 
 		if ( ! bp_group_has_invites( array( 'user_id' => 'any', 'group_id' => $request['group_id'] ) ) ) {
-			wp_send_json_error( array(
-				'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
-				'type'     => 'info',
-			) );
+
+			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
+				// This message displays if you search in pending invites screen and if no results found in search.
+				wp_send_json_error( array(
+					'feedback' => __( 'All members already received invitations.', 'buddyboss' ),
+					'type'     => 'info',
+				) );
+			} else {
+				// This message displays when pending invites screen doesn't have any users invitation.
+				wp_send_json_error( array(
+					'feedback' => __( 'No pending group invitations found.', 'buddyboss' ),
+					'type'     => 'info',
+				) );
+			}
 		}
 
 		$request['is_confirmed'] = false;
@@ -399,17 +409,51 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$potential_invites = bp_nouveau_get_group_potential_invites( $request );
 
 	if ( empty( $potential_invites->users ) ) {
-		$error = array(
-			'feedback' => __( 'No members were found. Try another filter.', 'buddyboss' ),
-			'type'     => 'info',
-		);
-
-		if ( 'friends' === $bp->groups->invites_scope ) {
+		if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
+			// This message displays if you search in Pending Invites screen and if no results found.
 			$error = array(
-				'feedback' => __( 'All your connections are already members of this group or have already received an invite to join this group or have requested to join it.', 'buddyboss' ),
+				'feedback' => __( 'No members found.', 'buddyboss' ),
 				'type'     => 'info',
 			);
+		} else {
+			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] && 'members' === $bp->groups->invites_scope ) {
+				// This message displays in Send Invites screen in Members tab, if you search members and if no results found.
+				$error = array(
+					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			} elseif ( isset( $request ) && ! isset( $request['search_terms'] ) && 'members' === $bp->groups->invites_scope ) {
+				// This message displays when all site members are in the group, already invited or already requested to join.
+				$error = array(
+					'feedback' => __( 'All site members are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			} else {
+				// General default message.
+				$error = array(
+					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			}
 
+		}
+
+		if ( 'friends' === $bp->groups->invites_scope ) {
+			if ( isset( $request ) && isset( $request['search_terms'] ) && '' !== $request['search_terms'] ) {
+				// This message displays if you search in Send Invites screen and if no results found.
+				$error = array(
+					'feedback' => __( 'No members found.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			} else {
+				// This message displays when all of your connections are in the group, already invited or already requested to join.
+				$error = array(
+					'feedback' => __( 'All your connections are already members of this group, or have already received an invite to join this group, or have requested to join it.', 'buddyboss' ),
+					'type'     => 'info',
+				);
+			}
+
+			// This message displays if you have no connections.
 			if ( 0 === (int) bp_get_total_friend_count( bp_loggedin_user_id() ) ) {
 				$error = array(
 					'feedback' => __( 'You have no connections.', 'buddyboss' ),
@@ -426,8 +470,136 @@ function bp_nouveau_ajax_get_users_to_invite() {
 	$potential_invites->users = array_map( 'bp_nouveau_prepare_group_potential_invites_for_js', array_values( $potential_invites->users ) );
 	$potential_invites->users = array_filter( $potential_invites->users );
 
+	$total_page = (int) $potential_invites->meta['total_page'];
+	$page       = ( isset( $_POST ) && '' !== $_POST['page'] && ! is_null( $_POST['page'] ) ) ? (int) $_POST['page'] : 1;
+	$html = '';
+	ob_start();
+
+	foreach ( $potential_invites->users as $user ) {
+		?>
+		<li class="<?php  echo $user['id']; ?>">
+			<div class="item-avatar">
+				<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
+					<img src="<?php echo $user['avatar']; ?>" class="avatar" alt="" />
+				</a>
+			</div>
+
+			<div class="item">
+				<div class="list-title member-name">
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $user['id'] ) ); ?>">
+						<?php echo $user['name']; ?>
+					</a>
+				</div>
+
+				<?php if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] ) {  ?>
+					<div class="item-meta">
+						<?php if ( isset( $user ) && isset( $user['invited_by'] ) && '' !== $user['invited_by'] ) {  ?>
+						<ul class="group-inviters">
+							<li><?php esc_html_e( 'Invited by:', 'buddyboss' ); ?></li>
+							<?php foreach ( $user['invited_by'] as $inviter ) { ?>
+							<li>
+								<a href="<?php echo $inviter['user_link']; ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo $inviter['name']; ?>">
+									<img src="<?php echo $inviter['avatar']; ?>" width="30px" class="avatar mini" alt="<?php echo $inviter['name']; ?>">
+								</a>
+							</li>
+							<?php } ?>
+						</ul>
+						<?php } ?>
+						<p class="status">
+							<?php if ( isset( $user ) && isset( $user['is_sent'] ) && '' !== $user['is_sent'] && false === $user['is_sent'] ) {  ?>
+							<?php esc_html_e( 'The invite has not been sent.', 'buddyboss' ); ?>
+							<?php } else { ?>
+							<?php esc_html_e( 'The invite has been sent.', 'buddyboss' ); ?>
+							<?php } ?>
+						</p>
+					</div>
+				<?php } ?>
+			</div>
+			<div class="action">
+				<?php if ( empty( $user['is_sent'] ) || ( false === $user['is_sent'] && true === $user['is_sent'] ) ) { ?>
+				<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-add-remove-invite-button bp-tooltip bp-icons<?php if ( $user['selected'] ) { ?> selected<?php } ?>" data-bp-tooltip-pos="left" data-bp-tooltip="<?php if ( $user['selected'] ) { ?><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?><?php } else { ?><?php esc_attr_e( 'Invite', 'buddyboss' ); ?><?php } ?>">
+					<span class="icons" aria-hidden="true"></span>
+					<span class="bp-screen-reader-text">
+						<?php if ( $user['selected'] ) { ?>
+							<?php esc_html_e( 'Cancel invitation', 'buddyboss' ); ?>
+						<?php } else { ?>
+							<?php esc_html_e( 'Invite', 'buddyboss' ); ?>
+						<?php } ?>
+					</span>
+				</button>
+				<?php } ?>
+
+				<?php
+				if ( isset( $user['can_edit'] ) && true === $user['can_edit'] ) {
+					if ( 'invited' === $request['scope'] ) {
+						?>
+						<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button remove-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+							<span class=" icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+						</button>
+						<?php
+					}  else {
+						?>
+						<button data-bp-user-id="<?php echo $user['id']; ?>" data-bp-user-name="<?php echo $user['name']; ?>" type="button" class="button invite-button group-remove-invite-button bp-tooltip bp-icons" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?>">
+							<span class=" icons" aria-hidden="true"></span>
+							<span class="bp-screen-reader-text"><?php esc_attr_e( 'Cancel invitation', 'buddyboss' ); ?></span>
+						</button>
+						<?php
+					}
+					?>
+				<?php } ?>
+			</div>
+		</li>
+		<?php
+	}
+
+	if ( $total_page !== (int) $_POST['page'] ) {
+		?>
+		<li class="load-more">
+			<div class="center">
+				<i class="dashicons dashicons-update animate-spin"></i>
+			</div>
+		</li>
+		<?php
+	}
+
+
+
+	$html = ob_get_contents();
+	ob_clean();
+
+	$potential_invites->html = $html;
+	$paginate   = '';
+
+	ob_start();
+
+	if ( $total_page > 1 ) {
+		if ( 1 !== $page ) { ?>
+			<a href="javascript:void(0);" id="bp-group-invites-prev-page" class="button group-invite-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Previous page',
+				'buddyboss' ); ?>"> <span class="dashicons dashicons-arrow-left" aria-hidden="true"></span>
+				<span class="bp-screen-reader-text"><?php esc_html_e( 'Previous page', 'buddyboss' ); ?></span> </a>
+		<?php }
+
+
+		if ( $total_page !== $page ) {
+			$page = $page + 1;
+			?>
+			<a href="javascript:void(0);" id="bp-group-invites-next-page" class="button group-invite-button bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php esc_attr_e( 'Next page',
+				'buddyboss' ); ?>"> <span class="bp-screen-reader-text"><?php esc_html_e( 'Next page',
+						'buddyboss' ); ?></span>
+				<span class="dashicons dashicons-arrow-right" aria-hidden="true"></span> </a>
+		<?php }
+	}
+
+	$paginate = ob_get_contents();
+	ob_clean();
+
 	// Set a message to explain use of the current scope
 	$potential_invites->feedback = $message;
+
+	// Set a pagination
+	$potential_invites->pagination = $paginate;
+	$potential_invites->page       = $page;
 
 	unset( $bp->groups->invites_scope );
 
@@ -464,6 +636,7 @@ function bp_nouveau_ajax_send_group_invites() {
 	}
 
 	if ( empty( $_POST['users'] ) ) {
+		$response['feedback'] = __( 'Please select members to send invitations for this group.', 'buddyboss' );
 		wp_send_json_error( $response );
 	}
 
