@@ -98,8 +98,11 @@ window.bp = window.bp || {};
 						memberTotalText.html( response.data.total_count );
 					} else if ( response.success && 'no_member' === response.data.results ) {
 						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback' ).removeClass( 'bp-messages-feedback-hide' );
-						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
+						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback' ).addClass( 'feedback' );
 						$( '#group-messages-container .bb-groups-messages-right .bp-messages-feedback .bp-feedback p' ).html( BP_Nouveau.group_messages.group_no_member );
+						var feedbackNotice = $( '#item-body .bp-messages-feedback').html();
+						$( '#item-body' ).html( '' );
+						$( '#item-body' ).html( feedbackNotice );
 					} else {
 						$('.group-messages-members-listing #members-list').html('');
 						memberListUlLast.html('');
