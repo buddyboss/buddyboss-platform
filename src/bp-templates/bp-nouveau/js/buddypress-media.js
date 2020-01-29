@@ -400,7 +400,7 @@ window.bp = window.bp || {};
 		},
 
 		resetForumsGifComponent: function(e) {
-			var self = this, target = $( e.target );
+			var target = $( e.target );
 			target.closest('form').find('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
 			target.closest('form').find('#whats-new-toolbar #forums-gif-button').removeClass('active');
 

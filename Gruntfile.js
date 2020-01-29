@@ -20,7 +20,7 @@ module.exports = function( grunt ) {
 			'**/*.js',
 			'!**/*.min.js',
 			'!bp-forums/**/*.js',
-			'!**/vendor/*.js'
+			'!**/vendor/**/*.js'
 		],
 
 		BP_EXCLUDED_MISC = [
@@ -59,6 +59,7 @@ module.exports = function( grunt ) {
 				cwd: SOURCE_DIR,
 				src: BP_JS.concat( [
 					'!**/vendor/*.js',
+					'!**/lib/*.js',
 					'!**/*.min.js',
 					'!**/emojione-edited.js',
 					'!**/emojionearea-edited.js'
