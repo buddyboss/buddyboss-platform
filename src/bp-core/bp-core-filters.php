@@ -1274,8 +1274,8 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
  */
 function bp_dd_check_avatar_folder_dir( $avatar_folder_dir, $group_id, $object, $avatar_dir ) {
 
-	if ( ! empty( $group_id ) ) {
-		if ( 'group-avatars' == $avatar_dir ) {
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		if ( 'group-avatars' === $avatar_dir ) {
 			$avatars = trim( groups_get_groupmeta( $group_id, 'avatars' ) );
 			if ( ! empty( $avatars ) && ! file_exists( $avatar_folder_dir ) ) {
 				wp_mkdir_p( $avatar_folder_dir );

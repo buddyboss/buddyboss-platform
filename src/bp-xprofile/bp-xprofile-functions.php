@@ -1857,7 +1857,7 @@ function bp_xprofile_get_member_display_name( $user_id = null ) {
 
 				// or use the user_nicename
 				if ( ! $nickname || $invalid ) {
-					$nickname = $user->user_nicename;
+					$nickname = ( isset( $user->user_nicename ) ) ? $user->user_nicename : '';
 				}
 				xprofile_set_field_data( $nickname_id, $user_id, $nickname );
 			}
