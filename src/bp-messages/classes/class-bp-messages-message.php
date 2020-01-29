@@ -298,7 +298,7 @@ class BP_Messages_Message {
 		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // db call ok; no-cache ok;
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-		$message_deleted_text = apply_filters( 'delete_user_message_message_text', 'Content Deleted' );
+		$message_deleted_text = apply_filters( 'delete_user_message_message_text', 'This message was deleted.' );
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
