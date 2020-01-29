@@ -1415,10 +1415,10 @@ function bp_profile_get_visibility_radio_buttons( $args = '' ) {
 
 					<?php printf( $r['before_radio'], esc_attr( $level['id'] ) ); ?>
 
-					<label for="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>">
-						<input type="radio" id="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] . '_visibility' ); ?>" value="<?php echo esc_attr( $level['id'] ); ?>" <?php checked( $level['id'], bp_get_the_profile_field_visibility_level() ); ?> />
-						<span class="field-visibility-text"><?php echo esc_html( $level['label'] ); ?></span>
-					</label>
+					<div class="bp-radio-wrap">
+						<input class="bs-styled-radio" type="radio" id="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] . '_visibility' ); ?>" value="<?php echo esc_attr( $level['id'] ); ?>" <?php checked( $level['id'], bp_get_the_profile_field_visibility_level() ); ?> />
+						<label for="<?php echo esc_attr( 'see-field_' . $r['field_id'] . '_' . $level['id'] ); ?>"><span class="field-visibility-text"><?php echo esc_html( $level['label'] ); ?></span></label>
+					</div>
 
 					<?php echo $r['after_radio']; ?>
 
@@ -1513,10 +1513,10 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 				<?php echo $r['before_controls']; ?>
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
-									   <?php
-										/* translators: accessibility text */
-										_e( 'Select visibility', 'buddyboss' );
-										?>
+					<?php
+					 /* translators: accessibility text */
+					 _e( 'Select visibility', 'buddyboss' );
+					 ?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 
