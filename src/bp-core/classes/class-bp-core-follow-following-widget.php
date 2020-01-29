@@ -38,6 +38,11 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 	 */
 	function widget( $args, $instance ) {
 
+		// do not do anything if user isn't logged in
+		if ( ! is_user_logged_in() ) {
+			return;
+		}
+
 		$id = bp_displayed_user_id();
 		$filter = false;
 
@@ -51,16 +56,6 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			if ( ! $id ) {
 				return;
 			}
-
-			// Set the global $bp->displayed_user variables.
-			$bp->displayed_user->id       = $id;
-			$bp->displayed_user->userdata = bp_core_get_core_userdata( $id );
-			$bp->displayed_user->domain   = bp_core_get_user_domain( $id );
-		}
-
-		// do not do anything if user isn't logged in
-		if ( ! bp_displayed_user_id() ) {
-			return;
 		}
 
 		if ( empty( $instance['max_users'] ) ) {
@@ -68,25 +63,25 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		}
 
 		// logged-in user isn't following anyone, so stop!
-		if ( ! $following = bp_get_following_ids( array( 'user_id' => bp_displayed_user_id() ) ) ) {
+		if ( ! $following = bp_get_following_ids( array( 'user_id' => $id ) ) ) {
 			return false;
 		}
 
-		$following_ids          = bp_get_following_ids( array( 'user_id' => bp_displayed_user_id() ) );
+		$following_ids          = bp_get_following_ids( array( 'user_id' => $id ) );
 		$following_array        = explode( ',', $following_ids );
 		$following_count        = '<span class="widget-num-count">' . count( $following_array ) . '</span>';
 		$following_count_number = count( $following_array );
+
+		$instance['title'] = (
+			bp_loggedin_user_id() === bp_displayed_user_id()
+			? __( "I'm Following", 'buddyboss' )
+			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( $id ) )
+		);
 
 		// Remove the filter.
 		if ( $filter ) {
 			remove_filter( 'bp_displayed_user_id', array( $this, 'set_display_user' ), 9999, 1 );
 		}
-
-		$instance['title'] = (
-			bp_loggedin_user_id() === bp_displayed_user_id()
-			? __( "I'm Following", 'buddyboss' )
-			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( bp_displayed_user_id() ) )
-		);
 
 		/**
 		 * Filters the Connections widget title.
