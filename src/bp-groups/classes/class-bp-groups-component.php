@@ -192,7 +192,7 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups', 'documents', 'folders' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
@@ -790,6 +790,20 @@ class BP_Groups_Component extends BP_Component {
 						'no_access_url'   => $group_link,
 					);
 				}
+			}
+
+			if ( bp_is_active( 'media' ) && bp_is_group_document_support_enabled() ) {
+				$sub_nav[] = array(
+					'name'            => __( 'Documents', 'buddyboss' ),
+					'slug'            => 'documents',
+					'parent_url'      => $group_link,
+					'parent_slug'     => $this->current_group->slug,
+					'screen_function' => 'groups_screen_group_document',
+					'position'        => 85,
+					'user_has_access' => $this->current_group->user_has_access,
+					'item_css_id'     => 'documents',
+					'no_access_url'   => $group_link,
+				);
 			}
 
 			// If the user is a group admin, then show the group admin nav item.

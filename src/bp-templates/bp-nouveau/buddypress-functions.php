@@ -368,6 +368,26 @@ class BP_Nouveau extends BP_Theme_Compat {
 			),
 		) );
 
+		$current_theme = wp_get_theme();
+		$current_theme_buddyboss = true;
+		
+		if (get_template_directory() === get_stylesheet_directory()) {
+			if ( 'BuddyBoss Theme' !== $current_theme->get( 'Theme Name' ) ) {
+				$current_theme_buddyboss = false;
+			}
+		} else {
+			if ( 'buddyboss-theme' !== $current_theme->get( 'Template' ) ) {
+				$current_theme_buddyboss = false;
+			}
+		}
+
+		if ( !$current_theme_buddyboss ) {
+			$font = array(
+				'file' => 'icons/bb-icons.css', 'dependencies' => array(), 'version' => $this->version,
+			);
+			$styles = array_merge( array( 'bp-nouveau-icons' => $font ), $styles );
+		}
+
 		if ( $styles ) {
 
 			foreach ( $styles as $handle => $style ) {
@@ -600,6 +620,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( true === $group_sub_objects ) {
 			$supported_objects = array_merge( $supported_objects, array( 'group_members', 'group_requests', 'group_subgroups' ) );
 		}
+
+//		if ( bp_is_active( 'media' ) ) {
+//			$supported_objects = array_merge( $supported_objects, array( 'document' ) );
+//		}
 
 		// Add components & nonces
 		$params['objects'] = $supported_objects;

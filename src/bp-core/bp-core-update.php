@@ -285,6 +285,11 @@ function bp_version_updater() {
 		if ( $raw_db_version < 14001 ) {
 			bb_update_to_1_2_3();
 		}
+
+		// Version 3.1.1
+		if ( $raw_db_version < 14350 ) {
+			bp_update_to_1_2_4();
+		}
 	}
 
 	/* All done! *************************************************************/
@@ -575,6 +580,17 @@ function bp_update_to_3_1_1() {
 	bp_core_install_invites_email();
 	bp_core_update_activity_favorites();
 	bp_core_fix_media_activities();
+	bp_core_install_media();
+}
+
+/**
+ * 1.2.3 update routine.
+ *
+ * - Add follow table.
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_update_to_1_2_4() {
 	bp_core_install_media();
 }
 

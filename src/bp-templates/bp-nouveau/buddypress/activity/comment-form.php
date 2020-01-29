@@ -29,6 +29,10 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 
                         <div class="dropzone closed" id="ac-reply-post-media-uploader-<?php bp_activity_id(); ?>"></div>
 
+						<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ): ?>
+							<div class="dropzone closed" id="ac-reply-post-document-uploader-<?php bp_activity_id(); ?>"></div>
+						<?php endif; ?>
+
                         <div id="ac-reply-post-gif-<?php bp_activity_id(); ?>"></div>
 
 					<?php endif; ?>
@@ -39,11 +43,18 @@ if ( ! bp_nouveau_current_user_can( 'comment_activity' ) || ! bp_activity_can_co
 					<?php if ( bp_is_active( 'media' ) ) : ?>
 
                         <div class="post-elements-buttons-item post-media">
-                            <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button"
-                               data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+                            <a href="#" id="ac-reply-media-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-media-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>" data-ac-id="<?php bp_activity_id(); ?>">
                                 <span class="dashicons dashicons-admin-media"></span>
                             </a>
                         </div>
+
+						<?php if ( bp_is_active( 'media' ) && ( ( bp_is_activity_directory() && ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() ) ) || ( bp_is_user_activity() && bp_is_profile_document_support_enabled() ) || ( bp_is_group_activity() && bp_is_group_document_support_enabled() ) ) ): ?>
+							<div class="post-elements-buttons-item post-media">
+								<a href="#" id="ac-reply-document-button-<?php bp_activity_id(); ?>" class="toolbar-button bp-tooltip ac-reply-document-button" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Attach a document', 'buddyboss'); ?>" data-ac-id="<?php bp_activity_id(); ?>">
+									<span class="dashicons dashicons-paperclip"></span>
+								</a>
+							</div>
+						<?php endif; ?>
 
                         <div class="post-elements-buttons-item post-gif">
                             <div class="gif-media-search">

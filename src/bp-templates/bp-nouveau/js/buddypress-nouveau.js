@@ -29,6 +29,8 @@ window.bp = window.bp || {};
 			// Adjust Document/Forms properties
 			this.prepareDocument();
 
+			//$.ajaxPrefilter( this.mediaPreFilter );
+
 			// Init the BuddyPress objects
 			this.initObjects();
 
@@ -57,8 +59,13 @@ window.bp = window.bp || {};
 
 			// Check for lazy images and load them also register scroll event to load on scroll
 			bp.Nouveau.lazyLoad( '.lazy' );
+
+			//Text File Activity Preview
+			bp.Nouveau.documentCodeMirror();
+
 			$( window ).on( 'scroll resize',function(){
 				bp.Nouveau.lazyLoad('.lazy');
+				bp.Nouveau.documentCodeMirror();
 			});
 		},
 
@@ -478,6 +485,12 @@ window.bp = window.bp || {};
 										bp.Nouveau.lazyLoad( '.lazy' );
 									},1000);
 								}
+								//Text File Activity Preview
+								if(bp.Nouveau.documentCodeMirror){
+									setTimeout(function(){
+										bp.Nouveau.documentCodeMirror();
+									},500);
+								}
 							} );
 						} );
 
@@ -494,6 +507,12 @@ window.bp = window.bp || {};
 								setTimeout(function(){ // Waiting to load dummy image
 									bp.Nouveau.lazyLoad( '.lazy' );
 								},1000);
+							}
+							// Text File Activity Preview
+							if(bp.Nouveau.documentCodeMirror){
+								setTimeout(function(){
+									bp.Nouveau.documentCodeMirror();
+								},500);
 							}
 						} );
 					}
@@ -622,6 +641,13 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'keyup', this, this.keyUp );
 
+			//Document move option
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
+
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
+
 			// Close notice
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
 
@@ -632,7 +658,7 @@ window.bp = window.bp || {};
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
 		},
 
-                /**
+		/**
 		 * [switchGridList description]
 		 * @return {[type]} [description]
 		 */
@@ -913,6 +939,119 @@ window.bp = window.bp || {};
 			if ( event.keyCode === 27 ) { // escape key
 				self.buttonRevertAll();
 			}
+		},
+
+		/**
+		 * [openDocumentMove description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		openDocumentMove: function( event ) {
+			event.preventDefault();
+
+			var currentTarget;
+			var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
+			if($(event.currentTarget).hasClass('ac-document-move')){
+				currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').find('.bp-media-move-file').attr('id');
+			}else{
+				currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').find('.bp-media-move-folder').attr('id');
+			}
+			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
+				if($(event.currentTarget).hasClass('ac-document-move')){
+					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
+					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+				}else{
+					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
+					$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+					
+				}
+			}
+			if(bp.Nouveau.Media.folderLocationUI){
+				bp.Nouveau.Media.folderLocationUI(currentTarget);
+			}
+			
+			$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
+
+			$(currentTarget).show();
+		},
+
+		/**
+		 * [closeDocumentMove description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		closeDocumentMove: function( event ) {
+			event.preventDefault();
+			var closest_parent = jQuery(event.currentTarget).closest('.has-folderlocationUI');
+			if($(event.currentTarget).hasClass('ac-document-close-button')){
+				$(event.currentTarget).closest('.bp-media-move-file').hide().find('.bp-document-move').attr('id','');
+
+			}else{
+				$(event.currentTarget).closest('.bp-media-move-folder').hide().find('.bp-folder-move').attr('id','');
+			}
+
+			bp.Nouveau.Media.clearFolderLocationUI(event);
+
+		},
+
+		/**
+		 * [renameDocument description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocument: function( event ) {
+
+			var current_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
+			var current_name_text = current_name.children('span').text();
+			
+			current_name.hide().siblings('.media-folder_name_edit').show().val(current_name_text).focus().select();
+
+		},
+
+		/**
+		 * [renameDocumentSubmit description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocumentSubmit: function( event ) {
+
+			var document_edit = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
+			var document_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
+			var document_name_val =  document_edit.val().trim(); // trim to remove whitespace around name
+			var pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
+			
+
+			var matches = pattern.exec(document_name_val);
+			var matchStatus = Boolean(matches);
+
+			if( matchStatus ){ // If any not supported character found add error class
+				document_edit.removeClass('error');
+			} else {
+				document_edit.addClass('error');
+			}
+
+			if( event.keyCode == 27 ){
+
+				document_edit.removeClass('error');
+				document_edit.hide().siblings('.media-folder_name').show();
+				
+			}
+				
+			if( event.keyCode == 13 ) {
+
+				if( !matchStatus ){
+					return; // prevent user to add not supported characters
+				}
+
+				document_name.text( document_name_val );
+				
+				// Make ajax call to save new file name here.
+				//use variable 'document_name_val' as a new name while making an ajax call.
+
+				document_edit.hide().siblings('.media-folder_name').show();
+
+			}
+
 		},
 
 		/**
@@ -1522,6 +1661,16 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+		mediaPreFilter: function( options ) {
+			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=media_filter') ) {
+				var	type = $( '#buddypress [data-bp-media-type]' ).attr( 'data-bp-media-type' );
+				if ( typeof type !== 'undefined' ) {
+					options.data += '&type=' + type;
+				} else {
+					options.data += '&type=media';
+				}
+			}
+		},
 		memberPreFilter: function( options ) {
 			if ( typeof options.data === 'string' && -1 !== options.data.indexOf('action=members_filter') ) {
 				var	member_type_id = $('#member-type-order-by').find(':selected').val();
@@ -1592,7 +1741,49 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		}
+		},
+
+		/**
+		 * Text File Activity Preview
+		 */
+		documentCodeMirror: function(){
+			$('.document-text:not(.loaded)').each(function(){
+				var $this = $(this);
+				var data_extension = $this.attr('data-extension');
+				var fileMode = $this.attr('data-extension');
+				if(data_extension == 'html' || data_extension == 'htm'){ // HTML file need specific mode.
+					fileMode = 'text/html';
+				}
+				if(data_extension == 'js'){ //mode not needed for javascript file.
+					var myCodeMirror = CodeMirror($this[0], {
+						value: $this.find('.document-text-file-data-hidden').val(),
+						lineNumbers: true,
+						theme: 'default',
+						readOnly: true,
+						lineWrapping: true,
+					});
+				}else{
+					var myCodeMirror = CodeMirror($this[0], {
+						value: $this.find('.document-text-file-data-hidden').val(),
+						mode:  fileMode,
+						lineNumbers: true,
+						theme: 'default',
+						readOnly: true,
+						lineWrapping: true,
+					});
+				}
+
+
+				$this.addClass('loaded');
+				if($this.parent().height() > 150){ //If file is bigger add controls to Expand/Collapse.
+					$this.closest('.document-text-wrap').addClass('is_large');
+				}
+
+			});
+			if(!$('.bb-activity-media-elem.document-activity').closest('.activity-inner').hasClass('documemt-activity')){
+				$('.bb-activity-media-elem.document-activity').closest('.activity-content').addClass('documemt-activity');
+			}
+		},
 	};
 
 	// Launch BP Nouveau

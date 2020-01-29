@@ -1289,6 +1289,16 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $album_id );
 			}
 
+			if ( 'document_document_save' === $_POST['action'] ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
+			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['document'] ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
+			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['media'] ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
+			} else {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
+			}
+
 			if ( empty( $group_id ) ) {
 				$main_activity = new BP_Activity_Activity( $activity_id );
 				if ( ! empty( $main_activity ) ) {

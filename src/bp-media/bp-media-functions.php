@@ -510,7 +510,7 @@ function bp_media_add_handler( $medias = array() ) {
 	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_media_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
 
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
-		// save media
+		// save  media
 		foreach ( $medias as $media ) {
 
 			$media_id = bp_media_add( array(
@@ -926,16 +926,18 @@ function bp_album_get_specific( $args = '' ) {
 			'per_page'          => false,      // Results per page.
 			'sort'              => 'DESC',     // Sort ASC or DESC
 			'update_meta_cache' => true,
+			'count_total'       => false,
 		),
 		'media_get_specific'
 	);
 
 	$get_args = array(
-		'in'       => $r['album_ids'],
-		'max'      => $r['max'],
-		'page'     => $r['page'],
-		'per_page' => $r['per_page'],
-		'sort'     => $r['sort'],
+		'in'          => $r['album_ids'],
+		'max'         => $r['max'],
+		'page'        => $r['page'],
+		'per_page'    => $r['per_page'],
+		'sort'        => $r['sort'],
+		'count_total' => $r['count_total'],
 	);
 
 	/**

@@ -173,9 +173,9 @@ class BP_Media_Album {
 
 		// If we have an existing ID, update the album, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
-			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, $this->id );
+			$q = $wpdb->prepare( "UPDATE {$bp->media->table_name_albums} SET user_id = %d, group_id = %d, title = %s, privacy = %s, date_created = %s, type = %s, parent = %d WHERE id = %d", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'media', 0, $this->id );
 		} else {
-			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created ) VALUES ( %d, %d, %s, %s, %s )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created );
+			$q = $wpdb->prepare( "INSERT INTO {$bp->media->table_name_albums} ( user_id, group_id, title, privacy, date_created, type, parent ) VALUES ( %d, %d, %s, %s, %s, %s, %d )", $this->user_id, $this->group_id, $this->title, $this->privacy, $this->date_created, 'media', 0 );
 		}
 
 		if ( false === $wpdb->query( $q ) ) {
@@ -314,6 +314,8 @@ class BP_Media_Album {
 		if ( ! empty( $r['user_id'] ) ) {
 			$where_conditions['user'] = "m.user_id = {$r['user_id']}";
 		}
+
+		$where_conditions['type'] = "m.type = 'media'";
 
 		if ( ! empty( $r['group_id'] ) ) {
 			$where_conditions['user'] = "m.group_id = {$r['group_id']}";
@@ -500,12 +502,10 @@ class BP_Media_Album {
 				$album->group_id = (int) $album->group_id;
 			}
 
-			$album->media = bp_media_get(
-				array(
+			$album->media = bp_media_get( array(
 					'album_id'    => $album->id,
 					'count_total' => true,
-				)
-			);
+				) );
 
 			$albums[] = $album;
 		}
@@ -540,6 +540,7 @@ class BP_Media_Album {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param string $id       ID to check.
+	 * @param string $type     type to check.
 	 * @return int|bool Album ID if found; false if not.
 	 */
 	public static function album_exists( $id ) {
@@ -548,7 +549,7 @@ class BP_Media_Album {
 		}
 
 		$args = array(
-			'in' => $id,
+			'in'   => $id,
 		);
 
 		$albums = self::get( $args );

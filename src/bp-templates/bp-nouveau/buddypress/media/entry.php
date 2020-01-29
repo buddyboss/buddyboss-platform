@@ -4,8 +4,8 @@
  *
  * @since BuddyBoss 1.0.0
  */
-?>
 
+?>
 <li class="lg-grid-1-5 md-grid-1-3 sm-grid-1-3" data-id="<?php bp_media_id(); ?>" data-date-created="<?php bp_media_date_created(); ?>">
 
     <div class="bb-photo-thumb">

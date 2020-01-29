@@ -28,6 +28,16 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 			'dependencies' => array( 'bp-nouveau' ),
 			'footer'       => true,
 		),
+		'bp-nouveau-codemirror' => array(
+			'file'         => 'js/codemirror%s.js',
+			'dependencies' => array( 'bp-nouveau' ),
+			'footer'       => true,
+		),
+		'bp-nouveau-codemirror-css' => array(
+			'file'         => 'js/css%s.js',
+			'dependencies' => array( 'bp-nouveau' ),
+			'footer'       => true,
+		),
 	) );
 }
 
@@ -38,6 +48,8 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
  */
 function bp_nouveau_media_enqueue_scripts() {
 
+	wp_enqueue_script( 'bp-nouveau-media-document-data-table' );
+
 	if ( bp_is_user_media() ||
 	     bp_is_single_album() ||
 	     bp_is_media_directory() ||
@@ -45,6 +57,8 @@ function bp_nouveau_media_enqueue_scripts() {
 	     bp_is_group_activity() ||
 	     bp_is_group_media() ||
 	     bp_is_group_albums() ||
+	     bp_is_group_document() ||
+	     bp_is_group_folders() ||
 	     bp_is_messages_component()
 	) {
 
@@ -61,12 +75,16 @@ function bp_nouveau_media_enqueue_scripts() {
 			$emoji = true;
 		}
 
-		if ( bp_is_profile_media_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji ) {
+		if ( bp_is_profile_media_support_enabled() || bp_is_group_document_support_enabled() || bp_is_group_media_support_enabled() || bp_is_group_albums_support_enabled() || bp_is_messages_media_support_enabled() || $gif || $emoji ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
+			wp_enqueue_script( 'bp-nouveau-codemirror' );
+			wp_enqueue_script( 'bp-nouveau-codemirror-css' );
 			wp_enqueue_script( 'bp-nouveau-media' );
 			wp_enqueue_script( 'bp-exif' );
 		}
 	}
+
+
 }
 
 /**
@@ -87,10 +105,15 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_media'     => bp_is_group_media_support_enabled(),
 		'group_album'     => bp_is_group_albums_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
+		'document_type'   => apply_filters( 'bp_media_allowed_document_type', '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip' ),
 	);
 
 	if ( bp_is_single_album() ) {
 		$params['media']['album_id'] = (int) bp_action_variable( 0 );
+	}
+
+	if ( bp_is_single_folder() ) {
+		$params['document']['folder_id'] = (int) bp_action_variable( 0 );
 	}
 
 	if ( bp_is_active( 'groups' ) && bp_is_group() ) {
@@ -102,6 +125,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'groups'   => bp_is_groups_emoji_support_enabled(),
 		'messages' => bp_is_messages_emoji_support_enabled(),
 		'forums'   => bp_is_forums_emoji_support_enabled(),
+		'document' => bp_is_forums_document_support_enabled(),
 	);
 	$params['media']['emoji_filter_url'] = buddypress()->plugin_url . 'bp-core/images/emojifilter/';
 
@@ -110,20 +134,23 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'groups'   => bp_is_groups_gif_support_enabled(),
 		'messages' => bp_is_messages_gif_support_enabled(),
 		'forums'   => bp_is_forums_gif_support_enabled(),
+		'document' => bp_is_forums_document_support_enabled(),
 	);
 	$params['media']['gif_api_key'] = bp_media_get_gif_api_key();
 
 	$params['media']['i18n_strings'] = array(
-		'select'               => __( 'Select', 'buddyboss' ),
-		'unselect'             => __( 'Unselect', 'buddyboss' ),
-		'selectall'            => __( 'Select All', 'buddyboss' ),
-		'unselectall'          => __( 'Unselect All', 'buddyboss' ),
-		'no_photos_found'      => __( 'Sorry, no photos were found', 'buddyboss' ),
-		'upload'               => __( 'Upload', 'buddyboss' ),
-		'uploading'            => __( 'Uploading', 'buddyboss' ),
-		'upload_status'        => __( '%d out of %d uploaded', 'buddyboss' ),
-		'album_delete_confirm' => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
-		'album_delete_error'   => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'select'                => __( 'Select', 'buddyboss' ),
+		'unselect'              => __( 'Unselect', 'buddyboss' ),
+		'selectall'             => __( 'Select All', 'buddyboss' ),
+		'unselectall'           => __( 'Unselect All', 'buddyboss' ),
+		'no_photos_found'       => __( 'Sorry, no photos were found', 'buddyboss' ),
+		'upload'                => __( 'Upload', 'buddyboss' ),
+		'uploading'             => __( 'Uploading', 'buddyboss' ),
+		'upload_status'         => __( '%d out of %d uploaded', 'buddyboss' ),
+		'album_delete_confirm'  => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
+		'folder_delete_confirm' => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted.', 'buddyboss' ),
+		'album_delete_error'    => __( 'There was a problem deleting the album.', 'buddyboss' ),
+		'folder_delete_error'   => __( 'There was a problem deleting the folder.', 'buddyboss' ),
 	);
 
 	return $params;
@@ -139,26 +166,56 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 function bp_nouveau_get_media_directory_nav_items() {
 	$nav_items = array();
 
-	$nav_items['all'] = array(
-		'component' => 'media',
-		'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
-		'li_class'  => array(),
-		'link'      => bp_get_media_directory_permalink(),
-		'text'      => __( 'All Photos', 'buddyboss' ),
-		'count'     => bp_get_total_media_count(),
-		'position'  => 5,
-	);
+	global $wp_query;
+	$page_ids   = bp_core_get_directory_page_ids();
+	if ( $page_ids['media'] === $wp_query->post->ID ) {
 
-	if ( is_user_logged_in() ) {
-		$nav_items['personal'] = array(
+		$nav_items['all'] = array(
 			'component' => 'media',
-			'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
 			'li_class'  => array(),
-			'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
-			'text'      => __( 'My Photos', 'buddyboss' ),
-			'count'     => bp_media_get_total_media_count(),
-			'position'  => 15,
+			'link'      => bp_get_media_directory_permalink(),
+			'text'      => __( 'All Photos', 'buddyboss' ),
+			'count'     => bp_get_total_media_count(),
+			'position'  => 5,
 		);
+
+		if ( is_user_logged_in() ) {
+			$nav_items['personal'] = array(
+				'component' => 'media',
+				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+				'li_class'  => array(),
+				'link'      => bp_loggedin_user_domain() . bp_get_media_slug() . '/my-media/',
+				'text'      => __( 'My Photos', 'buddyboss' ),
+				'count'     => bp_media_get_total_media_count(),
+				'position'  => 15,
+			);
+		}
+
+	} else {
+
+		$nav_items['all'] = array(
+			'component' => 'document',
+			'slug'      => 'all', // slug is used because BP_Core_Nav requires it, but it's the scope
+			'li_class'  => array(),
+			'link'      => bp_get_media_directory_permalink(),
+			'text'      => __( 'All Documents', 'buddyboss' ),
+			'count'     => bp_get_total_document_count(),
+			'position'  => 5,
+		);
+
+		if ( is_user_logged_in() ) {
+			$nav_items['personal'] = array(
+				'component' => 'document',
+				'slug'      => 'personal', // slug is used because BP_Core_Nav requires it, but it's the scope
+				'li_class'  => array(),
+				'link'      => bp_loggedin_user_domain() . bp_get_document_slug() . '/my-document/',
+				'text'      => __( 'My Documents', 'buddyboss' ),
+				'count'     => bp_get_total_document_count(),
+				'position'  => 15,
+			);
+		}
+
 	}
 
 	/**

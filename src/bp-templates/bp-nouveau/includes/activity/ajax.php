@@ -494,7 +494,9 @@ function bp_nouveau_ajax_post_update() {
 
 		// check activity toolbar options if one of them is set, activity can be empty
 		$toolbar_option = false;
-		if ( bp_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
+		if ( bp_is_active( 'media' ) && ! empty( $_POST['document'] ) ) {
+			$toolbar_option = true;
+		} else if ( bp_is_active( 'media' ) && ! empty( $_POST['media'] ) ) {
 			$toolbar_option = true;
 		} else if ( bp_is_activity_link_preview_active() && ! empty( $_POST['link_url'] ) ) {
 			$toolbar_option = true;

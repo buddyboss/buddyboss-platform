@@ -483,6 +483,7 @@ function bp_core_get_packaged_component_ids() {
 		'xprofile',
 		'friends',
 		'media',
+		'document',
 		'messages',
 		'settings',
 		'notifications',
@@ -779,6 +780,7 @@ function bp_core_get_directory_page_default_titles() {
 		'blogs'           => __( 'Sites', 'buddyboss' ),
 		'members'         => __( 'Members', 'buddyboss' ),
 		'media'           => __( 'Photos', 'buddyboss' ),
+		'document'        => __( 'Documents', 'buddyboss' ),
 		'activate'        => __( 'Activate', 'buddyboss' ),
 		'register'        => __( 'Register', 'buddyboss' ),
 		// 'profile_dashboard' => __( 'Dashboard', 'buddyboss' ),
@@ -2579,6 +2581,20 @@ function bp_core_get_components( $type = 'all' ) {
 				)
 			),
 			'description' => __( 'Allow members to upload photos, emojis and animated GIFs, and to organize photos into albums.', 'buddyboss' ),
+			'default'     => false,
+		),
+		'document'         => array(
+			'title'       => __( 'Document Uploading', 'buddyboss' ),
+			'settings'    => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page' => 'bp-settings',
+						'tab'  => 'bp-media',
+					),
+					'admin.php'
+				)
+			),
+			'description' => __( 'Allow members to upload documents, and to organize documents into folders.', 'buddyboss' ),
 			'default'     => false,
 		),
 		'messages'      => array(

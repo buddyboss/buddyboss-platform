@@ -9,6 +9,14 @@
             </div>
 		<?php endif; ?>
 
+		<?php if ( bp_is_messages_document_support_enabled() ) : ?>
+			<div class="post-elements-buttons-item post-media">
+				<a href="#" id="messages-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down" data-bp-tooltip="<?php _e('Attach a document', 'buddyboss'); ?>">
+					<span class="dashicons dashicons-paperclip"></span>
+				</a>
+			</div>
+		<?php endif; ?>
+
 		<?php if ( bp_is_messages_gif_support_enabled() ): ?>
             <div class="post-elements-buttons-item post-gif">
                 <div class="gif-media-search">
