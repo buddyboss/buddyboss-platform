@@ -194,7 +194,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 					?>
 					<div class="more-block">
 						<a href="<?php bp_members_directory_permalink(); ?>" data-page="<?php echo $pag_num;?>" class="count-more more-connection"><?php _e( 'More', 'buddyboss' ); ?>
-							<i class="bb-icon-angle-right"></i>
+							<!-- <i class="bb-icon-angle-right"></i> -->
 						</a>
 					</div>
 				<?php 
