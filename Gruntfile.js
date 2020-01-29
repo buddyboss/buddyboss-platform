@@ -324,7 +324,7 @@ module.exports = function( grunt ) {
 				stdout: false
 			},
 			rest_api: {
-				command: 'svn export --force https://github.com/buddyboss/buddyboss-platform-api.git/trunk buddyboss-platform-api',
+				command: 'git clone git@github.com:buddyboss/buddyboss-platform-api.git',
 				cwd: SOURCE_DIR,
 				stdout: false
 			}
