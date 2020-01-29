@@ -2171,7 +2171,7 @@ function bp_get_the_thread_message_content() {
 
 	// If user was deleted, mark content as deleted.
 	if ( false === bp_core_get_core_userdata( bp_get_the_thread_message_sender_id() ) ) {
-		$content = esc_html__( '[deleted]', 'buddyboss' );
+		$content = esc_html__( 'Content deleted.', 'buddyboss' );
 	}
 
 	/**

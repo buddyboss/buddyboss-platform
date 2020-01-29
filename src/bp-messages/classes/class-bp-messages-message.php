@@ -293,16 +293,22 @@ class BP_Messages_Message {
 		$bp = buddypress();
 
 		// Get the message ids in order to delete their metas.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // db call ok; no-cache ok;
+
+		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // db call ok; no-cache ok;
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$message_deleted_text = apply_filters( 'delete_user_message_message_text', 'Content Deleted' );
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
-			bp_messages_delete_meta( $message_id );
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+			// bp_messages_delete_meta( $message_id );
 		}
 
 		// delete all the meta recipients from user table.
-		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
+		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) ); // db call ok; no-cache ok;
 	}
 
 	/**
