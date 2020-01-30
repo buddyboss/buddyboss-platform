@@ -112,6 +112,17 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			$instance['friend_default'] = 'active';
 		}
 
+		$members_args = array(
+			'user_id'         => absint( $user_id ),
+			'type'            => sanitize_text_field( $instance['friend_default'] ),
+			'max'             => absint( $instance['max_friends'] ),
+			'populate_extras' => 1,
+		);
+
+		if ( ! bp_has_members( $members_args ) ) {
+			return;
+		}
+
 		/**
 		 * Filters the Connections widget title.
 		 *
@@ -129,13 +140,6 @@ class BP_Core_Friends_Widget extends WP_Widget {
 		$title = $instance['link_title'] ? '<a href="' . esc_url( $link ) . '">' . esc_html( $title ) . '</a>' : esc_html( $title );
 
 		echo $before_title . $title . $after_title;
-
-		$members_args = array(
-			'user_id'         => absint( $user_id ),
-			'type'            => sanitize_text_field( $instance['friend_default'] ),
-			'max'             => absint( $instance['max_friends'] ),
-			'populate_extras' => 1,
-		);
 
 		// Back up the global.
 		$old_members_template = $members_template;

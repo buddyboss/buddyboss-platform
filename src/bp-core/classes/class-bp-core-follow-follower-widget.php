@@ -44,7 +44,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		}
 
 		$id = bp_displayed_user_id();
-		$filter = false;
+		$filter = $show_more = false;
 
 		if ( ! $id ) {
 			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
@@ -77,6 +77,10 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 			? __( "My Followers", 'buddyboss' )
 			: sprintf( __( "%s's Followers", 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
+
+		if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
+			$show_more = true;
+		}
 
 		// Remove the filter.
 		if ( $filter ) {
@@ -121,7 +125,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 					</div>
 				<?php endwhile; ?>
 			</div>
-			<?php if ( $follower_count_number > $instance['max_users'] ) { ?>
+			<?php if ( $follower_count_number > $instance['max_users'] && $show_more ) { ?>
 				<div class="more-block"><a href="<?php bp_members_directory_permalink(); ?>" class="count-more"><?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i></a></div>
 			<?php } ?>
 
