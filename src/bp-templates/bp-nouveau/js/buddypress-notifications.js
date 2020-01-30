@@ -133,18 +133,18 @@ window.bp = window.bp || {};
 		 * @param  {[type]} event [description]
 		 * @return {[type]}       [description]
 		 */
-		checkSelectAllOrNot: function( event ) {
+		checkSelectAllOrNot: function() {
 			var unChecked 	= 0;
 			$.each( $( '.notification-check' ), function( cb, checkbox ) {
-				if($( checkbox ).prop("checked") == false ){
+				if($( checkbox ).prop('checked') == false ){
 	            	unChecked = parseInt( unChecked ) +1;
 	            }
 			} );
-			
+
 			if ( unChecked == 0 ) {
-				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( "checked",true );
+				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked',true );
 			}else{
-				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( "checked",false );
+				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked',false );
 			}
 		},
 

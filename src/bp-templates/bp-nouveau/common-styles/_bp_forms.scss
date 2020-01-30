@@ -430,7 +430,7 @@ ul.bbp-stats {
 	list-style: none;
 	padding: 0;
 	margin: 40px -20px;
-        width: auto;
+	width: auto;
 
 	li {
 		padding: 0 20px;
@@ -438,9 +438,9 @@ ul.bbp-stats {
 		margin-bottom: 40px;
 		flex: 0 0 50%;
 
-                @include medium-up() {
+		@include medium-up() {
 			flex: 0 0 25%;
-                }
+		}
 	}
 
 	h4 {

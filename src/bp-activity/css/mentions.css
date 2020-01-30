@@ -12,10 +12,12 @@
 	z-index: 1000; /* >999 for wp-admin */
 }
 
+/* stylelint-disable */
 /* rtl:ignore */
 .atwho-view {
 	left: 0;
 }
+/* stylelint-enable */
 
 .atwho-view ul {
 	background: #fff;

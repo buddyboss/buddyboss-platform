@@ -4639,28 +4639,21 @@ function bp_allow_user_to_send_invites() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param array                                              $buttons The WP Editor buttons list.
- * @param array          The filtered WP Editor buttons list.
+ * @param  array $buttons  The WP Editor buttons list.
+ * @return array           The filtered WP Editor buttons list.
  */
 function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
-	$remove_buttons = array(
-		'wp_more',
-		'spellchecker',
-		'wp_adv',
-		'fullscreen',
-		'alignleft',
-		'alignright',
-		'aligncenter',
-		'formatselect',
+	$buttons = array(
+		'bold',
+		'italic',
+		'bullist',
+		'numlist',
+		'blockquote',
+		'link',
 	);
 
-	// Remove unused buttons
-	$buttons = array_diff( $buttons, $remove_buttons );
-
-	// Add the image button
-	// array_push( $buttons, 'image' );
-
-	return $buttons;
+	// Provide extensibility
+	return apply_filters( 'bp_nouveau_btn_invites_mce_buttons', $buttons );
 }
 
 /**
@@ -4740,3 +4733,51 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 
 }
 add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
+
+/**
+ * Function to add the content on top of members listing.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_members_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['members'] ) ) {
+		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
+		echo apply_filters( 'the_content', $members_page_content );
+	}
+}
+add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
+
+/**
+ * Function to add the content on activate page.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_activate_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['activate'] ) ) {
+		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
+		echo apply_filters( 'the_content', $activate_page_content );
+	}
+}
+add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
+
+/**
+ * Function to add the content on register page
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_register_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['register'] ) ) {
+		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
+		echo apply_filters( 'the_content', $register_page_content );
+	}
+}
+add_action( 'bp_before_register_page', 'bp_register_page_content' );

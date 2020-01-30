@@ -1786,43 +1786,45 @@ body .section-repair_community .settings fieldset .checkbox label code {
 #bp-help-content-area.loading,
 #bp-help-main-menu-wrap.loading,
 .bp-help-sidebar.loading{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
+
 .content-loader {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-  div {
 	display: inline-block;
-	position: absolute;
-	left: 5px;
-	width: 9px;
-	background: #dadada;
-	animation: contentLoader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-	&:nth-child(1) {
-		left: 8px;
-		animation-delay: -.24s
+	position: relative;
+	width: 80px;
+	height: 80px;
+
+	div {
+		display: inline-block;
+		position: absolute;
+		left: 5px;
+		width: 9px;
+		background: #dadada;
+		animation: contentLoader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+		&:nth-child(1) {
+			left: 8px;
+			animation-delay: -.24s
+		}
+		&:nth-child(2) {
+			left: 28px;
+			animation-delay: -0.12s;
+		}
+		&:nth-child(3) {
+			left: 48px;
+			animation-delay: 0;
+		}
 	}
-	&:nth-child(2) {
-		left: 28px;
-		animation-delay: -0.12s;
-	  }
-	  &:nth-child(3) {
-		left: 48px;
-		animation-delay: 0;
-	  }
-  }
 }
 @keyframes contentLoader  {
-  0% {
-    top: 8px;
-    height: 50px;
-  }
-  50%, 100% {
-    top: 24px;
-    height: 28px;
-  }
+	0% {
+		top: 8px;
+		height: 50px;
+	}
+	50%, 100% {
+		top: 24px;
+		height: 28px;
+	}
 }
