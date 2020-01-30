@@ -436,7 +436,7 @@ function bp_nouveau_ajax_messages_send_reply() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_user_message_threads() {
-	global $messages_template;
+	global $messages_template, $wpdb;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
@@ -531,9 +531,71 @@ function bp_nouveau_ajax_get_user_message_threads() {
 					'html'       => false,
 				) );
 			} else {
-				$group_name   = '';
-				$group_link   = '';
-				$group_avatar = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_link               = '';
+				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( '' !== $group_name ) {
+					$group_link        = 'javascript:void(0);';
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					if ( file_exists( $avatar_folder_dir ) ) {
+
+						$group_avatar = '';
+
+						// Open directory.
+						if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+							// Stash files in an array once to check for one that matches.
+							$avatar_files = array();
+							while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+								// Only add files to the array (skip directories).
+								if ( 2 < strlen( $avatar_file ) ) {
+									$avatar_files[] = $avatar_file;
+								}
+							}
+
+							// Check for array.
+							if ( 0 < count( $avatar_files ) ) {
+
+								// Check for current avatar.
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $avatar_size ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+
+									// Legacy group avatar check.
+									if ( ! isset( $group_avatar ) ) {
+										foreach ( $avatar_files as $key => $value ) {
+											if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+												$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+											}
+										}
+									}
+								}
+							}
+						}
+						// Close the avatar directory.
+						closedir( $av_dir );
+					}
+				}
 			}
 
 			$group_name = ( '' === $group_name ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
@@ -541,9 +603,8 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		}
 
 		if ( ! $group_id ) {
-			$first_message           = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
-			$group_message_thread_id = bp_messages_get_meta( $first_message->id, 'group_message_thread_id', true ); // group
-			$group_id                = (int) bp_messages_get_meta( $first_message->id, 'group_id', true );
+			$first_message = BP_Messages_Thread::get_first_message( bp_get_message_thread_id() );
+			$group_id      = ( isset( $first_message->id ) ) ? (int) bp_messages_get_meta( $first_message->id, 'group_id', true ) : 0;
 
 			if ( $group_id ) {
 				if ( bp_is_active( 'groups' ) ) {
@@ -623,7 +684,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][] = array(
-						'avatar'    => esc_url( bp_core_fetch_avatar( array(
+						'avatar'      => esc_url( bp_core_fetch_avatar( array(
 							'item_id' => $recipient->user_id,
 							'object'  => 'user',
 							'type'    => 'thumb',
@@ -754,7 +815,7 @@ function bp_nouveau_ajax_messages_thread_read() {
  * @since BuddyPress 3.0.0
  */
 function bp_nouveau_ajax_get_thread_messages() {
-	global $thread_template, $media_template;
+	global $thread_template, $media_template, $wpdb;
 
 	if ( empty( $_POST['nonce'] ) || ! wp_verify_nonce( $_POST['nonce'], 'bp_nouveau_messages' ) ) {
 		wp_send_json_error( array(
@@ -851,9 +912,71 @@ function bp_nouveau_ajax_get_thread_messages() {
 				'html'       => false,
 			) );
 		} else {
-			$group_name   = '';
-			$group_link   = '';
-			$group_avatar = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+
+			$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+			$groups_table             = $prefix . 'bp_groups';
+			$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+			$group_link               = '';
+			$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+			$legacy_group_avatar_name = '-groupavatar-full';
+			$legacy_user_avatar_name  = '-avatar2';
+
+			if ( '' !== $group_name ) {
+				$group_link        = 'javascript:void(0);';
+				$directory         = 'group-avatars';
+				$avatar_size       = '-bpfull';
+				$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+				$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+				if ( file_exists( $avatar_folder_dir ) ) {
+
+					$group_avatar = '';
+
+					// Open directory.
+					if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+						// Stash files in an array once to check for one that matches.
+						$avatar_files = array();
+						while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+							// Only add files to the array (skip directories).
+							if ( 2 < strlen( $avatar_file ) ) {
+								$avatar_files[] = $avatar_file;
+							}
+						}
+
+						// Check for array.
+						if ( 0 < count( $avatar_files ) ) {
+
+							// Check for current avatar.
+							foreach ( $avatar_files as $key => $value ) {
+								if ( strpos( $value, $avatar_size ) !== false ) {
+									$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+								}
+							}
+
+							// Legacy avatar check.
+							if ( ! isset( $group_avatar ) ) {
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy group avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+								}
+							}
+						}
+					}
+					// Close the avatar directory.
+					closedir( $av_dir );
+				}
+			}
 		}
 
 		$group_name = ( '' === $group_name ) ? __( 'Deleted Group', 'buddyboss' ) : $group_name;
@@ -987,9 +1110,71 @@ function bp_nouveau_ajax_get_thread_messages() {
 					'html'       => false,
 				) );
 			} else {
-				$group_name   = '';
-				$group_link   = '';
-				$group_avatar = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+
+				$prefix                   = apply_filters( 'bp_core_get_table_prefix', $wpdb->base_prefix );
+				$groups_table             = $prefix . 'bp_groups';
+				$group_name               = $wpdb->get_var( "SELECT `name` FROM `{$groups_table}` WHERE `id` = '{$group_id}';" ); // db call ok; no-cache ok;
+				$group_link               = '';
+				$group_avatar             = buddypress()->plugin_url . 'bp-core/images/mystery-group.png';
+				$legacy_group_avatar_name = '-groupavatar-full';
+				$legacy_user_avatar_name  = '-avatar2';
+
+				if ( '' !== $group_name ) {
+					$group_link        = 'javascript:void(0);';
+					$directory         = 'group-avatars';
+					$avatar_size       = '-bpfull';
+					$avatar_folder_dir = bp_core_avatar_upload_path() . '/' . $directory . '/' . $group_id;
+					$avatar_folder_url = bp_core_avatar_url() . '/' . $directory . '/' . $group_id;
+
+					if ( file_exists( $avatar_folder_dir ) ) {
+
+						$group_avatar = '';
+
+						// Open directory.
+						if ( $av_dir = opendir( $avatar_folder_dir ) ) {
+
+							// Stash files in an array once to check for one that matches.
+							$avatar_files = array();
+							while ( false !== ( $avatar_file = readdir( $av_dir ) ) ) {
+								// Only add files to the array (skip directories).
+								if ( 2 < strlen( $avatar_file ) ) {
+									$avatar_files[] = $avatar_file;
+								}
+							}
+
+							// Check for array.
+							if ( 0 < count( $avatar_files ) ) {
+
+								// Check for current avatar.
+								foreach ( $avatar_files as $key => $value ) {
+									if ( strpos( $value, $avatar_size ) !== false ) {
+										$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+									}
+								}
+
+								// Legacy avatar check.
+								if ( ! isset( $group_avatar ) ) {
+									foreach ( $avatar_files as $key => $value ) {
+										if ( strpos( $value, $legacy_user_avatar_name ) !== false ) {
+											$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+										}
+									}
+
+									// Legacy group avatar check.
+									if ( ! isset( $group_avatar ) ) {
+										foreach ( $avatar_files as $key => $value ) {
+											if ( strpos( $value, $legacy_group_avatar_name ) !== false ) {
+												$group_avatar = $avatar_folder_url . '/' . $avatar_files[ $key ];
+											}
+										}
+									}
+								}
+							}
+						}
+						// Close the avatar directory.
+						closedir( $av_dir );
+					}
+				}
 			}
 
 			if ( '' === $group_name ) {
