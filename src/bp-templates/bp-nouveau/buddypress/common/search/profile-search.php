@@ -273,20 +273,23 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 					case 'radio': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-radio-wrap">
-							<label> <input type="radio" <?php if ( $key == $value ) {
+							<input class="bs-styled-radio" id="bb-search-<?php echo str_replace(' ', '', $key); ?>" type="radio" <?php if ( $key == $value ) {
 									echo 'checked="checked"';
-								} ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>"/>
-								<span><?php echo $label; ?></span> </label>
-						</div>                        <?php } ?><?php
+							} ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
+							<label for="bb-search-<?php echo str_replace(' ', '', $key); ?>"><?php echo $label; ?></label>
+						</div><?php
+					}
+
 					break;
 
 					case 'checkbox': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-checkbox-wrap">
-							<label> <input type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
-									echo 'checked="checked"';
-								} ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>"/>
-								<span><?php echo $label; ?></span> </label>
-						</div>                        <?php } ?><?php
+							<input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace(' ', '', $key); ?>" type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
+								echo 'checked="checked"';
+							} ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>" />
+							<label for="bb-search-<?php echo str_replace(' ', '', $key); ?>"><?php echo $label; ?></label>
+						</div><?php
+					}
 					break;
 
 					default: ?>

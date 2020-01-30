@@ -502,10 +502,10 @@ function bp_admin_setting_callback_theme_package_id() {
 
 	if ( $options ) : ?>
 		<select name="_bp_theme_package_id" id="_bp_theme_package_id" aria-describedby="_bp_theme_package_description"><?php echo $options; ?></select>
-		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddypress' ); ?></p>
+		<p id="_bp_theme_package_description" class="description"><?php esc_html_e( 'The selected Template Pack will serve all BuddyPress templates.', 'buddyboss' ); ?></p>
 
 	<?php else : ?>
-		<p><?php esc_html_e( 'No template packages available.', 'buddypress' ); ?></p>
+		<p><?php esc_html_e( 'No template packages available.', 'buddyboss' ); ?></p>
 
 	<?php endif;
 }

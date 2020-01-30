@@ -186,8 +186,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					'count'         => bp_get_message_thread_total_count(),
 					'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 					'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-					'started_date'  => date_i18n( get_option( 'date_format' ),
-						strtotime( $messages_template->thread->first_message_date ) ),
+					'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
 				);
 
 				if ( is_array( $messages_template->thread->recipients ) ) {
@@ -414,9 +413,6 @@ function bp_nouveau_ajax_messages_send_reply() {
 
 	// Remove the bp_current_action() override.
 	$bp->current_action = $reset_action;
-
-	//  $today = $reply;
-	//$today['date_separator'] = 'Today';
 
 	// set a flag
 	$reply['is_new'] = true;
@@ -673,11 +669,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				'height'  => BP_AVATAR_THUMB_HEIGHT,
 				'html'    => false,
 			) ) ),
-			'count'                     => bp_get_message_thread_total_count(),
-			'date'                      => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'              => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date'              => date_i18n( get_option( 'date_format' ),
-				strtotime( $messages_template->thread->first_message_date ) ),
+			'count'         => bp_get_message_thread_total_count(),
+			'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
+			'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
@@ -1045,7 +1040,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$thread->thread = array(
 			'id'                        => bp_get_the_thread_id(),
 			'subject'                   => wp_strip_all_tags( bp_get_the_thread_subject() ),
-			'started_date'              => date_i18n( get_option( 'date_format' ), strtotime( $thread_template->thread->first_message_date ) ),
+			'started_date'              => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option('date_format') ),
 			'group_id'                  => $group_id,
 			'group_name'                => html_entity_decode( ucwords( $group_name ) ),
 			'is_group_thread'           => $is_group_thread,

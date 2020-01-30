@@ -1281,7 +1281,7 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 
 .bbp-forum-form label {
 	color: inherit;
-    display: inline-block;
+	display: inline-block;
 	font-size: 15px;
 	letter-spacing: -0.24px;
 	margin-bottom: 5px;
@@ -1297,13 +1297,13 @@ body .bb-select-container.select2-selection.select2-selection--multiple {
 	flex: 1;
 	padding: 0 10px;
 
-        @media( max-width: 900px ) {
+	@media( max-width: 900px ) {
 		flex: 0 0 50%;
-        }
+	}
 
-        @media( max-width: 500px ) {
+	@media( max-width: 500px ) {
 		flex: 0 0 100%;
-        }
+	}
 }
 
 h2.bbp-form-title.entry-title {

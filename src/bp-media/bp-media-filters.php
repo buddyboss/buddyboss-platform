@@ -261,7 +261,6 @@ function bp_media_delete_activity_media( $activities ) {
                     bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
-
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 	}
@@ -601,7 +600,6 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
         }
     }
 }
-
 
 /**
  * Save gif data into messages meta key "_gif_data"

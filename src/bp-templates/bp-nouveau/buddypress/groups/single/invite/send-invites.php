@@ -22,7 +22,7 @@
 						<i class="dashicons dashicons-update animate-spin"></i>
 					</div>
 					<div class="bp-group-message-wrap">
-						<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
+						<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox" />
 						<label for="bp-group-send-invite-switch-checkbox" class="bp-group-invite-label"><span class="select-members-text"><?php _e( 'My Connections', 'buddyboss' ); ?></span></label>
 					</div>
 					<?php } ?>

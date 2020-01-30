@@ -2073,3 +2073,20 @@ function bp_media_import_status_request() {
 		)
 	);
 }
+
+/**
+ * Function to add the content on top of media listing
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_media_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['media'] ) ) {
+		$media_page_content = get_post_field( 'post_content', $page_ids['media'] );
+		echo apply_filters( 'the_content', $media_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_media', 'bp_media_directory_page_content' );
