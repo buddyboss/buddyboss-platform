@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-30 09:12:37+00:00\n"
+"POT-Creation-Date: 2020-01-30 09:20:52+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -408,8 +408,8 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-repeaters.php:779
 #: bp-xprofile/bp-xprofile-repeaters.php:806
 #: bp-xprofile/bp-xprofile-repeaters.php:808
-#: bp-xprofile/classes/class-bp-xprofile-component.php:272
-#: bp-xprofile/classes/class-bp-xprofile-component.php:389
+#: bp-xprofile/classes/class-bp-xprofile-component.php:273
+#: bp-xprofile/classes/class-bp-xprofile-component.php:390
 msgid "Edit"
 msgstr ""
 
@@ -846,7 +846,7 @@ msgstr[1] ""
 #: bp-messages/classes/class-bp-messages-component.php:370
 #: bp-notifications/classes/class-bp-notifications-component.php:293
 #: bp-templates/bp-nouveau/includes/activity/functions.php:110
-#: bp-xprofile/classes/class-bp-xprofile-component.php:445
+#: bp-xprofile/classes/class-bp-xprofile-component.php:446
 #. translators: %s = member name
 msgid "Profile photo of %s"
 msgstr ""
@@ -917,8 +917,8 @@ msgstr ""
 #: bp-invites/bp-invites-admin.php:268
 #: bp-members/classes/class-bp-members-component.php:361
 #: bp-templates/bp-nouveau/includes/members/functions.php:229
-#: bp-xprofile/classes/class-bp-xprofile-component.php:262
-#: bp-xprofile/classes/class-bp-xprofile-component.php:380
+#: bp-xprofile/classes/class-bp-xprofile-component.php:263
+#: bp-xprofile/classes/class-bp-xprofile-component.php:381
 msgid "View"
 msgstr ""
 
@@ -2862,8 +2862,8 @@ msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:59
-#: bp-xprofile/classes/class-bp-xprofile-component.php:341
-#: bp-xprofile/classes/class-bp-xprofile-component.php:493
+#: bp-xprofile/classes/class-bp-xprofile-component.php:342
+#: bp-xprofile/classes/class-bp-xprofile-component.php:494
 msgid "Privacy"
 msgstr ""
 
@@ -3548,8 +3548,10 @@ msgstr ""
 
 #: bp-core/bp-core-avatars.php:352
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
-#: bp-xprofile/classes/class-bp-xprofile-component.php:284
-#: bp-xprofile/classes/class-bp-xprofile-component.php:399
+#: bp-xprofile/classes/class-bp-xprofile-component.php:285
+#: bp-xprofile/classes/class-bp-xprofile-component.php:400
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:236
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:468
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:163
 msgid "Profile Photo"
 msgstr ""
@@ -5616,6 +5618,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:229
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:183
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:476
 msgid "Title:"
 msgstr ""
 
@@ -5973,7 +5976,7 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:152
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-wp.php:16
-#: bp-xprofile/classes/class-bp-xprofile-component.php:439
+#: bp-xprofile/classes/class-bp-xprofile-component.php:440
 msgid "My Profile"
 msgstr ""
 
@@ -6537,8 +6540,10 @@ msgstr ""
 #: bp-core/gdpr/class-bp-xprofile-export.php:91
 #: bp-groups/classes/class-bp-groups-component.php:426
 #: bp-groups/classes/class-bp-groups-component.php:852
-#: bp-xprofile/classes/class-bp-xprofile-component.php:297
-#: bp-xprofile/classes/class-bp-xprofile-component.php:409
+#: bp-xprofile/classes/class-bp-xprofile-component.php:298
+#: bp-xprofile/classes/class-bp-xprofile-component.php:410
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:257
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:471
 msgid "Cover Photo"
 msgstr ""
 
@@ -9610,7 +9615,7 @@ msgstr ""
 #: bp-groups/bp-groups-template.php:1392
 #: bp-groups/classes/class-bp-groups-list-table.php:646
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:304
-#: bp-xprofile/classes/class-bp-xprofile-component.php:181
+#: bp-xprofile/classes/class-bp-xprofile-component.php:182
 msgid "Public"
 msgstr ""
 
@@ -10563,8 +10568,8 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:1046
 #: bp-members/classes/class-bp-members-component.php:345
 #: bp-templates/bp-nouveau/includes/customizer.php:161
-#: bp-xprofile/classes/class-bp-xprofile-component.php:252
-#: bp-xprofile/classes/class-bp-xprofile-component.php:372
+#: bp-xprofile/classes/class-bp-xprofile-component.php:253
+#: bp-xprofile/classes/class-bp-xprofile-component.php:373
 msgid "Profile"
 msgstr ""
 
@@ -11199,7 +11204,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
 #: bp-templates/bp-nouveau/includes/groups/functions.php:143
 #: bp-templates/bp-nouveau/includes/members/functions.php:40
-#: bp-xprofile/classes/class-bp-xprofile-component.php:196
+#: bp-xprofile/classes/class-bp-xprofile-component.php:197
 msgid "My Connections"
 msgstr ""
 
@@ -11665,7 +11670,7 @@ msgstr ""
 #: bp-groups/bp-groups-admin.php:1220
 #: bp-templates/bp-nouveau/includes/groups/functions.php:122
 #: bp-templates/bp-nouveau/includes/members/functions.php:27
-#: bp-xprofile/classes/class-bp-xprofile-component.php:189
+#: bp-xprofile/classes/class-bp-xprofile-component.php:190
 msgid "All Members"
 msgstr ""
 
@@ -12943,7 +12948,6 @@ msgid "Export is ready."
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:188
-#: bp-integrations/learndash/templates/buddypress/groups/single/courses-progress.php:4
 msgid "Completed"
 msgstr ""
 
@@ -13272,6 +13276,10 @@ msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-nav.php:19
 msgid "Group courses menu"
+msgstr ""
+
+#: bp-integrations/learndash/templates/buddypress/groups/single/courses-progress.php:10
+msgid "Complete"
 msgstr ""
 
 #: bp-integrations/learndash/templates/buddypress/groups/single/reports-course-stats.php:13
@@ -13691,7 +13699,7 @@ msgid "Logged In Users"
 msgstr ""
 
 #: bp-media/classes/class-bp-media-privacy.php:53
-#: bp-xprofile/classes/class-bp-xprofile-component.php:185
+#: bp-xprofile/classes/class-bp-xprofile-component.php:186
 msgid "Only Me"
 msgstr ""
 
@@ -16145,6 +16153,10 @@ msgstr ""
 msgid "%s's Profile"
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/members/single/profile/widget.php:16
+msgid "%s Complete"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/capabilities.php:12
 msgid "Member Capabilities"
 msgstr ""
@@ -18008,6 +18020,30 @@ msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-group.php:971
 msgid "Enabled"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:30
+msgid "Show Logged in user Profile Completion Progress."
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:36
+msgid "(BB) Profile Completion"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:455
+msgid "Complete Your Profile"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:479
+msgid "Profile field sets:"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:501
+msgid "Profile photos:"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:530
+msgid "Note: This widget is only displayed if a member is logged in."
 msgstr ""
 
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:151
