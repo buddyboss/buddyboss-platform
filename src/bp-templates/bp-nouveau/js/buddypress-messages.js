@@ -1538,7 +1538,7 @@ window.bp = window.bp || {};
 				this.el.className += ' unread';
 			}
 
-			if ( this.model.get( 'is_group' ) && 'all' === this.model.get( 'group_message_users' ) && 'open' === this.model.get( 'group_message_type' ) ) {
+			if ( this.model.get( 'is_group' ) && 1 === this.model.get( 'is_group_thread' ) ) {
 				this.el.className += ' group-thread';
 			}
 

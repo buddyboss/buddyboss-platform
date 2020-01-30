@@ -20,12 +20,26 @@
 		<# if ( undefined !== other_recipients ) { #>
 		<dl class="thread-participants">
 			<dt>
-				<# if ( data.group_name.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
-				<span class="participants-name"><a href="{{data.group_link}}">{{data.group_name}}</a></span>
+				<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
+				<span class="participants-name">
+					<# if ( data.is_deleted ) { #>
+						{{data.group_name}}
+					<# } else { #>
+						<a href="{{data.group_link}}">{{data.group_name}}</a>
+					<# } #>
+
+				</span>
 				<# } else { #>
 					<# for ( i in other_recipients ) { #>
 						<span class="participants-name">
-		                    <a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a><# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #><?php _e(',', 'buddyboss'); ?><# } #>
+                            <# if ( other_recipients[i].is_deleted ) { #>
+								{{other_recipients[i].user_name}}
+							<# } else { #>
+								<a href="{{other_recipients[i].user_link}}">{{other_recipients[i].user_name}}</a>
+							<# } #>
+							<# if ( i != other_recipients.length -1 || ( i == other_recipients.length -1 && include_you ) ) { #>
+								<?php _e(',', 'buddyboss'); ?>
+							<# } #>
 		                </span>
 					<# } #>
 

@@ -19,7 +19,7 @@
 	<a class="bp-message-link bp-message-link-{{data.id}}" href="../view/{{data.id}}/" data-thread-id="{{data.id}}">
 		<div class="thread-avatar">
 
-			<# if ( data.group_avatar.length > 1 && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
+			<# if ( data.group_avatar.length > 1 && data.is_group_thread ) { #>
 				<img class="avatar" src="{{data.group_avatar}}" alt="{{data.group_name}}" />
 			<# } else { #>
 				<# if ( other_recipients.length > 1 ) { #>
@@ -36,7 +36,7 @@
 		<div class="thread-content" data-thread-id="{{data.id}}">
 			<div class="thread-to">
 
-				<# if ( data.group_name.length && data.group_message_type == 'open' && data.group_message_users == 'all' ) { #>
+				<# if ( data.group_name.length && data.is_group_thread ) { #>
 					<span class="user-name">{{data.group_name}}</span>
 				<# } else { #>
 

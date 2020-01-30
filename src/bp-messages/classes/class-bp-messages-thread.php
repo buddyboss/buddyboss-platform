@@ -390,6 +390,33 @@ class BP_Messages_Thread {
 	}
 
 	/**
+	 * Get a thread's first message
+	 *
+	 * @since Buddyboss 1.2.5
+	 *
+	 * @param  int $thread_id
+	 */
+	public static function get_first_message( $thread_id ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$messages = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+			SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm
+			WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' )
+			ORDER BY m.date_sent ASC, m.id ASC
+			LIMIT 1
+		",
+				$thread_id
+			)
+		);
+
+		return $messages ? (object) $messages[0] : null;
+	}
+
+	/**
 	 * Get all messages associated with a thread.
 	 *
 	 * @since BuddyPress 2.3.0

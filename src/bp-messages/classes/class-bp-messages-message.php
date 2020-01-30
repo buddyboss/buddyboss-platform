@@ -298,13 +298,16 @@ class BP_Messages_Message {
 		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // db call ok; no-cache ok;
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
-		$message_deleted_text = apply_filters( 'delete_user_message_message_text', 'This message was deleted.' );
+		$message_deleted_text = '<p> </p>';
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
 			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
 			$wpdb->query( $query ); // db call ok; no-cache ok;
 			// bp_messages_delete_meta( $message_id );
+			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
+			bp_messages_update_meta( $message_id, '_gif_data', '' );
+			bp_messages_update_meta( $message_id, 'bp_media_ids', '' );
 		}
 
 		// delete all the meta recipients from user table.
