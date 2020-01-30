@@ -76,13 +76,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		/* Widget VARS */
 
-		$profile_groups_selected = $instance['profile_groups_enabled'];
-
-		// do not do anything if NO Group selected.
-		if ( empty( $profile_groups_selected ) ) {
-			return;
-		}
-
+		$profile_groups_selected    = $instance['profile_groups_enabled'];
 		$this->widget_id            = $args['widget_id'];
 		$profile_phototype_selected = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
 		$user_progress              = $this->get_progress_data( $profile_groups_selected, $profile_phototype_selected );
@@ -511,7 +505,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 					<li>
 						<label>
-							<input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_photos_enabled' ) ); ?>[]" value="<?php echo esc_attr( $photos_value ); ?>" <?php checked( ( ! empty( $instance['profile_groups_enabled'] ) && in_array( $photos_value, $instance['profile_photos_enabled'] ) ) ); ?>/>
+							<input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_photos_enabled' ) ); ?>[]" value="<?php echo esc_attr( $photos_value ); ?>" <?php checked( ( ! empty( $instance['profile_photos_enabled'] ) && in_array( $photos_value, $instance['profile_photos_enabled'] ) ) ); ?>/>
 							<?php echo esc_html( $photos_label ); ?>
 						</label>
 					</li>
