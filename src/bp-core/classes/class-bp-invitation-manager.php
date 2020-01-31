@@ -2,9 +2,9 @@
 /**
  * Core invitations class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
- * @since 5.0.0
+ * @since BuddyBoss 1.2.5
  */
 
 // Exit if accessed directly.
@@ -17,14 +17,14 @@ defined( 'ABSPATH' ) || exit;
  * Your extension class, must, at a minimum, provide the
  * run_send_action() and run_acceptance_action() methods.
  *
- * @since 5.0.0
+ * @since BuddyBoss 1.2.5
  */
 abstract class BP_Invitation_Manager {
 
 	/**
 	 * The name of the related class.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 * @access public
 	 * @var string
 	 */
@@ -33,7 +33,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Construct parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array|string $args {
 	 * }
@@ -45,7 +45,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Get the invitations table name.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 * @access public
 	 * @return string
 	 */
@@ -59,7 +59,7 @@ abstract class BP_Invitation_Manager {
 	 * Add an invitation to a specific user, from a specific user, related to a
 	 * specific class.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args {
 	 *     Array of arguments describing the invitation. All are optional.
@@ -102,7 +102,7 @@ abstract class BP_Invitation_Manager {
 		/**
 		 * Is this user allowed to extend invitations in this situation?
 		 *
-		 * @since 5.0.0
+		 * @since BuddyBoss 1.2.5
 		 *
 		 * @param array $r Describes the invitation to be added.
 		 */
@@ -151,7 +151,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Send an invitation notification.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 * @access public
 	 *
 	 * @param int $invitation_id ID of invitation to send.
@@ -170,7 +170,7 @@ abstract class BP_Invitation_Manager {
 		/**
 		 * Fires before an invitation is sent.
 		 *
-		 * @since 5.0.0
+		 * @since BuddyBoss 1.2.5
 		 *
 		 * @param BP_Invitation object $invitation Invitation about to be sent.
 		 */
@@ -205,7 +205,7 @@ abstract class BP_Invitation_Manager {
 	 * Add a request to an item for a specific user, related to a
 	 * specific class.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args {
 	 *     Array of arguments describing the invitation. All are optional.
@@ -248,7 +248,7 @@ abstract class BP_Invitation_Manager {
 		/**
 		 * Is this user allowed to make a request in this situation?
 		 *
-		 * @since 5.0.0
+		 * @since BuddyBoss 1.2.5
 		 *
 		 * @param array $r Describes the invitation to be added.
 		 */
@@ -302,7 +302,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Send a request notification.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 * @access public
 	 *
 	 * @param int $request_id ID of request to send.
@@ -352,7 +352,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Get a specific invitation by its ID.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param int $id ID of the invitation.
 	 * @return BP_Invitation object
@@ -364,7 +364,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Get invitations, based on provided filter parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of accepted parameters.
 	 *
@@ -384,7 +384,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Get requests, based on provided filter parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of accepted parameters.
 	 *
@@ -405,7 +405,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Check whether an invitation exists matching the passed arguments.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of accepted parameters.
 	 *
@@ -425,7 +425,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Check whether a request exists matching the passed arguments.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of accepted parameters.
 	 *
@@ -447,7 +447,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Accept invitation, based on provided filter parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of
 	 *      accepted update/where arguments.
@@ -496,7 +496,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Accept invitation, based on provided filter parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of
 	 *      accepted update/where arguments.
@@ -542,7 +542,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Update invitation, based on provided filter parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::get() for a description of
 	 *      accepted update/where arguments.
@@ -564,7 +564,7 @@ abstract class BP_Invitation_Manager {
 	 * This is where custom actions are added (in child classes)
 	 * to run when an invitation or request needs to be "sent."
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param BP_Invitation $invitation The invitation to send.
 	 * @return bool True on success, false on failure.
@@ -576,7 +576,7 @@ abstract class BP_Invitation_Manager {
 	 * invitee_email, class name, optional item id,
 	 * optional secondary item id.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args {
 	 *     Associative array of arguments. All arguments but $page and
@@ -606,7 +606,7 @@ abstract class BP_Invitation_Manager {
 	 * This is where custom actions are added (in child classes)
 	 * to run when an invitation or request is accepted.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param int $id The ID of the invitation to mark as sent.
 	 * @return bool True on success, false on failure.
@@ -616,7 +616,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Mark invitation as accepted by invitation ID.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param int $id The ID of the invitation to mark as sent.
 	 * @return bool True on success, false on failure.
@@ -630,7 +630,7 @@ abstract class BP_Invitation_Manager {
 	 * invitee_email, class name, item id, and
 	 * optional secondary item id.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::mark_accepted_by_data()
 	 *      for a description of arguments.
@@ -645,7 +645,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Delete an invitation or invitations by query data.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::delete for a description of arguments.
 	 * @return int|bool Number of rows deleted on success, false on failure.
@@ -661,7 +661,7 @@ abstract class BP_Invitation_Manager {
 	/**
 	 * Delete a request or requests by query data.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::delete for a description of arguments.
 	 *
@@ -678,7 +678,7 @@ abstract class BP_Invitation_Manager {
 	 * Used when clearing out invitations for an entire class. Possibly used
 	 * when deactivating a component related to a class that created invitations.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @return int|bool Number of rows deleted on success, false on failure.
 	 */
@@ -692,7 +692,7 @@ abstract class BP_Invitation_Manager {
 	 * This is where custom actions are added (in child classes)
 	 * to determine whether an invitation should be allowed.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args The parameters describing the invitation.
 	 * @return bool True if allowed, false to end process.
@@ -705,7 +705,7 @@ abstract class BP_Invitation_Manager {
 	 * This is where custom actions are added (in child classes)
 	 * to determine whether a request should be allowed.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args The parameters describing the request.
 	 * @return bool True if allowed, false to end process.

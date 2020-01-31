@@ -978,7 +978,7 @@ function bp_core_install_invitations() {
 	/**
 	 * Fires after BuddyPress adds the invitations table.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyPress 5.0.0
 	 */
 	do_action( 'bp_core_install_invitations' );
 }

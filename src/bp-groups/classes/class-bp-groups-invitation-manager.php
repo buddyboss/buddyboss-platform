@@ -2,9 +2,9 @@
 /**
  * Group invitations class.
  *
- * @package BuddyPress
+ * @package BuddyBoss
  * @subpackage Core
- * @since 5.0.0
+ * @since BuddyBoss 1.2.5
  */
 
 // Exit if accessed directly.
@@ -16,13 +16,13 @@ defined( 'ABSPATH' ) || exit;
  * An extension of the core Invitations class that adapts the
  * core logic to accommodate group invitation behavior.
  *
- * @since 5.0.0
+ * @since BuddyBoss 1.2.5
  */
 class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	/**
 	 * Construct parameters.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array|string $args.
 	 */
@@ -34,7 +34,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * This is where custom actions are added to run when notifications of an
 	 * invitation or request need to be generated & sent.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param int $id The ID of the invitation to mark as sent.
 	 * @return bool True on success, false on failure.
@@ -61,7 +61,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * This is where custom actions are added to run when an invitation
 	 * or request is accepted.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param string $type Are we accepting an invitation or request?
 	 * @param array  $r    Parameters that describe the invitation being accepted.
@@ -91,7 +91,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			/**
 			 * Fires after a group membership request has been accepted.
 			 *
-			 * @since 1.0.0
+			 * @since BuddyPress 1.0.0
 			 *
 			 * @param int  $user_id  ID of the user who accepted membership.
 			 * @param int  $group_id ID of the group that was accepted membership to.
@@ -109,8 +109,8 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 			/**
 			 * Fires after a user has accepted a group invite.
 			 *
-			 * @since 1.0.0
-			 * @since 2.8.0 The $inviter_id arg was added.
+			 * @since BuddyPress 1.0.0
+			 * @since BuddyPress 2.8.0 The $inviter_id arg was added.
 			 *
 			 * @param int $user_id    ID of the user who accepted the group invite.
 			 * @param int $group_id   ID of the group being accepted to.
@@ -129,7 +129,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	 * With group invitations, we don't need to keep the old record, so we delete rather than
 	 * mark invitations as "accepted."
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @see BP_Invitation::mark_accepted_by_data()
 	 *      for a description of arguments.
@@ -148,7 +148,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	/**
 	 * Should this invitation be created?
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args.
 	 * @return bool
@@ -175,7 +175,7 @@ class BP_Groups_Invitation_Manager extends BP_Invitation_Manager {
 	/**
 	 * Should this request be created?
 	 *
-	 * @since 5.0.0
+	 * @since BuddyBoss 1.2.5
 	 *
 	 * @param array $args.
 	 * @return bool.

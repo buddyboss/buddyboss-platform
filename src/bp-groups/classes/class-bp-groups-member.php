@@ -948,8 +948,8 @@ class BP_Groups_Member {
 		/**
 		 * Fires before a group invitation is deleted.
 		 *
-		 * @since 2.6.0
-		 * @since 5.0.0 Added $inviter_id
+		 * @since BuddyPress 2.6.0
+		 * @since BuddyPress 5.0.0 Added $inviter_id
 		 *
 		 * @param int $user_id  ID of the user.
 		 * @param int $group_id ID of the group.
