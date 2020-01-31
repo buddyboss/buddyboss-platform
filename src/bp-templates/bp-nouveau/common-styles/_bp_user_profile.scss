@@ -340,62 +340,58 @@ body.register .buddypress-wrap .page ul {
 	}
 }
 
-
-
 /* Profile Completion Widget  */
 
 div.profile_completion_wrap {
 
-	.progress_text_wrap{
+	.progress_text_wrap {
 		text-align: right;
 		margin-bottom: 5px;
 	}
-	
-	.progress_container{
-		
-		border: 1px solid black;
+
+	.progress_container {
+
+		border: 1px solid #000;
 		border-radius: 12px;
-		
-		.pc_progress{
-			height: 8px; 
+
+		.pc_progress {
+			height: 8px;
 			background-color: $informational;
 			border-radius: 12px 0 0 12px;
 		}
 	}
-	
-	ul.pc_detailed_progress li{
-		
-		margin: 15px 0px;
-		
-		span.completed_staus{
-			color: white;
+
+	ul.pc_detailed_progress li {
+
+		margin: 15px 0;
+
+		span.completed_staus {
+			color: #fff;
 			border-radius: 8px;
 			padding: 2px;
 			float: right;
 			width: 50px;
 			text-align: center;
 		}
-		
-		
 	}
 
-	ul.pc_detailed_progress li.completed{
-		
-		span.completed_staus{
+	ul.pc_detailed_progress li.completed {
+
+		span.completed_staus {
 			background-color: $update-success;
 		}
 	}
-	
-	ul.pc_detailed_progress li.incomplete{
-		
-		span.section_name a{
+
+	ul.pc_detailed_progress li.incomplete {
+
+		span.section_name a {
 			color: $text-link-hover;
 			text-decoration: underline;
 		}
-		
-		span.completed_staus{
+
+		span.completed_staus {
 			background-color: $warn;
 		}
 	}
-	
+
 }
