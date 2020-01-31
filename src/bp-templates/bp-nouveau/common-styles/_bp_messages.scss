@@ -631,17 +631,14 @@ input#send-to-input {
 	margin-right: 10px;
 }
 
-@include medium-up() {
+.bp-messages-user-threads {
+        max-height: 80vh;
+        overflow: auto;
+}
 
-	.bp-messages-user-threads {
-		max-height: 80vh;
-		overflow: auto;
-	}
-
-	#bp-message-thread-list {
-		max-height: 50vh;
-		overflow: auto;
-	}
+#bp-message-thread-list {
+        max-height: 50vh;
+        overflow: auto;
 }
 
 @media screen and (min-width: 1080px) {
