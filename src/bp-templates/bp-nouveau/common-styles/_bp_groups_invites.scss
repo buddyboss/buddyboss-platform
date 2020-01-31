@@ -1,6 +1,6 @@
 #group-invites-container {
 	background: #fff;
-	border: 1px solid #E7E9EC;
+	border: 1px solid #e7e9ec;
 	border-radius: 4px;
 	margin-bottom: 0;
 	display: -webkit-box;
@@ -13,7 +13,7 @@
 }
 
 .bb-groups-invites-left {
-	border-right: 1px solid #E7E9EC;
+	border-right: 1px solid #e7e9ec;
 	min-width: 0;
 	flex: 0 0 360px;
 
@@ -106,12 +106,13 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
 }
 
 .bb-invites-footer {
-	border-top: 1px solid #E7E9EC;
+	border-top: 1px solid #e7e9ec;
 	padding: 10px 20px;
 	text-align: right;
 }
 
 @media screen and (min-width: 768px) {
+
 	.bb-invites-footer,
 	.bb-groups-invites-right-top .bb-add-invites {
 		display: none;
@@ -119,6 +120,7 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
 }
 
 @media screen and (max-width: 767px) {
+
 	.bb-groups-invites-left {
 		display: none;
 	}
@@ -130,7 +132,7 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
 	.bb-groups-invites-left.bb-select-member-view {
 		position: fixed;
 		background: rgba(0, 0, 0, 0.69);
-		content: '';
+		content: "";
 		width: 100%;
 		height: 100%;
 		top: 0;
@@ -155,6 +157,7 @@ body.groups.group-invites span.select2-dropdown.select2-dropdown--below {
 	}
 
 	.group-invites-members-listing {
+
 		.bp-invites-feedback {
 			margin-bottom: 30px;
 		}
@@ -166,14 +169,14 @@ a.bb-close-invites-members.button {
 }
 
 .bb-groups-invites-right-bottom {
-	border-top: 1px solid #E7E9EC;
+	border-top: 1px solid #e7e9ec;
 }
 
 body.groups.group-invites #send_group_invite_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
-	background-color: #4D5C6D;
-	border-color: #4D5C6D;
+	background-color: #4d5c6d;
+	border-color: #4d5c6d;
 	font-size: 14px;
-	color: #FFF;
+	color: #fff;
 	letter-spacing: -0.24px;
 	display: -webkit-box;
 	display: -ms-flexbox;
@@ -235,16 +238,17 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 	position: relative;
 }
 
-#bp-group-invite-content .medium-editor-element, #bp-group-invite-content .medium-editor-placeholder {
+#bp-group-invite-content .medium-editor-element,
+#bp-group-invite-content .medium-editor-placeholder {
 	font-size: 16px;
 }
 
 #bp-group-invite-content {
+
 	#send-invites-control {
 		border: 0;
 		resize: none;
 		padding: 25px;
-		/*min-height: 350px;*/
 		height: auto;
 		max-height: 32vh;
 	}
@@ -349,7 +353,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 .bp-single-invite-content .bp-invite-content-wrap p.joined {
 	color: #847d7d;
 	font-style: italic;
-	font-weight: bold;
+	font-weight: 700;
 }
 
 .group-invites-members-listing {
@@ -393,8 +397,8 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #bp-pending-invites-loader .dashicons-update:before {
-	content: '\e838';
-	font-family: 'bb-icons';
+	content: "\e838";
+	font-family: bb-icons;
 	font-size: 20px;
 	display: block;
 	-webkit-transform: scale(0.8);
@@ -410,8 +414,8 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 #bp-invites-submit-loader .dashicons-update:before {
-	content: '\e838';
-	font-family: 'bb-icons';
+	content: "\e838";
+	font-family: bb-icons;
 	font-size: 20px;
 	display: block;
 	-webkit-transform: scale(0.8);
@@ -420,6 +424,7 @@ body.groups.group-invites #send_group_invite_form .select2-container--default .s
 }
 
 .group-invites-members-listing {
+
 	.bp-list li .item {
 		overflow: initial;
 	}
