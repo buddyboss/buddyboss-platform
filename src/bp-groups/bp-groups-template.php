@@ -4064,6 +4064,15 @@ function bp_group_join_button( $group = false ) {
 			return false;
 		}
 
+		// Don't Show the button if restrict invite is enabled and member is not a part of parent group.
+		$parent_group_id = bp_get_parent_group_id( $group->id );
+		if ( isset( $parent_group_id ) && $parent_group_id > 0 && true === bp_enable_group_hierarchies() && true === bp_enable_group_restrict_invites() ) {
+			$is_member = groups_is_user_member( bp_loggedin_user_id(), $parent_group_id );
+			if ( false === $is_member ) {
+				return false;
+			}
+		}
+
 		// Group creation was not completed or status is unknown.
 		if ( empty( $group->status ) ) {
 			return false;
@@ -4072,10 +4081,19 @@ function bp_group_join_button( $group = false ) {
 		// Already a member.
 		if ( ! empty( $group->is_member ) ) {
 
+			$is_only_admin = false;
 			// Stop sole admins from abandoning their group.
 			$group_admins = groups_get_group_admins( $group->id );
 			if ( ( 1 == count( $group_admins ) ) && ( bp_loggedin_user_id() === (int) $group_admins[0]->user_id ) ) {
-				return false;
+				$is_only_admin = true;
+			}
+
+			if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
+				$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re an %s', 'buddyboss' ), get_group_role_label( $group->id, 'organizer_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
+			} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
+				$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
+			} else {
+				$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'member_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
 			}
 
 			// Setup button attributes.
@@ -4087,16 +4105,24 @@ function bp_group_join_button( $group = false ) {
 				'wrapper_class'     => 'group-button ' . $group->status,
 				'wrapper_id'        => 'groupbutton-' . $group->id,
 				'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'leave-group' ), 'groups_leave_group' ),
-				'link_text'         => __( 'Leave Group', 'buddyboss' ),
-				'link_class'        => 'group-button leave-group',
+				'link_text'         => $button_text,
+				'link_class'        => 'group-button leave-group bp-toggle-action-button',
+				'button_attr'       => array(
+					'data-title'           => __( 'Leave group', 'buddyboss' ),
+					'data-title-displayed' => $button_text,
+				),
 			);
+
+			if ( $is_only_admin ) {
+				$button['button_attr']['data-only-admin'] = '1';
+			}
 
 			// Not a member.
 		} else {
 
 			// Show different buttons based on group status.
 			switch ( $group->status ) {
-				case 'hidden' :
+				case 'hidden':
 					return false;
 
 				case 'public':
@@ -4108,13 +4134,12 @@ function bp_group_join_button( $group = false ) {
 						'wrapper_class'     => 'group-button ' . $group->status,
 						'wrapper_id'        => 'groupbutton-' . $group->id,
 						'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'join' ), 'groups_join_group' ),
-						'link_text'         => __( 'Join Group', 'buddyboss' ),
+						'link_text'         => __( 'Join group', 'buddyboss' ),
 						'link_class'        => 'group-button join-group',
 					);
 					break;
 
-				case 'private' :
-
+				case 'private':
 					// Member has outstanding invitation -
 					// show an "Accept Invitation" button.
 					if ( $group->is_invited ) {
@@ -4148,17 +4173,57 @@ function bp_group_join_button( $group = false ) {
 						// Member has not requested membership yet -
 						// show a "Request Membership" button.
 					} else {
-						$button = array(
-							'id'                => 'request_membership',
-							'component'         => 'groups',
-							'must_be_logged_in' => true,
-							'block_self'        => false,
-							'wrapper_class'     => 'group-button ' . $group->status,
-							'wrapper_id'        => 'groupbutton-' . $group->id,
-							'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
-							'link_text'         => __( 'Request Membership', 'buddyboss' ),
-							'link_class'        => 'group-button request-membership',
-						);
+
+						if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+
+							$group_type = bp_groups_get_group_type( $group->id );
+
+							$group_type_id = bp_group_get_group_type_id( $group_type );
+
+							$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
+
+							$get_selected_member_type_join = ( isset( $get_selected_member_type_join ) && ! empty( $get_selected_member_type_join ) ) ? $get_selected_member_type_join : array();
+
+							$get_requesting_user_member_type = bp_get_member_type( bp_loggedin_user_id() );
+
+							if ( in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
+								$button = array(
+									'id'                => 'request_membership',
+									'component'         => 'groups',
+									'must_be_logged_in' => true,
+									'block_self'        => false,
+									'wrapper_class'     => 'group-button ' . $group->status,
+									'wrapper_id'        => 'groupbutton-' . $group->id,
+									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+									'link_text'         => __( 'Join group', 'buddyboss' ),
+									'link_class'        => 'group-button request-membership',
+								);
+							} else {
+								$button = array(
+									'id'                => 'request_membership',
+									'component'         => 'groups',
+									'must_be_logged_in' => true,
+									'block_self'        => false,
+									'wrapper_class'     => 'group-button ' . $group->status,
+									'wrapper_id'        => 'groupbutton-' . $group->id,
+									'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+									'link_text'         => __( 'Request Access', 'buddyboss' ),
+									'link_class'        => 'group-button request-membership',
+								);
+							}
+						} else {
+							$button = array(
+								'id'                => 'request_membership',
+								'component'         => 'groups',
+								'must_be_logged_in' => true,
+								'block_self'        => false,
+								'wrapper_class'     => 'group-button ' . $group->status,
+								'wrapper_id'        => 'groupbutton-' . $group->id,
+								'link_href'         => wp_nonce_url( trailingslashit( bp_get_group_permalink( $group ) . 'request-membership' ), 'groups_request_membership' ),
+								'link_text'         => __( 'Request Access', 'buddyboss' ),
+								'link_class'        => 'group-button request-membership',
+							);
+						}
 					}
 
 					break;
@@ -6546,18 +6611,24 @@ function bp_group_request_reject_link() {
 	 *
 	 * @return mixed|void
 	 */
-function bp_get_group_request_reject_link() {
-	global $requests_template;
+	function bp_get_group_request_reject_link() {
+		global $requests_template;
 
-	/**
-	 * Filters the URL to use to reject a membership request.
-	 *
-	 * @since BuddyPress 1.2.6
-	 *
-	 * @param string $value URL to use to reject a membership request.
-	 */
-	return apply_filters( 'bp_get_group_request_reject_link', wp_nonce_url( trailingslashit( bp_get_group_permalink( groups_get_current_group() ) . 'admin/membership-requests/reject/' . $requests_template->request->membership_id ), 'groups_reject_membership_request' ) );
-}
+		$link = add_query_arg( array(
+			'_wpnonce' => wp_create_nonce( 'groups_reject_membership_request' ),
+			'user_id'  => $requests_template->request->user_id,
+			'action'   => 'reject'
+		), trailingslashit( bp_get_group_permalink( groups_get_current_group() ) ) . 'admin/membership-requests/' );
+
+		/**
+		 * Filters the URL to use to reject a membership request.
+		 *
+		 * @since BuddyPress 1.2.6
+		 *
+		 * @param string $value URL to use to reject a membership request.
+		 */
+		return apply_filters( 'bp_get_group_request_reject_link', $link );
+	}
 
 /**
  * Output the accept group membership link.
@@ -6574,18 +6645,24 @@ function bp_group_request_accept_link() {
 	 * @since BuddyPress 1.2.6
 	 * @return mixed|void
 	 */
-function bp_get_group_request_accept_link() {
-	global $requests_template;
+	function bp_get_group_request_accept_link() {
+		global $requests_template;
 
-	/**
-	 * Filters the URL to use to accept a membership request.
-	 *
-	 * @since BuddyPress 1.2.6
-	 *
-	 * @param string $value URL to use to accept a membership request.
-	 */
-	return apply_filters( 'bp_get_group_request_accept_link', wp_nonce_url( trailingslashit( bp_get_group_permalink( groups_get_current_group() ) . 'admin/membership-requests/accept/' . $requests_template->request->membership_id ), 'groups_accept_membership_request' ) );
-}
+		$link = add_query_arg( array(
+			'_wpnonce' => wp_create_nonce( 'groups_accept_membership_request' ),
+			'user_id'  => $requests_template->request->user_id,
+			'action'   => 'accept'
+		), trailingslashit( bp_get_group_permalink( groups_get_current_group() ) ) . 'admin/membership-requests/' );
+
+		/**
+		 * Filters the URL to use to accept a membership request.
+		 *
+		 * @since BuddyPress 1.2.6
+		 *
+		 * @param string $value URL to use to accept a membership request.
+		 */
+		return apply_filters( 'bp_get_group_request_accept_link', $link );
+	}
 
 /**
  * Output the anchor tag with profile link of the member who requested group membership.
