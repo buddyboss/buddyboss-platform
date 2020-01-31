@@ -602,7 +602,7 @@ function groups_join_group( $group_id, $user_id = 0 ) {
 
 	// Check if the user has an outstanding request. If so, delete it.
 	if ( groups_check_for_membership_request( $user_id, $group_id ) ) {
-		groups_delete_membership_request( null, $user_id, $group_id );
+		groups_delete_membership_request( false, $user_id, $group_id );
 	}
 
 	// User is already a member, just return true.
