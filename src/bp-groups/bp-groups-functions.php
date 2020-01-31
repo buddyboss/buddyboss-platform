@@ -1027,6 +1027,44 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 		}
 	}
 
+	// Prime the invitations- and requests-as-memberships cache
+	$invitation_ids = array();
+	if ( true !== $r['is_confirmed'] || false !== $r['invite_sent'] ) {
+		$invitation_ids = groups_get_invites( array(
+			'user_id'     => $user_id,
+			'invite_sent' => 'all',
+			'type'        => 'all',
+			'fields'      => 'ids'
+		) );
+
+		// Prime the invitations cache.
+		$uncached_invitation_ids = bp_get_non_cached_ids( $invitation_ids, 'bp_groups_invitations_as_memberships' );
+		if ( $uncached_invitation_ids ) {
+			$uncached_invitations = groups_get_invites( array(
+				'id'          => $uncached_invitation_ids,
+				'invite_sent' => 'all',
+				'type'        => 'all'
+			) );
+			foreach ( $uncached_invitations as $uncached_invitation ) {
+				// Reshape the result as a membership db entry.
+				$invitation = new StdClass;
+				$invitation->id            = $uncached_invitation->id;
+				$invitation->group_id      = $uncached_invitation->item_id;
+				$invitation->user_id       = $uncached_invitation->user_id;
+				$invitation->inviter_id    = $uncached_invitation->inviter_id;
+				$invitation->is_admin      = false;
+				$invitation->is_mod        = false;
+				$invitation->user_title    = '';
+				$invitation->date_modified = $uncached_invitation->date_modified;
+				$invitation->comments      = $uncached_invitation->content;
+				$invitation->is_confirmed  = false;
+				$invitation->is_banned     = false;
+				$invitation->invite_sent   = $uncached_invitation->invite_sent;
+				wp_cache_set( $uncached_invitation->id, $invitation, 'bp_groups_invitations_as_memberships' );
+			}
+		}
+	}
+
 	// Assemble filter array for use in `wp_list_filter()`.
 	$filters = wp_array_slice_assoc( $r, array( 'is_confirmed', 'is_banned', 'is_admin', 'is_mod', 'invite_sent' ) );
 	foreach ( $filters as $filter_name => $filter_value ) {
@@ -1066,6 +1104,36 @@ function bp_get_user_groups( $user_id, $args = array() ) {
 		$group_id = (int) $membership->group_id;
 
 		$groups[ $group_id ] = $membership;
+	}
+
+	// Populate group invitations array from cache, and normalize.
+	foreach ( $invitation_ids as $invitation_id ) {
+		$invitation = wp_cache_get( $invitation_id, 'bp_groups_invitations_as_memberships' );
+
+		// Sanity check.
+		if ( ! isset( $invitation->group_id ) ) {
+			continue;
+		}
+
+		// Integer values.
+		foreach ( $int_keys as $index ) {
+			$invitation->{$index} = intval( $invitation->{$index} );
+		}
+
+		// Boolean values.
+		foreach ( $bool_keys as $index ) {
+			$invitation->{$index} = (bool) $invitation->{$index};
+		}
+
+		foreach ( $filters as $filter_name => $filter_value ) {
+			if ( ! isset( $invitation->{$filter_name} ) || $filter_value != $invitation->{$filter_name} ) {
+				continue 2;
+			}
+		}
+
+		$group_id = (int) $invitation->group_id;
+
+		$groups[ $group_id ] = $invitation;
 	}
 
 	// By default, results are ordered by membership id.
@@ -1452,27 +1520,17 @@ function groups_is_user_banned( $user_id, $group_id ) {
  * Check whether a user has an outstanding invitation to a group.
  *
  * @since BuddyPress 2.6.0
+ * @since BuddyPress 5.0.0 Added $type parameter.
  *
- * @param int $user_id ID of the user.
- * @param int $group_id ID of the group.
+ * @param int    $user_id  ID of the user.
+ * @param int    $group_id ID of the group.
+ * @param string $type     If 'sent', results are limited to those invitations
+ *                         that have actually been sent (non-draft).
+ *                         Possible values: 'sent', 'draft', or 'all' Default: 'sent'.
  * @return int|bool ID of the membership if the user is invited, otherwise false.
  */
-function groups_is_user_invited( $user_id, $group_id ) {
-	$is_invited = false;
-
-	$user_groups = bp_get_user_groups(
-		$user_id,
-		array(
-			'invite_sent'  => true,
-			'is_confirmed' => false,
-		)
-	);
-
-	if ( isset( $user_groups[ $group_id ] ) ) {
-		$is_invited = $user_groups[ $group_id ]->id;
-	}
-
-	return $is_invited;
+function groups_is_user_invited( $user_id, $group_id, $type = 'sent' ) {
+	return groups_check_has_invite_from_user( $user_id, $group_id, false, $type );
 }
 
 /**
@@ -1485,21 +1543,17 @@ function groups_is_user_invited( $user_id, $group_id ) {
  * @return int|bool ID of the membership if the user is pending, otherwise false.
  */
 function groups_is_user_pending( $user_id, $group_id ) {
-	$is_pending = false;
-
-	$user_groups = bp_get_user_groups(
-		$user_id,
-		array(
-			'invite_sent'  => false,
-			'is_confirmed' => false,
-		)
-	);
-
-	if ( isset( $user_groups[ $group_id ] ) ) {
-		$is_pending = $user_groups[ $group_id ]->id;
+	if ( empty( $user_id ) || empty( $group_id ) ) {
+		return false;
 	}
 
-	return $is_pending;
+	$args = array(
+		'user_id'     => $user_id,
+		'item_id'     => $group_id,
+	);
+	$invites_class = new BP_Groups_Invitation_Manager();
+
+	return $invites_class->request_exists( $args );
 }
 
 /**
@@ -1627,21 +1681,43 @@ function groups_post_update( $args = '' ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param int               $user_id ID of the inviting user.
+ * @param int               $user_id ID of the invited user.
  * @param int|bool          $limit   Limit to restrict to.
  * @param int|bool          $page    Optional. Page offset of results to return.
  * @param string|array|bool $exclude Array of comma-separated list of group IDs
  *                                   to exclude from results.
- * @return array $value IDs of users who have been invited to the group by the
- *                      user but have not yet accepted.
+ * @return array {
+ *     @type array $groups Array of groups returned by paginated query.
+ *     @type int   $total  Count of groups matching query.
+ * }
  */
 function groups_get_invites_for_user( $user_id = 0, $limit = false, $page = false, $exclude = false ) {
-
 	if ( empty( $user_id ) ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	return BP_Groups_Member::get_invites( $user_id, $limit, $page, $exclude );
+	$group_ids = groups_get_invited_to_group_ids( $user_id );
+
+	// Remove excluded groups.
+	if ( $exclude ) {
+		$group_ids = array_diff( $group_ids, wp_parse_id_list( $exclude ) );
+	}
+
+	// Avoid passing an empty array.
+	if ( ! $group_ids ) {
+		$group_ids = array( 0 );
+	}
+
+	// Get a filtered list of groups.
+	$args = array(
+		'include'     => $group_ids,
+		'show_hidden' => true,
+		'per_page'    => $limit,
+		'page'        => $page,
+	);
+	$groups = groups_get_groups( $args );
+
+	return array( 'groups' => $groups['groups'], 'total' => groups_get_invite_count_for_user( $user_id ) );
 }
 
 /**
@@ -1657,7 +1733,31 @@ function groups_get_invite_count_for_user( $user_id = 0 ) {
 		$user_id = bp_loggedin_user_id();
 	}
 
-	return BP_Groups_Member::get_invite_count_for_user( $user_id );
+	return count( groups_get_invited_to_group_ids( $user_id ) );
+}
+
+/**
+ * Get an array of group IDs to which a user is invited.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int $user_id The user ID.
+ *
+ * @return array Array of group IDs.
+ */
+function groups_get_invited_to_group_ids( $user_id = 0 ) {
+	if ( empty( $user_id ) ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$group_ids = groups_get_invites( array(
+		'user_id'     => $user_id,
+		'invite_sent' => 'sent',
+		'fields'      => 'item_ids'
+	) );
+
+	return array_unique( $group_ids );
 }
 
 /**
@@ -1673,64 +1773,46 @@ function groups_get_invite_count_for_user( $user_id = 0 ) {
  *                                 ID of the logged-in user.
  *     @type string $date_modified Optional. Modified date for the invitation.
  *                                 Default: current date/time.
- *     @type bool   $is_confirmed  Optional. Whether the invitation should be
- *                                 marked confirmed. Default: false.
+ *     @type string $content       Optional. Message to invitee.
+ *     @type bool   $send_invite   Optional. Whether the invitation should be
+ *                                 sent now. Default: false.
  * }
  * @return bool True on success, false on failure.
  */
 function groups_invite_user( $args = '' ) {
-	$bp = buddypress();
+	$r = bp_parse_args( $args, array(
+		'user_id'       => false,
+		'group_id'      => false,
+		'inviter_id'    => bp_loggedin_user_id(),
+		'date_modified' => bp_core_current_time(),
+		'content'       => '',
+		'send_invite'   => 0
+	), 'groups_invite_user' );
 
-	$args = bp_parse_args(
-		$args,
-		array(
-			'user_id'       => false,
-			'group_id'      => false,
-			'inviter_id'    => bp_loggedin_user_id(),
-			'date_modified' => bp_core_current_time(),
-			'is_confirmed'  => 0,
-		),
-		'groups_invite_user'
+	$inv_args = array(
+		'user_id'       => $r['user_id'],
+		'item_id'       => $r['group_id'],
+		'inviter_id'    => $r['inviter_id'],
+		'date_modified' => $r['date_modified'],
+		'content'       => $r['content'],
+		'send_invite'   => $r['send_invite']
 	);
-	extract( $args, EXTR_SKIP );
 
-	if ( ! $user_id || ! $group_id || ! $inviter_id ) {
-		return false;
-	}
+	// Create the unsent invitataion.
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$created       = $invites_class->add_invitation( $inv_args );
 
-	// If the user has already requested membership, accept the request.
-	if ( $membership_id = groups_check_for_membership_request( $user_id, $group_id ) ) {
-		groups_accept_membership_request( $membership_id, $user_id, $group_id );
+	/**
+	 * Fires after the creation of a new group invite.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param array    $r       Array of parsed arguments for the group invite.
+	 * @param int|bool $created The ID of the invitation or false if it couldn't be created.
+	 */
+	do_action( 'groups_invite_user', $r, $created );
 
-		// Otherwise, create a new invitation.
-	} elseif ( ! groups_is_user_member( $user_id, $group_id ) && ! groups_check_user_has_invite( $user_id, $group_id, 'all' ) ) {
-		$invite                = new BP_Groups_Member();
-		$invite->group_id      = $group_id;
-		$invite->user_id       = $user_id;
-		$invite->date_modified = $date_modified;
-		$invite->inviter_id    = $inviter_id;
-		$invite->is_confirmed  = $is_confirmed;
-
-		if ( ! $invite->save() ) {
-			return false;
-		}
-
-		// update user meta with invite message for a group
-		if ( ! empty( $bp->groups->invites_message ) ) {
-			update_user_meta( $user_id, 'bp_group_invite_message_' . $group_id, $bp->groups->invites_message );
-		}
-
-		/**
-		 * Fires after the creation of a new group invite.
-		 *
-		 * @since BuddyPress 1.0.0
-		 *
-		 * @param array $args Array of parsed arguments for the group invite.
-		 */
-		do_action( 'groups_invite_user', $args );
-	}
-
-	return true;
+	return $created;
 }
 
 /**
@@ -1742,25 +1824,36 @@ function groups_invite_user( $args = '' ) {
  *
  * @param int $user_id  ID of the user.
  * @param int $group_id ID of the group.
+ * @param int $inviter_id ID of the inviter.
  * @return bool True on success, false on failure.
  */
-function groups_uninvite_user( $user_id, $group_id ) {
-
-	if ( ! BP_Groups_Member::delete_invite( $user_id, $group_id ) ) {
+function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
+	if ( empty( $user_id ) || empty( $group_id ) ) {
 		return false;
 	}
 
-	/**
-	 * Fires after uninviting a user from a group.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param int $group_id ID of the group being uninvited from.
-	 * @param int $user_id  ID of the user being uninvited.
-	 */
-	do_action( 'groups_uninvite_user', $group_id, $user_id );
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$success       = $invites_class->delete( array(
+		'user_id'    => $user_id,
+		'item_id'    => $group_id,
+		'inviter_id' => $inviter_id,
+	) );
 
-	return true;
+	if ( $success ) {
+		/**
+		 * Fires after uninviting a user from a group.
+		 *
+		 * @since 1.0.0
+		 * @since 2.7.0 Added $inviter_id parameter
+		 *
+		 * @param int $group_id    ID of the group being uninvited from.
+		 * @param int $user_id     ID of the user being uninvited.
+		 * @param int $inviter_id  ID of the inviter.
+		 */
+		do_action( 'groups_uninvite_user', $group_id, $user_id, $inviter_id );
+	}
+
+	return $success;
 }
 
 /**
@@ -1776,104 +1869,90 @@ function groups_uninvite_user( $user_id, $group_id ) {
  */
 function groups_accept_invite( $user_id, $group_id ) {
 
-	// If the user is already a member (because BP at one point allowed two invitations to
-	// slip through), delete all existing invitations/requests and return true.
-	if ( groups_is_user_member( $user_id, $group_id ) ) {
-		if ( groups_check_user_has_invite( $user_id, $group_id ) ) {
-			groups_delete_invite( $user_id, $group_id );
-		}
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$args = array(
+		'user_id'     => $user_id,
+		'item_id'     => $group_id,
+		'invite_sent' => 'sent',
+	);
 
-		if ( groups_check_for_membership_request( $user_id, $group_id ) ) {
-			groups_delete_membership_request( null, $user_id, $group_id );
-		}
-
-		return true;
-	}
-
-	$member = new BP_Groups_Member( $user_id, $group_id );
-
-	// Save the inviter ID so that we can pass it to the action below.
-	$inviter_id = $member->inviter_id;
-
-	$member->accept_invite();
-
-	if ( ! $member->save() ) {
-		return false;
-	}
-
-	// Remove request to join.
-	if ( $member->check_for_membership_request( $user_id, $group_id ) ) {
-		$member->delete_request( $user_id, $group_id );
-	}
-
-	// Modify group meta.
-	groups_update_groupmeta( $group_id, 'last_activity', bp_core_current_time() );
-
-	/**
-	 * Fires after a user has accepted a group invite.
-	 *
-	 * @since BuddyPress 1.0.0
-	 * @since BuddyPress 2.8.0 The $inviter_id arg was added.
-	 *
-	 * @param int $user_id    ID of the user who accepted the group invite.
-	 * @param int $group_id   ID of the group being accepted to.
-	 * @param int $inviter_id ID of the user who invited this user to the group.
-	 */
-	do_action( 'groups_accept_invite', $user_id, $group_id, $inviter_id );
-
-	return true;
+	return $invites_class->accept_invitation( $args );
 }
 
 /**
  * Reject a group invitation.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyPress 5.0.0 The $inviter_id arg was added.
  *
- * @param int $user_id  ID of the user.
- * @param int $group_id ID of the group.
+ * @param int $user_id    ID of the user.
+ * @param int $group_id   ID of the group.
+ * @param int $inviter_id ID of the inviter.
+ *
  * @return bool True on success, false on failure.
  */
-function groups_reject_invite( $user_id, $group_id ) {
-	if ( ! BP_Groups_Member::delete_invite( $user_id, $group_id ) ) {
+function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
+	if ( empty( $user_id ) || empty( $group_id ) ) {
 		return false;
 	}
+
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$success       = $invites_class->delete( array(
+		'user_id'    => $user_id,
+		'item_id'    => $group_id,
+		'inviter_id' => $inviter_id,
+	) );
 
 	/**
 	 * Fires after a user rejects a group invitation.
 	 *
-	 * @since BuddyPress 1.0.0
+	 * @since 1.0.0
+	 * @since 5.0.0 The $inviter_id arg was added.
 	 *
-	 * @param int $user_id  ID of the user rejecting the invite.
-	 * @param int $group_id ID of the group being rejected.
+	 * @param int $user_id    ID of the user rejecting the invite.
+	 * @param int $group_id   ID of the group being rejected.
+	 * @param int $inviter_id ID of the inviter.
 	 */
-	do_action( 'groups_reject_invite', $user_id, $group_id );
+	do_action( 'groups_reject_invite', $user_id, $group_id, $inviter_id );
 
-	return true;
+	return $success;
 }
 
 /**
  * Delete a group invitation.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyPress 5.0.0 The $inviter_id arg was added.
  *
  * @param int $user_id  ID of the invited user.
  * @param int $group_id ID of the group.
+ * @param int $inviter_id ID of the inviter.
+ *
  * @return bool True on success, false on failure.
  */
-function groups_delete_invite( $user_id, $group_id ) {
-	if ( ! BP_Groups_Member::delete_invite( $user_id, $group_id ) ) {
+function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
+	if ( empty( $user_id ) || empty( $group_id ) ) {
 		return false;
 	}
+
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$success       = $invites_class->delete( array(
+		'user_id'    => $user_id,
+		'item_id'    => $group_id,
+		'inviter_id' => $inviter_id,
+	) );
 
 	/**
 	 * Fires after the deletion of a group invitation.
 	 *
-	 * @since BuddyPress 1.9.0
+	 * @since 1.9.0
+	 * @since 5.0.0 The $inviter_id arg was added.
 	 *
 	 * @param int $user_id  ID of the user whose invitation is being deleted.
 	 * @param int $group_id ID of the group whose invitation is being deleted.
+	 * @param int $inviter_id ID of the inviter.
 	 */
-	do_action( 'groups_delete_invite', $user_id, $group_id );
+	do_action( 'groups_delete_invite', $user_id, $group_id, $inviter_id );
 
 	return true;
 }
@@ -1882,33 +1961,63 @@ function groups_delete_invite( $user_id, $group_id ) {
  * Send all pending invites by a single user to a specific group.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyPress 5.0.0 Parameters changed to associative array.
  *
- * @param int $user_id  ID of the inviting user.
- * @param int $group_id ID of the group.
+ * @param array $args {
+ *     An array of optional arguments.
+ *     @type int    $user_id       ID of the invited user.
+ *     @type string $invitee_email Email address of the invited user, if not a member of the site.
+ *     @type string $group_id      ID of the group or an array of group IDs.
+ *     @type string $inviter_id    ID of the user extending the invitation.
+ *     @type bool   $force_resend  Whether to resend the email & notification if one has already been sent.
+ * }
  */
-function groups_send_invites( $user_id, $group_id ) {
+function groups_send_invites( $args = array() ) {
+	// Backward compatibility with old method of passing arguments.
+	if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
-	if ( empty( $user_id ) ) {
-		$user_id = bp_loggedin_user_id();
+		$old_args_keys = array(
+			0 => 'inviter_id',
+			1 => 'group_id',
+		);
+
+		$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 	}
 
-	// Send friend invites.
-	$invited_users = groups_get_invites_for_group( $user_id, $group_id );
-	$group         = groups_get_group( $group_id );
+	$r = bp_parse_args( $args, array(
+		'user_id'       => false,
+		'invitee_email' => '',
+		'group_id'      => 0,
+		'inviter_id'    => bp_loggedin_user_id(),
+		'force_resend'  => false,
+	), 'groups_send_invitation' );
 
-	for ( $i = 0, $count = count( $invited_users ); $i < $count; ++$i ) {
-		$member = new BP_Groups_Member( $invited_users[ $i ], $group_id );
+	$args = array(
+		'user_id'       => $r['user_id'],
+		'invitee_email' => $r['invitee_email'],
+		'item_id'       => $r['group_id'],
+		'inviter_id'    => $r['inviter_id'],
+	);
 
-		// Skip if we've already sent an invite to this user.
-		if ( $member->invite_sent ) {
-			continue;
-		}
+	/*
+	 * We will generally only want to fetch unsent invitations.
+	 * If force_resend is true, then we need to fetch both sent and draft invites.
+	 */
+	if ( $r['force_resend'] ) {
+		$args['invite_sent'] = 'all';
+	} else {
+		$args['invite_sent'] = 'draft';
+	}
 
-		// Send the actual invite.
-		groups_notification_group_invites( $group, $member, $user_id );
+	$invites = groups_get_invites( $args );
 
-		$member->invite_sent = 1;
-		$member->save();
+	$invited_users = array();
+
+	$invites_class = new BP_Groups_Invitation_Manager();
+	foreach ( $invites as $invite ) {
+		$invited_users[] = $invite->user_id;
+		$invites_class->send_invitation_by_id( $invite->id );
 	}
 
 	/**
@@ -1921,7 +2030,7 @@ function groups_send_invites( $user_id, $group_id ) {
 	 * @param array $invited_users Array of users being invited to the group.
 	 * @param int   $user_id       ID of the inviting user.
 	 */
-	do_action( 'groups_send_invites', $group_id, $invited_users, $user_id );
+	do_action( 'groups_send_invites', $r['group_id'], $invited_users, $r['inviter_id'] );
 }
 
 /**
@@ -1944,6 +2053,23 @@ function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
 }
 
 /**
+ * Get invitations to a given group filtered by arguments.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int   $group_id ID of the group.
+ * @param array $args     Invitation arguments.
+ *                        See BP_Invitation::get() for list.
+ *
+ * @return array $invites     Matching BP_Invitation objects.
+ */
+function groups_get_invites( $args = array() ) {
+	$invites_class = new BP_Groups_Invitation_Manager();
+	return $invites_class->get_invitations( $args );
+}
+
+/**
  * Check to see whether a user has already been invited to a group.
  *
  * By default, the function checks for invitations that have been sent.
@@ -1959,26 +2085,47 @@ function groups_get_invites_for_group( $user_id, $group_id, $sent = null ) {
  * @return int|bool ID of the membership if found, otherwise false.
  */
 function groups_check_user_has_invite( $user_id, $group_id, $type = 'sent' ) {
-	$invite = false;
+	return groups_check_has_invite_from_user( $user_id, $group_id, false, $type );
+}
+
+/**
+ * Check to see whether a user has already been invited to a group by a particular user.
+ *
+ * By default, the function checks for invitations that have been sent.
+ * Entering 'all' as the $type parameter will return unsent invitations as
+ * well (useful to make sure AJAX requests are not duplicated).
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int    $user_id    ID of potential group member.
+ * @param int    $group_id   ID of potential group.
+ * @param string $inviter_id Optional. Use 'sent' to check for sent invites,
+ *                           'all' to check for all. Default: 'sent'.
+ * @param string $type       Optional. Specify a user ID to limit to only invited from that user.
+ *                           Default: 'false'.
+ * @return int|bool ID of the first found membership if found, otherwise false.
+ */
+function groups_check_has_invite_from_user( $user_id, $group_id, $inviter_id = false, $type = 'sent' ) {
+	if ( empty( $user_id ) || empty( $group_id ) ) {
+		return false;
+	}
 
 	$args = array(
-		'is_confirmed' => false,
-		'is_banned'    => null,
-		'is_admin'     => null,
-		'is_mod'       => null,
+		'user_id'     => $user_id,
+		'item_id'     => $group_id,
+		'invite_sent' => 'sent',
 	);
-
-	if ( 'sent' === $type ) {
-		$args['invite_sent'] = true;
+	if ( $inviter_id ) {
+		$args['inviter_id'] = $inviter_id;
+	}
+	if ( $type === 'draft' || $type === 'all' ) {
+		$args['invite_sent'] = $type;
 	}
 
-	$user_groups = bp_get_user_groups( $user_id, $args );
+	$invites_class = new BP_Groups_Invitation_Manager();
 
-	if ( isset( $user_groups[ $group_id ] ) && 0 !== $user_groups[ $group_id ]->inviter_id ) {
-		$invite = $user_groups[ $group_id ]->id;
-	}
-
-	return $invite;
+	return $invites_class->invitation_exists( $args );
 }
 
 /**
@@ -2159,62 +2306,50 @@ function groups_remove_member( $user_id, $group_id ) {
  *
  * @since BuddyPress 1.0.0
  *
- * @param int $requesting_user_id ID of the user requesting membership.
- * @param int $group_id           ID of the group.
+ * @param array|string $args {
+ *     Array of arguments.
+ *     @type int    $user_id       ID of the user being invited.
+ *     @type int    $group_id      ID of the group to which the user is being invited.
+ *     @type string $content       Optional. Message to invitee.
+ *     @type string $date_modified Optional. Modified date for the invitation.
+ *                                 Default: current date/time.
+ * }
  * @return bool True on success, false on failure.
  */
-function groups_send_membership_request( $requesting_user_id, $group_id ) {
+function groups_send_membership_request( $args = array() ) {
+	// Backward compatibility with old method of passing arguments.
+	if ( ! is_array( $args ) || func_num_args() > 1 ) {
+		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Arguments passed to %1$s should be in an associative array. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 
-	// Prevent duplicate requests.
-	if ( groups_check_for_membership_request( $requesting_user_id, $group_id ) ) {
-		return false;
+		$old_args_keys = array(
+			0 => 'user_id',
+			1 => 'group_id',
+		);
+
+		$args = bp_core_parse_args_array( $old_args_keys, func_get_args() );
 	}
 
-	// Check if the user is already a member or is banned.
-	if ( groups_is_user_member( $requesting_user_id, $group_id ) || groups_is_user_banned( $requesting_user_id, $group_id ) ) {
-		return false;
-	}
+	$r = bp_parse_args( $args, array(
+		'user_id'       => false,
+		'group_id'      => false,
+		'content'       => '',
+		'date_modified' => bp_core_current_time(),
+	), 'groups_send_membership_request' );
 
-	// Check if the user is already invited - if so, simply accept invite.
-	if ( groups_check_user_has_invite( $requesting_user_id, $group_id ) ) {
-		groups_accept_invite( $requesting_user_id, $group_id );
-		return true;
-	} else {
+	$inv_args = array(
+		'user_id'       => $r['user_id'],
+		'item_id'       => $r['group_id'],
+		'content'       => $r['content'],
+		'date_modified' => $r['date_modified'],
+	);
 
-		if ( true === bp_member_type_enable_disable() && true === bp_disable_group_type_creation() ) {
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$request_id = $invites_class->add_request( $inv_args );
 
-			$group_type = bp_groups_get_group_type( $group_id );
-
-			$group_type_id = bp_group_get_group_type_id( $group_type );
-
-			$get_selected_member_type_join = get_post_meta( $group_type_id, '_bp_group_type_enabled_member_type_join', true );
-
-			$get_requesting_user_member_type = bp_get_member_type( $requesting_user_id );
-
-			if ( is_array( $get_selected_member_type_join ) && in_array( $get_requesting_user_member_type, $get_selected_member_type_join ) ) {
-				groups_accept_invite( $requesting_user_id, $group_id );
-				return true;
-			}
-		}
-	}
-
-	$requesting_user                = new BP_Groups_Member();
-	$requesting_user->group_id      = $group_id;
-	$requesting_user->user_id       = $requesting_user_id;
-	$requesting_user->inviter_id    = 0;
-	$requesting_user->is_admin      = 0;
-	$requesting_user->user_title    = '';
-	$requesting_user->date_modified = bp_core_current_time();
-	$requesting_user->is_confirmed  = 0;
-	$requesting_user->comments      = isset( $_POST['group-request-membership-comments'] ) ? $_POST['group-request-membership-comments'] : '';
-
-	if ( $requesting_user->save() ) {
-		$admins = groups_get_group_admins( $group_id );
-
-		// Saved okay, now send the email notification.
-		for ( $i = 0, $count = count( $admins ); $i < $count; ++$i ) {
-			groups_notification_new_membership_request( $requesting_user_id, $admins[ $i ]->user_id, $group_id, $requesting_user->id );
-		}
+	// If a new request was created, send the emails.
+	if ( $request_id && is_int( $request_id ) ) {
+		$invites_class->send_request_notification_by_id( $request_id );
+		$admins = groups_get_group_admins( $r['group_id'] );
 
 		/**
 		 * Fires after the creation of a new membership request.
@@ -2224,11 +2359,11 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
 		 * @param int   $requesting_user_id  ID of the user requesting membership.
 		 * @param array $admins              Array of group admins.
 		 * @param int   $group_id            ID of the group being requested to.
-		 * @param int   $requesting_user->id ID of the membership.
+		 * @param int   $request_id          ID of the request.
 		 */
-		do_action( 'groups_membership_requested', $requesting_user_id, $admins, $group_id, $requesting_user->id );
+		do_action( 'groups_membership_requested', $r['user_id'], $admins, $r['group_id'], $request_id );
 
-		return true;
+		return $request_id;
 	}
 
 	return false;
@@ -2238,47 +2373,34 @@ function groups_send_membership_request( $requesting_user_id, $group_id ) {
  * Accept a pending group membership request.
  *
  * @since BuddyPress 1.0.0
+ * @since BuddyPress 5.0.0 Deprecated $membership_id argument.
  *
- * @param int $membership_id ID of the membership object.
- * @param int $user_id       Optional. ID of the user who requested membership.
+ * @param int $membership_id Deprecated 5.0.0.
+ * @param int $user_id       Required. ID of the user who requested membership.
  *                           Provide this value along with $group_id to override
  *                           $membership_id.
- * @param int $group_id      Optional. ID of the group to which membership is being
+ * @param int $group_id      Required. ID of the group to which membership is being
  *                           requested. Provide this value along with $user_id to
  *                           override $membership_id.
  * @return bool True on success, false on failure.
  */
 function groups_accept_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
 
-	if ( ! empty( $user_id ) && ! empty( $group_id ) ) {
-		$membership = new BP_Groups_Member( $user_id, $group_id );
-	} else {
-		$membership = new BP_Groups_Member( false, false, $membership_id );
+	if ( ! empty( $membership_id ) ) {
+		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
-	$membership->accept_request();
-
-	if ( ! $membership->save() ) {
+	if ( ! $user_id || ! $group_id ) {
 		return false;
 	}
 
-	// Check if the user has an outstanding invite, if so delete it.
-	if ( groups_check_user_has_invite( $membership->user_id, $membership->group_id ) ) {
-		groups_delete_invite( $membership->user_id, $membership->group_id );
-	}
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$args = array(
+		'user_id' => $user_id,
+		'item_id' => $group_id,
+	);
 
-	/**
-	 * Fires after a group membership request has been accepted.
-	 *
-	 * @since BuddyPress 1.0.0
-	 *
-	 * @param int  $user_id  ID of the user who accepted membership.
-	 * @param int  $group_id ID of the group that was accepted membership to.
-	 * @param bool $value    If membership was accepted.
-	 */
-	do_action( 'groups_membership_accepted', $membership->user_id, $membership->group_id, true );
-
-	return true;
+	return $invites_class->accept_request( $args );
 }
 
 /**
@@ -2286,7 +2408,7 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
  *
  * @since BuddyPress 1.0.0
  *
- * @param int $membership_id ID of the membership object.
+ * @param int $membership_id Deprecated BuddyPress 5.0.0.
  * @param int $user_id       Optional. ID of the user who requested membership.
  *                           Provide this value along with $group_id to override
  *                           $membership_id.
@@ -2296,20 +2418,25 @@ function groups_accept_membership_request( $membership_id, $user_id = 0, $group_
  * @return bool True on success, false on failure.
  */
 function groups_reject_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-	if ( ! $membership = groups_delete_membership_request( $membership_id, $user_id, $group_id ) ) {
+
+	if ( ! empty( $membership_id ) ){
+		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
+	}
+
+	if ( ! groups_delete_membership_request( false, $user_id, $group_id ) ) {
 		return false;
 	}
 
 	/**
 	 * Fires after a group membership request has been rejected.
 	 *
-	 * @since BuddyPress 1.0.0
+	 * @since 1.0.0
 	 *
 	 * @param int  $user_id  ID of the user who rejected membership.
 	 * @param int  $group_id ID of the group that was rejected membership to.
 	 * @param bool $value    If membership was accepted.
 	 */
-	do_action( 'groups_membership_rejected', $membership->user_id, $membership->group_id, false );
+	do_action( 'groups_membership_rejected', $user_id, $group_id, false );
 
 	return true;
 }
@@ -2319,7 +2446,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  *
  * @since BuddyPress 1.2.0
  *
- * @param int $membership_id ID of the membership object.
+ * @param int $membership_id Deprecated 5.0.0.
  * @param int $user_id       Optional. ID of the user who requested membership.
  *                           Provide this value along with $group_id to override
  *                           $membership_id.
@@ -2329,17 +2456,38 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
  * @return false|BP_Groups_Member True on success, false on failure.
  */
 function groups_delete_membership_request( $membership_id, $user_id = 0, $group_id = 0 ) {
-	if ( ! empty( $user_id ) && ! empty( $group_id ) ) {
-		$membership = new BP_Groups_Member( $user_id, $group_id );
-	} else {
-		$membership = new BP_Groups_Member( false, false, $membership_id );
+	if ( ! empty( $membership_id ) ){
+		_deprecated_argument( __METHOD__, '5.0.0', sprintf( __( 'Argument `membership_id` passed to %1$s  is deprecated. See the inline documentation at %2$s for more details.', 'buddyboss' ), __METHOD__, __FILE__ ) );
 	}
 
-	if ( ! BP_Groups_Member::delete_request( $membership->user_id, $membership->group_id ) ) {
+	if ( empty( $user_id ) || empty( $group_id ) ) {
 		return false;
 	}
 
-	return $membership;
+	$invites_class = new BP_Groups_Invitation_Manager();
+	$success       = $invites_class->delete_requests( array(
+		'user_id' => $user_id,
+		'item_id' => $group_id
+	) );
+
+	return $success;
+}
+
+/**
+ * Get group membership requests filtered by arguments.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int   $group_id ID of the group.
+ * @param array $args     Invitation arguments.
+ *                        See BP_Invitation::get() for list.
+ *
+ * @return array $requests Matching BP_Invitation objects.
+ */
+function groups_get_requests( $args = array() ) {
+	$invites_class = new BP_Groups_Invitation_Manager();
+	return $invites_class->get_requests( $args );
 }
 
 /**
@@ -2352,23 +2500,63 @@ function groups_delete_membership_request( $membership_id, $user_id = 0, $group_
  * @return int|bool ID of the membership if found, otherwise false.
  */
 function groups_check_for_membership_request( $user_id, $group_id ) {
-	$request = false;
-
-	$user_groups = bp_get_user_groups(
-		$user_id,
-		array(
-			'is_confirmed' => false,
-			'is_banned'    => false,
-			'is_admin'     => null,
-			'is_mod'       => null,
-		)
-	);
-
-	if ( isset( $user_groups[ $group_id ] ) && 0 === $user_groups[ $group_id ]->inviter_id ) {
-		$request = $user_groups[ $group_id ]->id;
+	if ( empty( $user_id ) || empty( $group_id ) ) {
+		return false;
 	}
 
-	return $request;
+	$args = array(
+		'user_id' => $user_id,
+		'item_id' => $group_id,
+	);
+	$invites_class = new BP_Groups_Invitation_Manager();
+
+	return $invites_class->request_exists( $args );
+}
+
+/**
+ * Get an array of group IDs to which a user has requested membership.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int $user_id The user ID.
+ *
+ * @return array Array of group IDs.
+ */
+function groups_get_membership_requested_group_ids( $user_id = 0 ) {
+	if ( ! $user_id ) {
+		$user_id = bp_loggedin_user_id();
+	}
+
+	$group_ids     = groups_get_requests( array(
+		'user_id' => $user_id,
+		'fields'  => 'item_ids'
+	) );
+
+	return $group_ids;
+}
+
+/**
+ * Get an array of group IDs to which a user has requested membership.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param int $user_id The user ID.
+ *
+ * @return array Array of group IDs.
+ */
+function groups_get_membership_requested_user_ids( $group_id = 0 ) {
+	if ( ! $group_id ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	$requests = groups_get_requests( array(
+		'item_id' => $group_id,
+		'fields'  => 'user_ids'
+	) );
+
+	return $requests;
 }
 
 /**
@@ -2379,8 +2567,12 @@ function groups_check_for_membership_request( $user_id, $group_id ) {
  * @param int $group_id ID of the group.
  * @return bool True on success, false on failure.
  */
-function groups_accept_all_pending_membership_requests( $group_id ) {
-	$user_ids = BP_Groups_Member::get_all_membership_request_user_ids( $group_id );
+function groups_accept_all_pending_membership_requests( $group_id = 0 ) {
+	if ( ! $group_id ) {
+		$group_id = bp_get_current_group_id();
+	}
+
+	$user_ids = groups_get_membership_requested_user_ids( $group_id );
 
 	if ( ! $user_ids ) {
 		return false;
@@ -2393,7 +2585,7 @@ function groups_accept_all_pending_membership_requests( $group_id ) {
 	/**
 	 * Fires after the acceptance of all pending membership requests to a group.
 	 *
-	 * @since BuddyPress 1.0.2
+	 * @since 1.0.2
 	 *
 	 * @param int $group_id ID of the group whose pending memberships were accepted.
 	 */
@@ -2424,7 +2616,10 @@ function groups_delete_groupmeta( $group_id, $meta_key = false, $meta_value = fa
 
 	// Legacy - if no meta_key is passed, delete all for the item.
 	if ( empty( $meta_key ) ) {
-		$keys = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$wpdb->groupmeta} WHERE group_id = %d", $group_id ) );
+		$table_name = buddypress()->groups->table_name_groupmeta;
+		$sql        = "SELECT meta_key FROM {$table_name} WHERE group_id = %d";
+		$query      = $wpdb->prepare( $sql, $group_id );
+		$keys       = $wpdb->get_col( $query );
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;
@@ -3699,3 +3894,51 @@ function bp_group_directory_page_content() {
 }
 
 add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );
+
+/**
+ * Migrate invitations and requests from pre-5.0 group_members table to invitations table.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @since BuddyPress 5.0.0
+ */
+function bp_groups_migrate_invitations() {
+	global $wpdb;
+	$bp = buddypress();
+
+	$records = $wpdb->get_results( "SELECT id, group_id, user_id, inviter_id, date_modified, comments, invite_sent FROM {$bp->groups->table_name_members} WHERE is_confirmed = 0 AND is_banned = 0" );
+	if ( empty( $records ) ) {
+		return;
+	}
+
+	$processed = array();
+	$values = array();
+	foreach ( $records as $record ) {
+		$values[] = $wpdb->prepare(
+			"(%d, %d, %s, %s, %d, %d, %s, %s, %s, %d, %d)",
+			(int) $record->user_id,
+			(int) $record->inviter_id,
+			'',
+			'bp_groups_invitation_manager',
+			(int) $record->group_id,
+			0,
+			( 0 === (int) $record->inviter_id ) ? 'request' : 'invite',
+			$record->comments,
+			$record->date_modified,
+			(int) $record->invite_sent,
+			0
+		);
+		$processed[] = (int) $record->id;
+	}
+
+	$table_name = BP_Invitation_Manager::get_table_name();
+	$query = "INSERT INTO {$table_name} (user_id, inviter_id, invitee_email, class, item_id, secondary_item_id, type, content, date_modified, invite_sent, accepted) VALUES ";
+	$query .= implode(', ', $values );
+	$query .= ';';
+	$wpdb->query( $query );
+
+	$ids_to_delete = implode( ',', $processed );
+	if ( $ids_to_delete ) {
+		$wpdb->query( "DELETE FROM {$bp->groups->table_name_members} WHERE ID IN ($ids_to_delete)" );
+	}
+}
