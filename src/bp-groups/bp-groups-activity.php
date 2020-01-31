@@ -267,7 +267,7 @@ function bp_groups_format_activity_action_group_activity_update( $action, $activ
 	/**
 	 * Filters the Group's activity update action.
 	 *
-	 * @since 5.0.0
+	 * @since BuddyPress 5.0.0
 	 *
 	 * @param string $action   The Group's activity update action.
 	 * @param object $activity Activity data object.

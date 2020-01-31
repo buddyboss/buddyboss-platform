@@ -61,7 +61,7 @@ function groups_screen_group_admin_requests() {
 		/**
 		 * Fires before the redirect if a group membership request has been handled.
 		 *
-		 * @since 1.0.0
+		 * @since BuddyPress 1.0.0
 		 *
 		 * @param int    $id             ID of the group that was edited.
 		 * @param string $request_action Membership request action being performed.
@@ -76,7 +76,7 @@ function groups_screen_group_admin_requests() {
 	/**
 	 * Fires before the loading of the group membership request page template.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int $id ID of the group that is being displayed.
 	 */
@@ -85,7 +85,7 @@ function groups_screen_group_admin_requests() {
 	/**
 	 * Filters the template to load for a group's membership request page.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param string $value Path to a group's membership request template.
 	 */

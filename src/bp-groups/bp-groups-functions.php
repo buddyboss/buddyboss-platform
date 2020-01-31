@@ -1805,7 +1805,7 @@ function groups_invite_user( $args = '' ) {
 	/**
 	 * Fires after the creation of a new group invite.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param array    $r       Array of parsed arguments for the group invite.
 	 * @param int|bool $created The ID of the invitation or false if it couldn't be created.
@@ -1843,8 +1843,8 @@ function groups_uninvite_user( $user_id, $group_id, $inviter_id = false ) {
 		/**
 		 * Fires after uninviting a user from a group.
 		 *
-		 * @since 1.0.0
-		 * @since 2.7.0 Added $inviter_id parameter
+		 * @since BuddyPress 1.0.0
+		 * @since BuddyPress 2.7.0 Added $inviter_id parameter
 		 *
 		 * @param int $group_id    ID of the group being uninvited from.
 		 * @param int $user_id     ID of the user being uninvited.
@@ -1906,8 +1906,8 @@ function groups_reject_invite( $user_id, $group_id, $inviter_id = false ) {
 	/**
 	 * Fires after a user rejects a group invitation.
 	 *
-	 * @since 1.0.0
-	 * @since 5.0.0 The $inviter_id arg was added.
+	 * @since BuddyPress 1.0.0
+	 * @since BuddyPress 5.0.0 The $inviter_id arg was added.
 	 *
 	 * @param int $user_id    ID of the user rejecting the invite.
 	 * @param int $group_id   ID of the group being rejected.
@@ -1945,8 +1945,8 @@ function groups_delete_invite( $user_id, $group_id, $inviter_id = false ) {
 	/**
 	 * Fires after the deletion of a group invitation.
 	 *
-	 * @since 1.9.0
-	 * @since 5.0.0 The $inviter_id arg was added.
+	 * @since BuddyPress 1.9.0
+	 * @since BuddyPress 5.0.0 The $inviter_id arg was added.
 	 *
 	 * @param int $user_id  ID of the user whose invitation is being deleted.
 	 * @param int $group_id ID of the group whose invitation is being deleted.
@@ -2430,7 +2430,7 @@ function groups_reject_membership_request( $membership_id, $user_id = 0, $group_
 	/**
 	 * Fires after a group membership request has been rejected.
 	 *
-	 * @since 1.0.0
+	 * @since BuddyPress 1.0.0
 	 *
 	 * @param int  $user_id  ID of the user who rejected membership.
 	 * @param int  $group_id ID of the group that was rejected membership to.
@@ -2585,7 +2585,7 @@ function groups_accept_all_pending_membership_requests( $group_id = 0 ) {
 	/**
 	 * Fires after the acceptance of all pending membership requests to a group.
 	 *
-	 * @since 1.0.2
+	 * @since BuddyPress 1.0.2
 	 *
 	 * @param int $group_id ID of the group whose pending memberships were accepted.
 	 */
