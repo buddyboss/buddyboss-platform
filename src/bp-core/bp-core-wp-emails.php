@@ -1270,11 +1270,11 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 		$siteurl          = site_url();
 		restore_current_blog();
 
-		/* translators: New site notification email. 1: Site URL, 2: User IP address, 3: Settings screen URL */
-		$msg  = '<p>' . sprintf( __( 'New Site: %1$s', 'buddyboss' ), $blogname ) . '</p>';
-		$msg .= '<p>' . sprintf( __( 'URL: %2$s', 'buddyboss' ), $siteurl ) . '</p>';
-		$msg .= '<p>' . sprintf( __( 'Remote IP address: %3$s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
-		$msg .= '<p>' . sprintf( __( 'Disable these notifications: %4$s', 'buddyboss' ), $options_site_url ) . '</p>';
+		/* translators: New site notification email. */
+		$msg  = '<p>' . sprintf( __( 'New Site: %s', 'buddyboss' ), $blogname ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $siteurl ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss' ), $options_site_url ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 
