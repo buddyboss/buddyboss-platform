@@ -953,7 +953,7 @@ window.bp = window.bp || {};
 			var currentTargetName = $(event.currentTarget).closest('.bb-activity-media-elem').find('.document-title').text();
 
 			// For Activity Feed
-			currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').attr('id') + ' .bp-media-move-file';
+			currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
 			$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
 
 			// Change if this is not from Activity Page
