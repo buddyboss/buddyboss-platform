@@ -2138,6 +2138,7 @@ span.dashicons.dashicons-admin-file:before {
   display: inline-block;
   width: 100%;
   margin: 3px;
+  position: relative;
   padding: 0;
 }
 

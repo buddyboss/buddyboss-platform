@@ -950,14 +950,16 @@ window.bp = window.bp || {};
 			event.preventDefault();
 
 			var currentTarget;
-			var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
-			if($(event.currentTarget).hasClass('ac-document-move')){
-				currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').find('.bp-media-move-file').attr('id');
-			}else{
-				currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').find('.bp-media-move-folder').attr('id');
-			}
+			var currentTargetName = $(event.currentTarget).closest('.bb-activity-media-elem').find('.document-title').text();
+
+			// For Activity Feed
+			currentTarget = '#'+$(event.currentTarget).closest('li.activity_update').attr('id') + ' .bp-media-move-file';
+			$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
+
+			// Change if this is not from Activity Page
 			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
-				if($(event.currentTarget).hasClass('ac-document-move')){
+				var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
+				if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
 					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
 					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
 				}else{

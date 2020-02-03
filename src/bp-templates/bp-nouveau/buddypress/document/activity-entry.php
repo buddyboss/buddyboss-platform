@@ -16,7 +16,7 @@ $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
 ?>
 
-	<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?> ">
+	<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>">
 		<div class="document-description-wrap">
 			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
 				<img style="width: 40px;" width="40" height="40" src="<?php echo esc_url( $svg_icon ); ?>" class="" alt="<?php bp_document_title(); ?>" />
@@ -128,9 +128,3 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 		} ?>
 		
 	</div> <!-- .bb-activity-media-elem -->
-<?php
-if ( isset( $attachment_id) ) {
-	bp_get_template_part( 'document/activity-document-move' );
-} else {
-	bp_get_template_part( 'document/activity-document-folder-move' );
-}

@@ -63,6 +63,8 @@ function bp_document_activity_entry() {
 		) ) ) { ?>
 		<div class="bb-activity-media-wrap bb-media-length-1 ">
 			<?php
+
+			bp_get_template_part( 'document/activity-document-move' );
 			while ( bp_document() ) {
 				bp_the_document();
 				bp_get_template_part( 'document/activity-entry' );

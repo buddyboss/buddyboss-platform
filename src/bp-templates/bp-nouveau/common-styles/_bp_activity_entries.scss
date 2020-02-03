@@ -650,7 +650,8 @@ span.dashicons.dashicons-admin-file:before {
         padding: 15px;
         display: inline-block;
         width: 100%;
-        margin: 3px;
+		margin: 3px;
+		position: relative;
         padding: 0;
         &:hover{
             background-color: #f5f6f7;
