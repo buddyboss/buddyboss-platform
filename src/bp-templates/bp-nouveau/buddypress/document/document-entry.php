@@ -23,7 +23,9 @@ if ( $attachment_id ) {
 ?>
 <div class="media-folder_items <?php echo $listing_class; ?>" data-id="<?php bp_document_id(); ?>">
 	<div class="media-folder_icon">
-		<a href="<?php echo esc_url( $link ); ?>"><img src="<?php echo esc_url( $svg_icon ); ?>" /></a>
+		<a href="<?php echo esc_url( $link ); ?>">
+			<i class="<?php echo $svg_icon; ?>"></i>
+		</a>
 	</div>
 	<div class="media-folder_details">
 		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">

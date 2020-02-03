@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-31 14:55:13+00:00\n"
+"POT-Creation-Date: 2020-02-03 09:36:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -900,7 +900,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:13
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:44
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:114
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:48
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:50
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -2506,8 +2506,8 @@ msgid "Profile Dashboard"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
-#: bp-document/bp-document-functions.php:1435
-#: bp-document/bp-document-functions.php:1438
+#: bp-document/bp-document-functions.php:1480
+#: bp-document/bp-document-functions.php:1483
 #: bp-document/classes/class-bp-document-component.php:60
 #: bp-document/classes/class-bp-document-component.php:244
 #: bp-document/classes/class-bp-document-component.php:299
@@ -7004,7 +7004,7 @@ msgstr ""
 msgid "Error while uploading document."
 msgstr ""
 
-#: bp-document/bp-document-functions.php:1442
+#: bp-document/bp-document-functions.php:1487
 msgid "..."
 msgstr ""
 
@@ -10175,7 +10175,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:51
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:43
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:113
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:47
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:49
 msgid "Move"
 msgstr ""
 
@@ -10605,7 +10605,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:46
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:48
 msgid "Rename"
 msgstr ""
 

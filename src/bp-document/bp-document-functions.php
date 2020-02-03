@@ -1284,68 +1284,113 @@ function bp_document_svg_icon( $extension ) {
 	$svg = '';
 
 	switch ( $extension ) {
+		case 'css':
+			$svg = 'bb-icon-code';
+		break;
 		case 'csv':
-			$svg = apply_filters( 'bp_document_svg_icon_csv', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/csv.svg', $extension ) ;
+			$svg = 'bb-icon-file-csv';
         break;
 		case 'doc':
-			$svg = apply_filters( 'bp_document_svg_icon_doc', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/doc.svg', $extension ) ;
+			$svg = 'bb-icon-doc';
         break;
 		case 'docx':
-			$svg = apply_filters( 'bp_document_svg_icon_docx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/docx.svg', $extension ) ;
+			$svg = 'bb-icon-doc';
+		break;
+		case 'dotx':
+			$svg = 'bb-icon-doc';
         break;
 		case 'gzip':
-			$svg = apply_filters( 'bp_document_svg_icon_gzip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/gzip.svg', $extension ) ;
+			$svg = 'bb-icon-zip';
+		break;
+		case 'htm':
+			$svg = 'bb-icon-code';
+		break;
+		case 'html':
+			$svg = 'bb-icon-code';
 		break;
 		case 'ics':
-			$svg = apply_filters( 'bp_document_svg_icon_ics', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ics.svg', $extension ) ;
+			$svg = 'bb-icon-file-ics';
+		break;
+		case 'js':
+			$svg = 'bb-icon-code';
 		break;
 		case 'jar':
-			$svg = apply_filters( 'bp_document_svg_icon_jar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/jar.svg', $extension ) ;
+			$svg = 'bb-icon-file-jar';
+		break;
+		case 'mp3':
+			$svg = 'bb-icon-mp3';
 		break;
 		case 'ods':
-			$svg = apply_filters( 'bp_document_svg_icon_ods', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ods.svg', $extension ) ;
+			$svg = 'bb-icon-file-ods';
 		break;
 		case 'odt':
-			$svg = apply_filters( 'bp_document_svg_icon_odt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/odt.svg', $extension ) ;
+			$svg = 'bb-icon-file-odt';
 		break;
 		case 'pdf':
-			$svg = apply_filters( 'bp_document_svg_icon_pdf', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/pdf.svg', $extension ) ;
+			$svg = 'bb-icon-pdf';
 		break;
 		case 'psd':
-			$svg = apply_filters( 'bp_document_svg_icon_psd', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/psd.svg', $extension ) ;
+			$svg = 'bb-icon-file-psd';
+		break;
+		case 'potm':
+			$svg = 'bb-icon-file-pptm';
+		break;
+		case 'potx':
+			$svg = 'bb-icon-file-pptx';
+		break;
+		case 'pps':
+			$svg = 'bb-icon-file-pps';
+		break;
+		case 'ppsx':
+			$svg = 'bb-icon-file-ppsx';
 		break;
 		case 'ppt':
-			$svg = apply_filters( 'bp_document_svg_icon_ppt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/ppt.svg', $extension ) ;
+			$svg = 'bb-icon-file-ppt';
+		break;
+		case 'pptm':
+			$svg = 'bb-icon-file-pptm';
 		break;
 		case 'pptx':
-			$svg = apply_filters( 'bp_document_svg_icon_pptx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/pptx.svg', $extension ) ;
+			$svg = 'bb-icon-file-pptx';
 		break;
 		case 'rar':
-			$svg = apply_filters( 'bp_document_svg_icon_rar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/rar.svg', $extension ) ;
+			$svg = 'bb-icon-file-rar';
+		break;
+		case 'rtf':
+			$svg = 'bb-icon-file-rtf';
 		break;
 		case 'tar':
-			$svg = apply_filters( 'bp_document_svg_icon_tar', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/tar.svg', $extension ) ;
+			$svg = 'bb-icon-file-tar';
 		break;
 		case 'txt':
-			$svg = apply_filters( 'bp_document_svg_icon_txt', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/txt.svg', $extension ) ;
+			$svg = 'bb-icon-file-txt';
+		break;
+		case 'wav':
+			$svg = 'bb-icon-mp3';
 		break;
 		case 'xls':
-			$svg = apply_filters( 'bp_document_svg_icon_xls', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/xls.svg', $extension ) ;
+			$svg = 'bb-icon-file-xls';
+		break;
+		case 'xlsm':
+			$svg = 'bb-icon-file-xls';
 		break;
 		case 'xlsx':
-			$svg = apply_filters( 'bp_document_svg_icon_xlsx', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/xlsx.svg', $extension ) ;
+			$svg = 'bb-icon-file-xls';
+			break;
+		case 'xltm':
+			$svg = 'bb-icon-file-xls';
 			break;
 		case 'zip':
-			$svg = apply_filters( 'bp_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/zip.svg', $extension ) ;
+			$svg = 'bb-icon-zip';
 		break;
 		case 'folder':
-			$svg = apply_filters( 'bp_document_svg_icon_zip', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
+			$svg = 'bb-icon-folder-stacked';
 			break;
 		case 'download':
-			$svg = apply_filters( 'bp_document_svg_icon_download', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/download.svg', $extension ) ;
+			$svg = 'bb-icon-download';
 			break;
 		default:
-			$svg = apply_filters( 'bp_document_svg_icon_folder', buddypress()->plugin_url. 'bp-templates/bp-nouveau/images/documents-svg/file.svg', $extension ) ;
+			$svg = 'bb-icon-file';
 	}
 
 	return apply_filters( 'bp_document_svg_icon', $svg, $extension );

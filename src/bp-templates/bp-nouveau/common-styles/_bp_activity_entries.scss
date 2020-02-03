@@ -658,11 +658,6 @@ span.dashicons.dashicons-admin-file:before {
             .document-audio-wrap audio::-webkit-media-controls-panel{
                 background-color: #fff;
             }
-            .document-description-wrap .entry-img:after{
-                opacity: 1;
-                visibility: visible;
-                bottom: 10px
-            }
         }
         .document-text:not(.loaded):after{
             content: '\e838';
@@ -683,45 +678,19 @@ span.dashicons.dashicons-admin-file:before {
             flex-direction: row;
             padding: 5px 15px;
             .entry-img {
-                -ms-flex-preferred-size: 40px;
-                flex-basis: 40px;
-                width: 40px;
+                -ms-flex-preferred-size: 30px;
+                flex-basis: 30px;
+                width: 30px;
                 text-align: center;
                 padding: 15px 0;
                 display: inline-block;
                 vertical-align: middle;
                 position: relative;
-                img{
-                    width: 35px;
-                    height: 35px;
-                    position: static;
-                    object-fit: inherit;
-                    min-height: inherit;
-                    min-width: inherit;
-                }
-                &:after{
-                    content: '\e861';
-                    font-family: 'bb-icons';
-                    font-style: normal;
-                    font-weight: normal;
-                    speak: none;
-                    display: inline-block;
-                    text-decoration: inherit;
-                    position: absolute;
-                    bottom: 16px;
-                    right: 0;
-                    font-size: 11px;
-                    color: #fff;
-                    background-color: #000;
-                    border-radius: 50%;
-                    height: 20px;
-                    width: 20px;
-                    border: 2px solid #f2f2f2;
-                    opacity: 0;
-                    visibility: hidden;
-                    -webkit-transition: all .3s ease;
-                    transition: all .3s ease;
-                }
+                >i{
+					font-size: 30px;
+					color: #9ca8b4;
+					margin-top: 5px
+				}
             }
             .document-detail-wrap{
                 -ms-flex-preferred-size: calc(100% - 40px);
@@ -760,7 +729,7 @@ span.dashicons.dashicons-admin-file:before {
         .document-action-wrap{
             position: absolute;
             right: 15px;
-            top: 24px;
+            top: 20px;
             opacity: 0;
             visibility: hidden;
             z-index: 111;
@@ -908,6 +877,7 @@ span.dashicons.dashicons-admin-file:before {
             }
         }
         &.is-visible{
+			z-index: 112;
             .document-action-wrap,
             .document-action_list{
                 opacity: 1;

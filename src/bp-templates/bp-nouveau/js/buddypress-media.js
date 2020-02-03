@@ -2225,7 +2225,7 @@ window.bp = window.bp || {};
 		fileActivityActionButton: function (event) {
 			event.preventDefault();
 
-			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible').closest('.activity_update').siblings().find('.bb-activity-media-elem').removeClass('is-visible');
+			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible').siblings().removeClass('is-visible').closest('.activity_update').siblings().find('.bb-activity-media-elem').removeClass('is-visible');
 			if(event.currentTarget.tagName.toLowerCase() == 'a' && !$(event.currentTarget).hasClass('document-action_more')){
 				$(event.currentTarget).closest('.bb-activity-media-elem').removeClass('is-visible');
 			}
