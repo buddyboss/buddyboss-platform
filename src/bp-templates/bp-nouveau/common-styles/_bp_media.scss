@@ -1559,9 +1559,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 				top: 0;
 				margin: 0 auto;
 				right: 0;
-				left: -6px;
+				left: -5px;
 				box-sizing: border-box;
-				border: 8px solid black;
+				border: 6px solid black;
 				border-color: #fff #fff transparent transparent;
 				-webkit-transform-origin: 0 0;
 				-ms-transform-origin: 0 0;
@@ -1576,16 +1576,37 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 			}
 			ul{
 				list-style: none;
-				margin: 10px 0;
+				margin: 5px 0;
 				padding: 0;
 				li{
 					a{
-						padding: 5px 10px;
+						padding: 10px 14px;
 						display: block;
-						font-size: 13px;
+						font-size: 14px;
+						line-height: 1;
+						color: #7F868F;
 						&:hover{
 							background-color: #F5F5F5;
+							color: $blue;
 						}
+						&:before{
+							font-family: 'bb-icons';
+							font-size: 16px;
+							display: inline-block;
+							margin-right: 10px;
+							width: 20px;
+							text-align: center;
+						}
+					}
+					&.rename_file a:before{
+						content: '\e80c';
+					}
+					&.move_file a:before{
+						content: '\e959';
+						font-size: 13px;
+					}
+					&.delete_file a:before{
+						content: '\eaea';
 					}
 				}
 			}

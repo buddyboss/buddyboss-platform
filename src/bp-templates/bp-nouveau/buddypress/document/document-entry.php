@@ -45,9 +45,9 @@ if ( $attachment_id ) {
 		</a>
 		<div class="media-folder_action__list">
 			<ul>
-				<li><a href="#" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
-				<li><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
-				<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
+				<li class="rename_file"><a href="#" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
+				<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+				<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 			</ul>
 		</div>
 	</div>

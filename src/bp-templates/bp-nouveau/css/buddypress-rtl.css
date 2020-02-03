@@ -2291,7 +2291,7 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul {
   list-style: none;
-  margin: 10px 0;
+  margin: 5px 0;
   padding: 0;
 }
 
@@ -2301,13 +2301,34 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a {
-  padding: 5px 10px;
+  padding: 10px 14px;
   display: block;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1;
+  color: #7F868F;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:hover {
   background-color: #f5f5f5;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:before {
+  font-family: 'bb-icons';
+  font-size: 16px;
+  vertical-align: middle;
+  display: inline-block;
+  margin-left: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.move_file a:before {
+  content: '\e959';
+  font-size: 13px;
+}
+
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.delete_file a:before {
+  content: '\eaea';
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list:after {
@@ -2317,9 +2338,9 @@ span.dashicons.dashicons-admin-file:before {
   height: 0;
   top: 0;
   margin: 0 auto;
-  left: 10px;
+  left: 13px;
   box-sizing: border-box;
-  border: 8px solid #000;
+  border: 6px solid #000;
   border-color: #fff transparent transparent #fff;
   -webkit-transform-origin: 100% 0;
   -ms-transform-origin: 100% 0;
@@ -12097,9 +12118,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   top: 0;
   margin: 0 auto;
   left: 0;
-  right: -6px;
+  right: -5px;
   box-sizing: border-box;
-  border: 8px solid black;
+  border: 6px solid black;
   border-color: #fff transparent transparent #fff;
   -webkit-transform-origin: 100% 0;
   -ms-transform-origin: 100% 0;
@@ -12115,18 +12136,42 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul {
   list-style: none;
-  margin: 10px 0;
+  margin: 5px 0;
   padding: 0;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li a {
-  padding: 5px 10px;
+  padding: 10px 14px;
   display: block;
-  font-size: 13px;
+  font-size: 14px;
+  line-height: 1;
+  color: #7F868F;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li a:hover {
   background-color: #F5F5F5;
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li a:before {
+  font-family: 'bb-icons';
+  font-size: 16px;
+  display: inline-block;
+  margin-left: 10px;
+  width: 20px;
+  text-align: center;
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.rename_file a:before {
+  content: '\e80c';
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.move_file a:before {
+  content: '\e959';
+  font-size: 13px;
+}
+
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.delete_file a:before {
+  content: '\eaea';
 }
 
 @media screen and (max-width: 460px) {

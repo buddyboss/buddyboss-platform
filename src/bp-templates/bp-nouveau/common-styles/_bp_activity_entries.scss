@@ -788,19 +788,39 @@ span.dashicons.dashicons-admin-file:before {
                 z-index: 1;
                 ul{
                     list-style: none;
-                    margin: 10px 0;
+                    margin: 5px 0;
                     padding: 0;
                     li{
                         margin: 0;
                         padding: 0;
                         a {
-                            padding: 5px 10px;
+                            padding: 10px 14px;
                             display: block;
-                            font-size: 13px;
+							font-size: 14px;
+							line-height: 1;
+							color: #7F868F;
                             &:hover {
-                                background-color: #f5f5f5;
-                            }
-                        }
+								background-color: #f5f5f5;
+								color: $blue;
+							}
+							&:before{
+								font-family: 'bb-icons';
+								font-size: 16px;
+								vertical-align: middle;
+								display: inline-block;
+								margin-right: 10px;
+								width: 20px;
+								text-align: center;
+							}
+						}
+						
+						&.move_file a:before{
+							content: '\e959';
+							font-size: 13px;
+						}
+						&.delete_file a:before{
+							content: '\eaea';
+						}
                     }
                 }
                 &:after {
@@ -810,9 +830,9 @@ span.dashicons.dashicons-admin-file:before {
                     height: 0;
                     top: 0;
                     margin: 0 auto;
-                    right: 10px;
+                    right: 13px;
                     box-sizing: border-box;
-                    border: 8px solid #000;
+                    border: 6px solid #000;
                     border-color: #fff #fff transparent transparent;
                     -webkit-transform-origin: 0 0;
                     -ms-transform-origin: 0 0;

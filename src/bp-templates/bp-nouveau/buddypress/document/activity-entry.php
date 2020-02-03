@@ -40,8 +40,8 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
-					<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
+					<li class="move_file"><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+					<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
 
@@ -110,8 +110,8 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 						</a>
 						<div class="document-action_list">
 							<ul>
-								<li><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
-								<li><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
+								<li class="move_file"><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
+								<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 							</ul>
 						</div>
 

@@ -1376,19 +1376,19 @@ function bp_document_svg_icon( $extension ) {
 		break;
 		case 'xlsx':
 			$svg = 'bb-icon-file-xls';
-			break;
+		break;
 		case 'xltm':
 			$svg = 'bb-icon-file-xls';
-			break;
+		break;
 		case 'zip':
 			$svg = 'bb-icon-zip';
 		break;
 		case 'folder':
 			$svg = 'bb-icon-folder-stacked';
-			break;
+		break;
 		case 'download':
 			$svg = 'bb-icon-download';
-			break;
+		break;
 		default:
 			$svg = 'bb-icon-file';
 	}
