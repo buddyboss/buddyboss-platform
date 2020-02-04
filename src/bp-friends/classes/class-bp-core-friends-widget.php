@@ -67,11 +67,6 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	function widget( $args, $instance ) {
 		global $members_template, $bp;
 
-		// do not do anything if user isn't logged in OR IF user is viewing other members profile.
-		if ( ! is_user_logged_in() || ( bp_is_user() && ! bp_is_my_profile() ) ) {
-			return;
-		}
-
 		extract( $args );
 
 		$id     = bp_displayed_user_id();

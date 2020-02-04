@@ -43,12 +43,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 			return;
 		}
 
-		// do not do anything if user isn't logged in OR IF user is viewing other members profile.
-		if ( ! is_user_logged_in() || ( bp_is_user() && ! bp_is_my_profile() ) ) {
-			return;
-		}
-
-		$id     = bp_displayed_user_id();
+		$id = bp_displayed_user_id();
 		$filter = $show_more = false;
 
 		if ( ! $id ) {
