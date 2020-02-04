@@ -81,6 +81,11 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$profile_phototype_selected = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
 		$user_progress              = $this->get_progress_data( $profile_groups_selected, $profile_phototype_selected );
 
+		// IF nothing selected then return and nothing to display.
+		if ( empty( $profile_groups_selected ) && empty( $profile_phototype_selected ) ) {
+		    return;
+        }
+
 		/* Widget Template */
 
 		echo $args['before_widget'];
