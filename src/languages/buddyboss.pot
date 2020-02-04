@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-31 14:34:37+00:00\n"
+"POT-Creation-Date: 2020-02-04 01:21:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -5230,21 +5230,20 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1274
-#. translators: New site notification email. 1: Site URL, 2: User IP address,
-#. 3: Settings screen URL
-msgid "New Site: %1$s"
+#. translators: New site notification email.
+msgid "New Site: %s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1275
-msgid "URL: %2$s"
+msgid "URL: %s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1276
-msgid "Remote IP address: %3$s"
+msgid "Remote IP address: %s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1277
-msgid "Disable these notifications: %4$s"
+msgid "Disable these notifications:%s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1330
@@ -9174,7 +9173,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
 msgstr ""
 
-#: bp-forums/common/functions.php:1973
+#: bp-forums/common/functions.php:1975
 msgid ""
 "Conditional query tags do not work before the query is run. Before then, "
 "they always return false."
