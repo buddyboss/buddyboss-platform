@@ -221,9 +221,14 @@ class BP_Activity_List_Table extends WP_List_Table {
 	 * @return array Column headers.
 	 */
 	function get_column_info() {
+
+		$screen         = get_current_screen();
+		$hidden_columns = get_hidden_columns( $screen );
+		$hidden_columns = ( ! empty( $hidden_columns ) ) ? $hidden_columns : array();
+
 		$this->_column_headers = array(
 			$this->get_columns(),
-			array(),
+			$hidden_columns,
 			$this->get_sortable_columns(),
 			$this->get_default_primary_column_name(),
 		);
@@ -485,10 +490,10 @@ class BP_Activity_List_Table extends WP_List_Table {
 					}
 
 					// Change `Bbpress` to `Forums`
-					$component_name = ( 'Bbpress' === $component_name ) ? 'Forums' : $component_name;
+					$component_name = ( 'Bbpress' === $component_name ) ? __( 'Forums', 'buddyboss' ) : $component_name;
 					?>
 
-					<optgroup label="<?php esc_html_e( $component_name, 'buddyboss' ); ?>">
+					<optgroup label="<?php echo $component_name; ?>">
 
 						<?php foreach ( $actions as $action_key => $action_values ) : ?>
 
@@ -593,7 +598,7 @@ class BP_Activity_List_Table extends WP_List_Table {
 			if ( strpos( $item['type'], 'new_blog_' ) !== false ) {
 				$get_action = bp_activity_get_meta( $item['id'], 'admin_filters' );
 				if ( '' !== $get_action ) {
-					echo __( $get_action, 'buddyboss' );
+					echo $get_action;
 				} else {
 					$split_cpt = explode( 'new_blog_', $item['type'] );
 

@@ -163,6 +163,12 @@ div.field-group {
 	padding: 0 20px 20px;
 }
 
+
+#profile-field-form .field-group {
+    width: 100%;
+    box-sizing: border-box;
+}
+
 .field-group .xprofile-field {
 	position: relative;
 }
@@ -174,6 +180,11 @@ div.field-group {
 	margin: 20px 0 0;
 	padding: 10px 0 0;
 	border-radius: 3px;
+}
+#profile-field-form .field-group fieldset{
+	padding: 14px 14px 14px 16px;
+	width: 100%;
+    box-sizing: border-box;
 }
 
 .field-group fieldset.sortable {
@@ -192,6 +203,12 @@ div.field-group {
 	padding: 0;
 }
 
+#profile-field-form .field-group fieldset legend{
+	position: static;
+	float: right;
+    margin-bottom: 5px;
+}
+
 fieldset .field-name {
 	font-weight: 500;
 	font-size: 15px;
@@ -202,7 +219,14 @@ fieldset.clear-value {
 }
 
 fieldset div.field-wrapper {
-	padding: 29px 14px 14px;
+	clear: right;
+}
+
+fieldset div.field-wrapper p.description {
+	color: #999;
+	font-style: normal;
+	margin-bottom: 5px;
+	font-size: 14px;
 }
 
 fieldset span.bp-signup-field-label {

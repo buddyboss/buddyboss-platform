@@ -508,7 +508,7 @@ jQuery( document ).ready(
 			jQuery( 'ul#field-group-tabs' ).sortable(
 				{
 					cursor: 'move',
-					axis: 'x',
+					axis: 'x,y',
 					opacity: 1,
 					items: 'li',
 					tolerance: 'intersect',

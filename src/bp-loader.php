@@ -5,7 +5,7 @@
  * Description: The BuddyBoss Platform adds community features to WordPress. Member Profiles, Activity Feeds, Direct Messaging, Notifications, and more!
  * Author:      BuddyBoss
  * Author URI:  https://buddyboss.com/
- * Version:     1.2.1
+ * Version:     1.2.4
  * Text Domain: buddyboss
  * Domain Path: /languages/
  * License:     GPLv2 or later (license.txt)
@@ -21,7 +21,7 @@ defined( 'ABSPATH' ) || exit;
 
 
 if ( ! defined( 'BP_PLATFORM_VERSION' ) ) {
-	define( 'BP_PLATFORM_VERSION', '1.2.1' );
+	define( 'BP_PLATFORM_VERSION', '1.2.4' );
 }
 
 global $bp_incompatible_plugins;
@@ -71,7 +71,7 @@ if ( in_array( $bb_plugin_file, $bp_plugins ) ) {
  */
 $bp_incompatible_plugins_list = array(
 	'buddypress-global-search/buddypress-global-search.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Global Search plugin is active. Global Search functionality is built into the platform. Please deactivate BuddyPress Global Search first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
-	'buddypress-followers/loader.php'                       => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
+	'buddypress-followers/loader.php' => __( 'The BuddyBoss Platform can\'t work while BuddyPress Follow plugin is active. Follow functionality is built into the platform. Please deactivate BuddyPress Follow first, if you wish to activate BuddyBoss Platform.', 'buddyboss' ),
 );
 
 foreach ( $bp_incompatible_plugins_list as $incompatible_plugin => $error_message ) {
@@ -128,9 +128,37 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite, $buddyboss_platform_plugin_file;
 
 		// Do not add the "bbpress/bbpress.php" & "buddypress/bp-loader.php" on "/wp-admin/plugins.php" page otherwise it will show the plugin file not exists error.
+
+		$plugins_path = '/wp-admin/plugins.php';
+		$ajax_path    = '/wp-admin/admin-ajax.php';
+
+		// Hide My WP plugin compatibility
+		if ( class_exists( 'HideMyWP' ) ) {
+			if ( is_multisite() ) {
+				// Get the current site ID
+				$site_id = get_current_blog_id();
+				$options = get_blog_option( $site_id, 'hide_my_wp' );
+			} else {
+				$options = get_option( 'hide_my_wp' );
+			}
+
+			$new_admin_path     = ! empty( $options['new_admin_path'] ) ? $options['new_admin_path'] : '';
+			$replace_admin_ajax = ! empty( $options['replace_admin_ajax'] ) ? $options['replace_admin_ajax'] : '';
+
+			if ( '' !== $new_admin_path ) {
+				$plugins_path = '/' . $new_admin_path . '/plugins.php';
+			}
+
+			if ( '' !== $new_admin_path && '' !== $replace_admin_ajax ) {
+				$ajax_path = '/' . $new_admin_path . '/' . $replace_admin_ajax;
+			} elseif ( '' !== $new_admin_path && '' === $replace_admin_ajax ) {
+				$ajax_path = '/' . $new_admin_path . '/admin-ajax.php';
+			}
+		}
+
 		if ( is_network_admin()
-		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/plugins.php' ) !== false
-		     || strpos( $_SERVER['REQUEST_URI'], '/wp-admin/admin-ajax.php' ) !== false
+			 || strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
+			 || strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
 		) {
 
 			/**
@@ -146,11 +174,11 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 
-                apply_filters( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
+				add_filter( 'all_plugins', 'bp_core_unset_bbpress_buddypress_active_all_plugins', - 1 );
 
-                if ( isset( $_REQUEST['checked'] ) ) {
-                    add_action( 'load-plugins.php', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
-                }
+				if ( isset( $_REQUEST['checked'] ) ) {
+					add_action( 'load-plugins.php', 'bp_core_set_bbpress_buddypress_on_admin_notices', - 1 );
+				}
 			}
 
 			/**
@@ -178,10 +206,10 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	}
 
 	/**
-     * Remove the BuddyPress and bbPress Spoofing
-     *
+	 * Remove the BuddyPress and bbPress Spoofing
+	 *
 	 * @since BuddyBoss 1.2.0
-     *
+	 *
 	 * @param $plugins
 	 *
 	 * @return mixed
@@ -197,7 +225,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 	 *
 	 * @since BuddyBoss 1.2.0
 	 */
-	function pre_update_option_active_plugins( $value ) {
+	function bp_pre_update_option_active_plugins( $value ) {
 		global $bp_plugin_file, $bb_plugin_file, $bp_is_multisite;
 		if ( $bp_is_multisite ) {
 			if ( isset( $value[ $bb_plugin_file ] ) ) {
@@ -222,12 +250,12 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		add_filter( 'option_active_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
 	}
 	// Filter for setting the spoofing of BuddyPress.
-	add_filter( 'pre_update_option_active_plugins', 'pre_update_option_active_plugins' );
+	add_filter( 'pre_update_option_active_plugins', 'bp_pre_update_option_active_plugins' );
 
 	if ( $bp_is_multisite ) {
 		add_filter( 'site_option_active_sitewide_plugins', 'bp_core_set_bbpress_buddypress_active', 0, 2 );
-		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
-		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'pre_update_option_active_plugins' );
+		add_filter( 'pre_add_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
+		add_filter( 'pre_update_site_option_active_sitewide_plugins', 'bp_pre_update_option_active_plugins' );
 	}
 
 

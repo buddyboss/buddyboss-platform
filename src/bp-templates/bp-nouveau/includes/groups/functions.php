@@ -72,6 +72,10 @@ function bp_nouveau_groups_enqueue_scripts() {
 		return;
 	}
 
+	wp_enqueue_script( 'bp-select2' );
+	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
+		wp_enqueue_script( 'bp-select2-local' );
+	}
 	wp_enqueue_script( 'bp-nouveau-group-invites' );
 }
 
@@ -146,17 +150,22 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 	}
 
 	$params['group_invites'] = array(
-		'nav'                => bp_sort_by_key( $invites_nav, 'order', 'num' ),
-		'loading'            => __( 'Loading members. Please wait.', 'buddyboss' ),
-		'invites_form'       => __( 'Use the "Send" button to send your invite or the "Cancel" button to abort.', 'buddyboss' ),
-		'invites_form_reset' => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
-		'invites_sending'    => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
-		'removeUserInvite'   => __( 'Cancel invitation %s', 'buddyboss' ),
-		'group_id'           => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
-		'is_group_create'    => bp_is_group_create(),
-		'nonces'             => array(
+		'nav'                   => bp_sort_by_key( $invites_nav, 'order', 'num' ),
+		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'removing'              => __( 'Removing member invite. Please wait.', 'buddyboss' ),
+		'invites_form'          => '',
+		'cancel_invite_tooltip' => __( 'Cancel Invite', 'buddyboss' ),
+		'add_invite_tooltip'    => __( 'Send Invite', 'buddyboss' ),
+		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
+		'all_member_invited'    => __( 'All members of this group are invited.', 'buddyboss' ),
+		'member_invite_info_text'    => __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ),
+		'group_id'              => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
+		'is_group_create'       => bp_is_group_create(),
+		'nonces'                => array(
 			'uninvite'     => wp_create_nonce( 'groups_invite_uninvite_user' ),
-			'send_invites' => wp_create_nonce( 'groups_send_invites' )
+			'send_invites' => wp_create_nonce( 'groups_send_invites' ),
 		),
 	);
 
@@ -186,13 +195,13 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 
 	$response = array(
 		'id'           => intval( $user->ID ),
-		'name'         => $user->display_name,
+		'name'         => bp_core_get_user_displayname( intval( $user->ID )  ),
 		'avatar'       => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 			'item_id' => $user->ID,
 			'object'  => 'user',
 			'type'    => 'thumb',
-			'width'   => 50,
-			'height'  => 50,
+			'width'   => 150,
+			'height'  => 150,
 			'html'    => false )
 		) ),
 	);
@@ -225,6 +234,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 				) ) ),
 				'user_link' => bp_core_get_userlink( $inviter_id, false, true ),
 				'user_name' => bp_core_get_username( $inviter_id ),
+				'name' => bp_core_get_user_displayname( intval( $inviter_id )  ),
 			);
 		}
 
@@ -338,7 +348,7 @@ function bp_nouveau_group_setup_nav() {
 
 		$bp->groups->nav->edit_nav(
 			array( 'name' => __( 'Send Invites', 'buddyboss' ) ),
-			'send-invites',
+			'invite',
 			bp_get_current_group_slug()
 		);
 
@@ -349,7 +359,7 @@ function bp_nouveau_group_setup_nav() {
 
 		bp_core_new_subnav_item( array(
 			'name'            => __( 'Send Invites', 'buddyboss' ),
-			'slug'            => 'send-invites',
+			'slug'            => 'invite',
 			'parent_url'      => $group_link,
 			'parent_slug'     => $current_group->slug,
 			'screen_function' => 'groups_screen_group_invite',
@@ -358,6 +368,33 @@ function bp_nouveau_group_setup_nav() {
 			'user_has_access' => $current_group->user_has_access,
 			'no_access_url'   => $group_link,
 		) );
+
+		if ( ! bp_is_active( 'friends' ) ) {
+
+			bp_core_new_subnav_item( array(
+				'name'            => __( 'Send Invites', 'buddyboss' ),
+				'slug'            => 'invite/send-invites',
+				'parent_url'      => $group_link,
+				'parent_slug'     => $current_group->slug . '_invite',
+				'screen_function' => 'groups_screen_group_invite',
+				'item_css_id'     => 'send-invites',
+				'position'        => 71,
+				'user_has_access' => $current_group->user_has_access,
+				'no_access_url'   => $group_link,
+			) );
+
+			bp_core_new_subnav_item( array(
+				'name'            => __( 'Pending Invites', 'buddyboss' ),
+				'slug'            => 'invite/pending-invites',
+				'parent_url'      => $group_link,
+				'parent_slug'     => $current_group->slug . '_invite',
+				'screen_function' => 'groups_screen_group_invite',
+				'item_css_id'     => 'pending-invites',
+				'position'        => 72,
+				'user_has_access' => $current_group->user_has_access,
+				'no_access_url'   => $group_link,
+			) );
+		}
 	}
 }
 
@@ -1083,7 +1120,7 @@ function bp_nouveau_group_get_core_create_screens( $id = '' ) {
 		'group-invites' => array(
 			'hook'     => 'group_invites_creation_step',
 			'nonce'    => 'groups_create_save_group-invites',
-			'template' => 'common/js-templates/invites/index',
+			'template' => 'groups/single/invite/send-invites',
 		),
 	);
 
@@ -1165,4 +1202,42 @@ function bp_nouveau_groups_notification_filters() {
 	foreach ( $notifications as $notification ) {
 		bp_nouveau_notifications_register_filter( $notification );
 	}
+}
+
+function bp_nouveau_group_pending_invites_set_page_title( $title ){
+
+	global $bp;
+	$new_title = '';
+
+	if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
+		$new_title = esc_html__( 'Pending Invites', 'buddyboss' );
+	}
+
+	if( strlen( $new_title ) > 0 ) {
+		$title['title'] = $new_title;
+	}
+
+	return $title;
+}
+
+//Update title on Buddypress sub pages
+function bp_nouveau_group_pending_invites_set_title_tag( $title ){
+
+	global $bp;
+	$new_title = "";
+
+	if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
+		$new_title = esc_html__( 'Pending Invites', 'buddyboss' );
+		$sep = apply_filters( 'document_title_separator', '-' );
+		$get_current_group = bp_get_current_group_name();
+
+		$new_title = $new_title . ' ' . $sep . ' ' . $get_current_group . ' ' . $sep . ' ' . bp_get_site_name();
+	}
+
+	//Combine the new title with the old (separator and tagline)
+	if( strlen($new_title) > 0 ){
+		$title = $new_title . " " . $title;
+	}
+
+	return $title;
 }

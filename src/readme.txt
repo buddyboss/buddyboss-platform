@@ -1,9 +1,9 @@
 === BuddyBoss Platform ===
 Contributors: buddyboss
 Requires at least: 4.9.1
-Tested up to: 5.3.0
+Tested up to: 5.3.2
 Requires PHP: 5.6.20
-Stable tag: 1.2.1
+Stable tag: 1.2.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,64 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.4 =
+* Errors - Fixed PHP fatal error in certain situations
+
+= 1.2.3 =
+* Groups - Updated the 'Send Invites' interface to be more intuitive
+* Groups - Added proper formatting for ordered and bulleted lists added into group description
+* Groups - Added pagination to Manage Members screen when there are more than 15 group members
+* Groups - Fixed 'Screen Options' in admin area not toggling 'Description' option properly
+* Groups - Fixed 'Restrict Invitations' logic for invites into subgroups before joining the parent group
+* Groups - Fixed issues with not being able to select a group type when editing a group
+* Activity - Fixed issue with certain links displaying two embeds; fancy embed and fallback embed
+* Activity - Improved the slide down animation when clicking 'Read more' on long activity posts
+* Activity - Fixed clicking 'Comment' or 'Reply' on an activity post not scrolling down to the comment box
+* Profiles - Fixed issue when trying to follow multiple members in a row on Members directory
+* Profiles - Fixed extra space when adding a profile type shortcode to a page while BuddyPanel is disabled
+* Profiles - Fixed drag and drop issues with field sets, when there are many field sets with long names
+* Profiles - Fixed incorrect date ranges when 'Date' profile field type is added to Profile Search form
+* Profiles - Fixed issues with selecting 'Profile Type' profile field and getting incorrect error notices
+* Profiles - Fixed 'First Name' and 'Last Name' appearing in Account Privacy settings when they are disabled
+* Profiles - Fixed 'Last Name' visibility options when Display Name Format is set to 'First Name & Last Name'
+* Profiles - Added proper formatting for lists and underline when using 'Paragraph Text' profile field type
+* Forums - Fixed issues when adding multiple forum shortcodes onto the same WordPress page
+* Forums - When receiving a notification about a forum reply, the link now scrolls down to the specific reply
+* Messages - Fixed the Back button not working right after composing a message, on mobile devices
+* Media - Fixed GIF not working when replying to a single activity post on its permalink screen
+* Network Search - Added an option to search forums based on their Discussion Tags
+* Email Invites - Fixed shortcode {{{inviter.url}}} not working in invitation email template
+* Email Invites - Fixed 404 error when trying to log out right after sending email invites
+* Widgets - Fixed '(BB) Connections' widget sorting members incorrectly when added to Activity Feed
+* Privacy - Fixed issue with extra 'Privacy Policy' pages being created when activating components
+* LearnDash - Fixed scheduled courses, lessons and topics incorrectly posting into Activity Feed
+* LearnDash - Fixed emails not sending to users registering to the site via enrollment into a Free course
+* Compatibility - Fixed conflict when enabling 'Private Network' while allowing account creation in 'WooCommerce'
+* Compatibility - Fixed conflict with Email Invites email link when using plugin 'Paid Memberships Pro'
+* Compatibility - Fixed Network Search displaying results that are restricted via plugin 'Paid Memberships Pro'
+* Compatibility - Fixed verified badge not showing in forums with plugin 'Verified Member for BuddyPress'
+* Compatibility - Fixed redirect issues for Forums, Photos and Groups tabs with plugin 'WPML'
+* Compatibility - Fixed conficts with plugin 'WordPress SEO Plugin - Rank Math'
+* Compatibility - Fixed conficts with plugin 'Hide My WP'
+* Translations - Fixed text instances that could not be translated
+
+= 1.2.2 =
+* Activity - Fixed certain link embeds URLs not rendering proper results
+* Profiles - Fixed member type not displaying in profile cards in 'My Connections' tab
+* Profiles - Fixed the 'Mutual Connections' tab incorrectly showing all members
+* Profiles - Fixed pagination of members when using [profile type=""] shortcode
+* Groups - Fixed pagination of groups when using [group type=""] shortcode
+* Groups - Fixed 'Read more' in group activity feed not working when Media component is disabled
+* Groups - Added ability to re-order Photos and Albums tabs in customizer
+* Forums - Fixed issue when posting a forum reply using only a GIF, with no text
+* Forums - Fixed issue with pagination through forums in Forums index
+* Notices - Fixed site notices not clearing after closing them, for non-admin members
+* Registration - Fixed data not saving on register form when validating incomplete fields
+* Widgets - Changed 'More' link in 'Users I'm Following' widget to redirect to 'Following' tab
+* Compatibility - Fixed conflict with WP Ultimo while Network Search is enabled
+* Compatibility - Added support for 'bp_embed_oembed_html' filter in code
+* Documentation - Now syncing all docs in real time from BuddyBoss Resources website
 
 = 1.2.1 =
 * Profiles - Fixed field sets not editable on some profile types when Repeater Set is enabled

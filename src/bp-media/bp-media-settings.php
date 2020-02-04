@@ -453,7 +453,19 @@ function bp_photo_uploading_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/media/photo-uploading.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62827,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -596,7 +608,19 @@ function bp_emoji_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/media/emoji.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62828,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
@@ -616,7 +640,18 @@ function bp_media_settings_callback_gif_key() {
 		   placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>"
 		   style="width: 300px;"
 	/>
-	<p class="description"><?php _e( 'This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it above.', 'buddyboss' ); ?></p>
+	<p class="description">
+		<?php
+			printf(
+				'%1$s <a href="%2$s" target="_blank">GIPHY</a>. %3$s <a href="%4$s" target="_blank">Create an App</a>. %5$s',
+				__( 'This feature requires an account at', 'buddyboss' ),
+				esc_url( 'https://developers.giphy.com/' ),
+				__( 'Create your account, and then click', 'buddyboss' ),
+				esc_url( 'https://developers.giphy.com/dashboard/?create=true' ),
+				__( 'Once done, copy the API key and paste it in the field above.', 'buddyboss' )
+			);
+		?>	
+	</p>
 	<?php
 }
 
@@ -778,7 +813,19 @@ function bp_animated_gifs_tutorial() {
 	?>
 
 	<p>
-		<a class="button" href="<?php echo bp_core_help_docs_link( 'components/media/animated-gifs.md' ); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+		<a class="button" href="
+		<?php
+		echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62829,
+				),
+				'admin.php'
+			)
+		);
+		?>
+		"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
 	</p>
 
 	<?php
