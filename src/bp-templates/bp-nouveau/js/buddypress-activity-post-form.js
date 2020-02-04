@@ -1560,6 +1560,14 @@ window.bp = window.bp || {};
 			// Silently add meta
 			this.model.set( meta, { silent: true } );
 
+			var medias = self.model.get('media');
+			if ( 'group' == self.model.get('object') && typeof medias !== 'undefined' && medias.length ) {
+				for( var k = 0; k < medias.length; k++ ) {
+					medias[k].group_id = self.model.get('item_id');
+				}
+				self.model.set('media',medias);
+			}
+
 			// update posting status true
 			this.model.set( 'posting', true );
 
@@ -1611,14 +1619,6 @@ window.bp = window.bp || {};
 				data.content = '&#8203;';
 			}
 
-			/**
-			 * Add group id when add media in group
-			 */
-			if ( typeof data.media !== 'undefined' && (typeof data.item_id !== 'undefined' && data.item_id !== 0 )) {
-				_.each( data.media, function( view,index ) {
-				 	data.media[index].group_id = data.item_id;
-			 	});
-			}
 			bp.ajax.post( 'post_update', data ).done( function( response ) {
 				var store       = bp.Nouveau.getStorage( 'bp-activity' ),
 					searchTerms = $( '[data-bp-search="activity"] input[type="search"]' ).val(), matches = {},
