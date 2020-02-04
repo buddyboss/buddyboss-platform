@@ -4529,6 +4529,13 @@ input#send-to-input {
   }
 }
 
+@media screen and (max-width: 767px) {
+  .bp-messages-user-threads,
+  #bp-message-thread-list {
+    max-height: 400px;
+  }
+}
+
 /**
 *------------------------------------------
 * @subsection 5.2.2.6 - Settings
