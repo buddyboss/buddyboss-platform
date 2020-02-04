@@ -168,6 +168,14 @@ if ( ! class_exists( 'BBP_Forums_Members' ) ) :
 				// 'subscriptions' action
 			} elseif ( bbp_is_subscriptions_active() && bp_is_current_action( bbp_get_user_subscriptions_slug() ) ) {
 				$wp_query->bbp_is_single_user_subs = true;
+
+				// 'replies' action
+			} elseif ( bp_is_current_action( bbp_get_reply_archive_slug() ) ) {
+				$wp_query->bbp_is_single_user_replies = true;
+
+				// 'topics' action
+			} elseif ( bp_is_current_action( bbp_get_topic_archive_slug() ) ) {
+				$wp_query->bbp_is_single_user_topics = true;
 			}
 		}
 	}

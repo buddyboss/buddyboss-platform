@@ -53,6 +53,9 @@ window.bp = window.bp || {};
 			// Select all displayed notifications
 			$( '#buddypress [data-bp-list="notifications"]' ).on( 'click', '#select-all-notifications', this.selectAll );
 
+			// Check all checkbox checked or not
+			$( '#buddypress [data-bp-list="notifications"]' ).on( 'click', '.notification-check', this.checkSelectAllOrNot );
+
 			// Reset The filter before unload
 			$( window ).on( 'unload', this.resetFilter );
 		},
@@ -123,6 +126,26 @@ window.bp = window.bp || {};
 			$.each( $( '.notification-check' ), function( cb, checkbox ) {
 				$( checkbox ).prop( 'checked', $( event.currentTarget ).prop( 'checked' ) );
 			} );
+		},
+
+		/**
+		 * [checkSelectAllOrNot description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		checkSelectAllOrNot: function() {
+			var unChecked 	= 0;
+			$.each( $( '.notification-check' ), function( cb, checkbox ) {
+				if($( checkbox ).prop('checked') == false ){
+	            	unChecked = parseInt( unChecked ) +1;
+	            }
+			} );
+
+			if ( unChecked == 0 ) {
+				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked',true );
+			}else{
+				$( '#buddypress [data-bp-list="notifications"]' ).find( '#select-all-notifications' ).prop( 'checked',false );
+			}
 		},
 
 		/**

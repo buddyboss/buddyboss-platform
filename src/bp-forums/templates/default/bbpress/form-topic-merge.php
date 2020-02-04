@@ -75,24 +75,24 @@
 							<legend><?php _e( 'Discussion Extras', 'buddyboss' ); ?></legend>
 
 							<div>
-
 								<?php if ( bbp_is_subscriptions_active() ) : ?>
-
-									<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_subscribers"><?php _e( 'Merge discussion subscribers', 'buddyboss' ); ?></label><br />
-
+									<div class="bp-checkbox-wrap">
+										<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+										<label for="bbp_topic_subscribers"><?php _e( 'Merge discussion subscribers', 'buddyboss' ); ?></label>
+									</div>
 								<?php endif; ?>
 
-								<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_topic_favoriters"><?php _e( 'Merge discussion favoriters', 'buddyboss' ); ?></label><br />
+								<div class="bp-checkbox-wrap">
+									<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+									<label for="bbp_topic_favoriters"><?php _e( 'Merge discussion favoriters', 'buddyboss' ); ?></label>
+								</div>
 
 								<?php if ( bbp_allow_topic_tags() ) : ?>
-
-									<input name="bbp_topic_tags" id="bbp_topic_tags" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_tags"><?php _e( 'Merge discussion tags', 'buddyboss' ); ?></label><br />
-
+									<div class="bp-checkbox-wrap">
+										<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+										<label for="bbp_topic_tags"><?php _e( 'Merge discussion tags', 'buddyboss' ); ?></label>
+									</div>
 								<?php endif; ?>
-
 							</div>
 						</fieldset>
 

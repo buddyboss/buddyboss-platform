@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _ */
+/* global wp, bp, BP_Nouveau, _, bp_select2 */
 /* @version 3.0.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};

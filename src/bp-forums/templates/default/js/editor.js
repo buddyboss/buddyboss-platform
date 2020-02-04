@@ -8,7 +8,7 @@ jQuery( document ).ready(
 			};
 			if ( jQuery( '.bbp_editor_forum_content' ).length ) {
 				window.forums_medium_forum_editor = [];
-				jQuery( '.bbp_editor_forum_content' ).each(function(element){
+				jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
 					var key = jQuery(element).data('key');
 					window.forums_medium_forum_editor[key] = new window.MediumEditor(
 						element,

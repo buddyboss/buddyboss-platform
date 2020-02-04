@@ -3944,7 +3944,7 @@ function bp_email_the_salutation( $settings = array() ) {
 	 * @return string The Recipient Salutation.
 	 */
 function bp_email_get_salutation( $settings = array() ) {
-	$token = '{{recipient.name}}<img src="{{recipient.avatar}}" style="border: 1px solid #b9babc;border-radius: 50%;margin-left: 12px;width: 34px;max-width: 34px;height: 34px;vertical-align: middle;" />';
+	$token = '<table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="vertical-align: middle;font-family:sans-serif;font-weight:normal;color:#7f868f;font-size:14px;padding-right: 12px;">{{recipient.name}} </td><td style="vertical-align: middle;"><img src="{{recipient.avatar}}" height="34" width="34" style="border: 1px solid #b9babc;border-radius: 50%;max-width: 34px;vertical-align: middle;" /></td></tr></tbody></table>';
 
 	/**
 	 * Filters The Recipient Salutation inside the Email Template.
