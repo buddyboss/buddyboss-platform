@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.4\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-04 01:21:15+00:00\n"
+"POT-Creation-Date: 2020-02-04 06:54:29+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -1652,7 +1652,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:272
 #: bp-core/bp-core-functions.php:783
-#: bp-core/classes/class-bp-core-login-widget.php:122
+#: bp-core/classes/class-bp-core-login-widget.php:125
 #: bp-forums/common/widgets.php:124 bp-members/bp-members-adminbar.php:69
 msgid "Register"
 msgstr ""
@@ -3550,8 +3550,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
 #: bp-xprofile/classes/class-bp-xprofile-component.php:285
 #: bp-xprofile/classes/class-bp-xprofile-component.php:400
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:236
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:468
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:241
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:473
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:163
 msgid "Profile Photo"
 msgstr ""
@@ -3980,7 +3980,7 @@ msgid "Record activity for new sites, posts, and comments across your network."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2776
-#: bp-core/classes/class-bp-core-login-widget.php:118
+#: bp-core/classes/class-bp-core-login-widget.php:121
 #: bp-core/deprecated/buddypress/2.1.php:189 bp-forums/common/widgets.php:91
 #: bp-forums/common/widgets.php:112 bp-members/bp-members-adminbar.php:59
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:30
@@ -5587,8 +5587,16 @@ msgstr ""
 msgid "(BB) Members Following Me"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:87
-#: bp-core/classes/class-bp-core-follow-following-widget.php:87
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:77
+msgid "My Followers"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:78
+msgid "%s's Followers"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:129
+#: bp-core/classes/class-bp-core-follow-following-widget.php:129
 #: bp-groups/classes/class-bp-groups-widget.php:172
 #: bp-members/classes/class-bp-core-members-widget.php:186
 #: bp-members/classes/class-bp-core-recently-active-widget.php:102
@@ -5599,40 +5607,18 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:116
-msgid "My Followers"
-msgstr ""
-
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:122
-#: bp-core/classes/class-bp-core-follow-following-widget.php:122
-#: bp-core/classes/class-bp-core-login-widget.php:189
-#: bp-core/classes/class-bp-core-network-posts-widget.php:213
-#: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
-#: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
-#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
-#: bp-forums/common/widgets.php:1360
-#: bp-groups/classes/class-bp-groups-widget.php:232
-#: bp-members/classes/class-bp-core-members-widget.php:243
-#: bp-members/classes/class-bp-core-recently-active-widget.php:154
-#: bp-members/classes/class-bp-core-whos-online-widget.php:229
-#: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:183
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:476
-msgid "Title:"
-msgstr ""
-
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:125
-#: bp-core/classes/class-bp-core-follow-following-widget.php:125
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:162
+#: bp-core/classes/class-bp-core-follow-following-widget.php:162
 #: bp-members/classes/class-bp-core-members-widget.php:257
 #: bp-members/classes/class-bp-core-recently-active-widget.php:161
 #: bp-members/classes/class-bp-core-whos-online-widget.php:236
 msgid "Max members to show:"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:126
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:163
 msgid ""
-"Note: This widget is only displayed if a member is logged in and if the "
-"logged-in user is followed by other users."
+"Note: This widget is only displayed if a member is followed by other "
+"members."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:25
@@ -5643,14 +5629,16 @@ msgstr ""
 msgid "(BB) Members I'm Following"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-following-widget.php:116
+#: bp-core/classes/class-bp-core-follow-following-widget.php:77
 msgid "I'm Following"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-following-widget.php:126
-msgid ""
-"Note: This widget is only displayed if a member is logged in and if the "
-"logged-in user is following some users."
+#: bp-core/classes/class-bp-core-follow-following-widget.php:78
+msgid "%s is Following"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-following-widget.php:163
+msgid "Note: This widget is only displayed if a member is following other members."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-login-widget.php:27
@@ -5680,9 +5668,25 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-login-widget.php:116
+#: bp-core/classes/class-bp-core-login-widget.php:118
 #: bp-forums/common/widgets.php:105
 msgid "Remember Me"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-login-widget.php:192
+#: bp-core/classes/class-bp-core-network-posts-widget.php:213
+#: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
+#: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
+#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
+#: bp-forums/common/widgets.php:1360
+#: bp-groups/classes/class-bp-groups-widget.php:232
+#: bp-members/classes/class-bp-core-members-widget.php:243
+#: bp-members/classes/class-bp-core-recently-active-widget.php:154
+#: bp-members/classes/class-bp-core-whos-online-widget.php:229
+#: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:183
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
+msgid "Title:"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-network-posts-widget.php:29
@@ -6030,8 +6034,8 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:159
 #: bp-core/deprecated/buddypress/1.6.php:187
-#: bp-friends/classes/class-bp-core-friends-widget.php:148
-#: bp-friends/classes/class-bp-core-friends-widget.php:252
+#: bp-friends/classes/class-bp-core-friends-widget.php:155
+#: bp-friends/classes/class-bp-core-friends-widget.php:259
 #: bp-groups/bp-groups-template.php:5310
 #: bp-groups/classes/class-bp-groups-widget.php:124
 #: bp-groups/classes/class-bp-groups-widget.php:241
@@ -6541,8 +6545,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:852
 #: bp-xprofile/classes/class-bp-xprofile-component.php:298
 #: bp-xprofile/classes/class-bp-xprofile-component.php:410
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:257
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:471
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:262
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:476
 msgid "Cover Photo"
 msgstr ""
 
@@ -11197,6 +11201,7 @@ msgid "%s sent you an invitation to connect"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
+#: bp-friends/classes/class-bp-core-friends-widget.php:107
 #: bp-friends/classes/class-bp-friends-component.php:197
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
@@ -11208,7 +11213,7 @@ msgid "My Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
-#: bp-friends/classes/class-bp-core-friends-widget.php:106
+#: bp-friends/classes/class-bp-core-friends-widget.php:108
 msgid "%s's Connections"
 msgstr ""
 
@@ -11278,11 +11283,11 @@ msgid ""
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:30
-msgid "(BB) Connections"
+msgid "(BB) My Connections"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:153
-#: bp-friends/classes/class-bp-core-friends-widget.php:253
+#: bp-friends/classes/class-bp-core-friends-widget.php:160
+#: bp-friends/classes/class-bp-core-friends-widget.php:260
 #: bp-groups/classes/class-bp-groups-widget.php:130
 #: bp-groups/classes/class-bp-groups-widget.php:242
 #: bp-members/classes/class-bp-core-members-widget.php:129
@@ -11291,8 +11296,8 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:158
-#: bp-friends/classes/class-bp-core-friends-widget.php:254
+#: bp-friends/classes/class-bp-core-friends-widget.php:165
+#: bp-friends/classes/class-bp-core-friends-widget.php:261
 #: bp-groups/classes/class-bp-groups-widget.php:136
 #: bp-groups/classes/class-bp-groups-widget.php:243
 #: bp-members/classes/class-bp-core-members-widget.php:137
@@ -11300,21 +11305,25 @@ msgstr ""
 msgid "Popular"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:193
+#: bp-friends/classes/class-bp-core-friends-widget.php:200
 msgid "Sorry, no connections were found."
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:245
+#: bp-friends/classes/class-bp-core-friends-widget.php:252
 #: bp-members/classes/class-bp-core-members-widget.php:251
 msgid "Link widget title to Members directory"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:247
+#: bp-friends/classes/class-bp-core-friends-widget.php:254
 msgid "Max connections to show:"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:250
+#: bp-friends/classes/class-bp-core-friends-widget.php:257
 msgid "Default connections to show:"
+msgstr ""
+
+#: bp-friends/classes/class-bp-core-friends-widget.php:264
+msgid "Note: This widget is only displayed if a member has some connections."
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:137
@@ -18029,19 +18038,19 @@ msgstr ""
 msgid "(BB) Profile Completion"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:455
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:460
 msgid "Complete Your Profile"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:479
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
 msgid "Profile field sets:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:501
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:506
 msgid "Profile photos:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:530
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:535
 msgid "Note: This widget is only displayed if a member is logged in."
 msgstr ""
 
