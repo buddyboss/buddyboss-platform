@@ -227,25 +227,25 @@ function bp_core_get_forums_admin_tabs( $active_tab = '') {
 	$tabs = array();
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( bp_get_root_blog_id(), add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_forum_post_type() ), 'edit.php' ) ),
 		'name'  => __( 'Forums', 'buddyboss' ),
 		'class' => 'bp-forums',
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( bp_get_root_blog_id(), add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_topic_post_type() ), 'edit.php' ) ),
 		'name'  => __( 'Discussions', 'buddyboss' ),
 		'class' => 'bp-discussions',
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( bp_get_root_blog_id(), add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ) : bp_get_admin_url( add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ) : bp_get_admin_url( add_query_arg( array( 'taxonomy' =>  bbp_get_topic_tag_tax_id(), 'post_type' => bbp_get_topic_post_type() ), 'edit-tags.php' ) ),
 		'name'  => __( 'Discussion Tags', 'buddyboss' ),
 		'class' => 'bp-tags',
 	);
 
 	$tabs[] = array(
-		'href'  => ( is_multisite() ) ? get_admin_url( bp_get_root_blog_id(), add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ),
+		'href'  => ( is_multisite() ) ? get_admin_url( get_current_blog_id(), add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ) : bp_get_admin_url( add_query_arg( array( 'post_type' => bbp_get_reply_post_type() ), 'edit.php' ) ),
 		'name'  => __( 'Replies', 'buddyboss' ),
 		'class' => 'bp-replies',
 	);
