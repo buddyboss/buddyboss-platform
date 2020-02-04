@@ -170,6 +170,7 @@ window.bp = window.bp || {};
 			//Documents
 			$( document ).on( 'click', '.bb-media-container .media-folder_action__anchor, .bb-media-container  .media-folder_action__list li a', this.fileActionButton.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_more, .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list li a', this.fileActivityActionButton.bind( this ) );
+			$( document ).click( this.toggleFileActivityActionButton );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-expand .document-expand-anchor', this.expandCodePreview.bind( this ) );
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_collapse', this.collapseCodePreview.bind( this ) );
 			$( document ).on( 'click', '.activity .bp-document-move-activity, #media-stream .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
@@ -2225,10 +2226,42 @@ window.bp = window.bp || {};
 		fileActivityActionButton: function (event) {
 			event.preventDefault();
 
-			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible').siblings().removeClass('is-visible').closest('.activity_update').siblings().find('.bb-activity-media-elem').removeClass('is-visible');
+			$(event.currentTarget).closest('.bb-activity-media-elem').toggleClass('is-visible').siblings().removeClass('is-visible').closest('.activity-item').siblings().find('.bb-activity-media-elem').removeClass('is-visible');
 			if(event.currentTarget.tagName.toLowerCase() == 'a' && !$(event.currentTarget).hasClass('document-action_more')){
 				$(event.currentTarget).closest('.bb-activity-media-elem').removeClass('is-visible');
 			}
+		},
+
+		/**
+		 * File Activity action Toggle
+		 */
+		toggleFileActivityActionButton: function (event) {
+			var element;
+
+			event = event || window.event;
+
+			if ( event.target ) {
+				element = event.target;
+			} else if ( event.srcElement) {
+				element = event.srcElement;
+			}
+
+			if ( element.nodeType === 3 ) {
+				element = element.parentNode;
+			}
+
+			if ( event.altKey === true || event.metaKey === true ) {
+				return event;
+			}
+
+			// if privacy dropdown items, return
+			if ( $( element ).hasClass( 'document-action_more' ) || $( element ).parent().hasClass( 'document-action_more' ) || $( element ).hasClass( 'media-folder_action__anchor' ) || $( element ).parent().hasClass( 'media-folder_action__anchor' ) ) {
+				return event;
+			}
+
+			$( '.bb-activity-media-elem.is-visible' ).removeClass('is-visible');
+			$( '.media-folder_items.is-visible' ).removeClass('is-visible');			
+
 		},
 
 		/**

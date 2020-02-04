@@ -1274,8 +1274,14 @@ function bp_document_extension( $attachment_id ) {
 
 	$file_url  = wp_get_attachment_url( $attachment_id );
 	$file_type = wp_check_filetype( $file_url );
+	$extension = trim( $file_type['ext'] );
 
-	return $file_type['ext'];
+	if( '' === $extension ) {
+		$file = pathinfo( $file_url );
+		$extension = $file['extension'];
+	}
+
+	return $extension;
 
 }
 

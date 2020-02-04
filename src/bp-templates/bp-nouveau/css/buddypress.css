@@ -2316,7 +2316,6 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:before {
   font-family: 'bb-icons';
   font-size: 16px;
-  vertical-align: middle;
   display: inline-block;
   margin-right: 10px;
   width: 20px;
