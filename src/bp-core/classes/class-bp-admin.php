@@ -769,7 +769,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-	        wp_enqueue_script( 'bp-fitvids-js' )
+	        wp_enqueue_script( 'bp-fitvids-js' );
 
 	        wp_enqueue_script( 'bp-wp-api-js' );
 			wp_enqueue_script( 'bp-help-js' );
@@ -793,7 +793,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 					'bb_help_no_network' => __( '<strong>You are offline.</strong> Documentation requires internet access.', 'buddyboss' ),
 				)
 			);
-	}
+		}
 
 		/** About BuddyBoss and AppBoss ********************************************/
 
