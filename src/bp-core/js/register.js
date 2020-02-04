@@ -204,7 +204,7 @@ jQuery( document ).ready( function() {
 	});
 
 	//for form validation
-	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
+	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function() {
 		//e.preventDefault();
 		var html_error = '<div class="bp-messages bp-feedback error">';
 				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
@@ -229,7 +229,7 @@ jQuery( document ).ready( function() {
 			jQuery( document ).find( signup_password_confirm ).before( html_error );
 			return_val = false;
 		}
-		jQuery( '.required-field' ).each( function( index ) {
+		jQuery( '.required-field' ).each( function() {
 
 			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
 				jQuery( this ).find( 'input[type="text"]' ).before( html_error );
@@ -269,8 +269,8 @@ jQuery( document ).ready( function() {
             jQuery.ajax({
 			    type: 'POST',
 			    url: ajaxurl,
-			    dataType: "json",
-			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + "&action=check_email",
+			    dataType: 'json',
+			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + '&action=check_email',
 			    success: function ( response ) {
 			    	if (response.signup_email) {
 				    	var html_serror = '<div class="bp-messages bp-feedback error">';
@@ -360,7 +360,7 @@ jQuery( document ).ready( function() {
 			errorMessageSelector.html( '' );
 			return;
 		}
-		if ( email1 !== email2 ) {
+		if ( email1 !== email2 && confirmEmailSelector.length ) {
 			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 			return;
 		}

@@ -105,6 +105,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Main settings page.
 			$this->settings_page = 'buddyboss-platform'; // always use custom menu item, instead of setting page
 
+			// Child Admin Settings page will redirect to BuddyPress integration page.
+			$this->child_settings_page = bp_core_do_network_admin() ? 'settings.php' : 'options-general.php';
+
 			// Main capability.
 			$this->capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
 		}
@@ -196,7 +199,11 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
 			add_action( 'admin_enqueue_scripts', array( $this, 'deregister_wp_job_manager_shared_assets' ), 21 );
 
-		}
+			add_action( 'admin_menu', array( $this, 'bp_emails_add_sub_menu_page_admin_menu' ) );
+
+			add_action( 'admin_menu', array( $this, 'bp_add_main_menu_page_admin_menu' ) );
+			add_action( 'admin_menu', array( $this, 'adjust_buddyboss_menus' ), 100 );
+	}
 
 		/**
 		 * DeRegisters jquery-ui-style from the WP Job Manager plugin in WP admin /wp-admin/admin.php?page=bp-profile-setup page.
@@ -216,18 +223,18 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 
 		}
 
-		/**
-		 * Add the separator above the BuddyBoss menu in admin.
-		 *
-		 * @param int $menu_order Menu order.
-		 *
-		 * @since BuddyBoss 1.0.0
-		 *
-		 * @return array
-		 */
-		public function buddyboss_menu_order( $menu_order ) {
-			// Initialize our custom order array.
-			$buddyboss_menu_order = array();
+	/**
+	 * Add the separator above the BuddyBoss menu in admin.
+	 *
+	 * @param int $menu_order Menu order.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @return array
+	 */
+	public function buddyboss_menu_order( $menu_order ) {
+		// Initialize our custom order array.
+		$buddyboss_menu_order = array();
 
 			// Get the index of our custom separator.
 			$buddyboss_separator = array_search( 'separator-buddyboss-platform', $menu_order, true );
@@ -346,14 +353,51 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			);
 		}
 
-		/**
-		 * Register site- or network-admin nav menu elements.
-		 *
-		 * Contextually hooked to site or network-admin depending on current configuration.
-		 *
-		 * @since BuddyPress 1.6.0
-		 */
-		public function admin_menus() {
+	/**
+	 * Register network-admin nav menu elements.
+	 *
+	 * Contextually hooked to network-admin depending on current configuration.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 */
+
+	public function bp_add_main_menu_page_admin_menu() {
+
+		global $menu;
+
+		// Bail if user cannot moderate.
+		if ( ! bp_current_user_can( 'manage_options' ) ) {
+			return;
+		}
+		// Add BuddyBoss Menu separator above the BuddyBoss and below the BuddyBoss
+		if ( bp_current_user_can( 'manage_options' ) ) {
+			$menu[] = array( '', 'read', 'separator-buddyboss', '', 'wp-menu-separator buddyboss' ); // WPCS: override ok.
+			$menu[] = array( '', 'read', 'separator-plugins', '', 'wp-menu-separator plugins' ); // WPCS: override ok.
+		}
+
+		$hooks = array();
+		if ( is_multisite() && bp_is_network_activated() ) {
+			$hooks[] = add_menu_page(
+				__( 'BuddyBoss', 'buddyboss' ),
+				__( 'BuddyBoss', 'buddyboss' ),
+				$this->capability,
+				$this->settings_page,
+				'bp_core_admin_backpat_menu',
+				buddypress()->plugin_url . 'bp-core/images/admin/icons/logos/buddyboss.svg',
+				3
+			);
+		}
+
+	}
+
+	/**
+	 * Register site- or network-admin nav menu elements.
+	 *
+	 * Contextually hooked to site or network-admin depending on current configuration.
+	 *
+	 * @since BuddyPress 1.6.0
+	 */
+	public function admin_menus() {
 
 			global $menu;
 
@@ -399,6 +443,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// 'bp-plugin-separator-notice',
 			// ''
 			// );
+
+			// Add the option pages.
+			$hooks[] = add_submenu_page(
+				$this->child_settings_page,
+				__( 'BuddyPress Settings', 'buddypress' ),
+				__( 'BuddyPress', 'buddypress' ),
+				$this->capability,
+				'admin.php?page=bp-integrations&tab=bp-compatibility'
+			);
 
 			// Add the option pages.
 			$hooks[] = add_submenu_page(
@@ -593,12 +646,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				'bp_email_redirect_to_customizer'
 			);
 
-			if ( is_network_admin() && bp_is_network_activated() ) {
-				$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() );
-			} else {
-				$email_url = 'edit.php?post_type=' . bp_get_email_post_type();
-			}
-
+		if ( ! is_network_admin() && ! bp_is_network_activated() ) {
+			$email_url = 'edit.php?post_type=' . bp_get_email_post_type();
 			$hooks[] = add_submenu_page(
 				'buddyboss-platform',
 				__( 'Emails', 'buddyboss' ),
@@ -607,18 +656,34 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				$email_url,
 				''
 			);
+		}
 
 			foreach ( $hooks as $hook ) {
 				add_action( "admin_head-$hook", 'bp_core_modify_admin_menu_highlight' );
 			}
 		}
 
-		/**
-		 * Register the settings.
-		 *
-		 * @since BuddyPress 1.6.0
-		 */
-		public function register_admin_settings() {
+	public function bp_emails_add_sub_menu_page_admin_menu() {
+
+		if ( is_multisite() && bp_is_network_activated() ) {
+			$email_url = get_admin_url( bp_get_root_blog_id(), 'edit.php?post_type=' . bp_get_email_post_type() ); // buddyboss-settings
+			// Add our screen.
+			$hook = add_submenu_page( 'buddyboss-platform',
+				__( 'Emails', 'buddyboss' ),
+				__( 'Emails', 'buddyboss' ),
+				'bp_moderate',
+				$email_url,
+				'' );
+		}
+	}
+
+	/**
+	 * Register the settings.
+	 *
+	 * @since BuddyPress 1.6.0
+	 *
+	 */
+	public function register_admin_settings() {
 
 			$bp = buddypress();
 			require_once trailingslashit( $bp->plugin_dir . 'bp-core/classes' ) . '/class-bp-admin-tab.php';
@@ -716,8 +781,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 				wp_enqueue_script( 'bp-hello-js' );
 			}
 
-			wp_enqueue_script( 'bp-fitvids-js' );
-			wp_enqueue_script( 'bp-wp-api-js' );
+	        wp_enqueue_script( 'bp-fitvids-js' );
+
+	        wp_enqueue_script( 'bp-wp-api-js' );
 			wp_enqueue_script( 'bp-help-js' );
 
 			$bp_help_base_url = bp_get_admin_url(
@@ -968,34 +1034,33 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 						'footer'       => true,
 					),
 
-					// 3.0
-					'bp-hello-js'            => array(
-						'file'         => "{$url}hello{$min}.js",
-						'dependencies' => array(),
-						'footer'       => true,
-					),
+			// 3.0
+			'bp-hello-js' => array(
+				'file'         => "{$url}hello{$min}.js",
+				'dependencies' => array(),
+				'footer'       => true,
+			),
 
-					// 1.1
-					'bp-fitvids-js'          => array(
-						'file'         => "{$url}fitvids{$min}.js",
-						'dependencies' => array(),
-						'footer'       => true,
-					),
+            // 1.1
+			'bp-fitvids-js' => array(
+				'file'         => "{$url}fitvids{$min}.js",
+				'dependencies' => array(),
+				'footer'       => true,
+			),
 
-					'bp-wp-api-js'          => array(
-						'file'         => "{$url}lib/wpapi{$min}.js",
-						'dependencies' => array(),
-						'footer'       => true,
-					),
+			'bp-wp-api-js'          => array(
+				'file'         => "{$url}lib/wpapi{$min}.js",
+				'dependencies' => array(),
+				'footer'       => true,
+			),
 
-					// 1.2.3
-					'bp-help-js'          => array(
-						'file'         => "{$url}help{$min}.js",
-						'dependencies' => array( 'jquery' ),
-						'footer'       => true,
-					),
-				)
-			);
+			// 1.2.3
+			'bp-help-js'          => array(
+				'file'         => "{$url}help{$min}.js",
+				'dependencies' => array( 'jquery' ),
+				'footer'       => true,
+			),
+		) );
 
 			$version = bp_get_version();
 

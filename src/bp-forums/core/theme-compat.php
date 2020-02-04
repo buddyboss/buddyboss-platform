@@ -501,21 +501,15 @@ function bbp_template_include_theme_compat( $template = '' ) {
 		// Page exists where this archive should be
 		$page = bbp_get_page_by_path( bbp_get_root_slug() );
 
-		// Should we replace the content...
-		if ( empty( $page->post_content ) ) {
+		$new_content = apply_filters( 'the_content', $page->post_content );
 
-			// Use the topics archive
-			if ( 'topics' === bbp_show_on_root() ) {
-				$new_content = $bbp_shortcodes->display_topic_index();
+		// Use the topics archive
+		if ( 'topics' === bbp_show_on_root() ) {
+			$new_content .= $bbp_shortcodes->display_topic_index();
 
-				// No page so show the archive
-			} else {
-				$new_content = $bbp_shortcodes->display_forum_index();
-			}
-
-			// ...or use the existing page content?
+			// No page so show the archive
 		} else {
-			$new_content = apply_filters( 'the_content', $page->post_content );
+			$new_content .= $bbp_shortcodes->display_forum_index();
 		}
 
 		// Should we replace the title...

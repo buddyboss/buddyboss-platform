@@ -870,7 +870,7 @@ if ( ! class_exists( 'bbPress' ) ) :
 
 			// Search Permastruct
 			add_permastruct(
-				$user_id,
+				$search_id,
 				$search_slug . '/%' . $search_id . '%',
 				array(
 					'with_front'  => false,

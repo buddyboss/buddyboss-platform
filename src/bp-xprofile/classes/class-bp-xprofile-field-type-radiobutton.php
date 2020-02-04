@@ -139,7 +139,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 			}
 
 			$new_html = sprintf(
-				'<label for="%3$s" class="option-label"><input %1$s type="radio" name="%2$s" id="%3$s" value="%4$s">%5$s</label>',
+				'<div class="bp-radio-wrap"><input %1$s type="radio" name="%2$s" id="%3$s" value="%4$s" class="bs-styled-radio" /><label for="%3$s" class="option-label">%5$s</label></div>',
 				$selected,
 				esc_attr( bp_get_the_profile_field_input_name() ),
 				esc_attr( "option_{$options[$k]->id}" ),

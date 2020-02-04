@@ -414,36 +414,36 @@ function bp_activity_screen_notification_settings() {
 				<tr id="activity-notification-settings-mentions">
 					<td>&nbsp;</td>
 					<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
-					<td class="yes"><input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" value="yes" <?php checked( $mention, 'yes', true ); ?>/><label for="notification-activity-new-mention-yes" class="bp-screen-reader-text">
-																																													  <?php
-																																														/* translators: accessibility text */
-																																														_e( 'Yes, send email', 'buddyboss' );
-																																														?>
-					</label></td>
-					<td class="no"><input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" value="no" <?php checked( $mention, 'no', true ); ?>/><label for="notification-activity-new-mention-no" class="bp-screen-reader-text">
-																																												   <?php
-																																													/* translators: accessibility text */
-																																													_e( 'No, do not send email', 'buddyboss' );
-																																													?>
-					</label></td>
+					<td class="yes">
+						<div class="bp-radio-wrap">
+							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio" value="yes" <?php checked( $mention, 'yes', true ); ?> />
+							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php  _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+						</div>
+					</td>
+					<td class="no">
+						<div class="bp-radio-wrap">
+							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-no" class="bs-styled-radio" value="no" <?php checked( $mention, 'no', true ); ?> />
+							<label for="notification-activity-new-mention-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+						</div>
+					</td>
 				</tr>
 			<?php endif; ?>
 
 			<tr id="activity-notification-settings-replies">
 				<td>&nbsp;</td>
 				<td><?php _e( "A member replies to an update or comment you've posted", 'buddyboss' ); ?></td>
-				<td class="yes"><input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" value="yes" <?php checked( $reply, 'yes', true ); ?>/><label for="notification-activity-new-reply-yes" class="bp-screen-reader-text">
-																																											  <?php
-																																												/* translators: accessibility text */
-																																												_e( 'Yes, send email', 'buddyboss' );
-																																												?>
-				</label></td>
-				<td class="no"><input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" value="no" <?php checked( $reply, 'no', true ); ?>/><label for="notification-activity-new-reply-no" class="bp-screen-reader-text">
-																																										   <?php
-																																											/* translators: accessibility text */
-																																											_e( 'No, do not send email', 'buddyboss' );
-																																											?>
-				</label></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-yes" class="bs-styled-radio" value="yes" <?php checked( $reply, 'yes', true ); ?> />
+						<label for="notification-activity-new-reply-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_activity_new_reply]" id="notification-activity-new-reply-no" class="bs-styled-radio" value="no" <?php checked( $reply, 'no', true ); ?> />
+						<label for="notification-activity-new-reply-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
 			</tr>
 
 			<?php

@@ -225,7 +225,7 @@ document = window.document || {};
 			search            : true,
 			placeholder       : null,
 			emojiPlaceholder  : ":smiley:",
-			searchPlaceholder : "Search",
+			searchPlaceholder : bp_emojionearea.searchPlaceholder,
 			container         : null,
 			hideSource        : true,
 			shortnames        : true,
@@ -257,7 +257,7 @@ document = window.document || {};
 		if (supportMode > 4) {
 			defaultOptions.filters = {
 				tones: {
-					title: "Diversity",
+					title: bp_emojionearea.tones,
 					emoji: "open_hands raised_hands palms_up_together clap pray thumbsup thumbsdown punch fist left_facing_fist right_facing_fist " +
 						"fingers_crossed v metal love_you_gesture ok_hand point_left point_right point_up_2 point_down point_up raised_hand " +
 						"raised_back_of_hand hand_splayed vulcan wave call_me muscle middle_finger writing_hand selfie nail_care ear " +
@@ -292,13 +292,13 @@ document = window.document || {};
 
 				recent: {
 					icon: "clock3",
-					title: "Recent",
+					title: bp_emojionearea.recent,
 					emoji: ""
 				},
 
 				smileys_people: {
 					icon: "grinning",
-					title: "Smileys & People",
+					title: bp_emojionearea.smileys_people,
 					emoji: "grinning smiley smile grin laughing sweat_smile joy rofl relaxed blush innocent slight_smile upside_down " +
 						"wink relieved crazy_face star_struck heart_eyes kissing_heart kissing kissing_smiling_eyes kissing_closed_eyes yum " +
 						"stuck_out_tongue_winking_eye stuck_out_tongue_closed_eyes stuck_out_tongue money_mouth hugging nerd sunglasses " +
@@ -339,7 +339,7 @@ document = window.document || {};
 
 				animals_nature: {
 					icon: "leaves",
-					title: "Animals & Nature",
+					title: bp_emojionearea.animals_nature,
 					emoji: "dog cat mouse hamster rabbit fox bear panda_face koala tiger lion_face cow pig pig_nose frog monkey_face see_no_evil " +
 						"hear_no_evil speak_no_evil monkey chicken penguin bird baby_chick hatching_chick hatched_chick duck eagle owl bat wolf boar " +
 						"horse unicorn bee bug butterfly snail shell beetle ant spider spider_web turtle snake lizard scorpion crab squid octopus shrimp " +
@@ -357,7 +357,7 @@ document = window.document || {};
 
 				food_drink: {
 					icon: "hamburger",
-					title: "Food & Drink",
+					title: bp_emojionearea.food_drink,
 					emoji: "green_apple apple pear tangerine lemon banana watermelon grapes strawberry melon cherries peach pineapple kiwi " +
 						"avocado tomato eggplant cucumber carrot corn hot_pepper potato sweet_potato chestnut peanuts honey_pot croissant " +
 						"bread french_bread cheese egg cooking bacon pancakes fried_shrimp poultry_leg meat_on_bone pizza hotdog hamburger " +
@@ -370,7 +370,7 @@ document = window.document || {};
 
 				activity: {
 					icon: "football",
-					title: "Activity",
+					title: bp_emojionearea.activity,
 					emoji: "soccer basketball football baseball tennis volleyball rugby_football 8ball ping_pong badminton goal hockey field_hockey " +
 						"cricket_game golf bow_and_arrow fishing_pole_and_fish boxing_glove martial_arts_uniform ice_skate ski skier snowboarder " +
 						"woman_lifting_weights man_lifting_weights person_fencing women_wrestling men_wrestling woman_cartwheeling " +
@@ -386,7 +386,7 @@ document = window.document || {};
 
 				travel_places: {
 					icon: "airplane",
-					title: "Travel & Places",
+					title: bp_emojionearea.travel_places,
 					emoji: "red_car taxi blue_car bus trolleybus race_car police_car ambulance fire_engine minibus truck articulated_lorry tractor " +
 						"scooter bike motor_scooter motorcycle rotating_light oncoming_police_car oncoming_bus oncoming_automobile oncoming_taxi " +
 						"aerial_tramway mountain_cableway suspension_railway railway_car train mountain_railway monorail bullettrain_side " +
@@ -403,7 +403,7 @@ document = window.document || {};
 
 				objects: {
 					icon: "bulb",
-					title: "Objects",
+					title: bp_emojionearea.objects,
 					emoji: "watch iphone calling computer keyboard desktop printer mouse_three_button trackball joystick compression minidisc " +
 						"floppy_disk cd dvd vhs camera camera_with_flash video_camera movie_camera projector film_frames telephone_receiver " +
 						"telephone pager fax tv radio microphone2 level_slider control_knobs stopwatch timer alarm_clock clock hourglass " +
@@ -424,7 +424,7 @@ document = window.document || {};
 
 				symbols: {
 					icon: "heart",
-					title: "Symbols",
+					title: bp_emojionearea.symbols,
 					emoji: "heart orange_heart yellow_heart green_heart blue_heart purple_heart black_heart broken_heart heart_exclamation two_hearts " +
 						"revolving_hearts heartbeat heartpulse sparkling_heart cupid gift_heart heart_decoration peace cross star_and_crescent " +
 						"om_symbol wheel_of_dharma star_of_david six_pointed_star menorah yin_yang orthodox_cross place_of_worship ophiuchus " +
@@ -457,7 +457,7 @@ document = window.document || {};
 
 				flags: {
 					icon: "flag_white",
-					title: "Flags",
+					title: bp_emojionearea.flags,
 					emoji: "flag_white flag_black checkered_flag triangular_flag_on_post rainbow_flag flag_af flag_ax flag_al flag_dz flag_as " +
 						"flag_ad flag_ao flag_ai flag_aq flag_ag flag_ar flag_am flag_aw flag_au flag_at flag_az flag_bs flag_bh flag_bd flag_bb " +
 						"flag_by flag_be flag_bz flag_bj flag_bm flag_bt flag_bo flag_ba flag_bw flag_br flag_io flag_vg flag_bn flag_bg flag_bf " +
@@ -482,7 +482,7 @@ document = window.document || {};
 		} else {
 			defaultOptions.filters = {
 				tones: {
-					title: "Diversity",
+					title: bp_emojionearea.tones,
 					emoji: "santa runner surfer swimmer lifter ear nose point_up_2 point_down point_left point_right punch " +
 						"wave ok_hand thumbsup thumbsdown clap open_hands boy girl man woman cop bride_with_veil person_with_blond_hair " +
 						"man_with_gua_pi_mao man_with_turban older_man grandma baby construction_worker princess angel " +
@@ -493,13 +493,13 @@ document = window.document || {};
 
 				recent: {
 					icon: "clock3",
-					title: "Recent",
+					title: bp_emojionearea.recent,
 					emoji: ""
 				},
 
 				smileys_people: {
 					icon: "yum",
-					title: "Smileys & People",
+					title: bp_emojionearea.smileys_people,
 					emoji: "grinning grimacing grin joy smiley smile sweat_smile laughing innocent wink blush slight_smile " +
 						"upside_down relaxed yum relieved heart_eyes kissing_heart kissing kissing_smiling_eyes " +
 						"kissing_closed_eyes stuck_out_tongue_winking_eye stuck_out_tongue_closed_eyes stuck_out_tongue " +
@@ -525,7 +525,7 @@ document = window.document || {};
 
 				animals_nature: {
 					icon: "hamster",
-					title: "Animals & Nature",
+					title: bp_emojionearea.animals_nature,
 					emoji: "dog cat mouse hamster rabbit bear panda_face koala tiger lion_face cow pig pig_nose frog " +
 						"octopus monkey_face see_no_evil hear_no_evil speak_no_evil monkey chicken penguin bird baby_chick " +
 						"hatching_chick hatched_chick wolf boar horse unicorn bee bug snail beetle ant spider scorpion crab " +
@@ -545,7 +545,7 @@ document = window.document || {};
 
 				food_drink: {
 					icon: "pizza",
-					title: "Food & Drink",
+					title: bp_emojionearea.food_drink,
 					emoji: "green_apple apple pear tangerine lemon banana watermelon grapes strawberry melon cherries peach " +
 						"pineapple tomato eggplant hot_pepper corn sweet_potato honey_pot bread cheese poultry_leg meat_on_bone " +
 						"fried_shrimp egg hamburger fries hotdog pizza spaghetti taco burrito ramen stew fish_cake sushi bento " +
@@ -556,7 +556,7 @@ document = window.document || {};
 
 				activity: {
 					icon: "basketball",
-					title: "Activity",
+					title: bp_emojionearea.activity,
 					emoji: "soccer basketball football baseball tennis volleyball rugby_football 8ball golf golfer ping_pong " +
 						"badminton hockey field_hockey cricket ski skier snowboarder ice_skate bow_and_arrow fishing_pole_and_fish " +
 						"rowboat swimmer surfer bath basketball_player lifter bicyclist mountain_bicyclist horse_racing levitate " +
@@ -567,7 +567,7 @@ document = window.document || {};
 
 				travel_places: {
 					icon: "rocket",
-					title: "Travel & Places",
+					title: bp_emojionearea.travel_places,
 					emoji: "red_car taxi blue_car bus trolleybus race_car police_car ambulance fire_engine minibus truck " +
 						"articulated_lorry tractor motorcycle bike rotating_light oncoming_police_car oncoming_bus " +
 						"oncoming_automobile oncoming_taxi aerial_tramway mountain_cableway suspension_railway railway_car " +
@@ -585,7 +585,7 @@ document = window.document || {};
 
 				objects: {
 					icon: "bulb",
-					title: "Objects",
+					title: bp_emojionearea.objects,
 					emoji: "watch iphone calling computer keyboard desktop printer mouse_three_button trackball joystick " +
 						"compression minidisc floppy_disk cd dvd vhs camera camera_with_flash video_camera movie_camera projector " +
 						"film_frames telephone_receiver telephone pager fax tv radio microphone2 level_slider control_knobs " +
@@ -608,7 +608,7 @@ document = window.document || {};
 
 				symbols: {
 					icon: "heartpulse",
-					title: "Symbols",
+					title: bp_emojionearea.symbols,
 					emoji: "heart yellow_heart green_heart blue_heart purple_heart broken_heart heart_exclamation two_hearts " +
 						"revolving_hearts heartbeat heartpulse sparkling_heart cupid gift_heart heart_decoration peace cross " +
 						"star_and_crescent om_symbol wheel_of_dharma star_of_david six_pointed_star menorah yin_yang orthodox_cross " +
@@ -641,7 +641,7 @@ document = window.document || {};
 
 				flags: {
 					icon: "flag_gb",
-					title: "Flags",
+					title: bp_emojionearea.flags,
 					emoji: "ac af al dz ad ao ai ag ar am aw au at az bs bh bd bb by be bz bj bm bt bo ba bw br bn bg bf bi " +
 						"cv kh cm ca ky cf td flag_cl cn co km cg flag_cd cr hr cu cy cz dk dj dm do ec eg sv gq er ee et fk fo " +
 						"fj fi fr pf ga gm ge de gh gi gr gl gd gu gt gn gw gy ht hn hk hu is in flag_id ir iq ie il it ci jm jp " +
