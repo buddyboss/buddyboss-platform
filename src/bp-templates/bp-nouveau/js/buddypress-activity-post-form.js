@@ -1791,6 +1791,14 @@ window.bp = window.bp || {};
 			// Silently add meta
 			this.model.set( meta, { silent: true } );
 
+			var medias = self.model.get('media');
+			if ( 'group' == self.model.get('object') && typeof medias !== 'undefined' && medias.length ) {
+				for( var k = 0; k < medias.length; k++ ) {
+					medias[k].group_id = self.model.get('item_id');
+				}
+				self.model.set('media',medias);
+			}
+
 			// update posting status true
 			this.model.set( 'posting', true );
 
@@ -1840,14 +1848,6 @@ window.bp = window.bp || {};
 			// Append zero-width character to allow post gif without activity content
 			if ( ! _.isEmpty( data.gif_data ) && _.isEmpty( data.content ) ) {
 				data.content = '&#8203;';
-			}
-
-			var medias = self.model.get('media');
-			if ( 'group' == self.model.get('object') && typeof medias !== 'undefined' && medias.length ) {
-				for( var k = 0; k < medias.length; k++ ) {
-					medias[k].group_id = self.model.get('item_id');
-				}
-				self.model.set('media',medias);
 			}
 
 			bp.ajax.post( 'post_update', data ).done( function( response ) {
