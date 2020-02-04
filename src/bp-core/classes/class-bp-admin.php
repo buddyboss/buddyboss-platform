@@ -105,6 +105,9 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Main settings page.
 			$this->settings_page = 'buddyboss-platform'; // always use custom menu item, instead of setting page
 
+			// Child Admin Settings page will redirect to BuddyPress integration page.
+			$this->child_settings_page = bp_core_do_network_admin() ? 'settings.php' : 'options-general.php';
+
 			// Main capability.
 			$this->capability = bp_core_do_network_admin() ? 'manage_network_options' : 'manage_options';
 		}
@@ -399,6 +402,15 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// 'bp-plugin-separator-notice',
 			// ''
 			// );
+
+			// Add the option pages.
+			$hooks[] = add_submenu_page(
+				$this->child_settings_page,
+				__( 'BuddyPress Settings', 'buddypress' ),
+				__( 'BuddyPress', 'buddypress' ),
+				$this->capability,
+				'admin.php?page=bp-integrations&tab=bp-compatibility'
+			);
 
 			// Add the option pages.
 			$hooks[] = add_submenu_page(
