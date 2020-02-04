@@ -190,8 +190,13 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	// Bail if we have errors
 	if ( ! bbp_has_errors() ) {
 
-		// Attempt to clear notifications for the current user from this topic
-		$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
+		if ( !empty( $_GET['reply_id'] ) ) {
+			// Attempt to clear notifications for the current user from this reply
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_reply' );
+		} else {
+			// Attempt to clear notifications for the current user from this topic
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
+		}
 
 		// Do additional subscriptions actions
 		do_action( 'bbp_notifications_handler', $success, $user_id, $topic_id, $action );
