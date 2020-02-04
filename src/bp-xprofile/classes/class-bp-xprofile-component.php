@@ -48,7 +48,7 @@ class BP_XProfile_Component extends BP_Component {
 			__( 'Profile Fields', 'buddyboss' ),
 			buddypress()->plugin_dir,
 			array(
-				'adminbar_myaccount_order' => 20
+				'adminbar_myaccount_order' => 20,
 			)
 		);
 
@@ -70,7 +70,8 @@ class BP_XProfile_Component extends BP_Component {
 			'filters',
 			'template',
 			'functions',
-            'repeaters',
+			'repeaters',
+			'widgets',
 		);
 
 		// Conditional includes.
@@ -113,7 +114,7 @@ class BP_XProfile_Component extends BP_Component {
 			require $this->path . 'bp-xprofile/screens/public.php';
 
 			// Action - Delete avatar.
-			if ( is_user_logged_in()&& bp_is_user_change_avatar() && bp_is_action_variable( 'delete-avatar', 0 ) ) {
+			if ( is_user_logged_in() && bp_is_user_change_avatar() && bp_is_action_variable( 'delete-avatar', 0 ) ) {
 				require $this->path . 'bp-xprofile/actions/delete-avatar.php';
 			}
 
@@ -145,7 +146,7 @@ class BP_XProfile_Component extends BP_Component {
 		$bp = buddypress();
 
 		// Define a slug, if necessary.
-		if ( !defined( 'BP_XPROFILE_SLUG' ) ) {
+		if ( ! defined( 'BP_XPROFILE_SLUG' ) ) {
 			define( 'BP_XPROFILE_SLUG', 'profile' );
 		}
 
@@ -176,24 +177,24 @@ class BP_XProfile_Component extends BP_Component {
 
 		// Register the visibility levels. See bp_xprofile_get_visibility_levels() to filter.
 		$this->visibility_levels = array(
-			'public' => array(
-				'id'	  => 'public',
-				'label' => __( 'Public', 'buddyboss' )
+			'public'     => array(
+				'id'    => 'public',
+				'label' => __( 'Public', 'buddyboss' ),
 			),
 			'adminsonly' => array(
-				'id'	  => 'adminsonly',
-				'label' => __( 'Only Me', 'buddyboss' )
+				'id'    => 'adminsonly',
+				'label' => __( 'Only Me', 'buddyboss' ),
 			),
-			'loggedin' => array(
-				'id'	  => 'loggedin',
-				'label' => __( 'All Members', 'buddyboss' )
-			)
+			'loggedin'   => array(
+				'id'    => 'loggedin',
+				'label' => __( 'All Members', 'buddyboss' ),
+			),
 		);
 
 		if ( bp_is_active( 'friends' ) ) {
 			$this->visibility_levels['friends'] = array(
-				'id'	=> 'friends',
-				'label'	=> __( 'My Connections', 'buddyboss' )
+				'id'    => 'friends',
+				'label' => __( 'My Connections', 'buddyboss' ),
 			);
 		}
 
@@ -254,7 +255,7 @@ class BP_XProfile_Component extends BP_Component {
 			'position'            => 20,
 			'screen_function'     => 'xprofile_screen_display_profile',
 			'default_subnav_slug' => 'public',
-			'item_css_id'         => $this->id
+			'item_css_id'         => $this->id,
 		);
 
 		// Add the subnav items to the profile.
@@ -264,7 +265,7 @@ class BP_XProfile_Component extends BP_Component {
 			'parent_url'      => $profile_link,
 			'parent_slug'     => $slug,
 			'screen_function' => 'xprofile_screen_display_profile',
-			'position'        => 10
+			'position'        => 10,
 		);
 
 		// Edit Profile.
@@ -275,7 +276,7 @@ class BP_XProfile_Component extends BP_Component {
 			'parent_slug'     => $slug,
 			'screen_function' => 'xprofile_screen_edit_profile',
 			'position'        => 20,
-			'user_has_access' => $access
+			'user_has_access' => $access,
 		);
 
 		// Change Avatar.
@@ -287,7 +288,7 @@ class BP_XProfile_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'xprofile_screen_change_avatar',
 				'position'        => 30,
-				'user_has_access' => $access
+				'user_has_access' => $access,
 			);
 		}
 
@@ -300,7 +301,7 @@ class BP_XProfile_Component extends BP_Component {
 				'parent_slug'     => $slug,
 				'screen_function' => 'xprofile_screen_change_cover_image',
 				'position'        => 40,
-				'user_has_access' => $access
+				'user_has_access' => $access,
 			);
 		}
 
@@ -336,15 +337,18 @@ class BP_XProfile_Component extends BP_Component {
 		// Get the settings slug.
 		$settings_slug = bp_get_settings_slug();
 
-		bp_core_new_subnav_item( array(
-			'name'            => __( 'Privacy', 'buddyboss' ),
-			'slug'            => 'profile',
-			'parent_url'      => trailingslashit( $user_domain . $settings_slug ),
-			'parent_slug'     => $settings_slug,
-			'screen_function' => 'bp_xprofile_screen_settings',
-			'position'        => 30,
-			'user_has_access' => bp_core_can_edit_settings()
-		), 'members' );
+		bp_core_new_subnav_item(
+			array(
+				'name'            => __( 'Privacy', 'buddyboss' ),
+				'slug'            => 'profile',
+				'parent_url'      => trailingslashit( $user_domain . $settings_slug ),
+				'parent_slug'     => $settings_slug,
+				'screen_function' => 'bp_xprofile_screen_settings',
+				'position'        => 30,
+				'user_has_access' => bp_core_can_edit_settings(),
+			),
+			'members'
+		);
 	}
 
 	/**
@@ -367,7 +371,7 @@ class BP_XProfile_Component extends BP_Component {
 				'parent' => buddypress()->my_account_menu_id,
 				'id'     => 'my-account-' . $this->id,
 				'title'  => __( 'Profile', 'buddyboss' ),
-				'href'   => $profile_link
+				'href'   => $profile_link,
 			);
 
 			// View Profile.
@@ -376,7 +380,7 @@ class BP_XProfile_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-public',
 				'title'    => __( 'View', 'buddyboss' ),
 				'href'     => $profile_link,
-				'position' => 10
+				'position' => 10,
 			);
 
 			// Edit Profile.
@@ -385,7 +389,7 @@ class BP_XProfile_Component extends BP_Component {
 				'id'       => 'my-account-' . $this->id . '-edit',
 				'title'    => __( 'Edit', 'buddyboss' ),
 				'href'     => trailingslashit( $profile_link . 'edit' ),
-				'position' => 20
+				'position' => 20,
 			);
 
 			// Edit Avatar.
@@ -395,7 +399,7 @@ class BP_XProfile_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-change-avatar',
 					'title'    => __( 'Profile Photo', 'buddyboss' ),
 					'href'     => trailingslashit( $profile_link . 'change-avatar' ),
-					'position' => 30
+					'position' => 30,
 				);
 			}
 
@@ -405,7 +409,7 @@ class BP_XProfile_Component extends BP_Component {
 					'id'       => 'my-account-' . $this->id . '-change-cover-image',
 					'title'    => __( 'Cover Photo', 'buddyboss' ),
 					'href'     => trailingslashit( $profile_link . 'change-cover-image' ),
-					'position' => 40
+					'position' => 40,
 				);
 			}
 		}
@@ -435,12 +439,14 @@ class BP_XProfile_Component extends BP_Component {
 			if ( bp_is_my_profile() ) {
 				$bp->bp_options_title = __( 'My Profile', 'buddyboss' );
 			} else {
-				$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-					'item_id' => bp_displayed_user_id(),
-					'type'    => 'thumb',
-					'alt'	  => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() )
-				) );
-				$bp->bp_options_title = bp_get_displayed_user_fullname();
+				$bp->bp_options_avatar = bp_core_fetch_avatar(
+					array(
+						'item_id' => bp_displayed_user_id(),
+						'type'    => 'thumb',
+						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
+					)
+				);
+				$bp->bp_options_title  = bp_get_displayed_user_fullname();
 			}
 		}
 
@@ -455,13 +461,15 @@ class BP_XProfile_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_xprofile',
-			'bp_xprofile_data',
-			'bp_xprofile_fields',
-			'bp_xprofile_groups',
-			'xprofile_meta'
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'bp_xprofile',
+				'bp_xprofile_data',
+				'bp_xprofile_fields',
+				'bp_xprofile_groups',
+				'xprofile_meta',
+			)
+		);
 
 		parent::setup_cache_groups();
 	}
@@ -481,11 +489,11 @@ class BP_XProfile_Component extends BP_Component {
 
 		// Add the "Profile" subnav item.
 		$wp_admin_nav[] = array(
-			'parent' => 'my-account-' . buddypress()->settings->id,
-			'id'     => 'my-account-' . buddypress()->settings->id . '-profile',
-			'title'  => __( 'Privacy', 'buddyboss' ),
-			'href'   => trailingslashit( $settings_link . 'profile' ),
-			'position' => 30
+			'parent'   => 'my-account-' . buddypress()->settings->id,
+			'id'       => 'my-account-' . buddypress()->settings->id . '-profile',
+			'title'    => __( 'Privacy', 'buddyboss' ),
+			'href'     => trailingslashit( $settings_link . 'profile' ),
+			'position' => 30,
 		);
 
 		return $wp_admin_nav;

@@ -29,10 +29,6 @@ function bp_nouveau_messages_enqueue_styles( $styles = array() ) {
 			'dependencies' => array( 'bp-nouveau' ),
 			'version'      => bp_get_version(),
 		),
-		'select2' => array(
-			'file'         => buddypress()->plugin_url . 'bp-core/css/select2.min.css',
-			'dependencies' => []
-		)
 	) );
 }
 
@@ -51,10 +47,6 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 	}
 
 	return array_merge( $scripts, array(
-		'bp-nouveau-select2' => array(
-			'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/select2.min.js',
-			'footer'       => false,
-		),
 		'bp-nouveau-messages-at' => array(
 			'file'         => buddypress()->plugin_url . 'bp-activity/js/mentions%s.js',
 			'dependencies' => array( 'bp-nouveau', 'jquery', 'jquery-atwho' ),
@@ -63,7 +55,7 @@ function bp_nouveau_messages_register_scripts( $scripts = array() ) {
 		),
 		'bp-nouveau-messages' => array(
 			'file'         => 'js/buddypress-messages%s.js',
-			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-nouveau-select2' ),
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
 			'footer'       => true,
 		),
 	) );
@@ -80,7 +72,10 @@ function bp_nouveau_messages_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-messages' );
-	wp_enqueue_script( 'select2' );
+	wp_enqueue_script( 'bp-select2' );
+	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
+		wp_enqueue_script( 'bp-select2-local' );
+	}
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -280,7 +275,7 @@ function bp_nouveau_unregister_notices_widget() {
  */
 function bp_nouveau_push_sitewide_notices() {
 	// Do not show notices if user is not logged in.
-	if ( ! is_user_logged_in() || ! bp_is_my_profile() ) {
+	if ( ! is_user_logged_in() ) {
 		return;
 	}
 
@@ -390,14 +385,14 @@ function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_message_date( $date ) {
+function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 	$now  = bp_core_current_time( true, 'timestamp' );
 	$date = strtotime( $date );
 
 	$now_date    = getdate( $now );
 	$date_date   = getdate( $date );
 	$compare     = array_diff( $date_date, $now_date );
-	$date_format = 'Y/m/d';
+	// $date_format = 'Y/m/d';
 
 	// Use Timezone string if set.
 	$timezone_string = bp_get_option( 'timezone_string' );
@@ -422,7 +417,9 @@ function bp_nouveau_get_message_date( $date ) {
 	// 	$date_format = 'M j';
 	// }
 
-	$date_format = 'M j';
+	if ( empty( $date_format ) ) {
+		$date_format = 'M j';
+	}
 
 	/**
 	 * Filters the message date for BuddyPress Nouveau display.

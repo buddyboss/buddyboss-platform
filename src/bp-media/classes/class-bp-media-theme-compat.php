@@ -36,8 +36,9 @@ class BP_Media_Theme_Compat {
 	public function is_media() {
 
 		// Bail if not looking at a group.
-		if ( ! bp_is_media_component() )
+		if ( ! bp_is_media_component() ) {
 			return;
+		}
 
 		// Media Directory.
 		if ( ! bp_displayed_user_id() && ! bp_current_action() ) {
@@ -46,9 +47,9 @@ class BP_Media_Theme_Compat {
 			/** This action is documented in bp-media/bp-media-screens.php */
 			do_action( 'bp_media_screen_index' );
 
-			add_filter( 'bp_get_buddypress_template',                array( $this, 'directory_template_hierarchy' ) );
+			add_filter( 'bp_get_buddypress_template', array( $this, 'directory_template_hierarchy' ) );
 			add_action( 'bp_template_include_reset_dummy_post_data', array( $this, 'directory_dummy_post' ) );
-			add_filter( 'bp_replace_the_content',                    array( $this, 'directory_content'    ) );
+			add_filter( 'bp_replace_the_content', array( $this, 'directory_content' ) );
 
 		}
 	}
@@ -74,9 +75,12 @@ class BP_Media_Theme_Compat {
 		 *
 		 * @param array $index-directory Array holding template names to be merged into template list.
 		 */
-		$new_templates = apply_filters( 'bp_template_hierarchy_media_directory', array(
-			'media/index-directory.php'
-		) );
+		$new_templates = apply_filters(
+			'bp_template_hierarchy_media_directory',
+			array(
+				'media/index-directory.php',
+			)
+		);
 
 		// Merge new templates with existing stack
 		// @see bp_get_theme_compat_templates().
@@ -91,17 +95,19 @@ class BP_Media_Theme_Compat {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function directory_dummy_post() {
-		bp_theme_compat_reset_post( array(
-			'ID'             => 0,
-			'post_title'     => bp_get_directory_title( 'media' ),
-			'post_author'    => 0,
-			'post_date'      => 0,
-			'post_content'   => '',
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'is_page'        => true,
-			'comment_status' => 'closed'
-		) );
+		bp_theme_compat_reset_post(
+			array(
+				'ID'             => 0,
+				'post_title'     => bp_get_directory_title( 'media' ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'is_page'        => true,
+				'comment_status' => 'closed',
+			)
+		);
 	}
 
 	/**
@@ -134,9 +140,12 @@ class BP_Media_Theme_Compat {
 		 *
 		 * @param array $index Array holding template names to be merged into template list.
 		 */
-		$new_templates = apply_filters( 'bp_template_hierarchy_media_single_item', array(
-			'media/single/index.php'
-		) );
+		$new_templates = apply_filters(
+			'bp_template_hierarchy_media_single_item',
+			array(
+				'media/single/index.php',
+			)
+		);
 
 		// Merge new templates with existing stack
 		// @see bp_get_theme_compat_templates().
@@ -151,17 +160,19 @@ class BP_Media_Theme_Compat {
 	 * @since BuddyBoss 1.0.0
 	 */
 	public function single_dummy_post() {
-		bp_theme_compat_reset_post( array(
-			'ID'             => 0,
-			'post_title'     => __( 'Photos', 'buddyboss' ),
-			'post_author'    => 0,
-			'post_date'      => 0,
-			'post_content'   => '',
-			'post_type'      => 'page',
-			'post_status'    => 'publish',
-			'is_page'        => true,
-			'comment_status' => 'closed'
-		) );
+		bp_theme_compat_reset_post(
+			array(
+				'ID'             => 0,
+				'post_title'     => __( 'Photos', 'buddyboss' ),
+				'post_author'    => 0,
+				'post_date'      => 0,
+				'post_content'   => '',
+				'post_type'      => 'page',
+				'post_status'    => 'publish',
+				'is_page'        => true,
+				'comment_status' => 'closed',
+			)
+		);
 	}
 
 	/**

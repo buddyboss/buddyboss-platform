@@ -68,7 +68,7 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_name(); ?>
 				<?php if ( bp_is_register_page() ) : ?>
 					<?php bp_the_profile_field_optional_label(); ?>
-				<?php else: ?>
+				<?php else : ?>
 					<?php bp_the_profile_field_required_label(); ?>
 				<?php endif; ?>
 			</legend>
@@ -80,11 +80,14 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 			<?php
 
 			/** This action is documented in bp-xprofile/bp-xprofile-classes */
-			do_action( bp_get_the_profile_field_errors_action() ); ?>
+			do_action( bp_get_the_profile_field_errors_action() );
+			?>
 
-			<?php bp_the_profile_field_options( array( 'user_id' => $user_id ) );
+			<?php
+			bp_the_profile_field_options( array( 'user_id' => $user_id ) );
 
-			if ( ! bp_get_the_profile_field_is_required() ) : ?>
+			if ( ! bp_get_the_profile_field_is_required() ) :
+				?>
 
 				<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>' );">
 					<?php esc_html_e( 'Clear', 'buddyboss' ); ?>
@@ -120,27 +123,28 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 
 			// Check for updated posted values, but errors preventing them from
 			// being saved first time.
-			if ( isset( $_POST['field_' . $this->field_obj->id] ) && $option_value != $_POST['field_' . $this->field_obj->id] ) {
-				if ( ! empty( $_POST['field_' . $this->field_obj->id] ) ) {
-					$option_value = sanitize_text_field( $_POST['field_' . $this->field_obj->id] );
+			if ( isset( $_POST[ 'field_' . $this->field_obj->id ] ) && $option_value != $_POST[ 'field_' . $this->field_obj->id ] ) {
+				if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
+					$option_value = sanitize_text_field( $_POST[ 'field_' . $this->field_obj->id ] );
 				}
 			}
 
 			// Run the allowed option name through the before_save filter, so
 			// we'll be sure to get a match.
-			$allowed_options = xprofile_sanitize_data_value_before_save( $options[$k]->name, false, false );
+			$allowed_options = xprofile_sanitize_data_value_before_save( $options[ $k ]->name, false, false );
 			$selected        = '';
 
-			if ( $option_value === $allowed_options || ( empty( $option_value ) && ! empty( $options[$k]->is_default_option ) ) ) {
+			if ( $option_value === $allowed_options || ( empty( $option_value ) && ! empty( $options[ $k ]->is_default_option ) ) ) {
 				$selected = ' checked="checked"';
 			}
 
-			$new_html = sprintf( '<label for="%3$s" class="option-label"><input %1$s type="radio" name="%2$s" id="%3$s" value="%4$s">%5$s</label>',
+			$new_html = sprintf(
+				'<div class="bp-radio-wrap"><input %1$s type="radio" name="%2$s" id="%3$s" value="%4$s" class="bs-styled-radio" /><label for="%3$s" class="option-label">%5$s</label></div>',
 				$selected,
 				esc_attr( bp_get_the_profile_field_input_name() ),
 				esc_attr( "option_{$options[$k]->id}" ),
-				esc_attr( stripslashes( $options[$k]->name ) ),
-				esc_html( stripslashes( $options[$k]->name ) )
+				esc_attr( stripslashes( $options[ $k ]->name ) ),
+				esc_html( stripslashes( $options[ $k ]->name ) )
 			);
 
 			/**
@@ -154,10 +158,11 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 			 * @param string $selected Current selected value.
 			 * @param string $k        Current index in the foreach loop.
 			 */
-			$html .= apply_filters( 'bp_get_the_profile_field_options_radio', $new_html, $options[$k], $this->field_obj->id, $selected, $k );
+			$html .= apply_filters( 'bp_get_the_profile_field_options_radio', $new_html, $options[ $k ], $this->field_obj->id, $selected, $k );
 		}
 
-		printf( '<div id="%1$s" class="input-options radio-button-options">%2$s</div>',
+		printf(
+			'<div id="%1$s" class="input-options radio-button-options">%2$s</div>',
 			esc_attr( 'field_' . $this->field_obj->id ),
 			$html
 		);
@@ -177,7 +182,8 @@ class BP_XProfile_Field_Type_Radiobutton extends BP_XProfile_Field_Type {
 
 		if ( bp_get_the_profile_field_is_required() ) {
 			return;
-		} ?>
+		}
+		?>
 
 		<a class="clear-value" href="javascript:clear( '<?php echo esc_js( bp_get_the_profile_field_input_name() ); ?>' );">
 			<?php esc_html_e( 'Clear', 'buddyboss' ); ?>

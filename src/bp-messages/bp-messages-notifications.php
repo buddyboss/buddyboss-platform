@@ -73,20 +73,29 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 			$return = apply_filters( 'bp_messages_' . $amount . '_new_message_notification', $return, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 		} else {
 			/** This filter is documented in bp-messages/bp-messages-notifications.php */
-			$return = apply_filters( 'bp_messages_' . $amount . '_new_message_notification', array(
-				'text' => $text,
-				'link' => $link
-			), $link, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
+			$return = apply_filters(
+				'bp_messages_' . $amount . '_new_message_notification',
+				array(
+					'text' => $text,
+					'link' => $link,
+				),
+				$link,
+				(int) $total_items,
+				$text,
+				$link,
+				$item_id,
+				$secondary_item_id
+			);
 		}
 
-	// Custom notification action for the Messages component
+		// Custom notification action for the Messages component
 	} else {
 		if ( 'string' === $format ) {
 			$return = $text;
 		} else {
 			$return = array(
 				'text' => $text,
-				'link' => $link
+				'link' => $link,
 			);
 		}
 
@@ -99,7 +108,7 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 				/** This filter is documented in bp-messages/bp-messages-notifications.php */
 				$return = apply_filters( 'bp_messages_single_new_message_notification', $return, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
 
-			// Notice that there are seven parameters instead of six? Ugh...
+				// Notice that there are seven parameters instead of six? Ugh...
 			} else {
 				/** This filter is documented in bp-messages/bp-messages-notifications.php */
 				$return = apply_filters( 'bp_messages_single_new_message_notification', $return, $link, (int) $total_items, $text, $link, $item_id, $secondary_item_id );
@@ -148,15 +157,17 @@ function messages_format_notifications( $action, $item_id, $secondary_item_id, $
 function bp_messages_message_sent_add_notification( $message ) {
 	if ( ! empty( $message->recipients ) ) {
 		foreach ( (array) $message->recipients as $recipient ) {
-			bp_notifications_add_notification( array(
-				'user_id'           => $recipient->user_id,
-				'item_id'           => $message->id,
-				'secondary_item_id' => $message->sender_id,
-				'component_name'    => buddypress()->messages->id,
-				'component_action'  => 'new_message',
-				'date_notified'     => bp_core_current_time(),
-				'is_new'            => 1,
-			) );
+			bp_notifications_add_notification(
+				array(
+					'user_id'           => $recipient->user_id,
+					'item_id'           => $message->id,
+					'secondary_item_id' => $message->sender_id,
+					'component_name'    => buddypress()->messages->id,
+					'component_action'  => 'new_message',
+					'date_notified'     => bp_core_current_time(),
+					'is_new'            => 1,
+				)
+			);
 		}
 	}
 }
@@ -179,13 +190,15 @@ function bp_messages_screen_conversation_mark_notifications() {
 	}
 
 	// Get unread PM notifications for the user.
-	$new_pm_notifications = BP_Notifications_Notification::get( array(
-		'user_id'           => bp_loggedin_user_id(),
-		'component_name'    => buddypress()->messages->id,
-		'component_action'  => 'new_message',
-		'is_new'            => 1,
-	) );
-	$unread_message_ids = wp_list_pluck( $new_pm_notifications, 'item_id' );
+	$new_pm_notifications = BP_Notifications_Notification::get(
+		array(
+			'user_id'          => bp_loggedin_user_id(),
+			'component_name'   => buddypress()->messages->id,
+			'component_action' => 'new_message',
+			'is_new'           => 1,
+		)
+	);
+	$unread_message_ids   = wp_list_pluck( $new_pm_notifications, 'item_id' );
 
 	// No unread PMs, so stop!
 	if ( empty( $unread_message_ids ) ) {
@@ -251,7 +264,7 @@ function messages_screen_notification_settings() {
 		return;
 	}
 
-	if ( !$new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
+	if ( ! $new_messages = bp_get_user_meta( bp_displayed_user_id(), 'notification_messages_new_message', true ) ) {
 		$new_messages = 'yes';
 	} ?>
 
@@ -259,24 +272,28 @@ function messages_screen_notification_settings() {
 		<thead>
 			<tr>
 				<th class="icon"></th>
-				<th class="title"><?php _e( 'Messages', 'buddyboss' ) ?></th>
-				<th class="yes"><?php _e( 'Yes', 'buddyboss' ) ?></th>
-				<th class="no"><?php _e( 'No', 'buddyboss' )?></th>
+				<th class="title"><?php _e( 'Messages', 'buddyboss' ); ?></th>
+				<th class="yes"><?php _e( 'Yes', 'buddyboss' ); ?></th>
+				<th class="no"><?php _e( 'No', 'buddyboss' ); ?></th>
 			</tr>
 		</thead>
 
 		<tbody>
 			<tr id="messages-notification-settings-new-message">
 				<td></td>
-				<td><?php _e( 'A member sends you a new message', 'buddyboss' ) ?></td>
-				<td class="yes"><input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" value="yes" <?php checked( $new_messages, 'yes', true ) ?>/><label for="notification-messages-new-messages-yes" class="bp-screen-reader-text"><?php
-					/* translators: accessibility text */
-					_e( 'Yes, send email', 'buddyboss' );
-				?></label></td>
-				<td class="no"><input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" value="no" <?php checked( $new_messages, 'no', true ) ?>/><label for="notification-messages-new-messages-no" class="bp-screen-reader-text"><?php
-					/* translators: accessibility text */
-					_e( 'No, do not send email', 'buddyboss' );
-				?></label></td>
+				<td><?php _e( 'A member sends you a new message', 'buddyboss' ); ?></td>
+				<td class="yes">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-yes" class="bs-styled-radio" value="yes" <?php checked( $new_messages, 'yes', true ); ?> />
+						<label for="notification-messages-new-messages-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
+				<td class="no">
+					<div class="bp-radio-wrap">
+						<input type="radio" name="notifications[notification_messages_new_message]" id="notification-messages-new-messages-no" class="bs-styled-radio" value="no" <?php checked( $new_messages, 'no', true ); ?> />
+						<label for="notification-messages-new-messages-no"><span class="bp-screen-reader-text"><?php _e( 'No, do not send email', 'buddyboss' ); ?></span></label>
+					</div>
+				</td>
 			</tr>
 
 			<?php
@@ -286,10 +303,11 @@ function messages_screen_notification_settings() {
 			 *
 			 * @since BuddyPress 1.0.0
 			 */
-			do_action( 'messages_screen_notification_settings' ); ?>
+			do_action( 'messages_screen_notification_settings' );
+			?>
 		</tbody>
 	</table>
 
-<?php
+	<?php
 }
 add_action( 'bp_notification_settings', 'messages_screen_notification_settings', 2 );

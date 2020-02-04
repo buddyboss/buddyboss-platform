@@ -27,10 +27,9 @@ class BP_Admin_Setting_Credit extends BP_Admin_Setting_tab {
 		return true;
 	}
 
-	public function form_html()
-	{
-		require_once trailingslashit( buddypress()->plugin_dir  . 'bp-core/admin/templates' ) . '/credit-screen.php';
+	public function form_html() {
+		require_once trailingslashit( buddypress()->plugin_dir . 'bp-core/admin/templates' ) . '/credit-screen.php';
 	}
 }
 
-return new BP_Admin_Setting_Credit;
+return new BP_Admin_Setting_Credit();

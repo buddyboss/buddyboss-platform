@@ -39,11 +39,13 @@ function bp_groups_group_admin_menu() {
 	$bp->group_admin_menu_id = 'group-admin';
 
 	// Add the top-level Group Admin button.
-	$wp_admin_bar->add_menu( array(
-		'id'    => $bp->group_admin_menu_id,
-		'title' => __( 'Edit Group', 'buddyboss' ),
-		'href'  => bp_get_group_permalink( $bp->groups->current_group ) . 'admin/edit-details/'
-	) );
+	$wp_admin_bar->add_menu(
+		array(
+			'id'    => $bp->group_admin_menu_id,
+			'title' => __( 'Edit Group', 'buddyboss' ),
+			'href'  => bp_get_group_permalink( $bp->groups->current_group ) . 'admin/edit-details/',
+		)
+	);
 
 	// Index of the Manage tabs parent slug.
 	$secondary_nav_items = $bp->groups->nav->get_secondary( array( 'parent_slug' => $bp->groups->current_group->slug . '_manage' ) );
@@ -71,22 +73,26 @@ function bp_groups_group_admin_menu() {
 
 				if ( bp_is_active( 'forums' ) && function_exists( 'bbp_is_group_forums_active' ) ) {
 					if ( bbp_is_group_forums_active() ) {
-						$wp_admin_bar->add_menu( array(
-							'parent' => $bp->group_admin_menu_id,
-							'id'     => get_option( '_bbp_forum_slug', 'forum' ),
-							'title'  => 'Edit Group Discussion',
-							'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) )
-						) );
+						$wp_admin_bar->add_menu(
+							array(
+								'parent' => $bp->group_admin_menu_id,
+								'id'     => get_option( '_bbp_forum_slug', 'forum' ),
+								'title'  => 'Edit Group Discussion',
+								'href'   => bp_get_groups_action_link( 'admin/' . get_option( '_bbp_forum_slug', 'forum' ) ),
+							)
+						);
 					}
 				}
 			}
 
-			$wp_admin_bar->add_menu( array(
-				'parent' => $bp->group_admin_menu_id,
-				'id'     => $menu->slug,
-				'title'  => $title,
-				'href'   => bp_get_groups_action_link( 'admin/' . $menu->slug )
-			) );
+			$wp_admin_bar->add_menu(
+				array(
+					'parent' => $bp->group_admin_menu_id,
+					'id'     => $menu->slug,
+					'title'  => $title,
+					'href'   => bp_get_groups_action_link( 'admin/' . $menu->slug ),
+				)
+			);
 		}
 	}
 }

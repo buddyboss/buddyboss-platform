@@ -4,7 +4,6 @@
  *
  * @package BuddyBoss\Activity
  * @since BuddyBoss 1.0.0
-
  */
 
 // Exit if accessed directly
@@ -88,7 +87,7 @@ class BP_Activity_Follow {
 
 		// do not use these filters
 		// use the 'bp_follow_before_save' hook instead
-		$this->leader_id   = apply_filters( 'bp_follow_leader_id_before_save',   $this->leader_id,   $this->id );
+		$this->leader_id   = apply_filters( 'bp_follow_leader_id_before_save', $this->leader_id, $this->id );
 		$this->follower_id = apply_filters( 'bp_follow_follower_id_before_save', $this->follower_id, $this->id );
 
 		/**
@@ -111,7 +110,7 @@ class BP_Activity_Follow {
 
 			// add new entry
 		} else {
-			$result = $wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->activity->table_name_follow} ( leader_id, follower_id ) VALUES ( %d, %d )", $this->leader_id, $this->follower_id ) );
+			$result   = $wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->activity->table_name_follow} ( leader_id, follower_id ) VALUES ( %d, %d )", $this->leader_id, $this->follower_id ) );
 			$this->id = $wpdb->insert_id;
 		}
 
@@ -213,7 +212,10 @@ class BP_Activity_Follow {
 			wp_cache_set( 'bp_total_following_for_user_' . $user_id, $following, 'bp' );
 		}
 
-		return array( 'followers' => (int) $followers, 'following' => (int) $following );
+		return array(
+			'followers' => (int) $followers,
+			'following' => (int) $following,
+		);
 	}
 
 	/**
@@ -222,7 +224,7 @@ class BP_Activity_Follow {
 	 * @since BuddyBoss 1.0.0
 	 *
 	 * @param array $leader_ids The user IDs to check the follow status for.
-	 * @param int $user_id The user ID to check against the list of leader IDs.
+	 * @param int   $user_id The user ID to check against the list of leader IDs.
 	 * @return array
 	 */
 	public static function bulk_check_follow_status( $leader_ids, $user_id = false ) {

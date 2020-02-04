@@ -54,6 +54,12 @@ function bp_nouveau_activity_enqueue_scripts() {
 	}
 
 	wp_enqueue_script( 'bp-nouveau-activity' );
+
+	// Enqueue activity form parts and js required for single activity
+	if ( bp_nouveau_current_user_can( 'publish_activity' ) && bp_is_single_activity() ) {
+		wp_enqueue_script( 'bp-nouveau-activity-post-form' );
+		bp_get_template_part( 'common/js-templates/activity/form' );
+	}
 }
 
 /**
@@ -166,7 +172,7 @@ function bp_nouveau_activity_localize_scripts( $params = array() ) {
 		if ( bp_is_active( 'groups' ) && bp_has_groups( array( 'user_id' => bp_loggedin_user_id(), 'max' => 1 ) ) ) {
 			$activity_objects['group'] = array(
 				'text'                     => __( 'Post in: Group', 'buddyboss' ),
-				'autocomplete_placeholder' => __( 'Start typing the group name&hellip;', 'buddyboss' ),
+				'autocomplete_placeholder' => __( 'Start typing the group name...', 'buddyboss' ),
 				'priority'                 => 10,
 			);
 		}

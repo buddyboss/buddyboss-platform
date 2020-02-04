@@ -8,7 +8,7 @@
 
 ?>
 
-<?php if ( !bbp_is_single_forum() ) : ?>
+<?php if ( ! bbp_is_single_forum() ) : ?>
 
 <div id="bbpress-forums">
 
@@ -34,17 +34,18 @@
 				<legend>
 
 					<?php
-						if ( bbp_is_topic_edit() )
-							printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_topic_title() );
-						else
-							bbp_is_single_forum() ? printf( __( 'Ask a question or share an idea.', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Start New Discussion', 'buddyboss' );
+					if ( bbp_is_topic_edit() ) {
+						printf( __( 'Now Editing &ldquo;%s&rdquo;', 'buddyboss' ), bbp_get_topic_title() );
+					} else {
+						bbp_is_single_forum() ? printf( __( 'Ask a question or share an idea.', 'buddyboss' ), bbp_get_forum_title() ) : _e( 'Start New Discussion', 'buddyboss' );
+					}
 					?>
 
 				</legend>
 
 				<?php do_action( 'bbp_theme_before_topic_form_notices' ); ?>
 
-				<?php if ( !bbp_is_topic_edit() && bbp_is_forum_closed() ) : ?>
+				<?php if ( ! bbp_is_topic_edit() && bbp_is_forum_closed() ) : ?>
 
 					<div class="bp-feedback info">
 						<span class="bp-icon" aria-hidden="true"></span>
@@ -62,7 +63,7 @@
 					<?php do_action( 'bbp_theme_before_topic_form_title' ); ?>
 
 					<p>
-						<label for="bbp_topic_title"><?php _e('Discussion Title', 'buddyboss'); ?></label><br />
+						<label for="bbp_topic_title"><?php _e( 'Discussion Title', 'buddyboss' ); ?></label><br />
 						<input type="text" id="bbp_topic_title" value="<?php bbp_form_topic_title(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_title" maxlength="<?php bbp_title_max_length(); ?>" />
 					</p>
 
@@ -79,7 +80,7 @@
 					<?php if ( ! ( bbp_use_wp_editor() || current_user_can( 'unfiltered_html' ) ) ) : ?>
 
 						<p class="form-allowed-tags">
-							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:','buddyboss' ); ?></label><br />
+							<label><?php _e( 'You may use these <abbr title="HyperText Markup Language">HTML</abbr> tags and attributes:', 'buddyboss' ); ?></label><br />
 							<code><?php bbp_allowed_tags(); ?></code>
 						</p>
 
@@ -90,25 +91,27 @@
 						<?php do_action( 'bbp_theme_before_topic_form_tags' ); ?>
 
 						<p>
-							<label for="bbp_topic_tags"><?php _e( 'Tags:', 'buddyboss' ); ?></label><br />
-							<input type="text" value="<?php bbp_form_topic_tags(); ?>" tabindex="<?php bbp_tab_index(); ?>" size="40" name="bbp_topic_tags" id="bbp_topic_tags" <?php disabled( bbp_is_topic_spam() ); ?> />
+							<input type="hidden" value="" name="bbp_topic_tags" class="bbp_topic_tags" id="bbp_topic_tags" >
+							<select name="bbp_topic_tags_dropdown[]" class="bbp_topic_tags_dropdown" id="bbp_topic_tags_dropdown" placeholder="<?php esc_html_e( 'Type one or more tag, comma separated', 'buddyboss' ); ?>" autocomplete="off" multiple="multiple" style="width: 100%" tabindex="<?php bbp_tab_index(); ?>"></select>
 						</p>
 
 						<?php do_action( 'bbp_theme_after_topic_form_tags' ); ?>
 
 					<?php endif; ?>
 
-					<?php if ( !bbp_is_single_forum() ) : ?>
+					<?php if ( ! bbp_is_single_forum() ) : ?>
 
 						<?php do_action( 'bbp_theme_before_topic_form_forum' ); ?>
 
 						<p>
 							<label for="bbp_forum_id"><?php _e( 'Forum:', 'buddyboss' ); ?></label><br />
 							<?php
-								bbp_dropdown( array(
-									'show_none' => __( '(No Forum)', 'buddyboss' ),
-									'selected'  => bbp_get_form_topic_forum()
-								) );
+								bbp_dropdown(
+									array(
+										'show_none' => __( '(No Forum)', 'buddyboss' ),
+										'selected'  => bbp_get_form_topic_forum(),
+									)
+								);
 							?>
 						</p>
 
@@ -132,12 +135,12 @@
 
 					<?php endif; ?>
 
-					<?php if ( bbp_is_subscriptions_active() && !bbp_is_anonymous() && ( !bbp_is_topic_edit() || ( bbp_is_topic_edit() && !bbp_is_topic_anonymous() ) ) ) : ?>
+					<?php if ( bbp_is_subscriptions_active() && ! bbp_is_anonymous() && ( ! bbp_is_topic_edit() || ( bbp_is_topic_edit() && ! bbp_is_topic_anonymous() ) ) ) : ?>
 
 						<?php do_action( 'bbp_theme_before_topic_form_subscriptions' ); ?>
 
-						<p>
-							<input name="bbp_topic_subscription" id="bbp_topic_subscription" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+						<p class="checkbox bp-checkbox-wrap">
+							<input name="bbp_topic_subscription" id="bbp_topic_subscription" class="bs-styled-checkbox" type="checkbox" value="bbp_subscribe" <?php bbp_form_topic_subscribed(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 
 							<?php if ( bbp_is_topic_edit() && ( bbp_get_topic_author_id() !== bbp_get_current_user_id() ) ) : ?>
 
@@ -159,10 +162,10 @@
 						<?php do_action( 'bbp_theme_before_topic_form_revisions' ); ?>
 
 						<fieldset class="bbp-form">
-							<legend>
-								<input name="bbp_log_topic_edit" id="bbp_log_topic_edit" type="checkbox" value="1" <?php bbp_form_topic_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
+							<div class="bp-checkbox-wrap">
+								<input name="bbp_log_topic_edit" id="bbp_log_topic_edit" class="bs-styled-checkbox" type="checkbox" value="1" <?php bbp_form_topic_log_edit(); ?> tabindex="<?php bbp_tab_index(); ?>" />
 								<label for="bbp_log_topic_edit"><?php _e( 'Keep a log of this edit:', 'buddyboss' ); ?></label><br />
-							</legend>
+							</div>
 
 							<div>
 								<label for="bbp_topic_edit_reason"><?php printf( __( 'Optional reason for editing:', 'buddyboss' ), bbp_get_current_user_name() ); ?></label><br />
@@ -219,7 +222,7 @@
 
 <?php endif; ?>
 
-<?php if ( !bbp_is_single_forum() ) : ?>
+<?php if ( ! bbp_is_single_forum() ) : ?>
 
 </div>
 

@@ -39,18 +39,19 @@ defined( 'ABSPATH' ) || exit;
  *
  *           v--WordPress Actions       v--BuddyPress Sub-actions
  */
-add_filter( 'request',                 'bp_request',             10    );
-add_filter( 'template_include',        'bp_template_include',    10    );
-add_filter( 'login_redirect',          'bp_login_redirect',      10, 3 );
-add_filter( 'map_meta_cap',            'bp_map_meta_caps',       10, 4 );
+add_filter( 'request', 'bp_request', 10 );
+add_filter( 'template_include', 'bp_template_include', 10 );
+add_filter( 'login_redirect', 'bp_login_redirect', 10, 3 );
+add_filter( 'map_meta_cap', 'bp_map_meta_caps', 10, 4 );
 
 // Add some filters to feedback messages.
-add_filter( 'bp_core_render_message_content', 'wptexturize'       );
-add_filter( 'bp_core_render_message_content', 'convert_smilies'   );
-add_filter( 'bp_core_render_message_content', 'convert_chars'     );
-add_filter( 'bp_core_render_message_content', 'wpautop'           );
+add_filter( 'bp_core_render_message_content', 'do_shortcode' );
+add_filter( 'bp_core_render_message_content', 'wptexturize' );
+add_filter( 'bp_core_render_message_content', 'convert_smilies' );
+add_filter( 'bp_core_render_message_content', 'convert_chars' );
+add_filter( 'bp_core_render_message_content', 'wpautop' );
 add_filter( 'bp_core_render_message_content', 'shortcode_unautop' );
-add_filter( 'bp_core_render_message_content', 'wp_kses_data', 5   );
+add_filter( 'bp_core_render_message_content', 'wp_kses_data', 5 );
 
 // Emails.
 add_filter( 'bp_email_set_content_html', 'wp_filter_post_kses', 6 );
@@ -61,10 +62,11 @@ add_filter( 'bp_email_set_subject', 'sanitize_text_field', 6 );
 // Avatars
 /**
  * Disable gravatars fallback for member avatars.
+ *
  * @since BuddyBoss 1.0.0
  */
-add_action( 'init', 'bp_enable_gravatar_callback');
-//add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
+add_action( 'init', 'bp_enable_gravatar_callback' );
+// add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
 function bp_enable_gravatar_callback() {
 	$avatar = (bool) bp_get_option( 'bp-enable-profile-gravatar', false );
 
@@ -72,6 +74,7 @@ function bp_enable_gravatar_callback() {
 		// Avatars
 		/**
 		 * Disable gravatars fallback for member avatars.
+		 *
 		 * @since BuddyBoss 1.0.0
 		 */
 		add_filter( 'bp_core_fetch_avatar_no_grav', '__return_true' );
@@ -87,8 +90,8 @@ function bp_enable_gravatar_callback() {
  * template hierarchy, start here by removing this filter, then look at how
  * bp_template_include() works and do something similar. :)
  */
-add_filter( 'bp_template_include',   'bp_template_include_theme_supports', 2, 1 );
-add_filter( 'bp_template_include',   'bp_template_include_theme_compat',   4, 2 );
+add_filter( 'bp_template_include', 'bp_template_include_theme_supports', 2, 1 );
+add_filter( 'bp_template_include', 'bp_template_include_theme_compat', 4, 2 );
 
 // Filter BuddyPress template locations.
 add_filter( 'bp_get_template_stack', 'bp_add_template_stack_locations' );
@@ -111,16 +114,19 @@ add_filter( 'posts_pre_query', 'bp_core_filter_wp_query', 10, 2 );
 function bp_core_exclude_pages( $pages = array() ) {
 
 	// Bail if not the root blog.
-	if ( ! bp_is_root_blog() )
+	if ( ! bp_is_root_blog() ) {
 		return $pages;
+	}
 
 	$bp = buddypress();
 
-	if ( !empty( $bp->pages->activate ) )
+	if ( ! empty( $bp->pages->activate ) ) {
 		$pages[] = $bp->pages->activate->id;
+	}
 
-	if ( !empty( $bp->pages->register ) )
+	if ( ! empty( $bp->pages->register ) ) {
 		$pages[] = $bp->pages->register->id;
+	}
 
 	/**
 	 * Filters specific pages that shouldn't show up on page listings.
@@ -152,7 +158,7 @@ function bp_core_exclude_pages_from_nav_menu_admin( $object = null ) {
 		return $object;
 	}
 
-	$bp = buddypress();
+	$bp    = buddypress();
 	$pages = array();
 
 	if ( ! empty( $bp->pages->activate ) ) {
@@ -250,7 +256,7 @@ function bp_core_menu_highlight_nav_menu_item( $retval, $item ) {
 	}
 
 	// Get the WP page.
-	$page   = get_post( $item->object_id );
+	$page = get_post( $item->object_id );
 
 	// See if we should add our highlight CSS classes for the page.
 	$retval = bp_core_menu_highlight_parent_page( $retval, $page );
@@ -271,26 +277,31 @@ add_filter( 'nav_menu_css_class', 'bp_core_menu_highlight_nav_menu_item', 10, 2 
 function bp_core_filter_comments( $comments, $post_id ) {
 	global $wpdb;
 
-	foreach( (array) $comments as $comment ) {
-		if ( $comment->user_id )
+	foreach ( (array) $comments as $comment ) {
+		if ( $comment->user_id ) {
 			$user_ids[] = $comment->user_id;
+		}
 	}
 
-	if ( empty( $user_ids ) )
+	if ( empty( $user_ids ) ) {
 		return $comments;
+	}
 
 	$user_ids = implode( ',', wp_parse_id_list( $user_ids ) );
 
-	if ( !$userdata = $wpdb->get_results( "SELECT ID as user_id, user_login, user_nicename FROM {$wpdb->users} WHERE ID IN ({$user_ids})" ) )
+	if ( ! $userdata = $wpdb->get_results( "SELECT ID as user_id, user_login, user_nicename FROM {$wpdb->users} WHERE ID IN ({$user_ids})" ) ) {
 		return $comments;
+	}
 
-	foreach( (array) $userdata as $user )
-		$users[$user->user_id] = bp_core_get_user_domain( $user->user_id, $user->user_nicename, $user->user_login );
+	foreach ( (array) $userdata as $user ) {
+		$users[ $user->user_id ] = bp_core_get_user_domain( $user->user_id, $user->user_nicename, $user->user_login );
+	}
 
-	foreach( (array) $comments as $i => $comment ) {
-		if ( !empty( $comment->user_id ) ) {
-			if ( !empty( $users[$comment->user_id] ) )
-				$comments[$i]->comment_author_url = $users[$comment->user_id];
+	foreach ( (array) $comments as $i => $comment ) {
+		if ( ! empty( $comment->user_id ) ) {
+			if ( ! empty( $users[ $comment->user_id ] ) ) {
+				$comments[ $i ]->comment_author_url = $users[ $comment->user_id ];
+			}
 		}
 	}
 
@@ -314,12 +325,12 @@ add_filter( 'comments_array', 'bp_core_filter_comments', 10, 2 );
 function bp_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 
 	// Only modify the redirect if we're on the main BP blog.
-	if ( !bp_is_root_blog() ) {
+	if ( ! bp_is_root_blog() ) {
 		return $redirect_to;
 	}
 
 	// Only modify the redirect once the user is logged in.
-	if ( !is_a( $user, 'WP_User' ) ) {
+	if ( ! is_a( $user, 'WP_User' ) ) {
 		return $redirect_to;
 	}
 
@@ -344,7 +355,7 @@ function bp_core_login_redirect( $redirect_to, $redirect_to_raw, $user ) {
 	// If a 'redirect_to' parameter has been passed that contains 'wp-admin', verify that the
 	// logged-in user has any business to conduct in the Dashboard before allowing the
 	// redirect to go through.
-	if ( !empty( $redirect_to ) && ( false === strpos( $redirect_to, 'wp-admin' ) || user_can( $user, 'edit_posts' ) ) ) {
+	if ( ! empty( $redirect_to ) && ( false === strpos( $redirect_to, 'wp-admin' ) || user_can( $user, 'edit_posts' ) ) ) {
 		return $redirect_to;
 	}
 
@@ -375,8 +386,8 @@ add_filter( 'bp_login_redirect', 'bp_core_login_redirect', 10, 3 );
  */
 function bp_email_plaintext_entity_decode( $retval, $prop, $transform ) {
 	switch ( $prop ) {
-		case 'content_plaintext' :
-		case 'subject' :
+		case 'content_plaintext':
+		case 'subject':
 			// Only decode if 'replace-tokens' is the current type.
 			if ( 'replace-tokens' === $transform ) {
 				return html_entity_decode( $retval, ENT_QUOTES );
@@ -385,7 +396,7 @@ function bp_email_plaintext_entity_decode( $retval, $prop, $transform ) {
 			}
 			break;
 
-		default :
+		default:
 			return $retval;
 			break;
 	}
@@ -454,8 +465,9 @@ function bp_core_filter_blog_welcome_email( $welcome_email, $blog_id, $user_id, 
 	}
 
 	// Don't touch the email if we don't have a custom registration template.
-	if ( ! bp_has_custom_signup_page() )
+	if ( ! bp_has_custom_signup_page() ) {
 		return $welcome_email;
+	}
 
 	// [User Set] Replaces $password in welcome email; Represents value set by user
 	return str_replace( $password, __( '[User Set]', 'buddyboss' ), $welcome_email );
@@ -516,9 +528,9 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 	if ( is_admin() ) {
 
 		// If the user is created from the WordPress Add User screen, don't send BuddyPress signup notifications.
-		if( in_array( get_current_screen()->id, array( 'user', 'user-network' ) ) ) {
+		if ( in_array( get_current_screen()->id, array( 'user', 'user-network' ) ) ) {
 			// If the Super Admin want to skip confirmation email.
-			if ( isset( $_POST[ 'noconfirmation' ] ) && is_super_admin() ) {
+			if ( isset( $_POST['noconfirmation'] ) && is_super_admin() ) {
 				return false;
 
 				// WordPress will manage the signup process.
@@ -540,7 +552,7 @@ function bp_core_activation_signup_user_notification( $user, $user_email, $key, 
 		}
 	}
 
-	$user_id = 0;
+	$user_id     = 0;
 	$user_object = get_user_by( 'login', $user );
 	if ( $user_object ) {
 		$user_id = $user_object->ID;
@@ -628,10 +640,10 @@ function bp_modify_page_title( $title = '', $sep = '&raquo;', $seplocation = 'ri
 	 */
 	return apply_filters( 'bp_modify_page_title', $new_title, $title, $sep, $seplocation );
 }
-add_filter( 'wp_title',             'bp_modify_page_title', 20, 3 );
-add_filter( 'bp_modify_page_title', 'wptexturize'                 );
-add_filter( 'bp_modify_page_title', 'convert_chars'               );
-add_filter( 'bp_modify_page_title', 'esc_html'                    );
+add_filter( 'wp_title', 'bp_modify_page_title', 20, 3 );
+add_filter( 'bp_modify_page_title', 'wptexturize' );
+add_filter( 'bp_modify_page_title', 'convert_chars' );
+add_filter( 'bp_modify_page_title', 'esc_html' );
 
 /**
  * Filter the document title for BuddyPress pages.
@@ -656,7 +668,7 @@ function bp_modify_document_title_parts( $title = array() ) {
 	// Build the BuddyPress portion of the title.
 	// We don't need to sanitize this as WordPress will take care of it.
 	$bp_title = array(
-		'title' => join( " $sep ", $bp_title_parts )
+		'title' => join( " $sep ", $bp_title_parts ),
 	);
 
 	// Add the pagination number if needed (not sure if this is necessary).
@@ -698,7 +710,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 	$menu_classes = $menu_item->classes;
 
 	if ( is_array( $menu_classes ) ) {
-		$menu_classes = implode( ' ', $menu_item->classes);
+		$menu_classes = implode( ' ', $menu_item->classes );
 	}
 
 	// We use information stored in the CSS class to determine what kind of
@@ -711,7 +723,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 	}
 
 	switch ( $matches[1] ) {
-		case 'login' :
+		case 'login':
 			if ( is_user_logged_in() ) {
 				$menu_item->_invalid = true;
 			} else {
@@ -720,7 +732,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 
 			break;
 
-		case 'logout' :
+		case 'logout':
 			if ( ! is_user_logged_in() ) {
 				$menu_item->_invalid = true;
 			} else {
@@ -730,7 +742,7 @@ function bp_setup_nav_menu_item( $menu_item ) {
 			break;
 
 		// Don't show the Register link to logged-in users.
-		case 'register' :
+		case 'register':
 			if ( is_user_logged_in() ) {
 				$menu_item->_invalid = true;
 			}
@@ -816,18 +828,21 @@ add_filter( 'customize_nav_menu_available_items', 'bp_customizer_nav_menus_get_i
  * @return array $item_types An associative array structured for the customizer.
  */
 function bp_customizer_nav_menus_set_item_types( $item_types = array() ) {
-	$item_types = array_merge( $item_types, array(
-		'bp_loggedin_nav' => array(
-			'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
-			'type'   => 'bp_nav',
-			'object' => 'bp_loggedin_nav',
-		),
-		'bp_loggedout_nav' => array(
-			'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
-			'type'   => 'bp_nav',
-			'object' => 'bp_loggedout_nav',
-		),
-	) );
+	$item_types = array_merge(
+		$item_types,
+		array(
+			'bp_loggedin_nav'  => array(
+				'title'  => __( 'BuddyPress (logged-in)', 'buddyboss' ),
+				'type'   => 'bp_nav',
+				'object' => 'bp_loggedin_nav',
+			),
+			'bp_loggedout_nav' => array(
+				'title'  => __( 'BuddyPress (logged-out)', 'buddyboss' ),
+				'type'   => 'bp_nav',
+				'object' => 'bp_loggedout_nav',
+			),
+		)
+	);
 
 	return $item_types;
 }
@@ -864,7 +879,7 @@ function bp_filter_metaid_column_name( $q ) {
 	if ( ! empty( $quoted_matches[0] ) ) {
 		for ( $i = 0; $i < count( $quoted_matches[0] ); $i++ ) {
 			$quote_pos = strpos( $q, '__QUOTE__' );
-			$q = substr_replace( $q, $quoted_matches[0][ $i ], $quote_pos, 9 );
+			$q         = substr_replace( $q, $quoted_matches[0][ $i ], $quote_pos, 9 );
 		}
 	}
 
@@ -1031,10 +1046,12 @@ function bp_email_set_default_headers( $headers, $property, $transform, $email )
 	if ( ! empty( $tokens['unsubscribe'] ) && $tokens['unsubscribe'] !== wp_login_url() ) {
 		$user = get_user_by( 'email', $tokens['recipient.email'] );
 
-		$link = bp_email_get_unsubscribe_link( array(
-			'user_id'           => $user->ID,
-			'notification_type' => $email->get( 'type' ),
-		) );
+		$link = bp_email_get_unsubscribe_link(
+			array(
+				'user_id'           => $user->ID,
+				'notification_type' => $email->get( 'type' ),
+			)
+		);
 
 		if ( ! empty( $link ) ) {
 			$headers['List-Unsubscribe'] = sprintf( '<%s>', esc_url_raw( $link ) );
@@ -1066,11 +1083,11 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 	$tokens['site.name']        = wp_specialchars_decode( bp_get_option( 'blogname' ), ENT_QUOTES );
 
 	// Default values for tokens set conditionally below.
-	$tokens['email.preheader']     = '';
-	$tokens['recipient.email']     = '';
-	$tokens['recipient.name']      = '';
-	$tokens['recipient.avatar']    = '';
-	$tokens['recipient.username']  = '';
+	$tokens['email.preheader']    = '';
+	$tokens['recipient.email']    = '';
+	$tokens['recipient.name']     = '';
+	$tokens['recipient.avatar']   = '';
+	$tokens['recipient.username'] = '';
 
 	// Who is the email going to?
 	$recipient = $email->get( 'to' );
@@ -1090,11 +1107,13 @@ function bp_email_set_default_tokens( $tokens, $property_name, $transform, $emai
 			$tokens['recipient.username'] = $user_obj->user_login;
 
 			if ( bp_is_active( 'settings' ) && empty( $tokens['unsubscribe'] ) ) {
-				$tokens['unsubscribe'] = esc_url( sprintf(
-					'%s%s/notifications/',
-					bp_core_get_user_domain( $user_obj->ID ),
-					bp_get_settings_slug()
-				) );
+				$tokens['unsubscribe'] = esc_url(
+					sprintf(
+						'%s%s/notifications/',
+						bp_core_get_user_domain( $user_obj->ID ),
+						bp_get_settings_slug()
+					)
+				);
 			}
 		}
 	}
@@ -1140,7 +1159,8 @@ function bp_core_render_email_template( $template ) {
 	 *
 	 * @param string $template Path to current template (probably single.php).
 	 */
-	$email_template = apply_filters( 'bp_core_render_email_template',
+	$email_template = apply_filters(
+		'bp_core_render_email_template',
 		bp_locate_template( bp_email_get_template( get_queried_object() ), false ),
 		$template
 	);
@@ -1150,7 +1170,7 @@ function bp_core_render_email_template( $template ) {
 	}
 
 	ob_start();
-	include( $email_template );
+	include $email_template;
 	$template = ob_get_contents();
 	ob_end_clean();
 
@@ -1246,8 +1266,8 @@ add_action( 'xprofile_cover_image_uploaded', 'bp_dd_delete_xprofile_cover_images
  * @since BuddyBoss 1.0.0
  *
  * @param string $avatar_folder_dir
- * @param int $group_id
- * @param array $object
+ * @param int    $group_id
+ * @param array  $object
  * @param string $avatar_dir
  *
  * @return string $avatar_url
@@ -1281,7 +1301,7 @@ add_filter( 'bp_core_avatar_folder_dir', 'bp_dd_check_avatar_folder_dir', 0, 4 )
  * @since BuddyBoss 1.0.0
  *
  * @param string $avatar_url
- * @param array $params
+ * @param array  $params
  *
  * @return string $avatar_url
  */
@@ -1341,13 +1361,12 @@ add_action( 'bp_core_delete_existing_avatar', 'bp_dd_delete_avatar', 10, 1 );
  * Removed the CKEditor Js on the activity page.
  *
  * @since BuddyBoss 1.0.5
- *
  */
 add_filter( 'script_loader_src', 'bp_remove_badgeos_conflict_ckeditor_dequeue_script', 9999, 2 );
 
 function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 
-	if ( function_exists( 'is_plugin_active' ) && is_plugin_active('badgeos/badgeos.php') ) {
+	if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'badgeos/badgeos.php' ) ) {
 
 		if ( bp_is_user_activity() || bp_is_group_activity() || bp_is_activity_directory() || bp_is_messages_component() ) {
 
@@ -1355,8 +1374,31 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
 				$src = '';
 			}
 		}
-
 	}
 
 	return $src;
 }
+
+/**
+ * Removed the non-component pages from $bp->pages from bp_core_set_uri_globals function.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_pages_terms_and_privacy_exclude( $pages ) {
+
+	if ( !empty( $pages ) ) {
+
+		// Removed terms page as non component page.
+		if ( property_exists( $pages, 'terms' ) ) {
+			unset( $pages->terms );
+		}
+
+		// Removed privacy policy page as non component page.
+		if ( property_exists( $pages, 'privacy' ) ) {
+			unset( $pages->privacy );
+		}
+	}
+
+	return $pages;
+}
+add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );

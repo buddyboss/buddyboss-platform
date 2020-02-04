@@ -13,7 +13,9 @@
 defined( 'ABSPATH' ) || exit;
 
 // Include WP's list table class.
-if ( !class_exists( 'WP_List_Table' ) ) require( ABSPATH . 'wp-admin/includes/class-wp-list-table.php' );
+if ( ! class_exists( 'WP_List_Table' ) ) {
+	require ABSPATH . 'wp-admin/includes/class-wp-list-table.php';
+}
 
 
 // Hook for register the invite admin action and filters.
@@ -23,17 +25,16 @@ add_action( 'bp_loaded', 'bp_register_invite_type_sections_filters_actions' );
  * Registers the invite admin action and filters.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_register_invite_type_sections_filters_actions() {
 
-	//add column
+	// add column
 	add_filter( 'manage_' . bp_get_invite_post_type() . '_posts_columns', 'bp_invite_add_column' );
 
 	// action for adding a sortable column name.
 	add_action( 'manage_' . bp_get_invite_post_type() . '_posts_custom_column', 'bp_invite_show_data', 10, 2 );
 
-	//sortable columns
+	// sortable columns
 	add_filter( 'manage_edit-' . bp_get_invite_post_type() . '_sortable_columns', 'bp_invite_add_sortable_columns' );
 
 	// remove bulk actions
@@ -43,9 +44,9 @@ function bp_register_invite_type_sections_filters_actions() {
 
 	add_action( 'admin_notices', 'bp_invite_bulk_action_notices' );
 
-	add_action('admin_footer-edit.php', 'bp_invites_js_bulk_admin_footer');
+	add_action( 'admin_footer-edit.php', 'bp_invites_js_bulk_admin_footer' );
 
-	//hide quick edit link on the custom post type list screen
+	// hide quick edit link on the custom post type list screen
 	add_filter( 'post_row_actions', 'bp_invite_hide_quick_edit', 10, 2 );
 
 	// Invites
@@ -63,11 +64,11 @@ function bp_register_invite_type_sections_filters_actions() {
  */
 function bp_invite_add_column( $columns ) {
 
-	$columns['inviter'] = __( 'Sender', 'buddyboss' );
-	$columns['invitee_name'] = __( 'Recipient Name', 'buddyboss' );
+	$columns['inviter']       = __( 'Sender', 'buddyboss' );
+	$columns['invitee_name']  = __( 'Recipient Name', 'buddyboss' );
 	$columns['invitee_email'] = __( 'Recipient Email', 'buddyboss' );
-	$columns['date_invited'] = __( 'Date Invited', 'buddyboss' );
-	$columns['status'] = __( 'Status', 'buddyboss' );
+	$columns['date_invited']  = __( 'Date Invited', 'buddyboss' );
+	$columns['status']        = __( 'Status', 'buddyboss' );
 
 	unset( $columns['date'] );
 	unset( $columns['title'] );
@@ -83,36 +84,35 @@ function bp_invite_add_column( $columns ) {
  * @param $column
  * @param $post_id
  */
-function bp_invite_show_data( $column, $post_id  ) {
+function bp_invite_show_data( $column, $post_id ) {
 
-	switch( $column ) {
+	switch ( $column ) {
 
 		case 'inviter':
-			$author_id = get_post_field ('post_author', $post_id );
+			$author_id    = get_post_field( 'post_author', $post_id );
 			$inviter_link = bp_core_get_user_domain( $author_id );
 			$inviter_name = bp_core_get_user_displayname( $author_id );
 			printf(
 				'<strong>%s<a href="%s">%s</a></strong>',
-				get_avatar( $author_id, '32' ),esc_url( $inviter_link ), $inviter_name
+				get_avatar( $author_id, '32' ),
+				esc_url( $inviter_link ),
+				$inviter_name
 			);
 
 			break;
 
 		case 'invitee_name':
-
 			echo get_post_meta( $post_id, '_bp_invitee_name', true );
 
 			break;
 
 		case 'invitee_email':
-
 			echo get_post_meta( $post_id, '_bp_invitee_email', true );
 
 			break;
 
 		case 'date_invited':
-
-			$date = get_the_date( '',$post_id );
+			$date = get_the_date( '', $post_id );
 			echo $date;
 
 			break;
@@ -125,11 +125,11 @@ function bp_invite_show_data( $column, $post_id  ) {
 					$title
 				);
 			} else {
-				$redirect_link = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-				$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' .$redirect_link;
+				$redirect_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+				$revoke_link   = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' . $redirect_link;
 				$confirm_title = __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
 				?>
-				<a onclick="return confirm('<?php echo esc_attr( $confirm_title ) ?>')" href="<?php echo esc_url( $revoke_link ); ?>"><?php echo esc_html( $title ); ?></a>
+				<a onclick="return confirm('<?php echo esc_attr( $confirm_title ); ?>')" href="<?php echo esc_url( $revoke_link ); ?>"><?php echo esc_html( $title ); ?></a>
 				<?php
 			}
 
@@ -162,7 +162,6 @@ function bp_invite_add_sortable_columns( $columns ) {
  * Adds a filter to invite sort items.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_invite_add_request_filter() {
 
@@ -180,46 +179,43 @@ function bp_invite_add_request_filter() {
  */
 function bp_invite_sort_items( $qv ) {
 
-	if( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_invite_post_type() )
+	if ( ! isset( $qv['post_type'] ) || $qv['post_type'] != bp_get_invite_post_type() ) {
 		return $qv;
+	}
 
-	if( ! isset( $qv['orderby'] ) )
+	if ( ! isset( $qv['orderby'] ) ) {
 		return $qv;
+	}
 
-	switch( $qv['orderby'] ) {
+	switch ( $qv['orderby'] ) {
 
 		case 'inviter':
-
 			$qv['meta_key'] = '_bp_invites_inviter_name';
-			$qv['orderby'] = 'meta_value';
+			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'invitee_name':
-
 			$qv['meta_key'] = '_bp_invites_invitee_name';
-			$qv['orderby'] = 'meta_value';
+			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'invitee_email':
-
 			$qv['meta_key'] = '_bp_invites_invitee_email';
-			$qv['orderby'] = 'meta_value';
+			$qv['orderby']  = 'meta_value';
 
 			break;
 
 		case 'date_invited':
-
 			$qv['meta_key'] = '_bp_invites_date_invited';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby']  = 'meta_value_num';
 
 			break;
 
 		case 'status':
-
 			$qv['meta_key'] = '_bp_invites_status';
-			$qv['orderby'] = 'meta_value_num';
+			$qv['orderby']  = 'meta_value_num';
 
 			break;
 
@@ -243,13 +239,14 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 		global $post;
 	}
 
-	if ( bp_get_invite_post_type() == $post->post_type )
+	if ( bp_get_invite_post_type() == $post->post_type ) {
 		unset( $actions['inline hide-if-no-js'] );
+	}
 
 	if ( bp_get_invite_post_type() == $post->post_type ) {
 
 		// Sender author id
-		$author_id = get_post_field ('post_author', $post->ID );
+		$author_id = get_post_field( 'post_author', $post->ID );
 
 		// Build edit links URL.
 		$edit_url = admin_url( 'user-edit.php?user_id=' . $author_id );
@@ -260,12 +257,16 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
 		$inviter_link = bp_core_get_user_domain( $author_id );
 
 		$actions = array(
-			'edit' => sprintf( '<a href="%1$s">%2$s</a>',
+			'edit' => sprintf(
+				'<a href="%1$s">%2$s</a>',
 				esc_url( $edit_link ),
-				esc_html( __( 'Edit', 'buddyboss' ) ) ),
-			'view' => sprintf( '<a href="%1$s">%2$s</a>',
-			esc_url( $inviter_link ),
-			esc_html( __( 'View', 'buddyboss' ) ) )
+				esc_html( __( 'Edit', 'buddyboss' ) )
+			),
+			'view' => sprintf(
+				'<a href="%1$s">%2$s</a>',
+				esc_url( $inviter_link ),
+				esc_html( __( 'View', 'buddyboss' ) )
+			),
 		);
 	}
 
@@ -283,8 +284,8 @@ function bp_invite_hide_quick_edit( $actions, $post ) {
  */
 function bp_invites_remove_bulk_actions( $actions ) {
 
-	unset( $actions[ 'edit' ] );
-	unset( $actions[ 'trash' ] );
+	unset( $actions['edit'] );
+	unset( $actions['trash'] );
 	$actions['revoke_action'] = 'Revoke Invitations';
 	return $actions;
 }
@@ -337,14 +338,14 @@ function bp_invites_bulk_action_handler( $redirect, $doaction, $object_ids ) {
 			if ( isset( $post_id ) && '' !== $post_id ) {
 				wp_delete_post( $post_id, true );
 			}
-
 		}
 
 		// do not forget to add query args to URL because we will show notices later
 		$redirect = add_query_arg(
 			'revoke_action',
 			count( $object_ids ), // parameter value - how much posts have been affected
-			$redirect );
+			$redirect
+		);
 
 	}
 
@@ -355,16 +356,18 @@ function bp_invites_bulk_action_handler( $redirect, $doaction, $object_ids ) {
  * Revoke invitation success message.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_invite_bulk_action_notices() {
 
-	if( ! empty( $_REQUEST['revoke_action'] ) ) {
+	if ( ! empty( $_REQUEST['revoke_action'] ) ) {
 
 		// depending on ho much posts were changed, make the message different
-		printf( '<div id="message" class="updated notice is-dismissible"><p>' .
+		printf(
+			'<div id="message" class="updated notice is-dismissible"><p>' .
 			_n( 'Invite %s has been revoked.', 'Invites of %s has been revoked..', intval( $_REQUEST['revoke_action'] ), 'buddyboss' ) .
-			'</p></div>', intval( $_REQUEST['revoke_action'] ) );
+			'</p></div>',
+			intval( $_REQUEST['revoke_action'] )
+		);
 
 	}
 }
@@ -373,13 +376,12 @@ function bp_invite_bulk_action_notices() {
  * Javascript popup to confirm bulk revoke invitations.
  *
  * @since BuddyBoss 1.0.0
- *
  */
 function bp_invites_js_bulk_admin_footer() {
 
 	global $post_type;
 
-	if( 'bp-invite' === $post_type ) {
+	if ( 'bp-invite' === $post_type ) {
 		$confirm_title = __( 'Are you sure you want to revoke all selected invitation?', 'buddyboss' );
 		?>
 		<script type="text/javascript">

@@ -98,15 +98,18 @@ class Group extends BuddypressCommand {
 	 * @alias add
 	 */
 	public function create( $args, $assoc_args ) {
-		$r = wp_parse_args( $assoc_args, array(
-			'name'         => '',
-			'slug'         => '',
-			'description'  => '',
-			'creator-id'   => 1,
-			'status'       => 'public',
-			'enable-forum' => 0,
-			'date-created' => bp_core_current_time(),
-		) );
+		$r = wp_parse_args(
+			$assoc_args,
+			array(
+				'name'         => '',
+				'slug'         => '',
+				'description'  => '',
+				'creator-id'   => 1,
+				'status'       => 'public',
+				'enable-forum' => 0,
+				'date-created' => bp_core_current_time(),
+			)
+		);
 
 		// Auto-generate some stuff.
 		if ( empty( $r['slug'] ) ) {
@@ -122,15 +125,17 @@ class Group extends BuddypressCommand {
 			$r['status'] = 'public';
 		}
 
-		$group_id = groups_create_group( array(
-			'name'         => $r['name'],
-			'slug'         => $r['slug'],
-			'description'  => $r['description'],
-			'creator_id'   => $r['creator-id'],
-			'status'       => $r['status'],
-			'enable_forum' => $r['enable-forum'],
-			'date_created' => $r['date-created'],
-		) );
+		$group_id = groups_create_group(
+			array(
+				'name'         => $r['name'],
+				'slug'         => $r['slug'],
+				'description'  => $r['description'],
+				'creator_id'   => $r['creator-id'],
+				'status'       => $r['status'],
+				'enable_forum' => $r['enable-forum'],
+				'date_created' => $r['date-created'],
+			)
+		);
 
 		// Silent it before it errors.
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'silent' ) ) {
@@ -146,9 +151,11 @@ class Group extends BuddypressCommand {
 		if ( WP_CLI\Utils\get_flag_value( $assoc_args, 'porcelain' ) ) {
 			WP_CLI::line( $group_id );
 		} else {
-			$group = groups_get_group( array(
-				'group_id' => $group_id,
-			) );
+			$group     = groups_get_group(
+				array(
+					'group_id' => $group_id,
+				)
+			);
 			$permalink = bp_get_group_permalink( $group );
 			WP_CLI::success( sprintf( 'Group (ID %d) created: %s', $group_id, $permalink ) );
 		}
@@ -193,13 +200,16 @@ class Group extends BuddypressCommand {
 		$notify = WP_CLI\Utils\make_progress_bar( 'Generating groups', $assoc_args['count'] );
 
 		for ( $i = 0; $i < $assoc_args['count']; $i++ ) {
-			$this->create( array(), array(
-				'name'         => sprintf( 'Group - #%d', $i ),
-				'creator-id'   => $assoc_args['creator-id'],
-				'status'       => $this->random_group_status( $assoc_args['status'] ),
-				'enable-forum' => $assoc_args['enable-forum'],
-				'silent',
-			) );
+			$this->create(
+				array(),
+				array(
+					'name'         => sprintf( 'Group - #%d', $i ),
+					'creator-id'   => $assoc_args['creator-id'],
+					'status'       => $this->random_group_status( $assoc_args['status'] ),
+					'enable-forum' => $assoc_args['enable-forum'],
+					'silent',
+				)
+			);
 
 			$notify->tick();
 		}
@@ -273,13 +283,17 @@ class Group extends BuddypressCommand {
 
 		WP_CLI::confirm( 'Are you sure you want to delete this group and its metadata?', $assoc_args );
 
-		parent::_delete( array( $group_id ), $assoc_args, function( $group_id ) {
-			if ( groups_delete_group( $group_id ) ) {
-				return array( 'success', 'Group successfully deleted.' );
-			} else {
-				return array( 'error', 'Could not delete the group.' );
+		parent::_delete(
+			array( $group_id ),
+			$assoc_args,
+			function( $group_id ) {
+				if ( groups_delete_group( $group_id ) ) {
+					return array( 'success', 'Group successfully deleted.' );
+				} else {
+					return array( 'error', 'Could not delete the group.' );
+				}
 			}
-		} );
+		);
 	}
 
 	/**
@@ -304,9 +318,13 @@ class Group extends BuddypressCommand {
 			$clean_group_ids[] = $this->get_group_id_from_identifier( $group_id );
 		}
 
-		parent::_update( $clean_group_ids, $assoc_args, function( $params ) {
-			return groups_create_group( $params );
-		} );
+		parent::_update(
+			$clean_group_ids,
+			$assoc_args,
+			function( $params ) {
+				return groups_create_group( $params );
+			}
+		);
 	}
 
 	/**
@@ -370,16 +388,19 @@ class Group extends BuddypressCommand {
 	 */
 	public function _list( $args, $assoc_args ) {
 		$formatter  = $this->get_formatter( $assoc_args );
-		$query_args = wp_parse_args( $assoc_args, array(
-			'count'       => 50,
-			'show_hidden' => true,
-			'orderby'     => $assoc_args['orderby'],
-			'order'       => $assoc_args['order'],
-			'per_page'    => $assoc_args['count'],
-		) );
+		$query_args = wp_parse_args(
+			$assoc_args,
+			array(
+				'count'       => 50,
+				'show_hidden' => true,
+				'orderby'     => $assoc_args['orderby'],
+				'order'       => $assoc_args['order'],
+				'per_page'    => $assoc_args['count'],
+			)
+		);
 
 		if ( isset( $assoc_args['user-id'] ) ) {
-			$user = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
+			$user                  = $this->get_user_id_from_identifier( $assoc_args['user-id'] );
 			$query_args['user_id'] = $user->ID;
 		}
 

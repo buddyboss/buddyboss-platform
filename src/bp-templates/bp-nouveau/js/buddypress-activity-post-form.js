@@ -308,13 +308,37 @@ window.bp = window.bp || {};
 
 		initialize: function() {
 			this.model.set( 'link_scrapping', false );
+			this.model.set( 'link_embed', false );
 			this.listenTo( this.model, 'change', this.render );
 			document.addEventListener( 'activity_link_preview_open', this.open.bind(this) );
 			document.addEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
 		},
 
 		render: function() {
+			// do not re render if post form is submitting
+			if ( this.model.get( 'posting' ) == true ) {
+				return;
+			}
+
 			this.$el.html( this.template( this.model.toJSON() ) );
+
+			// if link embed is used then add class to container
+			if ( this.model.get( 'link_embed' ) == true ) {
+
+				// support for instgram embed after ajax
+				if ( typeof window.instgrm !== 'undefined' ) {
+					window.instgrm.Embeds.process();
+				}
+
+				// support for facebook embed after ajax
+				if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+					window.FB.XFBML.parse(this.el);
+				}
+
+				this.$el.addClass('activity-post-form-link-wp-embed');
+			} else {
+				this.$el.removeClass('activity-post-form-link-wp-embed');
+			}
 			return this;
 		},
 
@@ -362,7 +386,8 @@ window.bp = window.bp || {};
 				link_image_index: 0,
 				link_title: '',
 				link_description: '',
-				link_url: ''
+				link_url: '',
+				link_embed: false
 			});
 			document.removeEventListener( 'activity_link_preview_open', this.open.bind(this) );
 			document.removeEventListener( 'activity_link_preview_close', this.destroy.bind(this) );
@@ -632,6 +657,8 @@ window.bp = window.bp || {};
 			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
 			contenteditable: true
 		},
+		loadURLAjax : null,
+		loadedURLs : [],
 
 		initialize: function() {
 			this.on( 'ready', this.adjustContent, this );
@@ -744,64 +771,94 @@ window.bp = window.bp || {};
 			return urlString;
 		},
 
-		loadURLPreview: function(url) {
+		loadURLPreview: function (url) {
 			var self = this;
 
-			var regexp = /^(http|https|ftp):\/\/[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
-			if ( regexp.test( url ) ) {
+			var regexp = /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/;
+			url = $.trim(url);
+			if (regexp.test(url)) {
 
-				if ( typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true ) {
+				if (typeof self.options.activity.get('link_success') !== 'undefined' && self.options.activity.get('link_success') == true) {
 					return false;
 				}
 
-				self.options.activity.set( {
+				var urlResponse = false;
+				if ( self.loadedURLs.length ) {
+					$.each( self.loadedURLs, function( index, urlObj ) {
+						if ( urlObj.url == url ) {
+							urlResponse = urlObj.response;
+							return false;
+						}
+					});
+				}
+
+				if (self.loadURLAjax != null) {
+					self.loadURLAjax.abort();
+				}
+
+				self.options.activity.set({
 					link_scrapping: true,
 					link_loading: true,
 					link_error: false,
-					link_url: url
-				} );
+					link_url: url,
+					link_embed: false
+				});
 
-				bp.ajax.post( 'bp_activity_parse_url', { url: url } ).always( function( response ) {
-					self.options.activity.set('link_loading', false);
+				if ( ! urlResponse ) {
+					self.loadURLAjax = bp.ajax.post('bp_activity_parse_url', {url: url}).always(function (response) {
+						self.setURLResponse( response, url );
+					});
+				} else {
+					self.setURLResponse( urlResponse, url );
+				}
+			}
+		},
 
-					if ( response.title === '' && response.images === '' ) {
-						self.options.activity.set( 'link_scrapping', false );
-						return;
-					}
+		setURLResponse : function( response, url ) {
+			var self = this;
 
-					if ( response.error === '' ) {
-						self.options.activity.set( {
-							link_success: true,
-							link_title: response.title,
-							link_description: response.description,
-							link_images: response.images,
-							link_image_index: 0
-						} );
+			self.options.activity.set('link_loading', false);
 
-						$('#whats-new-attachments').removeClass('empty');
+			if (response.title === '' && response.images === '') {
+				self.options.activity.set('link_scrapping', false);
+				return;
+			}
 
-						if ( $('#whats-new-attachments').hasClass('activity-video-preview') ) {
-                                                    $('#whats-new-attachments').removeClass('activity-video-preview');
-						}
+			if (response.error === '') {
+				self.options.activity.set({
+					link_success: true,
+					link_title: response.title,
+					link_description: response.description,
+					link_images: response.images,
+					link_image_index: 0,
+					link_embed: typeof response.wp_embed !== 'undefined' && response.wp_embed
+				});
 
-						if ( $('#whats-new-attachments').hasClass('activity-link-preview') ) {
-                                                    $('#whats-new-attachments').removeClass('activity-link-preview');
-						}
+				$('#whats-new-attachments').removeClass('empty');
 
-						if ( $('.activity-media-container').length ) {
-                                                    if (  response.description.indexOf('iframe') > -1 ) {
-                                                            $('#whats-new-attachments').addClass('activity-video-preview');
-                                                    } else {
-                                                            $('#whats-new-attachments').addClass('activity-link-preview');
-                                                    }
-						}
+				if ($('#whats-new-attachments').hasClass('activity-video-preview')) {
+					$('#whats-new-attachments').removeClass('activity-video-preview');
+				}
+
+				if ($('#whats-new-attachments').hasClass('activity-link-preview')) {
+					$('#whats-new-attachments').removeClass('activity-link-preview');
+				}
+
+				if ($('.activity-media-container').length) {
+					if (response.description.indexOf('iframe') > -1 || (typeof response.wp_embed !== 'undefined' && response.wp_embed)) {
+						$('#whats-new-attachments').addClass('activity-video-preview');
 					} else {
-						self.options.activity.set( {
-							link_success: false,
-							link_error: true,
-							link_error_msg: response.error
-						} );
+						$('#whats-new-attachments').addClass('activity-link-preview');
 					}
+				}
+
+				self.loadedURLs.push({'url': url, 'response': response});
+
+			} else {
+				self.options.activity.set({
+					link_success: false,
+					link_error: true,
+					link_error_msg: response.error
 				});
 			}
 		}
@@ -1460,7 +1517,14 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)) {
+			if (!_.isUndefined(BP_Nouveau.media) &&
+				!_.isUndefined(BP_Nouveau.media.emoji) &&
+				(
+					(!_.isUndefined(BP_Nouveau.media.emoji.profile) && BP_Nouveau.media.emoji.profile) ||
+					(!_.isUndefined(BP_Nouveau.media.emoji.groups) && BP_Nouveau.media.emoji.groups)
+				)
+			) {
+
 				$('#whats-new').emojioneArea({
 					standalone: true,
 					hideSource: false,
@@ -1551,7 +1615,9 @@ window.bp = window.bp || {};
 			});
 
 			// Add valid line breaks
-			var content = $whatsNew[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'');
+			var content = $.trim( $whatsNew[0].innerHTML.replace(/<div>/gi,'\n').replace(/<\/div>/gi,'') );
+			content = content.replace(/&nbsp;/g, ' ');
+
 			self.model.set( 'content', content, { silent: true } );
 
 			// Silently add meta
@@ -1645,6 +1711,11 @@ window.bp = window.bp || {};
 					self.model.set('media',medias);
 				}
 
+				var link_embed = false;
+				if ( self.model.get( 'link_embed' ) == true ) {
+					link_embed = true;
+				}
+
 				// Reset the form
 				self.resetForm();
 
@@ -1662,9 +1733,18 @@ window.bp = window.bp || {};
 
 					// Prepend the activity.
 					bp.Nouveau.inject( '#activity-stream ul.activity-list', response.activity, 'prepend' );
-					
+
 					//replace dummy image with original image by faking scroll event
 					jQuery(window).scroll();
+
+					if ( link_embed ) {
+						if ( typeof window.instgrm !== 'undefined' ) {
+							window.instgrm.Embeds.process();
+						}
+						if ( typeof window.FB !== 'undefined' && typeof window.FB.XFBML !== 'undefined' ) {
+							window.FB.XFBML.parse(document.getElementById('activity-' + response.id));
+						}
+					}
 				}
 			} ).fail( function( response ) {
 

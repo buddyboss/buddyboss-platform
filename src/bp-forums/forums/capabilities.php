@@ -17,15 +17,18 @@
  * @return array Forum capabilities
  */
 function bbp_get_forum_caps() {
-	return apply_filters( 'bbp_get_forum_caps', array (
-		'edit_posts'          => 'edit_forums',
-		'edit_others_posts'   => 'edit_others_forums',
-		'publish_posts'       => 'publish_forums',
-		'read_private_posts'  => 'read_private_forums',
-		'read_hidden_posts'   => 'read_hidden_forums',
-		'delete_posts'        => 'delete_forums',
-		'delete_others_posts' => 'delete_others_forums'
-	) );
+	return apply_filters(
+		'bbp_get_forum_caps',
+		array(
+			'edit_posts'          => 'edit_forums',
+			'edit_others_posts'   => 'edit_others_forums',
+			'publish_posts'       => 'publish_forums',
+			'read_private_posts'  => 'read_private_forums',
+			'read_hidden_posts'   => 'read_hidden_forums',
+			'delete_posts'        => 'delete_forums',
+			'delete_others_posts' => 'delete_others_forums',
+		)
+	);
 }
 
 /**
@@ -33,10 +36,10 @@ function bbp_get_forum_caps() {
  *
  * @since bbPress (r4242)
  *
- * @param array $caps Capabilities for meta capability
+ * @param array  $caps Capabilities for meta capability
  * @param string $cap Capability name
- * @param int $user_id User id
- * @param mixed $args Arguments
+ * @param int    $user_id User id
+ * @param mixed  $args Arguments
  * @uses get_post() To get the post
  * @uses get_post_type_object() To get the post type object
  * @uses apply_filters() Filter capability map results
@@ -47,11 +50,10 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 	// What capability is being checked?
 	switch ( $cap ) {
 
-		/** Reading ***********************************************************/
+		/** Reading */
 
-		case 'read_private_forums' :
-		case 'read_hidden_forums'  :
-
+		case 'read_private_forums':
+		case 'read_hidden_forums':
 			// Moderators can always read private/hidden forums
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
@@ -59,18 +61,17 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		case 'read_forum' :
-
+		case 'read_forum':
 			// User cannot spectate
 			if ( ! user_can( $user_id, 'spectate' ) ) {
 				$caps = array( 'do_not_allow' );
 
-			// Do some post ID based logic
+				// Do some post ID based logic
 			} else {
 
 				// Get the post
 				$_post = get_post( $args[0] );
-				if ( !empty( $_post ) ) {
+				if ( ! empty( $_post ) ) {
 
 					// Get caps for post type object
 					$post_type = get_post_type_object( $_post->post_type );
@@ -79,11 +80,11 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 					if ( bbp_get_public_status_id() === $_post->post_status ) {
 						$caps = array( 'spectate' );
 
-					// User is author so allow read
+						// User is author so allow read
 					} elseif ( (int) $user_id === (int) $_post->post_author ) {
 						$caps = array( 'spectate' );
 
-					// Unknown so map to private posts
+						// Unknown so map to private posts
 					} else {
 						$caps = array( $post_type->cap->read_private_posts );
 					}
@@ -92,10 +93,9 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Publishing ********************************************************/
+		/** Publishing */
 
-		case 'publish_forums'  :
-
+		case 'publish_forums':
 			// Moderators can always edit
 			if ( user_can( $user_id, 'moderate' ) ) {
 				$caps = array( 'moderate' );
@@ -103,17 +103,16 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Editing ***********************************************************/
+		/** Editing */
 
 		// Used primarily in wp-admin
-		case 'edit_forums'         :
-		case 'edit_others_forums'  :
-
+		case 'edit_forums':
+		case 'edit_others_forums':
 			// Moderators can always edit
 			if ( user_can( $user_id, 'keep_gate' ) ) {
 				$caps = array( 'keep_gate' );
 
-			// Otherwise, block
+				// Otherwise, block
 			} else {
 				$caps = array( 'do_not_allow' );
 			}
@@ -121,11 +120,10 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 			break;
 
 		// Used everywhere
-		case 'edit_forum' :
-
+		case 'edit_forum':
 			// Get the post
 			$_post = get_post( $args[0] );
-			if ( !empty( $_post ) ) {
+			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
 				$post_type = get_post_type_object( $_post->post_type );
@@ -135,11 +133,11 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				if ( bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
-				// User is author so allow edit if not in admin
-				} elseif ( !is_admin() && ( (int) $user_id === (int) $_post->post_author ) ) {
+					// User is author so allow edit if not in admin
+				} elseif ( ! is_admin() && ( (int) $user_id === (int) $_post->post_author ) ) {
 					$caps[] = $post_type->cap->edit_posts;
 
-				// Unknown, so map to edit_others_posts
+					// Unknown, so map to edit_others_posts
 				} else {
 					$caps[] = $post_type->cap->edit_others_posts;
 				}
@@ -147,14 +145,13 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Deleting **********************************************************/
+		/** Deleting */
 
 		// Allow forum authors to delete forums (for BuddyBoss groups, etc)
-		case 'delete_forum' :
-
+		case 'delete_forum':
 			// Get the post
 			$_post = get_post( $args[0] );
-			if ( !empty( $_post ) ) {
+			if ( ! empty( $_post ) ) {
 
 				// Get caps for post type object
 				$post_type = get_post_type_object( $_post->post_type );
@@ -164,11 +161,11 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 				if ( bbp_is_user_inactive( $user_id ) ) {
 					$caps[] = 'do_not_allow';
 
-				// User is author so allow to delete
+					// User is author so allow to delete
 				} elseif ( (int) $user_id === (int) $_post->post_author ) {
 					$caps[] = $post_type->cap->delete_posts;
 
-				// Unknown so map to delete_others_posts
+					// Unknown so map to delete_others_posts
 				} else {
 					$caps[] = $post_type->cap->delete_others_posts;
 				}
@@ -176,9 +173,9 @@ function bbp_map_forum_meta_caps( $caps = array(), $cap = '', $user_id = 0, $arg
 
 			break;
 
-		/** Admin *************************************************************/
+		/** Admin */
 
-		case 'bbp_forums_admin' :
+		case 'bbp_forums_admin':
 			$caps = array( 'keep_gate' );
 			break;
 	}

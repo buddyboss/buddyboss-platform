@@ -37,10 +37,10 @@ function bp_blogs_catch_transition_post_status( $new_status, $old_status, $post 
  *
  * @deprecated BuddyPress 2.2.0
  *
- * @param int $post_id ID of the post being recorded.
+ * @param int    $post_id ID of the post being recorded.
  * @param object $post The WP post object passed to the 'save_post' action.
- * @param int $user_id Optional. The user to whom the activity item will be
- *        associated. Defaults to the post_author.
+ * @param int    $user_id Optional. The user to whom the activity item will be
+ *           associated. Defaults to the post_author.
  * @return bool|null Returns false on failure.
  */
 function bp_blogs_record_post( $post_id, $post, $user_id = 0 ) {

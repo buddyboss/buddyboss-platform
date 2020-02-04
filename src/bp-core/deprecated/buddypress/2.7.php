@@ -21,6 +21,6 @@ function bp_core_set_charset() {
 
 	_deprecated_function( __FUNCTION__, '2.7', 'wpdb::get_charset_collate()' );
 
-	require_once( ABSPATH . 'wp-admin/includes/upgrade.php' );
-	return !empty( $wpdb->charset ) ? "DEFAULT CHARACTER SET {$wpdb->charset}" : '';
+	require_once ABSPATH . 'wp-admin/includes/upgrade.php';
+	return ! empty( $wpdb->charset ) ? "DEFAULT CHARACTER SET {$wpdb->charset}" : '';
 }

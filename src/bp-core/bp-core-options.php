@@ -26,113 +26,113 @@ function bp_get_default_options() {
 
 		/* Components ********************************************************/
 
-		'bp-deactivated-components'        => array(),
+		'bp-deactivated-components'                  => array(),
 
 		/* XProfile **********************************************************/
 
 		// Default profile groups name.
-		'bp-xprofile-base-group-name'      => __( 'Details', 'buddyboss' ),
+		'bp-xprofile-base-group-name'                => __( 'Details', 'buddyboss' ),
 
 		// Default fullname field name.
-		'bp-xprofile-firstname-field-name' => __( 'First Name', 'buddyboss' ),
+		'bp-xprofile-firstname-field-name'           => __( 'First Name', 'buddyboss' ),
 
 		// Default fullname field name.
-		'bp-xprofile-lastname-field-name'  => __( 'Last Name', 'buddyboss' ),
+		'bp-xprofile-lastname-field-name'            => __( 'Last Name', 'buddyboss' ),
 
 		// Default fullname field name.
-		'bp-xprofile-nickname-field-name'  => __( 'Nickname', 'buddyboss' ),
+		'bp-xprofile-nickname-field-name'            => __( 'Nickname', 'buddyboss' ),
 
 		// Default fullname field name. (for backward compat)
-		'bp-xprofile-fullname-field-name'  => __( 'Name', 'buddyboss' ),
+		'bp-xprofile-fullname-field-name'            => __( 'Name', 'buddyboss' ),
 
-		'bp-display-name-format'               => 'first_name',
+		'bp-display-name-format'                     => 'first_name',
 
 		// Enable/Disable Profile Type.
-		'bp-member-type-enable-disable'        => false,
+		'bp-member-type-enable-disable'              => false,
 
 		// Enable/Disable Display on profiles.
-		'bp-member-type-display-on-profile'    => false,
+		'bp-member-type-display-on-profile'          => false,
 
 		/* Blogs *************************************************************/
 
 		// Used to decide if blogs need indexing.
-		'bp-blogs-first-install'               => false,
+		'bp-blogs-first-install'                     => false,
 
 		/* Settings **********************************************************/
 
 		// Disable the WP to BP profile sync.
-		'bp-disable-profile-sync'              => false,
+		'bp-disable-profile-sync'                    => false,
 
 		// Hide the Toolbar for logged out users.
-		'hide-loggedout-adminbar'              => false,
+		'hide-loggedout-adminbar'                    => false,
 
 		// Avatar uploads.
-		'bp-disable-avatar-uploads'            => false,
+		'bp-disable-avatar-uploads'                  => false,
 
 		// cover photo uploads.
-		'bp-disable-cover-image-uploads'       => false,
+		'bp-disable-cover-image-uploads'             => false,
 
 		// Group Profile Photos.
-		'bp-disable-group-avatar-uploads'      => false,
+		'bp-disable-group-avatar-uploads'            => false,
 
 		// Group cover photo uploads.
-		'bp-disable-group-cover-image-uploads' => false,
+		'bp-disable-group-cover-image-uploads'       => false,
 
 		// Group Types.
-		'bp-disable-group-type-creation'       => false,
+		'bp-disable-group-type-creation'             => false,
 
 		// Auto Group Membership Approval.
-		'bp-enable-group-auto-join'            => false,
+		'bp-enable-group-auto-join'                  => false,
 
 		// Group restrict invites to members who already in specific parent group.
-		'bp-enable-group-restrict-invites'     => false,
+		'bp-enable-group-restrict-invites'           => false,
 
 		// Allow users to delete their own accounts.
-		'bp-disable-account-deletion'          => false,
+		'bp-disable-account-deletion'                => false,
 
 		// Allow site owner to enable private network.
-		'bp-enable-private-network'            => true,
+		'bp-enable-private-network'                  => true,
 
 		// Allow comments on post and comment activity items.
-		'bp-disable-blogforum-comments'        => true,
+		'bp-disable-blogforum-comments'              => true,
 
 		// The ID for the current theme package.
-		'_bp_theme_package_id'                 => 'nouveau',
+		'_bp_theme_package_id'                       => 'nouveau',
 
 		// Email unsubscribe salt.
-		'bp-emails-unsubscribe-salt'           => '',
+		'bp-emails-unsubscribe-salt'                 => '',
 
 		// Profile Enable Gravatar
-		'bp-enable-profile-gravatar'   => false,
+		'bp-enable-profile-gravatar'                 => false,
 
 		/* Groups ************************************************************/
 
 		// @todo Move this into the groups component
 		// Restrict group creation to super admins.
-		'bp_restrict_group_creation'   => false,
+		'bp_restrict_group_creation'                 => false,
 
 		/* Akismet ***********************************************************/
 
 		// Users from all sites can post.
-		'_bp_enable_akismet'           => true,
+		'_bp_enable_akismet'                         => true,
 
 		/* Activity HeartBeat ************************************************/
 
 		// HeartBeat is on to refresh activities.
-		'_bp_enable_heartbeat_refresh' => true,
+		'_bp_enable_heartbeat_refresh'               => true,
 
 		/* BuddyBar **********************************************************/
 
 		// Force the BuddyBar.
-		'_bp_force_buddybar'           => false,
+		'_bp_force_buddybar'                         => false,
 
 		/* Legacy *********************************************/
 
 		// Do not register the bp-default themes directory.
-		'_bp_retain_bp_default'        => false,
+		'_bp_retain_bp_default'                      => false,
 
 		// Ignore deprecated code.
-		'_bp_ignore_deprecated_code'   => true,
+		'_bp_ignore_deprecated_code'                 => true,
 
 		/* Invites ************************************************************/
 
@@ -358,7 +358,7 @@ function bp_delete_option( $option_name ) {
  */
 function bp_core_activate_site_options( $keys = array() ) {
 
-	if ( !empty( $keys ) && is_array( $keys ) ) {
+	if ( ! empty( $keys ) && is_array( $keys ) ) {
 		$bp = buddypress();
 
 		$errors = false;
@@ -367,7 +367,7 @@ function bp_core_activate_site_options( $keys = array() ) {
 			if ( empty( $bp->site_options[ $key ] ) ) {
 				$bp->site_options[ $key ] = bp_get_option( $key, $default );
 
-				if ( !bp_update_option( $key, $bp->site_options[ $key ] ) ) {
+				if ( ! bp_update_option( $key, $bp->site_options[ $key ] ) ) {
 					$errors = true;
 				}
 			}
@@ -411,7 +411,7 @@ function bp_core_get_root_options() {
 
 	if ( false === $root_blog_options_meta ) {
 		$blog_options_keys      = "'" . join( "', '", (array) $root_blog_option_keys ) . "'";
-		$blog_options_table	    = bp_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'options';
+		$blog_options_table     = bp_is_multiblog_mode() ? $wpdb->options : $wpdb->get_blog_prefix( bp_get_root_blog_id() ) . 'options';
 		$blog_options_query     = "SELECT option_name AS name, option_value AS value FROM {$blog_options_table} WHERE option_name IN ( {$blog_options_keys} )";
 		$root_blog_options_meta = $wpdb->get_results( $blog_options_query );
 
@@ -425,12 +425,15 @@ function bp_core_get_root_options() {
 			 *
 			 * @param array $value Array of multisite options from sitemeta table.
 			 */
-			$network_options = apply_filters( 'bp_core_network_options', array(
-				'tags_blog_id'       => '0',
-				'sitewide_tags_blog' => '',
-				'registration'       => '0',
-				'fileupload_maxk'    => '1500'
-			) );
+			$network_options = apply_filters(
+				'bp_core_network_options',
+				array(
+					'tags_blog_id'       => '0',
+					'sitewide_tags_blog' => '',
+					'registration'       => '0',
+					'fileupload_maxk'    => '1500',
+				)
+			);
 
 			$current_site           = get_current_site();
 			$network_option_keys    = array_keys( $network_options );
@@ -444,7 +447,7 @@ function bp_core_get_root_options() {
 
 		// Loop through our results and make them usable.
 		foreach ( $root_blog_options_meta as $root_blog_option ) {
-			$root_blog_options[$root_blog_option->name] = $root_blog_option->value;
+			$root_blog_options[ $root_blog_option->name ] = $root_blog_option->value;
 		}
 
 		// Copy the options no the return val.
@@ -1251,7 +1254,6 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: true.
  * @return string
- *
  */
 function bp_enable_private_network_public_content( $default = '' ) {
 
@@ -1425,4 +1427,22 @@ function bp_register_confirm_password( $default = false ) {
 	 * @param bool $value whether or not display password confirmation field in registrations.
 	 */
 	return (bool) apply_filters( 'bp_register_confirm_password', (bool) bp_get_option( 'register-confirm-password', $default ) );
+}
+
+/**
+ * Default layout option for the members listing
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_profile_layout_default_format( $default = 'grid' ) {
+	return apply_filters( 'bp_profile_layout_default_format', bp_get_option( 'bp-profile-layout-default-format', $default ) );
+}
+
+/**
+ * Default layout option for the groups listing
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_group_layout_default_format( $default = 'grid' ) {
+	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
 }

@@ -3,21 +3,6 @@
 // Exit if accessed directly
 defined( 'ABSPATH' ) || exit;
 
-
-/**
- * Remove BuddyPress Follow init hook action
- *
- * Support BuddyPress Follow
- */
-remove_action( 'bp_include', 'bp_follow_init' );
-
-/**
- * Remove message of BuddyPress Groups Export & Import
- *
- * Support BuddyPress Groups Export & Import
- */
-remove_action( 'plugins_loaded', 'bpgei_plugin_init' );
-
 /**
  * Fire to add support for third party plugin
  *
@@ -34,21 +19,19 @@ function bp_helper_plugins_loaded_callback() {
 	 */
 	if ( in_array( 'learndash-bbpress/learndash-bbpress.php', $bp_plugins ) ) {
 
+			/**
+			 * Remove bbPress Integration admin init hook action
+			 *
+			 * Support bbPress Integration
+			 */
+			remove_action( 'admin_init', 'wdm_activation_dependency_check' );
 
-            /**
-             * Remove bbPress Integration admin init hook action
-             *
-             * Support bbPress Integration
-             */
-            remove_action( 'admin_init', 'wdm_activation_dependency_check' );
+		if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+			deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
 
-            if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
-                deactivate_plugins( 'learndash-bbpress/learndash-bbpress.php' );
-
-                add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
-                add_action( 'network_admin_notices', 'bp_core_learndash_bbpress_notices' );
-            }
-
+			add_action( 'admin_notices', 'bp_core_learndash_bbpress_notices' );
+			add_action( 'network_admin_notices', 'bp_core_learndash_bbpress_notices' );
+		}
 	}
 
 	/**
@@ -57,7 +40,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Rank Math SEO
 	 */
 	if ( in_array( 'seo-by-rank-math/rank-math.php', $bp_plugins ) && ! is_admin() ) {
-		require( buddypress()->plugin_dir . '/bp-core/compatibility/bp-rankmath-plugin-helpers.php' );
+		require buddypress()->compatibility_dir . '/bp-rankmath-plugin-helpers.php';
 	}
 
 	/**
@@ -66,7 +49,7 @@ function bp_helper_plugins_loaded_callback() {
 	 * Support Co-Authors Plus
 	 */
 	if ( in_array( 'co-authors-plus/co-authors-plus.php', $bp_plugins ) ) {
-		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus',100 ,2 );
+		add_filter( 'bp_search_settings_post_type_taxonomies', 'bp_core_remove_authors_taxonomy_for_co_authors_plus', 100, 2 );
 	}
 
 	/**
@@ -84,6 +67,36 @@ function bp_helper_plugins_loaded_callback() {
 		 * This action to update the first and last name usermeta
 		 */
 		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
+	}
+
+	/**
+	 * Include fix when WPML plugin is activated
+	 *
+	 * Support WPML Multilingual CMS
+	 */
+	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
+
+		/**
+		 * Add fix for wpml redirect issue
+		 *
+		 * @since BuddyBoss 1.2.3
+		 *
+		 * @param array $q
+		 */
+		function bp_core_fix_wpml_redirection( $q ) {
+
+			if ( ! bp_is_my_profile() || ! bp_current_component() ) {
+				return $q;
+			}
+
+			if ( in_array( bp_current_component(), array( 'forums', 'photos', 'groups' ) ) ) {
+				if ( isset( bp_core_get_directory_pages()->members->id ) ) {
+					$q->set( 'page_id', bp_core_get_directory_pages()->members->id );
+				}
+			}
+		}
+
+		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
 	}
 }
 
@@ -120,37 +133,45 @@ function bp_core_add_admin_menu_for_memberpress_buddypress( $menus ) {
 	$name      = apply_filters( 'mepr-bp-info-main-nav-name', _x( 'Membership', 'ui', 'buddyboss' ) );
 	$position  = apply_filters( 'mepr-bp-info-main-nav-position', 25 );
 
-	$wp_admin_bar->add_menu( array(
-		'parent'   => $bp->my_account_menu_id,
-		'id'       => $main_slug,
-		'title'    => $name,
-		'href'     => $bp->loggedin_user->domain . $main_slug . '/',
-		'position' => $position,
-	) );
+	$wp_admin_bar->add_menu(
+		array(
+			'parent'   => $bp->my_account_menu_id,
+			'id'       => $main_slug,
+			'title'    => $name,
+			'href'     => $bp->loggedin_user->domain . $main_slug . '/',
+			'position' => $position,
+		)
+	);
 
 	// add submenu item
-	$wp_admin_bar->add_menu( array(
-		'parent' => $main_slug,
-		'id'     => 'mp-info',
-		'title'  => _x( 'Info', 'ui', 'buddyboss' ),
-		'href'   => $bp->loggedin_user->domain . $main_slug . '/'
-	) );
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => $main_slug,
+			'id'     => 'mp-info',
+			'title'  => _x( 'Info', 'ui', 'buddyboss' ),
+			'href'   => $bp->loggedin_user->domain . $main_slug . '/',
+		)
+	);
 
 	// add submenu item
-	$wp_admin_bar->add_menu( array(
-		'parent' => $main_slug,
-		'id'     => 'mp-subscriptions',
-		'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
-		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/'
-	) );
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => $main_slug,
+			'id'     => 'mp-subscriptions',
+			'title'  => _x( 'Subscriptions', 'ui', 'buddyboss' ),
+			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-subscriptions/',
+		)
+	);
 
 	// add submenu item
-	$wp_admin_bar->add_menu( array(
-		'parent' => $main_slug,
-		'id'     => 'mp-payments',
-		'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
-		'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/'
-	) );
+	$wp_admin_bar->add_menu(
+		array(
+			'parent' => $main_slug,
+			'id'     => 'mp-payments',
+			'title'  => _x( 'Payments', 'ui', 'buddyboss' ),
+			'href'   => $bp->loggedin_user->domain . $main_slug . '/mp-payments/',
+		)
+	);
 
 }
 
@@ -168,7 +189,7 @@ function bp_core_update_group_fields_id_in_db() {
 		$table_name = $bp_prefix . 'bp_xprofile_fields';
 
 		if ( empty( bp_xprofile_firstname_field_id( 0, false ) ) ) {
-			//first name fields update
+			// first name fields update
 			$firstname = bp_get_option( 'bp-xprofile-firstname-field-name' );
 			$results   = $wpdb->get_results( "SELECT id FROM {$table_name} WHERE name = '{$firstname}' AND can_delete = 0" );
 			$count     = 0;
@@ -186,7 +207,7 @@ function bp_core_update_group_fields_id_in_db() {
 		}
 
 		if ( empty( bp_xprofile_lastname_field_id( 0, false ) ) ) {
-			//last name fields update
+			// last name fields update
 			$lastname = bp_get_option( 'bp-xprofile-lastname-field-name' );
 			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$lastname}' AND can_delete = 0" );
 			$count    = 0;
@@ -204,7 +225,7 @@ function bp_core_update_group_fields_id_in_db() {
 		}
 
 		if ( empty( bp_xprofile_nickname_field_id( true, false ) ) ) {
-			//nick name fields update
+			// nick name fields update
 			$nickname = bp_get_option( 'bp-xprofile-nickname-field-name' );
 			$results  = $wpdb->get_results( "SELECT id FROM {$bp_prefix}bp_xprofile_fields WHERE name = '{$nickname}' AND can_delete = 0" );
 			$count    = 0;
@@ -301,18 +322,80 @@ add_action( 'mepr-signup', 'bp_core_add_support_mepr_signup_map_user_fields', 10
  * @since BuddyBoss 1.1.9
  */
 function bp_core_learndash_bbpress_notices() {
-    global $bp_plugins;
+	global $bp_plugins;
 
-    if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
-        $links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
+	if ( empty( bp_is_active( 'forums' ) ) || empty( in_array( 'sfwd-lms/sfwd_lms.php', $bp_plugins ) ) ) {
+		$links = bp_get_admin_url( add_query_arg( array( 'page' => 'bp-components' ), 'admin.php' ) );
 
-        $text = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
-        $activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss' ) );
-        ?>
-        <div id="message" class="error notice">
-            <p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
-            <p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %s component is deactivated. Please activate LearnDash LMS plugin & %s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
-        </div>
-        <?php
+		$text     = sprintf( '<a href="%s">%s</a>', $links, __( 'Forum Discussions', 'buddyboss' ) );
+		$activate = sprintf( '<a href="%s">%s</a>', $links, __( 'activate', 'buddyboss' ) );
+		?>
+		<div id="message" class="error notice">
+			<p><strong><?php esc_html_e( 'LearnDash & bbPress Integration is deactivated.', 'buddyboss' ); ?></strong></p>
+			<p><?php printf( esc_html__( 'The LearnDash & bbPress Integration plugin can\'t work if LearnDash LMS plugin & %1$s component is deactivated. Please activate LearnDash LMS plugin & %2$s component.', 'buddyboss' ), $text, $text, $activate ); ?></p>
+		</div>
+		<?php
 	}
 }
+
+/**
+ * Fix PHP notices in WooCommerce status Menu
+ *
+ * @since BuddyBoss 1.2.0
+ *
+ * @param $tabs
+ *
+ * @return mixed
+ */
+function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
+	if ( isset( $_GET['page'] ) && 'wc-status' == $_GET['page'] ) {
+		bp_core_unset_bbpress_buddypress_active();
+	}
+	return $tabs;
+}
+add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
+
+/**
+ * Fix Memberpress Privacy for BuddyPress pages.
+ *
+ * @since BuddyBoss 1.2.4
+ *
+ * @param mixed $content
+ *
+ * @return mixed
+ */
+function bp_core_memberpress_the_content( $content ) {
+	if ( class_exists( 'MeprBaseModel' ) ) {
+		global $post;
+		$page_ids = bp_core_get_directory_page_ids();
+
+		if (
+			bp_is_groups_component()
+			&& !empty( $page_ids['groups'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['groups'] );
+		} else if (
+			bp_is_media_component()
+			&& !empty( $page_ids['media'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['media'] );
+		} else if (
+			bp_is_members_component()
+			&& !empty( $page_ids['members'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['members'] );
+		} else if (
+			bp_is_activity_component()
+			&& !empty( $page_ids['activity'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['activity'] );
+		}
+	}
+
+	return $content;
+}
+add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );

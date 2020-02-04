@@ -9,9 +9,11 @@ jQuery( document ).ready( function() {
 	// Add new hidden field for keep existing field to add again in change profile type action.
 	var hiddenField  = jQuery('<input type="hidden" class="onloadfields" value="" />');
 	var existsField  = jQuery('<input type="hidden" name="signup_profile_field_ids" id="signup_profile_field_ids" value="" />');
+	var prevField  	= jQuery('<input type="hidden" name="signup_profile_field_id_prev" id="signup_profile_field_id_prev" value="" />');
 
 	// Append new field to body.
 	jQuery('body').append(hiddenField);
+	jQuery('body').append(prevField);
 
 	var tinyMceAdded = 0;
 	var onLoadField  = jQuery('body .onloadfields');
@@ -30,6 +32,7 @@ jQuery( document ).ready( function() {
 		if ( 1 === firstCall ) {
 			jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
+			prevField.val(dropDownSelected.val());
 		}
 
 		var getExistingFields = getExistingFieldsSelector.val();
@@ -98,8 +101,13 @@ jQuery( document ).ready( function() {
 	// Profile Type field select box change action.
 	jQuery( document ).on( 'change', 'body #buddypress #register-page #signup-form .layout-wrap #profile-details-section .editfield fieldset select#' + BP_Register.field_id , function() {
 
+
+
+		var registerSubmitButtonSelector = jQuery( 'body #buddypress #register-page #signup-form .submit #signup_submit' );
+		registerSubmitButtonSelector.prop( 'disabled', true );
+
 		if ( 1 === firstCall ) {
-			jQuery( 'body .ajax_added' ).remove();
+			//jQuery( 'body .ajax_added' ).remove();
 			getExistingFieldsSelector.val( jQuery('.onloadfields').val() );
 		}
 
@@ -114,9 +122,10 @@ jQuery( document ).ready( function() {
 			'fields'  : getExistingFields,
 			'fixedIds': fixedIds,
 			'tinymce' : tinyMceAdded,
-			'type'	  : getSelectedValue
+			'type'	  : getSelectedValue,
+			'prevId'  :prevField.val()
 		};
-
+		prevField.val(this.value);
 		// Ajax get the data based on the selected profile type.
 		jQuery.ajax({
 			type: 'GET',
@@ -125,6 +134,27 @@ jQuery( document ).ready( function() {
 			success: function ( response ) {
 
 				if ( response.success ) {
+					var exist_field_by = [];
+					if ( existsField.val() ) {
+						exist_field_by = existsField.val().split(',');
+					}
+					var new_data 	= response.data.field_ids.split(',');
+					var difference = [];
+					if ( exist_field_by ) {
+						jQuery.grep( exist_field_by , function( el ) {
+					        if (jQuery.inArray( el, new_data ) == -1){
+				        		difference.push( el );
+				        	}
+						});
+
+						if ( difference.length !== 0 ) {
+							jQuery.each( difference , function( index, value ) {
+							  	appendHtmlDiv.find( '.field_' + value ).remove();
+							});
+						}
+					}
+					registerSubmitButtonSelector.prop( 'disabled', false );
+
 					firstCall = 1;
 
 					if ( true === parseInt( response.data.field_html ) ) {
@@ -159,23 +189,133 @@ jQuery( document ).ready( function() {
 
 							}
 						);
-						window.tinymce.execCommand('mceRepaint');
+
+						window.tinymce.on('init', function () {
+							if (window.tinymce.inline) {
+								window.tinymce.execCommand('mceRepaint');
+							}
+						});
 					}
+				} else {
+					registerSubmitButtonSelector.prop( 'disabled', false );
 				}
 			}
 		});
+	});
+
+	//for form validation
+	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function() {
+		//e.preventDefault();
+		var html_error = '<div class="bp-messages bp-feedback error">';
+				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
+				html_error += '<p>' + BP_Register.required_field + '</p>';
+				html_error += '</div>';
+		var signup_email 			= jQuery( '#signup_email' ),
+			signup_email_confirm 	= jQuery( '#signup_email_confirm' ),
+			signup_password 		= jQuery( '#signup_password' ),
+			signup_password_confirm = jQuery( '#signup_password_confirm' );
+		var return_val = true;
+		jQuery( '.register-page .error' ).remove();
+
+		if ( jQuery( document ).find( signup_email_confirm ).length && jQuery( document ).find( signup_email_confirm ).val() == '' ) {
+			jQuery( document ).find( signup_email_confirm ).before( html_error );
+			return_val = false;
+		}
+		if ( jQuery( document ).find( signup_password ).length && jQuery( document ).find( signup_password ).val() == '' ) {
+			jQuery( document ).find( signup_password ).before( html_error );
+			return_val = false;
+		}
+		if ( jQuery( document ).find( signup_password_confirm ).length && jQuery( document ).find( signup_password_confirm ).val() == '' ) {
+			jQuery( document ).find( signup_password_confirm ).before( html_error );
+			return_val = false;
+		}
+		jQuery( '.required-field' ).each( function() {
+
+			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
+				jQuery( this ).find( 'input[type="text"]' ).before( html_error );
+				return_val = false;
+			}
+			if ( jQuery( this ).find( 'input[type="number"]' ).length && jQuery( this ).find( 'input[type="number"] ').val() == '' ) {
+				jQuery( this ).find( 'input[type="number"]' ).before( html_error );
+				return_val = false;
+			}
+			if ( jQuery( this ).find( 'textarea' ).length && jQuery( this ).find( 'textarea' ).val() == '' ) {
+					jQuery( this ).find( 'textarea' ).before( html_error );
+				return_val = false;
+			}
+			if ( jQuery( this ).find( 'select' ).length && jQuery( this ).find( 'select' ).val() == '' ) {
+					jQuery( this ).find( 'legend' ).next().append( html_error );
+				return_val = false;
+			}
+			if ( jQuery( this ).find( 'input[type="checkbox"]' ).length ) {
+					var checked_check = 0;
+					jQuery( this ).find('input[type="checkbox"]' ).each( function() {
+					    if ( jQuery( this ).prop( 'checked' ) == true ){
+					        checked_check++;
+					    }
+					});
+					if ( 0 >= checked_check ) {
+						jQuery( this ).find( 'legend' ).next().append( html_error );
+						return_val = false;
+					}
+			}
+		});
+		if ( jQuery( document ).find( signup_email ).length && jQuery( document ).find( signup_email ).val() == '' ) {
+			jQuery( document ).find( signup_email ).before( html_error );
+			return_val = false;
+		}else{
+			bp_register_validate_confirm_email();
+
+            jQuery.ajax({
+			    type: 'POST',
+			    url: ajaxurl,
+			    dataType: 'json',
+			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + '&action=check_email',
+			    success: function ( response ) {
+			    	if (response.signup_email) {
+				    	var html_serror = '<div class="bp-messages bp-feedback error">';
+							html_serror += '<span class="bp-icon" aria-hidden="true"></span>';
+							html_serror += '<p>' + response.signup_email + '</p>';
+							html_serror += '</div>';
+
+                		jQuery( document ).find( signup_email ).before( html_serror );
+                		return_val = false;
+                	}
+                	var nickname = 'field_'+response.field_id;
+                	if (response.signup_username) {
+                		var html_uerror = '<div class="bp-messages bp-feedback error">';
+							html_uerror += '<span class="bp-icon" aria-hidden="true"></span>';
+							html_uerror += '<p>' + response.signup_username + '</p>';
+							html_uerror += '</div>';
+                		jQuery( document ).find( '#'+nickname ).before( html_uerror );
+                		return_val = false;
+                	}
+	                return true;
+	           	}
+			});
+		}
+		if ( ! return_val ) {
+			var target = jQuery( '.error' ).first();
+			if (target.length) {
+				jQuery('html,body').animate({
+					scrollTop: target.offset().top
+				}, 1000);
+				return false;
+			}
+		}
+		return return_val;
 	});
 
 	// Bind signup_email to keyup events in the email fields
 	var emailSelector, confirmEmailSelector, errorMessageSelector;
 	emailSelector 	  = jQuery( '#signup_email' );
 	if ( emailSelector.length ) {
-	emailSelector.val( '' ).on( 'focusout', bp_register_validate_email );
+	emailSelector.on( 'focusout', bp_register_validate_email );
     }
 
 	confirmEmailSelector =  jQuery( '#signup_email_confirm' );
     if ( confirmEmailSelector.length ) {
-		confirmEmailSelector.val( '' ).on( 'keyup change' , bp_register_validate_confirm_email );
+		confirmEmailSelector.on( 'keyup change' , bp_register_validate_confirm_email );
     }
 
 
@@ -196,7 +336,7 @@ jQuery( document ).ready( function() {
 				errorMessageSelector.addClass( 'show bad' ).html( BP_Register.valid_email );
 				return;
 			}
-			if ( ( email2 !== '' ) && ( email1 !== email2 ) ) {
+			if ( ( email2 !== '' ) && ( email1 !== email2 ) && confirmEmailSelector.length ) {
 				errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 				return;
 			}
@@ -220,7 +360,7 @@ jQuery( document ).ready( function() {
 			errorMessageSelector.html( '' );
 			return;
 		}
-		if ( email1 !== email2 ) {
+		if ( email1 !== email2 && confirmEmailSelector.length ) {
 			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 			return;
 		}

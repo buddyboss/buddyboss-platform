@@ -22,4 +22,4 @@ function bp_setup_search() {
 
 add_action( 'bp_setup_components', 'bp_setup_search', 6 );
 
-require( buddypress()->plugin_dir . 'bp-search/classes/class-bp-search-core.php' );
+require buddypress()->plugin_dir . 'bp-search/classes/class-bp-search-core.php';

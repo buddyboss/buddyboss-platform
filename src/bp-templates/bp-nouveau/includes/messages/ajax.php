@@ -120,10 +120,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					'count'         => bp_get_message_thread_total_count(),
 					'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 					'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-					'started_date'  => date_i18n(
-						get_option( 'date_format' ),
-						strtotime( $messages_template->thread->first_message_date )
-					)
+					'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
 				);
 
 				if ( is_array( $messages_template->thread->recipients ) ) {
@@ -430,10 +427,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'count'         => bp_get_message_thread_total_count(),
 			'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 			'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date' => date_i18n(
-				get_option('date_format'),
-				strtotime($messages_template->thread->first_message_date)
-			)
+			'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
@@ -643,10 +637,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$thread->thread = array(
 			'id'      => bp_get_the_thread_id(),
 			'subject' => strip_tags( bp_get_the_thread_subject() ),
-			'started_date' => date_i18n(
-				get_option('date_format'),
-				strtotime($thread_template->thread->first_message_date)
-			)
+			'started_date' => bp_nouveau_get_message_date( $thread_template->thread->first_message_date, get_option('date_format') ),
 		);
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
@@ -988,7 +979,10 @@ function bp_nouveau_ajax_dismiss_sitewide_notice() {
 	}
 
 	// Check capability.
-	if ( ! is_user_logged_in() || ! bp_core_can_edit_settings() ) {
+	if (
+		! is_user_logged_in()
+		// || ! bp_core_can_edit_settings()
+	) {
 		wp_send_json_error( $response );
 	}
 

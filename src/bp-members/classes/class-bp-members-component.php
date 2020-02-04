@@ -38,7 +38,7 @@ class BP_Members_Component extends BP_Component {
 			buddypress()->plugin_dir,
 			array(
 				'adminbar_myaccount_order' => 10,
-				'search_query_arg' => 'members_search',
+				'search_query_arg'         => 'members_search',
 			)
 		);
 	}
@@ -146,13 +146,13 @@ class BP_Members_Component extends BP_Component {
 		 */
 
 		// Define a slug, as a fallback for backpat.
-		if ( !defined( 'BP_MEMBERS_SLUG' ) ) {
+		if ( ! defined( 'BP_MEMBERS_SLUG' ) ) {
 			define( 'BP_MEMBERS_SLUG', $this->id );
 		}
 
 		// Fetch the default directory title.
 		$default_directory_titles = bp_core_get_directory_page_default_titles();
-		$default_directory_title  = $default_directory_titles[$this->id];
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// Override any passed args.
 		$args = array(
@@ -164,7 +164,7 @@ class BP_Members_Component extends BP_Component {
 			'global_tables'   => array(
 				'table_name_last_activity' => bp_core_get_table_prefix() . 'bp_activity',
 				'table_name_signups'       => $wpdb->base_prefix . 'signups', // Signups is a global WordPress table.
-			)
+			),
 		);
 
 		parent::setup_globals( $args );
@@ -173,16 +173,16 @@ class BP_Members_Component extends BP_Component {
 		 */
 
 		// The core userdata of the user who is currently logged in.
-		$bp->loggedin_user->userdata       = bp_core_get_core_userdata( bp_loggedin_user_id() );
+		$bp->loggedin_user->userdata = bp_core_get_core_userdata( bp_loggedin_user_id() );
 
 		// Fetch the full name for the logged in user.
-		$bp->loggedin_user->fullname       = isset( $bp->loggedin_user->userdata->display_name ) ? $bp->loggedin_user->userdata->display_name : '';
+		$bp->loggedin_user->fullname = isset( $bp->loggedin_user->userdata->display_name ) ? $bp->loggedin_user->userdata->display_name : '';
 
 		// Hits the DB on single WP installs so get this separately.
 		$bp->loggedin_user->is_super_admin = $bp->loggedin_user->is_site_admin = is_super_admin( bp_loggedin_user_id() );
 
 		// The domain for the user currently logged in. eg: http://example.com/members/andy.
-		$bp->loggedin_user->domain         = bp_core_get_user_domain( bp_loggedin_user_id() );
+		$bp->loggedin_user->domain = bp_core_get_user_domain( bp_loggedin_user_id() );
 
 		/** Displayed user ***************************************************
 		 */
@@ -194,7 +194,7 @@ class BP_Members_Component extends BP_Component {
 		$bp->displayed_user->fullname = isset( $bp->displayed_user->userdata->display_name ) ? $bp->displayed_user->userdata->display_name : '';
 
 		// The domain for the user currently being displayed.
-		$bp->displayed_user->domain   = bp_core_get_user_domain( bp_displayed_user_id() );
+		$bp->displayed_user->domain = bp_core_get_user_domain( bp_displayed_user_id() );
 
 		// Initialize the nav for the members component.
 		$this->nav = new BP_Core_Nav();
@@ -207,13 +207,13 @@ class BP_Members_Component extends BP_Component {
 		/** Signup ***********************************************************
 		 */
 
-		$bp->signup = new stdClass;
+		$bp->signup = new stdClass();
 
 		/** Profiles Fallback ************************************************
 		 */
 
 		if ( ! bp_is_active( 'xprofile' ) ) {
-			$bp->profile       = new stdClass;
+			$bp->profile       = new stdClass();
 			$bp->profile->slug = 'profile';
 			$bp->profile->id   = 'profile';
 		}
@@ -246,12 +246,18 @@ class BP_Members_Component extends BP_Component {
 		$default_tab       = '';
 
 		if ( function_exists( 'bp_nouveau_get_temporary_setting' ) && function_exists( 'bp_nouveau_get_appearance_settings' ) ) {
-			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option,bp_nouveau_get_appearance_settings( $customizer_option ) );
+			$default_tab = bp_nouveau_get_temporary_setting( $customizer_option, bp_nouveau_get_appearance_settings( $customizer_option ) );
 		}
 		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'profile';
 
-		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
+		/**
+		 * - Enable Photos as default user profile page.
+		 */
+		if ( 'media' === $default_tab ) {
+			$default_tab = 'photos';
+		}
 
+		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************
 		 */
@@ -267,7 +273,7 @@ class BP_Members_Component extends BP_Component {
 				$bp->canonical_stack['action'] = bp_current_action();
 			}
 
-			if ( !empty( $bp->action_variables ) ) {
+			if ( ! empty( $bp->action_variables ) ) {
 				$bp->canonical_stack['action_variables'] = bp_action_variables();
 			}
 
@@ -275,7 +281,7 @@ class BP_Members_Component extends BP_Component {
 			if ( ! bp_current_component() ) {
 				$bp->current_component = $bp->default_component;
 
-			// The canonical URL will not contain the default component.
+				// The canonical URL will not contain the default component.
 			} elseif ( bp_is_current_component( $bp->default_component ) && ! bp_current_action() ) {
 				unset( $bp->canonical_stack['component'] );
 			}
@@ -341,7 +347,7 @@ class BP_Members_Component extends BP_Component {
 				'position'            => 10,
 				'screen_function'     => 'bp_members_screen_display_profile',
 				'default_subnav_slug' => 'public',
-				'item_css_id'         => buddypress()->profile->id
+				'item_css_id'         => buddypress()->profile->id,
 			);
 		}
 
@@ -357,7 +363,7 @@ class BP_Members_Component extends BP_Component {
 			'parent_url'      => trailingslashit( $user_domain . $slug ),
 			'parent_slug'     => $slug,
 			'screen_function' => 'bp_members_screen_display_profile',
-			'position'        => 10
+			'position'        => 10,
 		);
 
 		/**
@@ -374,7 +380,7 @@ class BP_Members_Component extends BP_Component {
 			);
 
 			// We need a dummy subnav for the front page to load.
-			$front_subnav = $this->sub_nav;
+			$front_subnav                = $this->sub_nav;
 			$front_subnav['parent_slug'] = 'front';
 
 			// In case the subnav is displayed in the front template
@@ -391,15 +397,14 @@ class BP_Members_Component extends BP_Component {
 				add_action( 'bp_members_setup_nav', array( $this, 'setup_profile_nav' ) );
 			}
 
-		/**
-		 * If there's no front template and xProfile is not active, the members
-		 * component nav will be there to display the WordPress profile
-		 */
+			/**
+			 * If there's no front template and xProfile is not active, the members
+			 * component nav will be there to display the WordPress profile
+			 */
 		} else {
 			$main_nav  = $this->main_nav;
 			$sub_nav[] = $this->sub_nav;
 		}
-
 
 		parent::setup_nav( $main_nav, $sub_nav );
 	}
@@ -435,11 +440,13 @@ class BP_Members_Component extends BP_Component {
 			$bp->bp_options_title = __( 'You', 'buddyboss' );
 		} elseif ( bp_is_user() ) {
 			$bp->bp_options_title  = bp_get_displayed_user_fullname();
-			$bp->bp_options_avatar = bp_core_fetch_avatar( array(
-				'item_id' => bp_displayed_user_id(),
-				'type'    => 'thumb',
-				'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $bp->bp_options_title )
-			) );
+			$bp->bp_options_avatar = bp_core_fetch_avatar(
+				array(
+					'item_id' => bp_displayed_user_id(),
+					'type'    => 'thumb',
+					'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), $bp->bp_options_title ),
+				)
+			);
 		}
 
 		parent::setup_title();
@@ -453,10 +460,12 @@ class BP_Members_Component extends BP_Component {
 	public function setup_cache_groups() {
 
 		// Global groups.
-		wp_cache_add_global_groups( array(
-			'bp_last_activity',
-			'bp_member_type'
-		) );
+		wp_cache_add_global_groups(
+			array(
+				'bp_last_activity',
+				'bp_member_type',
+			)
+		);
 
 		parent::setup_cache_groups();
 	}

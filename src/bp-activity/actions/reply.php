@@ -14,8 +14,9 @@
  * @return bool False on failure.
  */
 function bp_activity_action_post_comment() {
-	if ( !is_user_logged_in() || !bp_is_activity_component() || !bp_is_current_action( 'reply' ) )
+	if ( ! is_user_logged_in() || ! bp_is_activity_component() || ! bp_is_current_action( 'reply' ) ) {
 		return false;
+	}
 
 	// Check the nonce.
 	check_admin_referer( 'new_activity_comment', '_wpnonce_new_activity_comment' );
@@ -36,23 +37,26 @@ function bp_activity_action_post_comment() {
 	 *
 	 * @param string $value Comment content being posted.
 	 */
-	$content = apply_filters( 'bp_activity_post_comment_content', $_POST['ac_input_' . $activity_id] );
+	$content = apply_filters( 'bp_activity_post_comment_content', $_POST[ 'ac_input_' . $activity_id ] );
 
 	if ( empty( $content ) ) {
 		bp_core_add_message( __( 'Please do not leave the comment area blank.', 'buddyboss' ), 'error' );
 		bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 	}
 
-	$comment_id = bp_activity_new_comment( array(
-		'content'     => $content,
-		'activity_id' => $activity_id,
-		'parent_id'   => false
-	));
+	$comment_id = bp_activity_new_comment(
+		array(
+			'content'     => $content,
+			'activity_id' => $activity_id,
+			'parent_id'   => false,
+		)
+	);
 
-	if ( !empty( $comment_id ) )
+	if ( ! empty( $comment_id ) ) {
 		bp_core_add_message( __( 'Reply Posted!', 'buddyboss' ) );
-	else
+	} else {
 		bp_core_add_message( __( 'There was an error posting that reply. Please try again.', 'buddyboss' ), 'error' );
+	}
 
 	bp_core_redirect( wp_get_referer() . '#ac-form-' . $activity_id );
 }
