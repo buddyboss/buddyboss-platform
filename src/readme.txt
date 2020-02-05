@@ -72,6 +72,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Profiles - Fixed assigning 'Photos' as the default profile tab resulting in 404 error
 * Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
 * Emails - Fixed formatting of BuddyBoss emails when viewed in Microsoft Outlook
+* Registration - Fixed incorrect 'Mismatch' notice appearing on registration page in certain situations
 * Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
 * Widgets - Fixed logic for '(BB) Members Following Me' widget when displayed on other member profiles
 * Widgets - Fixed logic for '(BB) Members I'm Following' widget when displayed on other member profiles
