@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 * Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
+* Translations - Fixed text instances in JavaScript files that could not be translated
 
 = 1.2.4 =
 * Errors - Fixed PHP fatal error in certain situations
