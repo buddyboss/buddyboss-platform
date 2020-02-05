@@ -68,6 +68,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed 'Description' input not displaying correctly for 'Create New Forum' shortcode
 * Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
 * Forums - Fixed text in forum replies displaying as HTML markup in certain situations
+* Activity - Consistent styling for default WordPress embeds and our custom preview embeds
 * Activity - Fixed the setting to allow activity stream commenting on forum discussions and replies
 * Profiles - Fixed assigning 'Photos' as the default profile tab resulting in 404 error
 * Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
