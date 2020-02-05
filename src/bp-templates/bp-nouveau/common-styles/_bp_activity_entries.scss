@@ -422,7 +422,8 @@
         height: auto;
 	}
 	#forums-document-button,
-	#activity-document-button{
+	#activity-document-button,
+	#messages-document-button{
 		float: left;
     	margin-top: -4px;
 	}
@@ -454,7 +455,10 @@
 }
 .active #activity-media-button,
 .active #activity-link-preview-button,
-.active #activity-document-button
+.active #activity-document-button,
+.active#messages-document-button,
+.active#messages-media-button,
+.active#messages-gif-button
  {
     .bb-icon {
         color: #122B46;

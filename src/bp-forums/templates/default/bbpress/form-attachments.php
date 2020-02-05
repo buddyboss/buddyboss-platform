@@ -23,7 +23,7 @@
 				<img src="" alt="">
 			</div>
 			<div class="gif-image-remove gif-image-overlay">
-				<span class="dashicons dashicons-no"></span>
+				<i class="bb-icon-close"></i>
 			</div>
 		</div>
 		<input name="bbp_media_gif" id="bbp_media_gif" type="hidden" value=""/>

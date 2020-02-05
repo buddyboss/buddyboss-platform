@@ -1385,6 +1385,11 @@ div[class*="attached-gif-container"] .gif-image-overlay {
   position: absolute;
 }
 
+div[class*="attached-gif-container"] .gif-image-overlay .bb-icon-close {
+  font-size: 20px;
+  vertical-align: top;
+}
+
 div[class*="attached-gif-container"] .gif-player {
   position: relative;
   max-width: 480px;
@@ -1906,10 +1911,13 @@ input.search-query-input {
 
 .ac-reply-toolbar #forums-document-button,
 .ac-reply-toolbar #activity-document-button,
+.ac-reply-toolbar #messages-document-button,
 #whats-new-toolbar #forums-document-button,
 #whats-new-toolbar #activity-document-button,
+#whats-new-toolbar #messages-document-button,
 #whats-new-messages-toolbar #forums-document-button,
-#whats-new-messages-toolbar #activity-document-button {
+#whats-new-messages-toolbar #activity-document-button,
+#whats-new-messages-toolbar #messages-document-button {
   float: right;
   margin-top: -4px;
 }
@@ -1948,7 +1956,10 @@ input.search-query-input {
 
 .active #activity-media-button .bb-icon,
 .active #activity-link-preview-button .bb-icon,
-.active #activity-document-button .bb-icon {
+.active #activity-document-button .bb-icon,
+.active#messages-document-button .bb-icon,
+.active#messages-media-button .bb-icon,
+.active#messages-gif-button .bb-icon {
   color: #122B46;
 }
 
