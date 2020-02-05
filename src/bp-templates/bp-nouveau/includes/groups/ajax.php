@@ -987,7 +987,41 @@ function bp_nouveau_ajax_groups_send_message() {
 			$group_thread = groups_get_groupmeta( (int) $group, 'group_message_thread' );
 			$is_deleted   = false;
 			if ( '' !== $group_thread ) {
-				$is_deleted = (int) $wpdb->get_var( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
+				$total_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $group_thread ) ); // db call ok; no-cache ok;
+                foreach ( $total_threads as $thread ) {
+                	if ( 1 === (int) $thread->is_deleted ) {
+		                $is_deleted = true;
+		                break;
+	                }
+                }
+
+                if ( $is_deleted ) {
+
+	                // This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
+	                $_POST['message_thread_type'] = 'new';
+
+	                // Attempt to send the message.
+	                $send = messages_new_message( array(
+		                'recipients'    => $members,
+		                'subject'       => wp_trim_words( $_POST['content'], messages_get_default_subject_length() ),
+		                'content'       => $_POST['content'],
+		                'error_type'    => 'wp_error',
+		                'append_thread' => false,
+	                ) );
+
+	                if ( is_wp_error( $send ) ) {
+		                $response['feedback'] = $send->get_error_message();
+		                wp_send_json_error( $response );
+	                } elseif ( ! empty( $send ) ) {
+		                groups_update_groupmeta( (int) $group, 'group_message_thread', $send );
+		                $response['feedback']      = __( 'Your message was sent successfully.', 'buddyboss' );
+		                $response['redirect_link'] = '<a href="' . bp_loggedin_user_domain() . bp_get_messages_slug() . '"> ' . __( 'View message.', 'buddyboss' ) . '</a>';
+		                $response['type']          = 'success';
+		                wp_send_json_success( $response );
+	                }
+
+                }
+
 			}
 			if ( '' !== $group_thread && ! $is_deleted ) {
 				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
