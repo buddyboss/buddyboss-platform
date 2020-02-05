@@ -58,14 +58,15 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 = 1.2.5 =
 * Messages - Fixed message list not loading more after scrolling down on mobile devices
 * Messages - Fixed the conversation start date not matching WordPress timezone settings
-* Notifications - Fixed issues with toggling Bulk selection of Notifications
-* Groups - Fixed links in group description set to open in a new tab loading in the same tab
+* Groups - Fixed links in group description set to 'open in a new tab' loading in the same tab
+* Groups - Fixed buttons for Join/Leave Group not working in Group Type shortcodes
 * Forums - Fixed 'Unsubscribe' link in forum subscription emails redirecting to 'Email Preferences'
 * Forums - Fixed 'Description' input not displaying correctly for 'Create New Forum' shortcode
 * Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
 * Forums - Fixed text in forum replies displaying as HTML markup in certain situations
 * Profiles - Fixed setting 'Photos' as the default profile tab resulting in 404 error
 * Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
+* Notifications - Fixed issues with toggling Bulk selection of Notifications
 * Emails - Fixed formatting of BuddyBoss emails when viewed in Microsoft Outlook
 * Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
 * Widgets - Fixed logic for '(BB) Members Following Me' widget when displayed on other member profiles
