@@ -61,8 +61,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								<?php
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['day'], 0, false ),
-									/* translators: no option picked in select box */
-									__( 'Select Day', 'buddyboss' ) );
+									/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
 
 								for ( $i = 1; $i < 32; ++ $i ) {
 									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
@@ -114,8 +113,20 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									/* translators: no option picked in select box */
 									__( 'Select Year', 'buddyboss' ) );
 
-								$start = date( 'Y' ) - 50;//50 years ago
-								$end   = date( 'Y' ) + 50;//50 years in future
+								$date_range_type = bp_xprofile_get_meta( $f->id, 'field', 'range_type', true );
+
+								if ( 'relative' === $date_range_type ) {
+									$range_relative_start = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_start', true );
+									$range_relative_end   = bp_xprofile_get_meta( $f->id, 'field', 'range_relative_end', true );
+									$start                = date( 'Y' ) - abs( $range_relative_start );
+									$end                  = date( 'Y' ) + $range_relative_end;
+								} elseif ( 'absolute' === $date_range_type ) {
+									$start = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_start', true );
+									$end   = bp_xprofile_get_meta( $f->id, 'field', 'range_absolute_end', true );
+								} else {
+									$start = date( 'Y' ) - 50;//50 years ago
+									$end   = date( 'Y' ) + 50;//50 years in future
+								}
 
 								for ( $i = $end; $i >= $start; $i -- ) {
 									printf( '<option value="%1$s" %2$s>%3$s</option>',
@@ -134,8 +145,7 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								<?php
 								printf( '<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['day'], 0, false ),
-									/* translators: no option picked in select box */
-									__( 'Select Day', 'buddyboss' ) );
+									/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
 
 								for ( $i = 1; $i < 32; ++ $i ) {
 									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
@@ -233,9 +243,9 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 						<script>
 							jQuery(function ($) {
-                                bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
+								bp_ps_autocomplete('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng');
 								$('#<?php echo $id; ?>_icon').click(function () {
-                                    bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
+									bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
 								});
 							});
 						</script>                        <?php
@@ -263,20 +273,23 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 
 					case 'radio': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-radio-wrap">
-							<label> <input type="radio" <?php if ( $key == $value ) {
+							<input class="bs-styled-radio" id="bb-search-<?php echo str_replace(' ', '', $key); ?>" type="radio" <?php if ( $key == $value ) {
 									echo 'checked="checked"';
-								} ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>"/>
-								<span><?php echo $label; ?></span> </label>
-						</div>                        <?php } ?><?php
+							} ?> name="<?php echo $name; ?>" value="<?php echo $key; ?>" />
+							<label for="bb-search-<?php echo str_replace(' ', '', $key); ?>"><?php echo $label; ?></label>
+						</div><?php
+					}
+
 					break;
 
 					case 'checkbox': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-checkbox-wrap">
-							<label> <input type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
-									echo 'checked="checked"';
-								} ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>"/>
-								<span><?php echo $label; ?></span> </label>
-						</div>                        <?php } ?><?php
+							<input class="bs-styled-checkbox" id="bb-search-<?php echo str_replace(' ', '', $key); ?>" type="checkbox" <?php if ( in_array( $key, $f->values ) ) {
+								echo 'checked="checked"';
+							} ?> name="<?php echo $name . '[]'; ?>" value="<?php echo $key; ?>" />
+							<label for="bb-search-<?php echo str_replace(' ', '', $key); ?>"><?php echo $label; ?></label>
+						</div><?php
+					}
 					break;
 
 					default: ?>

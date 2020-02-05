@@ -6,62 +6,74 @@ jQuery( document ).ready(
 			  var toolbarOptions = {
 					buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
 			};
-			if ( jQuery( '#bbp_editor_forum_content' ).length ) {
-				window.forums_medium_forum_editor = new window.MediumEditor(
-					'#bbp_editor_forum_content',
-					{
-						placeholder: {
-							text: window.bbpEditorJsStrs.description,
-							hideOnClick: true
-						},
-						toolbar: toolbarOptions
-					  }
-				);
+			if ( jQuery( '.bbp_editor_forum_content' ).length ) {
+				window.forums_medium_forum_editor = [];
+				jQuery( '.bbp_editor_forum_content' ).each(function(i,element){
+					var key = jQuery(element).data('key');
+					window.forums_medium_forum_editor[key] = new window.MediumEditor(
+						element,
+						{
+							placeholder: {
+								text: window.bbpEditorJsStrs.description,
+								hideOnClick: true
+							},
+							toolbar: toolbarOptions
+						}
+					);
 
-				window.forums_medium_forum_editor.subscribe(
-					'editableInput',
-					function () {
-						jQuery( '#bbp_forum_content' ).val( window.forums_medium_forum_editor.getContent() );
-					}
-				);
+					window.forums_medium_forum_editor[key].subscribe(
+						'editableInput',
+						function () {
+							jQuery(element).closest('form').find( '#bbp_forum_content' ).val( window.forums_medium_forum_editor[key].getContent() );
+						}
+					);
+				});
 			}
-			if ( jQuery( '#bbp_editor_reply_content' ).length ) {
-				window.forums_medium_reply_editor = new window.MediumEditor(
-					'#bbp_editor_reply_content',
-					{
-						placeholder: {
-							text: window.bbpEditorJsStrs.type_reply,
-							hideOnClick: true
-						},
-						toolbar: toolbarOptions
-					}
-				);
+			if ( jQuery( '.bbp_editor_reply_content' ).length ) {
+				window.forums_medium_reply_editor = [];
+				jQuery( '.bbp_editor_reply_content' ).each(function(i,element){
+					var key = jQuery(element).data('key');
+					window.forums_medium_reply_editor[key] = new window.MediumEditor(
+						element,
+						{
+							placeholder: {
+								text: window.bbpEditorJsStrs.type_reply,
+								hideOnClick: true
+							},
+							toolbar: toolbarOptions
+						}
+					);
 
-				window.forums_medium_reply_editor.subscribe(
-					'editableInput',
-					function () {
-						  jQuery( '#bbp_reply_content' ).val( window.forums_medium_reply_editor.getContent() );
-					}
-				);
+					window.forums_medium_reply_editor[key].subscribe(
+						'editableInput',
+						function () {
+							jQuery(element).closest('form').find( '#bbp_reply_content' ).val( window.forums_medium_reply_editor[key].getContent() );
+						}
+					);
+				});
 			}
-			if ( jQuery( '#bbp_editor_topic_content' ).length ) {
-				window.forums_medium_topic_editor = new window.MediumEditor(
-					'#bbp_editor_topic_content',
-					{
-						placeholder: {
-							text: window.bbpEditorJsStrs.type_topic,
-							hideOnClick: true
-						},
-						toolbar: toolbarOptions
-					  }
-				);
+			if ( jQuery( '.bbp_editor_topic_content' ).length ) {
+				window.forums_medium_topic_editor = [];
+				jQuery( '.bbp_editor_topic_content' ).each(function(i,element){
+					var key = jQuery(element).data('key');
+					window.forums_medium_topic_editor[key] = new window.MediumEditor(
+						element,
+						{
+							placeholder: {
+								text: window.bbpEditorJsStrs.type_topic,
+								hideOnClick: true
+							},
+							toolbar: toolbarOptions
+						}
+					);
 
-				window.forums_medium_topic_editor.subscribe(
-					'editableInput',
-					function () {
-						jQuery( '#bbp_topic_content' ).val( window.forums_medium_topic_editor.getContent() );
-					}
-				);
+					window.forums_medium_topic_editor[key].subscribe(
+						'editableInput',
+						function () {
+							jQuery(element).closest('form').find( '#bbp_topic_content' ).val( window.forums_medium_topic_editor[key].getContent() );
+						}
+					);
+				});
 			}
 		}
 

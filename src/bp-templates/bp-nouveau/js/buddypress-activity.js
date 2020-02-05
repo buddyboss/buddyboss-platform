@@ -720,7 +720,7 @@ window.bp = window.bp || {};
 						content.after( response.data.feedback );
 						content.parent().find( '.bp-feedback' ).hide().fadeIn( 300 );
 					} else {
-						$( content ).slideUp( 300 ).html( response.data.contents ).slideDown( 300 );
+						$( content ).html( response.data.contents ).slideDown( 300 );
 
 						//replace dummy image with original image by faking scroll event to call bp.Nouveau.lazyLoad
 						jQuery(window).scroll();
@@ -803,7 +803,7 @@ window.bp = window.bp || {};
 					easing:'swing'
 				} );
 
-				$( '#ac-form-' + activity_id + ' textarea' ).focus();
+				$( '#ac-form-' + activity_id + ' #ac-input-' + activity_id ).focus();
 
 				if ( !_.isUndefined( BP_Nouveau.media ) && !_.isUndefined( BP_Nouveau.media.emoji ) && 'undefined' == typeof $( '#ac-input-' + activity_id ).data( 'emojioneArea' ) ) {
 					$( '#ac-input-' + activity_id ).emojioneArea( {

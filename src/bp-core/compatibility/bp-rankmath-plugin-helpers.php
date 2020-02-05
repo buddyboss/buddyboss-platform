@@ -45,6 +45,15 @@ class BP_RankMath_Title implements IPaper {
 	}
 
 	/**
+	 * Retrieves the Advanced Robots.
+	 *
+	 * @return string
+	 */
+	public function advanced_robots() {
+		return array();
+	}
+
+	/**
 	 * Retrieves the robots.
 	 *
 	 * @return string

@@ -164,7 +164,7 @@ class BP_XProfile_Field_Type_Checkbox extends BP_XProfile_Field_Type {
 			}
 
 			$new_html = sprintf(
-				'<label for="%3$s" class="option-label"><input %1$s type="checkbox" name="%2$s" id="%3$s" value="%4$s">%5$s</label>',
+				'<div class="bp-checkbox-wrap"><input %1$s type="checkbox" name="%2$s" id="%3$s" value="%4$s" class="bs-styled-checkbox" /><label for="%3$s" class="option-label">%5$s</label></div>',
 				$selected,
 				esc_attr( bp_get_the_profile_field_input_name() . '[]' ),
 				esc_attr( "field_{$options[$k]->id}_{$k}" ),

@@ -735,10 +735,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 	// Create the pages.
 	foreach ( $pages_to_create as $component_name => $page_name ) {
 		$exists = get_page_by_path( $component_name );
+		$page_exist = post_exists( $page_name, '', '', 'page' );
 
 		// If page already exists, use it.
 		if ( ! empty( $exists ) ) {
 			$pages[ $component_name ] = $exists->ID;
+		} else if ( ! empty( $page_exist ) ) {
+			$pages[ $component_name ] = $page_exist;
 		} else {
 			$pages[ $component_name ] = wp_insert_post(
 				array(
@@ -2344,6 +2347,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
+			trailingslashit( BP_PLUGIN_DIR . '/languages'  ),
 		)
 	);
 
@@ -3237,6 +3241,13 @@ function bp_get_email( $email_type ) {
 function bp_send_email( $email_type, $to, $args = array() ) {
 	static $is_default_wpmail = null;
 	static $wp_html_emails    = null;
+
+	if ( function_exists( 'pmpro_wp_mail_content_type' ) ) {
+		/**
+		 * Removed Paid Memberships Pro plugin's filter.
+		 */
+		remove_filter( 'wp_mail_content_type', 'pmpro_wp_mail_content_type' );
+	}
 
 	// Has wp_mail() been filtered to send HTML emails?
 	if ( is_null( $wp_html_emails ) ) {
