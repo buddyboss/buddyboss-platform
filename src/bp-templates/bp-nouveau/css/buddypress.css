@@ -1894,6 +1894,64 @@ input.search-query-input {
   box-shadow: 0 0 6px 0 #eaeaea;
 }
 
+.ac-reply-toolbar .bb-icon,
+#whats-new-toolbar .bb-icon,
+#whats-new-messages-toolbar .bb-icon {
+  color: rgba(18, 43, 70, 0.4);
+  transition: all linear .2s;
+  font-size: 24px;
+  width: auto;
+  height: auto;
+}
+
+.ac-reply-toolbar #forums-document-button,
+.ac-reply-toolbar #activity-document-button,
+#whats-new-toolbar #forums-document-button,
+#whats-new-toolbar #activity-document-button,
+#whats-new-messages-toolbar #forums-document-button,
+#whats-new-messages-toolbar #activity-document-button {
+  float: left;
+  margin-top: -4px;
+}
+
+.ac-reply-toolbar .bb-icon-attach:before,
+#whats-new-toolbar .bb-icon-attach:before,
+#whats-new-messages-toolbar .bb-icon-attach:before {
+  font-size: 18px;
+  width: 24px;
+  display: inline-block;
+  text-align: center;
+}
+
+.ac-reply-toolbar .emojionearea .emojionearea-button:before,
+#whats-new-toolbar .emojionearea .emojionearea-button:before,
+#whats-new-messages-toolbar .emojionearea .emojionearea-button:before {
+  content: '\E821';
+  color: rgba(18, 43, 70, 0.4);
+  font: normal normal normal 24px/1 "bb-icons";
+  speak: none;
+  display: inline-block;
+  text-decoration: inherit;
+  text-transform: none;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ac-reply-toolbar #activity-gif-button.open .bb-icon,
+.ac-reply-toolbar .emojionearea .emojionearea-button.active:before,
+#whats-new-toolbar #activity-gif-button.open .bb-icon,
+#whats-new-toolbar .emojionearea .emojionearea-button.active:before,
+#whats-new-messages-toolbar #activity-gif-button.open .bb-icon,
+#whats-new-messages-toolbar .emojionearea .emojionearea-button.active:before {
+  color: #122B46;
+}
+
+.active #activity-media-button .bb-icon,
+.active #activity-link-preview-button .bb-icon,
+.active #activity-document-button .bb-icon {
+  color: #122B46;
+}
+
 .activity-url-scrapper-loading {
   display: block;
   font-size: 14px;

@@ -42,7 +42,7 @@
 
 		<div class="post-elements-buttons-item post-media">
 			<a href="#" id="forums-media-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a photo', 'buddyboss' ); ?>">
-				<span class="dashicons dashicons-admin-media"></span>
+				<i class="bb-icon bb-icon-camera-small"></i>
 			</a>
 		</div>
 
@@ -52,7 +52,7 @@
 
 		<div class="post-elements-buttons-item post-media">
 			<a href="#" id="forums-document-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Attach a document', 'buddyboss' ); ?>">
-				<span class="dashicons dashicons-paperclip"></span>
+				<i class="bb-icon bb-icon-attach"></i>
 			</a>
 		</div>
 
@@ -62,7 +62,7 @@
 		<div class="post-elements-buttons-item post-gif">
 			<div class="gif-media-search">
 				<a href="#" id="forums-gif-button" class="toolbar-button bp-tooltip" data-bp-tooltip-pos="down-left" data-bp-tooltip="<?php _e( 'Post a GIF', 'buddyboss' ); ?>">
-					<span class="dashicons dashicons-smiley"></span>
+					<i class="bb-icon bb-icon-gif"></i>
 				</a>
 				<div class="gif-media-search-dropdown">
 					<div class="gif-search-content">

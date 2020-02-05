@@ -411,7 +411,55 @@
 		}
 	}
 }
+.ac-reply-toolbar,
+#whats-new-toolbar,
+#whats-new-messages-toolbar {
+    .bb-icon {
+        color: rgba(18,43,70,0.4);
+		transition: all linear .2s;
+		font-size: 24px;
+        width: auto;
+        height: auto;
+	}
+	#forums-document-button,
+	#activity-document-button{
+		float: left;
+    	margin-top: -4px;
+	}
+    .bb-icon-attach{
+        &:before {
+			font-size: 18px;
+			width: 24px;
+			display: inline-block;
+			text-align: center;
+        }
+    }
 
+    .emojionearea .emojionearea-button:before {
+        content: '\E821';
+        color: rgba(18,43,70,0.4);
+        font: normal normal normal 24px/1 "bb-icons";
+        speak: none;
+        display: inline-block;
+        text-decoration: inherit;
+        text-transform: none;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+
+	#activity-gif-button.open .bb-icon,
+	.emojionearea .emojionearea-button.active:before {
+        color: #122B46;
+    }
+}
+.active #activity-media-button,
+.active #activity-link-preview-button,
+.active #activity-document-button
+ {
+    .bb-icon {
+        color: #122B46;
+    }
+}
 // link previews
 .activity-url-scrapper-loading {
 	display: block;
