@@ -62,6 +62,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed links in group description set to open in a new tab loading in the same tab
 * Profiles - Fixed setting 'Photos' as the default profile tab resulting in 404 error
 * Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
+* Widgets - Fixed logic for '(BB) Members Following Me' widget when displayed on other member profiles
+* Widgets - Fixed logic for '(BB) Members I'm Following' widget when displayed on other member profiles
+* Widgets - Fixed logic for '(BB) My Connections' widget when displayed on other member profiles
 * Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 * Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
