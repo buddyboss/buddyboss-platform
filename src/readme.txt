@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.5 =
+* Messages - Fixed message list not loading more after scrolling down on mobile devices
 * Widgets - Added new 'Profile Completion' widget for showing profile completion progress
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 
