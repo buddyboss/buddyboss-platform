@@ -61,8 +61,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Notifications - Fixed issues with toggling Bulk selection of Notifications
 * Groups - Fixed links in group description set to open in a new tab loading in the same tab
 * Forums - Fixed 'Unsubscribe' link in forum subscription emails redirecting to 'Email Preferences'
-* Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
 * Forums - Fixed 'Description' input not displaying correctly for 'Create New Forum' shortcode
+* Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
+* Forums - Fixed text in forum replies displaying as HTML markup in certain situations
 * Profiles - Fixed setting 'Photos' as the default profile tab resulting in 404 error
 * Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
 * Emails - Fixed formatting of BuddyBoss emails when viewed in Microsoft Outlook
