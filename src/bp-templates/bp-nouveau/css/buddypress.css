@@ -2153,7 +2153,7 @@ span.dashicons.dashicons-admin-file:before {
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text:not(.loaded):after {
   content: '\e838';
   font-family: bb-icons;
-  display: block;
+  display: inline-block;
   text-align: center;
   margin: 10px 0;
   animation: spin 2s infinite linear;
@@ -2192,9 +2192,9 @@ span.dashicons.dashicons-admin-file:before {
   -ms-flex-preferred-size: calc(100% - 40px);
   flex-basis: calc(100% - 40px);
   width: calc(100% - 40px);
-  display: inline-block;
+  display: inline-block !important;
   vertical-align: middle;
-  padding: 10px 0 10px 15px;
+  padding: 10px 0 10px 15px !important;
   color: #122B46;
 }
 
@@ -2291,25 +2291,26 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul {
   list-style: none;
-  margin: 5px 0;
-  padding: 0;
+  margin: 5px 0 !important;
+  padding: 0 !important;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li {
   margin: 0;
   padding: 0;
+  list-style-type: none !important;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a {
-  padding: 10px 14px;
-  display: block;
+  padding: 10px 14px !important;
+  display: block !important;
   font-size: 14px;
   line-height: 1;
   color: #7F868F;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li a:hover {
-  background-color: #f5f5f5;
+  background-color: #f5f5f5 !important;
   color: #5087e5;
 }
 
@@ -2328,7 +2329,8 @@ span.dashicons.dashicons-admin-file:before {
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.delete_file a:before {
-  content: '\eaea';
+  content: '\e937';
+  font-size: 15px;
 }
 
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list:after {
@@ -2531,10 +2533,11 @@ span.dashicons.dashicons-admin-file:before {
 
 .bb-activity-media-wrap .document-text-wrap {
   border: 1px solid #E7E9EC;
-  border-width: 1px 1px 0px 1px;
+  border-width: 1px;
   border-radius: 4px 4px 0 0;
-  margin: 0 15px;
+  margin: 0 15px 15px;
   position: relative;
+  text-align: center;
 }
 
 .bb-activity-media-wrap .document-text-wrap.is_large .document-text {
@@ -2588,7 +2591,7 @@ span.dashicons.dashicons-admin-file:before {
   padding: 7px 15px;
   background-color: #E7E9EC;
   word-break: break-word;
-  margin: 0 15px 15px;
+  margin: -15px 15px 15px;
   border: 1px solid #E7E9EC;
   border-width: 0 1px 1px;
   border-radius: 0 0 4px 4px;
@@ -12172,7 +12175,8 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.delete_file a:before {
-  content: '\eaea';
+  content: '\e937';
+  font-size: 15px;
 }
 
 @media screen and (max-width: 460px) {

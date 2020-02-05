@@ -662,7 +662,7 @@ span.dashicons.dashicons-admin-file:before {
         .document-text:not(.loaded):after{
             content: '\e838';
             font-family: bb-icons;
-            display: block;
+            display: inline-block;
             text-align: center;
             margin: 10px 0;
             animation: spin 2s infinite linear;
@@ -696,9 +696,9 @@ span.dashicons.dashicons-admin-file:before {
                 -ms-flex-preferred-size: calc(100% - 40px);
                 flex-basis: calc(100% - 40px);
                 width: calc(100% - 40px);
-                display: inline-block;
+                display: inline-block !important;
                 vertical-align: middle;
-                padding: 10px 0 10px 15px;
+                padding: 10px 0 10px 15px !important;
                 color: #122B46;
                 .document-title{
                     text-overflow: ellipsis;
@@ -788,19 +788,20 @@ span.dashicons.dashicons-admin-file:before {
                 z-index: 1;
                 ul{
                     list-style: none;
-                    margin: 5px 0;
-                    padding: 0;
+                    margin: 5px 0 !important;
+                    padding: 0 !important;
                     li{
                         margin: 0;
-                        padding: 0;
+						padding: 0;
+						list-style-type: none !important;
                         a {
-                            padding: 10px 14px;
-                            display: block;
+                            padding: 10px 14px !important;
+                            display: block !important;
 							font-size: 14px;
 							line-height: 1;
 							color: #7F868F;
                             &:hover {
-								background-color: #f5f5f5;
+								background-color: #f5f5f5 !important;
 								color: $blue;
 							}
 							&:before{
@@ -818,7 +819,8 @@ span.dashicons.dashicons-admin-file:before {
 							font-size: 13px;
 						}
 						&.delete_file a:before{
-							content: '\eaea';
+							content: '\e937';
+							font-size: 15px;
 						}
                     }
                 }
@@ -1016,10 +1018,11 @@ span.dashicons.dashicons-admin-file:before {
 	}
     .document-text-wrap{
         border: 1px solid #E7E9EC;
-        border-width: 1px 1px 0px 1px;
+        border-width: 1px;
         border-radius: 4px 4px 0 0;
-        margin: 0 15px;
-        position: relative;
+        margin: 0 15px 15px;
+		position: relative;
+		text-align: center;
 
 	    &.is_large{
 		    .document-text{
@@ -1071,7 +1074,7 @@ span.dashicons.dashicons-admin-file:before {
 		padding: 7px 15px;
 		background-color: #E7E9EC;
 		word-break: break-word;
-		margin: 0 15px 15px;
+		margin: -15px 15px 15px;
 		border: 1px solid #E7E9EC;
 		border-width: 0 1px 1px;
 		border-radius: 0 0 4px 4px;
