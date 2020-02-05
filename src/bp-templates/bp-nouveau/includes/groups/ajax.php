@@ -1177,7 +1177,7 @@ function bp_nouveau_ajax_groups_send_message() {
 						}
 
 						// check both previous and current recipients are same.
-						$is_recipient_match = ( $previous_thread_recipients == $members_recipients );
+						$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members_recipients ) && count( $previous_thread_recipients ) === count( $members_recipients ) && array_diff( $previous_thread_recipients, $members_recipients ) === array_diff( $members_recipients, $previous_thread_recipients ) );
 
 						$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
 
@@ -1217,7 +1217,7 @@ function bp_nouveau_ajax_groups_send_message() {
 					}
 
 					// check both previous and current recipients are same.
-					$is_recipient_match = ( $previous_thread_recipients == $members_recipients );
+					$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members_recipients ) && count( $previous_thread_recipients ) === count( $members_recipients ) && array_diff( $previous_thread_recipients, $members_recipients ) === array_diff( $members_recipients, $previous_thread_recipients ) );
 
 					$group_thread = (int) groups_get_groupmeta( (int) $group, 'group_message_thread' );
 
@@ -1278,7 +1278,7 @@ function bp_nouveau_ajax_groups_send_message() {
 									}
 
 									// check both previous and current recipients are same.
-									$is_recipient_match = ( $previous_thread_recipients == $members );
+									$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members ) && count( $previous_thread_recipients ) === count( $members ) && array_diff( $previous_thread_recipients, $members ) === array_diff( $members, $previous_thread_recipients ) );
 
 									// check any messages of this thread should not be a open & all.
 									$message_ids  = wp_list_pluck( $thread->messages, 'id' );
@@ -1398,7 +1398,7 @@ function bp_nouveau_ajax_groups_send_message() {
 								}
 
 								// check both previous and current recipients are same.
-								$is_recipient_match = ( $previous_thread_recipients == $members );
+								$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members ) && count( $previous_thread_recipients ) === count( $members ) && array_diff( $previous_thread_recipients, $members ) === array_diff( $members, $previous_thread_recipients ) );
 
 								// check any messages of this thread should not be a open & all.
 								$message_ids  = wp_list_pluck( $thread->messages, 'id' );
@@ -1521,7 +1521,7 @@ function bp_nouveau_ajax_groups_send_message() {
 							}
 
 							// check both previous and current recipients are same.
-							$is_recipient_match = ( $previous_thread_recipients == $members );
+							$is_recipient_match = ( is_array( $previous_thread_recipients ) && is_array( $members ) && count( $previous_thread_recipients ) === count( $members ) && array_diff( $previous_thread_recipients, $members ) === array_diff( $members, $previous_thread_recipients ) );
 
 							// check any messages of this thread should not be a open & all.
 							$message_ids  = wp_list_pluck( $thread->messages, 'id' );
