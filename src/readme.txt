@@ -79,8 +79,9 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Multisite - Fixed Forum Discussions, Tags, Replies links not working in WordPress Multisite dashboard
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 * Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
-* Compatibility - Fixed conflicts with plugin 'WPML' (WordPress Multilingual)
-* Compatibility - Fixed conflicts with plugin 'WP Mail Logging by MailPoet'
+* Compatibility - Fixed membership rules for page restriction not working correctly in 'MemberPress'
+* Compatibility - Fixed errors in BuddyBoss > Pages, with plugin 'WPML' (WordPress Multilingual)
+* Compatibility - Fixed errors in WordPress dashboard when activating 'WP Mail Logging by MailPoet'
 * Translations - Fixed text instances in JavaScript files that could not be translated
 
 = 1.2.4 =
