@@ -41,7 +41,7 @@ add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 );
-add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );
+//add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );
 
 // Core tools
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );

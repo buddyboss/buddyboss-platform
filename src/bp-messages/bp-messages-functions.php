@@ -39,6 +39,7 @@ defined( 'ABSPATH' ) || exit;
  * @return int|bool|WP_Error ID of the message thread on success, false on failure.
  */
 function messages_new_message( $args = '' ) {
+	global $wpdb, $bp;
 
 	// Parse the default arguments.
 	$r = bp_parse_args(
@@ -192,7 +193,44 @@ function messages_new_message( $args = '' ) {
 			$message->recipients[ $i ]->user_id = $recipient_id;
 		}
 
-		$previous_thread = BP_Messages_Message::get_existing_thread( $recipient_ids, $r['sender_id'] );
+		$previous_threads = BP_Messages_Message::get_existing_threads( $recipient_ids, $r['sender_id'] );
+		$previous_thread  = null;
+		if ( $previous_threads ) {
+
+			foreach ( $previous_threads as $thread ) {
+
+				$is_active_recipient = BP_Messages_Thread::is_thread_recipient( (int) $thread->thread_id, $r['sender_id'] );
+				if ( ! $is_active_recipient ) {
+					continue;
+				}
+
+				$first_message = BP_Messages_Thread::get_first_message( (int) $thread->thread_id );
+				$message_id    = $first_message->id;
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true ); // group id
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true ); // all - individual
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true ); // open - private
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true ); // new - reply
+				$message_from  = bp_messages_get_meta( $message_id, 'message_from', true ); // group
+
+				if ( !empty( $group ) && 'all' === $message_users && 'open' === $message_type && 'new' === $thread_type && 'group' === $message_from ) {
+					$previous_thread = null;
+				} else {
+					$previous_thread     = (int) $thread->thread_id;
+					$total_users_threads = $wpdb->get_results( $wpdb->prepare( "SELECT is_deleted FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", (int) $previous_thread ) ); // db call ok; no-cache ok;
+					foreach ( $total_users_threads as $total_users_thread ) {
+						if ( 1 === (int) $total_users_thread->is_deleted ) {
+							$previous_thread = null;
+							break;
+						}
+					}
+				}
+			}
+
+		} else {
+			$previous_threads = null;
+		}
+
+
 		if ( $previous_thread && $r['append_thread'] ) {
 			$message->thread_id = $r['thread_id'] = (int) $previous_thread;
 
