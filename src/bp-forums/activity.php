@@ -365,7 +365,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 		 */
 		function activity_get_notification_permalink( $link, $item_id, $secondary_item_id, $total_items ) {
 
-			remove_filter('bp_activity_get_permalink', array( $this, 'activity_get_permalink'), 10, 2);
+			remove_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 			$link = bp_activity_get_permalink( $item_id );
 			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 

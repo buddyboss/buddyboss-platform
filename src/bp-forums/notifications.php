@@ -190,7 +190,7 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	// Bail if we have errors
 	if ( ! bbp_has_errors() ) {
 
-		if ( !empty( $_GET['reply_id'] ) ) {
+		if ( ! empty( $_GET['reply_id'] ) ) {
 			// Attempt to clear notifications for the current user from this reply
 			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_reply' );
 		} else {
@@ -202,10 +202,7 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 		do_action( 'bbp_notifications_handler', $success, $user_id, $topic_id, $action );
 	}
 
-	if (
-		!empty( $_GET['reply_id'] )
-		&& get_post_type( (int)$_GET['reply_id'] ) == 'reply'
-	) {
+	if ( ! empty( $_GET['reply_id'] ) && get_post_type( (int) $_GET['reply_id'] ) == 'reply' ) {
 		// Redirect to the reply
 		$redirect = bbp_get_reply_url( (int) $_GET['reply_id'] );
 	} else {
