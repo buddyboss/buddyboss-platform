@@ -56,7 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.5 =
-*
+* Widgets - Added new 'Profile Completion' widget for showing profile completion progress
 
 = 1.2.4 =
 * Errors - Fixed PHP fatal error in certain situations
