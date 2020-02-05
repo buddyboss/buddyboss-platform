@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.5 =
 * Messages - Fixed message list not loading more after scrolling down on mobile devices
+* Messages - Fixed the conversation start date not matching WordPress timezone settings
 * Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 
