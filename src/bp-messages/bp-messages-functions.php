@@ -223,6 +223,9 @@ function messages_new_message( $args = '' ) {
 							break;
 						}
 					}
+					if ( $previous_thread ) {
+						break;
+					}
 				}
 			}
 
