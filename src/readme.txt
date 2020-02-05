@@ -61,6 +61,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed links in group description set to 'open in a new tab' loading in the same tab
 * Groups - Fixed buttons for Join/Leave Group not working in Group Type shortcodes
 * Groups - When posting a photo from sitewide activity into a group, fixed photo not appearing in group
+* Forums - Fixed issues on Forums index page when Gutenberg content is added into the page editor
 * Forums - Fixed 'Unsubscribe' link in forum subscription emails redirecting to 'Email Preferences'
 * Forums - Fixed 'Description' input not displaying correctly for 'Create New Forum' shortcode
 * Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
