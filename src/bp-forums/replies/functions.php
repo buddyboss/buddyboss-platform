@@ -1974,31 +1974,32 @@ function bbp_reply_content_autoembed_paragraph( $content ) {
 		return $content;
 
 	global $wp_embed;
-	$embed_urls = array();
-	$embeds = array();
+	$embed_urls = $embeds_array = array();
+	$flag = true;
 
-	if ( preg_match( '#(^|\s|>)https?://#i', strip_tags( $content ) ) ) {
-		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content , $embed_urls );
 	}
 
-	if( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
+	if ( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
 		$embed_urls = array_filter( $embed_urls[0] );
 		$embed_urls = array_unique( $embed_urls );
-		$flag = true;
+
 		foreach ( $embed_urls as $url ) {
-			if ( $flag == false )
+			if ( $flag == false ) {
 				continue;
+			}
 
 			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
 			if( $embed ) {
 				$flag = false;
-				$embeds[] = wpautop( $embed );
+				$embeds_array[] = wpautop( $embed );
 			}
 		}
 	}
 
 	// Put the line breaks back.
-	return $content . implode( '', $embeds );
+	return $content . implode( '', $embeds_array );
 }
 
 /** Filters *******************************************************************/
