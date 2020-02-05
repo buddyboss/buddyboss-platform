@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Messages - Fixed the conversation start date not matching WordPress timezone settings
 * Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
+* Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
 
 = 1.2.4 =
 * Errors - Fixed PHP fatal error in certain situations
