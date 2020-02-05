@@ -63,7 +63,7 @@ bp_nouveau_before_loop(); ?>
 
 <?php else : ?>
 
-	bp_nouveau_user_feedback( 'blogs-loop-none' );
+	<?php bp_nouveau_user_feedback( 'blogs-loop-none' ); ?>
 
 <?php endif; ?>
 

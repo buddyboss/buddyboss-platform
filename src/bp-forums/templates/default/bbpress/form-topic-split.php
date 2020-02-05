@@ -38,8 +38,10 @@
 							<legend><?php _e( 'Split Method', 'buddyboss' ); ?></legend>
 
 							<div>
-								<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" type="radio" checked="checked" value="reply" tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_topic_split_option_reply"><?php printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
+								<div class="bp-radio-wrap">
+									<input name="bbp_topic_split_option" id="bbp_topic_split_option_reply" class="bs-styled-radio" type="radio" checked="checked" value="reply" tabindex="<?php bbp_tab_index(); ?>" />
+									<label for="bbp_topic_split_option_reply"><?php printf( __( 'New discussion in <strong>%s</strong> titled:', 'buddyboss' ), bbp_get_forum_title( bbp_get_topic_forum_id( bbp_get_topic_id() ) ) ); ?></label>
+								</div>
 								<input type="text" id="bbp_topic_split_destination_title" value="<?php printf( __( 'Split: %s', 'buddyboss' ), bbp_get_topic_title() ); ?>" tabindex="<?php bbp_tab_index(); ?>" size="35" name="bbp_topic_split_destination_title" />
 							</div>
 
@@ -54,21 +56,22 @@
 								?>
 
 								<div>
-									<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" type="radio" value="existing" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_split_option_existing"><?php _e( 'Use an existing discussion in this forum:', 'buddyboss' ); ?></label>
+									<div class="bp-radio-wrap">
+										<input name="bbp_topic_split_option" id="bbp_topic_split_option_existing" class="bs-styled-radio" type="radio" value="existing" tabindex="<?php bbp_tab_index(); ?>" />
+										<label for="bbp_topic_split_option_existing"><?php _e( 'Use an existing discussion in this forum:', 'buddyboss' ); ?></label>
+									</div>
 
-																										<?php
-																										bbp_dropdown(
-																											array(
-																												'post_type'   => bbp_get_topic_post_type(),
-																												'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
-																												'selected'    => -1,
-																												'exclude'     => bbp_get_topic_id(),
-																												'select_id'   => 'bbp_destination_topic',
-																											)
-																										);
-																										?>
-
+									<?php
+									bbp_dropdown(
+										array(
+											'post_type'   => bbp_get_topic_post_type(),
+											'post_parent' => bbp_get_topic_forum_id( bbp_get_topic_id() ),
+											'selected'    => -1,
+											'exclude'     => bbp_get_topic_id(),
+											'select_id'   => 'bbp_destination_topic',
+										)
+									);
+									?>
 								</div>
 
 							<?php endif; ?>
@@ -79,24 +82,24 @@
 							<legend><?php _e( 'Discussion Extras', 'buddyboss' ); ?></legend>
 
 							<div>
-
 								<?php if ( bbp_is_subscriptions_active() ) : ?>
-
-									<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_subscribers"><?php _e( 'Copy subscribers to the new discussion', 'buddyboss' ); ?></label><br />
-
+									<div class="bp-checkbox-wrap">
+										<input name="bbp_topic_subscribers" id="bbp_topic_subscribers" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+										<label for="bbp_topic_subscribers"><?php _e( 'Copy subscribers to the new discussion', 'buddyboss' ); ?></label>
+									</div>
 								<?php endif; ?>
 
-								<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-								<label for="bbp_topic_favoriters"><?php _e( 'Copy favoriters to the new discussion', 'buddyboss' ); ?></label><br />
+								<div class="bp-checkbox-wrap">
+									<input name="bbp_topic_favoriters" id="bbp_topic_favoriters" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+									<label for="bbp_topic_favoriters"><?php _e( 'Copy favoriters to the new discussion', 'buddyboss' ); ?></label>
+								</div>
 
 								<?php if ( bbp_allow_topic_tags() ) : ?>
-
-									<input name="bbp_topic_tags" id="bbp_topic_tags" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
-									<label for="bbp_topic_tags"><?php _e( 'Copy discussion tags to the new discussion', 'buddyboss' ); ?></label><br />
-
+									<div class="bp-checkbox-wrap">
+										<input name="bbp_topic_tags" id="bbp_topic_tags" class="bs-styled-checkbox" type="checkbox" value="1" checked="checked" tabindex="<?php bbp_tab_index(); ?>" />
+										<label for="bbp_topic_tags"><?php _e( 'Copy discussion tags to the new discussion', 'buddyboss' ); ?></label>
+									</div>
 								<?php endif; ?>
-
 							</div>
 						</fieldset>
 

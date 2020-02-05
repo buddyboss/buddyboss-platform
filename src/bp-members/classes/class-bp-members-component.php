@@ -250,6 +250,13 @@ class BP_Members_Component extends BP_Component {
 		}
 		$default_tab = bp_is_active( $default_tab ) ? $default_tab : 'profile';
 
+		/**
+		 * - Enable Photos as default user profile page.
+		 */
+		if ( 'media' === $default_tab ) {
+			$default_tab = 'photos';
+		}
+
 		$bp->default_component = apply_filters( 'bp_member_default_component', ( '' === $default_tab ) ? $bp->default_component : $default_tab );
 
 		/** Canonical Component Stack ****************************************
