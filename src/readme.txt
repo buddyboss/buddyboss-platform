@@ -71,7 +71,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Widgets - Fixed logic for '(BB) My Connections' widget when displayed on other member profiles
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 * Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
-* Compatibility - Improved support for WordPress Multilingual (WPML) Plugin
+* Compatibility - Fixed conflicts with plugin 'WPML' (WordPress Multilingual)
+* Compatibility - Fixed conflicts with plugin 'WP Mail Logging by MailPoet'
 * Translations - Fixed text instances in JavaScript files that could not be translated
 
 = 1.2.4 =
