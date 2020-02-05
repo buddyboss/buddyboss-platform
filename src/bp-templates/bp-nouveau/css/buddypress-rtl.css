@@ -4492,15 +4492,14 @@ input#send-to-input {
   margin-left: 10px;
 }
 
-@media screen and (min-width: 46.8em) {
-  .bp-messages-user-threads {
-    max-height: 80vh;
-    overflow: auto;
-  }
-  #bp-message-thread-list {
-    max-height: 50vh;
-    overflow: auto;
-  }
+.bp-messages-user-threads {
+  max-height: 80vh;
+  overflow: auto;
+}
+
+#bp-message-thread-list {
+  max-height: 50vh;
+  overflow: auto;
 }
 
 @media screen and (min-width: 1080px) {
@@ -4527,6 +4526,13 @@ input#send-to-input {
   .bp-compose-message .bp-messages-content {
     display: block;
     padding-right: 0;
+  }
+}
+
+@media screen and (max-width: 767px) {
+  .bp-messages-user-threads,
+  #bp-message-thread-list {
+    max-height: 400px;
   }
 }
 
