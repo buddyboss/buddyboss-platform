@@ -447,8 +447,8 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			// Add the option pages.
 			$hooks[] = add_submenu_page(
 				$this->child_settings_page,
-				__( 'BuddyPress Settings', 'buddypress' ),
-				__( 'BuddyPress', 'buddypress' ),
+				__( 'BuddyPress Settings', 'buddyboss' ),
+				__( 'BuddyPress', 'buddyboss' ),
 				$this->capability,
 				'admin.php?page=bp-integrations&tab=bp-compatibility'
 			);
