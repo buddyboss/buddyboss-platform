@@ -71,6 +71,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Widgets - Fixed logic for '(BB) Members Following Me' widget when displayed on other member profiles
 * Widgets - Fixed logic for '(BB) Members I'm Following' widget when displayed on other member profiles
 * Widgets - Fixed logic for '(BB) My Connections' widget when displayed on other member profiles
+* Multisite - Fixed PHP errors displaying while creating a new site in WordPress Multisite
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 * Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
 * Compatibility - Fixed conflicts with plugin 'WPML' (WordPress Multilingual)
