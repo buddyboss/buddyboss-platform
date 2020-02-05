@@ -68,6 +68,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
 * Compatibility - Global fix for all radio and checkbox conflicts with various plugins
 * Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
+* Compatibility - Improved support for WordPress Multilingual (WPML) Plugin
 * Translations - Fixed text instances in JavaScript files that could not be translated
 
 = 1.2.4 =
