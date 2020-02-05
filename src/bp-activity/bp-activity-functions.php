@@ -1488,14 +1488,8 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
 
-	/**
-	 * Removed users liked activity meta
-	 *
-	 * @since BuddyBoss 1.2.5
-	 *
-	 * @param int $user_id ID of the user being deleted.
-	 */
-	bp_remove_user_liked_activity_meta( $user_id );
+	// Removed users liked activity meta.
+	bp_activity_remove_user_favorite_meta( $user_id );
 
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
@@ -3133,7 +3127,7 @@ function bp_activity_delete( $args = '' ) {
 	 * @param array $args Array of arguments to be used with the activity deletion.
 	 */
 	do_action( 'bp_before_activity_delete', $args );
-	
+
 	// Adjust the new mention count of any mentioned member.
 	bp_activity_adjust_mention_count( $args['id'], 'delete' );
 
@@ -3185,7 +3179,7 @@ function bp_activity_delete( $args = '' ) {
  * @param int To delete user id.
  * @return bool True on success, false on failure.
  */
-function bp_remove_user_liked_activity_meta( $user_id = 0 ) {
+function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
 
 	if ( empty( $user_id ) ) {
 		return false;
@@ -3195,27 +3189,28 @@ function bp_remove_user_liked_activity_meta( $user_id = 0 ) {
 	 * For delete user id from other liked activity
 	 */
 	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
-	
+
 	// Loop through activity ids and attempt to delete favorite.
-	if ( is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+	if ( ! empty( $activity_ids ) && is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
 		foreach ( $activity_ids as $activity_id ) {
+			$activity = new BP_Activity_Activity( $activity_id );
 			// Attempt to delete meta value.
-			if ( (int)$activity_id > 0 ) {
-				
+			if ( ! empty( $activity->id ) ) {
+
 				// Update the users who have favorited this activity.
 				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
 				if ( empty( $users ) || ! is_array( $users ) ) {
 					$users = array();
 				}
 
-				if ( in_array( $user_id, $users ) ) {
-					$pos = array_search( $user_id, $users );
-					unset( $users[ $pos ] );
+				$found_user = array_search( $user_id, $users );
+				if ( ! empty( $found_user ) ) {
+					unset( $users[ $found_user ] );
 				}
 
 				// Update activity meta
-				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( $users ) );
-				
+				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
+
 				// Update the total number of users who have favorited this activity.
 				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
 
@@ -3225,6 +3220,7 @@ function bp_remove_user_liked_activity_meta( $user_id = 0 ) {
 			}
 		}
 	}
+
 	return true;
 }
 	/**
