@@ -467,7 +467,7 @@ window.bp = window.bp || {};
 					if ( typeof response.pagination !== 'undefined' && typeof response.pagination.total_count !== 'undefined' ) {
 						self.gif_data[gif_container_key].total_count = response.pagination.total_count;
 					}
-					$(e.target).closest('.forums-attached-gif-container').removeClass('loading');
+					$forums_gif_container.removeClass('loading');
 				}
 			);
 
@@ -539,7 +539,7 @@ window.bp = window.bp || {};
 						self.gif_data[gif_container_key].total_count = response.pagination.total_count;
 					}
 
-					target.closest('form').find('.forums-attached-gif-container').removeClass('loading');
+					$forums_attached_gif_container.removeClass('loading');
 				});
 
 				self.gif_data[gif_container_key].requests.push( request );
