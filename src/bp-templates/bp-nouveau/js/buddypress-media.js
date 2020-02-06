@@ -372,7 +372,7 @@ window.bp = window.bp || {};
 			var self = this, i = 0, target = $( e.currentTarget ), gif_container = target.closest('form').find('.forums-attached-gif-container');
 			e.preventDefault();
 
-			gif_container.parent().removeClass( 'open' );
+			gif_container.closest('form').find('.gif-media-search-dropdown').removeClass( 'open' );
 			var gif_container_key = gif_container.data( 'key' );
 			if ( typeof self.gif_data[gif_container_key] !== 'undefined' && typeof self.gif_data[gif_container_key].data !== 'undefined' && self.gif_data[gif_container_key].data.length ) {
 				for( i = 0; i < self.gif_data[gif_container_key].data.length; i++ ) {
@@ -401,7 +401,7 @@ window.bp = window.bp || {};
 
 		resetForumsGifComponent: function(e) {
 			var target = $( e.target );
-			target.closest('form').find('#whats-new-toolbar .forums-attached-gif-container').parent().removeClass( 'open' );
+			target.closest('form').find('.gif-media-search-dropdown').removeClass( 'open' );
 			target.closest('form').find('#whats-new-toolbar #forums-gif-button').removeClass('active');
 
 			var $forums_attached_gif_container = target.closest('form').find('#whats-new-attachments .forums-attached-gif-container');
