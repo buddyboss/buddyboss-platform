@@ -26,4 +26,4 @@ BuddyBoss Platform is licensed under the GPLv2+, and all contributions to the pr
 
 ## Feature Requests
 
-Feature requests can be submitted by paying customers through our support system at buddyboss.com, and should not be added in Github as issues. Feature request issues submitted by users to Github will be automatically closed by our staff, as we do not want to clutter this repository with random requests. We get a lot of requests, and the ones added to this repository are just the ones that have been validated by our team and scoped properly. But don't worry, we are working on a better system for suggesting feature requests!
+For now, feature requests can be submitted by paying customers through our support system at buddyboss.com, and should not be added in Github as issues. Feature request issues submitted by users to Github will be automatically closed by our staff, as we do not want to clutter this repository with random requests. We get a lot of requests, and the ones added to this repository are just the ones that have been validated by our team and scoped properly. But don't worry, we are working on a better system for suggesting feature requests!
