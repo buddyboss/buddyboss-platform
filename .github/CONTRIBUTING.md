@@ -17,13 +17,11 @@ BuddyBoss Platform is licensed under the GPLv2+, and all contributions to the pr
 ## Getting started
 - [How to set up BuddyBoss development environment](https://github.com/buddyboss/buddyboss-platform/wiki/How-to-set-up-BuddyBoss-development-environment)
 - [Git Flow](https://github.com/buddyboss/buddyboss-platform/wiki/BuddyBoss-Platform-Git-Flow)
+- [Submitting Issues](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Issues)
+- [Submitting Pull Requests](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Pull-Requests)
 - [SCSS and JS minification](https://github.com/buddyboss/buddyboss-platform/wiki/Minification-of-SCSS-and-JS)
 - [Naming conventions](https://github.com/buddyboss/buddyboss-platform/wiki/Naming-conventions)
 - [String localization guidelines](https://github.com/buddyboss/buddyboss-platform/wiki/String-localization-guidelines)
 - [Translating BuddyBoss](https://github.com/buddyboss/buddyboss-platform/wiki/Translating-BuddyBoss-Platform)
 - [Deprecation in core](https://github.com/buddyboss/buddyboss-platform/wiki/Deprecation-in-core)
 - [BuddyPress compatibility](https://github.com/buddyboss/buddyboss-platform/wiki/Backward-compatibility-with-BuddyPress)
-
-## Feature Requests
-
-For now, feature requests can be submitted by paying customers through our support system at buddyboss.com, and should not be added in Github as issues. Feature request issues submitted by users to Github will be automatically closed by our staff, as we do not want to clutter this repository with random requests. We get a lot of requests, and the ones added to this repository are just the ones that have been validated by our team and scoped properly. But don't worry, we are working on a better system for suggesting feature requests!
