@@ -242,36 +242,36 @@
         line-height: 1;
 
         &:before {
-            content: "\f11f";
-            font-family: dashicons;
-            font-size: 18px;
+            content: '\e960';
+            font-family: 'bb-icons';
+            font-size: 16px;
             vertical-align: middle;
             display: inline-block;
         }
 
         &:after {
-            content: "\f140";
-            font-family: dashicons;
-            font-size: 11px;
+			content: '\e826';
+            font-family: 'bb-icons';
+            font-size: 20px;
             vertical-align: middle;
             display: inline-block;
             line-height: 1;
         }
 
         &.onlyme:before {
-            content: "\f160";
+            content: '\e95f';
         }
 
         &.loggedin:before {
-            content: "\f307";
+            content: '\e95d';
         }
 
         &.friends:before {
-            content: "\f110";
+			content: '\e95e';
         }
 
         &.loading:before {
-            content: "\f113";
+            content: '\e838';
             animation: spin 2s infinite linear;
         }
     }
@@ -336,8 +336,8 @@
 .activity-privacy {
     > li {
         &:before {
-            content: "\f11f";
-            font-family: dashicons;
+            content: '\e960';
+            font-family: 'bb-icons';
             font-size: 16px;
             vertical-align: middle;
             display: inline-block;
@@ -347,15 +347,15 @@
         }
 
         &.onlyme:before {
-            content: "\f160";
+            content: '\e95f';
         }
 
         &.loggedin:before {
-            content: "\f307";
+            content: '\e95d';
         }
 
         &.friends:before {
-            content: "\f110";
+            content: '\e95e';
         }
     }
 }

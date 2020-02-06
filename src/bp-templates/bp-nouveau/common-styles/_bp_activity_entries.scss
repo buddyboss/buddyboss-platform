@@ -291,34 +291,34 @@
 			// Uncomment .acomment-reply class for icon us
 			.button:before,
 			.icons:before {
-				font-family: dashicons;
+				font-family: 'bb-icons';
 				font-size: 18px;
 				vertical-align: middle;
 			}
 
 			.acomment-reply.button:before {
-				content: "\f101";
+				content: "\e80b";
 			}
 
 			.view:before {
-				content: "\f125";
+				content: "\e80b";
 			}
 
 			.fav:before {
-				content: "\f529";
+				content: '\e815';
 			}
 
 			.unfav:before {
-				content: "\f529";
+				content: '\e815';
 				color: #0061ac;
 			}
 
 			.delete-activity:before {
-				content: "\f153";
+				content: "\eaea";
 			}
 
 			.spam-activity:before {
-				content: "\f227";
+				content: '\e8c9';
 			}
 
 			.delete-activity:hover {
@@ -463,6 +463,12 @@
     .bb-icon {
         color: #122B46;
     }
+}
+.ac-reply-toolbar{
+	.bb-icon-attach{
+		float: left;
+		margin-top: -3px;
+	}
 }
 // link previews
 .activity-url-scrapper-loading {

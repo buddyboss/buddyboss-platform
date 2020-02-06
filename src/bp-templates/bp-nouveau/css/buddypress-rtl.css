@@ -705,6 +705,10 @@ body.buddypress article.page > .entry-header .entry-title {
   line-height: 36px;
 }
 
+.buddypress-wrap .grid-filters a i {
+  font-size: 20px;
+}
+
 .buddypress-wrap .grid-filters a,
 .buddypress-wrap .grid-filters a:active,
 .buddypress-wrap .grid-filters a:focus {
@@ -1239,36 +1243,36 @@ a.layout-grid-view {
 }
 
 .bb-media-privacy-wrap .privacy:before {
-  content: "\f11f";
-  font-family: dashicons;
-  font-size: 18px;
+  content: '\e960';
+  font-family: 'bb-icons';
+  font-size: 16px;
   vertical-align: middle;
   display: inline-block;
 }
 
 .bb-media-privacy-wrap .privacy:after {
-  content: "\f140";
-  font-family: dashicons;
-  font-size: 11px;
+  content: '\e826';
+  font-family: 'bb-icons';
+  font-size: 20px;
   vertical-align: middle;
   display: inline-block;
   line-height: 1;
 }
 
 .bb-media-privacy-wrap .privacy.onlyme:before {
-  content: "\f160";
+  content: '\e95f';
 }
 
 .bb-media-privacy-wrap .privacy.loggedin:before {
-  content: "\f307";
+  content: '\e95d';
 }
 
 .bb-media-privacy-wrap .privacy.friends:before {
-  content: "\f110";
+  content: '\e95e';
 }
 
 .bb-media-privacy-wrap .privacy.loading:before {
-  content: "\f113";
+  content: '\e838';
   animation: spin 2s infinite linear;
 }
 
@@ -1329,8 +1333,8 @@ a.layout-grid-view {
 }
 
 .activity-privacy > li:before {
-  content: "\f11f";
-  font-family: dashicons;
+  content: '\e960';
+  font-family: 'bb-icons';
   font-size: 16px;
   vertical-align: middle;
   display: inline-block;
@@ -1340,15 +1344,15 @@ a.layout-grid-view {
 }
 
 .activity-privacy > li.onlyme:before {
-  content: "\f160";
+  content: '\e95f';
 }
 
 .activity-privacy > li.loggedin:before {
-  content: "\f307";
+  content: '\e95d';
 }
 
 .activity-privacy > li.friends:before {
-  content: "\f110";
+  content: '\e95e';
 }
 
 .bb-media-model-container .bb-media-privacy-wrap .activity-privacy {
@@ -1795,34 +1799,34 @@ input.search-query-input {
 
 .activity-list .activity-item .bp-generic-meta.action .button:before,
 .activity-list .activity-item .bp-generic-meta.action .icons:before {
-  font-family: dashicons;
+  font-family: 'bb-icons';
   font-size: 18px;
   vertical-align: middle;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .acomment-reply.button:before {
-  content: "\f101";
+  content: "\e80b";
 }
 
 .activity-list .activity-item .bp-generic-meta.action .view:before {
-  content: "\f125";
+  content: "\e80b";
 }
 
 .activity-list .activity-item .bp-generic-meta.action .fav:before {
-  content: "\f529";
+  content: '\e815';
 }
 
 .activity-list .activity-item .bp-generic-meta.action .unfav:before {
-  content: "\f529";
+  content: '\e815';
   color: #0061ac;
 }
 
 .activity-list .activity-item .bp-generic-meta.action .delete-activity:before {
-  content: "\f153";
+  content: "\eaea";
 }
 
 .activity-list .activity-item .bp-generic-meta.action .spam-activity:before {
-  content: "\f227";
+  content: '\e8c9';
 }
 
 .activity-list .activity-item .bp-generic-meta.action .delete-activity:hover {
@@ -1961,6 +1965,11 @@ input.search-query-input {
 .active#messages-media-button .bb-icon,
 .active#messages-gif-button .bb-icon {
   color: #122B46;
+}
+
+.ac-reply-toolbar .bb-icon-attach {
+  float: right;
+  margin-top: -3px;
 }
 
 .activity-url-scrapper-loading {
@@ -5114,7 +5123,7 @@ input#send-to-input {
 }
 
 #compose-personal-li a:after {
-  content: '\e910';
+  content: '\E80C';
   font-size: 20px;
   line-height: 1;
   font-family: "bb-icons";
