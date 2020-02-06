@@ -76,13 +76,19 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		/* Widget VARS */
 
-		$profile_groups_selected    = $instance['profile_groups_enabled'];
-		$this->widget_id            = $args['widget_id'];
-		$profile_phototype_selected = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
-		$user_progress              = $this->get_progress_data( $profile_groups_selected, $profile_phototype_selected );
+		$profile_groups_selected      = $instance['profile_groups_enabled'];
+		$this->widget_id              = $args['widget_id'];
+		$profile_phototype_selected   = ! empty( $instance['profile_photos_enabled'] ) ? $instance['profile_photos_enabled'] : array();
+		$profile_hide_widget_selected = ! empty( $instance['profile_hide_widget'] ) ? $instance['profile_hide_widget'] : array();
+		$user_progress                = $this->get_progress_data( $profile_groups_selected, $profile_phototype_selected );
 
 		// IF nothing selected then return and nothing to display.
 		if ( empty( $profile_groups_selected ) && empty( $profile_phototype_selected ) ) {
+		    return;
+        }
+
+		// Hide the widget if "Hide widget once progress hits 100%" selected and progress is 100%
+		if ( 100 === (int) $user_progress['completion_percentage'] && ! empty( $instance['profile_hide_widget'] ) ) {
 		    return;
         }
 
@@ -437,6 +443,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$instance['title']                  = wp_strip_all_tags( $new_instance['title'] );
 		$instance['profile_groups_enabled'] = $new_instance['profile_groups_enabled'];
 		$instance['profile_photos_enabled'] = $new_instance['profile_photos_enabled'];
+		$instance['profile_hide_widget']    = $new_instance['profile_hide_widget'];
 
 		// Delete Transient.
 		$this->delete_pc_transient();
@@ -465,6 +472,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		$profile_groups = bp_xprofile_get_groups();
 
 		$photos_enabled_arr        = array();
+		$widget_enabled_arr        = array();
 		$is_profile_photo_disabled = bp_disable_avatar_uploads();
 		$is_cover_photo_disabled   = bp_disable_cover_image_uploads();
 
@@ -475,6 +483,8 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		if ( ! $is_cover_photo_disabled ) {
 			$photos_enabled_arr['cover_photo'] = __( 'Cover Photo', 'buddyboss' );
 		}
+
+		$widget_enabled_arr['hide_widget'] = __( 'Hide widget once progress hits 100%', 'buddyboss' );
 
 		/* Widget Form HTML */ ?>
 		<p>
@@ -519,6 +529,26 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 			</ul>
 
 			</p>
+		<?php endif; ?>
+
+		<?php if ( ! empty( $widget_enabled_arr ) ) : ?>
+            <p>
+                <label><?php esc_html_e( 'Options:', 'buddyboss' ); ?></label>
+
+            <ul>
+				<?php foreach ( $widget_enabled_arr as $option_value => $option_label ) : ?>
+
+                    <li>
+                        <label>
+                            <input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_hide_widget' ) ); ?>[]" value="<?php echo esc_attr( $option_value ); ?>" <?php checked( ( ! empty( $instance['profile_hide_widget'] ) && in_array( $option_value, $instance['profile_hide_widget'] ) ) ); ?>/>
+							<?php echo esc_html( $option_label ); ?>
+                        </label>
+                    </li>
+
+				<?php endforeach; ?>
+            </ul>
+
+            </p>
 		<?php endif; ?>
 
 		<?php

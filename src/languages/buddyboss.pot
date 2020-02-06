@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-06 11:15:27+00:00\n"
+"POT-Creation-Date: 2020-02-06 23:33:09+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -3553,8 +3553,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
 #: bp-xprofile/classes/class-bp-xprofile-component.php:285
 #: bp-xprofile/classes/class-bp-xprofile-component.php:400
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:241
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:473
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:247
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:163
 msgid "Profile Photo"
 msgstr ""
@@ -5696,7 +5696,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:229
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:183
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:491
 msgid "Title:"
 msgstr ""
 
@@ -6556,8 +6556,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:852
 #: bp-xprofile/classes/class-bp-xprofile-component.php:298
 #: bp-xprofile/classes/class-bp-xprofile-component.php:410
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:262
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:476
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:268
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
 msgid "Cover Photo"
 msgstr ""
 
@@ -18049,19 +18049,27 @@ msgstr ""
 msgid "(BB) Profile Completion"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:460
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:467
 msgid "Complete Your Profile"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:487
+msgid "Hide widget once progress hits 100%"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:494
 msgid "Profile field sets:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:506
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:516
 msgid "Profile photos:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:535
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:536
+msgid "Options:"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:565
 msgid "Note: This widget is only displayed if a member is logged in."
 msgstr ""
 
