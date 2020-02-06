@@ -1,8 +1,8 @@
 # Contributing to BuddyBoss
 
-BuddyBoss powers many online communities across the internet, and your help making it even more awesome will be greatly appreciated :)
+BuddyBoss powers many online communities across the internet, and we are happy to welcome you to the BuddyBoss family.
 
-There are many ways to contribute to the project!
+There are many ways to contribute to this amazing project!
 
 - [Translating strings into your language.](https://github.com/buddyboss/buddyboss-platform/wiki/Translating-BuddyBoss-Platform)
 - Testing open [issues](https://github.com/buddyboss/buddyboss-platform/issues) or [pull requests](https://github.com/buddyboss/buddyboss-platform/pulls) and sharing your findings in a comment.
