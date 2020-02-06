@@ -16,7 +16,7 @@ BuddyBoss Platform is licensed under the GPLv2+, and all contributions to the pr
 
 ## Getting started
 - [How to set up BuddyBoss development environment](https://github.com/buddyboss/buddyboss-platform/wiki/How-to-set-up-BuddyBoss-development-environment)
-- [Git Flow](https://github.com/buddyboss/buddyboss-platform/wiki/BuddyBoss-Platform-Git-Flow)
+- [Our Git Flow](https://github.com/buddyboss/buddyboss-platform/wiki/BuddyBoss-Platform-Git-Flow)
 - [Submitting Issues](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Issues)
 - [Submitting Pull Requests](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Pull-Requests)
 - [SCSS and JS minification](https://github.com/buddyboss/buddyboss-platform/wiki/Minification-of-SCSS-and-JS)
