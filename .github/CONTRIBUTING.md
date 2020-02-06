@@ -14,7 +14,7 @@ We use the `good first issue` label to mark issues that are suitable for new con
 
 BuddyBoss Platform is licensed under the GPLv2+, and all contributions to the project will be released under the same license. You maintain copyright over any contribution you make, and by submitting a pull request, you are agreeing to release that contribution under the GPLv2+ license.
 
-# Getting started
+## Getting started
 - [How to set up BuddyBoss development environment](https://github.com/buddyboss/buddyboss-platform/wiki/How-to-set-up-BuddyBoss-development-environment)
 - [Git Flow](https://github.com/buddyboss/buddyboss-platform/wiki/BuddyBoss-Platform-Git-Flow)
 - [SCSS and JS minification](https://github.com/buddyboss/buddyboss-platform/wiki/Minification-of-SCSS-and-JS)
@@ -23,3 +23,7 @@ BuddyBoss Platform is licensed under the GPLv2+, and all contributions to the pr
 - [Translating BuddyBoss](https://github.com/buddyboss/buddyboss-platform/wiki/Translating-BuddyBoss-Platform)
 - [Deprecation in core](https://github.com/buddyboss/buddyboss-platform/wiki/Deprecation-in-core)
 - [BuddyPress compatibility](https://github.com/buddyboss/buddyboss-platform/wiki/Backward-compatibility-with-BuddyPress)
+
+## Feature Requests
+
+Feature requests can be submitted by paying customers through our support system at buddyboss.com and should not be added in Github as issues. Feature request issues submitted by users will be automatically closed by our staff. Don't worry, we are workin on a better system for submitting feature requests!
