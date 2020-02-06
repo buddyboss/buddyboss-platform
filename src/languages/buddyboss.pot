@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.5\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-05 06:41:43+00:00\n"
+"POT-Creation-Date: 2020-02-06 11:15:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -555,19 +555,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:504
+#: bp-activity/bp-activity-filters.php:505
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:508
+#: bp-activity/bp-activity-filters.php:509
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:565
+#: bp-activity/bp-activity-filters.php:566
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:823
+#: bp-activity/bp-activity-filters.php:824
 msgid "Load Newest"
 msgstr ""
 
@@ -639,67 +639,67 @@ msgstr ""
 msgid "other like this"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1679
+#: bp-activity/bp-activity-functions.php:1682
 #: bp-groups/bp-groups-activity.php:33
 msgid "Posted a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1681
+#: bp-activity/bp-activity-functions.php:1684
 #: bp-groups/bp-groups-activity.php:35
 msgid "Updates"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1688
+#: bp-activity/bp-activity-functions.php:1691
 msgid "Replied to a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1690
+#: bp-activity/bp-activity-functions.php:1693
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:761
 msgid "Activity Comments"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1770
+#: bp-activity/bp-activity-functions.php:1773
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1773
+#: bp-activity/bp-activity-functions.php:1776
 msgid " and "
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1777 cli/components/activity.php:766
+#: bp-activity/bp-activity-functions.php:1780 cli/components/activity.php:766
 msgid "%s posted an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1801 cli/components/activity.php:790
+#: bp-activity/bp-activity-functions.php:1804 cli/components/activity.php:790
 msgid "%s posted a new activity comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1850
+#: bp-activity/bp-activity-functions.php:1853
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1856
+#: bp-activity/bp-activity-functions.php:1859
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1901
+#: bp-activity/bp-activity-functions.php:1904
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1907
+#: bp-activity/bp-activity-functions.php:1910
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2894
+#: bp-activity/bp-activity-functions.php:2897
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:340
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2922
+#: bp-activity/bp-activity-functions.php:2925
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3552
+#: bp-activity/bp-activity-functions.php:3607
 msgid "Thumbnail"
 msgstr ""
 
@@ -707,43 +707,43 @@ msgstr ""
 msgid "@%s Mentions"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:40
+#: bp-activity/bp-activity-notifications.php:55
 msgid "You have %1$d new mentions"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:43
+#: bp-activity/bp-activity-notifications.php:58
 msgid "%1$s mentioned you"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:49
+#: bp-activity/bp-activity-notifications.php:64
 msgid "New Activity reply"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:54
+#: bp-activity/bp-activity-notifications.php:69
 msgid "You have %1$d new replies"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:58
+#: bp-activity/bp-activity-notifications.php:73
 msgid "%1$s commented on one of your updates"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:64
+#: bp-activity/bp-activity-notifications.php:79
 msgid "New Activity comment reply"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:69
+#: bp-activity/bp-activity-notifications.php:84
 msgid "You have %1$d new comment replies"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:73
+#: bp-activity/bp-activity-notifications.php:88
 msgid "%1$s replied to one of your activity comments"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:405
+#: bp-activity/bp-activity-notifications.php:420
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:406
+#: bp-activity/bp-activity-notifications.php:421
 #: bp-blogs/bp-blogs-template.php:1146
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
@@ -759,7 +759,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:407
+#: bp-activity/bp-activity-notifications.php:422
 #: bp-blogs/bp-blogs-template.php:1154
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
@@ -775,12 +775,12 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:416
+#: bp-activity/bp-activity-notifications.php:431
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:420
-#: bp-activity/bp-activity-notifications.php:438
+#: bp-activity/bp-activity-notifications.php:435
+#: bp-activity/bp-activity-notifications.php:453
 #: bp-friends/bp-friends-notifications.php:274
 #: bp-friends/bp-friends-notifications.php:290
 #: bp-groups/bp-groups-notifications.php:1191
@@ -792,8 +792,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:426
-#: bp-activity/bp-activity-notifications.php:444
+#: bp-activity/bp-activity-notifications.php:441
+#: bp-activity/bp-activity-notifications.php:459
 #: bp-friends/bp-friends-notifications.php:280
 #: bp-friends/bp-friends-notifications.php:296
 #: bp-groups/bp-groups-notifications.php:1197
@@ -805,7 +805,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:434
+#: bp-activity/bp-activity-notifications.php:449
 #: bp-core/gdpr/class-bp-settings-export.php:155
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
@@ -6899,27 +6899,27 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
-#: bp-forums/activity.php:183 bp-forums/activity.php:188
+#: bp-forums/activity.php:186 bp-forums/activity.php:191
 msgid "New forum discussion"
 msgstr ""
 
-#: bp-forums/activity.php:184 bp-forums/activity.php:189
+#: bp-forums/activity.php:187 bp-forums/activity.php:192
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:410 bp-forums/activity.php:665
+#: bp-forums/activity.php:434 bp-forums/activity.php:689
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:559 bp-forums/activity.php:692
+#: bp-forums/activity.php:583 bp-forums/activity.php:716
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:723
+#: bp-forums/activity.php:747
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:755
+#: bp-forums/activity.php:779
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
