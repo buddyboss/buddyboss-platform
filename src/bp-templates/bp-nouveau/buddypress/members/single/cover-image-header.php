@@ -12,7 +12,7 @@
 	<div id="header-cover-image">
 		<?php if ( bp_is_my_profile() ) { ?>
 			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
-				<span class="dashicons dashicons-edit"></span>
+				<i class="bb-icon-edit-thin"></i>
 			</a>
 		<?php } ?>
 	</div>
@@ -21,7 +21,7 @@
 		<div id="item-header-avatar">
 			<?php if ( bp_is_my_profile() && ! bp_disable_avatar_uploads() ) { ?>
 				<a href="<?php bp_members_component_link( 'profile', 'change-avatar' ); ?>" class="link-change-profile-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Profile Photo', 'buddyboss'); ?>">
-					<span class="dashicons dashicons-edit"></span>
+					<i class="bb-icon-edit-thin"></i>
 				</a>
 			<?php } ?>
 			<?php bp_displayed_user_avatar( 'type=full' ); ?>
