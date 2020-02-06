@@ -4815,6 +4815,10 @@ body.register .buddypress-wrap .page ul {
   margin-right: auto;
 }
 
+.bp-messages-content .actions .bb-icon-trash {
+  font-size: 18px;
+}
+
 .bp-messages-content .actions .bp-icons:not(.bp-hide) {
   display: inline-block;
   margin: 0;
@@ -5110,10 +5114,10 @@ input#send-to-input {
 }
 
 #compose-personal-li a:after {
-  content: "\f465";
+  content: '\e910';
   font-size: 20px;
   line-height: 1;
-  font-family: dashicons;
+  font-family: "bb-icons";
   vertical-align: top;
   text-align: center;
   transition: color 0.1s ease-in;
@@ -5716,7 +5720,6 @@ ul.bbp-stats .bbp-count {
 .buddypress-wrap form.bp-dir-search-form button[type="submit"] span,
 .buddypress-wrap form.bp-messages-search-form button[type="submit"] span,
 .buddypress-wrap form.bp-invites-search-form button[type="submit"] span {
-  font-family: dashicons;
   font-size: 18px;
   line-height: 1.6;
 }

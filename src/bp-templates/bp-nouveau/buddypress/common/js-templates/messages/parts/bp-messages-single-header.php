@@ -38,7 +38,7 @@
 
 		<div class="actions">
 			<button type="button" class="message-action-delete bp-icons" data-bp-action="delete" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'Delete conversation', 'buddyboss' ); ?>">
-				<i class="dashicons dashicons-trash"></i>
+				<i class="bb-icon-trash"></i>
 				<span class="bp-screen-reader-text"><?php esc_html_e( 'Delete conversation', 'buddyboss' ); ?></span>
 			</button>
 		</div>

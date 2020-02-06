@@ -185,6 +185,10 @@
 	.actions {
 		margin-left: auto;
 
+		.bb-icon-trash{
+			font-size: 18px;
+		}
+
 		.bp-icons:not(.bp-hide) {
 			display: inline-block;
 			margin: 0;
@@ -518,10 +522,10 @@ input#send-to-input {
 	font-size: 0;
 
 	&:after {
-		content: "\f465";
+		content: '\e910';
 		font-size: 20px;
 		line-height: 1;
-		font-family: dashicons;
+		font-family: "bb-icons";
 		vertical-align: top;
 		text-align: center;
 		transition: color 0.1s ease-in;
