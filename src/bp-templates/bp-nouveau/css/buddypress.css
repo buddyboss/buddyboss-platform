@@ -10633,6 +10633,9 @@ body.login .login-popup .mfp-close:hover {
 *-------------------------------------------------------------------------------
 */
 .bb-activity-media-wrap {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
   display: flex;
   flex-flow: row wrap;
   margin: 0 -3px;
@@ -11365,45 +11368,6 @@ body.bb-model-open {
   margin: 0 5px;
 }
 
-.bb-single-album-header .document-breadcrumb {
-  list-style: none;
-  margin: 0;
-  text-align: left;
-}
-
-.bb-single-album-header .document-breadcrumb li {
-  display: inline-block;
-  font-weight: 600;
-  vertical-align: middle;
-  color: #939597;
-}
-
-.bb-single-album-header .document-breadcrumb li:after {
-  content: "\f345";
-  font-family: dashicons;
-  font-size: 20px;
-  vertical-align: middle;
-  font-size: 15px;
-  margin-right: 6px;
-  margin-left: 6px;
-  color: inherit;
-  font-weight: 400;
-}
-
-.bb-single-album-header .document-breadcrumb li:last-child a {
-  color: #393e41;
-  font-weight: bold;
-}
-
-.bb-single-album-header .document-breadcrumb li:last-child:after {
-  display: none;
-}
-
-.bb-single-album-header .document-breadcrumb li a {
-  color: #939597;
-  font-weight: normal;
-}
-
 .bb-album-photos-list {
   list-style: none;
   margin-left: 0;
@@ -12084,11 +12048,63 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   font-size: 14px;
 }
 
+#media-folder-document-data-table .document-data-table-head {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  border-bottom: 1px solid #E7E9EC;
+  padding: 0 0 8px;
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head {
+  font-size: 12px;
+  color: #939597;
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head span {
+  cursor: pointer;
+  user-select: none;
+  text-transform: uppercase;
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head i {
+  font-size: 8px;
+  -webkit-transform: rotate(180deg) translateY(1px);
+  -ms-transform: rotate(180deg) translateY(1px);
+  transform: rotate(180deg) translateY(1px);
+  transition: all ease 0.3s;
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head.asce i {
+  -webkit-transform: rotate(0deg) translateY(-1px);
+  -ms-transform: rotate(0deg) translateY(-1px);
+  transform: rotate(0deg) translateY(-1px);
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head-name {
+  -ms-flex-preferred-size: calc(60% - 50px);
+  flex-basis: calc(60% - 50px);
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head-modified {
+  -ms-flex-preferred-size: 20%;
+  flex-basis: 20%;
+}
+
+#media-folder-document-data-table .document-data-table-head .data-head-visibility {
+  -ms-flex-preferred-size: 20%;
+  flex-basis: 20%;
+}
+
 #media-folder-document-data-table .media-folder_items {
   margin: 0;
   border-bottom: 1px solid #E7E9EC;
   padding: 15px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
 }
 
@@ -12122,9 +12138,21 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   font-size: 23px;
 }
 
+#media-folder-document-data-table .media-folder_items .media-folder_visibility,
+#media-folder-document-data-table .media-folder_items .media-folder_modified {
+  -ms-flex-preferred-size: 20%;
+  flex-basis: 20%;
+}
+
 #media-folder-document-data-table .media-folder_items .media-folder_details {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
-  flex-basis: calc(100% - 125px);
+  -ms-flex-preferred-size: calc(+60% - 100px);
+  flex-basis: calc(60% - 100px);
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-flow: column;
   flex-flow: column;
 }
 
@@ -12139,7 +12167,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 #media-folder-document-data-table .media-folder_items .media-folder_details .media-folder_name_edit {
   height: 32px;
   display: none;
-  margin-bottom: 8px;
+  margin: 0 8px 8px 0;
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_details__bottom {
@@ -12171,9 +12199,16 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 }
 
 #media-folder-document-data-table .media-folder_items .media-folder_actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
   display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
   align-items: center;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
   justify-content: center;
+  -ms-flex-preferred-size: 55px;
   flex-basis: 55px;
   position: relative;
 }
@@ -12262,7 +12297,12 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 
 @media screen and (max-width: 460px) {
   #media-folder-document-data-table .media-folder_items {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
+    -webkit-box-align: start;
+    -ms-flex-align: start;
     align-items: flex-start;
     position: relative;
   }
@@ -12285,52 +12325,6 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   #media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list:after {
     left: inherit;
     right: 9px;
-  }
-}
-
-.media-folder-document-filters {
-  display: inline-block;
-  width: calc(100% + 40px);
-  margin: 0 -20px;
-  padding: 0 20px 15px;
-  border-bottom: 1px solid #E7E9EC;
-}
-
-.media-folder-document-filters .media-search-form {
-  background-color: #fff;
-  border: 1px solid #DEDFE2;
-  border-radius: 100px;
-  margin-bottom: 0;
-  position: relative;
-  float: left;
-}
-
-.media-folder-document-filters .media-search-form input[type=text] {
-  background: transparent;
-  border-radius: 100px;
-  border: 0;
-  height: 34px;
-  font-size: 14px;
-  letter-spacing: -0.24px;
-  padding: 0 30px 0 35px;
-}
-
-.media-folder-document-filters .select-wrap {
-  float: right;
-}
-
-.media-folder-document-filters .select-wrap select {
-  -moz-appearance: menulist;
-  -webkit-appearance: menulist;
-  -o-appearance: menulist;
-  appearance: menulist;
-}
-
-@media screen and (max-width: 640px) {
-  .media-folder-document-filters .media-search-form,
-  .media-folder-document-filters .select-wrap {
-    float: none;
-    margin-bottom: 10px;
   }
 }
 
@@ -12360,6 +12354,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   .bp-media-header-wrap .bb-media-actions-wrap {
     float: none;
     margin-bottom: 10px;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -ms-flex-direction: column;
     flex-direction: column;
   }
   .bp-media-header-wrap .bb-media-actions-wrap .bb-media-actions a {
@@ -12367,10 +12364,63 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   }
 }
 
+.bp-media-header-wrap .media-search-form {
+  background-color: #fff;
+  border: 1px solid #DEDFE2;
+  border-radius: 100px;
+  margin-bottom: 0;
+  position: relative;
+  display: inline-block;
+}
+
+.bp-media-header-wrap .media-search-form input[type=text] {
+  background: transparent;
+  border-radius: 100px;
+  border: 0;
+  height: 34px;
+  width: 215px;
+  font-size: 14px;
+  letter-spacing: -0.24px;
+  padding: 0 30px 0 35px;
+}
+
+.bp-media-header-wrap .media-search-form:after {
+  content: '\e81f';
+  font-family: bb-icons;
+  display: inline-block;
+  color: #4d5c6d;
+  opacity: .4;
+  position: absolute;
+  left: 12px;
+  top: 10px;
+  line-height: 1;
+  font-size: 16px;
+}
+
+.bp-document-listing .media-search-form {
+  float: right;
+}
+
+@media screen and (max-width: 1120px) {
+  .bp-media-header-wrap .media-search-form {
+    width: 100%;
+    margin: 5px 0;
+  }
+  .bp-media-header-wrap .media-search-form input[type=text] {
+    width: 100%;
+  }
+  .bp-media-header-wrap .album-actions-wrap,
+  .bp-media-header-wrap .bb-media-actions-wrap {
+    margin: 5px 0 !important;
+  }
+}
+
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-single-album-header {
-  float: left;
   padding: 0;
-  width: 40%;
+  width: 30%;
+  -webkit-flex-basis: 30%;
+  -ms-flex-preferred-size: 30%;
+  flex-basis: 30%;
 }
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-single-album-header .bb-title {
@@ -12383,7 +12433,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 }
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions {
-  float: right;
+  width: 70%;
+  -webkit-flex-basis: 70%;
+  -ms-flex-preferred-size: 70%;
+  flex-basis: 70%;
+  text-align: right;
 }
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions > a {
@@ -12400,15 +12454,68 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   font-size: 14px;
 }
 
+#bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions *:not(.button) {
+  text-align: left;
+}
+
 #bp-media-single-folder .bp-media-header-wrap {
   margin-bottom: 15px;
   display: inline-block;
   width: 100%;
+  width: calc(100% + 40px);
+  margin: 0 -20px;
+  padding: 0 20px 15px;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .bp-media-header-wrap-inner {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .document-breadcrumb {
+  list-style: none;
+  margin: 10px 0 0 0;
+  text-align: left;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .document-breadcrumb li {
+  display: inline-block;
+  font-weight: 600;
+  vertical-align: middle;
+  color: #939597;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .document-breadcrumb li:after {
+  content: "\f345";
+  font-family: dashicons;
+  font-size: 20px;
+  vertical-align: middle;
+  font-size: 15px;
+  margin-right: 6px;
+  margin-left: 6px;
+  color: inherit;
+  font-weight: 400;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .document-breadcrumb li:last-child a {
+  color: #393e41;
+  font-weight: bold;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .document-breadcrumb li:last-child:after {
+  display: none;
+}
+
+#bp-media-single-folder .bp-media-header-wrap .document-breadcrumb li a {
+  color: #939597;
+  font-weight: normal;
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items {
   display: inline-block;
   position: relative;
+  text-align: left;
 }
 
 #bp-media-single-folder .bp-media-header-wrap .media-folder_items .media-folder_action__anchor {
@@ -12511,12 +12618,25 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 }
 
 @media screen and (max-width: 1120px) {
+  #bp-media-single-folder .album-single-view .bp-media-header-wrap .bp-media-header-wrap-inner {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+    -webkit-flex-direction: column;
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
   #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-single-album-header {
     width: 100%;
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
   }
   #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions {
     float: left;
     width: 100%;
+    -webkit-flex-basis: 100%;
+    -ms-flex-preferred-size: 100%;
+    flex-basis: 100%;
     position: relative;
     padding-right: 25px;
     margin-top: 15px;

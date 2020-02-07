@@ -175,6 +175,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bb-activity-media-elem.document-activity .document-action-wrap .document-action_collapse', this.collapseCodePreview.bind( this ) );
 			$( document ).on( 'click', '.activity .bp-document-move-activity, #media-stream .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
+			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .data-head', this.sortDocuments.bind( this ) );
 
 
 			// Gifs autoplay
@@ -2068,6 +2069,12 @@ window.bp = window.bp || {};
 					}
 				} );
 			}
+		},
+
+		sortDocuments: function( event ) {
+			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data('filter');
+			
+			sortTarget.hasClass('asce') ? sortTarget.removeClass('asce') : sortTarget.addClass('asce');
 		},
 
 		/**

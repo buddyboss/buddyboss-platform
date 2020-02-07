@@ -11,25 +11,35 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 
-		<div class="media-folder-document-filters">
-			<div id="search-documents-form" class="media-search-form">
-				<label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
-				<input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
-			</div>
-			<div class="select-wrap">
-				<select id="documents-order-by">
-					<option value="last"><?php _e( 'Last Updated', 'buddyboss' ); ?></option>
-					<option value="newest"><?php _e( 'Newly Added', 'buddyboss' ); ?></option>
-					<option value="alphabetical"><?php _e( 'Alphabetical', 'buddyboss' ); ?></option>
-				</select>
-			</div>
-		</div><!-- .media-folder-document-filters -->
-
 		<div id="media-folder-document-data-table">
-		<?php
-		bp_get_template_part( 'document/activity-document-move' );
-		bp_get_template_part( 'document/activity-document-folder-move' );
-		?>
+			<?php
+				bp_get_template_part( 'document/activity-document-move' );
+				bp_get_template_part( 'document/activity-document-folder-move' );
+			?>
+
+			<div class="document-data-table-head">
+				<div class="data-head data-head-name">
+					<span>
+						Name
+						<i class="bb-icon-triangle-fill"></i>
+					</span>
+					
+				</div>
+				<div class="data-head data-head-modified">
+					<span>
+						Modified
+						<i class="bb-icon-triangle-fill"></i>
+					</span>
+					
+				</div>
+				<div class="data-head data-head-visibility">
+					<span>
+						Visibility
+						<i class="bb-icon-triangle-fill"></i>
+					</span>
+				</div>
+			</div><!-- .document-data-table-head -->
+
 
 	<?php
 	endif;

@@ -17,12 +17,23 @@
 		// Home/Media
 		case 'my-document':
 			?>
-				<div class="bp-media-header-wrap">
-					<?php
-						bp_get_template_part( 'document/add-document' );
-						bp_get_template_part( 'document/add-folder' );
-					?>
-				</div>
+				<div class="bp-document-listing">
+					<div class="bp-media-header-wrap">
+					
+						<h2 class="bb-title"><?php _e( 'Documents', 'buddyboss' ); ?></h2>
+
+						<?php
+							bp_get_template_part( 'document/add-document' );
+							bp_get_template_part( 'document/add-folder' );
+						?>
+						
+						<div id="search-documents-form" class="media-search-form">
+							<label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
+							<input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
+						</div>
+
+					</div>
+				</div><!-- .bp-document-listing -->
 			<?php
 
 			bp_nouveau_member_hook( 'before', 'document_content' );
