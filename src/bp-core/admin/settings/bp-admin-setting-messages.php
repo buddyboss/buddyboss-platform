@@ -31,6 +31,15 @@ class BP_Admin_Setting_Messages extends BP_Admin_Setting_tab {
 	// Register setting fields
 	public function register_fields() {
 		$this->add_section( 'bp_messages', __( 'Messages Settings', 'buddyboss' ) );
+
+		/**
+		 * Fires to register Messages tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Messages.
+		 */
+		do_action( 'bp_admin_setting_messages_register_fields', $this );
 	}
 }
 
