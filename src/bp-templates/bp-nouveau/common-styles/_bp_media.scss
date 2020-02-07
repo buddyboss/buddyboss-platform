@@ -1198,11 +1198,19 @@ ul.bb-albums-list {
 
 	.gif-media-search-dropdown.open {
 		width: 300px;
-		left: -60px;
+		left: -20px;
+	}
+
+	.comment-item & ul .gif-media-search-dropdown.open {
+		left: -80px;
 	}
 
 	.gif-media-search-dropdown:before {
-		left: 80px;
+		left: 40px;
+	}
+
+	.comment-item & ul .gif-media-search-dropdown:before {
+		left: 100px;
 	}
 
 	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {

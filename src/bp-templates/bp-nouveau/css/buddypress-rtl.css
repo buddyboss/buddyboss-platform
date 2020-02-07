@@ -1943,20 +1943,16 @@ blockquote.wp-embedded-content > p:first-child > a:hover {
   padding: 1em 0 0;
 }
 
-.buddypress-wrap .activity-comments ul li ul {
-  margin-right: 5%;
-}
-
-.buddypress-wrap .activity-comments ul li ul li.detached-comment-item {
-  margin-right: -5%;
-}
-
 .buddypress-wrap .activity-comments ul li:first-child {
   border-top: 0;
 }
 
 .buddypress-wrap .activity-comments ul li:last-child {
   margin-bottom: 0;
+}
+
+.buddypress-wrap .activity-comments > ul > li > ul {
+  margin-right: 5%;
 }
 
 .buddypress-wrap .activity-comments div.acomment-avatar {
@@ -11020,11 +11016,19 @@ ul.bb-albums-list .bb-more-photos strong {
 
 .bb-media-model-inner .gif-media-search-dropdown.open {
   width: 300px;
-  right: -60px;
+  right: -20px;
+}
+
+.comment-item .bb-media-model-inner ul .gif-media-search-dropdown.open {
+  right: -80px;
 }
 
 .bb-media-model-inner .gif-media-search-dropdown:before {
-  right: 80px;
+  right: 40px;
+}
+
+.comment-item .bb-media-model-inner ul .gif-media-search-dropdown:before {
+  right: 100px;
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
