@@ -25,6 +25,15 @@ class BP_Admin_Setting_Registration extends BP_Admin_Setting_tab {
 
 	public function register_fields() {
 		$this->add_section( 'bp_registration', __( 'Registration Settings', 'buddyboss' ) );
+
+		/**
+		 * Fires to register Registration tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Registration.
+		 */
+		do_action( 'bp_admin_setting_registration_register_fields', $this );
 	}
 }
 
