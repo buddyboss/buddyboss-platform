@@ -1,3 +1,7 @@
+<p align="center">
+<a href="https://www.buddyboss.com/">![](https://github.com/buddyboss/buddyboss-platform/raw/master/.github/buddyboss-logo.jpg)</a>
+</p>
+
 Welcome to the BuddyBoss Platform repository on GitHub. Here you can browse the source, look at [open issues](https://github.com/buddyboss/buddyboss-platform/issues) and keep track of development progress in our [project board](https://github.com/buddyboss/buddyboss-platform/projects/1).
 
 ## Documentation
