@@ -1,5 +1,5 @@
 <p align="center">
-<a href="https://www.buddyboss.com/"><img src="https://github.com/buddyboss/buddyboss-platform/raw/master/.github/buddyboss-logo.jpg" alt="BuddyBoss" /></a>
+<a href="https://www.buddyboss.com/"><img src="https://github.com/buddyboss/buddyboss-platform/raw/master/.github/buddyboss-logo.jpg" alt="BuddyBoss" width="360" height="116" /></a>
 </p>
 
 Welcome to the BuddyBoss Platform repository on GitHub. Here you can browse the source, look at [open issues](https://github.com/buddyboss/buddyboss-platform/issues) and keep track of development progress in our [project board](https://github.com/buddyboss/buddyboss-platform/projects/1).
