@@ -31,6 +31,7 @@
                         <?php if ( ! bp_is_group() ) : ?>
 
                             <div class="bb-field-wrap">
+                                <label for="bb-folder-privacy" class="bb-label"><?php _e( 'Privacy', 'buddyboss' ); ?></label>
                                 <div class="bb-dropdown-wrap">
                                     <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
                                     <select id="bb-folder-privacy">
@@ -42,6 +43,8 @@
                                     </select>
                                 </div>
                             </div>
+                        
+                        <?php endif; ?>
 
                             <?php
                             $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
@@ -70,7 +73,7 @@
                             }
                             ?>
 
-                        <?php endif; ?>
+                        
 
                     <footer class="bb-model-footer">
                         <a class="button" id="bp-media-create-folder-submit" href="#"><?php _e( 'Create Folder', 'buddyboss' ); ?></a>

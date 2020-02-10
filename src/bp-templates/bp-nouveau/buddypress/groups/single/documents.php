@@ -20,17 +20,26 @@
 
 			// Home/Media
 			case 'documents':
-
-				if ( bp_is_group_document() && groups_can_user_manage_media( bp_loggedin_user_id(), bp_get_current_group_id() ) ) :
-					?>
+				?>
+				<div class="bp-document-listing">
 					<div class="bp-media-header-wrap">
+					
+						<h2 class="bb-title"><?php _e( 'Documents', 'buddyboss' ); ?></h2>
+
 						<?php
 							bp_get_template_part( 'document/add-document' );
 							bp_get_template_part( 'document/add-folder' );
 						?>
+						
+						<div id="search-documents-form" class="media-search-form">
+							<label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
+							<input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
+						</div>
+
 					</div>
-					<?php
-				endif;
+				</div><!-- .bp-document-listing -->
+				
+				<?php
 
 				bp_nouveau_group_hook( 'before', 'document_content' );
 

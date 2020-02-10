@@ -781,6 +781,8 @@ function bp_document_date_created() {
 function bp_get_document_date_created() {
 	global $document_template;
 
+	$date = date_i18n( bp_get_option( 'date_format' ), strtotime( $document_template->document->date_created ) );
+
 	/**
 	 * Filters the document date created being displayed.
 	 *
@@ -788,7 +790,7 @@ function bp_get_document_date_created() {
 	 *
 	 * @param string The date created.
 	 */
-	return apply_filters( 'bp_get_document_date_created', $document_template->document->date_created );
+	return apply_filters( 'bp_get_document_date_created', $date );
 }
 
 /**

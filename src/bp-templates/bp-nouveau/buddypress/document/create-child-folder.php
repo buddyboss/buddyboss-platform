@@ -43,6 +43,7 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                     <?php if ( ! bp_is_group() ) : ?>
 
                         <div class="bb-field-wrap">
+                            <label for="bb-folder-privacy" class="bb-label"><?php _e( 'Privacy', 'buddyboss' ); ?></label>
                             <div class="bb-dropdown-wrap">
                                 <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
                                 <select id="bb-folder-child-privacy">
@@ -54,6 +55,8 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                                 </select>
                             </div>
                         </div>
+                        
+                    <?php endif; ?>
 
                         <?php
                         $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
@@ -81,8 +84,6 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             </div><?php
                         }
                         ?>
-
-                    <?php endif; ?>
 
                     <footer class="bb-model-footer">
 	                    <input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $album_id ); ?>">
