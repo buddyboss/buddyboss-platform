@@ -80,6 +80,15 @@ class BP_Admin_Setting_Forums extends BP_Admin_Setting_tab {
 				}
 			}
 		}
+
+		/**
+		 * Fires to register Forums tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Forums.
+		 */
+		do_action( 'bp_admin_setting_forums_register_fields', $this );
 	}
 }
 
