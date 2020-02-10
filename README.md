@@ -1,4 +1,4 @@
-Welcome to the BuddyBoss Platform repository on GitHub. Here you can browse the source, look at [open issues](https://github.com/buddyboss/buddyboss-platform/issues) and keep track of development progress in our [Project Board](https://github.com/buddyboss/buddyboss-platform/projects/1).
+Welcome to the BuddyBoss Platform repository on GitHub. Here you can browse the source, look at [open issues](https://github.com/buddyboss/buddyboss-platform/issues) and keep track of development progress in our [project board](https://github.com/buddyboss/buddyboss-platform/projects/1).
 
 ## Documentation
 
