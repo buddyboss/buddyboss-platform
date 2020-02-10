@@ -8,7 +8,7 @@ There are many ways to contribute to this amazing project!
 - Testing open [issues](https://github.com/buddyboss/buddyboss-platform/issues) or [pull requests](https://github.com/buddyboss/buddyboss-platform/pulls) and sharing your findings in a comment.
 - Submitting fixes, improvements, and enhancements.
 
-If you wish to contribute code, please read the information in the sections below. Then [fork](https://help.github.com/articles/fork-a-repo/) BuddyBoss Platform, commit your changes, and [submit a pull request](https://help.github.com/articles/using-pull-requests/) 🎉
+If you wish to contribute code, please read the information in the sections below. Then [fork](https://help.github.com/articles/fork-a-repo/) BuddyBoss Platform, commit your changes, and [submit a pull request](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Pull-Requests) 🎉
 
 We use the `good first issue` label to mark issues that are suitable for new contributors. You can find all the issues with this label [here](https://github.com/buddyboss/buddyboss-platform/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
 
