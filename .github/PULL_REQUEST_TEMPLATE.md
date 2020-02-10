@@ -1,6 +1,6 @@
 ### All Submissions:
 
-* [ ] Have you followed the [BuddyBoss Contributing guideline](https://github.com/buddyboss/buddyboss-platform/blob/dev/contributing.md)?
+* [ ] Have you followed the [Pull Requests Guidelines](https://github.com/buddyboss/buddyboss-platform/wiki/Submitting-Pull-Requests#pull-request-guidelines)?
 * [ ] Does your code follow the [WordPress' Coding Standards](https://make.wordpress.org/core/handbook/best-practices/coding-standards/)?
 * [ ] Have you checked to ensure there aren't other open [Pull Requests](../pulls) for the same update/change?
 
