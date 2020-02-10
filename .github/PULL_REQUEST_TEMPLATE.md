@@ -12,7 +12,7 @@
 
 <!-- Describe the changes made to this Pull Request and the reason for such changes. -->
 
-Closes #ISSUE_NUMBER .
+Fixes #ISSUE_NUMBER .
 
 ### How to test the changes in this Pull Request:
 
