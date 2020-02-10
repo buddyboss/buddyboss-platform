@@ -540,6 +540,9 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 		'lesson'          	 => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
 		'llms_quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
 		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'llms_certificate'   => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'llms_my_certificate'=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
 	);
 
 	return isset( $default[ $post_type ] ) ?
