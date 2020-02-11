@@ -17,6 +17,8 @@
                         <a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
                     </header>
 
+                    <div class="bb-field-steps bb-field-steps-1">
+
                         <div class="bb-field-wrap">
                             <label for="bb-album-title" class="bb-label"><?php _e( 'Title', 'buddyboss' ); ?></label>
                             <input id="bb-album-title" type="text" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
@@ -45,39 +47,46 @@
                             </div>
                         
                         <?php endif; ?>
-
-                            <?php
-                            $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
-                            if ( '' !== $ul ) {
-                                ?>
-                                <label for="bb-album-child-title" class="bb-label"><?php _e( 'Destination Folder', 'buddyboss' ); ?></label>
-                                <div class="bb-field-wrap bb-field-wrap-search">
-                                    <input type="text" class="ac_document_search_folder" value="" placeholder="<?php _e( 'Search Folder', 'buddyboss' ); ?>" />
-                                </div>
-                                <div class="bb-field-wrap">
-                                    <div class="bb-dropdown-wrap">
-                                        <div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
-                                            <input type="hidden" class="bb-folder-destination" value="<?php _e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
-                                            <div class="location-folder-list-wrap">
-                                                <span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
-                                                <span class="location-folder-title"><?php _e( 'Documents', 'buddyboss' ); ?></span>
-                                                <?php echo $ul; ?>
-                                            </div> <!-- .location-folder-list-wrap -->
-                                            <div class="ac_document_search_folder_list" style="display: none;">
-                                                <ul class="location-folder-list"></ul>
-                                            </div>
-                                            <input type="hidden" class="bb-folder-selected-id" value="" readonly/>
-                                        </div>
-                                    </div>
-                                </div><?php
-                            }
-                            ?>
-
                         
+                        <a class="button bb-field-steps-next bb-field-steps-actions" href="#"><?php _e( 'Next', 'buddyboss' ); ?></a>
 
-                    <footer class="bb-model-footer">
-                        <a class="button" id="bp-media-create-folder-submit" href="#"><?php _e( 'Create Folder', 'buddyboss' ); ?></a>
-                    </footer>
+                    </div>
+
+                    <div class="bb-field-steps bb-field-steps-2">
+
+                        <?php
+                        $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
+                        if ( '' !== $ul ) {
+                            ?>
+                            <label for="bb-album-child-title" class="bb-label"><?php _e( 'Destination Folder', 'buddyboss' ); ?></label>
+                            <div class="bb-field-wrap bb-field-wrap-search">
+                                <input type="text" class="ac_document_search_folder" value="" placeholder="<?php _e( 'Search Folder', 'buddyboss' ); ?>" />
+                            </div>
+                            <div class="bb-field-wrap">
+                                <div class="bb-dropdown-wrap">
+                                    <div class="location-folder-list-wrap-main <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>">
+                                        <input type="hidden" class="bb-folder-destination" value="<?php _e( 'Select Folder', 'buddyboss' ); ?>" readonly/>
+                                        <div class="location-folder-list-wrap">
+                                            <span class="location-folder-back"><i class="bb-icon-angle-left"></i></span>
+                                            <span class="location-folder-title"><?php _e( 'Documents', 'buddyboss' ); ?></span>
+                                            <?php echo $ul; ?>
+                                        </div> <!-- .location-folder-list-wrap -->
+                                        <div class="ac_document_search_folder_list" style="display: none;">
+                                            <ul class="location-folder-list"></ul>
+                                        </div>
+                                        <input type="hidden" class="bb-folder-selected-id" value="" readonly/>
+                                    </div>
+                                </div>
+                            </div><?php
+                        }
+                        ?>
+
+                        <footer class="bb-model-footer">
+                            <a class="button bb-field-steps-previous bb-field-steps-actions" href="#"><?php _e( 'Previous', 'buddyboss' ); ?></a>
+                            <a class="button" id="bp-media-create-folder-submit" href="#"><?php _e( 'Create Folder', 'buddyboss' ); ?></a>
+                        </footer>
+
+                    </div>
 
                 </div>
             </div>

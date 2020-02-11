@@ -176,6 +176,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.activity .bp-document-move-activity, #media-stream .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .data-head', this.sortDocuments.bind( this ) );
+			$( document ).on( 'click', '.bb-media-container .modal-container .bb-field-steps-actions', this.createFolderNavigate.bind( this ) );
 
 
 			// Gifs autoplay
@@ -1129,9 +1130,9 @@ window.bp = window.bp || {};
 			var self = this;
 			event.preventDefault();
 
-			if ( typeof window.Dropzone !== 'undefined' && $('div#media-uploader').length ) {
+			if ( typeof window.Dropzone !== 'undefined' && $('div#bp-media-create-folder').length ) {
 
-				$('#bp-media-uploader').show();
+				$('#bp-media-create-folder').show();
 
 				self.dropzone_obj = new Dropzone('div#media-uploader-folder', self.options );
 
@@ -2075,6 +2076,24 @@ window.bp = window.bp || {};
 			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data('filter');
 			
 			sortTarget.hasClass('asce') ? sortTarget.removeClass('asce') : sortTarget.addClass('asce');
+		},
+
+		createFolderNavigate: function( event ) {
+
+			event.preventDefault();
+
+			var target = $(event.currentTarget), currentSlide = target.closest('.bb-field-steps');
+
+			var titleField = target.closest('.bp-document-listing').length ? '#bb-album-title' : '#bb-album-child-title';
+
+			if( target.hasClass('bb-field-steps-next') && currentSlide.find(titleField).val().trim() == '' ){
+				currentSlide.find(titleField).addClass('error');
+				return;
+			}else{
+				currentSlide.find(titleField).removeClass('error');
+			}
+
+			currentSlide.slideUp(200).siblings('.bb-field-steps').slideDown(200);
 		},
 
 		/**

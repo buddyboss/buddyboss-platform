@@ -2248,3 +2248,20 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		}
 	}
 }
+
+.modal-container .bb-field-steps{
+	display: none;
+	&.bb-field-steps-1{
+		display: block;
+	}
+	#bp-media-create-child-folder-submit,
+	#bp-media-create-folder-submit,
+	.bb-field-steps-next{
+		min-width: 100px;
+		float: right;
+	}
+	.bb-field-steps-previous{
+		float: left;
+	}
+	
+}

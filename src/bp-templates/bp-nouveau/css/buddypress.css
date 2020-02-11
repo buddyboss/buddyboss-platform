@@ -13005,6 +13005,25 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   opacity: 1;
 }
 
+.modal-container .bb-field-steps {
+  display: none;
+}
+
+.modal-container .bb-field-steps.bb-field-steps-1 {
+  display: block;
+}
+
+.modal-container .bb-field-steps #bp-media-create-child-folder-submit,
+.modal-container .bb-field-steps #bp-media-create-folder-submit,
+.modal-container .bb-field-steps .bb-field-steps-next {
+  min-width: 100px;
+  float: right;
+}
+
+.modal-container .bb-field-steps .bb-field-steps-previous {
+  float: left;
+}
+
 /* BASICS */
 .CodeMirror {
   /* Set height, width, borders, and global font properties here */

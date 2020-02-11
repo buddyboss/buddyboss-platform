@@ -29,34 +29,42 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                         <a class="bb-model-close-button" id="bp-media-create-folder-close" href="#"><span class="dashicons dashicons-no-alt"></span></a>
                     </header>
 
-                    <div class="bb-field-wrap">
-                        <label for="bb-album-child-title" class="bb-label"><?php _e( 'Title', 'buddyboss' ); ?></label>
-                        <input id="bb-album-child-title" type="text" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
-                    </div>
-
-                    <div class="bb-field-wrap">
-                        <div class="media-uploader-wrapper">
-                            <div class="dropzone" id="media-uploader-child-folder"></div>
-                        </div>
-                    </div>
-
-                    <?php if ( ! bp_is_group() ) : ?>
+                    <div class="bb-field-steps bb-field-steps-1">
 
                         <div class="bb-field-wrap">
-                            <label for="bb-folder-privacy" class="bb-label"><?php _e( 'Privacy', 'buddyboss' ); ?></label>
-                            <div class="bb-dropdown-wrap">
-                                <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
-                                <select id="bb-folder-child-privacy">
-                                    <?php foreach ( $privacy_options as $k => $option ) {
-                                        ?>
-                                        <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
-                                        <?php
-                                    } ?>
-                                </select>
+                            <label for="bb-album-child-title" class="bb-label"><?php _e( 'Title', 'buddyboss' ); ?></label>
+                            <input id="bb-album-child-title" type="text" placeholder="<?php _e( 'Enter Folder Title', 'buddyboss' ); ?>" />
+                        </div>
+
+                        <div class="bb-field-wrap">
+                            <div class="media-uploader-wrapper">
+                                <div class="dropzone" id="media-uploader-child-folder"></div>
                             </div>
                         </div>
-                        
-                    <?php endif; ?>
+
+                        <?php if ( ! bp_is_group() ) : ?>
+
+                            <div class="bb-field-wrap">
+                                <label for="bb-folder-privacy" class="bb-label"><?php _e( 'Privacy', 'buddyboss' ); ?></label>
+                                <div class="bb-dropdown-wrap">
+                                    <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
+                                    <select id="bb-folder-child-privacy">
+                                        <?php foreach ( $privacy_options as $k => $option ) {
+                                            ?>
+                                            <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
+                                            <?php
+                                        } ?>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                        <?php endif; ?>
+
+                        <a class="button bb-field-steps-next bb-field-steps-actions" href="#"><?php _e( 'Next', 'buddyboss' ); ?></a>
+
+                    </div>
+
+                    <div class="bb-field-steps bb-field-steps-2">
 
                         <?php
                         $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );
@@ -85,10 +93,12 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                         }
                         ?>
 
-                    <footer class="bb-model-footer">
-	                    <input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $album_id ); ?>">
-                        <a class="button" id="bp-media-create-child-folder-submit" href="#"><?php _e( 'Create Folder', 'buddyboss' ); ?></a>
-                    </footer>
+                        <footer class="bb-model-footer">
+                            <a class="button bb-field-steps-previous bb-field-steps-actions" href="#"><?php _e( 'Previous', 'buddyboss' ); ?></a>
+                            <input type="hidden" class="parent_id" id="parent_id" name="parent_id" value="<?php echo esc_attr( $album_id ); ?>">
+                            <a class="button" id="bp-media-create-child-folder-submit" href="#"><?php _e( 'Create Folder', 'buddyboss' ); ?></a>
+                        </footer>
+                    </div>
 
                 </div>
             </div>
