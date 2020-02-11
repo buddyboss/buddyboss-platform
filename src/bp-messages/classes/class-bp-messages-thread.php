@@ -654,11 +654,19 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		// Mark messages as deleted
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = %d AND user_id = %d", $thread_id, $user_id ) );
-
 		// Get the message ids in order to pass to the action.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) );
+		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) ); // WPCS: db call ok. // WPCS: cache ok.
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$message_deleted_text = '<p> </p>';
+
+		// Update the message subject & content of particular user messages.
+		$update_message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id = %d", $thread_id, $user_id ) ); // WPCS: db call ok. // WPCS: cache ok.
+		foreach ( $update_message_ids as $message_id ) {
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+		}
 
 		/**
 		 * Fires before an entire message thread is deleted.
@@ -681,6 +689,33 @@ class BP_Messages_Thread {
 		 * @param int   $user_id     ID of the user the threads were deleted for.
 		 */
 		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, $user_id );
+
+		// If there is no any messages in thread then delete the complete thread.
+		$thread_delete = true;
+		foreach ( $message_ids as $message_id ) {
+			$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
+			if ( '' === $is_deleted ) {
+				$thread_delete = false;
+				break;
+			}
+		}
+
+		if ( $thread_delete ) {
+
+			// Delete thread messages.
+			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+
+			// Delete messages meta.
+			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode(',', $message_ids ) );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+
+			// Delete thread.
+			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+
+		}
+
 
 		return true;
 	}

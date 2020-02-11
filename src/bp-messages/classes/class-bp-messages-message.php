@@ -308,6 +308,7 @@ class BP_Messages_Message {
 			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
 			bp_messages_update_meta( $message_id, '_gif_data', '' );
 			bp_messages_update_meta( $message_id, 'bp_media_ids', '' );
+			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
 		}
 
 		// delete all the meta recipients from user table.

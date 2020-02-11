@@ -1224,6 +1224,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 		$message_from              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'message_from', true );
 		$message_left              = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
 		$message_joined            = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
+		$message_deleted           = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
 
 		if ( $group_id && $message_from && 'group' === $message_from ) {
 
@@ -1337,6 +1338,8 @@ function bp_nouveau_ajax_get_thread_messages() {
 			$content = '';
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
+				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) .'</p>';
 			} elseif ( $message_joined && 'yes' === $message_joined ) {
 				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
@@ -1376,12 +1379,15 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 		} else {
 
-			$message_left   = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
-			$message_joined = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
+			$message_left    = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_left', true );
+			$message_joined  = bp_messages_get_meta( bp_get_the_thread_message_id(), 'group_message_group_joined', true );
+			$message_deleted = bp_messages_get_meta( bp_get_the_thread_message_id(), 'bp_messages_deleted', true );
 
 			$content = '';
 			if ( $message_left && 'yes' === $message_left ) {
 				$content = sprintf( __( '<p class="joined">Left "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
+			} elseif ( $message_deleted && 'yes' === $message_deleted ) {
+				$content = '<p class="joined">' . __( 'This message was deleted.', 'buddyboss' ) .'</p>';
 			} elseif ( $message_joined && 'yes' === $message_joined ) {
 				$content = sprintf( __( '<p class="joined">Joined "%s"</p>', 'buddyboss' ), ucwords( $group_name ) );
 			} elseif ( 'This message was deleted.' === wp_strip_all_tags( bp_get_the_thread_message_content() ) ) {
@@ -1514,10 +1520,19 @@ function bp_nouveau_ajax_delete_thread_messages() {
 		messages_delete_thread( $thread_id );
 	}
 
+	$thread_template = bp_get_thread( array( 'thread_id' => $thread_id ) );
+	if ( $thread_template->has_messages() ) {
+		$id = $thread_id;
+	} else {
+		$id = '';
+	}
+
 	wp_send_json_success( array(
 		'feedback' => __( 'Messages deleted', 'buddyboss' ),
+		'id'       => $id,
 		'type'     => 'success',
 	) );
+
 }
 
 /**

@@ -1798,11 +1798,18 @@ window.bp = window.bp || {};
 
 				// Remove all views
 				if ( 'delete' === action ) {
-					//bp.Nouveau.Messages.clearViews();
-					// Navigate back to current box
-					bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
+
 					if ( bp.Nouveau.Messages.threads.length > 1 ) {
-						bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+						if ( response.id && '' !== response.id ) {
+							//bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/?refresh=1', { trigger: true } );
+							bp.Nouveau.Messages.router.navigate( 'view/' + response.id + '/', { trigger: true } );
+						} else {
+							//bp.Nouveau.Messages.clearViews();
+							// Navigate back to current box
+							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( self.model.get( 'id' ) ) );
+							bp.Nouveau.Messages.router.navigate( 'view/' + bp.Nouveau.Messages.threads.at(0).id + '/', { trigger: true } );
+						}
 					} else {
 						BP_Nouveau.messages.hasThreads = false;
 						bp.Nouveau.Messages.router.navigate( 'compose/', { trigger: true } );
