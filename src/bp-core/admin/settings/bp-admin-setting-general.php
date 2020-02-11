@@ -81,6 +81,14 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		// Add the Activity Settings.
 		add_settings_section( 'bp_activity', __( 'Activity Settings', 'buddyboss' ), '__return_null', 'buddypress' );
 
+		/**
+		 * Fires to register General tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_General.
+		 */
+		do_action( 'bp_admin_setting_general_register_fields', $this );
 	}
 }
 

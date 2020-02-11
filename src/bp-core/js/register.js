@@ -360,7 +360,7 @@ jQuery( document ).ready( function() {
 			errorMessageSelector.html( '' );
 			return;
 		}
-		if ( email1 !== email2 ) {
+		if ( email1 !== email2 && confirmEmailSelector.length ) {
 			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 			return;
 		}

@@ -172,6 +172,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Profile Directories Tutorial
 		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
+		/**
+		 * Fires to register xProfile tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Xprofile.
+		 */
+		do_action( 'bp_admin_setting_xprofile_register_fields', $this );
 	}
 
 	/**

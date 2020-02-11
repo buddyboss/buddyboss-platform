@@ -93,6 +93,7 @@ add_filter( 'bp_get_activity_parent_content', 'bp_activity_make_nofollow_filter'
 add_filter( 'bp_get_activity_latest_update', 'bp_activity_make_nofollow_filter' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'bp_activity_make_nofollow_filter' );
 add_filter( 'bp_get_activity_feed_item_description', 'bp_activity_make_nofollow_filter' );
+add_filter( 'bp_activity_new_at_mention_permalink', 'bp_activity_new_at_mention_permalink', 11, 3 );
 
 add_filter( 'pre_comment_content', 'bp_activity_at_name_filter' );
 add_filter( 'the_content', 'bp_activity_at_name_filter' );
@@ -1311,3 +1312,40 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 
 	return $media_ids;
 }
+
+/**
+ * Generate permalink for comment mention notification.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @param $link
+ * @param $item_id
+ * @param $secondary_item_id
+ *
+ * @return string
+ */
+function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_id ) {
+
+	$activity_obj = new BP_Activity_Activity( $item_id );
+
+	if ( 'activity_comment' == $activity_obj->type ) {
+		$notification = BP_Notifications_Notification::get(
+			array(
+				'user_id'           => bp_loggedin_user_id(),
+				'item_id'           => $item_id,
+				'secondary_item_id' => $secondary_item_id,
+				'component_name'    => 'activity',
+				'component_action'  => 'new_at_mention',
+			)
+		);
+
+		if ( ! empty( $notification ) ) {
+			$id   = current( $notification )->id;
+			$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_obj->id ) );
+		}
+
+	}
+
+	return $link;
+}
+

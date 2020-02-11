@@ -38,6 +38,23 @@ module.exports = function( grunt ) {
 		stylelintConfigCss  = require('stylelint-config-wordpress/index.js'),
 		stylelintConfigScss = require('stylelint-config-wordpress/scss.js');
 
+	if ( typeof stylelintConfigCss.rules !== 'undefined' ) {
+		stylelintConfigCss.rules = Object.assign(stylelintConfigCss.rules, {
+                        'font-family-no-missing-generic-family-keyword': null,
+			'no-descending-specificity': null,
+			'selector-pseudo-element-colon-notation': null,
+			'no-duplicate-selectors': null
+		});
+	}
+	if ( typeof stylelintConfigScss.rules !== 'undefined' ) {
+		stylelintConfigScss.rules = Object.assign(stylelintConfigScss.rules, {
+                        'font-family-no-missing-generic-family-keyword': null,
+			'no-descending-specificity': null,
+			'selector-pseudo-element-colon-notation': null,
+			'no-duplicate-selectors': null
+		});
+	}
+
 	require( 'matchdep' ).filterDev( ['grunt-*', '!grunt-legacy-util'] ).forEach( grunt.loadNpmTasks );
 	grunt.util = require( 'grunt-legacy-util' );
 
