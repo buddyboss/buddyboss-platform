@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.6 =
+* Developers - Added hooks for adding your own options into all Component settings
 
 = 1.2.5 =
 * Messages - Fixed message list not loading more after scrolling down on mobile devices
