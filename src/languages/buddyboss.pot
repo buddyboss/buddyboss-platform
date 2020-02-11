@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.2.5\n"
+"Project-Id-Version: BuddyBoss Platform 1.2.6\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-05 06:41:43+00:00\n"
+"POT-Creation-Date: 2020-02-11 03:49:13+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -555,19 +555,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:504
+#: bp-activity/bp-activity-filters.php:505
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:508
+#: bp-activity/bp-activity-filters.php:509
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:565
+#: bp-activity/bp-activity-filters.php:566
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:823
+#: bp-activity/bp-activity-filters.php:824
 msgid "Load Newest"
 msgstr ""
 
@@ -639,67 +639,67 @@ msgstr ""
 msgid "other like this"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1679
+#: bp-activity/bp-activity-functions.php:1682
 #: bp-groups/bp-groups-activity.php:33
 msgid "Posted a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1681
+#: bp-activity/bp-activity-functions.php:1684
 #: bp-groups/bp-groups-activity.php:35
 msgid "Updates"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1688
+#: bp-activity/bp-activity-functions.php:1691
 msgid "Replied to a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1690
+#: bp-activity/bp-activity-functions.php:1693
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:761
 msgid "Activity Comments"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1770
+#: bp-activity/bp-activity-functions.php:1773
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1773
+#: bp-activity/bp-activity-functions.php:1776
 msgid " and "
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1777 cli/components/activity.php:766
+#: bp-activity/bp-activity-functions.php:1780 cli/components/activity.php:766
 msgid "%s posted an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1801 cli/components/activity.php:790
+#: bp-activity/bp-activity-functions.php:1804 cli/components/activity.php:790
 msgid "%s posted a new activity comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1850
+#: bp-activity/bp-activity-functions.php:1853
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1856
+#: bp-activity/bp-activity-functions.php:1859
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1901
+#: bp-activity/bp-activity-functions.php:1904
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1907
+#: bp-activity/bp-activity-functions.php:1910
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2894
+#: bp-activity/bp-activity-functions.php:2897
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:340
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2922
+#: bp-activity/bp-activity-functions.php:2925
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3552
+#: bp-activity/bp-activity-functions.php:3607
 msgid "Thumbnail"
 msgstr ""
 
@@ -707,43 +707,43 @@ msgstr ""
 msgid "@%s Mentions"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:40
+#: bp-activity/bp-activity-notifications.php:55
 msgid "You have %1$d new mentions"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:43
+#: bp-activity/bp-activity-notifications.php:58
 msgid "%1$s mentioned you"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:49
+#: bp-activity/bp-activity-notifications.php:64
 msgid "New Activity reply"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:54
+#: bp-activity/bp-activity-notifications.php:69
 msgid "You have %1$d new replies"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:58
+#: bp-activity/bp-activity-notifications.php:73
 msgid "%1$s commented on one of your updates"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:64
+#: bp-activity/bp-activity-notifications.php:79
 msgid "New Activity comment reply"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:69
+#: bp-activity/bp-activity-notifications.php:84
 msgid "You have %1$d new comment replies"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:73
+#: bp-activity/bp-activity-notifications.php:88
 msgid "%1$s replied to one of your activity comments"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:405
+#: bp-activity/bp-activity-notifications.php:420
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:406
+#: bp-activity/bp-activity-notifications.php:421
 #: bp-blogs/bp-blogs-template.php:1146
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
@@ -759,7 +759,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:407
+#: bp-activity/bp-activity-notifications.php:422
 #: bp-blogs/bp-blogs-template.php:1154
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
@@ -775,12 +775,12 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:416
+#: bp-activity/bp-activity-notifications.php:431
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:420
-#: bp-activity/bp-activity-notifications.php:438
+#: bp-activity/bp-activity-notifications.php:435
+#: bp-activity/bp-activity-notifications.php:453
 #: bp-friends/bp-friends-notifications.php:274
 #: bp-friends/bp-friends-notifications.php:290
 #: bp-groups/bp-groups-notifications.php:1191
@@ -792,8 +792,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:426
-#: bp-activity/bp-activity-notifications.php:444
+#: bp-activity/bp-activity-notifications.php:441
+#: bp-activity/bp-activity-notifications.php:459
 #: bp-friends/bp-friends-notifications.php:280
 #: bp-friends/bp-friends-notifications.php:296
 #: bp-groups/bp-groups-notifications.php:1197
@@ -805,7 +805,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:434
+#: bp-activity/bp-activity-notifications.php:449
 #: bp-core/gdpr/class-bp-settings-export.php:155
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
@@ -1245,7 +1245,7 @@ msgid "New post published"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:335
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:343
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-messages/bp-messages-functions.php:202
 #: bp-messages/bp-messages-template.php:2121
@@ -2116,10 +2116,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:910
 #: bp-core/admin/bp-core-admin-settings.php:1026
 #: bp-core/admin/bp-core-admin-settings.php:1178
-#: bp-core/admin/settings/bp-admin-setting-friends.php:86
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:379
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:431
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:509
+#: bp-core/admin/settings/bp-admin-setting-friends.php:95
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:387
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:517
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
@@ -2163,7 +2163,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:925
 #: bp-core/admin/bp-core-admin-settings.php:953
 #: bp-core/admin/bp-core-admin-settings.php:981
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:215
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:223
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
@@ -2179,7 +2179,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:935
 #: bp-core/admin/bp-core-admin-settings.php:963
 #: bp-core/admin/bp-core-admin-settings.php:1000
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:225
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -2416,21 +2416,21 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1112
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:444
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:452
 msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1113
 #: bp-core/admin/bp-core-admin-settings.php:1144
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:445
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:476
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:453
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:484
 msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1114
 #: bp-core/admin/bp-core-admin-settings.php:1145
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:446
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:477
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:454
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:485
 msgid "List"
 msgstr ""
 
@@ -2843,7 +2843,7 @@ msgstr ""
 msgid "Messaging"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-friends.php:49
+#: bp-core/admin/settings/bp-admin-setting-friends.php:58
 msgid "Require users to be connected before they can message each other"
 msgstr ""
 
@@ -3060,49 +3060,49 @@ msgstr ""
 msgid "Profile Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:185
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:193
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:190
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:198
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:209
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:216
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:224
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:236
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:244
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:262
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:270
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:273
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:281
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:286
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:294
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:304
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:312
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:319
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:327
 #: bp-members/classes/class-bp-members-admin.php:1348
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:240
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:263
@@ -3114,7 +3114,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:345
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:353
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -3122,15 +3122,15 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:398
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:406
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:409
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:417
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:471
 msgid ""
 "Display profile/member directories in Grid View, List View, or allow "
 "toggling between both views."
@@ -3313,7 +3313,7 @@ msgid "Marketing and Strategy"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:34
-msgid "60 People and Growing!"
+msgid "70 People and Growing!"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:40
@@ -3553,8 +3553,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
 #: bp-xprofile/classes/class-bp-xprofile-component.php:285
 #: bp-xprofile/classes/class-bp-xprofile-component.php:400
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:241
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:473
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:247
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:163
 msgid "Profile Photo"
 msgstr ""
@@ -5696,7 +5696,7 @@ msgstr ""
 #: bp-members/classes/class-bp-core-whos-online-widget.php:229
 #: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:183
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:491
 msgid "Title:"
 msgstr ""
 
@@ -6556,8 +6556,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:852
 #: bp-xprofile/classes/class-bp-xprofile-component.php:298
 #: bp-xprofile/classes/class-bp-xprofile-component.php:410
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:262
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:476
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:268
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
 msgid "Cover Photo"
 msgstr ""
 
@@ -6899,27 +6899,27 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
-#: bp-forums/activity.php:183 bp-forums/activity.php:188
+#: bp-forums/activity.php:186 bp-forums/activity.php:191
 msgid "New forum discussion"
 msgstr ""
 
-#: bp-forums/activity.php:184 bp-forums/activity.php:189
+#: bp-forums/activity.php:187 bp-forums/activity.php:192
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:410 bp-forums/activity.php:665
+#: bp-forums/activity.php:434 bp-forums/activity.php:689
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:559 bp-forums/activity.php:692
+#: bp-forums/activity.php:583 bp-forums/activity.php:716
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:723
+#: bp-forums/activity.php:747
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:755
+#: bp-forums/activity.php:779
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
@@ -18049,19 +18049,27 @@ msgstr ""
 msgid "(BB) Profile Completion"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:460
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:467
 msgid "Complete Your Profile"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:487
+msgid "Hide widget once progress hits 100%"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:494
 msgid "Profile field sets:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:506
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:516
 msgid "Profile photos:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:535
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:536
+msgid "Options:"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:565
 msgid "Note: This widget is only displayed if a member is logged in."
 msgstr ""
 
