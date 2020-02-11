@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.6 =
+* Network Search - Added icons for search results from plugin LifterLMS
 * Developers - Added hooks for adding your own options into all Component settings
 
 = 1.2.5 =
