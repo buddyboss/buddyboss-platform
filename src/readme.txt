@@ -56,10 +56,11 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.6 =
-* Activity - Fixed issue with deleted users leaving 'Unknown' likes in activity
 * Widgets - Added option to hide '(BB) Profile Completion' widget when progress hits 100%
-* Network Search - Added icons for search results from plugin LifterLMS
-* Developers - Added hooks for adding your own options into all Component settings
+* Activity - Fixed issue with deleted users leaving 'Unknown' likes in activity
+* Notifications - Fixed certain notifications not clearing after clicking in Notifications dropdown
+* Network Search - Added icons for search results coming from plugin LifterLMS
+* Developers - Added hooks for adding your own options into all Component Settings pages
 
 = 1.2.5 =
 * Messages - Fixed message list not loading more after scrolling down on mobile devices
