@@ -39,9 +39,9 @@ if ( $attachment_id ) {
 	<div class="media-folder_modified">
 		<div  class="media-folder_details__bottom">
 			<span class="media-folder_date"><?php bp_document_date_created(); ?></span>
-			<?php //if ( ! bp_is_user() ) { ?>
-				<span class="media-folder_author"><?php bp_document_author(); ?></span>
-			<?php //} ?>
+			<?php if ( ! bp_is_user() ) { ?>
+				<span class="media-folder_author">by <?php bp_document_author(); ?></span>
+			<?php } ?>
 		</div>
 	</div>
 
