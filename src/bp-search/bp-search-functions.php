@@ -521,12 +521,12 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 	$default = array(
 		'product'            => buddypress()->plugin_url . 'bp-core/images/search/product.svg',
 		'sfwd-courses'       => buddypress()->plugin_url . 'bp-core/images/search/course.svg',
-		'sfwd-lessons'       => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'sfwd-topic'         => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'sfwd-quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
+		'sfwd-lessons'       => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'sfwd-topic'         => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'sfwd-quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quiz.svg',
 		'post'               => buddypress()->plugin_url . 'bp-core/images/search/blog-post.svg',
 		'forum'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
-		'topic'              => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'topic'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
 		'reply'              => buddypress()->plugin_url . 'bp-core/images/search/forum.svg',
 		'bp-member-type'     => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
 		'memberpressproduct' => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
@@ -537,12 +537,12 @@ function bp_search_get_post_thumbnail_default( $post_type ) {
 		'command'            => buddypress()->plugin_url . 'bp-core/images/search/code.svg',
 		'course'          	 => buddypress()->plugin_url . 'bp-core/images/search/course.svg',
 		'llms_membership'	 => buddypress()->plugin_url . 'bp-core/images/search/membership.svg',
-		'lesson'          	 => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'llms_quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quizzes.svg',
-		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'llms_certificate'   => buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
-		'llms_my_certificate'=> buddypress()->plugin_url . 'bp-core/images/search/topics.svg',
+		'lesson'          	 => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_assignment'    => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_certificate'   => buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_my_certificate'=> buddypress()->plugin_url . 'bp-core/images/search/course-content.svg',
+		'llms_quiz'          => buddypress()->plugin_url . 'bp-core/images/search/quiz.svg'
 	);
 
 	return isset( $default[ $post_type ] ) ?
