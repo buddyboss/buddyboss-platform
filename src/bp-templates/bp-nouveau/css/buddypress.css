@@ -11016,7 +11016,7 @@ ul.bb-albums-list .bb-more-photos strong {
 
 .bb-media-model-inner .gif-media-search-dropdown.open {
   width: 300px;
-  left: -20px;
+  left: -50px;
 }
 
 .comment-item .bb-media-model-inner ul .gif-media-search-dropdown.open {
@@ -11024,7 +11024,7 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-media-model-inner .gif-media-search-dropdown:before {
-  left: 40px;
+  left: 70px;
 }
 
 .comment-item .bb-media-model-inner ul .gif-media-search-dropdown:before {
@@ -11032,11 +11032,51 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
-  left: -100px;
+  left: -110px;
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
-  left: 102px;
+  left: 112px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom {
+  left: -28px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  left: 30px;
+}
+
+.bb-media-model-inner .ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom {
+  left: -50px;
+}
+
+.bb-media-model-inner .ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  left: 52px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .emojionearea-picker.emojionearea-picker-position-bottom {
+  left: -80px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  left: 82px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .gif-media-search-dropdown.open {
+  left: -30px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .gif-media-search-dropdown:before {
+  left: 50px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) .emojionearea-picker.emojionearea-picker-position-bottom {
+  left: -80px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  left: 82px;
 }
 
 img.emoji,

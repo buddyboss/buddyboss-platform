@@ -11016,7 +11016,7 @@ ul.bb-albums-list .bb-more-photos strong {
 
 .bb-media-model-inner .gif-media-search-dropdown.open {
   width: 300px;
-  right: -20px;
+  right: -50px;
 }
 
 .comment-item .bb-media-model-inner ul .gif-media-search-dropdown.open {
@@ -11024,7 +11024,7 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-media-model-inner .gif-media-search-dropdown:before {
-  right: 40px;
+  right: 70px;
 }
 
 .comment-item .bb-media-model-inner ul .gif-media-search-dropdown:before {
@@ -11032,11 +11032,51 @@ ul.bb-albums-list .bb-more-photos strong {
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
-  right: -100px;
+  right: -110px;
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
-  right: 102px;
+  right: 112px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -28px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 30px;
+}
+
+.bb-media-model-inner .ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -50px;
+}
+
+.bb-media-model-inner .ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 52px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -80px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 82px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .gif-media-search-dropdown.open {
+  right: -30px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .gif-media-search-dropdown:before {
+  right: 50px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -80px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 82px;
 }
 
 img.emoji,
