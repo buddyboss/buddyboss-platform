@@ -47,7 +47,7 @@ if ( $attachment_id ) {
 
 	<div class="media-folder_visibility">
 		<div  class="media-folder_details__bottom">
-			<span>All Member</span>
+			<span>All Members</span>
 		</div>
 	</div>
 
