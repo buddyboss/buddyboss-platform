@@ -21,7 +21,7 @@
 		 *
 		 * @since BuddyPress 1.8.0
 		 */
-		do_action( 'bp_before_directory_media_tabs' );
+		do_action( 'bp_before_directory_document_tabs' );
 		?>
 
 		<?php if ( ! bp_nouveau_is_object_nav_in_sidebar() ) : ?>
@@ -34,7 +34,7 @@
 
 		<?php bp_get_template_part( 'document/theatre' ); ?>
 
-		<div id="media-stream" class="media" data-bp-list="document">
+		<div id="media-stream" class="media document-parent" data-bp-list="document">
 			<div id="bp-ajax-loader"><?php bp_nouveau_user_feedback( 'directory-media-document-loading' ); ?></div>
 		</div><!-- .media -->
 

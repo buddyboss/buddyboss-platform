@@ -2036,15 +2036,15 @@ window.bp = window.bp || {};
 		injectDocuments: function( event ) {
 
 			var store = bp.Nouveau.getStorage( 'bp-media' ),
-				scope = store.scope || null, filter = store.filter || null;
+				scope = store.scope || null, filter = store.filter || null, currentTarget = $( event.currentTarget );
 
-			if ( $( event.currentTarget ).hasClass( 'load-more' ) ) {
+			if ( currentTarget.hasClass( 'load-more' ) ) {
 				var next_page = ( Number( this.current_page ) * 1 ) + 1, self = this, search_terms = '';
 
 				// Stop event propagation
 				event.preventDefault();
 
-				$( event.currentTarget ).find( 'a' ).first().addClass( 'loading' );
+				currentTarget.find( 'a' ).first().addClass( 'loading' );
 
 				if ( $( '#buddypress .dir-search input[type=search]' ).length ) {
 					search_terms = $( '#buddypress .dir-search input[type=search]' ).val();
@@ -2060,7 +2060,7 @@ window.bp = window.bp || {};
 					target              : '#buddypress [data-bp-list] div#media-folder-document-data-table'
 				} ).done( function( response ) {
 					if ( true === response.success ) {
-						$( event.currentTarget ).parent( '.pager' ).remove();
+						currentTarget.parent( '.pager' ).remove();
 
 						// Update the current page
 						self.current_page = next_page;

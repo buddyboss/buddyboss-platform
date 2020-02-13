@@ -1508,6 +1508,23 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		}
 	}
 }
+#media-folder-document-data-table{
+	.pager{
+		margin: 20px auto;
+		width: 230px;
+		a.button.loading:after {
+			content: "\e838";
+			font-family: "bb-icons";
+			font-size: 18px;
+			line-height: 1;
+			margin-left: 10px;
+			text-align: center;
+			display: inline-block;
+			-webkit-animation: spin 3s infinite linear;
+			animation: spin 3s infinite linear;
+		}
+	}
+}
 #media-folder-document-data-table .media-folder_items{
 	margin: 0;
 	border-bottom: 1px solid #E7E9EC;
@@ -2264,4 +2281,48 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		float: left;
 	}
 	
+}
+.directory.document{
+	.subnav-filters .subnav-search{
+		position: absolute;
+		right: 0;
+		top: 0;
+		margin: 0;
+		.bp-dir-search-form{
+			background-color: #fff;
+			border: 1px solid #DEDFE2;
+			box-shadow: none;
+			border-radius: 100px;
+			margin: 0;
+			position: relative;
+			button[type=submit]{
+				position: absolute;
+				opacity: 0;
+				visibility: hidden;
+				width: 0;
+				height: 0;
+			}
+			#dir-document-search{
+				border: 0;
+				background-color: transparent;
+				padding-left: 32px;
+				font-size: 14px;
+				height: 34px;
+			}
+		}
+		
+	}
+}
+.document-parent{
+    background-color: #fff;
+    border-radius: 4px;
+    border: 1px solid #E7E9EC;
+	#media-folder-document-data-table{
+		.document-data-table-head{
+			padding: 20px 20px 8px;
+		}
+		.media-folder_items{
+			margin: 0 20px;
+		}
+	}
 }
