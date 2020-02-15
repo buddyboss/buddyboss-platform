@@ -56,6 +56,8 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.7 =
+* Activity - Fixed error on Mentions tab, when 'Activity tabs' option is enabled
+* Registration - Fixed false validation on registration page, when using required fields
 
 = 1.2.6 =
 * Widgets - Added option to hide '(BB) Profile Completion' widget when progress hits 100%
