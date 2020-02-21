@@ -1071,6 +1071,29 @@ ul.bb-albums-list {
 	}
 }
 
+@media (max-width: 480px) {
+	div#buddypress {
+		div.bb-single-album-header {
+			input[type="text"] {
+				display: block;
+				width: 100%;
+				margin-bottom: 10px;
+			}
+		}
+		div.bb-album-actions {
+			flex-wrap: wrap;
+			justify-content: space-around;
+			.button {
+				margin: 0 0 10px 0;
+			}
+			select {
+				width: 100%;			
+				direction: ltr;
+			}
+		}
+	}
+}
+
 .bb-custom-check {
 	position: absolute; // take it out of document flow
 	opacity: 0; // hide it
@@ -1221,3 +1244,4 @@ img.emojioneemoji {
 	width: 24px !important;
 	height: 24px !important;
 }
+

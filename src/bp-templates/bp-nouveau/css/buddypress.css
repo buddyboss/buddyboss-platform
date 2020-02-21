@@ -10908,6 +10908,25 @@ ul.bb-albums-list .bb-more-photos strong {
   }
 }
 
+@media (max-width: 480px) {
+  div#buddypress div.bb-single-album-header input[type="text"] {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+  }
+  div#buddypress div.bb-album-actions {
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  div#buddypress div.bb-album-actions .button {
+    margin: 0 0 10px 0;
+  }
+  div#buddypress div.bb-album-actions select {
+    width: 100%;
+    direction: ltr;
+  }
+}
+
 .bb-custom-check {
   position: absolute;
   opacity: 0;
