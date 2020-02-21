@@ -204,12 +204,12 @@ jQuery( document ).ready( function() {
 	});
 
 	//for form validation
-	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit' , function(e) {
+	jQuery( document ).on( 'click', 'body #buddypress #register-page #signup-form #signup_submit', function() {
 		//e.preventDefault();
 		var html_error = '<div class="bp-messages bp-feedback error">';
-				html_error += '<span class="bp-icon" aria-hidden="true"></span>';
-				html_error += '<p>' + BP_Register.required_field + '</p>';
-				html_error += '</div>';
+			html_error += '<span class="bp-icon" aria-hidden="true"></span>';
+			html_error += '<p>' + BP_Register.required_field + '</p>';
+			html_error += '</div>';
 		var signup_email 			= jQuery( '#signup_email' ),
 			signup_email_confirm 	= jQuery( '#signup_email_confirm' ),
 			signup_password 		= jQuery( '#signup_password' ),
@@ -229,7 +229,7 @@ jQuery( document ).ready( function() {
 			jQuery( document ).find( signup_password_confirm ).before( html_error );
 			return_val = false;
 		}
-		jQuery( '.required-field' ).each( function( index ) {
+		jQuery( '.required-field' ).each( function() {
 
 			if ( jQuery( this ).find( 'input[type="text"]' ).length && jQuery( this ).find( 'input[type="text"] ').val() == '' ) {
 				jQuery( this ).find( 'input[type="text"]' ).before( html_error );
@@ -240,11 +240,11 @@ jQuery( document ).ready( function() {
 				return_val = false;
 			}
 			if ( jQuery( this ).find( 'textarea' ).length && jQuery( this ).find( 'textarea' ).val() == '' ) {
-					jQuery( this ).find( 'textarea' ).before( html_error );
+				jQuery( this ).find( 'textarea' ).before( html_error );
 				return_val = false;
 			}
 			if ( jQuery( this ).find( 'select' ).length && jQuery( this ).find( 'select' ).val() == '' ) {
-					jQuery( this ).find( 'legend' ).next().append( html_error );
+				jQuery( this ).find( 'select' ).before( html_error );
 				return_val = false;
 			}
 			if ( jQuery( this ).find( 'input[type="checkbox"]' ).length ) {
@@ -269,8 +269,9 @@ jQuery( document ).ready( function() {
             jQuery.ajax({
 			    type: 'POST',
 			    url: ajaxurl,
-			    dataType: "json",
-			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + "&action=check_email",
+			    dataType: 'json',
+				async: false,
+			    data: jQuery( 'body #buddypress #register-page #signup-form' ).serialize() + '&action=check_email',
 			    success: function ( response ) {
 			    	if (response.signup_email) {
 				    	var html_serror = '<div class="bp-messages bp-feedback error">';
@@ -310,7 +311,7 @@ jQuery( document ).ready( function() {
 	var emailSelector, confirmEmailSelector, errorMessageSelector;
 	emailSelector 	  = jQuery( '#signup_email' );
 	if ( emailSelector.length ) {
-	emailSelector.on( 'focusout', bp_register_validate_email );
+		emailSelector.on( 'focusout', bp_register_validate_email );
     }
 
 	confirmEmailSelector =  jQuery( '#signup_email_confirm' );
@@ -360,7 +361,7 @@ jQuery( document ).ready( function() {
 			errorMessageSelector.html( '' );
 			return;
 		}
-		if ( email1 !== email2 ) {
+		if ( email1 !== email2 && confirmEmailSelector.length ) {
 			errorMessageSelector.addClass( 'show mismatch' ).html( BP_Register.mismatch_email );
 			return;
 		}
