@@ -433,6 +433,12 @@ class BP_Nouveau extends BP_Theme_Compat {
 				'version'      => $this->version,
 				'footer'       => true,
 			),
+			'guillotine-js' => array(
+				'file'         => 'js/jquery.guillotine.min.js',
+				'dependencies' => $dependencies,
+				'version'      => $this->version,
+				'footer'       => true,
+			),
 		) );
 
 		// Bail if no scripts
@@ -497,6 +503,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 	    }
 
 		wp_enqueue_script( 'bp-nouveau' );
+		wp_enqueue_script( 'guillotine-js' );
+		
 
 		if ( bp_is_register_page() || bp_is_user_settings_general() ) {
 			wp_enqueue_script( 'bp-nouveau-password-verify' );

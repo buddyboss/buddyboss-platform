@@ -630,6 +630,8 @@ window.bp = window.bp || {};
 
 			$( document ).on( 'click', this.closePickersOnClick );
 			document.addEventListener( 'keydown', this.closePickersOnEsc );
+
+			$( document ).on( 'click', '#item-header a.position-change-cover-image, .header-cover-reposition-wrap a.cover-image-save, .header-cover-reposition-wrap a.cover-image-cancel', this.coverPhotoCropper);
 		},
 
                 /**
@@ -1592,7 +1594,38 @@ window.bp = window.bp || {};
 					}
 				}
 			}
-		}
+		},
+		/**
+		 *  Cover photo Cropper
+		 */
+		coverPhotoCropper: function ( e ){
+
+			var picture;
+			if($( e.currentTarget ).hasClass( 'position-change-cover-image' )){
+				
+				var currentTarget = $( e.currentTarget )
+				currentTarget.closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).show();
+				picture = $( '.header-cover-reposition-wrap img' );
+				picture.guillotine( { width: 1178, height: 300, eventOnChange: 'guillotinechange' } );
+				picture.guillotine( 'fit' );
+				picture.on('guillotinechange', function(e, data, action) { currentTarget.closest( '#cover-image-container' ).find( '.header-cover-img' ).attr('data-top',-data.y) });
+
+			} else if( $( e.currentTarget ).hasClass( 'cover-image-save' ) ){
+
+				var coverImage = $( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' );
+				coverImage.css( { 'top' : coverImage.attr('data-top') + 'px'} );
+				coverImage.attr( 'data-top', '' );
+				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+
+			} else if( $( e.currentTarget ).hasClass( 'cover-image-cancel' ) ){
+
+				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-img' ).attr( 'data-top', '' );
+
+			}
+			e.preventDefault();
+			
+		},		
 	};
 
 	// Launch BP Nouveau
