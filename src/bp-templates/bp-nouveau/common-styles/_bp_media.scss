@@ -2280,7 +2280,26 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 	.bb-field-steps-previous{
 		float: left;
 	}
-	
+	@media screen and ( max-width: 420px ){
+		.bb-field-steps-previous,
+		#bp-media-create-folder-submit{
+			float: none;
+			width: 100% !important;
+			margin-bottom: 10px;
+		}
+	}
+}
+@media screen and ( max-width: 420px ){
+	.bp-media-document-uploader{
+		.bb-model-footer{
+			-ms-flex-direction: column;
+			flex-direction: column;
+			>a{
+				width: 100% !important;
+				margin-bottom: 10px;
+			}
+		}
+	}
 }
 .directory.document{
 	.subnav-filters .subnav-search{

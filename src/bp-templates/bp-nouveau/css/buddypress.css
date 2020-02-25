@@ -13041,6 +13041,26 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   float: left;
 }
 
+@media screen and (max-width: 420px) {
+  .modal-container .bb-field-steps .bb-field-steps-previous,
+  .modal-container .bb-field-steps #bp-media-create-folder-submit {
+    float: none;
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+}
+
+@media screen and (max-width: 420px) {
+  .bp-media-document-uploader .bb-model-footer {
+    -ms-flex-direction: column;
+    flex-direction: column;
+  }
+  .bp-media-document-uploader .bb-model-footer > a {
+    width: 100% !important;
+    margin-bottom: 10px;
+  }
+}
+
 .directory.document .subnav-filters .subnav-search {
   position: absolute;
   right: 0;
