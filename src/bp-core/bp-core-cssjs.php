@@ -219,8 +219,9 @@ function bp_core_register_common_scripts() {
 	/**
 	 * Translation for select2 script text.
 	 */
+	$bp_select2 = array( 'lang' => 'en' );
+
 	if ( ! function_exists( 'wp_get_available_translations' ) ) {
-		$bp_select2 = array( 'lang' => '' );
 		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 		$translations = wp_get_available_translations();
 	} else {
