@@ -2774,16 +2774,19 @@ body.no-js .single-item-header .js-self-profile-button {
   height: 100%;
   display: none;
   width: 100%;
+  text-align: right;
 }
 
 #header-cover-image .header-cover-reposition-wrap > .button {
-  position: absolute;
-  top: 5px;
-  right: 0;
+  position: relative;
+  z-index: 1;
+  float: none;
+  margin: 5px 5px 0 0;
 }
 
-#header-cover-image .header-cover-reposition-wrap > .button + a.button.small {
-  right: 95px;
+#header-cover-image .header-cover-reposition-wrap .guillotine-window {
+  position: absolute;
+  top: 0;
 }
 
 #header-cover-image .header-cover-reposition-wrap img {

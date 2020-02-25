@@ -42,13 +42,16 @@
 		height: 100%;
 		display: none;
 		width: 100%;
+		text-align: right;
 		&> .button{
+			position: relative;
+			z-index: 1;
+			float: none;
+    		margin: 5px 5px 0 0;
+		}
+		.guillotine-window{
 			position: absolute;
-			top: 5px;
-			right: 0;
-			& + a.button.small{
-				right: 95px
-			}
+			top: 0;
 		}
 		img{
 			max-width: 100%;
