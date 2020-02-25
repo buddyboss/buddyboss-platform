@@ -5,24 +5,43 @@
  * @since BuddyPress 3.0.0
  * @version 3.0.0
  */
+
+$displayed_user = bp_get_displayed_user();
+$cover_image_url = bp_attachments_get_attachment(
+	'url',
+	array(
+		'object_dir' => 'members',
+		'item_id' => $displayed_user->id,
+	)
+);
 ?>
 
 <div id="cover-image-container">
 
 	<div id="header-cover-image">
-		<img class="header-cover-img" src="https://images.pexels.com/photos/3625709/pexels-photo-3625709.jpeg?auto=compress&cs=tinysrgb&" style="top:<?php echo 0 . 'px'; ?> " />
+		<?php
+		if ( ! empty( $cover_image_url ) ) {
+			echo '<img class="header-cover-img" src="' . esc_url( $cover_image_url ) . '" />';
+		}
+		?>
 		<?php if ( bp_is_my_profile() ) { ?>
 			<a href="<?php echo bp_get_members_component_link( 'profile', 'change-cover-image' ); ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-edit"></span>
 			</a>
-			<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Image', 'buddyboss-theme'); ?>">
+
+			<?php if ( ! empty( $cover_image_url ) ) { ?>
+				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Image', 'buddyboss-theme'); ?>">
 					<span class="dashicons dashicons-move"></span>
 				</a>
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss-theme'); ?></a>
-					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss-theme'); ?></a>	
-					<img src="https://images.pexels.com/photos/3625709/pexels-photo-3625709.jpeg?auto=compress&cs=tinysrgb&" />	
+					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss-theme'); ?></a>
+					<?php
+					echo '<img src="' . esc_url( $cover_image_url ) . '" />';
+					?>
 				</div>
+			<?php } ?>
+
 		<?php } ?>
 	</div>
 
@@ -57,7 +76,7 @@
 					<?php if ( bp_nouveau_member_has_meta() ) : ?>
 						<?php bp_nouveau_member_meta(); ?>
 					<?php endif; ?>
-				</div>	
+				</div>
 			<?php endif; ?>
 
 			<?php echo bp_get_user_social_networks_urls(); ?>

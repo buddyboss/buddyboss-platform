@@ -15,19 +15,26 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 <div id="cover-image-container">
 
 	<div id="header-cover-image">
-		<img class="header-cover-img" src="https://images.pexels.com/photos/3625709/pexels-photo-3625709.jpeg?auto=compress&cs=tinysrgb&" style="top:<?php echo 0 . 'px'; ?> " />
-		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) { ?>
+		<?php if ( bp_is_item_admin() && bp_group_use_cover_image_header() ) {
+			$group_cover_image = bp_attachments_get_attachment( 'url', array( 'object_dir' => 'groups','item_id' => bp_get_group_id() ) );
+
+			if ( ! empty( $group_cover_image ) ) {
+				echo '<img class="header-cover-img" src="' . esc_url( $group_cover_image ) . '" />';
+			}
+			?>
 			<a href="<?php echo $group_cover_link; ?>" class="link-change-cover-image bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e('Change Cover Photo', 'buddyboss'); ?>">
 				<span class="dashicons dashicons-edit"></span>
 			</a>
-			<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Image', 'buddyboss-theme'); ?>">
+			<?php if ( ! empty( $group_cover_image ) ) { ?>
+				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Image', 'buddyboss-theme'); ?>">
 					<span class="dashicons dashicons-move"></span>
 				</a>
 				<div class="header-cover-reposition-wrap">
 					<a href="#" class="button small cover-image-cancel"><?php _e('Cancel', 'buddyboss-theme'); ?></a>
-					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss-theme'); ?></a>	
-					<img src="https://images.pexels.com/photos/3625709/pexels-photo-3625709.jpeg?auto=compress&cs=tinysrgb&" />	
+					<a href="#" class="button small cover-image-save"><?php _e('Save Change', 'buddyboss-theme'); ?></a>
+					<img src="<?php echo esc_url( $group_cover_image );  ?>" />
 				</div>
+			<?php } ?>
 		<?php } ?>
 	</div>
 
