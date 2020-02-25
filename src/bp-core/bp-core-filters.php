@@ -1402,3 +1402,28 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 	return $pages;
 }
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+
+
+/**
+ * Filter to change cover image dimensions to original for group and profile.
+ *
+ * @param $wh array
+ * @param $settings array
+ * @param $component string
+ *
+ * @return array
+ */
+function filter_bp_attachments_get_cover_image_dimensions( $wh, $settings, $component ) {
+	if (
+		did_action( 'wp_ajax_bp_cover_image_upload' )
+		&& ( 'xprofile' === $component || 'groups' === $component )
+	) {
+		return array(
+			'width' => 99999,
+			'height' => 99999,
+		);
+	}
+
+	return $wh;
+}
+add_filter( 'bp_attachments_get_cover_image_dimensions', 'filter_bp_attachments_get_cover_image_dimensions', 10, 3 );
