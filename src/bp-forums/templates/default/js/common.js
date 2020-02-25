@@ -10,7 +10,7 @@ jQuery( document ).ready(
 			minimumInputLength: 1,
 			closeOnSelect: true,
 			tags: true,
-			language: bp_select2.lang,
+			language: ( typeof bp_select2 != 'undefined' && typeof bp_select2.lang != 'undefined' ) ? bp_select2.lang : 'en',
 			dropdownCssClass: 'bb-select-dropdown',
 			containerCssClass: 'bb-select-container',
 			tokenSeparators: [',', ' '],
