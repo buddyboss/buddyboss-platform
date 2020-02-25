@@ -1618,6 +1618,7 @@ window.bp = window.bp || {};
 				coverImage.css( { 'top' : coverImage.attr('data-top') + 'px'} );
 				coverImage.attr( 'data-top', '' );
 				$( e.currentTarget ).closest( '#cover-image-container' ).find( '.header-cover-reposition-wrap' ).hide();
+				// ajax call to save photo position
 
 			} else if( $( e.currentTarget ).hasClass( 'cover-image-cancel' ) ){
 
