@@ -40,6 +40,7 @@ module.exports = function( grunt ) {
 
 	if ( typeof stylelintConfigCss.rules !== 'undefined' ) {
 		stylelintConfigCss.rules = Object.assign(stylelintConfigCss.rules, {
+                        'font-family-no-missing-generic-family-keyword': null,
 			'no-descending-specificity': null,
 			'selector-pseudo-element-colon-notation': null,
 			'no-duplicate-selectors': null
@@ -47,6 +48,7 @@ module.exports = function( grunt ) {
 	}
 	if ( typeof stylelintConfigScss.rules !== 'undefined' ) {
 		stylelintConfigScss.rules = Object.assign(stylelintConfigScss.rules, {
+                        'font-family-no-missing-generic-family-keyword': null,
 			'no-descending-specificity': null,
 			'selector-pseudo-element-colon-notation': null,
 			'no-duplicate-selectors': null

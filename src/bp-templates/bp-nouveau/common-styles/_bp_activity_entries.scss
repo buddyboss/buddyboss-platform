@@ -489,13 +489,16 @@
 }
 
 .activity-link-preview-excerpt {
+
 	p {
 		font-size: 14px;
 		font-weight: 400;
 	}
+
 	a.activity-link-preview-more {
 		color: #b4b9be;
 	}
+
 	a.activity-link-preview-more:hover {
 		text-decoration: underline !important;
 	}
@@ -598,13 +601,12 @@ blockquote.wp-embedded-content {
 	position: relative;
 	margin: 0;
 
-	& > a ,
-	& > p:first-child > a {
+	> a,
+	> p:first-child > a {
 		color: #32373c;
 		font-weight: 600;
 		font-size: 22px;
 		line-height: 1.3;
-		color: #32373c;
 
 		&:hover {
 			text-decoration: underline;
@@ -623,6 +625,7 @@ blockquote.wp-embedded-content {
 }
 
 @keyframes lazyAmination {
+
 	0% {
 		background-position: 100% 0;
 	}

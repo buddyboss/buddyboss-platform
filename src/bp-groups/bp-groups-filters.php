@@ -113,6 +113,7 @@ function bp_groups_filter_kses( $content = '' ) {
 	$allowed_tags['ol']            = array();
 	$allowed_tags['ul']            = array();
 	$allowed_tags['li']            = array();
+	$allowed_tags['a']['target']   = array();
 
 	/**
 	 * Filters the HTML elements allowed for a given context.

@@ -205,7 +205,7 @@ body.register {
 }
 
 .bs-bp-container-reg .buddypress-wrap #email-strength-result.mismatch {
-	font-weight: normal;
+	font-weight: 400;
 	background-color: #e0e1e1;
 	border-color: #e0e1e1;
 	border-radius: 3px;
@@ -213,15 +213,16 @@ body.register {
 }
 
 .bs-bp-container-reg .buddypress-wrap #email-strength-result.show {
-	font-weight: normal;
+	font-weight: 400;
 	color: #fff;
 	border-radius: 3px;
 	font-size: 14px;
 	display: block;
 }
 
-.bs-bp-container-reg .buddypress-wrap #email-strength-result.error, #email-strength-result.bad {
-	background-color: #EF3E46;
-	border-color: #EF3E46;
+.bs-bp-container-reg .buddypress-wrap #email-strength-result.error,
+#email-strength-result.bad {
+	background-color: #ef3e46;
+	border-color: #ef3e46;
 	color: #fff;
 }

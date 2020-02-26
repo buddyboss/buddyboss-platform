@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.2.4\n"
+"Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-01-30 09:20:52+00:00\n"
+"POT-Creation-Date: 2020-02-18 14:37:35+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -527,6 +527,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:66
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/includes/activity/functions.php:195
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
 #: bp-xprofile/classes/class-bp-xprofile-group.php:935
@@ -555,19 +556,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:504
+#: bp-activity/bp-activity-filters.php:505
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:508
+#: bp-activity/bp-activity-filters.php:509
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:565
+#: bp-activity/bp-activity-filters.php:566
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:823
+#: bp-activity/bp-activity-filters.php:824
 msgid "Load Newest"
 msgstr ""
 
@@ -639,67 +640,67 @@ msgstr ""
 msgid "other like this"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1679
+#: bp-activity/bp-activity-functions.php:1682
 #: bp-groups/bp-groups-activity.php:33
 msgid "Posted a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1681
+#: bp-activity/bp-activity-functions.php:1684
 #: bp-groups/bp-groups-activity.php:35
 msgid "Updates"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1688
+#: bp-activity/bp-activity-functions.php:1691
 msgid "Replied to a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1690
+#: bp-activity/bp-activity-functions.php:1693
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:761
 msgid "Activity Comments"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1770
+#: bp-activity/bp-activity-functions.php:1773
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1773
+#: bp-activity/bp-activity-functions.php:1776
 msgid " and "
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1777 cli/components/activity.php:766
+#: bp-activity/bp-activity-functions.php:1780 cli/components/activity.php:766
 msgid "%s posted an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1801 cli/components/activity.php:790
+#: bp-activity/bp-activity-functions.php:1804 cli/components/activity.php:790
 msgid "%s posted a new activity comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1850
+#: bp-activity/bp-activity-functions.php:1853
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1856
+#: bp-activity/bp-activity-functions.php:1859
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1901
+#: bp-activity/bp-activity-functions.php:1904
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1907
+#: bp-activity/bp-activity-functions.php:1910
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2894
+#: bp-activity/bp-activity-functions.php:2897
 #: bp-templates/bp-nouveau/includes/activity/ajax.php:340
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2922
+#: bp-activity/bp-activity-functions.php:2925
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3552
+#: bp-activity/bp-activity-functions.php:3607
 msgid "Thumbnail"
 msgstr ""
 
@@ -707,43 +708,43 @@ msgstr ""
 msgid "@%s Mentions"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:40
+#: bp-activity/bp-activity-notifications.php:55
 msgid "You have %1$d new mentions"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:43
+#: bp-activity/bp-activity-notifications.php:58
 msgid "%1$s mentioned you"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:49
+#: bp-activity/bp-activity-notifications.php:64
 msgid "New Activity reply"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:54
+#: bp-activity/bp-activity-notifications.php:69
 msgid "You have %1$d new replies"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:58
+#: bp-activity/bp-activity-notifications.php:73
 msgid "%1$s commented on one of your updates"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:64
+#: bp-activity/bp-activity-notifications.php:79
 msgid "New Activity comment reply"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:69
+#: bp-activity/bp-activity-notifications.php:84
 msgid "You have %1$d new comment replies"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:73
+#: bp-activity/bp-activity-notifications.php:88
 msgid "%1$s replied to one of your activity comments"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:405
+#: bp-activity/bp-activity-notifications.php:420
 msgid "Activity Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:406
+#: bp-activity/bp-activity-notifications.php:421
 #: bp-blogs/bp-blogs-template.php:1146
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:68
@@ -759,7 +760,7 @@ msgstr ""
 msgid "Yes"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:407
+#: bp-activity/bp-activity-notifications.php:422
 #: bp-blogs/bp-blogs-template.php:1154
 #: bp-core/gdpr/class-bp-friendship-export.php:93
 #: bp-core/gdpr/class-bp-notification-export.php:66
@@ -775,12 +776,12 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:416
+#: bp-activity/bp-activity-notifications.php:431
 msgid "A member mentions you in an update using \"@%s\""
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:420
-#: bp-activity/bp-activity-notifications.php:438
+#: bp-activity/bp-activity-notifications.php:435
+#: bp-activity/bp-activity-notifications.php:453
 #: bp-friends/bp-friends-notifications.php:274
 #: bp-friends/bp-friends-notifications.php:290
 #: bp-groups/bp-groups-notifications.php:1191
@@ -792,8 +793,8 @@ msgstr ""
 msgid "Yes, send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:426
-#: bp-activity/bp-activity-notifications.php:444
+#: bp-activity/bp-activity-notifications.php:441
+#: bp-activity/bp-activity-notifications.php:459
 #: bp-friends/bp-friends-notifications.php:280
 #: bp-friends/bp-friends-notifications.php:296
 #: bp-groups/bp-groups-notifications.php:1197
@@ -805,7 +806,7 @@ msgstr ""
 msgid "No, do not send email"
 msgstr ""
 
-#: bp-activity/bp-activity-notifications.php:434
+#: bp-activity/bp-activity-notifications.php:449
 #: bp-core/gdpr/class-bp-settings-export.php:155
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
@@ -1092,8 +1093,8 @@ msgstr ""
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
 #: bp-forums/admin/settings.php:218 bp-forums/admin/tools.php:1711
-#: bp-forums/admin.php:216 bp-forums/admin.php:267
-#: bp-forums/classes/class-bbpress.php:451
+#: bp-forums/admin.php:45 bp-forums/admin.php:46 bp-forums/admin.php:231
+#: bp-forums/admin.php:274 bp-forums/classes/class-bbpress.php:451
 #: bp-forums/classes/class-bp-forums-component.php:38
 #: bp-forums/classes/class-bp-forums-component.php:189
 #: bp-forums/classes/class-bp-forums-component.php:276
@@ -1223,7 +1224,7 @@ msgstr ""
 msgid "Activity History"
 msgstr ""
 
-#: bp-activity/classes/class-bp-akismet.php:645 bp-forums/admin/admin.php:724
+#: bp-activity/classes/class-bp-akismet.php:645 bp-forums/admin/admin.php:725
 #: bp-forums/admin/settings.php:727
 msgid "%1$s - %2$s"
 msgstr ""
@@ -1245,7 +1246,7 @@ msgid "New post published"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:106
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:335
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:343
 #: bp-integrations/learndash/buddypress/components/BpGroupCourses.php:146
 #: bp-messages/bp-messages-functions.php:202
 #: bp-messages/bp-messages-template.php:2121
@@ -1503,8 +1504,8 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-components.php:27
 #: bp-core/admin/bp-core-admin-functions.php:647
-#: bp-core/classes/class-bp-admin.php:305
-#: bp-core/classes/class-bp-admin.php:407
+#: bp-core/classes/class-bp-admin.php:312
+#: bp-core/classes/class-bp-admin.php:460
 msgid "Components"
 msgstr ""
 
@@ -1609,11 +1610,11 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-components.php:337
 #: bp-core/admin/bp-core-admin-functions.php:657
 #: bp-core/admin/bp-core-admin-settings.php:606
-#: bp-core/classes/class-bp-admin.php:323
-#: bp-core/classes/class-bp-admin.php:425
-#: bp-core/classes/class-bp-admin.php:675
+#: bp-core/classes/class-bp-admin.php:330
+#: bp-core/classes/class-bp-admin.php:478
+#: bp-core/classes/class-bp-admin.php:740
 #: bp-core/gdpr/class-bp-settings-export.php:29
-#: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:426
+#: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:427
 #: bp-groups/bp-groups-admin.php:166
 #: bp-groups/classes/class-bp-groups-component.php:409
 #: bp-groups/classes/class-bp-groups-component.php:831
@@ -1652,7 +1653,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:272
 #: bp-core/bp-core-functions.php:783
-#: bp-core/classes/class-bp-core-login-widget.php:122
+#: bp-core/classes/class-bp-core-login-widget.php:125
 #: bp-forums/common/widgets.php:124 bp-members/bp-members-adminbar.php:69
 msgid "Register"
 msgstr ""
@@ -1685,18 +1686,18 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:652
 #: bp-core/admin/bp-core-admin-pages.php:25
-#: bp-core/classes/class-bp-admin.php:313
-#: bp-core/classes/class-bp-admin.php:314
-#: bp-core/classes/class-bp-admin.php:415
-#: bp-core/classes/class-bp-admin.php:416 bp-forums/admin/settings.php:1670
+#: bp-core/classes/class-bp-admin.php:320
+#: bp-core/classes/class-bp-admin.php:321
+#: bp-core/classes/class-bp-admin.php:468
+#: bp-core/classes/class-bp-admin.php:469 bp-forums/admin/settings.php:1670
 #: bp-search/bp-search-functions.php:362
 msgid "Pages"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:662
 #: bp-core/admin/bp-core-admin-settings.php:631
-#: bp-core/classes/class-bp-admin.php:332
-#: bp-core/classes/class-bp-admin.php:434
+#: bp-core/classes/class-bp-admin.php:339
+#: bp-core/classes/class-bp-admin.php:487
 msgid "Integrations"
 msgstr ""
 
@@ -1705,10 +1706,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:34
 #: bp-core/admin/bp-core-admin-tools.php:222
 #: bp-core/admin/bp-core-admin-tools.php:846
-#: bp-core/classes/class-bp-admin.php:456
-#: bp-core/classes/class-bp-admin.php:457
-#: bp-core/classes/class-bp-admin.php:479
-#: bp-core/classes/class-bp-admin.php:480 bp-forums/admin/settings.php:1464
+#: bp-core/classes/class-bp-admin.php:509
+#: bp-core/classes/class-bp-admin.php:510
+#: bp-core/classes/class-bp-admin.php:532
+#: bp-core/classes/class-bp-admin.php:533 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
 #: bp-media/bp-media-filters.php:814
 msgid "Tools"
@@ -1716,19 +1717,19 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:672
 #: bp-core/admin/bp-core-admin-help.php:56
-#: bp-core/classes/class-bp-admin.php:387
-#: bp-core/classes/class-bp-admin.php:488
-#: bp-core/classes/class-bp-admin.php:489
+#: bp-core/classes/class-bp-admin.php:431
+#: bp-core/classes/class-bp-admin.php:541
+#: bp-core/classes/class-bp-admin.php:542
 msgid "Help"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:677
 #: bp-core/admin/settings/bp-admin-setting-credit.php:21
-#: bp-core/classes/class-bp-admin.php:341
-#: bp-core/classes/class-bp-admin.php:342
-#: bp-core/classes/class-bp-admin.php:443
-#: bp-core/classes/class-bp-admin.php:444
-#: bp-core/classes/class-bp-admin.php:537
+#: bp-core/classes/class-bp-admin.php:348
+#: bp-core/classes/class-bp-admin.php:349
+#: bp-core/classes/class-bp-admin.php:496
+#: bp-core/classes/class-bp-admin.php:497
+#: bp-core/classes/class-bp-admin.php:590
 msgid "Credits"
 msgstr ""
 
@@ -2033,10 +2034,12 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2547
 #: bp-core/admin/bp-core-admin-functions.php:2718
-#: bp-core/bp-core-functions.php:3015 bp-core/classes/class-bp-admin.php:589
-#: bp-core/classes/class-bp-admin.php:590
-#: bp-core/classes/class-bp-admin.php:604
-#: bp-core/classes/class-bp-admin.php:605
+#: bp-core/bp-core-functions.php:3015 bp-core/classes/class-bp-admin.php:642
+#: bp-core/classes/class-bp-admin.php:643
+#: bp-core/classes/class-bp-admin.php:653
+#: bp-core/classes/class-bp-admin.php:654
+#: bp-core/classes/class-bp-admin.php:672
+#: bp-core/classes/class-bp-admin.php:673
 msgid "Emails"
 msgstr ""
 
@@ -2114,10 +2117,10 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:910
 #: bp-core/admin/bp-core-admin-settings.php:1026
 #: bp-core/admin/bp-core-admin-settings.php:1178
-#: bp-core/admin/settings/bp-admin-setting-friends.php:86
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:379
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:431
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:509
+#: bp-core/admin/settings/bp-admin-setting-friends.php:95
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:387
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:517
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
@@ -2161,7 +2164,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:925
 #: bp-core/admin/bp-core-admin-settings.php:953
 #: bp-core/admin/bp-core-admin-settings.php:981
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:215
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:223
 #: bp-core/bp-core-options.php:37
 msgid "First Name"
 msgstr ""
@@ -2177,7 +2180,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:935
 #: bp-core/admin/bp-core-admin-settings.php:963
 #: bp-core/admin/bp-core-admin-settings.php:1000
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:225
 #: bp-core/bp-core-options.php:43
 msgid "Nickname"
 msgstr ""
@@ -2414,21 +2417,21 @@ msgid "Add Password confirmation to register form"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1112
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:444
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:452
 msgid "Grid and List"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1113
 #: bp-core/admin/bp-core-admin-settings.php:1144
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:445
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:476
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:453
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:484
 msgid "Grid"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1114
 #: bp-core/admin/bp-core-admin-settings.php:1145
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:446
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:477
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:454
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:485
 msgid "List"
 msgstr ""
 
@@ -2541,7 +2544,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:175 bp-forums/admin/forums.php:495
 #: bp-forums/admin/settings.php:226 bp-forums/admin/settings.php:247
 #: bp-forums/admin/tools.php:1712 bp-forums/admin/topics.php:676
-#: bp-forums/admin.php:222 bp-forums/admin.php:286
+#: bp-forums/admin.php:237 bp-forums/admin.php:293
 #: bp-forums/forums/template.php:2635 bp-forums/groups.php:49
 #: bp-forums/groups.php:50
 #: bp-forums/templates/default/bbpress/content-statistics.php:27
@@ -2556,7 +2559,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-tools.php:184 bp-forums/admin/forums.php:496
 #: bp-forums/admin/settings.php:234 bp-forums/admin/settings.php:255
 #: bp-forums/admin/tools.php:1713 bp-forums/admin/topics.php:678
-#: bp-forums/admin.php:242 bp-forums/admin.php:305
+#: bp-forums/admin.php:249 bp-forums/admin.php:312
 #: bp-forums/core/theme-compat.php:667 bp-forums/forums/template.php:2703
 #: bp-forums/replies/template.php:48 bp-forums/replies/template.php:49
 #: bp-forums/templates/default/bbpress/content-statistics.php:32
@@ -2841,7 +2844,7 @@ msgstr ""
 msgid "Messaging"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-friends.php:49
+#: bp-core/admin/settings/bp-admin-setting-friends.php:58
 msgid "Require users to be connected before they can message each other"
 msgstr ""
 
@@ -2933,7 +2936,8 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
 #: bp-groups/classes/class-bp-groups-component.php:434
-#: bp-invites/bp-invites-admin.php:420 bp-invites/bp-invites-admin.php:421
+#: bp-invites/bp-invites-admin.php:416 bp-invites/bp-invites-admin.php:417
+#: bp-invites/bp-invites-admin.php:433 bp-invites/bp-invites-admin.php:434
 #: bp-invites/bp-invites-functions.php:58
 msgid "Invites"
 msgstr ""
@@ -3057,49 +3061,49 @@ msgstr ""
 msgid "Profile Directories"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:185
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:193
 msgid "Use a WordPress page as each user's personal Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:190
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:198
 msgid ""
 "This page is only accessible to logged-in users. Create a WordPress page "
 "and assign it in the <a href=\"%s\">Pages</a> settings."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:209
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:217
 msgid "Redirect users to their Profile Dashboard on login"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:216
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:224
 msgid "First Name &amp; Last Name"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:236
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:244
 msgid ""
 "After the format has been updated, remember to run <a href=\"%s\">Repair "
 "Community</a> tools to update all the users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:262
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:270
 msgid ""
 "Enable <a href=\"%s\">profile types</a> to give members unique profile "
 "fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:273
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:281
 msgid "Enable profile types to give members unique profile fields and permissions"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:286
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:294
 msgid "Display each member's profile type on their profile page"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:304
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:312
 msgid "You first need to create some <a href=\"%s\">Profile Types</a>."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:319
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:327
 #: bp-members/classes/class-bp-members-admin.php:1348
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:240
 #: bp-xprofile/classes/class-bp-xprofile-field-type-datebox.php:263
@@ -3111,7 +3115,7 @@ msgstr ""
 msgid "----"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:345
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:353
 msgid ""
 "Select a default profile type to be auto-assigned to users during "
 "registration. After the profile type has been selected, you can run <a "
@@ -3119,15 +3123,15 @@ msgid ""
 "existing users."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:398
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:406
 msgid "Enable <a href=\"%s\">advanced profile search</a> on the members directory."
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:409
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:417
 msgid "Enable advanced profile search on the members directory"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-xprofile.php:463
+#: bp-core/admin/settings/bp-admin-setting-xprofile.php:471
 msgid ""
 "Display profile/member directories in Grid View, List View, or allow "
 "toggling between both views."
@@ -3310,7 +3314,7 @@ msgid "Marketing and Strategy"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:34
-msgid "60 People and Growing!"
+msgid "70 People and Growing!"
 msgstr ""
 
 #: bp-core/admin/templates/credit-screen.php:40
@@ -3550,8 +3554,8 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
 #: bp-xprofile/classes/class-bp-xprofile-component.php:285
 #: bp-xprofile/classes/class-bp-xprofile-component.php:400
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:236
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:468
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:247
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:163
 msgid "Profile Photo"
 msgstr ""
@@ -3980,7 +3984,7 @@ msgid "Record activity for new sites, posts, and comments across your network."
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2776
-#: bp-core/classes/class-bp-core-login-widget.php:118
+#: bp-core/classes/class-bp-core-login-widget.php:121
 #: bp-core/deprecated/buddypress/2.1.php:189 bp-forums/common/widgets.php:91
 #: bp-forums/common/widgets.php:112 bp-members/bp-members-adminbar.php:59
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:30
@@ -4069,7 +4073,7 @@ msgstr ""
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3110 bp-core/classes/class-bp-admin.php:785
+#: bp-core/bp-core-functions.php:3110 bp-core/classes/class-bp-admin.php:851
 msgid "Situations"
 msgstr ""
 
@@ -5230,21 +5234,20 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1274
-#. translators: New site notification email. 1: Site URL, 2: User IP address,
-#. 3: Settings screen URL
-msgid "New Site: %1$s"
+#. translators: New site notification email.
+msgid "New Site: %s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1275
-msgid "URL: %2$s"
+msgid "URL: %s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1276
-msgid "Remote IP address: %3$s"
+msgid "Remote IP address: %s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1277
-msgid "Disable these notifications: %4$s"
+msgid "Disable these notifications:%s"
 msgstr ""
 
 #: bp-core/bp-core-wp-emails.php:1330
@@ -5368,39 +5371,47 @@ msgid ""
 "be deleted."
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:304
-#: bp-core/classes/class-bp-admin.php:406
+#: bp-core/classes/class-bp-admin.php:311
+#: bp-core/classes/class-bp-admin.php:459
 msgid "BuddyBoss Components"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:322
-#: bp-core/classes/class-bp-admin.php:424
+#: bp-core/classes/class-bp-admin.php:329
+#: bp-core/classes/class-bp-admin.php:477
 msgid "BuddyBoss Settings"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:331
-#: bp-core/classes/class-bp-admin.php:433
+#: bp-core/classes/class-bp-admin.php:338
+#: bp-core/classes/class-bp-admin.php:486
 msgid "Plugin Integrations"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:386
+#: bp-core/classes/class-bp-admin.php:430
 msgid "BuddyBoss Help"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:467
-#: bp-core/classes/class-bp-admin.php:468
+#: bp-core/classes/class-bp-admin.php:450
+msgid "BuddyPress Settings"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin.php:451
+msgid "BuddyPress"
+msgstr ""
+
+#: bp-core/classes/class-bp-admin.php:520
+#: bp-core/classes/class-bp-admin.php:521
 msgid "Available Tools"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:676 bp-forums/admin/admin.php:431
+#: bp-core/classes/class-bp-admin.php:741 bp-forums/admin/admin.php:432
 msgid "About"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:738
+#: bp-core/classes/class-bp-admin.php:804
 msgid "Docs"
 msgstr ""
 
-#: bp-core/classes/class-bp-admin.php:739
+#: bp-core/classes/class-bp-admin.php:805
 msgid "<strong>You are offline.</strong> Documentation requires internet access."
 msgstr ""
 
@@ -5588,8 +5599,16 @@ msgstr ""
 msgid "(BB) Members Following Me"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:87
-#: bp-core/classes/class-bp-core-follow-following-widget.php:87
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:77
+msgid "My Followers"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:78
+msgid "%s's Followers"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:129
+#: bp-core/classes/class-bp-core-follow-following-widget.php:129
 #: bp-groups/classes/class-bp-groups-widget.php:172
 #: bp-members/classes/class-bp-core-members-widget.php:186
 #: bp-members/classes/class-bp-core-recently-active-widget.php:102
@@ -5600,40 +5619,18 @@ msgstr ""
 msgid "More"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:116
-msgid "My Followers"
-msgstr ""
-
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:122
-#: bp-core/classes/class-bp-core-follow-following-widget.php:122
-#: bp-core/classes/class-bp-core-login-widget.php:189
-#: bp-core/classes/class-bp-core-network-posts-widget.php:213
-#: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
-#: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
-#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
-#: bp-forums/common/widgets.php:1360
-#: bp-groups/classes/class-bp-groups-widget.php:232
-#: bp-members/classes/class-bp-core-members-widget.php:243
-#: bp-members/classes/class-bp-core-recently-active-widget.php:154
-#: bp-members/classes/class-bp-core-whos-online-widget.php:229
-#: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
-#: bp-templates/bp-nouveau/includes/activity/widgets.php:183
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:476
-msgid "Title:"
-msgstr ""
-
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:125
-#: bp-core/classes/class-bp-core-follow-following-widget.php:125
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:162
+#: bp-core/classes/class-bp-core-follow-following-widget.php:162
 #: bp-members/classes/class-bp-core-members-widget.php:257
 #: bp-members/classes/class-bp-core-recently-active-widget.php:161
 #: bp-members/classes/class-bp-core-whos-online-widget.php:236
 msgid "Max members to show:"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-follower-widget.php:126
+#: bp-core/classes/class-bp-core-follow-follower-widget.php:163
 msgid ""
-"Note: This widget is only displayed if a member is logged in and if the "
-"logged-in user is followed by other users."
+"Note: This widget is only displayed if a member is followed by other "
+"members."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-follow-following-widget.php:25
@@ -5644,14 +5641,16 @@ msgstr ""
 msgid "(BB) Members I'm Following"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-following-widget.php:116
+#: bp-core/classes/class-bp-core-follow-following-widget.php:77
 msgid "I'm Following"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-follow-following-widget.php:126
-msgid ""
-"Note: This widget is only displayed if a member is logged in and if the "
-"logged-in user is following some users."
+#: bp-core/classes/class-bp-core-follow-following-widget.php:78
+msgid "%s is Following"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-follow-following-widget.php:163
+msgid "Note: This widget is only displayed if a member is following other members."
 msgstr ""
 
 #: bp-core/classes/class-bp-core-login-widget.php:27
@@ -5681,9 +5680,25 @@ msgstr ""
 msgid "Password"
 msgstr ""
 
-#: bp-core/classes/class-bp-core-login-widget.php:116
+#: bp-core/classes/class-bp-core-login-widget.php:118
 #: bp-forums/common/widgets.php:105
 msgid "Remember Me"
+msgstr ""
+
+#: bp-core/classes/class-bp-core-login-widget.php:192
+#: bp-core/classes/class-bp-core-network-posts-widget.php:213
+#: bp-forums/common/widgets.php:189 bp-forums/common/widgets.php:351
+#: bp-forums/common/widgets.php:488 bp-forums/common/widgets.php:698
+#: bp-forums/common/widgets.php:966 bp-forums/common/widgets.php:1128
+#: bp-forums/common/widgets.php:1360
+#: bp-groups/classes/class-bp-groups-widget.php:232
+#: bp-members/classes/class-bp-core-members-widget.php:243
+#: bp-members/classes/class-bp-core-recently-active-widget.php:154
+#: bp-members/classes/class-bp-core-whos-online-widget.php:229
+#: bp-messages/classes/class-bp-messages-sitewide-notices-widget.php:119
+#: bp-templates/bp-nouveau/includes/activity/widgets.php:183
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:491
+msgid "Title:"
 msgstr ""
 
 #: bp-core/classes/class-bp-core-network-posts-widget.php:29
@@ -6011,13 +6026,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -6031,8 +6046,8 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:159
 #: bp-core/deprecated/buddypress/1.6.php:187
-#: bp-friends/classes/class-bp-core-friends-widget.php:148
-#: bp-friends/classes/class-bp-core-friends-widget.php:252
+#: bp-friends/classes/class-bp-core-friends-widget.php:155
+#: bp-friends/classes/class-bp-core-friends-widget.php:259
 #: bp-groups/bp-groups-template.php:5310
 #: bp-groups/classes/class-bp-groups-widget.php:124
 #: bp-groups/classes/class-bp-groups-widget.php:241
@@ -6542,8 +6557,8 @@ msgstr ""
 #: bp-groups/classes/class-bp-groups-component.php:852
 #: bp-xprofile/classes/class-bp-xprofile-component.php:298
 #: bp-xprofile/classes/class-bp-xprofile-component.php:410
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:257
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:471
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:268
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
 msgid "Cover Photo"
 msgstr ""
 
@@ -6885,116 +6900,116 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
-#: bp-forums/activity.php:183 bp-forums/activity.php:188
+#: bp-forums/activity.php:186 bp-forums/activity.php:191
 msgid "New forum discussion"
 msgstr ""
 
-#: bp-forums/activity.php:184 bp-forums/activity.php:189
+#: bp-forums/activity.php:187 bp-forums/activity.php:192
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:410 bp-forums/activity.php:665
+#: bp-forums/activity.php:434 bp-forums/activity.php:689
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:559 bp-forums/activity.php:692
+#: bp-forums/activity.php:583 bp-forums/activity.php:716
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:723
+#: bp-forums/activity.php:747
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:755
+#: bp-forums/activity.php:779
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/admin/admin.php:206 bp-forums/admin/functions.php:239
+#: bp-forums/admin/admin.php:207 bp-forums/admin/functions.php:239
 #: bp-forums/admin/functions.php:276 bp-forums/admin/tools.php:40
 msgid "Repair Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:207
+#: bp-forums/admin/admin.php:208
 msgid "Forum Repair"
 msgstr ""
 
-#: bp-forums/admin/admin.php:217 bp-forums/admin/converter.php:86
+#: bp-forums/admin/admin.php:218 bp-forums/admin/converter.php:86
 #: bp-forums/admin/functions.php:243 bp-forums/admin/functions.php:303
 msgid "Import Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:218
+#: bp-forums/admin/admin.php:219
 msgid "Forum Import"
 msgstr ""
 
-#: bp-forums/admin/admin.php:249 bp-forums/admin/admin.php:250
-#: bp-forums/admin/admin.php:272 bp-forums/admin/admin.php:273
-#: bp-forums/admin/admin.php:801 bp-forums/admin/admin.php:898
+#: bp-forums/admin/admin.php:250 bp-forums/admin/admin.php:251
+#: bp-forums/admin/admin.php:273 bp-forums/admin/admin.php:274
+#: bp-forums/admin/admin.php:802 bp-forums/admin/admin.php:899
 msgid "Update Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:446
+#: bp-forums/admin/admin.php:447
 msgid "Right Now in Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:462
+#: bp-forums/admin/admin.php:463
 msgid "About Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:505
+#: bp-forums/admin/admin.php:506
 #: bp-forums/templates/default/bbpress-functions.php:214
 msgid "Loading"
 msgstr ""
 
-#: bp-forums/admin/admin.php:558
+#: bp-forums/admin/admin.php:559
 msgid "Mint"
 msgstr ""
 
-#: bp-forums/admin/admin.php:571
+#: bp-forums/admin/admin.php:572
 msgid "Evergreen"
 msgstr ""
 
-#: bp-forums/admin/admin.php:634
+#: bp-forums/admin/admin.php:635
 msgid "-- Select Discussion --"
 msgstr ""
 
-#: bp-forums/admin/admin.php:668
+#: bp-forums/admin/admin.php:669
 msgid "-- Select Reply --"
 msgstr ""
 
-#: bp-forums/admin/admin.php:748 bp-forums/admin/admin.php:771
+#: bp-forums/admin/admin.php:749 bp-forums/admin/admin.php:772
 msgid "Update Forum"
 msgstr ""
 
-#: bp-forums/admin/admin.php:759 bp-forums/admin/admin.php:818
+#: bp-forums/admin/admin.php:760 bp-forums/admin/admin.php:819
 msgid "All done!"
 msgstr ""
 
-#: bp-forums/admin/admin.php:760 bp-forums/admin/admin.php:819
+#: bp-forums/admin/admin.php:761 bp-forums/admin/admin.php:820
 msgid "Go Back"
 msgstr ""
 
-#: bp-forums/admin/admin.php:770
+#: bp-forums/admin/admin.php:771
 msgid "You can update your forum through this page. Hit the link below to update."
 msgstr ""
 
-#: bp-forums/admin/admin.php:850
+#: bp-forums/admin/admin.php:851
 msgid ""
 "Warning! Problem updating %1$s. Your server may not be able to connect to "
 "sites running on it. Error message: <em>%2$s</em>"
 msgstr ""
 
-#: bp-forums/admin/admin.php:876
+#: bp-forums/admin/admin.php:877
 msgid ""
 "If your browser doesn't start loading the next page automatically, click "
 "this link:"
 msgstr ""
 
-#: bp-forums/admin/admin.php:877
+#: bp-forums/admin/admin.php:878
 msgid "Next Forums"
 msgstr ""
 
-#: bp-forums/admin/admin.php:897
+#: bp-forums/admin/admin.php:898
 msgid ""
 "You can update all the forums on your network through this page. It works "
 "by calling the update script of each site automatically. Hit the link below "
@@ -8611,8 +8626,8 @@ msgstr ""
 msgid "The following data will be removed:"
 msgstr ""
 
-#: bp-forums/admin/tools.php:1714 bp-forums/admin.php:236
-#: bp-forums/admin.php:324
+#: bp-forums/admin/tools.php:1714 bp-forums/admin.php:243
+#: bp-forums/admin.php:331
 #: bp-forums/templates/default/bbpress/content-statistics.php:37
 #: bp-forums/topics/template.php:3474
 msgid "Discussion Tags"
@@ -9174,7 +9189,7 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Invalid email address submitted!"
 msgstr ""
 
-#: bp-forums/common/functions.php:1973
+#: bp-forums/common/functions.php:1975
 msgid ""
 "Conditional query tags do not work before the query is run. Before then, "
 "they always return false."
@@ -11198,6 +11213,7 @@ msgid "%s sent you an invitation to connect"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
+#: bp-friends/classes/class-bp-core-friends-widget.php:107
 #: bp-friends/classes/class-bp-friends-component.php:197
 #: bp-friends/classes/class-bp-friends-component.php:279
 #: bp-media/classes/class-bp-media-privacy.php:54
@@ -11209,7 +11225,7 @@ msgid "My Connections"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
-#: bp-friends/classes/class-bp-core-friends-widget.php:106
+#: bp-friends/classes/class-bp-core-friends-widget.php:108
 msgid "%s's Connections"
 msgstr ""
 
@@ -11279,11 +11295,11 @@ msgid ""
 msgstr ""
 
 #: bp-friends/classes/class-bp-core-friends-widget.php:30
-msgid "(BB) Connections"
+msgid "(BB) My Connections"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:153
-#: bp-friends/classes/class-bp-core-friends-widget.php:253
+#: bp-friends/classes/class-bp-core-friends-widget.php:160
+#: bp-friends/classes/class-bp-core-friends-widget.php:260
 #: bp-groups/classes/class-bp-groups-widget.php:130
 #: bp-groups/classes/class-bp-groups-widget.php:242
 #: bp-members/classes/class-bp-core-members-widget.php:129
@@ -11292,8 +11308,8 @@ msgstr ""
 msgid "Active"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:158
-#: bp-friends/classes/class-bp-core-friends-widget.php:254
+#: bp-friends/classes/class-bp-core-friends-widget.php:165
+#: bp-friends/classes/class-bp-core-friends-widget.php:261
 #: bp-groups/classes/class-bp-groups-widget.php:136
 #: bp-groups/classes/class-bp-groups-widget.php:243
 #: bp-members/classes/class-bp-core-members-widget.php:137
@@ -11301,21 +11317,25 @@ msgstr ""
 msgid "Popular"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:193
+#: bp-friends/classes/class-bp-core-friends-widget.php:200
 msgid "Sorry, no connections were found."
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:245
+#: bp-friends/classes/class-bp-core-friends-widget.php:252
 #: bp-members/classes/class-bp-core-members-widget.php:251
 msgid "Link widget title to Members directory"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:247
+#: bp-friends/classes/class-bp-core-friends-widget.php:254
 msgid "Max connections to show:"
 msgstr ""
 
-#: bp-friends/classes/class-bp-core-friends-widget.php:250
+#: bp-friends/classes/class-bp-core-friends-widget.php:257
 msgid "Default connections to show:"
+msgstr ""
+
+#: bp-friends/classes/class-bp-core-friends-widget.php:264
+msgid "Note: This widget is only displayed if a member has some connections."
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:137
@@ -15331,6 +15351,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:8
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-form.php:36
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:84
 msgid "Send"
 msgstr ""
 
@@ -18030,19 +18051,27 @@ msgstr ""
 msgid "(BB) Profile Completion"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:455
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:467
 msgid "Complete Your Profile"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:479
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:487
+msgid "Hide widget once progress hits 100%"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:494
 msgid "Profile field sets:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:501
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:516
 msgid "Profile photos:"
 msgstr ""
 
-#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:530
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:536
+msgid "Options:"
+msgstr ""
+
+#: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:565
 msgid "Note: This widget is only displayed if a member is logged in."
 msgstr ""
 

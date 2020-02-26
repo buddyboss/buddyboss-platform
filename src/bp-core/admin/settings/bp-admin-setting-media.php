@@ -57,6 +57,15 @@ class BP_Admin_Setting_Media extends BP_Admin_Setting_tab {
 				}
 			}
 		}
+
+		/**
+		 * Fires to register Media tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Media.
+		 */
+		do_action( 'bp_admin_setting_media_register_fields', $this );
 	}
 
 }

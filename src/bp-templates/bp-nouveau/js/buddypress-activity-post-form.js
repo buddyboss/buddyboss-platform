@@ -1623,6 +1623,14 @@ window.bp = window.bp || {};
 			// Silently add meta
 			this.model.set( meta, { silent: true } );
 
+			var medias = self.model.get('media');
+			if ( 'group' == self.model.get('object') && typeof medias !== 'undefined' && medias.length ) {
+				for( var k = 0; k < medias.length; k++ ) {
+					medias[k].group_id = self.model.get('item_id');
+				}
+				self.model.set('media',medias);
+			}
+
 			// update posting status true
 			this.model.set( 'posting', true );
 
