@@ -73,6 +73,28 @@ function groups_register_activity_actions() {
 add_action( 'bp_register_activity_actions', 'groups_register_activity_actions' );
 
 /**
+ * Get the group object the activity belongs to.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param integer $group_id The group ID the activity is linked to.
+ * @return BP_Groups_Group  The group object the activity belongs to.
+ */
+function bp_groups_get_activity_group( $group_id = 0 ) {
+	// If displaying a specific group, check the activity belongs to it.
+	if ( bp_is_group() && bp_get_current_group_id() === (int) $group_id ) {
+		$group = groups_get_current_group();
+
+		// Otherwise get the group the activity belongs to.
+	} else {
+		$group = groups_get_group( $group_id );
+	}
+
+	return $group;
+}
+
+/**
  * Format 'created_group' activity actions.
  *
  * @since BuddyPress 2.0.0
@@ -179,7 +201,7 @@ function bp_groups_format_activity_action_activity_update( $action, $activity ) 
 function bp_groups_format_activity_action_group_details_updated( $action, $activity ) {
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
-	$group      = groups_get_group( $activity->item_id );
+	$group      = bp_groups_get_activity_group( $activity->item_id );
 	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
 
 	/*
@@ -218,6 +240,39 @@ function bp_groups_format_activity_action_group_details_updated( $action, $activ
 	 * @param object $activity Activity data object.
 	 */
 	return apply_filters( 'bp_groups_format_activity_action_joined_group', $action, $activity );
+}
+
+/**
+ * Format the action for activity updates posted in a Group.
+ *
+ * @since BuddyBoss 1.2.5
+ * @since BuddyPress 5.0.0
+ *
+ * @param string $action   Static activity action.
+ * @param object $activity Activity data object.
+ * @return string          The formatted action for activity updates posted in a Group.
+ */
+function bp_groups_format_activity_action_group_activity_update( $action, $activity ) {
+	$user_link = bp_core_get_userlink( $activity->user_id );
+	$group     = bp_groups_get_activity_group( $activity->item_id );
+
+	$group_link = '<a href="' . esc_url( bp_get_group_permalink( $group ) ) . '">' . esc_html( $group->name ) . '</a>';
+
+	// Set the Activity update posted in a Group action.
+	$action = sprintf( esc_html__( '%1$s posted an update in the group %2$s', 'buddyboss' ), $user_link, $group_link );
+
+	/** This filter is documented in wp-includes/deprecated.php */
+	$action = apply_filters_deprecated( 'groups_activity_new_update_action', array( $action ), '5.0.0', 'bp_groups_format_activity_action_group_activity_update' );
+
+	/**
+	 * Filters the Group's activity update action.
+	 *
+	 * @since BuddyPress 5.0.0
+	 *
+	 * @param string $action   The Group's activity update action.
+	 * @param object $activity Activity data object.
+	 */
+	return apply_filters( 'bp_groups_format_activity_action_group_activity_update', $action, $activity );
 }
 
 /**
@@ -365,11 +420,7 @@ function groups_record_activity( $args = '' ) {
 	// Set the default for hide_sitewide by checking the status of the group.
 	$hide_sitewide = false;
 	if ( ! empty( $args['item_id'] ) ) {
-		if ( bp_get_current_group_id() == $args['item_id'] ) {
-			$group = groups_get_current_group();
-		} else {
-			$group = groups_get_group( $args['item_id'] );
-		}
+		$group = bp_groups_get_activity_group( $args['item_id'] );
 
 		if ( isset( $group->status ) && 'public' != $group->status ) {
 			$hide_sitewide = true;

@@ -218,6 +218,7 @@ function bp_version_updater() {
 		bp_update_option( 'bp-active-components', $default_components );
 		bp_core_add_page_mappings( $default_components, 'delete' );
 		bp_core_install_emails();
+		bp_core_install_invitations();
 
 		// Upgrades.
 	} else {
@@ -284,6 +285,11 @@ function bp_version_updater() {
 		// Version 3.1.1
 		if ( $raw_db_version < 14001 ) {
 			bb_update_to_1_2_3();
+		}
+
+		// Version 1.2.5
+		if ( $raw_db_version < 14501 ) {
+			bb_update_to_1_2_5();
 		}
 	}
 
@@ -586,6 +592,21 @@ function bp_update_to_3_1_1() {
  */
 function bb_update_to_1_2_3() {
 	bp_add_option( '_bp_ignore_deprecated_code', false );
+}
+
+/**
+ * 1.2.5 update routine.
+ *
+ * - Create the invitations table.
+ * - Migrate requests and invitations to the new table.
+ *
+ */
+function bb_update_to_1_2_5() {
+	bp_core_install_invitations();
+
+	if ( bp_is_active( 'groups' ) ) {
+		bp_groups_migrate_invitations();
+	}
 }
 
 /**
