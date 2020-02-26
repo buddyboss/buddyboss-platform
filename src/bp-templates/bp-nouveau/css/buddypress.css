@@ -3912,7 +3912,7 @@ body.register .buddypress-wrap .page ul {
     display: block;
   }
   #buddypress #item-header #header-cover-image {
-    background: none;
+    background-image: none;
   }
 }
 
