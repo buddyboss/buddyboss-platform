@@ -14,10 +14,6 @@
                     <header class="bb-model-header bg-white">
                         <a href="#" class="bp-media-upload-tab selected" data-content="bp-dropzone-content" id="bp-media-uploader-modal-title"><?php _e( 'Upload', 'buddyboss' ); ?></a>
 
-                        <?php if ( bp_is_single_folder() ) : ?>
-                            <a href="#" class="bp-media-upload-tab" data-content="bp-existing-media-content" id="bp-media-select-from-existing"><?php _e( 'Select Documents', 'buddyboss' ); ?></a>
-                        <?php endif; ?>
-
                         <span id="bp-media-uploader-modal-status-text" style="display: none;"></span>
 
                         <a class="bb-model-close-button" id="bp-media-uploader-close" href="#">
@@ -37,39 +33,6 @@
                             </div>
                         </div>
                     </div>
-
-	                <?php if ( bp_is_single_folder() ) : ?>
-                        <div class="bp-existing-media-wrap bp-media-upload-tab-content" id="bp-existing-media-content" style="display: none;">
-
-                            <?php if ( bp_has_document( array( 'album_id' => 'existing-media' ) ) ) : ?>
-
-                                <ul class="media-list item-list bp-list bb-photo-list grid existing-media-list">
-
-                                    <?php while ( bp_document() ) :
-                                        bp_the_document();
-
-                                        bp_get_template_part( 'document/entry' ); ?>
-
-                                    <?php endwhile; ?>
-
-                                    <?php if ( bp_document_has_more_items() ) : ?>
-
-                                        <li class="load-more">
-                                            <a class="button outline" href="<?php bp_document_has_more_items(); ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
-                                        </li>
-
-                                    <?php endif; ?>
-
-                                </ul>
-
-                            <?php else : ?>
-
-                                <?php bp_nouveau_user_feedback( 'media-loop-document-none' ); ?>
-
-                            <?php endif; ?>
-
-                        </div>
-                    <?php endif; ?>
                     
                     <?php
                        $ul = bp_document_user_document_folder_tree_view_li_html( bp_loggedin_user_id() );

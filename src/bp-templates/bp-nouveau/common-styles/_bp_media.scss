@@ -1874,6 +1874,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 			*:not(.button){
 				text-align: left;
 			}
+			.dropzone *{
+				text-align: center;
+			}
 		}
 		@media screen and (max-width: 1480px){
 			.bp-media-header-wrap-inner{

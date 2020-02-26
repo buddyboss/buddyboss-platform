@@ -1473,7 +1473,9 @@ window.bp = window.bp || {};
 
 			this.closeUploader(event);
 			$('#bp-media-create-folder, #bp-media-create-child-folder').hide();
-			$('#bb-album-title').val('');
+			$('#bb-album-title, #bb-album-child-title').val('');
+			$('#bp-media-create-folder .bb-folder-selected-id').val('');
+			$('#bp-media-create-folder .bb-field-steps-1, #bp-media-create-child-folder .bb-field-steps-1').show().siblings('.bb-field-steps').hide();
 
 		},
 

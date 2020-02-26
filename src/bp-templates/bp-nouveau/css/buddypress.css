@@ -2694,6 +2694,7 @@ span.dashicons.dashicons-admin-file:before {
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-expand .document-expand-anchor {
     padding: 5px 6px;
+    min-width: 130px;
   }
   .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-text {
     font-size: 12px;
@@ -12596,6 +12597,10 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 
 #bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions *:not(.button) {
   text-align: left;
+}
+
+#bp-media-single-folder .album-single-view .bp-media-header-wrap .bb-media-actions .dropzone * {
+  text-align: center;
 }
 
 @media screen and (max-width: 1480px) {
