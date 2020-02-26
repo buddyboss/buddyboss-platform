@@ -18,6 +18,9 @@ defined( 'ABSPATH' ) || exit;
 $bp_loader = dirname( __FILE__ ) . '/src/bp-loader.php';
 $subdir    = 'src';
 
+
+
+
 if ( ! defined( 'BP_SOURCE_SUBDIRECTORY' ) ) {
 	// Set source subdirectory
 	define( 'BP_SOURCE_SUBDIRECTORY', $subdir );
