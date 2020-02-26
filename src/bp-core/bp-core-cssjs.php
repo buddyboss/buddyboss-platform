@@ -238,9 +238,9 @@ function bp_core_register_common_scripts() {
 			$bp_select2['lang'] = get_bloginfo( 'language' );
 			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
 		}
-
-		wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
 	}
+
+	wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
 
 	$bp_emojionearea = array(
 		'recent'            => __( 'Recent', 'buddyboss' ),
