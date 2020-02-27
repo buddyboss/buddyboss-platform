@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-18 14:37:35+00:00\n"
+"POT-Creation-Date: 2020-02-27 08:56:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -152,7 +152,7 @@ msgstr ""
 #: bp-activity/classes/class-bp-activity-list-table.php:416
 #: bp-activity/classes/class-bp-activity-oembed-extension.php:137
 #: bp-core/admin/settings/bp-admin-setting-activity.php:21
-#: bp-core/bp-core-cssjs.php:251 bp-search/bp-search-functions.php:376
+#: bp-core/bp-core-cssjs.php:250 bp-search/bp-search-functions.php:376
 #: bp-search/bp-search-settings.php:726
 msgid "Activity"
 msgstr ""
@@ -1131,7 +1131,7 @@ msgid "Replies disabled"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
-#: bp-core/bp-core-cssjs.php:349
+#: bp-core/bp-core-cssjs.php:348
 #: bp-templates/bp-nouveau/buddypress-functions.php:564
 msgid "Are you sure?"
 msgstr ""
@@ -1421,7 +1421,7 @@ msgstr ""
 
 #: bp-blogs/bp-blogs-template.php:1376
 #: bp-core/admin/settings/bp-admin-setting-search.php:22
-#: bp-core/bp-core-cssjs.php:257 bp-core/deprecated/buddypress/1.5.php:440
+#: bp-core/bp-core-cssjs.php:256 bp-core/deprecated/buddypress/1.5.php:440
 #: bp-core/profile-search/templates/members/bps-form-default.php:229
 #: bp-forums/admin/settings.php:162 bp-forums/admin/settings.php:337
 #: bp-forums/common/template.php:2508 bp-forums/search/template.php:228
@@ -3595,51 +3595,51 @@ msgstr ""
 msgid "You must log in to access the page you requested."
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:247
+#: bp-core/bp-core-cssjs.php:246
 msgid "Recent"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:248
+#: bp-core/bp-core-cssjs.php:247
 msgid "Smileys & People"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:249
+#: bp-core/bp-core-cssjs.php:248
 msgid "Animals & Nature"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:250
+#: bp-core/bp-core-cssjs.php:249
 msgid "Food & Drink"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:252
+#: bp-core/bp-core-cssjs.php:251
 msgid "Travel & Places"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:253
+#: bp-core/bp-core-cssjs.php:252
 msgid "Objects"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:254
+#: bp-core/bp-core-cssjs.php:253
 msgid "Symbols"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:255
+#: bp-core/bp-core-cssjs.php:254
 msgid "Flags"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:256
+#: bp-core/bp-core-cssjs.php:255
 msgid "Diversity"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:884
+#: bp-core/bp-core-cssjs.php:883
 msgid "Mismatch"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:885
+#: bp-core/bp-core-cssjs.php:884
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:886 bp-members/screens/register.php:138
+#: bp-core/bp-core-cssjs.php:885 bp-members/screens/register.php:138
 msgid "This is a required field."
 msgstr ""
 
@@ -3904,7 +3904,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-functions.php:2543
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:330
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:345
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:98
@@ -5848,19 +5848,19 @@ msgstr ""
 msgid "View Profile"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:290
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:305
 msgid "Activate Forum Discussions Component"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:331
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:346
 msgid "activate"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:334
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:349
 msgid "LearnDash & bbPress Integration is deactivated."
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:335
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:350
 msgid ""
 "The LearnDash & bbPress Integration plugin can't work if LearnDash LMS "
 "plugin & %1$s component is deactivated. Please activate LearnDash LMS "
@@ -6026,13 +6026,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -6957,7 +6957,7 @@ msgid "About Forums"
 msgstr ""
 
 #: bp-forums/admin/admin.php:506
-#: bp-forums/templates/default/bbpress-functions.php:214
+#: bp-forums/templates/default/bbpress-functions.php:215
 msgid "Loading"
 msgstr ""
 
@@ -10648,72 +10648,72 @@ msgstr ""
 msgid "This user has not created any discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:218
+#: bp-forums/templates/default/bbpress-functions.php:219
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:251
+#: bp-forums/templates/default/bbpress-functions.php:252
 msgid "Explain what the forum is about"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:252
+#: bp-forums/templates/default/bbpress-functions.php:253
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:253
+#: bp-forums/templates/default/bbpress-functions.php:254
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:445
-#: bp-forums/templates/default/bbpress-functions.php:458
+#: bp-forums/templates/default/bbpress-functions.php:446
+#: bp-forums/templates/default/bbpress-functions.php:459
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:487
-#: bp-forums/templates/default/bbpress-functions.php:623
+#: bp-forums/templates/default/bbpress-functions.php:488
+#: bp-forums/templates/default/bbpress-functions.php:624
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:492
+#: bp-forums/templates/default/bbpress-functions.php:493
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:501
-#: bp-forums/templates/default/bbpress-functions.php:569
-#: bp-forums/templates/default/bbpress-functions.php:637
+#: bp-forums/templates/default/bbpress-functions.php:502
+#: bp-forums/templates/default/bbpress-functions.php:570
+#: bp-forums/templates/default/bbpress-functions.php:638
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:509
+#: bp-forums/templates/default/bbpress-functions.php:510
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:514
-#: bp-forums/templates/default/bbpress-functions.php:582
-#: bp-forums/templates/default/bbpress-functions.php:650
+#: bp-forums/templates/default/bbpress-functions.php:515
+#: bp-forums/templates/default/bbpress-functions.php:583
+#: bp-forums/templates/default/bbpress-functions.php:651
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:522
-#: bp-forums/templates/default/bbpress-functions.php:590
-#: bp-forums/templates/default/bbpress-functions.php:658
+#: bp-forums/templates/default/bbpress-functions.php:523
+#: bp-forums/templates/default/bbpress-functions.php:591
+#: bp-forums/templates/default/bbpress-functions.php:659
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:555
+#: bp-forums/templates/default/bbpress-functions.php:556
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:560
+#: bp-forums/templates/default/bbpress-functions.php:561
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:577
-#: bp-forums/templates/default/bbpress-functions.php:645
+#: bp-forums/templates/default/bbpress-functions.php:578
+#: bp-forums/templates/default/bbpress-functions.php:646
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:628
+#: bp-forums/templates/default/bbpress-functions.php:629
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -13363,6 +13363,10 @@ msgstr ""
 #: bp-invites/actions/revoke-invite.php:46
 #: bp-invites/actions/revoke-invite.php:56
 msgid "You didn't include any email addresses!"
+msgstr ""
+
+#: bp-invites/actions/invites.php:212
+msgid "To accept this invitation, please <a href=\"%s\">click here</a>."
 msgstr ""
 
 #: bp-invites/bp-invites-admin.php:67
@@ -18214,22 +18218,22 @@ msgctxt "widget name"
 msgid "BuddyBoss - Network Posts"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:133
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:148
 msgctxt "ui"
 msgid "Membership"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:151
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:166
 msgctxt "ui"
 msgid "Info"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:161
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:176
 msgctxt "ui"
 msgid "Subscriptions"
 msgstr ""
 
-#: bp-core/compatibility/bp-incompatible-plugins-helper.php:171
+#: bp-core/compatibility/bp-incompatible-plugins-helper.php:186
 msgctxt "ui"
 msgid "Payments"
 msgstr ""

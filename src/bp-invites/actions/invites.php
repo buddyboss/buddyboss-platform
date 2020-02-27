@@ -206,7 +206,13 @@ function bp_invites_member_invite_filter_content( $content, $email ) {
 	}
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
-		$content .= '<br>' . bp_get_member_invites_wildcard_replace( wp_kses( 'To accept this invitation, please <a href="{{invitee.url}}">click here</a>.', bp_invites_kses_allowed_tags() ) );
+		$content .= '<br>' .
+		            bp_get_member_invites_wildcard_replace(
+			            wp_kses(
+				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss' ), '{{invitee.url}}' ),
+				            bp_invites_kses_allowed_tags()
+			            )
+		            );
 	}
 	return apply_filters( 'bp_invites_member_invite_filter_content', $content, $email );
 }
