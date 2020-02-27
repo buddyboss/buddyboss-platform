@@ -844,7 +844,7 @@ window.bp = window.bp || {};
 							response.data.group_id = self.group_id;
 							response.data.saved    = false;
 							self.dropzone_media[dropzone_obj_key].push( response.data );
-							self.addMediaIdsToForumsFormDropZone(dropzone_container);
+							self.addMediaIdsToForumsForm(dropzone_container);
 						}
 					});
 
@@ -858,7 +858,7 @@ window.bp = window.bp || {};
 									}
 
 									self.dropzone_media[dropzone_obj_key].splice( i, 1 );
-									self.addMediaIdsToForumsFormDropZone(dropzone_container);
+									self.addMediaIdsToForumsForm(dropzone_container);
 									break;
 								}
 							}
@@ -907,7 +907,7 @@ window.bp = window.bp || {};
 								self.dropzone_obj[dropzone_obj_key].emit('addedfile', mock_file);
 								self.createThumbnailFromUrl(mock_file,dropzone_container);
 							}
-							self.addMediaIdsToForumsFormDropZone(dropzone_container);
+							self.addMediaIdsToForumsForm(dropzone_container);
 						}
 					}
 
@@ -1041,7 +1041,7 @@ window.bp = window.bp || {};
 
 		},
 
-		addMediaIdsToForumsFormDropZone: function( dropzone_container ) {
+		addMediaIdsToForumsForm: function(dropzone_container) {
 			var self = this, dropzone_obj_key = dropzone_container.data('key');
 			if( dropzone_container.closest('#whats-new-attachments').find('#bbp_media').length ) {
 				dropzone_container.closest('#whats-new-attachments').find('#bbp_media').val(JSON.stringify(self.dropzone_media[dropzone_obj_key]));
