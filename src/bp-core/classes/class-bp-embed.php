@@ -291,7 +291,10 @@ class BP_Embed extends WP_Embed {
 
 		if ( preg_match( '#(^|\s|>)https?://#i', $content ) ) {
 			// Find URLs on their own line.
-			$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
+			if ( ! $is_activity ) {
+				$content = preg_replace_callback( '|^(\s*)(https?://[^\s<>"]+)(\s*)$|im', array( $this, 'autoembed_callback' ), $content );
+			}
+
 			// Find URLs in their own paragraph.
 			$content = preg_replace_callback( '|(<p(?: [^>]*)?>\s*)(https?://[^\s<>"]+)(\s*<\/p>)|i', array( $this, 'autoembed_callback' ), $content );
 		}

@@ -925,7 +925,7 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: '',
 				minimumInputLength: 1,
-				language: bp_select2.lang,
+				language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',
