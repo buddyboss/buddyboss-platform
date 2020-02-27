@@ -335,8 +335,14 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+
 		loadMoreGroupMessagesGif: function(e) {
 			var el = e.target, self = this;
+
+			var $group_messages_gif_container = $(e.target).closest('form').find('.bp-group-messages-attached-gif-container');
+			var gif_container_key = $group_messages_gif_container.data('key');
+			self.gif_container_key = gif_container_key;
+
 			if ( el.scrollTop + el.offsetHeight >= el.scrollHeight &&  ! $(e.target).closest('.bp-group-messages-attached-gif-container').hasClass('loading') ) {
 				if ( self.gif_total_count > 0 && self.gif_offset <= self.gif_total_count ) {
 					var params = {
@@ -461,6 +467,7 @@ window.bp = window.bp || {};
 				}
 			}
 		},
+
 		selectGroupMessagesGif: function(e) {
 			var self = this, i = 0;
 			e.preventDefault();
@@ -492,6 +499,7 @@ window.bp = window.bp || {};
 			e.preventDefault();
 			this.resetForumsGifComponent(e);
 		},
+
 		removeGroupMessagesSelectedGif: function(e) {
 			e.preventDefault();
 			this.resetGroupMessagesGifComponent();
@@ -513,6 +521,7 @@ window.bp = window.bp || {};
 				target.closest('form').find('#bbp_media_gif').val('');
 			}
 		},
+
 		resetGroupMessagesGifComponent: function() {
 
 			var containerAttachment = $( '#whats-new-attachments .bp-group-messages-attached-gif-container' );
@@ -540,6 +549,7 @@ window.bp = window.bp || {};
 				self.searchGifRequest( e, e.target.value );
 			}, 1000 );
 		},
+
 		searchGroupMessagesGif: function(e) {
 			var self = this;
 
@@ -595,6 +605,7 @@ window.bp = window.bp || {};
 			self.gif_requests.push( request );
 			self.gif_offset = self.gif_offset + self.gif_limit;
 		},
+
 		searchGifRequest: function( e ) {
 			var self = this, i = 0;
 
@@ -778,6 +789,7 @@ window.bp = window.bp || {};
 			$( 'div#bp-group-messages-post-media-uploader' ).html('');
 			$( 'div#bp-group-messages-post-media-uploader' ).addClass( 'closed' ).removeClass( 'open' );
 		},
+
 		resetForumsMediaComponent: function( dropzone_container_key ) {
 			var self = this;
 
@@ -832,7 +844,7 @@ window.bp = window.bp || {};
 							response.data.group_id = self.group_id;
 							response.data.saved    = false;
 							self.dropzone_media[dropzone_obj_key].push( response.data );
-							self.addMediaIdsToForumsForm(dropzone_container);
+							self.addMediaIdsToForumsFormDropZone(dropzone_container);
 						}
 					});
 
@@ -846,7 +858,7 @@ window.bp = window.bp || {};
 									}
 
 									self.dropzone_media[dropzone_obj_key].splice( i, 1 );
-									self.addMediaIdsToForumsForm(dropzone_container);
+									self.addMediaIdsToForumsFormDropZone(dropzone_container);
 									break;
 								}
 							}
@@ -895,7 +907,7 @@ window.bp = window.bp || {};
 								self.dropzone_obj[dropzone_obj_key].emit('addedfile', mock_file);
 								self.createThumbnailFromUrl(mock_file,dropzone_container);
 							}
-							self.addMediaIdsToForumsForm(dropzone_container);
+							self.addMediaIdsToForumsFormDropZone(dropzone_container);
 						}
 					}
 
@@ -1029,7 +1041,7 @@ window.bp = window.bp || {};
 
 		},
 
-		addMediaIdsToForumsForm: function(dropzone_container) {
+		addMediaIdsToForumsFormDropZone: function( dropzone_container ) {
 			var self = this, dropzone_obj_key = dropzone_container.data('key');
 			if( dropzone_container.closest('#whats-new-attachments').find('#bbp_media').length ) {
 				dropzone_container.closest('#whats-new-attachments').find('#bbp_media').val(JSON.stringify(self.dropzone_media[dropzone_obj_key]));
