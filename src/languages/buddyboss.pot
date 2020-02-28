@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-28 09:50:08+00:00\n"
+"POT-Creation-Date: 2020-02-28 11:06:11+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -25,7 +25,7 @@ msgstr ""
 "X-Generator: grunt-wp-i18n 1.0.3\n"
 
 #: bp-activity/actions/delete.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:257
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:263
 msgid "Activity deleted successfully"
 msgstr ""
 
@@ -110,7 +110,7 @@ msgid "Activity feed of %s's saved posts."
 msgstr ""
 
 #: bp-activity/actions/post.php:60
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:502
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:510
 msgid "Please enter some content to post."
 msgstr ""
 
@@ -123,7 +123,7 @@ msgid "There was an error when posting your update. Please try again."
 msgstr ""
 
 #: bp-activity/actions/reply.php:43
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:361
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:367
 msgid "Please do not leave the comment area blank."
 msgstr ""
 
@@ -380,9 +380,9 @@ msgstr ""
 #: bp-forums/admin/replies.php:806 bp-forums/admin/topics.php:899
 #: bp-forums/classes/class-bbpress.php:564 bp-forums/replies/template.php:2226
 #: bp-forums/topics/functions.php:2068 bp-forums/topics/template.php:3037
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:547
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:548
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:872
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:589
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:590
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:914
 msgid "Spam"
 msgstr ""
 
@@ -408,8 +408,8 @@ msgstr ""
 #: bp-xprofile/bp-xprofile-repeaters.php:779
 #: bp-xprofile/bp-xprofile-repeaters.php:806
 #: bp-xprofile/bp-xprofile-repeaters.php:808
-#: bp-xprofile/classes/class-bp-xprofile-component.php:273
-#: bp-xprofile/classes/class-bp-xprofile-component.php:390
+#: bp-xprofile/classes/class-bp-xprofile-component.php:274
+#: bp-xprofile/classes/class-bp-xprofile-component.php:391
 msgid "Edit"
 msgstr ""
 
@@ -516,7 +516,7 @@ msgstr ""
 #: bp-forums/replies/template.php:50 bp-forums/replies/template.php:1679
 #: bp-forums/topics/template.php:3096
 #: bp-templates/bp-nouveau/buddypress/assets/emails/single-bp-email.php:369
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:831
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:873
 #. translators: accessibility text
 msgid "Reply"
 msgstr ""
@@ -524,9 +524,11 @@ msgstr ""
 #: bp-activity/bp-activity-admin.php:1148 bp-forums/replies/template.php:1756
 #: bp-groups/bp-groups-admin.php:1037
 #: bp-members/classes/class-bp-members-admin.php:2453
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:66
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:79
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/crop.php:22
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:48
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:50
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/includes/activity/functions.php:195
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
@@ -556,19 +558,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:505
+#: bp-activity/bp-activity-filters.php:504
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:509
+#: bp-activity/bp-activity-filters.php:508
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:566
+#: bp-activity/bp-activity-filters.php:565
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:824
+#: bp-activity/bp-activity-filters.php:823
 msgid "Load Newest"
 msgstr ""
 
@@ -640,67 +642,67 @@ msgstr ""
 msgid "other like this"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1682
+#: bp-activity/bp-activity-functions.php:1701
 #: bp-groups/bp-groups-activity.php:33
 msgid "Posted a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1684
+#: bp-activity/bp-activity-functions.php:1703
 #: bp-groups/bp-groups-activity.php:35
 msgid "Updates"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1691
+#: bp-activity/bp-activity-functions.php:1710
 msgid "Replied to a status update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1693
+#: bp-activity/bp-activity-functions.php:1712
 #: bp-search/bp-search-functions.php:389 bp-search/bp-search-settings.php:761
 msgid "Activity Comments"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1773
+#: bp-activity/bp-activity-functions.php:1792
 msgid "%1$s <span class=\"activity-to\">to</span> %2$s%3$s%4$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1776
+#: bp-activity/bp-activity-functions.php:1795
 msgid " and "
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1780 cli/components/activity.php:766
+#: bp-activity/bp-activity-functions.php:1799 cli/components/activity.php:766
 msgid "%s posted an update"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1804 cli/components/activity.php:790
+#: bp-activity/bp-activity-functions.php:1823 cli/components/activity.php:790
 msgid "%s posted a new activity comment"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1853
+#: bp-activity/bp-activity-functions.php:1872
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1859
+#: bp-activity/bp-activity-functions.php:1878
 msgid "%1$s wrote a new <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1904
+#: bp-activity/bp-activity-functions.php:1923
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>, on the site %3$s"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:1910
+#: bp-activity/bp-activity-functions.php:1929
 msgid "%1$s commented on the <a href=\"%2$s\">item</a>"
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2897
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:340
+#: bp-activity/bp-activity-functions.php:2918
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:346
 msgid "There was an error posting your reply. Please try again."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:2925
+#: bp-activity/bp-activity-functions.php:2946
 msgid "The item you were replying to no longer exists."
 msgstr ""
 
-#: bp-activity/bp-activity-functions.php:3607
+#: bp-activity/bp-activity-functions.php:3628
 msgid "Thumbnail"
 msgstr ""
 
@@ -753,10 +755,10 @@ msgstr ""
 #: bp-friends/bp-friends-notifications.php:262
 #: bp-groups/bp-groups-notifications.php:1179
 #: bp-messages/bp-messages-notifications.php:276
-#: bp-templates/bp-nouveau/includes/functions.php:1094
-#: bp-templates/bp-nouveau/includes/functions.php:1157
-#: bp-templates/bp-nouveau/includes/functions.php:1220
-#: bp-templates/bp-nouveau/includes/functions.php:1275
+#: bp-templates/bp-nouveau/includes/functions.php:1118
+#: bp-templates/bp-nouveau/includes/functions.php:1181
+#: bp-templates/bp-nouveau/includes/functions.php:1244
+#: bp-templates/bp-nouveau/includes/functions.php:1299
 msgid "Yes"
 msgstr ""
 
@@ -769,10 +771,10 @@ msgstr ""
 #: bp-friends/bp-friends-notifications.php:263
 #: bp-groups/bp-groups-notifications.php:1180
 #: bp-messages/bp-messages-notifications.php:277
-#: bp-templates/bp-nouveau/includes/functions.php:1102
-#: bp-templates/bp-nouveau/includes/functions.php:1165
-#: bp-templates/bp-nouveau/includes/functions.php:1228
-#: bp-templates/bp-nouveau/includes/functions.php:1283
+#: bp-templates/bp-nouveau/includes/functions.php:1126
+#: bp-templates/bp-nouveau/includes/functions.php:1189
+#: bp-templates/bp-nouveau/includes/functions.php:1252
+#: bp-templates/bp-nouveau/includes/functions.php:1307
 msgid "No"
 msgstr ""
 
@@ -811,34 +813,37 @@ msgstr ""
 msgid "A member replies to an update or comment you've posted"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:467 bp-media/bp-media-template.php:349
-#: bp-media/bp-media-template.php:1149
+#: bp-activity/bp-activity-template.php:471
+#: bp-document/bp-document-template.php:352
+#: bp-document/bp-document-template.php:1177 bp-media/bp-media-template.php:351
+#: bp-media/bp-media-template.php:1244
 msgid "Viewing 1 item"
 msgid_plural "Viewing %1$s - %2$s of %3$s items"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-activity/bp-activity-template.php:1036
-#: bp-activity/bp-activity-template.php:1213
-#: bp-activity/bp-activity-template.php:1224
-#: bp-activity/classes/class-bp-activity-component.php:494
+#: bp-activity/bp-activity-template.php:1040
+#: bp-activity/bp-activity-template.php:1217
+#: bp-activity/bp-activity-template.php:1228
+#: bp-activity/classes/class-bp-activity-component.php:516
 #: bp-blogs/classes/class-bp-blogs-component.php:332
 #: bp-core/bp-core-template.php:201 bp-core/bp-core-template.php:225
 #: bp-core/classes/class-bp-core-user.php:174
 #: bp-core/classes/class-bp-core-user.php:187
 #: bp-core/classes/class-bp-core-user.php:199
 #: bp-core/deprecated/buddypress/2.1.php:465
+#: bp-document/classes/class-bp-document-component.php:335
 #: bp-friends/classes/class-bp-friends-component.php:315
 #: bp-groups/bp-groups-template.php:1769 bp-groups/bp-groups-template.php:1864
 #: bp-groups/bp-groups-template.php:2934 bp-groups/bp-groups-template.php:2964
 #: bp-groups/bp-groups-template.php:3048 bp-groups/bp-groups-template.php:3078
 #: bp-groups/bp-groups-template.php:4649 bp-groups/bp-groups-template.php:4691
 #: bp-groups/bp-groups-template.php:4735 bp-groups/bp-groups-template.php:6529
-#: bp-groups/classes/class-bp-groups-component.php:1008
+#: bp-groups/classes/class-bp-groups-component.php:1022
 #: bp-groups/classes/class-bp-groups-invite-template.php:247
 #: bp-groups/classes/class-bp-groups-invite-template.php:260
 #: bp-groups/classes/class-bp-groups-invite-template.php:272
-#: bp-media/classes/class-bp-media-component.php:357
+#: bp-media/classes/class-bp-media-component.php:379
 #: bp-members/bp-members-template.php:800
 #: bp-members/bp-members-template.php:1523
 #: bp-members/bp-members-template.php:1581
@@ -847,41 +852,41 @@ msgstr[1] ""
 #: bp-messages/classes/class-bp-messages-component.php:370
 #: bp-notifications/classes/class-bp-notifications-component.php:293
 #: bp-templates/bp-nouveau/includes/activity/functions.php:110
-#: bp-xprofile/classes/class-bp-xprofile-component.php:446
+#: bp-xprofile/classes/class-bp-xprofile-component.php:447
 #. translators: %s = member name
 msgid "Profile photo of %s"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1036
+#: bp-activity/bp-activity-template.php:1040
 msgid "Profile photo"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1189
+#: bp-activity/bp-activity-template.php:1193
 msgid "Group logo"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1192
+#: bp-activity/bp-activity-template.php:1196
 #: bp-groups/bp-groups-template.php:891
 #: bp-groups/classes/class-bp-groups-list-table.php:598
 msgid "Group logo of %s"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:1203
+#: bp-activity/bp-activity-template.php:1207
 msgid "Profile photo of the author of the site %s"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2192
+#: bp-activity/bp-activity-template.php:2279
 msgid ""
 "%1$s no longer accepts arguments. See the inline documentation at %2$s for "
 "more details."
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2685
+#: bp-activity/bp-activity-template.php:2772
 #: bp-core/bp-core-attachments.php:810 bp-forums/replies/template.php:2120
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:90
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:105
 #: bp-forums/topics/template.php:2714
-#: bp-groups/classes/class-bp-groups-component.php:882
+#: bp-groups/classes/class-bp-groups-component.php:896
 #: bp-groups/classes/class-bp-groups-list-table.php:409
 #: bp-groups/classes/class-bp-groups-list-table.php:573
 #: bp-members/classes/class-bp-members-list-table.php:177
@@ -891,10 +896,14 @@ msgstr ""
 #: bp-messages/bp-messages-template.php:1057
 #: bp-notifications/bp-notifications-template.php:787
 #: bp-notifications/bp-notifications-template.php:1038
+#: bp-templates/bp-nouveau/buddypress/document/actions.php:13
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:44
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:114
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:63
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:491
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:492
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:845
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:887
 #: bp-templates/bp-nouveau/includes/notifications/functions.php:244
 #: bp-templates/bp-nouveau/includes/notifications/template-tags.php:114
 #: bp-xprofile/bp-xprofile-admin.php:929
@@ -908,45 +917,45 @@ msgstr ""
 msgid "Delete"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2788
+#: bp-activity/bp-activity-template.php:2875
 #: bp-core/admin/bp-core-admin-functions.php:1492
-#: bp-core/admin/bp-core-admin-pages.php:300
-#: bp-core/admin/bp-core-admin-pages.php:334
+#: bp-core/admin/bp-core-admin-pages.php:302
+#: bp-core/admin/bp-core-admin-pages.php:336
 #: bp-core/deprecated/buddyboss/1.0.php:75 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
 #: bp-groups/classes/class-bp-groups-list-table.php:576
 #: bp-invites/bp-invites-admin.php:268
 #: bp-members/classes/class-bp-members-component.php:361
 #: bp-templates/bp-nouveau/includes/members/functions.php:229
-#: bp-xprofile/classes/class-bp-xprofile-component.php:263
-#: bp-xprofile/classes/class-bp-xprofile-component.php:381
+#: bp-xprofile/classes/class-bp-xprofile-component.php:264
+#: bp-xprofile/classes/class-bp-xprofile-component.php:382
 msgid "View"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:2899
+#: bp-activity/bp-activity-template.php:2986
 msgid "Clear Filter"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3204
+#: bp-activity/bp-activity-template.php:3291
 msgid "a user"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:3797
+#: bp-activity/bp-activity-template.php:3884
 msgid "Site Wide Activity RSS Feed"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4025
-#: bp-activity/bp-activity-template.php:4031
+#: bp-activity/bp-activity-template.php:4112
+#: bp-activity/bp-activity-template.php:4118
 #: bp-templates/bp-nouveau/includes/activity/functions.php:322
 #: bp-templates/bp-nouveau/includes/members/functions.php:56
 msgid "Following"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4030
+#: bp-activity/bp-activity-template.php:4117
 msgid "Unfollow"
 msgstr ""
 
-#: bp-activity/bp-activity-template.php:4047
+#: bp-activity/bp-activity-template.php:4134
 #: bp-core/admin/settings/bp-admin-setting-activity.php:88
 msgid "Follow"
 msgstr ""
@@ -967,37 +976,83 @@ msgid ""
 "documentation at %2$s for more details."
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:29
-#: bp-core/bp-core-functions.php:2557
+#: bp-activity/classes/class-bp-activity-component.php:39
+#: bp-core/bp-core-functions.php:2559
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:86
 msgid "Activity Feeds"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:189
+#: bp-activity/classes/class-bp-activity-component.php:177
+#: bp-forums/forums/functions.php:1689 bp-groups/bp-groups-admin.php:1177
+#: bp-groups/bp-groups-template.php:714 bp-groups/bp-groups-template.php:715
+#: bp-groups/bp-groups-template.php:1392
+#: bp-groups/classes/class-bp-groups-list-table.php:646
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:304
+#: bp-media/classes/class-bp-media-component.php:163
+#: bp-media/classes/class-bp-media-privacy.php:52
+#: bp-xprofile/classes/class-bp-xprofile-component.php:182
+msgid "Public"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:178
+#: bp-groups/bp-groups-admin.php:1187 bp-groups/bp-groups-admin.php:1208
+#: bp-groups/bp-groups-admin.php:1220
+#: bp-media/classes/class-bp-media-component.php:164
+#: bp-media/classes/class-bp-media-privacy.php:54
+#: bp-templates/bp-nouveau/includes/groups/functions.php:122
+#: bp-templates/bp-nouveau/includes/members/functions.php:27
+#: bp-xprofile/classes/class-bp-xprofile-component.php:186
+msgid "All Members"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:182
+#: bp-document/classes/class-bp-document-privacy.php:54
+#: bp-friends/bp-friends-template.php:81
+#: bp-friends/classes/class-bp-core-friends-widget.php:107
+#: bp-friends/classes/class-bp-friends-component.php:197
+#: bp-friends/classes/class-bp-friends-component.php:279
+#: bp-media/classes/class-bp-media-component.php:168
+#: bp-media/classes/class-bp-media-privacy.php:55
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
+#: bp-templates/bp-nouveau/includes/groups/functions.php:143
+#: bp-templates/bp-nouveau/includes/members/functions.php:40
+#: bp-xprofile/classes/class-bp-xprofile-component.php:193
+msgid "My Connections"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:185
+#: bp-document/classes/class-bp-document-privacy.php:53
+#: bp-media/classes/class-bp-media-component.php:171
+#: bp-media/classes/class-bp-media-privacy.php:53
+#: bp-xprofile/classes/class-bp-xprofile-component.php:199
+msgid "Only Me"
+msgstr ""
+
+#: bp-activity/classes/class-bp-activity-component.php:211
 msgid "Search Feed&hellip;"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:266
-#: bp-activity/classes/class-bp-activity-component.php:401
+#: bp-activity/classes/class-bp-activity-component.php:288
+#: bp-activity/classes/class-bp-activity-component.php:423
 #: bp-templates/bp-nouveau/includes/customizer.php:164
 msgid "Timeline"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:389
+#: bp-activity/classes/class-bp-activity-component.php:411
 #. translators: %s: Unread mention count for the current user
 msgid "Mentions %s"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:393
+#: bp-activity/classes/class-bp-activity-component.php:415
 #: bp-templates/bp-nouveau/includes/activity/functions.php:308
 msgid "Mentions"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:409
+#: bp-activity/classes/class-bp-activity-component.php:431
 msgid "Personal"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:409
+#: bp-activity/classes/class-bp-activity-component.php:431
 #: bp-blogs/bp-blogs-activity.php:80 bp-core/bp-core-template.php:567
 #: bp-forums/admin/settings.php:1665
 #: bp-forums/templates/default/bbpress/loop-forums.php:20
@@ -1007,7 +1062,7 @@ msgstr ""
 msgid "Posts"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:488
+#: bp-activity/classes/class-bp-activity-component.php:510
 msgid "My Activity"
 msgstr ""
 
@@ -1088,7 +1143,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-slugs.php:48
 #: bp-core/admin/bp-core-admin-tools.php:166
 #: bp-core/admin/settings/bp-admin-setting-forums.php:21
-#: bp-core/bp-core-functions.php:785
+#: bp-core/bp-core-functions.php:787
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:46
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:64
 #: bp-core/gdpr/class-bp-bbp-gdpr-forums.php:105
@@ -1100,9 +1155,9 @@ msgstr ""
 #: bp-forums/classes/class-bp-forums-component.php:276
 #: bp-forums/classes/class-bp-forums-component.php:327
 #: bp-forums/common/widgets.php:728 bp-forums/forums/template.php:48
-#: bp-media/bp-media-filters.php:865 bp-media/bp-media-settings.php:157
-#: bp-media/bp-media-settings.php:164 bp-media/bp-media-settings.php:171
-#: bp-search/bp-search-functions.php:369
+#: bp-media/bp-media-filters.php:977 bp-media/bp-media-settings.php:202
+#: bp-media/bp-media-settings.php:209 bp-media/bp-media-settings.php:216
+#: bp-media/bp-media-settings.php:223 bp-search/bp-search-functions.php:369
 #: bp-templates/bp-nouveau/includes/customizer.php:173
 msgid "Forums"
 msgstr ""
@@ -1132,7 +1187,7 @@ msgstr ""
 
 #: bp-activity/classes/class-bp-activity-list-table.php:682
 #: bp-core/bp-core-cssjs.php:371
-#: bp-templates/bp-nouveau/buddypress-functions.php:564
+#: bp-templates/bp-nouveau/buddypress-functions.php:567
 msgid "Are you sure?"
 msgstr ""
 
@@ -1151,22 +1206,26 @@ msgstr ""
 msgid "Embedded Activity Item"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:297
+#: bp-activity/classes/class-bp-activity-template.php:298
 #: bp-blogs/classes/class-bp-blogs-template.php:152
+#: bp-document/classes/class-bp-document-folder-template.php:225
+#: bp-document/classes/class-bp-document-template.php:239
 #: bp-groups/classes/class-bp-groups-template.php:298
 #: bp-media/classes/class-bp-media-album-template.php:225
-#: bp-media/classes/class-bp-media-template.php:234
+#: bp-media/classes/class-bp-media-template.php:235
 #: bp-members/classes/class-bp-core-members-template.php:209
 #: bp-messages/classes/class-bp-messages-box-template.php:225
 #: bp-notifications/classes/class-bp-notifications-template.php:243
 msgid "&larr;"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-template.php:298
+#: bp-activity/classes/class-bp-activity-template.php:299
 #: bp-blogs/classes/class-bp-blogs-template.php:153
+#: bp-document/classes/class-bp-document-folder-template.php:226
+#: bp-document/classes/class-bp-document-template.php:240
 #: bp-groups/classes/class-bp-groups-template.php:299
 #: bp-media/classes/class-bp-media-album-template.php:226
-#: bp-media/classes/class-bp-media-template.php:235
+#: bp-media/classes/class-bp-media-template.php:236
 #: bp-members/classes/class-bp-core-members-template.php:210
 #: bp-messages/classes/class-bp-messages-box-template.php:226
 #: bp-notifications/classes/class-bp-notifications-template.php:244
@@ -1174,7 +1233,7 @@ msgid "&rarr;"
 msgstr ""
 
 #: bp-activity/classes/class-bp-activity-theme-compat.php:171
-#: bp-core/bp-core-functions.php:777
+#: bp-core/bp-core-functions.php:778
 msgid "News Feed"
 msgstr ""
 
@@ -1259,7 +1318,7 @@ msgid "New post comment posted"
 msgstr ""
 
 #: bp-blogs/bp-blogs-activity.php:138
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:235
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:277
 msgid "Comments"
 msgstr ""
 
@@ -1402,7 +1461,7 @@ msgstr ""
 #: bp-blogs/bp-blogs-template.php:1317 bp-blogs/bp-blogs-template.php:1416
 #: bp-blogs/classes/class-bp-blogs-component.php:301
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:184
-#: bp-core/bp-core-template.php:3330
+#: bp-core/bp-core-template.php:3439
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:53
 msgid "Create a Site"
 msgstr ""
@@ -1435,6 +1494,9 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/search-form.php:11
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:312
 #: bp-templates/bp-nouveau/buddypress/common/search/search-form.php:20
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:40
+#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:35
+#: bp-templates/bp-nouveau/buddypress/members/single/document.php:31
 #: bp-templates/bp-nouveau/buddypress/search/search-form.php:26
 msgid "Search"
 msgstr ""
@@ -1473,7 +1535,7 @@ msgstr ""
 #: bp-blogs/classes/class-bp-blogs-component.php:283
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:118
 #: bp-blogs/classes/class-bp-blogs-theme-compat.php:186
-#: bp-core/bp-core-functions.php:779 bp-core/bp-core-update.php:656
+#: bp-core/bp-core-functions.php:780 bp-core/bp-core-update.php:675
 msgid "Sites"
 msgstr ""
 
@@ -1509,39 +1571,39 @@ msgstr ""
 msgid "Components"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:131
+#: bp-core/admin/bp-core-admin-components.php:134
 #. translators: accessibility text
 msgid "Filter components list"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:152
+#: bp-core/admin/bp-core-admin-components.php:155
 msgid "All <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:169
+#: bp-core/admin/bp-core-admin-components.php:172
 msgid "Active <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:186
+#: bp-core/admin/bp-core-admin-components.php:189
 msgid "Inactive <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:203
+#: bp-core/admin/bp-core-admin-components.php:206
 msgid "Required <span class=\"count\">(%s)</span>"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:209
+#: bp-core/admin/bp-core-admin-components.php:212
 #. translators: accessibility text
 msgid "Components list"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:215
-#: bp-core/admin/bp-core-admin-components.php:387
+#: bp-core/admin/bp-core-admin-components.php:218
+#: bp-core/admin/bp-core-admin-components.php:390
 msgid "Select bulk action"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:217
-#: bp-core/admin/bp-core-admin-components.php:389
+#: bp-core/admin/bp-core-admin-components.php:220
+#: bp-core/admin/bp-core-admin-components.php:392
 #: bp-forums/admin/forums.php:188 bp-forums/admin/replies.php:176
 #: bp-forums/admin/topics.php:178 bp-messages/bp-messages-template.php:1054
 #: bp-notifications/bp-notifications-template.php:1031
@@ -1549,11 +1611,11 @@ msgstr ""
 msgid "Bulk Actions"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:218
-#: bp-core/admin/bp-core-admin-components.php:324
-#: bp-core/admin/bp-core-admin-components.php:390
+#: bp-core/admin/bp-core-admin-components.php:221
+#: bp-core/admin/bp-core-admin-components.php:327
+#: bp-core/admin/bp-core-admin-components.php:393
 #: bp-core/admin/bp-core-admin-functions.php:267
-#: bp-core/bp-core-functions.php:782
+#: bp-core/bp-core-functions.php:784
 #: bp-members/classes/class-bp-members-list-table.php:172
 #: bp-members/classes/class-bp-members-list-table.php:323
 #: bp-members/classes/class-bp-members-ms-list-table.php:159
@@ -1563,51 +1625,51 @@ msgstr ""
 msgid "Activate"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:219
-#: bp-core/admin/bp-core-admin-components.php:301
-#: bp-core/admin/bp-core-admin-components.php:391
+#: bp-core/admin/bp-core-admin-components.php:222
+#: bp-core/admin/bp-core-admin-components.php:304
+#: bp-core/admin/bp-core-admin-components.php:394
 #: bp-messages/bp-messages-template.php:1292
 msgid "Deactivate"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:231
-#: bp-core/admin/bp-core-admin-components.php:372
+#: bp-core/admin/bp-core-admin-components.php:234
+#: bp-core/admin/bp-core-admin-components.php:375
 #. translators: accessibility text
 msgid "Enable or disable all optional components in bulk"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:234
-#: bp-core/admin/bp-core-admin-components.php:375
+#: bp-core/admin/bp-core-admin-components.php:237
+#: bp-core/admin/bp-core-admin-components.php:378
 msgid "Component"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:235
-#: bp-core/admin/bp-core-admin-components.php:376
+#: bp-core/admin/bp-core-admin-components.php:238
+#: bp-core/admin/bp-core-admin-components.php:379
 #: bp-core/profile-search/bps-admin.php:85
 #: bp-forums/templates/default/bbpress/form-forum.php:64
 #: bp-groups/classes/class-bp-groups-list-table.php:437
 msgid "Description"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:263
+#: bp-core/admin/bp-core-admin-components.php:266
 #. translators: accessibility text
 msgid "Select %s"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:278
+#: bp-core/admin/bp-core-admin-components.php:281
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1709
 msgid "Required"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:330
+#: bp-core/admin/bp-core-admin-components.php:333
 msgid "|"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:335
+#: bp-core/admin/bp-core-admin-components.php:338
 msgid "Edit Fields"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:337
+#: bp-core/admin/bp-core-admin-components.php:340
 #: bp-core/admin/bp-core-admin-functions.php:657
 #: bp-core/admin/bp-core-admin-settings.php:606
 #: bp-core/classes/class-bp-admin.php:330
@@ -1617,12 +1679,12 @@ msgstr ""
 #: bp-core/gdpr/class-bp-settings-export.php:55 bp-forums/admin/admin.php:427
 #: bp-groups/bp-groups-admin.php:166
 #: bp-groups/classes/class-bp-groups-component.php:409
-#: bp-groups/classes/class-bp-groups-component.php:831
+#: bp-groups/classes/class-bp-groups-component.php:845
 #: bp-integrations/compatibility/bp-compatibility-integration.php:78
 msgid "Settings"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-components.php:359
+#: bp-core/admin/bp-core-admin-components.php:362
 msgid "No components found."
 msgstr ""
 
@@ -1652,7 +1714,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:272
-#: bp-core/bp-core-functions.php:783
+#: bp-core/bp-core-functions.php:785
 #: bp-core/classes/class-bp-core-login-widget.php:125
 #: bp-forums/common/widgets.php:124 bp-members/bp-members-adminbar.php:69
 msgid "Register"
@@ -1711,7 +1773,7 @@ msgstr ""
 #: bp-core/classes/class-bp-admin.php:532
 #: bp-core/classes/class-bp-admin.php:533 bp-forums/admin/settings.php:1464
 #: bp-forums/admin/tools.php:29 bp-forums/admin/tools.php:1693
-#: bp-media/bp-media-filters.php:814
+#: bp-media/bp-media-filters.php:926
 msgid "Tools"
 msgstr ""
 
@@ -1791,8 +1853,10 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1244
 #: bp-search/bp-search-settings.php:435 bp-search/bp-search-settings.php:449
+#: bp-templates/bp-nouveau/buddypress/document/actions.php:14
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:14
-#: bp-templates/bp-nouveau/includes/media/functions.php:119
+#: bp-templates/bp-nouveau/includes/document/functions.php:125
+#: bp-templates/bp-nouveau/includes/media/functions.php:144
 msgid "Select All"
 msgstr ""
 
@@ -1937,7 +2001,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:1922
-#: bp-core/bp-core-functions.php:2604 bp-invites/bp-invites-functions.php:59
+#: bp-core/bp-core-functions.php:2620 bp-invites/bp-invites-functions.php:59
 #: bp-invites/classes/class-bp-invites-component.php:216
 #: bp-invites/classes/class-bp-invites-component.php:295
 msgid "Email Invites"
@@ -2016,7 +2080,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2349
-#: bp-media/bp-media-filters.php:913
+#: bp-media/bp-media-filters.php:1025
 msgid "Run Migration"
 msgstr ""
 
@@ -2034,7 +2098,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2547
 #: bp-core/admin/bp-core-admin-functions.php:2718
-#: bp-core/bp-core-functions.php:3015 bp-core/classes/class-bp-admin.php:642
+#: bp-core/bp-core-functions.php:3031 bp-core/classes/class-bp-admin.php:642
 #: bp-core/classes/class-bp-admin.php:643
 #: bp-core/classes/class-bp-admin.php:653
 #: bp-core/classes/class-bp-admin.php:654
@@ -2045,7 +2109,7 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2626
 #: bp-groups/bp-groups-admin.php:578
-#: bp-templates/bp-nouveau/includes/groups/functions.php:555
+#: bp-templates/bp-nouveau/includes/groups/functions.php:557
 msgid "All Groups"
 msgstr ""
 
@@ -2060,7 +2124,7 @@ msgid "Group Types"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-functions.php:2650
-#: bp-templates/bp-nouveau/includes/groups/functions.php:740
+#: bp-templates/bp-nouveau/includes/groups/functions.php:742
 msgid "Group Navigation"
 msgstr ""
 
@@ -2101,11 +2165,11 @@ msgstr ""
 msgid "Component Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:165
+#: bp-core/admin/bp-core-admin-pages.php:167
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:181
+#: bp-core/admin/bp-core-admin-pages.php:183
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -2124,33 +2188,33 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
-#: bp-media/bp-media-settings.php:468 bp-media/bp-media-settings.php:623
-#: bp-media/bp-media-settings.php:828 bp-search/bp-search-settings.php:420
+#: bp-media/bp-media-settings.php:520 bp-media/bp-media-settings.php:675
+#: bp-media/bp-media-settings.php:880 bp-search/bp-search-settings.php:420
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:214
+#: bp-core/admin/bp-core-admin-pages.php:216
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:224
+#: bp-core/admin/bp-core-admin-pages.php:226
 msgid "Associate a WordPress page with the following Registration sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:243
+#: bp-core/admin/bp-core-admin-pages.php:245
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:291
-#: bp-core/admin/bp-core-admin-pages.php:325
+#: bp-core/admin/bp-core-admin-pages.php:293
+#: bp-core/admin/bp-core-admin-pages.php:327
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:307
-#: bp-core/admin/bp-core-admin-pages.php:341
+#: bp-core/admin/bp-core-admin-pages.php:309
+#: bp-core/admin/bp-core-admin-pages.php:343
 msgid "Create Page"
 msgstr ""
 
@@ -2445,19 +2509,38 @@ msgstr ""
 msgid "Profile Dashboard"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-slugs.php:92
+#: bp-core/admin/bp-core-admin-slugs.php:53 bp-core/bp-core-functions.php:783
+#: bp-document/bp-document-functions.php:1489
+#: bp-document/bp-document-functions.php:1492
+#: bp-document/classes/class-bp-document-component.php:60
+#: bp-document/classes/class-bp-document-component.php:244
+#: bp-document/classes/class-bp-document-component.php:299
+#: bp-document/classes/class-bp-document-theme-compat.php:166
+#: bp-groups/classes/class-bp-groups-component.php:797
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:33
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:36
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:83
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:71
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:51
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:68
+#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
+#: bp-templates/bp-nouveau/buddypress/members/single/document.php:23
+msgid "Documents"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-slugs.php:96
 msgid "Register Form"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-slugs.php:93 bp-core/bp-core-functions.php:786
+#: bp-core/admin/bp-core-admin-slugs.php:97 bp-core/bp-core-functions.php:788
 msgid "Terms of Service"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-slugs.php:94 bp-core/bp-core-functions.php:787
+#: bp-core/admin/bp-core-admin-slugs.php:98 bp-core/bp-core-functions.php:789
 msgid "Privacy Policy"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-slugs.php:95
+#: bp-core/admin/bp-core-admin-slugs.php:99
 msgid "Activate Account"
 msgstr ""
 
@@ -2466,15 +2549,15 @@ msgid "What do you want to import?"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:54
-#: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:780
-#: bp-core/bp-core-template.php:556 bp-core/bp-core-update.php:658
+#: bp-core/admin/bp-core-admin-tools.php:120 bp-core/bp-core-functions.php:781
+#: bp-core/bp-core-template.php:556 bp-core/bp-core-update.php:677
 #: bp-core/classes/class-bp-email-tokens.php:394 bp-forums/admin/topics.php:679
 #: bp-groups/bp-groups-admin.php:1355 bp-groups/bp-groups-admin.php:2011
 #: bp-groups/bp-groups-functions.php:3636
 #: bp-groups/bp-groups-functions.php:3655
 #: bp-groups/bp-groups-functions.php:3672 bp-groups/bp-groups-template.php:5288
 #: bp-groups/classes/class-bp-groups-component.php:629
-#: bp-groups/classes/class-bp-groups-component.php:862
+#: bp-groups/classes/class-bp-groups-component.php:876
 #: bp-groups/classes/class-bp-groups-list-table.php:439
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:514
 #: bp-members/classes/class-bp-core-members-widget.php:298
@@ -2482,8 +2565,8 @@ msgstr ""
 #: bp-search/bp-search-functions.php:364 bp-search/bp-search-settings.php:465
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:19
 #: bp-templates/bp-nouveau/includes/groups/classes.php:241
-#: bp-templates/bp-nouveau/includes/groups/functions.php:825
-#: bp-templates/bp-nouveau/includes/groups/functions.php:831
+#: bp-templates/bp-nouveau/includes/groups/functions.php:827
+#: bp-templates/bp-nouveau/includes/groups/functions.php:833
 #. translators: accessibility text
 msgid "Members"
 msgstr ""
@@ -2518,20 +2601,20 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:111
 #: bp-core/admin/settings/bp-admin-setting-groups.php:23
-#: bp-core/bp-core-functions.php:778 bp-core/bp-core-template.php:560
-#: bp-core/bp-core-update.php:657 bp-core/gdpr/class-bp-group-export.php:27
+#: bp-core/bp-core-functions.php:779 bp-core/bp-core-template.php:560
+#: bp-core/bp-core-update.php:676 bp-core/gdpr/class-bp-group-export.php:27
 #: bp-core/gdpr/class-bp-group-export.php:57 bp-groups/bp-groups-admin.php:37
 #: bp-groups/bp-groups-admin.php:38 bp-groups/bp-groups-admin.php:48
 #: bp-groups/bp-groups-admin.php:49 bp-groups/bp-groups-admin.php:211
 #: bp-groups/bp-groups-admin.php:1085 bp-groups/bp-groups-admin.php:1113
 #: bp-groups/bp-groups-admin.php:2227
 #: bp-groups/classes/class-bp-groups-component.php:560
-#: bp-groups/classes/class-bp-groups-component.php:932
+#: bp-groups/classes/class-bp-groups-component.php:946
 #: bp-groups/classes/class-bp-groups-widget.php:74
 #: bp-groups/classes/class-bp-groups-widget.php:219
-#: bp-media/bp-media-settings.php:100 bp-media/bp-media-settings.php:116
-#: bp-media/bp-media-settings.php:123 bp-search/bp-search-functions.php:375
-#: bp-search/bp-search-settings.php:691
+#: bp-media/bp-media-settings.php:131 bp-media/bp-media-settings.php:138
+#: bp-media/bp-media-settings.php:154 bp-media/bp-media-settings.php:161
+#: bp-search/bp-search-functions.php:375 bp-search/bp-search-settings.php:691
 #: bp-templates/bp-nouveau/includes/activity/functions.php:293
 #: bp-templates/bp-nouveau/includes/customizer.php:170
 msgid "Groups"
@@ -2551,7 +2634,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-forums.php:19
 #: bp-forums/templates/default/bbpress/loop-topics.php:18
 #: bp-forums/topics/template.php:48 bp-forums/topics/template.php:49
-#: bp-media/bp-media-filters.php:871
+#: bp-media/bp-media-filters.php:983
 #: bp-templates/bp-nouveau/includes/groups/classes.php:281
 msgid "Discussions"
 msgstr ""
@@ -2567,7 +2650,7 @@ msgstr ""
 #: bp-forums/templates/default/bbpress/loop-replies.php:31
 #: bp-forums/templates/default/bbpress/loop-replies.php:72
 #: bp-forums/templates/default/bbpress/loop-topics.php:19
-#: bp-media/bp-media-filters.php:877
+#: bp-media/bp-media-filters.php:989
 msgid "Replies"
 msgstr ""
 
@@ -2775,16 +2858,27 @@ msgstr ""
 
 #: bp-core/admin/bp-core-admin-tools.php:1085 bp-forums/admin/tools.php:1892
 #: bp-forums/functions.php:866
+#: bp-templates/bp-nouveau/includes/document/ajax.php:74
+#: bp-templates/bp-nouveau/includes/document/ajax.php:214
+#: bp-templates/bp-nouveau/includes/document/ajax.php:275
+#: bp-templates/bp-nouveau/includes/document/ajax.php:344
+#: bp-templates/bp-nouveau/includes/document/ajax.php:441
+#: bp-templates/bp-nouveau/includes/document/ajax.php:519
+#: bp-templates/bp-nouveau/includes/document/ajax.php:589
+#: bp-templates/bp-nouveau/includes/document/ajax.php:936
+#: bp-templates/bp-nouveau/includes/document/ajax.php:997
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1076
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:50
 #: bp-templates/bp-nouveau/includes/friends/ajax.php:68
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:47
 #: bp-templates/bp-nouveau/includes/groups/ajax.php:261
-#: bp-templates/bp-nouveau/includes/media/ajax.php:98
-#: bp-templates/bp-nouveau/includes/media/ajax.php:197
-#: bp-templates/bp-nouveau/includes/media/ajax.php:258
-#: bp-templates/bp-nouveau/includes/media/ajax.php:327
-#: bp-templates/bp-nouveau/includes/media/ajax.php:424
-#: bp-templates/bp-nouveau/includes/media/ajax.php:502
+#: bp-templates/bp-nouveau/includes/media/ajax.php:110
+#: bp-templates/bp-nouveau/includes/media/ajax.php:209
+#: bp-templates/bp-nouveau/includes/media/ajax.php:270
+#: bp-templates/bp-nouveau/includes/media/ajax.php:339
+#: bp-templates/bp-nouveau/includes/media/ajax.php:436
+#: bp-templates/bp-nouveau/includes/media/ajax.php:514
+#: bp-templates/bp-nouveau/includes/media/ajax.php:584
 #: bp-templates/bp-nouveau/includes/xprofile/ajax.php:49
 msgid "There was a problem performing this action. Please try again."
 msgstr ""
@@ -2865,8 +2959,11 @@ msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:59
-#: bp-xprofile/classes/class-bp-xprofile-component.php:342
-#: bp-xprofile/classes/class-bp-xprofile-component.php:494
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:48
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:36
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:40
+#: bp-xprofile/classes/class-bp-xprofile-component.php:343
+#: bp-xprofile/classes/class-bp-xprofile-component.php:495
 msgid "Privacy"
 msgstr ""
 
@@ -2963,13 +3060,13 @@ msgid "Allowed Profile Type"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-media.php:22
-#: bp-media/bp-media-filters.php:859
+#: bp-media/bp-media-filters.php:971
 msgid "Media"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-messages.php:21
-#: bp-media/bp-media-settings.php:133 bp-media/bp-media-settings.php:140
-#: bp-media/bp-media-settings.php:147
+#: bp-media/bp-media-settings.php:171 bp-media/bp-media-settings.php:178
+#: bp-media/bp-media-settings.php:185 bp-media/bp-media-settings.php:192
 #: bp-messages/bp-messages-notifications.php:30
 #: bp-messages/bp-messages-notifications.php:275
 #: bp-messages/classes/class-bp-messages-component.php:224
@@ -2994,8 +3091,9 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:21
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:453
-#: bp-media/bp-media-settings.php:54 bp-media/bp-media-settings.php:73
-#: bp-media/bp-media-settings.php:90 bp-xprofile/bp-xprofile-admin.php:29
+#: bp-media/bp-media-settings.php:59 bp-media/bp-media-settings.php:78
+#: bp-media/bp-media-settings.php:97 bp-media/bp-media-settings.php:114
+#: bp-media/bp-media-settings.php:122 bp-xprofile/bp-xprofile-admin.php:29
 #: bp-xprofile/bp-xprofile-admin.php:30
 msgid "Profiles"
 msgstr ""
@@ -3146,6 +3244,7 @@ msgstr ""
 #: bp-core/admin/templates/about-buddyboss.php:21
 #: bp-forums/admin/topics.php:847 bp-forums/topics/template.php:2819
 #: bp-templates/bp-nouveau/buddypress/common/notices/template-notices.php:15
+#: bp-templates/bp-nouveau/buddypress/document/theatre.php:10
 #: bp-templates/bp-nouveau/buddypress/media/theatre.php:10
 #: bp-templates/bp-nouveau/buddypress/members/single/parts/profile-visibility.php:35
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:465
@@ -3392,7 +3491,7 @@ msgstr ""
 msgid "Edit My Profile"
 msgstr ""
 
-#: bp-core/bp-core-adminbar.php:219 bp-core/bp-core-functions.php:2711
+#: bp-core/bp-core-adminbar.php:219 bp-core/bp-core-functions.php:2727
 #: bp-core/classes/class-bp-core-login-widget.php:84
 #: bp-core/deprecated/buddypress/1.5.php:325
 #: bp-core/deprecated/buddypress/2.1.php:257 bp-forums/common/template.php:2686
@@ -3497,8 +3596,11 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-attachments.php:803
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:15
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:15
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:15
-#: bp-templates/bp-nouveau/includes/media/functions.php:122
+#: bp-templates/bp-nouveau/includes/document/functions.php:128
+#: bp-templates/bp-nouveau/includes/media/functions.php:147
 msgid "Upload"
 msgstr ""
 
@@ -3552,8 +3654,8 @@ msgstr ""
 
 #: bp-core/bp-core-avatars.php:352
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/change-avatar.php:15
-#: bp-xprofile/classes/class-bp-xprofile-component.php:285
-#: bp-xprofile/classes/class-bp-xprofile-component.php:400
+#: bp-xprofile/classes/class-bp-xprofile-component.php:286
+#: bp-xprofile/classes/class-bp-xprofile-component.php:401
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:247
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:481
 #: bp-xprofile/classes/class-bp-xprofile-user-admin.php:163
@@ -3812,11 +3914,11 @@ msgstr ""
 msgid "BuddyPress (logged-out)"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:781
+#: bp-core/bp-core-functions.php:782
 #: bp-groups/classes/class-bp-groups-component.php:769
-#: bp-media/classes/class-bp-media-component.php:60
-#: bp-media/classes/class-bp-media-component.php:248
-#: bp-media/classes/class-bp-media-component.php:311
+#: bp-media/classes/class-bp-media-component.php:70
+#: bp-media/classes/class-bp-media-component.php:270
+#: bp-media/classes/class-bp-media-component.php:333
 #: bp-media/classes/class-bp-media-theme-compat.php:166
 #: bp-templates/bp-nouveau/buddypress/media/add-media.php:12
 #: bp-templates/bp-nouveau/includes/customizer.php:176
@@ -3824,75 +3926,75 @@ msgstr ""
 msgid "Photos"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1180 bp-forums/common/functions.php:113
+#: bp-core/bp-core-functions.php:1182 bp-forums/common/functions.php:113
 msgid "sometime"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1189 bp-forums/common/functions.php:114
+#: bp-core/bp-core-functions.php:1191 bp-forums/common/functions.php:114
 msgid "right now"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1198 bp-forums/common/functions.php:115
+#: bp-core/bp-core-functions.php:1200 bp-forums/common/functions.php:115
 msgid "%s ago"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1259
+#: bp-core/bp-core-functions.php:1261
 msgid "%s year"
 msgid_plural "%s years"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1262 bp-core/bp-core-functions.php:1296
+#: bp-core/bp-core-functions.php:1264 bp-core/bp-core-functions.php:1298
 msgid "%s month"
 msgid_plural "%s months"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1265 bp-core/bp-core-functions.php:1299
+#: bp-core/bp-core-functions.php:1267 bp-core/bp-core-functions.php:1301
 msgid "%s week"
 msgid_plural "%s weeks"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1268 bp-core/bp-core-functions.php:1302
+#: bp-core/bp-core-functions.php:1270 bp-core/bp-core-functions.php:1304
 msgid "%s day"
 msgid_plural "%s days"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1271 bp-core/bp-core-functions.php:1305
+#: bp-core/bp-core-functions.php:1273 bp-core/bp-core-functions.php:1307
 msgid "%s hour"
 msgid_plural "%s hours"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1274 bp-core/bp-core-functions.php:1308
+#: bp-core/bp-core-functions.php:1276 bp-core/bp-core-functions.php:1310
 msgid "%s minute"
 msgid_plural "%s minutes"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1277 bp-core/bp-core-functions.php:1311
+#: bp-core/bp-core-functions.php:1279 bp-core/bp-core-functions.php:1313
 msgid "%s second"
 msgid_plural "%s seconds"
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-core/bp-core-functions.php:1630
+#: bp-core/bp-core-functions.php:1632
 msgid "Not recently active"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2497
+#: bp-core/bp-core-functions.php:2499
 msgid "Member Profiles"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2507
+#: bp-core/bp-core-functions.php:2509
 msgid ""
 "Everything in a community website revolves around its members. All website "
 "users are given member profiles."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2510 bp-xprofile/bp-xprofile-admin.php:160
+#: bp-core/bp-core-functions.php:2512 bp-xprofile/bp-xprofile-admin.php:160
 #: bp-xprofile/bp-xprofile-admin.php:168 bp-xprofile/bp-xprofile-admin.php:177
 #: bp-xprofile/bp-xprofile-admin.php:1095
 #: bp-xprofile/classes/class-bp-xprofile-component.php:48
@@ -3901,23 +4003,23 @@ msgstr ""
 msgid "Profile Fields"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2512
+#: bp-core/bp-core-functions.php:2514
 msgid ""
 "Customize your community with fully editable profile fields that allow "
 "members to share details about themselves."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2519
+#: bp-core/bp-core-functions.php:2521
 msgid "Account Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2520
+#: bp-core/bp-core-functions.php:2522
 msgid ""
 "Allow members to modify their account and notification settings from within "
 "their profile."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2524 bp-core/deprecated/buddypress/2.1.php:538
+#: bp-core/bp-core-functions.php:2526 bp-core/deprecated/buddypress/2.1.php:538
 #: bp-core/gdpr/class-bp-notification-export.php:27
 #: bp-core/gdpr/class-bp-notification-export.php:57
 #: bp-notifications/classes/class-bp-notifications-component.php:27
@@ -3927,13 +4029,13 @@ msgstr ""
 msgid "Notifications"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2525
+#: bp-core/bp-core-functions.php:2527
 msgid ""
 "Notify members of relevant activity with a toolbar bubble and/or via email "
 "and allow them to customize their notification settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2529
+#: bp-core/bp-core-functions.php:2531
 #: bp-core/deprecated/buddyboss/1.1.8.php:235
 #: bp-groups/bp-groups-functions.php:3147
 #: bp-groups/bp-groups-notifications.php:1178
@@ -3943,13 +4045,13 @@ msgstr ""
 msgid "Social Groups"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2539
+#: bp-core/bp-core-functions.php:2541
 msgid ""
 "Allow members to organize themselves into public, private or hidden social "
 "groups with separate activity feeds and member listings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2543
+#: bp-core/bp-core-functions.php:2545
 #: bp-core/compatibility/bp-incompatible-plugins-helper.php:345
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:39
 #: bp-core/gdpr/class-bp-bbp-gdpr-topics.php:57
@@ -3959,77 +4061,85 @@ msgstr ""
 msgid "Forum Discussions"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2553
+#: bp-core/bp-core-functions.php:2555
 msgid ""
 "Allow members to have discussions using Q&A style message boards. Forums "
 "can be standalone or connected to social groups."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2567
+#: bp-core/bp-core-functions.php:2569
 msgid ""
 "Global, personal, and group activity feeds with threaded commenting, direct "
 "posting, and @mentions, with email notification support."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2571
+#: bp-core/bp-core-functions.php:2573
 msgid "Media Uploading"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2581
+#: bp-core/bp-core-functions.php:2583
 msgid ""
 "Allow members to upload photos, emojis and animated GIFs, and to organize "
 "photos into albums."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2585
+#: bp-core/bp-core-functions.php:2587 bp-media/bp-media-settings.php:29
+msgid "Document Uploading"
+msgstr ""
+
+#: bp-core/bp-core-functions.php:2597
+msgid "Allow members to upload documents, and to organize documents into folders."
+msgstr ""
+
+#: bp-core/bp-core-functions.php:2601
 msgid "Private Messaging"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2586
+#: bp-core/bp-core-functions.php:2602
 msgid ""
 "Allow members to send private messages. Messages can be sent to one member "
 "or a group of members."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2590
+#: bp-core/bp-core-functions.php:2606
 msgid "Member Connections"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2600
+#: bp-core/bp-core-functions.php:2616
 msgid ""
 "Allow members to make connections with one another and focus on those they "
 "care about most."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2614
+#: bp-core/bp-core-functions.php:2630
 msgid "Allow members to send email invitations to non-members to join the network."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2618 bp-search/bp-search-settings.php:24
+#: bp-core/bp-core-functions.php:2634 bp-search/bp-search-settings.php:24
 msgid "Network Search"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2628
+#: bp-core/bp-core-functions.php:2644
 msgid ""
 "Allow members to search the entire network, along with custom post types of "
 "your choice, all in one unified search bar."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2632
+#: bp-core/bp-core-functions.php:2648
 msgid "Blog Feeds"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2633
+#: bp-core/bp-core-functions.php:2649
 msgid ""
 "Have new blog posts and comments appear in site activity feeds. Make sure "
 "to enable Activity Feeds first."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2640
+#: bp-core/bp-core-functions.php:2656
 msgid "Record activity for new sites, posts, and comments across your network."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:2776
+#: bp-core/bp-core-functions.php:2792
 #: bp-core/classes/class-bp-core-login-widget.php:121
 #: bp-core/deprecated/buddypress/2.1.php:189 bp-forums/common/widgets.php:91
 #: bp-forums/common/widgets.php:112 bp-members/bp-members-adminbar.php:59
@@ -4037,51 +4147,51 @@ msgstr ""
 msgid "Log In"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3008 bp-core/bp-core-functions.php:3017
+#: bp-core/bp-core-functions.php:3024 bp-core/bp-core-functions.php:3033
 msgid "New Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3009
+#: bp-core/bp-core-functions.php:3025
 msgid "Add New Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3010
+#: bp-core/bp-core-functions.php:3026
 msgid "All Emails"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3011
+#: bp-core/bp-core-functions.php:3027
 msgid "Edit Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3012
+#: bp-core/bp-core-functions.php:3028
 msgid "Filter email list"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3013 bp-core/bp-core-functions.php:3108
+#: bp-core/bp-core-functions.php:3029 bp-core/bp-core-functions.php:3124
 msgid "Email list"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3014 bp-core/bp-core-functions.php:3109
+#: bp-core/bp-core-functions.php:3030 bp-core/bp-core-functions.php:3125
 msgid "Email list navigation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3016
+#: bp-core/bp-core-functions.php:3032
 msgid "Email Templates"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3018
+#: bp-core/bp-core-functions.php:3034
 msgid "No emails found"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3019
+#: bp-core/bp-core-functions.php:3035
 msgid "No emails found in trash"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3020 bp-core/bp-core-functions.php:3116
+#: bp-core/bp-core-functions.php:3036 bp-core/bp-core-functions.php:3132
 msgid "Search Emails"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3021 bp-core/bp-core-functions.php:3117
+#: bp-core/bp-core-functions.php:3037 bp-core/bp-core-functions.php:3133
 #: bp-forums/admin/metaboxes.php:572
 #: bp-members/classes/class-bp-members-admin.php:2387
 #: bp-members/classes/class-bp-members-list-table.php:157
@@ -4092,76 +4202,76 @@ msgstr ""
 #: bp-members/classes/class-bp-members-ms-list-table.php:320
 #: bp-search/classes/class-bp-search-members.php:275
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:66
-#: bp-templates/bp-nouveau/includes/functions.php:1044
-#: bp-templates/bp-nouveau/includes/functions.php:1115
-#: bp-templates/bp-nouveau/includes/functions.php:1178
-#: bp-templates/bp-nouveau/includes/functions.php:1241
+#: bp-templates/bp-nouveau/includes/functions.php:1068
+#: bp-templates/bp-nouveau/includes/functions.php:1139
+#: bp-templates/bp-nouveau/includes/functions.php:1202
+#: bp-templates/bp-nouveau/includes/functions.php:1265
 msgid "Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3022
+#: bp-core/bp-core-functions.php:3038
 msgid "Uploaded to this email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3023
+#: bp-core/bp-core-functions.php:3039
 msgid "View Email"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3105
+#: bp-core/bp-core-functions.php:3121
 msgid "New Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3106
+#: bp-core/bp-core-functions.php:3122
 msgid "All Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3107
+#: bp-core/bp-core-functions.php:3123
 msgid "Edit Email Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3110 bp-core/classes/class-bp-admin.php:851
+#: bp-core/bp-core-functions.php:3126 bp-core/classes/class-bp-admin.php:851
 msgid "Situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3111
+#: bp-core/bp-core-functions.php:3127
 msgid "Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3112
+#: bp-core/bp-core-functions.php:3128
 msgid "New email situation name"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3113
+#: bp-core/bp-core-functions.php:3129
 msgid "No email situations found"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3114
+#: bp-core/bp-core-functions.php:3130
 msgid "No email situations"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3115
+#: bp-core/bp-core-functions.php:3131
 msgid "Popular Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3118
+#: bp-core/bp-core-functions.php:3134
 msgid "Update Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3119
+#: bp-core/bp-core-functions.php:3135
 msgid "View Email Situation"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3420
+#: bp-core/bp-core-functions.php:3436
 #. translators: email disclaimer, e.g. "© 2016 Site Name".
 msgid "&copy; %1$s %2$s"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3525
+#: bp-core/bp-core-functions.php:3541
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} replied to one of your updates"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3527
+#: bp-core/bp-core-functions.php:3543
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your "
@@ -4170,7 +4280,7 @@ msgid ""
 "{{{activity_reply}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3529
+#: bp-core/bp-core-functions.php:3545
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} replied to one of your updates:\n"
@@ -4181,12 +4291,12 @@ msgid ""
 "{{{thread.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3533
+#: bp-core/bp-core-functions.php:3549
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} replied to one of your comments"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3535
+#: bp-core/bp-core-functions.php:3551
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> replied to one of your "
@@ -4195,7 +4305,7 @@ msgid ""
 "{{{activity_reply}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3537
+#: bp-core/bp-core-functions.php:3553
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} replied to one of your comments:\n"
@@ -4206,12 +4316,12 @@ msgid ""
 "{{{thread.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3541
+#: bp-core/bp-core-functions.php:3557
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} mentioned you in a status update"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3543
+#: bp-core/bp-core-functions.php:3559
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in a status "
@@ -4220,7 +4330,7 @@ msgid ""
 "{{{status_update}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3545
+#: bp-core/bp-core-functions.php:3561
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} mentioned you in a status update:\n"
@@ -4231,12 +4341,12 @@ msgid ""
 "{{{mentioned.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3549
+#: bp-core/bp-core-functions.php:3565
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} mentioned you in a group update"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3551
+#: bp-core/bp-core-functions.php:3567
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{poster.url}}}\">{{poster.name}}</a> mentioned you in the group "
@@ -4245,7 +4355,7 @@ msgid ""
 "{{{status_update}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3553
+#: bp-core/bp-core-functions.php:3569
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} mentioned you in the group \"{{group.name}}\":\n"
@@ -4256,12 +4366,12 @@ msgid ""
 "{{{mentioned.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3557
+#: bp-core/bp-core-functions.php:3573
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Activate your account"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3559
+#: bp-core/bp-core-functions.php:3575
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Thanks for registering!\n"
@@ -4270,7 +4380,7 @@ msgid ""
 "href=\"{{{activate.url}}}\">{{{activate.url}}}</a>"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3561
+#: bp-core/bp-core-functions.php:3577
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Thanks for registering!\n"
@@ -4279,12 +4389,12 @@ msgid ""
 "{{{activate.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3565
+#: bp-core/bp-core-functions.php:3581
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Activate {{{user-site.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3567
+#: bp-core/bp-core-functions.php:3583
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Thanks for registering!\n"
@@ -4296,7 +4406,7 @@ msgid ""
 "href=\"{{{user-site.url}}}\">{{{user-site.url}}}</a>."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3569
+#: bp-core/bp-core-functions.php:3585
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Thanks for registering!\n"
@@ -4307,12 +4417,12 @@ msgid ""
 "After you activate, you can visit your site at {{{user-site.url}}}."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3576
+#: bp-core/bp-core-functions.php:3592
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] New request to connect from {{initiator.name}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3578
+#: bp-core/bp-core-functions.php:3594
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{initiator.url}}}\">{{initiator.name}}</a> wants to add you as "
@@ -4324,7 +4434,7 @@ msgid ""
 "other pending requests."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3580
+#: bp-core/bp-core-functions.php:3596
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{initiator.name}} wants to add you as a connection.\n"
@@ -4335,12 +4445,12 @@ msgid ""
 "To view {{initiator.name}}'s profile, visit: {{{initiator.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3584
+#: bp-core/bp-core-functions.php:3600
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{friend.name}} accepted your request to connect"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3586
+#: bp-core/bp-core-functions.php:3602
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{friendship.url}}}\">{{friend.name}}</a> accepted your request "
@@ -4349,7 +4459,7 @@ msgid ""
 "{{{member.card}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3588
+#: bp-core/bp-core-functions.php:3604
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{friend.name}} accepted your friend request.\n"
@@ -4357,12 +4467,12 @@ msgid ""
 "To learn more about them, visit their profile: {{{friendship.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3592
+#: bp-core/bp-core-functions.php:3608
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Group details updated"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3594
+#: bp-core/bp-core-functions.php:3610
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Group details for the group &quot;<a "
@@ -4373,7 +4483,7 @@ msgid ""
 "{{{group.small_card}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3596
+#: bp-core/bp-core-functions.php:3612
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Group details for the group \"{{group.name}}\" were updated:\n"
@@ -4383,12 +4493,12 @@ msgid ""
 "To view the group, visit: {{{group.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3600
+#: bp-core/bp-core-functions.php:3616
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] You have an invitation to the group: \"{{group.name}}\""
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3602
+#: bp-core/bp-core-functions.php:3618
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{inviter.url}}}\">{{inviter.name}}</a> has invited you to join "
@@ -4402,7 +4512,7 @@ msgid ""
 "pending group invites."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3604
+#: bp-core/bp-core-functions.php:3620
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{inviter.name}} has invited you to join the group: \"{{group.name}}\".\n"
@@ -4415,12 +4525,12 @@ msgid ""
 "To view {{inviter.name}}'s profile, visit: {{{inviter.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3608
+#: bp-core/bp-core-functions.php:3624
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] You have been promoted in the group: \"{{group.name}}\""
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3610
+#: bp-core/bp-core-functions.php:3626
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "You have been promoted to <b>{{promoted_to}}</b> in the group &quot;<a "
@@ -4429,7 +4539,7 @@ msgid ""
 "{{{group.small_card}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3612
+#: bp-core/bp-core-functions.php:3628
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "You have been promoted to {{promoted_to}} in the group: \"{{group.name}}\".\n"
@@ -4437,12 +4547,12 @@ msgid ""
 "To visit the group, go to: {{{group.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3616
+#: bp-core/bp-core-functions.php:3632
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Membership request for group: {{group.name}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3618
+#: bp-core/bp-core-functions.php:3634
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "<a href=\"{{{profile.url}}}\">{{requesting-user.name}}</a> wants to join "
@@ -4456,7 +4566,7 @@ msgid ""
 "other pending requests."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3620
+#: bp-core/bp-core-functions.php:3636
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{requesting-user.name}} wants to join the group \"{{group.name}}\". As you "
@@ -4469,12 +4579,12 @@ msgid ""
 "To view {{requesting-user.name}}'s profile, visit: {{{profile.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3624
+#: bp-core/bp-core-functions.php:3640
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] New message from {{sender.name}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3626
+#: bp-core/bp-core-functions.php:3642
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{sender.name}} sent you a new message.\n"
@@ -4482,7 +4592,7 @@ msgid ""
 "{{{message}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3628
+#: bp-core/bp-core-functions.php:3644
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{sender.name}} sent you a new message.\n"
@@ -4493,12 +4603,12 @@ msgid ""
 "{{{message.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3632
+#: bp-core/bp-core-functions.php:3648
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Verify your new email address"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3634
+#: bp-core/bp-core-functions.php:3650
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "You recently changed the email address associated with your account on "
@@ -4509,7 +4619,7 @@ msgid ""
 "your mind, or if you think you have received this email in error."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3636
+#: bp-core/bp-core-functions.php:3652
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "You recently changed the email address associated with your account on "
@@ -4520,12 +4630,12 @@ msgid ""
 "your mind, or if you think you have received this email in error."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3640
+#: bp-core/bp-core-functions.php:3656
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Membership request for group \"{{group.name}}\" accepted"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3642
+#: bp-core/bp-core-functions.php:3658
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Your membership request for the group &quot;<a "
@@ -4534,7 +4644,7 @@ msgid ""
 "{{{group.small_card}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3644
+#: bp-core/bp-core-functions.php:3660
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Your membership request for the group \"{{group.name}}\" has been accepted.\n"
@@ -4542,12 +4652,12 @@ msgid ""
 "To view the group, visit: {{{group.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3648
+#: bp-core/bp-core-functions.php:3664
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] Membership request for group \"{{group.name}}\" rejected"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3650
+#: bp-core/bp-core-functions.php:3666
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Your membership request for the group &quot;<a "
@@ -4556,7 +4666,7 @@ msgid ""
 "{{{group.small_card}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3652
+#: bp-core/bp-core-functions.php:3668
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "Your membership request for the group \"{{group.name}}\" has been rejected.\n"
@@ -4564,12 +4674,12 @@ msgid ""
 "To request membership again, visit: {{{group.url}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3656
+#: bp-core/bp-core-functions.php:3672
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] New discussion: {{discussion.title}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3658
+#: bp-core/bp-core-functions.php:3674
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} started a new discussion <a "
@@ -4579,7 +4689,7 @@ msgid ""
 "{{{discussion.content}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3660
+#: bp-core/bp-core-functions.php:3676
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} started a new discussion {{discussion.title}} in the forum "
@@ -4590,12 +4700,12 @@ msgid ""
 "Discussion Link: {{discussion.url}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3664
+#: bp-core/bp-core-functions.php:3680
 #. translators: do not remove {} brackets or translate its contents.
 msgid "[{{{site.name}}}] {{poster.name}} replied to one of your forum discussions"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3666
+#: bp-core/bp-core-functions.php:3682
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} replied to the discussion <a "
@@ -4605,7 +4715,7 @@ msgid ""
 "{{{reply.content}}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3668
+#: bp-core/bp-core-functions.php:3684
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "{{poster.name}} replied to the discussion {{discussion.title}} in the forum "
@@ -4616,221 +4726,221 @@ msgid ""
 "Post Link: {{reply.url}}"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3672
+#: bp-core/bp-core-functions.php:3688
 #. translators: do not remove {} brackets or translate its contents.
 msgid "An invitation from {{inviter.name}} to join [{{{site.name}}}]"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3674
+#: bp-core/bp-core-functions.php:3690
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "You have been invited by {{inviter.name}} to join the <a "
 "href=\"{{{site.url}}}\">[{{{site.name}}}]</a> community."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3676
+#: bp-core/bp-core-functions.php:3692
 #. translators: do not remove {} brackets or translate its contents.
 msgid ""
 "You have been invited by {{inviter.name}} to join the [{{{site.name}}}] "
 "community."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3702
+#: bp-core/bp-core-functions.php:3718
 msgid "A member has replied to an activity update that the recipient posted."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3705 bp-core/bp-core-functions.php:3713
+#: bp-core/bp-core-functions.php:3721 bp-core/bp-core-functions.php:3729
 msgid ""
 "You will no longer receive emails when someone replies to an update or "
 "comment you posted."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3710
+#: bp-core/bp-core-functions.php:3726
 msgid ""
 "A member has replied to a comment on an activity update that the recipient "
 "posted."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3718
+#: bp-core/bp-core-functions.php:3734
 msgid "Recipient was mentioned in an activity update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3721 bp-core/bp-core-functions.php:3729
+#: bp-core/bp-core-functions.php:3737 bp-core/bp-core-functions.php:3745
 msgid "You will no longer receive emails when someone mentions you in an update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3726
+#: bp-core/bp-core-functions.php:3742
 msgid "Recipient was mentioned in a group activity update."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3734
+#: bp-core/bp-core-functions.php:3750
 msgid "Recipient has registered for an account."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3739
+#: bp-core/bp-core-functions.php:3755
 msgid "Recipient has registered for an account and site."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3744
+#: bp-core/bp-core-functions.php:3760
 msgid "A member has sent an invitation to connect to the recipient."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3747
+#: bp-core/bp-core-functions.php:3763
 msgid ""
 "You will no longer receive emails when someone sends you an invitation to "
 "connect."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3752
+#: bp-core/bp-core-functions.php:3768
 msgid "Recipient has had an invitation to connect accepted by a member."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3755
+#: bp-core/bp-core-functions.php:3771
 msgid ""
 "You will no longer receive emails when someone accepts your invitation to "
 "connect."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3760
+#: bp-core/bp-core-functions.php:3776
 msgid "A group's details were updated."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3763
+#: bp-core/bp-core-functions.php:3779
 msgid "You will no longer receive emails when one of your groups is updated."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3768
+#: bp-core/bp-core-functions.php:3784
 msgid "A member has sent a group invitation to the recipient."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3771
+#: bp-core/bp-core-functions.php:3787
 msgid "You will no longer receive emails when you are invited to join a group."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3776
+#: bp-core/bp-core-functions.php:3792
 msgid "Recipient's status within a group has changed."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3779
+#: bp-core/bp-core-functions.php:3795
 msgid "You will no longer receive emails when you have been promoted in a group."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3784
+#: bp-core/bp-core-functions.php:3800
 msgid "A member has requested permission to join a group."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3787
+#: bp-core/bp-core-functions.php:3803
 msgid ""
 "You will no longer receive emails when someone requests to be a member of "
 "your group."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3792
+#: bp-core/bp-core-functions.php:3808
 msgid "Recipient has received a private message."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3795
+#: bp-core/bp-core-functions.php:3811
 msgid "You will no longer receive emails when someone sends you a message."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3800
+#: bp-core/bp-core-functions.php:3816
 msgid "Recipient has changed their email address."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3805
+#: bp-core/bp-core-functions.php:3821
 msgid "Recipient had requested to join a group, which was accepted."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3808 bp-core/bp-core-functions.php:3816
+#: bp-core/bp-core-functions.php:3824 bp-core/bp-core-functions.php:3832
 msgid ""
 "You will no longer receive emails when your request to join a group has "
 "been accepted or denied."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3813
+#: bp-core/bp-core-functions.php:3829
 msgid "Recipient had requested to join a group, which was rejected."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3821
+#: bp-core/bp-core-functions.php:3837
 msgid "A member has created a new forum discussion."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3824
+#: bp-core/bp-core-functions.php:3840
 msgid ""
 "You will no longer receive emails when a member will create a new forum "
 "discussion."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3829
+#: bp-core/bp-core-functions.php:3845
 msgid ""
 "A member has replied to a forum discussion that the participant is "
 "following."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3832
+#: bp-core/bp-core-functions.php:3848
 msgid ""
 "You will no longer receive emails when a member will reply to one of your "
 "forum discussions."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3837
+#: bp-core/bp-core-functions.php:3853
 msgid "Recipient has been invited by a member to join the website."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3885 bp-core/bp-core-functions.php:3891
-#: bp-core/bp-core-functions.php:3896
+#: bp-core/bp-core-functions.php:3901 bp-core/bp-core-functions.php:3907
+#: bp-core/bp-core-functions.php:3912
 msgid "Something has gone wrong."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3886 bp-core/bp-core-functions.php:3892
+#: bp-core/bp-core-functions.php:3902 bp-core/bp-core-functions.php:3908
 msgid ""
 "Please log in and go to your settings to unsubscribe from notification "
 "emails."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3897
+#: bp-core/bp-core-functions.php:3913
 msgid "Please go to your notifications settings to unsubscribe from emails."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:3924
+#: bp-core/bp-core-functions.php:3940
 msgid ""
 "You can change this or any other email notification preferences in your "
 "email settings."
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4212
+#: bp-core/bp-core-functions.php:4228
 msgid "Member changes their profile photo"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4216
+#: bp-core/bp-core-functions.php:4232
 msgid "Member updates their profile details"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4220
+#: bp-core/bp-core-functions.php:4236
 msgid "Member registers to the site"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4224
+#: bp-core/bp-core-functions.php:4240
 msgid "Two members become connected"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4228
+#: bp-core/bp-core-functions.php:4244
 msgid "Member creates a group"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4232
+#: bp-core/bp-core-functions.php:4248
 msgid "Member joins a group"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4236
+#: bp-core/bp-core-functions.php:4252
 msgid "Group details are updated"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4240
+#: bp-core/bp-core-functions.php:4256
 msgid "Member creates a forum discussion"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:4244
+#: bp-core/bp-core-functions.php:4260
 msgid "Member replies to a forum discussion"
 msgstr ""
 
@@ -4844,7 +4954,7 @@ msgstr ""
 
 #: bp-core/bp-core-options.php:34
 #: bp-groups/classes/class-bp-groups-component.php:405
-#: bp-groups/classes/class-bp-groups-component.php:822
+#: bp-groups/classes/class-bp-groups-component.php:836
 msgid "Details"
 msgstr ""
 
@@ -4890,22 +5000,22 @@ msgstr ""
 msgid "Community"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3310
+#: bp-core/bp-core-template.php:3419
 msgid "Directory"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3318
+#: bp-core/bp-core-template.php:3427
 #: bp-members/classes/class-bp-registration-theme-compat.php:102
 msgid "Create an Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3322
+#: bp-core/bp-core-template.php:3431
 #: bp-members/classes/class-bp-registration-theme-compat.php:110
 msgid "Activate Your Account"
 msgstr ""
 
-#: bp-core/bp-core-template.php:3326 bp-groups/bp-groups-template.php:4214
-#: bp-templates/bp-nouveau/includes/groups/functions.php:584
+#: bp-core/bp-core-template.php:3435 bp-groups/bp-groups-template.php:4214
+#: bp-templates/bp-nouveau/includes/groups/functions.php:586
 msgid "Create a Group"
 msgstr ""
 
@@ -4969,7 +5079,7 @@ msgstr ""
 msgid "Default Forum for %s Group"
 msgstr ""
 
-#: bp-core/bp-core-update.php:655
+#: bp-core/bp-core-update.php:674
 msgid "Site-Wide Activity"
 msgstr ""
 
@@ -5553,26 +5663,31 @@ msgid "The uploaded file exceeds the maximum allowed file size of: %s"
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:161
+#: bp-document/bp-document-functions.php:1184
 #: bp-media/bp-media-functions.php:117
 msgid "The uploaded file was only partially uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:162
+#: bp-document/bp-document-functions.php:1185
 #: bp-media/bp-media-functions.php:118
 msgid "No file was uploaded."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:164
+#: bp-document/bp-document-functions.php:1187
 #: bp-media/bp-media-functions.php:120
 msgid "Missing a temporary folder."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:165
+#: bp-document/bp-document-functions.php:1188
 #: bp-media/bp-media-functions.php:121
 msgid "Failed to write file to disk."
 msgstr ""
 
 #: bp-core/classes/class-bp-attachment.php:166
+#: bp-document/bp-document-functions.php:1189
 #: bp-media/bp-media-functions.php:122
 msgid "File upload stopped by extension."
 msgstr ""
@@ -5719,10 +5834,10 @@ msgstr ""
 
 #: bp-core/classes/class-bp-core-login-widget.php:113
 #: bp-forums/common/widgets.php:99
-#: bp-templates/bp-nouveau/includes/functions.php:1060
-#: bp-templates/bp-nouveau/includes/functions.php:1123
-#: bp-templates/bp-nouveau/includes/functions.php:1194
-#: bp-templates/bp-nouveau/includes/functions.php:1249
+#: bp-templates/bp-nouveau/includes/functions.php:1084
+#: bp-templates/bp-nouveau/includes/functions.php:1147
+#: bp-templates/bp-nouveau/includes/functions.php:1218
+#: bp-templates/bp-nouveau/includes/functions.php:1273
 msgid "Password"
 msgstr ""
 
@@ -6037,7 +6152,7 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:152
 #: bp-templates/bp-nouveau/buddypress/members/single/profile/profile-wp.php:16
-#: bp-xprofile/classes/class-bp-xprofile-component.php:440
+#: bp-xprofile/classes/class-bp-xprofile-component.php:441
 msgid "My Profile"
 msgstr ""
 
@@ -6072,20 +6187,20 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\r\n"
-"\r\n"
-"\"%3$s\"\r\n"
-"\r\n"
-"To view and respond to the message, log in and visit: %4$s\r\n"
-"\r\n"
-"---------------------\r\n"
+"%1$s mentioned you in the group \"%2$s\":\n"
+"\n"
+"\"%3$s\"\n"
+"\n"
+"To view and respond to the message, log in and visit: %4$s\n"
+"\n"
+"---------------------\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
 #: bp-core/deprecated/buddypress/1.6.php:184
 #: bp-groups/bp-groups-template.php:6121 bp-groups/bp-groups-template.php:6165
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:108
-#: bp-templates/bp-nouveau/includes/groups/functions.php:639
+#: bp-templates/bp-nouveau/includes/groups/functions.php:641
 #: bp-templates/bp-nouveau/includes/members/functions.php:92
 msgid "Recently Active"
 msgstr ""
@@ -6170,7 +6285,7 @@ msgid "Edit Details"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/2.1.php:378
-#: bp-groups/classes/class-bp-groups-component.php:1023
+#: bp-groups/classes/class-bp-groups-component.php:1037
 msgid "Group Profile Photo"
 msgstr ""
 
@@ -6265,9 +6380,9 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-activity-export.php:70
 #: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:22
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:237
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:434
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:435
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:279
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:476
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:477
 msgid "Comment"
 msgstr ""
 
@@ -6600,9 +6715,9 @@ msgstr ""
 
 #: bp-core/gdpr/class-bp-xprofile-export.php:91
 #: bp-groups/classes/class-bp-groups-component.php:426
-#: bp-groups/classes/class-bp-groups-component.php:852
-#: bp-xprofile/classes/class-bp-xprofile-component.php:298
-#: bp-xprofile/classes/class-bp-xprofile-component.php:410
+#: bp-groups/classes/class-bp-groups-component.php:866
+#: bp-xprofile/classes/class-bp-xprofile-component.php:299
+#: bp-xprofile/classes/class-bp-xprofile-component.php:411
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:268
 #: bp-xprofile/classes/class-bp-xprofile-profile-completion-widget.php:484
 msgid "Cover Photo"
@@ -6944,6 +7059,67 @@ msgstr ""
 #: bp-core/profile-search/templates/members/bps-form-default.php:134
 #: bp-templates/bp-nouveau/buddypress/common/search/profile-search.php:226
 msgid "get current location"
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1126
+msgid "Please login in order to upload file document."
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1182
+#: bp-document/bp-document-functions.php:1183
+#: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
+msgid "The uploaded file exceeds "
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1207
+msgid "Error while uploading document."
+msgstr ""
+
+#: bp-document/bp-document-functions.php:1496
+msgid "..."
+msgstr ""
+
+#: bp-document/classes/class-bp-document-component.php:166
+msgid "Search Documents&hellip;"
+msgstr ""
+
+#: bp-document/classes/class-bp-document-component.php:236
+#. translators: %s: total document count for the current user
+msgid "Documents %s"
+msgstr ""
+
+#: bp-document/classes/class-bp-document-component.php:307
+#: bp-document/classes/class-bp-document-component.php:328
+#: bp-templates/bp-nouveau/includes/document/functions.php:194
+#: bp-templates/bp-nouveau/includes/media/functions.php:213
+msgid "My Documents"
+msgstr ""
+
+#: bp-document/classes/class-bp-document-privacy.php:51
+msgid "Everyone"
+msgstr ""
+
+#: bp-document/classes/class-bp-document-privacy.php:52
+msgid "Logged In Users"
+msgstr ""
+
+#: bp-document/classes/class-bp-document-privacy.php:58
+#: bp-integrations/learndash/bp-admin-learndash-tab.php:154
+#: bp-media/classes/class-bp-media-privacy.php:59
+msgid "Group Members"
+msgstr ""
+
+#: bp-document/classes/class-bp-document-privacy.php:76
+#: bp-document/classes/class-bp-document-privacy.php:94
+msgid "There is no document."
+msgstr ""
+
+#: bp-document/screens/folders.php:27 bp-groups/screens/single/folders.php:22
+msgid "The folder you tried to access is no longer available"
+msgstr ""
+
+#: bp-document/screens/folders.php:35 bp-groups/screens/single/folders.php:30
+msgid "You do not have access to that folder."
 msgstr ""
 
 #: bp-forums/activity.php:186 bp-forums/activity.php:191
@@ -7837,6 +8013,8 @@ msgid "Reply \"%1$s\" successfully unmarked as spam."
 msgstr ""
 
 #: bp-forums/admin/replies.php:622
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:35
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:23
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:21
 #: bp-templates/bp-nouveau/buddypress/media/single-album.php:27
 msgid "Title"
@@ -8192,10 +8370,10 @@ msgstr ""
 
 #: bp-forums/admin/settings.php:1224 bp-groups/bp-groups-admin.php:1497
 #: bp-groups/classes/class-bp-group-extension.php:524
-#: bp-templates/bp-nouveau/includes/functions.php:1347
-#: bp-templates/bp-nouveau/includes/functions.php:1378
-#: bp-templates/bp-nouveau/includes/functions.php:1389
-#: bp-templates/bp-nouveau/includes/functions.php:1400
+#: bp-templates/bp-nouveau/includes/functions.php:1371
+#: bp-templates/bp-nouveau/includes/functions.php:1402
+#: bp-templates/bp-nouveau/includes/functions.php:1413
+#: bp-templates/bp-nouveau/includes/functions.php:1424
 #: bp-templates/bp-nouveau/includes/groups/template-tags.php:365
 msgid "Save Changes"
 msgstr ""
@@ -9252,7 +9430,7 @@ msgstr ""
 msgid "Organizer"
 msgstr ""
 
-#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2430
+#: bp-forums/common/locale.php:46 bp-forums/replies/functions.php:2431
 #: bp-groups/bp-groups-admin.php:1411 bp-groups/bp-groups-functions.php:1200
 #: bp-groups/bp-groups-functions.php:3640
 #: bp-groups/bp-groups-functions.php:3659
@@ -9585,7 +9763,7 @@ msgstr ""
 #: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:416
 #: bp-forums/groups.php:341 bp-forums/groups.php:522
 #: bp-forums/notifications.php:183 bp-forums/replies/functions.php:124
-#: bp-forums/replies/functions.php:547 bp-forums/replies/functions.php:1305
+#: bp-forums/replies/functions.php:548 bp-forums/replies/functions.php:1306
 #: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:552
 #: bp-forums/topics/functions.php:1211 bp-forums/topics/functions.php:1531
 #: bp-forums/topics/functions.php:1906 bp-forums/topics/functions.php:1951
@@ -9622,7 +9800,7 @@ msgid ""
 "new forums in it."
 msgstr ""
 
-#: bp-forums/forums/functions.php:212 bp-forums/replies/functions.php:299
+#: bp-forums/forums/functions.php:212 bp-forums/replies/functions.php:300
 #: bp-forums/topics/functions.php:277
 msgid "<strong>ERROR</strong>: Slow down; you move too fast."
 msgstr ""
@@ -9669,15 +9847,6 @@ msgstr ""
 
 #: bp-forums/forums/functions.php:1673
 msgid "Category"
-msgstr ""
-
-#: bp-forums/forums/functions.php:1689 bp-groups/bp-groups-admin.php:1177
-#: bp-groups/bp-groups-template.php:714 bp-groups/bp-groups-template.php:715
-#: bp-groups/bp-groups-template.php:1392
-#: bp-groups/classes/class-bp-groups-list-table.php:646
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:304
-#: bp-xprofile/classes/class-bp-xprofile-component.php:182
-msgid "Public"
 msgstr ""
 
 #: bp-forums/forums/functions.php:1690
@@ -9842,158 +10011,158 @@ msgstr ""
 msgid "<strong>ERROR</strong>: Forum does not exist."
 msgstr ""
 
-#: bp-forums/replies/functions.php:235 bp-forums/replies/functions.php:599
+#: bp-forums/replies/functions.php:235 bp-forums/replies/functions.php:600
 msgid ""
 "<strong>ERROR</strong>: This forum is a category. No replies can be created "
 "in this forum."
 msgstr ""
 
-#: bp-forums/replies/functions.php:242 bp-forums/replies/functions.php:606
+#: bp-forums/replies/functions.php:242 bp-forums/replies/functions.php:607
 msgid "<strong>ERROR</strong>: This forum has been closed to new replies."
 msgstr ""
 
-#: bp-forums/replies/functions.php:248 bp-forums/replies/functions.php:612
+#: bp-forums/replies/functions.php:248 bp-forums/replies/functions.php:613
 msgid ""
 "<strong>ERROR</strong>: This forum is private and you do not have the "
 "capability to read or create new replies in it."
 msgstr ""
 
-#: bp-forums/replies/functions.php:254 bp-forums/replies/functions.php:618
+#: bp-forums/replies/functions.php:254 bp-forums/replies/functions.php:619
 msgid ""
 "<strong>ERROR</strong>: This forum is hidden and you do not have the "
 "capability to read or create new replies in it."
 msgstr ""
 
-#: bp-forums/replies/functions.php:293 bp-forums/replies/functions.php:644
+#: bp-forums/replies/functions.php:294 bp-forums/replies/functions.php:645
 msgid "<strong>ERROR</strong>: Your reply cannot be empty."
 msgstr ""
 
-#: bp-forums/replies/functions.php:313
+#: bp-forums/replies/functions.php:314
 msgid ""
 "<strong>ERROR</strong>: Duplicate reply detected; it looks as though you've "
 "already said that!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:319
+#: bp-forums/replies/functions.php:320
 msgid "<strong>ERROR</strong>: Your reply cannot be created at this time."
 msgstr ""
 
-#: bp-forums/replies/functions.php:344
+#: bp-forums/replies/functions.php:345
 msgid "<strong>ERROR</strong>: Discussion is closed."
 msgstr ""
 
-#: bp-forums/replies/functions.php:407 bp-forums/replies/functions.php:741
+#: bp-forums/replies/functions.php:408 bp-forums/replies/functions.php:742
 msgid "<strong>ERROR</strong>: There was a problem adding the tags to the topic."
 msgstr ""
 
-#: bp-forums/replies/functions.php:536
+#: bp-forums/replies/functions.php:537
 msgid "<strong>ERROR</strong>: Reply ID not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:553
+#: bp-forums/replies/functions.php:554
 msgid "<strong>ERROR</strong>: The reply you want to edit was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:564
+#: bp-forums/replies/functions.php:565
 msgid "<strong>ERROR</strong>: You do not have permission to edit that reply."
 msgstr ""
 
-#: bp-forums/replies/functions.php:650
+#: bp-forums/replies/functions.php:651
 msgid "<strong>ERROR</strong>: Your reply cannot be edited at this time."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1281
+#: bp-forums/replies/functions.php:1282
 msgid "<strong>ERROR</strong>: Reply ID to move not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1290
+#: bp-forums/replies/functions.php:1291
 msgid "<strong>ERROR</strong>: The reply you want to move was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1300
+#: bp-forums/replies/functions.php:1301
 msgid "<strong>ERROR</strong>: The discussion you want to move from was not found."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1311 bp-forums/topics/functions.php:1222
+#: bp-forums/replies/functions.php:1312 bp-forums/topics/functions.php:1222
 #: bp-forums/topics/functions.php:1537
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the source "
 "discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1321
+#: bp-forums/replies/functions.php:1322
 msgid "<strong>ERROR</strong>: You need to choose a valid move option."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1333 bp-forums/topics/functions.php:1559
+#: bp-forums/replies/functions.php:1334 bp-forums/topics/functions.php:1559
 msgid "<strong>ERROR</strong>: Destination discussion ID not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1343
+#: bp-forums/replies/functions.php:1344
 msgid "<strong>ERROR</strong>: The discussion you want to move to was not found!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1348 bp-forums/topics/functions.php:1574
+#: bp-forums/replies/functions.php:1349 bp-forums/topics/functions.php:1574
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to edit the "
 "destination discussion!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1358 bp-forums/replies/template.php:589
+#: bp-forums/replies/functions.php:1359 bp-forums/replies/template.php:589
 #: bp-forums/templates/default/bbpress/form-reply.php:28
 #: bp-forums/topics/functions.php:1364 bp-forums/topics/functions.php:1736
 msgid "Reply To: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1405 bp-forums/topics/functions.php:1613
+#: bp-forums/replies/functions.php:1406 bp-forums/topics/functions.php:1613
 msgid ""
 "<strong>ERROR</strong>: There was a problem converting the reply into the "
 "discussion. Please try again."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1410
+#: bp-forums/replies/functions.php:1411
 msgid ""
 "<strong>ERROR</strong>: You do not have the permissions to create new "
 "discussions. The reply could not be converted into a discussion."
 msgstr ""
 
-#: bp-forums/replies/functions.php:1599
+#: bp-forums/replies/functions.php:1600
 msgid "<strong>ERROR:</strong> You do not have the permission to do that!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1612
+#: bp-forums/replies/functions.php:1613
 msgid "<strong>ERROR</strong>: There was a problem unmarking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1612
+#: bp-forums/replies/functions.php:1613
 msgid "<strong>ERROR</strong>: There was a problem marking the reply as spam!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1631
+#: bp-forums/replies/functions.php:1632
 msgid "<strong>ERROR</strong>: There was a problem trashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1639
+#: bp-forums/replies/functions.php:1640
 msgid "<strong>ERROR</strong>: There was a problem untrashing the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:1647
+#: bp-forums/replies/functions.php:1648
 msgid "<strong>ERROR</strong>: There was a problem deleting the reply!"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2118
+#: bp-forums/replies/functions.php:2119
 msgid "All Posts"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2120 bp-forums/replies/template.php:51
+#: bp-forums/replies/functions.php:2121 bp-forums/replies/template.php:51
 msgid "All Replies"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2166 bp-forums/topics/functions.php:3654
+#: bp-forums/replies/functions.php:2167 bp-forums/topics/functions.php:3654
 msgid "Replies: %s"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2400 bp-forums/users/template.php:517
+#: bp-forums/replies/functions.php:2401 bp-forums/users/template.php:517
 #: bp-groups/bp-groups-admin.php:1412 bp-groups/bp-groups-functions.php:1208
 #: bp-groups/bp-groups-functions.php:3642
 #: bp-groups/bp-groups-functions.php:3661
@@ -10005,11 +10174,11 @@ msgstr ""
 msgid "Member"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2421 bp-forums/users/template.php:503
+#: bp-forums/replies/functions.php:2422 bp-forums/users/template.php:503
 msgid "Guest"
 msgstr ""
 
-#: bp-forums/replies/functions.php:2426
+#: bp-forums/replies/functions.php:2427
 msgid "Administrator"
 msgstr ""
 
@@ -10073,6 +10242,11 @@ msgid "Unspam"
 msgstr ""
 
 #: bp-forums/replies/template.php:2300
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:49
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:51
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:43
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:113
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:62
 msgid "Move"
 msgstr ""
 
@@ -10190,30 +10364,37 @@ msgstr ""
 msgid "Email (will not be published) (required):"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:39
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:43
+#: bp-forums/templates/default/bbpress/form-attachments.php:44
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:46
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:6
 msgid "Attach a photo"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:49
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:50
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:12
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:15
+#: bp-forums/templates/default/bbpress/form-attachments.php:54
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:53
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:11
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:14
+msgid "Attach a document"
+msgstr ""
+
+#: bp-forums/templates/default/bbpress/form-attachments.php:64
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:61
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:19
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:23
 msgid "Post a GIF"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:55
+#: bp-forums/templates/default/bbpress/form-attachments.php:70
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-gif-media-search-dropdown.php:4
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-gif-media-search-dropdown.php:4
 msgid "Search GIFs"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress/form-attachments.php:69
-#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:55
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:18
-#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:24
+#: bp-forums/templates/default/bbpress/form-attachments.php:84
+#: bp-templates/bp-nouveau/buddypress/activity/comment-form.php:68
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/activity/parts/bp-whats-new-toolbar.php:25
+#: bp-templates/bp-nouveau/buddypress/common/js-templates/messages/parts/bp-messages-editor-toolbar.php:32
 msgid "Insert an emoji"
 msgstr ""
 
@@ -10368,7 +10549,7 @@ msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-reply.php:129
 #: bp-forums/templates/default/bbpress/form-topic.php:186
-#: bp-templates/bp-nouveau/includes/functions.php:1420
+#: bp-templates/bp-nouveau/includes/functions.php:1444
 msgid "Post"
 msgstr ""
 
@@ -10495,6 +10676,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:61
 msgid "Rename"
 msgstr ""
 
@@ -10629,8 +10811,8 @@ msgstr ""
 #: bp-members/classes/class-bp-members-admin.php:1046
 #: bp-members/classes/class-bp-members-component.php:345
 #: bp-templates/bp-nouveau/includes/customizer.php:161
-#: bp-xprofile/classes/class-bp-xprofile-component.php:253
-#: bp-xprofile/classes/class-bp-xprofile-component.php:373
+#: bp-xprofile/classes/class-bp-xprofile-component.php:254
+#: bp-xprofile/classes/class-bp-xprofile-component.php:374
 msgid "Profile"
 msgstr ""
 
@@ -10710,56 +10892,56 @@ msgstr ""
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:446
-#: bp-forums/templates/default/bbpress-functions.php:459
+#: bp-forums/templates/default/bbpress-functions.php:552
+#: bp-forums/templates/default/bbpress-functions.php:565
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:488
-#: bp-forums/templates/default/bbpress-functions.php:624
+#: bp-forums/templates/default/bbpress-functions.php:594
+#: bp-forums/templates/default/bbpress-functions.php:730
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:493
+#: bp-forums/templates/default/bbpress-functions.php:599
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:502
-#: bp-forums/templates/default/bbpress-functions.php:570
-#: bp-forums/templates/default/bbpress-functions.php:638
+#: bp-forums/templates/default/bbpress-functions.php:608
+#: bp-forums/templates/default/bbpress-functions.php:676
+#: bp-forums/templates/default/bbpress-functions.php:744
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:510
+#: bp-forums/templates/default/bbpress-functions.php:616
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:515
-#: bp-forums/templates/default/bbpress-functions.php:583
-#: bp-forums/templates/default/bbpress-functions.php:651
+#: bp-forums/templates/default/bbpress-functions.php:621
+#: bp-forums/templates/default/bbpress-functions.php:689
+#: bp-forums/templates/default/bbpress-functions.php:757
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:523
-#: bp-forums/templates/default/bbpress-functions.php:591
-#: bp-forums/templates/default/bbpress-functions.php:659
+#: bp-forums/templates/default/bbpress-functions.php:629
+#: bp-forums/templates/default/bbpress-functions.php:697
+#: bp-forums/templates/default/bbpress-functions.php:765
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:556
+#: bp-forums/templates/default/bbpress-functions.php:662
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:561
+#: bp-forums/templates/default/bbpress-functions.php:667
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:578
-#: bp-forums/templates/default/bbpress-functions.php:646
+#: bp-forums/templates/default/bbpress-functions.php:684
+#: bp-forums/templates/default/bbpress-functions.php:752
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:629
+#: bp-forums/templates/default/bbpress-functions.php:735
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
@@ -11259,18 +11441,6 @@ msgid "%s sent you an invitation to connect"
 msgstr ""
 
 #: bp-friends/bp-friends-template.php:81
-#: bp-friends/classes/class-bp-core-friends-widget.php:107
-#: bp-friends/classes/class-bp-friends-component.php:197
-#: bp-friends/classes/class-bp-friends-component.php:279
-#: bp-media/classes/class-bp-media-privacy.php:54
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:26
-#: bp-templates/bp-nouveau/includes/groups/functions.php:143
-#: bp-templates/bp-nouveau/includes/members/functions.php:40
-#: bp-xprofile/classes/class-bp-xprofile-component.php:197
-msgid "My Connections"
-msgstr ""
-
-#: bp-friends/bp-friends-template.php:81
 #: bp-friends/classes/class-bp-core-friends-widget.php:108
 msgid "%s's Connections"
 msgstr ""
@@ -11404,7 +11574,7 @@ msgid "Mutual Connections"
 msgstr ""
 
 #: bp-friends/classes/class-bp-friends-component.php:219
-#: bp-groups/classes/class-bp-groups-component.php:872
+#: bp-groups/classes/class-bp-groups-component.php:886
 msgid "Requests"
 msgstr ""
 
@@ -11573,8 +11743,9 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
-#: bp-templates/bp-nouveau/includes/functions.php:1357
-#: bp-templates/bp-nouveau/includes/functions.php:1409
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:83
+#: bp-templates/bp-nouveau/includes/functions.php:1381
+#: bp-templates/bp-nouveau/includes/functions.php:1433
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1275
 #: bp-xprofile/classes/class-bp-xprofile-group.php:816
 msgid "Save"
@@ -11730,14 +11901,6 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1185
 msgid "Who can invite others to join this group?"
-msgstr ""
-
-#: bp-groups/bp-groups-admin.php:1187 bp-groups/bp-groups-admin.php:1208
-#: bp-groups/bp-groups-admin.php:1220
-#: bp-templates/bp-nouveau/includes/groups/functions.php:122
-#: bp-templates/bp-nouveau/includes/members/functions.php:27
-#: bp-xprofile/classes/class-bp-xprofile-component.php:190
-msgid "All Members"
 msgstr ""
 
 #: bp-groups/bp-groups-admin.php:1188 bp-groups/bp-groups-admin.php:1209
@@ -12252,7 +12415,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-template.php:5317
 #: bp-templates/bp-nouveau/includes/blogs/functions.php:110
-#: bp-templates/bp-nouveau/includes/groups/functions.php:642
+#: bp-templates/bp-nouveau/includes/groups/functions.php:644
 #: bp-templates/bp-nouveau/includes/members/functions.php:97
 #: bp-templates/bp-nouveau/includes/members/functions.php:115
 msgid "Alphabetical"
@@ -12334,12 +12497,12 @@ msgid "Search Groups&hellip;"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:419
-#: bp-groups/classes/class-bp-groups-component.php:841
+#: bp-groups/classes/class-bp-groups-component.php:855
 msgid "Photo"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:552
-#: bp-groups/classes/class-bp-groups-component.php:938
+#: bp-groups/classes/class-bp-groups-component.php:952
 #. translators: %s: Group count for the current user
 #. translators: %s: Group invitation count for the current user
 msgid "Groups %s"
@@ -12347,10 +12510,10 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:581
 #: bp-groups/classes/class-bp-groups-component.php:615
-#: bp-groups/classes/class-bp-groups-component.php:961
-#: bp-groups/classes/class-bp-groups-component.php:1001
+#: bp-groups/classes/class-bp-groups-component.php:975
+#: bp-groups/classes/class-bp-groups-component.php:1015
 #: bp-templates/bp-nouveau/includes/groups/classes.php:234
-#: bp-templates/bp-nouveau/includes/groups/functions.php:571
+#: bp-templates/bp-nouveau/includes/groups/functions.php:573
 msgid "My Groups"
 msgstr ""
 
@@ -12364,7 +12527,7 @@ msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:664
 #: bp-templates/bp-nouveau/includes/groups/classes.php:324
-#: bp-templates/bp-nouveau/includes/groups/functions.php:826
+#: bp-templates/bp-nouveau/includes/groups/functions.php:828
 msgid "Feed"
 msgstr ""
 
@@ -12379,7 +12542,7 @@ msgstr ""
 #: bp-invites/classes/class-bp-invites-component.php:309
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:64
 #: bp-templates/bp-nouveau/buddypress/members/single/invites/send-invites.php:5
-#: bp-templates/bp-nouveau/includes/functions.php:1437
+#: bp-templates/bp-nouveau/includes/functions.php:1461
 #: bp-templates/bp-nouveau/includes/groups/classes.php:247
 #: bp-templates/bp-nouveau/includes/groups/functions.php:133
 #: bp-templates/bp-nouveau/includes/groups/functions.php:350
@@ -12392,38 +12555,38 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/pending-invites.php:12
 #: bp-templates/bp-nouveau/includes/groups/functions.php:127
 #: bp-templates/bp-nouveau/includes/groups/functions.php:387
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1213
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1230
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1215
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1232
 msgid "Pending Invites"
 msgstr ""
 
 #: bp-groups/classes/class-bp-groups-component.php:782
-#: bp-media/bp-media-filters.php:853
-#: bp-media/classes/class-bp-media-component.php:276
+#: bp-media/bp-media-filters.php:965
+#: bp-media/classes/class-bp-media-component.php:298
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:12
 #: bp-templates/bp-nouveau/includes/groups/classes.php:270
 msgid "Albums"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:798
+#: bp-groups/classes/class-bp-groups-component.php:812
 #: bp-templates/bp-nouveau/includes/groups/classes.php:253
 msgid "Manage"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:933
+#: bp-groups/classes/class-bp-groups-component.php:947
 msgid "No Pending Invites"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:944
+#: bp-groups/classes/class-bp-groups-component.php:958
 #. translators: %s: Group invitation count for the current user
 msgid "Pending Invites %s"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:980
+#: bp-groups/classes/class-bp-groups-component.php:994
 msgid "Create Group"
 msgstr ""
 
-#: bp-groups/classes/class-bp-groups-component.php:1028
+#: bp-groups/classes/class-bp-groups-component.php:1042
 msgid "No Group Profile Photo"
 msgstr ""
 
@@ -12734,11 +12897,6 @@ msgstr ""
 msgid "Loggedin Users"
 msgstr ""
 
-#: bp-integrations/learndash/bp-admin-learndash-tab.php:154
-#: bp-media/classes/class-bp-media-privacy.php:58
-msgid "Group Members"
-msgstr ""
-
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:155
 msgid "No one"
 msgstr ""
@@ -13002,6 +13160,8 @@ msgid "Last"
 msgstr ""
 
 #: bp-integrations/learndash/buddypress/Reports.php:111
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:63
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:51
 msgid "Next"
 msgstr ""
 
@@ -13576,43 +13736,43 @@ msgid ""
 "bbPress to re-enable BuddyBoss Platform."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:756 bp-media/bp-media-filters.php:772
-#: bp-media/bp-media-filters.php:773 bp-media/bp-media-filters.php:826
-#: bp-media/bp-media-filters.php:961
+#: bp-media/bp-media-filters.php:868 bp-media/bp-media-filters.php:884
+#: bp-media/bp-media-filters.php:885 bp-media/bp-media-filters.php:938
+#: bp-media/bp-media-filters.php:1073
 msgid "Import Media"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:831
+#: bp-media/bp-media-filters.php:943
 msgid ""
 "BuddyBoss Media plugin database tables do not exist, meaning you have "
 "nothing to import."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:848
+#: bp-media/bp-media-filters.php:960
 msgid "Your database is being updated in the background."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:850
+#: bp-media/bp-media-filters.php:962
 msgid "Migration in progress"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:855 bp-media/bp-media-filters.php:861
-#: bp-media/bp-media-filters.php:867 bp-media/bp-media-filters.php:873
-#: bp-media/bp-media-filters.php:879
+#: bp-media/bp-media-filters.php:967 bp-media/bp-media-filters.php:973
+#: bp-media/bp-media-filters.php:979 bp-media/bp-media-filters.php:985
+#: bp-media/bp-media-filters.php:991
 msgid "out of"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:891 bp-media/bp-media-filters.php:905
+#: bp-media/bp-media-filters.php:1003 bp-media/bp-media-filters.php:1017
 msgid "Re-Run Migration"
 msgstr ""
 
-#: bp-media/bp-media-filters.php:900 bp-media/bp-media-functions.php:2071
+#: bp-media/bp-media-filters.php:1012 bp-media/bp-media-functions.php:2097
 msgid ""
 "BuddyBoss Media data update is complete! Any previously uploaded member "
 "photos should display in their profiles now."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:912
+#: bp-media/bp-media-filters.php:1024
 msgid ""
 "Import your existing members photo uploads, if you were previously using <a "
 "href=\"https://www.buddyboss.com/product/buddyboss-media/\">BuddyBoss "
@@ -13620,7 +13780,7 @@ msgid ""
 "old photos into the new Media component."
 msgstr ""
 
-#: bp-media/bp-media-filters.php:959
+#: bp-media/bp-media-filters.php:1071
 msgid ""
 "We have found some media uploaded from the <strong>BuddyBoss "
 "Media</strong></strong> plugin, which is not compatible with BuddyBoss "
@@ -13633,15 +13793,11 @@ msgstr ""
 msgid "Please login in order to upload file media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:115 bp-media/bp-media-functions.php:116
-msgid "The uploaded file exceeds "
-msgstr ""
-
 #: bp-media/bp-media-functions.php:146
 msgid "Error while uploading media."
 msgstr ""
 
-#: bp-media/bp-media-functions.php:2072
+#: bp-media/bp-media-functions.php:2098
 msgid "BuddyBoss Media data update is failing!"
 msgstr ""
 
@@ -13649,132 +13805,136 @@ msgstr ""
 msgid "Photo Uploading"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:29
+#: bp-media/bp-media-settings.php:34
 msgid "Emoji"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:33
+#: bp-media/bp-media-settings.php:38
 msgid "Animated GIFs"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:61
+#: bp-media/bp-media-settings.php:66 bp-media/bp-media-settings.php:85
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:83 bp-media/bp-media-settings.php:640
+#: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:692
 msgid "GIPHY API Key"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:107
+#: bp-media/bp-media-settings.php:145
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-settings.php:134
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:179 bp-media/bp-media-settings.php:184
-#: bp-media/bp-media-settings.php:189
+#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:236
+#: bp-media/bp-media-settings.php:241
 msgid "&#160;"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:285
+#: bp-media/bp-media-settings.php:337
 msgid "Allow members to upload photos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:296 bp-media/bp-media-settings.php:352
+#: bp-media/bp-media-settings.php:348 bp-media/bp-media-settings.php:404
 msgid "Enable Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:341
+#: bp-media/bp-media-settings.php:393
 msgid "Allow members to upload photos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:397
+#: bp-media/bp-media-settings.php:449
 msgid "Allow members to upload photos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:429
+#: bp-media/bp-media-settings.php:481
 msgid "Allow members to upload photos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:488
+#: bp-media/bp-media-settings.php:540
 msgid "Allow members to use emoji in <strong>profile activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:507
+#: bp-media/bp-media-settings.php:559
 msgid "Allow members to use emoji in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:526
+#: bp-media/bp-media-settings.php:578
 msgid "Allow members to use emoji in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:545
+#: bp-media/bp-media-settings.php:597
 msgid "Allow members to use emoji in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:647
+#: bp-media/bp-media-settings.php:699
 msgid "This feature requires an account at"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:649
+#: bp-media/bp-media-settings.php:701
 msgid "Create your account, and then click"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:651
+#: bp-media/bp-media-settings.php:703
 msgid "Once done, copy the API key and paste it in the field above."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:693
+#: bp-media/bp-media-settings.php:745
 msgid ""
 "Allow members to use animated GIFs in <strong>profile activity "
 "posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:712
+#: bp-media/bp-media-settings.php:764
 msgid "Allow members to use animated GIFs in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:731
+#: bp-media/bp-media-settings.php:783
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:750
+#: bp-media/bp-media-settings.php:802
 msgid "Allow members to use animated GIFs in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:171
+#: bp-media/bp-media-settings.php:900
+msgid "Allow members to upload documents in <strong>private messages</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:932
+msgid "Allow members to upload documents in <strong>groups</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:964
+msgid "Allow members to upload documents in <strong>forum discussions</strong>"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:996
+msgid "Allow members to upload documents in <strong>profiles</strong>"
+msgstr ""
+
+#: bp-media/classes/class-bp-media-component.php:192
 msgid "Search Photos&hellip;"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:240
+#: bp-media/classes/class-bp-media-component.php:262
 #. translators: %s: total media count for the current user
 msgid "Photos %s"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:319
-#: bp-media/classes/class-bp-media-component.php:350
-#: bp-templates/bp-nouveau/includes/media/functions.php:158
+#: bp-media/classes/class-bp-media-component.php:341
+#: bp-media/classes/class-bp-media-component.php:372
+#: bp-templates/bp-nouveau/includes/document/functions.php:170
+#: bp-templates/bp-nouveau/includes/media/functions.php:189
 msgid "My Photos"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-component.php:329
+#: bp-media/classes/class-bp-media-component.php:351
 msgid "My Albums"
 msgstr ""
 
-#: bp-media/classes/class-bp-media-privacy.php:51
-msgid "Everyone"
-msgstr ""
-
-#: bp-media/classes/class-bp-media-privacy.php:52
-msgid "Logged In Users"
-msgstr ""
-
-#: bp-media/classes/class-bp-media-privacy.php:53
-#: bp-xprofile/classes/class-bp-xprofile-component.php:186
-msgid "Only Me"
-msgstr ""
-
-#: bp-media/classes/class-bp-media-privacy.php:76
-#: bp-media/classes/class-bp-media-privacy.php:94
+#: bp-media/classes/class-bp-media-privacy.php:77
+#: bp-media/classes/class-bp-media-privacy.php:95
 msgid "There is no media."
 msgstr ""
 
@@ -13824,7 +13984,7 @@ msgstr ""
 #: bp-settings/classes/class-bp-settings-component.php:201
 #: bp-settings/classes/class-bp-settings-component.php:270
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/delete-account.php:12
-#: bp-templates/bp-nouveau/includes/functions.php:1368
+#: bp-templates/bp-nouveau/includes/functions.php:1392
 msgid "Delete Account"
 msgstr ""
 
@@ -14137,7 +14297,7 @@ msgid "There are no users currently online"
 msgstr ""
 
 #: bp-members/classes/class-bp-core-whos-online-widget.php:182
-#: bp-templates/bp-nouveau/includes/functions.php:879
+#: bp-templates/bp-nouveau/includes/functions.php:883
 msgid "Sorry, no members were found."
 msgstr ""
 
@@ -14589,7 +14749,7 @@ msgid "Messages marked as read"
 msgstr ""
 
 #: bp-messages/actions/bulk-manage.php:67
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:930
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:994
 msgid "Messages marked as unread."
 msgstr ""
 
@@ -14662,7 +14822,7 @@ msgid "Message marked unread."
 msgstr ""
 
 #: bp-messages/actions/view.php:42
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:348
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:380
 msgid "Your reply was sent successfully"
 msgstr ""
 
@@ -14698,7 +14858,7 @@ msgid "You need to be connected with this member in order to send a message."
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:214
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:614
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:646
 msgid "You need to be connected with this member to continue this conversation."
 msgstr ""
 
@@ -14709,7 +14869,7 @@ msgid ""
 msgstr ""
 
 #: bp-messages/bp-messages-functions.php:216
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:612
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:644
 msgid "You need to be connected with all recipients to continue this conversation."
 msgstr ""
 
@@ -14800,8 +14960,10 @@ msgid "Select:"
 msgstr ""
 
 #: bp-messages/bp-messages-template.php:1020
-#: bp-templates/bp-nouveau/buddypress/media/entry.php:22
-#: bp-templates/bp-nouveau/includes/media/functions.php:117
+#: bp-templates/bp-nouveau/buddypress/document/entry.php:21
+#: bp-templates/bp-nouveau/buddypress/media/entry.php:26
+#: bp-templates/bp-nouveau/includes/document/functions.php:123
+#: bp-templates/bp-nouveau/includes/media/functions.php:142
 #: bp-xprofile/classes/class-bp-xprofile-field-type-gender.php:186
 #: bp-xprofile/classes/class-bp-xprofile-field-type-multiselectbox.php:208
 #: bp-xprofile/classes/class-bp-xprofile-field-type-selectbox.php:178
@@ -15252,10 +15414,13 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:57
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:56
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
-#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:26
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:56
-#: bp-templates/bp-nouveau/includes/media/ajax.php:132
+#: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:59
+#: bp-templates/bp-nouveau/includes/document/ajax.php:108
+#: bp-templates/bp-nouveau/includes/media/ajax.php:144
 msgid "Load More"
 msgstr ""
 
@@ -15604,6 +15769,148 @@ msgstr ""
 msgid "Please add fields to search members."
 msgstr ""
 
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:17
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:16
+msgid "Move "
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:17
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:16
+msgid " to "
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:25
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:28
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:75
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:63
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:43
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:60
+msgid "Search Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:30
+#: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:33
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:80
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:68
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:48
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:65
+msgid "Select Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:27
+msgid "- Click to Download"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:32
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:102
+msgid "Download"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:38
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:108
+msgid "More actions"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:56
+msgid "Your browser does not support the audio element."
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:93
+msgid "Click to expand"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:100
+msgid "Collapse"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/add-document.php:13
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:47
+msgid "Add Documents"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/add-folder.php:13
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:51
+msgid "Add Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:28
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:99
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:16
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:86
+msgid "Create Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:36
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:24
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:34
+msgid "Enter Folder Title"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:73
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:61
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:41
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:58
+msgid "Destination Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:97
+#: bp-templates/bp-nouveau/buddypress/document/create-folder.php:85
+msgid "Previous"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:28
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:31
+msgid "Write something about your documents, to be shown on the group feed"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:28
+msgid "Write something about your documents, to be shown on your timeline"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:65
+msgid "Add more documents"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:66
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:74
+#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:90
+msgid "Done"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:28
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:62
+msgid "Edit Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:33
+msgid "Rename Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:41
+#: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:36
+#: bp-templates/bp-nouveau/buddypress/members/single/document.php:32
+msgid "Search Documents"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/single-folder.php:64
+msgid "Delete Folder"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:18
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:18
+msgid "Select Photos"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:31
+#: bp-templates/bp-nouveau/buddypress/media/uploader.php:31
+msgid "Write something about your photos, to be shown on your timeline"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/uploader.php:73
+msgid "Add more photos"
+msgstr ""
+
 #: bp-templates/bp-nouveau/buddypress/groups/create.php:11
 msgid "Create A New Group"
 msgstr ""
@@ -15677,7 +15984,7 @@ msgid "To skip the group photo upload process select \"Next Step\"."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/groups/single/admin/group-avatar.php:61
-#: bp-templates/bp-nouveau/includes/functions.php:871
+#: bp-templates/bp-nouveau/includes/functions.php:875
 msgid ""
 "To remove the existing group photo, please use the delete group profile "
 "photo button."
@@ -15855,11 +16162,6 @@ msgstr ""
 msgid "Loading Members. Please Wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:74
-msgid "Done"
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:65
 msgid "Select Members"
 msgstr ""
@@ -15904,7 +16206,7 @@ msgstr ""
 msgid "Manage Membership Requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:28
+#: bp-templates/bp-nouveau/buddypress/media/activity-entry.php:32
 msgid "More Photos"
 msgstr ""
 
@@ -15922,7 +16224,7 @@ msgstr[1] ""
 
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:14
 #: bp-templates/bp-nouveau/buddypress/media/create-album.php:16
-#: bp-templates/bp-nouveau/buddypress/media/create-album.php:44
+#: bp-templates/bp-nouveau/buddypress/media/create-album.php:43
 msgid "Create Album"
 msgstr ""
 
@@ -15946,20 +16248,8 @@ msgstr ""
 msgid "Delete Album"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:18
-msgid "Select Photos"
-msgstr ""
-
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:31
 msgid "Write something about your photos, to be shown on the group feed"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:31
-msgid "Write something about your photos, to be shown on your timeline"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/media/uploader.php:73
-msgid "Add More Media"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/activate.php:21
@@ -16043,8 +16333,8 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/members/single/groups/invites.php:10
 #: bp-templates/bp-nouveau/buddypress/members/single/settings/group-invites.php:11
-#: bp-templates/bp-nouveau/includes/groups/functions.php:466
-#: bp-templates/bp-nouveau/includes/groups/functions.php:494
+#: bp-templates/bp-nouveau/includes/groups/functions.php:468
+#: bp-templates/bp-nouveau/includes/groups/functions.php:496
 msgid "Group Invites"
 msgstr ""
 
@@ -16325,8 +16615,8 @@ msgid "and you."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/search/loop/message.php:19
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:396
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:401
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:438
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:443
 msgid "View Conversation"
 msgstr ""
 
@@ -16381,81 +16671,84 @@ msgstr ""
 msgid "Try different keywords&hellip;"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:562
+#: bp-templates/bp-nouveau/buddypress-functions.php:565
 msgid ""
 "As you are the only organizer of this group, you cannot leave it. You can "
 "either delete the group or promote another member to be an organizer first "
 "and then leave the group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:563
+#: bp-templates/bp-nouveau/buddypress-functions.php:566
 msgid "Are you sure you want to remove your connection with this member?"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:565
+#: bp-templates/bp-nouveau/buddypress-functions.php:568
 msgid "Are you sure you want to delete this set? This cannot be undone."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:566
+#: bp-templates/bp-nouveau/buddypress-functions.php:569
 msgid "View previous comments"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress-functions.php:567
+#: bp-templates/bp-nouveau/buddypress-functions.php:570
 msgid ""
 "Your profile has unsaved changes. If you leave the page, the changes will "
 "be lost."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:106
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:353
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:112
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:395
 msgid "Unlike"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:117
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:123
 msgid "My Likes"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:150
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:341
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:156
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:383
 msgid "Like"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:159
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:165
 #: bp-templates/bp-nouveau/includes/functions.php:803
 msgid "Sorry, there was no activity found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:203
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:209
 msgid "There was a problem when deleting. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:275
-#: bp-templates/bp-nouveau/includes/media/ajax.php:574
-#: bp-templates/bp-nouveau/includes/media/ajax.php:611
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:281
+#: bp-templates/bp-nouveau/includes/document/ajax.php:661
+#: bp-templates/bp-nouveau/includes/document/ajax.php:698
+#: bp-templates/bp-nouveau/includes/media/ajax.php:656
+#: bp-templates/bp-nouveau/includes/media/ajax.php:693
+#: bp-templates/bp-nouveau/includes/media/ajax.php:730
 msgid "There was a problem displaying the content. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:467
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:473
 msgid "No activities were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:568
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:581
 msgid "There was a problem posting your update. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:585
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:598
 msgid "Update posted."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:585
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:598
 msgid "View activity."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:613
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:626
 msgid "There was a problem marking this activity as spam. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/ajax.php:662
+#: bp-templates/bp-nouveau/includes/activity/ajax.php:675
 msgid "This activity has been marked as spam and is no longer visible."
 msgstr ""
 
@@ -16519,13 +16812,21 @@ msgstr ""
 msgid "New update comment replies"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/activity/template-tags.php:722
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:764
 #. translators: 1: user profile link, 2: user name, 3: activity permalink, 4:
 #. activity recorded date, 5: activity timestamp, 6: activity human time since
 msgid ""
 "<a class=\"author-name\" href=\"%1$s\">%2$s</a> <a href=\"%3$s\" "
 "class=\"activity-time-since\"><time class=\"time-since\" datetime=\"%4$s\" "
 "data-bp-timestamp=\"%5$d\">%6$s</time></a>"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1090
+msgid "Edit Album Privacy"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/activity/template-tags.php:1092
+msgid "Edit Post Privacy"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/activity/widgets.php:35
@@ -16598,6 +16899,142 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/includes/customizer.php:196
 msgid "Reorder the primary navigation for a member."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:130
+#: bp-templates/bp-nouveau/includes/document/ajax.php:171
+#: bp-templates/bp-nouveau/includes/media/ajax.php:166
+msgid "There was a problem when trying to upload this file."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:239
+#: bp-templates/bp-nouveau/includes/document/ajax.php:369
+#: bp-templates/bp-nouveau/includes/document/ajax.php:961
+#: bp-templates/bp-nouveau/includes/media/ajax.php:234
+#: bp-templates/bp-nouveau/includes/media/ajax.php:364
+msgid "Please upload media before saving."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:300
+#: bp-templates/bp-nouveau/includes/media/ajax.php:295
+msgid "Please select media to delete."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:323
+#: bp-templates/bp-nouveau/includes/media/ajax.php:318
+msgid "There was a problem deleting media."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:378
+#: bp-templates/bp-nouveau/includes/media/ajax.php:373
+msgid "Please provide album to move media."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:403
+#: bp-templates/bp-nouveau/includes/media/ajax.php:398
+msgid "There was a problem when trying to move the media."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:466
+#: bp-templates/bp-nouveau/includes/media/ajax.php:461
+msgid "Please enter title of album."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:483
+#: bp-templates/bp-nouveau/includes/media/ajax.php:478
+msgid "There was a problem when trying to create the album."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:544
+#: bp-templates/bp-nouveau/includes/media/ajax.php:539
+msgid "Please provide ID of album to delete."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:553
+#: bp-templates/bp-nouveau/includes/media/ajax.php:548
+msgid "You do not have permission to delete this album."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:614
+#: bp-templates/bp-nouveau/includes/media/ajax.php:609
+msgid "Please provide ID of folder to delete."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:623
+#: bp-templates/bp-nouveau/includes/media/ajax.php:618
+msgid "You do not have permission to delete this folder."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:710
+#: bp-templates/bp-nouveau/includes/media/ajax.php:705
+msgid "Please provide attachment id to delete."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1022
+msgid "Please enter title of folder."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/ajax.php:1044
+msgid "There was a problem when trying to create the folder."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:124
+#: bp-templates/bp-nouveau/includes/media/functions.php:143
+msgid "Unselect"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:126
+#: bp-templates/bp-nouveau/includes/media/functions.php:145
+msgid "Unselect All"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:127
+#: bp-templates/bp-nouveau/includes/media/functions.php:146
+msgid "Sorry, no photos were found"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:129
+#: bp-templates/bp-nouveau/includes/media/functions.php:148
+msgid "Uploading"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:130
+#: bp-templates/bp-nouveau/includes/media/functions.php:149
+msgid "%d out of %d uploaded"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:131
+#: bp-templates/bp-nouveau/includes/media/functions.php:150
+msgid ""
+"Are you sure you want to delete this album? Photos in this album will also "
+"be deleted."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:132
+#: bp-templates/bp-nouveau/includes/media/functions.php:151
+msgid ""
+"Are you sure you want to delete this folder? Documents in this folder will "
+"also be deleted."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:133
+#: bp-templates/bp-nouveau/includes/media/functions.php:152
+msgid "There was a problem deleting the album."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:134
+#: bp-templates/bp-nouveau/includes/media/functions.php:153
+msgid "There was a problem deleting the folder."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:159
+#: bp-templates/bp-nouveau/includes/media/functions.php:178
+msgid "All Photos"
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/document/functions.php:183
+#: bp-templates/bp-nouveau/includes/media/functions.php:202
+msgid "All Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/follow/ajax.php:89
@@ -16721,102 +17158,106 @@ msgid "Requesting the group photos. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:843
-msgid "Sorry, no group members were found."
+msgid "Requesting the group documents. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:847
-msgid "Sorry, there was no member with that name found within this group."
+msgid "Sorry, no group members were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:851
-msgid "This group has no members."
+msgid "Sorry, there was no member with that name found within this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:855
-msgid "There are no pending membership requests."
+msgid "This group has no members."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:859
-msgid "You have already requested to join this group."
+msgid "There are no pending membership requests."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:863
-msgid "Loading the members who requested to join the group. Please wait."
+msgid "You have already requested to join this group."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:867
+msgid "Loading the members who requested to join the group. Please wait."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/functions.php:871
 msgid ""
 "WARNING: Deleting this group will completely remove ALL content associated "
 "with it. There is no way back. Please be careful with this option."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:875
+#: bp-templates/bp-nouveau/includes/functions.php:879
 msgid "Loading members of the community. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:883
+#: bp-templates/bp-nouveau/includes/functions.php:887
 msgid "You have no pending requests to connect."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:887
+#: bp-templates/bp-nouveau/includes/functions.php:891
 msgid "You have no mutual connections with this member."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:891
+#: bp-templates/bp-nouveau/includes/functions.php:895
 msgid "You have no outstanding group invites."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:895
+#: bp-templates/bp-nouveau/includes/functions.php:899
 msgid "This member has no notifications."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:899
+#: bp-templates/bp-nouveau/includes/functions.php:903
 msgid "%s did not save any profile information yet."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:903
+#: bp-templates/bp-nouveau/includes/functions.php:907
 msgid ""
 "Deleting this account will delete all of the content it has created. It "
 "will be completely unrecoverable."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:907
+#: bp-templates/bp-nouveau/includes/functions.php:911
 msgid "Loading member's updates. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:911
+#: bp-templates/bp-nouveau/includes/functions.php:915
 msgid "Loading member's blog. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:915
+#: bp-templates/bp-nouveau/includes/functions.php:919
 msgid "Loading member's friends. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:919
+#: bp-templates/bp-nouveau/includes/functions.php:923
 msgid "Loading member's mutual connections. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:923
+#: bp-templates/bp-nouveau/includes/functions.php:927
 msgid "Loading member's groups. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:927
+#: bp-templates/bp-nouveau/includes/functions.php:931
 msgid "Loading notifications. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:931
+#: bp-templates/bp-nouveau/includes/functions.php:935
 msgid ""
 "Currently every member of the community can invite you to join their "
 "groups. Optionally, you may restrict group invites to your connections only."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:935
+#: bp-templates/bp-nouveau/includes/functions.php:939
 msgid ""
 "Currently only your connections may invite you to join a group. Uncheck "
 "this box to allow any member to send invites."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:939
+#: bp-templates/bp-nouveau/includes/functions.php:943
 msgid ""
 "You may download a copy of all data you have created on this platform. "
 "Click the button below to start a new request. An email will be sent to you "
@@ -16824,96 +17265,110 @@ msgid ""
 "approved, a zip file will be generated and emailed to you."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:943
+#: bp-templates/bp-nouveau/includes/functions.php:947
 msgid "Loading member's photos. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:947
 #: bp-templates/bp-nouveau/includes/functions.php:951
-msgid "Sorry, no photos were found."
+msgid "Loading member's documents. Please wait."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:955
-msgid "Sorry, no albums were found."
+#: bp-templates/bp-nouveau/includes/functions.php:967
+msgid "Sorry, no photos were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:959
-msgid "Loading photos from the album. Please wait."
-msgstr ""
-
 #: bp-templates/bp-nouveau/includes/functions.php:963
-msgid "Loading photos from the community. Please wait."
+#: bp-templates/bp-nouveau/includes/functions.php:971
+msgid "Sorry, no documents were found."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/functions.php:975
+msgid "Sorry, no albums were found."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/functions.php:979
+msgid "Loading photos from the album. Please wait."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/functions.php:983
+msgid "Loading photos from the community. Please wait."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/functions.php:987
+msgid "Loading documents from the community. Please wait."
+msgstr ""
+
+#: bp-templates/bp-nouveau/includes/functions.php:999
 msgid ""
 "Before you can login, you need to confirm your email address via the email "
 "we just sent to you."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:980
+#: bp-templates/bp-nouveau/includes/functions.php:1004
 msgid "This member has no unread notifications."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:983
+#: bp-templates/bp-nouveau/includes/functions.php:1007
 msgid "You have no unread notifications."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:986
+#: bp-templates/bp-nouveau/includes/functions.php:1010
 msgid "You have no notifications."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:991
+#: bp-templates/bp-nouveau/includes/functions.php:1015
 msgid ""
 "Deleting your account will delete all of the content you have created. It "
 "will be completely irrecoverable."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:993
+#: bp-templates/bp-nouveau/includes/functions.php:1017
 msgid "Loading your updates. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:995
+#: bp-templates/bp-nouveau/includes/functions.php:1019
 msgid "Loading your blogs. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:997
+#: bp-templates/bp-nouveau/includes/functions.php:1021
 msgid "Loading your connections. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:999
+#: bp-templates/bp-nouveau/includes/functions.php:1023
 msgid "Loading your groups. Please wait."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:1052
-#: bp-templates/bp-nouveau/includes/functions.php:1186
+#: bp-templates/bp-nouveau/includes/functions.php:1076
+#: bp-templates/bp-nouveau/includes/functions.php:1210
 msgid "Confirm Email"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:1068
-#: bp-templates/bp-nouveau/includes/functions.php:1131
+#: bp-templates/bp-nouveau/includes/functions.php:1092
+#: bp-templates/bp-nouveau/includes/functions.php:1155
 msgid "Confirm Password"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:1078
-#: bp-templates/bp-nouveau/includes/functions.php:1141
-#: bp-templates/bp-nouveau/includes/functions.php:1204
-#: bp-templates/bp-nouveau/includes/functions.php:1259
+#: bp-templates/bp-nouveau/includes/functions.php:1102
+#: bp-templates/bp-nouveau/includes/functions.php:1165
+#: bp-templates/bp-nouveau/includes/functions.php:1228
+#: bp-templates/bp-nouveau/includes/functions.php:1283
 msgid "Site URL"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:1086
-#: bp-templates/bp-nouveau/includes/functions.php:1149
-#: bp-templates/bp-nouveau/includes/functions.php:1212
-#: bp-templates/bp-nouveau/includes/functions.php:1267
+#: bp-templates/bp-nouveau/includes/functions.php:1110
+#: bp-templates/bp-nouveau/includes/functions.php:1173
+#: bp-templates/bp-nouveau/includes/functions.php:1236
+#: bp-templates/bp-nouveau/includes/functions.php:1291
 msgid "Site Title"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:1337
+#: bp-templates/bp-nouveau/includes/functions.php:1361
 msgid "Create Account"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/functions.php:1428
+#: bp-templates/bp-nouveau/includes/functions.php:1452
 msgid "Request Data Export"
 msgstr ""
 
@@ -17060,67 +17515,67 @@ msgstr ""
 msgid "All members of this group are invited."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:524
+#: bp-templates/bp-nouveau/includes/groups/functions.php:526
 msgid "Group invites preferences saved."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:526
+#: bp-templates/bp-nouveau/includes/groups/functions.php:528
 msgid "You are not allowed to perform this action."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:640
+#: bp-templates/bp-nouveau/includes/groups/functions.php:642
 msgid "Most Members"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:641
+#: bp-templates/bp-nouveau/includes/groups/functions.php:643
 msgid "Newly Created"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:743
+#: bp-templates/bp-nouveau/includes/groups/functions.php:745
 msgid ""
 "Customize the navigation menu for groups. See your changes by navigating to "
 "a group in the live-preview window."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:838
+#: bp-templates/bp-nouveau/includes/groups/functions.php:840
 msgid "Display the group navigation vertically."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:844
+#: bp-templates/bp-nouveau/includes/groups/functions.php:846
 msgid "Group navigation order"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:845
+#: bp-templates/bp-nouveau/includes/groups/functions.php:847
 msgid ""
 "Set the default navigation tab when viewing a group. The dropdown only "
 "shows tabs that are available to all groups."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:853
+#: bp-templates/bp-nouveau/includes/groups/functions.php:855
 msgid "Reorder the primary navigation for a group."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1172
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1174
 msgid "Pending Group membership requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1177
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1179
 msgid "Accepted Group membership requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1182
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1184
 msgid "Rejected Group membership requests"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1187
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1189
 msgid "Group Organizer promotions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1192
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1194
 msgid "Group Moderator promotions"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/functions.php:1197
+#: bp-templates/bp-nouveau/includes/groups/functions.php:1199
 msgid "Group invitations"
 msgstr ""
 
@@ -17167,95 +17622,28 @@ msgstr ""
 msgid "Remove from group"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1325
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1329
 msgid "Groups default front page"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1343
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1347
 msgid "widgets (content blocks)"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1380
+#: bp-templates/bp-nouveau/includes/groups/template-tags.php:1384
 msgid "Notify group members of these changes via email"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:154
-msgid "There was a problem when trying to upload this file."
+#: bp-templates/bp-nouveau/includes/media/ajax.php:742
+msgid "Please provide media id to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:222
-#: bp-templates/bp-nouveau/includes/media/ajax.php:352
-msgid "Please upload media before saving."
+#: bp-templates/bp-nouveau/includes/media/ajax.php:751
+msgid "Please provide privacy to update."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/media/ajax.php:283
-msgid "Please select media to delete."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:306
-msgid "There was a problem deleting media."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:361
-msgid "Please provide album to move media."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:386
-msgid "There was a problem when trying to move the media."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:449
-msgid "Please enter title of album."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:466
-msgid "There was a problem when trying to create the album."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:527
-msgid "Please provide ID of album to delete."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:536
-msgid "You do not have permission to delete this album."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/ajax.php:623
-msgid "Please provide attachment id to delete."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:118
-msgid "Unselect"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:120
-msgid "Unselect All"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:121
-msgid "Sorry, no photos were found"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:123
-msgid "Uploading"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:124
-msgid "%d out of %d uploaded"
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:125
-msgid ""
-"Are you sure you want to delete this album? Photos in this album will also "
-"be deleted."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:126
-msgid "There was a problem deleting the album."
-msgstr ""
-
-#: bp-templates/bp-nouveau/includes/media/functions.php:147
-msgid "All Photos"
+#: bp-templates/bp-nouveau/includes/media/ajax.php:761
+msgid "Privacy option is not valid."
 msgstr ""
 
 #: bp-templates/bp-nouveau/includes/members/functions.php:93
@@ -17284,78 +17672,78 @@ msgstr ""
 msgid "Please add some content to your message."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:363
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:568
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:395
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:600
 msgid "Unauthorized request."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:387
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:574
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:419
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:606
 #: bp-templates/bp-nouveau/includes/messages/functions.php:104
 msgid "Sorry, no messages were found."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:481
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:513
 msgid "sent a photo"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:483
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:515
 msgid "sent some photos"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:492
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:524
 msgid "sent a gif"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:579
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:611
 msgid "Sorry, no more messages can be loaded."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:764
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:828
 msgid "There was a problem deleting your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:787
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:851
 msgid "Messages deleted"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:805
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:869
 msgid "There was a problem starring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:807
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:871
 msgid "There was a problem unstarring your messages. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:881
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:945
 msgid "Messages successfully starred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:883
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:947
 msgid "Messages successfully unstarred."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:906
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:970
 msgid "There was a problem marking your messages as read. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:912
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:976
 msgid "There was a problem marking your messages as unread. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:932
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:996
 msgid "Messages marked as read."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:969
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1033
 msgid "There was a problem dismissing the notice. Please try again."
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1006
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1070
 msgid "Sitewide notice dismissed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/includes/messages/ajax.php:1023
+#: bp-templates/bp-nouveau/includes/messages/ajax.php:1087
 msgid "There was a problem loading recipients. Please try again."
 msgstr ""
 
@@ -18157,7 +18545,7 @@ msgstr ""
 msgid "Changes saved."
 msgstr ""
 
-#: class-buddypress.php:809
+#: class-buddypress.php:810
 msgid "BuddyPress Nouveau"
 msgstr ""
 
@@ -18179,57 +18567,57 @@ msgid ""
 "Profiles, Activity Feeds, Direct Messaging, Notifications, and more!"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:277
+#: bp-activity/classes/class-bp-activity-component.php:299
 msgctxt "Profile activity screen nav"
 msgid "Timeline"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:287
+#: bp-activity/classes/class-bp-activity-component.php:309
 msgctxt "Profile activity screen sub nav"
 msgid "Personal"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:298
+#: bp-activity/classes/class-bp-activity-component.php:320
 msgctxt "Profile activity screen sub nav"
 msgid "Likes"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:311
+#: bp-activity/classes/class-bp-activity-component.php:333
 msgctxt "Profile activity screen sub nav"
 msgid "Connections"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:324
+#: bp-activity/classes/class-bp-activity-component.php:346
 msgctxt "Profile activity screen sub nav"
 msgid "Groups"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:337
+#: bp-activity/classes/class-bp-activity-component.php:359
 msgctxt "Profile activity screen sub nav"
 msgid "Mentions"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:350
+#: bp-activity/classes/class-bp-activity-component.php:372
 msgctxt "Profile activity screen sub nav"
 msgid "Following"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:421
+#: bp-activity/classes/class-bp-activity-component.php:443
 msgctxt "My Account Activity sub nav"
 msgid "Likes"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:432
+#: bp-activity/classes/class-bp-activity-component.php:454
 msgctxt "My Account Activity sub nav"
 msgid "Connections"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:443
+#: bp-activity/classes/class-bp-activity-component.php:465
 msgctxt "My Account Activity sub nav"
 msgid "Groups"
 msgstr ""
 
-#: bp-activity/classes/class-bp-activity-component.php:465
+#: bp-activity/classes/class-bp-activity-component.php:487
 msgctxt "My Account Activity sub nav"
 msgid "Following"
 msgstr ""
@@ -18244,7 +18632,7 @@ msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
 
-#: bp-core/bp-core-functions.php:1292 bp-forums/common/functions.php:180
+#: bp-core/bp-core-functions.php:1294 bp-forums/common/functions.php:180
 msgctxt "Separator in time since"
 msgid ","
 msgstr ""
@@ -18318,6 +18706,21 @@ msgstr ""
 #: bp-integrations/learndash/templates/buddypress/groups/single/courses-content-display.php:236
 msgctxt "Course Content Label"
 msgid "%s Content"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1024
+#. translators: 1: Imagick status, 2: libreoffice status
+msgctxt "extension notification"
+msgid ""
+"Server needs %1$s and %2$s extensions to be activated for the documents "
+"previews."
+msgstr ""
+
+#: bp-media/bp-media-settings.php:1037 bp-media/bp-media-settings.php:1048
+#. translators: 1: libreoffice status
+#. translators: 1: Imagick status
+msgctxt "extension notification"
+msgid "Server needs %1$s extensions to be activated for the documents previews."
 msgstr ""
 
 #: bp-members/bp-members-template.php:123
