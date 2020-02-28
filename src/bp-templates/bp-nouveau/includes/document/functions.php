@@ -86,7 +86,7 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 		'profile_media'   => bp_is_profile_document_support_enabled(),
 		'group_media'     => bp_is_group_document_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
-		'document_type'   => apply_filters( 'bp_media_allowed_document_type', '.csv,.css,.doc,.docm,.docx,.dotx,.dotm,.gzip,.htm,.html,.ics,.ico,.jar,.js,.mp3,.ods,.odt,.pdf,.psd,.ppt,.pptx,.pps,.ppsx,.pptm,.potx,.potm,.rar,.rtf,.tar,.txt,.xls,.wav,.xlsx,.xlsm,.xltx,.xltm,.zip' ),
+		'document_type'   => bp_media_allowed_document_type(),
 	);
 
 	if ( bp_is_single_folder() ) {
@@ -207,4 +207,61 @@ function bp_nouveau_get_document_directory_nav_items() {
 	 * @param array $nav_items The list of the media directory nav items.
 	 */
 	return apply_filters( 'bp_nouveau_get_media_directory_nav_items', $nav_items );
+}
+
+/**
+ * Function get document support extension.
+ *
+ * @param string $format
+ *
+ * @return array|mixed|string|void
+ */
+function bp_media_allowed_document_type( $format = 'string' ) {
+
+	$extension_lists = array(
+		'.csv',
+		'.css',
+		'.doc',
+		'.docm',
+		'.docx',
+		'.dotx',
+		'.dotm',
+		'.gzip',
+		'.htm',
+		'.html',
+		'.ics',
+		'.ico',
+		'.jar',
+		'.js',
+		'.mp3',
+		'.ods',
+		'.odt',
+		'.pdf',
+		'.psd',
+		'.ppt',
+		'.pptx',
+		'.pps',
+		'.ppsx',
+		'.pptm',
+		'.potx',
+		'.potm',
+		'.rar',
+		'.rtf',
+		'.tar',
+		'.txt',
+		'.xls',
+		'.wav',
+		'.xlsx',
+		'.xlsm',
+		'.xltx',
+		'.xltm',
+		'.zip',
+	);
+
+	$extension_lists = apply_filters( 'bp_media_allowed_document_type', $extension_lists );
+	if ( 'string' === $format ) {
+		return implode( ',', $extension_lists );
+	}
+
+	return $extension_lists;
 }

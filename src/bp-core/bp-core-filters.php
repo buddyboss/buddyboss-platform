@@ -1402,3 +1402,15 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 	return $pages;
 }
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
+
+add_filter( 'upload_mimes', 'bp_media_document_upload_mimes' );
+function bp_media_document_upload_mimes ( $existing_mimes = array() ) {
+	if ( bp_is_active( 'media' ) ) {
+		$allowed_extensions = bp_array_flatten( bp_is_media_document_extension_support_enabled() );
+		foreach ( $allowed_extensions as $k => $v ) {
+			$mime_types = bp_document_allowed_mimes();
+			$existing_mimes[ "$k" ] = $mime_types[$k];
+		}
+	}
+	return $existing_mimes;
+}

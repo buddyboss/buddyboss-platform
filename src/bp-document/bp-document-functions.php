@@ -1216,7 +1216,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
  *
  * @return Array
  */
-function bp_document_allowed_mimes( $mime_types ) {
+function bp_document_allowed_mimes() {
 
 	// Creating a new array will reset the allowed file types
 	$mime_types = array(

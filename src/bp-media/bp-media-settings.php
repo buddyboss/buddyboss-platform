@@ -227,6 +227,13 @@ function bp_media_get_settings_fields() {
 		);
 	}
 
+	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
+		'title'             => __( 'Extensions', 'buddyboss' ),
+		'callback'          => 'bp_media_settings_callback_extension_document_support',
+		'sanitize_callback' => 'array',
+		'args'              => array(),
+	);
+
 	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = array(
 		'title'    => __( '&#160;', 'buddyboss' ),
 		'callback' => 'bp_photo_uploading_tutorial',
@@ -1052,4 +1059,47 @@ function bp_media_admin_setting_callback_document_section() {
 		<?php
 	}
 
+}
+
+function bp_media_settings_callback_extension_document_support() {
+
+    $extensions = bp_media_allowed_document_type( 'array' );
+    $stored = bp_array_flatten( bp_is_media_document_extension_support_enabled() );
+
+    $mime_types = bp_document_allowed_mimes();
+    error_log( print_r( $mime_types, true ) );
+    error_log( $mime_types['tar'] );
+    ?>
+    <ul class="extension-listing">
+    <?php
+    foreach ( $extensions as $extension ) {
+
+	    $exte = ltrim( $extension, '.' );
+        $name = 'bp_media_extension_document_support[][' . $exte . ']';
+
+	    ?>
+        <li style="width: 15%;float: left;">
+            <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( array_key_exists( "$exte", $stored ) ) ?> />
+            <label for="<?php echo esc_attr( $name ); ?>">
+                <?php echo esc_html( $extension ); ?>
+            </label><br/>
+        </li>
+	    <?php
+    }
+    ?>
+    </ul>
+    <?php
+}
+
+/**
+ * Checks if extension support is enabled.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param $default integer
+ *
+ * @return array Is media extension support enabled or not
+ */
+function bp_is_media_document_extension_support_enabled() {
+	return apply_filters( 'bp_is_media_extension_support_enabled', get_option( 'bp_media_extension_document_support', array() ) );
 }
