@@ -198,7 +198,8 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 
 			$hooks = array();
 
-			// These are later removed in admin_head
+		// These are later removed in admin_head
+		if ( ! is_network_admin() && ! bp_is_network_activated() ) {
 			if ( current_user_can( 'bbp_tools_page' ) ) {
 				if ( current_user_can( 'bbp_tools_repair_page' ) ) {
 					$hooks[] = add_submenu_page(
@@ -223,26 +224,26 @@ if ( ! class_exists( 'BBP_Admin' ) ) :
 				}
 
 				if ( current_user_can( 'bbp_tools_reset_page' ) ) {
-					// $hooks[] = add_submenu_page(
-					// 'buddyboss-platform',
-					// __( 'Reset Forums', 'buddyboss' ),
-					// __( 'Forum Reset', 'buddyboss' ),
-					// $this->minimum_capability,
-					// 'bbp-reset',
-					// 'bbp_admin_reset'
-					// );
+	//				$hooks[] = add_submenu_page(
+	//					'buddyboss-platform',
+	//					__( 'Reset Forums', 'buddyboss' ),
+	//					__( 'Forum Reset', 'buddyboss' ),
+	//					$this->minimum_capability,
+	//					'bbp-reset',
+	//					'bbp_admin_reset'
+	//				);
 				}
 
 				// Fudge the highlighted subnav item when on a Forums admin page
 				foreach ( $hooks as $hook ) {
 					add_action( "admin_head-$hook", 'bbp_tools_modify_menu_highlight' );
 				}
-			}
 
-			// Bail if plugin is not network activated
-			if ( ! is_plugin_active_for_network( bbpress()->basename ) ) {
-				return;
 			}
+		}
+		// Bail if plugin is not network activated
+		if ( ! is_plugin_active_for_network( bbpress()->basename ) )
+			return;
 
 			add_submenu_page(
 				'index.php',

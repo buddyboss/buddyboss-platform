@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.3.2
 Requires PHP: 5.6.20
-Stable tag: 1.2.4
+Stable tag: 1.2.7
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,49 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.7 =
+* Activity - Fixed error on Mentions tab, when 'Activity tabs' option is enabled
+* Registration - Fixed false validation on registration page, when using required fields
+
+= 1.2.6 =
+* Widgets - Added option to hide '(BB) Profile Completion' widget when progress hits 100%
+* Activity - Fixed issue with deleted users leaving 'Unknown' likes in activity
+* Notifications - Fixed certain notifications not clearing after clicking in Notifications dropdown
+* Network Search - Added icons for search results coming from plugin LifterLMS
+* Developers - Added hooks for adding your own options into all Component Settings pages
+
+= 1.2.5 =
+* Messages - Fixed message list not loading more after scrolling down on mobile devices
+* Messages - Fixed the conversation start date not matching WordPress timezone settings
+* Notifications - Fixed issues with toggling Bulk selection of Notifications
+* Groups - Fixed links in group description set to 'open in a new tab' loading in the same tab
+* Groups - Fixed buttons for Join/Leave Group not working in Group Type shortcodes
+* Groups - When posting a photo from sitewide activity into a group, fixed photo not appearing in group
+* Forums - Fixed issues on Forums index page when Gutenberg content is added into the page editor
+* Forums - Fixed non-admins not seeing their own replies for Hidden groups, in 'My Discussions' tab
+* Forums - Fixed 'Unsubscribe' link in forum subscription emails redirecting to 'Email Preferences'
+* Forums - Fixed 'Description' input not displaying correctly for 'Create New Forum' shortcode
+* Forums - Fixed custom 'CSS Classes' added to Forums menu not displaying on Forums link
+* Forums - Fixed text in forum replies displaying as HTML markup in certain situations
+* Activity - Consistent styling for default WordPress embeds and our custom preview embeds
+* Activity - Fixed the setting to allow activity stream commenting on forum discussions and replies
+* Profiles - Fixed assigning 'Photos' as the default profile tab resulting in 404 error
+* Privacy - Fixed issue with Privacy and Terms of Service pages occasionally getting 404 errors
+* Emails - Fixed formatting of BuddyBoss emails when viewed in Microsoft Outlook
+* Registration - Fixed incorrect 'Mismatch' notice appearing on registration page in certain situations
+* Widgets - Added new '(BB) Profile Completion' widget for showing profile completion progress
+* Widgets - Fixed logic for '(BB) Members Following Me' widget when displayed on other member profiles
+* Widgets - Fixed logic for '(BB) Members I'm Following' widget when displayed on other member profiles
+* Widgets - Fixed logic for '(BB) My Connections' widget when displayed on other member profiles
+* Multisite - Fixed PHP errors displaying while creating a new site in WordPress Multisite dashboard
+* Multisite - Fixed Forum Discussions, Tags, Replies links not working in WordPress Multisite dashboard
+* Compatibility - Global fix for all radio and checkbox conflicts with various plugins
+* Compatibility - Added settings link at Settings > BuddyPress for third party BuddyPress add-ons
+* Compatibility - Fixed membership rules for page restriction not working correctly in 'MemberPress'
+* Compatibility - Fixed errors in BuddyBoss > Pages, with plugin 'WPML' (WordPress Multilingual)
+* Compatibility - Fixed errors in WordPress dashboard when activating 'WP Mail Logging by MailPoet'
+* Translations - Fixed text instances in JavaScript files that could not be translated
 
 = 1.2.4 =
 * Errors - Fixed PHP fatal error in certain situations

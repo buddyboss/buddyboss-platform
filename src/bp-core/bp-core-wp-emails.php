@@ -230,7 +230,7 @@ if ( ! function_exists( 'wp_notify_postauthor' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px;  width: 64px; text-align: center; height: 16px; line-height: 16px; padding:8px; "><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -520,7 +520,7 @@ if ( ! function_exists( 'wp_notify_moderator' ) ) :
 			<tr>
 				<td>
 					<a href="<?php echo get_comment_link( $comment ); ?>" target="_blank" rel="nofollow"
-					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 84px; text-align: center; height: 32px; line-height: 32px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
+					   style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; font-size: 14px; color: <?php echo $settings['highlight_color']; ?>; text-decoration: none; display: block; border: 1px solid <?php echo $settings['highlight_color']; ?>; border-radius: 100px; width: 64px; text-align: center; height: 16px; line-height: 16px; padding: 8px;"><?php _e( 'Reply', 'buddyboss' ); ?></a>
 				</td>
 			</tr>
 
@@ -1270,11 +1270,11 @@ if ( ! function_exists( 'bp_email_newblog_notify_siteadmin' ) ) {
 		$siteurl          = site_url();
 		restore_current_blog();
 
-		/* translators: New site notification email. 1: Site URL, 2: User IP address, 3: Settings screen URL */
-		$msg  = '<p>' . sprintf( __( 'New Site: %1$s', 'buddyboss' ), $blogname ) . '</p>';
-		$msg .= '<p>' . sprintf( __( 'URL: %2$s', 'buddyboss' ), $siteurl ) . '</p>';
-		$msg .= '<p>' . sprintf( __( 'Remote IP address: %3$s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
-		$msg .= '<p>' . sprintf( __( 'Disable these notifications: %4$s', 'buddyboss' ), $options_site_url ) . '</p>';
+		/* translators: New site notification email. */
+		$msg  = '<p>' . sprintf( __( 'New Site: %s', 'buddyboss' ), $blogname ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'URL: %s', 'buddyboss' ), $siteurl ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Remote IP address: %s', 'buddyboss' ), wp_unslash( $_SERVER['REMOTE_ADDR'] ) ) . '</p>';
+		$msg .= '<p>' . sprintf( __( 'Disable these notifications:%s', 'buddyboss' ), $options_site_url ) . '</p>';
 
 		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' ); // add this to support html in email
 

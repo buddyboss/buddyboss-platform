@@ -1,5 +1,5 @@
 {
-	"description": "BuddyPress adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
+	"description": "BuddyBoss adds community features to WordPress. Member Profiles, Activity Streams, Direct Messaging, Notifications, and more!",
 	"devDependencies": {
 		"grunt": "^1.0.4",
 		"grunt-check-dependencies": "~1.0.0",

@@ -1517,11 +1517,13 @@ window.bp = window.bp || {};
 
 			this.views.add( new bp.Views.FormSubmitWrapper( { model: this.model } ) );
 
-			if ( !_.isUndefined(BP_Nouveau.media) && !_.isUndefined(BP_Nouveau.media.emoji)
-				&& ( ( !_.isUndefined(BP_Nouveau.media.emoji.profile) && BP_Nouveau.media.emoji.profile )
-					|| ( !_.isUndefined(BP_Nouveau.media.emoji.groups) && BP_Nouveau.media.emoji.groups )
-					)
-				) {
+			if (!_.isUndefined(BP_Nouveau.media) &&
+				!_.isUndefined(BP_Nouveau.media.emoji) &&
+				(
+					(!_.isUndefined(BP_Nouveau.media.emoji.profile) && BP_Nouveau.media.emoji.profile) ||
+					(!_.isUndefined(BP_Nouveau.media.emoji.groups) && BP_Nouveau.media.emoji.groups)
+				)
+			) {
 
 				$('#whats-new').emojioneArea({
 					standalone: true,
@@ -1620,6 +1622,14 @@ window.bp = window.bp || {};
 
 			// Silently add meta
 			this.model.set( meta, { silent: true } );
+
+			var medias = self.model.get('media');
+			if ( 'group' == self.model.get('object') && typeof medias !== 'undefined' && medias.length ) {
+				for( var k = 0; k < medias.length; k++ ) {
+					medias[k].group_id = self.model.get('item_id');
+				}
+				self.model.set('media',medias);
+			}
 
 			// update posting status true
 			this.model.set( 'posting', true );

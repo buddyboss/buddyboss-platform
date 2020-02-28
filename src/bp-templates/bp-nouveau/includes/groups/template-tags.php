@@ -1375,9 +1375,8 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
  */
 function bp_nouveau_add_notify_group_members_checkbox() {
 	printf( '<p class="bp-controls-wrap">
-		<label for="group-notify-members" class="bp-label-text">
-			<input type="checkbox" name="group-notify-members" id="group-notify-members" value="1" /> %s
-		</label>
+		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
+		<label for="group-notify-members" class="bp-label-text">%s</label>
 	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );

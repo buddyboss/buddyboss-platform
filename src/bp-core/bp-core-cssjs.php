@@ -161,7 +161,11 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-        'bp-select2'        => array( 'file' => "{$url}vendor/select2.min.js", 'dependencies' => array(), 'footer' => false ),
+		'bp-select2'          => array(
+			'file'         => "{$url}vendor/select2.min.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 
 		'isInViewport'        => array(
 			'file'         => "{$url}vendor/isInViewport{$min}.js",
@@ -212,36 +216,31 @@ function bp_core_register_common_scripts() {
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
 
-
 	/**
 	 * Translation for select2 script text.
 	 */
-	if ( !function_exists( 'wp_get_available_translations' ) ) {
+	$bp_select2 = array( 'lang' => 'en' );
 
-		$bp_select2 = array( 'lang' => '' );
-		require_once( ABSPATH . 'wp-admin/includes/translation-install.php' );
+	if ( ! function_exists( 'wp_get_available_translations' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
 		$translations = wp_get_available_translations();
+	} else {
+		$translations = wp_get_available_translations();
+	}
 
+	if ( ! empty( $translations ) ) {
 		$file_path = buddypress()->plugin_dir . 'bp-core/js/';
-		if (
-			isset( $translations[ get_locale() ] )
-			&&  !empty( current( $translations[ get_locale() ]['iso'] ) )
-			&& file_exists( $file_path . 'vendor/i18n/' . current( $translations[ get_locale() ]['iso'] ) . '.js' )
-		) {
-			$lang = current( $translations[ get_locale() ]['iso'] );
+		if ( isset( $translations[ get_locale() ] ) && ! empty( current( $translations[ get_locale() ]['iso'] ) ) && file_exists( $file_path . 'vendor/i18n/' . current( $translations[ get_locale() ]['iso'] ) . '.js' ) ) {
+			$lang               = current( $translations[ get_locale() ]['iso'] );
 			$bp_select2['lang'] = $lang;
 			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
-		} else if (
-			!empty( get_bloginfo( 'language' ) )
-			&& file_exists( $file_path . 'vendor/i18n/' . get_bloginfo( 'language' ) . '.js' )
-		) {
+		} elseif ( ! empty( get_bloginfo( 'language' ) ) && file_exists( $file_path . 'vendor/i18n/' . get_bloginfo( 'language' ) . '.js' ) ) {
 			$bp_select2['lang'] = get_bloginfo( 'language' );
 			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
 		}
-
-		wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
-
 	}
+
+	wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
 
 	/**
 	 * Translate EmojineArea
@@ -334,9 +333,9 @@ function bp_core_register_common_styles() {
 				'file'         => "{$url}medium-editor-beagle{$min}.css",
 				'dependencies' => array(),
 			),
-			'bp-select2' => array(
+			'bp-select2'              => array(
 				'file'         => "{$url}select2.min.css",
-				'dependencies' => array()
+				'dependencies' => array(),
 			),
 		)
 	);
