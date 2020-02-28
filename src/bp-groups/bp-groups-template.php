@@ -7369,8 +7369,9 @@ function bp_get_article_prefix( $string ) {
 		return $string;
 	}
 
-	$vowel_array = array('a','e','i','o','u');  // array of vowel
-	$prefix = in_array( strtolower( substr( $string ,0,1 ) ), $vowel_array ) ? __( 'an', 'buddyboss' ) : __( 'a', 'buddyboss' );
-	return apply_filters( 'bp_get_article_prefix', $prefix . ' ' . $string,  $string );
+	$vowel_array = array( 'a', 'e', 'i', 'o', 'u' );  // array of vowel
+	$prefix      = in_array( strtolower( substr( $string, 0, 1 ) ), $vowel_array ) ? __( 'an', 'buddyboss' ) : __( 'a', 'buddyboss' );
+
+	return apply_filters( 'bp_get_article_prefix', $prefix . ' ' . $string, $string );
 
 }
