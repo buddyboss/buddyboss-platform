@@ -4031,11 +4031,11 @@ function bp_get_group_join_button( $group = false ) {
 		}
 
 		if ( groups_is_user_admin( bp_loggedin_user_id(), $group->id ) ) {
-			$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re an %s', 'buddyboss' ), get_group_role_label( $group->id, 'organizer_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
+			$button_text = apply_filters( 'bp_group_organizer_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'organizer_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'organizer_singular_label_name' ) );
 		} elseif ( groups_is_user_mod( bp_loggedin_user_id(), $group->id ) ) {
-			$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'moderator_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
+			$button_text = apply_filters( 'bp_group_moderator_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'moderator_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'moderator_singular_label_name' ) );
 		} else {
-			$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re a %s', 'buddyboss' ), get_group_role_label( $group->id, 'member_singular_label_name' ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
+			$button_text = apply_filters( 'bp_group_member_label_text', sprintf( __( 'You\'re %s', 'buddyboss' ), bp_get_article_prefix( get_group_role_label( $group->id, 'member_singular_label_name' ) ) ), $group->id, get_group_role_label( $group->id, 'member_singular_label_name' ) );
 		}
 
 		// Setup button attributes.
@@ -7354,4 +7354,23 @@ function bp_get_group_current_invite_tab() {
 	 * @param string $tab Current group invite tab slug.
 	 */
 	return apply_filters( 'bp_get_group_current_invite_tab', $tab );
+}
+
+/**
+ * Return string with the article prefix "a/an".
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param string $string  Text string for adding the article prefix.
+ * @return string
+ */
+function bp_get_article_prefix( $string ) {
+	if ( empty( $string ) ) {
+		return $string;
+	}
+
+	$vowelArry = array('a','e','i','o','u');  // array of vowel
+	$prefix = in_array( strtolower( substr( $string ,0,1 ) ), $vowelArry ) ? __( 'an', 'buddyboss' ) : __( 'a', 'buddyboss' );
+	return $prefix . ' ' . $string;
+
 }
