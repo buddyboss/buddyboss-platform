@@ -11,34 +11,36 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 
+		<div class="document-data-table-head">
+			<div class="data-head data-head-name">
+				<span>
+					Name
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+				
+			</div>
+			<div class="data-head data-head-modified">
+				<span>
+					Modified
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+				
+			</div>
+			<div class="data-head data-head-visibility">
+				<span>
+					Visibility
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+			</div>
+		</div><!-- .document-data-table-head -->
+
 		<div id="media-folder-document-data-table">
 			<?php
 				bp_get_template_part( 'document/activity-document-move' );
 				bp_get_template_part( 'document/activity-document-folder-move' );
 			?>
 
-			<div class="document-data-table-head">
-				<div class="data-head data-head-name">
-					<span>
-						Name
-						<i class="bb-icon-triangle-fill"></i>
-					</span>
-					
-				</div>
-				<div class="data-head data-head-modified">
-					<span>
-						Modified
-						<i class="bb-icon-triangle-fill"></i>
-					</span>
-					
-				</div>
-				<div class="data-head data-head-visibility">
-					<span>
-						Visibility
-						<i class="bb-icon-triangle-fill"></i>
-					</span>
-				</div>
-			</div><!-- .document-data-table-head -->
+			
 
 
 	<?php

@@ -176,7 +176,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.activity .bp-document-move-activity, #media-stream .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .data-head', this.sortDocuments.bind( this ) );
-			$( document ).on( 'click', '.bb-media-container .modal-container .bb-field-steps-actions', this.createFolderNavigate.bind( this ) );
+			$( document ).on( 'click', '.modal-container .bb-field-steps-actions', this.createFolderNavigate.bind( this ) );
 
 
 			// Gifs autoplay
@@ -2089,7 +2089,12 @@ window.bp = window.bp || {};
 
 			var target = $(event.currentTarget), currentSlide = target.closest('.bb-field-steps');
 
-			var titleField = target.closest('.bp-document-listing').length ? '#bb-album-title' : '#bb-album-child-title';
+			//Check if this is documnet parent or child folder page
+			var titleField = target.closest('.bp-document-listing').length == 0 ? '#bb-album-child-title' : '#bb-album-title';
+
+			if(target.closest('.document-options').length) { //Check if this is /document page
+				titleField = '#bb-album-title';
+			}
 
 			if( target.hasClass('bb-field-steps-next') && currentSlide.find(titleField).val().trim() == '' ){
 				currentSlide.find(titleField).addClass('error');

@@ -12101,7 +12101,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   font-size: 14px;
 }
 
-#media-folder-document-data-table .document-data-table-head {
+#media-stream .document-data-table-head {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -12109,18 +12109,18 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   padding: 0 0 8px;
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head {
+#media-stream .document-data-table-head .data-head {
   font-size: 12px;
   color: #939597;
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head span {
+#media-stream .document-data-table-head .data-head span {
   cursor: pointer;
   user-select: none;
   text-transform: uppercase;
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head i {
+#media-stream .document-data-table-head .data-head i {
   font-size: 8px;
   -webkit-transform: rotate(180deg) translateY(1px);
   -ms-transform: rotate(180deg) translateY(1px);
@@ -12128,65 +12128,65 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   transition: all ease 0.3s;
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head.asce i {
+#media-stream .document-data-table-head .data-head.asce i {
   -webkit-transform: rotate(0deg) translateY(-1px);
   -ms-transform: rotate(0deg) translateY(-1px);
   transform: rotate(0deg) translateY(-1px);
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head-name {
+#media-stream .document-data-table-head .data-head-name {
   -ms-flex-preferred-size: calc(60% - 50px);
   flex-basis: calc(60% - 50px);
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head-modified {
+#media-stream .document-data-table-head .data-head-modified {
   -ms-flex-preferred-size: 20%;
   flex-basis: 20%;
 }
 
-#media-folder-document-data-table .document-data-table-head .data-head-visibility {
+#media-stream .document-data-table-head .data-head-visibility {
   -ms-flex-preferred-size: 20%;
   flex-basis: 20%;
 }
 
 @media screen and (max-width: 540px) {
-  #media-folder-document-data-table .document-data-table-head {
+  #media-stream .document-data-table-head {
     -webkit-box-pack: end;
     -ms-flex-pack: end;
     justify-content: flex-end;
     padding: 10px 0;
   }
-  #media-folder-document-data-table .document-data-table-head:before {
+  #media-stream .document-data-table-head:before {
     content: 'Sort By:';
     position: absolute;
     left: 25px;
     font-size: 14px;
   }
-  #media-folder-document-data-table .document-data-table-head .data-head-name,
-  #media-folder-document-data-table .document-data-table-head .data-head-modified,
-  #media-folder-document-data-table .document-data-table-head .data-head-visibility {
+  #media-stream .document-data-table-head .data-head-name,
+  #media-stream .document-data-table-head .data-head-modified,
+  #media-stream .document-data-table-head .data-head-visibility {
     -ms-flex-preferred-size: auto;
     flex-basis: auto;
     padding-right: 15px;
   }
-  #media-folder-document-data-table .document-data-table-head .data-head-visibility {
+  #media-stream .document-data-table-head .data-head-visibility {
     padding-right: 0;
   }
 }
 
 @media screen and (max-width: 360px) {
-  #media-folder-document-data-table .document-data-table-head:before {
+  #media-stream .document-data-table-head:before {
     font-size: 12px;
   }
-  #media-folder-document-data-table .document-data-table-head .data-head-name,
-  #media-folder-document-data-table .document-data-table-head .data-head-modified,
-  #media-folder-document-data-table .document-data-table-head .data-head-visibility {
+  #media-stream .document-data-table-head .data-head-name,
+  #media-stream .document-data-table-head .data-head-modified,
+  #media-stream .document-data-table-head .data-head-visibility {
     padding-right: 7px;
     font-size: 10px;
   }
-  #media-folder-document-data-table .document-data-table-head .data-head-name i,
-  #media-folder-document-data-table .document-data-table-head .data-head-modified i,
-  #media-folder-document-data-table .document-data-table-head .data-head-visibility i {
+  #media-stream .document-data-table-head .data-head-name i,
+  #media-stream .document-data-table-head .data-head-modified i,
+  #media-stream .document-data-table-head .data-head-visibility i {
     font-size: 6px;
     -webkit-transform: rotate(180deg) translateY(2px);
     -ms-transform: rotate(180deg) translateY(2px);
@@ -13066,10 +13066,37 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   }
 }
 
-.directory.document .subnav-filters .subnav-search {
+.directory.document .document-options {
   position: absolute;
   right: 0;
   top: 0;
+  margin: 0;
+}
+
+.directory.document .document-options a.button > i {
+  margin-right: 6px;
+}
+
+.directory.document .document-options > * {
+  margin-left: 6px;
+}
+
+@media screen and (max-width: 1024px) {
+  .directory.document .document-options {
+    position: static;
+    margin: -20px 0 0 0;
+  }
+  .directory.document .document-options > * {
+    margin-bottom: 15px;
+  }
+}
+
+.directory.document .subnav-filters {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.directory.document .subnav-filters .subnav-search {
   margin: 0;
 }
 
@@ -13098,17 +13125,17 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   height: 34px;
 }
 
-.document-parent {
+#media-stream.document-parent {
   background-color: #fff;
   border-radius: 4px;
   border: 1px solid #E7E9EC;
 }
 
-.document-parent #media-folder-document-data-table .document-data-table-head {
+#media-stream.document-parent .document-data-table-head {
   padding: 20px 20px 8px;
 }
 
-.document-parent #media-folder-document-data-table .media-folder_items {
+#media-stream.document-parent #media-folder-document-data-table .media-folder_items {
   margin: 0 20px;
 }
 

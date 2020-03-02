@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-02-28 11:06:11+00:00\n"
+"POT-Creation-Date: 2020-03-02 10:54:27+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2188,8 +2188,8 @@ msgstr ""
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:248
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:391
 #: bp-integrations/learndash/bp-admin-learndash-tab.php:485
-#: bp-media/bp-media-settings.php:520 bp-media/bp-media-settings.php:675
-#: bp-media/bp-media-settings.php:880 bp-search/bp-search-settings.php:420
+#: bp-media/bp-media-settings.php:527 bp-media/bp-media-settings.php:682
+#: bp-media/bp-media-settings.php:887 bp-search/bp-search-settings.php:420
 msgid "View Tutorial"
 msgstr ""
 
@@ -6187,13 +6187,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -13817,7 +13817,7 @@ msgstr ""
 msgid "Profile Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:692
+#: bp-media/bp-media-settings.php:107 bp-media/bp-media-settings.php:699
 msgid "GIPHY API Key"
 msgstr ""
 
@@ -13826,90 +13826,94 @@ msgstr ""
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:236
-#: bp-media/bp-media-settings.php:241
+#: bp-media/bp-media-settings.php:231
+msgid "Extensions"
+msgstr ""
+
+#: bp-media/bp-media-settings.php:238 bp-media/bp-media-settings.php:243
+#: bp-media/bp-media-settings.php:248
 msgid "&#160;"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:337
+#: bp-media/bp-media-settings.php:344
 msgid "Allow members to upload photos in <strong>profiles</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:348 bp-media/bp-media-settings.php:404
+#: bp-media/bp-media-settings.php:355 bp-media/bp-media-settings.php:411
 msgid "Enable Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:393
+#: bp-media/bp-media-settings.php:400
 msgid "Allow members to upload photos in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:449
+#: bp-media/bp-media-settings.php:456
 msgid "Allow members to upload photos in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:481
+#: bp-media/bp-media-settings.php:488
 msgid "Allow members to upload photos in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:540
+#: bp-media/bp-media-settings.php:547
 msgid "Allow members to use emoji in <strong>profile activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:559
+#: bp-media/bp-media-settings.php:566
 msgid "Allow members to use emoji in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:578
+#: bp-media/bp-media-settings.php:585
 msgid "Allow members to use emoji in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:597
+#: bp-media/bp-media-settings.php:604
 msgid "Allow members to use emoji in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:699
+#: bp-media/bp-media-settings.php:706
 msgid "This feature requires an account at"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:701
+#: bp-media/bp-media-settings.php:708
 msgid "Create your account, and then click"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:703
+#: bp-media/bp-media-settings.php:710
 msgid "Once done, copy the API key and paste it in the field above."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:745
+#: bp-media/bp-media-settings.php:752
 msgid ""
 "Allow members to use animated GIFs in <strong>profile activity "
 "posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:764
+#: bp-media/bp-media-settings.php:771
 msgid "Allow members to use animated GIFs in <strong>group activity posts</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:783
+#: bp-media/bp-media-settings.php:790
 msgid "Allow members to use animated GIFs in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:802
+#: bp-media/bp-media-settings.php:809
 msgid "Allow members to use animated GIFs in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:900
+#: bp-media/bp-media-settings.php:907
 msgid "Allow members to upload documents in <strong>private messages</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:932
+#: bp-media/bp-media-settings.php:939
 msgid "Allow members to upload documents in <strong>groups</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:964
+#: bp-media/bp-media-settings.php:971
 msgid "Allow members to upload documents in <strong>forum discussions</strong>"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:996
+#: bp-media/bp-media-settings.php:1003
 msgid "Allow members to upload documents in <strong>profiles</strong>"
 msgstr ""
 
@@ -15414,7 +15418,7 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:57
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:59
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:56
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
@@ -15824,11 +15828,13 @@ msgid "Collapse"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/add-document.php:13
+#: bp-templates/bp-nouveau/buddypress/document/index.php:35
 #: bp-templates/bp-nouveau/buddypress/document/single-folder.php:47
 msgid "Add Documents"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/add-folder.php:13
+#: bp-templates/bp-nouveau/buddypress/document/index.php:36
 #: bp-templates/bp-nouveau/buddypress/document/single-folder.php:51
 msgid "Add Folder"
 msgstr ""
@@ -18708,7 +18714,7 @@ msgctxt "Course Content Label"
 msgid "%s Content"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1024
+#: bp-media/bp-media-settings.php:1031
 #. translators: 1: Imagick status, 2: libreoffice status
 msgctxt "extension notification"
 msgid ""
@@ -18716,7 +18722,7 @@ msgid ""
 "previews."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1037 bp-media/bp-media-settings.php:1048
+#: bp-media/bp-media-settings.php:1044 bp-media/bp-media-settings.php:1055
 #. translators: 1: libreoffice status
 #. translators: 1: Imagick status
 msgctxt "extension notification"
