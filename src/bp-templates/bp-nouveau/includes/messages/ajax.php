@@ -406,6 +406,10 @@ function bp_nouveau_ajax_get_user_message_threads() {
 	while ( bp_message_threads() ) : bp_message_thread();
 		$last_message_id = (int) $messages_template->thread->last_message_id;
 
+		if ( ! (int) $last_message_id ) {
+			continue;
+		}
+
 		$threads->threads[ $i ] = array(
 			'id'            => bp_get_message_thread_id(),
 			'message_id'    => (int) $last_message_id,
