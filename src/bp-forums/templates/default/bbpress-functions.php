@@ -294,9 +294,9 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			 * This is the hook where BP components can add their own prefetched results
 			 * friends to the page for quicker @mentions lookups.
 			 *
-			 * @since BuddyPress 2.1.0
+			 * @since BuddyBoss 1.2.8
 			 */
-			do_action( 'bp_activity_mentions_prime_results' );
+			do_action( 'bbp_forums_mentions_prime_results' );
 		}
 
 		/**

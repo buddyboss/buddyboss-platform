@@ -798,7 +798,7 @@ function bp_friends_prime_mentions_results() {
 		return;
 	}
 
-	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
+	if ( function_exists( 'bp_activity_maybe_load_mentions_scripts' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
 		return;
 	}
 
@@ -850,6 +850,7 @@ function bp_friends_prime_mentions_results() {
 	);
 }
 add_action( 'bp_activity_mentions_prime_results', 'bp_friends_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bp_friends_prime_mentions_results' );
 
 /** Emails ********************************************************************/
 
