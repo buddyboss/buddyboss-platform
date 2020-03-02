@@ -98,6 +98,8 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 		}
 
+		$this->add_field( 'bp-admin-registration-setting-tutorial', '', 'bp_admin_registration_setting_tutorial' );
+
 		// Main Privacy Settings Section
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );
 

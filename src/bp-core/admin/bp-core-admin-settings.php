@@ -1210,3 +1210,26 @@ function bp_admin_setting_callback_register_page_url() {
 
 	<?php
 }
+
+/**
+ * Link to Registration tutorial
+ *
+ * @since BuddyBoss 1.2.8
+ */
+function bp_admin_registration_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 62793,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
