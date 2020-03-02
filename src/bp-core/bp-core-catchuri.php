@@ -1148,6 +1148,19 @@ function bp_private_network_template_redirect() {
 				return;
 			}
 
+			$allow_custom_registration = bp_allow_custom_registration();
+			$actual_link               = ( isset($_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+			if ( $allow_custom_registration ) {
+
+				$link_array = explode('/', untrailingslashit( $actual_link ) );
+				$page       = end($link_array );
+
+				if (strpos( untrailingslashit( bp_custom_register_page_url() ),$page ) !== false) {
+					return;
+				}
+
+			}
+
 			// Redirect to MemberPress custom login page.
 			if ( function_exists( 'is_plugin_active' ) && is_plugin_active( 'memberpress/memberpress.php' ) ) {
 				$mepr_options_array = get_option( MEPR_OPTIONS_SLUG );
