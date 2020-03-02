@@ -798,10 +798,6 @@ function bp_friends_prime_mentions_results() {
 		return;
 	}
 
-	if ( function_exists( 'bp_activity_maybe_load_mentions_scripts' ) && ! bp_activity_maybe_load_mentions_scripts() ) {
-		return;
-	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
