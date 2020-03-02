@@ -46,7 +46,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 
 
 		// Main Registration Settings Section
-		$this->add_section( 'bp_registration', __( 'Registration Settings', 'buddyboss' ) );
+		$this->add_section( 'bp_registration', __( 'Registration', 'buddyboss' ) );
 
 		// Registration Settings.
 		$args          = array();
@@ -79,7 +79,7 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 			$args          = array();
 			//$args['class'] = 'child-no-padding';
 			$this->add_field( 'allow-custom-registration',
-				'Allow custom registration',
+				'Custom Registration URL',
 				'bp_admin_setting_callback_register_allow_custom_registration',
 				'intval',
 				$args );

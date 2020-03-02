@@ -1191,7 +1191,7 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 	?>
 
     <input id="allow-custom-registration" name="allow-custom-registration" type="checkbox" value="1" <?php checked( bp_allow_custom_registration( false ) ); ?> />
-    <label for="allow-custom-registration"><?php _e( 'Allow custom registration', 'buddyboss' ); ?></label>
+    <label for="allow-custom-registration"><?php _e( 'Redirect registrations to a custom URL', 'buddyboss' ); ?></label>
 
 	<?php
 }
