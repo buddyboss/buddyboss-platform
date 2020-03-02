@@ -28,17 +28,6 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		// Main General Settings Section
 		$this->add_section( 'bp_main', __( 'General Settings', 'buddyboss' ) );
 
-		// Registration Settings.
-		$args          = array();
-		$args['class'] = 'child-no-padding-first';
-		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval', $args );
-		$args          = array();
-		$args['class'] = 'child-no-padding';
-		$this->add_field( 'register-confirm-email', '', 'bp_admin_setting_callback_register_show_confirm_email', 'intval', $args );
-		$args          = array();
-		$args['class'] = 'child-no-padding';
-		$this->add_field( 'register-confirm-password', '', 'bp_admin_setting_callback_register_show_confirm_password', 'intval', $args );
-
 		// Account Deletion Settings.
 		$this->add_field( 'bp-disable-account-deletion', __( 'Account Deletion', 'buddyboss' ), 'bp_admin_setting_callback_account_deletion', 'intval' );
 
@@ -54,6 +43,60 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$this->add_field( 'hide-loggedout-adminbar', '', 'bp_admin_setting_callback_admin_bar', 'intval', $args );
 		$args = array();
 		$this->add_field( 'bp-admin-setting-tutorial', '', 'bp_admin_setting_tutorial' );
+
+
+		// Main Registration Settings Section
+		$this->add_section( 'bp_registration', __( 'Registration Settings', 'buddyboss' ) );
+
+		// Registration Settings.
+		$args          = array();
+		$args['class'] = 'child-no-padding-first';
+		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval', $args );
+
+		if ( (bool) bp_enable_site_registration() ) {
+
+			$allow_custom_registration = bp_allow_custom_registration();
+
+			if ( ! $allow_custom_registration ) {
+
+				$args          = array();
+				$args['class'] = 'child-no-padding';
+				$this->add_field( 'register-confirm-email',
+					'',
+					'bp_admin_setting_callback_register_show_confirm_email',
+					'intval',
+					$args );
+
+				$args          = array();
+				$args['class'] = 'child-no-padding';
+				$this->add_field( 'register-confirm-password',
+					'',
+					'bp_admin_setting_callback_register_show_confirm_password',
+					'intval',
+					$args );
+			}
+
+			$args          = array();
+			//$args['class'] = 'child-no-padding';
+			$this->add_field( 'allow-custom-registration',
+				'Allow custom registration',
+				'bp_admin_setting_callback_register_allow_custom_registration',
+				'intval',
+				$args );
+
+			if ( $allow_custom_registration ) {
+
+				$args          = array();
+				$args['class'] = 'child-no-padding';
+				$this->add_field( 'register-page-url',
+					'',
+					'bp_admin_setting_callback_register_page_url',
+					'string',
+					$args );
+
+			}
+
+		}
 
 		// Main Privacy Settings Section
 		$this->add_section( 'bp_privacy', __( 'Privacy', 'buddyboss' ) );

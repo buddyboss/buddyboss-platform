@@ -95,6 +95,13 @@ function bp_core_admin_get_static_pages() {
 		'activate' => __( 'Activate Account', 'buddyboss' ),
 	);
 
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( $allow_custom_registration ) {
+		unset( $static_pages['register'] );
+		unset( $static_pages['activate'] );
+	}
+
 	/**
 	 * Filters the default static pages for BuddyPress setup.
 	 *

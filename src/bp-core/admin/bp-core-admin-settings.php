@@ -1180,3 +1180,33 @@ function bp_group_directories_tutorial() {
 
 	<?php
 }
+
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_allow_custom_registration() {
+	?>
+
+    <input id="allow-custom-registration" name="allow-custom-registration" type="checkbox" value="1" <?php checked( bp_allow_custom_registration( false ) ); ?> />
+    <label for="allow-custom-registration"><?php _e( 'Allow custom registration', 'buddyboss' ); ?></label>
+
+	<?php
+}
+
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_page_url() {
+	?>
+
+    <label for="register-page-url"><?php _e( 'Registration URL: ', 'buddyboss' ); ?></label>
+    <input id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
+
+	<?php
+}

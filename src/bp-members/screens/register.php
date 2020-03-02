@@ -18,6 +18,12 @@ function bp_core_screen_signup() {
 		return;
 	}
 
+	$allow_custom_registration = bp_allow_custom_registration();
+	if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_custom_register_page_url() );
+		return;
+	}
+
 	// Not a directory.
 	bp_update_is_directory( false, 'register' );
 

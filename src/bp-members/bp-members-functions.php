@@ -2389,8 +2389,14 @@ function bp_core_wpsignup_redirect() {
 		return;
 	}
 
-	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) ) {
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) && ! $allow_custom_registration ) {
 		bp_core_redirect( bp_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_custom_register_page_url() );
 	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
