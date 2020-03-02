@@ -2122,7 +2122,24 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		width: 100%;
 	}
 }
-
+.modal-container.has-folderlocationUI{
+	.bb-model-footer a{
+		&.saving, &.loading{
+			pointer-events: none;
+			&:after {
+				content: "\e838";
+				font-family: "bb-icons";
+				font-size: 18px;
+				line-height: 1;
+				margin-left: 10px;
+				text-align: center;
+				display: inline-block;
+				-webkit-animation: spin 3s infinite linear;
+				animation: spin 3s infinite linear;
+			}
+	}
+	}
+}
 .bp-media-move-file,
 .bp-media-move-folder{
 	.bb-model-footer{
@@ -2169,6 +2186,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 	}
 	.ac_document_search_folder_list,
 	.location-folder-list-wrap{
+		&.has-error{
+			border-color: #f00;
+		}
 		.location-folder-title{
 			padding: 8px 0;
 			display: inline-block;
@@ -2200,6 +2220,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 			border: 1px solid #e7e9ec;
 			border-radius: 4px;
 			padding: 0 10px;
+			&.has-error{
+				border-color: #f00;
+			}
 			li{
 				position: relative;
 				margin: 0;

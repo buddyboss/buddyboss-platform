@@ -12855,6 +12855,22 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   width: 100%;
 }
 
+.modal-container.has-folderlocationUI .bb-model-footer a.saving, .modal-container.has-folderlocationUI .bb-model-footer a.loading {
+  pointer-events: none;
+}
+
+.modal-container.has-folderlocationUI .bb-model-footer a.saving:after, .modal-container.has-folderlocationUI .bb-model-footer a.loading:after {
+  content: "\e838";
+  font-family: "bb-icons";
+  font-size: 18px;
+  line-height: 1;
+  margin-right: 10px;
+  text-align: center;
+  display: inline-block;
+  -webkit-animation: spin 3s infinite linear;
+  animation: spin 3s infinite linear;
+}
+
 .bp-media-move-file .bb-model-footer,
 .bp-media-move-folder .bb-model-footer {
   display: inline-block;
@@ -12906,6 +12922,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   cursor: pointer;
 }
 
+.location-folder-list-wrap-main .ac_document_search_folder_list.has-error,
+.location-folder-list-wrap-main .location-folder-list-wrap.has-error {
+  border-color: #f00;
+}
+
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-title,
 .location-folder-list-wrap-main .location-folder-list-wrap .location-folder-title {
   padding: 8px 0;
@@ -12944,6 +12965,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   border: 1px solid #e7e9ec;
   border-radius: 4px;
   padding: 0 10px;
+}
+
+.location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list.has-error,
+.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list.has-error {
+  border-color: #f00;
 }
 
 .location-folder-list-wrap-main .ac_document_search_folder_list .location-folder-list li,

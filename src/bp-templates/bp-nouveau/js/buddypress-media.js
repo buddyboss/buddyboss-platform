@@ -231,8 +231,12 @@ window.bp = window.bp || {};
 			var folder_id 	= target.closest('.bp-media-move-file').find('.bb-folder-selected-id').val();
 
 			if ( '' === document_id || '' === folder_id ) {
+				target.closest('.modal-container').find('.location-folder-list').addClass('has-error');
 				return false;
 			}
+
+			target.closest('.modal-container').find('.location-folder-list').removeClass('has-error');
+			target.addClass('loading');
 
 			var data = {
 				'action'		: 'document_folder_move',
@@ -1808,7 +1812,7 @@ window.bp = window.bp || {};
 				privacy.removeClass('error');
 			}
 
-			target.prop('disabled',true);
+			target.prop('disabled',true).addClass('loading');
 
 			var data = {
 				'action'	: 'document_folder_save',
