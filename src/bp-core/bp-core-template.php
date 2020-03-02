@@ -404,7 +404,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 
 		// Use Timezone string if set.
 		$timezone_string = bp_get_option( 'timezone_string' );
-		if ( ! empty( $timezone_string ) ) {
+		if ( ! empty( $timezone_string ) && isset( $time ) ) {
 			$timezone_object = timezone_open( $timezone_string );
 			$datetime_object = date_create( "@{$time}" );
 			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
