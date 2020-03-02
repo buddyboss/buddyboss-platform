@@ -162,6 +162,12 @@ add_action( 'admin_init', 'bp_core_admin_register_page_fields' );
  */
 function bp_core_admin_register_registration_page_fields() {
 
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( $allow_custom_registration ) {
+		return;
+	}
+
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
 
 	$existing_pages = bp_core_get_directory_page_ids();
