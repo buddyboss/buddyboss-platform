@@ -20,7 +20,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
@@ -51,7 +51,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],
@@ -82,7 +82,7 @@ jQuery( document ).ready(
 							toolbar: toolbarOptions,
 							paste: {
 								forcePlainText: false,
-								cleanPastedHTML: false,
+								cleanPastedHTML: true,
 								cleanReplacements: [],
 								cleanAttrs: ['class', 'style', 'dir'],
 								cleanTags: ['meta'],

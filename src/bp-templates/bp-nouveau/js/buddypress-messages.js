@@ -588,7 +588,7 @@ window.bp = window.bp || {};
 					},
 					paste: {
 						forcePlainText: false,
-						cleanPastedHTML: false,
+						cleanPastedHTML: true,
 						cleanReplacements: [],
 						cleanAttrs: ['class', 'style', 'dir'],
 						cleanTags: ['meta'],
