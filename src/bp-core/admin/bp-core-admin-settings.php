@@ -834,7 +834,7 @@ function bp_admin_setting_callback_register() {
 	<input id="bp-enable-site-registration" name="bp-enable-site-registration" type="checkbox" value="1" <?php checked( bp_enable_site_registration() ); ?> />
 	<label for="bp-enable-site-registration"><?php _e( 'Allow non-members to register new accounts', 'buddyboss' ); ?></label>
 	<?php
-	if ( bp_is_active( 'invites' ) ) {
+	if ( false === bp_enable_site_registration() && bp_is_active( 'invites' ) ) {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
@@ -1244,34 +1244,4 @@ function bp_admin_registration_setting_tutorial() {
     </p>
 
 	<?php
-}
-
-/*
- Admin settings for showing the allow custom registration checkbox.
-*
-* @since BuddyBoss 1.2.8
-*
-*/
-function bp_admin_setting_callback_register_allow_custom_registration_email_invite() {
-	?>
-
-    <select name="allow-custom-registration" id="allow-custom-registration">
-        <option value="0" <?php selected( 0, bp_allow_custom_registration( false ) ); ?>><?php _e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
-    </select>
-	<?php
-	printf(
-		'<p class="description">%s</p>',
-		sprintf(
-			__(
-				'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
-				'buddyboss'
-			),
-			add_query_arg(
-				array(
-					'page' => 'bp-pages'
-				),
-				admin_url( 'admin.php' )
-			)
-		)
-	);
 }

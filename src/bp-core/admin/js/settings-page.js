@@ -779,10 +779,12 @@
 						$( '.register-text-box' ).hide();
 						$( '.register-email-checkbox' ).show();
 						$( '.register-password-checkbox' ).show();
+						$( '.registration-form-main-select p.description' ).show();
 					} else {
-						$('.register-email-checkbox').hide();
-						$('.register-password-checkbox').hide();
-						$('.register-text-box').show();
+						$( '.register-email-checkbox' ).hide();
+						$( '.register-password-checkbox' ).hide();
+						$( '.register-text-box' ).show();
+						$( '.registration-form-main-select p.description' ).hide();
 					}
 
 				} );

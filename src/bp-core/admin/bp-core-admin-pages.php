@@ -164,13 +164,15 @@ function bp_core_admin_register_registration_page_fields() {
 
 	$allow_custom_registration = bp_allow_custom_registration();
 
-	if ( $allow_custom_registration && ! bp_is_active( 'invites' ) ) {
+	if ( $allow_custom_registration ) {
 		return;
 	}
 
 	if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) ) {
 		return;
 	}
+
+
 
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
 
