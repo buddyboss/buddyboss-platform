@@ -7379,7 +7379,7 @@ function bp_get_article_prefix( $string ) {
 	);
 
 	if ( ! in_array( get_locale(), $supported_languages ) ) {
-		return $string;
+		return apply_filters( 'bp_get_article_prefix', __( 'a', 'buddyboss' ) . ' ' . $string, $string );
 	}
 
 	$vowel_array = array( 'a', 'e', 'i', 'o', 'u' );  // array of vowel
