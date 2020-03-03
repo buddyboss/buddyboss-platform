@@ -12068,10 +12068,6 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   display: none;
 }
 
-#buddypress .bp-media-document-uploader #bp-media-document-next {
-  float: left;
-}
-
 #buddypress .bp-media-document-uploader .bb-field-steps-2 {
   padding-top: 30px;
 }

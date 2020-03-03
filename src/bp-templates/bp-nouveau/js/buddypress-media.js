@@ -176,7 +176,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.activity .bp-document-move-activity, #media-stream .bp-document-move-activity', this.moveDocumentIntoFolder.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .data-head', this.sortDocuments.bind( this ) );
-			$( document ).on( 'click', '.modal-container .bb-field-steps-actions', this.createFolderNavigate.bind( this ) );
+			$( document ).on( 'click', '.modal-container .bb-field-steps-actions', this.documentPopupNavigate.bind( this ) );
 			$( document ).on( 'click', '.modal-container .bb-field-uploader-actions', this.uploadDocumentNavigate.bind( this ) );
 
 
@@ -1497,7 +1497,10 @@ window.bp = window.bp || {};
 		closeEditFolderModal: function(event){
 			event.preventDefault();
 
+			var currentPopup = $( event.currentTarget ).closest('#bp-media-edit-child-folder');
+
 			$('#bp-media-edit-child-folder').hide();
+			currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps').hide();
 			this.clearFolderLocationUI(event);
 
 		},
@@ -2095,7 +2098,7 @@ window.bp = window.bp || {};
 			sortTarget.hasClass('asce') ? sortTarget.removeClass('asce') : sortTarget.addClass('asce');
 		},
 
-		createFolderNavigate: function( event ) {
+		documentPopupNavigate: function( event ) {
 
 			event.preventDefault();
 

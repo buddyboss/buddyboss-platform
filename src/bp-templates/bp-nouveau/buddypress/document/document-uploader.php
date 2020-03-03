@@ -36,7 +36,7 @@
                             </div>
                         </div>
 
-                        <a id="bp-media-document-next" class="button bb-field-uploader-next bb-field-uploader-actions" href="#"><?php _e( 'Next', 'buddyboss' ); ?></a>
+                        <a id="bp-media-document-next" class="button bb-field-uploader-next bb-field-uploader-actions pull-right" href="#"><?php _e( 'Next', 'buddyboss' ); ?></a>
 
                     </div>
 
