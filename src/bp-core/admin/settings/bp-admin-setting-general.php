@@ -61,24 +61,24 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 			//$args['class'] = 'child-no-padding';
 			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
-			if ( $allow_custom_registration ) {
+			//if ( $allow_custom_registration ) {
 
 				$args          = array();
-				$args['class'] = 'child-no-padding';
+				$args['class'] = 'child-no-padding register-text-box';
 				$this->add_field( 'register-page-url', '', 'bp_admin_setting_callback_register_page_url', 'string', $args );
 
-			}
+			//}
 
-			if ( ! $allow_custom_registration ) {
+			//if ( ! $allow_custom_registration ) {
 
 				$args          = array();
-				$args['class'] = 'child-no-padding';
+				$args['class'] = 'child-no-padding register-email-checkbox';
 				$this->add_field( 'register-confirm-email', '', 'bp_admin_setting_callback_register_show_confirm_email', 'intval', $args );
 
 				$args          = array();
-				$args['class'] = 'child-no-padding';
+				$args['class'] = 'child-no-padding register-password-checkbox';
 				$this->add_field( 'register-confirm-password', '', 'bp_admin_setting_callback_register_show_confirm_password', 'intval', $args );
-			}
+			//}
 
 		} elseif ( bp_is_active( 'invites' ) ) {
 
