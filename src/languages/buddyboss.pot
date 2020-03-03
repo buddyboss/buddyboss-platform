@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-02 15:13:05+00:00\n"
+"POT-Creation-Date: 2020-03-03 08:26:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -910,8 +910,8 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2788
 #: bp-core/admin/bp-core-admin-functions.php:1492
-#: bp-core/admin/bp-core-admin-pages.php:300
-#: bp-core/admin/bp-core-admin-pages.php:334
+#: bp-core/admin/bp-core-admin-pages.php:310
+#: bp-core/admin/bp-core-admin-pages.php:344
 #: bp-core/deprecated/buddyboss/1.0.php:75 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
 #: bp-groups/classes/class-bp-groups-list-table.php:576
@@ -2101,11 +2101,11 @@ msgstr ""
 msgid "Component Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:165
+#: bp-core/admin/bp-core-admin-pages.php:175
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:181
+#: bp-core/admin/bp-core-admin-pages.php:191
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -2117,6 +2117,7 @@ msgstr ""
 #: bp-core/admin/bp-core-admin-settings.php:910
 #: bp-core/admin/bp-core-admin-settings.php:1026
 #: bp-core/admin/bp-core-admin-settings.php:1178
+#: bp-core/admin/bp-core-admin-settings.php:1243
 #: bp-core/admin/settings/bp-admin-setting-friends.php:95
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:387
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:439
@@ -2129,28 +2130,28 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:214
+#: bp-core/admin/bp-core-admin-pages.php:224
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:224
+#: bp-core/admin/bp-core-admin-pages.php:234
 msgid "Associate a WordPress page with the following Registration sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:243
+#: bp-core/admin/bp-core-admin-pages.php:253
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:291
-#: bp-core/admin/bp-core-admin-pages.php:325
+#: bp-core/admin/bp-core-admin-pages.php:301
+#: bp-core/admin/bp-core-admin-pages.php:335
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:307
-#: bp-core/admin/bp-core-admin-pages.php:341
+#: bp-core/admin/bp-core-admin-pages.php:317
+#: bp-core/admin/bp-core-admin-pages.php:351
 msgid "Create Page"
 msgstr ""
 
@@ -2441,12 +2442,26 @@ msgid ""
 "between both views."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1194
-msgid "Allow custom registration"
+#: bp-core/admin/bp-core-admin-settings.php:1196
+#: bp-core/admin/bp-core-admin-settings.php:1259
+msgid "BuddyBoss Registration"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-settings.php:1208
-msgid "Registration URL: "
+#: bp-core/admin/bp-core-admin-settings.php:1197
+msgid "Custom URL"
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1202
+#: bp-core/admin/bp-core-admin-settings.php:1265
+msgid ""
+"Use the default BuddyBoss registration form. Make sure to configure the <a "
+"href=\"%s\">registration pages</a>."
+msgstr ""
+
+#: bp-core/admin/bp-core-admin-settings.php:1222
+msgid ""
+"Enter a custom URL to redirect users to register to your site. Useful for "
+"membership plugins."
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-slugs.php:38
@@ -2798,7 +2813,7 @@ msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:76
-#: bp-core/admin/settings/bp-admin-setting-general.php:125
+#: bp-core/admin/settings/bp-admin-setting-general.php:113
 msgid "Activity Settings"
 msgstr ""
 
@@ -2869,34 +2884,34 @@ msgid "Toolbar"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:49
-#: bp-core/admin/settings/bp-admin-setting-registration.php:27
-msgid "Registration Settings"
+#: bp-core/admin/settings/bp-admin-setting-registration.php:21
+msgid "Registration"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:54
 msgid "Registrations"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:102
+#: bp-core/admin/settings/bp-admin-setting-general.php:90
 #: bp-xprofile/classes/class-bp-xprofile-component.php:342
 #: bp-xprofile/classes/class-bp-xprofile-component.php:494
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:105
+#: bp-core/admin/settings/bp-admin-setting-general.php:93
 msgid "Private Network"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:108
+#: bp-core/admin/settings/bp-admin-setting-general.php:96
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:116
+#: bp-core/admin/settings/bp-admin-setting-general.php:104
 #: bp-forums/admin/settings.php:1526
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:122
+#: bp-core/admin/settings/bp-admin-setting-general.php:110
 msgid "Groups Settings"
 msgstr ""
 
@@ -2997,8 +3012,8 @@ msgstr ""
 msgid "Messages Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-registration.php:21
-msgid "Registration"
+#: bp-core/admin/settings/bp-admin-setting-registration.php:27
+msgid "Registration Settings"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-xprofile.php:21
@@ -3590,7 +3605,7 @@ msgid ""
 msgstr ""
 
 #: bp-core/bp-core-catchuri.php:667 bp-core/bp-core-catchuri.php:777
-#: bp-core/bp-core-catchuri.php:1211
+#: bp-core/bp-core-catchuri.php:1224
 msgid "Please login to access this website."
 msgstr ""
 
@@ -3598,9 +3613,9 @@ msgstr ""
 msgid "Please login to access this group."
 msgstr ""
 
-#: bp-core/bp-core-catchuri.php:1227 bp-core/bp-core-catchuri.php:1243
-#: bp-core/bp-core-catchuri.php:1271 bp-core/bp-core-catchuri.php:1288
-#: bp-core/bp-core-catchuri.php:1312 bp-core/bp-core-catchuri.php:1332
+#: bp-core/bp-core-catchuri.php:1240 bp-core/bp-core-catchuri.php:1256
+#: bp-core/bp-core-catchuri.php:1284 bp-core/bp-core-catchuri.php:1301
+#: bp-core/bp-core-catchuri.php:1325 bp-core/bp-core-catchuri.php:1345
 msgid "You must log in to access the page you requested."
 msgstr ""
 
@@ -3694,7 +3709,7 @@ msgstr ""
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:908 bp-members/screens/register.php:144
+#: bp-core/bp-core-cssjs.php:908 bp-members/screens/register.php:150
 msgid "This is a required field."
 msgstr ""
 
@@ -14548,23 +14563,23 @@ msgstr ""
 msgid "Your account is now active!"
 msgstr ""
 
-#: bp-members/screens/register.php:81
+#: bp-members/screens/register.php:87
 msgid "Please make sure to enter your password."
 msgstr ""
 
-#: bp-members/screens/register.php:89 bp-members/screens/register.php:336
+#: bp-members/screens/register.php:95 bp-members/screens/register.php:342
 msgid "Please make sure to enter your email twice."
 msgstr ""
 
-#: bp-members/screens/register.php:94 bp-members/screens/register.php:341
+#: bp-members/screens/register.php:100 bp-members/screens/register.php:347
 msgid "The emails entered do not match."
 msgstr ""
 
-#: bp-members/screens/register.php:103
+#: bp-members/screens/register.php:109
 msgid "Please make sure to enter your password twice."
 msgstr ""
 
-#: bp-members/screens/register.php:108
+#: bp-members/screens/register.php:114
 msgid "The passwords entered do not match."
 msgstr ""
 
@@ -18248,7 +18263,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:119
+#: bp-core/admin/settings/bp-admin-setting-general.php:107
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
