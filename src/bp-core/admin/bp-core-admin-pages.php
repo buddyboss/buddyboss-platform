@@ -164,7 +164,11 @@ function bp_core_admin_register_registration_page_fields() {
 
 	$allow_custom_registration = bp_allow_custom_registration();
 
-	if ( $allow_custom_registration ) {
+	if ( $allow_custom_registration && ! bp_is_active( 'invites' ) ) {
+		return;
+	}
+
+	if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) ) {
 		return;
 	}
 

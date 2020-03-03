@@ -834,7 +834,7 @@ function bp_admin_setting_callback_register() {
 	<input id="bp-enable-site-registration" name="bp-enable-site-registration" type="checkbox" value="1" <?php checked( bp_enable_site_registration() ); ?> />
 	<label for="bp-enable-site-registration"><?php _e( 'Allow non-members to register new accounts', 'buddyboss' ); ?></label>
 	<?php
-	if ( false === bp_enable_site_registration() && bp_is_active( 'invites' ) ) {
+	if ( bp_is_active( 'invites' ) ) {
 		printf(
 			'<p class="description">%s</p>',
 			sprintf(
@@ -1188,12 +1188,24 @@ function bp_group_directories_tutorial() {
 *
 */
 function bp_admin_setting_callback_register_allow_custom_registration() {
+
+	$allow_custom_registration = bp_allow_custom_registration();
 	?>
 
-    <input id="allow-custom-registration" name="allow-custom-registration" type="checkbox" value="1" <?php checked( bp_allow_custom_registration( false ) ); ?> />
-    <label for="allow-custom-registration"><?php _e( 'Redirect registrations to a custom URL', 'buddyboss' ); ?></label>
-
+    <select name="allow-custom-registration" id="allow-custom-registration">
+	    <option value="0" <?php selected( 0, $allow_custom_registration ); ?>><?php _e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
+	    <option value="1" <?php selected( 1, $allow_custom_registration ); ?>><?php _e( 'Custom URL', 'buddyboss' ); ?></option>
+    </select>
 	<?php
+    if ( ! $allow_custom_registration ) {
+	    printf( '<p class="description">%s</p>',
+		    sprintf( __( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
+			    'buddyboss' ),
+			    add_query_arg( array(
+				    'page' => 'bp-pages'
+			    ),
+				    admin_url( 'admin.php' ) ) ) );
+    }
 }
 
 /*
@@ -1204,11 +1216,11 @@ function bp_admin_setting_callback_register_allow_custom_registration() {
 */
 function bp_admin_setting_callback_register_page_url() {
 	?>
-
-    <label for="register-page-url"><?php _e( 'Registration URL: ', 'buddyboss' ); ?></label>
-    <input id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
-
+    <input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
 	<?php
+	printf(
+		'<p class="description">%s</p>', sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+	);
 }
 
 /**
@@ -1232,4 +1244,34 @@ function bp_admin_registration_setting_tutorial() {
     </p>
 
 	<?php
+}
+
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_allow_custom_registration_email_invite() {
+	?>
+
+    <select name="allow-custom-registration" id="allow-custom-registration">
+        <option value="0" <?php selected( 0, bp_allow_custom_registration( false ) ); ?>><?php _e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
+    </select>
+	<?php
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			__(
+				'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
+				'buddyboss'
+			),
+			add_query_arg(
+				array(
+					'page' => 'bp-pages'
+				),
+				admin_url( 'admin.php' )
+			)
+		)
+	);
 }

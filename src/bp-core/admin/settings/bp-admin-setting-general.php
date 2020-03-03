@@ -53,49 +53,46 @@ class BP_Admin_Setting_General extends BP_Admin_Setting_tab {
 		$args['class'] = 'child-no-padding-first';
 		$this->add_field( 'bp-enable-site-registration', __( 'Registrations', 'buddyboss' ), 'bp_admin_setting_callback_register', 'intval', $args );
 
-		if ( (bool) bp_enable_site_registration() ) {
+		if ( bp_enable_site_registration() ) {
 
 			$allow_custom_registration = bp_allow_custom_registration();
 
-			if ( ! $allow_custom_registration ) {
-
-				$args          = array();
-				$args['class'] = 'child-no-padding';
-				$this->add_field( 'register-confirm-email',
-					'',
-					'bp_admin_setting_callback_register_show_confirm_email',
-					'intval',
-					$args );
-
-				$args          = array();
-				$args['class'] = 'child-no-padding';
-				$this->add_field( 'register-confirm-password',
-					'',
-					'bp_admin_setting_callback_register_show_confirm_password',
-					'intval',
-					$args );
-			}
-
 			$args          = array();
 			//$args['class'] = 'child-no-padding';
-			$this->add_field( 'allow-custom-registration',
-				'Custom Registration URL',
-				'bp_admin_setting_callback_register_allow_custom_registration',
-				'intval',
-				$args );
+			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration', 'intval', $args );
 
 			if ( $allow_custom_registration ) {
 
 				$args          = array();
 				$args['class'] = 'child-no-padding';
-				$this->add_field( 'register-page-url',
-					'',
-					'bp_admin_setting_callback_register_page_url',
-					'string',
-					$args );
+				$this->add_field( 'register-page-url', '', 'bp_admin_setting_callback_register_page_url', 'string', $args );
 
 			}
 
+			if ( ! $allow_custom_registration ) {
+
+				$args          = array();
+				$args['class'] = 'child-no-padding';
+				$this->add_field( 'register-confirm-email', '', 'bp_admin_setting_callback_register_show_confirm_email', 'intval', $args );
+
+				$args          = array();
+				$args['class'] = 'child-no-padding';
+				$this->add_field( 'register-confirm-password', '', 'bp_admin_setting_callback_register_show_confirm_password', 'intval', $args );
+			}
+
+		} elseif ( bp_is_active( 'invites' ) ) {
+
+			$args          = array();
+			//$args['class'] = 'child-no-padding';
+			$this->add_field( 'allow-custom-registration', 'Registration Form', 'bp_admin_setting_callback_register_allow_custom_registration_email_invite', 'intval', $args );
+
+			$args          = array();
+			$args['class'] = 'child-no-padding';
+			$this->add_field( 'register-confirm-email', '', 'bp_admin_setting_callback_register_show_confirm_email', 'intval', $args );
+
+			$args          = array();
+			$args['class'] = 'child-no-padding';
+			$this->add_field( 'register-confirm-password', '', 'bp_admin_setting_callback_register_show_confirm_password', 'intval', $args );
 		}
 
 		$this->add_field( 'bp-admin-registration-setting-tutorial', '', 'bp_admin_registration_setting_tutorial' );

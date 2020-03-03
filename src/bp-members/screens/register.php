@@ -20,8 +20,14 @@ function bp_core_screen_signup() {
 
 	$allow_custom_registration = bp_allow_custom_registration();
 	if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
-		bp_core_redirect( bp_custom_register_page_url() );
-		return;
+
+		// Check it's not a Email Invites
+		if ( bp_is_active( 'invites' ) && isset( $_GET ) && isset( $_GET['bp-invites'] ) && 'accept-member-invitation' === $_GET['bp-invites'] ) {
+			// Nothing to do here.
+		} else {
+			bp_core_redirect( bp_custom_register_page_url() );
+			return;
+		}
 	}
 
 	// Not a directory.
