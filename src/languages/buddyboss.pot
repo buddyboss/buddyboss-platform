@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-02 10:54:27+00:00\n"
+"POT-Creation-Date: 2020-03-03 06:17:59+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -2521,7 +2521,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:36
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:83
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:71
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:51
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:59
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:68
 #: bp-templates/bp-nouveau/buddypress/groups/single/documents.php:27
 #: bp-templates/bp-nouveau/buddypress/members/single/document.php:23
@@ -13162,6 +13162,7 @@ msgstr ""
 #: bp-integrations/learndash/buddypress/Reports.php:111
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:63
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:51
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:39
 msgid "Next"
 msgstr ""
 
@@ -15787,7 +15788,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:28
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:75
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:63
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:43
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:51
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:60
 msgid "Search Folder"
 msgstr ""
@@ -15796,7 +15797,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:33
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:80
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:68
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:48
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:56
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:65
 msgid "Select Folder"
 msgstr ""
@@ -15854,7 +15855,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/create-child-folder.php:73
 #: bp-templates/bp-nouveau/buddypress/document/create-folder.php:61
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:41
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:49
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:58
 msgid "Destination Folder"
 msgstr ""
@@ -15864,20 +15865,24 @@ msgstr ""
 msgid "Previous"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:28
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:30
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:31
 msgid "Write something about your documents, to be shown on the group feed"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:28
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:30
 msgid "Write something about your documents, to be shown on your timeline"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:65
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:75
 msgid "Add more documents"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:66
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:76
+msgid "previous"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/document-uploader.php:77
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:74
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:55
 #: bp-templates/bp-nouveau/buddypress/media/uploader.php:90

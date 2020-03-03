@@ -177,6 +177,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .pager .dt-more-container.load-more', this.injectDocuments.bind( this ) );
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .data-head', this.sortDocuments.bind( this ) );
 			$( document ).on( 'click', '.modal-container .bb-field-steps-actions', this.createFolderNavigate.bind( this ) );
+			$( document ).on( 'click', '.modal-container .bb-field-uploader-actions', this.uploadDocumentNavigate.bind( this ) );
 
 
 			// Gifs autoplay
@@ -389,6 +390,13 @@ window.bp = window.bp || {};
 			$('#bp-media-uploader-modal-status-text').text('');
 			this.dropzone_obj.destroy();
 			this.dropzone_media = [];
+
+			var currentPopup = $(event.currentTarget).closest('#bp-media-uploader');
+
+			if( currentPopup.find('.bb-field-steps').length ){
+				currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps-2').hide();
+				currentPopup.find('#bp-media-document-prev, #bp-media-document-submit').hide();
+			}
 
 			this.clearFolderLocationUI(event);
 
@@ -1103,7 +1111,7 @@ window.bp = window.bp || {};
 						self.dropzone_media.push( response.data );
 					}
 					$('#bp-media-document-add-more').show();
-					$('#bp-media-document-submit').show();
+					$('#bp-media-document-next').show();
 					$('#bp-media-uploader-modal-title').text(BP_Nouveau.media.i18n_strings.uploading + '...');
 					$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 				});
@@ -1125,7 +1133,7 @@ window.bp = window.bp || {};
 					if ( ! self.dropzone_obj.getAcceptedFiles().length ) {
 						$('#bp-media-uploader-modal-status-text').text('');
 						$('#bp-media-document-add-more').hide();
-						$('#bp-media-document-submit').hide();
+						$('#bp-media-document-next').hide();
 					} else {
 						$('#bp-media-uploader-modal-status-text').text(wp.i18n.sprintf( BP_Nouveau.media.i18n_strings.upload_status, self.dropzone_media.length, self.dropzone_obj.getAcceptedFiles().length )).show();
 					}
@@ -2108,6 +2116,25 @@ window.bp = window.bp || {};
 			}
 
 			currentSlide.slideUp(200).siblings('.bb-field-steps').slideDown(200);
+		},
+
+		uploadDocumentNavigate: function( event ) {
+
+			event.preventDefault()
+
+			var target = $(event.currentTarget), currentPopup = $(target).closest('#bp-media-uploader');
+
+			if( $(target).hasClass('bb-field-uploader-next') ){
+				currentPopup.find('.bb-field-steps-1').slideUp(200).siblings('.bb-field-steps').slideDown(200);
+				currentPopup.find('#bp-media-document-submit, #bp-media-document-prev').show();
+				currentPopup.find('#bp-media-document-add-more').hide();
+			} else{
+				$(target).hide();
+				currentPopup.find('#bp-media-document-submit, #bp-media-document-prev').hide();
+				currentPopup.find('#bp-media-document-add-more').show();
+				currentPopup.find('.bb-field-steps-2').slideUp(200).siblings('.bb-field-steps').slideDown(200);
+			}
+
 		},
 
 		/**

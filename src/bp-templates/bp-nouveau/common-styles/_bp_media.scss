@@ -1403,6 +1403,18 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 	}
 
 }
+#buddypress .bp-media-document-uploader{
+	#bp-media-document-prev,
+	#bp-media-document-next{
+		display: none;
+	}
+	#bp-media-document-next{
+		float: right;
+	}
+	.bb-field-steps-2{
+		padding-top: 30px;
+	}	
+}
 #media-folder-document-data-table td.svg-document-icon {
 	padding-right: 0px;
 }
