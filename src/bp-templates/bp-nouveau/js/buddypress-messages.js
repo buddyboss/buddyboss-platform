@@ -585,6 +585,14 @@ window.bp = window.bp || {};
 					},
 					toolbar: {
 						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: false,
+						cleanReplacements: [],
+						cleanAttrs: ['class', 'style', 'dir'],
+						cleanTags: ['meta'],
+						unwrapTags: []
 					}
 				});
 

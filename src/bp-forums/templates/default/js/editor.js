@@ -17,7 +17,15 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.description,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions
+							toolbar: toolbarOptions,
+							paste: {
+								forcePlainText: false,
+								cleanPastedHTML: false,
+								cleanReplacements: [],
+								cleanAttrs: ['class', 'style', 'dir'],
+								cleanTags: ['meta'],
+								unwrapTags: []
+							}
 						}
 					);
 
@@ -40,7 +48,15 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_reply,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions
+							toolbar: toolbarOptions,
+							paste: {
+								forcePlainText: false,
+								cleanPastedHTML: false,
+								cleanReplacements: [],
+								cleanAttrs: ['class', 'style', 'dir'],
+								cleanTags: ['meta'],
+								unwrapTags: []
+							}
 						}
 					);
 
@@ -63,7 +79,15 @@ jQuery( document ).ready(
 								text: window.bbpEditorJsStrs.type_topic,
 								hideOnClick: true
 							},
-							toolbar: toolbarOptions
+							toolbar: toolbarOptions,
+							paste: {
+								forcePlainText: false,
+								cleanPastedHTML: false,
+								cleanReplacements: [],
+								cleanAttrs: ['class', 'style', 'dir'],
+								cleanTags: ['meta'],
+								unwrapTags: []
+							}
 						}
 					);
 
