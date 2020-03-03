@@ -408,7 +408,7 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 			$timezone_object = timezone_open( $timezone_string );
 			$datetime_object = date_create( "@{$time}" );
 
-			if ( isset( $timezone_object ) && false !== $timezone_object && isset( $datetime_object ) && false !== $datetime_object ) {
+			if ( false !== $timezone_object && false !== $datetime_object ) {
 				$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
 			} else {
 				$timezone_offset = bp_get_option( 'gmt_offset' );

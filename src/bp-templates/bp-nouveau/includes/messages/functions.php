@@ -400,7 +400,7 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 		$timezone_object = timezone_open( $timezone_string );
 		$datetime_object = date_create( "@{$date}" );
 
-		if ( isset( $timezone_object ) && false !== $timezone_object && isset( $datetime_object ) && false !== $datetime_object ) {
+		if ( false !== $timezone_object && false !== $datetime_object ) {
 			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
 		} else {
 			$timezone_offset = bp_get_option( 'gmt_offset' );
