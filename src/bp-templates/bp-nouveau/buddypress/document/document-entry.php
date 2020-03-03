@@ -58,6 +58,9 @@ if ( $attachment_id ) {
 			</a>
 			<div class="media-folder_action__list">
 				<ul>
+					<?php if( $attachment_id ){ ?>
+						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a></li>	
+					<?php } ?>
 					<li class="rename_file"><a href="#" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
 					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 					<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>

@@ -1703,6 +1703,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 						content: '\e937';
 						font-size: 15px;
 					}
+					&.download_file a:before{
+						content: '\e890';
+					}
 				}
 			}
 		}

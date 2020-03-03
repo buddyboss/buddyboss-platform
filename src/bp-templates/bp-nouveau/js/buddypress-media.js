@@ -2283,6 +2283,11 @@ window.bp = window.bp || {};
 		 * File action Button
 		 */
 		fileActionButton: function (event) {
+
+			if( $( event.currentTarget ).parent().hasClass('download_file') ){
+				return;
+			}
+			
 			event.preventDefault();
 			$(event.currentTarget).closest('.media-folder_items').toggleClass('is-visible').siblings('.media-folder_items').removeClass('is-visible');
 		},

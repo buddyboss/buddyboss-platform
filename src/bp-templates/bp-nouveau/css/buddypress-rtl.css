@@ -12417,6 +12417,10 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
   font-size: 15px;
 }
 
+#media-folder-document-data-table .media-folder_items .media-folder_actions .media-folder_action__list ul li.download_file a:before {
+  content: '\e890';
+}
+
 @media screen and (max-width: 540px) {
   #media-folder-document-data-table .media-folder_items {
     -webkit-box-orient: vertical;
