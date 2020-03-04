@@ -11632,7 +11632,7 @@ img.emojioneemoji {
 */
 #group-messages-container {
   background: #fff;
-  border: 1px solid #E7E9EC;
+  border: 1px solid #e7e9ec;
   border-radius: 4px;
   margin-bottom: 20px;
   display: flex;
@@ -11669,7 +11669,7 @@ img.emojioneemoji {
 }
 
 .bb-panel-head {
-  border-bottom: 1px solid #E7E9EC;
+  border-bottom: 1px solid #e7e9ec;
   padding: 15px 20px;
   position: relative;
 }
@@ -11716,7 +11716,7 @@ img.emojioneemoji {
 
 .bb-panel-footer {
   display: none;
-  border-top: 1px solid #E7E9EC;
+  border-top: 1px solid #e7e9ec;
   padding: 10px 20px;
   text-align: left;
 }
@@ -11806,7 +11806,7 @@ body.groups.messages span.select2-dropdown.select2-dropdown--below {
 }
 
 .bb-groups-messages-right-bottom {
-  border-top: 1px solid #E7E9EC;
+  border-top: 1px solid #e7e9ec;
   height: 100%;
 }
 
@@ -11815,10 +11815,10 @@ body.groups.messages span.select2-dropdown.select2-dropdown--below {
 }
 
 body.groups.messages #send_group_message_form .select2-container--default .select2-selection--multiple .select2-selection__choice {
-  background-color: #4D5C6D;
-  border-color: #4D5C6D;
+  background-color: #4d5c6d;
+  border-color: #4d5c6d;
   font-size: 14px;
-  color: #FFF;
+  color: #fff;
   letter-spacing: -0.24px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -12000,7 +12000,7 @@ span.icons:before {
 .bp-single-message-content .bp-message-content-wrap p.joined {
   color: #847d7d;
   font-style: italic;
-  font-weight: bold;
+  font-weight: 500;
 }
 
 .total-members-text:empty {
@@ -12061,28 +12061,28 @@ span.icons:before {
   left: 0;
   bottom: 0;
   background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .bp-group-message-slider:before {
   position: absolute;
-  content: ' ';
+  content: " ";
   height: 14px;
   width: 14px;
   right: 3px;
   bottom: 3px;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
+  background-color: #fff;
+  -webkit-transition: 0.4s;
+  transition: 0.4s;
 }
 
 .bb-groups-messages-left-inner input:checked + .bp-group-message-slider {
-  background-color: #007CFF;
+  background-color: #007cff;
 }
 
 .bb-groups-messages-left-inner .input:focus + .bp-group-message-slider {
-  box-shadow: 0 0 1px #007CFF;
+  box-shadow: 0 0 1px #007cff;
 }
 
 .bb-groups-messages-left-inner input:checked + .bp-group-message-slider:before {
@@ -12108,7 +12108,7 @@ span.icons:before {
 }
 
 .message-lists .group-thread .thread-avatar:before {
-  content: '\f307';
+  content: "\f307";
   font-family: dashicons;
   font-style: normal;
   speak: none;
@@ -12143,21 +12143,21 @@ span.icons:before {
 }
 
 .hr-text {
-  line-height: 1em;
+  line-height: 1;
   position: relative;
   outline: 0;
   border: 0;
-  color: black;
+  color: #000;
   text-align: center;
   height: 1.5em;
-  opacity: .5;
+  opacity: 0.5;
   width: 100%;
   background: transparent;
   margin: 0;
 }
 
 .hr-text:before {
-  content: '';
+  content: "";
   background: #818078;
   position: absolute;
   right: 0;
@@ -12170,16 +12170,15 @@ span.icons:before {
   content: attr(data-content);
   position: relative;
   display: inline-block;
-  color: black;
-  padding: 0 .5em;
-  line-height: 1.5em;
+  padding: 0.5em;
+  line-height: 1.5;
   color: #818078;
-  background-color: #FFFFFF;
+  background-color: #fff;
 }
 
 @media screen and (min-width: 1081px) {
   .bb-groups-messages-left {
-    border-left: 1px solid #E7E9EC;
+    border-left: 1px solid #e7e9ec;
   }
   .add-more-members {
     display: none;
@@ -12206,7 +12205,7 @@ span.icons:before {
   .bb-groups-messages-left.bb-select-member-view {
     position: fixed;
     background: rgba(0, 0, 0, 0.69);
-    content: '';
+    content: "";
     width: 100%;
     height: 100%;
     top: 0;
@@ -12229,7 +12228,8 @@ span.icons:before {
   .bb-groups-messages-left.bb-select-member-view .group-messages-members-listing {
     display: block;
   }
-  .bb-groups-messages-left.bb-select-member-view select.group-messages-select-members-dropdown, .bb-groups-messages-left.bb-select-member-view .add-more-members {
+  .bb-groups-messages-left.bb-select-member-view select.group-messages-select-members-dropdown,
+  .bb-groups-messages-left.bb-select-member-view .add-more-members {
     display: none;
   }
   .bb-groups-messages-left.bb-select-member-view .group-messages-members-listing {
