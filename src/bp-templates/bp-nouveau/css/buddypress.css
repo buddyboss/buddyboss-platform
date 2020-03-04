@@ -11921,6 +11921,11 @@ div#bp-group-message-content {
   width: 100%;
 }
 
+#group-messages-container .bb-groups-messages-left .list-title > a {
+  font-size: 15px;
+  font-weight: 400;
+}
+
 #group-messages-container .bb-groups-messages-left .action button {
   height: auto;
   min-height: 10px;

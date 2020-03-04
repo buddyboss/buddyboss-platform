@@ -285,6 +285,10 @@ div#bp-group-message-content {
 	font-size: 15px;
 	margin: 0 auto;
 	width: 100%;
+	> a{
+		font-size: 15px;
+		font-weight: 400;
+	}
 }
 
 #group-messages-container .bb-groups-messages-left .action button {
