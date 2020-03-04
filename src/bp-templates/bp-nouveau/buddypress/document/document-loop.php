@@ -12,6 +12,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 
 		<div class="document-data-table-head">
+			<span class="data-head-sort-label">Sort By:</span>
 			<div class="data-head data-head-name">
 				<span>
 					Name

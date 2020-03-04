@@ -647,6 +647,8 @@ window.bp = window.bp || {};
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
+			
 
 			// Close notice
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
@@ -1006,7 +1008,7 @@ window.bp = window.bp || {};
 			var current_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
 			var current_name_text = current_name.children('span').text();
 			
-			current_name.hide().siblings('.media-folder_name_edit').show().val(current_name_text).focus().select();
+			current_name.hide().siblings('.media-folder_name_edit_wrap').show().children('.media-folder_name_edit').val(current_name_text).focus().select();
 
 		},
 
@@ -1032,14 +1034,14 @@ window.bp = window.bp || {};
 				document_edit.addClass('error');
 			}
 
-			if( event.keyCode == 27 ){
+			if( $( event.currentTarget ).hasClass('name_edit_cancel') || event.keyCode == 27 ){
 
 				document_edit.removeClass('error');
-				document_edit.hide().siblings('.media-folder_name').show();
+				document_edit.parent().hide().siblings('.media-folder_name').show();
 				
 			}
 				
-			if( event.keyCode == 13 ) {
+			if( $( event.currentTarget ).hasClass('name_edit_save') || event.keyCode == 13 ) {
 
 				if( !matchStatus ){
 					return; // prevent user to add not supported characters
@@ -1050,9 +1052,11 @@ window.bp = window.bp || {};
 				// Make ajax call to save new file name here.
 				//use variable 'document_name_val' as a new name while making an ajax call.
 
-				document_edit.hide().siblings('.media-folder_name').show();
+				document_edit.parent().hide().siblings('.media-folder_name').show();
 
 			}
+
+			event.preventDefault();
 
 		},
 

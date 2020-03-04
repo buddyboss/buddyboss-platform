@@ -33,7 +33,15 @@ if ( $attachment_id ) {
 		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">
 			<span><?php bp_document_title(); ?></span><?php echo $extension ? '.' . $extension : ''; ?>
 		</a>
-		<input type="text" value="" class="media-folder_name_edit" />
+		<div class="media-folder_name_edit_wrap">
+			<input type="text" value="" class="media-folder_name_edit" />
+			<?php if( wp_is_mobile() ){ ?>
+				<a href="#" class="name_edit_cancel button small"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
+				<a href="#" class="name_edit_save button small pull-right"><?php _e( 'Save', 'buddyboss' ); ?></a>
+			<?php } ?>
+			
+		</div>
+		
 	</div>
 
 	<div class="media-folder_modified">

@@ -1442,6 +1442,9 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 	display: flex;
 	border-bottom: 1px solid #E7E9EC;
 	padding: 0 0 8px;
+	.data-head-sort-label{
+		display: none;
+	}
 	.data-head{
 		font-size: 12px;
 		color: #939597;
@@ -1482,11 +1485,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
         -ms-flex-pack: end;
 		justify-content: flex-end;
 		padding: 10px 0;
-		&:before{
-			content: 'Sort By:';
+		.data-head-sort-label{
 			position: absolute;
 			left: 25px;
 			font-size: 14px;
+			display: inline-block;
 		}
 		.data-head-name,
 		.data-head-modified,
@@ -1593,11 +1596,19 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 				white-space: pre;
 			}
 		}
+		.media-folder_name_edit_wrap{
+			display: none;
+			padding-right: 5px;
+			>a{
+				margin: 5px 0;
+			}
+		}
 		.media-folder_name_edit{
 			height: 32px;
-			display: none;
-			margin: 0 8px 8px 0;
+			width: 100%;
+			margin: 0 8px 0 0;
 		}
+
 	}
 	.media-folder_details__bottom{
 		display: block;

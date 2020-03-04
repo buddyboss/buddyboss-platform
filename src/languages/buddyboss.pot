@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-03 08:44:08+00:00\n"
+"POT-Creation-Date: 2020-03-04 08:53:38+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -529,6 +529,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/common/js-templates/invites/parts/bp-invites-form.php:7
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-folder-move.php:48
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:50
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:39
 #: bp-templates/bp-nouveau/buddypress/groups/single/invite/send-invites.php:85
 #: bp-templates/bp-nouveau/includes/activity/functions.php:195
 #: bp-xprofile/classes/class-bp-xprofile-field.php:1497
@@ -899,7 +900,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/actions.php:13
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:44
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:114
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:66
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:74
 #: bp-templates/bp-nouveau/buddypress/media/actions.php:13
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:533
 #: bp-templates/bp-nouveau/includes/activity/template-tags.php:534
@@ -10246,7 +10247,7 @@ msgstr ""
 #: bp-templates/bp-nouveau/buddypress/document/activity-document-move.php:51
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:43
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:113
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:65
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:73
 msgid "Move"
 msgstr ""
 
@@ -10676,7 +10677,7 @@ msgid "Manage Tag: \"%s\""
 msgstr ""
 
 #: bp-forums/templates/default/bbpress/form-topic-tag.php:21
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:64
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:72
 msgid "Rename"
 msgstr ""
 
@@ -11743,6 +11744,7 @@ msgstr ""
 
 #: bp-groups/bp-groups-admin.php:165
 #: bp-templates/bp-nouveau/buddypress/assets/_attachments/avatars/camera.php:23
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:40
 #: bp-templates/bp-nouveau/buddypress/document/edit-child-folder.php:92
 #: bp-templates/bp-nouveau/includes/functions.php:1381
 #: bp-templates/bp-nouveau/includes/functions.php:1433
@@ -15420,7 +15422,7 @@ msgid "Capabilities"
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/activity/activity-loop.php:28
-#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:59
+#: bp-templates/bp-nouveau/buddypress/document/document-loop.php:60
 #: bp-templates/bp-nouveau/buddypress/document/uploader.php:56
 #: bp-templates/bp-nouveau/buddypress/media/albums.php:43
 #: bp-templates/bp-nouveau/buddypress/media/media-loop.php:25
@@ -15809,7 +15811,7 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:32
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:102
-#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:62
+#: bp-templates/bp-nouveau/buddypress/document/document-entry.php:70
 msgid "Download"
 msgstr ""
 
