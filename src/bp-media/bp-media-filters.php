@@ -41,6 +41,7 @@ add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 );
+add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 );
 //add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );
 
 // Core tools
@@ -597,6 +598,24 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
                     bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
+        }
+    }
+}
+
+/**
+ * Delete gif attached to messages
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $thread_id
+ * @param $message_ids
+ */
+function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
+
+	if ( ! empty( $message_ids ) ) {
+		foreach ( $message_ids as $message_id ) {
+			bp_messages_update_meta( $message_id, '_gif_data', '' );
+			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
+
         }
     }
 }
