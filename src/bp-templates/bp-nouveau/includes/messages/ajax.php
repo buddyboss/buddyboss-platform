@@ -1170,7 +1170,10 @@ function bp_nouveau_ajax_get_thread_messages() {
 		}
 	}
 
-	if ( empty( $_POST['js_thread'] ) ) {
+	//if ( empty( $_POST['js_thread'] ) ) {
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$is_participated = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id = %d AND subject != %s", $thread_template->thread->thread_id, bp_loggedin_user_id(), $subject_deleted_text ) ); // WPCS: db call ok. // WPCS: cache ok.
 
 		$thread->thread = array(
 			'id'                        => bp_get_the_thread_id(),
@@ -1187,6 +1190,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 			'group_message_thread_type' => $group_message_thread_type,
 			'group_message_fresh'       => $group_message_fresh,
 			'message_from'              => $message_from,
+			'is_participated'           => empty( $is_participated ) ? 0 : 1
 		);
 
 		if ( is_array( $thread_template->thread->recipients ) ) {
@@ -1209,7 +1213,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 				}
 			}
 		}
-	}
+	//}
 
 	$thread->messages = array();
 	$i                = 0;
