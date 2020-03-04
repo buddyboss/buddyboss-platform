@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-03 08:26:03+00:00\n"
+"POT-Creation-Date: 2020-03-04 12:02:53+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -403,7 +403,7 @@ msgstr ""
 #: bp-forums/replies/template.php:54 bp-forums/replies/template.php:1982
 #: bp-forums/topics/template.php:54 bp-forums/topics/template.php:2576
 #: bp-groups/classes/class-bp-groups-list-table.php:570
-#: bp-invites/bp-invites-admin.php:263 bp-xprofile/bp-xprofile-admin.php:924
+#: bp-invites/bp-invites-admin.php:273 bp-xprofile/bp-xprofile-admin.php:924
 #: bp-xprofile/bp-xprofile-repeaters.php:777
 #: bp-xprofile/bp-xprofile-repeaters.php:779
 #: bp-xprofile/bp-xprofile-repeaters.php:806
@@ -910,12 +910,12 @@ msgstr ""
 
 #: bp-activity/bp-activity-template.php:2788
 #: bp-core/admin/bp-core-admin-functions.php:1492
-#: bp-core/admin/bp-core-admin-pages.php:310
-#: bp-core/admin/bp-core-admin-pages.php:344
+#: bp-core/admin/bp-core-admin-pages.php:312
+#: bp-core/admin/bp-core-admin-pages.php:346
 #: bp-core/deprecated/buddyboss/1.0.php:75 bp-forums/admin/replies.php:783
 #: bp-forums/admin/topics.php:827
 #: bp-groups/classes/class-bp-groups-list-table.php:576
-#: bp-invites/bp-invites-admin.php:268
+#: bp-invites/bp-invites-admin.php:278
 #: bp-members/classes/class-bp-members-component.php:361
 #: bp-templates/bp-nouveau/includes/members/functions.php:229
 #: bp-xprofile/classes/class-bp-xprofile-component.php:263
@@ -2101,11 +2101,11 @@ msgstr ""
 msgid "Component Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:175
+#: bp-core/admin/bp-core-admin-pages.php:177
 msgid "Registration Pages"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:191
+#: bp-core/admin/bp-core-admin-pages.php:193
 #: bp-core/admin/bp-core-admin-settings.php:86
 #: bp-core/admin/bp-core-admin-settings.php:147
 #: bp-core/admin/bp-core-admin-settings.php:200
@@ -2130,28 +2130,28 @@ msgstr ""
 msgid "View Tutorial"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:224
+#: bp-core/admin/bp-core-admin-pages.php:226
 msgid "Associate a WordPress page with each of the following components."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:234
+#: bp-core/admin/bp-core-admin-pages.php:236
 msgid "Associate a WordPress page with the following Registration sections."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:253
+#: bp-core/admin/bp-core-admin-pages.php:255
 msgid ""
 "Registration is currently disabled. %1$s To enable open registration, "
 "please click on the \"Registration\" checkbox in <a href=\"%2$s\">General "
 "Settings</a>."
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:301
-#: bp-core/admin/bp-core-admin-pages.php:335
+#: bp-core/admin/bp-core-admin-pages.php:303
+#: bp-core/admin/bp-core-admin-pages.php:337
 msgid "- Select a page -"
 msgstr ""
 
-#: bp-core/admin/bp-core-admin-pages.php:317
-#: bp-core/admin/bp-core-admin-pages.php:351
+#: bp-core/admin/bp-core-admin-pages.php:319
+#: bp-core/admin/bp-core-admin-pages.php:353
 msgid "Create Page"
 msgstr ""
 
@@ -2443,7 +2443,6 @@ msgid ""
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1196
-#: bp-core/admin/bp-core-admin-settings.php:1259
 msgid "BuddyBoss Registration"
 msgstr ""
 
@@ -2452,7 +2451,6 @@ msgid "Custom URL"
 msgstr ""
 
 #: bp-core/admin/bp-core-admin-settings.php:1202
-#: bp-core/admin/bp-core-admin-settings.php:1265
 msgid ""
 "Use the default BuddyBoss registration form. Make sure to configure the <a "
 "href=\"%s\">registration pages</a>."
@@ -2813,7 +2811,7 @@ msgid "There was a problem performing this action. Please try again."
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-activity.php:76
-#: bp-core/admin/settings/bp-admin-setting-general.php:113
+#: bp-core/admin/settings/bp-admin-setting-general.php:120
 msgid "Activity Settings"
 msgstr ""
 
@@ -2889,29 +2887,29 @@ msgid "Registration"
 msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-general.php:54
-msgid "Registrations"
+msgid "Enable Registration"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:90
+#: bp-core/admin/settings/bp-admin-setting-general.php:97
 #: bp-xprofile/classes/class-bp-xprofile-component.php:342
 #: bp-xprofile/classes/class-bp-xprofile-component.php:494
 msgid "Privacy"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:93
+#: bp-core/admin/settings/bp-admin-setting-general.php:100
 msgid "Private Network"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:96
+#: bp-core/admin/settings/bp-admin-setting-general.php:103
 msgid "Public Content"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:104
+#: bp-core/admin/settings/bp-admin-setting-general.php:111
 #: bp-forums/admin/settings.php:1526
 msgid "Main Settings"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:110
+#: bp-core/admin/settings/bp-admin-setting-general.php:117
 msgid "Groups Settings"
 msgstr ""
 
@@ -2964,8 +2962,8 @@ msgstr ""
 
 #: bp-core/admin/settings/bp-admin-setting-invites.php:21
 #: bp-groups/classes/class-bp-groups-component.php:434
-#: bp-invites/bp-invites-admin.php:416 bp-invites/bp-invites-admin.php:417
-#: bp-invites/bp-invites-admin.php:433 bp-invites/bp-invites-admin.php:434
+#: bp-invites/bp-invites-admin.php:426 bp-invites/bp-invites-admin.php:427
+#: bp-invites/bp-invites-admin.php:443 bp-invites/bp-invites-admin.php:444
 #: bp-invites/bp-invites-functions.php:58
 msgid "Invites"
 msgstr ""
@@ -3709,7 +3707,7 @@ msgstr ""
 msgid "Enter valid email"
 msgstr ""
 
-#: bp-core/bp-core-cssjs.php:908 bp-members/screens/register.php:150
+#: bp-core/bp-core-cssjs.php:908 bp-members/screens/register.php:160
 msgid "This is a required field."
 msgstr ""
 
@@ -13460,8 +13458,9 @@ msgstr ""
 #: bp-invites/bp-invites-admin.php:121
 #: bp-members/classes/class-bp-members-list-table.php:158
 #: bp-members/classes/class-bp-members-ms-list-table.php:145
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:107
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:109
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:111
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:115
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:118
 msgid "Registered"
 msgstr ""
 
@@ -13469,18 +13468,24 @@ msgstr ""
 msgid "Pending &ndash; Revoke Invite"
 msgstr ""
 
-#: bp-invites/bp-invites-admin.php:130
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:107
+#: bp-invites/bp-invites-admin.php:132 bp-invites/bp-invites-admin.php:139
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:118
 msgid "Are you sure you want to revoke this invitation?"
 msgstr ""
 
-#: bp-invites/bp-invites-admin.php:367
+#: bp-invites/bp-invites-admin.php:134
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:67
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:111
+msgid "Invited"
+msgstr ""
+
+#: bp-invites/bp-invites-admin.php:377
 msgid "Invite %s has been revoked."
 msgid_plural "Invites of %s has been revoked.."
 msgstr[0] ""
 msgstr[1] ""
 
-#: bp-invites/bp-invites-admin.php:385
+#: bp-invites/bp-invites-admin.php:395
 msgid "Are you sure you want to revoke all selected invitation?"
 msgstr ""
 
@@ -14563,23 +14568,23 @@ msgstr ""
 msgid "Your account is now active!"
 msgstr ""
 
-#: bp-members/screens/register.php:87
+#: bp-members/screens/register.php:97
 msgid "Please make sure to enter your password."
 msgstr ""
 
-#: bp-members/screens/register.php:95 bp-members/screens/register.php:342
+#: bp-members/screens/register.php:105 bp-members/screens/register.php:352
 msgid "Please make sure to enter your email twice."
 msgstr ""
 
-#: bp-members/screens/register.php:100 bp-members/screens/register.php:347
+#: bp-members/screens/register.php:110 bp-members/screens/register.php:357
 msgid "The emails entered do not match."
 msgstr ""
 
-#: bp-members/screens/register.php:109
+#: bp-members/screens/register.php:119
 msgid "Please make sure to enter your password twice."
 msgstr ""
 
-#: bp-members/screens/register.php:114
+#: bp-members/screens/register.php:124
 msgid "The passwords entered do not match."
 msgstr ""
 
@@ -16140,23 +16145,19 @@ msgstr ""
 msgid "You have sent invitation emails to the following people:"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:67
-msgid "Invited"
-msgstr ""
-
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:109
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:115
 msgid "Revoke Invite"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:122
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:133
 msgid "You haven't sent any invitations yet."
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:139
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:150
 msgid "« Prev"
 msgstr ""
 
-#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:140
+#: bp-templates/bp-nouveau/buddypress/members/single/invites/sent-invites.php:151
 msgid "Next »"
 msgstr ""
 
@@ -18263,7 +18264,7 @@ msgctxt "Label for the Title field of the Recent Networkwide Posts widget"
 msgid "Title:"
 msgstr ""
 
-#: bp-core/admin/settings/bp-admin-setting-general.php:107
+#: bp-core/admin/settings/bp-admin-setting-general.php:114
 msgctxt "BuddyPress setting tab"
 msgid "Profile Settings"
 msgstr ""
