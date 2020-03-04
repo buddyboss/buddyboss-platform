@@ -140,6 +140,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Hook into topic and reply deletion
 			add_action( 'bbp_delete_topic', array( $this, 'topic_delete' ), 10, 1 );
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
+
+			// Hook into notification before save
+			add_action( 'bp_notification_before_save', array( $this, 'notification_before_save' ) );
 		}
 
 		/**
@@ -158,6 +161,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Link directly to the topic or reply
 			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 
+			// todo: we don't need this anymore because reply and topic notification mention permalink will always be their own links not activity's
+			// todo: but keeping this handle backward compatibility
 			// topic or reply mention notification permalink
 			add_filter( 'bp_activity_new_at_mention_permalink', array( $this, 'activity_get_notification_permalink' ), 10, 4 );
 		}
@@ -781,6 +786,26 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_link,
 				$group_link
 			);
+		}
+
+		/**
+		 * Notification related to bbp activity and change data values.
+		 *
+		 * @since BuddyBoss 1.2.8
+		 *
+		 * @param $notification Notification object
+		 */
+		public function notification_before_save( $notification ) {
+			if ( bp_is_active( 'activity' ) && isset( buddypress()->activity ) && buddypress()->activity->id === $notification->component_name ) {
+				// Try to get the activity ID of the post
+				$activity_id = $notification->item_id;
+				$activity    = new BP_Activity_Activity( $activity_id );
+				if ( ! empty( $activity->item_id ) && in_array( $activity->type, array( $this->reply_create, $this->topic_create ) ) ) {
+					$notification->item_id          = $activity->item_id;
+					$notification->component_name   = bbp_get_component_name();
+					$notification->component_action = 'bbp_new_at_mention';
+				}
+			}
 		}
 	}
 endif;
