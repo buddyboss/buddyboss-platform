@@ -1620,7 +1620,7 @@ window.bp = window.bp || {};
 		},
 
 		submitDocumentMedia: function(event) {
-			var self = this, target = $( event.currentTarget ), data;
+			var self = this, target = $( event.currentTarget ), data, currentPopup = $( event.currentTarget ).closest('#bp-media-uploader');
 			event.preventDefault();
 
 			if ( target.hasClass( 'saving' ) ) {
@@ -1674,6 +1674,12 @@ window.bp = window.bp || {};
 						}
 
 						target.removeClass('saving');
+
+						if( currentPopup.find('.bb-field-steps').length ){
+							currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps-2').hide();
+							currentPopup.find('#bp-media-document-prev, #bp-media-document-submit').hide();
+						}
+
 					}
 				});
 
@@ -1724,6 +1730,12 @@ window.bp = window.bp || {};
 						}
 
 						target.removeClass('saving');
+
+						if( currentPopup.find('.bb-field-steps').length ){
+							currentPopup.find('.bb-field-steps-1').show().siblings('.bb-field-steps-2').hide();
+							currentPopup.find('#bp-media-document-prev, #bp-media-document-submit').hide();
+						}
+
 					}
 				});
 			} else if ( ! self.current_tab ) {

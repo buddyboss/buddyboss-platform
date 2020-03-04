@@ -994,6 +994,8 @@ window.bp = window.bp || {};
 				$(event.currentTarget).closest('.bp-media-move-folder').hide().find('.bp-folder-move').attr('id','');
 			}
 
+			closest_parent.find('.bp-document-move.loading').removeClass('loading');
+
 			bp.Nouveau.Media.clearFolderLocationUI(event);
 
 		},
