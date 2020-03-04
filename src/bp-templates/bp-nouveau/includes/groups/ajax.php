@@ -824,13 +824,17 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 
 			$name = bp_core_get_user_displayname( $member->ID );
 			?>
-			<li class="<?php echo $member->ID; ?>">
+			<li class="group-message-member-li <?php echo $member->ID; ?>">
 				<div class="item-avatar">
-					<?php echo $image; ?>
+					<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+						<?php echo $image; ?>
+					</a>
 				</div>
 				<div class="item">
 					<div class="list-title member-name">
-						<?php echo $name; ?>
+						<a href="<?php echo esc_url( bp_core_get_user_domain( $member->ID ) ); ?>">
+							<?php echo $name; ?>
+						</a>
 					</div>
 				</div>
 				<div class="action">
