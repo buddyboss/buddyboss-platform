@@ -41,14 +41,11 @@ if  ( function_exists( 'bp_is_group_single' ) && bp_is_group_single() && bp_is_g
                             <div class="bb-field-wrap">
                                 <label for="bb-folder-privacy" class="bb-label"><?php _e( 'Privacy', 'buddyboss' ); ?></label>
                                 <div class="bb-dropdown-wrap">
-                                    <?php $privacy_options = BP_Document_Privacy::instance()->get_visibility_options(); ?>
-                                    <select id="bb-folder-privacy">
-                                        <?php foreach ( $privacy_options as $k => $option ) {
-                                            ?>
-                                            <option value="<?php echo $k; ?>"><?php echo $option; ?></option>
-                                            <?php
-                                        } ?>
-                                    </select>
+	                                <select id="bb-folder-privacy">
+		                                <?php foreach( bp_document_get_visibility_levels() as $key => $privacy ) : ?>
+			                                <option value="<?php echo $key; ?>"><?php echo $privacy; ?></option>
+		                                <?php endforeach; ?>
+	                                </select>
                                 </div>
                             </div>
                         <?php endif; ?>

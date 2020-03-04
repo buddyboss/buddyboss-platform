@@ -1530,3 +1530,22 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 
 	return $document_id;
 }
+
+/**
+ * Get document visibility levels out of the $bp global.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return array
+ */
+function bp_document_get_visibility_levels() {
+
+	/**
+	 * Filters the media visibility levels out of the $bp global.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param array $visibility_levels Array of visibility levels.
+	 */
+	return apply_filters( 'bp_document_get_visibility_levels', buddypress()->document->visibility_levels );
+}
