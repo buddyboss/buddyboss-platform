@@ -2578,6 +2578,8 @@ window.bp = window.bp || {};
 
 						if ( typeof m.privacy !== 'undefined' && m.privacy == 'message' ) {
 							m.is_message = true;
+						} else {
+							m.is_message = false;
 						}
 
 						self.medias.push(m);
