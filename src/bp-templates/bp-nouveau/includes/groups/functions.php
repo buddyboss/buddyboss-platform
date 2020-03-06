@@ -444,7 +444,7 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 
 	return array(
 		'id'          => $item->id,
-		'name'        => $item->name,
+		'name'        => wp_specialchars_decode( $item->name ),
 		'avatar_url'  => $item_avatar_url,
 		'object_type' => 'group',
 		'is_public'   => ( 'public' === $item->status ),

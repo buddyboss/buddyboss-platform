@@ -518,7 +518,7 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
 				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'privacy'       => $privacy,
+				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array( 'public', 'loggedin', 'friends', 'onlyme', 'messages' ) ) ? $media['privacy'] : $privacy,
 			) );
 
 			if ( $media_id ) {
