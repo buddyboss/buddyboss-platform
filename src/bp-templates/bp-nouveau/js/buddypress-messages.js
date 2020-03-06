@@ -694,6 +694,7 @@ window.bp = window.bp || {};
 					response.data.uuid = file.upload.uuid;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					response.data.saved = false;
+					response.data.privacy = 'messages';
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
 				}
