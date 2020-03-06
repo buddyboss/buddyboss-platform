@@ -146,9 +146,20 @@ $group_members = groups_get_group_members( $args );
 									<option value="private"><?php _e( 'Private Reply (BCC)', 'buddyboss' ); ?></option>
 								</select>
 								<?php
-								$disabled = 'disabled';
-								if ( bp_group_has_members( bp_ajax_querystring( 'group_members' ) . '&group_id=' . bp_get_current_group_id() .'&exclude_admin_mods=' . false ) ) {
-									$disabled = '';
+
+								$disabled = '';
+								$args = array(
+									'page'                => 1,
+									'per_page'            => 12,
+									'group_id'            => bp_get_current_group_id(),
+									'exclude'             => array( bp_loggedin_user_id() ),
+									'exclude_admins_mods' => false,
+								);
+
+								$group_members = groups_get_group_members( $args );
+
+								if ( empty( $group_members['members'] ) ) {
+									$disabled = 'disabled';
 								} ?>
 								<input <?php echo esc_attr( $disabled ); ?> type="submit" name="send_group_message_button" value="Send Message" id="send_group_message_button" class="small">
 							</div>
