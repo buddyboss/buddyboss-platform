@@ -1025,6 +1025,7 @@ window.bp = window.bp || {};
 			var document_name 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
 			var document_id   			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-id').attr( 'data-item-id' );
 			var attachment_document_id   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-attachment-id').attr( 'data-item-id' );
+			var documentType		    = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-type').attr( 'data-item-id' );
 			var document_name_val 		 =  document_edit.val().trim(); // trim to remove whitespace around name
 			var pattern 				 = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
 
@@ -1062,6 +1063,7 @@ window.bp = window.bp || {};
 						action: 'document_update_file_name',
 						document_id: document_id,
 						attachment_document_id: attachment_document_id,
+						document_type: documentType,
 						name: document_name_val
 					},success : function() {
 

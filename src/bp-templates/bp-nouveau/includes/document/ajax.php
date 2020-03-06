@@ -1144,19 +1144,36 @@ function bp_nouveau_ajax_document_update_file_name() {
 	$document_id            = ! empty( $_POST['document_id'] ) ? (int) base64_decode( $_POST['document_id'] ) : 0;
 	$attachment_document_id = ! empty( $_POST['attachment_document_id'] ) ? (int) base64_decode( $_POST['attachment_document_id'] ) : 0;
 	$title                  = ! empty( $_POST['name'] ) ? $_POST['name'] : '';
+	$type                   = ! empty( $_POST['document_type'] ) ? $_POST['document_type'] : '';
 
-	if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
-		wp_send_json_error( $response );
-	}
+	if ( 'document' === $type ) {
+		if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
+			wp_send_json_error( $response );
+		}
 
-	$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
+		$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
 
-	if ( $document > 0 ) {
-		wp_send_json_success( array(
-			'message'     => 'success',
-		) );
+		if ( $document > 0 ) {
+			wp_send_json_success( array(
+				'message' => 'success',
+			) );
+		} else {
+			wp_send_json_error( $response );
+		}
 	} else {
-		wp_send_json_error( $response );
+		if ( 0 === $document_id || '' === $title ) {
+			wp_send_json_error( $response );
+		}
+
+		$folder = bp_document_rename_folder( $document_id, $title );
+
+		if ( $folder > 0 ) {
+			wp_send_json_success( array(
+				'message' => 'success',
+			) );
+		} else {
+			wp_send_json_error( $response );
+		}
 	}
 
 }
@@ -1212,6 +1229,10 @@ function bp_nouveau_ajax_document_edit_folder() {
 
 	if ( $parent > 0 ) {
 		$id = false;
+	}
+
+	if ( 0 === $move_to ) {
+		$move_to = $parent;
 	}
 
 	$album_id = bp_folder_add( array( 'id' => $parent, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id, 'parent' => $move_to ) );

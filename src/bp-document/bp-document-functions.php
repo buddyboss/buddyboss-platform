@@ -1558,7 +1558,7 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
-	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s WHERE id = %d AND attachment_id = %d", $title, $document_id, $attachment_document_id );
+	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
 
 	if ( false === $wpdb->query( $q ) ) {
 		return false;
@@ -1572,4 +1572,21 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	}
 
 	return $document_id;
+}
+
+function bp_document_rename_folder( $folder_id = 0, $title = '' ) {
+
+	global $wpdb, $bp;
+
+	if ( 0 === $folder_id && '' === $title ) {
+		return false;
+	}
+
+	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id );
+
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	return $folder_id;
 }

@@ -13,11 +13,13 @@ if ( $attachment_id ) {
 	$link = wp_get_attachment_url( $attachment_id );
 	$move_class = 'ac-document-move';
 	$listing_class = 'ac-document-list';
+	$type = 'document';
 } else {
 	$svg_icon  = bp_document_svg_icon('folder' );
 	$link = bp_get_folder_link();
 	$move_class = 'ac-folder-move';
 	$listing_class = 'ac-folder-list';
+	$type = 'folder';
 }
 
 ?>
@@ -34,6 +36,7 @@ if ( $attachment_id ) {
 			<span><?php bp_document_title(); ?></span><?php echo $extension ? '.' . $extension : ''; ?>
 			<span class="media-document-id" data-item-id="<?php echo base64_encode( bp_get_document_id() ); ?>" style="display: none;"></span>
 			<span class="media-document-attachment-id" data-item-id="<?php echo base64_encode( bp_get_document_attachment_id() ); ?>" style="display: none;"></span>
+			<span class="media-document-type" data-item-id="<?php echo esc_attr( $type ); ?>" style="display: none;"></span>
 		</a>
 		<div class="media-folder_name_edit_wrap">
 			<input type="text" value="" class="media-folder_name_edit" />
@@ -71,7 +74,7 @@ if ( $attachment_id ) {
 					<?php if( $attachment_id ){ ?>
 						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a></li>
 					<?php } ?>
-					<li class="rename_file"><a href="#" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
+					<li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $type ); ?>" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
 					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
 					<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
