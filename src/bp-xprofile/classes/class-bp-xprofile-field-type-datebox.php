@@ -536,16 +536,13 @@ class BP_XProfile_Field_Type_Datebox extends BP_XProfile_Field_Type {
 							<span class="date-format-label"><?php esc_html_e( 'Custom:', 'buddyboss' ); ?></span>
 						</label>
 						<label for="date-format-custom-value" class="screen-reader-text"><?php esc_html_e( 'Enter custom time format', 'buddyboss' ); ?></label>
-						<input type="text" name="field-settings[date_format_custom]" id="date-format-custom-value" class="date-format-custom-value" value="<?php echo esc_attr( $settings['date_format_custom'] ); ?>" aria-describedby="date-format-custom-example" /> <span class="screen-reader-text"><?php esc_html_e( 'Example:', 'buddyboss' ); ?></span><span class="date-format-custom-example" id="date-format-custom-sample">
-																																									  <?php
-																																										if ( $settings['date_format_custom'] ) :
-																																											?>
-							
-																																											<?php
-																																											echo esc_html( date_i18n( $settings['date_format_custom'] ) );
-endif;
-																																										?>
-						</span><span class="spinner" id="date-format-custom-spinner" aria-hidden="true"></span>
+						<input type="text" name="field-settings[date_format_custom]" id="date-format-custom-value" class="date-format-custom-value" value="<?php echo esc_attr( $settings['date_format_custom'] ); ?>" aria-describedby="date-format-custom-example" /> <span class="screen-reader-text"><?php esc_html_e( 'Example:', 'buddyboss' ); ?></span>
+						<span class="date-format-custom-example" id="date-format-custom-sample"><?php
+							if ( $settings['date_format_custom'] ) :
+								  echo esc_html( date_i18n( $settings['date_format_custom'] ) );
+							endif; ?>
+						</span>
+						<span class="spinner" id="date-format-custom-spinner" aria-hidden="true"></span>
 
 						<p><a href="https://wordpress.org/support/article/formatting-date-and-time/"><?php esc_html_e( 'Documentation on date and time formatting', 'buddyboss' ); ?></a></p>
 					</div>

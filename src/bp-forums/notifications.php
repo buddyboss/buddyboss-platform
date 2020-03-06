@@ -49,6 +49,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 				array(
 					'action'   => 'bbp_mark_read',
 					'topic_id' => $topic_id,
+					'reply_id' => $item_id,
 				),
 				bbp_get_reply_url( $item_id )
 			),
@@ -132,7 +133,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	// Get some reply information
 	$args = array(
 		'user_id'          => $topic_author_id,
-		'item_id'          => $topic_id,
+		'item_id'          => $reply_id,
 		'component_name'   => bbp_get_component_name(),
 		'component_action' => 'bbp_new_reply',
 		'date_notified'    => get_post( $reply_id )->post_date,
@@ -189,15 +190,25 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	// Bail if we have errors
 	if ( ! bbp_has_errors() ) {
 
-		// Attempt to clear notifications for the current user from this topic
-		$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
+		if ( ! empty( $_GET['reply_id'] ) ) {
+			// Attempt to clear notifications for the current user from this reply
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_reply' );
+		} else {
+			// Attempt to clear notifications for the current user from this topic
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
+		}
 
 		// Do additional subscriptions actions
 		do_action( 'bbp_notifications_handler', $success, $user_id, $topic_id, $action );
 	}
 
-	// Redirect to the topic
-	$redirect = bbp_get_reply_url( $topic_id );
+	if ( ! empty( $_GET['reply_id'] ) && get_post_type( (int) $_GET['reply_id'] ) == 'reply' ) {
+		// Redirect to the reply
+		$redirect = bbp_get_reply_url( (int) $_GET['reply_id'] );
+	} else {
+		// Redirect to the topic
+		$redirect = bbp_get_reply_url( $topic_id );
+	}
 
 	// Redirect
 	wp_safe_redirect( $redirect );

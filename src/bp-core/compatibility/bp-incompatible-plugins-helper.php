@@ -68,6 +68,51 @@ function bp_helper_plugins_loaded_callback() {
 		 */
 		add_action( 'user_register', 'bp_core_updated_flname_memberpress_buddypress', 0 );
 	}
+
+	/**
+	 * Include fix when WPML plugin is activated
+	 *
+	 * Support WPML Multilingual CMS
+	 */
+	if ( in_array( 'sitepress-multilingual-cms/sitepress.php', $bp_plugins ) ) {
+
+		/**
+		 * Add fix for wpml redirect issue
+		 *
+		 * @since BuddyBoss 1.2.3
+		 *
+		 * @param array $q
+		 */
+		function bp_core_fix_wpml_redirection( $q ) {
+
+			if ( ! bp_is_my_profile() || ! bp_current_component() ) {
+				return $q;
+			}
+
+			if ( in_array( bp_current_component(), array( 'forums', 'photos', 'groups' ) ) ) {
+				if ( isset( bp_core_get_directory_pages()->members->id ) ) {
+					$q->set( 'page_id', bp_core_get_directory_pages()->members->id );
+				}
+			}
+		}
+
+		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
+
+		/**
+		 * Fix for url with wpml
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param $url
+		 * @return string
+		 */
+		function bp_core_wpml_fix_get_root_domain( $url ) {
+			return untrailingslashit( $url );
+		}
+
+		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
+
+	}
 }
 
 add_action( 'init', 'bp_helper_plugins_loaded_callback', 0 );
@@ -324,3 +369,48 @@ function bp_core_fix_notices_woocommerce_admin_status( $tabs ) {
 	return $tabs;
 }
 add_filter( 'woocommerce_admin_status_tabs', 'bp_core_fix_notices_woocommerce_admin_status' );
+
+/**
+ * Fix Memberpress Privacy for BuddyPress pages.
+ *
+ * @since BuddyBoss 1.2.4
+ *
+ * @param mixed $content
+ *
+ * @return mixed
+ */
+function bp_core_memberpress_the_content( $content ) {
+	if ( class_exists( 'MeprBaseModel' ) ) {
+		global $post;
+		$page_ids = bp_core_get_directory_page_ids();
+
+		if (
+			bp_is_groups_component()
+			&& !empty( $page_ids['groups'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['groups'] );
+		} else if (
+			bp_is_media_component()
+			&& !empty( $page_ids['media'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['media'] );
+		} else if (
+			bp_is_members_component()
+			&& !empty( $page_ids['members'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['members'] );
+		} else if (
+			bp_is_activity_component()
+			&& !empty( $page_ids['activity'] )
+			&& empty( $post->ID )
+		) {
+			$post = get_post( $page_ids['activity'] );
+		}
+	}
+
+	return $content;
+}
+add_filter( 'the_content', 'bp_core_memberpress_the_content', 999 );

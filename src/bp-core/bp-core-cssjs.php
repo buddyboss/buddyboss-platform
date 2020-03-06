@@ -152,7 +152,7 @@ function bp_core_register_common_scripts() {
 		'bp-exif'             => array( 'file' => "{$url}vendor/exif.js" ),
 
 		'bp-media-dropzone'   => array(
-			'file'         => "{$url}vendor/dropzone.min.js",
+			'file'         => "{$url}vendor/dropzone{$min}.js",
 			'dependencies' => array(),
 			'footer'       => false,
 		),
@@ -161,7 +161,11 @@ function bp_core_register_common_scripts() {
 			'dependencies' => array(),
 			'footer'       => false,
 		),
-        'bp-select2'        => array( 'file' => "{$url}vendor/select2.min.js", 'dependencies' => array(), 'footer' => false ),
+		'bp-select2'          => array(
+			'file'         => "{$url}vendor/select2.min.js",
+			'dependencies' => array(),
+			'footer'       => false,
+		),
 
 		'isInViewport'        => array(
 			'file'         => "{$url}vendor/isInViewport{$min}.js",
@@ -211,6 +215,72 @@ function bp_core_register_common_scripts() {
 		$footer       = isset( $script['footer'] ) ? $script['footer'] : false;
 		wp_register_script( $id, $script['file'], $dependencies, $version, $footer );
 	}
+
+	/**
+	 * Translation for select2 script text.
+	 */
+	$bp_select2 = array( 'lang' => 'en' );
+
+	if ( ! function_exists( 'wp_get_available_translations' ) ) {
+		require_once ABSPATH . 'wp-admin/includes/translation-install.php';
+		$translations = wp_get_available_translations();
+	} else {
+		$translations = wp_get_available_translations();
+	}
+
+	if ( ! empty( $translations ) ) {
+		$file_path = buddypress()->plugin_dir . 'bp-core/js/';
+		if ( isset( $translations[ get_locale() ] ) && ! empty( current( $translations[ get_locale() ]['iso'] ) ) && file_exists( $file_path . 'vendor/i18n/' . current( $translations[ get_locale() ]['iso'] ) . '.js' ) ) {
+			$lang               = current( $translations[ get_locale() ]['iso'] );
+			$bp_select2['lang'] = $lang;
+			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
+		} elseif ( ! empty( get_bloginfo( 'language' ) ) && file_exists( $file_path . 'vendor/i18n/' . get_bloginfo( 'language' ) . '.js' ) ) {
+			$bp_select2['lang'] = get_bloginfo( 'language' );
+			wp_register_script( 'bp-select2-local', "{$url}vendor/i18n/{$bp_select2['lang']}.js", array( 'bp-select2' ), $version, false );
+		}
+	}
+
+	wp_localize_script( 'bp-select2', 'bp_select2', $bp_select2 );
+
+	/**
+	 * Translate EmojineArea
+	 */
+	$bp_emojionearea = array(
+		'recent'            => __( 'Recent', 'buddyboss' ),
+		'smileys_people'    => __( 'Smileys & People', 'buddyboss' ),
+		'animals_nature'    => __( 'Animals & Nature', 'buddyboss' ),
+		'food_drink'        => __( 'Food & Drink', 'buddyboss' ),
+		'activity'          => __( 'Activity', 'buddyboss' ),
+		'travel_places'     => __( 'Travel & Places', 'buddyboss' ),
+		'objects'           => __( 'Objects', 'buddyboss' ),
+		'symbols'           => __( 'Symbols', 'buddyboss' ),
+		'flags'             => __( 'Flags', 'buddyboss' ),
+		'tones'             => __( 'Diversity', 'buddyboss' ),
+		'searchPlaceholder' => __( 'Search', 'buddyboss' ),
+	);
+
+	wp_localize_script( 'emojionearea', 'bp_emojionearea', $bp_emojionearea );
+
+	/**
+	 * Translate Dropzone
+	 */
+	wp_localize_script(
+		'bp-media-dropzone',
+		'bp_media_dropzone',
+		array(
+			'dictDefaultMessage'           => __( "Drop files here to upload", 'buddyboss' ),
+			'dictFallbackMessage'          => __( "Your browser does not support drag'n'drop file uploads.", 'buddyboss' ),
+			'dictFallbackText'             => __( "Please use the fallback form below to upload your files like in the olden days.", 'buddyboss' ),
+			'dictFileTooBig'               => __( "File is too big ({{filesize}}MiB). Max filesize: {{maxFilesize}}MiB.", 'buddyboss' ),
+			'dictInvalidFileType'          => __( "You can't upload files of this type.", 'buddyboss' ),
+			'dictResponseError'            => __( "Server responded with {{statusCode}} code.", 'buddyboss' ),
+			'dictCancelUpload'             => __( "Cancel upload", 'buddyboss' ),
+			'dictUploadCanceled'           => __( "Upload canceled.", 'buddyboss' ),
+			'dictCancelUploadConfirmation' => __( "Are you sure you want to cancel this upload?", 'buddyboss' ),
+			'dictRemoveFile'               => __( "Remove file", 'buddyboss' ),
+			'dictMaxFilesExceeded'         => __( "You can not upload any more files.", 'buddyboss' ),
+		)
+	);
 }
 add_action( 'bp_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
 add_action( 'bp_admin_enqueue_scripts', 'bp_core_register_common_scripts', 1 );
@@ -263,9 +333,9 @@ function bp_core_register_common_styles() {
 				'file'         => "{$url}medium-editor-beagle{$min}.css",
 				'dependencies' => array(),
 			),
-			'bp-select2' => array(
+			'bp-select2'              => array(
 				'file'         => "{$url}select2.min.css",
-				'dependencies' => array()
+				'dependencies' => array(),
 			),
 		)
 	);

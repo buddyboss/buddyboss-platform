@@ -1133,7 +1133,7 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str = __( 'You like this', 'buddyboss' );
 		} else {
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str        = $user_display_name . ' ' . __( 'likes this', 'buddyboss' );
 		}
 	} elseif ( 2 == $like_count ) {
@@ -1141,15 +1141,15 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str .= __( 'You and', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
 		} else {
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'like this', 'buddyboss' );
 		}
 	} elseif ( 3 == $like_count ) {
@@ -1158,18 +1158,18 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 
 			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
 		} else {
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ', ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 
 			$return_str .= ' ' . __( '1 other like this', 'buddyboss' );
@@ -1182,15 +1182,15 @@ function bp_activity_get_favorite_users_string( $activity_id ) {
 			$return_str .= __( 'You,', 'buddyboss' ) . ' ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 		} else {
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ', ';
 
 			$user_data         = get_userdata( array_pop( $favorited_users ) );
-			$user_display_name = ! empty( $user_data ) ? $user_data->display_name : __( 'Unknown', 'buddyboss' );
+			$user_display_name = ! empty( $user_data ) ? bp_core_get_user_displayname( $user_data->ID ) : __( 'Unknown', 'buddyboss' );
 			$return_str       .= $user_display_name . ' ' . __( 'and', 'buddyboss' ) . ' ';
 		}
 
@@ -1231,9 +1231,9 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 			$favorited_users,
 			function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
 				if ( $user_id != $current_user_id ) {
-					$user_data = get_userdata( $user_id );
-					if ( strpos( $like_text, $user_data->display_name ) === false ) {
-						$carry .= $user_data->display_name . '&#10;';
+					$user_display_name = bp_core_get_user_displayname( $user_id );
+					if ( strpos( $like_text, $user_display_name ) === false ) {
+						$carry .= $user_display_name . '&#10;';
 					}
 				}
 
@@ -1487,6 +1487,9 @@ function bp_activity_remove_all_user_data( $user_id = 0 ) {
 
 	// Clear the user's activity from the sitewide stream and clear their activity tables.
 	bp_activity_delete( array( 'user_id' => $user_id ) );
+
+	// Removed users liked activity meta.
+	bp_activity_remove_user_favorite_meta( $user_id );
 
 	// Remove any usermeta.
 	bp_delete_user_meta( $user_id, 'bp_latest_update' );
@@ -3168,6 +3171,58 @@ function bp_activity_delete( $args = '' ) {
 	return true;
 }
 
+/**
+ * Delete users liked activity meta.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @param int To delete user id.
+ * @return bool True on success, false on failure.
+ */
+function bp_activity_remove_user_favorite_meta( $user_id = 0 ) {
+
+	if ( empty( $user_id ) ) {
+		return false;
+	}
+
+	/**
+	 * For delete user id from other liked activity
+	 */
+	$activity_ids = bp_get_user_meta( $user_id, 'bp_favorite_activities', true );
+
+	// Loop through activity ids and attempt to delete favorite.
+	if ( ! empty( $activity_ids ) && is_array( $activity_ids ) && count( $activity_ids ) > 0 ) {
+		foreach ( $activity_ids as $activity_id ) {
+			$activity = new BP_Activity_Activity( $activity_id );
+			// Attempt to delete meta value.
+			if ( ! empty( $activity->id ) ) {
+
+				// Update the users who have favorited this activity.
+				$users = bp_activity_get_meta( $activity_id, 'bp_favorite_users', true );
+				if ( empty( $users ) || ! is_array( $users ) ) {
+					$users = array();
+				}
+
+				$found_user = array_search( $user_id, $users );
+				if ( ! empty( $found_user ) ) {
+					unset( $users[ $found_user ] );
+				}
+
+				// Update activity meta
+				bp_activity_update_meta( $activity_id, 'bp_favorite_users', array_unique( array_values( $users ) ) );
+
+				// Update the total number of users who have favorited this activity.
+				$fav_count = bp_activity_get_meta( $activity_id, 'favorite_count' );
+
+				if ( ! empty( $fav_count ) ) {
+					bp_activity_update_meta( $activity_id, 'favorite_count', (int) $fav_count - 1 );
+				}
+			}
+		}
+	}
+
+	return true;
+}
 	/**
 	 * Delete an activity item by activity id.
 	 *
@@ -4330,6 +4385,23 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 		return;
 	}
 
+	/**
+	 * Fires before post type transition catch in activity
+	 *
+	 * @param bool true True for default.
+	 * @param string $new_status New status for the post.
+	 * @param string $old_status Old status for the post.
+	 * @param WP_Post $post Post data.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 */
+	$pre_transition = apply_filters( 'bp_activity_pre_transition_post_type_status', true, $new_status, $old_status, $post );
+
+	if ( false === $pre_transition ) {
+		return;
+	}
+
 	// This is an edit.
 	if ( $new_status === $old_status ) {
 		// An edit of an existing post should update the existing activity item.
@@ -4982,26 +5054,34 @@ add_action( 'rest_after_insert_post', 'bp_update_activity_feed_of_post', 99, 3 )
  * @since BuddyBoss 1.0.0
  */
 function bp_activity_action_parse_url() {
+	$url       = $_POST['url'];
+	$json_data = array();
+
+	$cache_key = 'bp_activity_oembed_' . md5( serialize( $url ) );
+	$data      = get_transient( $cache_key );
+	if ( ! empty( $data ) ) {
+		wp_send_json( $data );
+	}
+
+	// Fetch the oembed code for URL.
+	$embed_code = wp_oembed_get( $url );
+	if ( ! empty( $embed_code ) ) {
+		$json_data['title']       = ' ';
+		$json_data['description'] = $embed_code;
+		$json_data['images']      = '';
+		$json_data['error']       = '';
+		$json_data['wp_embed']    = true;
+
+		set_transient( $cache_key, $json_data, DAY_IN_SECONDS );
+
+		wp_send_json( $json_data );
+	}
+
+	// include wensite parser
 	require_once trailingslashit( buddypress()->plugin_dir . 'bp-activity/vendors' ) . '/website-parser/website_parser.php';
 
 	// curling
-	$json_data = array();
 	if ( class_exists( 'WebsiteParser' ) ) {
-
-		$url = $_POST['url'];
-
-		if ( strpos( $url, 'youtube' ) > 0 || strpos( $url, 'youtu' ) > 0 || strpos( $url, 'vimeo' ) > 0 ) {
-
-			// Fetch the oembed code for URL.
-			$embed_code = wp_oembed_get( $url );
-			if ( $embed_code ) {
-				$json_data['title']       = ' ';
-				$json_data['description'] = $embed_code;
-				$json_data['images']      = '';
-				$json_data['error']       = '';
-				wp_send_json( $json_data );
-			}
-		}
 
 		$parser = new WebsiteParser( $url );
 		$body   = wp_remote_get( $url );
@@ -5256,3 +5336,20 @@ function bp_activity_media_handle_sideload( $file_array, $post_data = array() ) 
 
 	return $id;
 }
+
+/**
+ * Function to add the content on top of activity listing
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_activity_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['activity'] ) ) {
+		$activity_page_content = get_post_field( 'post_content', $page_ids['activity'] );
+		echo apply_filters( 'the_content', $activity_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_activity', 'bp_activity_directory_page_content' );

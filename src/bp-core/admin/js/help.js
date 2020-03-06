@@ -1,3 +1,4 @@
+/* globals BP_HELP, WPAPI */
 /**
  * BuddyBoss Help implementation.
  *
@@ -50,7 +51,7 @@
 				$( '#bp-help-content-area' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
 				$( '.bp-help-sidebar' ).addClass( 'loading' ).html('<div class="content-loader"><div></div><div></div><div></div></div>');
 
-				var article_id = bp_help_page_url.searchParams.get("article");
+				var article_id = bp_help_page_url.searchParams.get('article');
 				bp_help_wpapi.docs().id( article_id ).then(function (doc) {
 
 					$( '#bp-help-content-area' ).removeClass( 'loading' );
@@ -72,7 +73,7 @@
 			}
 
 			function bp_help_js_render_hierarchy_dom( doc ) {
-				var article_id = bp_help_page_url.searchParams.get("article");
+				var article_id = bp_help_page_url.searchParams.get('article');
 
 				var ancestors = doc.ancestors ? doc.ancestors.reverse() : [];
 				var children = doc.children ? doc.children : [];
@@ -143,7 +144,7 @@
 			}
 
 			function bp_help_js_get_doc_hierarchy_dom( doc,level ) {
-				var article_id = bp_help_page_url.searchParams.get("article");
+				var article_id = bp_help_page_url.searchParams.get('article');
 				var selected = doc.ID == article_id ? 'selected' : '';
 				var sidebar = '<li class="main level-'+level+' '+doc.post_name+' '+selected+'"><a href="'+BP_HELP.bb_help_url+'&article='+doc.ID+'">'+doc.post_title;
 

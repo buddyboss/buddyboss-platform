@@ -259,7 +259,6 @@ function bp_media_delete_activity_media( $activities ) {
                     bp_media_delete( array( 'id' => $media_id ) );
                 }
             }
-
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 	}

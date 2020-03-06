@@ -36,6 +36,15 @@ class BP_Admin_Setting_Friends extends BP_Admin_Setting_tab {
 
 		// Connection Settings tutorial
 		$this->add_field( 'bp-connection-settings-tutorial', '', array( $this, 'bp_connection_settings_tutorial' ) );
+
+		/**
+		 * Fires to register Friends tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Friends.
+		 */
+		do_action( 'bp_admin_setting_friends_register_fields', $this );
 	}
 
 	/**

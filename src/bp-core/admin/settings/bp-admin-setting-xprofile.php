@@ -172,6 +172,14 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 		// Profile Directories Tutorial
 		$this->add_field( 'bp-directories-search-tutorial', '', array( $this, 'bp_profile_directories_tutorial' ) );
 
+		/**
+		 * Fires to register xProfile tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Xprofile.
+		 */
+		do_action( 'bp_admin_setting_xprofile_register_fields', $this );
 	}
 
 	/**
@@ -317,32 +325,26 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 			?>
 			<select name="bp-member-type-default-on-registration" id="bp-member-type-default-on-registration">
 				<option value=""><?php esc_html_e( '----', 'buddyboss' ); ?></option>
-												   <?php
-													foreach ( $member_types as $member_type_id ) {
-														$type_name = bp_get_member_type_key( $member_type_id );
-														// $type_id = bp_member_type_term_taxonomy_id( $type_name );
-														$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
-														// if ( ! empty( $type_id ) ) {
-														?>
+					<?php
+					foreach ( $member_types as $member_type_id ) {
+						$type_name = bp_get_member_type_key( $member_type_id );
+						// $type_id = bp_member_type_term_taxonomy_id( $type_name );
+						$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_name', true );
+						// if ( ! empty( $type_id ) ) {
+						?>
 						<option
-														<?php
-														selected(
-															$existing_selected,
-															$type_name
-														);
-														?>
+								<?php
+								selected(
+									$existing_selected,
+									$type_name
+								);
+								?>
 							 value="<?php echo $type_name; ?>">
-														<?php
-														esc_html_e(
-															$member_type_name,
-															'buddyboss'
-														);
-														?>
+								<?php printf( esc_html__( '%s', 'buddyboss' ), $member_type_name ); ?>
 							</option>
-																<?php
-																// }
-													}
-													?>
+					<?php
+					}
+					?>
 			</select>
 			<?php
 			printf(
@@ -508,7 +510,7 @@ class BP_Admin_Setting_Xprofile extends BP_Admin_Setting_tab {
 				add_query_arg(
 					array(
 						'page'    => 'bp-help',
-						'article' => '',
+						'article' => '83106',
 					),
 					'admin.php'
 				)

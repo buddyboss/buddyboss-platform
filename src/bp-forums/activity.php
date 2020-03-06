@@ -157,6 +157,9 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 
 			// Link directly to the topic or reply
 			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
+
+			// topic or reply mention notification permalink
+			add_filter( 'bp_activity_new_at_mention_permalink', array( $this, 'activity_get_notification_permalink' ), 10, 4 );
 		}
 
 		/**
@@ -304,7 +307,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Check if blog & forum activity stream commenting is off
-			if ( ( false === $activities_template->disable_blogforum_replies ) || (int) $activities_template->disable_blogforum_replies ) {
+			if ( !empty( $activities_template->disable_blogforum_replies ) ) {
 
 				// Get the current action name
 				$action_name = bp_get_activity_action_name();
@@ -344,6 +347,27 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			if ( in_array( $activity_object->type, $disabled_actions ) ) {
 				$link = $activity_object->primary_link;
 			}
+
+			return $link;
+		}
+
+		/**
+		 * - Generate permalink for reply and topic mention notification.
+		 *
+		 * @since BuddyBoss 1.2.5
+		 *
+		 * @param $link
+		 * @param $item_id
+		 * @param $secondary_item_id
+		 * @param $total_items
+		 *
+		 * @return string
+		 */
+		function activity_get_notification_permalink( $link, $item_id, $secondary_item_id, $total_items ) {
+
+			remove_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
+			$link = bp_activity_get_permalink( $item_id );
+			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 
 			return $link;
 		}
