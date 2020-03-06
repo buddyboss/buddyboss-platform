@@ -296,6 +296,13 @@ window.bp = window.bp || {};
 					return false;
 				}
 
+				var type = '';
+				if ( $( '#bp-group-message-switch-checkbox' ).is( ':checked' ) ) {
+					type = 'all';
+				} else {
+					type = 'individual';
+				}
+
 				page = 1;
 
 				var data = {
@@ -325,7 +332,11 @@ window.bp = window.bp || {};
 							$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
 							feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
 						}
-
+						if ( 'all' === type ) {
+							$('.group-messages-members-listing #members-list li .action').hide();
+						} else {
+							$('.group-messages-members-listing #members-list li .action').show();
+						}
 					}
 				});
 			});
@@ -528,6 +539,11 @@ window.bp = window.bp || {};
 							memberListUlLast.html( '' );
 							$( '#group-messages-container .bb-groups-messages-left .bp-messages-feedback .bp-feedback' ).addClass( 'error' );
 							feedbackParagraphTagSelectorLeft.html( BP_Nouveau.group_messages.no_member );
+						}
+						if ( 'all' === type ) {
+							$('.group-messages-members-listing #members-list li .action').hide();
+						} else {
+							$('.group-messages-members-listing #members-list li .action').show();
 						}
 					}
 				});
