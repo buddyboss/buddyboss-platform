@@ -1031,6 +1031,8 @@ function bp_nouveau_ajax_groups_send_message() {
 				// This post variable will using in "bp_media_messages_save_group_data" function for storing message meta "group_message_thread_type"
 				$_POST['message_thread_type'] = 'reply';
 
+				remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+				add_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
 				$new_reply = messages_new_message( array(
 					'thread_id'  => $group_thread,
 					'subject'    => ! empty( $_POST['content'] ) ? $_POST['content'] : ' ',
@@ -1038,6 +1040,8 @@ function bp_nouveau_ajax_groups_send_message() {
 					'date_sent'  => $date_sent = bp_core_current_time(),
 					'error_type' => 'wp_error',
 				) );
+				remove_action( 'messages_message_sent', 'group_messages_notification_new_message', 10 );
+				add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
 				if ( is_wp_error( $new_reply ) ) {
 					$response['feedback'] = $new_reply->get_error_message();

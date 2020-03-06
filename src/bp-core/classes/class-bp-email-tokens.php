@@ -591,7 +591,7 @@ class BP_Email_Tokens {
 
 		ob_start();
 		?>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">			
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -700,7 +700,7 @@ class BP_Email_Tokens {
 	public function token__message( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
-		if ( 'messages-unread' != $bp_email->get( 'type' ) ) {
+		if ( 'messages-unread' != $bp_email->get( 'type' ) || 'group-message-email' != $bp_email->get( 'type' ) ) {
 			return $output;
 		}
 
@@ -1195,7 +1195,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">			
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -1293,7 +1293,7 @@ class BP_Email_Tokens {
 		ob_start();
 		?>
 		<div class="spacer" style="font-size: 5px; line-height: 5px; height: 5px;">&nbsp;</div>
-		<table cellspacing="0" cellpadding="0" border="0" width="100%">			
+		<table cellspacing="0" cellpadding="0" border="0" width="100%">
 			<tr>
 				<td align="center">
 					<table cellpadding="0" cellspacing="0" border="0" width="100%">

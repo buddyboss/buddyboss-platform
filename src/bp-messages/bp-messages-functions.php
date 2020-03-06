@@ -752,7 +752,85 @@ function messages_notification_new_message( $raw_args = array() ) {
 }
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
+function group_messages_notification_new_message( $raw_args = array() ) {
+	if ( is_object( $raw_args ) ) {
+		$args = (array) $raw_args;
+	} else {
+		$args = $raw_args;
+	}
 
+	// These should be extracted below.
+	$recipients    = array();
+	$email_subject = $subject = $email_content = '';
+	$sender_id = $id     = 0;
+
+	// Barf.
+	extract( $args );
+
+	if ( empty( $recipients ) ) {
+		return;
+	}
+
+	$sender_name = bp_core_get_user_displayname( $sender_id );
+
+	if ( isset( $message ) ) {
+		$message = wpautop( $message );
+	} else {
+		$message = '';
+	}
+
+	// Send an email to each recipient.
+	foreach ( $recipients as $recipient ) {
+		if ( $sender_id == $recipient->user_id || 'no' == bp_get_user_meta( $recipient->user_id, 'notification_messages_new_message', true ) ) {
+			continue;
+		}
+
+		// User data and links.
+		$ud = get_userdata( $recipient->user_id );
+		if ( empty( $ud ) ) {
+			continue;
+		}
+
+		$unsubscribe_args = array(
+			'user_id'           => $recipient->user_id,
+			'notification_type' => 'group-message-email',
+		);
+
+		$group      = bp_messages_get_meta( $id, 'group_id', true );
+		$group_name = bp_get_group_name( groups_get_group( $group ) );
+
+		bp_send_email(
+			'group-message-email',
+			$ud,
+			array(
+				'tokens' => array(
+					'message_id'  => $id,
+					'usermessage' => stripslashes( $message ),
+					'message'     => stripslashes( $message ),
+					'message.url' => esc_url( bp_core_get_user_domain( $recipient->user_id ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' ),
+					'sender.name' => $sender_name,
+					'usersubject' => sanitize_text_field( stripslashes( $subject ) ),
+					'group.name'  => $group_name,
+					'unsubscribe' => esc_url( bp_email_get_unsubscribe_link( $unsubscribe_args ) ),
+				),
+			)
+		);
+	}
+
+	/**
+	 * Fires after the sending of a new message email notification.
+	 *
+	 * @since BuddyPress 1.5.0
+	 * @deprecated 2.5.0 Use the filters in BP_Email.
+	 *                   $email_subject and $email_content arguments unset and deprecated.
+	 *
+	 * @param array  $recipients    User IDs of recipients.
+	 * @param string $email_subject Deprecated in 2.5; now an empty string.
+	 * @param string $email_content Deprecated in 2.5; now an empty string.
+	 * @param array  $args          Array of originally provided arguments.
+	 */
+	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
+}
 
 
 /**
