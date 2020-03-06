@@ -46,6 +46,18 @@ add_action( 'admin_init', function() {
 				'function' => 'bp_nouveau_ajax_document_folder_move',
 				'nopriv'   => true,
 			),
+		),
+		array(
+			'document_update_file_name' => array(
+				'function' => 'bp_nouveau_ajax_document_update_file_name',
+				'nopriv'   => true,
+			),
+		),
+		array(
+			'document_edit_folder' => array(
+				'function' => 'bp_nouveau_ajax_document_edit_folder',
+				'nopriv'   => true,
+			),
 		)
 	);
 
@@ -1113,4 +1125,113 @@ function bp_nouveau_ajax_document_folder_move() {
 		wp_send_json_error( $response );
 	}
 
+}
+
+function bp_nouveau_ajax_document_update_file_name() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	$document_id            = ! empty( $_POST['document_id'] ) ? (int) base64_decode( $_POST['document_id'] ) : 0;
+	$attachment_document_id = ! empty( $_POST['attachment_document_id'] ) ? (int) base64_decode( $_POST['attachment_document_id'] ) : 0;
+	$title                  = ! empty( $_POST['name'] ) ? $_POST['name'] : '';
+
+	if ( 0 === $document_id || 0 === $attachment_document_id || '' === $title ) {
+		wp_send_json_error( $response );
+	}
+
+	$document = bp_document_rename_file( $document_id, $attachment_document_id, $title );
+
+	if ( $document > 0 ) {
+		wp_send_json_success( array(
+			'message'     => 'success',
+		) );
+	} else {
+		wp_send_json_error( $response );
+	}
+
+}
+
+/**
+ * Rename folder
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @return string HTML
+ */
+function bp_nouveau_ajax_document_edit_folder() {
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['_wpnonce'] ) ) {
+		wp_send_json_error( $response );
+	}
+
+	// Use default nonce
+	$nonce = $_POST['_wpnonce'];
+	$check = 'bp_nouveau_media';
+
+	// Nonce check!
+	if ( empty( $nonce ) || ! wp_verify_nonce( $nonce, $check ) ) {
+		wp_send_json_error( $response );
+	}
+
+	if ( empty( $_POST['title'] ) ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'Please enter title of folder.', 'buddyboss' )
+		);
+
+		wp_send_json_error( $response );
+	}
+
+	// save media
+	$group_id = ! empty( $_POST['group_id'] ) ? $_POST['group_id'] : false;
+	$title    = $_POST['title'];
+	$privacy  = ! empty( $_POST['privacy'] ) ? $_POST['privacy'] : 'public';
+	$parent   = ! empty( $_POST['parent'] ) ? (int) $_POST['parent'] : 0;
+	$move_to  = ! empty( $_POST['moveTo'] ) ? (int) $_POST['moveTo'] : 0;
+
+	if ( $parent > 0 ) {
+		$id = false;
+	}
+
+	$album_id = bp_folder_add( array( 'id' => $parent, 'title' => $title, 'privacy' => $privacy, 'group_id' => $group_id, 'parent' => $move_to ) );
+
+	if ( ! $album_id ) {
+		$response['feedback'] = sprintf(
+			'<div class="bp-feedback error"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem when trying to create the folder.', 'buddyboss' )
+		);
+		wp_send_json_error( $response );
+	}
+
+	if ( ! empty( $group_id ) && bp_is_active( 'groups' ) ) {
+		$group_link = bp_get_group_permalink( groups_get_group( $group_id ) );
+		$redirect_url = trailingslashit( $group_link . bp_get_document_slug() . '/folders/' . $album_id );
+	} else {
+		$redirect_url = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() . '/folders/' . $album_id );
+	}
+
+	wp_send_json_success( array(
+		'redirect_url'     => $redirect_url,
+	) );
 }

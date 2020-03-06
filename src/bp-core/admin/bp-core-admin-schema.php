@@ -681,6 +681,7 @@ function bp_core_install_media() {
 	   privacy varchar(50) NULL DEFAULT 'public',
 	   type varchar(50) NULL DEFAULT 'media',
 	   parent bigint(20) NULL DEFAULT 0,
+	   date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
 	   PRIMARY KEY  (id)
    ) {$charset_collate};";
 
@@ -698,6 +699,7 @@ function bp_core_install_media() {
 		preview_attachment_id bigint(20) NULL DEFAULT 0,
 		menu_order bigint(20) NULL DEFAULT 0 ,
 		date_created datetime DEFAULT '0000-00-00 00:00:00',
+		date_modified datetime NULL DEFAULT '0000-00-00 00:00:00',
 		PRIMARY KEY  (id),
 		KEY attachment_id (attachment_id),
 		KEY user_id (user_id),

@@ -1616,3 +1616,109 @@ function bp_get_document_group_id() {
 	 */
 	return apply_filters( 'bp_get_document_group_id', $document_template->document->group_id );
 }
+
+/**
+ * Output the document date modified.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_document_date_modified() {
+	echo bp_get_document_date_modified();
+}
+
+/**
+ * Return the document date created.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document date created.
+ */
+function bp_get_document_date_modified() {
+	global $document_template;
+
+	$date = date_i18n( bp_get_option( 'date_format' ), strtotime( $document_template->document->date_modified ) );
+
+	/**
+	 * Filters the document date modified being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param string The date modified.
+	 */
+	return apply_filters( 'bp_get_document_date_modified', $date );
+}
+
+/**
+ * Output the document date modified.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_document_date() {
+	echo bp_get_document_date();
+}
+
+/**
+ * Return the document date created.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document date created.
+ */
+function bp_get_document_date() {
+	global $document_template;
+
+	if ( (int) strtotime( $document_template->document->date_modified ) > 0 ) {
+		$date = $document_template->document->date_modified;
+	} else {
+		$date = $document_template->document->date_created;
+	}
+
+	$date = date_i18n( bp_get_option( 'date_format' ), strtotime( $date ) );
+
+	/**
+	 * Filters the document date modified being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param string The date modified.
+	 */
+	return apply_filters( 'bp_get_document_date', $date );
+}
+
+/**
+ * Output the document date modified.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_document_privacy() {
+	echo bp_get_document_privacy();
+}
+
+/**
+ * Return the document privacy.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @global object $document_template {@link BP_Document_Template}
+ *
+ * @return string The document privacy.
+ */
+function bp_get_document_privacy() {
+	global $document_template;
+
+	$document_privacy = bp_document_get_visibility_levels();
+	$document_privacy = $document_privacy[ $document_template->document->privacy ];
+
+	/**
+	 * Filters the document privacy being displayed.
+	 *
+	 * @since BuddyBoss 1.2.5
+	 *
+	 * @param string The privacy.
+	 */
+	return apply_filters( 'bp_get_document_privacy', $document_privacy, $document_template->document->privacy, $document_privacy );
+}

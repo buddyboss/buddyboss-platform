@@ -1549,3 +1549,27 @@ function bp_document_get_visibility_levels() {
 	 */
 	return apply_filters( 'bp_document_get_visibility_levels', buddypress()->document->visibility_levels );
 }
+
+function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0, $title = '' ) {
+
+	global $wpdb, $bp;
+
+	if ( 0 === $document_id && '' === $title ) {
+		return false;
+	}
+
+	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s WHERE id = %d AND attachment_id = %d", $title, $document_id, $attachment_document_id );
+
+	if ( false === $wpdb->query( $q ) ) {
+		return false;
+	}
+
+	$post    = get_post( $attachment_document_id, ARRAY_A );
+
+	if ( isset( $title ) ) {
+		$post['post_title'] = $title;
+		wp_update_post( $post );
+	}
+
+	return $document_id;
+}

@@ -32,6 +32,8 @@ if ( $attachment_id ) {
 	<div class="media-folder_details">
 		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">
 			<span><?php bp_document_title(); ?></span><?php echo $extension ? '.' . $extension : ''; ?>
+			<span class="media-document-id" data-item-id="<?php echo base64_encode( bp_get_document_id() ); ?>" style="display: none;"></span>
+			<span class="media-document-attachment-id" data-item-id="<?php echo base64_encode( bp_get_document_attachment_id() ); ?>" style="display: none;"></span>
 		</a>
 		<div class="media-folder_name_edit_wrap">
 			<input type="text" value="" class="media-folder_name_edit" />
@@ -39,14 +41,14 @@ if ( $attachment_id ) {
 				<a href="#" class="name_edit_cancel button small"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
 				<a href="#" class="name_edit_save button small pull-right"><?php _e( 'Save', 'buddyboss' ); ?></a>
 			<?php } ?>
-			
+
 		</div>
-		
+
 	</div>
 
 	<div class="media-folder_modified">
 		<div  class="media-folder_details__bottom">
-			<span class="media-folder_date"><?php bp_document_date_created(); ?></span>
+			<span class="media-folder_date"><?php bp_document_date(); ?></span>
 			<?php if ( ! bp_is_user() ) { ?>
 				<span class="media-folder_author">by <?php bp_document_author(); ?></span>
 			<?php } ?>
@@ -55,7 +57,7 @@ if ( $attachment_id ) {
 
 	<div class="media-folder_visibility">
 		<div  class="media-folder_details__bottom">
-			<span>All Members</span>
+			<span><?php bp_document_privacy(); ?></span>
 		</div>
 	</div>
 
@@ -67,7 +69,7 @@ if ( $attachment_id ) {
 			<div class="media-folder_action__list">
 				<ul>
 					<?php if( $attachment_id ){ ?>
-						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a></li>	
+						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a></li>
 					<?php } ?>
 					<li class="rename_file"><a href="#" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
 					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>

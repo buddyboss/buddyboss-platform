@@ -648,7 +648,7 @@ window.bp = window.bp || {};
 
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
-			
+
 
 			// Close notice
 			$( '[data-bp-close]' ).on( 'click', this, this.closeNotice );
@@ -967,13 +967,13 @@ window.bp = window.bp || {};
 				}else{
 					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
 					$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
-					
+
 				}
 			}
 			if(bp.Nouveau.Media.folderLocationUI){
 				bp.Nouveau.Media.folderLocationUI(currentTarget);
 			}
-			
+
 			$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
 
 			$(currentTarget).show();
@@ -1009,7 +1009,7 @@ window.bp = window.bp || {};
 
 			var current_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
 			var current_name_text = current_name.children('span').text();
-			
+
 			current_name.hide().siblings('.media-folder_name_edit_wrap').show().children('.media-folder_name_edit').val(current_name_text).focus().select();
 
 		},
@@ -1021,11 +1021,13 @@ window.bp = window.bp || {};
 		 */
 		renameDocumentSubmit: function( event ) {
 
-			var document_edit = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
-			var document_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
-			var document_name_val =  document_edit.val().trim(); // trim to remove whitespace around name
-			var pattern = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
-			
+			var document_edit 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
+			var document_name 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
+			var document_id   			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-id').attr( 'data-item-id' );
+			var attachment_document_id   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-attachment-id').attr( 'data-item-id' );
+			var document_name_val 		 =  document_edit.val().trim(); // trim to remove whitespace around name
+			var pattern 				 = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
+
 
 			var matches = pattern.exec(document_name_val);
 			var matchStatus = Boolean(matches);
@@ -1040,9 +1042,9 @@ window.bp = window.bp || {};
 
 				document_edit.removeClass('error');
 				document_edit.parent().hide().siblings('.media-folder_name').show();
-				
+
 			}
-				
+
 			if( $( event.currentTarget ).hasClass('name_edit_save') || event.keyCode == 13 ) {
 
 				if( !matchStatus ){
@@ -1050,9 +1052,21 @@ window.bp = window.bp || {};
 				}
 
 				document_name.text( document_name_val );
-				
+
 				// Make ajax call to save new file name here.
 				//use variable 'document_name_val' as a new name while making an ajax call.
+				$.ajax( {
+					url : BP_Nouveau.ajaxurl,
+					type : 'post',
+					data : {
+						action: 'document_update_file_name',
+						document_id: document_id,
+						attachment_document_id: attachment_document_id,
+						name: document_name_val
+					},success : function() {
+
+					}
+				});
 
 				document_edit.parent().hide().siblings('.media-folder_name').show();
 

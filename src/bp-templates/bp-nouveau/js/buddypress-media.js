@@ -129,6 +129,7 @@ window.bp = window.bp || {};
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-submit', this.saveAlbum.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-folder-submit', this.saveFolder.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-child-folder-submit', this.saveChildFolder.bind( this ) );
+
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-album-close', this.closeCreateAlbumModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-create-folder-close', this.closeCreateFolderModal.bind( this ) );
 			$( '.bp-nouveau' ).on( 'click', '#bp-media-edit-folder-close', this.closeEditFolderModal.bind( this ) );
@@ -178,7 +179,7 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.bp-nouveau [data-bp-list="document"] .data-head', this.sortDocuments.bind( this ) );
 			$( document ).on( 'click', '.modal-container .bb-field-steps-actions', this.documentPopupNavigate.bind( this ) );
 			$( document ).on( 'click', '.modal-container .bb-field-uploader-actions', this.uploadDocumentNavigate.bind( this ) );
-
+			$( document ).on( 'click', '.modal-container #bp-media-edit-child-folder-submit', this.renameChildFolder.bind( this ) );
 
 			// Gifs autoplay
 			if ( !_.isUndefined( BP_Nouveau.media.gif_api_key ) ) {
@@ -1951,6 +1952,72 @@ window.bp = window.bp || {};
 
 		},
 
+		renameChildFolder: function(event) {
+
+			var target = $( event.currentTarget ), self = this, title = $('#bp-media-edit-child-folder #bb-album-child-title'), privacy = $('#bp-media-edit-child-folder #bb-folder-privacy'), parent = $('#bp-media-edit-child-folder #parent_id'), moveTo = $('#bp-media-edit-child-folder .bb-folder-selected-id');
+			//event.preventDefault();
+
+			if( $.trim(title.val()) === '' ) {
+				title.addClass('error');
+				return false;
+			} else {
+				title.removeClass('error');
+			}
+
+			if( ! self.group_id && $.trim(privacy.val()) === '' ) {
+				privacy.addClass('error');
+				return false;
+			} else {
+				privacy.removeClass('error');
+			}
+
+			target.prop('disabled',true);
+
+			var data = {
+				'action'	: 'document_edit_folder',
+				'_wpnonce'	: BP_Nouveau.nonces.media,
+				'title'		: title.val(),
+				'privacy'	: privacy.val(),
+				'parent'	: parent.val(),
+				'moveTo'	: moveTo.val()
+			};
+
+			if ( self.album_id ) {
+				data.folder_id = self.album_id;
+			}
+
+			if ( self.group_id ) {
+				data.group_id = self.group_id;
+			}
+
+			//remove all feedback erros from the DOM
+			$('.bb-single-album-header .bp-feedback').remove();
+			$('#boss-media-create-album-popup .bp-feedback').remove();
+
+			$.ajax({
+				type: 'POST',
+				url: BP_Nouveau.ajaxurl,
+				data: data,
+				success: function (response) {
+					setTimeout(function () {
+						target.prop('disabled',false);
+					},500);
+					if ( response.success ) {
+						window.location.href = response.data.redirect_url;
+					} else {
+						if ( self.album_id ) {
+							$('#bp-media-single-album').prepend(response.data.feedback);
+						} else {
+							$('#boss-media-create-album-popup .bb-model-header').after(response.data.feedback);
+						}
+					}
+				}
+			});
+
+			console.log( 'click 1 1' );
+
+		},
+
 		deleteAlbum: function(event) {
 			event.preventDefault();
 
@@ -2106,7 +2173,7 @@ window.bp = window.bp || {};
 
 		sortDocuments: function( event ) {
 			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data('filter');
-			
+
 			sortTarget.hasClass('asce') ? sortTarget.removeClass('asce') : sortTarget.addClass('asce');
 		},
 
@@ -2302,7 +2369,7 @@ window.bp = window.bp || {};
 			if( $( event.currentTarget ).parent().hasClass('download_file') ){
 				return;
 			}
-			
+
 			event.preventDefault();
 			$(event.currentTarget).closest('.media-folder_items').toggleClass('is-visible').siblings('.media-folder_items').removeClass('is-visible');
 		},
@@ -2347,7 +2414,7 @@ window.bp = window.bp || {};
 			}
 
 			$( '.bb-activity-media-elem.is-visible' ).removeClass('is-visible');
-			$( '.media-folder_items.is-visible' ).removeClass('is-visible');			
+			$( '.media-folder_items.is-visible' ).removeClass('is-visible');
 
 		},
 
