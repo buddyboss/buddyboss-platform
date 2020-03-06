@@ -829,7 +829,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	 * @param string $email_content Deprecated in 2.5; now an empty string.
 	 * @param array  $args          Array of originally provided arguments.
 	 */
-	do_action( 'bp_messages_sent_notification_email', $recipients, '', '', $args );
+	do_action( 'group_messages_notification_new_message', $recipients, '', '', $args );
 }
 
 

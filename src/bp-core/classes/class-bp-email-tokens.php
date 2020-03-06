@@ -700,7 +700,12 @@ class BP_Email_Tokens {
 	public function token__message( $bp_email, $formatted_tokens, $tokens ) {
 		$output = '';
 
-		if ( 'messages-unread' != $bp_email->get( 'type' ) || 'group-message-email' != $bp_email->get( 'type' ) ) {
+		$allow_type = array(
+			'group-message-email',
+			'messages-unread'
+		);
+
+		if ( ! in_array( $bp_email->get( 'type' ), $allow_type ) ) {
 			return $output;
 		}
 
