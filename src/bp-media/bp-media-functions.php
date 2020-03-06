@@ -518,7 +518,7 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
 				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array( 'public', 'loggedin', 'friends', 'onlyme', 'message' ) ) ? $media['privacy'] : $privacy,
+				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array_merge( array_keys( bp_media_get_visibility_levels() ), array( 'message' ) ) ) ? $media['privacy'] : $privacy,
 			) );
 
 			if ( $media_id ) {
