@@ -2576,6 +2576,10 @@ window.bp = window.bp || {};
 							m.is_forum = true;
 						}
 
+						if ( typeof m.privacy !== 'undefined' && m.privacy == 'message' ) {
+							m.is_message = true;
+						}
+
 						self.medias.push(m);
 					}
 				}
@@ -2622,7 +2626,8 @@ window.bp = window.bp || {};
 					self.group_id ||
 					self.current_media.is_forum ||
 					self.current_media.group_id ||
-					self.current_media.album_id
+					self.current_media.album_id ||
+					self.current_media.is_message
 				) {
 					media_privacy_wrap.hide();
 				}

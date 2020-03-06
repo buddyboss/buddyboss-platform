@@ -40,6 +40,7 @@
 					<a class="bb-open-media-theatre bb-photo-cover-wrap"
 					   data-id="{{data.media[i].id}}"
 					   data-attachment-full="{{data.media[i].full}}"
+					   data-privacy="{{data.media[i].privacy}}"
 					   href="#">
 						<img src="{{data.media[i].thumbnail}}" alt="{{data.media[i].title}}"/>
 					</a>

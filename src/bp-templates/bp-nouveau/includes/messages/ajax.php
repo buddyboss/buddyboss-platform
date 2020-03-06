@@ -305,6 +305,7 @@ function bp_nouveau_ajax_messages_send_reply() {
 					'thumbnail' => bp_get_media_attachment_image_thumbnail(),
 					'full'      => bp_get_media_attachment_image(),
 					'meta'      => $media_template->media->attachment_data->meta,
+					'privacy'   => bp_get_media_privacy(),
 				);
 			}
 		}
@@ -745,6 +746,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 						'thumbnail' => bp_get_media_attachment_image_thumbnail(),
 						'full'      => bp_get_media_attachment_image(),
 						'meta'      => $media_template->media->attachment_data->meta,
+						'privacy'   => bp_get_media_privacy(),
 					);
 				}
 			}
