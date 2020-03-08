@@ -544,33 +544,16 @@ function bp_media_forums_save_gif_data( $post_id ) {
 function bp_media_attach_media_to_message( &$message ) {
 
 	if ( bp_is_messages_media_support_enabled() && ! empty( $message->id ) && ! empty( $_POST['media'] ) ) {
-		$media_list = $_POST['media'];
-		$media_ids  = array();
+		remove_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+		remove_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
-		foreach ( $media_list as $media_index => $media ) {
-			$title         = ! empty( $media['name'] ) ? $media['name'] : '&nbsp;';
-			$attachment_id = ! empty( $media['id'] ) ? $media['id'] : 0;
+		$media_ids = bp_media_add_handler( $_POST['media'] );
 
-			$media_id = bp_media_add(
-				array(
-					'title'         => $title,
-					'privacy'       => 'message',
-					'attachment_id' => $attachment_id,
-				)
-			);
-
-			if ( $media_id ) {
-				$media_ids[] = $media_id;
-
-				// save media is saved in attachment
-				update_post_meta( $attachment_id, 'bp_media_saved', true );
-			}
-		}
-
-		$media_ids = implode( ',', $media_ids );
+		add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
+		add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
 		// save media meta for message
-		bp_messages_update_meta( $message->id, 'bp_media_ids', $media_ids );
+		bp_messages_update_meta( $message->id, 'bp_media_ids', implode( ',', $media_ids ) );
 	}
 }
 
