@@ -4346,3 +4346,84 @@ function bp_ajax_get_suggestions() {
 	wp_send_json_success( $results );
 }
 add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
+
+/**
+ * Locate usernames in an content string, as designated by an @ sign.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content Content
+ * @return array|bool Associative array with user ID as key and username as
+ *                    value. Boolean false if no mentions found.
+ */
+function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
+	$pattern = '/[@]+([A-Za-z0-9-_\.@]+)\b/';
+	preg_match_all( $pattern, $content, $usernames );
+
+	// Make sure there's only one instance of each username.
+	$usernames = array_unique( $usernames[1] );
+
+	// Bail if no usernames.
+	if ( empty( $usernames ) ) {
+		return $mentioned_users;
+	}
+
+	// We've found some mentions! Check to see if users exist.
+	foreach ( (array) array_values( $usernames ) as $username ) {
+		$user_id = bp_get_userid_from_mentionname( $username );
+
+		// The user ID exists, so let's add it to our array.
+		if ( ! empty( $user_id ) ) {
+			$mentioned_users[ $user_id ] = $username;
+		}
+	}
+
+	if ( empty( $mentioned_users ) ) {
+		return $mentioned_users;
+	}
+
+	return $mentioned_users;
+}
+
+/**
+ * Get a user ID from a "mentionname", the name used for a user in @-mentions.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param string $mentionname Username of user in @-mentions.
+ * @return int|bool ID of the user, if one is found. Otherwise false.
+ */
+function bp_get_userid_from_mentionname( $mentionname ) {
+	$user_id = false;
+
+	/*
+	 * In username compatibility mode, hyphens are ambiguous between
+	 * actual hyphens and converted spaces.
+	 *
+	 * @todo There is the potential for username clashes between 'foo bar'
+	 * and 'foo-bar' in compatibility mode. Come up with a system for
+	 * unique mentionnames.
+	 */
+	if ( bp_is_username_compatibility_mode() ) {
+		// First, try the raw username.
+		$userdata = get_user_by( 'login', $mentionname );
+
+		// Doing a direct query to use proper regex. Necessary to
+		// account for hyphens + spaces in the same user_login.
+		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
+			global $wpdb;
+			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
+			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+		} else {
+			$user_id = $userdata->ID;
+		}
+
+		// When username compatibility mode is disabled, the mentionname is
+		// the same as the nicename.
+	} else {
+		$user_id = bp_core_get_userid_from_nickname( $mentionname );
+	}
+
+	return $user_id;
+}

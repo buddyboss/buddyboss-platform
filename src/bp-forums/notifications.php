@@ -214,8 +214,59 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 		bp_notifications_add_notification( $args );
 	}
+
+	// Apply filters
+	$content = apply_filters( 'bbp_new_reply_pre_content', get_post_field( 'post_content', $reply_id ) );
+
+	// Search mentions in the reply.
+	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$args['user_id']          = $user_id;
+			$args['component_action'] = 'bbp_new_at_mention';
+			$args['secondary_item_id'] = get_current_user_id();
+			bp_notifications_add_notification( $args );
+		}
+	}
 }
 add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
+
+/**
+ * Hooked into the new topic function, this notification action is responsible
+ * for notifying topic.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param int   $topic_id
+ */
+function bbp_buddypress_add_topic_notification( $topic_id ) {
+	// Get some topic information
+	$args = array(
+		'item_id'           => $topic_id,
+		'secondary_item_id' => get_current_user_id(),
+		'component_name'    => bbp_get_component_name(),
+		'component_action'  => 'bbp_new_at_mention',
+		'date_notified'     => get_post( $topic_id )->post_date,
+	);
+
+	$content = apply_filters( 'bbp_new_topic_pre_content', get_post_field( 'post_content', $topic_id ) );
+
+	// Search mentions in the topic.
+	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$args['user_id']          = $user_id;
+			bp_notifications_add_notification( $args );
+		}
+	}
+}
+add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 10 );
 
 /**
  * Mark notifications as read when reading a topic

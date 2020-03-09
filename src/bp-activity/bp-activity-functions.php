@@ -106,6 +106,7 @@ function bp_activity_find_mentions( $content ) {
  *
  * @since Buddyboss 1.2.0
  * @version  Buddyboss 1.2.0
+ * @deprecated BuddyBoss 1.2.8
  *
  * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Activity content
@@ -140,8 +141,6 @@ function bp_activity_find_mention_by_at_sign( $mentioned_users, $content ) {
 
 	return $mentioned_users;
 }
-add_filter( 'bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2 );
-
 
 /**
  * Reset a user's unread mentions list and count.
@@ -263,6 +262,7 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
  * Get a user ID from a "mentionname", the name used for a user in @-mentions.
  *
  * @since BuddyPress 1.9.0
+ * @deprecated BuddyBoss 1.2.8
  *
  * @param string $mentionname Username of user in @-mentions.
  * @return int|bool ID of the user, if one is found. Otherwise false.
