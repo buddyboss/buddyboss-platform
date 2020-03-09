@@ -2,9 +2,9 @@
 # This file is distributed under the GPLv2 or later (license.txt).
 msgid ""
 msgstr ""
-"Project-Id-Version: BuddyBoss Platform 1.2.8\n"
+"Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-08 22:29:39+00:00\n"
+"POT-Creation-Date: 2020-03-09 12:37:04+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -6072,13 +6072,13 @@ msgstr ""
 
 #: bp-core/deprecated/buddypress/1.5.php:376
 msgid ""
-"%1$s mentioned you in the group \"%2$s\":\n"
-"\n"
-"\"%3$s\"\n"
-"\n"
-"To view and respond to the message, log in and visit: %4$s\n"
-"\n"
-"---------------------\n"
+"%1$s mentioned you in the group \"%2$s\":\r\n"
+"\r\n"
+"\"%3$s\"\r\n"
+"\r\n"
+"To view and respond to the message, log in and visit: %4$s\r\n"
+"\r\n"
+"---------------------\r\n"
 msgstr ""
 
 #: bp-core/deprecated/buddypress/1.6.php:154
@@ -12174,12 +12174,9 @@ msgid ""
 "Extension API to generate Manage tabs."
 msgstr ""
 
-#: bp-groups/bp-groups-template.php:4034
-msgid "You're an %s"
-msgstr ""
-
-#: bp-groups/bp-groups-template.php:4036 bp-groups/bp-groups-template.php:4038
-msgid "You're a %s"
+#: bp-groups/bp-groups-template.php:4034 bp-groups/bp-groups-template.php:4036
+#: bp-groups/bp-groups-template.php:4038
+msgid "You're %s"
 msgstr ""
 
 #: bp-groups/bp-groups-template.php:4053
@@ -12315,6 +12312,14 @@ msgid "%s group"
 msgid_plural "%s groups"
 msgstr[0] ""
 msgstr[1] ""
+
+#: bp-groups/bp-groups-template.php:7382 bp-groups/bp-groups-template.php:7386
+msgid "a"
+msgstr ""
+
+#: bp-groups/bp-groups-template.php:7386
+msgid "an"
+msgstr ""
 
 #: bp-groups/bp-groups-widgets.php:77
 #: bp-groups/classes/class-bp-groups-widget.php:155
