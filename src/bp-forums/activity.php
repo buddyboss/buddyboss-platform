@@ -140,9 +140,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Hook into topic and reply deletion
 			add_action( 'bbp_delete_topic', array( $this, 'topic_delete' ), 10, 1 );
 			add_action( 'bbp_delete_reply', array( $this, 'reply_delete' ), 10, 1 );
-
-			// Hook into notification before save
-			add_action( 'bp_notification_before_save', array( $this, 'notification_before_save' ) );
 		}
 
 		/**
@@ -440,6 +437,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_topic_create', $activity_text, $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
+			// Remove activity's notification for mentions.
+			add_action( 'bp_activity_before_save', function() {
+				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+			}, 99 );
+
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
@@ -588,6 +590,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_text    = sprintf( esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ), $user_link, $topic_link, $forum_link );
 			$activity_action  = apply_filters( 'bbp_activity_reply_create', $activity_text, $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
+
+			// Remove activity's notification for mentions.
+			add_action( 'bp_activity_before_save', function() {
+				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+			}, 99 );
 
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
@@ -786,26 +793,6 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 				$topic_link,
 				$group_link
 			);
-		}
-
-		/**
-		 * Notification related to bbp activity and change data values.
-		 *
-		 * @since BuddyBoss 1.2.8
-		 *
-		 * @param $notification Notification object
-		 */
-		public function notification_before_save( $notification ) {
-			if ( bp_is_active( 'activity' ) && isset( buddypress()->activity ) && buddypress()->activity->id === $notification->component_name ) {
-				// Try to get the activity ID of the post
-				$activity_id = $notification->item_id;
-				$activity    = new BP_Activity_Activity( $activity_id );
-				if ( ! empty( $activity->item_id ) && in_array( $activity->type, array( $this->reply_create, $this->topic_create ) ) ) {
-					$notification->item_id          = $activity->item_id;
-					$notification->component_name   = bbp_get_component_name();
-					$notification->component_action = 'bbp_new_at_mention';
-				}
-			}
 		}
 	}
 endif;
