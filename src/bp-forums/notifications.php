@@ -228,6 +228,12 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 			$args['user_id']          = $user_id;
 			$args['component_action'] = 'bbp_new_at_mention';
 			$args['secondary_item_id'] = get_current_user_id();
+
+			// If forum is not accesible to user, do not send notification
+			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
+				continue;
+			}
+
 			bp_notifications_add_notification( $args );
 		}
 	}
@@ -241,8 +247,9 @@ add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
  * @since BuddyBoss 1.2.8
  *
  * @param int   $topic_id
+ * @param int   $forum_id
  */
-function bbp_buddypress_add_topic_notification( $topic_id ) {
+function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 	// Get some topic information
 	$args = array(
 		'item_id'           => $topic_id,
@@ -262,11 +269,17 @@ function bbp_buddypress_add_topic_notification( $topic_id ) {
 		// Send @mentions and setup BP notifications.
 		foreach ( (array) $usernames as $user_id => $username ) {
 			$args['user_id']          = $user_id;
+
+			// If forum is not accesible to user, do not send notification
+			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
+				continue;
+			}
+
 			bp_notifications_add_notification( $args );
 		}
 	}
 }
-add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 10 );
+add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 10, 2 );
 
 /**
  * Mark notifications as read when reading a topic
