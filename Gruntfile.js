@@ -314,7 +314,8 @@ module.exports = function( grunt ) {
 					src: [
 						SOURCE_DIR + '/**/*.js',
 						'!**/emojione-edited.js',
-						'!**/emojionearea-edited.js'
+						'!**/emojionearea-edited.js',
+						'!**/vendor/**/*.js'
 					].concat( BP_EXCLUDED_MISC )
 				}
 			}
