@@ -4164,6 +4164,14 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   margin-bottom: 20px;
 }
 
+@media screen and (max-width: 540px) {
+  .bp-messages-content .single-message-thread-header .actions a[data-bp-tooltip][data-bp-tooltip-pos=left]:after {
+    max-width: 100vw;
+    white-space: normal;
+    min-width: 200px;
+  }
+}
+
 #bp-message-thread-list {
   background: #fafafa;
   border-top: 1px solid #eaeaea;
