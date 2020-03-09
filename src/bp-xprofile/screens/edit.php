@@ -80,7 +80,7 @@ function xprofile_screen_edit_profile() {
 				// Get selected profile type role.
 				$selected_member_type_wp_roles = get_post_meta( $_POST[ 'field_' . $field_id ], '_bp_member_type_wp_roles', true );
 
-				if ( current_user_can( 'administrator' ) ) {
+				if ( bp_current_user_can( 'administrator' ) ) {
 					if ( 'none' === $selected_member_type_wp_roles[0] ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
@@ -89,7 +89,7 @@ function xprofile_screen_edit_profile() {
 						$bp_error_message_string = __( 'Changing this profile type would remove your Administrator role and lock you out of the WordPress admin.', 'buddyboss' );
 						$validations[]           = $bp_error_message_string;
 					}
-				} elseif ( current_user_can( 'editor' ) ) {
+				} elseif ( bp_current_user_can( 'editor' ) ) {
 					if ( 'none' === $selected_member_type_wp_roles[0] ) {
 						bp_set_member_type( bp_displayed_user_id(), '' );
 						bp_set_member_type( bp_displayed_user_id(), $member_type_name );
