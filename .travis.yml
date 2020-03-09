@@ -19,7 +19,6 @@ git:
   depth: 10
 
 php:
-  - 8
   - 7.3
   #- 7.2
   #- 5.6
@@ -36,12 +35,12 @@ php:
 #  - WP_VERSION=4.7 BP_TRAVISCI=travis:phpunit
 env:
   - WP_VERSION=master BP_TRAVISCI=travis:grunt
-  - WP_VERSION=5.2 BP_TRAVISCI=travis:grunt
-  - WP_VERSION=5.1 BP_TRAVISCI=travis:grunt
-  - WP_VERSION=5.0 BP_TRAVISCI=travis:grunt
-  - WP_VERSION=4.9 BP_TRAVISCI=travis:grunt
-  - WP_VERSION=4.8 BP_TRAVISCI=travis:grunt
-  - WP_VERSION=4.7 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=5.2 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=5.1 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=5.0 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=4.9 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=4.8 BP_TRAVISCI=travis:grunt
+#  - WP_VERSION=4.7 BP_TRAVISCI=travis:grunt
 
 matrix:
   include:
