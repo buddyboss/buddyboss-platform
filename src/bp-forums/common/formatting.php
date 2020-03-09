@@ -475,8 +475,15 @@ function bbp_make_mentions_clickable( $text = '' ) {
  */
 function bbp_make_mentions_clickable_callback( $matches = array() ) {
 
+	$user_id = bp_get_userid_from_mentionname( $matches[2] );
+
+	// If not userid then return.
+	if ( ! $user_id ) {
+		return $matches[0];
+	}
+
 	// Get user; bail if not found
-	$user = get_user_by( 'slug', $matches[2] );
+	$user = get_userdata( $user_id );
 	if ( empty( $user ) || bbp_is_user_inactive( $user->ID ) ) {
 		return $matches[0];
 	}
@@ -484,7 +491,7 @@ function bbp_make_mentions_clickable_callback( $matches = array() ) {
 	// Create the link to the user's profile
 	$url    = bbp_get_user_profile_url( $user->ID );
 	$anchor = '<a href="%1$s" rel="nofollow">@%2$s</a>';
-	$link   = sprintf( $anchor, esc_url( $url ), esc_html( $user->user_nicename ) );
+	$link   = sprintf( $anchor, esc_url( $url ), esc_html( $matches[2] ) );
 
 	return $matches[1] . $link;
 }
