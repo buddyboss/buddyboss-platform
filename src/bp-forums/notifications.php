@@ -124,7 +124,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 			$filter = 'bbp_multiple_new_subscription_notification';
 		} else {
 			if ( ! empty( $secondary_item_id ) ) {
-				$text = sprintf( __( '%3$s mentioned you in the forum: %2$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
+				$text = sprintf( __( '%3$s mentioned you in: %2$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
 				$text = sprintf( __( 'You have %1$d new mention to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
 			}
