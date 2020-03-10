@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.8 =
+* Registration - New option to use any Custom URL for your registration form
 * Forums - Fixed video URL embeds not displaying as playable videos in forum replies
 * Forums - Fixed forum reply popup not displaying when 'Post Formatting' is disabled
 * Forums - Fixed searching for GIFs in GIPHY panel not working in forum reply popup
