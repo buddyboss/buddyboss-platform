@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed groups with & symbol displaying as &amp; in activity feed dropdown
 * Forums - Fixed video URL embeds not displaying as playable videos in forum replies
 * Forums - Fixed forum reply popup not displaying when 'Post Formatting' is disabled
+* Profiles - Fixed 'Dropdown' field type not saving when adding hundreds of options
 * Activity - Fixed occasional double posting of Youtube videos with embed URLs
 * Compatibility - Fixed incorrect message URLs with LearnDash and WPML both activated
 * Compatibility - Fixed conflict with plugin 'LearnDash Ratings, Reviews and Feedback'
