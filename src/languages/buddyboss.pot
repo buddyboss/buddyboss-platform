@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.7\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-10 04:05:20+00:00\n"
+"POT-Creation-Date: 2020-03-10 05:32:03+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -556,19 +556,19 @@ msgstr ""
 msgid "Your browser does not support HTML5 audio"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:505
+#: bp-activity/bp-activity-filters.php:507
 msgid " Read more"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:509
+#: bp-activity/bp-activity-filters.php:511
 msgid "&hellip;"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:566
+#: bp-activity/bp-activity-filters.php:568
 msgid "Continue reading"
 msgstr ""
 
-#: bp-activity/bp-activity-filters.php:824
+#: bp-activity/bp-activity-filters.php:826
 msgid "Load Newest"
 msgstr ""
 
@@ -6968,27 +6968,27 @@ msgstr ""
 msgid "get current location"
 msgstr ""
 
-#: bp-forums/activity.php:186 bp-forums/activity.php:191
+#: bp-forums/activity.php:188 bp-forums/activity.php:193
 msgid "New forum discussion"
 msgstr ""
 
-#: bp-forums/activity.php:187 bp-forums/activity.php:192
+#: bp-forums/activity.php:189 bp-forums/activity.php:194
 msgid "New forum reply"
 msgstr ""
 
-#: bp-forums/activity.php:434 bp-forums/activity.php:689
+#: bp-forums/activity.php:436 bp-forums/activity.php:701
 msgid "%1$s started the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:583 bp-forums/activity.php:716
+#: bp-forums/activity.php:590 bp-forums/activity.php:728
 msgid "%1$s replied to the discussion %2$s in the forum %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:747
+#: bp-forums/activity.php:759
 msgid "%1$s started the discussion %2$s in the group %3$s"
 msgstr ""
 
-#: bp-forums/activity.php:779
+#: bp-forums/activity.php:791
 msgid "%1$s replied to the discussion %2$s in the group %3$s"
 msgstr ""
 
@@ -7025,7 +7025,7 @@ msgid "About Forums"
 msgstr ""
 
 #: bp-forums/admin/admin.php:506
-#: bp-forums/templates/default/bbpress-functions.php:215
+#: bp-forums/templates/default/bbpress-functions.php:217
 msgid "Loading"
 msgstr ""
 
@@ -9606,7 +9606,7 @@ msgstr ""
 
 #: bp-forums/forums/functions.php:126 bp-forums/forums/functions.php:416
 #: bp-forums/groups.php:341 bp-forums/groups.php:522
-#: bp-forums/notifications.php:183 bp-forums/replies/functions.php:124
+#: bp-forums/notifications.php:322 bp-forums/replies/functions.php:124
 #: bp-forums/replies/functions.php:547 bp-forums/replies/functions.php:1305
 #: bp-forums/topics/functions.php:131 bp-forums/topics/functions.php:552
 #: bp-forums/topics/functions.php:1211 bp-forums/topics/functions.php:1531
@@ -9820,7 +9820,23 @@ msgstr ""
 msgid "You have %1$d new reply to %2$s"
 msgstr ""
 
-#: bp-forums/notifications.php:187
+#: bp-forums/notifications.php:120
+msgid "Discussion Mentions"
+msgstr ""
+
+#: bp-forums/notifications.php:123
+msgid "You have %d new mentions"
+msgstr ""
+
+#: bp-forums/notifications.php:127
+msgid "%3$s mentioned you in %2$s"
+msgstr ""
+
+#: bp-forums/notifications.php:129
+msgid "You have %1$d new mention to %2$s"
+msgstr ""
+
+#: bp-forums/notifications.php:326
 msgid ""
 "<strong>ERROR</strong>: You do not have permission to mark notifications "
 "for that user."
@@ -10716,72 +10732,72 @@ msgstr ""
 msgid "This user has not created any discussions."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:219
+#: bp-forums/templates/default/bbpress-functions.php:221
 msgid "Add Tags:"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:252
+#: bp-forums/templates/default/bbpress-functions.php:254
 msgid "Explain what the forum is about"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:253
+#: bp-forums/templates/default/bbpress-functions.php:255
 msgid "Type your reply here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:254
+#: bp-forums/templates/default/bbpress-functions.php:256
 msgid "Type your discussion content here"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:446
-#: bp-forums/templates/default/bbpress-functions.php:459
+#: bp-forums/templates/default/bbpress-functions.php:488
+#: bp-forums/templates/default/bbpress-functions.php:501
 msgid "Something went wrong. Refresh your browser and try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:488
-#: bp-forums/templates/default/bbpress-functions.php:624
+#: bp-forums/templates/default/bbpress-functions.php:530
+#: bp-forums/templates/default/bbpress-functions.php:666
 msgid "Subscriptions are no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:493
+#: bp-forums/templates/default/bbpress-functions.php:535
 msgid "Please login to subscribe to this forum."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:502
-#: bp-forums/templates/default/bbpress-functions.php:570
-#: bp-forums/templates/default/bbpress-functions.php:638
+#: bp-forums/templates/default/bbpress-functions.php:544
+#: bp-forums/templates/default/bbpress-functions.php:612
+#: bp-forums/templates/default/bbpress-functions.php:680
 msgid "You do not have permission to do this."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:510
+#: bp-forums/templates/default/bbpress-functions.php:552
 msgid "The forum could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:515
-#: bp-forums/templates/default/bbpress-functions.php:583
-#: bp-forums/templates/default/bbpress-functions.php:651
+#: bp-forums/templates/default/bbpress-functions.php:557
+#: bp-forums/templates/default/bbpress-functions.php:625
+#: bp-forums/templates/default/bbpress-functions.php:693
 msgid "Are you sure you meant to do that?"
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:523
-#: bp-forums/templates/default/bbpress-functions.php:591
-#: bp-forums/templates/default/bbpress-functions.php:659
+#: bp-forums/templates/default/bbpress-functions.php:565
+#: bp-forums/templates/default/bbpress-functions.php:633
+#: bp-forums/templates/default/bbpress-functions.php:701
 msgid "The request was unsuccessful. Please try again."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:556
+#: bp-forums/templates/default/bbpress-functions.php:598
 msgid "Saving discussions is no longer active."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:561
+#: bp-forums/templates/default/bbpress-functions.php:603
 msgid "Please login to make this discussion a favorite."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:578
-#: bp-forums/templates/default/bbpress-functions.php:646
+#: bp-forums/templates/default/bbpress-functions.php:620
+#: bp-forums/templates/default/bbpress-functions.php:688
 msgid "The discussion could not be found."
 msgstr ""
 
-#: bp-forums/templates/default/bbpress-functions.php:629
+#: bp-forums/templates/default/bbpress-functions.php:671
 msgid "Please login to subscribe to this discussion."
 msgstr ""
 
