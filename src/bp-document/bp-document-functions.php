@@ -1452,12 +1452,13 @@ function bp_document_folder_recursive_li_list( $array, $first = false ) {
 		$output = '<ul class="">';
 	} else {
 		$output = '<ul class="location-folder-list">';
+		$output .= '<li data-id="0"><span>' .  __( 'Documents', 'buddyboss' ) . '</span><ul class="">';
 	}
 
 	foreach ( $array as $item ) {
 		$output .= '<li data-id="'. $item["id"] .'"><span>' . $item["title"] . '</span>' . bp_document_folder_recursive_li_list( $item["children"], true ) . '</li>';
 	}
-	$output .= '</ul>';
+	$output .= '</li></ul>';
 
 	return $output;
 }
@@ -1518,7 +1519,7 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 
 	global $wpdb, $bp;
 
-	if ( 0 === $document_id || 0 === $folder_id ) {
+	if ( 0 === $document_id ) {
 		return false;
 	}
 

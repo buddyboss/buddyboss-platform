@@ -1111,7 +1111,7 @@ function bp_nouveau_ajax_document_folder_move() {
 	$folder_id   = ! empty( $_POST['folder_id'] ) ? (int) $_POST['folder_id'] : 0;
 	$document_id = ! empty( $_POST['document_id'] ) ? (int) $_POST['document_id'] : 0;
 
-	if ( 0 === $document_id || 0 === $folder_id ) {
+	if ( 0 === $document_id ) {
 		wp_send_json_error( $response );
 	}
 
