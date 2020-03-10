@@ -60,6 +60,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Forums - Fixed forum reply popup not displaying when 'Post Formatting' is disabled
 * Forums - Fixed searching for GIFs in GIPHY panel not working in forum reply popup
 * Groups - Fixed groups with & symbol displaying as &amp; in activity feed dropdown
+* Groups - Fixed 'a' vs 'an' logic for displaying your group role in English language sites
 * Profiles - Fixed 'Dropdown' field type not saving when adding hundreds of options
 * Activity - Fixed occasional double posting of Youtube videos with embed URLs
 * Messages - Fixed new photos attached to messages displaying in member's Photos tab
