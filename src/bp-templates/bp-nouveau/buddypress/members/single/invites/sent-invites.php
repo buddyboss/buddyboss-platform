@@ -125,17 +125,26 @@ if ( isset( $exists ) && '' !== $exists ) {
                         </span>
                     <?php
 					} else {
-						?>
-                        <span class="bp-invitee-status">
-                            <a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>"
-                               data-name="<?php echo esc_attr( $alert_message ); ?>"
-                               id="<?php echo esc_attr( get_the_ID() ); ?>"
-                               class="<?php echo esc_attr( $class ); ?>"
-                               href="javascript:void(0);">
+
+						if ( 'registered' === $class ) {
+							?>
+                            <span class="bp-invitee-status">
                                 <span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
-                            </a>
-                        </span>
-						<?php
+                            </span>
+							<?php
+						} else {
+							?>
+                            <span class="bp-invitee-status">
+                                <a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>"
+                                   data-name="<?php echo esc_attr( $alert_message ); ?>"
+                                   id="<?php echo esc_attr( get_the_ID() ); ?>"
+                                   class="<?php echo esc_attr( $class ); ?>"
+                                   href="javascript:void(0);">
+                                    <span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+                                </a>
+                            </span>
+							<?php
+						}
                     }
                     ?>
 				</td>
