@@ -215,11 +215,16 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 		bp_notifications_add_notification( $args );
 	}
 
-	// Apply filters
-	$content = apply_filters( 'bbp_new_reply_pre_content', get_post_field( 'post_content', $reply_id ) );
+	// If our temporary variable doesn't exist, stop now.
+	if ( empty( buddypress()->forums->mentioned_users ) ) {
+		return;
+	}
 
-	// Search mentions in the reply.
-	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+	// Grab our temporary variable from bbp_convert_mentions().
+	$usernames = buddypress()->forums->mentioned_users;
+
+	// Get rid of temporary variable.
+	unset( buddypress()->forums->mentioned_users );
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
@@ -253,6 +258,11 @@ add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
  * @param int   $forum_id
  */
 function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
+	// If our temporary variable doesn't exist, stop now.
+	if ( empty( buddypress()->forums->mentioned_users ) ) {
+		return;
+	}
+
 	// Get some topic information
 	$args = array(
 		'item_id'           => $topic_id,
@@ -261,10 +271,11 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 		'component_action'  => 'bbp_new_at_mention',
 	);
 
-	$content = apply_filters( 'bbp_new_topic_pre_content', get_post_field( 'post_content', $topic_id ) );
+	// Grab our temporary variable from bbp_convert_mentions().
+	$usernames = buddypress()->forums->mentioned_users;
 
-	// Search mentions in the topic.
-	$usernames = bp_find_mentions_by_at_sign( array(), $content );
+	// Get rid of temporary variable.
+	unset( buddypress()->forums->mentioned_users );
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {

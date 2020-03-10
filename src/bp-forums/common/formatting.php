@@ -495,3 +495,29 @@ function bbp_make_mentions_clickable_callback( $matches = array() ) {
 
 	return $matches[1] . $link;
 }
+
+/**
+ * Convert mentions into links
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param string $data Content to convert mentions
+ * @return string Filtered content
+ */
+function bbp_convert_mentions( $data ) {
+
+	// Search mentions in the content.
+	$usernames = bp_find_mentions_by_at_sign( array(), $data );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$data = preg_replace( '/(@' . $username . '\b)/', "<a class='bp-suggestions-mention' href='" . bbp_get_user_profile_url( $user_id ) . "' rel='nofollow'>@$username</a>", $data );
+		}
+
+		// Temporary variable to avoid having to run bp_find_mentions_by_at_sign() again.
+		buddypress()->forums->mentioned_users = $usernames;
+	}
+
+	return $data;
+}
