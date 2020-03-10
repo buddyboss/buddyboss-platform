@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.8 =
+* Forums - Fixed video URL embeds not displaying as playable videos in forum replies
 
 = 1.2.7 =
 * Activity - Fixed error on Mentions tab, when 'Activity tabs' option is enabled
