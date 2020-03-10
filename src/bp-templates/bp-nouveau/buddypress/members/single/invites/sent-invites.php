@@ -114,13 +114,30 @@ if ( isset( $exists ) && '' !== $exists ) {
 						$revoke_link = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite';
 						$title       = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Revoke Invite', 'buddyboss' );
                     }
-
 					$alert_message = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
 					$icon          = ( '1' === get_post_meta( get_the_ID(), '_bp_invitee_status', true ) ) ? 'dashicons-yes' : 'dashicons-dismiss';
 
-
-					?>
-					<span class="bp-invitee-status"><a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>" data-name="<?php echo esc_attr( $alert_message ); ?>" id="<?php echo esc_attr( get_the_ID() ); ?>" class="<?php echo esc_attr( $class ); ?>" href="javascript:void(0);"><span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?></a></span>
+					if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+						?>
+                        <span class="bp-invitee-status">
+                            <span class="dashicons <?php echo esc_attr( $icon ); ?>"></span>
+                            <?php echo $title; ?>
+                        </span>
+                    <?php
+					} else {
+						?>
+                        <span class="bp-invitee-status">
+                            <a data-revoke-access="<?php echo esc_url( $revoke_link ); ?>"
+                               data-name="<?php echo esc_attr( $alert_message ); ?>"
+                               id="<?php echo esc_attr( get_the_ID() ); ?>"
+                               class="<?php echo esc_attr( $class ); ?>"
+                               href="javascript:void(0);">
+                                <span class="dashicons <?php echo esc_attr( $icon ); ?>"></span><?php echo $title; ?>
+                            </a>
+                        </span>
+						<?php
+                    }
+                    ?>
 				</td>
 			</tr>
 			<?php
