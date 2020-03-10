@@ -799,33 +799,6 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 	return $results;
 }
 
-add_filter('bp_nouveau_object_template_result', 'bp_nouveau_object_template_results_document_tabs', 10, 2);
-
-/**
- * Object template results media tabs.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_nouveau_object_template_results_document_tabs( $results, $object ) {
-	if ( $object != 'document' ) {
-		return $results;
-	}
-
-	$results['scopes'] = [];
-
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_all_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	$results['scopes']['all'] = $GLOBALS["document_template"]->total_document_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_all_scope', 20 );
-
-	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_personal_scope', 20 );
-	bp_has_document( bp_ajax_querystring( 'document' ) );
-	$results['scopes']['personal'] = $GLOBALS["document_template"]->total_document_count;
-	remove_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_document_personal_scope', 20 );
-
-	return $results;
-}
-
 /**
  * Object template results media all scope.
  *
@@ -890,31 +863,6 @@ function bp_nouveau_object_template_results_document_all_scope( $querystring ) {
  * @since BuddyBoss 1.0.0
  */
 function bp_nouveau_object_template_results_media_personal_scope( $querystring ) {
-	$querystring = wp_parse_args( $querystring );
-
-	$querystring['scope']    = 'personal';
-	$querystring['page']     = 1;
-	$querystring['per_page'] = '1';
-	$querystring['user_id']  = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
-	//$querystring['type']     = 'media';
-
-	$privacy  = array( 'public' );
-	if ( is_user_logged_in() ) {
-		$privacy[] = 'loggedin';
-		$privacy[] = 'onlyme';
-	}
-
-	$querystring['privacy'] = $privacy;
-	$querystring['count_total'] = true;
-	return http_build_query( $querystring );
-}
-
-/**
- * Object template results media personal scope.
- *
- * @since BuddyBoss 1.0.0
- */
-function bp_nouveau_object_template_results_document_personal_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
 
 	$querystring['scope']    = 'personal';

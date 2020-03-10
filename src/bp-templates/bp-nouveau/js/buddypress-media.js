@@ -251,8 +251,12 @@ window.bp = window.bp || {};
 				type: 'POST',
 				url: BP_Nouveau.ajaxurl,
 				data: data,
-				success: function (response) {
-					if (response.success) {
+				success: function ( response ) {
+					if ( response.success ) {
+						var documentStream = $( '#media-stream' );
+						documentStream.html( '' );
+						documentStream.html( response.data.html );
+
 						target.closest('.bp-media-move-file').find('.ac-document-close-button').trigger( 'click' );
 					}
 				}
