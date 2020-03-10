@@ -57,6 +57,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 
 = 1.2.8 =
 * Forums - Fixed video URL embeds not displaying as playable videos in forum replies
+* Compatibility - Fixed incorrect message URLs with LearnDash and WPML both activated
 * Translations - Fixed text instances that could not be translated
 
 = 1.2.7 =
