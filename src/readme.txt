@@ -56,6 +56,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 == Changelog ==
 
 = 1.2.8 =
+* Groups - Fixed groups with & symbol displaying as &amp; in activity feed dropdown
 * Forums - Fixed video URL embeds not displaying as playable videos in forum replies
 * Compatibility - Fixed incorrect message URLs with LearnDash and WPML both activated
 * Translations - Fixed text instances that could not be translated
