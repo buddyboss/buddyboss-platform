@@ -1236,7 +1236,7 @@ function bp_admin_registration_setting_tutorial() {
 			add_query_arg(
 				array(
 					'page'    => 'bp-help',
-					'article' => 62793,
+					'article' => 86158,
 				),
 				'admin.php'
 			)
