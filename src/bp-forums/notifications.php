@@ -223,6 +223,9 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 	// We have mentions!
 	if ( ! empty( $usernames ) ) {
+
+		unset( $args['date_notified'] ); // use BP default timestamp
+
 		// Send @mentions and setup BP notifications.
 		foreach ( (array) $usernames as $user_id => $username ) {
 			$args['user_id']          = $user_id;
@@ -256,7 +259,6 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 		'secondary_item_id' => get_current_user_id(),
 		'component_name'    => bbp_get_component_name(),
 		'component_action'  => 'bbp_new_at_mention',
-		'date_notified'     => get_post( $topic_id )->post_date,
 	);
 
 	$content = apply_filters( 'bbp_new_topic_pre_content', get_post_field( 'post_content', $topic_id ) );
