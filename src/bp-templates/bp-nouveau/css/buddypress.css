@@ -10851,6 +10851,38 @@ ul.bb-albums-list .bb-more-photos strong {
   top: -6px;
 }
 
+#buddypress #bp-media-single-album .bb-single-album-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#buddypress #bp-media-single-album .bb-single-album-header #bp-single-album-title {
+  padding: 10px 0;
+  margin: 0 !important;
+}
+
+#buddypress #bp-media-single-album .bb-single-album-header #bb-album-title {
+  max-width: 202px;
+}
+
+#buddypress #bp-media-single-album .bb-single-album-header #bp-edit-album-title {
+  margin: 0px 0px 0px 10px;
+}
+
+#buddypress #bp-media-single-album .bb-single-album-header #bp-save-album-title {
+  margin: 0px 10px 0px 10px;
+}
+
+#buddypress #bp-media-single-album .bb-single-album-header p {
+  flex-basis: 100%;
+  width: 100%;
+}
+
+#buddypress #bp-media-single-album .bb-single-album-header .button.small {
+  line-height: 2;
+}
+
 @media (min-width: 768px) {
   .bb-media-model-inner {
     max-height: 90vh;
@@ -10912,6 +10944,7 @@ ul.bb-albums-list .bb-more-photos strong {
   div#buddypress div.bb-single-album-header input[type="text"] {
     display: block;
     width: 100%;
+    max-width: 100% !important;
     margin-bottom: 10px;
   }
   div#buddypress div.bb-album-actions {

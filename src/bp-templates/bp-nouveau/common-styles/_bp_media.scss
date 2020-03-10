@@ -1002,6 +1002,43 @@ ul.bb-albums-list {
 	}
 }
 
+
+#buddypress {
+	#bp-media-single-album {
+		.bb-single-album-header {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+
+			#bp-single-album-title {
+				padding: 10px 0;
+				margin: 0 !important;
+			}
+
+			#bb-album-title {
+				max-width: 202px;
+			}
+
+			#bp-edit-album-title {
+				margin: 0px 0px 0px 10px;
+			}
+
+			#bp-save-album-title {
+				margin: 0px 10px 0px 10px;
+			}
+
+			p {
+				flex-basis: 100%;
+    			width: 100%;
+			}
+
+			.button.small {
+				line-height: 2;
+			}
+		}
+	}
+}
+
 @media (min-width: 768px) {
 
 	.bb-media-model-inner {
@@ -1077,6 +1114,7 @@ ul.bb-albums-list {
 			input[type="text"] {
 				display: block;
 				width: 100%;
+				max-width: 100% !important;
 				margin-bottom: 10px;
 			}
 		}
@@ -1244,4 +1282,3 @@ img.emojioneemoji {
 	width: 24px !important;
 	height: 24px !important;
 }
-
