@@ -596,7 +596,7 @@ function bp_get_document_attachment_id() {
 	global $document_template;
 
 	// Will get false if it's a folder.
-	$attachment_id = false;
+	$attachment_id = 0;
 
 	/**
 	 * Filters the document ID being displayed.
@@ -1576,6 +1576,11 @@ function bp_document_preview_attachment_id() {
 function bp_get_document_preview_attachment_id() {
 	global $document_template;
 
+	$attachment_id = 0;
+	if ( isset( $document_template->document->preview_attachment_id ) ) {
+		$attachment_id = $document_template->document->preview_attachment_id;
+	}
+
 	/**
 	 * Filters the document preview attachment id being displayed.
 	 *
@@ -1583,7 +1588,7 @@ function bp_get_document_preview_attachment_id() {
 	 *
 	 * @param int $id The document preview attachment id.
 	 */
-	return apply_filters( 'bp_get_document_preview_attachment_id', $document_template->document->preview_attachment_id );
+	return apply_filters( 'bp_get_document_preview_attachment_id', $attachment_id );
 }
 
 /**

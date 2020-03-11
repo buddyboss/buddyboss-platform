@@ -9,39 +9,6 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
- * Register Scripts for the Media component
- *
- * @since BuddyBoss 1.0.0
- *
- * @param array $scripts The array of scripts to register
- *
- * @return array The same array with the specific media scripts.
- */
-function bp_nouveau_document_register_scripts( $scripts = array() ) {
-	if ( ! isset( $scripts['bp-nouveau'] ) ) {
-		return $scripts;
-	}
-
-	return array_merge( $scripts, array(
-		'bp-nouveau-media' => array(
-			'file'         => 'js/buddypress-media%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-		'bp-nouveau-codemirror' => array(
-			'file'         => 'js/codemirror%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-		'bp-nouveau-codemirror-css' => array(
-			'file'         => 'js/css%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-	) );
-}
-
-/**
  * Enqueue the media scripts
  *
  * @since BuddyBoss 1.0.0

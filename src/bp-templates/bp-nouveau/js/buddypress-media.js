@@ -202,6 +202,9 @@ window.bp = window.bp || {};
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
+			// document delete
+			$( document ).on( 'click', '.document-file-delete', this.deleteDocument.bind( this ) );
+
 			// Gifs autoplay
 			if ( ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -221,6 +224,23 @@ window.bp = window.bp || {};
 			if ((this.bbp_is_reply_edit || this.bbp_is_topic_edit || this.bbp_is_forum_edit) &&
 				(Object.keys( this.bbp_reply_edit_gif_data ).length || Object.keys( this.bbp_topic_edit_gif_data ).length || Object.keys( this.bbp_forum_edit_gif_data ).length)) {
 				this.editGifPreview();
+			}
+
+		},
+
+		deleteDocument: function (event) {
+			var target = $( event.currentTarget );
+			event.preventDefault();
+
+			var type 				  = target.attr( 'data-type' );
+			var id 					  = target.attr( 'data-item-id' );
+			var attachment_id 		  = target.attr( 'data-item-attachment-id' );
+			var preview_attachment_id = target.attr( 'data-item-preview-attachment-id' );
+
+			if ( 'folder' === type ) {
+				if ( ! confirm( BP_Nouveau.media.i18n_strings.folder_delete_confirm )) {
+					return false;
+				}
 			}
 
 		},

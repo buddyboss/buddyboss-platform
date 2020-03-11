@@ -76,9 +76,6 @@ class BP_Nouveau_Document {
 	 */
 	protected function setup_filters() {
 
-		// Register messages scripts
-		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_document_register_scripts', 10, 1 );
-
 		// Localize Scripts
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_document_localize_scripts', 10, 1 );
 	}

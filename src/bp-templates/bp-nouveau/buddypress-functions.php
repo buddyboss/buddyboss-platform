@@ -462,13 +462,13 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 			$scripts['bp-nouveau-codemirror'] = array(
 				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/codemirror%s.js',
-				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-media' ),
+				'dependencies' => array(),
 				'footer'       => true,
 			);
 
 			$scripts['bp-nouveau-codemirror-css'] = array(
 				'file'         => buddypress()->plugin_url . 'bp-core/js/vendor/css%s.js',
-				'dependencies' => array( 'bp-nouveau', 'bp-nouveau-media' ),
+				'dependencies' => array(),
 				'footer'       => true,
 			);
 
