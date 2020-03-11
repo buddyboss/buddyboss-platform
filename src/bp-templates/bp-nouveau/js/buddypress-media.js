@@ -108,6 +108,13 @@ window.bp = window.bp || {};
 			this.gif_requests      = [];
 			this.gif_data          = [];
 			this.gif_container_key = false;
+
+			//Text File Activity Preview
+			bp.Nouveau.Media.documentCodeMirror();
+
+			$( window ).on( 'scroll resize',function(){
+				bp.Nouveau.Media.documentCodeMirror();
+			});
 		},
 
 		/**
@@ -188,6 +195,12 @@ window.bp = window.bp || {};
 			$( document ).on( 'click', '.modal-container .bb-field-steps-actions', this.documentPopupNavigate.bind( this ) );
 			$( document ).on( 'click', '.modal-container .bb-field-uploader-actions', this.uploadDocumentNavigate.bind( this ) );
 			$( document ).on( 'click', '.modal-container #bp-media-edit-child-folder-submit', this.renameChildFolder.bind( this ) );
+			//Document move option
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
+			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
 			// Gifs autoplay
 			if ( ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
@@ -1473,6 +1486,143 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/**
+		 * [openDocumentMove description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		openDocumentMove: function( event ) {
+			event.preventDefault();
+
+			var currentTarget;
+			var currentTargetName = $(event.currentTarget).closest('.bb-activity-media-elem').find('.document-title').text();
+
+			// For Activity Feed
+			currentTarget = '#'+$(event.currentTarget).closest('li.activity-item').attr('id') + ' .bp-media-move-file';
+			$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.document-activity').attr('data-id') );
+
+			// Change if this is not from Activity Page
+			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
+				/* jshint ignore:start */
+				var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
+				/* jshint ignore:end */
+				if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
+					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
+					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+				}else{
+					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-folder').attr('class');
+					$(currentTarget).find('.bp-folder-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
+
+				}
+			}
+			if(this.folderLocationUI){
+				this.folderLocationUI(currentTarget);
+			}
+
+			$(currentTarget).find('.bb-model-header h4 .target_name').text(currentTargetName);
+
+			$(currentTarget).show();
+		},
+
+		/**
+		 * [closeDocumentMove description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		closeDocumentMove: function( event ) {
+			event.preventDefault();
+			var closest_parent = jQuery(event.currentTarget).closest('.has-folderlocationUI');
+			if($(event.currentTarget).hasClass('ac-document-close-button')){
+				$(event.currentTarget).closest('.bp-media-move-file').hide().find('.bp-document-move').attr('id','');
+
+			}else{
+				$(event.currentTarget).closest('.bp-media-move-folder').hide().find('.bp-folder-move').attr('id','');
+			}
+
+			closest_parent.find('.bp-document-move.loading').removeClass('loading');
+
+			this.clearFolderLocationUI(event);
+
+		},
+
+		/**
+		 * [renameDocument description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocument: function( event ) {
+
+			var current_name = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name');
+			var current_name_text = current_name.children('span').text();
+
+			current_name.hide().siblings('.media-folder_name_edit_wrap').show().children('.media-folder_name_edit').val(current_name_text).focus().select();
+
+		},
+
+		/**
+		 * [renameDocumentSubmit description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		renameDocumentSubmit: function( event ) {
+
+			var document_edit 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name_edit');
+			var document_name 			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span');
+			var document_id   			 = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-id').attr( 'data-item-id' );
+			var attachment_document_id   = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-attachment-id').attr( 'data-item-id' );
+			var documentType		    = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name > span.media-document-type').attr( 'data-item-id' );
+			var document_name_val 		 =  document_edit.val().trim(); // trim to remove whitespace around name
+			var pattern 				 = /^[-\w^&'@{}[\],$=!#().%+~ ]+$/; // regex to find not supported characters
+
+
+			var matches = pattern.exec(document_name_val);
+			var matchStatus = Boolean(matches);
+
+			if( matchStatus ){ // If any not supported character found add error class
+				document_edit.removeClass('error');
+			} else {
+				document_edit.addClass('error');
+			}
+
+			if( $( event.currentTarget ).hasClass('name_edit_cancel') || event.keyCode == 27 ){
+
+				document_edit.removeClass('error');
+				document_edit.parent().hide().siblings('.media-folder_name').show();
+
+			}
+
+			if( $( event.currentTarget ).hasClass('name_edit_save') || event.keyCode == 13 ) {
+
+				if( !matchStatus ){
+					return; // prevent user to add not supported characters
+				}
+
+				document_name.text( document_name_val );
+
+				// Make ajax call to save new file name here.
+				//use variable 'document_name_val' as a new name while making an ajax call.
+				$.ajax( {
+					url : BP_Nouveau.ajaxurl,
+					type : 'post',
+					data : {
+						action: 'document_update_file_name',
+						document_id: document_id,
+						attachment_document_id: attachment_document_id,
+						document_type: documentType,
+						name: document_name_val
+					},success : function() {
+
+					}
+				});
+
+				document_edit.parent().hide().siblings('.media-folder_name').show();
+
+			}
+
+			event.preventDefault();
+
+		},
+
 		removeAttachment: function (id) {
 			var data = {
 				'action': 'media_delete_attachment',
@@ -2693,12 +2843,59 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.document-activity' ).addClass( 'code-full-view' );
 		},
+		
 		/**
 		 * Text File Collapse
 		 */
 		collapseCodePreview: function (event) {
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.document-activity' ).removeClass( 'code-full-view' );
+		},
+
+		/**
+		 * Text File Activity Preview
+		 */
+		documentCodeMirror: function(){
+			$('.document-text:not(.loaded)').each(function(){
+				var $this = $(this);
+				var data_extension = $this.attr('data-extension');
+				var fileMode = $this.attr('data-extension');
+				if(data_extension == 'html' || data_extension == 'htm'){ // HTML file need specific mode.
+					fileMode = 'text/html';
+				}
+				if(data_extension == 'js'){ //mode not needed for javascript file.
+					/* jshint ignore:start */
+					var myCodeMirror = CodeMirror($this[0], {
+						value: $this.find('.document-text-file-data-hidden').val(),
+						lineNumbers: true,
+						theme: 'default',
+						readOnly: true,
+						lineWrapping: true,
+					});
+					/* jshint ignore:end */
+				}else{
+					/* jshint ignore:start */
+					var myCodeMirror = CodeMirror($this[0], {
+						value: $this.find('.document-text-file-data-hidden').val(),
+						mode:  fileMode,
+						lineNumbers: true,
+						theme: 'default',
+						readOnly: true,
+						lineWrapping: true,
+					});
+					/* jshint ignore:end */
+				}
+
+
+				$this.addClass('loaded');
+				if($this.parent().height() > 150){ //If file is bigger add controls to Expand/Collapse.
+					$this.closest('.document-text-wrap').addClass('is_large');
+				}
+
+			});
+			if(!$('.bb-activity-media-elem.document-activity').closest('.activity-inner').hasClass('documemt-activity')){
+				$('.bb-activity-media-elem.document-activity').closest('.activity-content').addClass('documemt-activity');
+			}
 		},
 	};
 
