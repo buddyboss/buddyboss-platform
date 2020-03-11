@@ -9024,6 +9024,7 @@ p.form-allowed-tags {
 #bbpress-forums div.bbp-the-content-wrapper textarea.bbp-the-content {
   width: 100%;
   margin: 0;
+  border-radius: 0;
   font-size: 12px;
 }
 

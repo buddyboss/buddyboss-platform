@@ -158,6 +158,8 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			// Link directly to the topic or reply
 			add_filter( 'bp_activity_get_permalink', array( $this, 'activity_get_permalink' ), 10, 2 );
 
+			// todo: we don't need this anymore because reply and topic notification mention permalink will always be their own links not activity's
+			// todo: but keeping this handle backward compatibility
 			// topic or reply mention notification permalink
 			add_filter( 'bp_activity_new_at_mention_permalink', array( $this, 'activity_get_notification_permalink' ), 10, 4 );
 		}
@@ -435,6 +437,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_action  = apply_filters( 'bbp_activity_topic_create', $activity_text, $user_id, $topic_id, $forum_id );
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
+			// Remove activity's notification for mentions.
+			add_action( 'bp_activity_before_save', function() {
+				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+			}, 99 );
+
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
 				array(
@@ -583,6 +590,11 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_text    = sprintf( esc_html__( '%1$s replied to the discussion %2$s in the forum %3$s', 'buddyboss' ), $user_link, $topic_link, $forum_link );
 			$activity_action  = apply_filters( 'bbp_activity_reply_create', $activity_text, $user_id, $reply_id, $topic_id );
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
+
+			// Remove activity's notification for mentions.
+			add_action( 'bp_activity_before_save', function() {
+				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+			}, 99 );
 
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(

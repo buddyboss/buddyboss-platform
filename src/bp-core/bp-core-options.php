@@ -1446,3 +1446,36 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
 function bp_group_layout_default_format( $default = 'grid' ) {
 	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
 }
+
+/**
+ * Allow custom registration.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if Whether or not allow custom registrations.
+ */
+function bp_allow_custom_registration( $default = false ) {
+
+	/**
+	 * Filters whether or not allow custom registrations.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param bool $value whether or not allow custom registrations.
+	 */
+	return (bool) apply_filters( 'bp_allow_custom_registration', (bool) bp_get_option( 'allow-custom-registration', $default ) );
+}
+
+/**
+ * Register page URL.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @return string URL of register page.
+ */
+function bp_custom_register_page_url( $default = '' ) {
+
+	return apply_filters( 'bp_custom_register_page_url', bp_get_option( 'register-page-url', $default ) );
+}

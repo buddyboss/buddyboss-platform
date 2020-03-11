@@ -390,6 +390,12 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
+.bp-admin-card.section-bp_registration h2:before {
+	background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
+	background-size: 22px 22px;
+	background-position-x: 11px;
+}
+
 .bp-admin-card.section-bp_privacy h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
 }

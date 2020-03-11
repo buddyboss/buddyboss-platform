@@ -121,16 +121,21 @@ function bp_invite_show_data( $column, $post_id ) {
 			$title = ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) ? __( 'Registered', 'buddyboss' ) : __( 'Pending &ndash; Revoke Invite', 'buddyboss' );
 			if ( '1' === get_post_meta( $post_id, '_bp_invitee_status', true ) ) {
 				printf(
-					'<a href="javascript:void(0);">%s</a>',
+					'%s',
 					$title
 				);
 			} else {
-				$redirect_link = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http' ) . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
-				$revoke_link   = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' . $redirect_link;
-				$confirm_title = __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
-				?>
-				<a onclick="return confirm('<?php echo esc_attr( $confirm_title ); ?>')" href="<?php echo esc_url( $revoke_link ); ?>"><?php echo esc_html( $title ); ?></a>
-				<?php
+				$allow_custom_registration = bp_allow_custom_registration();
+				if ( $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+					echo esc_html( __( 'Invited', 'buddyboss' ) );
+				} else {
+					$redirect_link = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+					$revoke_link   = bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_invites_slug() . '/revoke-invite-admin/?id=' . $post_id . '&redirect=' . $redirect_link;
+					$confirm_title = __( 'Are you sure you want to revoke this invitation?', 'buddyboss' );
+					?>
+                    <a onclick="return confirm('<?php echo esc_attr( $confirm_title ); ?>')" href="<?php echo esc_url( $revoke_link ); ?>"><?php echo esc_html( $title ); ?></a>
+					<?php
+                }
 			}
 
 			break;
