@@ -16,6 +16,7 @@
 		"grunt-jsvalidate": "~0.2.2",
 		"grunt-legacy-util": "^1.1.1",
 		"grunt-patch-wordpress": "^1.0.0",
+		"grunt-phplint": "~0.1.0",
 		"grunt-rtlcss": "^2.0.1",
 		"grunt-sass": "~2.0.0",
 		"grunt-stylelint": "^0.8.0",
