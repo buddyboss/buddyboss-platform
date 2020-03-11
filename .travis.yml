@@ -143,7 +143,7 @@ before_script:
   - npm install
 
 # Run tests
-script: grunt $BP_TRAVISCI --debug --verbose
+script: grunt $BP_TRAVISCI
 
 notifications:
   email: false
