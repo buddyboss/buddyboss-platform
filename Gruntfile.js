@@ -270,9 +270,6 @@ module.exports = function( grunt ) {
 				src: [ '**/*.scss', '!**/vendors/**/*.scss' ]
 			}
 		},
-		phplint: {
-			good: ['src/**/*.php'].concat( BP_EXCLUDED_MISC )
-		},
 		cssmin: {
 			minify: {
 				cwd: SOURCE_DIR,
@@ -338,7 +335,7 @@ module.exports = function( grunt ) {
 	/**
 	 * Register tasks.
 	 */
-	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', 'phplint', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
+	grunt.registerTask( 'src',     ['checkDependencies', 'jsvalidate', 'jshint', 'stylelint', 'sass', 'rtlcss', 'checktextdomain', /*'imagemin',*/ 'uglify', 'cssmin', 'makepot:src'] );
 	grunt.registerTask( 'build',   ['exec:cli','clean:all', 'copy:files', 'compress', 'clean:all'] );
 	grunt.registerTask( 'release', ['src', 'build'] );
 
