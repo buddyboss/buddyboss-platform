@@ -27,17 +27,7 @@ function bp_nouveau_media_register_scripts( $scripts = array() ) {
 			'file'         => 'js/buddypress-media%s.js',
 			'dependencies' => array( 'bp-nouveau' ),
 			'footer'       => true,
-		),
-		'bp-nouveau-codemirror' => array(
-			'file'         => 'js/codemirror%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
-		'bp-nouveau-codemirror-css' => array(
-			'file'         => 'js/css%s.js',
-			'dependencies' => array( 'bp-nouveau' ),
-			'footer'       => true,
-		),
+		)
 	) );
 }
 
