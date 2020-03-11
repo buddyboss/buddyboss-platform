@@ -242,16 +242,16 @@
 		line-height: 1;
 
 		&:before {
-			content: '\e960';
-			font-family: 'bb-icons';
+			content: "\e960";
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
 			display: inline-block;
 		}
 
 		&:after {
-			content: '\e826';
-			font-family: 'bb-icons';
+			content: "\e826";
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 20px;
 			vertical-align: middle;
 			display: inline-block;
@@ -259,19 +259,19 @@
 		}
 
 		&.onlyme:before {
-			content: '\e95f';
+			content: "\e95f";
 		}
 
 		&.loggedin:before {
-			content: '\e95d';
+			content: "\e95d";
 		}
 
 		&.friends:before {
-			content: '\e95e';
+			content: "\e95e";
 		}
 
 		&.loading:before {
-			content: '\e838';
+			content: "\e838";
 			animation: spin 2s infinite linear;
 		}
 	}
@@ -290,13 +290,13 @@
 		z-index: 119;
 
 		&:before {
-			content: ' ';
+			content: " ";
 			position: absolute;
 			width: 0;
 			height: 0;
 			top: 0;
 			left: 20px;
-			border: 6px solid black;
+			border: 6px solid #000;
 			border-color: #fff #fff transparent transparent;
 			-webkit-transform-origin: 0 0;
 			-ms-transform-origin: 0 0;
@@ -334,10 +334,12 @@
 }
 
 .activity-privacy {
+
 	> li {
+
 		&:before {
-			content: '\e960';
-			font-family: 'bb-icons';
+			content: "\e960";
+			font-family: 'bb-icons';/* stylelint-disable-line */
 			font-size: 16px;
 			vertical-align: middle;
 			display: inline-block;
@@ -347,20 +349,21 @@
 		}
 
 		&.onlyme:before {
-			content: '\e95f';
+			content: "\e95f";
 		}
 
 		&.loggedin:before {
-			content: '\e95d';
+			content: "\e95d";
 		}
 
 		&.friends:before {
-			content: '\e95e';
+			content: "\e95e";
 		}
 	}
 }
 
 .bb-media-model-container {
+
 	.bb-media-privacy-wrap .activity-privacy {
 		left: auto;
 		right: 0;
@@ -370,6 +373,7 @@
 		left: auto;
 		right: 24px;
 	}
+
 }
 
 // GIF styles
@@ -485,6 +489,7 @@ div[class*="attached-gif-container"] {
 	.gif-media-search-dropdown.open {
 		width: 360px;
 	}
+
 }
 
 .gif-search-query {

@@ -532,10 +532,10 @@ input#send-to-input {
 	font-size: 0;
 
 	&:after {
-		content: '\E80C';
+		content: "\E80C";
 		font-size: 20px;
 		line-height: 1;
-		font-family: "bb-icons";
+		font-family: "bb-icons";/* stylelint-disable-line */
 		vertical-align: top;
 		text-align: center;
 		transition: color 0.1s ease-in;
