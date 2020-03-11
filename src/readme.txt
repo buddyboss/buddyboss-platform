@@ -63,6 +63,7 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Groups - Fixed groups with & symbol displaying as &amp; in activity feed dropdown
 * Groups - Fixed 'a' vs 'an' logic for displaying your group role in English language sites
 * Profiles - Fixed 'Dropdown' field type not saving when adding hundreds of options
+* Profiles - Fixed 'Profile Type' field type not saving when WordPress role is set to (none)
 * Activity - Fixed occasional double posting of Youtube videos with embed URLs
 * Messages - Fixed new photos attached to messages displaying in member's Photos tab
 * Messages - Fixed maintaining formatting when copying and pasting text into the editor
