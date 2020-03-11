@@ -155,7 +155,9 @@
 					font-weight: 400;
 				}
 			}
-		} // close thread-content
+		}
+
+		// close thread-content
 
 		.thread-date {
 			color: #767676;
@@ -176,16 +178,20 @@
 			}
 		}
 
-	} // close li
+	}
 
-} // close message-threads
+	// close li
+
+}
+
+// close message-threads
 
 .bp-messages-content {
 
 	.actions {
 		margin-left: auto;
 
-		.bb-icon-trash{
+		.bb-icon-trash {
 			font-size: 18px;
 		}
 
@@ -284,7 +290,9 @@
 		}
 	}
 
-} // close .bp-messages-content
+}
+
+// close .bp-messages-content
 
 // The single view of messages in a conversation thread
 #bp-message-thread-list {
@@ -378,7 +386,9 @@
 			font-size: 18px;
 		}
 	}
-} // close #bp-message-thread-list
+}
+
+// close #bp-message-thread-list
 
 // Bulk Message styles
 

@@ -504,9 +504,12 @@ window.bp = window.bp || {};
 			} );
 		},
 
+		/* jshint ignore:start */
 		togglePrivacyDropdown: function( event ) {
+
 			var parent = event.data, target = $( event.target ), activity_item = $( event.currentTarget ).closest('.activity-item'),
 				activity_id = activity_item.data( 'bp-activity-id' );
+
 
 			// Stop event propagation
 			event.preventDefault();
@@ -515,7 +518,9 @@ window.bp = window.bp || {};
 			$( 'ul.activity-privacy' ).not(activity_item.find('.activity-privacy')).removeClass( 'bb-open' );
 
 			activity_item.find('.activity-privacy').toggleClass('bb-open');
+
 		},
+		/* jshint ignore:end */
 
 		/**
 		 * [activityActions description]
@@ -1010,8 +1015,8 @@ window.bp = window.bp || {};
 
 						// keep the dropzone media saved so it wont remove its attachment when destroyed
 						if ( self.dropzone_document.length ) {
-							for( var l = 0; l < self.dropzone_document.length; l++ ) {
-								self.dropzone_document[l].saved = true;
+							for( var d = 0; d < self.dropzone_document.length; d++ ) {
+								self.dropzone_document[d].saved = true;
 							}
 						}
 

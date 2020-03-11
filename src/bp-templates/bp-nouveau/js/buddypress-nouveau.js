@@ -960,7 +960,9 @@ window.bp = window.bp || {};
 
 			// Change if this is not from Activity Page
 			if($(event.currentTarget).closest('.media-folder_items').length > 0) {
+				/* jshint ignore:start */
 				var currentTargetName = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_name').text();
+				/* jshint ignore:end */
 				if($(event.currentTarget).hasClass('ac-document-move')){ // Check if target is file or folder
 					currentTarget = '.'+$(event.currentTarget).closest('#media-folder-document-data-table').find('.bp-media-move-file').attr('class');
 					$(currentTarget).find('.bp-document-move').attr('id',$(event.currentTarget).closest('.media-folder_items').attr('data-id') );
@@ -1779,6 +1781,7 @@ window.bp = window.bp || {};
 					fileMode = 'text/html';
 				}
 				if(data_extension == 'js'){ //mode not needed for javascript file.
+					/* jshint ignore:start */
 					var myCodeMirror = CodeMirror($this[0], {
 						value: $this.find('.document-text-file-data-hidden').val(),
 						lineNumbers: true,
@@ -1786,7 +1789,9 @@ window.bp = window.bp || {};
 						readOnly: true,
 						lineWrapping: true,
 					});
+					/* jshint ignore:end */
 				}else{
+					/* jshint ignore:start */
 					var myCodeMirror = CodeMirror($this[0], {
 						value: $this.find('.document-text-file-data-hidden').val(),
 						mode:  fileMode,
@@ -1795,6 +1800,7 @@ window.bp = window.bp || {};
 						readOnly: true,
 						lineWrapping: true,
 					});
+					/* jshint ignore:end */
 				}
 
 

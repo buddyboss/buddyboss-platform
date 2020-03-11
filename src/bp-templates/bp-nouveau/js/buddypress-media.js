@@ -1629,11 +1629,11 @@ window.bp = window.bp || {};
 
 								$( this ).closest( '.has-folderlocationUI' ).find( '.location-folder-list-wrap ul.location-folder-list li' + find_folder_selector ).each(
 									function () {
-
+										/* jshint ignore:start */
 										if ($( this ).children( 'span' ).text().search( new RegExp( keyword, "i" ) ) >= 0) {
 											$( this ).closest( '.has-folderlocationUI' ).find( '.ac_document_search_folder_list ul' ).append( '<li data-id="' + $( this ).attr( 'data-id' ) + '"><span>' + $( this ).children( 'span' ).text() + '</span></li>' );
 										}
-
+										/* jshint ignore:end */
 									}
 								);
 
@@ -2422,11 +2422,15 @@ window.bp = window.bp || {};
 			}
 		},
 
+		/* jshint ignore:start */
 		sortDocuments: function (event) {
+
 			var sortTarget = $( event.currentTarget ), sortArg = sortTarget.data( 'filter' );
 
 			sortTarget.hasClass( 'asce' ) ? sortTarget.removeClass( 'asce' ) : sortTarget.addClass( 'asce' );
+
 		},
+		/* jshint ignore:end */
 
 		documentPopupNavigate: function (event) {
 
@@ -2453,7 +2457,7 @@ window.bp = window.bp || {};
 
 		uploadDocumentNavigate: function (event) {
 
-			event.preventDefault()
+			event.preventDefault();
 
 			var target = $( event.currentTarget ), currentPopup = $( target ).closest( '#bp-media-uploader' );
 
