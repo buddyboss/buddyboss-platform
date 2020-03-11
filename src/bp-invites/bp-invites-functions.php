@@ -585,3 +585,13 @@ function bp_invites_member_invite_mark_register_user( $user_id ) {
 
 }
 add_action( 'user_register', 'bp_invites_member_invite_mark_register_user', 10, 1 );
+
+function bp_nouveau_send_invite_content_css( $mceInit ) {
+	$styles = 'body.mce-content-body { font-family: Arial, sans-serif;}';
+	if ( isset( $mceInit['content_style'] ) ) {
+		$mceInit['content_style'] .= ' ' . $styles . ' ';
+	} else {
+		$mceInit['content_style'] = $styles . ' ';
+	}
+	return $mceInit;
+}
