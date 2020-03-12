@@ -23,6 +23,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				<?php
 			}
 			?>
+			<th class="title actions"></th>
 		</tr>
 		</thead>
 
@@ -71,9 +72,19 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 					<?php
 				}
 				?>
+				<td class="field-actions">
+					<span class="field-actions-remove"><i class="dashicons dashicons-no-alt"></i></span>
+				</td>
 			</tr>
 
 		<?php }; ?>
+			<tr>
+				<td class="field-name" colspan="<?php if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) { echo 3; } else { echo 2; }?>">
+				</td>
+				<td class="field-actions-last" colspan="">
+					<span class="field-actions-add"><i class="dashicons dashicons-plus"></i></span>
+				</td>
+			</tr>
 
 		</tbody>
 	</table>
@@ -82,7 +93,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 
 	if ( true === bp_disable_invite_member_email_subject() ) {
 		?>
-		<label for="bp-member-invites-custom-subject"><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></label>
+		<label for="bp-member-invites-custom-subject"><span><?php _e( 'Customize the text of the invitation subject.', 'buddyboss' ) ?></span></label>
 		<textarea name="bp_member_invites_custom_subject" id="bp-member-invites-custom-subject" rows="5" cols="10" ><?php echo esc_textarea( bp_get_member_invitation_subject() ) ?></textarea>
 		<input type="hidden" value="<?php _e('Are you sure you want to send the invite without a subject?', 'buddyboss') ?>" name="error-message-empty-subject-field" id="error-message-empty-subject-field">
 		<?php
@@ -91,7 +102,7 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 	if ( true === bp_disable_invite_member_email_content() ) {
 
 		?>
-		<label for="bp-member-invites-custom-content"><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss' ) ?></label>
+		<label for="bp-member-invites-custom-content"><span><?php _e( 'Customize the text of the invitation email. A link to register will be sent with the email.', 'buddyboss' ) ?></span></label>
 		<?php
 		add_filter( 'mce_buttons', 'bp_nouveau_btn_invites_mce_buttons', 10, 1 );
 		wp_editor(
