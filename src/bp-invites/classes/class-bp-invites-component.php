@@ -215,45 +215,49 @@ class BP_Invites_Component extends BP_Component {
 
 			$nav_name     = __( 'Email Invites', 'buddyboss' );
 			$slug         = bp_get_invites_slug();
-			$access       = bp_core_can_edit_settings() && bp_allow_user_to_send_invites();
+			$access       = bp_core_can_edit_settings();
 			$invites_link = trailingslashit( $user_domain . $slug );
 
-			// Add 'Send Invites' to the main navigation.
-			$main_nav = array(
-				'name'                    => $nav_name,
-				'slug'                    => $slug,
-				'position'                => 90,
-				'screen_function'         => 'bp_invites_screen_send_invite',
-				'default_subnav_slug'     => 'send-invites',
-				'show_for_displayed_user' => $access,
-				'item_css_id'             => $this->id,
-			);
+			if ( bp_allow_user_to_send_invites() ) {
 
-			// Add the Invite by Email nav item.
-			$sub_nav[] = array(
-				'name'            => __( 'Send Invites', 'buddyboss' ),
-				'slug'            => 'send-invites',
-				'parent_url'      => $invites_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_invites_screen_send_invite',
-				'user_has_access' => $access,
-				'position'        => 10,
-				'item_css_id'     => 'invites-send-invite',
-			);
+				// Add 'Send Invites' to the main navigation.
+				$main_nav = array(
+					'name'                    => $nav_name,
+					'slug'                    => $slug,
+					'position'                => 90,
+					'screen_function'         => 'bp_invites_screen_send_invite',
+					'default_subnav_slug'     => 'send-invites',
+					'show_for_displayed_user' => $access,
+					'item_css_id'             => $this->id,
+				);
 
-			// Add the Sent Invites nav item.
-			$sub_nav[] = array(
-				'name'            => __( 'Sent Invites', 'buddyboss' ),
-				'slug'            => 'sent-invites',
-				'parent_url'      => $invites_link,
-				'parent_slug'     => $slug,
-				'screen_function' => 'bp_invites_screen_sent_invite',
-				'user_has_access' => $access,
-				'position'        => 20,
-				'item_css_id'     => 'invites-sent-invites',
-			);
+				// Add the Invite by Email nav item.
+				$sub_nav[] = array(
+					'name'            => __( 'Send Invites', 'buddyboss' ),
+					'slug'            => 'send-invites',
+					'parent_url'      => $invites_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_invites_screen_send_invite',
+					'user_has_access' => $access,
+					'position'        => 10,
+					'item_css_id'     => 'invites-send-invite',
+				);
 
-			parent::setup_nav( $main_nav, $sub_nav );
+				// Add the Sent Invites nav item.
+				$sub_nav[] = array(
+					'name'            => __( 'Sent Invites', 'buddyboss' ),
+					'slug'            => 'sent-invites',
+					'parent_url'      => $invites_link,
+					'parent_slug'     => $slug,
+					'screen_function' => 'bp_invites_screen_sent_invite',
+					'user_has_access' => $access,
+					'position'        => 20,
+					'item_css_id'     => 'invites-sent-invites',
+				);
+
+				parent::setup_nav( $main_nav, $sub_nav );
+
+			}
 		}
 	}
 
