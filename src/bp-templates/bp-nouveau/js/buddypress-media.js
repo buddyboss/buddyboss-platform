@@ -243,6 +243,29 @@ window.bp = window.bp || {};
 				}
 			}
 
+			var data = {
+				'action': 'document_delete',
+				'id': id,
+				'preview_attachment_id': preview_attachment_id,
+				'type': type,
+				'attachment_id': attachment_id
+			};
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function (response) {
+						if (response.success) {
+							var documentStream = $( '#media-stream' );
+							documentStream.html( '' );
+							documentStream.html( response.data.html );
+						}
+					}
+				}
+			);
+
 		},
 
 		bp_ajax_media_request: function (event, data) {

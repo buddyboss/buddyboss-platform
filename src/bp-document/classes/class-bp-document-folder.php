@@ -708,6 +708,11 @@ class BP_Document_Folder {
 		// Fetch all document folders being deleted so we can perform more actions.
 		$folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} {$where_sql}" );
 
+		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folders} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folders} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" );
+			$folders = array_merge( $folders, $recursive_folders );
+		}
+
 		/**
 		 * Action to allow intercepting folders to be deleted.
 		 *
@@ -718,8 +723,26 @@ class BP_Document_Folder {
 		 */
 		do_action_ref_array( 'bp_document_folder_before_delete', array( $folders, $r ) );
 
-		// Attempt to delete media albums from the database.
-		$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folders} {$where_sql}" );
+		if ( ! empty( $r['id'] ) && empty( $r['date_created'] ) && empty( $r['group_id'] ) && empty( $r['user_id'] ) ) {
+			$recursive_folders = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE FIND_IN_SET(ID,(SELECT GROUP_CONCAT(lv SEPARATOR ',') FROM ( SELECT @pv:=(SELECT GROUP_CONCAT(id SEPARATOR ',') FROM {$bp->document->table_name_folders} WHERE parent IN (@pv)) AS lv FROM {$bp->document->table_name_folders} JOIN (SELECT @pv:= {$r['id']})tmp WHERE parent IN (@pv)) a))" );
+			$folders           = array_merge( $folders, $recursive_folders );
+
+			// Pluck the media albums IDs out of the $albums array.
+			$foldr_ids = wp_parse_id_list( wp_list_pluck( $folders, 'id' ) );
+
+			// delete the media associated with album
+			if ( ! empty( $foldr_ids ) ) {
+				foreach( $foldr_ids as $folder_id ) {
+					// Attempt to delete media albums from the database.
+					$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folders} where id = {$folder_id}" );
+				}
+			}
+
+
+		} else {
+			// Attempt to delete media albums from the database.
+			$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name_folders} {$where_sql}" );
+		}
 
 		// Bail if nothing was deleted.
 		if ( empty( $deleted ) ) {
