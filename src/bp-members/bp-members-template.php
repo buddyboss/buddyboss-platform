@@ -2030,8 +2030,12 @@ function bp_signup_page() {
 	 * @return string
 	 */
 function bp_get_signup_page() {
-	if ( bp_has_custom_signup_page() ) {
+	if ( bp_has_custom_signup_page() && ! bp_allow_custom_registration() ) {
 		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
+	} else if ( bp_has_custom_signup_page() && bp_allow_custom_registration() && '' === bp_custom_register_page_url() ) {
+		$page = trailingslashit( bp_get_root_domain() . '/' . bp_get_signup_slug() );
+	} else if ( bp_allow_custom_registration() && '' !== bp_custom_register_page_url() ) {
+	    $page = bp_custom_register_page_url();
 	} else {
 		$page = bp_get_root_domain() . '/wp-signup.php';
 	}

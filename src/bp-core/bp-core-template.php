@@ -407,7 +407,12 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 		if ( ! empty( $timezone_string ) ) {
 			$timezone_object = timezone_open( $timezone_string );
 			$datetime_object = date_create( "@{$time}" );
-			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+
+			if ( false !== $timezone_object && false !== $datetime_object ) {
+				$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+			} else {
+				$timezone_offset = bp_get_option( 'gmt_offset' );
+			}
 
 			// Fall back on less reliable gmt_offset.
 		} else {

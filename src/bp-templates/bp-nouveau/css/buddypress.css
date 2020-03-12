@@ -2510,7 +2510,7 @@ body.register .registration-popup .mfp-close:hover {
   border-width: 1px;
   display: none;
   font-weight: 700;
-  margin: 10px 0 10px 0;
+  margin: 10px 0;
   margin-bottom: 10px;
   padding: 0.7em;
   text-align: center;
@@ -8238,6 +8238,7 @@ p.form-allowed-tags {
 #bbpress-forums div.bbp-the-content-wrapper textarea.bbp-the-content {
   width: 100%;
   margin: 0;
+  border-radius: 0;
   font-size: 12px;
 }
 
