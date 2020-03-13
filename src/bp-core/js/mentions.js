@@ -268,6 +268,47 @@ window.bp = window.bp || {};
 			mentions
 		);
 
+		// Remove atwho-query class from target to handle after save issues.
+		this.on( 'hidden.atwho', function( event ) {
+			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
+				var atwho_query = $( event.currentTarget ).find( 'span.atwho-query' );
+				for( var i = 0; i < atwho_query.length; i++ ) {
+					$(atwho_query[i]).replaceWith( atwho_query[i].innerText );
+				}
+			}
+		});
+
+		// Update medium editors when mention inserted into editor.
+		this.on( 'inserted.atwho', function( event ) {
+			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
+				var i = 0;
+				if ( typeof window.forums_medium_reply_editor !== 'undefined' && window.forums_medium_reply_editor.length ) {
+					var reply_editors = Object.keys(window.forums_medium_reply_editor);
+					if ( reply_editors.length ) {
+						for (i = 0; i < reply_editors.length; i++) {
+							window.forums_medium_reply_editor[reply_editors[i]].checkContentChanged();
+						}
+					}
+				}
+				if ( typeof window.forums_medium_topic_editor !== 'undefined' && window.forums_medium_topic_editor.length ) {
+					var topic_editors = Object.keys(window.forums_medium_topic_editor);
+					if ( topic_editors.length ) {
+						for (i = 0; i < topic_editors.length; i++) {
+							window.forums_medium_topic_editor[topic_editors[i]].checkContentChanged();
+						}
+					}
+				}
+				if ( typeof window.forums_medium_forum_editor !== 'undefined' && window.forums_medium_forum_editor.length ) {
+					var forum_editors = Object.keys(window.forums_medium_forum_editor);
+					if ( forum_editors.length ) {
+						for (i = 0; i < forum_editors.length; i++) {
+							window.forums_medium_forum_editor[forum_editors[i]].checkContentChanged();
+						}
+					}
+				}
+			}
+		});
+
 		var opts = $.extend( true, {}, suggestionsDefaults, mentionsDefaults, options );
 		return $.fn.atwho.call( this, opts );
 	};
