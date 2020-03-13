@@ -1366,6 +1366,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder,
 body.messages #buddypress #item-body #messages-post-document-uploader,
 #new-post #whats-new-attachments #forums-post-document-uploader,
 .bp-media-document-uploader.has-folderlocationUI,
+.ac-reply-content .ac-reply-attachments,
 .modal-container.has-folderlocationUI {
 
 	.dz-preview.dz-file-preview .dz-image {
@@ -2084,7 +2085,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 
 		.document-breadcrumb {
 			list-style: none;
-			margin: 10px 0 0 0;
+			margin: 10px 0 0;
 			text-align: left;
 
 			li {

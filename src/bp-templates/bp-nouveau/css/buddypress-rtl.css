@@ -2784,6 +2784,10 @@ span.dashicons.dashicons-admin-file:before {
   margin-bottom: 0.5em;
 }
 
+.buddypress-wrap .activity-comments .acomment-content .bb-activity-media-wrap {
+  margin: 15px 0;
+}
+
 .buddypress-wrap .activity-comments .acomment-options {
   float: right;
   margin: 10px 20px 10px 0;
@@ -11982,6 +11986,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.d
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-image,
 #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-image,
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-image,
+.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-image,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-image {
   padding-top: 0;
 }
@@ -11997,6 +12002,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.d
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
 #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
+.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details {
   display: block !important;
 }
@@ -12012,6 +12018,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.d
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details,
 #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details,
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details,
+.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details {
   border-radius: 4px;
   position: relative;
@@ -12038,6 +12045,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.d
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
 #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-size,
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size,
+.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-size,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-size {
   margin-bottom: 0;
   font-size: 12px;
@@ -12054,6 +12062,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.d
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
 #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename,
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename,
+.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-filename,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename {
   display: block;
   width: 100%;
@@ -12070,6 +12079,7 @@ body.documents #buddypress #item-body #media-uploader-child-folder .dz-preview.d
 body.messages #buddypress #item-body #messages-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
 #new-post #whats-new-attachments #forums-post-document-uploader .dz-preview.dz-file-preview .dz-details .dz-filename span,
 .bp-media-document-uploader.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span,
+.ac-reply-content .ac-reply-attachments .dz-preview.dz-file-preview .dz-details .dz-filename span,
 .modal-container.has-folderlocationUI .dz-preview.dz-file-preview .dz-details .dz-filename span {
   margin-top: 0;
 }
@@ -12692,7 +12702,7 @@ body.messages #buddypress #item-body #messages-post-document-uploader .dz-previe
 
 #bp-media-single-folder .bp-media-header-wrap .document-breadcrumb {
   list-style: none;
-  margin: 10px 0 0 0;
+  margin: 10px 0 0;
   text-align: right;
 }
 
