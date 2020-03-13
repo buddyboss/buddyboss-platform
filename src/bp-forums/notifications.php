@@ -233,11 +233,17 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 		// Send @mentions and setup BP notifications.
 		foreach ( (array) $usernames as $user_id => $username ) {
+
+			// Current user is the same user then do not send notification.
+			if ( $user_id === get_current_user_id() ) {
+				continue;
+			}
+
 			$args['user_id']          = $user_id;
 			$args['component_action'] = 'bbp_new_at_mention';
 			$args['secondary_item_id'] = get_current_user_id();
 
-			// If forum is not accesible to user, do not send notification
+			// If forum is not accesible to user, do not send notification.
 			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
 				continue;
 			}
@@ -281,9 +287,15 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 	if ( ! empty( $usernames ) ) {
 		// Send @mentions and setup BP notifications.
 		foreach ( (array) $usernames as $user_id => $username ) {
+
+			// Current user is the same user then do not send notification.
+			if ( $user_id === get_current_user_id() ) {
+				continue;
+			}
+
 			$args['user_id']          = $user_id;
 
-			// If forum is not accesible to user, do not send notification
+			// If forum is not accesible to user, do not send notification.
 			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
 				continue;
 			}
