@@ -282,7 +282,7 @@ window.bp = window.bp || {};
 		this.on( 'inserted.atwho', function( event ) {
 			if ( typeof event.currentTarget !== 'undefined' && typeof event.currentTarget.innerHTML !== 'undefined' ) {
 				var i = 0;
-				if ( typeof window.forums_medium_reply_editor !== 'undefined' && window.forums_medium_reply_editor.length ) {
+				if ( typeof window.forums_medium_reply_editor !== 'undefined' ) {
 					var reply_editors = Object.keys(window.forums_medium_reply_editor);
 					if ( reply_editors.length ) {
 						for (i = 0; i < reply_editors.length; i++) {
@@ -290,7 +290,7 @@ window.bp = window.bp || {};
 						}
 					}
 				}
-				if ( typeof window.forums_medium_topic_editor !== 'undefined' && window.forums_medium_topic_editor.length ) {
+				if ( typeof window.forums_medium_topic_editor !== 'undefined' ) {
 					var topic_editors = Object.keys(window.forums_medium_topic_editor);
 					if ( topic_editors.length ) {
 						for (i = 0; i < topic_editors.length; i++) {
@@ -298,7 +298,7 @@ window.bp = window.bp || {};
 						}
 					}
 				}
-				if ( typeof window.forums_medium_forum_editor !== 'undefined' && window.forums_medium_forum_editor.length ) {
+				if ( typeof window.forums_medium_forum_editor !== 'undefined' ) {
 					var forum_editors = Object.keys(window.forums_medium_forum_editor);
 					if ( forum_editors.length ) {
 						for (i = 0; i < forum_editors.length; i++) {
