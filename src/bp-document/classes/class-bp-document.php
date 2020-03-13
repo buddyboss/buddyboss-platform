@@ -3,7 +3,7 @@
  * BuddyBoss Document Classes
  *
  * @package BuddyBoss\Document
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 
 // Exit if accessed directly
@@ -16,7 +16,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  * Instance methods are available for creating/editing an document,
  * static methods for querying document.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 class BP_Document {
 
@@ -25,7 +25,7 @@ class BP_Document {
 	/**
 	 * ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $id;
@@ -33,7 +33,7 @@ class BP_Document {
 	/**
 	 * Blog ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $blog_id;
@@ -41,7 +41,7 @@ class BP_Document {
 	/**
 	 * Attachment ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $attachment_id;
@@ -49,7 +49,7 @@ class BP_Document {
 	/**
 	 * User ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $user_id;
@@ -57,15 +57,15 @@ class BP_Document {
 	/**
 	 * Title of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	var $title;
 
 	/**
-	 * Album ID of the document item.
+	 * Folder ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $folder_id;
@@ -73,7 +73,7 @@ class BP_Document {
 	/**
 	 * Activity ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $activity_id;
@@ -81,7 +81,7 @@ class BP_Document {
 	/**
 	 * Group ID of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $group_id;
@@ -89,7 +89,7 @@ class BP_Document {
 	/**
 	 * Privacy of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	var $privacy;
@@ -97,7 +97,7 @@ class BP_Document {
 	/**
 	 * Menu order of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	var $menu_order;
@@ -105,7 +105,7 @@ class BP_Document {
 	/**
 	 * Upload date of the document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	var $date_created;
@@ -113,7 +113,7 @@ class BP_Document {
 	/**
 	 * Error holder.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @var WP_Error
 	 */
@@ -122,7 +122,7 @@ class BP_Document {
 	/**
 	 * Error type to return. Either 'bool' or 'wp_error'.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @var string
 	 */
@@ -133,8 +133,7 @@ class BP_Document {
 	 *
 	 * @param int|bool $id Optional. The ID of a specific activity item.
 	 *
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	function __construct( $id = false ) {
 		// Instantiate errors object.
@@ -149,7 +148,7 @@ class BP_Document {
 	/**
 	 * Populate the object with data about the specific document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function populate() {
 
@@ -159,7 +158,7 @@ class BP_Document {
 
 		if ( false === $row ) {
 			$bp  = buddypress();
-			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE id = %d", $this->id ) );
+			$row = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->document->table_name} WHERE id = %d", $this->id ) ); // db call ok; no-cache ok;
 
 			wp_cache_set( $this->id, $row, 'bp_document' );
 		}
@@ -187,8 +186,7 @@ class BP_Document {
 	 * Save the document item to the database.
 	 *
 	 * @return WP_Error|bool True on success.
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function save() {
 
@@ -216,8 +214,7 @@ class BP_Document {
 		 *
 		 * @param BP_Document $this Current instance of the document item being saved. Passed by reference.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		do_action_ref_array( 'bp_document_before_save', array( &$this ) );
 
@@ -249,16 +246,16 @@ class BP_Document {
 
 		if ( 'pdf' === $extension ) {
 
-			$output_format = "jpeg";
-			$antialiasing  = "4";
-			$preview_page  = "1";
-			$resolution    = "300";
+			$output_format = 'jpeg';
+			$antialiasing  = '4';
+			$preview_page  = '1';
+			$resolution    = '300';
 			$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
-			$exec_command  = "gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=" . $output_format . " ";
-			$exec_command  .= "-dTextAlphaBits=" . $antialiasing . " -dGraphicsAlphaBits=" . $antialiasing . " ";
-			$exec_command  .= "-dFirstPage=" . $preview_page . " -dLastPage=" . $preview_page . " ";
-			$exec_command  .= "-r" . $resolution . " ";
-			$exec_command  .= "-sOutputFile=" . $output_file . " '" . $file . "'";
+			$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
+			$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
+			$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
+			$exec_command .= '-r' . $resolution . ' ';
+			$exec_command .= '-sOutputFile=' . $output_file . " '" . $file . "'";
 
 			exec( $exec_command, $command_output, $return_val );
 
@@ -281,11 +278,11 @@ class BP_Document {
 					'post_mime_type' => $wp_filetype['type'],
 					'post_title'     => sanitize_file_name( $filename ),
 					'post_content'   => '',
-					'post_status'    => 'inherit'
+					'post_status'    => 'inherit',
 				);
 
 				$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-				require_once( ABSPATH . 'wp-admin/includes/image.php' );
+				require_once ABSPATH . 'wp-admin/includes/image.php';
 				$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 
@@ -300,18 +297,18 @@ class BP_Document {
 
 			exec( $command, $command_output, $return_val );
 
-			foreach( glob( $pattern ) as $filename ){
+			foreach ( glob( $pattern ) as $filename ) {
 
-				$output_format = "jpeg";
-				$antialiasing  = "4";
-				$preview_page  = "1";
-				$resolution    = "300";
+				$output_format = 'jpeg';
+				$antialiasing  = '4';
+				$preview_page  = '1';
+				$resolution    = '300';
 				$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
-				$exec_command  = "gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=" . $output_format . " ";
-				$exec_command  .= "-dTextAlphaBits=" . $antialiasing . " -dGraphicsAlphaBits=" . $antialiasing . " ";
-				$exec_command  .= "-dFirstPage=" . $preview_page . " -dLastPage=" . $preview_page . " ";
-				$exec_command  .= "-r" . $resolution . " ";
-				$exec_command  .= "-sOutputFile=" . $output_file . " '" . $filename . "'";
+				$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
+				$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
+				$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
+				$exec_command .= '-r' . $resolution . ' ';
+				$exec_command .= '-sOutputFile=' . $output_file . " '" . $filename . "'";
 
 				exec( $exec_command, $command_output, $return_val );
 
@@ -334,24 +331,22 @@ class BP_Document {
 						'post_mime_type' => $wp_filetype['type'],
 						'post_title'     => sanitize_file_name( $filename ),
 						'post_content'   => '',
-						'post_status'    => 'inherit'
+						'post_status'    => 'inherit',
 					);
 
 					$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-					require_once( ABSPATH . 'wp-admin/includes/image.php' );
+					require_once ABSPATH . 'wp-admin/includes/image.php';
 					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
 
 					unlink( $output_file );
 
 				}
-
 			}
 
 			$this->bp_document_remove_temp_directory( $dir );
 
 		}
-
 
 		// If we have an existing ID, update the document item, otherwise insert it.
 		if ( ! empty( $this->id ) ) {
@@ -374,8 +369,7 @@ class BP_Document {
 		 *
 		 * @param BP_Document $this Current instance of document item being saved. Passed by reference.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		do_action_ref_array( 'bp_document_after_save', array( &$this ) );
 
@@ -386,11 +380,11 @@ class BP_Document {
 		if ( is_dir( $dir ) ) {
 			$objects = scandir( $dir );
 			foreach ( $objects as $object ) {
-				if ( $object != "." && $object != ".." ) {
-					if ( filetype( $dir . "/" . $object ) == "dir" ) {
-						rrmdir( $dir . "/" . $object );
+				if ( $object != '.' && $object != '..' ) {
+					if ( filetype( $dir . '/' . $object ) == 'dir' ) {
+						rrmdir( $dir . '/' . $object );
 					} else {
-						unlink( $dir . "/" . $object );
+						unlink( $dir . '/' . $object );
 					}
 				}
 			}
@@ -423,32 +417,33 @@ class BP_Document {
 	 * @return array The array returned has two keys:
 	 *               - 'total' is the count of located documents
 	 *               - 'documents' is an array of the located documents
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	public static function get( $args = array() ) {
 
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args( $args,
+		$r  = wp_parse_args(
+			$args,
 			array(
-				'scope'        => '',              // Scope - Groups, friends etc.
-				'page'         => 1,               // The current page.
-				'per_page'     => 20,              // Document items per page.
-				'max'          => false,           // Max number of items to return.
-				'fields'       => 'all',           // Fields to include.
-				'sort'         => 'DESC',          // ASC or DESC.
-				'order_by'     => 'date_created',  // Column to order by.
-				'exclude'      => false,           // Array of ids to exclude.
-				'in'           => false,           // Array of ids to limit query by (IN).
-				'search_terms' => false,           // Terms to search by.
-				'privacy'      => false,           // public, loggedin, onlyme, friends, grouponly, message.
-				'count_total'  => false,           // Whether or not to use count_total.
-				'folder_id'       => false,
-				'folder'       => true,
-				'user_directory'        => true,
-			) );
+				'scope'          => '',              // Scope - Groups, friends etc.
+				'page'           => 1,               // The current page.
+				'per_page'       => 20,              // Document items per page.
+				'max'            => false,           // Max number of items to return.
+				'fields'         => 'all',           // Fields to include.
+				'sort'           => 'DESC',          // ASC or DESC.
+				'order_by'       => 'date_created',  // Column to order by.
+				'exclude'        => false,           // Array of ids to exclude.
+				'in'             => false,           // Array of ids to limit query by (IN).
+				'search_terms'   => false,           // Terms to search by.
+				'privacy'        => false,           // public, loggedin, onlyme, friends, grouponly, message.
+				'count_total'    => false,           // Whether or not to use count_total.
+				'folder_id'      => false,
+				'folder'         => true,
+				'user_directory' => true,
+			)
+		);
 
 		// Select conditions.
 		$select_sql = 'SELECT DISTINCT m.id';
@@ -479,13 +474,12 @@ class BP_Document {
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 *
-			 * @since BuddyBoss 1.2.5
-			 *
+			 * @since BuddyBoss 1.3.0
 			 */
 			if ( apply_filters( 'bp_document_get_include_user_search', false ) ) {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
 				if ( false !== $user_search ) {
-					$user_id                        = $user_search->ID;
+					$user_id                         = $user_search->ID;
 					$where_conditions['search_sql'] .= $wpdb->prepare( ' OR m.user_id = %d', $user_id );
 				}
 			}
@@ -567,8 +561,7 @@ class BP_Document {
 		 * @param string $from_sql Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql Current INNER JOIN MySQL statement at point of execution.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		$where_conditions = apply_filters( 'bp_document_get_where_conditions', $where_conditions, $r, $select_sql, $from_sql, $join_sql );
 
@@ -592,8 +585,7 @@ class BP_Document {
 		 * @param string $from_sql Current FROM MySQL statement.
 		 * @param string $where_sql Current WHERE MySQL statement.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		$join_sql = apply_filters( 'bp_document_get_join_sql', $join_sql, $r, $select_sql, $from_sql, $where_sql );
 
@@ -622,8 +614,7 @@ class BP_Document {
 		 * @param string $document_ids_sql MySQL statement used to query for Document IDs.
 		 * @param array $r Array of arguments passed into method.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		$document_ids_sql = apply_filters( 'bp_document_paged_activities_sql', $document_ids_sql, $r );
 
@@ -631,7 +622,7 @@ class BP_Document {
 
 		$cached = bp_core_get_incremented_cache( $document_ids_sql, $cache_group );
 		if ( false === $cached ) {
-			$document_ids = $wpdb->get_col( $document_ids_sql );
+			$document_ids = $wpdb->get_col( $document_ids_sql ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $document_ids_sql, $cache_group, $document_ids );
 		} else {
 			$document_ids = $cached;
@@ -671,13 +662,12 @@ class BP_Document {
 			 * @param string $where_sql MySQL WHERE statement portion.
 			 * @param string $sort Sort direction for query.
 			 *
-			 * @since BuddyBoss 1.2.5
-			 *
+			 * @since BuddyBoss 1.3.0
 			 */
 			$total_documents_sql = apply_filters( 'bp_document_total_documents_sql', "SELECT count(DISTINCT m.id) FROM {$bp->document->table_name} m {$join_sql} {$where_sql}", $where_sql, $sort );
 			$cached              = bp_core_get_incremented_cache( $total_documents_sql, $cache_group );
 			if ( false === $cached ) {
-				$total_documents = $wpdb->get_var( $total_documents_sql );
+				$total_documents = $wpdb->get_var( $total_documents_sql ); // db call ok; no-cache ok;
 				bp_core_set_incremented_cache( $total_documents_sql, $cache_group, $total_documents );
 			} else {
 				$total_documents = $cached;
@@ -700,7 +690,8 @@ class BP_Document {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args( $args,
+		$r  = wp_parse_args(
+			$args,
 			array(
 				'scope'          => '',              // Scope - Groups, friends etc.
 				'page'           => 1,               // The current page.
@@ -716,7 +707,8 @@ class BP_Document {
 				'count_total'    => false,           // Whether or not to use count_total.
 				'folder'         => true,
 				'user_directory' => true,
-			) );
+			)
+		);
 
 		// Select conditions.
 		$select_sql_document = 'SELECT DISTINCT m.id';
@@ -752,13 +744,12 @@ class BP_Document {
 			 *
 			 * @param bool $value Whether or not to include user search. Default false.
 			 *
-			 * @since BuddyBoss 1.2.5
-			 *
+			 * @since BuddyBoss 1.3.0
 			 */
 			if ( apply_filters( 'bp_document_get_include_user_search', false ) ) {
 				$user_search = get_user_by( 'slug', $r['search_terms'] );
 				if ( false !== $user_search ) {
-					$user_id                                 = $user_search->ID;
+					$user_id                                  = $user_search->ID;
 					$where_conditions_document['search_sql'] .= $wpdb->prepare( ' OR m.user_id = %d', $user_id );
 					$where_conditions_folder['search_sql']   .= $wpdb->prepare( ' OR a.user_id = %d', $user_id );
 				}
@@ -833,12 +824,12 @@ class BP_Document {
 				$where_conditions_folder['user_directory']   = "a.parent = {$folder_id}";
 				$where_conditions_document['user_directory'] = "m.album_id = {$folder_id}";
 			} else {
-				$where_conditions_document['user_directory'] = "m.album_id = 0";
-				$where_conditions_folder['user_directory']   = "a.parent = 0";
+				$where_conditions_document['user_directory'] = 'm.album_id = 0';
+				$where_conditions_folder['user_directory']   = 'a.parent = 0';
 			}
 		}
 
-		$where_conditions_folder['type'] = "a.type = 'document'";
+		$where_conditions_folder['type']   = "a.type = 'document'";
 		$where_conditions_document['type'] = "m.type = 'document'";
 
 		if ( ! empty( $r['privacy'] ) ) {
@@ -856,8 +847,7 @@ class BP_Document {
 		 * @param string $from_sql Current FROM MySQL statement at point of execution.
 		 * @param string $join_sql Current INNER JOIN MySQL statement at point of execution.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		$where_conditions_document = apply_filters( 'bp_document_get_where_conditions_document', $where_conditions_document, $r, $select_sql_document, $from_sql_document, $join_sql_document );
 		$where_conditions_folder   = apply_filters( 'bp_document_get_where_conditions_folder', $where_conditions_folder, $r, $select_sql_folder, $from_sql_folder, $join_sql_folder );
@@ -888,21 +878,24 @@ class BP_Document {
 		 * @param string $from_sql Current FROM MySQL statement.
 		 * @param string $where_sql Current WHERE MySQL statement.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
-		$join_sql_folder   = apply_filters( 'bp_document_get_join_sql_folder',
+		$join_sql_folder   = apply_filters(
+			'bp_document_get_join_sql_folder',
 			$join_sql_folder,
 			$r,
 			$select_sql_folder,
 			$from_sql_folder,
-			$where_sql_folder );
-		$join_sql_document = apply_filters( 'bp_document_get_join_sql_document',
+			$where_sql_folder
+		);
+		$join_sql_document = apply_filters(
+			'bp_document_get_join_sql_document',
 			$join_sql_document,
 			$r,
 			$select_sql_document,
 			$from_sql_document,
-			$where_sql_document );
+			$where_sql_document
+		);
 
 		$retval = array(
 			'documents'      => null,
@@ -920,8 +913,7 @@ class BP_Document {
 		 * @param string $document_ids_sql MySQL statement used to query for Document IDs.
 		 * @param array $r Array of arguments passed into method.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		$document_ids_sql_folder   = apply_filters( 'bp_document_paged_activities_sql_folder', $document_ids_sql_folder, $r );
 		$document_ids_sql_document = apply_filters( 'bp_document_paged_activities_sql_document', $document_ids_sql_document, $r );
@@ -931,14 +923,14 @@ class BP_Document {
 		$cached_folder   = bp_core_get_incremented_cache( $document_ids_sql_folder, $cache_group );
 		$cached_document = bp_core_get_incremented_cache( $document_ids_sql_document, $cache_group );
 		if ( false === $cached_folder ) {
-			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder );
+			$document_ids_folder = $wpdb->get_col( $document_ids_sql_folder ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $document_ids_sql_folder, $cache_group, $document_ids_folder );
 		} else {
 			$document_ids_folder = $cached_folder;
 		}
 
 		if ( false === $cached_document ) {
-			$document_ids_document = $wpdb->get_col( $document_ids_sql_document );
+			$document_ids_document = $wpdb->get_col( $document_ids_sql_document ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $document_ids_sql_document, $cache_group, $document_ids_document );
 		} else {
 			$document_ids_document = $cached_document;
@@ -999,8 +991,7 @@ class BP_Document {
 	 * @param array $document_ids Array of document IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	protected static function get_document_data( $document_ids = array() ) {
 		global $wpdb;
@@ -1022,7 +1013,7 @@ class BP_Document {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from document table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name} WHERE id IN ({$uncached_ids_sql})" );
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name} WHERE id IN ({$uncached_ids_sql})" ); // db call ok; no-cache ok;
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
@@ -1058,10 +1049,12 @@ class BP_Document {
 		}
 
 		// Then fetch user data.
-		$user_query = new BP_User_Query( array(
+		$user_query = new BP_User_Query(
+			array(
 				'user_ids'        => wp_list_pluck( $documents, 'user_id' ),
 				'populate_extras' => false,
-			) );
+			)
+		);
 
 		// Associated located user data with document items.
 		foreach ( $documents as $a_index => $a_item ) {
@@ -1085,8 +1078,7 @@ class BP_Document {
 	 * @param array $document_ids Array of document IDs.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	protected static function get_folder_data( $folder_ids = array() ) {
 		global $wpdb;
@@ -1108,7 +1100,7 @@ class BP_Document {
 			$uncached_ids_sql = implode( ',', wp_parse_id_list( $uncached_ids ) );
 
 			// Fetch data from document table, preserving order.
-			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE id IN ({$uncached_ids_sql})" );
+			$queried_adata = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name_folders} WHERE id IN ({$uncached_ids_sql})" ); // db call ok; no-cache ok;
 
 			// Put that data into the placeholders created earlier,
 			// and add it to the cache.
@@ -1138,17 +1130,17 @@ class BP_Document {
 					$document->folder = 'profile';
 					$document->link   = bp_core_get_user_domain( (int) $document->user_id ) . bp_get_document_slug() . '/folder/' . (int) $document->id;
 				}
-
-
 			}
 			$documents[] = $document;
 		}
 
 		// Then fetch user data.
-		$user_query = new BP_User_Query( array(
+		$user_query = new BP_User_Query(
+			array(
 				'user_ids'        => wp_list_pluck( $documents, 'user_id' ),
 				'populate_extras' => false,
-			) );
+			)
+		);
 
 		// Associated located user data with document items.
 		foreach ( $documents as $a_index => $a_item ) {
@@ -1172,8 +1164,7 @@ class BP_Document {
 	 * @param array $documents Documents array.
 	 *
 	 * @return array
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	protected static function append_user_fullnames( $documents ) {
 
@@ -1206,8 +1197,7 @@ class BP_Document {
 	 * @param array $documents Array of document.
 	 *
 	 * @return array $documents Array of document.
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	protected static function prefetch_object_data( $documents ) {
 
@@ -1216,8 +1206,7 @@ class BP_Document {
 		 *
 		 * @param array $documents Array of document.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		return apply_filters( 'bp_document_prefetch_object_data', $documents );
 	}
@@ -1236,7 +1225,6 @@ class BP_Document {
 	 *
 	 * @return false|array 'sql' WHERE SQL string and 'override' document args.
 	 * @since BuddyBoss 1.1.9
-	 *
 	 */
 	public static function get_scope_query_sql( $scope = false, $r = array() ) {
 
@@ -1293,7 +1281,6 @@ class BP_Document {
 			 * @param array $r Current activity arguments passed in BP_Document::get().
 			 *
 			 * @since BuddyBoss 1.1.9
-			 *
 			 */
 			$scope_args = apply_filters( "bp_document_set_{$scope}_scope_args", array(), $r );
 
@@ -1333,14 +1320,13 @@ class BP_Document {
 	/**
 	 * Create SQL IN clause for filter queries.
 	 *
-	 * @param string $field The database field.
+	 * @param string     $field The database field.
 	 * @param array|bool $items The values for the IN clause, or false when none are found.
 	 *
 	 * @return string|false
 	 * @see BP_Document::get_filter_sql()
 	 *
 	 * @since BuddyBoss 1.1.9
-	 *
 	 */
 	public static function get_in_operator_sql( $field, $items ) {
 		global $wpdb;
@@ -1387,17 +1373,17 @@ class BP_Document {
 	 * @string    $privacy           Optional. The privacy to filter by.
 	 * @string $date_created      Optional. The date to filter by.
 	 * }
-	 * @param bool $from Context of deletion from. ex. attachment, activity etc.
+	 * @param bool  $from Context of deletion from. ex. attachment, activity etc.
 	 *
 	 * @return array|bool An array of deleted document IDs on success, false on failure.
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	public static function delete( $args = array(), $from = false ) {
 		global $wpdb;
 
 		$bp = buddypress();
-		$r  = wp_parse_args( $args,
+		$r  = wp_parse_args(
+			$args,
 			array(
 				'id'            => false,
 				'blog_id'       => false,
@@ -1409,7 +1395,8 @@ class BP_Document {
 				'group_id'      => false,
 				'privacy'       => false,
 				'date_created'  => false,
-			) );
+			)
+		);
 
 		// Setup empty array from where query arguments.
 		$where_args = array();
@@ -1473,7 +1460,7 @@ class BP_Document {
 		$where_sql = 'WHERE ' . join( ' AND ', $where_args );
 
 		// Fetch all document being deleted so we can perform more actions.
-		$documents = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name} {$where_sql}" );
+		$documents = $wpdb->get_results( "SELECT * FROM {$bp->document->table_name} {$where_sql}" ); // db call ok; no-cache ok;
 
 		/**
 		 * Action to allow intercepting document items to be deleted.
@@ -1481,13 +1468,12 @@ class BP_Document {
 		 * @param array $documents Array of document.
 		 * @param array $r Array of parsed arguments.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		do_action_ref_array( 'bp_document_before_delete', array( $documents, $r ) );
 
 		// Attempt to delete document from the database.
-		$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name} {$where_sql}" );
+		$deleted = $wpdb->query( "DELETE FROM {$bp->document->table_name} {$where_sql}" ); // db call ok; no-cache ok;
 
 		// Bail if nothing was deleted.
 		if ( empty( $deleted ) ) {
@@ -1500,8 +1486,7 @@ class BP_Document {
 		 * @param array $documents Array of document.
 		 * @param array $r Array of parsed arguments.
 		 *
-		 * @since BuddyBoss 1.2.5
-		 *
+		 * @since BuddyBoss 1.3.0
 		 */
 		do_action_ref_array( 'bp_document_after_delete', array( $documents, $r ) );
 
@@ -1525,9 +1510,11 @@ class BP_Document {
 							$activity_document_ids = array_diff( $activity_document_ids, $document_ids );
 							if ( ! empty( $activity_document_ids ) ) {
 								$activity_document_ids = implode( ',', $activity_document_ids );
-								bp_activity_update_meta( $parent_activity_id,
+								bp_activity_update_meta(
+									$parent_activity_id,
 									'bp_document_ids',
-									$activity_document_ids );
+									$activity_document_ids
+								);
 							} else {
 								$activity_ids[] = $parent_activity_id;
 							}
@@ -1561,10 +1548,12 @@ class BP_Document {
 
 						// Deleting an activity.
 					} else {
-						if ( bp_activity_delete( array(
+						if ( bp_activity_delete(
+							array(
 								'id'      => $activity->id,
 								'user_id' => $activity->user_id,
-							) ) ) {
+							)
+						) ) {
 							/** This action is documented in bp-activity/bp-activity-actions.php */
 							do_action( 'bp_activity_action_delete_activity', $activity->id, $activity->user_id );
 						}
@@ -1582,8 +1571,7 @@ class BP_Document {
 	 * @param int $user_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	public static function total_document_count( $user_id = 0 ) {
 		global $bp, $wpdb;
@@ -1600,7 +1588,7 @@ class BP_Document {
 		}
 		$privacy = "'" . implode( "', '", $privacy ) . "'";
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document'" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE user_id = {$user_id} AND privacy IN ({$privacy}) AND type = 'document'" ); // db call ok; no-cache ok;
 
 		return $total_count;
 	}
@@ -1611,13 +1599,12 @@ class BP_Document {
 	 * @param int $group_id
 	 *
 	 * @return array|bool|int
-	 * @since BuddyBoss 1.2.5
-	 *
+	 * @since BuddyBoss 1.3.0
 	 */
 	public static function total_group_document_count( $group_id = 0 ) {
 		global $bp, $wpdb;
 
-		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id}" );
+		$total_count = (int) $wpdb->get_var( "SELECT COUNT(*) FROM {$bp->document->table_name} WHERE group_id = {$group_id}" ); // db call ok; no-cache ok;
 
 		return $total_count;
 	}
@@ -1628,7 +1615,7 @@ class BP_Document {
 	 * @param bool $folder_id
 	 *
 	 * @return array|bool
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public static function get_folder_document_ids( $folder_id = false ) {
 		global $bp, $wpdb;
@@ -1637,13 +1624,15 @@ class BP_Document {
 			return false;
 		}
 
-		$folder_document_sql = $wpdb->prepare( "SELECT DISTINCT m.id FROM {$bp->document->table_name} m WHERE m.album_id = %d",
-			$folder_id );
+		$folder_document_sql = $wpdb->prepare(
+			"SELECT DISTINCT m.id FROM {$bp->document->table_name} m WHERE m.album_id = %d",
+			$folder_id
+		);
 
 		$cached = bp_core_get_incremented_cache( $folder_document_sql, 'bp_document' );
 
 		if ( false === $cached ) {
-			$document_ids = $wpdb->get_col( $folder_document_sql );
+			$document_ids = $wpdb->get_col( $folder_document_sql ); // db call ok; no-cache ok;
 			bp_core_set_incremented_cache( $folder_document_sql, 'bp_document', $document_ids );
 		} else {
 			$document_ids = $cached;
@@ -1667,7 +1656,7 @@ class BP_Document {
 			return false;
 		}
 
-		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->document->table_name} m WHERE m.activity_id = {$activity_id}" );
+		$activity_document_id = (int) $wpdb->get_var( "SELECT DISTINCT m.id FROM {$bp->document->table_name} m WHERE m.activity_id = {$activity_id}" ); // db call ok; no-cache ok;
 
 		return $activity_document_id;
 	}

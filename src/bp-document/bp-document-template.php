@@ -3,7 +3,7 @@
  * BuddyBoss Document Template Functions.
  *
  * @package BuddyBoss\Document\Templates
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 
 // Exit if accessed directly.
@@ -12,7 +12,7 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Output the document component slug.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_slug() {
 	echo bp_get_document_slug();
@@ -20,7 +20,7 @@ function bp_document_slug() {
 /**
  * Return the document component slug.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return string
  */
@@ -29,7 +29,7 @@ function bp_get_document_slug() {
 	/**
 	 * Filters the document component slug.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $slug Document component slug.
 	 */
@@ -39,7 +39,7 @@ function bp_get_document_slug() {
 /**
  * Output the document component root slug.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_root_slug() {
 	echo bp_get_document_root_slug();
@@ -47,7 +47,7 @@ function bp_document_root_slug() {
 /**
  * Return the document component root slug.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return string
  */
@@ -56,7 +56,7 @@ function bp_get_document_root_slug() {
 	/**
 	 * Filters the Document component root slug.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $slug Document component root slug.
 	 */
@@ -70,7 +70,7 @@ function bp_get_document_root_slug() {
  * $document_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of document items.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
 
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -200,30 +200,30 @@ function bp_has_document( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'include'      => false,           // Pass an document_id or string of IDs comma-separated.
-			'exclude'      => false,           // Pass an activity_id or string of IDs comma-separated.
-			'sort'         => 'DESC',          // Sort DESC or ASC.
-			'order_by'     => false,           // Order by. Default: date_created
-			'page'         => 1,               // Which page to load.
-			'per_page'     => 20,              // Number of items per page.
-			'page_arg'     => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
-			'max'          => false,           // Max number to return.
-			'fields'       => 'all',
-			'count_total'  => false,
+			'include'        => false,           // Pass an document_id or string of IDs comma-separated.
+			'exclude'        => false,           // Pass an activity_id or string of IDs comma-separated.
+			'sort'           => 'DESC',          // Sort DESC or ASC.
+			'order_by'       => false,           // Order by. Default: date_created
+			'page'           => 1,               // Which page to load.
+			'per_page'       => 20,              // Number of items per page.
+			'page_arg'       => 'acpage',        // See https://buddypress.trac.wordpress.org/ticket/3679.
+			'max'            => false,           // Max number to return.
+			'fields'         => 'all',
+			'count_total'    => false,
 
 			// Scope - pre-built document filters for a user (friends/groups).
-			'scope'        => $scope,
+			'scope'          => $scope,
 
 			// Filtering
-			'user_id'      => $user_id,        // user_id to filter on.
-			'folder_id'     => $folder_id,       // folder_id to filter on.
-			'group_id'     => $group_id,       // group_id to filter on.
-			'privacy'      => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
-			'folder'        => true,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'user_id'        => $user_id,        // user_id to filter on.
+			'folder_id'      => $folder_id,       // folder_id to filter on.
+			'group_id'       => $group_id,       // group_id to filter on.
+			'privacy'        => $privacy,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
+			'folder'         => true,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 			'user_directory' => true,        // privacy to filter on - public, onlyme, loggedin, friends, grouponly, message.
 
 		// Searching.
-			'search_terms' => $search_terms_default,
+			'search_terms'   => $search_terms_default,
 		),
 		'has_document'
 	);
@@ -251,7 +251,7 @@ function bp_has_document( $args = '' ) {
 	/**
 	 * Filters whether or not there are document items to display.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param bool   $value               Whether or not there are document items to display.
 	 * @param string $document_template      Current document template being used.
@@ -263,7 +263,7 @@ function bp_has_document( $args = '' ) {
 /**
  * Determine if there are still document left in the loop.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -277,7 +277,7 @@ function bp_document() {
 /**
  * Get the current document object in the loop.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -324,7 +324,7 @@ function bp_get_document_load_more_link() {
 /**
  * Output the document pagination count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  */
@@ -335,7 +335,7 @@ function bp_document_pagination_count() {
 /**
  * Return the document pagination count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -357,7 +357,7 @@ function bp_get_document_pagination_count() {
 /**
  * Output the document pagination links.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_pagination_links() {
 	echo bp_get_document_pagination_links();
@@ -366,7 +366,7 @@ function bp_document_pagination_links() {
 /**
  * Return the document pagination links.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -378,7 +378,7 @@ function bp_get_document_pagination_links() {
 	/**
 	 * Filters the document pagination link output.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $pag_links Output for the document pagination links.
 	 */
@@ -388,7 +388,7 @@ function bp_get_document_pagination_links() {
 /**
  * Return true when there are more document items to be shown than currently appear.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -412,7 +412,7 @@ function bp_document_has_more_items() {
 	/**
 	 * Filters whether there are more document items to display.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param bool $has_more_items Whether or not there are more document items to display.
 	 */
@@ -422,7 +422,7 @@ function bp_document_has_more_items() {
 /**
  * Output the document count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_count() {
 	echo bp_get_document_count();
@@ -431,7 +431,7 @@ function bp_document_count() {
 /**
  * Return the document count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -443,7 +443,7 @@ function bp_get_document_count() {
 	/**
 	 * Filters the document count for the document template.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $document_count The count for total document.
 	 */
@@ -453,7 +453,7 @@ function bp_get_document_count() {
 /**
  * Output the number of document per page.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_per_page() {
 	echo bp_get_document_per_page();
@@ -462,7 +462,7 @@ function bp_document_per_page() {
 /**
  * Return the number of document per page.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -474,7 +474,7 @@ function bp_get_document_per_page() {
 	/**
 	 * Filters the document posts per page value.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $pag_num How many post should be displayed for pagination.
 	 */
@@ -484,7 +484,7 @@ function bp_get_document_per_page() {
 /**
  * Output the document ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_id() {
 	echo bp_get_document_id();
@@ -493,7 +493,7 @@ function bp_document_id() {
 /**
  * Return the document ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -505,7 +505,7 @@ function bp_get_document_id() {
 	/**
 	 * Filters the document ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document ID.
 	 */
@@ -515,7 +515,7 @@ function bp_get_document_id() {
 /**
  * Output the document blog id.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_blog_id() {
 	echo bp_get_document_blog_id();
@@ -524,7 +524,7 @@ function bp_document_blog_id() {
 /**
  * Return the document blog ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -536,7 +536,7 @@ function bp_get_document_blog_id() {
 	/**
 	 * Filters the document ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document blog ID.
 	 */
@@ -546,7 +546,7 @@ function bp_get_document_blog_id() {
 /**
  * Output the document user ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_user_id() {
 	echo bp_get_document_user_id();
@@ -555,7 +555,7 @@ function bp_document_user_id() {
 /**
  * Return the document user ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -567,7 +567,7 @@ function bp_get_document_user_id() {
 	/**
 	 * Filters the document ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document user ID.
 	 */
@@ -577,7 +577,7 @@ function bp_get_document_user_id() {
 /**
  * Output the document attachment ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_attachment_id() {
 	echo bp_get_document_attachment_id();
@@ -586,7 +586,7 @@ function bp_document_attachment_id() {
 /**
  * Return the document attachment ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -601,7 +601,7 @@ function bp_get_document_attachment_id() {
 	/**
 	 * Filters the document ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document attachment ID.
 	 */
@@ -616,7 +616,7 @@ function bp_get_document_attachment_id() {
 /**
  * Output the document title.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_title() {
 	echo bp_get_document_title();
@@ -625,7 +625,7 @@ function bp_document_title() {
 /**
  * Return the document title.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -637,7 +637,7 @@ function bp_get_document_title() {
 	/**
 	 * Filters the document title being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document title.
 	 */
@@ -647,7 +647,7 @@ function bp_get_document_title() {
 /**
  * Determine if the current user can delete an document item.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @param int|BP_Document $document BP_Document object or ID of the document
  * @return bool True if can delete, false otherwise.
@@ -686,7 +686,7 @@ function bp_document_user_can_delete( $document = false ) {
 	/**
 	 * Filters whether the current user can delete an document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param bool   $can_delete Whether the user can delete the item.
 	 * @param object $document   Current document item object.
@@ -697,7 +697,7 @@ function bp_document_user_can_delete( $document = false ) {
 /**
  * Output the document folder ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_folder_id() {
 	echo bp_get_document_folder_id();
@@ -706,7 +706,7 @@ function bp_document_folder_id() {
 /**
  * Return the document folder ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -718,7 +718,7 @@ function bp_get_document_folder_id() {
 	/**
 	 * Filters the document folder ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document folder ID.
 	 */
@@ -728,7 +728,7 @@ function bp_get_document_folder_id() {
 /**
  * Output the document activity ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_activity_id() {
 	echo bp_get_document_activity_id();
@@ -737,7 +737,7 @@ function bp_document_activity_id() {
 /**
  * Return the document activity ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -749,7 +749,7 @@ function bp_get_document_activity_id() {
 	/**
 	 * Filters the document activity ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document activity ID.
 	 */
@@ -763,7 +763,7 @@ function bp_get_document_activity_id() {
 /**
  * Output the document date created.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_date_created() {
 	echo bp_get_document_date_created();
@@ -772,7 +772,7 @@ function bp_document_date_created() {
 /**
  * Return the document date created.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -786,7 +786,7 @@ function bp_get_document_date_created() {
 	/**
 	 * Filters the document date created being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The date created.
 	 */
@@ -796,7 +796,7 @@ function bp_get_document_date_created() {
 /**
  * Output the document attachment thumbnail.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_attachment_image_thumbnail() {
 	echo bp_get_document_attachment_image_thumbnail();
@@ -805,7 +805,7 @@ function bp_document_attachment_image_thumbnail() {
 /**
  * Return the document attachment thumbnail.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -817,7 +817,7 @@ function bp_get_document_attachment_image_thumbnail() {
 	/**
 	 * Filters the document thumbnail being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The document thumbnail.
 	 */
@@ -831,7 +831,7 @@ function bp_get_document_attachment_image_thumbnail() {
 /**
  * Output the document attachment activity thumbnail.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_attachment_image_activity_thumbnail() {
 	echo bp_get_document_attachment_image_activity_thumbnail();
@@ -840,7 +840,7 @@ function bp_document_attachment_image_activity_thumbnail() {
 /**
  * Return the document attachment activity thumbnail.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -852,7 +852,7 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 	/**
 	 * Filters the document activity thumbnail being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The document activity thumbnail.
 	 */
@@ -862,7 +862,7 @@ function bp_get_document_attachment_image_activity_thumbnail() {
 /**
  * Output the document attachment.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_attachment_image() {
 	echo bp_get_document_attachment_image();
@@ -871,7 +871,7 @@ function bp_document_attachment_image() {
 /**
  * Return the document attachment.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -883,7 +883,7 @@ function bp_get_document_attachment_image() {
 	/**
 	 * Filters the document image being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The full image.
 	 */
@@ -898,7 +898,7 @@ function bp_get_document_attachment_image() {
 /**
  * Output document directory permalink.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_directory_permalink() {
 	echo esc_url( bp_get_document_directory_permalink() );
@@ -906,7 +906,7 @@ function bp_document_directory_permalink() {
 /**
  * Return document directory permalink.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return string
  */
@@ -915,7 +915,7 @@ function bp_get_document_directory_permalink() {
 	/**
 	 * Filters the document directory permalink.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $value document directory permalink.
 	 */
@@ -931,7 +931,7 @@ function bp_get_document_directory_permalink() {
  * $document_folder_template global, enabling the use of BuddyPress templates and
  * template functions to display a list of document folder items.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
 
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1076,7 +1076,7 @@ function bp_has_folders( $args = '' ) {
 	/**
 	 * Filters whether or not there are document documents to display.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param bool   $value                     Whether or not there are document items to display.
 	 * @param string $document_folder_template      Current document folder template being used.
@@ -1088,7 +1088,7 @@ function bp_has_folders( $args = '' ) {
 /**
  * Determine if there are still folder left in the loop.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1102,7 +1102,7 @@ function bp_folder() {
 /**
  * Get the current folder object in the loop.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1116,7 +1116,7 @@ function bp_the_folder() {
 /**
  * Output the URL for the Load More link.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_load_more_link() {
 	echo esc_url( bp_get_folder_load_more_link() );
@@ -1124,7 +1124,7 @@ function bp_folder_load_more_link() {
 /**
  * Get the URL for the Load More link.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return string $link
  */
@@ -1137,7 +1137,7 @@ function bp_get_folder_load_more_link() {
 	/**
 	 * Filters the Load More link URL.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $link                  The "Load More" link URL with appropriate query args.
 	 * @param string $url                   The original URL.
@@ -1149,7 +1149,7 @@ function bp_get_folder_load_more_link() {
 /**
  * Output the folder pagination count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  */
@@ -1160,7 +1160,7 @@ function bp_folder_pagination_count() {
 /**
  * Return the folder pagination count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1182,7 +1182,7 @@ function bp_get_folder_pagination_count() {
 /**
  * Output the folder pagination links.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_pagination_links() {
 	echo bp_get_folder_pagination_links();
@@ -1191,7 +1191,7 @@ function bp_folder_pagination_links() {
 /**
  * Return the folder pagination links.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1203,7 +1203,7 @@ function bp_get_folder_pagination_links() {
 	/**
 	 * Filters the folder pagination link output.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $pag_links Output for the document folder pagination links.
 	 */
@@ -1213,7 +1213,7 @@ function bp_get_folder_pagination_links() {
 /**
  * Return true when there are more folder items to be shown than currently appear.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1237,7 +1237,7 @@ function bp_folder_has_more_items() {
 	/**
 	 * Filters whether there are more folder items to display.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param bool $has_more_items Whether or not there are more folder items to display.
 	 */
@@ -1247,7 +1247,7 @@ function bp_folder_has_more_items() {
 /**
  * Output the folder count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_count() {
 	echo bp_get_folder_count();
@@ -1256,7 +1256,7 @@ function bp_folder_count() {
 /**
  * Return the folder count.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1268,7 +1268,7 @@ function bp_get_folder_count() {
 	/**
 	 * Filters the folder count for the document folder template.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $folder_count The count for total folder.
 	 */
@@ -1278,7 +1278,7 @@ function bp_get_folder_count() {
 /**
  * Output the number of document folder per page.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_per_page() {
 	echo bp_get_folder_per_page();
@@ -1287,7 +1287,7 @@ function bp_folder_per_page() {
 /**
  * Return the number of document folder per page.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1299,7 +1299,7 @@ function bp_get_folder_per_page() {
 	/**
 	 * Filters the document folder posts per page value.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $pag_num How many post should be displayed for pagination.
 	 */
@@ -1309,7 +1309,7 @@ function bp_get_folder_per_page() {
 /**
  * Output the document folder ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_id() {
 	echo bp_get_folder_id();
@@ -1318,7 +1318,7 @@ function bp_folder_id() {
 /**
  * Return the folder ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1330,7 +1330,7 @@ function bp_get_folder_id() {
 	/**
 	 * Filters the document ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document folder ID.
 	 */
@@ -1340,7 +1340,7 @@ function bp_get_folder_id() {
 /**
  * Output the document folder title.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_title() {
 	echo bp_get_folder_title();
@@ -1349,7 +1349,7 @@ function bp_folder_title() {
 /**
  * Return the folder title.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1361,7 +1361,7 @@ function bp_get_folder_title() {
 	/**
 	 * Filters the folder title being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document folder title.
 	 */
@@ -1371,7 +1371,7 @@ function bp_get_folder_title() {
 /**
  * Return the folder privacy.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1383,7 +1383,7 @@ function bp_get_folder_privacy() {
 	/**
 	 * Filters the folder privacy being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document folder privacy.
 	 */
@@ -1393,7 +1393,7 @@ function bp_get_folder_privacy() {
 /**
  * Output the document folder ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_folder_link() {
 	echo bp_get_folder_link();
@@ -1402,7 +1402,7 @@ function bp_folder_link() {
 /**
  * Return the folder description.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_folder_template {@link BP_Document_Folder_Template}
  *
@@ -1416,7 +1416,7 @@ function bp_get_folder_link() {
 		if ( '' === $group_link ) {
 			$group_link = bp_get_group_permalink( $document_template->document->group_id );
 		}
-		$url        = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
+		$url = trailingslashit( $group_link . 'documents/folders/' . bp_get_folder_id() );
 	} else {
 		$url = trailingslashit( bp_displayed_user_domain() . 'document/folders/' . bp_get_folder_id() );
 	}
@@ -1424,7 +1424,7 @@ function bp_get_folder_link() {
 	/**
 	 * Filters the folder description being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document folder description.
 	 */
@@ -1434,7 +1434,7 @@ function bp_get_folder_link() {
 /**
  * Determine if the current user can delete an folder item.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @param int|BP_Document_Folder $folder BP_Document_Folder object or ID of the folder
  * @return bool True if can delete, false otherwise.
@@ -1464,7 +1464,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 			$can_delete = true;
 
 			// Users are allowed to delete their own folder.
-		} else if ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
+		} elseif ( isset( $folder->user_id ) && bp_loggedin_user_id() === $folder->user_id ) {
 			$can_delete = true;
 		}
 
@@ -1477,7 +1477,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 	/**
 	 * Filters whether the current user can delete an folder item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param bool   $can_delete Whether the user can delete the item.
 	 * @param object $folder   Current folder item object.
@@ -1488,7 +1488,7 @@ function bp_folder_user_can_delete( $folder = false ) {
 /**
  * Output the document name.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_name() {
 	echo bp_get_document_name();
@@ -1497,7 +1497,7 @@ function bp_document_name() {
 /**
  * Return the document name.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1506,7 +1506,7 @@ function bp_document_name() {
 function bp_get_document_name() {
 	global $document_template;
 
-	if ( isset($document_template->document ) && isset( $document_template->document->attachment_id ) && $document_template->document->attachment_id > 0 ) {
+	if ( isset( $document_template->document ) && isset( $document_template->document->attachment_id ) && $document_template->document->attachment_id > 0 ) {
 		$filename = basename( get_attached_file( $document_template->document->attachment_id ) );
 	} else {
 		$filename = $document_template->document->title;
@@ -1515,7 +1515,7 @@ function bp_get_document_name() {
 	/**
 	 * Filters the document name being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document name.
 	 */
@@ -1525,7 +1525,7 @@ function bp_get_document_name() {
 /**
  * Output the document name.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_author() {
 	echo bp_get_document_author();
@@ -1534,7 +1534,7 @@ function bp_document_author() {
 /**
  * Return the document name.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1548,7 +1548,7 @@ function bp_get_document_author() {
 	/**
 	 * Filters the document name being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document name.
 	 */
@@ -1558,7 +1558,7 @@ function bp_get_document_author() {
 /**
  * Output the document preview attachment id.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_preview_attachment_id() {
 	echo bp_get_document_preview_attachment_id();
@@ -1567,7 +1567,7 @@ function bp_document_preview_attachment_id() {
 /**
  * Return the document preview attachment id.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1584,7 +1584,7 @@ function bp_get_document_preview_attachment_id() {
 	/**
 	 * Filters the document preview attachment id being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document preview attachment id.
 	 */
@@ -1594,7 +1594,7 @@ function bp_get_document_preview_attachment_id() {
 /**
  * Output the document group ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_group_id() {
 	echo bp_get_document_group_id();
@@ -1603,7 +1603,7 @@ function bp_document_group_id() {
 /**
  * Return the document group ID.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1615,7 +1615,7 @@ function bp_get_document_group_id() {
 	/**
 	 * Filters the document group ID being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $id The document group ID.
 	 */
@@ -1625,7 +1625,7 @@ function bp_get_document_group_id() {
 /**
  * Output the document date modified.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_date_modified() {
 	echo bp_get_document_date_modified();
@@ -1634,7 +1634,7 @@ function bp_document_date_modified() {
 /**
  * Return the document date created.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1648,7 +1648,7 @@ function bp_get_document_date_modified() {
 	/**
 	 * Filters the document date modified being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The date modified.
 	 */
@@ -1658,7 +1658,7 @@ function bp_get_document_date_modified() {
 /**
  * Output the document date modified.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_date() {
 	echo bp_get_document_date();
@@ -1667,7 +1667,7 @@ function bp_document_date() {
 /**
  * Return the document date created.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1687,7 +1687,7 @@ function bp_get_document_date() {
 	/**
 	 * Filters the document date modified being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The date modified.
 	 */
@@ -1697,7 +1697,7 @@ function bp_get_document_date() {
 /**
  * Output the document date modified.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_privacy() {
 	echo bp_get_document_privacy();
@@ -1706,7 +1706,7 @@ function bp_document_privacy() {
 /**
  * Return the document privacy.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -1721,7 +1721,7 @@ function bp_get_document_privacy() {
 	/**
 	 * Filters the document privacy being displayed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string The privacy.
 	 */

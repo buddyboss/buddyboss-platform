@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of document into a loop for display.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 class BP_Document_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $current_document = -1;
@@ -28,7 +28,7 @@ class BP_Document_Template {
 	/**
 	 * The document count.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $document_count;
@@ -36,7 +36,7 @@ class BP_Document_Template {
 	/**
 	 * The total document count.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $total_document_count;
@@ -44,7 +44,7 @@ class BP_Document_Template {
 	/**
 	 * Array of document located by the query.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var array
 	 */
 	public $documents;
@@ -52,7 +52,7 @@ class BP_Document_Template {
 	/**
 	 * The document object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var object
 	 */
 	public $document;
@@ -60,7 +60,7 @@ class BP_Document_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -68,7 +68,7 @@ class BP_Document_Template {
 	/**
 	 * URL parameter key for document pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -76,7 +76,7 @@ class BP_Document_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -84,7 +84,7 @@ class BP_Document_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -92,7 +92,7 @@ class BP_Document_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -100,7 +100,7 @@ class BP_Document_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $full_name;
@@ -111,7 +111,7 @@ class BP_Document_Template {
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Document::get()}.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see BP_Document::get() for a description of the argument
 	 *      structure, as well as default values.
@@ -136,23 +136,23 @@ class BP_Document_Template {
 	public function __construct( $args ) {
 
 		$defaults = array(
-			'page'         => 1,
-			'per_page'     => 20,
-			'page_arg'     => 'acpage',
-			'max'          => false,
-			'fields'       => 'all',
-			'count_total'  => false,
-			'sort'         => false,
-			'order_by'     => false,
-			'include'      => false,
-			'exclude'      => false,
-			'search_terms' => false,
-			'scope'        => false,
-			'user_id'      => false,
-			'folder_id'     => false,
-			'group_id'     => false,
-			'privacy'      => false,
-			'folder'        => true,
+			'page'           => 1,
+			'per_page'       => 20,
+			'page_arg'       => 'acpage',
+			'max'            => false,
+			'fields'         => 'all',
+			'count_total'    => false,
+			'sort'           => false,
+			'order_by'       => false,
+			'include'        => false,
+			'exclude'        => false,
+			'search_terms'   => false,
+			'scope'          => false,
+			'user_id'        => false,
+			'folder_id'      => false,
+			'group_id'       => false,
+			'privacy'        => false,
+			'folder'         => true,
 			'user_directory' => true,
 		);
 		$r        = wp_parse_args( $args, $defaults );
@@ -168,7 +168,8 @@ class BP_Document_Template {
 		// Fetch specific document items based on ID's.
 		if ( ! empty( $include ) ) {
 
-			$this->documents = bp_document_get_specific( array(
+			$this->documents = bp_document_get_specific(
+				array(
 					'document_ids'   => explode( ',', $include ),
 					'max'            => $max,
 					'count_total'    => $count_total,
@@ -180,26 +181,27 @@ class BP_Document_Template {
 					'folder_id'      => $folder_id,
 					'folder'         => $folder,
 					'user_directory' => $user_directory,
-				) );
+				)
+			);
 
 			// Fetch all activity items.
 		} else {
 			$this->documents = bp_document_get(
 				array(
-					'max'          => $max,
-					'count_total'  => $count_total,
-					'per_page'     => $this->pag_num,
-					'page'         => $this->pag_page,
-					'sort'         => $sort,
-					'order_by'     => $order_by,
-					'search_terms' => $search_terms,
-					'scope'        => $scope,
-					'user_id'      => $user_id,
-					'folder_id'     => $folder_id,
-					'group_id'     => $group_id,
-					'exclude'      => $exclude,
-					'privacy'      => $privacy,
-					'folder'        => $folder,
+					'max'            => $max,
+					'count_total'    => $count_total,
+					'per_page'       => $this->pag_num,
+					'page'           => $this->pag_page,
+					'sort'           => $sort,
+					'order_by'       => $order_by,
+					'search_terms'   => $search_terms,
+					'scope'          => $scope,
+					'user_id'        => $user_id,
+					'folder_id'      => $folder_id,
+					'group_id'       => $group_id,
+					'exclude'        => $exclude,
+					'privacy'        => $privacy,
+					'folder'         => $folder,
 					'user_directory' => $user_directory,
 				)
 			);
@@ -248,7 +250,7 @@ class BP_Document_Template {
 	/**
 	 * Whether there are document items available in the loop.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see bp_has_document()
 	 *
@@ -265,7 +267,7 @@ class BP_Document_Template {
 	/**
 	 * Set up the next document item and iterate index.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @return object The next document item to iterate over.
 	 */
@@ -279,7 +281,7 @@ class BP_Document_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function rewind_documents() {
 		$this->current_document = -1;
@@ -295,7 +297,7 @@ class BP_Document_Template {
 	 * that controls iteration inside the document loop, eg:
 	 *     while ( bp_document() ) { ...
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see bp_document()
 	 *
@@ -330,14 +332,14 @@ class BP_Document_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current document item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see bp_the_document()
 	 */
 	public function the_document() {
 
 		$this->in_the_loop = true;
-		$this->document       = $this->next_document();
+		$this->document    = $this->next_document();
 
 		if ( is_array( $this->document ) ) {
 			$this->document = (object) $this->document;
@@ -349,7 +351,7 @@ class BP_Document_Template {
 			/**
 			 * Fires if the current document item is the first in the activity loop.
 			 *
-			 * @since BuddyBoss 1.2.5
+			 * @since BuddyBoss 1.3.0
 			 */
 			do_action( 'document_loop_start' );
 		}

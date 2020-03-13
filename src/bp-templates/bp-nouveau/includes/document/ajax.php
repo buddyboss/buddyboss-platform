@@ -44,8 +44,8 @@ add_action(
 				),
 			),
 			array(
-				'document_folder_move' => array(
-					'function' => 'bp_nouveau_ajax_document_folder_move',
+				'document_move' => array(
+					'function' => 'bp_nouveau_ajax_document_move',
 					'nopriv'   => true,
 				),
 			),
@@ -64,6 +64,12 @@ add_action(
 			array(
 				'document_delete' => array(
 					'function' => 'bp_nouveau_ajax_document_delete',
+					'nopriv'   => true,
+				),
+			),
+			array(
+				'document_folder_move' => array(
+					'function' => 'bp_nouveau_ajax_document_folder_move',
 					'nopriv'   => true,
 				),
 			),
@@ -1050,7 +1056,7 @@ function bp_nouveau_ajax_document_folder_save() {
 	);
 }
 
-function bp_nouveau_ajax_document_folder_move() {
+function bp_nouveau_ajax_document_move() {
 
 	$response = array(
 		'feedback' => sprintf(
@@ -1350,6 +1356,116 @@ function bp_nouveau_ajax_document_delete() {
     } else {
 		bp_document_delete( array( 'id' => $id, 'attachment_id' => $attachment_id ) );
     }
+
+	$content = '';
+	ob_start();
+
+	if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
+
+		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+			?>
+
+            <div class="document-data-table-head">
+                <span class="data-head-sort-label">Sort By:</span>
+                <div class="data-head data-head-name">
+				<span>
+					Name
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+
+                </div>
+                <div class="data-head data-head-modified">
+				<span>
+					Modified
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+
+                </div>
+                <div class="data-head data-head-visibility">
+				<span>
+					Visibility
+					<i class="bb-icon-triangle-fill"></i>
+				</span>
+                </div>
+            </div><!-- .document-data-table-head -->
+
+            <div id="media-folder-document-data-table">
+			<?php
+			bp_get_template_part( 'document/activity-document-move' );
+			bp_get_template_part( 'document/activity-document-folder-move' );
+
+		endif;
+
+		while ( bp_document() ) :
+			bp_the_document();
+
+			bp_get_template_part( 'document/document-entry' );
+
+		endwhile;
+
+		if ( bp_document_has_more_items() ) :
+			?>
+            <div class="pager">
+                <div class="dt-more-container load-more">
+                    <a class="button outline full"
+                       href="<?php bp_document_load_more_link(); ?>">
+						<?php
+						_e(
+							'Load More',
+							'buddyboss'
+						);
+						?>
+                    </a>
+                </div>
+            </div>
+		<?php
+		endif;
+
+		if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) :
+			?>
+            </div> <!-- #media-folder-document-data-table -->
+		<?php
+		endif;
+
+	else :
+
+		bp_nouveau_user_feedback( 'media-loop-document-none' );
+
+	endif;
+
+	$content .= ob_get_clean();
+
+	wp_send_json_success(
+		array(
+			'message' => 'success',
+			'html'    => $content,
+		)
+	);
+
+}
+
+function bp_nouveau_ajax_document_folder_move() {
+
+	$response = array(
+		'feedback' => sprintf(
+			'<div class="bp-feedback error bp-ajax-message"><span class="bp-icon" aria-hidden="true"></span><p>%s</p></div>',
+			esc_html__( 'There was a problem performing this action. Please try again.', 'buddyboss' )
+		),
+	);
+
+	// Bail if not a POST action.
+	if ( ! bp_is_post_request() ) {
+		wp_send_json_error( $response );
+	}
+
+	$destination_folder_id = ! empty( $_POST['folderMoveToId'] ) ? (int) $_POST['folderMoveToId'] : 0;
+	$folder_id             = ! empty( $_POST['currentFolderId'] ) ? (int) $_POST['currentFolderId'] : 0;
+
+	if ( '' === $destination_folder_id ) {
+		wp_send_json_error( $response );
+    }
+
+	bp_document_move_folder( $folder_id, $destination_folder_id );
 
 	$content = '';
 	ob_start();

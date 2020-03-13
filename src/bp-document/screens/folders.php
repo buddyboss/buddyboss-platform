@@ -3,13 +3,14 @@
  * Document: Single folder screen handler
  *
  * @package BuddyBoss\Document\Screens
- * @since BuddyBoss 1.2.5
+ *
+ * @since BuddyBoss 1.3.0
  */
 
 /**
  * Load an individual folder screen.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return false|null False on failure.
  */
@@ -39,14 +40,14 @@ function document_screen_single_folder() {
 	/**
 	 * Fires right before the loading of the single album view screen template file.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 */
 	do_action( 'document_screen_single_folder' );
 
 	/**
 	 * Filters the template to load for the Single Album view screen.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param string $template Path to the album template to load.
 	 */

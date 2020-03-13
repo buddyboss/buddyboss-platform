@@ -2,13 +2,13 @@
 /**
  * BuddyBoss Document Functions.
  *
- * Functions are where all the magic happens in BuddyPress. They will
+ * Functions are where all the magic happens in BuddyBoss. They will
  * handle the actual saving or manipulation of information. Usually they will
  * hand off to a database class for data access, then return
  * true or false on success or failure.
  *
  * @package BuddyBoss\Document\Functions
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  */
 
 // Exit if accessed directly.
@@ -19,7 +19,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @param bool $post_string
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return string
  */
@@ -65,7 +65,7 @@ function bp_document_file_upload_max_size( $post_string = false, $type = 'bytes'
  * @param $bytes
  * @param bool  $post_string
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @return string
  */
@@ -114,7 +114,7 @@ function bp_document_format_size_units( $bytes, $post_string = false, $type = 'b
  * the default for the bp_document_get()).
  *   - 'per_page' (false)
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @see BP_Document::get() For more information on accepted arguments
  *      and the format of the returned value.
@@ -127,25 +127,25 @@ function bp_document_get( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'max'          => false,        // Maximum number of results to return.
-			'fields'       => 'all',
-			'page'         => 1,            // Page 1 without a per_page will result in no pagination.
-			'per_page'     => false,        // results per page
-			'sort'         => 'DESC',       // sort ASC or DESC
-			'order_by'     => false,       // order by
+			'max'            => false,        // Maximum number of results to return.
+			'fields'         => 'all',
+			'page'           => 1,            // Page 1 without a per_page will result in no pagination.
+			'per_page'       => false,        // results per page
+			'sort'           => 'DESC',       // sort ASC or DESC
+			'order_by'       => false,       // order by
 
-			'scope'        => false,
+			'scope'          => false,
 
 			// want to limit the query.
-			'user_id'      => false,
-			'activity_id'  => false,
-			'folder_id'     => false,
-			'group_id'     => false,
-			'search_terms' => false,        // Pass search terms as a string
-			'privacy'      => false,        // privacy of document
-			'exclude'      => false,        // Comma-separated list of activity IDs to exclude.
-			'count_total'  => false,
-			'folder'        => true,
+			'user_id'        => false,
+			'activity_id'    => false,
+			'folder_id'      => false,
+			'group_id'       => false,
+			'search_terms'   => false,        // Pass search terms as a string
+			'privacy'        => false,        // privacy of document
+			'exclude'        => false,        // Comma-separated list of activity IDs to exclude.
+			'count_total'    => false,
+			'folder'         => true,
 			'user_directory' => true,
 		),
 		'document_get'
@@ -153,30 +153,30 @@ function bp_document_get( $args = '' ) {
 
 	$document = BP_Document::documents(
 		array(
-			'page'         => $r['page'],
-			'per_page'     => $r['per_page'],
-			'user_id'      => $r['user_id'],
-			'activity_id'  => $r['activity_id'],
-			'folder_id'     => $r['folder_id'],
-			'group_id'     => $r['group_id'],
-			'max'          => $r['max'],
-			'sort'         => $r['sort'],
-			'order_by'     => $r['order_by'],
-			'search_terms' => $r['search_terms'],
-			'scope'        => $r['scope'],
-			'privacy'      => $r['privacy'],
-			'exclude'      => $r['exclude'],
-			'count_total'  => $r['count_total'],
-			'fields'       => $r['fields'],
-			'folder'        => $r['folder'],
-			'user_directory' => $r['user_directory']
+			'page'           => $r['page'],
+			'per_page'       => $r['per_page'],
+			'user_id'        => $r['user_id'],
+			'activity_id'    => $r['activity_id'],
+			'folder_id'      => $r['folder_id'],
+			'group_id'       => $r['group_id'],
+			'max'            => $r['max'],
+			'sort'           => $r['sort'],
+			'order_by'       => $r['order_by'],
+			'search_terms'   => $r['search_terms'],
+			'scope'          => $r['scope'],
+			'privacy'        => $r['privacy'],
+			'exclude'        => $r['exclude'],
+			'count_total'    => $r['count_total'],
+			'fields'         => $r['fields'],
+			'folder'         => $r['folder'],
+			'user_directory' => $r['user_directory'],
 		)
 	);
 
 	/**
 	 * Filters the requested document item(s).
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param BP_Document  $document Requested document object.
 	 * @param array     $r     Arguments used for the document query.
@@ -187,7 +187,7 @@ function bp_document_get( $args = '' ) {
 /**
  * Fetch specific document items.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @see BP_Document::get() For more information on accepted arguments.
  *
@@ -205,32 +205,32 @@ function bp_document_get_specific( $args = '' ) {
 		$args,
 		array(
 			'document_ids' => false,      // A single document_id or array of IDs.
-			'max'       => false,      // Maximum number of results to return.
-			'page'      => 1,          // Page 1 without a per_page will result in no pagination.
-			'per_page'  => false,      // Results per page.
-			'sort'      => 'DESC',     // Sort ASC or DESC
-			'order_by'  => false,     // Sort ASC or DESC
-			'folder_id'  => false,     // Sort ASC or DESC
-			'folder'     => false,
+			'max'          => false,      // Maximum number of results to return.
+			'page'         => 1,          // Page 1 without a per_page will result in no pagination.
+			'per_page'     => false,      // Results per page.
+			'sort'         => 'DESC',     // Sort ASC or DESC
+			'order_by'     => false,     // Sort ASC or DESC
+			'folder_id'    => false,     // Sort ASC or DESC
+			'folder'       => false,
 		),
 		'document_get_specific'
 	);
 
 	$get_args = array(
-		'in'       => $r['document_ids'],
-		'max'      => $r['max'],
-		'page'     => $r['page'],
-		'per_page' => $r['per_page'],
-		'sort'     => $r['sort'],
-		'order_by' => $r['order_by'],
-		'folder_id'    => $r['folder_id'],
+		'in'        => $r['document_ids'],
+		'max'       => $r['max'],
+		'page'      => $r['page'],
+		'per_page'  => $r['per_page'],
+		'sort'      => $r['sort'],
+		'order_by'  => $r['order_by'],
+		'folder_id' => $r['folder_id'],
 		'folder'    => $r['folder'],
 	);
 
 	/**
 	 * Filters the requested specific document item.
 	 *
-	 * @since BuddyBoss
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param BP_Document   $document    Requested document object.
 	 * @param array         $args     Original passed in arguments.
@@ -242,7 +242,7 @@ function bp_document_get_specific( $args = '' ) {
 /**
  * Add an document item.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -276,7 +276,7 @@ function bp_document_add( $args = '' ) {
 			'attachment_id' => false,                   // attachment id.
 			'user_id'       => bp_loggedin_user_id(),   // user_id of the uploader.
 			'title'         => '',                      // title of document being added.
-			'folder_id'      => false,                   // Optional: ID of the folder.
+			'folder_id'     => false,                   // Optional: ID of the folder.
 			'group_id'      => false,                   // Optional: ID of the group.
 			'activity_id'   => false,                   // The ID of activity.
 			'privacy'       => 'public',                // Optional: privacy of the document e.g. public.
@@ -293,7 +293,7 @@ function bp_document_add( $args = '' ) {
 	$document->attachment_id = $r['attachment_id'];
 	$document->user_id       = (int) $r['user_id'];
 	$document->title         = $r['title'];
-	$document->folder_id      = (int) $r['folder_id'];
+	$document->folder_id     = (int) $r['folder_id'];
 	$document->group_id      = (int) $r['group_id'];
 	$document->activity_id   = (int) $r['activity_id'];
 	$document->privacy       = $r['privacy'];
@@ -305,9 +305,9 @@ function bp_document_add( $args = '' ) {
 	if ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
 
-	// folder privacy is document privacy
-	} else if ( ! empty( $document->folder_id ) ) {
-		$folder        = new BP_Document_Folder( $document->folder_id );
+		// folder privacy is document privacy
+	} elseif ( ! empty( $document->folder_id ) ) {
+		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
 			$document->privacy = $folder->privacy;
 		}
@@ -322,13 +322,13 @@ function bp_document_add( $args = '' ) {
 		return false;
 	}
 
-	//document is saved for attachment
+	// document is saved for attachment
 	update_post_meta( $document->attachment_id, 'bp_document_saved', true );
 
 	/**
 	 * Fires at the end of the execution of adding a new document item, before returning the new document item ID.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param object $document document object.
 	 */
@@ -340,7 +340,8 @@ function bp_document_add( $args = '' ) {
 /**
  * Document add handler function
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
+ *
  * @param array $documents
  *
  * @return mixed|void
@@ -356,13 +357,15 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 		// save  document
 		foreach ( $documents as $document ) {
 
-			$document_id = bp_document_add( array(
-				'activity_id'   => $activity_id,
-				'attachment_id' => $document['id'],
-				'title'         => $document['name'],
-				'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
-				'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
-			) );
+			$document_id = bp_document_add(
+				array(
+					'activity_id'   => $activity_id,
+					'attachment_id' => $document['id'],
+					'title'         => $document['name'],
+					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
+					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
+				)
+			);
 
 			if ( $document_id ) {
 				$document_ids[] = $document_id;
@@ -373,7 +376,7 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 	/**
 	 * Fires at the end of the execution of adding saving a document item, before returning the new document items in ajax response.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $document_ids document IDs.
 	 * @param array $documents Array of document from POST object or in function parameter.
@@ -384,37 +387,40 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 /**
  * Delete document.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  *
  * @param array|string $args To delete specific document items, use
  *                           $args = array( 'id' => $ids ); Otherwise, to use
  *                           filters for item deletion, the argument format is
  *                           the same as BP_Document::get().
  *                           See that method for a description.
- * @param bool $from Context of deletion from. ex. attachment, activity etc.
+ * @param bool         $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the document on success. False on error.
  */
 function bp_document_delete( $args = '', $from = false ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'blog_id'       => false,
-		'attachment_id' => false,
-		'user_id'       => false,
-		'title'         => false,
-		'folder_id'      => false,
-		'activity_id'   => false,
-		'group_id'      => false,
-		'privacy'       => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'            => false,
+			'blog_id'       => false,
+			'attachment_id' => false,
+			'user_id'       => false,
+			'title'         => false,
+			'folder_id'     => false,
+			'activity_id'   => false,
+			'group_id'      => false,
+			'privacy'       => false,
+			'date_created'  => false,
+		)
+	);
 
 	/**
 	 * Fires before an document item proceeds to be deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $args Array of arguments to be used with the document deletion.
 	 */
@@ -428,7 +434,7 @@ function bp_document_delete( $args = '', $from = false ) {
 	/**
 	 * Fires after the document item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $args Array of arguments used with the document deletion.
 	 */
@@ -437,7 +443,7 @@ function bp_document_delete( $args = '', $from = false ) {
 	/**
 	 * Fires after the document item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $document_ids_deleted Array of affected document item IDs.
 	 */
@@ -449,7 +455,7 @@ function bp_document_delete( $args = '', $from = false ) {
 /**
  * Completely remove a user's document data.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.3.0
  *
  * @param int $user_id ID of the user whose document is being deleted.
  * @return bool
@@ -468,20 +474,20 @@ function bp_document_remove_all_user_data( $user_id = 0 ) {
 	/**
 	 * Fires after the removal of all of a user's document data.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $user_id ID of the user being deleted.
 	 */
 	do_action( 'bp_document_remove_all_user_data', $user_id );
 }
-add_action( 'wpmu_delete_user',  'bp_document_remove_all_user_data' );
-add_action( 'delete_user',       'bp_document_remove_all_user_data' );
+add_action( 'wpmu_delete_user', 'bp_document_remove_all_user_data' );
+add_action( 'delete_user', 'bp_document_remove_all_user_data' );
 
 /**
  * Return the document activity.
  *
  * @param $activity_id
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @global object $document_template {@link BP_Document_Template}
  *
@@ -506,7 +512,7 @@ function bp_document_get_document_activity( $activity_id ) {
 	/**
 	 * Filters the document activity object being displayed.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param object $activity The document activity.
 	 */
@@ -516,7 +522,7 @@ function bp_document_get_document_activity( $activity_id ) {
 /**
  * Get the document count of a given user.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param int $user_id ID of the user whose document are being counted.
  * @return int document count of the user.
@@ -526,17 +532,17 @@ function bp_document_get_total_document_count( $user_id = 0 ) {
 		$user_id = ( bp_displayed_user_id() ) ? bp_displayed_user_id() : bp_loggedin_user_id();
 	}
 
-	$count = wp_cache_get( 'bp_total_document_for_user_' . $user_id , 'bp' );
+	$count = wp_cache_get( 'bp_total_document_for_user_' . $user_id, 'bp' );
 
 	if ( false === $count ) {
 		$count = BP_Document::total_document_count( $user_id );
-		wp_cache_set( 'bp_total_document_for_user_' . $user_id , $count, 'bp' );
+		wp_cache_set( 'bp_total_document_for_user_' . $user_id, $count, 'bp' );
 	}
 
 	/**
 	 * Filters the total document count for a given user.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $count Total document count for a given user.
 	 */
@@ -546,7 +552,7 @@ function bp_document_get_total_document_count( $user_id = 0 ) {
 /**
  * Get the document count of a given group.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param int $group_id ID of the group whose document are being counted.
  * @return int document count of the group.
@@ -566,7 +572,7 @@ function bp_document_get_total_group_document_count( $group_id = 0 ) {
 	/**
 	 * Filters the total document count for a given group.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $count Total document count for a given group.
 	 */
@@ -576,7 +582,7 @@ function bp_document_get_total_group_document_count( $group_id = 0 ) {
 /**
  * Get the folder count of a given group.
  *
- * @since BuddyBoss 1.2.0
+ * @since BuddyBoss 1.3.0
  *
  * @param int $group_id ID of the group whose folder are being counted.
  * @return int folder count of the group.
@@ -596,7 +602,7 @@ function bp_document_get_total_group_folder_count( $group_id = 0 ) {
 	/**
 	 * Filters the total folder count for a given group.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $count Total folder count for a given group.
 	 */
@@ -606,7 +612,7 @@ function bp_document_get_total_group_folder_count( $group_id = 0 ) {
 /**
  * Return the total document count in your BP instance.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @return int document count.
  */
@@ -620,7 +626,7 @@ function bp_get_total_document_count() {
 	/**
 	 * Filters the total number of document.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param int $count Total number of document.
 	 */
@@ -630,7 +636,7 @@ function bp_get_total_document_count() {
 /**
  * document results all scope.
  *
- * @since BuddyBoss 1.1.9
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_object_results_document_all_scope( $querystring ) {
 	$querystring = wp_parse_args( $querystring );
@@ -666,7 +672,7 @@ function bp_document_object_results_document_all_scope( $querystring ) {
  * the default for the bp_folder_get()).
  *   - 'per_page' (false)
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @see BP_Document_Folder::get() For more information on accepted arguments
  *      and the format of the returned value.
@@ -715,7 +721,7 @@ function bp_folder_get( $args = '' ) {
 	/**
 	 * Filters the requested folder item(s).
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param BP_Document  $folder Requested document object.
 	 * @param array     $r     Arguments used for the folder query.
@@ -726,7 +732,7 @@ function bp_folder_get( $args = '' ) {
 /**
  * Fetch specific folders.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @see BP_Document_Folder::get() For more information on accepted arguments.
  *
@@ -743,7 +749,7 @@ function bp_folder_get_specific( $args = '' ) {
 	$r = bp_parse_args(
 		$args,
 		array(
-			'folder_ids'         => false,      // A single folder id or array of IDs.
+			'folder_ids'        => false,      // A single folder id or array of IDs.
 			'max'               => false,      // Maximum number of results to return.
 			'page'              => 1,          // Page 1 without a per_page will result in no pagination.
 			'per_page'          => false,      // Results per page.
@@ -778,7 +784,7 @@ function bp_folder_get_specific( $args = '' ) {
 /**
  * Add folder item.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param array|string $args {
  *     An array of arguments.
@@ -838,7 +844,7 @@ function bp_folder_add( $args = '' ) {
 	/**
 	 * Fires at the end of the execution of adding a new folder item, before returning the new folder item ID.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param object $folder folder object.
 	 */
@@ -850,7 +856,7 @@ function bp_folder_add( $args = '' ) {
 /**
  * Delete folder item.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param array|string $args To delete specific folder items, use
  *                           $args = array( 'id' => $ids ); Otherwise, to use
@@ -863,17 +869,20 @@ function bp_folder_add( $args = '' ) {
 function bp_folder_delete( $args ) {
 
 	// Pass one or more the of following variables to delete by those variables.
-	$args = bp_parse_args( $args, array(
-		'id'            => false,
-		'user_id'       => false,
-		'group_id'      => false,
-		'date_created'  => false,
-	) );
+	$args = bp_parse_args(
+		$args,
+		array(
+			'id'           => false,
+			'user_id'      => false,
+			'group_id'     => false,
+			'date_created' => false,
+		)
+	);
 
 	/**
 	 * Fires before an folder item proceeds to be deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $args Array of arguments to be used with the folder deletion.
 	 */
@@ -887,7 +896,7 @@ function bp_folder_delete( $args ) {
 	/**
 	 * Fires after the folder item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $args Array of arguments used with the folder deletion.
 	 */
@@ -896,7 +905,7 @@ function bp_folder_delete( $args ) {
 	/**
 	 * Fires after the folder item has been deleted.
 	 *
-	 * @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $folder_ids_deleted Array of affected folder item IDs.
 	 */
@@ -912,7 +921,7 @@ function bp_folder_delete( $args ) {
  * of instantiating BP_Document_Folder directly, so that you will inherit cache
  * support and pass through the folders_get_folder filter.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param int $folder_id ID of the folder.
  * @return BP_Document_Folder $folder The folder object.
@@ -924,7 +933,7 @@ function folders_get_folder( $folder_id ) {
 	/**
 	 * Filters a single folder object.
 	 *
-	 * @since BuddyBoss 1.0.0
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param BP_Document_Folder $folder Single folder object.
 	 */
@@ -934,7 +943,7 @@ function folders_get_folder( $folder_id ) {
 /**
  * Check folder access for current user or guest
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  * @param $folder_id
  *
  * @return bool
@@ -972,7 +981,7 @@ function folders_check_folder_access( $folder_id ) {
 /**
  * Delete orphaned attachments uploaded
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 function bp_document_delete_orphaned_attachments() {
 
@@ -993,7 +1002,7 @@ function bp_document_delete_orphaned_attachments() {
 	$orphaned_attachment_query = new WP_Query( $orphaned_attachment_args );
 
 	if ( $orphaned_attachment_query->post_count > 0 ) {
-		foreach( $orphaned_attachment_query->posts as $a_id ) {
+		foreach ( $orphaned_attachment_query->posts as $a_id ) {
 			wp_delete_attachment( $a_id, true );
 		}
 	}
@@ -1002,7 +1011,7 @@ function bp_document_delete_orphaned_attachments() {
 /**
  * Download an image from the specified URL and attach it to a post.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param string $file The URL of the image to download
  *
@@ -1052,7 +1061,7 @@ function bp_document_sideload_attachment( $file ) {
 /**
  * This handles a sideloaded file in the same way as an uploaded file is handled by {@link media_handle_upload()}
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @param array $file_array Array similar to a {@link $_FILES} upload array
  * @param array $post_data  allows you to overwrite some of the attachment
@@ -1114,7 +1123,7 @@ function bp_document_handle_sideload( $file_array, $post_data = array() ) {
 /**
  * Create and upload the document file
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @return array|null|WP_Error|WP_Post
  */
@@ -1135,10 +1144,10 @@ function bp_document_upload() {
 	$name = $attachment->post_title;
 
 	$result = array(
-		'id'    => (int) $attachment->ID,
-		'url'   => esc_url( $attachment->guid ),
-		'name'  => esc_attr( $name ),
-		'type'  => esc_attr( 'document' ),
+		'id'   => (int) $attachment->ID,
+		'url'  => esc_url( $attachment->guid ),
+		'name' => esc_attr( $name ),
+		'type' => esc_attr( 'document' ),
 	);
 
 	return $result;
@@ -1149,7 +1158,7 @@ function bp_document_upload() {
  *
  * @param string $file_id
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @return array|int|null|WP_Error|WP_Post
  */
@@ -1169,7 +1178,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	//add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 1, 1 );
+	// add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 1, 1 );
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -1212,7 +1221,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
  * Mine type for uploader allowed by buddyboss document for security reason
  *
  * @param  Array $mime_types carry mime information
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.3.0
  *
  * @return Array
  */
@@ -1221,50 +1230,50 @@ function bp_document_allowed_mimes() {
 	// Creating a new array will reset the allowed file types
 	$mime_types = array(
 
-		'txt' => 'text/plain',
+		'txt'  => 'text/plain',
 		// archives
-		'zip' => 'application/zip',
-		'rar' => 'application/x-rar-compressed',
-		'gzip'=> 'application/gzip',
-		'tar' => 'application/x-tar',
+		'zip'  => 'application/zip',
+		'rar'  => 'application/x-rar-compressed',
+		'gzip' => 'application/gzip',
+		'tar'  => 'application/x-tar',
 		// adobe
-		'pdf' => 'application/pdf',
-		'psd' => 'image/vnd.adobe.photoshop',
+		'pdf'  => 'application/pdf',
+		'psd'  => 'image/vnd.adobe.photoshop',
 		// ms office
-		'doc' => 'application/msword',
-		'rtf' => 'application/rtf',
-		'xls' => 'application/vnd.ms-excel',
-		'ppt' => 'application/vnd.ms-powerpoint',
-		'pptx'=> 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-		'pps' => 'application/mspowerpoint',
-		'ppsx'=> 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-		'pptm'=> 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
-		'potx'=> 'application/vnd.openxmlformats-officedocument.presentationml.template',
-		'potm'=> 'application/vnd.ms-powerpoint.template.macroenabled.12',
-		'xlsx'=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		'xlsm'=> 'application/vnd.ms-excel.sheet.macroenabled.12',
-		'xltm'=> 'application/vnd.ms-excel.template.macroenabled.12',
-		'xltx'=> 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-		'docm'=> 'application/vnd.ms-word.document.macroenabled.12',
-		'docx'=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-		'dotx'=> 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-		'dotm'=> 'application/vnd.ms-word.template.macroenabled.12',
+		'doc'  => 'application/msword',
+		'rtf'  => 'application/rtf',
+		'xls'  => 'application/vnd.ms-excel',
+		'ppt'  => 'application/vnd.ms-powerpoint',
+		'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+		'pps'  => 'application/mspowerpoint',
+		'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+		'pptm' => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+		'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+		'potm' => 'application/vnd.ms-powerpoint.template.macroenabled.12',
+		'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+		'xlsm' => 'application/vnd.ms-excel.sheet.macroenabled.12',
+		'xltm' => 'application/vnd.ms-excel.template.macroenabled.12',
+		'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+		'docm' => 'application/vnd.ms-word.document.macroenabled.12',
+		'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+		'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+		'dotm' => 'application/vnd.ms-word.template.macroenabled.12',
 		// open office
-		'odt' => 'application/vnd.oasis.opendocument.text',
-		'ods' => 'application/vnd.oasis.opendocument.spreadsheet',
-		//audio files
-		'mp3' => 'audio/mpeg',
-		'ogg' => 'application/ogg',
-		'wav' => 'audio/wav',
+		'odt'  => 'application/vnd.oasis.opendocument.text',
+		'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
+		// audio files
+		'mp3'  => 'audio/mpeg',
+		'ogg'  => 'application/ogg',
+		'wav'  => 'audio/wav',
 
-		'csv' => 'text/csv',
-		'css' => 'text/css',
+		'csv'  => 'text/csv',
+		'css'  => 'text/css',
 
-		'htm' => 'text/html',
-		'html'=> 'text/html',
-		'ics' => 'text/calendar',
-		'jar' => 'application/java-archive',
-		'js'  => 'text/javascript'
+		'htm'  => 'text/html',
+		'html' => 'text/html',
+		'ics'  => 'text/calendar',
+		'jar'  => 'application/java-archive',
+		'js'   => 'text/javascript',
 	);
 
 	return $mime_types;
@@ -1276,8 +1285,8 @@ function bp_document_extension( $attachment_id ) {
 	$file_type = wp_check_filetype( $file_url );
 	$extension = trim( $file_type['ext'] );
 
-	if( '' === $extension ) {
-		$file = pathinfo( $file_url );
+	if ( '' === $extension ) {
+		$file      = pathinfo( $file_url );
 		$extension = $file['extension'];
 	}
 
@@ -1292,112 +1301,112 @@ function bp_document_svg_icon( $extension ) {
 	switch ( $extension ) {
 		case 'css':
 			$svg = 'bb-icon-code';
-		break;
+			break;
 		case 'csv':
 			$svg = 'bb-icon-file-csv';
-        break;
+			break;
 		case 'doc':
 			$svg = 'bb-icon-doc';
-        break;
+			break;
 		case 'docx':
 			$svg = 'bb-icon-doc';
-		break;
+			break;
 		case 'dotx':
 			$svg = 'bb-icon-doc';
-        break;
+			break;
 		case 'gzip':
 			$svg = 'bb-icon-zip';
-		break;
+			break;
 		case 'htm':
 			$svg = 'bb-icon-code';
-		break;
+			break;
 		case 'html':
 			$svg = 'bb-icon-code';
-		break;
+			break;
 		case 'ics':
 			$svg = 'bb-icon-file-ics';
-		break;
+			break;
 		case 'ico':
 			$svg = 'bb-icon-file-ico';
-		break;
+			break;
 		case 'js':
 			$svg = 'bb-icon-code';
-		break;
+			break;
 		case 'jar':
 			$svg = 'bb-icon-file-jar';
-		break;
+			break;
 		case 'mp3':
 			$svg = 'bb-icon-mp3';
-		break;
+			break;
 		case 'ods':
 			$svg = 'bb-icon-file-ods';
-		break;
+			break;
 		case 'odt':
 			$svg = 'bb-icon-file-odt';
-		break;
+			break;
 		case 'pdf':
 			$svg = 'bb-icon-pdf';
-		break;
+			break;
 		case 'psd':
 			$svg = 'bb-icon-file-psd';
-		break;
+			break;
 		case 'potm':
 			$svg = 'bb-icon-file-pptm';
-		break;
+			break;
 		case 'potx':
 			$svg = 'bb-icon-file-pptx';
-		break;
+			break;
 		case 'pps':
 			$svg = 'bb-icon-file-pps';
-		break;
+			break;
 		case 'ppsx':
 			$svg = 'bb-icon-file-ppsx';
-		break;
+			break;
 		case 'ppt':
 			$svg = 'bb-icon-file-ppt';
-		break;
+			break;
 		case 'pptm':
 			$svg = 'bb-icon-file-pptm';
-		break;
+			break;
 		case 'pptx':
 			$svg = 'bb-icon-file-pptx';
-		break;
+			break;
 		case 'rar':
 			$svg = 'bb-icon-file-rar';
-		break;
+			break;
 		case 'rtf':
 			$svg = 'bb-icon-file-rtf';
-		break;
+			break;
 		case 'tar':
 			$svg = 'bb-icon-file-tar';
-		break;
+			break;
 		case 'txt':
 			$svg = 'bb-icon-file-txt';
-		break;
+			break;
 		case 'wav':
 			$svg = 'bb-icon-mp3';
-		break;
+			break;
 		case 'xls':
 			$svg = 'bb-icon-file-xls';
-		break;
+			break;
 		case 'xlsm':
 			$svg = 'bb-icon-file-xls';
-		break;
+			break;
 		case 'xlsx':
 			$svg = 'bb-icon-file-xls';
-		break;
+			break;
 		case 'xltm':
 			$svg = 'bb-icon-file-xls';
-		break;
+			break;
 		case 'zip':
 			$svg = 'bb-icon-zip';
-		break;
+			break;
 		case 'folder':
 			$svg = 'bb-icon-folder-stacked';
-		break;
+			break;
 		case 'download':
 			$svg = 'bb-icon-download';
-		break;
+			break;
 		default:
 			$svg = 'bb-icon-file';
 	}
@@ -1416,59 +1425,84 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id, $group_id
 	}
 
 	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, $group_id, 'document' );
-	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A );
+	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
 	// Build array of item references:
-	foreach($data as $key => &$item) {
-		$itemsByReference[$item['id']] = &$item;
+	foreach ( $data as $key => &$item ) {
+		$itemsByReference[ $item['id'] ] = &$item;
 		// Children array:
-		$itemsByReference[$item['id']]['children'] = array();
+		$itemsByReference[ $item['id'] ]['children'] = array();
 		// Empty data class (so that json_encode adds "data: {}" )
-		$itemsByReference[$item['id']]['data'] = new StdClass();
+		$itemsByReference[ $item['id'] ]['data'] = new StdClass();
 	}
 
 	// Set items as children of the relevant parent item.
-	foreach($data as $key => &$item)
-		if($item['parent'] && isset($itemsByReference[$item['parent']]))
-			$itemsByReference [$item['parent']]['children'][] = &$item;
+	foreach ( $data as $key => &$item ) {
+		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+			$itemsByReference [ $item['parent'] ]['children'][] = &$item;
+		}
+	}
 
 	// Remove items that were added to parents elsewhere:
-	foreach($data as $key => &$item) {
-		if($item['parent'] && isset($itemsByReference[$item['parent']]))
-			unset($data[$key]);
+	foreach ( $data as $key => &$item ) {
+		if ( $item['parent'] && isset( $itemsByReference[ $item['parent'] ] ) ) {
+			unset( $data[ $key ] );
+		}
 	}
 
 	return bp_document_folder_recursive_li_list( $data, false );
 
 }
 
+/**
+ * This function will give the breadcrumbs ul li html.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $array
+ * @param bool  $first
+ *
+ * @return string
+ */
 function bp_document_folder_recursive_li_list( $array, $first = false ) {
 
-	//Base case: an empty array produces no list
-	if (empty($array)) return '';
+	// Base case: an empty array produces no list
+	if ( empty( $array ) ) {
+		return '';
+	}
 
-	//Recursive Step: make a list with child lists
+	// Recursive Step: make a list with child lists
 	if ( $first ) {
 		$output = '<ul class="">';
 	} else {
-		$output = '<ul class="location-folder-list">';
-		$output .= '<li data-id="0"><span>' .  __( 'Documents', 'buddyboss' ) . '</span><ul class="">';
+		$output  = '<ul class="location-folder-list">';
+		$output .= '<li data-id="0"><span>' . __( 'Documents', 'buddyboss' ) . '</span><ul class="">';
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="'. $item["id"] .'"><span>' . $item["title"] . '</span>' . bp_document_folder_recursive_li_list( $item["children"], true ) . '</li>';
+		$output .= '<li data-id="' . $item['id'] . '"><span>' . $item['title'] . '</span>' . bp_document_folder_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</li></ul>';
 
 	return $output;
 }
 
+/**
+ * This function will give the breadcrumbs html.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $folder_id
+ *
+ * @return string
+ */
 function bp_document_folder_bradcrumb( $folder_id ) {
 
 	global $wpdb, $bp;
 
-	$document_folder_table = $bp->table_prefix . 'bp_media_albums';
-	$documents_folder_query       = $wpdb->prepare( "SELECT c.*
+	$document_folder_table  = $bp->table_prefix . 'bp_media_albums';
+	$documents_folder_query = $wpdb->prepare(
+		"SELECT c.*
     FROM (
         SELECT
             @r AS _id,
@@ -1478,33 +1512,35 @@ function bp_document_folder_bradcrumb( $folder_id ) {
             (SELECT @r := %d, @l := 0) vars, {$document_folder_table} m
         WHERE @r <> 0) d
     JOIN {$document_folder_table} c
-    ON d._id = c.id ORDER BY c.id ASC", $folder_id );
-	$data                         = $wpdb->get_results( $documents_folder_query, ARRAY_A );
-	$html                         = '';
+    ON d._id = c.id ORDER BY c.id ASC",
+		$folder_id
+	);
+	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	$html                   = '';
 
-	if ( !empty( $data ) ) {
+	if ( ! empty( $data ) ) {
 		$html .= '<ul class="document-breadcrumb">';
 		if ( bp_is_group() && bp_is_group_single() ) {
 			$group = groups_get_group( array( 'group_id' => bp_get_current_group_id() ) );
-			$link = bp_get_group_permalink( $group ) . bp_get_document_root_slug();
-			$html .= '<li><a href=" ' . $link . ' "> ' .  __( 'Documents', 'buddyboss' ) . '</a></li>';
+			$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug();
+			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
 		} else {
-			$link = bp_displayed_user_domain() . bp_get_document_root_slug();
-			$html .= '<li><a href=" ' . $link . ' "> ' .  __( 'Documents', 'buddyboss' ) . '</a></li>';
+			$link  = bp_displayed_user_domain() . bp_get_document_root_slug();
+			$html .= '<li><a href=" ' . $link . ' "> ' . __( 'Documents', 'buddyboss' ) . '</a></li>';
 		}
 
-		if ( count( $data) > 3 ) {
-			$html .= '<li>' .  __( '...', 'buddyboss' ) . '</li>';
-			$data = array_slice( $data, -3 );
+		if ( count( $data ) > 3 ) {
+			$html .= '<li>' . __( '...', 'buddyboss' ) . '</li>';
+			$data  = array_slice( $data, - 3 );
 		}
 		foreach ( $data as $element ) {
-			$link = '';
+			$link     = '';
 			$group_id = (int) $element['group_id'];
 			if ( 0 === $group_id ) {
 				$link = bp_displayed_user_domain() . bp_get_document_root_slug() . '/folders/' . $element['id'];
 			} else {
 				$group = groups_get_group( array( 'group_id' => $group_id ) );
-				$link = bp_get_group_permalink( $group ) . bp_get_document_root_slug() . '/folders/' . $element['id'];
+				$link  = bp_get_group_permalink( $group ) . bp_get_document_root_slug() . '/folders/' . $element['id'];
 			}
 			$html .= '<li> <a href=" ' . $link . ' ">' . $element['title'] . '</a></li>';
 		}
@@ -1515,6 +1551,16 @@ function bp_document_folder_bradcrumb( $folder_id ) {
 
 }
 
+/**
+ * This function will document into the folder.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param int $document_id
+ * @param int $folder_id
+ *
+ * @return bool|int
+ */
 function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 
 	global $wpdb, $bp;
@@ -1523,9 +1569,9 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 		return false;
 	}
 
-	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET album_id = %d WHERE id = %d", $folder_id, $document_id );
-
-	if ( false === $wpdb->query( $q ) ) {
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET album_id = %d WHERE id = %d", $folder_id, $document_id );
+	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
+	if ( false === $query ) {
 		return false;
 	}
 
@@ -1535,7 +1581,7 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 /**
  * Get document visibility levels out of the $bp global.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.3.0
  *
  * @return array
  */
@@ -1544,13 +1590,24 @@ function bp_document_get_visibility_levels() {
 	/**
 	 * Filters the media visibility levels out of the $bp global.
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @param array $visibility_levels Array of visibility levels.
 	 */
 	return apply_filters( 'bp_document_get_visibility_levels', buddypress()->document->visibility_levels );
 }
 
+/**
+ * This function will rename the document name.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param int    $document_id
+ * @param int    $attachment_document_id
+ * @param string $title
+ *
+ * @return bool|int
+ */
 function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0, $title = '' ) {
 
 	global $wpdb, $bp;
@@ -1559,13 +1616,14 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 		return false;
 	}
 
-	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET title = %s, date_modified = %s WHERE id = %d AND attachment_id = %d", $title, bp_core_current_time(), $document_id, $attachment_document_id );
+	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
 
-	if ( false === $wpdb->query( $q ) ) {
+	if ( false === $query ) {
 		return false;
 	}
 
-	$post    = get_post( $attachment_document_id, ARRAY_A );
+	$post = get_post( $attachment_document_id, ARRAY_A );
 
 	if ( isset( $title ) ) {
 		$post['post_title'] = $title;
@@ -1575,6 +1633,16 @@ function bp_document_rename_file( $document_id = 0, $attachment_document_id = 0,
 	return $document_id;
 }
 
+/**
+ * This function will rename the folder name.
+ *
+ * @param int    $folder_id
+ * @param string $title
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @return bool|int
+ */
 function bp_document_rename_folder( $folder_id = 0, $title = '' ) {
 
 	global $wpdb, $bp;
@@ -1583,11 +1651,40 @@ function bp_document_rename_folder( $folder_id = 0, $title = '' ) {
 		return false;
 	}
 
-	$q = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id );
+	$q = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET title = %s, date_modified = %s WHERE id = %d", $title, bp_core_current_time(), $folder_id ) ); // db call ok; no-cache ok;
 
-	if ( false === $wpdb->query( $q ) ) {
+	if ( false === $q ) {
 		return false;
 	}
 
 	return $folder_id;
+}
+
+/**
+ * This function will move folder to another destination folder id.
+ *
+ * @since BuddyBoss 1.3.0
+ *
+ * @param $folder_id
+ * @param $destination_folder_id
+ *
+ * @return bool
+ */
+function bp_document_move_folder( $folder_id, $destination_folder_id ) {
+
+	global $wpdb, $bp;
+
+	if ( '' === $folder_id || '' === $destination_folder_id ) {
+		return false;
+	}
+
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name_folders} SET parent = %d WHERE id = %d", $destination_folder_id, $folder_id ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders.UnfinishedPrepare
+	$query = $wpdb->query( $query ); // db call ok. no-cache ok.
+
+	if ( false === $query ) {
+		return false;
+	} else {
+		return true;
+	}
+
 }

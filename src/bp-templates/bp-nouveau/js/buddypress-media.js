@@ -205,6 +205,9 @@ window.bp = window.bp || {};
 			// document delete
 			$( document ).on( 'click', '.document-file-delete', this.deleteDocument.bind( this ) );
 
+			// Folder Move
+			$( document ).on( 'click', '.bp-folder-move', this.folderMove.bind( this ) );
+
 			// Gifs autoplay
 			if ( ! _.isUndefined( BP_Nouveau.media.gif_api_key )) {
 				window.addEventListener( 'scroll', this.autoPlayGifVideos, false );
@@ -226,6 +229,43 @@ window.bp = window.bp || {};
 				this.editGifPreview();
 			}
 
+		},
+
+		folderMove: function( event ) {
+			var target = $( event.currentTarget );
+			event.preventDefault();
+
+			var currentFolderId = target.attr( 'id' );
+			var folderMoveToId  = $( '#media-folder-document-data-table #bp-media-move-folder .modal-mask .modal-wrapper #boss-media-create-album-popup .bb-field-wrap .bb-folder-selected-id' ).val();
+
+			console.log( currentFolderId );
+			console.log( folderMoveToId );
+
+			if ( '' === currentFolderId || '' === folderMoveToId ){
+				alert( BP_Nouveau.media.i18n_strings.folder_move_error );
+				return false;
+			}
+
+			var data = {
+				'action': 'document_folder_move',
+				'currentFolderId': currentFolderId,
+				'folderMoveToId': folderMoveToId
+			};
+
+			$.ajax(
+				{
+					type: 'POST',
+					url: BP_Nouveau.ajaxurl,
+					data: data,
+					success: function ( response ) {
+						if ( response.success ) {
+							var documentStream = $( '#media-stream' );
+							documentStream.html( '' );
+							documentStream.html( response.data.html );
+						}
+					}
+				}
+			);
 		},
 
 		deleteDocument: function (event) {
@@ -306,7 +346,7 @@ window.bp = window.bp || {};
 			target.addClass( 'loading' );
 
 			var data = {
-				'action': 'document_folder_move',
+				'action': 'document_move',
 				'_wpnonce': BP_Nouveau.nonces.media,
 				'document_id': document_id,
 				'folder_id': folder_id

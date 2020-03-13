@@ -139,6 +139,7 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'upload_status'         => __( '%d out of %d uploaded', 'buddyboss' ),
 		'album_delete_confirm'  => __( 'Are you sure you want to delete this album? Photos in this album will also be deleted.', 'buddyboss' ),
 		'folder_delete_confirm' => __( 'Are you sure you want to delete this folder? Documents in this folder will also be deleted.', 'buddyboss' ),
+		'folder_move_error'     => __( 'Please select destination folder.', 'buddyboss' ),
 		'album_delete_error'    => __( 'There was a problem deleting the album.', 'buddyboss' ),
 		'folder_delete_error'   => __( 'There was a problem deleting the folder.', 'buddyboss' ),
 	);

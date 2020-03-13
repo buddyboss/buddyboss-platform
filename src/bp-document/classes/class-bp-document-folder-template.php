@@ -13,14 +13,14 @@ defined( 'ABSPATH' ) || exit;
  *
  * Responsible for loading a group of document folders into a loop for display.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 class BP_Document_Folder_Template {
 
 	/**
 	 * The loop iterator.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $current_folder = -1;
@@ -28,7 +28,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * The folder count.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $folder_count;
@@ -36,7 +36,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * The total folder count.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $total_folder_count;
@@ -44,7 +44,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * Array of folder located by the query.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var array
 	 */
 	public $folders;
@@ -52,7 +52,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * The folder object currently being iterated on.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var object
 	 */
 	public $folder;
@@ -60,7 +60,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * A flag for whether the loop is currently being iterated.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var bool
 	 */
 	public $in_the_loop;
@@ -68,7 +68,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * URL parameter key for folder pagination. Default: 'acpage'.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $pag_arg;
@@ -76,7 +76,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * The page number being requested.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $pag_page;
@@ -84,7 +84,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * The number of items being requested per page.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var int
 	 */
 	public $pag_num;
@@ -92,7 +92,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * An HTML string containing pagination links.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $pag_links;
@@ -100,7 +100,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * The displayed user's full name.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $full_name;
@@ -111,7 +111,7 @@ class BP_Document_Folder_Template {
 	 * The arguments passed to this class constructor are of the same
 	 * format as {@link BP_Document_Folder::get()}.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see BP_Document_Folder::get() for a description of the argument
 	 *      structure, as well as default values.
@@ -163,7 +163,7 @@ class BP_Document_Folder_Template {
 		if ( ! empty( $include ) ) {
 			$this->folders = bp_folder_get_specific(
 				array(
-					'folder_ids'   => explode( ',', $include ),
+					'folder_ids'  => explode( ',', $include ),
 					'max'         => $max,
 					'count_total' => $count_total,
 					'page'        => $this->pag_page,
@@ -234,7 +234,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * Whether there are folder items available in the loop.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see bp_has_folders()
 	 *
@@ -251,7 +251,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * Set up the next folder item and iterate index.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @return object The next folder item to iterate over.
 	 */
@@ -265,7 +265,7 @@ class BP_Document_Folder_Template {
 	/**
 	 * Rewind the posts and reset post index.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function rewind_folders() {
 		$this->current_folder = -1;
@@ -281,7 +281,7 @@ class BP_Document_Folder_Template {
 	 * that controls iteration inside the folder loop, eg:
 	 *     while ( bp_folders() ) { ...
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see bp_folders()
 	 *
@@ -296,7 +296,7 @@ class BP_Document_Folder_Template {
 			/**
 			 * Fires right before the rewinding of folder posts.
 			 *
-			 * @since BuddyBoss 1.2.5
+			 * @since BuddyBoss 1.3.0
 			 */
 			do_action( 'folder_loop_end' );
 
@@ -316,14 +316,14 @@ class BP_Document_Folder_Template {
 	 * data while looping, so that template tags used during that iteration
 	 * make reference to the current folder item.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see bp_the_folder()
 	 */
 	public function the_folder() {
 
 		$this->in_the_loop = true;
-		$this->folder       = $this->next_folder();
+		$this->folder      = $this->next_folder();
 
 		if ( is_array( $this->folder ) ) {
 			$this->folder = (object) $this->folder;
@@ -335,7 +335,7 @@ class BP_Document_Folder_Template {
 			/**
 			 * Fires if the current folder item is the first in the activity loop.
 			 *
-			 * @since BuddyBoss 1.2.5
+			 * @since BuddyBoss 1.3.0
 			 */
 			do_action( 'folder_loop_start' );
 		}

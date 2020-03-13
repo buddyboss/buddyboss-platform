@@ -3,7 +3,7 @@
  * BuddyBoss Document Component Class.
  *
  * @package BuddyBoss\Document\Loader
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 
 // Exit if accessed directly.
@@ -12,14 +12,14 @@ defined( 'ABSPATH' ) || exit;
 /**
  * Creates Document component.
  *
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 class BP_Document_Component extends BP_Component {
 
 	/**
 	 * The folder being currently accessed.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var BP_Document_Folder
 	 */
 	public $current_folder;
@@ -27,7 +27,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Default document extension.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @todo Is this used anywhere? Is this a duplicate of $default_extension?
 	 * @var string
 	 */
@@ -36,7 +36,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Default document extension.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var string
 	 */
 	public $default_extension;
@@ -44,7 +44,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Illegal document names/slugs.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 * @var array
 	 */
 	public $forbidden_names;
@@ -54,7 +54,7 @@ class BP_Document_Component extends BP_Component {
 	 *
 	 * @see bp_media_get_visibility_levels()
 	 *
-	 * @since BuddyBoss 1.2.3
+	 * @since BuddyBoss 1.3.0
 	 * @var array
 	 */
 	public $visibility_levels = array();
@@ -62,7 +62,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Start the document component creation process.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function __construct() {
 		parent::start(
@@ -80,7 +80,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Include Document component files.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see BP_Component::includes() for a description of arguments.
 	 *
@@ -103,7 +103,7 @@ class BP_Document_Component extends BP_Component {
 	 *
 	 * Only load up certain code when on specific pages.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function late_includes() {
 		// Bail if PHPUnit is running.
@@ -140,7 +140,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up component global data.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see BP_Component::setup_globals() for a description of arguments.
 	 *
@@ -173,19 +173,19 @@ class BP_Document_Component extends BP_Component {
 		);
 
 		// Fetch the default directory title.
-		$default_directory_titles         = bp_core_get_directory_page_default_titles();
-		$default_directory_title          = $default_directory_titles[ $this->id ];
+		$default_directory_titles = bp_core_get_directory_page_default_titles();
+		$default_directory_title  = $default_directory_titles[ $this->id ];
 
 		// All globals for document component.
 		// Note that global_tables is included in this array.
 		parent::setup_globals(
 			array(
-				'slug'                                    => 'documents',
-				'root_slug'                               => isset( $bp->pages->document->slug ) ? $bp->pages->document->slug : 'documents',
-				'has_directory'                           => true,
-				'global_tables'                           => $global_tables,
-				'directory_title'                         => isset( $bp->pages->document->title ) ? $bp->pages->document->title : $default_directory_title,
-				'search_string'                           => __( 'Search Documents&hellip;', 'buddyboss' ),
+				'slug'            => 'documents',
+				'root_slug'       => isset( $bp->pages->document->slug ) ? $bp->pages->document->slug : 'documents',
+				'has_directory'   => true,
+				'global_tables'   => $global_tables,
+				'directory_title' => isset( $bp->pages->document->title ) ? $bp->pages->document->title : $default_directory_title,
+				'search_string'   => __( 'Search Documents&hellip;', 'buddyboss' ),
 			)
 		);
 
@@ -195,21 +195,20 @@ class BP_Document_Component extends BP_Component {
 		if ( bp_is_document_component() && bp_is_single_folder()
 			 && ( $folder_id = BP_Document_Folder::folder_exists( bp_action_variable( 0 ) ) )
 		) {
-			$bp->is_single_item  = true;
+			$bp->is_single_item   = true;
 			$this->current_folder = folders_get_folder( $folder_id );
 
-		// Set current_folder to 0 to prevent debug errors.
+			// Set current_folder to 0 to prevent debug errors.
 		} else {
 			$this->current_folder = 0;
 		}
-
 
 	}
 
 	/**
 	 * Set up the actions.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function setup_actions() {
 
@@ -226,7 +225,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up component navigation.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of arguments.
 	 *
@@ -235,7 +234,7 @@ class BP_Document_Component extends BP_Component {
 	 */
 	public function setup_nav( $main_nav = array(), $sub_nav = array() ) {
 
-		if ( bp_is_active( 'media') && bp_is_profile_document_support_enabled() ) {
+		if ( bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
 
 			// Determine user to use.
 			if ( bp_displayed_user_domain() ) {
@@ -254,7 +253,7 @@ class BP_Document_Component extends BP_Component {
 				$count    = bp_document_get_total_document_count( bp_displayed_user_id() );
 				$class    = ( 0 === $count ) ? 'no-count' : 'count';
 				$nav_name = sprintf(
-				/* translators: %s: total document count for the current user */
+					/* translators: %s: total document count for the current user */
 					__( 'Documents %s', 'buddyboss' ),
 					sprintf(
 						'<span class="%s">%s</span>',
@@ -298,7 +297,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the component entries in the WordPress Admin Bar.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 *
 	 * @see BP_Component::setup_nav() for a description of the $wp_admin_nav
 	 *      parameter array.
@@ -307,9 +306,8 @@ class BP_Document_Component extends BP_Component {
 	 */
 	public function setup_admin_bar( $wp_admin_nav = array() ) {
 
-
 		// Menus for logged in user.
-		if ( is_user_logged_in() && bp_is_active( 'media') && bp_is_profile_document_support_enabled() ) {
+		if ( is_user_logged_in() && bp_is_active( 'media' ) && bp_is_profile_document_support_enabled() ) {
 
 			// Setup the logged in user variables.
 			$document_link = trailingslashit( bp_loggedin_user_domain() . bp_get_document_slug() );
@@ -339,7 +337,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Set up the title for pages and <title>.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function setup_title() {
 
@@ -367,7 +365,7 @@ class BP_Document_Component extends BP_Component {
 	/**
 	 * Setup cache groups.
 	 *
-	 * @since BuddyBoss 1.2.5
+	 * @since BuddyBoss 1.3.0
 	 */
 	public function setup_cache_groups() {
 

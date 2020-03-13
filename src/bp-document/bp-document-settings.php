@@ -3,7 +3,7 @@
  * Document Settings
  *
  * @package BuddyBoss\Document
- * @since BuddyBoss 1.2.5
+ * @since BuddyBoss 1.3.0
  */
 
 // Exit if accessed directly
