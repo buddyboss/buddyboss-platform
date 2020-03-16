@@ -2389,8 +2389,14 @@ function bp_core_wpsignup_redirect() {
 		return;
 	}
 
-	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) ) {
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) && ! $allow_custom_registration ) {
 		bp_core_redirect( bp_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_custom_register_page_url() );
 	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
@@ -4587,51 +4593,48 @@ add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_
  */
 function bp_allow_user_to_send_invites() {
 
-	if ( is_user_logged_in() ) {
-		if ( bp_is_active( 'invites' ) ) {
-			// Get all active member type.
-			$member_types = array();
-			$member_types = bp_get_active_member_types();
-			if ( isset( $member_types ) && ! empty( $member_types ) ) {
-				$allowed_member_type    = array();
-				$disallowed_member_type = array();
-				foreach ( $member_types as $member_type_id ) {
-					$type_name = bp_get_member_type_key( $member_type_id );
-					$set_value = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $type_name );
-					if ( true === $set_value ) {
-						$allowed_member_type[] = $type_name;
-					} else {
-						$disallowed_member_type[] = $type_name;
-					}
-				}
-
-				if ( empty( $allowed_member_type ) ) {
-					return true;
-				}
-				// Get the member type of current logged in user.
-				$member_type = bp_get_member_type( bp_loggedin_user_id() );
-				if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
-					return true;
-				} elseif ( false === $member_type && ! current_user_can( 'manage_options' ) ) {
-					return false;
-				} elseif ( false === $member_type && current_user_can( 'manage_options' ) ) {
-					return true;
-				} elseif ( empty( $allowed_member_type ) || count( $allowed_member_type ) === count( $member_types ) ) {
-					return true;
-				} elseif ( in_array( $member_type, $disallowed_member_type, true ) ) {
-					return false;
-				} elseif ( in_array( $member_type, $allowed_member_type, true ) ) {
-					return true;
-				}
-			} else {
-				return true;
-			}
-		} else {
-			return false;
-		}
-	} else {
+	// if user not logged in and component not active then return false.
+	if ( ! bp_is_active( 'invites' ) && ! is_user_logged_in() ) {
 		return false;
 	}
+
+	// Get all active member type.
+	$member_types = bp_get_active_member_types();
+	if ( ! empty( $member_types ) ) {
+		$allowed_member_type    = array();
+		$disallowed_member_type = array();
+		foreach ( $member_types as $member_type_id ) {
+			$type_name = bp_get_member_type_key( $member_type_id );
+			$set_value = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $type_name );
+			if ( true === $set_value ) {
+				$allowed_member_type[] = $type_name;
+			} else {
+				$disallowed_member_type[] = $type_name;
+			}
+		}
+
+		if ( empty( $allowed_member_type ) ) {
+			return true;
+		}
+
+		// Get the member type of current logged in user.
+		$member_type = bp_get_member_type( bp_loggedin_user_id() );
+		if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
+			return true;
+		} elseif ( false === $member_type && ! current_user_can( 'manage_options' ) ) {
+			return false;
+		} elseif ( false === $member_type && current_user_can( 'manage_options' ) ) {
+			return true;
+		} elseif ( empty( $allowed_member_type ) || count( $allowed_member_type ) === count( $member_types ) ) {
+			return true;
+		} elseif ( in_array( $member_type, $disallowed_member_type, true ) ) {
+			return false;
+		} elseif ( in_array( $member_type, $allowed_member_type, true ) ) {
+			return true;
+		}
+	}
+
+	return true;
 }
 
 /**

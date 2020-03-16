@@ -168,7 +168,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_topic'] ) && wp_create_nonce( 'bbp-unfiltered-html-topic_new' ) === $_POST['_bbp_unfiltered_html_topic'] ) {
 		remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_new_topic_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_new_topic_pre_content', 'bbp_filter_kses', 30 ); // todo: removing this from here bcoz we need to filter mention tags from content
 	}
 
 	/** Discussion Title */

@@ -106,6 +106,7 @@ function bp_activity_find_mentions( $content ) {
  *
  * @since Buddyboss 1.2.0
  * @version  Buddyboss 1.2.0
+ * @deprecated BuddyBoss 1.2.8
  *
  * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Activity content
@@ -140,8 +141,6 @@ function bp_activity_find_mention_by_at_sign( $mentioned_users, $content ) {
 
 	return $mentioned_users;
 }
-add_filter( 'bp_activity_mentioned_users', 'bp_activity_find_mention_by_at_sign', 10, 2 );
-
 
 /**
  * Reset a user's unread mentions list and count.
@@ -263,6 +262,7 @@ function bp_activity_update_mention_count_for_user( $user_id, $activity_id, $act
  * Get a user ID from a "mentionname", the name used for a user in @-mentions.
  *
  * @since BuddyPress 1.9.0
+ * @deprecated BuddyBoss 1.2.8
  *
  * @param string $mentionname Username of user in @-mentions.
  * @return int|bool ID of the user, if one is found. Otherwise false.
@@ -4311,42 +4311,6 @@ function bp_activity_do_heartbeat() {
 	 */
 	return (bool) apply_filters( 'bp_activity_do_heartbeat', $retval );
 }
-
-/**
- * AJAX endpoint for Suggestions API lookups.
- *
- * @since BuddyPress 2.1.0
- */
-function bp_ajax_get_suggestions() {
-	if ( ! bp_is_user_active() || empty( $_GET['term'] ) || empty( $_GET['type'] ) ) {
-		wp_send_json_error( 'missing_parameter' );
-		exit;
-	}
-
-	$args = array(
-		'term' => sanitize_text_field( $_GET['term'] ),
-		'type' => sanitize_text_field( $_GET['type'] ),
-	);
-
-	if ( ! empty( $_GET['only_friends'] ) ) {
-		$args['only_friends'] = absint( $_GET['only_friends'] );
-	}
-
-	// Support per-Group suggestions.
-	if ( ! empty( $_GET['group-id'] ) ) {
-		$args['group_id'] = absint( $_GET['group-id'] );
-	}
-
-	$results = bp_core_get_suggestions( $args );
-
-	if ( is_wp_error( $results ) ) {
-		wp_send_json_error( $results->get_error_message() );
-		exit;
-	}
-
-	wp_send_json_success( $results );
-}
-add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
 
 /**
  * AJAX endpoint for activity comments.
