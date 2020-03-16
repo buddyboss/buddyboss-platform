@@ -1821,9 +1821,9 @@ window.bp = window.bp || {};
 						}
 					);
 
-					$( '#media-folder-document-data-table' ).on(
+					$( a ).on(
 						'click',
-						a + ' .location-folder-list li span',
+						' .location-folder-list li span',
 						function () {
 
 							if ($( this ).hasClass( 'selected' )) {
