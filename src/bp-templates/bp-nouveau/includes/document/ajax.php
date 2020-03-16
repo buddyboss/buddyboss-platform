@@ -1289,12 +1289,12 @@ function bp_nouveau_ajax_document_edit_folder() {
 	$parent   = ! empty( $_POST['parent'] ) ? (int) $_POST['parent'] : 0;
 	$move_to  = ! empty( $_POST['moveTo'] ) ? (int) $_POST['moveTo'] : 0;
 
-	if ( $parent > 0 ) {
-		$id = false;
-	}
-
 	if ( 0 === $move_to ) {
 		$move_to = $parent;
+	}
+
+	if ( $parent === $move_to ) {
+		$move_to = 0;
 	}
 
 	$album_id = bp_folder_add(
