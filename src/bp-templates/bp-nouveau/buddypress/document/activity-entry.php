@@ -24,24 +24,24 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-detail-wrap">
 				<span class="document-title"><?php echo $filename; ?></span>
 				<span class="document-description"><?php echo $size; ?></span>
-				<span class="document-helper-text"><?php _e( '- Click to Download', 'buddyboss' ); ?></span>
+				<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
 			</a>
 		</div>
 
 		<div class="document-action-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 				<i class="bb-icon-download"></i>
 			</a>
 
 			<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
 
-			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
+			<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 				<i class="bb-icon-menu-dots-v"></i>
 			</a>
 			<div class="document-action_list">
 				<ul>
-					<li class="move_file"><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
-					<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
+					<li class="move_file"><a href="#" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+					<li class="delete_file"><a href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
 
@@ -53,7 +53,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 			<div class="document-audio-wrap">
 				<audio controls>
 					<source src="<?php echo esc_url( $url ); ?>" type="audio/mpeg">
-					<?php _e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
+					<?php esc_html_e( 'Your browser does not support the audio element.', 'buddyboss' ); ?>
 				</audio>
 			</div>
 		<?php }
@@ -90,28 +90,28 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 					</div>
 
 					<div class="document-expand">
-						<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php _e( 'Click to expand', 'buddyboss' ); ?></a>
+						<a href="#" class="document-expand-anchor"><i class="bb-icon-plus document-icon-plus"></i> <?php esc_html_e( 'Click to expand', 'buddyboss' ); ?></a>
 					</div>
 
 				</div> <!-- .document-text-wrap -->
 
 				<div class="document-action-wrap">
 					
-					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php _e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
+					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
 					
-					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php _e( 'Download', 'buddyboss' ); ?>">
+					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 						<i class="bb-icon-download document-icon-download"></i>
 					</a>
 
 					<?php if ( bp_loggedin_user_id() === bp_get_document_user_id() ) { ?>
 
-						<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php _e( 'More actions', 'buddyboss' ); ?>">
+						<a href="#" target="_blank" class="document-action_more" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'More actions', 'buddyboss' ); ?>">
 							<i class="bb-icon-menu-dots-v document-icon-download-more"></i>
 						</a>
 						<div class="document-action_list">
 							<ul>
-								<li class="move_file"><a href="#" class="ac-document-move"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
-								<li class="delete_file"><a href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
+								<li class="move_file"><a href="#" class="ac-document-move"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+								<li class="delete_file"><a href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 							</ul>
 						</div>
 
@@ -120,8 +120,8 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 				</div> <!-- .document-action-wrap -->
 
 				<?php
-					if($more_text == true){
-						echo _e( '<div class="more_text_view">This file was truncated for preview. Please <a href="'.$url.'">download</a> to view the full file. </div>', 'buddyboss' );
+					if( $more_text == true ){
+						echo esc_html_e( '<div class="more_text_view">This file was truncated for preview. Please <a href="'.$url.'">download</a> to view the full file. </div>', 'buddyboss' );
 					}
 				?>
 			<?php } 

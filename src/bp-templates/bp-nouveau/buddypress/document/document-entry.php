@@ -41,8 +41,8 @@ if ( $attachment_id ) {
 		<div class="media-folder_name_edit_wrap">
 			<input type="text" value="" class="media-folder_name_edit" />
 			<?php if( wp_is_mobile() ){ ?>
-				<a href="#" class="name_edit_cancel button small"><?php _e( 'Cancel', 'buddyboss' ); ?></a>
-				<a href="#" class="name_edit_save button small pull-right"><?php _e( 'Save', 'buddyboss' ); ?></a>
+				<a href="#" class="name_edit_cancel button small"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+				<a href="#" class="name_edit_save button small pull-right"><?php esc_html_e( 'Save', 'buddyboss' ); ?></a>
 			<?php } ?>
 
 		</div>
@@ -72,11 +72,11 @@ if ( $attachment_id ) {
 			<div class="media-folder_action__list">
 				<ul>
 					<?php if( $attachment_id ){ ?>
-						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php _e( 'Download', 'buddyboss' ); ?></a></li>
+						<li class="download_file"><a href="<?php echo esc_url( $link ); ?>"><?php esc_html_e( 'Download', 'buddyboss' ); ?></a></li>
 					<?php } ?>
-					<li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $type ); ?>" class="ac-document-rename"><?php _e( 'Rename', 'buddyboss' ); ?></a></li>
-					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php _e( 'Move', 'buddyboss' ); ?></a></li>
-					<li class="delete_file"><a class="document-file-delete" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $type ); ?>" href="#"><?php _e( 'Delete', 'buddyboss' ); ?></a></li>
+					<li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a></li>
+					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+					<li class="delete_file"><a class="document-file-delete" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>
 		</div>

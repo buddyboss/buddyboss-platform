@@ -1424,8 +1424,13 @@ function bp_document_user_document_folder_tree_view_li_html( $user_id, $group_id
 		$group_id = ( function_exists( 'bp_get_current_group_id' ) ) ? bp_get_current_group_id() : 0;
 	}
 
-	$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, $group_id, 'document' );
-	$data                   = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
+	if ( $group_id > 0 ) {
+		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE group_id = %d AND type = '%s' ", $group_id, 'document' );
+	} else {
+		$documents_folder_query = $wpdb->prepare( "SELECT * FROM {$document_folder_table} WHERE user_id = %d AND group_id = %d AND type = '%s' ", $user_id, $group_id, 'document' );
+	}
+
+	$data = $wpdb->get_results( $documents_folder_query, ARRAY_A ); // db call ok; no-cache ok;
 
 	// Build array of item references:
 	foreach ( $data as $key => &$item ) {
@@ -1569,7 +1574,7 @@ function bp_document_move_to_folder( $document_id = 0, $folder_id = 0 ) {
 		return false;
 	}
 
-	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET album_id = %d WHERE id = %d", $folder_id, $document_id );
+	$query = $wpdb->prepare( "UPDATE {$bp->document->table_name} SET date_modified = %s, album_id = %d WHERE id = %d", bp_core_current_time(), $folder_id, $document_id );
 	$query = $wpdb->query( $query ); // db call ok; no-cache ok;
 	if ( false === $query ) {
 		return false;

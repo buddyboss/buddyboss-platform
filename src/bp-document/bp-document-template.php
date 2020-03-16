@@ -1718,6 +1718,10 @@ function bp_get_document_privacy() {
 	$document_privacy = bp_document_get_visibility_levels();
 	$document_privacy = $document_privacy[ $document_template->document->privacy ];
 
+	if ( empty( $document_privacy ) && function_exists( 'bp_get_current_group_id' ) && bp_get_current_group_id() > 0 ) {
+		$document_privacy = esc_html__( 'Groups Only', 'buddyboss' );
+	}
+
 	/**
 	 * Filters the document privacy being displayed.
 	 *

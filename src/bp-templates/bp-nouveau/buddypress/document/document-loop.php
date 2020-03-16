@@ -53,8 +53,7 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
         <div class="pager">
             <div class="dt-more-container load-more">
                 <a class="button outline full"
-                   href="<?php bp_document_load_more_link(); ?>"><?php _e( 'Load More',
-						'buddyboss' ); ?></a>
+                   href="<?php bp_document_load_more_link(); ?>"><?php esc_html_e( 'Load More', 'buddyboss' ); ?></a>
             </div>
         </div>
 	<?php

@@ -10,7 +10,7 @@
 
 	<div class="bb-media-actions-wrap album-actions-wrap">
 		<div class="bb-media-actions">
-			<a href="#" id="bb-create-folder" class="bb-create-folder button small outline"><i class="bb-icon-plus"></i><?php _e( 'Add Folder', 'buddyboss' ); ?></a>
+			<a href="#" id="bb-create-folder" class="bb-create-folder button small outline"><i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?></a>
 		</div>
 	</div>
 

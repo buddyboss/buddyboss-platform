@@ -10,7 +10,7 @@
 
     <div class="bb-media-actions-wrap">
         <div class="bb-media-actions">
-            <a href="#" id="bp-add-document" class="bb-add-document button small outline"><i class="bb-icon-upload"></i><?php _e( 'Add Documents', 'buddyboss' ); ?></a>
+            <a href="#" id="bp-add-document" class="bb-add-document button small outline"><i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?></a>
         </div>
     </div>
 

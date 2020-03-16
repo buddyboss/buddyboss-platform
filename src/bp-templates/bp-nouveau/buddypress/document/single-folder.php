@@ -37,18 +37,18 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
                             <div class="bb-media-actions">
 
                                 <div id="search-documents-form" class="media-search-form">
-                                    <label for="media_document_search" class="bp-screen-reader-text"><?php _e( 'Search', 'buddyboss' ); ?></label>
-                                    <input type="text" name="search" id="media_document_search" value="" placeholder="<?php _e( 'Search Documents', 'buddyboss' ); ?>" class="">
+                                    <label for="media_document_search" class="bp-screen-reader-text"><?php esc_html_e( 'Search', 'buddyboss' ); ?></label>
+                                    <input type="text" name="search" id="media_document_search" value="" placeholder="<?php esc_html_e( 'Search Documents', 'buddyboss' ); ?>" class="">
                                 </div>
 
                                 <?php if ( bp_is_my_profile() || ( bp_is_group() && groups_can_user_manage_albums( bp_loggedin_user_id(), bp_get_current_group_id() ) ) ) : ?>
 
                                     <a class="bp-add-document button small outline" id="bp-add-document" href="#" >
-                                        <i class="bb-icon-upload"></i><?php _e( 'Add Documents', 'buddyboss' ); ?>
+                                        <i class="bb-icon-upload"></i><?php esc_html_e( 'Add Documents', 'buddyboss' ); ?>
                                     </a>
 
                                     <a href="#" id="bb-create-folder-child" class="bb-create-folder button small outline">
-                                        <i class="bb-icon-plus"></i><?php _e( 'Add Folder', 'buddyboss' ); ?>
+                                        <i class="bb-icon-plus"></i><?php esc_html_e( 'Add Folder', 'buddyboss' ); ?>
                                     </a>
 
                                     <div class="media-folder_items">
@@ -59,9 +59,9 @@ if ( bp_has_folders( array( 'include' => $album_id ) ) ) :
                                             <div class="media-folder_action__list">
                                                 <ul>
                                                     <li>
-                                                        <a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> <?php _e( 'Edit Folder', 'buddyboss' ); ?></a>
+                                                        <a id="bp-edit-folder-open" href="#"><i class="bb-icon-edit"></i> <?php esc_html_e( 'Edit Folder', 'buddyboss' ); ?></a>
                                                     </li>
-                                                    <li><a href="#" id="bb-delete-folder"><i class="bb-icon-trash"></i><?php _e( 'Delete Folder', 'buddyboss' ); ?></a></li>
+                                                    <li><a href="#" id="bb-delete-folder"><i class="bb-icon-trash"></i><?php esc_html_e( 'Delete Folder', 'buddyboss' ); ?></a></li>
                                                 </ul>
                                             </div>
                                         </div>
