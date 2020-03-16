@@ -1767,23 +1767,23 @@ window.bp = window.bp || {};
 			$( '#bp-media-edit-child-folder' ).show();
 		},
 
-		folderLocationUI: function (a) {
+		folderLocationUI: function ( targetPopup ) {
 
-			if ($( a ).find( '.bb-folder-destination' ).length > 0) {
+			if ($( targetPopup ).find( '.bb-folder-destination' ).length > 0) {
 
-				if ( ! $( a ).find( '.location-folder-list-wrap' ).hasClass( 'is_loaded' )) {
+				if ( ! $( targetPopup ).find( '.location-folder-list-wrap' ).hasClass( 'is_loaded' )) {
 
 					$( document ).on(
 						'click',
-						a + ' .bb-folder-destination',
+						targetPopup + ' .bb-folder-destination',
 						function () {
 							$( this ).parent().find( '.location-folder-list-wrap' ).slideToggle();
 						}
 					);
 
-					$( a ).find( '.location-folder-list-wrap' ).addClass( 'is_loaded' );
+					$( targetPopup ).find( '.location-folder-list-wrap' ).addClass( 'is_loaded' );
 
-					$( a ).find( '.location-folder-list li' ).each(
+					$( targetPopup ).find( '.location-folder-list li' ).each(
 						function () {
 							$( this ).children( 'ul' ).parent().addClass( 'has-ul' ).append( '<i class="bb-icon-angle-right sub-menu-anchor"></i>' );
 						}
@@ -1791,7 +1791,7 @@ window.bp = window.bp || {};
 
 					$( document ).on(
 						'click',
-						a + ' .location-folder-list li i',
+						targetPopup + ' .location-folder-list li i',
 						function () {
 							$( this ).closest( '.location-folder-list-wrap' ).find( '.location-folder-title' ).text( $( this ).siblings( 'span' ).text() ).siblings( '.location-folder-back' ).css( 'display', 'inline-block' );
 							$( this ).siblings( 'ul' ).show().siblings( 'span, i' ).hide().parent().siblings().hide();
@@ -1802,7 +1802,7 @@ window.bp = window.bp || {};
 
 					$( document ).on(
 						'click',
-						a + ' .location-folder-back',
+						targetPopup + ' .location-folder-back',
 						function () {
 
 							if ($( this ).siblings( '.location-folder-list' ).find( 'li.is_active' ).parent().hasClass( 'location-folder-list' )) {
@@ -1821,7 +1821,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					$( a ).on(
+					$( targetPopup ).on(
 						'click',
 						' .location-folder-list li span',
 						function () {
@@ -1844,7 +1844,7 @@ window.bp = window.bp || {};
 
 					$( document ).on(
 						'keyup change',
-						a + ' .ac_document_search_folder',
+						targetPopup + ' .ac_document_search_folder',
 						function () {
 
 							var keyword = $( this ).val();
