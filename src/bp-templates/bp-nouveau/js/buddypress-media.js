@@ -1821,7 +1821,7 @@ window.bp = window.bp || {};
 						}
 					);
 
-					$( document ).on(
+					$( '#media-folder-document-data-table' ).on(
 						'click',
 						a + ' .location-folder-list li span',
 						function () {
