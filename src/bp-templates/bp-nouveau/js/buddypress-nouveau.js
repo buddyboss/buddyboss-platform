@@ -1401,12 +1401,26 @@ window.bp = window.bp || {};
 
 				if( $(this).closest('tr').siblings().length > 1 ){
 					$(this).closest('tr').remove();
+					currentDataTable.find('.field-actions-add.disabled').removeClass('disabled');
+				} else{
+
+					return;
+					
 				}
 
 			}else if( $(currentTarget).hasClass('field-actions-add') ){
 
-				var prev_data_row = $(this).closest('tr').prev('tr').html();
-				$( '<tr>' + prev_data_row + '</tr>' ).insertBefore( $(this).closest('tr') );
+				if( !$(currentTarget).hasClass('disabled') ){
+
+					var prev_data_row = $(this).closest('tr').prev('tr').html();
+					$( '<tr>' + prev_data_row + '</tr>' ).insertBefore( $(this).closest('tr') );
+					currentDataTable.find('tr').length > 20 ? $(currentTarget).addClass('disabled') : '' ; // Add Limit of 20
+
+				} else {
+
+					return;
+
+				}
 				
 			}
 

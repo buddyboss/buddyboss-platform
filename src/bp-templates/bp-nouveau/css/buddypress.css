@@ -3883,6 +3883,39 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed
   background-color: #b71717;
 }
 
+/* Send Invites Table */
+#member-invites-table .field-actions,
+#member-invites-table .field-actions-last {
+  text-align: center;
+}
+
+#member-invites-table .field-actions .field-actions-remove,
+#member-invites-table .field-actions-last .field-actions-remove {
+  cursor: pointer;
+}
+
+#member-invites-table .field-actions-add {
+  cursor: pointer;
+}
+
+#member-invites-table .field-actions-add i {
+  background-color: #000;
+  color: #fff;
+  border-radius: 100%;
+  padding: 3px 4px 1px 3px;
+  height: auto;
+  width: auto;
+  line-height: normal;
+}
+
+#member-invites-table .field-actions-add.disabled {
+  cursor: not-allowed;
+}
+
+#member-invites-table .field-actions-add.disabled i {
+  background-color: #ccc;
+}
+
 /**
 *-------------------------------------------
 * @subsection 5.2.2.3 - Groups
