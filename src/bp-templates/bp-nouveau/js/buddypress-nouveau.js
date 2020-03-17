@@ -60,6 +60,29 @@ window.bp = window.bp || {};
 			$( window ).on( 'scroll resize',function(){
 				bp.Nouveau.lazyLoad('.lazy');
 			});
+
+			$( document ).on(
+				'click',
+				'.comment-content-wrap .activity-attached-gif-container',
+				function ( e ) {
+					e.preventDefault();
+					var video = $( this ).find( 'video' ).get( 0 ),
+						$button   = $( this ).find( '.gif-play-button' );
+					if ( true === video.paused ) {
+						// Play the video
+						video.play();
+
+						// Update the button text to 'Pause'
+						$button.hide();
+					} else {
+						// Pause the video
+						video.pause();
+
+						// Update the button text to 'Play'
+						$button.show();
+					}
+				}
+			);
 		},
 
 		/**
