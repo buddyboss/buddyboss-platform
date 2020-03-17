@@ -2414,6 +2414,10 @@ span.dashicons.dashicons-admin-file:before {
   font-size: 15px;
 }
 
+.bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list ul li.privacy_file a:before {
+  content: "\e960";
+}
+
 .bb-activity-media-wrap .bb-activity-media-elem.document-activity .document-action-wrap .document-action_list:after {
   content: " ";
   position: absolute;

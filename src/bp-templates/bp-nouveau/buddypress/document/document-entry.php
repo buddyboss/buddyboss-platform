@@ -61,6 +61,11 @@ if ( $attachment_id ) {
 	<div class="media-folder_visibility">
 		<div  class="media-folder_details__bottom">
 			<span><?php bp_document_privacy(); ?></span>
+			<select id="bb-folder-privacy" class="hide">
+				<?php foreach( bp_document_get_visibility_levels() as $key => $privacy ) : ?>
+					<option value="<?php echo $key; ?>"><?php echo $privacy; ?></option>
+				<?php endforeach; ?>
+			</select>
 		</div>
 	</div>
 
@@ -76,6 +81,7 @@ if ( $attachment_id ) {
 					<?php } ?>
 					<li class="rename_file"><a href="#" data-type="<?php echo esc_attr( $type ); ?>" class="ac-document-rename"><?php esc_html_e( 'Rename', 'buddyboss' ); ?></a></li>
 					<li class="move_file"><a href="#" class="<?php echo $move_class; ?>"><?php esc_html_e( 'Move', 'buddyboss' ); ?></a></li>
+					<li class="privacy_file"><a href="#" class="ac-document-privacy"><?php esc_html_e( 'Edit Privacy', 'buddyboss' ); ?></a></li>
 					<li class="delete_file"><a class="document-file-delete" data-item-preview-attachment-id="<?php echo esc_attr( bp_get_document_preview_attachment_id() ); ?>" data-item-attachment-id="<?php echo esc_attr( bp_get_document_attachment_id() ); ?>" data-item-id="<?php echo esc_attr( bp_get_document_id() ); ?>" data-type="<?php echo esc_attr( $type ); ?>" href="#"><?php esc_html_e( 'Delete', 'buddyboss' ); ?></a></li>
 				</ul>
 			</div>

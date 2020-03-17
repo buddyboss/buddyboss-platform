@@ -199,6 +199,8 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-move, .ac-folder-move', this.openDocumentMove.bind( this ) );
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'change', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
@@ -1639,6 +1641,34 @@ window.bp = window.bp || {};
 			var current_name_text = current_name.children('span').text();
 
 			current_name.hide().siblings('.media-folder_name_edit_wrap').show().children('.media-folder_name_edit').val(current_name_text).focus().select();
+
+		},
+
+		/**
+		 * [editPrivacyDocument description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		editPrivacyDocument: function( event ) {
+
+			var current_privacy = $(event.currentTarget).closest('.media-folder_items').find('.media-folder_visibility');
+
+			current_privacy.find('.media-folder_details__bottom span').hide().siblings('select').removeClass('hide');
+
+		},
+
+		/**
+		 * [editPrivacyDocumentSubmit description]
+		 * @param  {[type]} event [description]
+		 * @return {[type]}       [description]
+		 */
+		editPrivacyDocumentSubmit: function( event ) {
+
+			var current_privacy_select = $(event.currentTarget);
+
+			//Make ajax call and onSuccess add this
+			current_privacy_select.addClass('hide').siblings('span').show().text( current_privacy_select.find('option:selected').text() );
+
 
 		},
 

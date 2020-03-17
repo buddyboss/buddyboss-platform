@@ -946,6 +946,11 @@ span.dashicons.dashicons-admin-file:before {
 							content: "\e937";
 							font-size: 15px;
 						}
+
+						&.privacy_file a:before {
+							content: "\e960";
+							font-size: 15px;
+						}
 					}
 				}
 

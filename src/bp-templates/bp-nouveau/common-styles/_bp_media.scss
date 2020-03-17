@@ -1785,6 +1785,11 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 						content: "\e890";
 					}
 
+					&.privacy_file a:before {
+						content: "\e960";
+						font-size: 15px;
+					}
+
 				}
 			}
 		}
