@@ -1,6 +1,7 @@
 ---
 name: "\U0001F680 New Feature (Scoped)"
-about: For the product owner to add scoped and approved features. Customers should not add feature requests here.
+about: For the product owner to add scoped and approved features. Customers should
+  not add feature requests here.
 title: ''
 labels: 'feature: major'
 assignees: ''
