@@ -176,14 +176,16 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 		}
 
 		// Get posts of custom post type selected.
-		$posts = new \WP_Query(
+		$member_type_order_by = apply_filters( 'member_type_order_by', 'menu_order' );
+		$posts                = new \WP_Query(
 			array(
 				'posts_per_page' => - 1,
 				'post_type'      => bp_get_member_type_post_type(),
 				'orderby'        => 'title',
-				'order'          => 'ASC',
+				'order'          => $member_type_order_by,
 			)
 		);
+
 		if ( $posts ) {
 
 			$html .= '<option value="">' . /* translators: no option picked in select box */ esc_html__( '----', 'buddyboss' ) . '</option>';

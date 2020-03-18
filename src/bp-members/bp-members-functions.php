@@ -3316,8 +3316,9 @@ function bp_get_active_member_types( $force_refresh = false ) {
 	if ( true === $force_refresh || false === $bp_active_member_types ) {
 
 		global $wpdb;
-		$query                  = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY menu_order";
-		$bp_active_member_types = $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) );
+		$member_type_order_by   = apply_filters( 'member_type_order_by', "menu_order" );
+		$query                  = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY {$member_type_order_by}";
+		$bp_active_member_types = $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) ); // db call ok; no-cache ok;
 
 		// Cache the whole WP_Query object in the cache and store it for 5 minutes (300 secs).
 		wp_cache_set( 'bp_active_member_types', $bp_active_member_types, 'active_member_types', 5 * MINUTE_IN_SECONDS );

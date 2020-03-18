@@ -4,9 +4,6 @@
  *
  * @since BuddyBoss 1.0.0
  */
-?>
-
-<?php
 
 // Check profile type enable?
 $is_member_type_enabled = bp_member_type_enable_disable();
@@ -16,7 +13,8 @@ if ( false === $is_member_type_enabled ) {
 }
 
 $member_types = bp_get_active_member_types();
-$display_arr = array();
+$display_arr  = array();
+
 foreach ( $member_types as $member_type_id ) {
 
 	if ( !get_post_meta( $member_type_id, '_bp_member_type_enable_filter', true ) ) {
@@ -28,9 +26,9 @@ foreach ( $member_types as $member_type_id ) {
 	$member_type_name = get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true );
 
 	$display_arr[] = array(
-		'id' => $type_id,
+		'id'             => $type_id,
 		'member_type_id' => $member_type_id,
-		'name' => $member_type_name,
+		'name'           => $member_type_name,
 	);
 
 }
