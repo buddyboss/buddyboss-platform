@@ -143,7 +143,7 @@ function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
 
 	$xprofile_allowedtags             = $allowedtags;
 	$xprofile_allowedtags['a']['rel'] = array();
-	
+
 	if ( null === $field_id && $data_obj instanceof BP_XProfile_ProfileData ) {
 		$field_id = $data_obj->field_id;
 	}
@@ -782,6 +782,21 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 	}
 
 	global $wpdb;
+
+	$user_where = array(
+		'user_login = "' . $value . '"',
+	);
+
+	$user_sql = sprintf(
+		'SELECT count(*) FROM %s WHERE %s',
+		$wpdb->users,
+		implode( ' AND ', $user_where )
+	);
+
+	if ( $wpdb->get_var( $user_sql ) > 0 ) {
+		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
+	}
+
 	$where = array(
 		'meta_key = "nickname"',
 		'meta_value = "' . $value . '"',
