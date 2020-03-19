@@ -2544,3 +2544,45 @@ function bbp_get_forums_per_page( $default = 15 ) {
 	// Filter and return
 	return (int) apply_filters( 'bbp_get_forums_per_page', $retval, $default );
 }
+
+function bbp_update_user_forum_data( $user_id ) {
+
+	// Update Reply
+	$user_replies = get_posts( array( 'author' => $user_id, 'post_type' => bbp_get_reply_post_type(), 'numberposts' => -1 ) );
+	if ( $user_replies ) {
+		foreach ( $user_replies as $user_reply ):
+			$reply = array(
+				'ID'           => $user_reply->ID,
+				'post_content' => sprintf( '<p class="deleted-reply-text">%s</p>', apply_filters( 'bbp_delete_user_reply_content_text', __( 'This content was deleted.', 'buddyboss' ) ) ),
+			);
+			wp_update_post( $reply );
+		endforeach;
+	}
+
+	// Update Topic
+	$user_topics = get_posts( array( 'author' => $user_id, 'post_type' => bbp_get_topic_post_type(), 'numberposts' => -1 ) );
+	if ( $user_topics ) {
+		foreach ( $user_topics as $user_topic ):
+			$topic = array(
+				'ID'           => $user_topic->ID,
+				'post_title'   => apply_filters( 'bbp_delete_user_topic_title_text', __( 'Deleted Topic', 'buddyboss' ) ),
+				'post_content' => sprintf( '<p class="deleted-topic-text">%s</p>', apply_filters( 'bbp_delete_user_topic_content_text', __( 'This content was deleted.', 'buddyboss' ) ) ),
+			);
+			wp_update_post( $topic );
+		endforeach;
+	}
+
+	// Update Forum
+	$user_forums = get_posts( array( 'author' => $user_id, 'post_type' => bbp_get_forum_post_type(), 'numberposts' => -1 ) );
+	if ( $user_forums ) {
+		foreach ( $user_forums as $user_forum ):
+			$forum = array(
+				'ID'           => $user_forum->ID,
+				'post_title'   => apply_filters( 'bbp_delete_user_forum_title_text', __( 'Deleted Forum', 'buddyboss' ) ),
+				'post_content' => sprintf( '<p class="deleted-forum-text">%s</p>', apply_filters( 'bbp_delete_user_forum_content_text', __( 'This content was deleted.', 'buddyboss' ) ) ),
+			);
+			wp_update_post( $forum );
+		endforeach;
+	}
+
+}

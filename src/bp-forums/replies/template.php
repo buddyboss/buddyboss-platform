@@ -1123,7 +1123,9 @@ function bbp_get_reply_author_display_name( $reply_id = 0 ) {
 	}
 
 	// If nothing could be found anywhere, use Anonymous
-	if ( empty( $author_name ) ) {
+	if ( empty( $author_name ) && empty( get_userdata( $author_id ) ) ) {
+		$author_name = __( 'Deleted User', 'buddyboss' );
+	} elseif ( empty( $author_name ) ) {
 		$author_name = __( 'Anonymous', 'buddyboss' );
 	}
 
