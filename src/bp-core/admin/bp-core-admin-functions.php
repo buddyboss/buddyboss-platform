@@ -2848,16 +2848,11 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_core_get_tools_import_p
 function bp_core_get_tools_repair_community_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-repair-community',
-					'tab'  => 'bp-repair-community',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-repair-community',
+			'tab'  => 'bp-repair-community',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Repair Community', 'buddyboss' ),
 		'slug' => 'bp-repair-community',
 	);
