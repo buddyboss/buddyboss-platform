@@ -244,7 +244,20 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 			$args['secondary_item_id'] = get_current_user_id();
 
 			// If forum is not accesible to user, do not send notification.
-			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
+			$can_access = bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) );
+
+			/**
+			 * Filters bbPress' ability to send notifications for @mentions.
+			 *
+			 * @param bool $value Whether or not BuddyPress should send a notification to the mentioned users.
+			 * @param array $usernames Array of users potentially notified.
+			 * @param int $user_id ID of the current user being notified.
+			 * @param int $forum_id ID of forum.
+			 *
+			 * @since BuddyBoss 1.2.9
+			 *
+			 */
+			if ( ! apply_filters( 'bbp_forums_at_name_do_notifications', $can_access, $usernames, $user_id, $forum_id ) ) {
 				continue;
 			}
 
@@ -296,7 +309,20 @@ function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
 			$args['user_id']          = $user_id;
 
 			// If forum is not accesible to user, do not send notification.
-			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
+			$can_access = bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) );
+
+			/**
+			 * Filters bbPress' ability to send notifications for @mentions.
+			 *
+			 * @param bool $value Whether or not BuddyPress should send a notification to the mentioned users.
+			 * @param array $usernames Array of users potentially notified.
+			 * @param int $user_id ID of the current user being notified.
+			 * @param int $forum_id ID of forum.
+			 *
+			 * @since BuddyBoss 1.2.9
+			 *
+			 */
+			if ( ! apply_filters( 'bbp_forums_at_name_do_notifications', $can_access, $usernames, $user_id, $forum_id ) ) {
 				continue;
 			}
 

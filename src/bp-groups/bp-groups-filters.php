@@ -68,6 +68,7 @@ add_filter( 'bp_get_total_group_count_for_user', 'bp_core_number_format' );
 
 // Activity component integration.
 add_filter( 'bp_activity_at_name_do_notifications', 'bp_groups_disable_at_mention_notification_for_non_public_groups', 10, 4 );
+add_filter( 'bbp_forums_at_name_do_notifications', 'bp_groups_disable_at_mention_forums_notification_for_non_public_groups', 10, 4 );
 
 // Default group avatar.
 add_filter( 'bp_core_avatar_default', 'bp_groups_default_avatar', 10, 3 );
@@ -169,6 +170,42 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 	}
 
 	if ( 'groups' === $activity->component && ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $activity->item_id ) ) ) {
+		$send = false;
+	}
+
+	return $send;
+}
+
+/**
+ * Disable at-mention forum notifications for users who are not a member of the non-public group.
+ *
+ * @param bool $send Whether to send the notification.
+ * @param array $usernames Array of all usernames being notified.
+ * @param int $user_id ID of the user to be notified.
+ * @param int $forum_id ID of the forum.
+ *
+ * @return bool
+ * @since BuddyBoss 1.2.9
+ *
+ */
+function bp_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
+	// Skip the check for administrators, who can get notifications from non-public groups.
+	if ( bp_user_can( $user_id, 'bp_moderate' ) ) {
+		return $send;
+	}
+
+	// Get group ID's for this forum
+	$group_ids = bbp_get_forum_group_ids( $forum_id );
+
+	// Bail if the post isn't associated with a group
+	if ( empty( $group_ids ) ) {
+		return $send;
+	}
+
+	// @todo Multiple group forums/forum groups
+	$group_id = $group_ids[0];
+
+	if ( ! bp_user_can( $user_id, 'groups_access_group', array( 'group_id' => $group_id ) ) ) {
 		$send = false;
 	}
 
