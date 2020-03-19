@@ -1786,7 +1786,7 @@ input.search-query-input {
   text-decoration: underline !important;
 }
 
-.activity-link-preview-content .activity-link-preview-body {
+.activity-link-preview-excerpt .activity-link-preview-body {
   word-break: break-word;
 }
 

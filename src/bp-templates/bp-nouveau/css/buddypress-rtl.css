@@ -1786,7 +1786,7 @@ input.search-query-input {
   text-decoration: underline !important;
 }
 
-.activity-link-preview-content .activity-link-preview-body {
+.activity-link-preview-excerpt .activity-link-preview-body {
   word-break: break-word;
 }
 
@@ -2528,7 +2528,7 @@ body.register .registration-popup .mfp-close:hover {
   border-width: 1px;
   display: none;
   font-weight: 700;
-  margin: 10px 0 10px 0;
+  margin: 10px 0;
   margin-bottom: 10px;
   padding: 0.7em;
   text-align: center;
