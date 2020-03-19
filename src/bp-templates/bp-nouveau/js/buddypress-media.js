@@ -6,7 +6,7 @@ window.bp = window.bp || {};
 (function (exports, $) {
 
 	// Bail if not set
-	if (typeof BP_Nouveau === 'undefined') {
+	if ( typeof BP_Nouveau === 'undefined' ) {
 		return;
 	}
 
@@ -14,17 +14,15 @@ window.bp = window.bp || {};
 
 	/**
 	 * [Media description]
-	 *
 	 * @type {Object}
 	 */
 	bp.Nouveau.Media = {
 
 		/**
 		 * [start description]
-		 *
 		 * @return {[type]} [description]
 		 */
-		start: function () {
+		start: function() {
 			this.setupGlobals();
 
 			// Listen to events ("Add hooks!")
@@ -34,10 +32,9 @@ window.bp = window.bp || {};
 
 		/**
 		 * [setupGlobals description]
-		 *
 		 * @return {[type]} [description]
 		 */
-		setupGlobals: function () {
+		setupGlobals: function() {
 
 			var bodySelector = $( 'body' );
 
@@ -48,7 +45,7 @@ window.bp = window.bp || {};
 			this.current_tab                 = bodySelector.hasClass( 'single-topic' ) || bodySelector.hasClass( 'single-forum' ) ? false : 'bp-dropzone-content';
 
 			// set up dropzones auto discover to false so it does not automatically set dropzones
-			if (typeof window.Dropzone !== 'undefined') {
+			if ( typeof window.Dropzone !== 'undefined' ) {
 				window.Dropzone.autoDiscover = false;
 			}
 
@@ -82,6 +79,11 @@ window.bp = window.bp || {};
 					uploadMultiple: false,
 					maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 				};
+			}
+
+			//  if defined, add custom dropzone options
+			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+				Object.assign(this.options, BP_Nouveau.media.dropzone_options);
 			}
 
 			this.dropzone_obj            = [];
@@ -1667,7 +1669,7 @@ window.bp = window.bp || {};
 			var current_privacy_select = $(event.currentTarget);
 
 			if( current_privacy_select.data('mouseup') == 'true' ) {
-				
+
 				current_privacy_select.data('mouseup','false');
 
 				//Make ajax call and onSuccess add this
@@ -2965,7 +2967,7 @@ window.bp = window.bp || {};
 			event.preventDefault();
 			$( event.currentTarget ).closest( '.document-activity' ).addClass( 'code-full-view' );
 		},
-		
+
 		/**
 		 * Text File Collapse
 		 */

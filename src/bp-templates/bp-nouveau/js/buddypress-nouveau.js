@@ -482,11 +482,11 @@ window.bp = window.bp || {};
 									},1000);
 								}
 								//Text File Activity Preview
-								if(bp.Nouveau.Media.documentCodeMirror){
-									setTimeout(function(){
-										bp.Nouveau.Media.documentCodeMirror();
-									},500);
-								}
+								// if(bp.Nouveau.Media.documentCodeMirror){
+								// 	setTimeout(function(){
+								// 		bp.Nouveau.Media.documentCodeMirror();
+								// 	},500);
+								// }
 							} );
 						} );
 
@@ -505,11 +505,11 @@ window.bp = window.bp || {};
 								},1000);
 							}
 							// Text File Activity Preview
-							if(bp.Nouveau.Media.documentCodeMirror){
-								setTimeout(function(){
-									bp.Nouveau.Media.documentCodeMirror();
-								},500);
-							}
+							// if(bp.Nouveau.Media.documentCodeMirror){
+							// 	setTimeout(function(){
+							// 		bp.Nouveau.Media.documentCodeMirror();
+							// 	},500);
+							// }
 						} );
 					}
 				}

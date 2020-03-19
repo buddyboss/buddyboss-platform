@@ -1,6 +1,7 @@
 ---
 name: "❓ Support Question"
-about: "If you have a question \U0001F4AC please see our docs or use our support ticket system!"
+about: "If you have a question \U0001F4AC please see our docs or use our support ticket
+  system!"
 title: ''
 labels: ''
 assignees: ''
