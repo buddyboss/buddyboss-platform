@@ -2876,6 +2876,29 @@ function bp_import_profile_types_admin_menu() {
 		'bp_member_type_import_submenu_page'
 	);
 
+	if ( current_user_can( 'bbp_tools_page' ) ) {
+		if ( current_user_can( 'bbp_tools_repair_page' ) ) {
+			add_submenu_page(
+				'buddyboss-platform',
+				__( 'Repair Forums', 'buddyboss' ),
+				__( 'Forum Repair', 'buddyboss' ),
+				'manage_options',
+				'bbp-repair',
+				'bbp_admin_repair'
+			);
+
+			add_submenu_page(
+				'buddyboss-platform',
+				__( 'Import Forums', 'buddyboss' ),
+				__( 'Forum Import', 'buddyboss' ),
+				'manage_options',
+				'bbp-converter',
+				'bbp_converter_settings'
+			);
+		}
+	}
+
+
 }
 add_action( bp_core_admin_hook(), 'bp_import_profile_types_admin_menu' );
 
