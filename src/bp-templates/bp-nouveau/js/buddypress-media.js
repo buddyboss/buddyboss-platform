@@ -200,7 +200,7 @@ window.bp = window.bp || {};
 			$( '#buddypress .activity-list, #buddypress [data-bp-list="activity"], #bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-close-button, .ac-folder-close-button', this.closeDocumentMove.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-rename', this.renameDocument.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.ac-document-privacy', this.editPrivacyDocument.bind( this ) );
-			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'change', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
+			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'mouseup', '#bb-folder-privacy', this.editPrivacyDocumentSubmit.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'keyup', '.media-folder_name_edit', this.renameDocumentSubmit.bind( this ) );
 			$( '#bb-media-model-container .activity-list, #media-stream' ).on( 'click', '.name_edit_cancel, .name_edit_save', this.renameDocumentSubmit.bind( this ) );
 
@@ -1666,9 +1666,18 @@ window.bp = window.bp || {};
 
 			var current_privacy_select = $(event.currentTarget);
 
-			//Make ajax call and onSuccess add this
-			current_privacy_select.addClass('hide').siblings('span').show().text( current_privacy_select.find('option:selected').text() );
+			if( current_privacy_select.data('mouseup') == 'true' ) {
+				
+				current_privacy_select.data('mouseup','false');
 
+				//Make ajax call and onSuccess add this
+				current_privacy_select.addClass('hide').siblings('span').show().text( current_privacy_select.find('option:selected').text() );
+
+			} else {
+
+				current_privacy_select.data('mouseup','true');
+
+			}
 
 		},
 
