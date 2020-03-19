@@ -241,6 +241,17 @@ window.bp = window.bp || {};
 								render_view( data );
 							}
 						);
+					},
+
+					/**
+					 * Before inserting selected value add space.
+					 *
+					 * @param {string} value @mention to search for.
+					 * @since BuddyBoss 1.2.9
+					 */
+					beforeInsert: function( value ) {
+						value += '&nbsp;';
+						return value;
 					}
 				},
 
