@@ -155,20 +155,20 @@
 		> li {
 			border-bottom: none;
 			flex: 0 0 100%;
-                        max-width: 100%;
-                        min-width: 0;
+			max-width: 100%;
+			min-width: 0;
 			padding: 0 5px;
 			margin-bottom: $marg-sml;
 
-                        @include medium-small-up() {
+			@include medium-small-up() {
 				flex: 0 0 50%;
-                        	max-width: 50%;
-                        }
+				max-width: 50%;
+			}
 
-                        @include large-up() {
+			@include large-up() {
 				flex: 0 0 33.33%;
-                        	max-width: 33.33%;
-                        }
+				max-width: 33.33%;
+			}
 
 			.item-avatar {
 				margin: 0;

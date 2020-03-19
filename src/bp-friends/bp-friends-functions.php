@@ -798,10 +798,6 @@ function bp_friends_prime_mentions_results() {
 		return;
 	}
 
-	if ( ! bp_activity_maybe_load_mentions_scripts() ) {
-		return;
-	}
-
 	// Bail out if the site has a ton of users.
 	if ( bp_is_large_install() ) {
 		return;
@@ -833,7 +829,7 @@ function bp_friends_prime_mentions_results() {
 		);
 
 		if ( ! empty( $user->display_name ) && ! bp_disable_profile_sync() ) {
-			$result->name = bp_core_get_member_display_name( $user->display_name, $user->ID );
+			$result->name = bp_core_get_user_displayname( $user->ID );
 		} else {
 			$result->name = bp_core_get_user_displayname( $user->ID );
 		}
@@ -850,6 +846,7 @@ function bp_friends_prime_mentions_results() {
 	);
 }
 add_action( 'bp_activity_mentions_prime_results', 'bp_friends_prime_mentions_results' );
+add_action( 'bbp_forums_mentions_prime_results', 'bp_friends_prime_mentions_results' );
 
 /** Emails ********************************************************************/
 

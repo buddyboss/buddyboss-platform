@@ -371,6 +371,12 @@ tr.bp-search-parent-field label {
   background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
+.bp-admin-card.section-bp_registration h2:before {
+  background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
+  background-size: 22px 22px;
+  background-position-x: 11px;
+}
+
 .bp-admin-card.section-bp_privacy h2:before {
   background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
 }
@@ -1622,8 +1628,8 @@ td label.platform-activity {
   border: 4px solid #f3f3f3;
   border-top: 4px solid #3498db;
   border-right: 4px solid #008000;
-  border-left: 4px solid #FF0000;
-  border-bottom: 4px solid #FFC0CB;
+  border-left: 4px solid #f00;
+  border-bottom: 4px solid #ffc0cb;
   border-radius: 50%;
   width: 10px;
   height: 10px;
@@ -1743,7 +1749,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 .content-loader div:nth-child(1) {
   left: 8px;
-  animation-delay: -.24s;
+  animation-delay: -0.24s;
 }
 
 .content-loader div:nth-child(2) {
@@ -1761,7 +1767,8 @@ body .section-repair_community .settings fieldset .checkbox label code {
     top: 8px;
     height: 50px;
   }
-  50%, 100% {
+  50%,
+  100% {
     top: 24px;
     height: 28px;
   }

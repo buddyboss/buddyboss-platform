@@ -390,6 +390,12 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/tools.svg);
 }
 
+.bp-admin-card.section-bp_registration h2:before {
+	background-image: url(../../images/admin/icons/buddyboss/page-registration.svg);
+	background-size: 22px 22px;
+	background-position-x: 11px;
+}
+
 .bp-admin-card.section-bp_privacy h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/user-secret.svg);
 }
@@ -1691,8 +1697,8 @@ td label.platform-activity {
 	border: 4px solid #f3f3f3;
 	border-top: 4px solid #3498db;
 	border-right: 4px solid #008000;
-	border-left: 4px solid #FF0000;
-	border-bottom: 4px solid #FFC0CB;
+	border-left: 4px solid #f00;
+	border-bottom: 4px solid #ffc0cb;
 	border-radius: 50%;
 	width: 10px;
 	height: 10px;
@@ -1703,8 +1709,14 @@ td label.platform-activity {
 }
 
 @keyframes spin {
-	0% { transform: rotate(0deg); }
-	100% { transform: rotate(360deg); }
+
+	0% {
+		transform: rotate(0deg);
+	}
+
+	100% {
+		transform: rotate(360deg);
+	}
 }
 
 body .section-repair_community .settings fieldset .submit a.disable-btn {
@@ -1732,45 +1744,55 @@ body .section-repair_community .settings fieldset .checkbox label code {
 }
 
 @-moz-keyframes spin {
+
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(359deg);
 	}
 }
 
 @-webkit-keyframes spin {
+
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(359deg);
 	}
 }
 
 @-o-keyframes spin {
+
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(359deg);
 	}
 }
 
 @-ms-keyframes spin {
+
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(359deg);
 	}
 }
 
 @keyframes spin {
+
 	0% {
 		transform: rotate(0deg);
 	}
+
 	100% {
 		transform: rotate(359deg);
 	}
@@ -1778,6 +1800,7 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 .wp-block-embed {
 	margin: 0;
+
 	iframe {
 		max-width: 100%;
 	}
@@ -1785,44 +1808,53 @@ body .section-repair_community .settings fieldset .checkbox label code {
 
 #bp-help-content-area.loading,
 #bp-help-main-menu-wrap.loading,
-.bp-help-sidebar.loading{
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.bp-help-sidebar.loading {
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
+
 .content-loader {
-  display: inline-block;
-  position: relative;
-  width: 80px;
-  height: 80px;
-  div {
 	display: inline-block;
-	position: absolute;
-	left: 5px;
-	width: 9px;
-	background: #dadada;
-	animation: contentLoader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
-	&:nth-child(1) {
-		left: 8px;
-		animation-delay: -.24s
+	position: relative;
+	width: 80px;
+	height: 80px;
+
+	div {
+		display: inline-block;
+		position: absolute;
+		left: 5px;
+		width: 9px;
+		background: #dadada;
+		animation: contentLoader 1.2s cubic-bezier(0, 0.5, 0.5, 1) infinite;
+
+		&:nth-child(1) {
+			left: 8px;
+			animation-delay: -0.24s;
+		}
+
+		&:nth-child(2) {
+			left: 28px;
+			animation-delay: -0.12s;
+		}
+
+		&:nth-child(3) {
+			left: 48px;
+			animation-delay: 0;
+		}
 	}
-	&:nth-child(2) {
-		left: 28px;
-		animation-delay: -0.12s;
-	  }
-	  &:nth-child(3) {
-		left: 48px;
-		animation-delay: 0;
-	  }
-  }
 }
-@keyframes contentLoader  {
-  0% {
-    top: 8px;
-    height: 50px;
-  }
-  50%, 100% {
-    top: 24px;
-    height: 28px;
-  }
+
+@keyframes contentLoader {
+
+	0% {
+		top: 8px;
+		height: 50px;
+	}
+
+	50%,
+	100% {
+		top: 24px;
+		height: 28px;
+	}
 }

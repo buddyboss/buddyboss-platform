@@ -73,6 +73,9 @@ function bp_nouveau_messages_enqueue_scripts() {
 
 	wp_enqueue_script( 'bp-nouveau-messages' );
 	wp_enqueue_script( 'bp-select2' );
+	if ( wp_script_is( 'bp-select2-local', 'registered' ) ) {
+		wp_enqueue_script( 'bp-select2-local' );
+	}
 	wp_enqueue_script( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor' );
 	wp_enqueue_style( 'bp-medium-editor-beagle' );
@@ -382,21 +385,26 @@ function bp_nouveau_messages_at_on_tinymce_init( $settings, $editor_id ) {
  *
  * @since BuddyPress 3.0.0
  */
-function bp_nouveau_get_message_date( $date ) {
+function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 	$now  = bp_core_current_time( true, 'timestamp' );
 	$date = strtotime( $date );
 
 	$now_date    = getdate( $now );
 	$date_date   = getdate( $date );
 	$compare     = array_diff( $date_date, $now_date );
-	$date_format = 'Y/m/d';
+	// $date_format = 'Y/m/d';
 
 	// Use Timezone string if set.
 	$timezone_string = bp_get_option( 'timezone_string' );
 	if ( ! empty( $timezone_string ) ) {
 		$timezone_object = timezone_open( $timezone_string );
 		$datetime_object = date_create( "@{$date}" );
-		$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+
+		if ( false !== $timezone_object && false !== $datetime_object ) {
+			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+		} else {
+			$timezone_offset = bp_get_option( 'gmt_offset' );
+		}
 
 	// Fall back on less reliable gmt_offset
 	} else {
@@ -414,7 +422,9 @@ function bp_nouveau_get_message_date( $date ) {
 	// 	$date_format = 'M j';
 	// }
 
-	$date_format = 'M j';
+	if ( empty( $date_format ) ) {
+		$date_format = 'M j';
+	}
 
 	/**
 	 * Filters the message date for BuddyPress Nouveau display.

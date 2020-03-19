@@ -49,6 +49,7 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 				array(
 					'action'   => 'bbp_mark_read',
 					'topic_id' => $topic_id,
+					'reply_id' => $item_id,
 				),
 				bbp_get_reply_url( $item_id )
 			),
@@ -64,6 +65,68 @@ function bbp_format_buddypress_notifications( $action, $item_id, $secondary_item
 				$text = sprintf( __( 'You have %d new reply to %2$s from %3$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
 			} else {
 				$text = sprintf( __( 'You have %1$d new reply to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
+			}
+			$filter = 'bbp_single_new_subscription_notification';
+		}
+
+		// WordPress Toolbar
+		if ( 'string' === $format ) {
+			$return = apply_filters( $filter, '<a href="' . esc_url( $topic_link ) . '" title="' . esc_attr( $title_attr ) . '">' . esc_html( $text ) . '</a>', (int) $total_items, $text, $topic_link );
+
+			// Deprecated BuddyBar
+		} else {
+			$return = apply_filters(
+				$filter,
+				array(
+					'text' => $text,
+					'link' => $topic_link,
+				),
+				$topic_link,
+				(int) $total_items,
+				$text,
+				$topic_title
+			);
+		}
+
+		/**
+		 * @todo add title/description
+		 *
+		 * @since BuddyBoss 1.0.0
+		 */
+		do_action( 'bbp_format_buddypress_notifications', $action, $item_id, $secondary_item_id, $total_items );
+
+		return $return;
+	}
+
+	if ( 'bbp_new_at_mention' === $action ) {
+		$topic_id    = bbp_get_reply_topic_id( $item_id );
+
+		if ( empty( $topic_id ) ) {
+			$topic_id = $item_id;
+		}
+
+		$topic_title = bbp_get_topic_title( $topic_id );
+		$topic_link  = wp_nonce_url(
+			add_query_arg(
+				array(
+					'action'   => 'bbp_mark_read',
+					'topic_id' => $topic_id,
+					'reply_id' => $item_id,
+				),
+				bbp_get_reply_url( $item_id )
+			),
+			'bbp_mark_topic_' . $topic_id
+		);
+		$title_attr  = __( 'Discussion Mentions', 'buddyboss' );
+
+		if ( (int) $total_items > 1 ) {
+			$text   = sprintf( __( 'You have %d new mentions', 'buddyboss' ), (int) $total_items );
+			$filter = 'bbp_multiple_new_subscription_notification';
+		} else {
+			if ( ! empty( $secondary_item_id ) ) {
+				$text = sprintf( __( '%3$s mentioned you in %2$s', 'buddyboss' ), (int) $total_items, $topic_title, bp_core_get_user_displayname( $secondary_item_id ) );
+			} else {
+				$text = sprintf( __( 'You have %1$d new mention to %2$s', 'buddyboss' ), (int) $total_items, $topic_title );
 			}
 			$filter = 'bbp_single_new_subscription_notification';
 		}
@@ -132,7 +195,7 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 	// Get some reply information
 	$args = array(
 		'user_id'          => $topic_author_id,
-		'item_id'          => $topic_id,
+		'item_id'          => $reply_id,
 		'component_name'   => bbp_get_component_name(),
 		'component_action' => 'bbp_new_reply',
 		'date_notified'    => get_post( $reply_id )->post_date,
@@ -151,8 +214,85 @@ function bbp_buddypress_add_notification( $reply_id = 0, $topic_id = 0, $forum_i
 
 		bp_notifications_add_notification( $args );
 	}
+
+	// If our temporary variable doesn't exist, stop now.
+	if ( empty( buddypress()->forums->mentioned_users ) ) {
+		return;
+	}
+
+	// Grab our temporary variable from bbp_convert_mentions().
+	$usernames = buddypress()->forums->mentioned_users;
+
+	// Get rid of temporary variable.
+	unset( buddypress()->forums->mentioned_users );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+
+		unset( $args['date_notified'] ); // use BP default timestamp
+
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$args['user_id']          = $user_id;
+			$args['component_action'] = 'bbp_new_at_mention';
+			$args['secondary_item_id'] = get_current_user_id();
+
+			// If forum is not accesible to user, do not send notification
+			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
+				continue;
+			}
+
+			bp_notifications_add_notification( $args );
+		}
+	}
 }
 add_action( 'bbp_new_reply', 'bbp_buddypress_add_notification', 10, 7 );
+
+/**
+ * Hooked into the new topic function, this notification action is responsible
+ * for notifying topic.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param int   $topic_id
+ * @param int   $forum_id
+ */
+function bbp_buddypress_add_topic_notification( $topic_id, $forum_id ) {
+	// If our temporary variable doesn't exist, stop now.
+	if ( empty( buddypress()->forums->mentioned_users ) ) {
+		return;
+	}
+
+	// Get some topic information
+	$args = array(
+		'item_id'           => $topic_id,
+		'secondary_item_id' => get_current_user_id(),
+		'component_name'    => bbp_get_component_name(),
+		'component_action'  => 'bbp_new_at_mention',
+	);
+
+	// Grab our temporary variable from bbp_convert_mentions().
+	$usernames = buddypress()->forums->mentioned_users;
+
+	// Get rid of temporary variable.
+	unset( buddypress()->forums->mentioned_users );
+
+	// We have mentions!
+	if ( ! empty( $usernames ) ) {
+		// Send @mentions and setup BP notifications.
+		foreach ( (array) $usernames as $user_id => $username ) {
+			$args['user_id']          = $user_id;
+
+			// If forum is not accesible to user, do not send notification
+			if ( ! bbp_user_can_view_forum( array( 'user_id' => $user_id, 'forum_id' => $forum_id, 'check_ancestors' => true ) ) ) {
+				continue;
+			}
+
+			bp_notifications_add_notification( $args );
+		}
+	}
+}
+add_action( 'bbp_new_topic', 'bbp_buddypress_add_topic_notification', 10, 2 );
 
 /**
  * Mark notifications as read when reading a topic
@@ -189,15 +329,29 @@ function bbp_buddypress_mark_notifications( $action = '' ) {
 	// Bail if we have errors
 	if ( ! bbp_has_errors() ) {
 
-		// Attempt to clear notifications for the current user from this topic
-		$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
+		if ( ! empty( $_GET['reply_id'] ) ) {
+			// Attempt to clear notifications for the current user from this reply
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_reply' );
+			// Clear mentions notifications by default
+			bp_notifications_mark_notifications_by_item_id( $user_id, intval( $_GET['reply_id'] ), bbp_get_component_name(), 'bbp_new_at_mention' );
+		} else {
+			// Attempt to clear notifications for the current user from this topic
+			$success = bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_reply' );
+			// Clear mentions notifications by default
+			bp_notifications_mark_notifications_by_item_id( $user_id, $topic_id, bbp_get_component_name(), 'bbp_new_at_mention' );
+		}
 
 		// Do additional subscriptions actions
 		do_action( 'bbp_notifications_handler', $success, $user_id, $topic_id, $action );
 	}
 
-	// Redirect to the topic
-	$redirect = bbp_get_reply_url( $topic_id );
+	if ( ! empty( $_GET['reply_id'] ) && get_post_type( (int) $_GET['reply_id'] ) == 'reply' ) {
+		// Redirect to the reply
+		$redirect = bbp_get_reply_url( (int) $_GET['reply_id'] );
+	} else {
+		// Redirect to the topic
+		$redirect = bbp_get_reply_url( $topic_id );
+	}
 
 	// Redirect
 	wp_safe_redirect( $redirect );

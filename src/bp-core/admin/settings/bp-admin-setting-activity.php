@@ -168,6 +168,15 @@ class BP_Admin_Setting_Activity extends BP_Admin_Setting_tab {
 
 		// Posts in Activity Tutorial
 		$this->add_field( 'bp-posts-in-activity-tutorial', '', 'bp_posts_in_activity_tutorial' );
+
+		/**
+		 * Fires to register Activity tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Activity.
+		 */
+		do_action( 'bp_admin_setting_activity_register_fields', $this );
 	}
 
 }

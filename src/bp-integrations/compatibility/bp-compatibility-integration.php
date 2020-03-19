@@ -36,7 +36,7 @@ class BP_Compatibility_Integration extends BP_Integration {
 	 * @param $link
 	 * @param $file
 	 *
-	 @since BuddyBoss 1.2.0
+	 * @since BuddyBoss 1.2.0
 	 *
 	 * @return array
 	 */
@@ -50,9 +50,26 @@ class BP_Compatibility_Integration extends BP_Integration {
 			return $link;
 		}
 
-		$result = new SimpleXMLElement( $link['settings'] );
-		if ( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ) == $result['href'] ) {
+		$htmlDom = new DOMDocument;
 
+		// Parse the HTML of the page using DOMDocument::loadHTML
+		$htmlDom->loadHTML($link['settings']);
+
+		// Extract the links from the HTML.
+		$links = $htmlDom->getElementsByTagName('a');
+
+		$extractedLinks = array();
+
+		if ( !empty( $links ) ) {
+			foreach ( $links as $link_obj ) {
+				$extractedLinks[] = $link_obj->getAttribute('href');
+			}
+		}
+
+		if (
+			!empty( $extractedLinks )
+			&& in_array( bp_get_admin_url( add_query_arg( array( 'page' => 'bp-settings' ), 'admin.php' ) ), $extractedLinks )
+		) {
 			// Add a few links to the existing links array.
 			return array_merge( $link, array(
 				'settings' => '<a href="' . esc_url( bp_get_admin_url( add_query_arg( array(

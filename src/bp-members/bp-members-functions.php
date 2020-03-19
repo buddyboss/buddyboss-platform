@@ -553,7 +553,6 @@ add_filter( 'bp_core_get_user_displayname', 'strip_tags', 1 );
 add_filter( 'bp_core_get_user_displayname', 'trim' );
 add_filter( 'bp_core_get_user_displayname', 'stripslashes' );
 add_filter( 'bp_core_get_user_displayname', 'esc_html' );
-add_filter( 'bp_core_get_user_displayname', 'bp_core_get_member_display_name', 15, 2 );
 
 /**
  * Return the user link for the user based on user email address.
@@ -2390,8 +2389,14 @@ function bp_core_wpsignup_redirect() {
 		return;
 	}
 
-	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) ) {
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( apply_filters( 'bp_core_wpsignup_redirect', true ) && ! $allow_custom_registration ) {
 		bp_core_redirect( bp_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' === bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_get_signup_page() );
+	} elseif ( apply_filters( 'bp_core_wpsignup_redirect', true ) && $allow_custom_registration && '' !== bp_custom_register_page_url() ) {
+		bp_core_redirect( bp_custom_register_page_url() );
 	}
 }
 add_action( 'bp_init', 'bp_core_wpsignup_redirect' );
@@ -2873,47 +2878,6 @@ function bp_get_current_member_type() {
 	 * @param string $value "Current" profile type.
 	 */
 	return apply_filters( 'bp_get_current_member_type', buddypress()->current_member_type );
-}
-
-/**
- * Get the display_name for member based on user_id
- *
- * @since BuddyBoss 1.0.0
- *
- * @param string $display_name
- * @param int    $user_id
- *
- * @return string
- */
-function bp_core_get_member_display_name( $display_name, $user_id = null ) {
-	// some cases it calls the filter directly, therefore no user id is passed
-	if ( ! $user_id ) {
-		return $display_name;
-	}
-
-	$old_display_name = $display_name;
-
-	$display_name = bp_xprofile_get_member_display_name( $user_id );
-
-	if ( empty( $display_name ) ) {
-		$display_name = $old_display_name;
-	}
-
-	if ( !empty( $user_id ) ) {
-
-		$list_fields = bp_xprofile_get_hidden_fields_for_user( $user_id );
-
-		if ( ! empty( $list_fields ) ) {
-			$last_name_field_id = bp_xprofile_lastname_field_id();
-
-			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
-				$display_name = str_replace( ' ' . $last_name, '', $display_name );
-			}
-		}
-	}
-
-	return apply_filters( 'bp_core_get_member_display_name', trim( $display_name ), $user_id );
 }
 
 /**
@@ -4629,51 +4593,48 @@ add_action( 'user_register', 'bp_assign_default_member_type_to_activate_user_on_
  */
 function bp_allow_user_to_send_invites() {
 
-	if ( is_user_logged_in() ) {
-		if ( bp_is_active( 'invites' ) ) {
-			// Get all active member type.
-			$member_types = array();
-			$member_types = bp_get_active_member_types();
-			if ( isset( $member_types ) && ! empty( $member_types ) ) {
-				$allowed_member_type    = array();
-				$disallowed_member_type = array();
-				foreach ( $member_types as $member_type_id ) {
-					$type_name = bp_get_member_type_key( $member_type_id );
-					$set_value = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $type_name );
-					if ( true === $set_value ) {
-						$allowed_member_type[] = $type_name;
-					} else {
-						$disallowed_member_type[] = $type_name;
-					}
-				}
-
-				if ( empty( $allowed_member_type ) ) {
-					return true;
-				}
-				// Get the member type of current logged in user.
-				$member_type = bp_get_member_type( bp_loggedin_user_id() );
-				if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
-					return true;
-				} elseif ( false === $member_type && ! current_user_can( 'manage_options' ) ) {
-					return false;
-				} elseif ( false === $member_type && current_user_can( 'manage_options' ) ) {
-					return true;
-				} elseif ( empty( $allowed_member_type ) || count( $allowed_member_type ) === count( $member_types ) ) {
-					return true;
-				} elseif ( in_array( $member_type, $disallowed_member_type, true ) ) {
-					return false;
-				} elseif ( in_array( $member_type, $allowed_member_type, true ) ) {
-					return true;
-				}
-			} else {
-				return true;
-			}
-		} else {
-			return false;
-		}
-	} else {
+	// if user not logged in and component not active then return false.
+	if ( ! bp_is_active( 'invites' ) && ! is_user_logged_in() ) {
 		return false;
 	}
+
+	// Get all active member type.
+	$member_types = bp_get_active_member_types();
+	if ( ! empty( $member_types ) ) {
+		$allowed_member_type    = array();
+		$disallowed_member_type = array();
+		foreach ( $member_types as $member_type_id ) {
+			$type_name = bp_get_member_type_key( $member_type_id );
+			$set_value = bp_enable_send_invite_member_type( 'bp-enable-send-invite-member-type-' . $type_name );
+			if ( true === $set_value ) {
+				$allowed_member_type[] = $type_name;
+			} else {
+				$disallowed_member_type[] = $type_name;
+			}
+		}
+
+		if ( empty( $allowed_member_type ) ) {
+			return true;
+		}
+
+		// Get the member type of current logged in user.
+		$member_type = bp_get_member_type( bp_loggedin_user_id() );
+		if ( ( is_admin() || is_network_admin() ) && current_user_can( 'manage_options' ) ) {
+			return true;
+		} elseif ( false === $member_type && ! current_user_can( 'manage_options' ) ) {
+			return false;
+		} elseif ( false === $member_type && current_user_can( 'manage_options' ) ) {
+			return true;
+		} elseif ( empty( $allowed_member_type ) || count( $allowed_member_type ) === count( $member_types ) ) {
+			return true;
+		} elseif ( in_array( $member_type, $disallowed_member_type, true ) ) {
+			return false;
+		} elseif ( in_array( $member_type, $allowed_member_type, true ) ) {
+			return true;
+		}
+	}
+
+	return true;
 }
 
 /**
@@ -4681,28 +4642,21 @@ function bp_allow_user_to_send_invites() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param array                                              $buttons The WP Editor buttons list.
- * @param array          The filtered WP Editor buttons list.
+ * @param  array $buttons  The WP Editor buttons list.
+ * @return array           The filtered WP Editor buttons list.
  */
 function bp_nouveau_btn_invites_mce_buttons( $buttons = array() ) {
-	$remove_buttons = array(
-		'wp_more',
-		'spellchecker',
-		'wp_adv',
-		'fullscreen',
-		'alignleft',
-		'alignright',
-		'aligncenter',
-		'formatselect',
+	$buttons = array(
+		'bold',
+		'italic',
+		'bullist',
+		'numlist',
+		'blockquote',
+		'link',
 	);
 
-	// Remove unused buttons
-	$buttons = array_diff( $buttons, $remove_buttons );
-
-	// Add the image button
-	// array_push( $buttons, 'image' );
-
-	return $buttons;
+	// Provide extensibility
+	return apply_filters( 'bp_nouveau_btn_invites_mce_buttons', $buttons );
 }
 
 /**
@@ -4782,3 +4736,51 @@ function bp_infusion_soft_sync_bp_data( $user_id ) {
 
 }
 add_action( 'user_register', 'bp_infusion_soft_sync_bp_data', 10, 1 );
+
+/**
+ * Function to add the content on top of members listing.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_members_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['members'] ) ) {
+		$members_page_content = get_post_field( 'post_content', $page_ids['members'] );
+		echo apply_filters( 'the_content', $members_page_content );
+	}
+}
+add_action( 'bp_before_directory_members_page', 'bp_members_directory_page_content' );
+
+/**
+ * Function to add the content on activate page.
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_activate_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['activate'] ) ) {
+		$activate_page_content = get_post_field( 'post_content', $page_ids['activate'] );
+		echo apply_filters( 'the_content', $activate_page_content );
+	}
+}
+add_action( 'bp_before_activation_page', 'bp_activate_page_content' );
+
+/**
+ * Function to add the content on register page
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_register_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['register'] ) ) {
+		$register_page_content = get_post_field( 'post_content', $page_ids['register'] );
+		echo apply_filters( 'the_content', $register_page_content );
+	}
+}
+add_action( 'bp_before_register_page', 'bp_register_page_content' );

@@ -192,12 +192,16 @@ class BP_Groups_Component extends BP_Component {
 				require $this->path . 'bp-groups/actions/access.php';
 
 				// Public nav items.
-				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'send-invites', 'subgroups' ), true ) ) {
+				if ( in_array( bp_current_action(), array( 'home', 'request-membership', 'activity', 'members', 'photos', 'albums', 'subgroups' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/' . bp_current_action() . '.php';
 				}
 
 				if ( in_array( bp_get_group_current_members_tab(), array( 'all-members', 'leaders' ), true ) ) {
 					require $this->path . 'bp-groups/screens/single/members/' . bp_get_group_current_members_tab() . '.php';
+				}
+
+				if ( bp_is_group_invites() && is_user_logged_in() ) {
+					require $this->path . 'bp-groups/screens/single/invite.php';
 				}
 
 				// Admin nav items.
@@ -366,6 +370,8 @@ class BP_Groups_Component extends BP_Component {
 				'create',
 				'invites',
 				'send-invites',
+				'invite',
+				'pending-invites',
 				'forum',
 				'delete',
 				'add',
@@ -480,7 +486,8 @@ class BP_Groups_Component extends BP_Component {
 		 * @param string $value BP_GROUPS_DEFAULT_EXTENSION constant if defined,
 		 *                      else 'members'.
 		 */
-		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : ( '' === $default_tab ) ? 'members' : $default_tab );
+		$default_tab = ( '' === $default_tab ) ? 'members' : $default_tab;
+		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : $default_tab );
 
 		$bp = buddypress();
 
@@ -719,7 +726,7 @@ class BP_Groups_Component extends BP_Component {
 			if ( bp_is_active( 'friends' ) && bp_groups_user_can_send_invites() ) {
 				$sub_nav[] = array(
 					'name'            => __( 'Send Invites', 'buddyboss' ),
-					'slug'            => 'send-invites',
+					'slug'            => 'invite',
 					'parent_url'      => $group_link,
 					'parent_slug'     => $this->current_group->slug,
 					'screen_function' => 'groups_screen_group_invite',
@@ -727,6 +734,34 @@ class BP_Groups_Component extends BP_Component {
 					'position'        => 70,
 					'user_has_access' => $this->current_group->user_has_access,
 					'no_access_url'   => $group_link,
+				);
+
+				$admin_link_invite = trailingslashit( $group_link . 'invite' );
+				// Common params to all nav items.
+				$default_params_invite = array(
+					'parent_url'        => $admin_link_invite,
+					'parent_slug'       => $this->current_group->slug . '_invite',
+					'screen_function'   => 'groups_screen_group_invite',
+					'user_has_access'   => $this->current_group->user_has_access,
+					'show_in_admin_bar' => true,
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Send Invites', 'buddyboss' ),
+						'slug'     => 'send-invites',
+						'position' => 0,
+					),
+					$default_params_invite
+				);
+
+				$sub_nav[] = array_merge(
+					array(
+						'name'     => __( 'Pending Invites', 'buddyboss' ),
+						'slug'     => 'pending-invites',
+						'position' => 1,
+					),
+					$default_params_invite
 				);
 			}
 
