@@ -168,7 +168,7 @@ function bbp_new_topic_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_topic'] ) && wp_create_nonce( 'bbp-unfiltered-html-topic_new' ) === $_POST['_bbp_unfiltered_html_topic'] ) {
 		remove_filter( 'bbp_new_topic_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_topic_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_new_topic_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_new_topic_pre_content', 'bbp_filter_kses', 30 ); // todo: removing this from here bcoz we need to filter mention tags from content
 	}
 
 	/** Discussion Title */
@@ -3524,7 +3524,7 @@ function bbp_topic_content_autoembed() {
 	if ( bbp_use_autoembed() && is_a( $wp_embed, 'WP_Embed' ) ) {
 		add_filter( 'bbp_get_topic_content', array( $wp_embed, 'autoembed' ), 2 );
 		// WordPress is not able to convert URLs to oembed if URL is in paragraph.
-		// add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
+		add_filter( 'bbp_get_reply_content', 'bbp_topic_content_autoembed_paragraph', 99999, 1 );
 	}
 }
 
@@ -3537,36 +3537,36 @@ function bbp_topic_content_autoembed() {
  */
 function bbp_topic_content_autoembed_paragraph( $content ) {
 
-	// Check if WordPress already embed the link then return the original content.
-	if ( strpos( $content, '<iframe' ) !== false ) {
+	if ( strpos( $content, '<iframe' ) !== false )
 		return $content;
-	} else {
-		// Find all the URLs from the content.
-		preg_match_all( '#\bhttps?://[^,\s()<>]+(?:\([\w\d]+\)|([^,[:punct:]\s]|/))#', $content, $match );
-		// Check if URL found.
-		if ( isset( $match[0] ) ) {
-			$html = '';
-			// Remove duplicate from array and run the loop
-			foreach ( array_unique( $match[0] ) as $url ) {
-				// Fetch the oembed code for URL.
-				$embed_code = wp_oembed_get( $url );
-				// If oembed found then store into the $html
-				if ( strpos( $embed_code, '<iframe' ) !== false ) {
-					$html .= '<p>' . $embed_code . '</p>';
-				}
+
+	global $wp_embed;
+	$embed_urls = $embeds_array = array();
+	$flag = true;
+
+	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content , $embed_urls );
+	}
+
+	if ( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
+		$embed_urls = array_filter( $embed_urls[0] );
+		$embed_urls = array_unique( $embed_urls );
+
+		foreach ( $embed_urls as $url ) {
+			if ( $flag == false ) {
+				continue;
 			}
-			// If $html blank return original content
-			if ( '' === $html ) {
-				return $content;
-				// Return the new content by adding oembed after the content.
-			} else {
-				return $content . $html;
+
+			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
+			if( $embed ) {
+				$flag = false;
+				$embeds_array[] = wpautop( $embed );
 			}
-			// Else return original content.
-		} else {
-			return $content;
 		}
 	}
+
+	// Put the line breaks back.
+	return $content . implode( '', $embeds_array );
 }
 
 /** Feeds *********************************************************************/

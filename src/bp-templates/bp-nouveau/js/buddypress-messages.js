@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE */
+/* global wp, bp, BP_Nouveau, _, Backbone, tinymce, tinyMCE, bp_select2 */
 /* jshint devel: true */
 /* @version 3.1.0 */
 window.wp = window.wp || {};
@@ -63,6 +63,11 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+
+			//  if defined, add custom dropzone options
+			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+				Object.assign(this.dropzone_options, BP_Nouveau.media.dropzone_options);
+			}			
 		},
 
 		setupNav: function() {
@@ -189,7 +194,7 @@ window.bp = window.bp || {};
 			this.views.add( { id: 'compose', view: form } );
 
 			form.inject( '.bp-messages-content' );
-			
+
 			//show compose message screen
 			$('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 		},
@@ -585,15 +590,24 @@ window.bp = window.bp || {};
 					},
 					toolbar: {
 						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: true,
+						cleanReplacements: [],
+						cleanAttrs: ['class', 'style', 'dir'],
+						cleanTags: ['meta'],
+						unwrapTags: []
 					}
 				});
 
-				if (!_.isUndefined(BP_Nouveau.media) 
-						&& !_.isUndefined(BP_Nouveau.media.emoji) 
-						&& ( !_.isUndefined(BP_Nouveau.media.emoji.messages) 
-							&& BP_Nouveau.media.emoji.messages
-							) 
-					) {
+				if (!_.isUndefined(BP_Nouveau.media) &&
+					!_.isUndefined(BP_Nouveau.media.emoji) &&
+					(
+						!_.isUndefined(BP_Nouveau.media.emoji.messages) &&
+						BP_Nouveau.media.emoji.messages
+					)
+				) {
 					$('#message_content').emojioneArea({
 						standalone: true,
 						hideSource: false,
@@ -685,6 +699,7 @@ window.bp = window.bp || {};
 					response.data.uuid = file.upload.uuid;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					response.data.saved = false;
+					response.data.privacy = 'message';
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
 				}
@@ -1130,8 +1145,9 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: $input.attr('placeholder'),
 				minimumInputLength: 1,
-                                dropdownCssClass: 'bb-select-dropdown',
-                                containerCssClass: 'bb-select-container',
+				dropdownCssClass: 'bb-select-dropdown',
+				containerCssClass: 'bb-select-container',
+				language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',

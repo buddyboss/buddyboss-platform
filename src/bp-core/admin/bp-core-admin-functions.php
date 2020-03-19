@@ -261,7 +261,8 @@ function bp_core_activation_notice() {
 
 	// Activate and Register are special cases. They are not components but they need WP pages.
 	// If user registration is disabled, we can skip this step.
-	if ( bp_get_signup_allowed() ) {
+	$allow_custom_registration = bp_allow_custom_registration();
+	if ( bp_get_signup_allowed() && ! $allow_custom_registration ) {
 		$wp_page_components[] = array(
 			'id'   => 'activate',
 			'name' => __( 'Activate', 'buddyboss' ),
@@ -611,7 +612,13 @@ function bp_core_admin_tabs( $active_tab = '' ) {
 	// Loop through tabs and build navigation.
 	foreach ( array_values( $tabs ) as $tab_data ) {
 		$is_current = (bool) ( $tab_data['name'] == $active_tab );
-		$tab_class  = $is_current && isset( $tab_data ) && isset( $tab_data['class'] ) ? $tab_data['class'] . ' ' . $active_class : isset( $tab_data['class'] ) ? $tab_data['class'] . ' ' . $idle_class : $idle_class;
+		if ( $is_current && isset( $tab_data ) && isset( $tab_data['class'] ) ) {
+			$tab_class = $tab_data['class'] . ' ' . $active_class;
+		} elseif ( isset( $tab_data ) && isset( $tab_data['class'] ) ) {
+			$tab_class = $tab_data['class'] . ' ' . $idle_class;
+		} else {
+			$tab_class = $idle_class;
+		}
 		$tabs_html .= '<a href="' . esc_url( $tab_data['href'] ) . '" class="' . esc_attr( $tab_class ) . '">' . esc_html( $tab_data['name'] ) . '</a>';
 	}
 

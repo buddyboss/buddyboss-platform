@@ -1178,6 +1178,51 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 /** Group Member Status Checks ************************************************/
 
 /**
+ * Get the Group roles.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @return array The list of Group role objects.
+ */
+
+function bp_groups_get_group_roles() {
+	return array(
+		'admin' => (object) array(
+			'id'           => 'admin',
+			'name'         => __( 'Organizer', 'buddyboss' ),
+			'is_admin'     => true,
+			'is_banned'    => false,
+			'is_confirmed' => true,
+			'is_mod'       => false,
+		),
+		'mod' => (object) array(
+			'id'           => 'mod',
+			'name'         => __( 'Moderator', 'buddyboss' ),
+			'is_admin'     => false,
+			'is_banned'    => false,
+			'is_confirmed' => true,
+			'is_mod'       => true,
+		),
+		'member' => (object) array(
+			'id'           => 'member',
+			'name'         => __( 'Member', 'buddyboss' ),
+			'is_admin'     => false,
+			'is_banned'    => false,
+			'is_confirmed' => true,
+			'is_mod'       => false,
+		),
+		'banned' => (object) array(
+			'id'           => 'banned',
+			'name'         => __( 'Banned', 'buddyboss' ),
+			'is_admin'     => false,
+			'is_banned'    => true,
+			'is_confirmed' => true,
+			'is_mod'       => false,
+		),
+	);
+}
+
+/**
  * Check whether a user is an admin of a given group.
  *
  * @since BuddyPress 1.0.0
@@ -3637,3 +3682,20 @@ function get_group_role_label( $group_id, $label_name ) {
 	return apply_filters( 'bp_' . $label_name, $label, $group_id, $label_name );
 
 }
+
+/**
+ * Function to add the content on top of group listing
+ *
+ * @since BuddyBoss 1.2.5
+ */
+function bp_group_directory_page_content() {
+
+	$page_ids = bp_core_get_directory_page_ids();
+
+	if ( ! empty( $page_ids['groups'] ) ) {
+		$group_page_content = get_post_field( 'post_content', $page_ids['groups'] );
+		echo apply_filters( 'the_content', $group_page_content );
+	}
+}
+
+add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content' );

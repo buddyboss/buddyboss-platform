@@ -67,6 +67,15 @@ class BP_Admin_Setting_Invites extends BP_Admin_Setting_tab {
 
 		// Email Invites tutorial
 		$this->add_field( 'bp-email-invites-tutorial', '', 'bp_email_invites_tutorial' );
+
+		/**
+		 * Fires to register Invites tab settings fields and section.
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param Object $this BP_Admin_Setting_Invites.
+		 */
+		do_action( 'bp_admin_setting_invites_register_fields', $this );
 	}
 }
 

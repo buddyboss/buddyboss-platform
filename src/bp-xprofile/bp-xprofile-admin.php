@@ -528,7 +528,7 @@ function xprofile_admin_manage_field( $group_id, $field_id = null ) {
 	if ( isset( $_POST['saveField'] ) ) {
 
 		// Check nonce
-		check_admin_referer( 'bp_xprofile_admin_field', 'bp_xprofile_admin_field' );
+		wp_verify_nonce( $_POST['bp_xprofile_admin_field'], 'bp_xprofile_admin_field' );
 
 		if ( BP_XProfile_Field::admin_validate() ) {
 			$field->is_required = $_POST['required'];

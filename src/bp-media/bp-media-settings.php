@@ -640,7 +640,18 @@ function bp_media_settings_callback_gif_key() {
 		   placeholder="<?php _e( 'GIPHY API Key', 'buddyboss' ); ?>"
 		   style="width: 300px;"
 	/>
-	<p class="description"><?php _e( 'This feature requires an account at <a href="https://developers.giphy.com/">GIPHY</a>. Create your account, and then click "Create an App". Once done, copy the API key and paste it above.', 'buddyboss' ); ?></p>
+	<p class="description">
+		<?php
+			printf(
+				'%1$s <a href="%2$s" target="_blank">GIPHY</a>. %3$s <a href="%4$s" target="_blank">Create an App</a>. %5$s',
+				__( 'This feature requires an account at', 'buddyboss' ),
+				esc_url( 'https://developers.giphy.com/' ),
+				__( 'Create your account, and then click', 'buddyboss' ),
+				esc_url( 'https://developers.giphy.com/dashboard/?create=true' ),
+				__( 'Once done, copy the API key and paste it in the field above.', 'buddyboss' )
+			);
+		?>	
+	</p>
 	<?php
 }
 

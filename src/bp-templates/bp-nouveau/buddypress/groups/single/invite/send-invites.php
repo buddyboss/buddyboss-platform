@@ -22,7 +22,7 @@
 						<i class="dashicons dashicons-update animate-spin"></i>
 					</div>
 					<div class="bp-group-message-wrap">
-						<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox">
+						<input id="bp-group-send-invite-switch-checkbox" class="bp-group-send-invite-switch-checkbox bb-input-switch bs-styled-checkbox" type="checkbox" />
 						<label for="bp-group-send-invite-switch-checkbox" class="bp-group-invite-label"><span class="select-members-text"><?php _e( 'My Connections', 'buddyboss' ); ?></span></label>
 					</div>
 					<?php } ?>
@@ -81,8 +81,8 @@
 							<div id="bp-invites-submit-loader" class="bp-invites-submit-loader-hide">
 								<i class="dashicons dashicons-update animate-spin"></i>
 							</div>
-							<input type="submit" name="send_group_invite_button" value="Send" id="send_group_invite_button" class="small">
-							<input type="submit" name="bp_invites_reset" value="Cancel" id="bp_invites_reset" class="small">
+							<input type="submit" name="send_group_invite_button" value="<?php esc_attr_e( 'Send', 'buddyboss' ); ?>" id="send_group_invite_button" class="small">
+							<input type="submit" name="bp_invites_reset" value="<?php esc_attr_e( 'Cancel', 'buddyboss' ); ?>" id="bp_invites_reset" class="small">
 						</div>
 					</div>
 				</div>

@@ -28,12 +28,23 @@ function bp_core_admin_pages_settings() {
 			settings_fields( 'bp-pages' );
 			bp_custom_pages_do_settings_sections( 'bp-pages' );
 
-			printf(
-				'<p class="submit">
-				<input type="submit" name="submit" class="button-primary" value="%s" />
-			</p>',
-				esc_attr__( 'Save Settings', 'buddyboss' )
-			);
+			// Check WPML Active
+			if ( class_exists( 'SitePress' ) ) {
+				$wpml_options = get_option( 'icl_sitepress_settings' );
+				$default_lang = $wpml_options['default_language'];
+				$current_lang = ICL_LANGUAGE_CODE;
+
+				if  ( $current_lang === $default_lang ) {
+					// Show the "Save Settings" button only if the current language is the default language.
+					printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+				} else {
+					// Show a disabled "Save Settings" button if the current language is not the default language.
+					printf( '<div class="submit"><p class="button-primary disabled">%s</p></div>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+					printf( '<p class="description">%s</p>', esc_attr__( 'You need to switch to your Default language in WPML to save these settings.', 'buddyboss' ) );
+				}
+			} else {
+				printf( '<p class="submit"><input type="submit" name="submit" class="button-primary" value="%s" /></p>', esc_attr__( 'Save Settings', 'buddyboss' ) );
+			}
 			?>
 		</form>
 	</div>
@@ -151,6 +162,18 @@ add_action( 'admin_init', 'bp_core_admin_register_page_fields' );
  */
 function bp_core_admin_register_registration_page_fields() {
 
+	$allow_custom_registration = bp_allow_custom_registration();
+
+	if ( $allow_custom_registration ) {
+		return;
+	}
+
+	if ( ! bp_enable_site_registration() && ! bp_is_active( 'invites' ) ) {
+		return;
+	}
+
+
+
 	add_settings_section( 'bp_registration_pages', __( 'Registration Pages', 'buddyboss' ), 'bp_core_admin_registration_pages_description', 'bp-pages' );
 
 	$existing_pages = bp_core_get_directory_page_ids();
@@ -158,13 +181,13 @@ function bp_core_admin_register_registration_page_fields() {
 
 	// add view tutorial button
 	$static_pages['button'] = array(
-		'link'  => 	bp_get_admin_url( 
-				add_query_arg( 
-					array( 
-						'page' 		=> 'bp-help', 
-						'article' 	=> 62795,
+		'link'  => bp_get_admin_url(
+				add_query_arg(
+					array(
+						'page'      => 'bp-help',
+						'article'   => 62795,
 					),
-					'admin.php' 
+					'admin.php'
 				)
 			),
 		'label' => __( 'View Tutorial', 'buddyboss' ),
@@ -290,7 +313,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 			);
 		} else {
 			printf(
-				'<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'<a href="%s" class="button-secondary create-background-page" data-name="%s">%s</a>',
 				'javascript:void(0);',
 				esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' )
@@ -324,7 +347,7 @@ function bp_admin_setting_callback_page_directory_dropdown( $args ) {
 			);
 		} else {
 			printf(
-				'<a href="%s" class="button-secondary create-background-page" data-name="%s" target="_bp">%s</a>',
+				'<a href="%s" class="button-secondary create-background-page" data-name="%s">%s</a>',
 				'javascript:void(0);',
 				esc_attr( $name ),
 				__( 'Create Page', 'buddyboss' )

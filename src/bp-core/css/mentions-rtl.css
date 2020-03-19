@@ -12,10 +12,11 @@
 	z-index: 1000; /* >999 for wp-admin */
 }
 
-/* rtl:ignore */
+/* stylelint-disable */
 .atwho-view {
 	left: 0;
 }
+/* stylelint-enable */
 
 .atwho-view ul {
 	background: #fff;
@@ -39,7 +40,7 @@
 
 .atwho-view img {
 	border-radius: 2px;
-	float: right;
+	float: left;
 	height: 20px;
 	margin-top: 0;
 	width: 20px;
@@ -56,10 +57,10 @@
 
 .atwho-view small {
 	color: #aaa;
-	float: right;
+	float: left;
 	font-size: smaller;
 	font-weight: 400;
-	margin: 0 10px 0 40px;
+	margin: 0 40px 0 10px;
 }
 
 .atwho-view .cur {
@@ -69,8 +70,8 @@
 @media (max-width: 900px) {
 
 	.atwho-view img {
-		float: left;
-		margin: 0 10px 0 0;
+		float: right;
+		margin: 0 0 0 10px;
 	}
 }
 
@@ -96,6 +97,6 @@
 
 	.atwho-view ul li small {
 		display: inline-block;
-		margin-left: 20px;
+		margin-right: 20px;
 	}
 }

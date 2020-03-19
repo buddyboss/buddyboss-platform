@@ -36,6 +36,8 @@ if ( function_exists( 'wp_encode_emoji' ) ) {
 	add_filter( 'bp_activity_content_before_save', 'wp_encode_emoji' );
 }
 
+add_filter( 'bp_activity_mentioned_users', 'bp_find_mentions_by_at_sign', 10, 2 );
+
 add_filter( 'bp_get_activity_action', 'wptexturize' );
 add_filter( 'bp_get_activity_content_body', 'wptexturize' );
 add_filter( 'bp_get_activity_content', 'wptexturize' );
@@ -93,6 +95,7 @@ add_filter( 'bp_get_activity_parent_content', 'bp_activity_make_nofollow_filter'
 add_filter( 'bp_get_activity_latest_update', 'bp_activity_make_nofollow_filter' );
 add_filter( 'bp_get_activity_latest_update_excerpt', 'bp_activity_make_nofollow_filter' );
 add_filter( 'bp_get_activity_feed_item_description', 'bp_activity_make_nofollow_filter' );
+add_filter( 'bp_activity_new_at_mention_permalink', 'bp_activity_new_at_mention_permalink', 11, 3 );
 
 add_filter( 'pre_comment_content', 'bp_activity_at_name_filter' );
 add_filter( 'the_content', 'bp_activity_at_name_filter' );
@@ -215,33 +218,43 @@ function bp_activity_check_blacklist_keys( $activity ) {
  */
 function bp_activity_save_link_data( $activity ) {
 
-	if ( empty( $_POST['link_url'] ) ) {
+	$link_url   = ! empty( $_POST['link_url'] ) ? filter_var( $_POST['link_url'], FILTER_VALIDATE_URL ) : '';
+	$link_embed = isset( $_POST['link_embed'] ) ? filter_var( $_POST['link_embed'], FILTER_VALIDATE_BOOLEAN ) : false;
+
+	// check if link url is set or not
+	if ( empty( $link_url ) ) {
+		if ( false === $link_embed ) {
+			bp_activity_update_meta( $activity->id, '_link_embed', '0' );
+		}
+
 		return;
 	}
 
-	// Ignore YouTube and Vimeo Preview link.
-	if ( strpos( $_POST['link_url'], 'youtube' ) > 0 || strpos( $_POST['link_url'], 'youtu' ) > 0 || strpos( $_POST['link_url'], 'vimeo' ) > 0 ) {
-		$embed_code = wp_oembed_get( $_POST['link_url'] );
-		if ( $embed_code ) {
-			return;
-		}
+	$link_title       = ! empty( $_POST['link_title'] ) ? filter_var( $_POST['link_title'] ) : '';
+	$link_description = ! empty( $_POST['link_description'] ) ? filter_var( $_POST['link_description'] ) : '';
+	$link_image       = ! empty( $_POST['link_image'] ) ? filter_var( $_POST['link_image'], FILTER_VALIDATE_URL ) : '';
+
+	// check if link embed was used
+	if ( true === $link_embed && ! empty( $link_url ) ) {
+		bp_activity_update_meta( $activity->id, '_link_embed', $link_url );
+		return;
 	}
 
-	$preview_data['url'] = $_POST['link_url'];
+	$preview_data['url'] = $link_url;
 
-	if ( ! empty( $_POST['link_image'] ) ) {
-		$attachment_id = bp_activity_media_sideload_attachment( $_POST['link_image'] );
+	if ( ! empty( $link_image ) ) {
+		$attachment_id = bp_activity_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
 		}
 	}
 
-	if ( ! empty( $_POST['link_title'] ) ) {
-		$preview_data['title'] = $_POST['link_title'];
+	if ( ! empty( $link_title ) ) {
+		$preview_data['title'] = $link_title;
 	}
 
-	if ( ! empty( $_POST['link_description'] ) ) {
-		$preview_data['description'] = $_POST['link_description'];
+	if ( ! empty( $link_description ) ) {
+		$preview_data['description'] = $link_description;
 	}
 
 	bp_activity_update_meta( $activity->id, '_link_preview_data', $preview_data );
@@ -552,22 +565,20 @@ function bp_activity_link_preview( $content, $activity ) {
 	);
 
 	$description = $preview_data['description'];
-	$read_more   = ' <a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Read more', 'buddyboss' ) . '...</a>';
+	$read_more   = ' &hellip; <a class="activity-link-preview-more" href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . __( 'Continue reading', 'buddyboss' ) . '</a>';
 	$description = wp_trim_words( $description, 40, $read_more );
 
 	$content = make_clickable( $content );
 
 	$content .= '<div class="activity-link-preview-container">';
+	$content .= '<p class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></p>';
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
-		$content  .= '<div class="activity-link-preview-image-wrap"><div class="activity-link-preview-image">';
+		$content  .= '<div class="activity-link-preview-image">';
 		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
-		$content  .= '</div></div>';
+		$content  .= '</div>';
 	}
-	$content .= '<div class="activity-link-preview-content">';
-	$content .= '<div class="activity-link-preview-title"><a href="' . esc_url( $preview_data['url'] ) . '" target="_blank" rel="nofollow">' . addslashes( $preview_data['title'] ) . '</a></div>';
-	$content .= '<div class="activity-link-preview-body">' . $description . '</div>';
-	$content .= '</div>';
+	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';
 
 	return $content;
@@ -1278,3 +1289,40 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 
 	return $media_ids;
 }
+
+/**
+ * Generate permalink for comment mention notification.
+ *
+ * @since BuddyBoss 1.2.5
+ *
+ * @param $link
+ * @param $item_id
+ * @param $secondary_item_id
+ *
+ * @return string
+ */
+function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_id ) {
+
+	$activity_obj = new BP_Activity_Activity( $item_id );
+
+	if ( 'activity_comment' == $activity_obj->type ) {
+		$notification = BP_Notifications_Notification::get(
+			array(
+				'user_id'           => bp_loggedin_user_id(),
+				'item_id'           => $item_id,
+				'secondary_item_id' => $secondary_item_id,
+				'component_name'    => 'activity',
+				'component_action'  => 'new_at_mention',
+			)
+		);
+
+		if ( ! empty( $notification ) ) {
+			$id   = current( $notification )->id;
+			$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_obj->id ) );
+		}
+
+	}
+
+	return $link;
+}
+

@@ -1,4 +1,4 @@
-/* global wp, bp, BP_Nouveau, _ */
+/* global wp, bp, BP_Nouveau, _, bp_select2 */
 /* @version 3.0.0 */
 window.wp = window.wp || {};
 window.bp = window.bp || {};
@@ -925,6 +925,7 @@ window.bp = window.bp || {};
 			$input.select2({
 				placeholder: '',
 				minimumInputLength: 1,
+				language: ( typeof bp_select2 !== 'undefined' && typeof bp_select2.lang !== 'undefined' ) ? bp_select2.lang : 'en',
 				ajax: {
 					url: bp.ajax.settings.url,
 					dataType: 'json',

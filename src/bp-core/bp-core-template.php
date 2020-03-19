@@ -407,7 +407,12 @@ function bp_format_time( $time = '', $exclude_time = false, $gmt = true ) {
 		if ( ! empty( $timezone_string ) ) {
 			$timezone_object = timezone_open( $timezone_string );
 			$datetime_object = date_create( "@{$time}" );
-			$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+
+			if ( false !== $timezone_object && false !== $datetime_object ) {
+				$timezone_offset = timezone_offset_get( $timezone_object, $datetime_object ) / HOUR_IN_SECONDS;
+			} else {
+				$timezone_offset = bp_get_option( 'gmt_offset' );
+			}
 
 			// Fall back on less reliable gmt_offset.
 		} else {
@@ -3944,7 +3949,7 @@ function bp_email_the_salutation( $settings = array() ) {
 	 * @return string The Recipient Salutation.
 	 */
 function bp_email_get_salutation( $settings = array() ) {
-	$token = '{{recipient.name}}<img src="{{recipient.avatar}}" style="border: 1px solid #b9babc;border-radius: 50%;margin-left: 12px;width: 34px;max-width: 34px;height: 34px;vertical-align: middle;" />';
+	$token = '<table cellspacing="0" cellpadding="0" border="0"><tbody><tr><td style="vertical-align: middle;font-family:sans-serif;font-weight:normal;color:#7f868f;font-size:14px;padding-right: 12px;">{{recipient.name}} </td><td style="vertical-align: middle;"><img src="{{recipient.avatar}}" height="34" width="34" style="border: 1px solid #b9babc;border-radius: 50%;max-width: 34px;vertical-align: middle;" /></td></tr></tbody></table>';
 
 	/**
 	 * Filters The Recipient Salutation inside the Email Template.
