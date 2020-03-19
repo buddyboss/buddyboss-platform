@@ -34,9 +34,9 @@ if ( $attachment_id ) {
 	<div class="media-folder_details">
 		<a class="media-folder_name" href="<?php echo esc_url( $link ); ?>">
 			<span><?php bp_document_title(); ?></span><?php echo $extension ? '.' . $extension : ''; ?>
-			<span class="media-document-id" data-item-id="<?php echo base64_encode( bp_get_document_id() ); ?>" style="display: none;"></span>
-			<span class="media-document-attachment-id" data-item-id="<?php echo base64_encode( bp_get_document_attachment_id() ); ?>" style="display: none;"></span>
-			<span class="media-document-type" data-item-id="<?php echo esc_attr( $type ); ?>" style="display: none;"></span>
+			<i class="media-document-id" data-item-id="<?php echo base64_encode( bp_get_document_id() ); ?>" style="display: none;"></i>
+			<i class="media-document-attachment-id" data-item-id="<?php echo base64_encode( bp_get_document_attachment_id() ); ?>" style="display: none;"></i>
+			<i class="media-document-type" data-item-id="<?php echo esc_attr( $type ); ?>" style="display: none;"></i>
 		</a>
 		<div class="media-folder_name_edit_wrap">
 			<input type="text" value="" class="media-folder_name_edit" />
