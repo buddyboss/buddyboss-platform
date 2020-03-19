@@ -2799,16 +2799,11 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 	// Tabs for the BuddyBoss > Tools
 	$tabs = array(
 		'0' => array(
-			'href' => get_admin_url(
-				'',
-				add_query_arg(
-					array(
-						'page' => 'bp-tools',
-						'tab'  => 'bp-tools',
-					),
-					'admin.php'
-				)
+			'href' => bp_get_admin_url( add_query_arg( array(
+				'page' => 'bp-tools',
+				'tab'  => 'bp-tools',
 			),
+				'admin.php' ) ),
 			'name' => __( 'Default Data', 'buddyboss' ),
 			'slug' => 'bp-tools',
 		),
@@ -2827,16 +2822,11 @@ function bp_core_get_tools_settings_admin_tabs( $active_tab = '' ) {
 function bp_core_get_tools_import_profile_settings_admin_tabs( $tabs ) {
 
 	$tabs[] = array(
-		'href' => get_admin_url(
-			'',
-			add_query_arg(
-				array(
-					'page' => 'bp-member-type-import',
-					'tab'  => 'bp-member-type-import',
-				),
-				'admin.php'
-			)
+		'href' => bp_get_admin_url( add_query_arg( array(
+			'page' => 'bp-member-type-import',
+			'tab'  => 'bp-member-type-import',
 		),
+			'admin.php' ) ),
 		'name' => __( 'Import Profile Types', 'buddyboss' ),
 		'slug' => 'bp-member-type-import',
 	);
