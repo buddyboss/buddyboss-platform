@@ -63,6 +63,11 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+
+			//  if defined, add custom dropzone options
+			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+				Object.assign(this.dropzone_options, BP_Nouveau.media.dropzone_options);
+			}			
 		},
 
 		setupNav: function() {
@@ -585,6 +590,14 @@ window.bp = window.bp || {};
 					},
 					toolbar: {
 						buttons: ['bold', 'italic', 'unorderedlist','orderedlist', 'quote', 'anchor' ]
+					},
+					paste: {
+						forcePlainText: false,
+						cleanPastedHTML: true,
+						cleanReplacements: [],
+						cleanAttrs: ['class', 'style', 'dir'],
+						cleanTags: ['meta'],
+						unwrapTags: []
 					}
 				});
 
@@ -686,6 +699,7 @@ window.bp = window.bp || {};
 					response.data.uuid = file.upload.uuid;
 					response.data.menu_order = $(file.previewElement).closest('.dropzone').find(file.previewElement).index() - 1;
 					response.data.saved = false;
+					response.data.privacy = 'message';
 					self.media.push( response.data );
 					self.model.set( 'media', self.media );
 				}

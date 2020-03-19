@@ -487,7 +487,8 @@ class BP_Groups_Component extends BP_Component {
 		 * @param string $value BP_GROUPS_DEFAULT_EXTENSION constant if defined,
 		 *                      else 'members'.
 		 */
-		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : ( '' === $default_tab ) ? 'members' : $default_tab );
+		$default_tab = ( '' === $default_tab ) ? 'members' : $default_tab;
+		$this->default_extension = apply_filters( 'bp_groups_default_extension', defined( 'BP_GROUPS_DEFAULT_EXTENSION' ) ? BP_GROUPS_DEFAULT_EXTENSION : $default_tab );
 
 		$bp = buddypress();
 

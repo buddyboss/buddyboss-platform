@@ -1181,6 +1181,71 @@ function bp_group_directories_tutorial() {
 	<?php
 }
 
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_allow_custom_registration() {
+
+	$allow_custom_registration = bp_allow_custom_registration();
+	?>
+
+    <select name="allow-custom-registration" id="allow-custom-registration">
+	    <option value="0" <?php selected( 0, $allow_custom_registration ); ?>><?php _e( 'BuddyBoss Registration', 'buddyboss' ); ?></option>
+	    <option value="1" <?php selected( 1, $allow_custom_registration ); ?>><?php _e( 'Custom URL', 'buddyboss' ); ?></option>
+    </select>
+	<?php
+    if ( ! $allow_custom_registration ) {
+	    printf( '<p class="description">%s</p>',
+		    sprintf( __( 'Use the default BuddyBoss registration form. Make sure to configure the <a href="%s">registration pages</a>.',
+			    'buddyboss' ),
+			    add_query_arg( array(
+				    'page' => 'bp-pages'
+			    ),
+				    admin_url( 'admin.php' ) ) ) );
+    }
+}
+
+/*
+ Admin settings for showing the allow custom registration checkbox.
+*
+* @since BuddyBoss 1.2.8
+*
+*/
+function bp_admin_setting_callback_register_page_url() {
+	?>
+    <input style="width: 89%;" id="register-page-url" name="register-page-url" type="text" value="<?php echo esc_url( bp_custom_register_page_url() ); ?>" />
+	<?php
+	printf(
+		'<p class="description">%s</p>', sprintf( __( 'Enter a custom URL to redirect users to register to your site. Useful for membership plugins.', 'buddyboss' ) )
+	);
+}
+
+/**
+ * Link to Registration tutorial
+ *
+ * @since BuddyBoss 1.2.8
+ */
+function bp_admin_registration_setting_tutorial() {
+	?>
+
+    <p>
+        <a class="button" href="<?php echo bp_get_admin_url(
+			add_query_arg(
+				array(
+					'page'    => 'bp-help',
+					'article' => 86158,
+				),
+				'admin.php'
+			)
+		); ?>"><?php _e( 'View Tutorial', 'buddyboss' ); ?></a>
+    </p>
+
+	<?php
+}
+
 /**
  * Enable group messages field markup.
  *

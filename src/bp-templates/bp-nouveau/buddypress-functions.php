@@ -234,8 +234,13 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function bbp_set_forum_selected_menu_class( $classes = array(), $item = false ) {
 
+		// Return if forums not active.
+		if ( ! bp_is_active( 'forums' ) ) {
+			return $classes;
+		}
+
 		// Protocol
-		$url = ( isset( $_SERVER['HTTPS'] ) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') . '://'.$_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
+		$url = ( is_ssl() ? 'https' : 'http' ) . '://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 
 		// Get current URL
 		$current_url = trailingslashit( $url );
@@ -244,18 +249,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$homepage_url = trailingslashit( get_bloginfo( 'url' ) );
 
 		// Exclude 404 and homepage
-		if( is_404() or $item->url == $homepage_url )
+		if ( is_404() || ( isset( $item->url ) && $item->url == $homepage_url ) ) {
 			return $classes;
+		}
 
-		if ( 'forum' === get_post_type() || 'topic' === get_post_type() ) {
+		if ( bbp_get_forum_post_type() === get_post_type() || bbp_get_topic_post_type() === get_post_type() ) {
 			// Unset current_page_parent class if exists.
 			if ( in_array( 'current_page_parent', $classes ) ) {
 				unset( $classes[ array_search( 'current_page_parent', $classes ) ] );
 			}
-			if ( isset( $item->url ) ) {
-				if ( isset( $current_url ) && isset( $item->url ) && strstr( $current_url, $item->url ) ) {
-					$classes[] = 'current-menu-item';
-				}
+			if ( ! empty( $item->url ) && ! empty( $current_url ) && strstr( $current_url, $item->url ) ) {
+				$classes[] = 'current-menu-item';
 			}
 		}
 

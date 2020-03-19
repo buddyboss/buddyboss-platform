@@ -505,6 +505,8 @@ function bp_media_add_handler( $medias = array() ) {
 		$medias = $_POST['medias'];
 	}
 
+	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array( 'public', 'loggedin', 'friends', 'onlyme' ) ) ? $_POST['privacy'] : 'public';
+
 	if ( ! empty( $medias ) && is_array( $medias ) ) {
 		// save media
 		foreach ( $medias as $media ) {
@@ -514,6 +516,7 @@ function bp_media_add_handler( $medias = array() ) {
 				'title'         => $media['name'],
 				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
 				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array( 'public', 'loggedin', 'friends', 'onlyme', 'message' ) ) ? $media['privacy'] : $privacy,
 			) );
 
 			if ( $media_id ) {
