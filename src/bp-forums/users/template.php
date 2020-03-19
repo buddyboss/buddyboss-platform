@@ -513,7 +513,9 @@ function bbp_get_user_display_role( $user_id = 0 ) {
 	}
 
 	// No role found so default to generic "Member"
-	if ( empty( $role ) ) {
+	if ( empty( $role ) && empty( get_userdata( $user_id ) ) ) {
+		$role = __( 'Deleted User', 'buddyboss' );
+	} elseif ( empty( $role ) ) {
 		$role = __( 'Member', 'buddyboss' );
 	}
 

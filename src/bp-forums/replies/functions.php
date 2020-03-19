@@ -2429,6 +2429,10 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 			if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
 				$display_role = __( 'Moderator', 'buddyboss' );
 			}
+
+			if ( empty( get_userdata( $author_id ) ) ) {
+				$display_role = __( 'Deleted User', 'buddyboss' );
+			}
 		}
 	}
 

@@ -1313,3 +1313,10 @@ h2.bbp-form-title.entry-title {
 	opacity: 0.6;
 	font-size: 14px;
 }
+
+p.deleted-forum-text,
+p.deleted-topic-text,
+p.deleted-reply-text {
+	font-style: italic;
+	color: #808080;
+}
