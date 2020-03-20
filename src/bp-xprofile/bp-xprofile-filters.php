@@ -739,6 +739,8 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
  * @return $retval
  */
 function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_id = null ) {
+	global $wpdb;
+
 	if ( $field_id != bp_xprofile_nickname_field_id() ) {
 		return $retval;
 	}
@@ -781,19 +783,10 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		return sprintf( __( '%s must be at least 3 characters', 'buddyboss' ), $field_name );
 	}
 
-	global $wpdb;
+	// Check user has same login or not.
+	$user = get_user_by( 'login', $value );
 
-	$user_where = array(
-		'user_login = "' . $value . '"',
-	);
-
-	$user_sql = sprintf(
-		'SELECT count(*) FROM %s WHERE %s',
-		$wpdb->users,
-		implode( ' AND ', $user_where )
-	);
-
-	if ( $wpdb->get_var( $user_sql ) > 0 ) {
+	if ( false !== $user ) {
 		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 	}
 
@@ -812,7 +805,7 @@ function bp_xprofile_validate_nickname_value( $retval, $field_id, $value, $user_
 		implode( ' AND ', $where )
 	);
 
-	if ( $asdf = $wpdb->get_var( $sql ) > 0 ) {
+	if ( $wpdb->get_var( $sql ) > 0 ) {
 		return sprintf( __( '%s has already been taken.', 'buddyboss' ), $field_name );
 	}
 
