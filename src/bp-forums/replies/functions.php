@@ -2420,15 +2420,21 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		if ( ! $author_id ) {
 			$display_role = __( 'Guest', 'buddyboss' );
 		} else {
-			$user_roles = array_values( get_userdata( $author_id )->roles );
 
-			if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
-				$display_role = __( 'Administrator', 'buddyboss' );
+			if ( empty( get_userdata( $author_id ) ) ) {
+				$display_role = __( 'Deleted User', 'buddyboss' );
+			} else {
+				$user_roles = array_values( get_userdata( $author_id )->roles );
+
+				if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
+					$display_role = __( 'Administrator', 'buddyboss' );
+				}
+
+				if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
+					$display_role = __( 'Moderator', 'buddyboss' );
+				}
 			}
 
-			if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
-				$display_role = __( 'Moderator', 'buddyboss' );
-			}
 		}
 	}
 
