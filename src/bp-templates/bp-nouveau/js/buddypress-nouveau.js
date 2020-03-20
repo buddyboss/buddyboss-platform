@@ -506,16 +506,17 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		initObjects: function() {
-			var self = this, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null, filter = null;
+			var self = this, objectScopeData = {}, objectData = {}, queryData = {}, scope = 'all', search_terms = '', extras = null, filter = null;
 
 			$.each( this.objects, function( o, object ) {
-				objectData = self.getLocalStorage( 'bp-' + object );
+				objectData 		= self.getLocalStorage( 'bp-' + object );
+				objectScopeData = self.getStorage( 'bp-' + object );
 
 				var typeType = window.location.hash.substr(1);
 				if ( undefined !== typeType && typeType == 'following' ) {
 					scope = typeType;
-				} else if ( undefined !== objectData.scope ) {
-					scope = objectData.scope;
+				} else if ( undefined !== objectScopeData.scope ) {
+					scope = objectScopeData.scope;
 				}
 
 				// Notifications always need to start with Newest ones
@@ -524,12 +525,18 @@ window.bp = window.bp || {};
 				}
 
 				if (  $( '#buddypress [data-bp-filter="' + object + '"]' ).length ) {
-					if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
-						filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
-					} else if ( undefined !== objectData.filter ) {
-						filter = objectData.filter,
+					if ( undefined !== objectScopeData.filter ) {
+						filter = objectScopeData.filter;
 						$( '#buddypress [data-bp-filter="' + object + '"] option[value="' + filter + '"]' ).prop( 'selected', true );
+
+					} else if ( '-1' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() && '0' !== $( '#buddypress [data-bp-filter="' + object + '"]' ).val() ) {
+						filter = $( '#buddypress [data-bp-filter="' + object + '"]' ).val();
 					}
+				}
+
+				if (  $( '#buddypress [data-bp-filter="friends"]' ).length && undefined !== objectScopeData.filter ) {
+					filter = objectScopeData.filter;
+					$( '#buddypress [data-bp-filter="friends"] option[value="' + filter + '"]' ).prop( 'selected', true );
 				}
 
 				if ( $( this.objectNavParent + ' [data-bp-object="' + object + '"]' ).length ) {
@@ -1421,7 +1428,7 @@ window.bp = window.bp || {};
 
 		paginateAction: function( event ) {
 			var self  = event.data, navLink = $( event.currentTarget ), pagArg,
-			    scope = null, object, objectData, filter = null, search_terms = null, extras = null;
+			    scope = null, object, objectScopeData, objectData, filter = null, search_terms = null, extras = null;
 
 			pagArg = navLink.closest( '[data-bp-pagination]' ).data( 'bp-pagination' ) || null;
 
@@ -1435,14 +1442,15 @@ window.bp = window.bp || {};
 
 			// Set the scope & filter for local storage
 			if ( null !== object ) {
-				objectData = self.getLocalStorage( 'bp-' + object );
+				objectData 		= self.getLocalStorage( 'bp-' + object );
+				objectScopeData = self.getStorage( 'bp-' + object );
 
-				if ( undefined !== objectData.scope ) {
-					scope = objectData.scope;
+				if ( undefined !== objectScopeData.scope ) {
+					scope = objectScopeData.scope;
 				}
 
-				if ( undefined !== objectData.filter ) {
-					filter = objectData.filter;
+				if ( undefined !== objectScopeData.filter ) {
+					filter = objectScopeData.filter;
 				}
 
 				if ( undefined !== objectData.extras ) {
