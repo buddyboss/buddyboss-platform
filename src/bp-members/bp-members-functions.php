@@ -3499,26 +3499,33 @@ function bp_register_active_member_types() {
  */
 function bp_member_type_exclude_users_from_directory_and_searches( $qs = false, $object = false ) {
 
-	$exclude_user_ids = bp_get_users_of_removed_member_types();
-	// print_r($exclude_user_ids);
+	$args = wp_parse_args( $qs );
 
-	if ( $object != 'members' ) {
+	if ( $object !== 'members' ) {
 		return $qs;
 	}
 
-	if ( bp_is_members_directory() ) {
-		$args = wp_parse_args( $qs );
+	if ( bp_is_members_directory() && isset( $args['scope'] ) && 'all' !== $args['scope'] ) {
 
-		// Removed this condition to add the profile type filter works properly do not remove because need to check if this causing anywhere.
-		// if( ! empty( $args['user_id'] ) )
-		// return $qs;
-
-		if ( ! empty( $args['exclude'] ) ) {
-			$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_user_ids );
-		} else {
-			$args['exclude'] = implode( ',', $exclude_user_ids );
+		// get removed profile type post ids
+		$bp_member_type_ids = bp_get_removed_member_types();
+		// get removed profile type names/slugs
+		$bp_member_type_names = array();
+		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+			foreach ( $bp_member_type_ids as $single ) {
+				$bp_member_type_names[] = $single['name'];
+			}
 		}
 
+		if ( ! empty( $args['member_type__not_in'] ) ) {
+			if ( is_array( $args['member_type__not_in'] ) ) {
+				$args['member_type__not_in'] = array_merge( $args['member_type__not_in'], $bp_member_type_names );
+			} else {
+				$args['member_type__not_in'] = $args['member_type__not_in'] . ',' . implode( ',', $bp_member_type_names );
+			}
+		} else {
+			$args['member_type__not_in'] = implode( ',', $bp_member_type_names );
+		}
 		$qs = build_query( $args );
 	}
 

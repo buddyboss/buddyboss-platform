@@ -3413,19 +3413,33 @@ function bp_group_type_short_code_add_body_class( $class ) {
  */
 function bp_groups_exclude_group_type( $qs = false, $object = false ) {
 
-	$exclude_group_ids = array_unique( bp_groups_get_excluded_group_ids_by_type() );
+	$args = wp_parse_args( $qs );
 
-	if ( $object != 'groups' ) {
+	if ( $object !== 'groups' ) {
 		return $qs;
 	}
 
-	if ( bp_is_groups_directory() ) {
-		$args = wp_parse_args( $qs );
+	if ( bp_is_groups_directory() && isset( $args['scope'] ) && 'all' === $args['scope'] ) {
 
-		if ( ! empty( $args['exclude'] ) ) {
-			$args['exclude'] = $args['exclude'] . ',' . implode( ',', $exclude_group_ids );
+		// get removed group type post ids
+		$bp_group_type_ids = bp_groups_get_excluded_group_types();
+
+		// get removed group type names/slugs
+		$bp_group_type_names = array();
+		if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
+			foreach ( $bp_group_type_ids as $single ) {
+				$bp_group_type_names[] = $single['name'];
+			}
+		}
+
+		if ( ! empty( $args['group_type__not_in'] ) ) {
+			if ( is_array( $args['group_type__not_in'] ) ) {
+				$args['group_type__not_in'] = array_merge( $args['group_type__not_in'], $bp_group_type_names );
+			} else {
+				$args['group_type__not_in'] = $args['group_type__not_in'] . ',' . implode( ',', $bp_group_type_names );
+			}
 		} else {
-			$args['exclude'] = implode( ',', $exclude_group_ids );
+			$args['group_type__not_in'] = implode( ',', $bp_group_type_names );
 		}
 
 		$qs = build_query( $args );
