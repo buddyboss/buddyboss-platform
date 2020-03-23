@@ -1155,12 +1155,14 @@ function bp_disable_invite_member_type( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string
+ * @param string $post_type Post Type
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
 function bp_is_post_type_feed_enable( $post_type, $default = false ) {
-	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) get_option( "bp-feed-custom-post-type-$post_type", $default ) );
+	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
 }
 
 /**
@@ -1168,12 +1170,13 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
 function bp_is_custom_post_type_feed_enable( $default = false ) {
-	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) get_option( 'bp-enable-custom-post-type-feed', $default ) );
+	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) bp_get_option( 'bp-enable-custom-post-type-feed', $default ) );
 }
 
 /**
@@ -1181,12 +1184,14 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $post_type string
+ * @param string $activity_type Activity Type
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
  *
  * @return bool Is post type feed enabled or not
  */
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
-	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) get_option( $activity_type, $default ) );
+	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) bp_get_option( $activity_type, $default ) );
 }
 
 /**
@@ -1238,12 +1243,14 @@ function bp_member_type_default_on_registration( $default = '' ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $member_type string
+ * @param string $member_type Member type
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: true.
  *
  * @return bool Is member type send invites enabled or not
  */
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
-	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) get_option( $member_type, $default ) );
+	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) bp_get_option( $member_type, $default ) );
 }
 
 /**
@@ -1251,12 +1258,11 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param bool $default Optional. Fallback value if not found in the database.
- *                      Default: true.
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: Empty string.
  * @return string
  */
 function bp_enable_private_network_public_content( $default = '' ) {
-
 	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
 }
 
