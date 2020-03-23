@@ -86,12 +86,13 @@ function enableSortableFieldOptions () {
 	);
 }
 
-function disableAlreadySelectedOption () {
-	jQuery("#field_box select.bp_ps_col2 option").prop("disabled", false); //enable everything
+function disableAlreadySelectedOption() {
+
+	jQuery('#field_box select.bp_ps_col2 option').prop('disabled', false); //enable everything
 
     //collect the values from selected;
     var arr = jQuery.map (
-	        jQuery("#field_box select.bp_ps_col2 option:selected"), function (n) {
+	        jQuery('#field_box select.bp_ps_col2 option:selected'), function (n) {
 	        	if ( n.value !== 'heading' ) {
 	            	return n.value;
 	        	}
@@ -99,16 +100,16 @@ function disableAlreadySelectedOption () {
         );
 
     //disable elements
-    jQuery("#field_box select.bp_ps_col2 option").filter(function () {
-    	if (jQuery(this).prop("selected") == false ){
+    jQuery('#field_box select.bp_ps_col2 option').filter(function () {
+    	if (jQuery(this).prop('selected') == false ){
 	        return jQuery.inArray(jQuery(this).val(), arr) > -1; //if value is in the array of selected values
 	    }
-    }).prop("disabled", true);
+    }).prop('disabled', true);
 
     //re-enable elements
-    jQuery("#field_box select.bp_ps_col2 option").filter(function () {
+    jQuery('#field_box select.bp_ps_col2 option').filter(function () {
         return jQuery.inArray(jQuery(this).val(), arr) == -1; //if value is not in the array of selected values
-    }).prop("disabled",false);
+    }).prop('disabled',false);
 }
 
 jQuery( document ).ready(
