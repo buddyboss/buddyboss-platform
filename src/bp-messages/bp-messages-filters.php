@@ -84,6 +84,7 @@ add_action( 'messages_screen_compose', 'maybe_redirects_to_previous_thread_messa
 add_action( 'groups_join_group', 'bp_group_messages_join_new_member', 10, 2 );
 add_action( 'groups_accept_invite', 'bp_group_messages_accept_new_member', 10, 2 );
 add_action( 'groups_banned_member', 'bp_group_messages_banned_member', 10, 2 );
+add_action( 'groups_ban_member', 'bp_group_messages_admin_banned_member', 10, 2 );
 add_action( 'groups_unban_member', 'bp_group_messages_unbanned_member', 10, 2 );
 add_action( 'groups_membership_accepted', 'bp_group_messages_groups_membership_accepted', 10, 3 );
 
@@ -373,14 +374,59 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 	$group_thread = (int) groups_get_groupmeta( (int) $group_id, 'group_message_thread' );
 
 	if ( $group_thread > 0 ) {
-		$first_message = BP_Messages_Thread::get_first_message( $group_thread );
-		$message_users_ids       = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+		$first_message     = BP_Messages_Thread::get_first_message( $group_thread );
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 
 		$message_users_ids = explode( ',', $message_users_ids );
 		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
 		$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
-		if ((  $key = array_search( $user_id, $message_users_ids ) ) !== false ) {
-			unset( $message_users_ids[$key] );
+		if ( ( $key = array_search( $user_id, $message_users_ids ) ) !== false ) {
+			unset( $message_users_ids[ $key ] );
+		}
+
+		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
+
+		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+		$new_reply = messages_new_message( array(
+			'sender_id'  => $user_id,
+			'thread_id'  => $group_thread,
+			'subject'    => '',
+			'content'    => '<p> </p>',
+			'date_sent'  => $date_sent = bp_core_current_time(),
+			'error_type' => 'wp_error',
+		) );
+		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
+		if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
+			if ( bp_has_message_threads( array( 'include' => $new_reply ) ) ) {
+				while ( bp_message_threads() ) {
+					bp_message_thread();
+					$last_message_id = (int) $messages_template->thread->last_message_id;
+					bp_messages_update_meta( $last_message_id, 'group_message_group_ban', 'yes' );
+					bp_messages_update_meta( $last_message_id, 'group_id', $group_id );
+				}
+			}
+		}
+		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND thread_id = %d", $user_id, (int) $group_thread ) );
+
+	}
+}
+
+function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
+
+	global $wpdb, $bp, $messages_template;
+
+	$group_thread = (int) groups_get_groupmeta( (int) $group_id, 'group_message_thread' );
+
+	if ( $group_thread > 0 ) {
+		$first_message     = BP_Messages_Thread::get_first_message( $group_thread );
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+
+		$message_users_ids = explode( ',', $message_users_ids );
+		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
+		$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
+		if ( ( $key = array_search( $user_id, $message_users_ids ) ) !== false ) {
+			unset( $message_users_ids[ $key ] );
 		}
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
