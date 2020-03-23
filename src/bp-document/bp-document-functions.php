@@ -353,6 +353,8 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 		$documents = $_POST['medias'];
 	}
 
+	$privacy = ! empty( $_POST['privacy'] ) && in_array( $_POST['privacy'], array_keys( bp_document_get_visibility_levels() ) ) ? $_POST['privacy'] : 'public';
+
 	if ( ! empty( $documents ) && is_array( $documents ) ) {
 		// save  document
 		foreach ( $documents as $document ) {
@@ -364,6 +366,7 @@ function bp_document_add_handler( $documents = array(), $activity_id = '' ) {
 					'title'         => $document['name'],
 					'folder_id'     => ! empty( $document['folder_id'] ) ? $document['folder_id'] : false,
 					'group_id'      => ! empty( $document['group_id'] ) ? $document['group_id'] : false,
+					'privacy'       => ! empty( $document['privacy'] ) && in_array( $document['privacy'], array_merge( array_keys( bp_document_get_visibility_levels() ), array( 'message' ) ) ) ? $document['privacy'] : $privacy,
 				)
 			);
 

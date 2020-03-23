@@ -133,6 +133,9 @@ add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 99
 add_action( 'bp_media_add', 'bp_activity_media_add', 9 );
 add_filter( 'bp_media_add_handler', 'bp_activity_create_parent_media_activity', 9 );
 
+add_action( 'bp_document_add', 'bp_activity_document_add', 9 );
+add_filter( 'bp_document_add_handler', 'bp_activity_create_parent_document_activity', 9 );
+
 /** Functions *****************************************************************/
 
 /**
@@ -1351,3 +1354,122 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 	return $link;
 }
 
+/**
+ * Create document activity for each document uploaded
+ *
+ * @param $document
+ *
+ * @since BuddyBoss 1.2.0
+ */
+function bp_activity_document_add( $document ) {
+
+	if ( ! empty( $document ) ) {
+
+		$activity_id = bp_activity_post_update( array( 'hide_sitewide' => true, 'privacy' => 'media' ) );
+
+		if ( $activity_id ) {
+
+			//save media activity id in media
+			$document->activity_id = $activity_id;
+			$document->save();
+
+			// update activity meta
+			bp_activity_update_meta( $activity_id, 'bp_document_activity', '1' );
+
+			// save attachment meta for activity
+			update_post_meta( $document->attachment_id, 'bp_document_activity_id', $activity_id );
+
+			if ( isset( $_POST['bp_activity_update'] ) && isset( $_POST['bp_activity_id'] ) ) {
+				//save parent activity id in attachment meta
+				update_post_meta( $document->attachment_id, 'bp_document_parent_activity_id', $_POST['bp_activity_id'] );
+			}
+		}
+	}
+}
+
+/**
+ * Create main activity for the media uploaded and saved.
+ *
+ * @param $document_ids
+ *
+ * @return mixed
+ * @since BuddyBoss 1.2.0
+ *
+ */
+function bp_activity_create_parent_document_activity( $document_ids ) {
+
+	if ( ! empty( $document_ids ) && ! isset( $_POST['bp_activity_update'] ) ) {
+
+		$added_document_ids = $document_ids;
+		$content            = false;
+
+		if ( ! empty( $_POST['content'] ) ) {
+
+			/**
+			 * Filters the content provided in the activity input field.
+			 *
+			 * @param string $value Activity message being posted.
+			 *
+			 * @since BuddyPress 1.2.0
+			 *
+			 */
+			$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
+		}
+
+		$group_id  = FILTER_INPUT( INPUT_POST, 'group_id', FILTER_SANITIZE_NUMBER_INT );
+		$folder_id = false;
+
+		if ( bp_is_active( 'groups' ) && ! empty( $group_id ) && $group_id > 0 ) {
+			$activity_id = groups_post_update( array( 'content' => $content, 'group_id' => $group_id ) );
+		} else {
+			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
+		}
+
+		//save media meta for activity
+		if ( ! empty( $activity_id ) ) {
+			$privacy = 'public';
+
+			foreach ( (array) $added_document_ids as $document_id ) {
+				$document = new BP_Document( $document_id );
+
+				// get one of the media's privacy for the activity privacy
+				$privacy = $document->privacy;
+
+				// get media album id
+				if ( ! empty( $document->album_id ) ) {
+					$folder_id = $document->album_id;
+				}
+
+				//save parent activity id in attachment meta
+				update_post_meta( $document->attachment_id, 'bp_media_parent_activity_id', $activity_id );
+			}
+
+			bp_activity_update_meta( $activity_id, 'bp_document_ids', implode( ',', $added_document_ids ) );
+
+			// if media is from album then save album id in activity media
+			if ( ! empty( $folder_id ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_album_activity', $folder_id );
+			}
+
+			if ( 'document_document_save' === $_POST['action'] ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
+			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['document'] ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'document' );
+			} elseif ( 'post_update' === $_POST['action'] && isset( $_POST['media'] ) ) {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
+			} else {
+				bp_activity_update_meta( $activity_id, 'bp_media_type', 'media' );
+			}
+
+			if ( empty( $group_id ) ) {
+				$main_activity = new BP_Activity_Activity( $activity_id );
+				if ( ! empty( $main_activity ) ) {
+					$main_activity->privacy = $privacy;
+					$main_activity->save();
+				}
+			}
+		}
+	}
+
+	return $document_ids;
+}
