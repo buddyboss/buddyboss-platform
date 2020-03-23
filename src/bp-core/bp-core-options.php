@@ -1162,6 +1162,14 @@ function bp_disable_invite_member_type( $default = false ) {
  * @return bool Is post type feed enabled or not
  */
 function bp_is_post_type_feed_enable( $post_type, $default = false ) {
+
+	/**
+	 * Filters whether post type feed enabled or not.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether post type feed enabled or not.
+	 */
 	return (bool) apply_filters( 'bp_is_post_type_feed_enable', (bool) bp_get_option( 'bp-feed-custom-post-type-' . $post_type, $default ) );
 }
 
@@ -1176,6 +1184,14 @@ function bp_is_post_type_feed_enable( $post_type, $default = false ) {
  * @return bool Is post type feed enabled or not
  */
 function bp_is_custom_post_type_feed_enable( $default = false ) {
+
+	/**
+	 * Filters whether custom post type feed enabled or not.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether custom post type feed enabled or not.
+	 */
 	return (bool) apply_filters( 'bp_is_custom_post_type_feed_enable', (bool) bp_get_option( 'bp-enable-custom-post-type-feed', $default ) );
 }
 
@@ -1191,6 +1207,14 @@ function bp_is_custom_post_type_feed_enable( $default = false ) {
  * @return bool Is post type feed enabled or not
  */
 function bp_platform_is_feed_enable( $activity_type, $default = true ) {
+
+	/**
+	 * Filters whether or not the feed enable or not.
+	 *
+	 * @since BuddyBoss 1.0.0
+	 *
+	 * @param bool $value Whether or not the feed enable or not.
+	 */
 	return (bool) apply_filters( 'bp_platform_is_feed_enable', (bool) bp_get_option( $activity_type, $default ) );
 }
 
@@ -1250,6 +1274,14 @@ function bp_member_type_default_on_registration( $default = '' ) {
  * @return bool Is member type send invites enabled or not
  */
 function bp_enable_send_invite_member_type( $member_type, $default = false ) {
+
+	/**
+	 * Filters whether or not allow member type invitations.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param bool $value whether or not allow member type invitations.
+	 */
 	return (bool) apply_filters( 'bp_enable_send_invite_member_type', (bool) bp_get_option( $member_type, $default ) );
 }
 
@@ -1260,9 +1292,17 @@ function bp_enable_send_invite_member_type( $member_type, $default = false ) {
  *
  * @param string $default Optional. Fallback value if not found in the database.
  *                      Default: Empty string.
- * @return string
+ * @return string Private network's public content.
  */
 function bp_enable_private_network_public_content( $default = '' ) {
+
+	/**
+	 * Filters private network's public content.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param bool $value Private network's public content.
+	 */
 	return apply_filters( 'bp_enable_private_network_public_content', bp_get_option( 'bp-enable-private-network-public-content', '' ) );
 }
 
@@ -1439,8 +1479,21 @@ function bp_register_confirm_password( $default = false ) {
  * Default layout option for the members listing
  *
  * @since BuddyBoss 1.2.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: grid.
+ *
+ * @return string Profile layout format.
  */
 function bp_profile_layout_default_format( $default = 'grid' ) {
+
+	/**
+	 * Filters profile layout format.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param bool $value Profile layout format.
+	 */
 	return apply_filters( 'bp_profile_layout_default_format', bp_get_option( 'bp-profile-layout-default-format', $default ) );
 }
 
@@ -1448,8 +1501,21 @@ function bp_profile_layout_default_format( $default = 'grid' ) {
  * Default layout option for the groups listing
  *
  * @since BuddyBoss 1.2.0
+ *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: grid.
+ *
+ * @return string Group layout format.
  */
 function bp_group_layout_default_format( $default = 'grid' ) {
+
+	/**
+	 * Filters group layout format.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param bool $value Group layout format.
+	 */
 	return apply_filters( 'bp_group_layout_default_format', bp_get_option( 'bp-group-layout-default-format', $default ) );
 }
 
@@ -1479,9 +1545,19 @@ function bp_allow_custom_registration( $default = false ) {
  *
  * @since BuddyBoss 1.2.8
  *
+ * @param string $default Optional. Fallback value if not found in the database.
+ *                      Default: Empty string.
+ *
  * @return string URL of register page.
  */
 function bp_custom_register_page_url( $default = '' ) {
 
+	/**
+	 * Filters custom registration page URL.
+	 *
+	 * @since BuddyBoss 1.2.8
+	 *
+	 * @param string $value custom registration page URL.
+	 */
 	return apply_filters( 'bp_custom_register_page_url', bp_get_option( 'register-page-url', $default ) );
 }
