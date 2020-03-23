@@ -2355,6 +2355,10 @@ form.ac-form .ac-reply-content input {
   width: 100%;
 }
 
+.bp-profile-search-widget .bp-heading-field-wrap {
+  border-radius: 0;
+}
+
 /**
 *-------------------------------------------------------------------------------
 * @section 4.0 - Directories
