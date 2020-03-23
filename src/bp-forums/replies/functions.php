@@ -580,7 +580,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Reply Topic */
@@ -2420,15 +2420,21 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 		if ( ! $author_id ) {
 			$display_role = __( 'Guest', 'buddyboss' );
 		} else {
-			$user_roles = array_values( get_userdata( $author_id )->roles );
 
-			if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
-				$display_role = __( 'Administrator', 'buddyboss' );
+			if ( empty( get_userdata( $author_id ) ) ) {
+				$display_role = __( 'Deleted User', 'buddyboss' );
+			} else {
+				$user_roles = array_values( get_userdata( $author_id )->roles );
+
+				if ( array_intersect( $user_roles, array( bbp_get_keymaster_role(), 'administrator' ) ) ) {
+					$display_role = __( 'Administrator', 'buddyboss' );
+				}
+
+				if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
+					$display_role = __( 'Moderator', 'buddyboss' );
+				}
 			}
 
-			if ( array_intersect( $user_roles, array( bbp_get_moderator_role(), 'editor' ) ) ) {
-				$display_role = __( 'Moderator', 'buddyboss' );
-			}
 		}
 	}
 

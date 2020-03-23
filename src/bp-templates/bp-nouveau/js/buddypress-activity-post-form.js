@@ -65,6 +65,11 @@ window.bp = window.bp || {};
 				uploadMultiple: false,
 				maxFilesize: typeof BP_Nouveau.media.max_upload_size !== 'undefined' ? BP_Nouveau.media.max_upload_size : 2
 			};
+
+			//  if defined, add custom dropzone options
+			if ( typeof BP_Nouveau.media.dropzone_options !== 'undefined' ) {
+				Object.assign(this.dropzone_options, BP_Nouveau.media.dropzone_options);
+			}
 		}
 	};
 

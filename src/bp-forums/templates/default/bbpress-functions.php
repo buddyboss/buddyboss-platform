@@ -278,25 +278,30 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 
 			$min = bp_core_get_minified_asset_suffix();
 
-			wp_enqueue_script( 'bp-mentions', buddypress()->plugin_url . "bp-core/js/mentions{$min}.js", array( 'jquery', 'jquery-atwho' ), bp_get_version(), true );
-			wp_enqueue_style( 'bp-mentions-css', buddypress()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bp_get_version() );
+			if ( ! wp_script_is( 'bp-mentions' ) ) {
+				wp_enqueue_script( 'bp-mentions', buddypress()->plugin_url . "bp-core/js/mentions{$min}.js", array(
+					'jquery',
+					'jquery-atwho'
+				), bp_get_version(), true );
+				wp_enqueue_style( 'bp-mentions-css', buddypress()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bp_get_version() );
 
-			wp_style_add_data( 'bp-mentions-css', 'rtl', true );
-			if ( $min ) {
-				wp_style_add_data( 'bp-mentions-css', 'suffix', $min );
+				wp_style_add_data( 'bp-mentions-css', 'rtl', true );
+				if ( $min ) {
+					wp_style_add_data( 'bp-mentions-css', 'suffix', $min );
+				}
+
+				wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bp_at_mention_default_options() );
+
+				/**
+				 * Fires at the end of the Mentions script.
+				 *
+				 * This is the hook where BP components can add their own prefetched results
+				 * friends to the page for quicker @mentions lookups.
+				 *
+				 * @since BuddyBoss 1.2.8
+				 */
+				do_action( 'bbp_forums_mentions_prime_results' );
 			}
-
-			wp_localize_script( 'bp-mentions', 'BP_Mentions_Options', bp_at_mention_default_options() );
-
-			/**
-			 * Fires at the end of the Mentions script.
-			 *
-			 * This is the hook where BP components can add their own prefetched results
-			 * friends to the page for quicker @mentions lookups.
-			 *
-			 * @since BuddyBoss 1.2.8
-			 */
-			do_action( 'bbp_forums_mentions_prime_results' );
 		}
 
 		/**
