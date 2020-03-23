@@ -8,7 +8,7 @@ add_action( 'bp_document_folder_after_save', 'bp_document_update_document_privac
 add_action( 'delete_attachment', 'bp_document_delete_attachment_document', 0 );
 
 // Activity
-add_action( 'bp_after_directory_activity_list', 'bp_document_add_theatre_template' );
+//add_action( 'bp_after_directory_activity_list', 'bp_document_add_theatre_template' );
 //add_action( 'bp_after_member_activity_content', 'bp_document_add_theatre_template' );
 //add_action( 'bp_after_group_activity_content', 'bp_document_add_theatre_template' );
 add_action( 'bp_activity_entry_content', 'bp_document_activity_entry' );
