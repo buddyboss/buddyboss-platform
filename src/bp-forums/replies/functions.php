@@ -650,6 +650,11 @@ function bbp_edit_reply_handler( $action = '' ) {
 		bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss' ) );
 	}
 
+	// Reply past edit lock checking.
+	if ( ! current_user_can( 'edit_others_replies' ) && bbp_past_edit_lock( $reply->post_date_gmt ) ) {
+		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
+	}
+
 	/** Reply Status */
 
 	// Maybe put into moderation

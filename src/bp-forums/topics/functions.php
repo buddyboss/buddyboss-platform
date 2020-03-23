@@ -638,6 +638,11 @@ function bbp_edit_topic_handler( $action = '' ) {
 		bbp_add_error( 'bbp_topic_blacklist', __( '<strong>ERROR</strong>: Your discussion cannot be edited at this time.', 'buddyboss' ) );
 	}
 
+	// Topic past edit lock checking.
+	if ( ! current_user_can( 'edit_others_topics' ) && bbp_past_edit_lock( $topic->post_date_gmt ) ) {
+		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
+	}
+
 	/** Topic Status */
 
 	// Maybe put into moderation
