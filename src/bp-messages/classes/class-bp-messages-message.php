@@ -294,13 +294,20 @@ class BP_Messages_Message {
 
 		// Get the message ids in order to delete their metas.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		//Get the all thread ids for unread messages
+		$thread_ids  = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
 
 		// Delete message meta.
 		foreach ( $message_ids as $message_id ) {
 			bp_messages_delete_meta( $message_id );
 		}
+		// unread theread message.
+		if ( ! empty( $thread_ids ) ) {
+			$thread_ids = implode( ',', $thread_ids );
 
+			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
+		}
 		// delete all the meta recipients from user table.
 		$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}

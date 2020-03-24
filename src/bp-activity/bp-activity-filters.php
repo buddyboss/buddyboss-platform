@@ -246,6 +246,9 @@ function bp_activity_save_link_data( $activity ) {
 		$attachment_id = bp_activity_media_sideload_attachment( $link_image );
 		if ( $attachment_id ) {
 			$preview_data['attachment_id'] = $attachment_id;
+		} else {
+			// store non downloadable urls as it is in preview data.
+			$preview_data['image_url'] = $link_image;
 		}
 	}
 
@@ -575,7 +578,11 @@ function bp_activity_link_preview( $content, $activity ) {
 	if ( ! empty( $preview_data['attachment_id'] ) ) {
 		$image_url = wp_get_attachment_image_url( $preview_data['attachment_id'], 'full' );
 		$content  .= '<div class="activity-link-preview-image">';
-		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . $image_url . '" /></a>';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
+		$content  .= '</div>';
+	} else if ( ! empty( $preview_data['image_url'] ) ) {
+		$content  .= '<div class="activity-link-preview-image">';
+		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
 		$content  .= '</div>';
 	}
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
