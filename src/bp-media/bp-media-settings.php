@@ -1065,25 +1065,113 @@ function bp_media_settings_callback_extension_document_support() {
 	$stored     = bp_array_flatten( bp_is_media_document_extension_support_enabled() );
 	$mime_types = bp_document_allowed_mimes();
 
-    ?>
-    <ul class="extension-listing">
-    <?php
-    foreach ( $extensions as $extension ) {
+	?>
+	<style>
+		table.extension-listing tbody td {
+			padding: 6px 10px;
+		}
+		
+		table.extension-listing thead th {
+			padding: 6px 10px;
+		}
+		
+		table.extension-listing thead th.ext-head-enable,
+		table.extension-listing thead th.ext-head-control {
+			width: 30px;
+			padding: 0;
+		}
 
-	    $exte = ltrim( $extension, '.' );
-        $name = 'bp_document_extensions_support[][' . $exte . ']';
+		table.extension-listing thead th.ext-head-name {
+			width: 100px;
+		}
+		
+		table.extension-listing td input[type="text"].extension-name {
+			width: 100px
+		}
 
-	    ?>
-        <li style="width: 15%;float: left;">
-            <input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( array_key_exists( "$exte", $stored ) ) ?> />
-            <label for="<?php echo esc_attr( $name ); ?>">
-                <?php echo esc_html( $extension ); ?>
-            </label><br/>
-        </li>
-	    <?php
-    }
-    ?>
-    </ul>
+		table.extension-listing td #btn-remove-extensions{
+			cursor: pointer
+		}
+
+		table.extension-listing tfoot td {
+			text-align: center;
+		}
+		
+		table.extension-listing td #btn-add-extensions{
+			cursor: pointer;
+			font-size: 22px;
+		}
+		
+		table.extension-listing td input[type="text"] {
+			width: 100%;
+		}
+	</style>
+
+    <table class="extension-listing">
+		<thead>
+			<th class="ext-head ext-head-enable"></th>
+			<th class="ext-head ext-head-name">Name</th>
+			<th class="ext-head ext-head-mime">Mime Type</th>
+			<th class="ext-head ext-head-desc">Description</th>
+			<th class="ext-head ext-head-control"></th>
+		</thead>
+		<tbody>
+			<?php
+			foreach ( $extensions as $extension ) {
+
+				$exte = ltrim( $extension, '.' );
+				$name = 'bp_document_extensions_support[][' . $exte . ']';
+
+				?>
+				<tr>
+					<td>
+						<input name="<?php echo esc_attr( $name ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( array_key_exists( "$exte", $stored ) ) ?> />
+					</td>
+					<td>
+						<label for="<?php echo esc_attr( $name ); ?>">
+						<?php echo esc_html( $extension ); ?>
+					</label>
+					</td>
+					<td>
+						<input name="<?php echo esc_attr( $name ) . 'mime'; ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" />
+					</td>
+					<td>
+						<input name="<?php echo esc_attr( $name ) . 'desc'; ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" />
+					</td>
+					<td></td>
+				</tr>
+				<?php
+			}
+			?>
+			<tr style="display: none;" class="custom-extension-data">
+				<td>
+					<input name="extension-check" data-name="extension-check" type="checkbox" class="extension-check" />
+				</td>
+				<td>
+					<input name="extension-name" data-name="extension-name" type="text" class="extension-name" />
+				</td>
+				<td>
+					<input name="extension-mime" data-name="extension-mime" type="text" class="extension-mime" />
+				</td>
+				<td>
+					<input name="extension-desc" data-name="extension-desc" type="text" class="extension-desc" />
+				</td>
+				<td>
+					<span class="dashicons dashicons-dismiss" id="btn-remove-extensions"></span>
+				</td>
+			</tr>
+		</tbody>
+		<tfoot>
+			<tr>
+				<td colspan="4">
+					
+				</td>
+				<td>
+					<span class="dashicons dashicons-plus-alt" id="btn-add-extensions"></span>
+				</td>
+			</tr>
+		</tfoot>
+    </table>
     <?php
 }
 

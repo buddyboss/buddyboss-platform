@@ -790,6 +790,46 @@
 				} );
 			}
 
+			$( document ).on(
+				'click',
+				'table.extension-listing #btn-add-extensions',
+				function( e ) {
+					var parent = $( this ).closest( 'table.extension-listing' );
+
+					var newOption = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
+
+					parent.find( 'tbody' ).append( ' <tr class="custom-extension"> ' + newOption + ' </tr> ' );
+
+					parent.find( 'tbody tr.custom-extension' ).each( function( index ) {
+						$(this).find('input.extension-check').attr( 'name', $(this).find('input.extension-check').attr( 'data-name' ) + index );
+						$(this).find('input.extension-name').attr( 'name', $(this).find('input.extension-name').attr( 'data-name' ) + index );
+						$(this).find('input.extension-mime').attr( 'name', $(this).find('input.extension-mime').attr( 'data-name' ) + index );
+						$(this).find('input.extension-desc').attr( 'name', $(this).find('input.extension-desc').attr( 'data-name' ) + index );
+					});
+					
+				}
+			);
+
+			$( document ).on(
+				'click',
+				'table.extension-listing #btn-remove-extensions',
+				function( e ) {
+
+					var parent = $( this ).closest( 'table.extension-listing' );
+					
+					$( this ).closest( 'tr' ).remove();
+
+					parent.find( 'tbody tr.custom-extension' ).each( function( index ) {
+						$(this).find('input.extension-check').attr( 'name', $(this).find('input.extension-check').attr( 'data-name' ) + index );
+						$(this).find('input.extension-name').attr( 'name', $(this).find('input.extension-name').attr( 'data-name' ) + index );
+						$(this).find('input.extension-mime').attr( 'name', $(this).find('input.extension-mime').attr( 'data-name' ) + index );
+						$(this).find('input.extension-desc').attr( 'name', $(this).find('input.extension-desc').attr( 'data-name' ) + index );
+					});
+
+				}
+			);
+
+
 		}
 	);
 
