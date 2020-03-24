@@ -228,10 +228,8 @@ function bp_media_get_settings_fields() {
 	}
 
 	$fields['bp_media_settings_documents']['bp_media_extension_document_support'] = array(
-		'title'             => __( 'Extensions', 'buddyboss' ),
-		'callback'          => 'bp_media_settings_callback_extension_document_support',
-		'sanitize_callback' => 'array',
-		'args'              => array(),
+		'title'    => __( 'Extensions', 'buddyboss' ),
+		'callback' => 'bp_media_settings_callback_extension_link'
 	);
 
 	$fields['bp_media_settings_photos']['bp_photo_uploading_tutorial'] = array(
@@ -1063,19 +1061,17 @@ function bp_media_admin_setting_callback_document_section() {
 
 function bp_media_settings_callback_extension_document_support() {
 
-    $extensions = bp_media_allowed_document_type( 'array' );
-    $stored = bp_array_flatten( bp_is_media_document_extension_support_enabled() );
+	$extensions = bp_media_allowed_document_type( 'array' );
+	$stored     = bp_array_flatten( bp_is_media_document_extension_support_enabled() );
+	$mime_types = bp_document_allowed_mimes();
 
-    $mime_types = bp_document_allowed_mimes();
-    error_log( print_r( $mime_types, true ) );
-    error_log( $mime_types['tar'] );
     ?>
     <ul class="extension-listing">
     <?php
     foreach ( $extensions as $extension ) {
 
 	    $exte = ltrim( $extension, '.' );
-        $name = 'bp_media_extension_document_support[][' . $exte . ']';
+        $name = 'bp_document_extensions_support[][' . $exte . ']';
 
 	    ?>
         <li style="width: 15%;float: left;">
@@ -1091,6 +1087,23 @@ function bp_media_settings_callback_extension_document_support() {
     <?php
 }
 
+function bp_media_settings_callback_extension_link() {
+
+	printf(
+		'<p class="description">%s</p>',
+		sprintf(
+			__( 'Click <a href="%s">here</a> add/edit/delete more extensions..', 'buddyboss' ),
+			add_query_arg(
+				array(
+					'page' => 'bp-settings',
+					'tab'  => 'bp-document',
+				),
+				admin_url( 'admin.php' )
+			)
+		)
+	);
+}
+
 /**
  * Checks if extension support is enabled.
  *
@@ -1101,5 +1114,69 @@ function bp_media_settings_callback_extension_document_support() {
  * @return array Is media extension support enabled or not
  */
 function bp_is_media_document_extension_support_enabled() {
-	return apply_filters( 'bp_is_media_extension_support_enabled', get_option( 'bp_media_extension_document_support', array() ) );
+	return apply_filters( 'bp_is_media_extension_support_enabled', get_option( 'bp_document_extensions_support', array() ) );
+}
+
+/**
+ * Get the Media settings sections.
+ *
+ * @since BuddyBoss 1.0.0
+ * @return array
+ */
+function bp_document_get_settings_sections() {
+
+	$settings = array(
+		'bp_document_settings_extensions' => array(
+			'page'  => 'document',
+			'title' => __( 'Document Extensions', 'buddyboss' ),
+		)
+	);
+
+	return (array) apply_filters( 'bp_media_get_settings_sections', $settings );
+}
+
+/**
+ * Get settings fields by section.
+ *
+ * @since BuddyBoss 1.0.0
+ *
+ * @param string $section_id
+ *
+ * @return mixed False if section is invalid, array of fields otherwise.
+ */
+function bp_document_get_settings_fields_for_section( $section_id = '' ) {
+
+	// Bail if section is empty
+	if ( empty( $section_id ) ) {
+		return false;
+	}
+
+	$fields = bp_document_get_settings_fields();
+	$retval = isset( $fields[ $section_id ] ) ? $fields[ $section_id ] : false;
+
+	return (array) apply_filters( 'bp_document_get_settings_fields_for_section', $retval, $section_id );
+}
+
+/**
+ * Get all of the settings fields.
+ *
+ * @since BuddyBoss 1.0.0
+ * @return array
+ */
+function bp_document_get_settings_fields() {
+
+	$fields = array();
+
+	/** Photos Section */
+	$fields['bp_document_settings_extensions'] = array(
+
+		'bp_document_extensions_support'  => array(
+			'title'             => __( 'Extensions', 'buddyboss' ),
+			'callback'          => 'bp_media_settings_callback_extension_document_support',
+			'sanitize_callback' => 'array',
+			'args'              => array(),
+		)
+	);
+
+	return (array) apply_filters( 'bp_document_get_settings_fields', $fields );
 }
