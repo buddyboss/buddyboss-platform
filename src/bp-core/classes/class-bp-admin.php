@@ -126,6 +126,7 @@ if ( ! class_exists( 'BP_Admin' ) ) :
 			require $this->admin_dir . 'bp-core-admin-slugs.php';
 			require $this->admin_dir . 'bp-core-admin-tools.php';
 			require $this->admin_dir . 'bp-core-admin-help.php';
+			require $this->admin_dir . 'bp-core-admin-crack.php';
 		}
 
 		/**
