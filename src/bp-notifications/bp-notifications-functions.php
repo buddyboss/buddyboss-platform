@@ -813,25 +813,3 @@ function bp_notifications_add_meta( $notification_id, $meta_key, $meta_value, $u
 
 	return $retval;
 }
-
-/**
- * When a user is deleted, we need to clean up the database and remove all message notifications.
- * Remove message notifications.
- *
- * @since BuddyBoss 1.2.6
- *
- * @param int $user_id The ID of the deleted user.
- */
-function bp_notification_remove_message_data( $user_id ) {
-	BP_Notifications_Notification::delete(
-		array(
-			'secondary_item_id' => $user_id,
-			'component_action'  => 'new_message',
-			'component_name'    => 'messages',
-		)
-	);
-}
-
-add_action( 'wpmu_delete_user', 'bp_notification_remove_message_data' );
-add_action( 'delete_user', 'bp_notification_remove_message_data' );
-add_action( 'bp_make_spam_user', 'bp_notification_remove_message_data' );
