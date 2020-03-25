@@ -3244,9 +3244,6 @@ if ( true === bp_disable_group_type_creation() ) {
 	// filter for adding body class where the shortcode added.
 	add_filter( 'body_class', 'bp_group_type_short_code_add_body_class' );
 
-	// remove groups of a specific group type from groups directory
-	add_action( 'bp_ajax_querystring', 'bp_groups_exclude_group_type', 999, 2 );
-
 }
 
 /**
@@ -3356,20 +3353,6 @@ function bp_group_type_short_code_callback( $atts ) {
 						buddypress()->current_component              = 'groups';
 						buddypress()->is_directory                   = true;
 					}
-
-					unset( $atts['type'] );
-					$bp_group_type_query = build_query( $atts );
-					if ( ! empty( $bp_group_type_query ) ) {
-						$bp_group_type_query = '&' . $bp_group_type_query;
-					}
-					update_option( 'bp_group_type_short_code_query_build', $bp_group_type_query );
-
-					add_filter(
-						'bp_ajax_querystring',
-						function ( $qs ) {
-							return $qs .= get_option( 'bp_group_type_short_code_query_build' );
-						}
-					);
 
 					// Get a BuddyPress groups-loop template part for display in a theme.
 					bp_get_template_part( 'groups/groups-loop' );

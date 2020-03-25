@@ -364,6 +364,20 @@ function bp_has_members( $args = array() ) {
 		$search_terms_default = stripslashes( $_REQUEST[ $search_query_arg ] );
 	}
 
+	$member_type__not_in = array();
+
+	$args = bp_parse_args( $args, array() );
+	// Exclude Member Types
+	if ( empty( $args['scope'] ) ||  'all' === $args['scope'] ) {
+		// get all excluded member types.
+		$bp_member_type_ids = bp_get_removed_member_types();
+		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+			foreach ( $bp_member_type_ids as $single ) {
+				$member_type__not_in[] = $single['name'];
+			}
+		}
+	}
+
 	// Type: active ( default ) | random | newest | popular | online | alphabetical.
 	$r = bp_parse_args(
 		$args,
@@ -381,7 +395,7 @@ function bp_has_members( $args = array() ) {
 			'user_id'             => $user_id, // Pass a user_id to only show friends of this user.
 			'member_type'         => $member_type,
 			'member_type__in'     => '',
-			'member_type__not_in' => '',
+			'member_type__not_in' => $member_type__not_in,
 			'search_terms'        => $search_terms_default,
 
 			'meta_key'            => false,    // Only return users with this usermeta.
