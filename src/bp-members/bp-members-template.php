@@ -348,8 +348,9 @@ function bp_has_members( $args = array() ) {
 		$type    = 'alphabetical';
 	}
 
-	$member_type = bp_get_current_member_type();
-	if ( ! $member_type && ! empty( $_GET['member_type'] ) ) {
+	$member_type = '';
+
+	if ( isset( $_GET['member_type'] ) && ! empty( $_GET['member_type'] ) ) {
 		if ( is_array( $_GET['member_type'] ) ) {
 			$member_type = $_GET['member_type'];
 		} else {
@@ -357,6 +358,15 @@ function bp_has_members( $args = array() ) {
 			$member_type = explode( ',', $_GET['member_type'] );
 		}
 	}
+
+	if ( empty( $member_type ) ) {
+		$member_type = bp_get_current_member_type();
+    } elseif ( is_array( $member_type ) ) {
+	    $member_type = array_merge( $member_type, bp_get_current_member_type() );
+    } elseif ( '' !== $member_type ) {
+		$member_type = explode( ',', $member_type );
+		$member_type = array_merge( $member_type, bp_get_current_member_type() );
+    }
 
 	$search_terms_default = null;
 	$search_query_arg     = bp_core_get_component_search_query_arg( 'members' );
@@ -369,13 +379,15 @@ function bp_has_members( $args = array() ) {
 	$args = bp_parse_args( $args, array() );
 	// Exclude Member Types
 	if ( empty( $args['scope'] ) || 'all' === $args['scope'] ) {
-		// get all excluded member types.
-		$bp_member_type_ids = bp_get_removed_member_types();
-		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
-			foreach ( $bp_member_type_ids as $single ) {
-				$member_type__not_in[] = $single['name'];
-			}
-		}
+	    if ( ! bp_is_user() && '' === $member_type   ) {
+		    // get all excluded member types.
+		    $bp_member_type_ids = bp_get_removed_member_types();
+		    if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {
+			    foreach ( $bp_member_type_ids as $single ) {
+				    $member_type__not_in[] = $single['name'];
+			    }
+		    }
+	    }
 	}
 
 	// Type: active ( default ) | random | newest | popular | online | alphabetical.
