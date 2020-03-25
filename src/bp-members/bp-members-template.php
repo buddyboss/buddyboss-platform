@@ -368,7 +368,7 @@ function bp_has_members( $args = array() ) {
 
 	$args = bp_parse_args( $args, array() );
 	// Exclude Member Types
-	if ( empty( $args['scope'] ) ||  'all' === $args['scope'] ) {
+	if ( empty( $args['scope'] ) || 'all' === $args['scope'] ) {
 		// get all excluded member types.
 		$bp_member_type_ids = bp_get_removed_member_types();
 		if ( isset( $bp_member_type_ids ) && ! empty( $bp_member_type_ids ) ) {

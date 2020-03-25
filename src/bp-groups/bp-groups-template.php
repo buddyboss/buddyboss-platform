@@ -394,16 +394,16 @@ function bp_has_groups( $args = '' ) {
 
 	$args = bp_parse_args( $args, array() );
 	// Exclude Group Types
-	if ( empty( $args['scope'] ) ||  'all' === $args['scope'] ) {
-	    if ( wp_doing_ajax() ) {
-		    // get all excluded group types.
-		    $bp_group_type_ids = bp_groups_get_excluded_group_types();
-		    if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
-			    foreach ( $bp_group_type_ids as $single ) {
-				    $group_type__not_in[] = $single['name'];
-			    }
-		    }
-	    }
+	if ( empty( $args['scope'] ) || 'all' === $args['scope'] ) {
+		if ( wp_doing_ajax() ) {
+			// get all excluded group types.
+			$bp_group_type_ids = bp_groups_get_excluded_group_types();
+			if ( isset( $bp_group_type_ids ) && ! empty( $bp_group_type_ids ) ) {
+				foreach ( $bp_group_type_ids as $single ) {
+					$group_type__not_in[] = $single['name'];
+				}
+			}
+		}
 	}
 
 	// Parse defaults and requested arguments.
