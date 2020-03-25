@@ -26,7 +26,7 @@ $group_cover_link = trailingslashit( $admin_link . 'group-cover-image' );
 				<span class="dashicons dashicons-edit"></span>
 			</a>
 			<?php if ( ! empty( $group_cover_image ) ) { ?>
-				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Image', 'buddyboss-theme'); ?>">
+				<a href="#" class="position-change-cover-image" data-balloon-pos="right" data-balloon="<?php _e('Reposition Cover Photo', 'buddyboss-theme'); ?>">
 					<span class="dashicons dashicons-move"></span>
 				</a>
 				<div class="header-cover-reposition-wrap">
