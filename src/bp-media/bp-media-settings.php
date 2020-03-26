@@ -1020,9 +1020,9 @@ function bp_media_admin_setting_callback_document_section() {
 
 	exec( 'whereis libreoffice', $command_output, $return_val );
 
-	if ( ! extension_loaded( 'imagick' ) && empty( $command_output ) && !empty( $return_val ) ) {
+	if ( ! extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
 		?>
-		<p><?php
+        <p><?php
 
 			echo sprintf(
 			/* translators: 1: Imagick status, 2: libreoffice status */
@@ -1031,11 +1031,11 @@ function bp_media_admin_setting_callback_document_section() {
 				'libreoffice'
 			);
 
-		?></p>
+			?></p>
 		<?php
-	} elseif ( extension_loaded( 'imagick' ) && empty( $command_output ) && !empty( $return_val ) ) {
+	} elseif ( extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
 		?>
-		<p><?php
+        <p><?php
 
 			echo sprintf(
 			/* translators: 1: libreoffice status */
@@ -1045,9 +1045,9 @@ function bp_media_admin_setting_callback_document_section() {
 
 			?></p>
 		<?php
-	} elseif ( !extension_loaded( 'imagick' ) && !empty( $command_output ) && empty( $return_val ) ) {
+	} elseif ( !extension_loaded( 'imagick' ) && ! $command_output && ! $return_val ) {
 		?>
-		<p><?php
+        <p><?php
 			echo sprintf(
 			/* translators: 1: Imagick status */
 				_x( 'Server needs %1$s extensions to be activated for the documents previews.', 'extension notification', 'buddyboss' ),
