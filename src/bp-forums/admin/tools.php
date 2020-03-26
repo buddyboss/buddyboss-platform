@@ -68,9 +68,9 @@ function bbp_admin_repair() {
 									<?php
 									foreach ( $user_blogs as $user_blog ) {
 										?>
-										<option value="<?php echo esc_attr( $user_blog->userblog_id ) ?>">
+										<option value="<?php echo esc_attr( $user_blog->blog_id ) ?>">
 											<?php
-											echo esc_html( $user_blog->blogname );
+											echo esc_html( $user_blog->domain );
 											?>
 										</option>
 										<?php
@@ -235,7 +235,7 @@ function bbp_get_blogs_list( $user_id = 0 ) {
 		$user_id = get_current_user_id();
 	}
 
-	$user_blogs = get_blogs_of_user( $user_id );
+	$user_blogs = get_sites();
 
 	return apply_filters( 'bbp_user_blogs', ( $user_blogs ) ? $user_blogs : array() );
 }
@@ -1601,8 +1601,15 @@ function bbp_admin_repair_topic_meta() {
 	$statement = __( 'Recalculating the discussion for each post &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
+	if( is_multisite() && bp_is_network_activated() ){
+		switch_to_blog( $_POST['site_id'] );
+	}
+
 	// First, delete everything.
 	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` = '_bbp_topic_id';" ) ) ) {
+		if( is_multisite() && bp_is_network_activated() ) {
+			restore_current_blog();
+		}
 		return array(
 			1,
 			sprintf( $statement, $result ),
@@ -1622,6 +1629,9 @@ function bbp_admin_repair_topic_meta() {
 			GROUP BY `topic`.`ID` );"
 		)
 	) ) {
+		if( is_multisite() && bp_is_network_activated() ) {
+			restore_current_blog();
+		}
 		return array(
 			3,
 			sprintf( $statement, $result ),
@@ -1645,6 +1655,9 @@ function bbp_admin_repair_topic_meta() {
 			GROUP BY `reply`.`ID` );"
 		)
 	) ) {
+		if( is_multisite() && bp_is_network_activated() ) {
+			restore_current_blog();
+		}
 		return array(
 			4,
 			sprintf( $statement, $result ),
@@ -1653,6 +1666,9 @@ function bbp_admin_repair_topic_meta() {
 		);
 	}
 
+	if( is_multisite() && bp_is_network_activated() ) {
+		restore_current_blog();
+	}
 	// Complete results
 	return array(
 		0,

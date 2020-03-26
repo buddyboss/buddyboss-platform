@@ -3,13 +3,6 @@
 	var $                             = jQuery.noConflict();
 	var BbToolsCommunityRepairActions = [];
 	var BbToolsForumsRepairActions    = [];
-	var SiteId 						  = 0;
-
-	if ($('body #select-site').length) {
-		$('body #select-site').on('change', function () {
-			SiteId = this.value;
-		});
-	}
 
 	$(
 		function() {
@@ -691,6 +684,7 @@
 				var bp_admin_forum_repair_tools_wrapper_function = function( offset, currentAction ) {
 					$( 'body .section-repair_forums .settings fieldset .checkbox label[for="' + BbToolsForumsRepairActions[currentAction] + '"]' ).append( '<div class="loader-repair-tools"></div>' );
 					if ( typeof BbToolsForumsRepairActions[currentAction] !== 'undefined' ) {
+						var SiteId = $('body #select-site').val();
 						$.ajax(
 							{
 								'url': BP_ADMIN.ajax_url,
