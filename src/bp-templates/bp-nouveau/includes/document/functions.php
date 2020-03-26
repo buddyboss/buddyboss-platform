@@ -47,13 +47,16 @@ function bp_nouveau_document_enqueue_scripts() {
  */
 function bp_nouveau_document_localize_scripts( $params = array() ) {
 
+	$all_extensions = bp_media_allowed_document_type();
+	$extensions     = array_column( $all_extensions, 'extension' );
+
 	//initialize media vars because it is used globally
 	$params['media'] = array(
 		'max_upload_size' => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_document_support_enabled(),
 		'group_media'     => bp_is_group_document_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
-		'document_type'   => bp_media_allowed_document_type(),
+		'document_type'   => $extensions,
 	);
 
 	if ( bp_is_single_folder() ) {
@@ -183,52 +186,372 @@ function bp_nouveau_get_document_directory_nav_items() {
  *
  * @return array|mixed|string|void
  */
-function bp_media_allowed_document_type( $format = 'string' ) {
+function bp_media_allowed_document_type() {
 
 	$extension_lists = array(
-		'.csv',
-		'.css',
-		'.doc',
-		'.docm',
-		'.docx',
-		'.dotx',
-		'.dotm',
-		'.gzip',
-		'.htm',
-		'.html',
-		'.ics',
-		'.ico',
-		'.jar',
-		'.js',
-		'.mp3',
-		'.ods',
-		'.odt',
-		'.pdf',
-		'.psd',
-		'.ppt',
-		'.pptx',
-		'.pps',
-		'.ppsx',
-		'.pptm',
-		'.potx',
-		'.potm',
-		'.rar',
-		'.rtf',
-		'.tar',
-		'.txt',
-		'.xls',
-		'.wav',
-		'.xlsx',
-		'.xlsm',
-		'.xltx',
-		'.xltm',
-		'.zip',
+		array(
+			'name'        => 'csv',
+			'extension'   => '.csv',
+			'mime_type'   => 'text/csv',
+			'description' => 'Comma-Seperated Values',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'css',
+			'extension'   => '.css',
+			'mime_type'   => 'text/css',
+			'description' => 'Cascading Style Sheets (CSS)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'doc',
+			'extension'   => '.doc',
+			'mime_type'   => 'application/msword',
+			'description' => 'Microsoft Word',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'docm',
+			'extension'   => '.docm',
+			'mime_type'   => 'application/vnd.ms-word.document.macroenabled.12',
+			'description' => 'Microsoft Word - Macro-Enabled Document',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'docx',
+			'extension'   => '.docx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'description' => 'Microsoft Office - OOXML - Word Document',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'dotx',
+			'extension'   => '.dotx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+			'description' => 'Microsoft Office - OOXML - Word Document Template',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'dotm',
+			'extension'   => '.dotm',
+			'mime_type'   => 'application/vnd.ms-word.template.macroenabled.12',
+			'description' => 'Microsoft Word - Macro-Enabled Template',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'gzip',
+			'extension'   => '.gzip',
+			'mime_type'   => 'application/gzip',
+			'description' => 'Zip File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'htm',
+			'extension'   => '.htm',
+			'mime_type'   => 'text/html',
+			'description' => 'HyperText Markup Language (HTML)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'html',
+			'extension'   => '.html',
+			'mime_type'   => 'text/html',
+			'description' => 'HyperText Markup Language (HTML)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ics',
+			'extension'   => '.ics',
+			'mime_type'   => 'text/calendar',
+			'description' => 'iCalendar',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ico',
+			'extension'   => '.ico',
+			'mime_type'   => 'image/x-icon',
+			'description' => 'Icon Image',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'jar',
+			'extension'   => '.jar',
+			'mime_type'   => 'application/java-archive',
+			'description' => 'Java Archive',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'js',
+			'extension'   => '.js',
+			'mime_type'   => 'application/javascript',
+			'description' => 'JavaScript',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'mp3',
+			'extension'   => '.mp3',
+			'mime_type'   => 'audio/mpeg',
+			'description' => 'MP3 File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ods',
+			'extension'   => '.ods',
+			'mime_type'   => 'application/vnd.oasis.opendocument.spreadsheet',
+			'description' => 'OpenDocument Spreadsheet',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'odt',
+			'extension'   => '.odt',
+			'mime_type'   => 'application/vnd.oasis.opendocument.text',
+			'description' => 'OpenDocument Text',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'pdf',
+			'extension'   => '.pdf',
+			'mime_type'   => 'application/pdf',
+			'description' => 'Adobe Portable Document Format',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'psd',
+			'extension'   => '.psd',
+			'mime_type'   => 'image/vnd.adobe.photoshop',
+			'description' => 'Photoshop Document',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ppt',
+			'extension'   => '.ppt',
+			'mime_type'   => 'application/vnd.ms-powerpoint',
+			'description' => 'Microsoft PowerPoint',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'pptx',
+			'extension'   => '.pptx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+			'description' => 'Microsoft Office - OOXML - Presentation',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ppsx',
+			'extension'   => '.ppsx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slidesho',
+			'description' => 'Microsoft Office - OOXML - Presentation (Slideshow)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'pptm',
+			'extension'   => '.pptm',
+			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+			'description' => 'Microsoft PowerPoint - Macro-Enabled Presentation File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'potx',
+			'extension'   => '.potx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.template',
+			'description' => 'Microsoft Office - OOXML - Presentation Template',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'potm',
+			'extension'   => '.potm',
+			'mime_type'   => 'application/vnd.ms-powerpoint.template.macroenabled.12',
+			'description' => 'Microsoft PowerPoint - Macro-Enabled Template File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'rar',
+			'extension'   => '.rar',
+			'mime_type'   => 'application/x-rar-compressed',
+			'description' => 'RAR Archive',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'rtf',
+			'extension'   => '.rtf',
+			'mime_type'   => 'application/rtf',
+			'description' => 'Rich Text Format',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'tar',
+			'extension'   => '.tar',
+			'mime_type'   => 'application/x-tar',
+			'description' => 'Tar File (Tape Archive)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'txt',
+			'extension'   => '.txt',
+			'mime_type'   => 'text/plain',
+			'description' => 'Text File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xls',
+			'extension'   => '.xls',
+			'mime_type'   => 'application/vnd.ms-excel',
+			'description' => 'Microsoft Excel',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'wav',
+			'extension'   => '.wav',
+			'mime_type'   => 'audio/x-wav',
+			'description' => 'Waveform Audio File Format (WAV)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xlsx',
+			'extension'   => '.xlsx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+			'description' => 'Microsoft Office - OOXML - Spreadsheet',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xlsm',
+			'extension'   => '.xlsm',
+			'mime_type'   => 'application/vnd.ms-excel.sheet.macroenabled.12',
+			'description' => 'Microsoft Excel - Macro-Enabled Workbook',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xltx',
+			'extension'   => '.xltx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+			'description' => 'Microsoft Office - OOXML - Spreadsheet Template	a',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'xltm',
+			'extension'   => '.xltm',
+			'mime_type'   => 'application/vnd.ms-excel.template.macroenabled.12',
+			'description' => 'Microsoft Excel - Macro-Enabled Template File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => '7z',
+			'extension'   => '.7z',
+			'mime_type'   => 'application/x-7z-compressed',
+			'description' => '7-Zip',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'abw',
+			'extension'   => '.abw',
+			'mime_type'   => 'application/x-abiword',
+			'description' => 'AbiWord',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ace',
+			'extension'   => '.ace',
+			'mime_type'   => 'application/x-ace-compressed',
+			'description' => 'Ace Archive',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'acc',
+			'extension'   => '.acc',
+			'mime_type'   => 'application/vnd.americandynamics.acc',
+			'description' => 'Active Content Compression',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'acu',
+			'extension'   => '.acu',
+			'mime_type'   => 'application/vnd.acucobol',
+			'description' => 'ACU Cobol',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'atc',
+			'extension'   => '.atc',
+			'mime_type'   => 'application/vnd.acucorp',
+			'description' => 'ACU Cobol',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'adp',
+			'extension'   => '.adp',
+			'mime_type'   => 'audio/adpcm',
+			'description' => 'Adaptive differential pulse-code modulation',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'zip',
+			'extension'   => '.zip',
+			'mime_type'   => 'application/zip',
+			'description' => 'Zip File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'zir',
+			'extension'   => '.zir',
+			'mime_type'   => 'application/vnd.zul',
+			'description' => 'Z.U.L. Geometry',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'zaz',
+			'extension'   => '.zaz',
+			'mime_type'   => 'application/vnd.zzazz.deck+xml',
+			'description' => 'Zzazz Deck',
+			'is_default'  => true,
+			'is_active'   => true
+		)
 	);
 
 	$extension_lists = apply_filters( 'bp_media_allowed_document_type', $extension_lists );
-	if ( 'string' === $format ) {
-		return implode( ',', $extension_lists );
-	}
 
 	return $extension_lists;
 }

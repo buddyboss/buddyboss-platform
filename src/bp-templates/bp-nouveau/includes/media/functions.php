@@ -95,7 +95,6 @@ function bp_nouveau_media_localize_scripts( $params = array() ) {
 		'group_media'     => bp_is_group_media_support_enabled(),
 		'group_album'     => bp_is_group_albums_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
-		'document_type'   => bp_media_allowed_document_type(),
 	);
 
 	if ( bp_is_single_album() ) {
