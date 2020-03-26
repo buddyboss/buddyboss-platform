@@ -45,7 +45,7 @@ function bbp_admin_repair() {
 
 				<?php
 				if ( is_multisite() && is_network_admin() ) {
-					$user_blogs = bbp_get_blogs_list( get_current_user_id() )
+					$blogs = bbp_get_sites()
 					?>
 					<fieldset>
 						<legend>
@@ -57,7 +57,7 @@ function bbp_admin_repair() {
 							<?php
 							esc_html_e( 'Select the site:', 'buddyboss' );
 
-							if ( ! empty( $user_blogs ) ) {
+							if ( ! empty( $blogs ) ) {
 								?>
 								<select name="user_blog" id="select-site" required>
 									<option value="0">
@@ -66,11 +66,11 @@ function bbp_admin_repair() {
 										?>
 									</option>
 									<?php
-									foreach ( $user_blogs as $user_blog ) {
+									foreach ( $blogs as $blog ) {
 										?>
-										<option value="<?php echo esc_attr( $user_blog->blog_id ) ?>">
+										<option value="<?php echo esc_attr( $blog->blog_id ) ?>">
 											<?php
-											echo esc_html( $user_blog->domain );
+											echo esc_html( $blog->domain );
 											?>
 										</option>
 										<?php
@@ -225,19 +225,13 @@ function bbp_admin_repair_list() {
 /**
  * Function get user's sub sites.
  *
- * @param int $user_id user id to get the sub sites
- *
  * @return mixed|void
  */
-function bbp_get_blogs_list( $user_id = 0 ) {
+function bbp_get_sites() {
 
-	if ( ! $user_id ) {
-		$user_id = get_current_user_id();
-	}
+	$sites = get_sites();
 
-	$user_blogs = get_sites();
-
-	return apply_filters( 'bbp_user_blogs', ( $user_blogs ) ? $user_blogs : array() );
+	return apply_filters( 'bbp_network_sites', ( $sites ) ? $sites : array() );
 }
 
 /**
