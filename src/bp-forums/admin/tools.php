@@ -43,6 +43,49 @@ function bbp_admin_repair() {
 
 			<form class="settings" method="post" action="">
 
+				<?php
+				if ( is_multisite() && is_network_admin() ) {
+					$user_blogs = bbp_get_blogs_list( get_current_user_id() )
+					?>
+					<fieldset>
+						<legend>
+							<?php
+							esc_html_e( 'Select the site:', 'buddyboss' );
+							?>
+						</legend>
+						<label for="select-site">
+							<?php
+							esc_html_e( 'Select the site:', 'buddyboss' );
+
+							if ( ! empty( $user_blogs ) ) {
+								?>
+								<select name="user_blog" id="select-site" required>
+									<option value="0">
+										<?php
+										esc_html_e( 'Select a site to fix the forums', 'buddyboss' );
+										?>
+									</option>
+									<?php
+									foreach ( $user_blogs as $user_blog ) {
+										?>
+										<option value="<?php echo esc_attr( $user_blog->userblog_id ) ?>">
+											<?php
+											echo esc_html( $user_blog->blogname );
+											?>
+										</option>
+										<?php
+									}
+									?>
+								</select>
+								<?php
+							}
+							?>
+						</label>
+					</fieldset>
+					<?php
+				}
+				?>
+
 				<fieldset>
 					<legend><?php esc_html_e( 'Relationships to Repair:', 'buddyboss' ); ?></legend>
 					<div class="checkbox">
@@ -177,6 +220,24 @@ function bbp_admin_repair_list() {
 	ksort( $repair_list );
 
 	return (array) apply_filters( 'bbp_repair_list', $repair_list );
+}
+
+/**
+ * Function get user's sub sites.
+ *
+ * @param int $user_id user id to get the sub sites
+ *
+ * @return mixed|void
+ */
+function bbp_get_blogs_list( $user_id = 0 ) {
+
+	if ( ! $user_id ) {
+		$user_id = get_current_user_id();
+	}
+
+	$user_blogs = get_blogs_of_user( $user_id );
+
+	return apply_filters( 'bbp_user_blogs', ( $user_blogs ) ? $user_blogs : array() );
 }
 
 /**
