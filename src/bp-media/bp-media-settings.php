@@ -1184,7 +1184,7 @@ function bp_media_settings_callback_extension_document_support() {
 		</tbody>
 		<tfoot>
 			<tr>
-				<td colspan="4">
+				<td colspan="5">
 					
 				</td>
 				<td>
