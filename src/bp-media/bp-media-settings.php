@@ -1121,9 +1121,9 @@ function bp_media_settings_callback_extension_document_support() {
 				$name       = 'bp_document_extensions_support[' . $k . ']';
                 $edit       = ( (bool) $extension['is_default'] ) ? 'readonly="readonly"' : '';
                 $is_default = ( (bool) $extension['is_default'] ) ? true : '';
-                $tr_class   = ( (bool) $extension['is_default'] ) ? 'default' : 'extra';
+                $tr_class   = ( (bool) $extension['is_default'] ) ? 'default-extension' : 'extra-extension';
 				?>
-				<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?>">
+				<tr class="document-extensions <?php echo esc_attr( $tr_class ); ?> <?php echo esc_attr( $k ); ?>">
 					<td>
 						<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( $extension['is_active'], 1 ) ?> />
 					</td>

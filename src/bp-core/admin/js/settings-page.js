@@ -794,19 +794,22 @@
 				'click',
 				'table.extension-listing #btn-add-extensions',
 				function() {
-					var parent = $( this ).closest( 'table.extension-listing' );
+					var parent 		= $( this ).closest( 'table.extension-listing' );
+					var newOption 	= $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
+					var totalCount  = parseInt( $('.extension-listing tr.default-extension').length );
+					parent.find( 'tbody' ).append( ' <tr class="custom-extension extra-extension"> ' + newOption + ' </tr> ' );
 
-					var newOption = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
-
-					parent.find( 'tbody' ).append( ' <tr class="custom-extension"> ' + newOption + ' </tr> ' );
-
-					parent.find( 'tbody tr.custom-extension' ).each( function( index ) {
-						$(this).find('input.extension-check').attr( 'name', $(this).find('input.extension-check').attr( 'data-name' ) + index );
-						$(this).find('input.extension-name').attr( 'name', $(this).find('input.extension-name').attr( 'data-name' ) + index );
-						$(this).find('input.extension-hidden').attr( 'name', $(this).find('input.extension-hidden').attr( 'data-name' ) + index );
-						$(this).find('input.extension-mime').attr( 'name', $(this).find('input.extension-mime').attr( 'data-name' ) + index );
-						$(this).find('input.extension-desc').attr( 'name', $(this).find('input.extension-desc').attr( 'data-name' ) + index );
+					parent.find( 'tbody tr.extra-extension' ).each( function() {
+						$(this).find('input.extension-check').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
+						$(this).find('input.extension-name').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
+						$(this).find('input.extension-hidden').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
+						$(this).find('input.extension-extension').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
+						$(this).find('input.extension-mime').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
+						$(this).find('input.extension-desc').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+						totalCount = totalCount + 1;
 					});
+
+					totalCount = parseInt( $('.extension-listing tr.default-extension').length );
 					
 				}
 			);
@@ -820,13 +823,20 @@
 					
 					$( this ).closest( 'tr' ).remove();
 
-					parent.find( 'tbody tr.custom-extension' ).each( function( index ) {
-						$(this).find('input.extension-check').attr( 'name', $(this).find('input.extension-check').attr( 'data-name' ) + index );
-						$(this).find('input.extension-name').attr( 'name', $(this).find('input.extension-name').attr( 'data-name' ) + index );
-						$(this).find('input.extension-hidden').attr( 'name', $(this).find('input.extension-hidden').attr( 'data-name' ) + index );
-						$(this).find('input.extension-mime').attr( 'name', $(this).find('input.extension-mime').attr( 'data-name' ) + index );
-						$(this).find('input.extension-desc').attr( 'name', $(this).find('input.extension-desc').attr( 'data-name' ) + index );
+					var totalCount  = parseInt( $('.extension-listing tr.default-extension').length );
+
+					parent.find( 'tbody tr.extra-extension' ).each( function() {
+						$(this).addClass(totalCount);
+						$(this).find('input.extension-check').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
+						$(this).find('input.extension-name').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
+						$(this).find('input.extension-hidden').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
+						$(this).find('input.extension-extension').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][extension]' );
+						$(this).find('input.extension-mime').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][mime_type]' );
+						$(this).find('input.extension-desc').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
+						totalCount = totalCount + 1;
 					});
+
+					totalCount = parseInt( $('.extension-listing tr.default-extension').length );
 
 				}
 			);
