@@ -826,7 +826,6 @@
 					var totalCount  = parseInt( $('.extension-listing tr.default-extension').length );
 
 					parent.find( 'tbody tr.extra-extension' ).each( function() {
-						$(this).addClass(totalCount);
 						$(this).find('input.extension-check').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][is_active]' );
 						$(this).find('input.extension-name').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][name]' );
 						$(this).find('input.extension-hidden').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][hidden]' );
@@ -835,8 +834,6 @@
 						$(this).find('input.extension-desc').attr( 'name', 'bp_document_extensions_support[' + totalCount + '][description]' );
 						totalCount = totalCount + 1;
 					});
-
-					totalCount = parseInt( $('.extension-listing tr.default-extension').length );
 
 				}
 			);
