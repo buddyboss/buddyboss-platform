@@ -803,6 +803,7 @@
 					parent.find( 'tbody tr.custom-extension' ).each( function( index ) {
 						$(this).find('input.extension-check').attr( 'name', $(this).find('input.extension-check').attr( 'data-name' ) + index );
 						$(this).find('input.extension-name').attr( 'name', $(this).find('input.extension-name').attr( 'data-name' ) + index );
+						$(this).find('input.extension-hidden').attr( 'name', $(this).find('input.extension-hidden').attr( 'data-name' ) + index );
 						$(this).find('input.extension-mime').attr( 'name', $(this).find('input.extension-mime').attr( 'data-name' ) + index );
 						$(this).find('input.extension-desc').attr( 'name', $(this).find('input.extension-desc').attr( 'data-name' ) + index );
 					});
@@ -822,6 +823,7 @@
 					parent.find( 'tbody tr.custom-extension' ).each( function( index ) {
 						$(this).find('input.extension-check').attr( 'name', $(this).find('input.extension-check').attr( 'data-name' ) + index );
 						$(this).find('input.extension-name').attr( 'name', $(this).find('input.extension-name').attr( 'data-name' ) + index );
+						$(this).find('input.extension-hidden').attr( 'name', $(this).find('input.extension-hidden').attr( 'data-name' ) + index );
 						$(this).find('input.extension-mime').attr( 'name', $(this).find('input.extension-mime').attr( 'data-name' ) + index );
 						$(this).find('input.extension-desc').attr( 'name', $(this).find('input.extension-desc').attr( 'data-name' ) + index );
 					});

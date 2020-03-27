@@ -1151,6 +1151,7 @@ function bp_media_settings_callback_extension_document_support() {
 				</td>
                 <td>
                     <input name="extension-name" data-name="<?php echo esc_attr( $name . '[name]' ); ?>" type="text" class="extension-name" />
+                    <input name="extension-hidden" data-name="<?php echo esc_attr( $name . '[is_default]' ); ?>" type="hidden" value="0" />
                 </td>
 				<td>
 					<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>" type="text" class="extension-extension" />
