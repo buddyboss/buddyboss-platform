@@ -28,6 +28,10 @@ class BP_Admin_Setting_Document extends BP_Admin_Setting_tab {
 		return bp_is_active( 'media' );
 	}
 
+	public function is_tab_visible() {
+		return false;
+	}
+
 	public function register_fields() {
 		$sections = bp_document_get_settings_sections();
 

@@ -1061,10 +1061,8 @@ function bp_media_admin_setting_callback_document_section() {
 
 function bp_media_settings_callback_extension_document_support() {
 
-	$extensions = bp_is_media_document_extension_support_enabled();
-	//$stored     = bp_array_flatten( bp_is_media_document_extension_support_enabled() );
-	//$mime_types = bp_document_allowed_mimes();
-
+	$extensions = bp_document_extensions_list();
+	$count      = count( $extensions ) + 1;
 	?>
 	<style>
 		table.extension-listing tbody td {
@@ -1123,7 +1121,7 @@ function bp_media_settings_callback_extension_document_support() {
 				$name = 'bp_document_extensions_support[' . $k . ']';
                 $edit = ( $extension['is_default'] ) ? 'readonly="readonly"' : '';
 				?>
-				<tr>
+				<tr class="document-extensions">
 					<td>
 						<input name="<?php echo esc_attr( $name . '[is_active]' ); ?>" id="<?php echo esc_attr( $name ); ?>" type="checkbox" value="1" <?php checked( $extension['is_active'], 1 ) ?> />
 					</td>
@@ -1144,22 +1142,24 @@ function bp_media_settings_callback_extension_document_support() {
 				</tr>
 				<?php
 			}
+
+			$name = 'bp_document_extensions_support[' . $count . ']';
 			?>
 			<tr style="display: none;" class="custom-extension-data">
 				<td>
-					<input name="extension-check" data-name="extension-check" type="checkbox" class="extension-check" />
+					<input name="extension-check" data-name="<?php echo esc_attr( $name . '[is_active]' ); ?>" type="checkbox" class="extension-check" />
 				</td>
                 <td>
-                    <input name="extension-name" data-name="extension-name" type="text" class="extension-name" />
+                    <input name="extension-name" data-name="<?php echo esc_attr( $name . '[name]' ); ?>" type="text" class="extension-name" />
                 </td>
 				<td>
-					<input name="extension-name" data-name="extension-extension" type="text" class="extension-extension" />
+					<input name="extension-extension" data-name="<?php echo esc_attr( $name . '[extension]' ); ?>" type="text" class="extension-extension" />
 				</td>
 				<td>
-					<input name="extension-mime" data-name="extension-mime" type="text" class="extension-mime" />
+					<input name="extension-mime" data-name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" type="text" class="extension-mime" />
 				</td>
 				<td>
-					<input name="extension-desc" data-name="extension-desc" type="text" class="extension-desc" />
+					<input name="extension-desc" data-name="<?php echo esc_attr( $name . '[description]' ); ?>" type="text" class="extension-desc" />
 				</td>
 				<td>
 					<span class="dashicons dashicons-dismiss" id="btn-remove-extensions"></span>
@@ -1206,8 +1206,8 @@ function bp_media_settings_callback_extension_link() {
  *
  * @return array Is media extension support enabled or not
  */
-function bp_is_media_document_extension_support_enabled() {
-	return apply_filters( 'bp_is_media_extension_support_enabled', get_option( 'bp_document_extensions_support', bp_media_allowed_document_type() ) );
+function bp_document_extensions_list() {
+	return apply_filters( 'bp_document_extensions_list', get_option( 'bp_document_extensions_support', bp_media_allowed_document_type() ) );
 }
 
 /**

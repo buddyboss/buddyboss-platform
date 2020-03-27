@@ -50,13 +50,16 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 	$all_extensions = bp_media_allowed_document_type();
 	$extensions     = array_column( $all_extensions, 'extension' );
 
+
+
+
 	//initialize media vars because it is used globally
 	$params['media'] = array(
 		'max_upload_size' => bp_document_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_document_support_enabled(),
 		'group_media'     => bp_is_group_document_support_enabled(),
 		'messages_media'  => bp_is_messages_media_support_enabled(),
-		'document_type'   => $extensions,
+		'document_type'   => implode( ',', $extensions ),
 	);
 
 	if ( bp_is_single_folder() ) {
@@ -554,4 +557,58 @@ function bp_media_allowed_document_type() {
 	$extension_lists = apply_filters( 'bp_media_allowed_document_type', $extension_lists );
 
 	return $extension_lists;
+}
+
+function bp_document_download_file( $attachment_id ) {
+
+	$the_file = wp_get_attachment_url( $attachment_id );
+
+	if ( ! $the_file ) {
+		return;
+	}
+
+	//clean the fileurl
+	$file_url = stripslashes( trim( $the_file ) );
+
+	//get filename
+	$file_name = basename( $the_file );
+
+	//get fileextension
+	$file_extension = pathinfo( $file_name );
+
+	//security check
+	$fileName = strtolower( $file_url );
+
+	// Get all allowed document extensions.
+	$all_extensions                   = bp_document_extensions_list();
+	$allowed_for_download             = array();
+	$allowed_file_type_with_mime_type = array();
+	foreach ( $all_extensions as $extension ) {
+		if ( true === $extension['is_active'] ) {
+			$extension_name         = ltrim( $extension['extension'], '.' );
+			$allowed_for_download[] = $extension_name;
+			$allowed_file_type_with_mime_type[$extension_name] = $extension['mime_type'];
+		}
+	}
+
+	$whitelist = apply_filters( 'bp_document_download_file_allowed_file_types', $allowed_for_download );
+
+	if ( ! in_array( end( explode( '.', $fileName ) ), $whitelist ) ) {
+		exit( 'Invalid file!' );
+	}
+
+	$file_new_name = $file_name;
+	$content_type  = isset( $allowed_file_type_with_mime_type[ $file_extension['extension'] ] ) ? $allowed_file_type_with_mime_type[ $file_extension['extension'] ] : '';
+	$content_type  = apply_filters( "bp_document_download_file_content_type", $content_type, $file_extension['extension'] );
+
+	header( "Expires: 0" );
+	header( "Cache-Control: no-cache, no-store, must-revalidate" );
+	header( 'Cache-Control: pre-check=0, post-check=0, max-age=0', false );
+	header( "Pragma: no-cache" );
+	header( "Content-type: {$content_type}" );
+	header( "Content-Disposition:attachment; filename={$file_new_name}" );
+	header( "Content-Type: application/force-download" );
+
+	readfile( "{$file_url}" );
+	exit();
 }
