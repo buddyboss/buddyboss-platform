@@ -3409,37 +3409,30 @@ function bp_get_users_of_removed_member_types() {
  * @since BuddyBoss 1.0.0
  */
 function bp_register_active_member_types() {
+	$member_type_ids = bp_get_active_member_types(
+		array(
+			'meta_query' => array(
+				array(
+					'key'   => '_bp_member_type_enable_filter',
+					'value' => 1,
+				),
+			)
+		)
+	);
 
-	$post_ids = bp_get_active_member_types();
+	if ( ! empty( $member_type_ids ) ) {
 
-	// update meta cache to avoid multiple db calls
-	update_meta_cache( 'post', $post_ids );
-	// build to register the memebr type
-	$member_types = array();
+		foreach ( $member_type_ids as $member_type_id ) {
+			$key = bp_get_member_type_key( $member_type_id );
 
-	foreach ( $post_ids as $post_id ) {
-
-		$key = bp_get_member_type_key( $post_id );
-
-		$enable_filter = get_post_meta( $post_id, '_bp_member_type_enable_filter', true );
-
-		$has_dir = false;
-
-		if ( $enable_filter ) {
-			$has_dir = true;
+			bp_register_member_type( $key, array(
+				'labels'        => array(
+					'name'          => get_post_meta( $member_type_id, '_bp_member_type_label_name', true ),
+					'singular_name' => get_post_meta( $member_type_id, '_bp_member_type_label_singular_name', true ),
+				),
+				'has_directory' => true,
+			) );
 		}
-
-		$member_types[ $key ] = array(
-			'labels'        => array(
-				'name'          => get_post_meta( $post_id, '_bp_member_type_label_name', true ),
-				'singular_name' => get_post_meta( $post_id, '_bp_member_type_label_singular_name', true ),
-			),
-			'has_directory' => $has_dir,
-		);
-	}
-
-	foreach ( $member_types as $member_type => $args ) {
-		bp_register_member_type( $member_type, $args );
 	}
 }
 
