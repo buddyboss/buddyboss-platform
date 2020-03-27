@@ -3216,21 +3216,29 @@ function bp_group_get_group_type_key( $post_id ) {
  * Get all active group types.
  *
  * @since BuddyBoss 1.0.0
+ * @param array $args Arguments
  *
- * @return type array
+ * @return array Group types
  */
-function bp_get_active_group_types() {
-	$query = new WP_Query(
-		array(
-			'posts_per_page' => -1,
-			'post_type'      => bp_groups_get_group_type_post_type(),
-			'post_status'    => 'publish',
-			'fields'         => 'ids',
-			'orderby'        => 'menu_order',
-		)
-	);
+function bp_get_active_group_types( $args = array() ) {
+	$bp_active_group_types = array();
 
-	return $query->posts;
+	$args = bp_parse_args( $args, array(
+		'posts_per_page' => - 1,
+		'post_type'      => bp_groups_get_group_type_post_type(),
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+		'fields'         => 'ids'
+	), 'group_types' );
+
+	$bp_active_group_types_query = new \WP_Query( $args );
+
+	if ( $bp_active_group_types_query->have_posts() ) {
+		$bp_active_group_types = $bp_active_group_types_query->posts;
+	}
+	wp_reset_postdata();
+
+	return apply_filters( 'bp_get_active_group_types', $bp_active_group_types );
 }
 
 if ( true === bp_disable_group_type_creation() ) {
@@ -3257,9 +3265,6 @@ if ( true === bp_disable_group_type_creation() ) {
 function bp_register_active_group_types() {
 
 	$post_ids = bp_get_active_group_types();
-
-	// update meta cache to avoid multiple db calls
-	update_meta_cache( 'post', $post_ids );
 
 	// build to register the group type
 	$group_types = array();
