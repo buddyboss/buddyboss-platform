@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: BuddyBoss Platform 1.2.8\n"
 "Report-Msgid-Bugs-To: https://www.buddyboss.com/contact/\n"
-"POT-Creation-Date: 2020-03-27 12:16:16+00:00\n"
+"POT-Creation-Date: 2020-03-27 14:04:00+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -13906,7 +13906,7 @@ msgstr ""
 msgid "Group Albums"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:1282
+#: bp-media/bp-media-settings.php:231 bp-media/bp-media-settings.php:1283
 msgid "Extensions"
 msgstr ""
 
@@ -14009,11 +14009,11 @@ msgstr ""
 msgid "Mime Type"
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1203
+#: bp-media/bp-media-settings.php:1204
 msgid "Click <a href=\"%s\">here</a> add/edit/delete more extensions.."
 msgstr ""
 
-#: bp-media/bp-media-settings.php:1239
+#: bp-media/bp-media-settings.php:1240
 msgid "Document Extensions"
 msgstr ""
 
@@ -15929,6 +15929,12 @@ msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:101
 msgid "Collapse"
+msgstr ""
+
+#: bp-templates/bp-nouveau/buddypress/document/activity-entry.php:128
+msgid ""
+"This file was truncated for preview. Please <a href=\"%s\">download</a> to "
+"view the full file."
 msgstr ""
 
 #: bp-templates/bp-nouveau/buddypress/document/add-document.php:13
