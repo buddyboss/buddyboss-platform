@@ -1703,7 +1703,7 @@ function bp_document_download_link( $attachment_id ) {
 		return;
 	}
 
-	$link = get_the_permalink( $attachment_id ) . '?attachment_id='. $attachment_id.'&download_document_file=1';
+	$link = get_the_permalink( $attachment_id ) . '?attachment_id=' . $attachment_id . '&download_document_file=1';
 
 	return apply_filters( 'bp_document_download_link', $link, $attachment_id );
 
