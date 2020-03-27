@@ -67,19 +67,19 @@ $download_url      = bp_document_download_link( $attachment_id );
 
 		<?php } 
 
-		if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 < 3 ) { ?>
+		if( filesize( get_attached_file( $attachment_id ) ) / 1e+6 < 3 ) {
+		    if ( 'css' === $extension || 'txt' === $extension || 'html' === $extension || 'htm' === $extension || 'js' === $extension || 'csv' === $extension ) {
+
+			    $file_open = fopen( get_attached_file( $attachment_id ), 'r' );
+			    $file_data = fread( $file_open, 10000 );
+			    $more_text = false;
+			    if ( strlen( $file_data ) >= 9999 ) {
+				    $file_data .= '...';
+				    $more_text  = true;
+			    }
+			    fclose( $file_open );
 
 
-			<?php if ( 'css' == $extension || 'txt' == $extension || 'html' == $extension || 'htm' == $extension || 'js' == $extension || 'csv' == $extension ) { ?>
-				<?php
-					$file_open = fopen($url, 'r');
-					$file_data = fread($file_open, 10000);
-					$more_text = false;
-					if(strlen($file_data) >= 9999){
-						$file_data.='...';
-						$more_text = true;
-					}
-					fclose($file_open);
 				?>
 				<div class="document-text-wrap">
 
@@ -121,8 +121,14 @@ $download_url      = bp_document_download_link( $attachment_id );
 				</div> <!-- .document-action-wrap -->
 
 				<?php
-					if( $more_text == true ){
-						echo esc_html_e( '<div class="more_text_view">This file was truncated for preview. Please <a href="'.$url.'">download</a> to view the full file. </div>', 'buddyboss' );
+					if( true === $more_text ){
+						printf(
+							'<div class="more_text_view">%s</div>',
+							sprintf(
+								__( 'This file was truncated for preview. Please <a href="%s">download</a> to view the full file.', 'buddyboss' ),
+								$download_url
+							)
+						);
 					}
 				?>
 			<?php } 

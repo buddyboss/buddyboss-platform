@@ -575,7 +575,7 @@ function bp_document_download_file( $attachment_id ) {
 	$allowed_for_download             = array();
 	$allowed_file_type_with_mime_type = array();
 	foreach ( $all_extensions as $extension ) {
-		if ( true === $extension['is_active'] ) {
+		if ( true === (bool) $extension['is_active'] ) {
 			$extension_name         = ltrim( $extension['extension'], '.' );
 			$allowed_for_download[] = $extension_name;
 			$allowed_file_type_with_mime_type[$extension_name] = $extension['mime_type'];
