@@ -1403,13 +1403,15 @@ function bp_pages_terms_and_privacy_exclude( $pages ) {
 }
 add_filter( 'bp_pages', 'bp_pages_terms_and_privacy_exclude' );
 
-add_filter( 'upload_mimes', 'bp_media_document_upload_mimes' );
-function bp_media_document_upload_mimes ( $existing_mimes = array() ) {
+add_filter( 'upload_mimes', 'bp_document_allowed_upload_mimes' );
+function bp_document_allowed_upload_mimes ( $existing_mimes = array() ) {
 	if ( bp_is_active( 'media' ) ) {
-		$allowed_extensions = bp_array_flatten( bp_document_extensions_list() );
-		foreach ( $allowed_extensions as $k => $v ) {
-			$mime_types = bp_document_allowed_mimes();
-			$existing_mimes[ "$k" ] = $mime_types[$k];
+		$all_extensions = bp_document_extensions_list();
+		foreach ( $all_extensions as $extension ) {
+			if ( true === (bool) $extension['is_active'] ) {
+				$extension_name                  = ltrim( $extension['extension'], '.' );
+				$existing_mimes[$extension_name] = $extension['mime_type'];
+			}
 		}
 	}
 	return $existing_mimes;

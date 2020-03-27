@@ -1118,8 +1118,9 @@ function bp_media_settings_callback_extension_document_support() {
 			<?php
 			foreach ( $extensions as $k => $extension ) {
 
-				$name = 'bp_document_extensions_support[' . $k . ']';
-                $edit = ( $extension['is_default'] ) ? 'readonly="readonly"' : '';
+				$name       = 'bp_document_extensions_support[' . $k . ']';
+                $edit       = ( (bool) $extension['is_default'] ) ? 'readonly="readonly"' : '';
+                $is_default = ( (bool) $extension['is_default'] ) ? true : '';
 				?>
 				<tr class="document-extensions">
 					<td>
@@ -1138,7 +1139,20 @@ function bp_media_settings_callback_extension_document_support() {
                     <td>
                         <input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" />
                     </td>
-					<td></td>
+                    <?php
+                    if ( ! $is_default ) {
+                        ?>
+                        <td>
+                            <span class="dashicons dashicons-dismiss" id="btn-remove-extensions"></span>
+                        </td>
+                        <?php
+                    } else {
+	                    ?>
+                        <td>
+                        </td>
+	                    <?php
+                    }
+                    ?>
 				</tr>
 				<?php
 			}

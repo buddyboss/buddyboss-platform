@@ -36,8 +36,13 @@ function bp_nouveau_document_enqueue_scripts() {
  */
 function bp_nouveau_document_localize_scripts( $params = array() ) {
 
-	$all_extensions = bp_media_allowed_document_type();
-	$extensions     = array_column( $all_extensions, 'extension' );
+	$extensions     = array();
+	$all_extensions = bp_document_extensions_list();
+	foreach ( $all_extensions as $extension ) {
+		if ( true === (bool) $extension['is_active'] ) {
+			$extensions[] = $extension['extension'];
+		}
+	}
 
 	//initialize media vars because it is used globally
 	$params['media'] = array(

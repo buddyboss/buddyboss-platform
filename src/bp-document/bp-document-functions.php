@@ -1181,7 +1181,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	// add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 1, 1 );
+	add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 1, 1 );
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -1230,54 +1230,14 @@ function bp_document_upload_handler( $file_id = 'file' ) {
  */
 function bp_document_allowed_mimes() {
 
-	// Creating a new array will reset the allowed file types
-	$mime_types = array(
-
-		'txt'  => 'text/plain',
-		// archives
-		'zip'  => 'application/zip',
-		'rar'  => 'application/x-rar-compressed',
-		'gzip' => 'application/gzip',
-		'tar'  => 'application/x-tar',
-		// adobe
-		'pdf'  => 'application/pdf',
-		'psd'  => 'image/vnd.adobe.photoshop',
-		// ms office
-		'doc'  => 'application/msword',
-		'rtf'  => 'application/rtf',
-		'xls'  => 'application/vnd.ms-excel',
-		'ppt'  => 'application/vnd.ms-powerpoint',
-		'pptx' => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-		'pps'  => 'application/mspowerpoint',
-		'ppsx' => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
-		'pptm' => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
-		'potx' => 'application/vnd.openxmlformats-officedocument.presentationml.template',
-		'potm' => 'application/vnd.ms-powerpoint.template.macroenabled.12',
-		'xlsx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-		'xlsm' => 'application/vnd.ms-excel.sheet.macroenabled.12',
-		'xltm' => 'application/vnd.ms-excel.template.macroenabled.12',
-		'xltx' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-		'docm' => 'application/vnd.ms-word.document.macroenabled.12',
-		'docx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-		'dotx' => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-		'dotm' => 'application/vnd.ms-word.template.macroenabled.12',
-		// open office
-		'odt'  => 'application/vnd.oasis.opendocument.text',
-		'ods'  => 'application/vnd.oasis.opendocument.spreadsheet',
-		// audio files
-		'mp3'  => 'audio/mpeg',
-		'ogg'  => 'application/ogg',
-		'wav'  => 'audio/wav',
-
-		'csv'  => 'text/csv',
-		'css'  => 'text/css',
-
-		'htm'  => 'text/html',
-		'html' => 'text/html',
-		'ics'  => 'text/calendar',
-		'jar'  => 'application/java-archive',
-		'js'   => 'text/javascript',
-	);
+	$mime_types     = array();
+	$all_extensions = bp_document_extensions_list();
+	foreach ( $all_extensions as $extension ) {
+		if ( true === (bool) $extension['is_active'] ) {
+			$extension_name              = ltrim( $extension['extension'], '.' );
+			$mime_types[$extension_name] = $extension['mime_type'];
+		}
+	}
 
 	return $mime_types;
 }

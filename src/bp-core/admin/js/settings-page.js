@@ -793,7 +793,7 @@
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-add-extensions',
-				function( e ) {
+				function() {
 					var parent = $( this ).closest( 'table.extension-listing' );
 
 					var newOption = $( this ).closest( 'table.extension-listing' ).find( 'tbody tr.custom-extension-data' ).html();
@@ -814,7 +814,7 @@
 			$( document ).on(
 				'click',
 				'table.extension-listing #btn-remove-extensions',
-				function( e ) {
+				function() {
 
 					var parent = $( this ).closest( 'table.extension-listing' );
 					

@@ -14,14 +14,15 @@ $svg_icon_download = bp_document_svg_icon( 'download' );
 $url               = wp_get_attachment_url( $attachment_id );
 $filename          = basename( get_attached_file( $attachment_id ) );
 $size              = size_format(filesize( get_attached_file( $attachment_id ) ) );
+$download_url      = bp_document_download_link( $attachment_id );
 ?>
 
 	<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>">
 		<div class="document-description-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
+			<a href="<?php echo esc_url( $download_url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
 				<i class="<?php echo $svg_icon; ?>" ></i>
 			</a>
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-detail-wrap">
+			<a href="<?php echo esc_url( $download_url ); ?>" target="_blank" class="document-detail-wrap">
 				<span class="document-title"><?php echo $filename; ?></span>
 				<span class="document-description"><?php echo $size; ?></span>
 				<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
@@ -29,7 +30,7 @@ $size              = size_format(filesize( get_attached_file( $attachment_id ) )
 		</div>
 
 		<div class="document-action-wrap">
-			<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
+			<a href="<?php echo esc_url( $download_url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 				<i class="bb-icon-download"></i>
 			</a>
 
