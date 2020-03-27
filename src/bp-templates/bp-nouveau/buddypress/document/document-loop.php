@@ -12,24 +12,24 @@ if ( bp_has_document( bp_ajax_querystring( 'document' ) ) ) :
 	if ( empty( $_POST['page'] ) || 1 === (int) $_POST['page'] ) : ?>
 
         <div class="document-data-table-head">
-            <span class="data-head-sort-label">Sort By:</span>
+            <span class="data-head-sort-label"><?php echo __( 'Sort By:', 'buddyboss' ); ?></span>
             <div class="data-head data-head-name">
                 <span>
-                    Name
+                    <?php echo __( 'Name', 'buddyboss' ); ?>
                     <i class="bb-icon-triangle-fill"></i>
                 </span>
 
             </div>
             <div class="data-head data-head-modified">
                 <span>
-                    Modified
+                    <?php echo __( 'Modified', 'buddyboss' ); ?>
                     <i class="bb-icon-triangle-fill"></i>
                 </span>
 
             </div>
             <div class="data-head data-head-visibility">
                 <span>
-                    Visibility
+                    <?php echo __( 'Visibility', 'buddyboss' ); ?>
                     <i class="bb-icon-triangle-fill"></i>
                 </span>
             </div>

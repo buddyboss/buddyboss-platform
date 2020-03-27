@@ -1104,24 +1104,24 @@ function bp_nouveau_ajax_document_move() {
 				?>
 
 				<div class="document-data-table-head">
-					<span class="data-head-sort-label">Sort By:</span>
+					<span class="data-head-sort-label"><?php echo __( 'Sort By:', 'buddyboss' ); ?></span>
 					<div class="data-head data-head-name">
 				<span>
-					Name
+					<?php echo __( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-modified">
 				<span>
-					Modified
+					<?php echo __( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
 					</div>
 					<div class="data-head data-head-visibility">
 				<span>
-					Visibility
+					<?php echo __( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 					</div>
@@ -1145,15 +1145,7 @@ function bp_nouveau_ajax_document_move() {
 				?>
 				<div class="pager">
 					<div class="dt-more-container load-more">
-						<a class="button outline full"
-						   href="<?php bp_document_load_more_link(); ?>">
-																	 <?php
-																		_e(
-																			'Load More',
-																			'buddyboss'
-																		);
-																		?>
-								</a>
+						<a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
 					</div>
 				</div>
 				<?php
@@ -1366,24 +1358,24 @@ function bp_nouveau_ajax_document_delete() {
 			?>
 
             <div class="document-data-table-head">
-                <span class="data-head-sort-label">Sort By:</span>
+                <span class="data-head-sort-label"><?php echo __( 'Sort By:', 'buddyboss' ); ?></span>
                 <div class="data-head data-head-name">
 				<span>
-					Name
+					<?php echo __( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
                 </div>
                 <div class="data-head data-head-modified">
 				<span>
-					Modified
+					<?php echo __( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
                 </div>
                 <div class="data-head data-head-visibility">
 				<span>
-					Visibility
+					<?php echo __( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
                 </div>
@@ -1407,15 +1399,7 @@ function bp_nouveau_ajax_document_delete() {
 			?>
             <div class="pager">
                 <div class="dt-more-container load-more">
-                    <a class="button outline full"
-                       href="<?php bp_document_load_more_link(); ?>">
-						<?php
-						_e(
-							'Load More',
-							'buddyboss'
-						);
-						?>
-                    </a>
+                    <a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
                 </div>
             </div>
 		<?php
@@ -1476,24 +1460,24 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
 
             <div class="document-data-table-head">
-                <span class="data-head-sort-label">Sort By:</span>
+                <span class="data-head-sort-label">:<?php echo __( 'Sort By:', 'buddyboss' ); ?></span>
                 <div class="data-head data-head-name">
 				<span>
-					Name
+					<?php echo __( 'Name', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
                 </div>
                 <div class="data-head data-head-modified">
 				<span>
-					Modified
+					<?php echo __( 'Modified', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
 
                 </div>
                 <div class="data-head data-head-visibility">
 				<span>
-					Visibility
+					<?php echo __( 'Visibility', 'buddyboss' ); ?>
 					<i class="bb-icon-triangle-fill"></i>
 				</span>
                 </div>
@@ -1517,15 +1501,7 @@ function bp_nouveau_ajax_document_folder_move() {
 			?>
             <div class="pager">
                 <div class="dt-more-container load-more">
-                    <a class="button outline full"
-                       href="<?php bp_document_load_more_link(); ?>">
-						<?php
-						_e(
-							'Load More',
-							'buddyboss'
-						);
-						?>
-                    </a>
+                    <a class="button outline full" href="<?php bp_document_load_more_link(); ?>"><?php _e( 'Load More', 'buddyboss' ); ?></a>
                 </div>
             </div>
 		<?php

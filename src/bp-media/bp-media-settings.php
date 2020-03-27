@@ -1107,11 +1107,11 @@ function bp_media_settings_callback_extension_document_support() {
 
     <table class="extension-listing">
 		<thead>
-			<th class="ext-head ext-head-enable">Enable/Disable</th>
-			<th class="ext-head ext-head-name">Name</th>
-			<th class="ext-head ext-head-name">Extension</th>
-			<th class="ext-head ext-head-mime">Mime Type</th>
-			<th class="ext-head ext-head-desc">Description</th>
+			<th class="ext-head ext-head-enable"><?php echo __( 'Enable/Disable', 'buddyboss' ); ?></th>
+			<th class="ext-head ext-head-name"><?php echo __( 'Name', 'buddyboss' ); ?></th>
+			<th class="ext-head ext-head-name"><?php echo __( 'Extension', 'buddyboss' ); ?></th>
+			<th class="ext-head ext-head-mime"><?php echo __( 'Mime Type', 'buddyboss' ); ?></th>
+			<th class="ext-head ext-head-desc"><?php echo __( 'Description', 'buddyboss' ); ?></th>
 			<th class="ext-head ext-head-control"></th>
 		</thead>
 		<tbody>

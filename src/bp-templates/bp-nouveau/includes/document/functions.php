@@ -15,16 +15,7 @@ defined( 'ABSPATH' ) || exit;
  */
 function bp_nouveau_document_enqueue_scripts() {
 
-	if ( bp_is_user_document() ||
-	     bp_is_single_folder() ||
-	     bp_is_document_directory() ||
-	     bp_is_activity_component() ||
-	     bp_is_group_activity() ||
-	     bp_is_group_document() ||
-	     bp_is_group_folders() ||
-	     bp_is_messages_component()
-	) {
-
+	if ( bp_is_user_document() || bp_is_single_folder() || bp_is_document_directory() || bp_is_activity_component() || bp_is_group_activity() || bp_is_group_document() || bp_is_group_folders() || bp_is_messages_component() ) {
 		if ( bp_is_profile_document_support_enabled() || bp_is_group_document_support_enabled() || bp_is_messages_document_support_enabled() ) {
 			wp_enqueue_script( 'bp-media-dropzone' );
 			wp_enqueue_script( 'bp-nouveau-codemirror' );
@@ -116,7 +107,7 @@ function bp_nouveau_get_document_directory_nav_items() {
 	$nav_items = array();
 
 	global $wp_query;
-	$page_ids   = bp_core_get_directory_page_ids();
+	$page_ids = bp_core_get_directory_page_ids();
 	if ( $page_ids['media'] === $wp_query->post->ID ) {
 
 		$nav_items['all'] = array(
