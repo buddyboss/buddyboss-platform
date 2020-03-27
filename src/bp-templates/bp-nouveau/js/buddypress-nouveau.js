@@ -594,11 +594,13 @@ window.bp = window.bp || {};
 		 * @return {[type]} [description]
 		 */
 		switchGridList: function() {
-            var _this = this;
+            var _this = this, group_members = false, object = $('.grid-filters').data('object');
 
-            var object = $('.grid-filters').data('object');
+            if ( 'group_members' === object ) {
+            	group_members = true;
+			}
 
-            if ( 'friends' === object || 'group_members' === object ) {
+            if ( 'friends' === object ) {
                 object = 'members';
             } else if ( 'group_requests' === object ) {
                 object = 'groups';
@@ -638,7 +640,7 @@ window.bp = window.bp || {};
                 }
 
                 // Added this condition to fix the list and grid view on Groups members page pagination.
-				if ( true === $( 'body' ).hasClass('group-members' ) ) {
+				if ( group_members ) {
 					_this.setStorage( 'bp-group_members', 'extras', extras );
 				} else {
 					_this.setStorage( 'bp-' + object, 'extras', extras );
