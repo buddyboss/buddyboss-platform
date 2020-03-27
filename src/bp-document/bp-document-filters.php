@@ -34,6 +34,9 @@ add_filter( 'bbp_get_topic_content', 'bp_document_forums_embed_attachments', 999
 add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 
+// Download Document
+add_action( 'init', 'bp_document_download_url_file' );
+
 /**
  * Add document theatre template for activity pages
  */
@@ -506,4 +509,11 @@ function bp_document_delete_attachment_document( $attachment_id ) {
 	bp_document_delete( array( 'id' => $document->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_document_delete_attachment_document', 0 );
+}
+
+function bp_document_download_url_file() {
+
+	if( isset( $_GET['attachment_id'] ) && isset( $_GET['download_document_file'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification
+		bp_document_download_file( $_GET['attachment_id'] ); // phpcs:ignore WordPress.Security.NonceVerification
+	}
 }

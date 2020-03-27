@@ -33,8 +33,6 @@ function bp_nouveau_document_enqueue_scripts() {
 			wp_enqueue_script( 'bp-exif' );
 		}
 	}
-
-
 }
 
 /**
@@ -49,9 +47,6 @@ function bp_nouveau_document_localize_scripts( $params = array() ) {
 
 	$all_extensions = bp_media_allowed_document_type();
 	$extensions     = array_column( $all_extensions, 'extension' );
-
-
-
 
 	//initialize media vars because it is used globally
 	$params['media'] = array(

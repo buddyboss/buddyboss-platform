@@ -6,20 +6,20 @@
  */
 
 $attachment_id = bp_get_document_attachment_id();
-$extension = '';
+$extension     = '';
 if ( $attachment_id ) {
-	$extension = bp_document_extension( $attachment_id );
-	$svg_icon  = bp_document_svg_icon( $extension );
-	$link = wp_get_attachment_url( $attachment_id );
-	$move_class = 'ac-document-move';
+	$extension     = bp_document_extension( $attachment_id );
+	$svg_icon      = bp_document_svg_icon( $extension );
+	$link          = bp_document_download_link( $attachment_id );
+	$move_class    = 'ac-document-move';
 	$listing_class = 'ac-document-list';
-	$type = 'document';
+	$type          = 'document';
 } else {
-	$svg_icon  = bp_document_svg_icon('folder' );
-	$link = bp_get_folder_link();
-	$move_class = 'ac-folder-move';
+	$svg_icon      = bp_document_svg_icon( 'folder' );
+	$link          = bp_get_folder_link();
+	$move_class    = 'ac-folder-move';
 	$listing_class = 'ac-folder-list';
-	$type = 'folder';
+	$type          = 'folder';
 }
 
 ?>
