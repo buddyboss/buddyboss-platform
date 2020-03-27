@@ -3304,74 +3304,29 @@ function bp_member_type_by_type( $type_id ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @global wpdb $wpdb WordPress database abstraction object.
- * @return type array
+ * @return array Member types
  */
-function bp_get_active_member_types( $force_refresh = false ) {
+function bp_get_active_member_types() {
+	$bp_active_member_types = array();
 
-	// Check for the bp_active_member_types in the 'active_member_types' group.
-	$bp_active_member_types = wp_cache_get( 'bp_active_member_types', 'active_member_types' );
+	$bp_active_member_types_query = new \WP_Query(
+		apply_filters( 'bp_get_active_member_types_args',
+			array(
+				'posts_per_page' => - 1,
+				'post_type'      => bp_get_member_type_post_type(),
+				'orderby'        => 'menu_order',
+				'order'          => 'ASC',
+				'fields'         => 'ids'
+			)
+		)
+	);
 
-	// If nothing is found, build the object.
-	if ( true === $force_refresh || false === $bp_active_member_types ) {
-
-		global $wpdb;
-		$member_type_order_by   = apply_filters( 'member_type_order_by', "menu_order" );
-		$query                  = "SELECT DISTINCT ID FROM {$wpdb->posts} WHERE post_type = %s AND post_status = %s ORDER BY {$member_type_order_by}";
-		$bp_active_member_types = $wpdb->get_col( $wpdb->prepare( $query, bp_get_member_type_post_type(), 'publish' ) ); // db call ok; no-cache ok;
-
-		// Cache the whole WP_Query object in the cache and store it for 5 minutes (300 secs).
-		wp_cache_set( 'bp_active_member_types', $bp_active_member_types, 'active_member_types', 5 * MINUTE_IN_SECONDS );
+	if ( $bp_active_member_types_query->have_posts() ) {
+		$bp_active_member_types = $bp_active_member_types_query->posts;
 	}
+	wp_reset_postdata();
 
-	return $bp_active_member_types;
-}
-
-/**
- * Build the cache for the bp_active_member_types post types.
- *
- * @param int  $post_id The post ID.
- * @param post $post The post object.
- * @param bool $update Whether this is an existing member type being updated or not.
- *
- * @since BuddyBoss 1.1.4
- */
-function bp_refresh_member_types_cache( $post_id, $post, $update ) {
-
-	/*
-	 * In production code, $slug should be set only once in the plugin,
-	 * preferably as a class property, rather than in each function that needs it.
-	 */
-	$post_type = get_post_type( $post_id );
-
-	// If this isn't a 'member_type' post, don't update it.
-	if ( bp_get_member_type_post_type() !== $post_type ) {
-		return;
-	}
-
-	// Force the cache refresh for active_member_types posts.
-	bp_get_active_member_types( $force_refresh = true );
-
-}
-add_action( 'save_post', 'bp_refresh_member_types_cache', 10, 3 );
-
-/**
- * Get all plural labels.
- *
- * @since BuddyBoss 1.0.0
- *
- * @return type array
- */
-function bp_plural_labels_array() {
-	$member_types = buddypress()->members->types;
-	$user_ids     = array();
-
-	foreach ( $member_types as $key => $member_type ) {
-		$user_ids[ $key ] = $member_type->labels['name'];
-	}
-
-	return $user_ids;
-
+	return apply_filters( 'bp_get_active_member_types', $bp_active_member_types );
 }
 
 /**
