@@ -3304,22 +3304,22 @@ function bp_member_type_by_type( $type_id ) {
  *
  * @since BuddyBoss 1.0.0
  *
+ * @param array $args Arguments
+ *
  * @return array Member types
  */
-function bp_get_active_member_types() {
+function bp_get_active_member_types( $args = array() ) {
 	$bp_active_member_types = array();
 
-	$bp_active_member_types_query = new \WP_Query(
-		apply_filters( 'bp_get_active_member_types_args',
-			array(
-				'posts_per_page' => - 1,
-				'post_type'      => bp_get_member_type_post_type(),
-				'orderby'        => 'menu_order',
-				'order'          => 'ASC',
-				'fields'         => 'ids'
-			)
-		)
-	);
+	$args = bp_parse_args( $args, array(
+		'posts_per_page' => - 1,
+		'post_type'      => bp_get_member_type_post_type(),
+		'orderby'        => 'menu_order',
+		'order'          => 'ASC',
+		'fields'         => 'ids'
+	), 'member_types' );
+
+	$bp_active_member_types_query = new \WP_Query( $args );
 
 	if ( $bp_active_member_types_query->have_posts() ) {
 		$bp_active_member_types = $bp_active_member_types_query->posts;
