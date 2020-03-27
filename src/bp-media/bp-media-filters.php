@@ -46,6 +46,9 @@ add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_s
 add_action( 'bp_core_activation_notice', 'bp_media_activation_notice' );
 add_action( 'wp_ajax_bp_media_import_status_request', 'bp_media_import_status_request' );
 
+// For WP Comments
+add_filter( 'comment_text', 'bp_media_comment_append_media', 10, 2 );
+
 /**
  * Add media theatre template for activity pages
  */
@@ -972,4 +975,40 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+}
+
+/**
+ * This will add the Gif/Media attached to comment text if comment added via activity comment.
+ *
+ * @param $comment_text
+ * @param null $comment
+ *
+ * @return false|string|void
+ */
+function bp_media_comment_append_media( $comment_text, $comment = null ) {
+
+	if ( ! bp_is_active( 'activity' ) ) {
+		return $comment_text;
+	}
+
+	$comment_meta = get_comment_meta( $comment->comment_ID, 'bp_activity_comment_id', true );
+
+	if ( empty( $comment_meta ) ) {
+		return $comment_text;
+	}
+
+	$gif_content = bp_media_activity_embed_gif_content( $comment_meta );
+
+	if ( ! empty( $gif_content ) ) {
+		$comment_text = $gif_content;
+	}
+
+	$activity      = new BP_Activity_Activity( $comment_meta );
+	$media_content = bp_media_activity_append_media( $comment_text, $activity );
+
+	if ( ! empty( $media_content ) ) {
+		$comment_text = $media_content;
+	}
+
+	return $comment_text;
 }
