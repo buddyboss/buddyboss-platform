@@ -19,10 +19,10 @@ $download_url      = bp_document_download_link( $attachment_id );
 
 	<div class="bb-activity-media-elem document-activity <?php echo wp_is_mobile() ? 'is-mobile' : ''; ?>" data-id="<?php bp_document_id(); ?>">
 		<div class="document-description-wrap">
-			<a href="<?php echo esc_url( $download_url ); ?>" target="_blank" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
+			<a href="<?php echo esc_url( $download_url ); ?>" class="entry-img" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>">
 				<i class="<?php echo $svg_icon; ?>" ></i>
 			</a>
-			<a href="<?php echo esc_url( $download_url ); ?>" target="_blank" class="document-detail-wrap">
+			<a href="<?php echo esc_url( $download_url ); ?>" class="document-detail-wrap">
 				<span class="document-title"><?php echo $filename; ?></span>
 				<span class="document-description"><?php echo $size; ?></span>
 				<span class="document-helper-text"><?php esc_html_e( '- Click to Download', 'buddyboss' ); ?></span>
@@ -30,7 +30,7 @@ $download_url      = bp_document_download_link( $attachment_id );
 		</div>
 
 		<div class="document-action-wrap">
-			<a href="<?php echo esc_url( $download_url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
+			<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 				<i class="bb-icon-download"></i>
 			</a>
 
@@ -100,7 +100,7 @@ $download_url      = bp_document_download_link( $attachment_id );
 					
 					<a href="#" class="document-action_collapse" data-balloon-pos="down" data-balloon="<?php esc_html_e( 'Collapse', 'buddyboss' ); ?>"><i class="bb-icon-arrow-up document-icon-collapse"></i></a>
 					
-					<a href="<?php echo esc_url( $url ); ?>" target="_blank" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
+					<a href="<?php echo esc_url( $download_url ); ?>" class="document-action_download" data-id="<?php bp_document_id(); ?>" data-activity-id="<?php bp_document_activity_id(); ?>" data-balloon-pos="up" data-balloon="<?php esc_html_e( 'Download', 'buddyboss' ); ?>">
 						<i class="bb-icon-download document-icon-download"></i>
 					</a>
 
