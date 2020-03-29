@@ -582,7 +582,7 @@ function bp_nouveau_get_loop_classes() {
 		}
 		if ( 'list_grid' === $current_value ) {
 			$list = false;
-			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' == $_POST['extras']['layout'] ) {
+			if ( isset( $_POST['extras'] ) && ! empty( $_POST['extras']['layout'] ) && 'list' === $_POST['extras']['layout'] ) {
 				$list = true;
 			}
 
@@ -807,9 +807,9 @@ function bp_nouveau_has_nav( $args = array() ) {
 
 		if ( 'group_manage' === $bp_nouveau->object_nav && bp_is_group_admin_page() ) {
 			$parent_slug .= '_manage';
-		} else if ( 'group_invite' === $bp_nouveau->object_nav && bp_is_group_invites() ) {
+		} elseif ( 'group_invite' === $bp_nouveau->object_nav && bp_is_group_invites() ) {
 			$parent_slug .= '_invite';
-		} else if ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
+		} elseif ( 'group_media' === $bp_nouveau->object_nav && bp_is_group_media() ) {
 			$parent_slug .= '_media';
 		} elseif ( 'group_members' === $bp_nouveau->object_nav && bp_is_group_members() ) {
 			$parent_slug .= '_members';
@@ -1682,9 +1682,9 @@ function bp_nouveau_get_single_item_subnav_classes() {
 		$classes[] = 'group-subnav';
 	}
 
-		if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
-			$classes[] = 'bp-invites-nav';
-		}
+	if ( ( bp_is_group() && 'send-invites' === bp_current_action() ) || ( bp_is_group() && 'pending-invites' === bp_current_action() ) || ( bp_is_group() && 'invite' === bp_current_action() ) || ( bp_is_group_create() && 'group-invites' === bp_get_groups_current_create_step() ) ) {
+		$classes[] = 'bp-invites-nav';
+	}
 
 	$class = array_map( 'sanitize_html_class', $classes );
 
@@ -2414,7 +2414,7 @@ function bp_nouveau_signup_form( $section = 'account_details' ) {
 				 */
 				if ( 'blog_details' !== $section ) {
 					// Removed because we don't have to display the browser error message.
-					//$existing_attributes['required'] = 'required';
+					// $existing_attributes['required'] = 'required';
 				}
 			}
 

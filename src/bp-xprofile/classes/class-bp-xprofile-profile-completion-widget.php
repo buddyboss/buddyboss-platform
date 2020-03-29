@@ -84,13 +84,13 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 
 		// IF nothing selected then return and nothing to display.
 		if ( empty( $profile_groups_selected ) && empty( $profile_phototype_selected ) ) {
-		    return;
-        }
+			return;
+		}
 
 		// Hide the widget if "Hide widget once progress hits 100%" selected and progress is 100%
 		if ( 100 === (int) $user_progress['completion_percentage'] && ! empty( $instance['profile_hide_widget'] ) ) {
-		    return;
-        }
+			return;
+		}
 
 		/* Widget Template */
 
@@ -190,10 +190,7 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 	 */
 	function delete_transient_query( $transient_name_prefix ) {
 		global $wpdb;
-		$delete_transient_query = $wpdb->prepare(
-			"DELETE FROM {$wpdb->options} WHERE option_name LIKE '%s' ",
-			$transient_name_prefix
-		);
+		$delete_transient_query = $wpdb->prepare( "DELETE FROM {$wpdb->options} WHERE option_name LIKE %s", $transient_name_prefix );
 		$wpdb->query( $delete_transient_query );
 	}
 
@@ -532,23 +529,23 @@ class BP_Xprofile_Profile_Completion_Widget extends WP_Widget {
 		<?php endif; ?>
 
 		<?php if ( ! empty( $widget_enabled_arr ) ) : ?>
-            <p>
-                <label><?php esc_html_e( 'Options:', 'buddyboss' ); ?></label>
+			<p>
+				<label><?php esc_html_e( 'Options:', 'buddyboss' ); ?></label>
 
-            <ul>
+			<ul>
 				<?php foreach ( $widget_enabled_arr as $option_value => $option_label ) : ?>
 
-                    <li>
-                        <label>
-                            <input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_hide_widget' ) ); ?>[]" value="<?php echo esc_attr( $option_value ); ?>" <?php checked( ( ! empty( $instance['profile_hide_widget'] ) && in_array( $option_value, $instance['profile_hide_widget'] ) ) ); ?>/>
+					<li>
+						<label>
+							<input class="widefat" type="checkbox" name="<?php echo esc_attr( $this->get_field_name( 'profile_hide_widget' ) ); ?>[]" value="<?php echo esc_attr( $option_value ); ?>" <?php checked( ( ! empty( $instance['profile_hide_widget'] ) && in_array( $option_value, $instance['profile_hide_widget'] ) ) ); ?>/>
 							<?php echo esc_html( $option_label ); ?>
-                        </label>
-                    </li>
+						</label>
+					</li>
 
 				<?php endforeach; ?>
-            </ul>
+			</ul>
 
-            </p>
+			</p>
 		<?php endif; ?>
 
 		<?php

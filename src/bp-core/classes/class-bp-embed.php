@@ -139,10 +139,10 @@ class BP_Embed extends WP_Embed {
 
 		// Set up a new WP oEmbed object to check URL with registered oEmbed providers.
 		if ( file_exists( ABSPATH . WPINC . '/class-wp-oembed.php' ) ) {
-			require_once( ABSPATH . WPINC . '/class-wp-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-wp-oembed.php';
 		} else {
 			// class-oembed.php is deprecated in WordPress 5.3.0.
-			require_once( ABSPATH . WPINC . '/class-oembed.php' );
+			require_once ABSPATH . WPINC . '/class-oembed.php';
 		}
 
 		$oembed_obj = _wp_oembed_get_object();
@@ -273,7 +273,7 @@ class BP_Embed extends WP_Embed {
 			$link_embed = bp_activity_get_meta( $type->id, '_link_embed', true );
 			if ( '0' === $link_embed ) {
 				return $content;
-			} else if ( ! empty( $link_embed ) ) {
+			} elseif ( ! empty( $link_embed ) ) {
 				if ( false !== wp_oembed_get( $link_embed ) ) {
 					$content .= '<p>' . $link_embed . '</p>';
 				}
@@ -302,20 +302,20 @@ class BP_Embed extends WP_Embed {
 
 		$content = str_replace( '<!-- wp-line-break -->', "\n", $content );
 
-		//todo: lazy load for iframe is not good enough for all the sites. we need to have proper solution here.
-//		if ( $is_activity && ! empty( $content ) ) {
-//
-//			$content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
-//
-//			// add the lazy class to the img element
-//			if ( preg_match( '/class=["\']/i', $content ) ) {
-//				$content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
-//			} else {
-//				$content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
-//			}
-//
-//			return apply_filters( 'bp_autoembed', $content );
-//		}
+		// todo: lazy load for iframe is not good enough for all the sites. we need to have proper solution here.
+		// if ( $is_activity && ! empty( $content ) ) {
+		//
+		// $content = preg_replace( '/iframe(.*?)src=/is', 'iframe$1 data-lazy-type="iframe" data-src=', $content );
+		//
+		// add the lazy class to the img element
+		// if ( preg_match( '/class=["\']/i', $content ) ) {
+		// $content = preg_replace( '/class=(["\'])(.*?)["\']/is', 'class=$1lazy $2$1', $content );
+		// } else {
+		// $content = preg_replace( '/<iframe/is', '<iframe class="lazy"', $content );
+		// }
+		//
+		// return apply_filters( 'bp_autoembed', $content );
+		// }
 
 		// Put the line breaks back.
 		return apply_filters( 'bp_autoembed', $content );

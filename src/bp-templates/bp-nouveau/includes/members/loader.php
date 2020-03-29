@@ -43,8 +43,8 @@ class BP_Nouveau_Members {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
-		require( trailingslashit( $this->dir ) . 'functions.php' );
-		require( trailingslashit( $this->dir ) . 'template-tags.php' );
+		require trailingslashit( $this->dir ) . 'functions.php';
+		require trailingslashit( $this->dir ) . 'template-tags.php';
 	}
 
 	/**

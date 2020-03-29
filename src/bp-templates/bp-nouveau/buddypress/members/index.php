@@ -63,20 +63,20 @@
 
 			<?php
 			/**
-			* Fires and displays the members content.
-			*
-			* @since BuddyPress 1.1.0
-			*/
+			 * Fires and displays the members content.
+			 *
+			 * @since BuddyPress 1.1.0
+			 */
 			do_action( 'bp_directory_members_content' );
 			?>
 		</div><!-- // .screen-content -->
 
 		<?php
 			/**
-			* Fires after the display of the members content.
-			*
-			* @since BuddyPress 1.1.0
-			*/
+			 * Fires after the display of the members content.
+			 *
+			 * @since BuddyPress 1.1.0
+			 */
 			do_action( 'bp_after_directory_members_content' );
 		?>
 
@@ -84,10 +84,10 @@
 
 	<?php
 		/**
-		* Fires after the display of the members.
-		*
-		* @since BuddyPress 1.1.0
-		*/
+		 * Fires after the display of the members.
+		 *
+		 * @since BuddyPress 1.1.0
+		 */
 		do_action( 'bp_after_directory_members' );
 	?>
 
@@ -95,9 +95,9 @@
 
 <?php
 /**
-* Fires at the bottom of the members directory template file.
-*
-* @since BuddyPress 1.5.0
-*/
+ * Fires at the bottom of the members directory template file.
+ *
+ * @since BuddyPress 1.5.0
+ */
 do_action( 'bp_after_directory_members_page' );
 ?>

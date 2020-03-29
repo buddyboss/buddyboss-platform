@@ -734,13 +734,13 @@ function bp_core_add_page_mappings( $components, $existing = 'keep' ) {
 
 	// Create the pages.
 	foreach ( $pages_to_create as $component_name => $page_name ) {
-		$exists = get_page_by_path( $component_name );
+		$exists     = get_page_by_path( $component_name );
 		$page_exist = post_exists( $page_name, '', '', 'page' );
 
 		// If page already exists, use it.
 		if ( ! empty( $exists ) ) {
 			$pages[ $component_name ] = $exists->ID;
-		} else if ( ! empty( $page_exist ) ) {
+		} elseif ( ! empty( $page_exist ) ) {
 			$pages[ $component_name ] = $page_exist;
 		} else {
 			$pages[ $component_name ] = wp_insert_post(
@@ -1375,8 +1375,8 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 /**
  * Return the Default date format
  *
- * @param bool $date
- * @param bool $time
+ * @param bool   $date
+ * @param bool   $time
  * @param string $symbol
  *
  * @return mixed
@@ -2347,7 +2347,7 @@ function bp_core_load_buddypress_textdomain() {
 		array(
 			trailingslashit( WP_LANG_DIR . '/' . $domain ),
 			trailingslashit( WP_LANG_DIR ),
-			trailingslashit( BP_PLUGIN_DIR . '/languages'  ),
+			trailingslashit( BP_PLUGIN_DIR . '/languages' ),
 		)
 	);
 
@@ -3371,7 +3371,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
 		 * }
 		 * @since BuddyPress 2.5.0
-		 *
 		 */
 		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
 		if ( ! class_exists( $delivery_class ) ) {
@@ -3391,7 +3390,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			 * @param BP_Email $email The email we tried to send.
 			 *
 			 * @since BuddyPress 2.5.0
-			 *
 			 */
 			do_action( 'bp_send_email_failure', $status, $email );
 
@@ -3404,7 +3402,6 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 			 * @param BP_Email $email The email sent.
 			 *
 			 * @since BuddyPress 2.5.0
-			 *
 			 */
 			do_action( 'bp_send_email_success', $status, $email );
 		}
@@ -4391,7 +4388,7 @@ add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
  *
  * @since BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Content
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.

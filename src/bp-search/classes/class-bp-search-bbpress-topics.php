@@ -50,14 +50,16 @@ if ( ! class_exists( 'Bp_Search_BBPress_Topics' ) ) :
 			// Tax query
 			if ( ! empty( $tax ) ) {
 
-				$tax_in_arr = array_map( function ( $t_name ) {
-					return "'" . $t_name . "'";
-				},
-					$tax );
+				$tax_in_arr = array_map(
+					function ( $t_name ) {
+							return "'" . $t_name . "'";
+					},
+					$tax
+				);
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$tax_sql             .= " WHERE r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON
+				$tax_sql            .= " WHERE r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON
 					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 				$query_placeholder[] = '%' . $search_term . '%';
 				$query_placeholder[] = '%' . $search_term . '%';
@@ -66,22 +68,28 @@ if ( ! class_exists( 'Bp_Search_BBPress_Topics' ) ) :
 
 			$group_memberships = '';
 			if ( bp_is_active( 'groups' ) ) {
-				$group_memberships = bp_get_user_groups( get_current_user_id(),
+				$group_memberships = bp_get_user_groups(
+					get_current_user_id(),
 					array(
 						'is_admin' => null,
 						'is_mod'   => null,
-					) );
+					)
+				);
 			}
 
 			$group_query = '';
 			if ( ! empty( $group_memberships ) ) {
-				$in = array_reduce( array_keys( $group_memberships ),
+				$in = array_reduce(
+					array_keys( $group_memberships ),
 					function ( $carry, $group_id ) {
 						return $carry . ',\'' . maybe_serialize( array( $group_id ) ) . '\'';
-					} );
+					}
+				);
 
-				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim( $in,
-						',' ) . ') ) OR ';
+				$group_query = ' pm.meta_value IN ( SELECT post_id FROM ' . $wpdb->postmeta . ' WHERE meta_key = \'_bbp_group_ids\' AND meta_value IN(' . trim(
+					$in,
+					','
+				) . ') ) OR ';
 			}
 
 			if ( current_user_can( 'read_hidden_forums' ) ) {
@@ -98,13 +106,14 @@ if ( ! class_exists( 'Bp_Search_BBPress_Topics' ) ) :
 			$where[] = "post_type = '{$this->type}'";
 
 			$where[] = '(' . $group_query . '
-			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join( ',',
-					$post_status ) . ') )
+			pm.meta_value IN ( SELECT ID FROM ' . $wpdb->posts . ' WHERE post_type = \'forum\' AND post_status IN (' . join(
+				',',
+				$post_status
+			) . ') )
 			)';
 
 			$query_placeholder[] = '%' . $search_term . '%';
 			$query_placeholder[] = '%' . $search_term . '%';
-
 
 			$sql = 'SELECT ' . $columns . ' FROM ' . $from . $tax_sql . $where_clause . implode( ' AND ', $where );
 
@@ -116,7 +125,8 @@ if ( ! class_exists( 'Bp_Search_BBPress_Topics' ) ) :
 				array(
 					'search_term'         => $search_term,
 					'only_totalrow_count' => $only_totalrow_count,
-				) );
+				)
+			);
 		}
 
 		/**
@@ -125,7 +135,6 @@ if ( ! class_exists( 'Bp_Search_BBPress_Topics' ) ) :
 		 *
 		 * @return object Bp_Search_Forums
 		 * @since BuddyBoss 1.0.0
-		 *
 		 */
 		public static function instance() {
 			// Store the instance locally to avoid private static replication

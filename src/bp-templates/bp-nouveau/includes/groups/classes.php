@@ -90,7 +90,7 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 			'limit'   => '',
 		);
 
-		/** WHERE clauses *****************************************************/
+		/** WHERE clauses */
 
 		// Group id
 		$sql['where'][] = $wpdb->prepare( 'group_id = %d', $this->query_vars['group_id'] );
@@ -103,11 +103,11 @@ class BP_Nouveau_Group_Invite_Query extends BP_User_Query {
 		// Join the query part
 		$sql['where'] = ! empty( $sql['where'] ) ? 'WHERE ' . implode( ' AND ', $sql['where'] ) : '';
 
-		/** ORDER BY clause ***************************************************/
+		/** ORDER BY clause */
 		$sql['orderby'] = 'ORDER BY date_modified';
 		$sql['order']   = 'DESC';
 
-		/** LIMIT clause ******************************************************/
+		/** LIMIT clause */
 		$this->group_member_ids = $wpdb->get_col( "{$sql['select']} {$sql['where']} {$sql['orderby']} {$sql['order']} {$sql['limit']}" );
 
 		return $this->group_member_ids;
@@ -220,7 +220,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 	 *
 	 * @param string $key The property.
 	 *
-	 * @param mixed $value The value of the property.
+	 * @param mixed  $value The value of the property.
 	 */
 	public function __set( $key, $value ) {
 		$this->{$key} = $value;
@@ -341,7 +341,7 @@ class BP_Nouveau_Customizer_Group_Nav extends BP_Core_Nav {
 		// Now find nav items plugins are creating within their Group extensions!
 		foreach ( get_declared_classes() as $class ) {
 			if ( is_subclass_of( $class, 'BP_Group_Extension' ) ) {
-				$extension = new $class;
+				$extension = new $class();
 
 				if ( ! empty( $extension->params ) && ! array_diff_key( $required_params, $extension->params ) ) {
 					$nav_items[ $extension->params['slug'] ] = array(

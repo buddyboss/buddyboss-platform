@@ -179,14 +179,13 @@ function bp_groups_disable_at_mention_notification_for_non_public_groups( $send,
 /**
  * Disable at-mention forum notifications for users who are not a member of the non-public group.
  *
- * @param bool $send Whether to send the notification.
+ * @param bool  $send Whether to send the notification.
  * @param array $usernames Array of all usernames being notified.
- * @param int $user_id ID of the user to be notified.
- * @param int $forum_id ID of the forum.
+ * @param int   $user_id ID of the user to be notified.
+ * @param int   $forum_id ID of the forum.
  *
  * @return bool
  * @since BuddyBoss 1.2.9
- *
  */
 function bp_groups_disable_at_mention_forums_notification_for_non_public_groups( $send, $usernames, $user_id, $forum_id ) {
 	// Skip the check for administrators, who can get notifications from non-public groups.

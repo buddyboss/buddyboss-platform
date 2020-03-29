@@ -269,7 +269,7 @@ function bbp_new_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $topic_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_new_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_new_reply_pre_content', 'bbp_encode_bad', 10 );
-		//remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
+		// remove_filter( 'bbp_new_reply_pre_content', 'bbp_filter_kses', 30 ); //todo: removing this from here bcoz we need to filter mention tags from content
 	}
 
 	/** Reply Title */
@@ -594,7 +594,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_encode_bad', 10 );
-		//remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
+		// remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Reply Topic */
@@ -1996,29 +1996,31 @@ function bbp_reply_content_autoembed() {
  */
 function bbp_reply_content_autoembed_paragraph( $content ) {
 
-	if ( strpos( $content, '<iframe' ) !== false )
+	if ( strpos( $content, '<iframe' ) !== false ) {
 		return $content;
-
-	global $wp_embed;
-	$embed_urls = $embeds_array = array();
-	$flag = true;
-
-	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
-		preg_match_all('/(https?:\/\/[^\s<>"]+)/i', $content , $embed_urls );
 	}
 
-	if ( !empty( $embed_urls ) && !empty( $embed_urls[0] ) ) {
+	global $wp_embed;
+	$embed_urls   = array();
+	$embeds_array = array();
+	$flag         = true;
+
+	if ( preg_match( '/(https?:\/\/[^\s<>"]+)/i', strip_tags( $content ) ) ) {
+		preg_match_all( '/(https?:\/\/[^\s<>"]+)/i', $content, $embed_urls );
+	}
+
+	if ( ! empty( $embed_urls ) && ! empty( $embed_urls[0] ) ) {
 		$embed_urls = array_filter( $embed_urls[0] );
 		$embed_urls = array_unique( $embed_urls );
 
 		foreach ( $embed_urls as $url ) {
-			if ( $flag == false ) {
+			if ( false === $flag ) {
 				continue;
 			}
 
 			$embed = wp_oembed_get( $url, array( 'discover' => false ) );
-			if( $embed ) {
-				$flag = false;
+			if ( $embed ) {
+				$flag           = false;
 				$embeds_array[] = wpautop( $embed );
 			}
 		}
@@ -2460,7 +2462,6 @@ function bbp_adjust_forum_role_labels( $author_role, $args ) {
 					$display_role = __( 'Moderator', 'buddyboss' );
 				}
 			}
-
 		}
 	}
 

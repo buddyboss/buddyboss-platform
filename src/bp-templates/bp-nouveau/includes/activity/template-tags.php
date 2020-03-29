@@ -215,7 +215,6 @@ function bp_nouveau_get_activity_timestamp() {
  * Output the state buttons inside an Activity Loop.
  *
  * @since BuddyPress 3.0.0
- *
  */
 function bp_nouveau_activity_state() {
 
@@ -339,7 +338,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'parent_attr'    => $parent_attr,
 				'button_element' => $button_element,
 				'link_class'     => 'button fav bp-secondary-action',
-				//'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
+				// 'data_bp_tooltip'  => __( 'Like', 'buddyboss' ),
 				'link_text'      => __( 'Like', 'buddyboss' ),
 				'aria-pressed'   => 'false',
 				'link_attr'      => bp_get_activity_favorite_link(),
@@ -351,7 +350,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 				'parent_attr'    => $parent_attr,
 				'button_element' => $button_element,
 				'link_class'     => 'button unfav bp-secondary-action',
-				//'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
+				// 'data_bp_tooltip' => __( 'Unlike', 'buddyboss' ),
 				'link_text'      => __( 'Unlike', 'buddyboss' ),
 				'aria-pressed'   => 'true',
 				'link_attr'      => bp_get_activity_unfavorite_link(),
@@ -370,7 +369,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_attr'       => array(
 				$key           => $fav_args['link_attr'],
 				'class'        => $fav_args['link_class'],
-				//'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
+				// 'data-bp-tooltip' => $fav_args['data_bp_tooltip'],
 				'aria-pressed' => $fav_args['aria-pressed'],
 			),
 		);
@@ -519,7 +518,7 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'id'            => $delete_args['link_id'],
 			'href'          => $delete_args['link_href'],
 			'class'         => $delete_args['link_class'],
-			//'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
+			// 'data-bp-tooltip' => $delete_args['data_bp_tooltip'],
 			'data-bp-nonce' => $delete_args['data-attr'],
 		),
 		'link_text'         => sprintf(
@@ -542,11 +541,11 @@ function bp_nouveau_get_activity_entry_buttons( $args ) {
 			'button_attr'       => array(
 				'class'               => 'bp-secondary-action spam-activity confirm button item-button bp-tooltip',
 				'id'                  => 'activity_make_spam_' . $activity_id,
-				//'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
+				// 'data-bp-tooltip' => __( 'Spam', 'buddyboss' ),
 				'data-bp-tooltip-pos' => 'up',
 			),
 			'link_text'         => sprintf(
-				/** @todo: use a specific css rule for this *************************************************************/
+				/** @todo: use a specific css rule for this */
 				'<span class="bp-screen-reader-text">%s</span><span class="delete-label">%s</span>',
 				esc_html__( 'Spam', 'buddyboss' ),
 				esc_html__( 'Spam', 'buddyboss' )
@@ -933,9 +932,9 @@ function bp_nouveau_get_activity_comment_buttons( $args ) {
 	 * If post comment / Activity comment sync is on, it's safer
 	 * to unset the comment button just before returning it.
 	 */
-	//      if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
-	//          unset( $return['activity_comment_reply'] );
-	//      }
+	// if ( ! bp_activity_can_comment_reply( bp_activity_current_comment() ) ) {
+	// unset( $return['activity_comment_reply'] );
+	// }
 
 	/**
 	 * If there was an activity of the user before one af another

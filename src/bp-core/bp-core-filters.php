@@ -1388,7 +1388,7 @@ function bp_remove_badgeos_conflict_ckeditor_dequeue_script( $src, $handle ) {
  */
 function bp_pages_terms_and_privacy_exclude( $pages ) {
 
-	if ( !empty( $pages ) ) {
+	if ( ! empty( $pages ) ) {
 
 		// Removed terms page as non component page.
 		if ( property_exists( $pages, 'terms' ) ) {

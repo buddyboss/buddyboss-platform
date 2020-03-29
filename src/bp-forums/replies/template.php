@@ -1281,11 +1281,11 @@ function bbp_get_reply_author_link( $args = '' ) {
 		unset( $links );
 
 		// Filter sections if avatar size is 1 or type is name else assign the author links array itself. Added condition not to show verified badges on avatar.
-        if ( 1 == $r['size'] || 'name' === $r['type'] ) {
-            $sections   = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
-        } else {
-            $sections   = $author_links;
-        }
+		if ( 1 === $r['size'] || 'name' === $r['type'] ) {
+			$sections = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
+		} else {
+			$sections = $author_links;
+		}
 
 		// Assemble sections into author link
 		$author_link = implode( $r['sep'], $sections );
@@ -1299,7 +1299,6 @@ function bbp_get_reply_author_link( $args = '' ) {
 		if ( true === $r['show_role'] ) {
 			$author_link .= bbp_get_reply_author_role( array( 'reply_id' => $reply_id ) );
 		}
-
 	}
 
 	// Filter & return

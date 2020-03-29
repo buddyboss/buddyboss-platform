@@ -32,7 +32,7 @@
 		</div>
 
 		<div class="item-extra">
-			<?php echo  wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
+			<?php echo wc_price( wc_get_price_to_display( $product ) ) . $product->get_price_suffix(); ?>
 		</div>
 	</div>
 </li>

@@ -42,8 +42,8 @@ class BP_Nouveau_XProfile {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function includes() {
-		require( trailingslashit( $this->dir ) . 'functions.php' );
-		require( trailingslashit( $this->dir ) . 'template-tags.php' );
+		require trailingslashit( $this->dir ) . 'functions.php';
+		require trailingslashit( $this->dir ) . 'template-tags.php';
 
 		// Test suite requires the AJAX functions early.
 		if ( function_exists( 'tests_add_filter' ) ) {

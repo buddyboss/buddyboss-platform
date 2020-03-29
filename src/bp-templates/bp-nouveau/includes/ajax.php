@@ -141,7 +141,7 @@ function bp_nouveau_ajax_object_template_loader() {
 	} elseif ( 'groups' === $object && ! empty( $GLOBALS['groups_template'] ) ) {
 		$result['count'] = $GLOBALS['groups_template']->group_count;
 	} elseif ( 'activity' === $object ) {
-		//$result['count'] = $GLOBALS["activities_template"]->activity_count;
+		// $result['count'] = $GLOBALS["activities_template"]->activity_count;
 	}
 
 	$result = apply_filters( 'bp_nouveau_object_template_result', $result, $object );

@@ -508,6 +508,8 @@ function bp_core_fetch_avatar( $args = '' ) {
 				if ( 2 < strlen( $avatar_file ) ) {
 					$avatar_files[] = $avatar_file;
 				}
+
+				$avatar_file = readdir( $av_dir );
 			}
 
 			// Check for array.

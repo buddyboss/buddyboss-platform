@@ -14,7 +14,7 @@ defined( 'ABSPATH' ) || exit;
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $scripts  The array of scripts to register
+ * @param  array $scripts  The array of scripts to register
  * @return array  The same array with the specific notifications scripts.
  */
 function bp_nouveau_notifications_register_scripts( $scripts = array() ) {
@@ -75,8 +75,8 @@ function bp_nouveau_notifications_init_filters() {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $args {
- *     Array of arguments.
+ * @param  array $args {
+ *    Array of arguments.
  *
  *     @type string      $id         The unique string to identify your "component action". Required.
  *     @type string      $label      The human readable notification type. Required.
@@ -138,7 +138,7 @@ function bp_nouveau_notifications_get_filters( $id = '' ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param  array  $filters The notifications filters to order.
+ * @param  array $filters The notifications filters to order.
  * @return array  The sorted filters.
  */
 function bp_nouveau_notifications_sort( $filters = array() ) {

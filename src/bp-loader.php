@@ -157,8 +157,8 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 		}
 
 		if ( is_network_admin()
-			 || strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
-			 || strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
+			|| strpos( $_SERVER['REQUEST_URI'], $plugins_path ) !== false
+			|| strpos( $_SERVER['REQUEST_URI'], $ajax_path ) !== false
 		) {
 
 			/**
@@ -170,7 +170,7 @@ if ( empty( $is_bp_active ) && empty( $is_bb_active ) && empty( $bp_incompatible
 				add_action( 'muplugins_loaded', 'bp_core_unset_bbpress_buddypress_active', 10000 );
 			}
 
-			if ( empty( $_GET['action'] ) || $_GET['action'] != 'activate' ) {
+			if ( empty( $_GET['action'] ) || 'activate' !== $_GET['action'] ) {
 
 				add_action( 'admin_init', 'bp_core_unset_bbpress_buddypress_active', 100000 );
 

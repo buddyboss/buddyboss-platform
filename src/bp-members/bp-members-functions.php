@@ -3828,7 +3828,7 @@ function bp_member_type_shortcode_add_body_class( $class ) {
 		 *This class commented because this class will add when buddypanel enable
 		 *and this condition already in the theme
 		 */
-		//$class[] = 'bb-buddypanel';
+		// $class[] = 'bb-buddypanel';
 	}
 	return $class;
 }

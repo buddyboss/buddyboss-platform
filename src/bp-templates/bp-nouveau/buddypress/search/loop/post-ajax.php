@@ -14,11 +14,11 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'po
 		<div class="item">
 			<div class="item-title"><?php the_title(); ?></div>
 			<?php
-                $content = wp_strip_all_tags( $result['post_content'] );
-				preg_match_all("^\[(.*?)\]^", $content, $matches, PREG_PATTERN_ORDER);  //strip all shortcodes in the ajax search content
-				$content = str_replace($matches[0], '', $content);
-                $trimmed_content = wp_trim_words( $content, 20, '&hellip;' );
-            ?>
+				$content = wp_strip_all_tags( $result['post_content'] );
+				preg_match_all( '^\[(.*?)\]^', $content, $matches, PREG_PATTERN_ORDER );  // strip all shortcodes in the ajax search content
+				$content         = str_replace( $matches[0], '', $content );
+				$trimmed_content = wp_trim_words( $content, 20, '&hellip;' );
+			?>
 			<div class="item-desc"><?php echo $trimmed_content; ?></div>
 
 		</div>

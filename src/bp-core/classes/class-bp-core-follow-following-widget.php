@@ -43,8 +43,9 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			return;
 		}
 
-		$id = bp_displayed_user_id();
-		$filter = $show_more = false;
+		$id        = bp_displayed_user_id();
+		$filter    = false;
+		$show_more = false;
 
 		if ( ! $id ) {
 			// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
@@ -76,7 +77,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 		$instance['title'] = (
 			bp_loggedin_user_id() === bp_displayed_user_id()
 			? __( "I'm Following", 'buddyboss' )
-			: sprintf( __( "%s is Following", 'buddyboss' ), $this->get_user_display_name( $id ) )
+			: sprintf( __( '%s is Following', 'buddyboss' ), $this->get_user_display_name( $id ) )
 		);
 
 		if ( bp_loggedin_user_id() === bp_displayed_user_id() ) {
@@ -110,10 +111,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			do_action( 'bp_before_following_widget' );
 
 			echo $args['before_widget'];
-			echo $args['before_title']
-			   . $title
-			   . $following_count
-			   . $args['after_title'];
+			echo $args['before_title'] . $title . $following_count . $args['after_title'];
 			?>
 
 			<div class="avatar-block">
@@ -196,7 +194,7 @@ class BP_Core_Follow_Following_Widget extends WP_Widget {
 			|| 'first_last_name' === $format
 		) {
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$display_name  = xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
 			$display_name = bp_core_get_user_displayname( $user_id );
 		}

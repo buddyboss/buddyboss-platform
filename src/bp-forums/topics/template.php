@@ -1504,7 +1504,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 		),
 		'get_topic_author_link'
 	);
-	
+
 	// Default return value
 	$author_link = '';
 
@@ -1544,7 +1544,7 @@ function bbp_get_topic_author_link( $args = '' ) {
 		if ( 'name' === $r['type'] || 'both' === $r['type'] ) {
 			$author_links['name'] = bbp_get_topic_author_display_name( $topic_id );
 		}
-		
+
 		// Empty array
 		$links  = array();
 		$sprint = '<span %1$s>%2$s</span>';
@@ -1560,11 +1560,11 @@ function bbp_get_topic_author_link( $args = '' ) {
 		unset( $links );
 
 		// Filter sections if avatar size is 1 or type is name else assign the author links array itself. Added condition not to show verified badges on avatar.
-        if ( 1 == $r['size'] || 'name' === $r['type'] ) {
-            $sections   = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
-        } else {
-            $sections   = $author_links;
-        }
+		if ( 1 === $r['size'] || 'name' === $r['type'] ) {
+			$sections = apply_filters( 'bbp_get_topic_author_links', $author_links, $r, $args );
+		} else {
+			$sections = $author_links;
+		}
 
 		// Assemble sections into author link
 		$author_link = implode( $r['sep'], $sections );

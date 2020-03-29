@@ -442,7 +442,7 @@ function bp_activity_screen_notification_settings() {
 					<td class="yes">
 						<div class="bp-radio-wrap">
 							<input type="radio" name="notifications[notification_activity_new_mention]" id="notification-activity-new-mention-yes" class="bs-styled-radio" value="yes" <?php checked( $mention, 'yes', true ); ?> />
-							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php  _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
+							<label for="notification-activity-new-mention-yes"><span class="bp-screen-reader-text"><?php _e( 'Yes, send email', 'buddyboss' ); ?></span></label>
 						</div>
 					</td>
 					<td class="no">

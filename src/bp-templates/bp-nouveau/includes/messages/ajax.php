@@ -196,7 +196,7 @@ function bp_nouveau_ajax_messages_send_message() {
 					'count'         => bp_get_message_thread_total_count(),
 					'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 					'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-					'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
+					'started_date'  => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 				);
 
 				if ( is_array( $messages_template->thread->recipients ) ) {
@@ -507,7 +507,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 		remove_filter( 'bp_after_has_message_threads_parse_args', 'bp_messages_filter_starred_message_threads' );
 	}
 
-	$threads       = new stdClass;
+	$threads       = new stdClass();
 	$threads->meta = array(
 		'total_page' => ceil( (int) $messages_template->total_thread_count / (int) $messages_template->pag_num ),
 		'page'       => $messages_template->pag_page,
@@ -549,7 +549,7 @@ function bp_nouveau_ajax_get_user_message_threads() {
 			'count'         => bp_get_message_thread_total_count(),
 			'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
 			'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
+			'started_date'  => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
@@ -727,7 +727,7 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	bp_get_thread( array( 'thread_id' => $thread_id ) );
 
-	$thread = new stdClass;
+	$thread = new stdClass();
 
 	// Check recipients if connected or not
 	if ( bp_force_friendship_to_message() && bp_is_active( 'friends' ) ) {

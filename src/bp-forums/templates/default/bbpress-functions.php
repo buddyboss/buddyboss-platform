@@ -278,10 +278,16 @@ if ( ! class_exists( 'BBP_Default' ) ) :
 			$min = bp_core_get_minified_asset_suffix();
 
 			if ( ! wp_script_is( 'bp-mentions' ) ) {
-				wp_enqueue_script( 'bp-mentions', buddypress()->plugin_url . "bp-core/js/mentions{$min}.js", array(
-					'jquery',
-					'jquery-atwho'
-				), bp_get_version(), true );
+				wp_enqueue_script(
+					'bp-mentions',
+					buddypress()->plugin_url . "bp-core/js/mentions{$min}.js",
+					array(
+						'jquery',
+						'jquery-atwho',
+					),
+					bp_get_version(),
+					true
+				);
 				wp_enqueue_style( 'bp-mentions-css', buddypress()->plugin_url . "bp-core/css/mentions{$min}.css", array(), bp_get_version() );
 
 				wp_style_add_data( 'bp-mentions-css', 'rtl', true );

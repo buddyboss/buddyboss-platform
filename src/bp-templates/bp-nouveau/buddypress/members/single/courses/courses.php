@@ -29,7 +29,7 @@ if ( ! empty( $filepath ) ) {
 
 }
 
-//LD_QuizPro::showModalWindow();
+// LD_QuizPro::showModalWindow();
 add_action( 'wp_footer', array( 'LD_QuizPro', 'showModalWindow' ), 20 );
 
 $user_id            = bp_displayed_user_id();
@@ -45,7 +45,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 		$quiz_attempt['post']       = get_post( $quiz_attempt['quiz'] );
 		$quiz_attempt['percentage'] = ! empty( $quiz_attempt['percentage'] ) ? $quiz_attempt['percentage'] : ( ! empty( $quiz_attempt['count'] ) ? $quiz_attempt['score'] * 100 / $quiz_attempt['count'] : 0 );
 
-		if ( $user_id == get_current_user_id() && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
+		if ( get_current_user_id() === $user_id && ! empty( $c['certificateLink'] ) && ( ( isset( $quiz_attempt['percentage'] ) && $quiz_attempt['percentage'] >= $c['certificate_threshold'] * 100 ) ) ) {
 			$quiz_attempt['certificate'] = $c;
 		}
 		$quiz_attempts[ learndash_get_course_id( $quiz_attempt['quiz'] ) ][] = $quiz_attempt;
@@ -60,10 +60,9 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 				/**
 				 * Do not show the free/open course unless those are explicitly started by the users
-				 *
 				 */
 
-				//Check user have enrolled for course
+				// Check user have enrolled for course
 				$since = ld_course_access_from( $course_id, $user_id );
 
 				/**
@@ -72,7 +71,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 				 */
 				if ( empty( $since ) ) {
 
-					//Check user has mass enrolled for course
+					// Check user has mass enrolled for course
 					$since = learndash_user_group_enrolled_to_course_from( $user_id, $course_id );
 
 					/**
@@ -81,7 +80,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 					 */
 					if ( empty( $since ) ) {
 
-						//Check user has started course(topic or lesson)
+						// Check user has started course(topic or lesson)
 						$course_status = learndash_course_status( $course_id, $user_id, true );
 
 						if ( 'not_started' === $course_status ) {
@@ -99,29 +98,27 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 						'array'     => true,
 					)
 				);
-				$status      = ( $progress['percentage'] == 100 ) ? 'completed' : 'notcompleted';
+				$status      = ( 100 === absint( $progress['percentage'] ) ) ? 'completed' : 'notcompleted';
 				?>
 				<div id="course-<?php echo $course->ID; ?>">
-					<div class="list_arrow collapse flippable"
-						 onClick="return flip_expand_collapse('#course', <?php echo $course->ID; ?>);"></div>
+					<div class="list_arrow collapse flippable" onClick="return flip_expand_collapse('#course', <?php echo $course->ID; ?>);"></div>
 					<h4>
 						<div class="learndash-course-link"><a
 									href="<?php echo esc_attr( $course_link ); ?>"><?php echo $course->post_title; ?></a>
 						</div>
 
 						<div class="learndash-course-status">
-							<a class="<?php echo esc_attr( $status ); ?>"
-							   href="<?php echo esc_attr( $course_link ); ?>">
+							<a class="<?php echo esc_attr( $status ); ?>" href="<?php echo esc_attr( $course_link ); ?>">
 								<?php echo learndash_course_status( $course_id, $user_id ); ?>
 							</a>
 						</div>
 
 						<div class="learndash-course-certificate">
 						<?php
-							$certificateLink = learndash_get_course_certificate_link( $course->ID, $user_id );
-						if ( ! empty( $certificateLink ) ) {
+							$certificate_link = learndash_get_course_certificate_link( $course->ID, $user_id );
+						if ( ! empty( $certificate_link ) ) {
 							?>
-								<a target="_blank" href="<?php echo esc_attr( $certificateLink ); ?>">
+								<a target="_blank" href="<?php echo esc_attr( $certificate_link ); ?>">
 									<div class="certificate_icon_large"></div></a>
 									<?php
 						} else {
@@ -138,8 +135,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 							<div>
 								<dd class="course_progress"
 									title='<?php echo sprintf( __( '%s out of %s steps completed', 'buddyboss' ), $progress['completed'], $progress['total'] ); ?>'>
-									<div class="course_progress_blue"
-										 style='width: <?php echo esc_attr( $progress['percentage'] ); ?>%;'></div>
+									<div class="course_progress_blue" style='width: <?php echo esc_attr( $progress['percentage'] ); ?>%;'></div>
 								</dd>
 
 								<div class="right">
@@ -160,16 +156,16 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 									<?php foreach ( $quiz_attempts[ $course_id ] as $k => $quiz_attempt ) : ?>
 										<?php
-										$certificateLink = null;
+										$certificate_link = null;
 
 										if ( ( isset( $quiz_attempt['has_graded'] ) ) && ( true === $quiz_attempt['has_graded'] ) && ( true === LD_QuizPro::quiz_attempt_has_ungraded_question( $quiz_attempt ) ) ) {
 											$status = 'pending';
 										} else {
-											$certificateLink = @$quiz_attempt['certificate']['certificateLink'];
-											$status          = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
+											$certificate_link = $quiz_attempt['certificate']['certificateLink'];
+											$status           = empty( $quiz_attempt['pass'] ) ? 'failed' : 'passed';
 										}
 
-										$quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? $quiz_attempt['post']->post_title : @$quiz_attempt['quiz_title'];
+										$quiz_title = ! empty( $quiz_attempt['post']->post_title ) ? $quiz_attempt['post']->post_title : $quiz_attempt['quiz_title'];
 
 										$quiz_link = ! empty( $quiz_attempt['post']->ID ) ? get_permalink( $quiz_attempt['post']->ID ) : '#';
 										?>
@@ -182,9 +178,8 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 												</div>
 
 												<div class="certificate">
-													<?php if ( ! empty( $certificateLink ) ) : ?>
-														<a href='<?php echo esc_attr( $certificateLink ); ?>&time=<?php echo esc_attr( $quiz_attempt['time'] ); ?>'
-														   target="_blank">
+													<?php if ( ! empty( $certificate_link ) ) : ?>
+														<a href='<?php echo esc_attr( $certificate_link ); ?>&time=<?php echo esc_attr( $quiz_attempt['time'] ); ?>' target="_blank">
 															<div class="certificate_icon"></div>
 														</a>
 													<?php else : ?>
@@ -202,7 +197,7 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 
 												<div class="statistics">
 													<?php
-													if ( ( ( $user_id == get_current_user_id() ) || ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( isset( $quiz_attempt['statistic_ref_id'] ) ) && ( ! empty( $quiz_attempt['statistic_ref_id'] ) ) ) {
+													if ( ( ( get_current_user_id() === $user_id ) || ( learndash_is_admin_user() ) || ( learndash_is_group_leader_user() ) ) && ( isset( $quiz_attempt['statistic_ref_id'] ) ) && ( ! empty( $quiz_attempt['statistic_ref_id'] ) ) ) {
 														/**
 														 * @since 2.3
 														 * See snippet on use of this filter https://bitbucket.org/snippets/learndash/5o78q
@@ -216,13 +211,9 @@ if ( ! empty( $quiz_attempts_meta ) ) {
 														) ) {
 
 															?>
-															<a class="user_statistic"
-																 data-statistic_nonce="<?php echo wp_create_nonce( 'statistic_nonce_' . $quiz_attempt['statistic_ref_id'] . '_' . get_current_user_id() . '_' . $user_id ); ?>"
-																 data-user_id="<?php echo $user_id; ?>"
-																 data-quiz_id="<?php echo $quiz_attempt['pro_quizid']; ?>"
-																 data-ref_id="<?php echo intval( $quiz_attempt['statistic_ref_id'] ); ?>"
-																 href="#">
-																<div class="statistic_icon"></div></a>
+															<a class="user_statistic" data-statistic_nonce="<?php echo wp_create_nonce( 'statistic_nonce_' . $quiz_attempt['statistic_ref_id'] . '_' . get_current_user_id() . '_' . $user_id ); ?>" data-user_id="<?php echo $user_id; ?>" data-quiz_id="<?php echo $quiz_attempt['pro_quizid']; ?>" data-ref_id="<?php echo intval( $quiz_attempt['statistic_ref_id'] ); ?>" href="#">
+																<div class="statistic_icon"></div>
+															</a>
 																<?php
 														}
 													}

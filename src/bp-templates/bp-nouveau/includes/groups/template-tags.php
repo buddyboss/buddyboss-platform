@@ -1164,7 +1164,7 @@ function bp_nouveau_get_group_meta() {
 		if ( $is_group ) {
 				$meta = array(
 					'status'      => bp_get_group_type(),
-					//'group_type_list' =>  bp_get_group_type_list(),
+					// 'group_type_list' =>  bp_get_group_type_list(),
 					'description' => bp_get_group_description(),
 				);
 
@@ -1350,12 +1350,12 @@ function bp_nouveau_groups_get_customizer_widgets_link() {
 }
 
 /**
-* Output "checked" attribute to determine if the group type should be checked.
-*
-* @since BuddyPress 3.2.0
-*
-* @param object $type Group type object. See bp_groups_get_group_type_object().
-*/
+ * Output "checked" attribute to determine if the group type should be checked.
+ *
+ * @since BuddyPress 3.2.0
+ *
+ * @param object $type Group type object. See bp_groups_get_group_type_object().
+ */
 function bp_nouveau_group_type_checked( $type = null ) {
 	if ( ! is_object( $type ) ) {
 		return;
@@ -1377,9 +1377,12 @@ function bp_nouveau_group_type_checked( $type = null ) {
  * @since BuddyPress 4.0.0
  */
 function bp_nouveau_add_notify_group_members_checkbox() {
-	printf( '<p class="bp-controls-wrap">
+	printf(
+		'<p class="bp-controls-wrap">
 		<input type="checkbox" name="group-notify-members" id="group-notify-members" class="bs-styled-checkbox" value="1" />
 		<label for="group-notify-members" class="bp-label-text">%s</label>
-	</p>', esc_html__( 'Notify group members of these changes via email', 'buddyboss' ) );
+	</p>',
+		esc_html__( 'Notify group members of these changes via email', 'buddyboss' )
+	);
 }
 add_action( 'groups_custom_group_fields_editable', 'bp_nouveau_add_notify_group_members_checkbox', 20 );

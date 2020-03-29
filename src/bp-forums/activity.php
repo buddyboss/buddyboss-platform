@@ -309,7 +309,7 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			}
 
 			// Check if blog & forum activity stream commenting is off
-			if ( !empty( $activities_template->disable_blogforum_replies ) ) {
+			if ( ! empty( $activities_template->disable_blogforum_replies ) ) {
 
 				// Get the current action name
 				$action_name = bp_get_activity_action_name();
@@ -438,9 +438,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_content = apply_filters( 'bbp_activity_topic_create_excerpt', $topic_content );
 
 			// Remove activity's notification for mentions.
-			add_action( 'bp_activity_before_save', function() {
-				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-			}, 99 );
+			add_action(
+				'bp_activity_before_save',
+				function() {
+					remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+				},
+				99
+			);
 
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(
@@ -593,9 +597,13 @@ if ( ! class_exists( 'BBP_BuddyPress_Activity' ) ) :
 			$activity_content = apply_filters( 'bbp_activity_reply_create_excerpt', $reply_content );
 
 			// Remove activity's notification for mentions.
-			add_action( 'bp_activity_before_save', function() {
-				remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
-			}, 99 );
+			add_action(
+				'bp_activity_before_save',
+				function() {
+					remove_action( 'bp_activity_after_save', 'bp_activity_at_name_send_emails' );
+				},
+				99
+			);
 
 			// Compile and record the activity stream results
 			$activity_id = $this->record_activity(

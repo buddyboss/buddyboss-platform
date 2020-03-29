@@ -11,10 +11,10 @@
 defined( 'ABSPATH' ) || exit;
 
 /**
-* Member submit email invite.
-*
-* @since BuddyBoss 1.0.0
-*/
+ * Member submit email invite.
+ *
+ * @since BuddyBoss 1.0.0
+ */
 function bp_member_invite_submit() {
 
 	global $bp;
@@ -129,7 +129,7 @@ function bp_member_invite_submit() {
 		$args        = array(
 			'tokens' => array(
 				'inviter.name' => $inviter_name,
-				'inviter.url' => $inviter_url,
+				'inviter.url'  => $inviter_url,
 				'invitee.url'  => $accept_link,
 			),
 		);
@@ -208,12 +208,12 @@ function bp_invites_member_invite_filter_content( $content, $email ) {
 
 	if ( 'invites-member-invite' === $email->get( 'type' ) ) {
 		$content .= '<br>' .
-		            bp_get_member_invites_wildcard_replace(
-			            wp_kses(
-				            sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss' ), '{{invitee.url}}' ),
-				            bp_invites_kses_allowed_tags()
-			            )
-		            );
+					bp_get_member_invites_wildcard_replace(
+						wp_kses(
+							sprintf( __( 'To accept this invitation, please <a href="%s">click here</a>.', 'buddyboss' ), '{{invitee.url}}' ),
+							bp_invites_kses_allowed_tags()
+						)
+					);
 	}
 	return apply_filters( 'bp_invites_member_invite_filter_content', $content, $email );
 }

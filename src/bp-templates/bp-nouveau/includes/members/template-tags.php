@@ -443,7 +443,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 	}
 
 	// Only add The public and private messages when not in a loop
-	//if ( 'profile' === $type ) {
+	// if ( 'profile' === $type ) {
 	if ( bp_is_active( 'activity' ) && bp_activity_do_mentions() ) {
 		/*
 		 * This filter workaround is waiting for a core adaptation
@@ -494,6 +494,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		 * This filter workaround is waiting for a core adaptation
 		 * so that we can directly get the private messages button arguments
 		 * instead of the button.
+		 *
 		 * @see https://buddypress.trac.wordpress.org/ticket/7126
 		 */
 		add_filter( 'bp_get_send_message_button_args', 'bp_nouveau_members_catch_button_args', 100, 1 );
@@ -590,7 +591,7 @@ function bp_nouveau_get_members_buttons( $args ) {
 		unset( bp_nouveau()->members->button_args );
 	}
 
-		//}
+		// }
 
 		/**
 		 * Filter to add your buttons, use the position argument to choose where to insert it.

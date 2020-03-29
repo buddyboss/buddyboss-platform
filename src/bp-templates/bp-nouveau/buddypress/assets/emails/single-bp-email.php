@@ -284,7 +284,7 @@ $settings = bp_email_get_appearance_settings();
 						 */
 						do_action( 'bp_before_email_recipient' );
 
-						//echo bp_get_option( 'blogname' );
+						// echo bp_get_option( 'blogname' );
 						if ( bp_is_email_customizer() ) {
 							echo '{{recipient.name}} <img src="' . apply_filters( 'bp_email_customizer_default_avatar', buddypress()->plugin_url . 'bp-core/images/mystery-man.jpg' ) . '" width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 						} else {

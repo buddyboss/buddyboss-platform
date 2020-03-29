@@ -22,7 +22,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 	 * @since BuddyPress 1.9.0
 	 */
 	function __construct() {
-		$widget_ops                       = array(
+		$widget_ops = array(
 			'description'                 => __( 'A list of members that are connected to the logged-in user or member profile containing the widget.', 'buddyboss' ),
 			'classname'                   => 'widget_bp_core_friends_widget buddypress widget',
 			'customize_selective_refresh' => true,
@@ -101,9 +101,9 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			return;
 		}
 
-		$link              = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
+		$link = trailingslashit( bp_displayed_user_domain() . bp_get_friends_slug() );
 		/* translators: [User display name]'s Connections */
-		$instance['title'] = ( bp_loggedin_user_id() === $user_id ? __( "My Connections", 'buddyboss' ) : sprintf( __( "%s's Connections", 'buddyboss' ), $this->get_user_display_name( bp_displayed_user_id() ) ) );
+		$instance['title'] = ( bp_loggedin_user_id() === $user_id ? __( 'My Connections', 'buddyboss' ) : sprintf( __( "%s's Connections", 'buddyboss' ), $this->get_user_display_name( bp_displayed_user_id() ) ) );
 
 		if ( empty( $instance['friend_default'] ) ) {
 			$instance['friend_default'] = 'active';
@@ -281,7 +281,7 @@ class BP_Core_Friends_Widget extends WP_Widget {
 			|| 'first_last_name' === $format
 		) {
 			$first_name_id = (int) bp_get_option( 'bp-xprofile-firstname-field-id' );
-			$display_name = xprofile_get_field_data( $first_name_id, $user_id );
+			$display_name  = xprofile_get_field_data( $first_name_id, $user_id );
 		} else {
 			$display_name = bp_core_get_user_displayname( $user_id );
 		}

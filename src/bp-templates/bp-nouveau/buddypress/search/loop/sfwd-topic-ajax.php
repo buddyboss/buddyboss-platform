@@ -13,7 +13,7 @@
 			<div class="item-title"><?php the_title(); ?></div>
 			<div class="item-desc">
 			<?php
-			//@todo remove %d?
+			// @todo remove %d?
 			printf( _n( '%d quiz', '%d quizzes', $total, 'buddyboss' ), $total );
 			?>
 			</div>

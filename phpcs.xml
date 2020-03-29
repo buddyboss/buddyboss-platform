@@ -16,6 +16,7 @@
     <exclude-pattern>*/js/autocomplete/*</exclude-pattern>
     <exclude-pattern>*/js-templates/*</exclude-pattern>
     <exclude-pattern>awpcp_ad_listing-ajax.php</exclude-pattern>
+    <exclude-pattern>*/cli/*</exclude-pattern>
 
     <!-- Configs -->
     <config name="minimum_supported_wp_version" value="4.7" />

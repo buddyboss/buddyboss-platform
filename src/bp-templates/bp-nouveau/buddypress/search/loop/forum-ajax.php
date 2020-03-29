@@ -17,7 +17,7 @@ $result = bp_search_is_post_restricted( get_the_ID(), get_current_user_id(), 'fo
 			<div class="item-title"><?php bbp_forum_title( get_the_ID() ); ?></div>
 			<div class="item-desc">
 			<?php
-			//@todo take %d out of this?
+			// @todo take %d out of this?
 			printf( _n( '%d topic', '%d topics', $total, 'buddyboss' ), $total );
 			?>
 			</div>

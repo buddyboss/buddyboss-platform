@@ -546,6 +546,8 @@ function bp_attachments_get_attachment( $data = 'url', $args = array() ) {
 					$file = $attachment_file;
 					break;
 				}
+
+				$attachment_file = readdir( $att_dir );
 			}
 		}
 

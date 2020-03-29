@@ -16,14 +16,14 @@
 			</div>
 			<div class="item-desc">
 				<?php
-				//@todo remove %d?
+				// @todo remove %d?
 				printf( _n( '%d reply', '%d replies', $total, 'buddyboss' ), $total );
 				?>
 			</div>
 			<?php
 			$discussion_tags = get_the_terms( $topic_id, bbpress()->topic_tag_tax_id );
-			$tags_count = count($discussion_tags);
-			$loop_count = 1;
+			$tags_count      = count( $discussion_tags );
+			$loop_count      = 1;
 			if ( ! empty( $discussion_tags ) ) {
 				?>
 				<div class="item-tags">
@@ -38,8 +38,8 @@
 						<span class="discussion-tag">
 							<?php
 							echo esc_html( $discussion_tag->name );
-							if( $tags_count != $loop_count ){
-								echo ", ";
+							if ( $tags_count !== $loop_count ) {
+								echo ', ';
 							}
 							?>
 						</span>

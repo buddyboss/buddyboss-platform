@@ -1189,7 +1189,7 @@ function groups_avatar_upload_dir( $group_id = 0 ) {
 
 function bp_groups_get_group_roles() {
 	return array(
-		'admin' => (object) array(
+		'admin'  => (object) array(
 			'id'           => 'admin',
 			'name'         => __( 'Organizer', 'buddyboss' ),
 			'is_admin'     => true,
@@ -1197,7 +1197,7 @@ function bp_groups_get_group_roles() {
 			'is_confirmed' => true,
 			'is_mod'       => false,
 		),
-		'mod' => (object) array(
+		'mod'    => (object) array(
 			'id'           => 'mod',
 			'name'         => __( 'Moderator', 'buddyboss' ),
 			'is_admin'     => false,
@@ -1558,7 +1558,7 @@ function groups_post_update( $args = '' ) {
 		$group_id = $bp->groups->current_group->id;
 	}
 
-	//if ( empty( $content ) || !strlen( trim( $content ) ) ||
+	// if ( empty( $content ) || !strlen( trim( $content ) ) ||
 	if ( empty( $user_id ) || empty( $group_id ) ) {
 		return false;
 	}

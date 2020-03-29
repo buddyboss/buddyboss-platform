@@ -25,7 +25,7 @@ $result      = bp_search_is_post_restricted( $forum_id, get_current_user_id(), '
 				</span> <span class="middot">&middot;</span> <span class="reply-count">
 				<?php printf( _n( '%d reply', '%d replies', $total_reply, 'buddyboss' ), $total_reply ); ?>
 				</span> <span class="middot">&middot;</span> <span class="freshness">
-					<?php bbp_forum_freshness_link( $forum_id ) ?>
+					<?php bbp_forum_freshness_link( $forum_id ); ?>
 				</span>
 			</div>
 		</div>

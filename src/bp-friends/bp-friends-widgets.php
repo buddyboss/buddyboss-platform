@@ -59,16 +59,16 @@ function bp_core_ajax_widget_friends() {
 			$type = 'popular';
 			break;
 	}
-	
-	$user_id     = bp_displayed_user_id();
-	
+
+	$user_id = bp_displayed_user_id();
+
 	if ( ! $user_id ) {
-		
+
 		// If member widget is putted on other pages then will not get the bp_displayed_user_id so set the bp_loggedin_user_id to bp_displayed_user_id.
-		$user_id     = bp_loggedin_user_id();
-		
+		$user_id = bp_loggedin_user_id();
+
 	}
-	
+
 	// If $user_id still blank then return.
 	if ( ! $user_id ) {
 		return;

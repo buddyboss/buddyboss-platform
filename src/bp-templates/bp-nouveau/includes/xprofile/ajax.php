@@ -42,7 +42,6 @@ add_action( 'wp_ajax_nopriv_', 'bp_get_xprofile_field_ajax' );
  * Ajax callback for get the conditional field based on the selected member type.
  *
  * @since BuddyBoss 1.1.6
- *
  */
 function bp_nouveau_ajax_xprofile_get_field() {
 	global $wpdb;
@@ -77,14 +76,14 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$existing_fields           = filter_input( INPUT_GET, 'fields', FILTER_SANITIZE_STRING );
 	$existing_fields_exclude   = filter_input( INPUT_GET, 'fields', FILTER_SANITIZE_STRING );
 	$existing_fields_fixed_ids = filter_input( INPUT_GET, 'fixedIds', FILTER_SANITIZE_STRING );
-	$prevId                    = filter_input( INPUT_GET, 'prevId', FILTER_SANITIZE_STRING );
+	$prev_id                   = filter_input( INPUT_GET, 'prevId', FILTER_SANITIZE_STRING );
 	$member_type_key           = bp_get_member_type_key( $member_type_id );
-	$prev_type_key             = bp_get_member_type_key( $prevId );
+	$prev_type_key             = bp_get_member_type_key( $prev_id );
 	$existing_fields_arr       = explode( ',', $existing_fields );
 	$tinymce_added             = filter_input( INPUT_GET, 'tinymce', FILTER_VALIDATE_INT );
 	$signup_group_id           = bp_xprofile_base_group_id();
 
-	//FOr prev data
+	// FOr prev data
 	$get_prev_ids = [];
 	if ( 0 < strlen( $prev_type_key ) ) {
 		$query           = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$prev_type_key}' AND object_type = 'field'";

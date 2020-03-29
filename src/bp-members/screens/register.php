@@ -26,11 +26,11 @@ function bp_core_screen_signup() {
 			if ( parse_url( bp_custom_register_page_url(), PHP_URL_QUERY ) ) {
 				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
 				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
-				$url = bp_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
+				$url     = bp_custom_register_page_url() . '&bp-invites=accept-member-invitation&email=' . $email . '&inviter=' . $inviter . '&user_email=' . $email;
 			} else {
 				$email   = isset( $_GET ) && isset( $_GET['email'] ) ? $_GET['email'] : '';
 				$inviter = isset( $_GET ) && isset( $_GET['inviter'] ) ? $_GET['inviter'] : '';
-				$url = bp_custom_register_page_url() . '?bp-invites=accept-member-invitation&email=' . $email . '&inviter=' .$inviter . '&user_email=' . $email;
+				$url     = bp_custom_register_page_url() . '?bp-invites=accept-member-invitation&email=' . $email . '&inviter=' . $inviter . '&user_email=' . $email;
 			}
 			bp_core_redirect( $url );
 			return;
@@ -353,7 +353,7 @@ function bp_signup_check_email_username() {
 		}
 
 		// Check that the passwords match.
-		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
+		if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] !== $_POST['signup_email_confirm'] ) {
 			$signup_email = __( 'The emails entered do not match.', 'buddyboss' );
 		}
 	}

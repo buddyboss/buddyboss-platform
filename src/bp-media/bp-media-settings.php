@@ -650,7 +650,7 @@ function bp_media_settings_callback_gif_key() {
 				esc_url( 'https://developers.giphy.com/dashboard/?create=true' ),
 				__( 'Once done, copy the API key and paste it in the field above.', 'buddyboss' )
 			);
-		?>	
+		?>
 	</p>
 	<?php
 }

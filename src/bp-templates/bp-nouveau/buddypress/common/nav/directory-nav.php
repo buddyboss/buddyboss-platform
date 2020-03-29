@@ -35,7 +35,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 					$bp_get_scope = $bp_get_scope[1];
 					$member_types = bp_get_active_member_types();
 
-					//$count = esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+					// $count = esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
 					$count = bp_nouveau_get_nav_count();
 
 					if ( 'personal' === $bp_get_scope ) {
@@ -119,7 +119,7 @@ if ( ! $has_nav || $nav_count <= 1 ) {
 						$bp_get_scope = $bp_get_scope[1];
 						$group_types  = bp_get_active_group_types();
 
-						//$count = esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
+						// $count = esc_html( number_format_i18n( bp_nouveau_get_nav_count() ) );
 						$count = bp_nouveau_get_nav_count();
 
 						if ( 'personal' === $bp_get_scope ) {

@@ -1154,7 +1154,7 @@ function bp_private_network_template_redirect() {
 			}
 
 			$allow_custom_registration = bp_allow_custom_registration();
-			$actual_link                = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+			$actual_link               = ( is_ssl() ? 'https://' : 'http://' ) . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
 			if ( $allow_custom_registration ) {
 
 				$link_array = explode( '/', untrailingslashit( $actual_link ) );
@@ -1163,7 +1163,6 @@ function bp_private_network_template_redirect() {
 				if ( strpos( untrailingslashit( bp_custom_register_page_url() ), $page ) !== false ) {
 					return;
 				}
-
 			}
 
 			// Redirect to MemberPress custom login page.
@@ -1213,8 +1212,8 @@ function bp_private_network_template_redirect() {
 								if (
 									'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
 									|| (
-										'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
-										&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+										'yes' === get_option( 'woocommerce_enable_myaccount_registration' )
+										&& intval( get_option( 'woocommerce_myaccount_page_id' ) !== $id )
 									)
 								) {
 
@@ -1273,8 +1272,8 @@ function bp_private_network_template_redirect() {
 							if (
 								'yes' !== get_option( 'woocommerce_enable_myaccount_registration' )
 								|| (
-									'yes' == get_option( 'woocommerce_enable_myaccount_registration' )
-									&& $id !== intval( get_option( 'woocommerce_myaccount_page_id' ) )
+									'yes' === get_option( 'woocommerce_enable_myaccount_registration' )
+									&& intval( get_option( 'woocommerce_myaccount_page_id' ) !== $id )
 								)
 							) {
 

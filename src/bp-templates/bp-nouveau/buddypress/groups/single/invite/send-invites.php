@@ -70,11 +70,11 @@
 						<p><?php esc_html_e( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ); ?></p>
 					</div>
 				</div>
-				<select name="group_invites_send_to[]" class="send-to-input select2-hidden-accessible" id="group-invites-send-to-input" placeholder="<?php _e( 'Type the names of one or more people','buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-invites-send-to-input" tabindex="-1" aria-hidden="true"></select>
+				<select name="group_invites_send_to[]" class="send-to-input select2-hidden-accessible" id="group-invites-send-to-input" placeholder="<?php _e( 'Type the names of one or more people', 'buddyboss' ); ?>" autocomplete="off" multiple="" style="width: 100%" data-select2-id="group-invites-send-to-input" tabindex="-1" aria-hidden="true"></select>
 			</div>
 			<div class="bb-groups-invites-right-bottom">
 				<div id="bp-group-invite-content">
-					<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php _e( 'Customize the message of your invite.','buddyboss' ); ?>"></textarea>
+					<textarea class="bp-faux-placeholder-label" id="send-invites-control" name="group_invite_content" rows="120" cols="150" placeholder="<?php _e( 'Customize the message of your invite.', 'buddyboss' ); ?>"></textarea>
 					<input type="hidden" id="group_invite_content_hidden" name="group_invite_content_hidden" value="">
 					<div id="whats-new-toolbar">
 						<div id="group-invites-new-submit" class="submit">

@@ -475,7 +475,7 @@ function bp_media_add( $args = '' ) {
 		return false;
 	}
 
-	//media is saved for attachment
+	// media is saved for attachment
 	update_post_meta( $media->attachment_id, 'bp_media_saved', true );
 
 	/**
@@ -511,13 +511,15 @@ function bp_media_add_handler( $medias = array() ) {
 		// save media
 		foreach ( $medias as $media ) {
 
-			$media_id = bp_media_add( array(
-				'attachment_id' => $media['id'],
-				'title'         => $media['name'],
-				'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
-				'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
-				'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array( 'public', 'loggedin', 'friends', 'onlyme', 'message' ) ) ? $media['privacy'] : $privacy,
-			) );
+			$media_id = bp_media_add(
+				array(
+					'attachment_id' => $media['id'],
+					'title'         => $media['name'],
+					'album_id'      => ! empty( $media['album_id'] ) ? $media['album_id'] : false,
+					'group_id'      => ! empty( $media['group_id'] ) ? $media['group_id'] : false,
+					'privacy'       => ! empty( $media['privacy'] ) && in_array( $media['privacy'], array( 'public', 'loggedin', 'friends', 'onlyme', 'message' ) ) ? $media['privacy'] : $privacy,
+				)
+			);
 
 			if ( $media_id ) {
 				$media_ids[] = $media_id;
@@ -547,7 +549,7 @@ function bp_media_add_handler( $medias = array() ) {
  *                           filters for item deletion, the argument format is
  *                           the same as BP_Media::get().
  *                           See that method for a description.
- * @param bool $from Context of deletion from. ex. attachment, activity etc.
+ * @param bool         $from Context of deletion from. ex. attachment, activity etc.
  *
  * @return bool|int The ID of the media on success. False on error.
  */

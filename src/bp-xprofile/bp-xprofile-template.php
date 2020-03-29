@@ -1514,9 +1514,9 @@ function bp_profile_get_settings_visibility_select( $args = '' ) {
 
 				<label for="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" class="<?php echo esc_attr( $r['label_class'] ); ?>">
 					<?php
-					 /* translators: accessibility text */
-					 _e( 'Select visibility', 'buddyboss' );
-					 ?>
+					/* translators: accessibility text */
+					_e( 'Select visibility', 'buddyboss' );
+					?>
 				</label>
 				<select class="<?php echo esc_attr( $r['class'] ); ?>" name="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility" id="<?php echo esc_attr( 'field_' . $r['field_id'] ); ?>_visibility">
 

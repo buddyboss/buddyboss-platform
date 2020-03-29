@@ -43,15 +43,15 @@ $total    = bbp_get_topic_reply_count( $topic_id ) ?>
 						?>
 					</span>
 					<?php
-					$tags_count = count($discussion_tags);
+					$tags_count = count( $discussion_tags );
 					$loop_count = 1;
 					foreach ( $discussion_tags as $key => $discussion_tag ) {
 						?>
 						<span class="discussion-tag">
 							<?php
 							echo esc_html( $discussion_tag->name );
-							if( $tags_count != $loop_count ){
-								echo ", ";
+							if ( $tags_count !== $loop_count ) {
+								echo ', ';
 							}
 							?>
 						</span>

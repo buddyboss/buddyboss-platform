@@ -108,7 +108,7 @@ final class BP_Xprofile_Export extends BP_Export {
 		foreach ( $data_items['items'] as $xgroup => $items ) {
 
 			$group_id    = $xgroup;
-			$group_label = __( "User Profile - {$xgroup}", 'buddyboss' );
+			$group_label = __( 'User Profile', 'buddyboss' ) . ' - ' . $xgroup;
 			$item_id     = "{$this->exporter_name}-{$group_id}";
 
 			$data = array();

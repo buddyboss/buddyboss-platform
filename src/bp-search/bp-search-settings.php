@@ -168,7 +168,7 @@ function bp_search_get_settings_fields() {
 			'sanitize_callback' => 'intval',
 			'args'              => array(
 				'post_type' => 'topic',
-				'taxonomy'  =>'topic-tag',
+				'taxonomy'  => 'topic-tag',
 				'class'     => 'bp-search-child-field',
 			),
 		);

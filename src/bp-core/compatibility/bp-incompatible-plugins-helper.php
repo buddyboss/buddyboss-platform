@@ -386,25 +386,25 @@ function bp_core_memberpress_the_content( $content ) {
 
 		if (
 			bp_is_groups_component()
-			&& !empty( $page_ids['groups'] )
+			&& ! empty( $page_ids['groups'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['groups'] );
-		} else if (
+		} elseif (
 			bp_is_media_component()
-			&& !empty( $page_ids['media'] )
+			&& ! empty( $page_ids['media'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['media'] );
-		} else if (
+		} elseif (
 			bp_is_members_component()
-			&& !empty( $page_ids['members'] )
+			&& ! empty( $page_ids['members'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['members'] );
-		} else if (
+		} elseif (
 			bp_is_activity_component()
-			&& !empty( $page_ids['activity'] )
+			&& ! empty( $page_ids['activity'] )
 			&& empty( $post->ID )
 		) {
 			$post = get_post( $page_ids['activity'] );

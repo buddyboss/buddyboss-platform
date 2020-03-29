@@ -135,15 +135,15 @@ function bp_xprofile_sanitize_field_default( $field_default = '' ) {
  *
  * @param string      $content  Content to filter.
  * @param object|null $data_obj The BP_XProfile_ProfileData object.
- * @param int|null                     $field_id Optional. The ID of the profile field.
+ * @param int|null    $field_id Optional. The ID of the profile field.
  * @return string $content
  */
-function xprofile_filter_kses( $content, $data_obj = null, $field_id = null  ) {
+function xprofile_filter_kses( $content, $data_obj = null, $field_id = null ) {
 	global $allowedtags;
 
 	$xprofile_allowedtags             = $allowedtags;
 	$xprofile_allowedtags['a']['rel'] = array();
-	
+
 	if ( null === $field_id && $data_obj instanceof BP_XProfile_ProfileData ) {
 		$field_id = $data_obj->field_id;
 	}
@@ -694,7 +694,7 @@ function xprofile_filter_field_edit_name( $field_name ) {
  * @global \BP_XProfile_Field_Type $field
  *
  * @param  string $full_name
- * @param  int $user_id
+ * @param  int    $user_id
  * @return string
  */
 function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
@@ -703,11 +703,11 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 		return $full_name;
 	}
 
-	if ( !empty( $user_id ) ) {
+	if ( ! empty( $user_id ) ) {
 
 		$display_name = bp_xprofile_get_member_display_name( $user_id );
 
-		if ( !empty( $display_name ) ) {
+		if ( ! empty( $display_name ) ) {
 			$full_name = $display_name;
 		}
 
@@ -717,7 +717,7 @@ function xprofile_filter_get_user_display_name( $full_name, $user_id ) {
 			$last_name_field_id = bp_xprofile_lastname_field_id();
 
 			if ( in_array( $last_name_field_id, $list_fields ) ) {
-				$last_name    = xprofile_get_field_data( $last_name_field_id, $user_id );
+				$last_name = xprofile_get_field_data( $last_name_field_id, $user_id );
 				$full_name = str_replace( ' ' . $last_name, '', $full_name );
 			}
 		}
@@ -836,7 +836,7 @@ function bp_xprofile_validate_phone_value( $retval, $field_id, $value, $user_id 
 	$selected_format = bp_xprofile_get_meta( $field_id, 'field', 'phone_format', true );
 	if (
 		empty( $selected_format )
-		|| $selected_format == 'international'
+		|| 'international' === $selected_format
 	) {
 		$international = true;
 	}

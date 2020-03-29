@@ -655,7 +655,7 @@ function bp_nouveau_ajax_media_delete_attachment() {
 		wp_send_json_error( $response );
 	}
 
-	//delete attachment with its meta
+	// delete attachment with its meta
 	$deleted = wp_delete_attachment( $_POST['id'], true );
 
 	if ( ! $deleted ) {

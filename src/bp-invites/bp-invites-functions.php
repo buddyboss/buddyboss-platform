@@ -523,14 +523,13 @@ add_action( 'bp_core_activated_user', 'bp_invites_member_invite_activate_user', 
  * @since BuddyBoss 1.2.8
  *
  * @param $user_id
- *
  */
 function bp_invites_member_invite_mark_register_user( $user_id ) {
 	global $bp;
 
 	$allow_custom_registration = bp_allow_custom_registration();
 	if ( ! $allow_custom_registration ) {
-	    return;
+		return;
 	}
 
 	$email = bp_core_get_user_email( $user_id );
@@ -593,15 +592,16 @@ add_action( 'user_register', 'bp_invites_member_invite_mark_register_user', 10, 
  *
  * @since BuddyBoss 1.2.9
  *
- * @param $user_id
+ * @param array $mce_init
  *
+ * @return array $mce_init
  */
-function bp_nouveau_send_invite_content_css( $mceInit ) {
+function bp_nouveau_send_invite_content_css( $mce_init ) {
 	$styles = 'body.mce-content-body { font-family: Arial, sans-serif;}';
-	if ( isset( $mceInit['content_style'] ) ) {
-		$mceInit['content_style'] .= ' ' . $styles . ' ';
+	if ( isset( $mce_init['content_style'] ) ) {
+		$mce_init['content_style'] .= ' ' . $styles . ' ';
 	} else {
-		$mceInit['content_style'] = $styles . ' ';
+		$mce_init['content_style'] = $styles . ' ';
 	}
-	return $mceInit;
+	return $mce_init;
 }

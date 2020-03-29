@@ -123,10 +123,10 @@ add_action( 'bp_activity_before_save', 'bp_activity_at_name_filter_updates' );
 add_action( 'bp_activity_before_save', 'bp_activity_check_moderation_keys', 2, 1 );
 add_action( 'bp_activity_before_save', 'bp_activity_check_blacklist_keys', 2, 1 );
 
-// Activity link preview
+// Activity link preview.
 add_action( 'bp_activity_after_save', 'bp_activity_save_link_data', 2, 1 );
 
-// Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform
+// Remove Activity if uncheck the options from the backend BuddyBoss > Settings > Activity > Posts in Activity Feed >BuddyBoss Platform.
 add_action( 'bp_activity_before_save', 'bp_activity_remove_platform_updates', 999, 1 );
 
 add_action( 'bp_has_activities', 'bp_activity_has_activity_filter', 10, 2 );
@@ -214,7 +214,7 @@ function bp_activity_check_blacklist_keys( $activity ) {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param $activity
+ * @param object $activity Activity Object
  */
 function bp_activity_save_link_data( $activity ) {
 
@@ -580,10 +580,10 @@ function bp_activity_link_preview( $content, $activity ) {
 		$content  .= '<div class="activity-link-preview-image">';
 		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $image_url ) . '" /></a>';
 		$content  .= '</div>';
-	} else if ( ! empty( $preview_data['image_url'] ) ) {
-		$content  .= '<div class="activity-link-preview-image">';
-		$content  .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
-		$content  .= '</div>';
+	} elseif ( ! empty( $preview_data['image_url'] ) ) {
+		$content .= '<div class="activity-link-preview-image">';
+		$content .= '<a href="' . esc_url( $preview_data['url'] ) . '" target="_blank"><img src="' . esc_url( $preview_data['image_url'] ) . '" /></a>';
+		$content .= '</div>';
 	}
 	$content .= '<div class="activity-link-preview-excerpt"><p>' . $description . '</p></div>';
 	$content .= '</div>';
@@ -1223,7 +1223,7 @@ function bp_activity_media_add( $media ) {
 
 		if ( $activity_id ) {
 
-			//save media activity id in media
+			// save media activity id in media
 			$media->activity_id = $activity_id;
 			$media->save();
 
@@ -1260,7 +1260,6 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			 * @param string $value Activity message being posted.
 			 *
 			 * @since BuddyPress 1.2.0
-			 *
 			 */
 			$content = apply_filters( 'bp_activity_post_update_content', $_POST['content'] );
 		}
@@ -1278,7 +1277,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 			$activity_id = bp_activity_post_update( array( 'content' => $content ) );
 		}
 
-		//save media meta for activity
+		// save media meta for activity
 		if ( ! empty( $activity_id ) ) {
 			$privacy = 'public';
 
@@ -1288,7 +1287,7 @@ function bp_activity_create_parent_media_activity( $media_ids ) {
 				// get one of the media's privacy for the activity privacy
 				$privacy = $media->privacy;
 
-				//save parent activity id in attachment meta
+				// save parent activity id in attachment meta
 				update_post_meta( $media->attachment_id, 'bp_media_parent_activity_id', $activity_id );
 			}
 
@@ -1322,7 +1321,7 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 
 	$activity_obj = new BP_Activity_Activity( $item_id );
 
-	if ( 'activity_comment' == $activity_obj->type ) {
+	if ( 'activity_comment' === $activity_obj->type ) {
 		$notification = BP_Notifications_Notification::get(
 			array(
 				'user_id'           => bp_loggedin_user_id(),
@@ -1337,7 +1336,6 @@ function bp_activity_new_at_mention_permalink( $link, $item_id, $secondary_item_
 			$id   = current( $notification )->id;
 			$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_obj->id ) );
 		}
-
 	}
 
 	return $link;

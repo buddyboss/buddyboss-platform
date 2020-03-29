@@ -150,16 +150,15 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 		</div>
 		<div class="widget-content" id="boss_whos_online_widget_connections" data-max="<?php echo $settings['max_members']; ?>">
 			<?php
-            if ( is_user_logged_in() && bp_has_members( 'user_id=' . bp_loggedin_user_id() . '&per_page=' . $settings['max_members'] . '&max=' . $settings['max_members'] . '&search_terms=' . false . '&populate_extras=' . true ) ) {
-                ?>
-                <div class="avatar-block">
+			if ( is_user_logged_in() && bp_has_members( 'user_id=' . bp_loggedin_user_id() . '&per_page=' . $settings['max_members'] . '&max=' . $settings['max_members'] . '&search_terms=' . false . '&populate_extras=' . true ) ) {
+				?>
+				<div class="avatar-block">
 				<?php
 				while ( bp_members() ) :
 					bp_the_member();
 					?>
-                    <div class="item-avatar">
-                        <a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up"
-                           data-bp-tooltip="<?php bp_member_name(); ?>">
+					<div class="item-avatar">
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php bp_member_name(); ?>">
 							<?php
 							bp_member_avatar();
 
@@ -167,30 +166,32 @@ class BP_Core_Whos_Online_Widget extends WP_Widget {
 							$diff         = strtotime( $current_time ) - strtotime( $members_template->member->last_activity );
 							if ( $diff < 300 ) { // 5 minutes  =  5 * 60
 								?>
-                                <span class="member-status online"></span>
+								<span class="member-status online"></span>
 								<?php
 							}
 							?>
-                        </a>
-                    </div>
+						</a>
+					</div>
 				<?php endwhile; ?>
-            </div>
-                <?php
-                if ( $members_template->total_member_count > (int) $settings['max_members'] ) {
-                    ?>
-                    <div class="more-block">
-                        <a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
-                            <?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
-                        </a>
-                    </div>
-                    <?php
-                }
-			} else { ?>
-                <div class="widget-error">
-		            <?php esc_html_e( 'Sorry, no members were found.', 'buddyboss' ); ?>
-                </div>
-	            <?php
-            } ?>
+			</div>
+				<?php
+				if ( $members_template->total_member_count > (int) $settings['max_members'] ) {
+					?>
+					<div class="more-block">
+						<a href="<?php bp_members_directory_permalink(); ?>" class="count-more">
+							<?php _e( 'More', 'buddyboss' ); ?><i class="bb-icon-angle-right"></i>
+						</a>
+					</div>
+					<?php
+				}
+			} else {
+				?>
+				<div class="widget-error">
+					<?php esc_html_e( 'Sorry, no members were found.', 'buddyboss' ); ?>
+				</div>
+				<?php
+			}
+			?>
 		</div>
 		<?php
 		echo $args['after_widget'];

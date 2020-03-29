@@ -61,7 +61,7 @@ function bp_nouveau_after_media_directory_content() {
 	 */
 	do_action( 'bp_after_directory_media' );
 
-	//bp_get_template_part( 'common/js-templates/media/comments' );
+	// bp_get_template_part( 'common/js-templates/media/comments' );
 }
 
 /**

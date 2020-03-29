@@ -37,7 +37,7 @@
 							<?php if ( ! empty( $inviter ) ) : ?>
 								<span class="small">
 								<?php
-								//@todo NO HTML in text domain please
+								// @todo NO HTML in text domain please
 								$member = new BP_Groups_Member( bp_displayed_user_id(), bp_get_group_id() );
 								printf( __( 'Invited by <a href="%s">%s</a> <span class="last-activity">%s</span>', 'buddyboss' ), $inviter['url'], $inviter['name'], bp_core_time_since( $member->date_modified ) );
 								?>

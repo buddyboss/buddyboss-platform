@@ -198,7 +198,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 	add_action( 'bp_activity_comment_posted', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 	add_action( 'bp_activity_comment_posted_notification_skipped', 'bp_media_activity_comments_update_media_meta', 10, 3 );
 
-	//save media meta for activity
+	// save media meta for activity
 	if ( ! empty( $activity_id ) ) {
 		bp_activity_update_meta( $activity_id, 'bp_media_ids', implode( ',', $media_ids ) );
 	}
@@ -252,13 +252,13 @@ function bp_media_delete_activity_media( $activities ) {
 			}
 
 			// get media ids attached to activity
-            $media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
-            if ( ! empty( $media_ids ) ) {
-                $media_ids = explode( ',', $media_ids );
-                foreach( $media_ids as $media_id ) {
-                    bp_media_delete( array( 'id' => $media_id ) );
-                }
-            }
+			$media_ids = bp_activity_get_meta( $activity_id, 'bp_media_ids', true );
+			if ( ! empty( $media_ids ) ) {
+				$media_ids = explode( ',', $media_ids );
+				foreach ( $media_ids as $media_id ) {
+					bp_media_delete( array( 'id' => $media_id ) );
+				}
+			}
 		}
 		add_action( 'bp_activity_after_delete', 'bp_media_delete_activity_media' );
 	}

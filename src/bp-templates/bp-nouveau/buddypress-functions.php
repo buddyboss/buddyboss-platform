@@ -44,7 +44,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public static function get_instance() {
 		if ( null === self::$instance ) {
-			self::$instance = new self;
+			self::$instance = new self();
 		}
 
 		return self::$instance;
@@ -122,14 +122,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 				continue;
 			}
 
-			require( $component_loader );
+			require $component_loader;
 		}
 
 		if ( bp_is_active( 'activity' ) && bp_is_activity_follow_active() ) {
 			$component_loader = trailingslashit( $this->includes_dir ) . 'follow/loader.php';
 
 			if ( file_exists( $component_loader ) ) {
-				require( $component_loader );
+				require $component_loader;
 			}
 		}
 
@@ -221,7 +221,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		// Set the Forums to selected in menu items.
 		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class' ), 10, 3 );
 
-		/** Override **********************************************************/
+		/** Override */
 
 		/**
 		 * Fires after all of the BuddyPress theme compat actions have been added.
@@ -237,7 +237,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * Set the Forums to selected in menu items
 	 *
 	 * @param array $classes
-	 * @param bool $item
+	 * @param bool  $item
 	 *
 	 * @since BuddyBoss 1.0.0
 	 *
@@ -260,7 +260,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		$homepage_url = trailingslashit( get_bloginfo( 'url' ) );
 
 		// Exclude 404 and homepage
-		if ( is_404() || ( isset( $item->url ) && $item->url == $homepage_url ) ) {
+		if ( is_404() || ( isset( $item->url ) && $item->url === $homepage_url ) ) {
 			return $classes;
 		}
 

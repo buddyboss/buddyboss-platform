@@ -50,24 +50,9 @@ if ( 'list_grid' === $current_value ) {
 		$component = 'group_members';
 	}
 	?>
-<div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">
-	<a href="#" class="layout-view layout-grid-view bp-tooltip <?php echo ( 'grid' === $default_current_value ) ? 'active' : ''; ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="
-																		  <?php
-																			_e(
-																				'Grid View',
-																				'buddyboss'
-																			);
-																			?>
-		"> <i class="dashicons dashicons-screenoptions" aria-hidden="true"></i> </a>
-
-	<a href="#" class="layout-view layout-list-view bp-tooltip <?php echo ( 'list' === $default_current_value ) ? 'active' : ''; ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="
-																		  <?php
-																			_e(
-																				'List View',
-																				'buddyboss'
-																			);
-																			?>
-		"> <i class="dashicons dashicons-menu" aria-hidden="true"></i> </a>
+	<div class="grid-filters" data-object="<?php echo esc_attr( $component ); ?>">
+		<a href="#" class="layout-view layout-grid-view bp-tooltip <?php echo ( 'grid' === $default_current_value ) ? 'active' : ''; ?>" data-view="grid" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'Grid View', 'buddyboss' ); ?>"><i class="dashicons dashicons-screenoptions" aria-hidden="true"></i></a>
+		<a href="#" class="layout-view layout-list-view bp-tooltip <?php echo ( 'list' === $default_current_value ) ? 'active' : ''; ?>" data-view="list" data-bp-tooltip-pos="up" data-bp-tooltip="<?php _e( 'List View', 'buddyboss' ); ?>"><i class="dashicons dashicons-menu" aria-hidden="true"></i></a>
 	</div>
 	<?php
 }

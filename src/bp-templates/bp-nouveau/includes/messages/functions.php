@@ -248,7 +248,7 @@ function bp_nouveau_add_notice_notification_for_user( $notifications, $user_id )
 		return $notifications;
 	}
 
-	$notice_notification                    = new stdClass;
+	$notice_notification                    = new stdClass();
 	$notice_notification->id                = 0;
 	$notice_notification->user_id           = $user_id;
 	$notice_notification->item_id           = $notice->id;
@@ -331,7 +331,7 @@ function bp_nouveau_push_sitewide_notices() {
  *
  * @since BuddyBoss 1.0.0
  *
- * @param array $buttons The WP Editor buttons list.
+ * @param array                                              $buttons The WP Editor buttons list.
  * @param array          The filtered WP Editor buttons list.
  */
 function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
@@ -350,7 +350,7 @@ function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
 	$buttons = array_diff( $buttons, $remove_buttons );
 
 	// Add the image button
-	//array_push( $buttons, 'image' );
+	// array_push( $buttons, 'image' );
 
 	return $buttons;
 }
@@ -360,7 +360,7 @@ function bp_nouveau_invites_mce_buttons( $buttons = array() ) {
  *
  * @since BuddyPress 3.0.0
  *
- * @param array $buttons The WP Editor buttons list.
+ * @param array                                              $buttons The WP Editor buttons list.
  * @param array          The filtered WP Editor buttons list.
  */
 function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
@@ -379,7 +379,7 @@ function bp_nouveau_messages_mce_buttons( $buttons = array() ) {
 	$buttons = array_diff( $buttons, $remove_buttons );
 
 	// Add the image button
-	//array_push( $buttons, 'image' );
+	// array_push( $buttons, 'image' );
 
 	return $buttons;
 }
@@ -407,9 +407,9 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 	$now  = bp_core_current_time( true, 'timestamp' );
 	$date = strtotime( $date );
 
-	$now_date    = getdate( $now );
-	$date_date   = getdate( $date );
-	$compare     = array_diff( $date_date, $now_date );
+	$now_date  = getdate( $now );
+	$date_date = getdate( $date );
+	$compare   = array_diff( $date_date, $now_date );
 	// $date_format = 'Y/m/d';
 
 	// Use Timezone string if set.
@@ -434,10 +434,10 @@ function bp_nouveau_get_message_date( $date, $date_format = '' ) {
 
 	// use M j for all, will revisit this later
 	// if ( empty( $compare['mday'] ) && empty( $compare['mon'] ) && empty( $compare['year'] ) ) {
-	// 	$date_format = 'H:i';
+	// $date_format = 'H:i';
 
 	// } elseif ( empty( $compare['mon'] ) || empty( $compare['year'] ) ) {
-	// 	$date_format = 'M j';
+	// $date_format = 'M j';
 	// }
 
 	if ( empty( $date_format ) ) {

@@ -83,7 +83,7 @@ function bp_nouveau_media_enqueue_scripts() {
  */
 function bp_nouveau_media_localize_scripts( $params = array() ) {
 
-	//initialize media vars because it is used globally
+	// initialize media vars because it is used globally
 	$params['media'] = array(
 		'max_upload_size' => bp_media_file_upload_max_size( false, 'MB' ),
 		'profile_media'   => bp_is_profile_media_support_enabled(),

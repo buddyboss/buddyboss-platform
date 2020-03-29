@@ -108,7 +108,7 @@ function bp_activity_find_mentions( $content ) {
  * @version  Buddyboss 1.2.0
  * @deprecated BuddyBoss 1.2.8
  *
- * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param  array  $mentioned_users Associative array with user IDs as keys and usernames as values.
  * @param string $content Activity content
  * @return array|bool Associative array with user ID as key and username as
  *                    value. Boolean false if no mentions found.
@@ -1230,7 +1230,7 @@ function bp_activity_get_favorite_users_tooltip_string( $activity_id ) {
 		$favorited_users = array_reduce(
 			$favorited_users,
 			function ( $carry, $user_id ) use ( $current_user_id, $like_text ) {
-				if ( $user_id != $current_user_id ) {
+				if ( $user_id !== $current_user_id ) {
 					$user_display_name = bp_core_get_user_displayname( $user_id );
 					if ( strpos( $like_text, $user_display_name ) === false ) {
 						$carry .= $user_display_name . '&#10;';
@@ -4362,7 +4362,6 @@ function bp_activity_catch_transition_post_type_status( $new_status, $old_status
 	 * @param WP_Post $post Post data.
 	 *
 	 * @since BuddyBoss 1.2.3
-	 *
 	 */
 	$pre_transition = apply_filters( 'bp_activity_pre_transition_post_type_status', true, $new_status, $old_status, $post );
 
