@@ -3,7 +3,7 @@ Contributors: buddyboss
 Requires at least: 4.9.1
 Tested up to: 5.3.2
 Requires PHP: 5.6.20
-Stable tag: 1.2.5
+Stable tag: 1.2.8
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
@@ -54,6 +54,34 @@ Furthermore, BuddyBoss Platform can be activated and operate in just about any s
 * Extend BuddyBoss Platform with a third-party multi-network plugin to allow each site or network to have an isolated and dedicated community, all from the same WordPress installation.
 
 == Changelog ==
+
+= 1.2.8 =
+* Registration - New option to use any Custom URL as your registration form
+* Forums - New feature to support @mentions in forums, with notifications
+* Forums - Fixed video URL embeds not displaying as playable videos in forum replies
+* Forums - Fixed forum reply popup not displaying when 'Post Formatting' is disabled
+* Forums - Fixed searching for GIFs in GIPHY panel not working in forum reply popup
+* Groups - Fixed groups with & symbol displaying as &amp; in activity feed dropdown
+* Groups - Fixed 'a' vs 'an' logic for displaying your group role in English language sites
+* Profiles - Fixed 'Dropdown' field type not saving when adding hundreds of options
+* Profiles - Fixed 'Profile Type' field type not saving when WordPress role is set to (none)
+* Activity - Fixed occasional double posting of Youtube videos with embed URLs
+* Messages - Fixed new photos attached to messages displaying in member's Photos tab
+* Messages - Fixed maintaining formatting when copying and pasting text into the editor
+* Compatibility - Fixed incorrect message URLs with LearnDash and WPML both activated
+* Compatibility - Fixed conflict with plugin 'LearnDash Ratings, Reviews and Feedback'
+* Translations - Fixed text instances that could not be translated
+
+= 1.2.7 =
+* Activity - Fixed error on Mentions tab, when 'Activity tabs' option is enabled
+* Registration - Fixed false validation on registration page, when using required fields
+
+= 1.2.6 =
+* Widgets - Added option to hide '(BB) Profile Completion' widget when progress hits 100%
+* Activity - Fixed issue with deleted users leaving 'Unknown' likes in activity
+* Notifications - Fixed certain notifications not clearing after clicking in Notifications dropdown
+* Network Search - Added icons for search results coming from plugin LifterLMS
+* Developers - Added hooks for adding your own options into all Component Settings pages
 
 = 1.2.5 =
 * Messages - Fixed message list not loading more after scrolling down on mobile devices

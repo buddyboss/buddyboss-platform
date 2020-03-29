@@ -3316,75 +3316,114 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param bool $use_wp_mail Whether to fallback to the regular wp_mail() function or not.
+	 * @param bool $wp_html_emails || ! $is_default_wpmail $is_default_wpmail Whether to fallback to the regular wp_mail() function or not.
 	 */
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
+	/**
+	 * Filter to forcefully use template
+	 *
+	 * This is done if wp_mail_content_type() has been configured for HTML,
+	 * or if wp_mail() has been redeclared (it's a pluggable function).
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param bool true default fallback will be always true.
+	 */
+	$force_use_template = apply_filters( 'bp_email_force_use_templates', true );
+
+	if ( $force_use_template ) {
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+	}
+
 	if ( $must_use_wpmail ) {
+
 		$to = $email->get( 'to' );
 
 		return wp_mail(
 			array_shift( $to )->get_address(),
 			$email->get( 'subject', 'replace-tokens' ),
-			$email->get( 'content_plaintext', 'replace-tokens' )
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
 		);
 	}
 
-	/*
-	 * Send the email.
-	 */
+	$must_use_bp_mail = apply_filters( 'bp_email_use_bp_mail', false );
 
-	/**
-	 * Filter the email delivery class.
-	 *
-	 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
-	 *
-	 * @since BuddyPress 2.5.0
-	 *
-	 * @param string       $deliver_class The email delivery class name.
-	 * @param string       $email_type    Type of email being sent.
-	 * @param array|string $to            Array or comma-separated list of email addresses to the email to.
-	 * @param array        $args {
-	 *     Optional. Array of extra parameters.
-	 *
-	 *     @type array $tokens Optional. Assocative arrays of string replacements for the email.
-	 * }
-	 */
-	$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
-	if ( ! class_exists( $delivery_class ) ) {
-		return new WP_Error( 'missing_class', __CLASS__, $this );
-	}
+	if ( $must_use_bp_mail ) {
 
-	$delivery = new $delivery_class();
-	$status   = $delivery->bp_email( $email );
-
-	if ( is_wp_error( $status ) ) {
+		/*
+		 * Send the email.
+		 */
 
 		/**
-		 * Fires after BuddyPress has tried - and failed - to send an email.
+		 * Filter the email delivery class.
 		 *
+		 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
+		 *
+		 * @param string $deliver_class The email delivery class name.
+		 * @param string $email_type Type of email being sent.
+		 * @param array|string $to Array or comma-separated list of email addresses to the email to.
+		 * @param array $args {
+		 *     Optional. Array of extra parameters.
+		 *
+		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
+		 * }
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
-		 *                         will vary based on the email delivery class you are using.
-		 * @param BP_Email $email  The email we tried to send.
 		 */
-		do_action( 'bp_send_email_failure', $status, $email );
+		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
+		if ( ! class_exists( $delivery_class ) ) {
+			return new WP_Error( 'missing_class', 'No class found by that name', $delivery_class );
+		}
+
+		$delivery = new $delivery_class();
+		$status   = $delivery->bp_email( $email );
+
+		if ( is_wp_error( $status ) ) {
+
+			/**
+			 * Fires after BuddyPress has tried - and failed - to send an email.
+			 *
+			 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
+			 *                         will vary based on the email delivery class you are using.
+			 * @param BP_Email $email The email we tried to send.
+			 *
+			 * @since BuddyPress 2.5.0
+			 *
+			 */
+			do_action( 'bp_send_email_failure', $status, $email );
+
+		} else {
+
+			/**
+			 * Fires after BuddyPress has succesfully sent an email.
+			 *
+			 * @param bool $status True if the email was sent successfully.
+			 * @param BP_Email $email The email sent.
+			 *
+			 * @since BuddyPress 2.5.0
+			 *
+			 */
+			do_action( 'bp_send_email_success', $status, $email );
+		}
+
+		return $status;
 
 	} else {
 
-		/**
-		 * Fires after BuddyPress has succesfully sent an email.
-		 *
-		 * @since BuddyPress 2.5.0
-		 *
-		 * @param bool     $status True if the email was sent successfully.
-		 * @param BP_Email $email  The email sent.
-		 */
-		do_action( 'bp_send_email_success', $status, $email );
-	}
+		$to = $email->get( 'to' );
 
-	return $status;
+		return wp_mail(
+			array_shift( $to )->get_address(),
+			$email->get( 'subject', 'replace-tokens' ),
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
+		);
+
+	}
 }
 
 /**
@@ -4307,4 +4346,123 @@ function bp_core_strip_header_tags( $content ) {
 	$content = preg_replace( '/<h1[^>]*>([\s\S]*?)<\/h1[^>]*>/', '', $content );
 
 	return $content;
+}
+
+/**
+ * AJAX endpoint for Suggestions API lookups.
+ *
+ * @since BuddyPress 2.1.0
+ *
+ * @info Moved from /bp-activity/bp-activity-functions.php
+ */
+function bp_ajax_get_suggestions() {
+	if ( ! bp_is_user_active() || empty( $_GET['term'] ) || empty( $_GET['type'] ) ) {
+		wp_send_json_error( 'missing_parameter' );
+		exit;
+	}
+
+	$args = array(
+		'term' => sanitize_text_field( $_GET['term'] ),
+		'type' => sanitize_text_field( $_GET['type'] ),
+	);
+
+	if ( ! empty( $_GET['only_friends'] ) ) {
+		$args['only_friends'] = absint( $_GET['only_friends'] );
+	}
+
+	// Support per-Group suggestions.
+	if ( ! empty( $_GET['group-id'] ) ) {
+		$args['group_id'] = absint( $_GET['group-id'] );
+	}
+
+	$results = bp_core_get_suggestions( $args );
+
+	if ( is_wp_error( $results ) ) {
+		wp_send_json_error( $results->get_error_message() );
+		exit;
+	}
+
+	wp_send_json_success( $results );
+}
+add_action( 'wp_ajax_bp_get_suggestions', 'bp_ajax_get_suggestions' );
+
+/**
+ * Locate usernames in an content string, as designated by an @ sign.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param  array $mentioned_users Associative array with user IDs as keys and usernames as values.
+ * @param string $content Content
+ * @return array|bool Associative array with user ID as key and username as
+ *                    value. Boolean false if no mentions found.
+ */
+function bp_find_mentions_by_at_sign( $mentioned_users, $content ) {
+	$pattern = '/[@]+([A-Za-z0-9-_\.@]+)\b/';
+	preg_match_all( $pattern, $content, $usernames );
+
+	// Make sure there's only one instance of each username.
+	$usernames = array_unique( $usernames[1] );
+
+	// Bail if no usernames.
+	if ( empty( $usernames ) ) {
+		return $mentioned_users;
+	}
+
+	// We've found some mentions! Check to see if users exist.
+	foreach ( (array) array_values( $usernames ) as $username ) {
+		$user_id = bp_get_userid_from_mentionname( $username );
+
+		// The user ID exists, so let's add it to our array.
+		if ( ! empty( $user_id ) ) {
+			$mentioned_users[ $user_id ] = $username;
+		}
+	}
+
+	if ( empty( $mentioned_users ) ) {
+		return $mentioned_users;
+	}
+
+	return $mentioned_users;
+}
+
+/**
+ * Get a user ID from a "mentionname", the name used for a user in @-mentions.
+ *
+ * @since BuddyBoss 1.2.8
+ *
+ * @param string $mentionname Username of user in @-mentions.
+ * @return int|bool ID of the user, if one is found. Otherwise false.
+ */
+function bp_get_userid_from_mentionname( $mentionname ) {
+	$user_id = false;
+
+	/*
+	 * In username compatibility mode, hyphens are ambiguous between
+	 * actual hyphens and converted spaces.
+	 *
+	 * @todo There is the potential for username clashes between 'foo bar'
+	 * and 'foo-bar' in compatibility mode. Come up with a system for
+	 * unique mentionnames.
+	 */
+	if ( bp_is_username_compatibility_mode() ) {
+		// First, try the raw username.
+		$userdata = get_user_by( 'login', $mentionname );
+
+		// Doing a direct query to use proper regex. Necessary to
+		// account for hyphens + spaces in the same user_login.
+		if ( empty( $userdata ) || ! is_a( $userdata, 'WP_User' ) ) {
+			global $wpdb;
+			$regex   = esc_sql( str_replace( '-', '[ \-]', $mentionname ) );
+			$user_id = $wpdb->get_var( "SELECT ID FROM {$wpdb->users} WHERE user_login REGEXP '{$regex}'" );
+		} else {
+			$user_id = $userdata->ID;
+		}
+
+		// When username compatibility mode is disabled, the mentionname is
+		// the same as the nicename.
+	} else {
+		$user_id = bp_core_get_userid_from_nickname( $mentionname );
+	}
+
+	return $user_id;
 }

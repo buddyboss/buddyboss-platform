@@ -248,7 +248,7 @@ function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 		return;
 	}
 
-	bp_notifications_mark_notifications_by_item_id( $user_id, buddypress()->activity->id, 'new_at_mention' );
+	bp_notifications_mark_notifications_by_type( $user_id, buddypress()->activity->id, 'new_at_mention' );
 }
 add_action( 'bp_activity_clear_new_mentions', 'bp_activity_remove_screen_notifications', 10, 1 );
 

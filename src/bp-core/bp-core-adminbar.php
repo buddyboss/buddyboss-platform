@@ -133,7 +133,7 @@ function bp_wp_admin_bar_my_account_menu( $wp_admin_bar ) {
 	}
 	$display_name = $current_user->data->display_name;
 	$avatar       = get_avatar( $user_id, 26 );
-	$name         = bp_xprofile_get_member_display_name( $user_id );
+	$name         = bp_core_get_user_displayname( $user_id );
 
 	// my account
 	$wp_admin_bar->add_node(

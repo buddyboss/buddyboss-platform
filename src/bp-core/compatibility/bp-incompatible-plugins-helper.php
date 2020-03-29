@@ -97,6 +97,21 @@ function bp_helper_plugins_loaded_callback() {
 		}
 
 		add_action( 'parse_query', 'bp_core_fix_wpml_redirection', 5 );
+
+		/**
+		 * Fix for url with wpml
+		 *
+		 * @since BuddyBoss 1.2.6
+		 *
+		 * @param $url
+		 * @return string
+		 */
+		function bp_core_wpml_fix_get_root_domain( $url ) {
+			return untrailingslashit( $url );
+		}
+
+		add_filter( 'bp_core_get_root_domain', 'bp_core_wpml_fix_get_root_domain' );
+
 	}
 }
 
