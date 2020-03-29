@@ -5,33 +5,36 @@ $options = array(
 
 // 3rd section: display the search form
 
-$F = bp_profile_search_escaped_form_data( $form_id );
+$form_data = bp_profile_search_escaped_form_data( $form_id );
 ?>
 
 <aside id="bp-profile-search-form-outer" class="bp-profile-search-widget">
 
-	<h2 class="bps-form-title"><?php echo $F->title; ?></h2>
+	<h2 class="bps-form-title"><?php echo $form_data->title; ?></h2>
 
-	<form action="<?php echo $F->action; ?>" method="<?php echo $F->method; ?>" id="<?php echo $F->unique_id; ?>" class="bps-form standard-form">
+	<form action="<?php echo $form_data->action; ?>" method="<?php echo $form_data->method; ?>" id="<?php echo $form_data->unique_id; ?>" class="bps-form standard-form">
 
 		<?php
-		if ( isset( $F->fields ) && ! empty( $F->fields ) && count( $F->fields ) > 1 ) {
-			foreach ( $F->fields as $f ) {
+		if ( isset( $form_data->fields ) && ! empty( $form_data->fields ) && count( $form_data->fields ) > 1 ) {
+			foreach ( $form_data->fields as $f ) {
 				$id      = $f->unique_id;
 				$name    = $f->html_name;
 				$value   = $f->value;
 				$display = $f->display;
 
-				if ( $display == 'none' ) {
+				if ( 'none' === $display ) {
 					continue;
 				}
 
-				if ( $display == 'hidden' ) { ?>
-					<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" /><?php
+				if ( 'hidden' === $display ) {
+					?>
+					<input type="hidden" name="<?php echo $name; ?>" value="<?php echo $value; ?>" />
+					<?php
 					continue;
 				}
 
-				if ( 'heading_contains' == $f->code ) { ?>
+				if ( 'heading_contains' === $f->code ) {
+					?>
 					<div id="<?php echo $id; ?>_wrap" class="bp-field-wrap bp-heading-field-wrap bps-<?php echo $display; ?>">
 						<strong><?php echo $f->label; ?></strong><br>
 						<?php if ( ! empty( $f->description ) ) : ?>
@@ -47,15 +50,24 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 					<label for="<?php echo $id; ?>" class="bps-label"><?php echo $f->label; ?></label>
 					<?php
 					switch ( $display ) {
-						case 'range': ?>
+						case 'range':
+							?>
 							<input type="text" id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>" value="<?php echo $value['min']; ?>"/>
 							<span> - </span>
 							<input type="text" name="<?php echo $name . '[max]'; ?>" value="<?php echo $value['max']; ?>"/>
 							<?php
 							break;
 
-					case 'date_range': ?><span class="date-from date-label"><?php _e( 'From',
-						'buddyboss' ); ?></span>
+						case 'date_range':
+							?>
+							<span class="date-from date-label">
+							<?php
+							_e(
+								'From',
+								'buddyboss'
+							);
+							?>
+																	</span>
 						<div class="date-wrapper">
 							<select name="<?php echo $name . '[min][day]'; ?>">
 								<?php
@@ -63,14 +75,16 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									selected( $value['min']['day'], 0, false ),
 									/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
 
-								for ( $i = 1; $i < 32; ++ $i ) {
-									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
-									printf( '<option value="%1$s" %2$s>%3$s</option>',
-										$day,
-										selected( $value['min']['day'], $day, false ),
-										$i );
-								}
-								?>
+									for ( $i = 1; $i < 32; ++ $i ) {
+										$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
+										printf(
+											'<option value="%1$s" %2$s>%3$s</option>',
+											$day,
+											selected( $value['min']['day'], $day, false ),
+											$i
+										);
+									}
+									?>
 							</select>
 
 							<select name="<?php echo $name . '[min][month]'; ?>">
@@ -90,28 +104,34 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									__( 'December', 'buddyboss' ),
 								);
 
-								printf( '<option value="" %1$s>%2$s</option>',
+								printf(
+									'<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['month'], 0, false ),
 									/* translators: no option picked in select box */
-									__( 'Select Month', 'buddyboss' ) );
+									__( 'Select Month', 'buddyboss' )
+								);
 
 								for ( $i = 0; $i < 12; ++ $i ) {
 									$month = $i + 1;
 									$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
-									printf( '<option value="%1$s" %2$s>%3$s</option>',
+									printf(
+										'<option value="%1$s" %2$s>%3$s</option>',
 										$month,
 										selected( $value['min']['month'], $month, false ),
-										$months[ $i ] );
+										$months[ $i ]
+									);
 								}
 								?>
 							</select>
 
 							<select name="<?php echo $name . '[min][year]'; ?>">
 								<?php
-								printf( '<option value="" %1$s>%2$s</option>',
+								printf(
+									'<option value="" %1$s>%2$s</option>',
 									selected( $value['min']['year'], 0, false ),
 									/* translators: no option picked in select box */
-									__( 'Select Year', 'buddyboss' ) );
+									__( 'Select Year', 'buddyboss' )
+								);
 
 								$date_range_type = bp_xprofile_get_meta( $f->id, 'field', 'range_type', true );
 
@@ -129,17 +149,25 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 								}
 
 								for ( $i = $end; $i >= $start; $i -- ) {
-									printf( '<option value="%1$s" %2$s>%3$s</option>',
+									printf(
+										'<option value="%1$s" %2$s>%3$s</option>',
 										(int) $i,
 										selected( $value['min']['year'], $i, false ),
-										(int) $i );
+										(int) $i
+									);
 								}
 								?>
 							</select>
 						</div>
 
-						<span class="date-to date-label"><?php _e( 'To',
-								'buddyboss' ); ?></span>
+						<span class="date-to date-label">
+							<?php
+							_e(
+								'To',
+								'buddyboss'
+							);
+							?>
+															</span>
 						<div class="date-wrapper">
 							<select name="<?php echo $name . '[max][day]'; ?>">
 								<?php
@@ -147,90 +175,124 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									selected( $value['max']['day'], 0, false ),
 									/* translators: no option picked in select box */ __( 'Select Day', 'buddyboss' ) );
 
-								for ( $i = 1; $i < 32; ++ $i ) {
-									$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
-									printf( '<option value="%1$s" %2$s>%3$s</option>',
-										$day,
-										selected( $value['max']['day'], $day, false ),
-										$i );
-								}
-								?>
+									for ( $i = 1; $i < 32; ++ $i ) {
+										$day = str_pad( $i, 2, '0', STR_PAD_LEFT );
+										printf(
+											'<option value="%1$s" %2$s>%3$s</option>',
+											$day,
+											selected( $value['max']['day'], $day, false ),
+											$i
+										);
+									}
+									?>
 							</select>
 
 							<select name="<?php echo $name . '[max][month]'; ?>">
 								<?php
-								printf( '<option value="" %1$s>%2$s</option>',
+								printf(
+									'<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['month'], 0, false ),
 									/* translators: no option picked in select box */
-									__( 'Select Month', 'buddyboss' ) );
+									__( 'Select Month', 'buddyboss' )
+								);
 
 								for ( $i = 0; $i < 12; ++ $i ) {
 									$month = $i + 1;
 									$month = str_pad( $month, 2, '0', STR_PAD_LEFT );
-									printf( '<option value="%1$s" %2$s>%3$s</option>',
+									printf(
+										'<option value="%1$s" %2$s>%3$s</option>',
 										$month,
 										selected( $value['max']['month'], $month, false ),
-										$months[ $i ] );
+										$months[ $i ]
+									);
 								}
 								?>
 							</select>
 
 							<select name="<?php echo $name . '[max][year]'; ?>">
 								<?php
-								printf( '<option value="" %1$s>%2$s</option>',
+								printf(
+									'<option value="" %1$s>%2$s</option>',
 									selected( $value['max']['year'], 0, false ),
 									/* translators: no option picked in select box */
-									__( 'Select Year', 'buddyboss' ) );
+									__( 'Select Year', 'buddyboss' )
+								);
 								for ( $i = $end; $i >= $start; $i -- ) {
-									printf( '<option value="%1$s" %2$s>%3$s</option>',
+									printf(
+										'<option value="%1$s" %2$s>%3$s</option>',
 										(int) $i,
 										selected( $value['max']['year'], $i, false ),
-										(int) $i );
+										(int) $i
+									);
 								}
 								?>
 							</select>
-						</div>                        <?php
-					break;
+						</div>
+							<?php
+							break;
 
-					case 'range-select': ?>
+						case 'range-select':
+							?>
 						<select id="<?php echo $id; ?>" name="<?php echo $name . '[min]'; ?>">
-							<?php foreach ( $f->options as $option ) { ?>
-								<option <?php selected( $value['min'],
-									$option ); ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+								<?php foreach ( $f->options as $option ) { ?>
+								<option
+									<?php
+									selected(
+										$value['min'],
+										$option
+									);
+									?>
+										value="<?php echo $option; ?>"><?php echo $option; ?></option>
 							<?php } ?>
 						</select>                        <span> - </span>
 						<select name="<?php echo $name . '[max]'; ?>">
-							<?php foreach ( $f->options as $option ) { ?>
-								<option <?php selected( $value['max'],
-									$option ); ?> value="<?php echo $option; ?>"><?php echo $option; ?></option>
+								<?php foreach ( $f->options as $option ) { ?>
+								<option
+									<?php
+									selected(
+										$value['max'],
+										$option
+									);
+									?>
+										value="<?php echo $option; ?>"><?php echo $option; ?></option>
 							<?php } ?>
-						</select>                        <?php
-					break;
+						</select>
+							<?php
+							break;
 
-					case 'textbox': ?>
+						case 'textbox':
+							?>
 					<input type="search" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"/>
-					<?php
-					break;
+							<?php
+							break;
 
-					case 'number': ?>
+						case 'number':
+							?>
 					<input type="number" id="<?php echo $id; ?>" name="<?php echo $name; ?>" value="<?php echo $value; ?>"/>
-					<?php
-					break;
+							<?php
+							break;
 
-					case 'distance':
-					$of          = __( 'of', 'buddyboss' );
-					$km          = __( 'km', 'buddyboss' );
-					$miles       = __( 'miles', 'buddyboss' );
-					$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
-					$icon_url    = plugins_url( 'bp-profile-search/templates/members/locator.png' );
-					$icon_title  = __( 'get current location', 'buddyboss' ); ?>
+						case 'distance':
+							$of          = __( 'of', 'buddyboss' );
+							$km          = __( 'km', 'buddyboss' );
+							$miles       = __( 'miles', 'buddyboss' );
+							$placeholder = __( 'Start typing, then select a location', 'buddyboss' );
+							$icon_url    = plugins_url( 'bp-profile-search/templates/members/locator.png' );
+							$icon_title  = __( 'get current location', 'buddyboss' );
+							?>
 
 					<input type="number" min="1" name="<?php echo $name . '[distance]'; ?>" value="<?php echo $value['distance']; ?>"/>
 
 						<select name="<?php echo $name . '[units]'; ?>">
-							<option value="km" <?php selected( $value['units'], "km" ); ?>><?php echo $km; ?></option>
-							<option value="miles" <?php selected( $value['units'],
-								"miles" ); ?>><?php echo $miles; ?></option>
+							<option value="km" <?php selected( $value['units'], 'km' ); ?>><?php echo $km; ?></option>
+							<option value="miles"
+							<?php
+							selected(
+								$value['units'],
+								'miles'
+							);
+							?>
+													><?php echo $miles; ?></option>
 						</select>
 
 						<span><?php echo $of; ?></span>
@@ -248,28 +310,41 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 									bp_ps_locate('<?php echo $id; ?>', '<?php echo $id; ?>_lat', '<?php echo $id; ?>_lng')
 								});
 							});
-						</script>                        <?php
-					break;
+						</script>
+							<?php
+							break;
 
-					case 'selectbox': ?>
+						case 'selectbox':
+							?>
 						<select id="<?php echo $id; ?>" name="<?php echo $name; ?>">
-							<?php foreach ( $f->options as $key => $label ) { ?>
-								<option <?php if ( $key == $value ) {
-									echo 'selected="selected"';
-								} ?> value="<?php echo $key; ?>"><?php echo $label; ?></option>
+								<?php foreach ( $f->options as $key => $label ) { ?>
+								<option
+									<?php
+									if ( $key === $value ) {
+										echo 'selected="selected"';
+									}
+									?>
+								value="<?php echo $key; ?>"><?php echo $label; ?></option>
 							<?php } ?>
-						</select>                        <?php
-					break;
+						</select>
+							<?php
+							break;
 
-					case 'multiselectbox': ?>
+						case 'multiselectbox':
+							?>
 						<select id="<?php echo $id; ?>" name="<?php echo $name . '[]'; ?>" multiple="multiple">
-							<?php foreach ( $f->options as $key => $label ) { ?>
-								<option <?php if ( in_array( $key, $f->values ) ) {
-									echo 'selected="selected"';
-								} ?> value="<?php echo $key; ?>"><?php echo $label; ?></option>
+								<?php foreach ( $f->options as $key => $label ) { ?>
+								<option
+									<?php
+									if ( in_array( $key, $f->values ) ) {
+										echo 'selected="selected"';
+									}
+									?>
+								value="<?php echo $key; ?>"><?php echo $label; ?></option>
 							<?php } ?>
-						</select>                        <?php
-					break;
+						</select>
+							<?php
+							break;
 
 					case 'radio': ?><?php foreach ( $f->options as $key => $label ) { ?>
 						<div class="bp-radio-wrap">
@@ -292,23 +367,32 @@ $F = bp_profile_search_escaped_form_data( $form_id );
 					}
 					break;
 
-					default: ?>
+						default:
+							?>
 						<p class="bps-error"><?php echo "BP Profile Search: unknown display <em>$display</em> for field <em>$f->name</em>."; ?></p>
-						<?php
-						break;
-					} ?>
+							<?php
+							break;
+					}
+					?>
 
 					<?php if ( ! empty( $f->description ) ) { ?>
 						<p class="bps-description"><?php echo $f->description; ?></p>
 					<?php } ?>
 				</div>
 				<?php
-			} ?>
+			}
+			?>
 
 			<div class="submit-wrapper">
 				<p class="clear-from-wrap">
-					<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);"><?php _e( 'Reset',
-							'buddyboss' ); ?></a></p>
+					<a href='javascript:void(0);' onclick="return bp_ps_clear_form_elements(this);">
+					<?php
+					_e(
+						'Reset',
+						'buddyboss'
+					);
+					?>
+																									</a></p>
 				<input type="submit" class="submit" value="<?php _e( 'Search', 'buddyboss' ); ?>"/>
 			</div>
 

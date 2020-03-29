@@ -106,7 +106,7 @@ function bp_core_screen_signup() {
 			}
 
 			// Check that the passwords match.
-			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] != $_POST['signup_email_confirm'] ) {
+			if ( ( ! empty( $_POST['signup_email'] ) && ! empty( $_POST['signup_email_confirm'] ) ) && $_POST['signup_email'] !== $_POST['signup_email_confirm'] ) {
 				$bp->signup->errors['signup_email'] = __( 'The emails entered do not match.', 'buddyboss' );
 			}
 		}
@@ -120,7 +120,7 @@ function bp_core_screen_signup() {
 			}
 
 			// Check that the passwords match.
-			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] != $_POST['signup_password_confirm'] ) {
+			if ( ( ! empty( $_POST['signup_password'] ) && ! empty( $_POST['signup_password_confirm'] ) ) && $_POST['signup_password'] !== $_POST['signup_password_confirm'] ) {
 				$bp->signup->errors['signup_password'] = __( 'The passwords entered do not match.', 'buddyboss' );
 			}
 		}
@@ -160,7 +160,7 @@ function bp_core_screen_signup() {
 							__( 'This is a required field.', 'buddyboss' )
 						);
 					} else {                    // Validate xprofile
-						if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) {
+						if ( isset( $_POST[ 'field_' . $field_id ] ) && $message = xprofile_validate_field( $field_id, $_POST[ 'field_' . $field_id ], '' ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 							$bp->signup->errors[ 'field_' . $field_id ] = sprintf(
 								'<div class="bp-messages bp-feedback error">
 								<span class="bp-icon" aria-hidden="true"></span>
@@ -182,7 +182,7 @@ function bp_core_screen_signup() {
 		if ( isset( $_POST['signup_with_blog'] ) ) {
 			$active_signup = bp_core_get_root_option( 'registration' );
 
-			if ( 'blog' == $active_signup || 'all' == $active_signup ) {
+			if ( 'blog' === $active_signup || 'all' === $active_signup ) {
 				$blog_details = bp_core_validate_blog_signup( $_POST['signup_blog_url'], $_POST['signup_blog_title'] );
 
 				// If there are errors with blog details, set them for display.
@@ -226,7 +226,7 @@ function bp_core_screen_signup() {
 			// No errors! Let's register those deets.
 			$active_signup = bp_core_get_root_option( 'registration' );
 
-			if ( 'none' != $active_signup ) {
+			if ( 'none' !== $active_signup ) {
 
 				// Make sure the profiles fields module is enabled.
 				if ( bp_is_active( 'xprofile' ) ) {
@@ -257,8 +257,8 @@ function bp_core_screen_signup() {
 				$usermeta['password'] = wp_hash_password( $_POST['signup_password'] );
 
 				// If the user decided to create a blog, save those details to usermeta.
-				if ( 'blog' == $active_signup || 'all' == $active_signup ) {
-					$usermeta['public'] = ( isset( $_POST['signup_blog_privacy'] ) && 'public' == $_POST['signup_blog_privacy'] ) ? true : false;
+				if ( 'blog' === $active_signup || 'all' === $active_signup ) {
+					$usermeta['public'] = ( isset( $_POST['signup_blog_privacy'] ) && 'public' === $_POST['signup_blog_privacy'] ) ? true : false;
 				}
 
 				/**

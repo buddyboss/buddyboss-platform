@@ -99,11 +99,13 @@ function bp_blogs_register_post_tracking_args( $params = null, $post_type = 0 ) 
 				$singular_label_name = $cu->labels->singular_name;
 
 				// Set specific params for the 'post' post type.
-				$params->component_id    = buddypress()->blogs->id;
-				$params->action_id       = 'new_blog_' . $post_type;
+				$params->component_id = buddypress()->blogs->id;
+				$params->action_id    = 'new_blog_' . $post_type;
+
+				/* translators: New [CPT singular name] published */
 				$params->admin_filter    = sprintf( __( 'New %s published', 'buddyboss' ), strtolower( $singular_label_name ) );
 				$params->format_callback = 'bp_blogs_format_activity_action_new_custom_post_type_feed';
-				$params->front_filter    = sprintf( __( '%s', 'buddyboss' ), $plural_label_name );
+				$params->front_filter    = $plural_label_name;
 				$params->contexts        = array( 'activity', 'member' );
 				$params->position        = 5;
 
@@ -158,6 +160,7 @@ function bp_blogs_format_activity_action_new_blog( $action, $activity ) {
 	$blog_url  = bp_blogs_get_blogmeta( $activity->item_id, 'url' );
 	$blog_name = bp_blogs_get_blogmeta( $activity->item_id, 'name' );
 
+	/* translators: [User link] created the site [Blog URL] */
 	$action = sprintf( __( '%1$s created the site %2$s', 'buddyboss' ), bp_core_get_userlink( $activity->user_id ), '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 
 	// Legacy filter - requires the BP_Blogs_Blog object.
@@ -267,8 +270,10 @@ function bp_blogs_format_activity_action_new_blog_post( $action, $activity ) {
 
 	// Build the complete activity action string.
 	if ( is_multisite() ) {
+		/* translators: [User link] posted a new post, [Post link], on the site [Blog URL] */
 		$action = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
+		/* translators: [User link] posted a new post, [Post link] */
 		$action = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
@@ -393,8 +398,10 @@ function bp_blogs_format_activity_action_new_blog_comment( $action, $activity ) 
 	$user_link = bp_core_get_userlink( $activity->user_id );
 
 	if ( is_multisite() ) {
+		/* translators: [User link] commented on the post, [Post link], on the site [Blog URL] */
 		$action = sprintf( __( '%1$s commented on the post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 	} else {
+		/* translators: [User link] commented on the post, [Post link] */
 		$action = sprintf( __( '%1$s commented on the post, %2$s', 'buddyboss' ), $user_link, $post_link );
 	}
 
@@ -621,7 +628,7 @@ function bp_blogs_comments_open( $activity ) {
 	} else {
 
 		// Comments are closed.
-		if ( 'closed' == bp_activity_get_meta( $activity->id, 'post_comment_status' ) ) {
+		if ( 'closed' === bp_activity_get_meta( $activity->id, 'post_comment_status' ) ) {
 			return false;
 		}
 
@@ -635,8 +642,8 @@ function bp_blogs_comments_open( $activity ) {
 		}
 
 		/*
-		   Commenting out for now - needs some more thought...
-		   should we add the post type to activity meta?
+		Commenting out for now - needs some more thought...
+		should we add the post type to activity meta?
 
 		$post = get_post($post_id);
 
@@ -833,7 +840,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	}
 
 	// Get userdata.
-	if ( $params['user_id'] == bp_loggedin_user_id() ) {
+	if ( bp_loggedin_user_id() === $params['user_id'] ) {
 		$user = buddypress()->loggedin_user->userdata;
 	} else {
 		$user = bp_core_get_core_userdata( $params['user_id'] );
@@ -1625,15 +1632,19 @@ function bp_blogs_format_activity_action_new_custom_post_type_feed( $action, $ac
 
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
+			/* translators: [User link] posted a new [CPT Singular name], [Post link], on the site [Blog Link] */
 			$action = sprintf( __( '%1$s posted a new %2$s, %3$s, on the site %4$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
+			/* translators: [User link] posted a new [CPT Singular name], [Post link] */
 			$action = sprintf( __( '%1$s posted a new %2$s, %3$s', 'buddyboss' ), $user_link, $singular_label_name, $post_link );
 		}
 	} else {
 		// Build the complete activity action string.
 		if ( is_multisite() ) {
+			/* translators: [User link] posted a new post, [Post link], on the site [Blog Link] */
 			$action = sprintf( __( '%1$s posted a new post, %2$s, on the site %3$s', 'buddyboss' ), $user_link, $post_link, '<a href="' . esc_url( $blog_url ) . '">' . esc_html( $blog_name ) . '</a>' );
 		} else {
+			/* translators: [User link] posted a new post, [Post link] */
 			$action = sprintf( __( '%1$s posted a new post, %2$s', 'buddyboss' ), $user_link, $post_link );
 		}
 	}

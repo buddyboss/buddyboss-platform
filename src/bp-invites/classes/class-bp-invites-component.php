@@ -117,15 +117,11 @@ class BP_Invites_Component extends BP_Component {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
 
-			if ( is_user_logged_in() &&
-				 in_array( bp_current_action(), array( 'revoke-invite' ), true )
-			) {
+			if ( is_user_logged_in() && in_array( bp_current_action(), array( 'revoke-invite' ), true ) ) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
 
-			if ( is_user_logged_in() &&
-				 in_array( bp_current_action(), array( 'revoke-invite-admin' ), true )
-			) {
+			if ( is_user_logged_in() && in_array( bp_current_action(), array( 'revoke-invite-admin' ), true ) ) {
 				require $this->path . 'bp-invites/actions/' . bp_current_action() . '.php';
 			}
 		} else {

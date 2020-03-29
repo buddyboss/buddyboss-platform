@@ -373,7 +373,7 @@ class BP_XProfile_Field {
 		// Prevent deletion if no ID is present.
 		// Prevent deletion by url when can_delete is false.
 		// Prevent deletion of option 1 since this invalidates fields with options.
-		if ( empty( $this->id ) || empty( $this->can_delete ) || ( $this->parent_id && $this->option_order == 1 ) ) {
+		if ( empty( $this->id ) || empty( $this->can_delete ) || ( $this->parent_id && 1 === $this->option_order ) ) {
 			return false;
 		}
 
@@ -535,12 +535,12 @@ class BP_XProfile_Field {
 								$is_default = 1;
 							}
 						} else {
-							if ( (int) $defaults == $option_key ) {
+							if ( (int) $defaults === $option_key ) {
 								$is_default = 1;
 							}
 						}
 
-						if ( '' != $option_value ) {
+						if ( '' !== $option_value ) {
 							$sql = $wpdb->prepare( "INSERT INTO {$bp->profile->table_name_fields} (group_id, parent_id, type, name, description, is_required, option_order, is_default_option) VALUES (%d, %d, 'option', %s, '', 0, %d, %d)", $this->group_id, $parent_id, $option_value, $counter, $is_default );
 							if ( ! $wpdb->query( $sql ) ) {
 								return false;
@@ -794,7 +794,7 @@ class BP_XProfile_Field {
 	 */
 	public function get_member_type_label() {
 		// Field 1 is always displayed to everyone, so never gets a label.
-		if ( 1 == $this->id ) {
+		if ( 1 === $this->id ) {
 			return '';
 		}
 
@@ -808,7 +808,7 @@ class BP_XProfile_Field {
 
 		// If the field applies to all profile types, show no message.
 		$all_types[] = 'null';
-		if ( array_values( $all_types ) == $member_types ) {
+		if ( array_values( $all_types ) === $member_types ) {
 			return '';
 		}
 
@@ -1333,8 +1333,7 @@ class BP_XProfile_Field {
 
 				?>
 
-				<a href="<?php echo esc_url( $action_add ); ?>"
-				   class="page-title-action"><?php esc_html_e( 'Add New Field', 'buddyboss' ); ?></a>
+				<a href="<?php echo esc_url( $action_add ); ?>" class="page-title-action"><?php esc_html_e( 'Add New Field', 'buddyboss' ); ?></a>
 				<?php
 			}
 			?>
@@ -1356,8 +1355,7 @@ class BP_XProfile_Field {
 
 			<form id="bp-xprofile-add-field" action="<?php echo esc_url( $action ); ?>" method="post">
 				<div id="poststuff">
-					<div id="post-body"
-						 class="metabox-holder columns-<?php echo ( 1 == get_current_screen()->get_columns() ) ? '1' : '2'; ?>">
+					<div id="post-body" class="metabox-holder columns-<?php echo ( 1 === get_current_screen()->get_columns() ) ? '1' : '2'; ?>">
 						<div id="post-body-content">
 
 							<?php
@@ -1480,21 +1478,18 @@ class BP_XProfile_Field {
 						do_action( 'xprofile_field_submitbox_start', $this );
 						?>
 
-						<input type="hidden" name="field_order" id="field_order"
-							   value="<?php echo esc_attr( $this->field_order ); ?>"/>
+						<input type="hidden" name="field_order" id="field_order" value="<?php echo esc_attr( $this->field_order ); ?>"/>
 
 						<?php if ( ! empty( $button_text ) ) : ?>
 
 							<div id="publishing-action">
-								<input type="submit" name="saveField" value="<?php echo esc_attr( $button_text ); ?>"
-									   class="button-primary"/>
+								<input type="submit" name="saveField" value="<?php echo esc_attr( $button_text ); ?>" class="button-primary"/>
 							</div>
 
 						<?php endif; ?>
 
 						<div id="delete-action">
-							<a href="<?php echo esc_url( $cancel_url ); ?>"
-							   class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
+							<a href="<?php echo esc_url( $cancel_url ); ?>" class="deletion"><?php esc_html_e( 'Cancel', 'buddyboss' ); ?></a>
 						</div>
 
 						<?php wp_nonce_field( 'xprofile_delete_option' ); ?>
@@ -1527,10 +1522,8 @@ class BP_XProfile_Field {
 
 		<div id="titlediv">
 			<div class="titlewrap">
-				<label id="title-prompt-text"
-					   for="title"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
-				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>"
-					   autocomplete="off"/>
+				<label id="title-prompt-text" for="title"><?php echo esc_html__( 'Name (required)', 'buddyboss' ); ?></label>
+				<input type="text" name="title" id="title" value="<?php echo esc_attr( $this->name ); ?>" autocomplete="off"/>
 			</div>
 		</div>
 
@@ -1550,17 +1543,14 @@ class BP_XProfile_Field {
 					<tr>
 						<th><?php _e( 'Alternate Title', 'buddyboss' ); ?></th>
 						<td>
-							<input type="text" name="title_secondary" id="title_secondary"
-								   value="<?php echo esc_attr( $this->get_alternate_name() ); ?>" autocomplete="off"
-								   style="width: 100%;">
+							<input type="text" name="title_secondary" id="title_secondary" value="<?php echo esc_attr( $this->get_alternate_name() ); ?>" autocomplete="off" style="width: 100%;">
 							<p class="description"><?php _e( 'For example, "How old are you?" could be used instead of "Age".', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
 					<tr>
 						<th><?php _e( 'Instructions', 'buddyboss' ); ?></th>
 						<td>
-							<textarea name="description" id="description" rows="6"
-									  cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
+							<textarea name="description" id="description" rows="6" cols="60"><?php echo esc_textarea( $this->description ); ?></textarea>
 							<p class="description"><?php _e( 'Explain to members how best to fill out this field.', 'buddyboss' ); ?></p>
 						</td>
 					</tr>
@@ -1585,12 +1575,13 @@ class BP_XProfile_Field {
 		}
 
 		// Bail when no profile types are registered.
-		if ( ! $member_types = bp_get_member_types( array(), 'objects' ) ) {
+		$member_types = bp_get_member_types( array(), 'objects' );
+		if ( ! $member_types ) {
 			return;
 		}
 
 		// Remove the Profile Type Metabox for the Profile Type Field.
-		if ( $this->id === bp_get_xprofile_member_type_field_id() ) {
+		if ( bp_get_xprofile_member_type_field_id() === $this->id ) {
 			return;
 		}
 
@@ -1608,9 +1599,9 @@ class BP_XProfile_Field {
 						<li>
 							<label for="member-type-<?php echo $member_type->labels['name']; ?>">
 								<input name="member-types[]"
-									   id="member-type-<?php echo $member_type->labels['name']; ?>"
-									   class="member-type-selector" type="checkbox"
-									   value="<?php echo $member_type->name; ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
+									id="member-type-<?php echo $member_type->labels['name']; ?>"
+									class="member-type-selector" type="checkbox"
+									value="<?php echo $member_type->name; ?>" <?php checked( in_array( $member_type->name, $field_member_types ) ); ?>/>
 								<?php echo $member_type->labels['singular_name']; ?>
 							</label>
 						</li>
@@ -1619,18 +1610,19 @@ class BP_XProfile_Field {
 					<li>
 						<label for="member-type-none">
 							<input name="member-types[]" id="member-type-none" class="member-type-selector"
-								   type="checkbox"
-								   value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
+								type="checkbox"
+								value="null" <?php checked( in_array( 'null', $field_member_types ) ); ?>/>
 							<?php _e( 'Users with no profile type', 'buddyboss' ); ?>
 						</label>
 					</li>
 
 				</ul>
 				<p class="description member-type-none-notice
-				<?php
-				if ( ! empty( $field_member_types ) ) :
-					?>
-					 hide<?php endif; ?>"><?php _e( 'Unavailable to all members.', 'buddyboss' ); ?></p>
+				<?php if ( ! empty( $field_member_types ) ) : ?>
+				hide
+				<?php endif; ?>">
+					<?php _e( 'Unavailable to all members.', 'buddyboss' ); ?>
+				</p>
 			</div>
 
 			<input type="hidden" name="has-member-types" value="1"/>
@@ -1670,12 +1662,12 @@ class BP_XProfile_Field {
 					<ul>
 						<li>
 							<input type="radio" id="allow-custom-visibility-allowed" name="allow-custom-visibility"
-								   value="allowed" <?php checked( $this->get_allow_custom_visibility(), 'allowed' ); ?> />
+								value="allowed" <?php checked( $this->get_allow_custom_visibility(), 'allowed' ); ?> />
 							<label for="allow-custom-visibility-allowed"><?php esc_html_e( 'Allow members to override', 'buddyboss' ); ?></label>
 						</li>
 						<li>
 							<input type="radio" id="allow-custom-visibility-disabled" name="allow-custom-visibility"
-								   value="disabled" <?php checked( $this->get_allow_custom_visibility(), 'disabled' ); ?> />
+								value="disabled" <?php checked( $this->get_allow_custom_visibility(), 'disabled' ); ?> />
 							<label for="allow-custom-visibility-disabled"><?php esc_html_e( 'Enforce field visibility', 'buddyboss' ); ?></label>
 						</li>
 					</ul>
@@ -1798,7 +1790,7 @@ class BP_XProfile_Field {
 			// bp_xprofile_lastname_field_id()
 		);
 
-		if ( bp_get_option( 'bp-display-name-format' ) == 'first_last_name' ) {
+		if ( bp_get_option( 'bp-display-name-format' ) === 'first_last_name' ) {
 			// $synced_fields[] = bp_xprofile_lastname_field_id();
 		}
 

@@ -90,7 +90,8 @@ class BP_Embed extends WP_Embed {
 		foreach ( $this->handlers as $priority => $handlers ) {
 			foreach ( $handlers as $hid => $handler ) {
 				if ( preg_match( $handler['regex'], $url, $matches ) && is_callable( $handler['callback'] ) ) {
-					if ( false !== $return = call_user_func( $handler['callback'], $matches, $attr, $url, $rawattr ) ) {
+					$return = call_user_func( $handler['callback'], $matches, $attr, $url, $rawattr );
+					if ( false !== $return ) {
 
 						/**
 						 * Filters the oEmbed handler result for the provided URL.
@@ -150,7 +151,7 @@ class BP_Embed extends WP_Embed {
 		$is_oembed_link = false;
 		if ( ! $attr['discover'] ) {
 			foreach ( (array) $oembed_obj->providers as $provider_matchmask => $provider ) {
-				$regex = ( $is_regex = $provider[1] ) ? $provider_matchmask : '#' . str_replace( '___wildcard___', '(.+)', preg_quote( str_replace( '*', '___wildcard___', $provider_matchmask ), '#' ) ) . '#i';
+				$regex = ( $is_regex = $provider[1] ) ? $provider_matchmask : '#' . str_replace( '___wildcard___', '(.+)', preg_quote( str_replace( '*', '___wildcard___', $provider_matchmask ), '#' ) ) . '#i'; // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 
 				if ( preg_match( $regex, $url ) ) {
 					$is_oembed_link = true;

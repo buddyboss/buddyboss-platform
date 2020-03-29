@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * BP Nouveau Groups
  *
@@ -51,13 +51,16 @@ class BP_Nouveau_Groups {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
-					require $this->dir . 'ajax.php';
+			add_action(
+				'admin_init',
+				function() {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX && 0 === strpos( $_REQUEST['action'], 'groups_' ) ) {
+						require $this->dir . 'ajax.php';
+					}
 				}
-			} );
+			);
 		}
 	}
 

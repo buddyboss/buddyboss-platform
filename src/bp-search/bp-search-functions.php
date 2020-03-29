@@ -73,7 +73,7 @@ function bp_search_reply_intro( $character_limit = 50 ) {
 		$search_term = BP_Search::instance()->get_search_term();
 
 		$search_term_position = stripos( $content, $search_term );
-		if ( $search_term_position !== false ) {
+		if ( false !== $search_term_position ) {
 			$shortened_content = bp_search_result_match( $content, $search_term );
 
 			// highlight search keyword
@@ -110,7 +110,7 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
 
 	$search_term_position = stripos( $content, $search_term );
 
-	if ( $search_term_position !== false ) {
+	if ( false !== $search_term_position ) {
 		$shortened_content = '&hellip;' . substr( $content, $search_term_position, $character_limit );
 		// highlight search keyword
 
@@ -134,17 +134,17 @@ function bp_search_result_intro( $content, $character_limit = 50 ) {
  * @since BuddyBoss 1.0.0
  *
  * @param $in
- * @param $wordToFind
- * @param int        $numWordsToWrap
+ * @param $word_to_find
+ * @param int        $num_words_to_wrap
  *
  * @return string
  */
-function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
+function bp_search_result_match( $in, $word_to_find, $num_words_to_wrap = 10 ) {
 
-	$words       = preg_split( '/\s+/', $in );
-	$wordsToFind = preg_split( '/\s+/', $wordToFind );
+	$words         = preg_split( '/\s+/', $in );
+	$words_to_find = preg_split( '/\s+/', $word_to_find );
 
-	foreach ( $wordsToFind as $key => $value ) {
+	foreach ( $words_to_find as $key => $value ) {
 		$found_words = preg_grep( '/' . $value . '.*/i', $words );
 		$found_pos   = array_keys( $found_words );
 
@@ -156,13 +156,13 @@ function bp_search_result_match( $in, $wordToFind, $numWordsToWrap = 10 ) {
 
 	if ( isset( $pos ) ) {
 
-		$start  = ( $pos - $numWordsToWrap > 0 ) ? $pos - $numWordsToWrap : 0;
-		$length = ( ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? $pos + ( $numWordsToWrap + 1 ) : count( $words ) ) - $start;
+		$start  = ( $pos - $num_words_to_wrap > 0 ) ? $pos - $num_words_to_wrap : 0;
+		$length = ( ( $pos + ( $num_words_to_wrap + 1 ) < count( $words ) ) ? $pos + ( $num_words_to_wrap + 1 ) : count( $words ) ) - $start;
 		$slice  = array_slice( $words, $start, $length );
 
 		$pre_start = ( $start > 0 ) ? '&hellip;' : '';
 
-		$post_end = ( $pos + ( $numWordsToWrap + 1 ) < count( $words ) ) ? '&hellip;' : '';
+		$post_end = ( $pos + ( $num_words_to_wrap + 1 ) < count( $words ) ) ? '&hellip;' : '';
 
 		$out = $pre_start . implode( ' ', $slice ) . $post_end;
 
@@ -202,14 +202,14 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 		}
 
 		$s = $links_on_each_side; // no of tabs to show for previos/next paged links
-		if ( $curr_paged == 0 ) {
+		if ( 0 === $curr_paged ) {
 			$curr_paged = 1;
 		}
 		/*
-		 $elements : an array of arrays; each child array will have following structure
-		  $child[0] = text of the link
-		  $child[1] = page no of target page
-		  $child[2] = link type :: link|current|nolink
+		 * $elements : an array of arrays; each child array will have following structure
+		 * $child[0] = text of the link
+		 * $child[1] = page no of target page
+		 * $child[2] = link type :: link|current|nolink
 		 */
 		$elements    = array();
 		$no_of_pages = ceil( $total_items / $items_per_page );
@@ -228,7 +228,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 				$counter ++;
 			}
 			$arr = array_reverse( $rev_array );
-			if ( $counter == $s ) {
+			if ( $counter === $s ) {
 				$elements[] = array( ' &hellip; ', '', 'nolink' );
 			}
 			foreach ( $arr as $el ) {
@@ -245,7 +245,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 			$i       = $curr_paged;
 			$counter = 0;
 			while ( $counter < $s + 1 && $i <= $no_of_pages ) {
-				if ( $i == $curr_paged ) {
+				if ( $i === $curr_paged ) {
 					$elements[] = array( $i, $i, 'current' );
 				} else {
 					$elements[] = array( $i, $i, 'link' );
@@ -253,7 +253,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 				$counter ++;
 				$i ++;
 			}
-			if ( $counter == $s + 1 ) {
+			if ( $counter === $s + 1 ) {
 				$elements[] = array( ' &hellip; ', '', 'nolink' );
 			}
 			unset( $i );
@@ -284,7 +284,7 @@ if ( ! function_exists( 'bp_search_pagination' ) ) :
 										$base_link .= "$k=$v&";
 									}
 									$base_link .= "$param_key=$e[1]";
-									if ( isset( $hashlink ) && $hashlink != '' ) {
+									if ( isset( $hashlink ) && '' !== $hashlink ) {
 										$base_link .= "#$hashlink";
 									}
 									$link_html = "<a href='$base_link' title='$e[0]' class='page-numbers' data-pagenumber='$e[1]'>$e[0]</a>";
@@ -331,7 +331,7 @@ endif;
  */
 function bp_search_pagination_page_counts( $total_items, $items_per_page, $curr_paged ) {
 
-	if ( $curr_paged == 0 ) {
+	if ( 0 === $curr_paged ) {
 		$curr_paged = 1;
 	}
 
@@ -375,9 +375,8 @@ function bp_search_items() {
 		'groups'   => __( 'Groups', 'buddyboss' ),
 		'activity' => __( 'Activity', 'buddyboss' ),
 		'messages' => __( 'Messages', 'buddyboss' ),
-		/*
-		 should we search notifications as well?
-		'notifications'	=> __( 'Notifications', 'buddyboss' ), */
+		/* should we search notifications as well? */
+		//'notifications'	=> __( 'Notifications', 'buddyboss' ),
 	);
 
 	// only the active ones please!
@@ -609,13 +608,13 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_o
 
 		switch ( $type ) {
 			case 'form':
-				if ( isset( $request['bps_form'] ) && $request['bps_form'] != $form ) {
+				if ( isset( $request['bps_form'] ) && $request['bps_form'] !== $form ) {
 					$request = array();
 				}
 				break;
 
 			case 'filters':
-				if ( isset( $request['bps_directory'] ) && $request['bps_directory'] != $current ) {
+				if ( isset( $request['bps_directory'] ) && $request['bps_directory'] !== $current ) {
 					$request = array();
 				}
 				foreach ( $hidden_filters as $key => $value ) {
@@ -624,7 +623,7 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_o
 				break;
 
 			case 'search':
-				if ( isset( $request['bps_directory'] ) && $request['bps_directory'] != $current ) {
+				if ( isset( $request['bps_directory'] ) && $request['bps_directory'] !== $current ) {
 					$request = array();
 				}
 				foreach ( $hidden_filters as $key => $value ) {
@@ -663,7 +662,7 @@ if ( in_array( 'geo-my-wp/geo-my-wp.php', apply_filters( 'active_plugins', get_o
 		} elseif ( isset( $_COOKIE[ $cookie ] ) ) {
 			$current = bps_current_page();
 			parse_str( stripslashes( $_COOKIE[ $cookie ] ), $data );
-			if ( $data['page'] != $current ) {
+			if ( $data['page'] !== $current ) {
 				$data = array();
 			}
 		}

@@ -89,7 +89,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 				<?php bp_the_profile_field_required_label(); ?>
 			<?php endif; ?>
 		</legend>
-		
+
 		<?php if ( bp_get_the_profile_field_description() ) : ?>
 			<p class="description" id="<?php bp_the_profile_field_input_name(); ?>-3"><?php bp_the_profile_field_description(); ?></p>
 		<?php endif; ?>
@@ -103,7 +103,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?> aria-labelledby="<?php bp_the_profile_field_input_name(); ?>-1" aria-describedby="<?php bp_the_profile_field_input_name(); ?>-3">
 
 		<span class="input_mask_details" data-field_id="<?php echo esc_attr( bp_get_the_profile_field_input_name() ); ?>" data-val="<?php echo esc_attr( $mask ); ?>"></span>
-			
+
 		<?php
 
 	}
@@ -127,10 +127,10 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 		?>
 
 		<label for="<?php bp_the_profile_field_input_name(); ?>" class="screen-reader-text">
-															 <?php
-																/* translators: accessibility text */
-																esc_html_e( 'Phone', 'buddyboss' );
-																?>
+			<?php
+				/* translators: accessibility text */
+				esc_html_e( 'Phone', 'buddyboss' );
+			?>
 		</label>
 		<input <?php echo $this->get_edit_field_html_elements( $r ); ?>>
 
@@ -156,7 +156,7 @@ class BP_XProfile_Field_Type_Telephone extends BP_XProfile_Field_Type {
 			return;
 		}
 
-		$class = $current_field->type != $type ? 'display: none;' : '';
+		$class = $current_field->type !== $type ? 'display: none;' : '';
 
 		$settings = $this->get_field_settings( $current_field );
 		?>

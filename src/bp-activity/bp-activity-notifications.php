@@ -33,8 +33,9 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 		case 'new_at_mention':
 			$action_filter = 'at_mentions';
 			$link          = bp_activity_get_permalink( $item_id );
-			$title         = sprintf( __( '@%s Mentions', 'buddyboss' ), bp_get_loggedin_user_username() );
-			$amount        = 'single';
+			/* translators: %s: Username */
+			$title  = sprintf( __( '@%s Mentions', 'buddyboss' ), bp_get_loggedin_user_username() );
+			$amount = 'single';
 
 			/**
 			 * Filters the mention notification permalink.
@@ -52,9 +53,11 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$link = apply_filters( 'bp_activity_new_at_mention_permalink', $link, $item_id, $secondary_item_id, $total_items );
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: 1: Total mentions for the user */
 				$text   = sprintf( __( 'You have %1$d new mentions', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
+				/* translators: 1: User full name */
 				$text = sprintf( __( '%1$s mentioned you', 'buddyboss' ), $user_fullname );
 			}
 			break;
@@ -65,11 +68,13 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$link   = add_query_arg( 'type', $action, $link );
+				$link = add_query_arg( 'type', $action, $link );
+				/* translators: 1: Total replies */
 				$text   = sprintf( __( 'You have %1$d new replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'rid', (int) $id, bp_activity_get_permalink( $activity_id ) );
+				/* translators: 1: User full name */
 				$text = sprintf( __( '%1$s commented on one of your updates', 'buddyboss' ), $user_fullname );
 			}
 			break;
@@ -80,17 +85,19 @@ function bp_activity_format_notifications( $action, $item_id, $secondary_item_id
 			$amount = 'single';
 
 			if ( (int) $total_items > 1 ) {
-				$link   = add_query_arg( 'type', $action, $link );
+				$link = add_query_arg( 'type', $action, $link );
+				/* translators: 1: Total comments */
 				$text   = sprintf( __( 'You have %1$d new comment replies', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 			} else {
 				$link = add_query_arg( 'crid', (int) $id, bp_activity_get_permalink( $activity_id ) );
+				/* translators: 1: User full name */
 				$text = sprintf( __( '%1$s replied to one of your activity comments', 'buddyboss' ), $user_fullname );
 			}
 			break;
 	}
 
-	if ( 'string' == $format ) {
+	if ( 'string' === $format ) {
 
 		/**
 		 * Filters the activity notification for the string format.
@@ -244,7 +251,7 @@ add_action( 'bp_activity_sent_reply_to_reply_notification', 'bp_activity_comment
  */
 function bp_activity_remove_screen_notifications( $user_id = 0 ) {
 	// Only mark read if the current user is looking at his own mentions.
-	if ( empty( $user_id ) || (int) $user_id !== (int) bp_loggedin_user_id() ) {
+	if ( empty( $user_id ) || (int) bp_loggedin_user_id() !== (int) $user_id ) {
 		return;
 	}
 
@@ -402,12 +409,14 @@ add_action( 'bp_blogs_comment_sync_activity_comment', 'bp_activity_add_notificat
  */
 function bp_activity_screen_notification_settings() {
 	if ( bp_activity_do_mentions() ) {
-		if ( ! $mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true ) ) {
+		$mention = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_mention', true );
+		if ( ! $mention ) {
 			$mention = 'yes';
 		}
 	}
 
-	if ( ! $reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true ) ) {
+	$reply = bp_get_user_meta( bp_displayed_user_id(), 'notification_activity_new_reply', true );
+	if ( ! $reply ) {
 		$reply = 'yes';
 	}
 
@@ -428,6 +437,7 @@ function bp_activity_screen_notification_settings() {
 				<?php $current_user = wp_get_current_user(); ?>
 				<tr id="activity-notification-settings-mentions">
 					<td>&nbsp;</td>
+					<?php /* translators: %s: User mention name */ ?>
 					<td><?php printf( __( 'A member mentions you in an update using "@%s"', 'buddyboss' ), bp_activity_get_user_mentionname( $current_user->ID ) ); ?></td>
 					<td class="yes">
 						<div class="bp-radio-wrap">

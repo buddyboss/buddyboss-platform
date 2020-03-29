@@ -30,6 +30,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 		if ( $group->name !== $old_group->name ) {
 			$changed[] = sprintf(
+				/* translators: * Name changed from "[Old Group Name]" to "[New Group Name]". */
 				__( '* Name changed from "%1$s" to "%2$s".', 'buddyboss' ),
 				esc_html( $old_group->name ),
 				esc_html( $group->name )
@@ -38,6 +39,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 		if ( $group->description !== $old_group->description ) {
 			$changed[] = sprintf(
+				/* translators: * Description changed from "[Old Group Description]" to "[New Group Description]". */
 				__( '* Description changed from "%1$s" to "%2$s".', 'buddyboss' ),
 				esc_html( $old_group->description ),
 				esc_html( $group->description )
@@ -46,6 +48,7 @@ function groups_notification_group_updated( $group_id = 0, $old_group = null ) {
 
 		if ( $group->slug !== $old_group->slug ) {
 			$changed[] = sprintf(
+				/* translators: * Permalink changed from "[Old Group link]" to "[New Group link]". */
 				__( '* Permalink changed from "%1$s" to "%2$s".', 'buddyboss' ),
 				esc_url( bp_get_group_permalink( $old_group ) ),
 				esc_url( bp_get_group_permalink( $group ) )
@@ -380,11 +383,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			// because different values are passed to the filters,
 			// we'll return values inline.
 			if ( (int) $total_items > 1 ) {
+				/* translators: [Total requests] new membership requests for the group "[Group name]" */
 				$text              = sprintf( __( '%1$d new membership requests for the group "%2$s"', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 
 					/**
 					 * Filters groups multiple new membership request notification for string format.
@@ -433,11 +437,13 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
-				$user_fullname     = bp_core_get_user_displayname( $requesting_user_id );
+				$user_fullname = bp_core_get_user_displayname( $requesting_user_id );
+
+				/* translators: [User full name] requests group membership */
 				$text              = sprintf( __( '%s requests group membership', 'buddyboss' ), $user_fullname );
 				$notification_link = $group_link . 'admin/membership-requests/?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 
 					/**
 					 * Filters groups single new membership request notification for string format.
@@ -497,11 +503,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: [Total Group requests] accepted group membership requests */
 				$text              = sprintf( __( '%d accepted group membership requests', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 
 					/**
 					 * Filters multiple accepted group membership requests notification for string format.
@@ -543,11 +550,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: Membership for group "[Group name]" accepted */
 				$text              = sprintf( __( 'Membership for group "%s" accepted', 'buddyboss' ), $group->name );
 				$filter            = 'bp_groups_single_membership_request_accepted_notification';
 				$notification_link = $group_link . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 
 					/**
 					 * Filters single accepted group membership request notification for string format.
@@ -600,11 +608,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: [Total group requests] rejected group membership requests */
 				$text              = sprintf( __( '%d rejected group membership requests', 'buddyboss' ), (int) $total_items, $group->name );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 
 					/**
 					 * Filters multiple rejected group membership requests notification for string format.
@@ -646,10 +655,11 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: Membership for group "[Group name]" rejected */
 				$text              = sprintf( __( 'Membership for group "%s" rejected', 'buddyboss' ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 
 					/**
 					 * Filters single rejected group membership requests notification for string format.
@@ -702,11 +712,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: You were promoted to the role of [Group role] in [Total groups count] groups */
 				$text              = sprintf( __( 'You were promoted to the role of %1$s in %2$d groups', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), (int) $total_items );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 					/**
 					 * Filters multiple promoted to group admin notification for string format.
 					 * Complete filter - bp_groups_multiple_member_promoted_to_admin_notification.
@@ -743,10 +754,11 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: You were promoted to the role of [Group role] in the group "[Group name]" */
 				$text              = sprintf( __( 'You were promoted to the role of %1$s in the group "%2$s"', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'organizer_singular_label_name' ) ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 					/**
 					 * Filters single promoted to group admin notification for non-string format.
 					 * Complete filter - bp_groups_single_member_promoted_to_admin_notification.
@@ -797,11 +809,12 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$amount     = 'single';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: You were promoted to a [Group role] in [Total groups count] groups */
 				$text              = sprintf( __( 'You were promoted to a %1$s in %2$d groups', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), (int) $total_items );
 				$amount            = 'multiple';
 				$notification_link = trailingslashit( bp_loggedin_user_domain() . bp_get_groups_slug() ) . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 					/**
 					 * Filters multiple promoted to group mod notification for string format.
 					 * Complete filter - bp_groups_multiple_member_promoted_to_mod_notification.
@@ -838,10 +851,11 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: You were promoted to a [Group role] in the group "[Group name]" */
 				$text              = sprintf( __( 'You were promoted to a %1$s in the group "%2$s"', 'buddyboss' ), strtolower( get_group_role_label( $group_id, 'moderator_singular_label_name' ) ), $group->name );
 				$notification_link = $group_link . '?n=1';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 					/**
 					 * Filters single promoted to group mod notification for string format.
 					 * Complete filter - bp_groups_single_member_promoted_to_mod_notification.
@@ -893,10 +907,11 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 			$notification_link = bp_loggedin_user_domain() . bp_get_groups_slug() . '/invites/?n=1';
 
 			if ( (int) $total_items > 1 ) {
+				/* translators: You have [Total invitation count] new group invitations */
 				$text   = sprintf( __( 'You have %d new group invitations', 'buddyboss' ), (int) $total_items );
 				$amount = 'multiple';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 					/**
 					 * Filters multiple group invitation notification for string format.
 					 * Complete filter - bp_groups_multiple_group_invite_notification.
@@ -933,10 +948,11 @@ function groups_format_notifications( $action, $item_id, $secondary_item_id, $to
 					);
 				}
 			} else {
+				/* translators: You have an invitation to the group: [Group name] */
 				$text   = sprintf( __( 'You have an invitation to the group: %s', 'buddyboss' ), $group->name );
 				$filter = 'bp_groups_single_group_invite_notification';
 
-				if ( 'string' == $format ) {
+				if ( 'string' === $format ) {
 					/**
 					 * Filters single group invitation notification for string format.
 					 * Complete filter - bp_groups_single_group_invite_notification.
@@ -1150,23 +1166,28 @@ add_action( 'groups_remove_data_for_user', 'bp_groups_remove_data_for_user_notif
  */
 function groups_screen_notification_settings() {
 
-	if ( ! $group_invite = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_invite', true ) ) {
+	$group_invite = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_invite', true );
+	if ( ! $group_invite ) {
 		$group_invite = 'yes';
 	}
 
-	if ( ! $group_update = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_group_updated', true ) ) {
+	$group_update = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_group_updated', true );
+	if ( ! $group_update ) {
 		$group_update = 'yes';
 	}
 
-	if ( ! $group_promo = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_admin_promotion', true ) ) {
+	$group_promo = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_admin_promotion', true );
+	if ( ! $group_promo ) {
 		$group_promo = 'yes';
 	}
 
-	if ( ! $group_request = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_membership_request', true ) ) {
+	$group_request = bp_get_user_meta( bp_displayed_user_id(), 'notification_groups_membership_request', true );
+	if ( ! $group_request ) {
 		$group_request = 'yes';
 	}
 
-	if ( ! $group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true ) ) {
+	$group_request_completed = bp_get_user_meta( bp_displayed_user_id(), 'notification_membership_request_completed', true );
+	if ( ! $group_request_completed ) {
 		$group_request_completed = 'yes';
 	}
 	?>

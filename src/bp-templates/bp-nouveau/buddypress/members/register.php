@@ -43,40 +43,50 @@
 					<div class="register-section extended-profile" id="profile-details-section">
 
 						<?php /* Use the profile field loop to render input fields for the 'base' profile field group */ ?>
-						<?php while ( bp_profile_groups() ) : bp_the_profile_group(); ?>
+						<?php
+						while ( bp_profile_groups() ) :
+							bp_the_profile_group();
+							?>
 
-							<?php while ( bp_profile_fields() ) : bp_the_profile_field();
+							<?php
+							while ( bp_profile_fields() ) :
+								bp_the_profile_field();
 
 								// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 								$current_value = bp_get_option( 'bp-display-name-format' );
 
 								// If First Name selected then do not add last name field.
 								if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
-									if ( function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {
+									if ( function_exists( 'bp_hide_last_name' ) && false === bp_hide_last_name() ) {
 										continue;
 									}
 									// If Nick Name selected then do not add first & last name field.
 								} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
-									if ( function_exists( 'bp_hide_nickname_last_name') && false === bp_hide_nickname_last_name() ) {
+									if ( function_exists( 'bp_hide_nickname_last_name' ) && false === bp_hide_nickname_last_name() ) {
 										continue;
 									}
 								} elseif ( 'nickname' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_firstname_field_id() ) {
-									if ( function_exists( 'bp_hide_nickname_first_name') && false === bp_hide_nickname_first_name() ) {
+									if ( function_exists( 'bp_hide_nickname_first_name' ) && false === bp_hide_nickname_first_name() ) {
 										continue;
 									}
 								}
 
-							?>
+								?>
 
 								<?php
-								if ( function_exists('bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
-									if ( function_exists( 'bp_get_xprofile_member_type_field_id') && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
+								if ( function_exists( 'bp_member_type_enable_disable' ) && false === bp_member_type_enable_disable() ) {
+									if ( function_exists( 'bp_get_xprofile_member_type_field_id' ) && bp_get_the_profile_field_id() === bp_get_xprofile_member_type_field_id() ) {
 										continue;
 									}
 								}
 								?>
 
-								<div<?php bp_field_css_class( 'editfield' ); bp_field_data_attribute(); ?>>
+								<div
+								<?php
+								bp_field_css_class( 'editfield' );
+								bp_field_data_attribute();
+								?>
+								>
 									<fieldset>
 
 									<?php
@@ -117,7 +127,11 @@
 							<label for="signup_with_blog"><?php esc_html_e( "Yes, I'd like to create a new site", 'buddyboss' ); ?></label>
 						</p>
 
-						<div id="blog-details"<?php if ( (int) bp_get_signup_with_blog_value() ) : ?>class="show"<?php endif; ?>>
+						<div id="blog-details"
+						<?php
+						if ( (int) bp_get_signup_with_blog_value() ) :
+							?>
+							class="show"<?php endif; ?>>
 
 							<?php bp_nouveau_signup_form( 'blog_details' ); ?>
 
@@ -131,7 +145,7 @@
 
 				</div><!-- //.layout-wrap -->
 
-                <?php bp_nouveau_signup_terms_privacy(); ?>
+				<?php bp_nouveau_signup_terms_privacy(); ?>
 
 				<?php bp_nouveau_submit_button( 'register' ); ?>
 

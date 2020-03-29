@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
+if ( ! class_exists( 'Bp_Search_BBPress_Replies' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbpress forums replies class
 	 */
-	class Bp_Search_bbPress_Replies extends Bp_Search_bbPress {
+	class Bp_Search_BBPress_Replies extends Bp_Search_BBPress {
 		public $type = 'reply';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
@@ -80,7 +80,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 			$query = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'Bp_Search_Forums_sql',
+				'bp_search_forums_sql',
 				$query,
 				array(
 					'search_term'         => $search_term,
@@ -103,7 +103,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Replies' ) ) :
 
 			// Only run these methods if they haven't been run previously
 			if ( null === $instance ) {
-				$instance = new Bp_Search_bbPress_Replies();
+				$instance = new Bp_Search_BBPress_Replies();
 			}
 
 			// Always return the instance

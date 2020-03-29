@@ -98,7 +98,7 @@ function bp_search_label_search_type_cpts( $search_type_label ) {
 	}
 
 	$pos = strpos( $search_type_label, 'cpt-' );
-	if ( $pos === 0 ) {
+	if ( 0 === $pos ) {
 		$cpt_name = str_replace( 'cpt-', '', $search_type_label );
 
 		$cpt_obj = get_post_type_object( $cpt_name );
@@ -108,7 +108,7 @@ function bp_search_label_search_type_cpts( $search_type_label ) {
 	}
 
 	$pos = strpos( $search_type_label, 'Cpt-' );
-	if ( $pos === 0 ) {
+	if ( 0 === $pos ) {
 		$cpt_name = str_replace( 'Cpt-', '', $search_type_label );
 
 		$cpt_obj = get_post_type_object( $cpt_name );

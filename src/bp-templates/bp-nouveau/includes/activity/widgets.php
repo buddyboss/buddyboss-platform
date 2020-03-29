@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * BP Nouveau Activity widgets
  *
@@ -30,7 +30,8 @@ class BP_Latest_Activities extends WP_Widget {
 		 * @param array $value Array of widget options.
 		 */
 		$widget_ops = apply_filters(
-			'bp_latest_activities', array(
+			'bp_latest_activities',
+			array(
 				'classname'                   => 'bp-latest-activities buddypress',
 				'description'                 => __( 'Select to display the latest activity updates, by type, posted within your community.', 'buddyboss' ),
 				'customize_selective_refresh' => true,
@@ -165,11 +166,14 @@ class BP_Latest_Activities extends WP_Widget {
 	 * @return string HTML output.
 	 */
 	public function form( $instance ) {
-		$instance = wp_parse_args( (array) $instance, array(
-			'title' => __( 'Latest updates', 'buddyboss' ),
-			'max'   => 5,
-			'type'  => '',
-		) );
+		$instance = wp_parse_args(
+			(array) $instance,
+			array(
+				'title' => __( 'Latest updates', 'buddyboss' ),
+				'max'   => 5,
+				'type'  => '',
+			)
+		);
 
 		$title = esc_attr( $instance['title'] );
 		$max   = (int) $instance['max'];

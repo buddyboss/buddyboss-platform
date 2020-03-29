@@ -34,7 +34,7 @@ abstract class BP_Export {
 		// Global Filter.
 		$this->items_per_batch = apply_filters( 'buddyboss_bp_gdpr_item_per_batch', $this->items_per_batch );
 		// Specific Filter.
-		$this->items_per_batch = apply_filters( 'buddyboss_bp_gdpr_item_per_batch_{$name}', $this->items_per_batch );
+		$this->items_per_batch = apply_filters( 'buddyboss_bp_gdpr_item_per_batch_' . $name, $this->items_per_batch );
 
 		$this->hooks();
 

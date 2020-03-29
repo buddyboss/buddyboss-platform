@@ -23,7 +23,7 @@
 				<button type="button" id="activity-url-prevPicButton"><span class="dashicons dashicons-arrow-left-alt2"></span></button>
 				<button type="button" id="activity-url-nextPicButton"><span class="dashicons dashicons-arrow-right-alt2"></span></button>
 				<div id="activity-url-scrapper-img-count">
-					<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ) ?>&nbsp;<# print(data.link_images.length) #>
+					<?php esc_html_e( 'Image', 'buddyboss' ) ?> <# print(data.link_image_index + 1) #>&nbsp;<?php esc_html_e( 'of', 'buddyboss' ); ?>&nbsp;<# print(data.link_images.length) #>
 				</div>
 			</div>
 			<# } #>

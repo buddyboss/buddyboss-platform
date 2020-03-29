@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 defined( 'ABSPATH' ) || exit;
 
 $settings = bp_email_get_appearance_settings();
-$width = wp_is_mobile() ? '100%' : '600px';
+$width    = wp_is_mobile() ? '100%' : '600px';
 
 ?><!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:v="urn:schemas-microsoft-com:vml" xmlns:o="urn:schemas-microsoft-com:office:office">
@@ -62,7 +62,7 @@ $width = wp_is_mobile() ? '100%' : '600px';
 		body {
 			margin: 0 !important;
 			padding: 0 !important;
-			<?php echo wp_is_mobile() ? "width:{$width} !important" : ""; ?>;
+			<?php echo wp_is_mobile() ? "width:{$width} !important" : ''; ?>;
 		}
 
 		/* What it does: Stops email clients resizing small text. */
@@ -224,12 +224,12 @@ $width = wp_is_mobile() ? '100%' : '600px';
 			.center-in-mobile {
 				float: none !important;
 				text-align: center !important;
-    			max-width: 600px !important;
+				max-width: 600px !important;
 			}
 		}
 	</style>
 </head>
-	
+
 <body class="email_bg" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="mso-line-height-rule: exactly;">
 	<table cellpadding="0" cellspacing="0" border="0" bgcolor="<?php echo esc_attr( $settings['email_bg'] ); ?>" style="border-collapse:collapse; display: block;" class="email_bg">
 		<tbody style="display: block;">
@@ -257,13 +257,13 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											 */
 											do_action( 'bp_before_email_header' );
 
-											$blogname = bp_get_option( 'blogname' );
-											$attachment_id = isset( $settings[ 'logo' ] ) ? $settings[ 'logo' ] : '';
+											$blogname      = bp_get_option( 'blogname' );
+											$attachment_id = isset( $settings['logo'] ) ? $settings['logo'] : '';
 
-											if ( !empty( $attachment_id ) ) {
+											if ( ! empty( $attachment_id ) ) {
 												$image_src = wp_get_attachment_image_src( $attachment_id, array( 180, 41 ) );
-												if ( !empty( $image_src ) ) {
-													echo apply_filters( 'bp_email_header_blog_image',"<img src='" . esc_attr( $image_src[ 0 ] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>" );
+												if ( ! empty( $image_src ) ) {
+													echo apply_filters( 'bp_email_header_blog_image', "<img src='" . esc_attr( $image_src[0] ) . "' alt='" . esc_attr( $blogname ) . "' style='margin:0; padding:0; border:none; display:block; max-height: auto; width: auto;' border='0'>" );
 												} else {
 													echo apply_filters( 'bp_email_header_blog_name_with_no_image', $blogname );
 												}
@@ -289,10 +289,12 @@ $width = wp_is_mobile() ? '100%' : '600px';
 											do_action( 'bp_before_email_recipient' );
 
 											if ( ! empty( $email_user->ID ) ) {
-												echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar( array(
+												echo $email_user->display_name . ' <img src="' . bp_core_fetch_avatar(
+													array(
 														'item_id' => $email_user->ID,
-														'html'    => false
-													) ) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
+														'html' => false,
+													)
+												) . '" " width="34" height="34" style="border: 1px solid #b9babc; border-radius: 50%; margin-left: 12px; vertical-align: middle;" />';
 											}
 
 											/**

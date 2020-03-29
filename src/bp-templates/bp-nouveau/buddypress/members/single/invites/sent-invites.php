@@ -3,7 +3,7 @@ bp_nouveau_member_hook( 'before', 'invites_sent_template' );
 ?>
 
 <?php
-$email = trim ( filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
+$email = trim( filter_input( INPUT_GET, 'email', FILTER_SANITIZE_STRING ) );
 if ( isset( $email ) && '' !== $email ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice success">
@@ -11,14 +11,14 @@ if ( isset( $email ) && '' !== $email ) {
 		<p>
 			<?php
 				$text = __( 'Invitations were sent successfully to the following email addresses:', 'buddyboss' );
-				echo trim ($text.' '. $email );
+				echo trim( $text . ' ' . $email );
 			?>
 		</p>
 	</aside>
 	<?php
 }
 
-$failed = trim ( filter_input( INPUT_GET, 'failed', FILTER_SANITIZE_STRING ) );
+$failed = trim( filter_input( INPUT_GET, 'failed', FILTER_SANITIZE_STRING ) );
 if ( isset( $failed ) && '' !== $failed ) {
 	?>
 	<aside class="bp-feedback bp-send-invites bp-template-notice error">
@@ -26,7 +26,7 @@ if ( isset( $failed ) && '' !== $failed ) {
 		<p>
 			<?php
 			$text = __( 'Invitations did not send because these email addresses are invalid:', 'buddyboss' );
-			echo trim ($text.' '. $failed );
+			echo trim( $text . ' ' . $failed );
 			?>
 		</p>
 
@@ -34,19 +34,19 @@ if ( isset( $failed ) && '' !== $failed ) {
 	<?php
 }
 
-$exists = trim ( filter_input( INPUT_GET, 'exists', FILTER_SANITIZE_STRING ) );
+$exists = trim( filter_input( INPUT_GET, 'exists', FILTER_SANITIZE_STRING ) );
 if ( isset( $exists ) && '' !== $exists ) {
 	?>
-    <aside class="bp-feedback bp-send-invites bp-template-notice error">
-        <span class="bp-icon" aria-hidden="true"></span>
-        <p>
+	<aside class="bp-feedback bp-send-invites bp-template-notice error">
+		<span class="bp-icon" aria-hidden="true"></span>
+		<p>
 			<?php
 			$text = __( 'Invitations did not send to the following email addresses, because they are already members:', 'buddyboss' );
-			echo trim ($text.' '. $exists );
+			echo trim( $text . ' ' . $exists );
 			?>
-        </p>
+		</p>
 
-    </aside>
+	</aside>
 	<?php
 }
 ?>
@@ -72,19 +72,20 @@ if ( isset( $exists ) && '' !== $exists ) {
 	<tbody>
 
 	<?php
-	$paged = (get_query_var('paged')) ? get_query_var('paged') : 1;
+	$paged                         = ( get_query_var( 'paged' ) ) ? get_query_var( 'paged' ) : 1;
 	$sent_invites_pagination_count = apply_filters( 'sent_invites_pagination_count', 25 );
-	$args = array(
+	$args                          = array(
 		'posts_per_page' => $sent_invites_pagination_count,
 		'post_type'      => bp_get_invite_post_type(),
 		'author'         => bp_loggedin_user_id(),
 		'paged'          => $paged,
 	);
-	$the_query = new WP_Query( $args );
+	$the_query                     = new WP_Query( $args );
 
-	if($the_query->have_posts()) {
+	if ( $the_query->have_posts() ) {
 
-		while ( $the_query->have_posts() ) : $the_query->the_post();
+		while ( $the_query->have_posts() ) :
+			$the_query->the_post();
 			?>
 			<tr>
 				<td class="field-name">
@@ -96,7 +97,7 @@ if ( isset( $exists ) && '' !== $exists ) {
 				<td class="field-email">
 					<span>
 						<?php
-						$date = get_the_date( '',get_the_ID() );
+						$date = get_the_date( '', get_the_ID() );
 						echo $date;
 						?>
 					</span>
@@ -164,18 +165,20 @@ if ( isset( $exists ) && '' !== $exists ) {
 
 	$total_pages = $the_query->max_num_pages;
 
-	if ( $total_pages > 1 ){
+	if ( $total_pages > 1 ) {
 
-		$current_page = max(1, get_query_var('paged'));
+		$current_page = max( 1, get_query_var( 'paged' ) );
 
-		echo paginate_links(array(
-			'base' => get_pagenum_link(1) . '%_%',
-			'format' => '?paged=%#%',
-			'current' => $current_page,
-			'total' => $total_pages,
-			'prev_text'    => __('« Prev', 'buddyboss'),
-			'next_text'    => __('Next »', 'buddyboss'),
-		));
+		echo paginate_links(
+			array(
+				'base'      => get_pagenum_link( 1 ) . '%_%',
+				'format'    => '?paged=%#%',
+				'current'   => $current_page,
+				'total'     => $total_pages,
+				'prev_text' => __( '« Prev', 'buddyboss' ),
+				'next_text' => __( 'Next »', 'buddyboss' ),
+			)
+		);
 	}
 
 	wp_reset_postdata();

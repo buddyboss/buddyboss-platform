@@ -23,7 +23,7 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 		<?php
 		while ( bp_profile_groups() ) :
 			bp_the_profile_group();
-		?>
+			?>
 
 			<?php if ( bp_profile_fields() ) : ?>
 
@@ -40,10 +40,10 @@ bp_nouveau_member_hook( 'before', 'settings_template' ); ?>
 						<?php
 						while ( bp_profile_fields() ) :
 							bp_the_profile_field();
-							
+
 							// Get the current display settings from BuddyBoss > Settings > Profiles > Display Name Format.
 							$current_value = bp_get_option( 'bp-display-name-format' );
-							
+
 							// If First Name selected then do not add last name field.
 							if ( 'first_name' === $current_value && bp_get_the_profile_field_id() === bp_xprofile_lastname_field_id() ) {
 								if ( function_exists( 'bp_hide_last_name') && false === bp_hide_last_name() ) {

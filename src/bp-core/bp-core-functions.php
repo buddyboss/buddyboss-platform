@@ -515,7 +515,7 @@ function bp_core_get_directory_page_ids( $status = 'active' ) {
 		}
 
 		// Trashed pages should never appear in results.
-		if ( 'trash' == get_post_status( $page_id ) ) {
+		if ( 'trash' === get_post_status( $page_id ) ) {
 			unset( $page_ids[ $component_name ] );
 		}
 
@@ -611,7 +611,7 @@ function bp_core_get_directory_pages() {
 
 			foreach ( (array) $page_ids as $component_id => $page_id ) {
 				foreach ( (array) $page_names as $page_name ) {
-					if ( $page_name->ID == $page_id ) {
+					if ( (int) $page_name->ID === (int) $page_id ) {
 						if ( ! isset( $pages->{$component_id} ) || ! is_object( $pages->{$component_id} ) ) {
 							$pages->{$component_id} = new stdClass();
 						}
@@ -622,7 +622,7 @@ function bp_core_get_directory_pages() {
 						$slug[]                        = $page_name->post_name;
 
 						// Get the slug.
-						while ( $page_name->post_parent != 0 ) {
+						while ( $page_name->post_parent != 0 ) { // phpcs:ignore WordPress.PHP.YodaConditions, WordPress.PHP.StrictComparisons
 							$parent                 = $wpdb->get_results( $wpdb->prepare( "SELECT post_name, post_parent FROM {$posts_table_name} WHERE ID = %d", $page_name->post_parent ) );
 							$slug[]                 = $parent[0]->post_name;
 							$page_name->post_parent = $parent[0]->post_parent;
@@ -887,7 +887,7 @@ function bp_core_add_root_component( $slug ) {
 
 	// Check if the slug is registered in the $bp->pages global.
 	foreach ( (array) $bp->pages as $key => $page ) {
-		if ( $key == $slug || $page->slug == $slug ) {
+		if ( $key === $slug || $page->slug === $slug ) {
 			$match = true;
 		}
 	}
@@ -1242,7 +1242,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 
 			// Finding the biggest chunk (if the chunk fits, break).
 			$count = floor( $since / $seconds );
-			if ( 0 != $count ) {
+			if ( 0 !== $count ) {
 				break;
 			}
 		}
@@ -1288,7 +1288,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 				$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
 
 				// Add to output var.
-				if ( 0 != $count2 ) {
+				if ( 0 !== $count2 ) {
 					$output .= _x( ',', 'Separator in time since', 'buddyboss' ) . ' ';
 
 					switch ( $seconds2 ) {
@@ -1321,7 +1321,7 @@ function bp_core_time_since( $older_date, $newer_date = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'.
-	if ( $output != $right_now_text ) {
+	if ( $output !== $right_now_text ) {
 		$output = sprintf( $ago_text, $output );
 	}
 
@@ -1358,7 +1358,7 @@ function bp_core_iso8601_date( $timestamp = '' ) {
 	 */
 function bp_core_get_iso8601_date( $timestamp = '' ) {
 	if ( ! $timestamp ) {
-			return '';
+		return '';
 	}
 
 	try {
@@ -1366,10 +1366,10 @@ function bp_core_get_iso8601_date( $timestamp = '' ) {
 
 		// Not a valid date, so return blank string.
 	} catch ( Exception $e ) {
-			 return '';
+		return '';
 	}
 
-		 return $date->format( DateTime::ISO8601 );
+	return $date->format( DateTime::ISO8601 );
 }
 
 /**
@@ -1447,8 +1447,8 @@ function bp_core_add_message( $message, $type = '' ) {
 	}
 
 	// Send the values to the cookie for page reload display.
-	@setcookie( 'bp-message', $message, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
-	@setcookie( 'bp-message-type', $type, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+	@setcookie( 'bp-message', $message, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+	@setcookie( 'bp-message-type', $type, time() + 60 * 60 * 24, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 	// Get BuddyPress.
 	$bp = buddypress();
@@ -1489,11 +1489,11 @@ function bp_core_setup_message() {
 	add_action( 'template_notices', 'bp_core_render_message' );
 
 	if ( isset( $_COOKIE['bp-message'] ) ) {
-		@setcookie( 'bp-message', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+		@setcookie( 'bp-message', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 	}
 
 	if ( isset( $_COOKIE['bp-message-type'] ) ) {
-		@setcookie( 'bp-message-type', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() );
+		@setcookie( 'bp-message-type', false, time() - 1000, COOKIEPATH, COOKIE_DOMAIN, is_ssl() ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 	}
 }
 add_action( 'bp_actions', 'bp_core_setup_message', 5 );
@@ -2392,7 +2392,7 @@ function bp_core_action_search_site( $slug = '' ) {
 				$var  = '/?s=';
 
 				// If posts aren't displayed on the front page, find the post page's slug.
-				if ( 'page' == get_option( 'show_on_front' ) ) {
+				if ( 'page' === get_option( 'show_on_front' ) ) {
 					$page = get_post( get_option( 'page_for_posts' ) );
 
 					if ( ! is_wp_error( $page ) && ! empty( $page->post_name ) ) {
@@ -2416,7 +2416,7 @@ function bp_core_action_search_site( $slug = '' ) {
 				break;
 		}
 
-		if ( empty( $slug ) && 'posts' != $search_which ) {
+		if ( empty( $slug ) && 'posts' !== $search_which ) {
 			bp_core_redirect( bp_get_root_domain() );
 			return;
 		}
@@ -2866,7 +2866,7 @@ function bp_core_get_suggestions( $args ) {
 	}
 
 	// Members @name suggestions.
-	if ( $args['type'] === 'members' ) {
+	if ( 'members' === $args['type'] ) {
 		$class = 'BP_Members_Suggestions';
 
 		// Members @name suggestions for users in a specific Group.
@@ -3899,7 +3899,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'invites-member-invite'              => $invites_member_invite,
 	);
 
-	if ( $field !== 'all' ) {
+	if ( 'all' !== $field ) {
 		return wp_list_pluck( $types, $field );
 	} else {
 		return $types;

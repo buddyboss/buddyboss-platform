@@ -63,7 +63,8 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 		}
 
 		// logged-in user isn't follower anyone, so stop!
-		if ( ! $follower = bp_get_follower_ids( array( 'user_id' => $id ) ) ) {
+		$follower = bp_get_follower_ids( array( 'user_id' => $id ) );
+		if ( ! $follower ) {
 			return false;
 		}
 
@@ -121,7 +122,7 @@ class BP_Core_Follow_Follower_Widget extends WP_Widget {
 					bp_the_member();
 					?>
 					<div class="item-avatar">
-						<a href="<?php bp_member_permalink() ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo bp_core_get_user_displayname( bp_get_member_user_id() ); ?>"><?php bp_member_avatar() ?></a>
+						<a href="<?php bp_member_permalink(); ?>" class="bp-tooltip" data-bp-tooltip-pos="up" data-bp-tooltip="<?php echo bp_core_get_user_displayname( bp_get_member_user_id() ); ?>"><?php bp_member_avatar(); ?></a>
 					</div>
 				<?php endwhile; ?>
 			</div>

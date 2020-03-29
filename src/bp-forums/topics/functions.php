@@ -133,10 +133,13 @@ function bbp_new_topic_handler( $action = '' ) {
 	}
 
 	// Define local variable(s)
-	$view_all    = false;
-	$forum_id    = $topic_author = $anonymous_data = 0;
-	$topic_title = $topic_content = '';
-	$terms       = array( bbp_get_topic_tag_tax_id() => array() );
+	$view_all       = false;
+	$forum_id       = 0;
+	$topic_author   = 0;
+	$anonymous_data = 0;
+	$topic_title    = '';
+	$topic_content  = '';
+	$terms          = array( bbp_get_topic_tag_tax_id() => array() );
 
 	/** Topic Author */
 
@@ -365,7 +368,7 @@ function bbp_new_topic_handler( $action = '' ) {
 
 		// If the forum is trash, or the topic_status is switched to
 		// trash, trash it properly
-		if ( ( get_post_field( 'post_status', $forum_id ) === bbp_get_trash_status_id() ) || ( $topic_data['post_status'] === bbp_get_trash_status_id() ) ) {
+		if ( ( bbp_get_trash_status_id() === get_post_field( 'post_status', $forum_id ) ) || ( bbp_get_trash_status_id() === $topic_data['post_status'] ) ) {
 
 			// Trash the reply
 			wp_trash_post( $topic_id );
@@ -377,7 +380,7 @@ function bbp_new_topic_handler( $action = '' ) {
 		/** Spam Check */
 
 		// If reply or topic are spam, officially spam this reply
-		if ( $topic_data['post_status'] === bbp_get_spam_status_id() ) {
+		if ( bbp_get_spam_status_id() === $topic_data['post_status'] ) {
 			add_post_meta( $topic_id, '_bbp_spam_meta_status', bbp_get_public_status_id() );
 
 			// Force view=all
@@ -504,8 +507,14 @@ function bbp_edit_topic_handler( $action = '' ) {
 
 	// Define local variable(s)
 	$revisions_removed = false;
-	$topic             = $topic_id = $topic_author = $forum_id = $anonymous_data = 0;
-	$topic_title       = $topic_content = $topic_edit_reason = '';
+	$topic             = 0;
+	$topic_id          = 0;
+	$topic_author      = 0;
+	$forum_id          = 0;
+	$anonymous_data    = 0;
+	$topic_title       = '';
+	$topic_content     = '';
+	$topic_edit_reason = '';
 
 	/** Topic */
 
@@ -1004,8 +1013,12 @@ function bbp_update_topic_walker( $topic_id, $last_active_time = '', $forum_id =
 
 	// If we want a full refresh, unset any of the possibly passed variables
 	if ( true === $refresh ) {
-		$forum_id     = $topic_id = $reply_id = $active_id = $last_active_time = 0;
-		$topic_status = bbp_get_public_status_id();
+		$forum_id         = 0;
+		$topic_id         = 0;
+		$reply_id         = 0;
+		$active_id        = 0;
+		$last_active_time = 0;
+		$topic_status     = bbp_get_public_status_id();
 	}
 
 	// Loop through ancestors
@@ -1198,9 +1211,13 @@ function bbp_merge_topic_handler( $action = '' ) {
 	}
 
 	// Define local variable(s)
-	$source_topic_id = $destination_topic_id = 0;
-	$source_topic    = $destination_topic = 0;
-	$subscribers     = $favoriters = $replies = array();
+	$source_topic_id      = 0;
+	$destination_topic_id = 0;
+	$source_topic         = 0;
+	$destination_topic    = 0;
+	$subscribers          = array();
+	$favoriters           = array();
+	$replies              = array();
 
 	/** Source Topic */
 
@@ -1217,7 +1234,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 		return;
 
 		// Source topic not found
-	} elseif ( ! $source_topic = bbp_get_topic( $source_topic_id ) ) {
+	} elseif ( ! $source_topic = bbp_get_topic( $source_topic_id ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 		bbp_add_error( 'bbp_merge_topic_source_not_found', __( '<strong>ERROR</strong>: The discussion you want to merge was not found.', 'buddyboss' ) );
 		return;
 	}
@@ -1238,7 +1255,7 @@ function bbp_merge_topic_handler( $action = '' ) {
 	}
 
 	// Destination topic not found
-	if ( ! $destination_topic = bbp_get_topic( $destination_topic_id ) ) {
+	if ( ! $destination_topic = bbp_get_topic( $destination_topic_id ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 		bbp_add_error( 'bbp_merge_topic_destination_not_found', __( '<strong>ERROR</strong>: The discussion you want to merge to was not found.', 'buddyboss' ) );
 	}
 
@@ -1501,9 +1518,12 @@ function bbp_split_topic_handler( $action = '' ) {
 	global $wpdb;
 
 	// Prevent debug notices
-	$from_reply_id           = $destination_topic_id = 0;
+	$from_reply_id           = 0;
+	$destination_topic_id    = 0;
 	$destination_topic_title = '';
-	$destination_topic       = $from_reply = $source_topic = '';
+	$destination_topic       = '';
+	$from_reply              = '';
+	$source_topic            = '';
 	$split_option            = false;
 
 	/** Split Reply */
@@ -1919,7 +1939,7 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 			}
 
 			// No tag name was provided
-			if ( empty( $_POST['tag-name'] ) || ! $name = $_POST['tag-name'] ) {
+			if ( empty( $_POST['tag-name'] ) || ! $name = $_POST['tag-name'] ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 				bbp_add_error( 'bbp_manage_topic_tag_update_name', __( '<strong>ERROR</strong>: You need to enter a tag name.', 'buddyboss' ) );
 				return;
 			}
@@ -1964,13 +1984,14 @@ function bbp_edit_topic_tag_handler( $action = '' ) {
 			}
 
 			// No tag name was provided
-			if ( empty( $_POST['tag-existing-name'] ) || ! $name = $_POST['tag-existing-name'] ) {
+			if ( empty( $_POST['tag-existing-name'] ) || ! $name = $_POST['tag-existing-name'] ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 				bbp_add_error( 'bbp_manage_topic_tag_merge_name', __( '<strong>ERROR</strong>: You need to enter a tag name.', 'buddyboss' ) );
 				return;
 			}
 
 			// If term does not exist, create it
-			if ( ! $tag = term_exists( $name, bbp_get_topic_tag_tax_id() ) ) {
+			$tag = term_exists( $name, bbp_get_topic_tag_tax_id() );
+			if ( ! $tag ) {
 				$tag = wp_insert_term( $name, bbp_get_topic_tag_tax_id() );
 			}
 
@@ -2558,7 +2579,7 @@ function bbp_update_topic_reply_count_hidden( $topic_id = 0, $reply_count = 0 ) 
 	// Get replies of topic
 	if ( empty( $reply_count ) ) {
 		$post_status = "'" . implode( "','", array( bbp_get_trash_status_id(), bbp_get_spam_status_id() ) ) . "'";
-		$reply_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $topic_id, bbp_get_reply_post_type() ) );
+		$reply_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $topic_id, bbp_get_reply_post_type() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 	}
 
 	update_post_meta( $topic_id, '_bbp_reply_count_hidden', (int) $reply_count );
@@ -2723,7 +2744,7 @@ function bbp_update_topic_voice_count( $topic_id = 0 ) {
 	}
 
 	// Query the DB to get members in this topic
-	$voices = $wpdb->get_col( $wpdb->prepare( "SELECT COUNT( DISTINCT post_author ) FROM {$wpdb->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' ) OR ( ID = %d AND post_type = '%s' );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) );
+	$voices = $wpdb->get_col( $wpdb->prepare( "SELECT COUNT( DISTINCT post_author ) FROM {$wpdb->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' ) OR ( ID = %d AND post_type = '%s' );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 
 	// If there's an error, make sure we have at least have 1 voice
 	$voices = ( empty( $voices ) || is_wp_error( $voices ) ) ? 1 : $voices[0];
@@ -2765,7 +2786,7 @@ function bbp_update_topic_anonymous_reply_count( $topic_id = 0 ) {
 		return;
 	}
 
-	$anonymous_replies = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( ID ) FROM {$wpdb->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' AND post_author = 0 ) OR ( ID = %d AND post_type = '%s' AND post_author = 0 );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) );
+	$anonymous_replies = (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT( ID ) FROM {$wpdb->posts} WHERE ( post_parent = %d AND post_status = '%s' AND post_type = '%s' AND post_author = 0 ) OR ( ID = %d AND post_type = '%s' AND post_author = 0 );", $topic_id, bbp_get_public_status_id(), bbp_get_reply_post_type(), $topic_id, bbp_get_topic_post_type() ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 
 	update_post_meta( $topic_id, '_bbp_anonymous_reply_count', (int) $anonymous_replies );
 

@@ -296,8 +296,8 @@ function bp_dd_delete_dummy_xprofile() {
  */
 function bp_dd_groups_join_group_date_fix( $args ) {
 	if (
-		$args['type'] === 'joined_group' &&
-		$args['component'] === 'groups'
+		'joined_group' === $args['type'] &&
+		'groups' === $args['component']
 	) {
 		$args['recorded_time'] = bp_dd_get_random_date( 25, 1 );
 	}
@@ -362,7 +362,7 @@ function bp_dd_get_random_groups_ids( $count = 1, $output = 'array' ) {
 	 */
 	$groups = array_map( 'intval', $groups );
 
-	if ( $output === 'string' ) {
+	if ( 'string' === $output ) {
 		return implode( ',', $groups );
 	}
 
@@ -402,7 +402,7 @@ function bp_dd_get_forums_enable_groups_ids( $count, $output = 'array' ) {
 	 */
 	$groups = array_map( 'intval', $groups );
 
-	if ( $output === 'string' ) {
+	if ( 'string' === $output ) {
 		return implode( ',', $groups );
 	}
 
@@ -444,7 +444,7 @@ function bp_dd_get_random_forums_ids( $count = 1, $output = 'array' ) {
 	 */
 	$forums = array_map( 'intval', $forums );
 
-	if ( $output === 'string' ) {
+	if ( 'string' === $output ) {
 		return implode( ',', $forums );
 	}
 
@@ -485,7 +485,7 @@ function bp_dd_get_random_topics_ids( $count = 1, $output = 'array' ) {
 	 */
 	$topics = array_map( 'intval', $topics );
 
-	if ( $output === 'string' ) {
+	if ( 'string' === $output ) {
 		return implode( ',', $topics );
 	}
 
@@ -533,7 +533,7 @@ function bp_dd_get_random_users_ids( $count = 1, $output = 'array' ) {
 	 */
 	$users = array_map( 'intval', $users );
 
-	if ( $output === 'string' ) {
+	if ( 'string' === $output ) {
 		return implode( ',', $users );
 	}
 
@@ -736,7 +736,7 @@ function bp_dd_import_users_profile() {
 
 	$data = array();
 
-	$xprofile_structure = require_once BP_DEFAULT_DATA_DIR . 'data/xprofile_structure.php';
+	$xprofile_structure = require_once BP_DEFAULT_DATA_DIR . 'data/xprofile-structure.php';
 
 	// Firstly, import profile groups.
 	foreach ( $xprofile_structure as $group_type => $group_data ) {
@@ -793,7 +793,7 @@ function bp_dd_import_users_profile() {
 		}
 	}
 
-	$xprofile_data = require_once BP_DEFAULT_DATA_DIR . 'data/xprofile_data.php';
+	$xprofile_data = require_once BP_DEFAULT_DATA_DIR . 'data/xprofile-data.php';
 	$users         = bp_dd_get_random_users_ids( 0 );
 
 	// Now import profile fields data for all fields for each user.
@@ -923,13 +923,14 @@ function bp_dd_import_users_activity() {
 		$user    = $users[ array_rand( $users ) ];
 		$content = $activity[ array_rand( $activity ) ];
 
-		if ( $bp_activity_id = bp_activity_post_update(
+		$bp_activity_id = bp_activity_post_update(
 			array(
 				'user_id' => $user,
 				'content' => $content,
 			)
-		)
-		) {
+		);
+
+		if ( $bp_activity_id ) {
 			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
 			$bp_activity->date_recorded = bp_dd_get_random_date( 44 );
 			if ( $bp_activity->save() ) {
@@ -1073,14 +1074,15 @@ function bp_dd_import_groups_activity() {
 			continue;
 		}
 
-		if ( $bp_activity_id = groups_post_update(
+		$bp_activity_id = groups_post_update(
 			array(
 				'user_id'  => $user_id,
 				'group_id' => $group_id,
 				'content'  => $content,
 			)
-		)
-		) {
+		);
+
+		if ( $bp_activity_id ) {
 			$bp_activity                = new BP_Activity_Activity( $bp_activity_id );
 			$bp_activity->date_recorded = bp_dd_get_random_date( 29 );
 			if ( $bp_activity->save() ) {
@@ -1260,7 +1262,7 @@ function bp_dd_import_forums_topics( $forums = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require BP_DEFAULT_DATA_DIR . 'data/forums_topics.php';
+	require BP_DEFAULT_DATA_DIR . 'data/forums-topics.php';
 	foreach ( $forums as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
 		foreach ( $topic as $topic_key ) {
@@ -1345,7 +1347,7 @@ function bp_dd_import_forums_topics_replies( $topics = false ) {
 
 	$users = bp_dd_get_random_users_ids( 0 );
 
-	require BP_DEFAULT_DATA_DIR . 'data/forums_replies.php';
+	require BP_DEFAULT_DATA_DIR . 'data/forums-replies.php';
 
 	foreach ( $topics as $topic_id ) {
 
@@ -1418,7 +1420,7 @@ function bp_dd_import_forums_in_groups() {
 		bp_update_option( 'bp_dd_imported_forum_ids', array_merge( $forum_ids, bp_get_option( 'bp_dd_imported_forum_ids', array() ) ) );
 	}
 
-	require BP_DEFAULT_DATA_DIR . 'data/forums_topics.php';
+	require BP_DEFAULT_DATA_DIR . 'data/forums-topics.php';
 
 	foreach ( $forum_ids as $forum_id ) {
 		$topic = (array) array_rand( $topics, absint( rand( 2, count( $topics ) ) ) );
@@ -1436,7 +1438,7 @@ function bp_dd_import_forums_in_groups() {
 
 	bp_update_option( 'bp_dd_imported_topic_ids', array_merge( $topics_ids, bp_get_option( 'bp_dd_imported_topic_ids', array() ) ) );
 
-	require BP_DEFAULT_DATA_DIR . 'data/forums_replies.php';
+	require BP_DEFAULT_DATA_DIR . 'data/forums-replies.php';
 
 	foreach ( $topics_ids as $topic_id ) {
 		$reply = (array) array_rand( $replies, absint( rand( 1, 7 ) ) );

@@ -65,7 +65,7 @@ function bp_media_clear_media_user_object_cache( $media ) {
 		wp_cache_delete( 'bp_total_media_for_user_' . $user_id, 'bp' );
 	}
 }
-add_action( 'bp_media_add',       'bp_media_clear_media_user_object_cache', 10 );
+add_action( 'bp_media_add', 'bp_media_clear_media_user_object_cache', 10 );
 
 /**
  * Clear a user's cached media count when delete.
@@ -85,7 +85,7 @@ function bp_media_clear_media_user_object_cache_on_delete( $medias ) {
 		}
 	}
 }
-add_action( 'bp_media_before_delete',    'bp_media_clear_media_user_object_cache_on_delete', 10 );
+add_action( 'bp_media_before_delete', 'bp_media_clear_media_user_object_cache_on_delete', 10 );
 
 /**
  * Clear a user's cached media count.
@@ -113,7 +113,7 @@ function bp_media_clear_media_group_object_cache( $media ) {
 		wp_cache_delete( 'bp_total_media_for_group_' . $group_id, 'bp' );
 	}
 }
-add_action( 'bp_media_add',       'bp_media_clear_media_group_object_cache', 10 );
+add_action( 'bp_media_add', 'bp_media_clear_media_group_object_cache', 10 );
 
 /**
  * Clear a group's cached media count when delete.
@@ -191,7 +191,7 @@ function bp_media_clear_album_group_object_cache( $album ) {
 		wp_cache_delete( 'bp_total_album_for_group_' . $group_id, 'bp' );
 	}
 }
-add_action( 'bp_album_add',       'bp_media_clear_album_group_object_cache', 10 );
+add_action( 'bp_album_add', 'bp_media_clear_album_group_object_cache', 10 );
 
 /**
  * Clear a group's cached album count when delete.

@@ -14,10 +14,10 @@ switch ( bp_current_action() ) :
 
 	case 'unread':
 	case 'read':
-	?>
+		?>
 
 
-	<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
+		<?php bp_get_template_part( 'common/search-and-filters-bar' ); ?>
 
 
 		<div id="notifications-user-list" class="notifications dir-list" data-bp-list="notifications">

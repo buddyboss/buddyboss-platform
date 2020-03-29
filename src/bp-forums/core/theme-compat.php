@@ -1,5 +1,4 @@
-<?php
-
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Forums Core Theme Compatibility
  *
@@ -68,7 +67,7 @@ class BBP_Theme_Compat {
 	 * @return mixed
 	 */
 	public function __set( $property, $value ) {
-		return $this->_data[ $property ] = $value;
+		return $this->_data[ $property ] = $value; // phpcs:ignore Squiz.PHP.DisallowMultipleAssignments
 	}
 
 	/**

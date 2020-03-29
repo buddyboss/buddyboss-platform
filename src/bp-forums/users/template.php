@@ -1958,7 +1958,9 @@ function bbp_current_user_can_publish_replies() {
 function bbp_get_forums_for_current_user( $args = array() ) {
 
 	// Setup arrays
-	$private = $hidden = $post__not_in = array();
+	$private      = array();
+	$hidden       = array();
+	$post__not_in = array();
 
 	// Private forums
 	if ( ! current_user_can( 'read_private_forums' ) ) {

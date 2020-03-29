@@ -162,7 +162,7 @@ class BP_XProfile_Group {
 		}
 
 		// Save metadata
-		$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' == $_POST['group_is_repeater'] ? 'on' : 'off';
+		$repeater_enabled = isset( $_POST['group_is_repeater'] ) && 'on' === $_POST['group_is_repeater'] ? 'on' : 'off';
 		self::update_group_meta( $this->id, 'is_repeater_enabled', $repeater_enabled );
 
 		/**
@@ -351,7 +351,7 @@ class BP_XProfile_Group {
 		 *  - include those field ids in loop
 		 */
 		foreach ( $group_ids as $group_id ) {
-			$is_repeater_enabled = 'on' == self::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
+			$is_repeater_enabled = 'on' === self::get_group_meta( $group_id, 'is_repeater_enabled' ) ? true : false;
 			if ( $is_repeater_enabled ) {
 				$clone_field_ids_all = bp_get_repeater_clone_field_ids_all( $group_id );
 
@@ -443,7 +443,8 @@ class BP_XProfile_Group {
 
 		// If social networks field found then remove from the $field_ids array.
 		if ( $social_networks_key > 0 ) {
-			if ( ( $key = array_search( $social_networks_key, $field_ids ) ) !== false ) {
+			$key = array_search( $social_networks_key, $field_ids );
+			if ( false !== $key ) {
 				unset( $field_ids[ $key ] );
 			}
 		}
@@ -488,7 +489,7 @@ class BP_XProfile_Group {
 					$maybe_value = maybe_unserialize( $data->value );
 
 					// Valid field values of 0 or '0' get caught by empty(), so we have an extra check for these. See #BP5731.
-					if ( ( ! empty( $maybe_value ) || '0' == $maybe_value ) && false !== $key = array_search( $data->field_id, $field_ids ) ) {
+					if ( ( ! empty( $maybe_value ) || '0' === $maybe_value ) && false !== ( $key = array_search( $data->field_id, $field_ids ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 
 						// Fields that have data get removed from the list.
 						unset( $field_ids[ $key ] );
@@ -516,7 +517,7 @@ class BP_XProfile_Group {
 					foreach ( (array) $field_data as $data ) {
 
 						// Assign correct data value to the field.
-						if ( $field->id == $data->field_id ) {
+						if ( $field->id === $data->field_id ) {
 							$fields[ $field_key ]->data        = new stdClass();
 							$fields[ $field_key ]->data->value = $data->value;
 							$fields[ $field_key ]->data->id    = $data->id;
@@ -857,7 +858,7 @@ class BP_XProfile_Group {
 
 			<form id="bp-xprofile-add-field-group" action="<?php echo esc_url( $action ); ?>" method="post">
 				<div id="poststuff">
-					<div id="post-body" class="metabox-holder columns-<?php echo ( 1 == get_current_screen()->get_columns() ) ? '1' : '2'; ?>">
+					<div id="post-body" class="metabox-holder columns-<?php echo ( 1 === get_current_screen()->get_columns() ) ? '1' : '2'; ?>">
 						<div id="post-body-content">
 							<div id="titlediv">
 								<div class="titlewrap">
@@ -960,7 +961,7 @@ class BP_XProfile_Group {
 							if ( empty( $this->id ) || $this->can_delete ) :
 								?>
 
-								<?php $enabled = 'on' == self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
+								<?php $enabled = 'on' === self::get_group_meta( $this->id, 'is_repeater_enabled' ) ? 'on' : 'off'; ?>
 
 								<div id="repeatersetdiv" class="postbox">
 									<h2><?php _e( 'Repeater Set', 'buddyboss' ); ?></h2>

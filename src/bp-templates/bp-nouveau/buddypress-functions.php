@@ -1,4 +1,4 @@
-<?php
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Functions of BuddyPress's "Nouveau" template pack.
  *
@@ -92,20 +92,28 @@ class BP_Nouveau extends BP_Theme_Compat {
 		if ( function_exists( 'tests_add_filter' ) ) {
 			require $this->includes_dir . 'ajax.php';
 
-		// Load AJAX code only on AJAX requests.
+			// Load AJAX code only on AJAX requests.
 		} else {
-			add_action( 'admin_init', function() {
-				if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
-					require $this->includes_dir . 'ajax.php';
-				}
-			}, 0 );
+			add_action(
+				'admin_init',
+				function() {
+					if ( defined( 'DOING_AJAX' ) && true === DOING_AJAX ) {
+						require $this->includes_dir . 'ajax.php';
+					}
+				},
+				0
+			);
 		}
 
-		add_action( 'bp_customize_register', function() {
-			if ( bp_is_root_blog() && current_user_can( 'customize' ) ) {
-				require $this->includes_dir . 'customizer.php';
-			}
-		}, 0 );
+		add_action(
+			'bp_customize_register',
+			function() {
+				if ( bp_is_root_blog() && current_user_can( 'customize' ) ) {
+					require $this->includes_dir . 'customizer.php';
+				}
+			},
+			0
+		);
 
 		foreach ( bp_core_get_packaged_component_ids() as $component ) {
 			$component_loader = trailingslashit( $this->includes_dir ) . $component . '/loader.php';
@@ -141,8 +149,8 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 * @since BuddyPress 3.0.0
 	 */
 	protected function setup_support() {
-		$width         = 1300;
-		$top_offset    = 150;
+		$width      = 1300;
+		$top_offset = 150;
 
 		/** This filter is documented in bp-core/bp-core-avatars.php. */
 		$avatar_height = apply_filters( 'bp_core_avatar_full_height', $top_offset );
@@ -151,16 +159,19 @@ class BP_Nouveau extends BP_Theme_Compat {
 			$top_offset = $avatar_height;
 		}
 
-		bp_set_theme_compat_feature( $this->id, array(
-			'name'     => 'cover_image',
-			'settings' => array(
-				'components'   => array( 'xprofile', 'groups' ),
-				'width'        => $width,
-				'height'       => $top_offset + round( $avatar_height / 2 ),
-				'callback'     => 'bp_nouveau_theme_cover_image',
-				'theme_handle' => 'bp-nouveau',
-			),
-		) );
+		bp_set_theme_compat_feature(
+			$this->id,
+			array(
+				'name'     => 'cover_image',
+				'settings' => array(
+					'components'   => array( 'xprofile', 'groups' ),
+					'width'        => $width,
+					'height'       => $top_offset + round( $avatar_height / 2 ),
+					'callback'     => 'bp_nouveau_theme_cover_image',
+					'theme_handle' => 'bp-nouveau',
+				),
+			)
+		);
 	}
 
 	/**
@@ -205,10 +216,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 		add_filter( 'bp_uri', array( $this, 'customizer_set_uri' ), 10, 1 );
 
 		// Set the forum slug on edit page from backend.
-		add_action( 'save_post', array( $this, 'bp_change_forum_slug_on_edit_save_page'), 10, 2 );
+		add_action( 'save_post', array( $this, 'bp_change_forum_slug_on_edit_save_page' ), 10, 2 );
 
 		// Set the Forums to selected in menu items.
-		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class'), 10, 3 );
+		add_filter( 'nav_menu_css_class', array( $this, 'bbp_set_forum_selected_menu_class' ), 10, 3 );
 
 		/** Override **********************************************************/
 
@@ -276,21 +287,24 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function bp_change_forum_slug_on_edit_save_page( $post_id, $post ) {
 		// if called by autosave, then bail here
-		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE )
+		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
+		}
 
 		// if this "post" post type?
-		if ( $post->post_type != 'page' )
+		if ( 'page' !== $post->post_type ) {
 			return;
+		}
 
 		// does this user have permissions?
-		if ( ! current_user_can( 'edit_post', $post_id ) )
+		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
+		}
 
 		// update!
-		$forum_page_id = (int) bp_get_option('_bbp_root_slug_custom_slug');
+		$forum_page_id = (int) bp_get_option( '_bbp_root_slug_custom_slug' );
 
-		if ( $forum_page_id > 0  && $forum_page_id === $post_id ) {
+		if ( $forum_page_id > 0 && $forum_page_id === $post_id ) {
 			$slug = get_post_field( 'post_name', $post_id );
 			if ( '' !== $slug ) {
 				bp_update_option( '_bbp_root_slug', $slug );
@@ -317,10 +331,10 @@ class BP_Nouveau extends BP_Theme_Compat {
 				}
 				if ( jQuery('.popup-modal-login').length ) {
 					jQuery('.popup-modal-login').magnificPopup({
-                        type: 'inline',
-    					preloader: false,
-                        fixedBgPos: true,
-    					fixedContentPos: true
+						type: 'inline',
+						preloader: false,
+						fixedBgPos: true,
+						fixedContentPos: true
 					});
 					jQuery('.popup-modal-dismiss').click(function (e) {
 						e.preventDefault();
@@ -366,11 +380,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of styles to enqueue.
 		 */
-		$styles = apply_filters( 'bp_nouveau_enqueue_styles', array(
-			'bp-nouveau' => array(
-				'file' => 'css/buddypress%1$s%2$s.css', 'dependencies' => $css_dependencies, 'version' => $this->version,
-			),
-		) );
+		$styles = apply_filters(
+			'bp_nouveau_enqueue_styles',
+			array(
+				'bp-nouveau' => array(
+					'file'         => 'css/buddypress%1$s%2$s.css',
+					'dependencies' => $css_dependencies,
+					'version'      => $this->version,
+				),
+			)
+		);
 
 		if ( $styles ) {
 
@@ -392,11 +411,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 					$file = $asset['uri'];
 				}
 
-				$data = wp_parse_args( $style, array(
-					'dependencies' => array(),
-					'version'      => $this->version,
-					'type'         => 'screen',
-				) );
+				$data = wp_parse_args(
+					$style,
+					array(
+						'dependencies' => array(),
+						'version'      => $this->version,
+						'type'         => 'screen',
+					)
+				);
 
 				wp_enqueue_style( $handle, $file, $data['dependencies'], $data['version'], $data['type'] );
 
@@ -430,14 +452,17 @@ class BP_Nouveau extends BP_Theme_Compat {
 		 *
 		 * @param array $value Array of scripts to register.
 		 */
-		$scripts = apply_filters( 'bp_nouveau_register_scripts', array(
-			'bp-nouveau' => array(
-				'file'         => 'js/buddypress-nouveau%s.js',
-				'dependencies' => $dependencies,
-				'version'      => $this->version,
-				'footer'       => true,
-			),
-		) );
+		$scripts = apply_filters(
+			'bp_nouveau_register_scripts',
+			array(
+				'bp-nouveau' => array(
+					'file'         => 'js/buddypress-nouveau%s.js',
+					'dependencies' => $dependencies,
+					'version'      => $this->version,
+					'footer'       => true,
+				),
+			)
+		);
 
 		// Bail if no scripts
 		if ( empty( $scripts ) ) {
@@ -477,11 +502,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 				$file = $asset['uri'];
 			}
 
-			$data = wp_parse_args( $script, array(
-				'dependencies' => array(),
-				'version'      => $this->version,
-				'footer'       => false,
-			) );
+			$data = wp_parse_args(
+				$script,
+				array(
+					'dependencies' => array(),
+					'version'      => $this->version,
+					'footer'       => false,
+				)
+			);
 
 			wp_register_script( $handle, $file, $data['dependencies'], $data['version'], $data['footer'] );
 		}
@@ -496,9 +524,9 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function enqueue_scripts() {
 
-	    if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
-		    wp_enqueue_script( 'bp-nouveau-magnific-popup' );
-	    }
+		if ( bp_is_register_page() || ( isset( $GLOBALS['pagenow'] ) && 'wp-login.php' === $GLOBALS['pagenow'] ) ) {
+			wp_enqueue_script( 'bp-nouveau-magnific-popup' );
+		}
 
 		wp_enqueue_script( 'bp-nouveau' );
 
@@ -522,16 +550,16 @@ class BP_Nouveau extends BP_Theme_Compat {
 
 	/**
 	 * Check the Heartbeat API if it is enabled or not on front end
-     *
-     * @since BuddyBoss 1.1.2
+	 *
+	 * @since BuddyBoss 1.1.2
 	 */
 	public function check_heartbeat_api() {
 		if ( ! wp_script_is( 'heartbeat', 'registered' ) && ! is_admin() ) {
 			update_option( 'bp_wp_heartbeat_disabled', '1' );
 		} else {
 			update_option( 'bp_wp_heartbeat_disabled', '0' );
-        }
-    }
+		}
+	}
 
 	/**
 	 * Adds the no-js class to the body tag.
@@ -562,14 +590,14 @@ class BP_Nouveau extends BP_Theme_Compat {
 	 */
 	public function localize_scripts() {
 		$params = array(
-			'ajaxurl'             => bp_core_ajax_url(),
-			'only_admin_notice'   => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
-			'is_friend_confirm'   => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
-			'confirm'             => __( 'Are you sure?', 'buddyboss' ),
-			'confirm_delete_set'  => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
-			'show_x_comments'     => __( 'View previous comments', 'buddyboss' ),
-			'unsaved_changes'     => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
-			'object_nav_parent'   => '#buddypress',
+			'ajaxurl'            => bp_core_ajax_url(),
+			'only_admin_notice'  => __( 'As you are the only organizer of this group, you cannot leave it. You can either delete the group or promote another member to be an organizer first and then leave the group.', 'buddyboss' ),
+			'is_friend_confirm'  => __( 'Are you sure you want to remove your connection with this member?', 'buddyboss' ),
+			'confirm'            => __( 'Are you sure?', 'buddyboss' ),
+			'confirm_delete_set' => __( 'Are you sure you want to delete this set? This cannot be undone.', 'buddyboss' ),
+			'show_x_comments'    => __( 'View previous comments', 'buddyboss' ),
+			'unsaved_changes'    => __( 'Your profile has unsaved changes. If you leave the page, the changes will be lost.', 'buddyboss' ),
+			'object_nav_parent'  => '#buddypress',
 		);
 
 		// If the Object/Item nav are in the sidebar
@@ -746,7 +774,7 @@ class BP_Nouveau extends BP_Theme_Compat {
 		}
 
 		foreach ( $nav_items as $nav_item ) {
-			if ( empty( $nav_item['component'] ) || $nav_item['component'] !== bp_current_component() ) {
+			if ( empty( $nav_item['component'] ) || bp_current_component() !== $nav_item['component'] ) {
 				continue;
 			}
 

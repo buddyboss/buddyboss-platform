@@ -274,8 +274,8 @@ class BP_Groups_Component extends BP_Component {
 
 		// Are we viewing a single group?
 		if ( bp_is_groups_component()
-			&& ( ( $group_id = BP_Groups_Group::group_exists( bp_current_action() ) )
-				|| ( $group_id = BP_Groups_Group::get_id_by_previous_slug( bp_current_action() ) ) )
+			&& ( ( $group_id = BP_Groups_Group::group_exists( bp_current_action() ) ) // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
+				|| ( $group_id = BP_Groups_Group::get_id_by_previous_slug( bp_current_action() ) ) ) // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition, Squiz.PHP.DisallowMultipleAssignments
 			) {
 			$bp->is_single_item = true;
 
@@ -288,7 +288,7 @@ class BP_Groups_Component extends BP_Component {
 			 */
 			$current_group_class = apply_filters( 'bp_groups_current_group_class', 'BP_Groups_Group' );
 
-			if ( $current_group_class == 'BP_Groups_Group' ) {
+			if ( 'BP_Groups_Group' === $current_group_class ) {
 				$this->current_group = groups_get_group( $group_id );
 
 			} else {
@@ -627,7 +627,7 @@ class BP_Groups_Component extends BP_Component {
 
 			// Add the "Members" subnav item, as this will always be present.
 			$sub_nav[] = array(
-				'name'            => sprintf( apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . __( ' %s', 'buddyboss' ), '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
+				'name'            => sprintf( apply_filters( 'group_single_members_label', __( 'Members', 'buddyboss' ) ) . ' %s', '<span>' . number_format( $this->current_group->total_member_count ) . '</span>' ),
 				'slug'            => 'members',
 				'parent_url'      => $group_link,
 				'parent_slug'     => $this->current_group->slug,
@@ -676,7 +676,8 @@ class BP_Groups_Component extends BP_Component {
 
 			if ( bp_enable_group_hierarchies() ) {
 				$descendant_groups = bp_get_descendent_groups( bp_get_current_group_id(), bp_loggedin_user_id() );
-				if ( $total_descendant = count( $descendant_groups ) ) {
+				$total_descendant  = count( $descendant_groups );
+				if ( $total_descendant ) {
 					$sub_nav[] = array(
 						'name'            => sprintf( __( 'Subgroups', 'buddyboss' ), '<span>' . number_format( $total_descendant ) . '</span>' ),
 						'slug'            => 'subgroups',
@@ -867,7 +868,7 @@ class BP_Groups_Component extends BP_Component {
 					$default_params
 				);
 
-				if ( 'private' == $this->current_group->status ) {
+				if ( 'private' === $this->current_group->status ) {
 					$sub_nav[] = array_merge(
 						array(
 							'name'     => __( 'Requests', 'buddyboss' ),
@@ -1006,6 +1007,8 @@ class BP_Groups_Component extends BP_Component {
 					array(
 						'item_id' => bp_displayed_user_id(),
 						'type'    => 'thumb',
+
+						/* translators: Profile photo of [User full name] */
 						'alt'     => sprintf( __( 'Profile photo of %s', 'buddyboss' ), bp_get_displayed_user_fullname() ),
 					)
 				);

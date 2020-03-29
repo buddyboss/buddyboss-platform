@@ -57,7 +57,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 			return;
 		}
 
-		$class            = $current_field->type != $type ? 'display: none;' : '';
+		$class            = $current_field->type !== $type ? 'display: none;' : '';
 		$current_type_obj = bp_xprofile_create_field_type( $type );
 
 		$active_member_type = bp_get_active_member_types();
@@ -164,7 +164,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 
 		if ( ! empty( $_POST[ 'field_' . $this->field_obj->id ] ) ) {
 			$new_post_selected = (int) $_POST[ 'field_' . $this->field_obj->id ];
-			$post_selected     = ( $post_selected != $new_post_selected ) ? $new_post_selected : $post_selected;
+			$post_selected     = ( $post_selected !== $new_post_selected ) ? $new_post_selected : $post_selected;
 		}
 
 		// Add Profile Type selected if users have previously added profile type in his/her account.
@@ -195,7 +195,7 @@ class BP_XProfile_Field_Type_Member_Types extends BP_XProfile_Field_Type {
 					$html .= sprintf(
 						'<option value="%s" %s>%s</option>',
 						$post->ID,
-						( $post_selected == $post->ID ) ? ' selected="selected"' : '',
+						( $post_selected === $post->ID ) ? ' selected="selected"' : '',
 						$name
 					);
 				}

@@ -116,24 +116,24 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<?php if ( bp_has_members( $members_args ) ) : ?>
 
 			<div class="item-options" id="members-list-options">
-				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-members" 
-																 <?php
-																	if ( 'newest' === $settings['member_default'] ) :
-																		?>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="newest-members"
+																<?php
+																if ( 'newest' === $settings['member_default'] ) :
+																	?>
 					class="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></a>
 				<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members" 
-																 <?php
-																	if ( 'active' === $settings['member_default'] ) :
-																		?>
+				<a href="<?php bp_members_directory_permalink(); ?>" id="recently-active-members"
+																<?php
+																if ( 'active' === $settings['member_default'] ) :
+																	?>
 					class="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></a>
 
 				<?php if ( bp_is_active( 'friends' ) ) : ?>
 					<span class="bp-separator" role="separator"><?php echo esc_html( $separator ); ?></span>
-					<a href="<?php bp_members_directory_permalink(); ?>" id="popular-members" 
-																	 <?php
-																		if ( 'popular' === $settings['member_default'] ) :
-																			?>
+					<a href="<?php bp_members_directory_permalink(); ?>" id="popular-members"
+																<?php
+																if ( 'popular' === $settings['member_default'] ) :
+																	?>
 						class="selected"<?php endif; ?>><?php esc_html_e( 'Popular', 'buddyboss' ); ?></a>
 
 				<?php endif; ?>
@@ -164,9 +164,9 @@ class BP_Core_Members_Widget extends WP_Widget {
 						<div class="item">
 							<div class="item-title fn"><a href="<?php bp_member_permalink(); ?>"><?php bp_member_name(); ?></a></div>
 							<div class="item-meta">
-								<?php if ( 'newest' == $settings['member_default'] ) : ?>
+								<?php if ( 'newest' === $settings['member_default'] ) : ?>
 									<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_registered( array( 'relative' => false ) ) ); ?>"><?php bp_member_registered(); ?></span>
-								<?php elseif ( 'active' == $settings['member_default'] ) : ?>
+								<?php elseif ( 'active' === $settings['member_default'] ) : ?>
 									<span class="activity" data-livestamp="<?php bp_core_iso8601_date( bp_get_member_last_active( array( 'relative' => false ) ) ); ?>"><?php bp_member_last_active(); ?></span>
 								<?php else : ?>
 									<span class="activity"><?php bp_member_total_friend_count(); ?></span>
@@ -262,17 +262,17 @@ class BP_Core_Members_Widget extends WP_Widget {
 		<p>
 			<label for="<?php echo $this->get_field_id( 'member_default' ); ?>"><?php esc_html_e( 'Default members to show:', 'buddyboss' ); ?></label>
 			<select name="<?php echo $this->get_field_name( 'member_default' ); ?>" id="<?php echo $this->get_field_id( 'member_default' ); ?>">
-				<option value="newest"  
+				<option value="newest"
 				<?php
 				if ( 'newest' === $member_default ) :
 					?>
 					selected="selected"<?php endif; ?>><?php esc_html_e( 'Newest', 'buddyboss' ); ?></option>
-				<option value="active"  
+				<option value="active"
 				<?php
 				if ( 'active' === $member_default ) :
 					?>
 					selected="selected"<?php endif; ?>><?php esc_html_e( 'Active', 'buddyboss' ); ?></option>
-				<option value="popular" 
+				<option value="popular"
 				<?php
 				if ( 'popular' === $member_default ) :
 					?>

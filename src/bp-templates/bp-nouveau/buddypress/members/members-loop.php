@@ -21,7 +21,10 @@ bp_nouveau_before_loop(); ?>
 
 	<ul id="members-list" class="<?php bp_nouveau_loop_classes(); ?>">
 
-	<?php while ( bp_members() ) : bp_the_member(); ?>
+	<?php
+	while ( bp_members() ) :
+		bp_the_member();
+		?>
 
 		<li <?php bp_member_class( array( 'item-entry' ) ); ?> data-bp-item-id="<?php bp_member_user_id(); ?>" data-bp-item-component="members">
 			<div class="list-wrap">
@@ -42,13 +45,14 @@ bp_nouveau_before_loop(); ?>
 						if ( true === bp_member_type_enable_disable() && true === bp_member_type_display_on_profile() ) {
 							echo '<p class="item-meta member-type-wrap">' . bp_get_user_member_type( bp_get_member_user_id() ) . '</p>';
 						} else {
-						    ?>
+							?>
 							<?php if ( bp_nouveau_member_has_meta() ) : ?>
-                                <p class="item-meta last-activity">
+								<p class="item-meta last-activity">
 									<?php bp_nouveau_member_meta(); ?>
-                                </p>
-							<?php endif;
-                        }
+								</p>
+								<?php
+							endif;
+						}
 						?>
 
 						<?php
@@ -58,7 +62,7 @@ bp_nouveau_before_loop(); ?>
 								'button_element' => 'button',
 							)
 						);
-                        ?>
+						?>
 
 					</div>
 
@@ -72,7 +76,7 @@ bp_nouveau_before_loop(); ?>
 
 	<?php bp_nouveau_pagination( 'bottom' ); ?>
 
-<?php
+	<?php
 else :
 
 	bp_nouveau_user_feedback( 'members-loop-none' );

@@ -87,7 +87,7 @@ if ( ! class_exists( 'Bp_Search_Activity_Comment' ) ) :
 			$sql                 = $wpdb->prepare( $sql, $query_placeholder );
 
 			return apply_filters(
-				'Bp_Search_Activity_Comment_sql',
+				'bp_search_activity_comment_sql',
 				$sql,
 				array(
 					'search_term'         => $search_term,

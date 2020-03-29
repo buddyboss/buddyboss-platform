@@ -307,7 +307,7 @@ class BP_Activity_Feed {
 			case 'friends':
 			case 'mentions':
 			case 'personal':
-				if ( 'activity_comment' == bp_get_activity_action_name() ) :
+				if ( 'activity_comment' === bp_get_activity_action_name() ) :
 					?>
 				<strong><?php _e( 'In reply to', 'buddyboss' ); ?></strong> -
 					<?php bp_activity_parent_content(); ?>
@@ -336,7 +336,7 @@ class BP_Activity_Feed {
 		}
 
 		// Set content-type.
-		@header( 'Content-Type: text/xml; charset=' . get_option( 'blog_charset' ), true );
+		@header( 'Content-Type: text/xml; charset=' . get_option( 'blog_charset' ), true ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 		send_nosniff_header();
 
 		// Cache-related variables.
@@ -345,12 +345,12 @@ class BP_Activity_Feed {
 		$etag               = md5( $last_modified );
 
 		// Set cache-related headers.
-		@header( 'Last-Modified: ' . $last_modified );
-		@header( 'Pragma: no-cache' );
-		@header( 'ETag: ' . '"' . $etag . '"' );
+		@header( 'Last-Modified: ' . $last_modified ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		@header( 'Pragma: no-cache' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
+		@header( 'ETag: ' . '"' . $etag . '"' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 		// First commit of BuddyPress! (Easter egg).
-		@header( 'Expires: Tue, 25 Mar 2008 17:13:55 GMT' );
+		@header( 'Expires: Tue, 25 Mar 2008 17:13:55 GMT' ); // phpcs:ignore WordPress.PHP.NoSilencedErrors
 
 		// Get ETag from supported user agents.
 		if ( isset( $_SERVER['HTTP_IF_NONE_MATCH'] ) ) {
@@ -376,8 +376,8 @@ class BP_Activity_Feed {
 
 		// Set 304 status if feed hasn't been updated since last fetch.
 		if ( ( $client_last_modified && $client_etag ) ?
-				 ( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag == $etag ) ) :
-				 ( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag == $etag ) ) ) {
+			( ( $client_modified_timestamp >= $modified_timestamp ) && ( $client_etag === $etag ) ) :
+			( ( $client_modified_timestamp >= $modified_timestamp ) || ( $client_etag === $etag ) ) ) {
 			$status = 304;
 		} else {
 			$status = false;
@@ -388,7 +388,7 @@ class BP_Activity_Feed {
 			status_header( $status );
 
 			// Cached response, so stop now!
-			if ( $status == 304 ) {
+			if ( 304 === $status ) {
 				exit();
 			}
 		}

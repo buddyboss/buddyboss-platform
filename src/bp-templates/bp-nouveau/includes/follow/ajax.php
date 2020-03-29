@@ -9,32 +9,36 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-add_action( 'admin_init', function() {
-	$ajax_actions = array(
-		array(
-			'follow_follow' => array(
-				'function' => 'bp_nouveau_ajax_followunfollow_member',
-				'nopriv'   => false,
+add_action(
+	'admin_init',
+	function() {
+		$ajax_actions = array(
+			array(
+				'follow_follow' => array(
+					'function' => 'bp_nouveau_ajax_followunfollow_member',
+					'nopriv'   => false,
+				),
 			),
-		),
-		array(
-			'follow_unfollow' => array(
-				'function' => 'bp_nouveau_ajax_followunfollow_member',
-				'nopriv'   => false,
+			array(
+				'follow_unfollow' => array(
+					'function' => 'bp_nouveau_ajax_followunfollow_member',
+					'nopriv'   => false,
+				),
 			),
-		),
-	);
+		);
 
-	foreach ( $ajax_actions as $ajax_action ) {
-		$action = key( $ajax_action );
+		foreach ( $ajax_actions as $ajax_action ) {
+			$action = key( $ajax_action );
 
-		add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
+			add_action( 'wp_ajax_' . $action, $ajax_action[ $action ]['function'] );
 
-		if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
-			add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			if ( ! empty( $ajax_action[ $action ]['nopriv'] ) ) {
+				add_action( 'wp_ajax_nopriv_' . $action, $ajax_action[ $action ]['function'] );
+			}
 		}
-	}
-}, 12 );
+	},
+	12
+);
 
 /**
  * Follow/Unfollow a user via a POST request.
@@ -93,11 +97,21 @@ function bp_nouveau_ajax_followunfollow_member() {
 		}
 	}
 
-	$is_following = bp_is_following( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) );
+	$is_following = bp_is_following(
+		array(
+			'leader_id'   => $leader_id,
+			'follower_id' => bp_loggedin_user_id(),
+		)
+	);
 
 	// Trying to unfollow.
 	if ( $is_following ) {
-		if ( ! bp_stop_following( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
+		if ( ! bp_stop_following(
+			array(
+				'leader_id'   => $leader_id,
+				'follower_id' => bp_loggedin_user_id(),
+			)
+		) ) {
 
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
@@ -110,12 +124,18 @@ function bp_nouveau_ajax_followunfollow_member() {
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
-					wp_send_json_success( array(
-						'contents' => bp_get_add_follow_button( $leader_id, bp_loggedin_user_id(), array(
-							'parent_element' => 'li',
-							'button_element' => 'button'
-						) )
-					) );
+					wp_send_json_success(
+						array(
+							'contents' => bp_get_add_follow_button(
+								$leader_id,
+								bp_loggedin_user_id(),
+								array(
+									'parent_element' => 'li',
+									'button_element' => 'button',
+								)
+							),
+						)
+					);
 				}
 			} else {
 				wp_send_json_success( array( 'contents' => '' ) );
@@ -124,7 +144,12 @@ function bp_nouveau_ajax_followunfollow_member() {
 
 		// Trying to follow.
 	} elseif ( ! $is_following ) {
-		if ( ! bp_start_following( array( 'leader_id' => $leader_id, 'follower_id' => bp_loggedin_user_id() ) ) ) {
+		if ( ! bp_start_following(
+			array(
+				'leader_id'   => $leader_id,
+				'follower_id' => bp_loggedin_user_id(),
+			)
+		) ) {
 
 			$response['feedback'] = sprintf(
 				'<div class="bp-feedback error">%s</div>',
@@ -136,12 +161,18 @@ function bp_nouveau_ajax_followunfollow_member() {
 			if ( bp_has_members( 'include=' . $leader_id ) ) {
 				while ( bp_members() ) {
 					bp_the_member();
-					wp_send_json_success( array(
-						'contents' => bp_get_add_follow_button( $leader_id, bp_loggedin_user_id(), array(
-							'parent_element' => 'li',
-							'button_element' => 'button'
-						) )
-					) );
+					wp_send_json_success(
+						array(
+							'contents' => bp_get_add_follow_button(
+								$leader_id,
+								bp_loggedin_user_id(),
+								array(
+									'parent_element' => 'li',
+									'button_element' => 'button',
+								)
+							),
+						)
+					);
 				}
 			} else {
 				wp_send_json_success( array( 'contents' => '' ) );

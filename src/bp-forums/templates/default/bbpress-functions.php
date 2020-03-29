@@ -1,5 +1,4 @@
-<?php
-
+<?php // phpcs:ignore WordPress.NamingConventions
 /**
  * Functions of Forums' Default theme
  *

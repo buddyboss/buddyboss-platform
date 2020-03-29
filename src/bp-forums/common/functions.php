@@ -155,7 +155,7 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 
 			// Finding the biggest chunk (if the chunk fits, break)
 			$count = floor( $since / $seconds );
-			if ( 0 != $count ) {
+			if ( 0 !== $count ) {
 				break;
 			}
 		}
@@ -167,7 +167,7 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 		} else {
 
 			// Set output var
-			$output = ( 1 == $count ) ? '1 ' . $chunks[ $i ][1] : $count . ' ' . $chunks[ $i ][2];
+			$output = ( 1 === $count ) ? '1 ' . $chunks[ $i ][1] : $count . ' ' . $chunks[ $i ][2];
 
 			// Step two: the second chunk
 			if ( $i + 2 < $j ) {
@@ -176,8 +176,8 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 				$count2   = floor( ( $since - ( $seconds * $count ) ) / $seconds2 );
 
 				// Add to output var
-				if ( 0 != $count2 ) {
-					$output .= ( 1 == $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
+				if ( 0 !== $count2 ) {
+					$output .= ( 1 === $count2 ) ? _x( ',', 'Separator in time since', 'buddyboss' ) . ' 1 ' . $name2 : _x( ',', 'Separator in time since', 'buddyboss' ) . ' ' . $count2 . ' ' . $chunks[ $i + 1 ][2];
 				}
 			}
 
@@ -189,7 +189,7 @@ function bbp_get_time_since( $older_date, $newer_date = false, $gmt = false ) {
 	}
 
 	// Append 'ago' to the end of time-since if not 'right now'
-	if ( $output != $right_now_text ) {
+	if ( $output !== $right_now_text ) {
 		$output = sprintf( $ago_text, $output );
 	}
 
@@ -358,8 +358,10 @@ function bbp_fix_post_author( $data = array(), $postarr = array() ) {
 	}
 
 	// Is the post by an anonymous user?
-	if ( ( bbp_get_topic_post_type() === $data['post_type'] && ! bbp_is_topic_anonymous( $postarr['ID'] ) ) ||
-		 ( bbp_get_reply_post_type() === $data['post_type'] && ! bbp_is_reply_anonymous( $postarr['ID'] ) ) ) {
+	if (
+		( bbp_get_topic_post_type() === $data['post_type'] && ! bbp_is_topic_anonymous( $postarr['ID'] ) ) ||
+		( bbp_get_reply_post_type() === $data['post_type'] && ! bbp_is_reply_anonymous( $postarr['ID'] ) )
+	) {
 		return $data;
 	}
 
@@ -508,7 +510,8 @@ function bbp_get_statistics( $args = '' ) {
 		if ( current_user_can( 'read_private_topics' ) || current_user_can( 'edit_others_topics' ) || current_user_can( 'view_trash' ) ) {
 
 			// Declare empty arrays
-			$topics = $topic_titles = array();
+			$topics       = array();
+			$topic_titles = array();
 
 			// Private
 			$topics['private'] = ( ! empty( $r['count_private_topics'] ) && current_user_can( 'read_private_topics' ) ) ? (int) $all_topics->{$private} : 0;
@@ -543,7 +546,8 @@ function bbp_get_statistics( $args = '' ) {
 		if ( current_user_can( 'read_private_replies' ) || current_user_can( 'edit_others_replies' ) || current_user_can( 'view_trash' ) ) {
 
 			// Declare empty arrays
-			$replies = $reply_titles = array();
+			$replies      = array();
+			$reply_titles = array();
 
 			// Private
 			$replies['private'] = ( ! empty( $r['count_private_replies'] ) && current_user_can( 'read_private_replies' ) ) ? (int) $all_replies->{$private} : 0;
@@ -725,7 +729,8 @@ function bbp_check_for_duplicate( $post_data = array() ) {
 		$join  = $clauses['join'];
 		$where = $clauses['where'];
 	} else {
-		$join = $where = '';
+		$join  = '';
+		$where = '';
 	}
 
 	// Unslash $r to pass through $wpdb->prepare()
@@ -1460,14 +1465,14 @@ function bbp_get_public_child_last_id( $parent_id = 0, $post_type = 'post' ) {
 		$post_status = array( bbp_get_public_status_id() );
 
 		// Add closed status if topic post type
-		if ( $post_type === bbp_get_topic_post_type() ) {
+		if ( bbp_get_topic_post_type() === $post_type ) {
 			$post_status[] = bbp_get_closed_status_id();
 		}
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
 
-		$child_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC LIMIT 1;", $parent_id, $post_type ) );
+		$child_id = $wpdb->get_var( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC LIMIT 1;", $parent_id, $post_type ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 		wp_cache_set( $cache_id, $child_id, 'bbpress_posts' );
 	}
 
@@ -1506,14 +1511,14 @@ function bbp_get_public_child_count( $parent_id = 0, $post_type = 'post' ) {
 		$post_status = array( bbp_get_public_status_id() );
 
 		// Add closed status if topic post type
-		if ( $post_type === bbp_get_topic_post_type() ) {
+		if ( bbp_get_topic_post_type() === $post_type ) {
 			$post_status[] = bbp_get_closed_status_id();
 		}
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
 
-		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) );
+		$child_count = $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(ID) FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s';", $parent_id, $post_type ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 		wp_cache_set( $cache_id, $child_count, 'bbpress_posts' );
 	}
 
@@ -1552,14 +1557,14 @@ function bbp_get_public_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		$post_status = array( bbp_get_public_status_id() );
 
 		// Add closed status if topic post type
-		if ( $post_type === bbp_get_topic_post_type() ) {
+		if ( bbp_get_topic_post_type() === $post_type ) {
 			$post_status[] = bbp_get_closed_status_id();
 		}
 
 		// Join post statuses together
 		$post_status = "'" . implode( "', '", $post_status ) . "'";
 
-		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
+		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}
 
@@ -1600,7 +1605,7 @@ function bbp_get_all_child_ids( $parent_id = 0, $post_type = 'post' ) {
 		$not_in      = array( 'draft', 'future' );
 		$post_status = "'" . implode( "', '", $not_in ) . "'";
 
-		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) );
+		$child_ids = $wpdb->get_col( $wpdb->prepare( "SELECT ID FROM {$wpdb->posts} WHERE post_parent = %d AND post_status NOT IN ( {$post_status} ) AND post_type = '%s' ORDER BY ID DESC;", $parent_id, $post_type ) ); // phpcs:ignore WordPress.DB.PreparedSQLPlaceholders
 		wp_cache_set( $cache_id, $child_ids, 'bbpress_posts' );
 	}
 

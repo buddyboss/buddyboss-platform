@@ -489,11 +489,11 @@ function bp_get_members_pagination_count() {
 	$to_num    = bp_core_number_format( ( $start_num + ( $members_template->pag_num - 1 ) > $members_template->total_member_count ) ? $members_template->total_member_count : $start_num + ( $members_template->pag_num - 1 ) );
 	$total     = bp_core_number_format( $members_template->total_member_count );
 
-	if ( 'active' == $members_template->type ) {
+	if ( 'active' === $members_template->type ) {
 		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-	} elseif ( 'popular' == $members_template->type ) {
+	} elseif ( 'popular' === $members_template->type ) {
 		$pag = sprintf( _n( 'Viewing 1 member with connections', 'Viewing %1$s - %2$s of %3$s members with connections', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
-	} elseif ( 'online' == $members_template->type ) {
+	} elseif ( 'online' === $members_template->type ) {
 		$pag = sprintf( _n( 'Viewing 1 online member', 'Viewing %1$s - %2$s of %3$s online members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
 	} else {
 		$pag = sprintf( _n( 'Viewing 1 member', 'Viewing %1$s - %2$s of %3$s members', $members_template->total_member_count, 'buddyboss' ), $from_num, $to_num, $total );
@@ -618,7 +618,8 @@ function bp_get_member_class( $classes = array() ) {
 	}
 
 	// Add current user profile types.
-	if ( $member_types = bp_get_member_type( $members_template->member->id, false ) ) {
+	$member_types = bp_get_member_type( $members_template->member->id, false );
+	if ( $member_types ) {
 		foreach ( $member_types as $member_type ) {
 			$classes[] = sprintf( 'member-type-%s', esc_attr( $member_type ) );
 		}
@@ -739,7 +740,7 @@ function bp_member_is_loggedin_user() {
 	 *
 	 * @param bool $value Whether current member in the loop is logged in.
 	 */
-	return apply_filters( 'bp_member_is_loggedin_user', bp_loggedin_user_id() == $members_template->member->id ? true : false );
+	return apply_filters( 'bp_member_is_loggedin_user', bp_loggedin_user_id() === $members_template->member->id ? true : false );
 }
 
 /**
@@ -801,7 +802,7 @@ function bp_get_member_avatar( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	/**
 	 * Filters a members avatar.
@@ -1301,7 +1302,7 @@ function bp_get_loggedin_user_nav() {
 		$selected = '';
 
 		// If the current component matches the nav item id, then add a highlight CSS class.
-		if ( ! bp_is_directory() && ! empty( $bp->active_components[ bp_current_component() ] ) && $bp->active_components[ bp_current_component() ] == $nav_item->css_id ) {
+		if ( ! bp_is_directory() && ! empty( $bp->active_components[ bp_current_component() ] ) && $bp->active_components[ bp_current_component() ] === $nav_item->css_id ) {
 			$selected = ' class="current selected"';
 		}
 
@@ -1313,7 +1314,7 @@ function bp_get_loggedin_user_nav() {
 			$selected = '';
 
 			if ( bp_is_active( 'friends' ) ) {
-				if ( $nav_item->css_id == $bp->friends->id ) {
+				if ( $nav_item->css_id === $bp->friends->id ) {
 					if ( friends_check_friendship( bp_loggedin_user_id(), bp_displayed_user_id() ) ) {
 						$selected = ' class="current selected"';
 					}
@@ -2151,9 +2152,9 @@ function bp_get_signup_username_value() {
 	$nickname_field = 'field_' . bp_xprofile_nickname_field_id();
 	if ( isset( $_POST[ $nickname_field ] ) ) {
 		$value = $_POST[ $nickname_field ];
-	}
-	// fallback to grab the username
-	elseif ( isset( $_POST['signup_username'] ) ) {
+
+		// fallback to grab the username
+	} elseif ( isset( $_POST['signup_username'] ) ) {
 		$value = $_POST['signup_username'];
 	}
 
@@ -2385,15 +2386,13 @@ function bp_get_signup_avatar_dir_value() {
 	// Check if signup_avatar_dir is passed.
 	if ( ! empty( $_POST['signup_avatar_dir'] ) ) {
 		$signup_avatar_dir = $_POST['signup_avatar_dir'];
-	}
 
-	// If not, check if global is set.
-	elseif ( ! empty( $bp->signup->avatar_dir ) ) {
+		// If not, check if global is set.
+	} elseif ( ! empty( $bp->signup->avatar_dir ) ) {
 		$signup_avatar_dir = $bp->signup->avatar_dir;
-	}
 
-	// If not, set false.
-	else {
+		// If not, set false.
+	} else {
 		$signup_avatar_dir = false;
 	}
 
@@ -2464,10 +2463,11 @@ function bp_get_signup_avatar( $args = '' ) {
 	);
 
 	$r = wp_parse_args( $args, $defaults );
-	extract( $r, EXTR_SKIP );
+	extract( $r, EXTR_SKIP ); // phpcs:ignore WordPress.PHP.DontExtract
 
 	// Avatar DIR is found.
-	if ( $signup_avatar_dir = bp_get_signup_avatar_dir_value() ) {
+	$signup_avatar_dir = bp_get_signup_avatar_dir_value();
+	if ( $signup_avatar_dir ) {
 		$gravatar_img = bp_core_fetch_avatar(
 			array(
 				'item_id'    => $signup_avatar_dir,
@@ -2487,7 +2487,7 @@ function bp_get_signup_avatar( $args = '' ) {
 		// Set default gravatar type.
 		if ( empty( $bp->grav_default->user ) ) {
 			$default_grav = 'wavatar';
-		} elseif ( 'mystery' == $bp->grav_default->user ) {
+		} elseif ( 'mystery' === $bp->grav_default->user ) {
 			$default_grav = apply_filters( 'bp_get_signup_avatar_mystery', $bp->plugin_url . 'bp-core/images/mystery-man.jpg' );
 		} else {
 			$default_grav = $bp->grav_default->user;

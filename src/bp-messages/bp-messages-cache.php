@@ -111,7 +111,7 @@ add_action( 'messages_notice_before_delete', 'bp_notices_clear_cache' );
  * @since BuddyBoss 1.0.0
  */
 function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
-	BP_Messages_Thread::$noCache = true;
+	BP_Messages_Thread::$noCache = true; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 	$thread_id                   = $thread_id;
 	$before                      = null;
 	$perpage                     = 10;
@@ -125,5 +125,5 @@ function bp_messages_delete_thread_paginated_messages_cache( $thread_id ) {
 		}
 	}
 
-	BP_Messages_Thread::$noCache = false;
+	BP_Messages_Thread::$noCache = false; // phpcs:ignore WordPress.NamingConventions.ValidVariableName
 }

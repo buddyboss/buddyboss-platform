@@ -9,12 +9,12 @@
 // Exit if accessed directly.
 defined( 'ABSPATH' ) || exit;
 
-if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
+if ( ! class_exists( 'Bp_Search_BBPress_Topics' ) ) :
 
 	/**
 	 * BuddyPress Global Search  - search bbpress forums topics class
 	 */
-	class Bp_Search_bbPress_Topics extends Bp_Search_bbPress {
+	class Bp_Search_BBPress_Topics extends Bp_Search_BBPress {
 		public $type = 'topic';
 
 		function sql( $search_term, $only_totalrow_count = false ) {
@@ -57,7 +57,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 				$tax_in = implode( ', ', $tax_in_arr );
 
-				$tax_sql             .= " WHERE r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON 
+				$tax_sql             .= " WHERE r.term_taxonomy_id IN (SELECT tt.term_taxonomy_id FROM {$wpdb->term_taxonomy} tt INNER JOIN {$wpdb->terms} t ON
 					  t.term_id = tt.term_id WHERE ( t.slug LIKE %s OR t.name LIKE %s ) AND  tt.taxonomy IN ({$tax_in}) )";
 				$query_placeholder[] = '%' . $search_term . '%';
 				$query_placeholder[] = '%' . $search_term . '%';
@@ -110,7 +110,8 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			$query = $wpdb->prepare( $sql, $query_placeholder );
 
-			return apply_filters( 'Bp_Search_Forums_sql',
+			return apply_filters(
+				'bp_search_forums_sql',
 				$query,
 				array(
 					'search_term'         => $search_term,
@@ -132,7 +133,7 @@ if ( ! class_exists( 'Bp_Search_bbPress_Topics' ) ) :
 
 			// Only run these methods if they haven't been run previously
 			if ( null === $instance ) {
-				$instance = new Bp_Search_bbPress_Topics();
+				$instance = new Bp_Search_BBPress_Topics();
 			}
 
 			// Always return the instance

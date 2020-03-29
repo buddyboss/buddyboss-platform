@@ -58,9 +58,9 @@ function bp_is_activation( $basename = '' ) {
 	$bp     = buddypress();
 	$action = false;
 
-	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
+	if ( ! empty( $_REQUEST['action'] ) && ( '-1' !== $_REQUEST['action'] ) ) {
 		$action = $_REQUEST['action'];
-	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) {
+	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' !== $_REQUEST['action2'] ) ) {
 		$action = $_REQUEST['action2'];
 	}
 
@@ -70,7 +70,7 @@ function bp_is_activation( $basename = '' ) {
 	}
 
 	// The plugin(s) being activated.
-	if ( $action == 'activate' ) {
+	if ( 'activate' === $action ) {
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
@@ -102,9 +102,9 @@ function bp_is_deactivation( $basename = '' ) {
 	$bp     = buddypress();
 	$action = false;
 
-	if ( ! empty( $_REQUEST['action'] ) && ( '-1' != $_REQUEST['action'] ) ) {
+	if ( ! empty( $_REQUEST['action'] ) && ( '-1' !== $_REQUEST['action'] ) ) {
 		$action = $_REQUEST['action'];
-	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' != $_REQUEST['action2'] ) ) {
+	} elseif ( ! empty( $_REQUEST['action2'] ) && ( '-1' !== $_REQUEST['action2'] ) ) {
 		$action = $_REQUEST['action2'];
 	}
 
@@ -114,7 +114,7 @@ function bp_is_deactivation( $basename = '' ) {
 	}
 
 	// The plugin(s) being deactivated.
-	if ( 'deactivate' == $action ) {
+	if ( 'deactivate' === $action ) {
 		$plugins = isset( $_GET['plugin'] ) ? array( $_GET['plugin'] ) : array();
 	} else {
 		$plugins = isset( $_POST['checked'] ) ? (array) $_POST['checked'] : array();
@@ -674,7 +674,7 @@ function bp_migrate_directory_page_titles() {
 		}
 
 		// If the saved page title is the same as the legacy title, there's nothing to do.
-		if ( $legacy_titles[ $component ] == $page->post_title ) {
+		if ( $legacy_titles[ $component ] === $page->post_title ) {
 			continue;
 		}
 

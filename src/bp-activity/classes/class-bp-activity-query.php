@@ -204,7 +204,7 @@ class BP_Activity_Query extends BP_Recursive_Query {
 					case 'BETWEEN':
 					case 'NOT BETWEEN':
 						$value = array_slice( $value, 0, 2 );
-						$where = $wpdb->prepare( '%s AND %s', $value );
+						$where = $wpdb->prepare( '%s AND %s', $value[0], $value[1] );
 						break;
 
 					case 'LIKE':
