@@ -1595,15 +1595,8 @@ function bbp_admin_repair_topic_meta() {
 	$statement = __( 'Recalculating the discussion for each post &hellip; %s', 'buddyboss' );
 	$result    = __( 'Failed!', 'buddyboss' );
 
-	if( is_multisite() && bp_is_network_activated() ){
-		switch_to_blog( $_POST['site_id'] );
-	}
-
 	// First, delete everything.
 	if ( is_wp_error( $wpdb->query( "DELETE FROM `$wpdb->postmeta` WHERE `meta_key` = '_bbp_topic_id';" ) ) ) {
-		if( is_multisite() && bp_is_network_activated() ) {
-			restore_current_blog();
-		}
 		return array(
 			1,
 			sprintf( $statement, $result ),
@@ -1623,9 +1616,6 @@ function bbp_admin_repair_topic_meta() {
 			GROUP BY `topic`.`ID` );"
 		)
 	) ) {
-		if( is_multisite() && bp_is_network_activated() ) {
-			restore_current_blog();
-		}
 		return array(
 			3,
 			sprintf( $statement, $result ),
@@ -1649,9 +1639,6 @@ function bbp_admin_repair_topic_meta() {
 			GROUP BY `reply`.`ID` );"
 		)
 	) ) {
-		if( is_multisite() && bp_is_network_activated() ) {
-			restore_current_blog();
-		}
 		return array(
 			4,
 			sprintf( $statement, $result ),
@@ -1660,9 +1647,6 @@ function bbp_admin_repair_topic_meta() {
 		);
 	}
 
-	if( is_multisite() && bp_is_network_activated() ) {
-		restore_current_blog();
-	}
 	// Complete results
 	return array(
 		0,
@@ -1982,6 +1966,10 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		wp_send_json_error( $response );
 	}
 
+	if( is_multisite() && bp_is_network_activated() ){
+		switch_to_blog( $_POST['site_id'] );
+	}
+
 	if ( 'bbp-sync-topic-meta' === $type ) {
 		$status = bbp_admin_repair_topic_meta();
 	} elseif ( 'bbp-sync-forum-meta' === $type ) {
@@ -2020,6 +2008,10 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 		$status = bbp_admin_repair_user_roles();
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
+	}
+	
+	if( is_multisite() && bp_is_network_activated() ) {
+		restore_current_blog();
 	}
 
 	if ( 0 === $status['status'] ) {
