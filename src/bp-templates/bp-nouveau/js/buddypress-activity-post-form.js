@@ -700,140 +700,140 @@ window.bp = window.bp || {};
 	);
 
 	// The content of the activity
-	bp.Views.WhatsNew = bp.View.extend( {
-		tagName   : 'div',
-		className : 'bp-suggestions',
-		id        : 'whats-new',
+	bp.Views.WhatsNew = bp.View.extend({
+		tagName: 'div',
+		className: 'bp-suggestions',
+		id: 'whats-new',
 		events: {
 			'paste': 'handlePaste',
 			'keyup': 'handleKeyUp'
 		},
 		attributes: {
-			name         : 'whats-new',
-			cols         : '50',
-			rows         : '4',
-			placeholder  : BP_Nouveau.activity.strings.whatsnewPlaceholder,
-			'aria-label' : BP_Nouveau.activity.strings.whatsnewLabel,
+			name: 'whats-new',
+			cols: '50',
+			rows: '4',
+			placeholder: BP_Nouveau.activity.strings.whatsnewPlaceholder,
+			'aria-label': BP_Nouveau.activity.strings.whatsnewLabel,
 			contenteditable: true
 		},
-		loadURLAjax : null,
-		loadedURLs : [],
+		loadURLAjax: null,
+		loadedURLs: [],
 
-			initialize: function () {
-				this.on('ready', this.adjustContent, this);
-				this.options.activity.on('change:content', this.resetContent, this);
-				this.linkTimeout = null;
+		initialize: function () {
+			this.on('ready', this.adjustContent, this);
+			this.options.activity.on('change:content', this.resetContent, this);
+			this.linkTimeout = null;
 
-				if (_.isUndefined(BP_Nouveau.activity.params.link_preview)) {
-					this.$el.off('keyup');
+			if (_.isUndefined(BP_Nouveau.activity.params.link_preview)) {
+				this.$el.off('keyup');
+			}
+		},
+
+		adjustContent: function () {
+
+			// this.$el.toTextarea({
+			// 	allowHTML: true,//allow HTML formatting with CTRL+b, CTRL+i, etc.
+			// 	allowImg: true,//allow drag and drop images
+			// 	pastePlainText: false,//paste text without styling as source
+			// 	placeholder: false
+			// });
+
+			// First adjust layout
+			this.$el.css(
+				{
+					resize: 'none',
+					height: '50px'
 				}
-			},
+			);
 
-			adjustContent: function () {
+			// Check for mention
+			var mention = bp.Nouveau.getLinkParams(null, 'r') || null;
 
-				// this.$el.toTextarea({
-				// 	allowHTML: true,//allow HTML formatting with CTRL+b, CTRL+i, etc.
-				// 	allowImg: true,//allow drag and drop images
-				// 	pastePlainText: false,//paste text without styling as source
-				// 	placeholder: false
-				// });
+			if (!_.isNull(mention)) {
+				this.$el.text('@' + _.escape(mention) + ' ');
+				this.$el.focus();
+			}
+		},
 
-				// First adjust layout
-				this.$el.css(
-					{
-						resize: 'none',
-						height: '50px'
-					}
-				);
+		resetContent: function (activity) {
+			if (_.isUndefined(activity)) {
+				return;
+			}
 
-				// Check for mention
-				var mention = bp.Nouveau.getLinkParams(null, 'r') || null;
+			this.$el.html(activity.get('content'));
+		},
 
-				if (!_.isNull(mention)) {
-					this.$el.text('@' + _.escape(mention) + ' ');
-					this.$el.focus();
+		handlePaste: function (event) {
+			// Get user's pasted data
+			var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
+				data = clipboardData.getData('text/plain');
+
+			// Insert the filtered content
+			document.execCommand('insertHTML', false, data);
+
+			// Prevent the standard paste behavior
+			event.preventDefault();
+		},
+
+		handleKeyUp: function (event) {
+			var self = this;
+
+			if (this.linkTimeout != null) {
+				clearTimeout(this.linkTimeout);
+			}
+
+			this.linkTimeout = setTimeout(
+				function () {
+					this.linkTimeout = null;
+					self.scrapURL(event.target.textContent);
+				},
+				500
+			);
+		},
+
+		scrapURL: function (urlText) {
+			var urlString = '';
+			if (urlText.indexOf('http://') >= 0) {
+				urlString = this.getURL('http://', urlText);
+			} else if (urlText.indexOf('https://') >= 0) {
+				urlString = this.getURL('https://', urlText);
+			} else if (urlText.indexOf('www.') >= 0) {
+				urlString = this.getURL('www', urlText);
+			}
+
+			if (urlString !== '') {
+				//check if the url of any of the excluded video oembeds
+				var url_a = document.createElement('a');
+				url_a.href = urlString;
+				var hostname = url_a.hostname;
+				if (BP_Nouveau.activity.params.excluded_hosts.indexOf(hostname) !== -1) {
+					urlString = '';
 				}
-			},
+			}
 
-			resetContent: function (activity) {
-				if (_.isUndefined(activity)) {
-					return;
-				}
+			if ('' !== urlString) {
+				this.loadURLPreview(urlString);
+			} else {
+				$('#activity-close-link-suggestion').click();
+			}
+		},
 
-				this.$el.html(activity.get('content'));
-			},
-
-			handlePaste: function (event) {
-				// Get user's pasted data
-				var clipboardData = event.clipboardData || window.clipboardData || event.originalEvent.clipboardData,
-					data = clipboardData.getData('text/plain');
-
-				// Insert the filtered content
-				document.execCommand('insertHTML', false, data);
-
-				// Prevent the standard paste behavior
-				event.preventDefault();
-			},
-
-			handleKeyUp: function (event) {
-				var self = this;
-
-				if (this.linkTimeout != null) {
-					clearTimeout(this.linkTimeout);
-				}
-
-				this.linkTimeout = setTimeout(
-					function () {
-						this.linkTimeout = null;
-						self.scrapURL(event.target.textContent);
-					},
-					500
-				);
-			},
-
-			scrapURL: function (urlText) {
-				var urlString = '';
-				if (urlText.indexOf('http://') >= 0) {
-					urlString = this.getURL('http://', urlText);
-				} else if (urlText.indexOf('https://') >= 0) {
-					urlString = this.getURL('https://', urlText);
-				} else if (urlText.indexOf('www.') >= 0) {
-					urlString = this.getURL('www', urlText);
-				}
-
-				if (urlString !== '') {
-					//check if the url of any of the excluded video oembeds
-					var url_a = document.createElement('a');
-					url_a.href = urlString;
-					var hostname = url_a.hostname;
-					if (BP_Nouveau.activity.params.excluded_hosts.indexOf(hostname) !== -1) {
-						urlString = '';
-					}
-				}
-
-				if ('' !== urlString) {
-					this.loadURLPreview(urlString);
+		getURL: function (prefix, urlText) {
+			var urlString = '';
+			var startIndex = urlText.indexOf(prefix);
+			for (var i = startIndex; i < urlText.length; i++) {
+				if (urlText[i] === ' ' || urlText[i] === '\n') {
+					break;
 				} else {
-					$('#activity-close-link-suggestion').click();
+					urlString += urlText[i];
 				}
-			},
-
-			getURL: function (prefix, urlText) {
-				var urlString = '';
-				var startIndex = urlText.indexOf(prefix);
-				for (var i = startIndex; i < urlText.length; i++) {
-					if (urlText[i] === ' ' || urlText[i] === '\n') {
-						break;
-					} else {
-						urlString += urlText[i];
-					}
-				}
-				if (prefix === 'www') {
-					prefix = 'http://';
-					urlString = prefix + urlString;
-				}
-				return urlString;
-			},
+			}
+			if (prefix === 'www') {
+				prefix = 'http://';
+				urlString = prefix + urlString;
+			}
+			return urlString;
+		},
 
 		loadURLPreview: function (url) {
 			var self = this;
@@ -847,9 +847,9 @@ window.bp = window.bp || {};
 				}
 
 				var urlResponse = false;
-				if ( self.loadedURLs.length ) {
-					$.each( self.loadedURLs, function( index, urlObj ) {
-						if ( urlObj.url == url ) {
+				if (self.loadedURLs.length) {
+					$.each(self.loadedURLs, function (index, urlObj) {
+						if (urlObj.url == url) {
 							urlResponse = urlObj.response;
 							return false;
 						}
@@ -868,17 +868,17 @@ window.bp = window.bp || {};
 					link_embed: false
 				});
 
-				if ( ! urlResponse ) {
+				if (!urlResponse) {
 					self.loadURLAjax = bp.ajax.post('bp_activity_parse_url', {url: url}).always(function (response) {
-						self.setURLResponse( response, url );
+						self.setURLResponse(response, url);
 					});
 				} else {
-					self.setURLResponse( urlResponse, url );
+					self.setURLResponse(urlResponse, url);
 				}
 			}
 		},
 
-		setURLResponse : function( response, url ) {
+		setURLResponse: function (response, url) {
 			var self = this;
 
 			self.options.activity.set('link_loading', false);
@@ -926,7 +926,7 @@ window.bp = window.bp || {};
 				});
 			}
 		}
-	);
+	});
 
 	bp.Views.WhatsNewPostIn = bp.View.extend(
 		{
