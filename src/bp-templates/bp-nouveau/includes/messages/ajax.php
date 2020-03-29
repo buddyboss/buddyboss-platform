@@ -760,11 +760,11 @@ function bp_nouveau_ajax_get_thread_messages() {
 
 	// Simulate the loop.
 
-	$args = [
+	$args = array(
 		'thread_id' => $thread_id,
 		'per_page'  => isset( $_POST['per_page'] ) && $_POST['per_page'] ? $_POST['per_page'] : 10,
 		'before'    => isset( $_POST['before'] ) && $_POST['before'] ? $_POST['before'] : null,
-	];
+	);
 
 	if ( ! bp_thread_has_messages( $args ) ) {
 		// Remove the bp_current_action() override.
@@ -1210,26 +1210,26 @@ function bp_nouveau_ajax_dsearch_recipients() {
 	add_filter( 'bp_members_suggestions_query_args', 'bp_nouveau_ajax_search_recipients_exclude_current' );
 
 	$results = bp_core_get_suggestions(
-		[
+		array(
 			'term' => sanitize_text_field( $_GET['term'] ),
 			'type' => 'members',
-		]
+		)
 	);
 
 	$results = apply_filters( 'bp_members_suggestions_results', $results );
 
 	wp_send_json_success(
-		[
+		array(
 			'results' => array_map(
 				function( $result ) {
-					return [
+					return array(
 						'id'   => "@{$result->ID}",
 						'text' => $result->name,
-					];
+					);
 				},
 				$results
 			),
-		]
+		)
 	);
 }
 
@@ -1240,7 +1240,7 @@ function bp_nouveau_ajax_dsearch_recipients() {
  */
 function bp_nouveau_ajax_search_recipients_exclude_current( $user_query ) {
 	if ( isset( $user_query['exclude'] ) && ! $user_query['exclude'] ) {
-		$user_query['exclude'] = [];
+		$user_query['exclude'] = array();
 	}
 
 	$user_query['exclude'][] = get_current_user_id();

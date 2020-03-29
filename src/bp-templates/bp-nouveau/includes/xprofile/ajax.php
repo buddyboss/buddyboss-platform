@@ -84,7 +84,7 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$signup_group_id           = bp_xprofile_base_group_id();
 
 	// FOr prev data
-	$get_prev_ids = [];
+	$get_prev_ids = array();
 	if ( 0 < strlen( $prev_type_key ) ) {
 		$query           = "SELECT object_id FROM {$bp->profile->table_name_meta} WHERE meta_key = 'member_type' AND meta_value = '{$prev_type_key}' AND object_type = 'field'";
 		$get_db_prev_ids = $wpdb->get_results( $query );

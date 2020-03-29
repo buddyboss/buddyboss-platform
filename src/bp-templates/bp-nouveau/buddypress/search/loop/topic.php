@@ -1,12 +1,14 @@
 <?php
-$topic_id = get_the_ID();
-$total    = bbp_get_topic_reply_count( $topic_id ) ?>
+$topic_id            = get_the_ID();
+$total               = bbp_get_topic_reply_count( $topic_id );
+$forum_thumbnail_src = bbp_get_forum_thumbnail_src( bbp_get_forum_id( $topic_id ) );
+?>
 <li class="bp-search-item bp-search-item_topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php bbp_topic_permalink( $topic_id ); ?>">
 				<img
-					src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( $topic_id ) ) ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
+					src="<?php echo ! empty( $forum_thumbnail_src ) ? esc_url( $forum_thumbnail_src ) : esc_url( bp_search_get_post_thumbnail_default( get_post_type() ) ); ?>"
 					class="avatar forum-avatar"
 					height="150"
 					width="150"

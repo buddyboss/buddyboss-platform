@@ -820,7 +820,8 @@ function bp_friends_prime_mentions_results() {
 
 	foreach ( $friends_query->results as $user ) {
 		$result        = new stdClass();
-		$result->ID    = get_user_meta( $user->ID, 'nickname', true ) ?: $user->user_nicename;
+		$nickname      = get_user_meta( $user->ID, 'nickname', true );
+		$result->ID    = ! empty( $nickname ) ? $nickname : $user->user_nicename;
 		$result->image = bp_core_fetch_avatar(
 			array(
 				'html'    => false,

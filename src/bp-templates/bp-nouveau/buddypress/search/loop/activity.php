@@ -8,7 +8,7 @@
 
 		<div class="item activity-content">
 			<div class="activity-header">
-				<?php echo bp_get_activity_action( [ 'no_timestamp' => true ] ); ?>
+				<?php echo bp_get_activity_action( array( 'no_timestamp' => true ) ); ?>
 			</div>
 			<?php if ( bp_nouveau_activity_has_content() ) : ?>
 				<div class="activity-inner"><?php echo wp_trim_words( $GLOBALS['activities_template']->activity->content, '20', '...' ); ?></div>

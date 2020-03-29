@@ -1,9 +1,12 @@
-<?php $total = bbp_get_topic_reply_count( get_the_ID() ); ?>
+<?php
+$total               = bbp_get_topic_reply_count( get_the_ID() );
+$forum_thumbnail_src = bbp_get_forum_thumbnail_src( bbp_get_forum_id( get_the_ID() ) );
+?>
 <div class="bp-search-ajax-item bp-search-ajax-item_topic">
 	<a href="<?php echo esc_url( add_query_arg( array( 'no_frame' => '1' ), bbp_get_topic_permalink( get_the_ID() ) ) ); ?>">
 		<div class="item-avatar">
 			<img
-				src="<?php echo bbp_get_forum_thumbnail_src( bbp_get_forum_id( get_the_ID() ) ) ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
+				src="<?php echo ! empty( $forum_thumbnail_src ) ? esc_url( $forum_thumbnail_src ) : esc_url( bp_search_get_post_thumbnail_default( get_post_type() ) ); ?>"
 				class="avatar forum-avatar"
 				height="150"
 				width="150"

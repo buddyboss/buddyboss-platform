@@ -1813,7 +1813,7 @@ function bp_group_list_parents( $group = false ) {
 		$parent_group      = groups_get_group( $group->parent_id );
 		$group_type        = bp_groups_get_group_type( $group->parent_id );
 		$group_type_object = bp_groups_get_group_type_object( $group_type );
-		$group_type        = ( isset( $group_type_object ) && isset( $group_type_object->labels['singular_name'] ) ) ?: esc_html__( 'Subgroup of', 'buddyboss' );
+		$group_type        = ( isset( $group_type_object ) && isset( $group_type_object->labels['singular_name'] ) ) ? $group_type_object->labels['singular_name'] : esc_html__( 'Subgroup of', 'buddyboss' );
 		?>
 		<dl class="parent-list">
 			<dt class="parent-title"><?php echo $group_type; ?></dt>

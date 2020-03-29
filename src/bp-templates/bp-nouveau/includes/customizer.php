@@ -252,10 +252,10 @@ function bp_nouveau_customizer_enqueue_scripts() {
 	wp_localize_script(
 		'bp-nouveau-customizer',
 		'BP_Customizer',
-		[
+		array(
 			'emailCustomizerUrl'    => bp_email_get_redirect_to_customizer_url(),
 			'platformCustomizerUrl' => admin_url( 'customize.php?autofocus[panel]=bp_nouveau_panel' ),
-		]
+		)
 	);
 
 	/**

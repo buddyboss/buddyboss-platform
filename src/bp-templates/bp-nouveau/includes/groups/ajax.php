@@ -723,7 +723,8 @@ function bp_nouveau_ajax_send_group_invites() {
 		wp_send_json_error( $response );
 	}
 
-	$group_id = bp_get_current_group_id() ?: $_POST['group_id'];
+	$group_id = bp_get_current_group_id();
+	$group_id = ! empty( $group_id ) ? $group_id : $_POST['group_id'];
 
 	if ( bp_is_group_create() && ! empty( $_POST['group_id'] ) ) {
 		$group_id = (int) $_POST['group_id'];

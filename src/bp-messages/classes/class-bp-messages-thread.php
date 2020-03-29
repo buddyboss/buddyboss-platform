@@ -573,7 +573,7 @@ class BP_Messages_Thread {
 	 * @param  mix $user_id
 	 */
 	public static function is_thread_recipient( $thread_id = 0, $user_id = null ) {
-		$user_id = $user_id ?: bp_loggedin_user_id();
+		$user_id = $user_id ? $user_id : bp_loggedin_user_id();
 		if ( ! $user_id ) {
 			return true;
 		}

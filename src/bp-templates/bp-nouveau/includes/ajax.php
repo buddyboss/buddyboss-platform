@@ -161,7 +161,7 @@ function bp_nouveau_object_template_results_members_tabs( $results, $object ) {
 		return $results;
 	}
 
-	$results['scopes'] = [];
+	$results['scopes'] = array();
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_members_all_scope', 20 );
 	bp_has_members( bp_ajax_querystring( 'members' ) );
@@ -197,7 +197,7 @@ function bp_nouveau_object_template_results_groups_tabs( $results, $object ) {
 		return $results;
 	}
 
-	$results['scopes'] = [];
+	$results['scopes'] = array();
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_groups_all_scope', 20 );
 	bp_has_groups( bp_ajax_querystring( 'groups' ) );

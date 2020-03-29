@@ -225,7 +225,7 @@ function bp_nouveau_activity_state() {
 	?>
 	<div class="activity-state <?php echo $like_text ? 'has-likes' : ''; ?> <?php echo $comment_count ? 'has-comments' : ''; ?>">
 		<a href="javascript:void(0);" class="activity-state-likes">
-			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users; ?>"><?php echo $like_text ?: ''; ?></span>
+			<span class="like-text hint--bottom hint--medium hint--multiline" data-hint="<?php echo $favorited_users; ?>"><?php echo ! empty( $like_text ) ? $like_text : ''; ?></span>
 		</a>
 		<span class="ac-state-separator">&middot;</span>
 		<a href="#" class="activity-state-comments">

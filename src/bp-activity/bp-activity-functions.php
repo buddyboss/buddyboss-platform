@@ -98,7 +98,7 @@ function bp_activity_find_mentions( $content ) {
 	 * @param array $mentioned_users Associative array with user IDs as keys and usernames as values.
 	 * @param string $content Activity content
 	 */
-	return apply_filters( 'bp_activity_mentioned_users', [], $content );
+	return apply_filters( 'bp_activity_mentioned_users', array(), $content );
 }
 
 /**
@@ -3708,7 +3708,7 @@ function bp_activity_create_summary( $content, $activity ) {
 		$excerpt = get_the_excerpt( $content->ID );
 
 		// Get the excerpt first if found otherwise it will take the post content.
-		$content = ( $excerpt ) ?: $content->post_content;
+		$content = ( $excerpt ) ? $excerpt : $content->post_content;
 	}
 
 	$para_count     = substr_count( strtolower( wpautop( $content ) ), '<p>' );
@@ -4858,7 +4858,7 @@ function bp_update_activity_feed_of_custom_post_type( $post_id, $post, $update )
 		$excerpt = get_the_excerpt( $post->ID );
 
 		// if excert found then take content as a excerpt otherwise take the content as a post content.
-		$content = ( $excerpt ) ?: $post->post_content;
+		$content = ( $excerpt ) ? $excerpt : $post->post_content;
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
@@ -4967,7 +4967,7 @@ function bp_update_activity_feed_of_post( $post, $request, $action ) {
 		$excerpt = get_the_excerpt( $post->ID );
 
 		// if excert found then take content as a excerpt otherwise take the content as a post content.
-		$content = ( $excerpt ) ?: $post->post_content;
+		$content = ( $excerpt ) ? $excerpt : $post->post_content;
 
 		// If content not empty.
 		if ( ! empty( $content ) ) {
@@ -5087,7 +5087,7 @@ function bp_activity_action_parse_url() {
 				$images = $parser->getImageSources( false );
 			}
 			if ( ! empty( $images ) ) {
-				$images_obj = [];
+				$images_obj = array();
 
 				foreach ( $images as $key => $img ) {
 					if ( strpos( $url, 'youtube.com' ) > 0 ) {

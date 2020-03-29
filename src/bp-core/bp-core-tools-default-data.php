@@ -571,7 +571,7 @@ function bp_dd_get_random_date( $days_from = 30, $days_to = 0 ) {
  * @return int
  */
 function bp_dd_get_time() {
-	return (int) current_time( 'timestamp' );
+	return (int) current_time( 'timestamp', 1 );
 }
 
 

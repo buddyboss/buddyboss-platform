@@ -81,7 +81,8 @@ class BP_Integration {
 			return false;
 		}
 
-		$plugins = get_option( 'active_plugins' ) ?: array();
+		$active_plugins = get_option( 'active_plugins' );
+		$plugins        = ! empty( $active_plugins ) ? $active_plugins : array();
 		if ( in_array( $this->required_plugin, $plugins ) ) {
 			return true;
 		}
@@ -90,7 +91,8 @@ class BP_Integration {
 			return false;
 		}
 
-		$plugins = get_site_option( 'active_sitewide_plugins' ) ?: array();
+		$active_sitewide_plugins = get_site_option( 'active_sitewide_plugins' );
+		$plugins                 = ! empty( $active_sitewide_plugins ) ? $active_sitewide_plugins : array();
 		return isset( $plugins[ $this->required_plugin ] );
 	}
 

@@ -1,10 +1,13 @@
-<?php $total = bp_search_get_total_quizzes_count( get_the_ID() ); ?>
+<?php
+$total              = bp_search_get_total_quizzes_count( get_the_ID() );
+$post_thumbnail_url = get_the_post_thumbnail_url();
+?>
 <li class="bp-search-item bp-search-item_sfwd-topic">
 	<div class="list-wrap">
 		<div class="item-avatar">
 			<a href="<?php the_permalink(); ?>">
 				<img
-					src="<?php echo get_the_post_thumbnail_url() ?: bp_search_get_post_thumbnail_default( get_post_type() ); ?>"
+					src="<?php echo ! empty( $post_thumbnail_url ) ? esc_url( $post_thumbnail_url ) : esc_url( bp_search_get_post_thumbnail_default( get_post_type() ) ); ?>"
 					class="attachment-post-thumbnail size-post-thumbnail wp-post-image"
 					alt="<?php the_title(); ?>"
 				/>

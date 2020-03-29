@@ -48,7 +48,7 @@ if ( ! class_exists( 'BBP_Forums_Component' ) ) :
 		 * Include BuddyBoss classes and functions
 		 */
 		public function includes( $includes = array() ) {
-			$includes = $includes ?: array();
+			$includes = $includes ? $includes : array();
 
 			// Helper BuddyBoss functions
 			$includes[] = 'admin.php';

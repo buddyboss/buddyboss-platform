@@ -676,7 +676,7 @@ function bp_nouveau_object_template_results_media_tabs( $results, $object ) {
 		return $results;
 	}
 
-	$results['scopes'] = [];
+	$results['scopes'] = array();
 
 	add_filter( 'bp_ajax_querystring', 'bp_nouveau_object_template_results_media_all_scope', 20 );
 	bp_has_media( bp_ajax_querystring( 'media' ) );

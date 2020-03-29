@@ -3667,7 +3667,8 @@ function get_group_role_label( $group_id, $label_name ) {
 			}
 		}
 
-		$group_type_roles = get_post_meta( $group_type_post_id, '_bp_group_type_role_labels', true ) ?: array();
+		$group_type_roles = get_post_meta( $group_type_post_id, '_bp_group_type_role_labels', true );
+		$group_type_roles = ! empty( $group_type_roles ) ? $group_type_roles : array();
 
 		if ( 'organizer_plural_label_name' === $label_name ) {
 			$label = ( isset( $group_type_roles['organizer_plural_label_name'] ) && $group_type_roles['organizer_plural_label_name'] ) ? $group_type_roles['organizer_plural_label_name'] : __( 'Organizers', 'buddyboss' );

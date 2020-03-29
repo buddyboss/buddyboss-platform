@@ -27,6 +27,8 @@
         <exclude name="WordPress.PHP.StrictInArray" />
         <exclude name="WordPress.DB.PreparedSQL" />
         <exclude name="WordPress.WP.I18n" />
+        <exclude name="WordPress.DateTime.RestrictedFunctions.date_date" />
+        <exclude name="WordPress.DateTime.CurrentTimeTimestamp.RequestedUTC" />
     </rule>
 
     <rule ref="WordPress.WP.I18n">
