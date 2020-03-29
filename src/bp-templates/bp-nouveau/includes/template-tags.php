@@ -303,17 +303,14 @@ function bp_nouveau_user_feedback( $feedback_id = '' ) {
 
 	$bp_nouveau->user_feedback = $feedback;
 
-	bp_get_template_part(
-
-		/**
-		 * Filter here if you wish to use a different templates than the notice one.
-		 *
-		 * @since BuddyPress 3.0.0
-		 *
-		 * @param string path to your template part.
-		 */
-		apply_filters( 'bp_nouveau_user_feedback_template', 'common/notices/template-notices' )
-	);
+	/**
+	 * Filter here if you wish to use a different templates than the notice one.
+	 *
+	 * @since BuddyPress 3.0.0
+	 *
+	 * @param string path to your template part.
+	 */
+	bp_get_template_part( apply_filters( 'bp_nouveau_user_feedback_template', 'common/notices/template-notices' ) );
 
 	if ( ! empty( $feedback['after'] ) ) {
 
