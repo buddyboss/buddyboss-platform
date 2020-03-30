@@ -1943,20 +1943,16 @@ blockquote.wp-embedded-content > p:first-child > a:hover {
   padding: 1em 0 0;
 }
 
-.buddypress-wrap .activity-comments ul li ul {
-  margin-right: 5%;
-}
-
-.buddypress-wrap .activity-comments ul li ul li.detached-comment-item {
-  margin-right: -5%;
-}
-
 .buddypress-wrap .activity-comments ul li:first-child {
   border-top: 0;
 }
 
 .buddypress-wrap .activity-comments ul li:last-child {
   margin-bottom: 0;
+}
+
+.buddypress-wrap .activity-comments > ul > li > ul {
+  margin-right: 5%;
 }
 
 .buddypress-wrap .activity-comments div.acomment-avatar {
@@ -3881,6 +3877,39 @@ div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.section_n
 
 div.profile_completion_wrap ul.pc_detailed_progress li.incomplete span.completed_staus {
   background-color: #b71717;
+}
+
+/* Send Invites Table */
+#member-invites-table .field-actions,
+#member-invites-table .field-actions-last {
+  text-align: center;
+}
+
+#member-invites-table .field-actions .field-actions-remove,
+#member-invites-table .field-actions-last .field-actions-remove {
+  cursor: pointer;
+}
+
+#member-invites-table .field-actions-add {
+  cursor: pointer;
+}
+
+#member-invites-table .field-actions-add i {
+  background-color: #000;
+  color: #fff;
+  border-radius: 100%;
+  padding: 3px 3px 1px 4px;
+  height: auto;
+  width: auto;
+  line-height: normal;
+}
+
+#member-invites-table .field-actions-add.disabled {
+  cursor: not-allowed;
+}
+
+#member-invites-table .field-actions-add.disabled i {
+  background-color: #ccc;
 }
 
 /**
@@ -11029,19 +11058,67 @@ ul.bb-albums-list .bb-more-photos strong {
 
 .bb-media-model-inner .gif-media-search-dropdown.open {
   width: 300px;
-  right: -60px;
+  right: -50px;
+}
+
+.comment-item .bb-media-model-inner ul .gif-media-search-dropdown.open {
+  right: -80px;
 }
 
 .bb-media-model-inner .gif-media-search-dropdown:before {
-  right: 80px;
+  right: 70px;
+}
+
+.comment-item .bb-media-model-inner ul .gif-media-search-dropdown:before {
+  right: 100px;
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
-  right: -100px;
+  right: -110px;
 }
 
 .bb-media-model-inner .emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
-  right: 102px;
+  right: 112px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -28px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 30px;
+}
+
+.bb-media-model-inner .ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -50px;
+}
+
+.bb-media-model-inner .ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 52px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -80px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 82px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .gif-media-search-dropdown.open {
+  right: -30px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) .gif-media-search-dropdown:before {
+  right: 50px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) .emojionearea-picker.emojionearea-picker-position-bottom {
+  right: -80px;
+}
+
+.bb-media-model-inner .ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+  right: 82px;
 }
 
 img.emoji,

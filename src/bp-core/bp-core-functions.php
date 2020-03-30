@@ -3316,75 +3316,114 @@ function bp_send_email( $email_type, $to, $args = array() ) {
 	 *
 	 * @since BuddyPress 2.5.0
 	 *
-	 * @param bool $use_wp_mail Whether to fallback to the regular wp_mail() function or not.
+	 * @param bool $wp_html_emails || ! $is_default_wpmail $is_default_wpmail Whether to fallback to the regular wp_mail() function or not.
 	 */
 	$must_use_wpmail = apply_filters( 'bp_email_use_wp_mail', $wp_html_emails || ! $is_default_wpmail );
 
+	/**
+	 * Filter to forcefully use template
+	 *
+	 * This is done if wp_mail_content_type() has been configured for HTML,
+	 * or if wp_mail() has been redeclared (it's a pluggable function).
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param bool true default fallback will be always true.
+	 */
+	$force_use_template = apply_filters( 'bp_email_force_use_templates', true );
+
+	if ( $force_use_template ) {
+		add_filter( 'wp_mail_content_type', 'bp_email_set_content_type' );
+	}
+
 	if ( $must_use_wpmail ) {
+
 		$to = $email->get( 'to' );
 
 		return wp_mail(
 			array_shift( $to )->get_address(),
 			$email->get( 'subject', 'replace-tokens' ),
-			$email->get( 'content_plaintext', 'replace-tokens' )
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
 		);
 	}
 
-	/*
-	 * Send the email.
-	 */
+	$must_use_bp_mail = apply_filters( 'bp_email_use_bp_mail', false );
 
-	/**
-	 * Filter the email delivery class.
-	 *
-	 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
-	 *
-	 * @since BuddyPress 2.5.0
-	 *
-	 * @param string       $deliver_class The email delivery class name.
-	 * @param string       $email_type    Type of email being sent.
-	 * @param array|string $to            Array or comma-separated list of email addresses to the email to.
-	 * @param array        $args {
-	 *     Optional. Array of extra parameters.
-	 *
-	 *     @type array $tokens Optional. Assocative arrays of string replacements for the email.
-	 * }
-	 */
-	$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
-	if ( ! class_exists( $delivery_class ) ) {
-		return new WP_Error( 'missing_class', __CLASS__, $this );
-	}
+	if ( $must_use_bp_mail ) {
 
-	$delivery = new $delivery_class();
-	$status   = $delivery->bp_email( $email );
-
-	if ( is_wp_error( $status ) ) {
+		/*
+		 * Send the email.
+		 */
 
 		/**
-		 * Fires after BuddyPress has tried - and failed - to send an email.
+		 * Filter the email delivery class.
 		 *
+		 * Defaults to BP_PHPMailer, which as you can guess, implements PHPMailer.
+		 *
+		 * @param string $deliver_class The email delivery class name.
+		 * @param string $email_type Type of email being sent.
+		 * @param array|string $to Array or comma-separated list of email addresses to the email to.
+		 * @param array $args {
+		 *     Optional. Array of extra parameters.
+		 *
+		 * @type array $tokens Optional. Assocative arrays of string replacements for the email.
+		 * }
 		 * @since BuddyPress 2.5.0
 		 *
-		 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
-		 *                         will vary based on the email delivery class you are using.
-		 * @param BP_Email $email  The email we tried to send.
 		 */
-		do_action( 'bp_send_email_failure', $status, $email );
+		$delivery_class = apply_filters( 'bp_send_email_delivery_class', 'BP_PHPMailer', $email_type, $to, $args );
+		if ( ! class_exists( $delivery_class ) ) {
+			return new WP_Error( 'missing_class', 'No class found by that name', $delivery_class );
+		}
+
+		$delivery = new $delivery_class();
+		$status   = $delivery->bp_email( $email );
+
+		if ( is_wp_error( $status ) ) {
+
+			/**
+			 * Fires after BuddyPress has tried - and failed - to send an email.
+			 *
+			 * @param WP_Error $status A WP_Error object describing why the email failed to send. The contents
+			 *                         will vary based on the email delivery class you are using.
+			 * @param BP_Email $email The email we tried to send.
+			 *
+			 * @since BuddyPress 2.5.0
+			 *
+			 */
+			do_action( 'bp_send_email_failure', $status, $email );
+
+		} else {
+
+			/**
+			 * Fires after BuddyPress has succesfully sent an email.
+			 *
+			 * @param bool $status True if the email was sent successfully.
+			 * @param BP_Email $email The email sent.
+			 *
+			 * @since BuddyPress 2.5.0
+			 *
+			 */
+			do_action( 'bp_send_email_success', $status, $email );
+		}
+
+		return $status;
 
 	} else {
 
-		/**
-		 * Fires after BuddyPress has succesfully sent an email.
-		 *
-		 * @since BuddyPress 2.5.0
-		 *
-		 * @param bool     $status True if the email was sent successfully.
-		 * @param BP_Email $email  The email sent.
-		 */
-		do_action( 'bp_send_email_success', $status, $email );
-	}
+		$to = $email->get( 'to' );
 
-	return $status;
+		return wp_mail(
+			array_shift( $to )->get_address(),
+			$email->get( 'subject', 'replace-tokens' ),
+			$force_use_template ?
+				$email->get_template( 'add-content' ) :
+				$email->get( 'content_plaintext', 'replace-tokens' )
+		);
+
+	}
 }
 
 /**
