@@ -197,13 +197,6 @@ window.bp = window.bp || {};
 
 						params = { 'action': 'bp_get_suggestions', 'term': query, 'type': 'members' };
 
-						if ( typeof window.BP_Nouveau !== 'undefined' &&
-						typeof window.BP_Nouveau.messages !== 'undefined' &&
-						typeof window.BP_Nouveau.messages.force_friendship_to_message !== 'undefined' &&
-						window.BP_Nouveau.messages.force_friendship_to_message ) {
-							params.only_friends = 1;
-						}
-
 						if ( $.isNumeric( this.$inputor.data( 'suggestions-group-id' ) ) ) {
 							params['group-id'] = parseInt( this.$inputor.data( 'suggestions-group-id' ), 10 );
 						}
