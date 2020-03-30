@@ -1181,7 +1181,7 @@ function bp_document_upload_handler( $file_id = 'file' ) {
 		require_once ABSPATH . 'wp-admin/includes/admin.php';
 	}
 
-	add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 1, 1 );
+	add_filter( 'upload_mimes', 'bp_document_allowed_mimes', 9999999, 1 );
 
 	$aid = media_handle_upload(
 		$file_id,
@@ -1228,18 +1228,19 @@ function bp_document_upload_handler( $file_id = 'file' ) {
  *
  * @return Array
  */
-function bp_document_allowed_mimes() {
+function bp_document_allowed_mimes( $existing_mimes = array() ) {
 
-	$mime_types     = array();
-	$all_extensions = bp_document_extensions_list();
-	foreach ( $all_extensions as $extension ) {
-		if ( true === (bool) $extension['is_active'] ) {
-			$extension_name              = ltrim( $extension['extension'], '.' );
-			$mime_types[$extension_name] = $extension['mime_type'];
+	if ( bp_is_active( 'media' ) ) {
+		$existing_mimes = array();
+		$all_extensions = bp_document_extensions_list();
+		foreach ( $all_extensions as $extension ) {
+			if ( true === (bool) $extension['is_active'] ) {
+				$extension_name                    = ltrim( $extension['extension'], '.' );
+				$existing_mimes["$extension_name"] = $extension['mime_type'];
+			}
 		}
 	}
-
-	return $mime_types;
+	return $existing_mimes;
 }
 
 function bp_document_extension( $attachment_id ) {

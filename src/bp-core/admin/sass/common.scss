@@ -483,7 +483,8 @@ tr.bp-search-parent-field label {
 	background-image: url(../../images/admin/icons/fontawesome/solid/camera-retro.svg);
 }
 
-.bp-admin-card.section-bp_media_settings_documents h2:before {
+.bp-admin-card.section-bp_media_settings_documents h2:before,
+.bp-admin-card.section-bp_document_settings_extensions h2:before {
 	background-image: url(../../images/admin/icons/fontawesome/solid/folder.svg);
 }
 
@@ -513,6 +514,53 @@ tr.bp-search-parent-field label {
 .bp-admin-card.section-bp_search_settings_community th[scope="row"],
 .bp-admin-card.section-bp_search_settings_post_types th[scope="row"] {
 	width: 1px;
+}
+
+table.extension-listing tbody td {
+	padding: 6px 10px;
+}
+
+table.extension-listing thead th {
+	padding: 6px 10px;
+}
+
+table.extension-listing thead th.ext-head-enable,
+table.extension-listing thead th.ext-head-control {
+	width: 30px;
+	padding: 0;
+}
+
+table.extension-listing thead th.ext-head-name {
+	width: 100px;
+}
+
+table.extension-listing td input[type="text"].extension-name {
+	width: 100px;
+}
+
+table.extension-listing td #btn-remove-extensions {
+	cursor: pointer;
+}
+
+table.extension-listing tfoot td {
+	text-align: center;
+}
+
+table.extension-listing td #btn-add-extensions {
+	cursor: pointer;
+	font-size: 22px;
+}
+
+table.extension-listing td input[type="text"] {
+	width: 100%;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing th {
+	display: none;
+}
+
+.section-bp_document_settings_extensions table.form-table tbody tr.document-extensions-listing td table.extension-listing thead tr th {
+	display: table-cell;
 }
 
 /* Pages */

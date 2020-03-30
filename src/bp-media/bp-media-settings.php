@@ -1065,49 +1065,12 @@ function bp_media_settings_callback_extension_document_support() {
 	$count      = count( $extensions ) + 1;
 	?>
 	<style>
-		table.extension-listing tbody td {
-			padding: 6px 10px;
-		}
-		
-		table.extension-listing thead th {
-			padding: 6px 10px;
-		}
-		
-		table.extension-listing thead th.ext-head-enable,
-		table.extension-listing thead th.ext-head-control {
-			width: 30px;
-			padding: 0;
-		}
 
-		table.extension-listing thead th.ext-head-name {
-			width: 100px;
-		}
-		
-		table.extension-listing td input[type="text"].extension-name {
-			width: 100px
-		}
-
-		table.extension-listing td #btn-remove-extensions{
-			cursor: pointer
-		}
-
-		table.extension-listing tfoot td {
-			text-align: center;
-		}
-		
-		table.extension-listing td #btn-add-extensions{
-			cursor: pointer;
-			font-size: 22px;
-		}
-		
-		table.extension-listing td input[type="text"] {
-			width: 100%;
-		}
 	</style>
 
     <table class="extension-listing">
 		<thead>
-			<th class="ext-head ext-head-enable"><?php echo __( 'Enable/Disable', 'buddyboss' ); ?></th>
+			<th class="ext-head ext-head-enable"><?php echo __( 'Enable', 'buddyboss' ); ?></th>
 			<th class="ext-head ext-head-name"><?php echo __( 'Name', 'buddyboss' ); ?></th>
 			<th class="ext-head ext-head-name"><?php echo __( 'Extension', 'buddyboss' ); ?></th>
 			<th class="ext-head ext-head-mime"><?php echo __( 'Mime Type', 'buddyboss' ); ?></th>
@@ -1135,10 +1098,10 @@ function bp_media_settings_callback_extension_document_support() {
 						<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[extension]' ); ?>" id="<?php echo esc_attr( $name ) . 'extension'; ?>" type="text" value="<?php echo esc_attr( $extension['extension'] ); ?>" />
 					</td>
 					<td>
-						<input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" />
+						<input name="<?php echo esc_attr( $name . '[mime_type]' ); ?>" id="<?php echo esc_attr( $name ) . 'mime'; ?>" type="text" value="<?php echo esc_attr( $extension['mime_type'] ); ?>" />
 					</td>
                     <td>
-                        <input <?php echo esc_attr( $edit ); ?> name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" />
+                        <input name="<?php echo esc_attr( $name . '[description]' ); ?>" id="<?php echo esc_attr( $name ) . 'desc'; ?>" type="text" value="<?php echo esc_attr( $extension['description'] ); ?>" />
                     </td>
                     <?php
                     if ( ! $is_default ) {
@@ -1276,14 +1239,16 @@ function bp_document_get_settings_fields() {
 
 	$fields = array();
 
-	/** Photos Section */
+	/** Document Extensions Section */
 	$fields['bp_document_settings_extensions'] = array(
 
-		'bp_document_extensions_support'  => array(
+		'bp_document_extensions_support' => array(
 			'title'             => __( 'Extensions', 'buddyboss' ),
 			'callback'          => 'bp_media_settings_callback_extension_document_support',
 			'sanitize_callback' => 'array',
-			'args'              => array(),
+			'args'              => array(
+				'class' => 'document-extensions-listing'
+			),
 		)
 	);
 

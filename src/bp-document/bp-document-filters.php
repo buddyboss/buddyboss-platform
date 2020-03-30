@@ -35,7 +35,7 @@ add_action( 'messages_message_sent', 'bp_document_attach_document_to_message' );
 add_action( 'bp_messages_thread_after_delete', 'bp_document_messages_delete_attached_document', 10, 2 );
 
 // Download Document
-add_action( 'init', 'bp_document_download_url_file' );
+add_action( 'bp_template_redirect', 'bp_document_download_url_file' );
 
 /**
  * Add document theatre template for activity pages

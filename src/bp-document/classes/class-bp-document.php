@@ -291,7 +291,9 @@ class BP_Document {
 			}
 		} elseif ( 'xlsm' === $extension || 'potx' === $extension || 'pps' === $extension || 'docm' === $extension || 'dotx' === $extension || 'doc' === $extension || 'docx' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'xlr' === $extension || 'wps' === $extension || 'wpd' === $extension || 'rtf' === $extension || 'pptx' === $extension || 'ppt' === $extension || 'pps' === $extension ) {
 
-			$dir     = $upload_dir['basedir'] . '/doc' . $attachment_id;
+			$dir = $upload_dir['basedir'] . '/doc' . $attachment_id;
+			wp_mkdir_p( $dir );
+
 			$pattern = $dir . '/*.*';
 			$command = 'soffice --headless "-env:UserInstallation=file:///tmp/LibreOffice_Conversion_${USER}" --convert-to pdf:writer_pdf_Export --outdir ' . $dir . '/ ' . $file;
 

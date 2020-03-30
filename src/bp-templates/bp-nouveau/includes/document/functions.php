@@ -226,7 +226,7 @@ function bp_media_allowed_document_type() {
 		array(
 			'name'        => 'dotx',
 			'extension'   => '.dotx',
-			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 			'description' => 'Microsoft Office - OOXML - Word Document Template',
 			'is_default'  => true,
 			'is_active'   => true
