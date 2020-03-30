@@ -52,9 +52,9 @@
 
 		<# if ( data.group_name.length > 1 && data.is_group_thread ) { #>
 			<div class="actions">
-				<a type="button" href="javascript:void(0);" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You can\'t delete this thread but you can leave the group to left this thread.', 'buddyboss' ); ?>">
+				<a type="button" href="javascript:void(0);" data-bp-tooltip-pos="left" data-bp-tooltip="<?php esc_attr_e( 'You need to leave the group to be removed from this conversation.', 'buddyboss' ); ?>">
 					<i class="dashicons dashicons-info"></i>
-					<span class="bp-screen-reader-text"><?php esc_html_e( 'You can\'t delete this thread but you can leave the group to left this thread.', 'buddyboss' ); ?></span>
+					<span class="bp-screen-reader-text"><?php esc_html_e( 'You need to leave the group to be removed from this conversation.', 'buddyboss' ); ?></span>
 				</a>
 			</div>
 		<# } else { #>
