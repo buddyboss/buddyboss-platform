@@ -45,7 +45,7 @@ function bbp_admin_repair() {
 
 				<?php
 				if ( is_multisite() && is_network_admin() ) {
-					$blogs = bbp_get_sites()
+					$bbp_network_sites = bbp_get_network_sites();
 					?>
 					<fieldset>
 						<legend>
@@ -57,20 +57,20 @@ function bbp_admin_repair() {
 							<?php
 							esc_html_e( 'Select the site:', 'buddyboss' );
 
-							if ( ! empty( $blogs ) ) {
+							if ( ! empty( $bbp_network_sites ) ) {
 								?>
-								<select name="user_blog" id="select-site" required>
+								<select name="bbp-network-site" id="bbp-network-site" required>
 									<option value="0">
 										<?php
 										esc_html_e( 'Select a site to fix the forums', 'buddyboss' );
 										?>
 									</option>
 									<?php
-									foreach ( $blogs as $blog ) {
+									foreach ( $bbp_network_sites as $bbp_network_site ) {
 										?>
-										<option value="<?php echo esc_attr( $blog->blog_id ) ?>">
+										<option value="<?php echo esc_attr( $bbp_network_site->blog_id ); ?>">
 											<?php
-											echo esc_html( $blog->domain );
+											echo esc_html( $bbp_network_site->domain . '/' . $bbp_network_site->path );
 											?>
 										</option>
 										<?php
@@ -223,15 +223,14 @@ function bbp_admin_repair_list() {
 }
 
 /**
- * Function get user's sub sites.
+ * Function get network sites.
  *
  * @return mixed|void
  */
-function bbp_get_sites() {
-
+function bbp_get_network_sites() {
 	$sites = get_sites();
 
-	return apply_filters( 'bbp_network_sites', ( $sites ) ? $sites : array() );
+	return apply_filters( 'bbp_get_network_sites', ( $sites ) ? $sites : array() );
 }
 
 /**
@@ -2009,7 +2008,7 @@ function bp_admin_forum_repair_tools_wrapper_function() {
 	} elseif ( 'bbp-wp-role-restore' === $type ) {
 		$status = bbp_restore_caps_from_wp_roles();
 	}
-	
+
 	if( is_multisite() && bp_is_network_activated() ) {
 		restore_current_blog();
 	}
