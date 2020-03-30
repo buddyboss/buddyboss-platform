@@ -161,20 +161,20 @@ function bp_nouveau_groups_localize_scripts( $params = array() ) {
 	}
 
 	$params['group_invites'] = array(
-		'nav'                   => bp_sort_by_key( $invites_nav, 'order', 'num' ),
-		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
-		'removing'              => __( 'Removing member invite. Please wait.', 'buddyboss' ),
-		'invites_form'          => '',
-		'cancel_invite_tooltip' => __( 'Cancel Invite', 'buddyboss' ),
-		'add_invite_tooltip'    => __( 'Send Invite', 'buddyboss' ),
-		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
-		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
-		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
-		'all_member_invited'    => __( 'All members of this group are invited.', 'buddyboss' ),
-		'member_invite_info_text'    => __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ),
-		'group_id'              => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
-		'is_group_create'       => bp_is_group_create(),
-		'nonces'                => array(
+		'nav'                     => bp_sort_by_key( $invites_nav, 'order', 'num' ),
+		'loading'                 => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'removing'                => __( 'Removing member invite. Please wait.', 'buddyboss' ),
+		'invites_form'            => '',
+		'cancel_invite_tooltip'   => __( 'Cancel Invite', 'buddyboss' ),
+		'add_invite_tooltip'      => __( 'Send Invite', 'buddyboss' ),
+		'invites_form_reset'      => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'         => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		'removeUserInvite'        => __( 'Cancel invitation %s', 'buddyboss' ),
+		'all_member_invited'      => __( 'All members of this group are invited.', 'buddyboss' ),
+		'member_invite_info_text' => __( 'Select members to invite by clicking the + button next to each member.', 'buddyboss' ),
+		'group_id'                => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
+		'is_group_create'         => bp_is_group_create(),
+		'nonces'                  => array(
 			'uninvite'     => wp_create_nonce( 'groups_invite_uninvite_user' ),
 			'send_invites' => wp_create_nonce( 'groups_send_invites' ),
 		),
@@ -205,15 +205,16 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	$bp = buddypress();
 
 	$response = array(
-		'id'           => intval( $user->ID ),
-		'name'         => bp_core_get_user_displayname( intval( $user->ID )  ),
-		'avatar'       => htmlspecialchars_decode( bp_core_fetch_avatar( array(
-			'item_id' => $user->ID,
-			'object'  => 'user',
-			'type'    => 'thumb',
-			'width'   => 150,
-			'height'  => 150,
-			'html'    => false )
+		'id'     => intval( $user->ID ),
+		'name'   => bp_core_get_user_displayname( intval( $user->ID ) ),
+		'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+				'item_id' => $user->ID,
+				'object'  => 'user',
+				'type'    => 'thumb',
+				'width'   => 150,
+				'height'  => 150,
+				'html'    => false
+			)
 		) ),
 	);
 
@@ -222,7 +223,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 
 	// Do extra queries only if needed
 	if ( ! empty( $bp->groups->invites_scope ) && 'invited' === $bp->groups->invites_scope ) {
-		$response['is_sent']  = (bool) groups_check_user_has_invite( $user->ID, $group_id );
+		$response['is_sent'] = (bool) groups_check_user_has_invite( $user->ID, $group_id );
 
 		$inviter_ids = bp_nouveau_groups_get_inviter_ids( $user->ID, $group_id );
 
@@ -234,7 +235,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 			}
 
 			$response['invited_by'][] = array(
-				'avatar' => htmlspecialchars_decode( bp_core_fetch_avatar( array(
+				'avatar'    => htmlspecialchars_decode( bp_core_fetch_avatar( array(
 					'item_id' => $inviter_id,
 					'object'  => 'user',
 					'type'    => 'thumb',
@@ -245,7 +246,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 				) ) ),
 				'user_link' => bp_core_get_userlink( $inviter_id, false, true ),
 				'user_name' => bp_core_get_username( $inviter_id ),
-				'name' => bp_core_get_user_displayname( intval( $inviter_id )  ),
+				'name'      => bp_core_get_user_displayname( intval( $inviter_id ) ),
 			);
 		}
 
@@ -305,7 +306,7 @@ function bp_nouveau_get_group_potential_invites( $args = array() ) {
 
 	$response = new stdClass();
 
-	$response->meta = array( 'total_page' => 0, 'current_page' => 0 );
+	$response->meta  = array( 'total_page' => 0, 'current_page' => 0 );
 	$response->users = array();
 
 	if ( ! empty( $query->results ) ) {
@@ -767,14 +768,14 @@ function bp_nouveau_groups_customizer_sections( $sections = array() ) {
  */
 function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 	return array_merge( $settings, array(
-		'bp_nouveau_appearance[group_front_page]' => array(
+		'bp_nouveau_appearance[group_front_page]'        => array(
 			'index'             => 'group_front_page',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'absint',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_front_boxes]' => array(
+		'bp_nouveau_appearance[group_front_boxes]'       => array(
 			'index'             => 'group_front_boxes',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'absint',
@@ -788,32 +789,32 @@ function bp_nouveau_groups_customizer_settings( $settings = array() ) {
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_nav_display]' => array(
+		'bp_nouveau_appearance[group_nav_display]'       => array(
 			'index'             => 'group_nav_display',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'absint',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_nav_order]' => array(
+		'bp_nouveau_appearance[group_nav_order]'         => array(
 			'index'             => 'group_nav_order',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'bp_nouveau_sanitize_nav_order',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[groups_dir_tabs]' => array(
+		'bp_nouveau_appearance[groups_dir_tabs]'         => array(
 			'index'             => 'groups_dir_tabs',
 			'capability'        => 'bp_moderate',
 			'sanitize_callback' => 'absint',
 			'transport'         => 'refresh',
 			'type'              => 'option',
 		),
-		'bp_nouveau_appearance[group_default_tab]' => array(
-			'index'             => 'group_default_tab',
-			'capability'        => 'bp_moderate',
-			'transport'         => 'refresh',
-			'type'              => 'option',
+		'bp_nouveau_appearance[group_default_tab]'       => array(
+			'index'      => 'group_default_tab',
+			'capability' => 'bp_moderate',
+			'transport'  => 'refresh',
+			'type'       => 'option',
 		),
 	) );
 }
@@ -845,13 +846,13 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 
 	return array_merge( $controls,
 		array(
-			'group_nav_display'  => array(
+			'group_nav_display' => array(
 				'label'    => __( 'Display the group navigation vertically.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
 				'settings' => 'bp_nouveau_appearance[group_nav_display]',
 				'type'     => 'checkbox',
 			),
-			'group_default_tab'  => array(
+			'group_default_tab' => array(
 				'label'       => __( 'Group navigation order', 'buddyboss' ),
 				'description' => __( 'Set the default navigation tab when viewing a group. The dropdown only shows tabs that are available to all groups.', 'buddyboss' ),
 				'section'     => 'bp_nouveau_group_primary_nav',
@@ -859,7 +860,7 @@ function bp_nouveau_groups_customizer_controls( $controls = array() ) {
 				'type'        => 'select',
 				'choices'     => $options,
 			),
-			'group_nav_order'    => array(
+			'group_nav_order'   => array(
 				'class'    => 'BP_Nouveau_Nav_Customize_Control',
 				'label'    => __( 'Reorder the primary navigation for a group.', 'buddyboss' ),
 				'section'  => 'bp_nouveau_group_primary_nav',
@@ -1238,8 +1239,8 @@ function bp_nouveau_group_pending_invites_set_title_tag( $title ){
 	$new_title = "";
 
 	if ( 'pending-invites' === bp_get_group_current_invite_tab() ) {
-		$new_title = esc_html__( 'Pending Invites', 'buddyboss' );
-		$sep = apply_filters( 'document_title_separator', '-' );
+		$new_title         = esc_html__( 'Pending Invites', 'buddyboss' );
+		$sep               = apply_filters( 'document_title_separator', '-' );
 		$get_current_group = bp_get_current_group_name();
 
 		$new_title = $new_title . ' ' . $sep . ' ' . $get_current_group . ' ' . $sep . ' ' . bp_get_site_name();
@@ -1256,7 +1257,7 @@ function bp_nouveau_group_pending_invites_set_title_tag( $title ){
 /**
  * Localize the strings needed for the Group's Message UI.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param array $params Associative array containing the JS Strings needed by scripts
  *
@@ -1303,7 +1304,7 @@ function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
 /**
  * Enqueue the groups scripts
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  */
 function bp_nouveau_groups_messages_enqueue_scripts() {
 

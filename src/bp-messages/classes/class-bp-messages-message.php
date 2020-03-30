@@ -295,8 +295,7 @@ class BP_Messages_Message {
 		// Get the message ids in order to delete their metas.
 		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
 		//Get the all thread ids for unread messages
-		$thread_ids  = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
-		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // db call ok; no-cache ok;
+		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
@@ -318,7 +317,7 @@ class BP_Messages_Message {
 			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
 		}
 		// delete all the meta recipients from user table.
-		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) ); // db call ok; no-cache ok;
+		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) );
 	}
 
 	/**
@@ -369,6 +368,14 @@ class BP_Messages_Message {
 		return $thread_id;
 	}
 
+	/**
+	 * Get existsing threads which matches the recipients
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param  array   $recipient_ids
+	 * @param  integer $sender
+	 */
 	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
 

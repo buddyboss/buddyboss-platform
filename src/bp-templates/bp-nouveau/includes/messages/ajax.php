@@ -742,17 +742,17 @@ function bp_nouveau_ajax_get_user_message_threads() {
 				'height'  => BP_AVATAR_THUMB_HEIGHT,
 				'html'    => false,
 			) ) ),
-			'count'         => bp_get_message_thread_total_count(),
-			'date'          => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
-			'display_date'  => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
-			'started_date' => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option('date_format') ),
+			'count'                     => bp_get_message_thread_total_count(),
+			'date'                      => strtotime( bp_get_message_thread_last_post_date_raw() ) * 1000,
+			'display_date'              => bp_nouveau_get_message_date( bp_get_message_thread_last_post_date_raw() ),
+			'started_date'              => bp_nouveau_get_message_date( $messages_template->thread->first_message_date, get_option( 'date_format' ) ),
 		);
 
 		if ( is_array( $messages_template->thread->recipients ) ) {
 			foreach ( $messages_template->thread->recipients as $recipient ) {
 				if ( empty( $recipient->is_deleted ) ) {
 					$threads->threads[ $i ]['recipients'][] = array(
-						'avatar'      => esc_url( bp_core_fetch_avatar( array(
+						'avatar'     => esc_url( bp_core_fetch_avatar( array(
 							'item_id' => $recipient->user_id,
 							'object'  => 'user',
 							'type'    => 'thumb',

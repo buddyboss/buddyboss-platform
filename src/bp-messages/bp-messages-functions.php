@@ -752,6 +752,13 @@ function messages_notification_new_message( $raw_args = array() ) {
 }
 add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
+/**
+ * Email message recipients to alert them of a new unread group message.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param array $raw_args
+ */
 function group_messages_notification_new_message( $raw_args = array() ) {
 	if ( is_object( $raw_args ) ) {
 		$args = (array) $raw_args;
@@ -762,7 +769,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	// These should be extracted below.
 	$recipients    = array();
 	$email_subject = $subject = $email_content = '';
-	$sender_id = $id     = 0;
+	$sender_id     = $id = 0;
 
 	// Barf.
 	extract( $args );
@@ -818,7 +825,7 @@ function group_messages_notification_new_message( $raw_args = array() ) {
 	}
 
 	/**
-	 * Fires after the sending of a new message email notification.
+	 * Fires after the sending of a new group message email notification.
 	 *
 	 * @since BuddyPress 1.5.0
 	 * @deprecated 2.5.0 Use the filters in BP_Email.

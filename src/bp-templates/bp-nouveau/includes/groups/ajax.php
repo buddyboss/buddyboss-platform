@@ -719,7 +719,7 @@ function bp_nouveau_ajax_remove_group_invite() {
 /**
  * Retrieve the possible members list to send group message.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  */
 function bp_nouveau_ajax_groups_get_group_members_listing() {
 
@@ -869,7 +869,7 @@ function bp_nouveau_ajax_groups_get_group_members_listing() {
 /**
  * Send group message to group members.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  */
 function bp_nouveau_ajax_groups_send_message() {
 

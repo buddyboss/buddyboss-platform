@@ -348,18 +348,8 @@ class BP_Messages_Thread {
 		global $wpdb;
 		$bp = buddypress();
 
-		$wpdb->query(
-			$wpdb->prepare(
-				"
-			UPDATE {$bp->messages->table_name_recipients}
-			SET is_deleted = 0
-			WHERE thread_id = %d
-			AND user_id IN (%s)
-		",
-				$thread_id,
-				implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) )
-			)
-		);
+		$query = $wpdb->prepare("UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN (%s)", $thread_id, implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) ) );
+		$wpdb->query( $query );
 	}
 
 	/**
@@ -374,17 +364,8 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		$messages = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-			SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm
-			WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' )
-			ORDER BY m.date_sent DESC, m.id DESC
-			LIMIT 1
-		",
-				$thread_id
-			)
-		);
+		$query    = $wpdb->prepare("SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent DESC, m.id DESC LIMIT 1", $thread_id );
+		$messages = $wpdb->get_results( $query );
 
 		return $messages ? (object) $messages[0] : null;
 	}
@@ -392,7 +373,7 @@ class BP_Messages_Thread {
 	/**
 	 * Get a thread's first message
 	 *
-	 * @since Buddyboss 1.2.5
+	 * @since Buddyboss 1.2.9
 	 *
 	 * @param  int $thread_id
 	 */
@@ -401,17 +382,8 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		$messages = $wpdb->get_results(
-			$wpdb->prepare(
-				"
-			SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm
-			WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' )
-			ORDER BY m.date_sent ASC, m.id ASC
-			LIMIT 1
-		",
-				$thread_id
-			)
-		);
+		$query    = $wpdb->prepare( "SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent ASC, m.id ASC LIMIT 1", $thread_id );
+		$messages = $wpdb->get_results( $query );
 
 		return $messages ? (object) $messages[0] : null;
 	}
@@ -447,24 +419,9 @@ class BP_Messages_Thread {
 				// $before = gmdate( 'Y-m-d H:i:s', ( time() + ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS + 1 ) ) );
 			}
 
+			$query = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND id > %d AND date_sent > %s AND date_sent <= %s ORDER BY date_sent DESC, id DESC LIMIT %d", $thread_id, $last_deleted_id, $last_deleted_timestamp, $before, $perpage );
 			// Always sort by DESC by default.
-			$messages = $wpdb->get_results(
-				$sql  = $wpdb->prepare(
-					"SELECT * FROM {$bp->messages->table_name_messages}
-				WHERE thread_id = %d
-				AND id > %d
-				AND date_sent > %s
-				AND date_sent <= %s
-				ORDER BY date_sent DESC, id DESC
-				LIMIT %d
-			",
-					$thread_id,
-					$last_deleted_id,
-					$last_deleted_timestamp,
-					$before,
-					$perpage
-				)
-			);
+			$messages = $wpdb->get_results( $query );
 
 			wp_cache_set( $cache_key, (array) $messages, 'bp_messages_threads' );
 		}
@@ -1097,7 +1054,7 @@ class BP_Messages_Thread {
 			$bp = buddypress();
 
 			// $unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0 AND sender_only = 0", $user_id ) );
-			$unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0", $user_id ) );
+			$unread_count = (int) $wpdb->get_var( $wpdb->prepare( "SELECT SUM(unread_count) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0", $user_id ) ); // WPCS: db call ok.
 
 			wp_cache_set( $user_id, $unread_count, 'bp_messages_unread_count' );
 		}

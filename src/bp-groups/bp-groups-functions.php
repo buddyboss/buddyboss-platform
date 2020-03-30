@@ -3708,7 +3708,7 @@ add_action( 'bp_before_directory_groups_page', 'bp_group_directory_page_content'
 /**
  * Check whether a user is allowed to manage messages in a given group.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param int $user_id ID of the user.
  * @param int $group_id ID of the group.

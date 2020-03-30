@@ -154,14 +154,14 @@ function maybe_redirects_to_previous_thread_message() {
 
 	$thread_url = esc_url( bp_core_get_user_domain( bp_loggedin_user_id() ) . bp_get_messages_slug() . '/view/' . $thread_id . '/' );
 
-	wp_redirect( $thread_url );
+	wp_safe_redirect( $thread_url );
 	exit();
 }
 
 /**
  * Add new message to a existing group thread when someone membership is accepted in group.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param $user_id
  * @param $group_id
@@ -178,26 +178,27 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 
 		$first_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-		$message_users_ids       = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
-
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
-		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
-		$text              = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
+		$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+		$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
 
 		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
 		$new_reply = messages_new_message( array(
-			'thread_id' => $group_thread,
-			'sender_id' => $user_id,
-			'subject'   => '',
-			'content'   => '<p> </p>',
-			'date_sent' => $date_sent = bp_core_current_time(),
+			'thread_id'  => $group_thread,
+			'sender_id'  => $user_id,
+			'subject'    => '',
+			'content'    => '<p> </p>',
+			'date_sent'  => $date_sent = bp_core_current_time(),
 			'error_type' => 'wp_error',
 		) );
+
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
 		if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
@@ -216,7 +217,7 @@ function bp_group_messages_groups_membership_accepted( $user_id, $group_id, $acc
 /**
  * Add new message to a existing group thread when someone join in group.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param $group_id
  * @param $user_id
@@ -232,7 +233,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 
 		$first_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-		$message_users_ids       = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
@@ -271,7 +272,7 @@ function bp_group_messages_join_new_member( $group_id, $user_id ) {
 /**
  * Add new message to a existing group thread when someone remove from group.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param $group_id
  * @param $user_id
@@ -321,6 +322,14 @@ function bp_group_messages_remove_group_member_from_thread( $group_id, $user_id 
 	}
 }
 
+/**
+ * Add new message to group thread if new member joined the group.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param $user_id
+ * @param $group_id
+ */
 function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -332,26 +341,28 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 
 		$first_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-		$message_users_ids       = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
-		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
-		$text              = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
+		$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+		$text       = sprintf( __( 'Joined "%s" ', 'buddyboss' ), $group_name );
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
 		$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 0 )", $user_id, $group_thread ) );
 
 		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
+
 		$new_reply = messages_new_message( array(
-			'thread_id' => $group_thread,
-			'sender_id' => $user_id,
-			'subject'   => '',
-			'content'   => '<p> </p>',
-			'date_sent' => $date_sent = bp_core_current_time(),
+			'thread_id'  => $group_thread,
+			'sender_id'  => $user_id,
+			'subject'    => '',
+			'content'    => '<p> </p>',
+			'date_sent'  => $date_sent = bp_core_current_time(),
 			'error_type' => 'wp_error',
 		) );
+
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 
 		if ( ! is_wp_error( $new_reply ) && true === is_int( ( int ) $new_reply ) ) {
@@ -367,6 +378,14 @@ function bp_group_messages_accept_new_member( $user_id, $group_id ) {
 	}
 }
 
+/**
+ * Add new message to group thread when someone from the group ban.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param $user_id
+ * @param $group_id
+ */
 function bp_group_messages_banned_member( $user_id, $group_id ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -376,7 +395,6 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 	if ( $group_thread > 0 ) {
 		$first_message     = BP_Messages_Thread::get_first_message( $group_thread );
 		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
-
 		$message_users_ids = explode( ',', $message_users_ids );
 		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
 		$text              = sprintf( __( 'Left "%s" ', 'buddyboss' ), $group_name );
@@ -412,6 +430,14 @@ function bp_group_messages_banned_member( $user_id, $group_id ) {
 	}
 }
 
+/**
+ * Add new message to group thread when someone from the group ban.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param $user_id
+ * @param $group_id
+ */
 function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -457,6 +483,14 @@ function bp_group_messages_admin_banned_member( $group_id, $user_id ) {
 	}
 }
 
+/**
+ * Add new message to group thread when someone from the group unban.
+ *
+ * @since BuddyBoss 1.2.9
+ *
+ * @param $user_id
+ * @param $group_id
+ */
 function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 
 	global $wpdb, $bp, $messages_template;
@@ -467,12 +501,12 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 
 		$first_message = BP_Messages_Thread::get_first_message( $group_thread );
 
-		$message_users_ids       = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
+		$message_users_ids = bp_messages_get_meta( $first_message->id, 'message_users_ids', true ); // users list
 
 		$message_users_ids = explode( ',', $message_users_ids );
 		array_push( $message_users_ids, $user_id );
-		$group_name        = bp_get_group_name( groups_get_group( $group_id ) );
-		$text              = sprintf( __( 'Banned "%s" ', 'buddyboss' ), $group_name );
+		$group_name = bp_get_group_name( groups_get_group( $group_id ) );
+		$text       = sprintf( __( 'Banned "%s" ', 'buddyboss' ), $group_name );
 
 		bp_messages_update_meta( $first_message->id, 'message_users_ids', implode( ',', $message_users_ids ) );
 
@@ -480,11 +514,11 @@ function bp_group_messages_unbanned_member( $group_id, $user_id ) {
 
 		remove_action( 'messages_message_sent', 'messages_notification_new_message', 10 );
 		$new_reply = messages_new_message( array(
-			'thread_id' => $group_thread,
-			'sender_id' => $user_id,
-			'subject'   => '',
-			'content'   => '<p> </p>',
-			'date_sent' => $date_sent = bp_core_current_time(),
+			'thread_id'  => $group_thread,
+			'sender_id'  => $user_id,
+			'subject'    => '',
+			'content'    => '<p> </p>',
+			'date_sent'  => $date_sent = bp_core_current_time(),
 			'error_type' => 'wp_error',
 		) );
 		add_action( 'messages_message_sent', 'messages_notification_new_message', 10 );

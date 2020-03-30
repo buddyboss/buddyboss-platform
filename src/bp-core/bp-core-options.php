@@ -1482,7 +1482,7 @@ function bp_custom_register_page_url( $default = '' ) {
 /**
  * Are group messages disabled?
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param bool $default Optional. Fallback value if not found in the database.
  *                      Default: false.
