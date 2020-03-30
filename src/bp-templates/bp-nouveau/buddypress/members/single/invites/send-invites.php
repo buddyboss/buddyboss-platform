@@ -23,13 +23,14 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 				<?php
 			}
 			?>
+			<th class="title actions"></th>
 		</tr>
 		</thead>
 
 		<tbody>
 
 		<?php
-		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 5 );
+		$raw = apply_filters( 'bp_invites_member_default_invitation_raw', 1 );
 		for ( $i = 0; $i < $raw; $i++ ) {
 			?>
 
@@ -71,9 +72,19 @@ bp_nouveau_member_hook( 'before', 'invites_send_template' ); ?>
 					<?php
 				}
 				?>
+				<td class="field-actions">
+					<span class="field-actions-remove"><i class="dashicons dashicons-no-alt"></i></span>
+				</td>
 			</tr>
 
 		<?php }; ?>
+			<tr>
+				<td class="field-name" colspan="<?php if ( true === bp_check_member_send_invites_tab_member_type_allowed() ) { echo 3; } else { echo 2; }?>">
+				</td>
+				<td class="field-actions-last" colspan="">
+					<span class="field-actions-add"><i class="dashicons dashicons-plus"></i></span>
+				</td>
+			</tr>
 
 		</tbody>
 	</table>

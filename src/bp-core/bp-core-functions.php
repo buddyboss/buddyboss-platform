@@ -3714,6 +3714,14 @@ function bp_email_get_schema() {
 			/* translators: do not remove {} brackets or translate its contents. */
 			'post_excerpt' => __( 'You have been invited by {{inviter.name}} to join the [{{{site.name}}}] community.', 'buddyboss' ),
 		),
+		'group-message-email'                => array(
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_title'   => __( '[{{{site.name}}}] New message from group: "{{group.name}}"', 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_content' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}", 'buddyboss' ),
+			/* translators: do not remove {} brackets or translate its contents. */
+			'post_excerpt' => __( "{{sender.name}} from {{group.name}} sent you a new message.\n\n{{{message}}}\"\n\nGo to the discussion to reply or catch up on the conversation: {{{message.url}}}", 'buddyboss' ),
+		),
 	);
 }
 
@@ -3877,6 +3885,14 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'unsubscribe' => false,
 	);
 
+	$group_message_email = array(
+		'description' => __( 'Recipient has received a group message.', 'buddyboss' ),
+		'unsubscribe' => array(
+		'meta_key' => 'notification_group_messages_new_message',
+		'message'  => __( 'You will no longer receive emails when someone sends you a group message.', 'buddyboss' ),
+	),
+	);
+
 	$types = array(
 		'activity-comment'                   => $activity_comment,
 		'activity-comment-author'            => $activity_comment_author,
@@ -3897,6 +3913,7 @@ function bp_email_get_type_schema( $field = 'description' ) {
 		'bbp-new-forum-topic'                => $bbp_new_forum_topic,
 		'bbp-new-forum-reply'                => $bbp_new_forum_reply,
 		'invites-member-invite'              => $invites_member_invite,
+		'group-message-email'                => $group_message_email,
 	);
 
 	if ( $field !== 'all' ) {

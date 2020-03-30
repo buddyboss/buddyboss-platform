@@ -1198,19 +1198,79 @@ ul.bb-albums-list {
 
 	.gif-media-search-dropdown.open {
 		width: 300px;
-		left: -60px;
+		left: -50px;
+	}
+
+	.comment-item & ul .gif-media-search-dropdown.open {
+		left: -80px;
 	}
 
 	.gif-media-search-dropdown:before {
-		left: 80px;
+		left: 70px;
+	}
+
+	.comment-item & ul .gif-media-search-dropdown:before {
+		left: 100px;
 	}
 
 	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom {
-		left: -100px;
+		left: -110px;
 	}
 
 	.emojionearea .emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
-		left: 102px;
+		left: 112px;
+	}
+
+	.ac-reply-toolbar.post-media-disabled.post-gif-disabled {
+
+		.emojionearea-picker.emojionearea-picker-position-bottom {
+			left: -28px;
+		}
+
+		.emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+			left: 30px;
+		}
+	}
+
+	.ac-reply-content .ac-reply-toolbar.post-media-disabled.post-gif-disabled {
+
+		.emojionearea-picker.emojionearea-picker-position-bottom {
+			left: -50px;
+		}
+
+		.emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+			left: 52px;
+		}
+	}
+
+	.ac-reply-toolbar.post-media-disabled:not(.post-gif-disabled) {
+
+		.emojionearea-picker.emojionearea-picker-position-bottom {
+			left: -80px;
+		}
+
+		.emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+			left: 82px;
+		}
+
+		.gif-media-search-dropdown.open {
+			left: -30px;
+		}
+
+		.gif-media-search-dropdown:before {
+			left: 50px;
+		}
+	}
+
+	.ac-reply-toolbar.post-gif-disabled:not(.post-media-disabled) {
+
+		.emojionearea-picker.emojionearea-picker-position-bottom {
+			left: -80px;
+		}
+
+		.emojionearea-picker.emojionearea-picker-position-bottom .emojionearea-wrapper:after {
+			left: 82px;
+		}
 	}
 }
 
