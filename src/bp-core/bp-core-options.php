@@ -1479,3 +1479,23 @@ function bp_custom_register_page_url( $default = '' ) {
 
 	return apply_filters( 'bp_custom_register_page_url', bp_get_option( 'register-page-url', $default ) );
 }
+/**
+ * Are group messages disabled?
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param bool $default Optional. Fallback value if not found in the database.
+ *                      Default: false.
+ * @return bool True if group message are disabled, otherwise false.
+ */
+function bp_disable_group_messages( $default = false ) {
+
+	/**
+	 * Filters whether or not group organizer and moderator allowed to send group message.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param bool $value whether or not group organizer and moderator allowed to send group message.
+	 */
+	return (bool) apply_filters( 'bp_disable_group_messages', (bool) bp_get_option( 'bp-disable-group-messages', $default ) );
+}

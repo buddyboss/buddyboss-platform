@@ -153,6 +153,29 @@
 
     <?php endif; ?>
 
+	<?php if ( bp_is_active( 'messages' ) && true === bp_disable_group_messages() ) : ?>
+
+		<fieldset class="radio group-messages">
+			<legend><?php esc_html_e( 'Group Messages', 'buddyboss' ); ?></legend>
+
+			<p class="group-setting-label" tabindex="0"><?php esc_html_e( 'Which members of this group are allowed to send group messages?', 'buddyboss' ); ?></p>
+
+			<label for="group-messages-status-mods">
+				<input type="radio" name="group-message-status" id="group-messages-status-mods" value="mods"<?php bp_group_show_messages_status_setting( 'mods' ); ?> />
+				<?php esc_html_e( 'Organizers and Moderators only', 'buddyboss' ); ?>
+			</label>
+
+			<label for="group-messages-status-admins">
+				<input type="radio" name="group-message-status" id="group-messages-status-admins" value="admins"<?php bp_group_show_messages_status_setting( 'admins' ); ?> />
+				<?php esc_html_e( 'Organizers only', 'buddyboss' ); ?>
+			</label>
+
+		</fieldset>
+
+	<?php endif; ?>
+
+
+
 	<?php
 	$group_types = bp_groups_get_group_types( array( 'show_in_create_screen' => true ), 'objects' );
 

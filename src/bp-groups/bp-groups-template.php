@@ -7388,3 +7388,71 @@ function bp_get_article_prefix( $string ) {
 	return apply_filters( 'bp_get_article_prefix', $prefix . ' ' . $string, $string );
 
 }
+
+/**
+ * Get the message status of a group.
+ *
+ * This function can be used either in or out of the loop.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param int|bool $group_id Optional. The ID of the group whose status you want to
+ *                           check. Default: the displayed group, or the current group
+ *                           in the loop.
+ * @return bool|string Returns false when no group can be found. Otherwise
+ *                     returns the group message status, from among 'mods', and 'admins'.
+ */
+function bp_group_get_message_status( $group_id = false ) {
+	global $groups_template;
+
+	if ( ! $group_id ) {
+		$bp = buddypress();
+
+		if ( isset( $bp->groups->current_group->id ) ) {
+			// Default to the current group first.
+			$group_id = $bp->groups->current_group->id;
+		} elseif ( isset( $groups_template->group->id ) ) {
+			// Then see if we're in the loop.
+			$group_id = $groups_template->group->id;
+		} else {
+			return false;
+		}
+	}
+
+	$message_status = groups_get_groupmeta( $group_id, 'message_status' );
+
+	// Backward compatibility. When 'message_status' is not set, fall back to a default value.
+	if ( ! $message_status ) {
+		$message_status = apply_filters( 'bp_group_message_status_fallback', 'mods' );
+	}
+
+	/**
+	 * Filters the message status of a group.
+	 *
+	 * Message status in this case means who from the group can send messages.
+	 *
+	 * @since BuddyBoss 1.2.3
+	 *
+	 * @param string $message_status Membership level needed to manage messages.
+	 * @param int    $group_id      ID of the group whose status is being checked.
+	 */
+	return apply_filters( 'bp_group_get_message_status', $message_status, $group_id );
+}
+
+/**
+ * Output the 'checked' value, if needed, for a given message_status on the group create/admin screens
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param string      $setting The setting you want to check against ('mods', or 'admins').
+ * @param object|bool $group   Optional. Group object. Default: current group in loop.
+ */
+function bp_group_show_messages_status_setting( $setting, $group = false ) {
+	$group_id = isset( $group->id ) ? $group->id : false;
+
+	$message_status = bp_group_get_message_status( $group_id );
+
+	if ( $setting == $message_status ) {
+		echo ' checked="checked"';
+	}
+}

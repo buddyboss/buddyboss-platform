@@ -39,7 +39,10 @@ add_filter( 'bbp_get_topic_content', 'bp_media_forums_embed_gif', 999, 2 );
 // Messages
 add_action( 'messages_message_sent', 'bp_media_attach_media_to_message' );
 add_action( 'messages_message_sent', 'bp_media_messages_save_gif_data' );
+add_action( 'messages_message_sent', 'bp_media_messages_save_group_data' );
 add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_attached_media', 10, 2 );
+add_action( 'bp_messages_thread_after_delete', 'bp_media_messages_delete_gif_data', 10, 2 );
+//add_action( 'bp_messages_thread_after_delete', 'bp_group_messages_delete_meta', 10, 2 );
 
 // Core tools
 add_filter( 'bp_core_get_tools_settings_admin_tabs', 'bp_media_get_tools_media_settings_admin_tabs', 20, 1 );
@@ -583,6 +586,24 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 }
 
 /**
+ * Delete gif attached to messages
+ *
+ * @since BuddyBoss 1.0.0
+ * @param $thread_id
+ * @param $message_ids
+ */
+function bp_media_messages_delete_gif_data( $thread_id, $message_ids ) {
+
+	if ( ! empty( $message_ids ) ) {
+		foreach ( $message_ids as $message_id ) {
+			bp_messages_update_meta( $message_id, '_gif_data', '' );
+			bp_messages_update_meta( $message_id, '_gif_raw_data', '' );
+
+        }
+    }
+}
+
+/**
  * Save gif data into messages meta key "_gif_data"
  *
  * @since BuddyBoss 1.0.0
@@ -972,4 +993,112 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 	bp_media_delete( array( 'id' => $media->id ), 'attachment' );
 
 	add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
+}
+
+/**
+ * Save group message meta.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $message
+ */
+function bp_media_messages_save_group_data( &$message ) {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
+	$group                   = ( isset( $_POST ) && isset( $_POST['group'] ) && '' !== $_POST['group'] ) ? trim( $_POST['group'] ) : ''; // Group id
+	$message_users           = ( isset( $_POST ) && isset( $_POST['users'] ) && '' !== $_POST['users'] ) ? trim( $_POST['users'] ) : ''; // all - individual
+	$message_type            = ( isset( $_POST ) && isset( $_POST['type'] ) && '' !== $_POST['type'] ) ? trim( $_POST['type'] ) : ''; // open - private
+	$message_meta_users_list = ( isset( $_POST ) && isset( $_POST['message_meta_users_list'] ) && '' !== $_POST['message_meta_users_list'] ) ? trim( $_POST['message_meta_users_list'] ) : ''; // users list
+	$thread_type             = ( isset( $_POST ) && isset( $_POST['message_thread_type'] ) && '' !== $_POST['message_thread_type'] ) ? trim( $_POST['message_thread_type'] ) : ''; // new - reply
+
+	if ( '' === $message_meta_users_list ) {
+		$args = array(
+			'per_page'            => 99999999999999,
+			'group'               => $_POST['group'],
+			'exclude'             => array( bp_loggedin_user_id() ),
+			'exclude_admins_mods' => false,
+		);
+
+		$group_members = groups_get_group_members( $args );
+		$members       = wp_list_pluck( $group_members['members'], 'ID' );
+		$message_meta_users_list = implode(',', $members );
+	}
+
+	if ( isset( $group ) &&  '' !== $group ) {
+		$thread_key =   'group_message_thread_id_' . $message->thread_id;
+		bp_messages_update_meta( $message->id, 'group_id', $group );
+		bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+		bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+		bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+		bp_messages_update_meta( $message->id, 'group_message_fresh', 'yes' );
+		bp_messages_update_meta( $message->id, $thread_key, $group );
+		bp_messages_update_meta( $message->id, 'message_from', 'group' );
+		bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
+		bp_messages_update_meta( $message->id, 'message_users_ids', $message_meta_users_list );
+		bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+	} else {
+
+		$args = [
+			'thread_id' => $message->thread_id,
+			'per_page' => 99999999999999,
+		];
+
+		if ( bp_thread_has_messages( $args ) ) {
+			while ( bp_thread_messages() ) : bp_thread_the_message();
+
+				$message_id    = bp_get_the_thread_message_id();
+				$group         = bp_messages_get_meta( $message_id, 'group_id', true );
+				$message_users = bp_messages_get_meta( $message_id, 'group_message_users', true );
+				$message_type  = bp_messages_get_meta( $message_id, 'group_message_type', true );
+				$thread_type   = bp_messages_get_meta( $message_id, 'group_message_thread_type', true );
+
+				if ( $group ) {
+					break;
+				}
+			endwhile;
+		}
+
+		if ( $group ) {
+
+			$thread_key =   'group_message_thread_id_' . $message->thread_id;
+			bp_messages_update_meta( $message->id, 'group_id', $group );
+			bp_messages_update_meta( $message->id, 'group_message_users', $message_users );
+			bp_messages_update_meta( $message->id, 'group_message_type', $message_type );
+			bp_messages_update_meta( $message->id, 'group_message_thread_type', $thread_type );
+			bp_messages_update_meta( $message->id, $thread_key, $group );
+			bp_messages_update_meta( $message->id, 'message_sender', bp_loggedin_user_id() );
+			bp_messages_update_meta( $message->id, 'message_from', 'personal' );
+			bp_messages_update_meta( $message->id, 'group_message_thread_id', $message->thread_id );
+		}
+
+
+	}
+
+}
+
+/**
+ * Remove the meta if thread is deleted.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param $thread_id
+ * @param $message_ids
+ */
+function bp_group_messages_delete_meta( $thread_id, $message_ids ) {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
+	if ( ! empty( $message_ids ) ) {
+		foreach ( $message_ids as $message_id ) {
+			if ( bp_loggedin_user_id() === messages_get_message_sender( $message_id ) ) {
+				bp_messages_delete_meta( $message_id );
+			}
+		}
+	}
+
 }

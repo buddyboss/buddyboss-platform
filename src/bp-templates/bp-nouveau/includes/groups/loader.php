@@ -75,6 +75,10 @@ class BP_Nouveau_Groups {
 
 		add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_groups_enqueue_scripts' );
 
+		if ( true === bp_disable_group_messages() ) {
+			add_action( 'bp_nouveau_enqueue_scripts', 'bp_nouveau_groups_messages_enqueue_scripts', 99999999 );
+		}
+
 		// Avoid Notices for BuddyPress Legacy Backcompat
 		remove_action( 'bp_groups_directory_group_filter', 'bp_group_backcompat_create_nav_item', 1000 );
 
@@ -99,6 +103,9 @@ class BP_Nouveau_Groups {
 	protected function setup_filters() {
 		add_filter( 'bp_nouveau_register_scripts', 'bp_nouveau_groups_register_scripts', 10, 1 );
 		add_filter( 'bp_core_get_js_strings', 'bp_nouveau_groups_localize_scripts', 10, 1 );
+		if ( true === bp_disable_group_messages() ) {
+			add_filter( 'bp_core_get_js_strings', 'bp_nouveau_groups_messages_localize_scripts', 10, 1 );
+		}
 		add_filter( 'groups_create_group_steps', 'bp_nouveau_group_invites_create_steps', 10, 1 );
 
 		$buttons = array(

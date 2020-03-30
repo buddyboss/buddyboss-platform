@@ -3962,3 +3962,20 @@ function bp_email_get_salutation( $settings = array() ) {
 	 */
 	return apply_filters( 'bp_email_get_salutation', sprintf( '%s', $token ), $settings, $token );
 }
+
+/**
+ * Is the current page a group's message page?
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @return bool True if the current page is a group's message page.
+ */
+function bp_is_group_messages() {
+	$retval = false;
+
+	if ( bp_is_single_item() && bp_is_groups_component() && bp_is_current_action( 'messages' ) ) {
+		$retval = true;
+	}
+
+	return $retval;
+}

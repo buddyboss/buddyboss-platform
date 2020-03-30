@@ -43,13 +43,24 @@ function bp_nouveau_groups_register_scripts( $scripts = array() ) {
 		return $scripts;
 	}
 
-	return array_merge( $scripts, array(
-		'bp-nouveau-group-invites' => array(
+	$message_scripts = array();
+
+	$message_scripts['bp-nouveau-group-invites'] =  array(
 			'file'         => 'js/buddypress-group-invites%s.js',
 			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone' ),
 			'footer'       => true,
-		),
-	) );
+		);
+
+	if ( true === bp_disable_group_messages() ) {
+		$message_scripts['bp-nouveau-group-messages'] = array(
+			'file'         => 'js/buddypress-group-messages%s.js',
+			'dependencies' => array( 'bp-nouveau', 'json2', 'wp-backbone', 'bp-nouveau-messages-at', 'bp-select2' ),
+			'footer'       => true,
+		);
+	}
+
+	return array_merge( $scripts, $message_scripts );
+
 }
 
 /**
@@ -1240,4 +1251,71 @@ function bp_nouveau_group_pending_invites_set_title_tag( $title ){
 	}
 
 	return $title;
+}
+
+/**
+ * Localize the strings needed for the Group's Message UI.
+ *
+ * @since BuddyBoss 1.2.3
+ *
+ * @param array $params Associative array containing the JS Strings needed by scripts
+ *
+ * @return array The same array with specific strings for the Group's Message UI if needed.
+ */
+function bp_nouveau_groups_messages_localize_scripts( $params = array() ) {
+
+	if ( false === bp_disable_group_messages() ) {
+		return $params;
+	}
+
+	$params['group_messages'] = array(
+		'page'                  => 1,
+		'type_message'          => __( 'Type message', 'buddyboss' ),
+		'group_no_member'       => __( 'There are no other members in this group. Please add some members before sending a message.', 'buddyboss' ),
+		'loading'               => __( 'Loading members. Please wait.', 'buddyboss' ),
+		'remove_recipient'      => __( 'Remove Recipient', 'buddyboss' ),
+		'add_recipient'         => __( 'Add Recipient', 'buddyboss' ),
+		'no_content'            => __( 'Please add some content to your message.', 'buddyboss' ),
+		'no_recipient'          => __( 'Please add at least one recipient.', 'buddyboss' ),
+		'select_default_text'   => __( 'All Group Members', 'buddyboss' ),
+		'select_default_value'  => __( 'all', 'buddyboss' ),
+		'no_member'             => __( 'No members were found. Try another filter.', 'buddyboss' ),
+		'invites_form_all'      => __( 'This message will be delivered to all members of this group.', 'buddyboss' ),
+		'invites_form_separate' => __( 'Select group members to message by clicking the + button next to each member. Once you\'ve made a selection, click "Send Message" to create a new group message.', 'buddyboss' ),
+		'invites_form_reset'    => __( 'Group invitations cleared. Please use one of the available tabs to select members to invite.', 'buddyboss' ),
+		'invites_sending'       => __( 'Sending group invitations. Please wait.', 'buddyboss' ),
+		'removeUserInvite'      => __( 'Cancel invitation %s', 'buddyboss' ),
+		'feedback_select_all'   => __( 'This message will be delivered to all members of this group.', 'buddyboss' ),
+		'feedback_individual'   => __( 'Select individual recipients by clicking the + button next to each member.', 'buddyboss' ),
+		'group_id'              => ! bp_get_current_group_id() ? bp_get_new_group_id() : bp_get_current_group_id(),
+		'is_group_create'       => bp_is_group_create(),
+		'nonces'                => array(
+			'unmessage'              => wp_create_nonce( 'groups_message_unmessage_user' ),
+			'send_messages'          => wp_create_nonce( 'groups_send_messages' ),
+			'retrieve_group_members' => wp_create_nonce( 'retrieve_group_members' ),
+			'send_messages_users'    => wp_create_nonce( 'send_messages_users' ),
+		),
+	);
+
+	return $params;
+}
+
+/**
+ * Enqueue the groups scripts
+ *
+ * @since BuddyBoss 1.2.3
+ */
+function bp_nouveau_groups_messages_enqueue_scripts() {
+
+	if ( false === bp_disable_group_messages() ) {
+		return;
+	}
+
+	if ( bp_is_group_messages() ) {
+		wp_enqueue_script( 'bp-select2' );
+		wp_enqueue_script( 'bp-medium-editor' );
+		wp_enqueue_style( 'bp-medium-editor' );
+		wp_enqueue_style( 'bp-medium-editor-beagle' );
+		wp_enqueue_script( 'bp-nouveau-group-messages' );
+	}
 }

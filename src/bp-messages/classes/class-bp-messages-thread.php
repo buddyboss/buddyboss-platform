@@ -188,11 +188,11 @@ class BP_Messages_Thread {
 			return false;
 		}
 
-		$this->last_message_id      = $this->last_message->id;
-		$this->last_message_date    = $this->last_message->date_sent;
-		$this->last_sender_id       = $this->last_message->sender_id;
-		$this->last_message_subject = $this->last_message->subject;
-		$this->last_message_content = $this->last_message->message;
+		$this->last_message_id      = ( isset( $this->last_message ) && $this->last_message->id ) ? $this->last_message->id : '';
+		$this->last_message_date    = ( isset( $this->last_message ) && $this->last_message->date_sent ) ? $this->last_message->date_sent : '';
+		$this->last_sender_id       = ( isset( $this->last_message ) && $this->last_message->sender_id ) ? $this->last_message->sender_id : '';
+		$this->last_message_subject = ( isset( $this->last_message ) && $this->last_message->subject ) ? $this->last_message->subject : '';
+		$this->last_message_content = ( isset( $this->last_message ) && $this->last_message->message ) ? $this->last_message->message : '';
 
 		$this->first_message_date = self::get_messages_started( $this->thread_id );
 
@@ -377,9 +377,36 @@ class BP_Messages_Thread {
 		$messages = $wpdb->get_results(
 			$wpdb->prepare(
 				"
-			SELECT * FROM {$bp->messages->table_name_messages}
-			WHERE thread_id = %d
-			ORDER BY date_sent DESC, id DESC
+			SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm
+			WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' )
+			ORDER BY m.date_sent DESC, m.id DESC
+			LIMIT 1
+		",
+				$thread_id
+			)
+		);
+
+		return $messages ? (object) $messages[0] : null;
+	}
+
+	/**
+	 * Get a thread's first message
+	 *
+	 * @since Buddyboss 1.2.5
+	 *
+	 * @param  int $thread_id
+	 */
+	public static function get_first_message( $thread_id ) {
+		global $wpdb;
+
+		$bp = buddypress();
+
+		$messages = $wpdb->get_results(
+			$wpdb->prepare(
+				"
+			SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm
+			WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' )
+			ORDER BY m.date_sent ASC, m.id ASC
 			LIMIT 1
 		",
 				$thread_id
@@ -627,11 +654,19 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		// Mark messages as deleted
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 1 WHERE thread_id = %d AND user_id = %d", $thread_id, $user_id ) );
-
 		// Get the message ids in order to pass to the action.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) );
+		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id ) ); // WPCS: db call ok. // WPCS: cache ok.
+
+		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
+		$message_deleted_text = '<p> </p>';
+
+		// Update the message subject & content of particular user messages.
+		$update_message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND sender_id = %d", $thread_id, $user_id ) ); // WPCS: db call ok. // WPCS: cache ok.
+		foreach ( $update_message_ids as $message_id ) {
+			$query = $wpdb->prepare( "UPDATE {$bp->messages->table_name_messages} SET subject= '%s', message= '%s' WHERE id = %d", $subject_deleted_text, $message_deleted_text, $message_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+			bp_messages_update_meta( $message_id, 'bp_messages_deleted', 'yes' );
+		}
 
 		/**
 		 * Fires before an entire message thread is deleted.
@@ -654,6 +689,33 @@ class BP_Messages_Thread {
 		 * @param int   $user_id     ID of the user the threads were deleted for.
 		 */
 		do_action( 'bp_messages_thread_after_delete', $thread_id, $message_ids, $user_id );
+
+		// If there is no any messages in thread then delete the complete thread.
+		$thread_delete = true;
+		foreach ( $message_ids as $message_id ) {
+			$is_deleted = bp_messages_get_meta( $message_id, 'bp_messages_deleted', true );
+			if ( '' === $is_deleted ) {
+				$thread_delete = false;
+				break;
+			}
+		}
+
+		if ( $thread_delete ) {
+
+			// Delete thread messages.
+			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE thread_id = %d", $thread_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+
+			// Delete messages meta.
+			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_meta} WHERE message_id IN(%s)", implode(',', $message_ids ) );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+
+			// Delete thread.
+			$query = $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
+			$wpdb->query( $query ); // db call ok; no-cache ok;
+
+		}
+
 
 		return true;
 	}
