@@ -534,7 +534,7 @@ function messages_get_message_thread_id( $message_id = 0 ) {
 
 	$bp = buddypress();
 
-	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	return (int) $wpdb->get_var( $wpdb->prepare( "SELECT thread_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
 }
 
 /**
@@ -569,7 +569,7 @@ function bp_messages_delete_meta( $message_id, $meta_key = false, $meta_value = 
 	if ( empty( $meta_key ) ) {
 		global $wpdb;
 
-		$keys = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$wpdb->messagemeta} WHERE message_id = %d", $message_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$keys = $wpdb->get_col( $wpdb->prepare( "SELECT meta_key FROM {$wpdb->messagemeta} WHERE message_id = %d", $message_id ) );
 
 		// With no meta_key, ignore $delete_all.
 		$delete_all = false;

@@ -219,7 +219,7 @@ function bp_nouveau_prepare_group_potential_invites_for_js( $user ) {
 	);
 
 	// Group id
-	$group_id = bp_get_current_group_id()?: (int) $_REQUEST['group_id']; // phpcs:ignore WordPress.Security.NonceVerification
+	$group_id = bp_get_current_group_id()?: (int) $_REQUEST['group_id'];
 
 	// Do extra queries only if needed
 	if ( ! empty( $bp->groups->invites_scope ) && 'invited' === $bp->groups->invites_scope ) {

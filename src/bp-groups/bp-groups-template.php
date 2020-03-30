@@ -4976,7 +4976,7 @@ function bp_get_group_member_joined_since( $args = array() ) {
 		);
 		$group = groups_get_group( $args );
 
-		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( $wpdb->prepare( "UPDATE {$bp->groups->table_name_members} SET date_modified = '%s' WHERE group_id = %d AND user_id = %d ", $group->date_created, $current_group_id, $members_template->member->ID ) );
 
 		$members_template->member->date_modified = $group->date_created;
 	}

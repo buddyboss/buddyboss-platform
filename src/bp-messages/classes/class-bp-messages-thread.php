@@ -269,7 +269,7 @@ class BP_Messages_Thread {
 
 			$recipients = array();
 			$sql        = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $thread_id );
-			$results    = $wpdb->get_results( $sql ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$results    = $wpdb->get_results( $sql );
 
 			foreach ( (array) $results as $recipient ) {
 				$recipients[ $recipient->user_id ] = $recipient;
@@ -349,7 +349,7 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$query = $wpdb->prepare("UPDATE {$bp->messages->table_name_recipients} SET is_deleted = 0 WHERE thread_id = %d AND user_id IN (%s)", $thread_id, implode( ',', wp_list_pluck( $deleted_recipients, 'user_id' ) ) );
-		$wpdb->query( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$wpdb->query( $query );
 	}
 
 	/**
@@ -365,7 +365,7 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$query    = $wpdb->prepare("SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent DESC, m.id DESC LIMIT 1", $thread_id );
-		$messages = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$messages = $wpdb->get_results( $query );
 
 		return $messages ? (object) $messages[0] : null;
 	}
@@ -383,7 +383,7 @@ class BP_Messages_Thread {
 		$bp = buddypress();
 
 		$query    = $wpdb->prepare( "SELECT m.* FROM {$bp->messages->table_name_messages} m, {$bp->messages->table_name_meta}  mm WHERE m.id = mm.message_id AND m.thread_id = %d  AND ( mm.meta_key != 'group_message_group_joined' OR mm.meta_key != 'group_message_group_left' ) ORDER BY m.date_sent ASC, m.id ASC LIMIT 1", $thread_id );
-		$messages = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$messages = $wpdb->get_results( $query );
 
 		return $messages ? (object) $messages[0] : null;
 	}
@@ -421,7 +421,7 @@ class BP_Messages_Thread {
 
 			$query = $wpdb->prepare( "SELECT * FROM {$bp->messages->table_name_messages} WHERE thread_id = %d AND id > %d AND date_sent > %s AND date_sent <= %s ORDER BY date_sent DESC, id DESC LIMIT %d", $thread_id, $last_deleted_id, $last_deleted_timestamp, $before, $perpage );
 			// Always sort by DESC by default.
-			$messages = $wpdb->get_results( $query ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			$messages = $wpdb->get_results( $query );
 
 			wp_cache_set( $cache_key, (array) $messages, 'bp_messages_threads' );
 		}
@@ -776,7 +776,7 @@ class BP_Messages_Thread {
 					$search_terms_like,
 					$search_terms_like
 				)
-			); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+			);
 
 			$current_user_participants_ids = array_map( 'intval', wp_list_pluck( $current_user_participants, 'user_id' ) );
 			$current_user_participants_ids = array_diff( $current_user_participants_ids, array( bp_loggedin_user_id() ) );
@@ -811,7 +811,7 @@ class BP_Messages_Thread {
 		$sql['misc']   = "GROUP BY m.thread_id {$having_sql} ORDER BY date_sent DESC {$pag_sql}";
 
 		// Get thread IDs.
-		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$thread_ids = $wpdb->get_results( $qq = implode( ' ', $sql ) );
 		// print_r($qq);die();
 		if ( empty( $thread_ids ) ) {
 			return false;
@@ -910,7 +910,7 @@ class BP_Messages_Thread {
 			bp_loggedin_user_id();
 
 		$bp     = buddypress();
-		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
@@ -945,7 +945,7 @@ class BP_Messages_Thread {
 			bp_loggedin_user_id();
 
 		$bp     = buddypress();
-		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$retval = $wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 1 WHERE user_id = %d AND thread_id = %d", $user_id, $thread_id ) );
 
 		wp_cache_delete( 'thread_recipients_' . $thread_id, 'bp_messages' );
 		wp_cache_delete( $user_id, 'bp_messages_unread_count' );
@@ -988,7 +988,7 @@ class BP_Messages_Thread {
 
 		$bp = buddypress();
 
-		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(thread_id) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0 {$exclude_sender} {$type_sql}", $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		return (int) $wpdb->get_var( $wpdb->prepare( "SELECT COUNT(thread_id) FROM {$bp->messages->table_name_recipients} WHERE user_id = %d AND is_deleted = 0 {$exclude_sender} {$type_sql}", $user_id ) );
 	}
 
 	/**
@@ -1165,7 +1165,7 @@ class BP_Messages_Thread {
 
 		$bp_prefix = bp_core_get_table_prefix();
 		$errors    = false;
-		$threads   = $wpdb->get_results( "SELECT * FROM {$bp_prefix}bp_messages_threads" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+		$threads   = $wpdb->get_results( "SELECT * FROM {$bp_prefix}bp_messages_threads" );
 
 		// Nothing to update, just return true to remove the table.
 		if ( empty( $threads ) ) {

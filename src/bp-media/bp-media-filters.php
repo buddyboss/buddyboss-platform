@@ -929,7 +929,7 @@ function bp_media_activation_notice() {
 	global $wpdb;
 	global $bp;
 
-	if ( ! empty( $_GET['page'] ) && 'bp-media-import' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
+	if ( ! empty( $_GET['page'] ) && 'bp-media-import' === $_GET['page'] ) {
 		return;
 	}
 
@@ -975,7 +975,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 
 	$bp = buddypress();
 
-	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
+	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) );
 
 	if ( ! $media ) {
 		return false;
