@@ -117,6 +117,9 @@ if ( ! class_exists( 'BP_Admin_Tab' ) ) :
 							'submit_button_message' => esc_js( __( 'Are you sure you want to import data? This action is going to alter your database. If this is a live website you may want to create a backup of your database first.', 'buddyboss' ) ),
 							'clear_button_message'  => esc_js( __( 'Are you sure you want to delete all Default Data content? Content that was created by you and others, and not by this default data installer, will not be deleted.', 'buddyboss' ) ),
 						),
+						'repair_forums' => array(
+							'validate_site_id_message' => esc_html__( 'Select site to repair the forums', 'buddyboss' ),
+						),
 					),
 				)
 			);
