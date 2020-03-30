@@ -134,7 +134,7 @@ class BP_Messages_Message {
 
 		// If we have no thread_id then this is the first message of a new thread.
 		if ( empty( $this->thread_id ) ) {
-			$this->thread_id = (int) $wpdb->get_var( "SELECT MAX(thread_id) FROM {$bp->messages->table_name_messages}" ) + 1;
+			$this->thread_id = (int) $wpdb->get_var( "SELECT MAX(thread_id) FROM {$bp->messages->table_name_messages}" ) + 1; // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			$new_thread      = true;
 		}
 
@@ -150,17 +150,17 @@ class BP_Messages_Message {
 		if ( $new_thread ) {
 			// Add an recipient entry for all recipients.
 			foreach ( (array) $this->recipients as $recipient ) {
-				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 1 )", $recipient->user_id, $this->thread_id ) );
+				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id, unread_count ) VALUES ( %d, %d, 1 )", $recipient->user_id, $this->thread_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 				$recipient_ids[] = $recipient->user_id;
 			}
 
 			// Add a sender recipient entry if the sender is not in the list of recipients.
 			if ( ! in_array( $this->sender_id, $recipient_ids ) ) {
-				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id ) VALUES ( %d, %d )", $this->sender_id, $this->thread_id ) );
+				$wpdb->query( $wpdb->prepare( "INSERT INTO {$bp->messages->table_name_recipients} ( user_id, thread_id ) VALUES ( %d, %d )", $this->sender_id, $this->thread_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 			}
 		} else {
 			// Update the unread count for all recipients.
-			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) );
+			$wpdb->query( $wpdb->prepare( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = unread_count + 1, is_deleted = 0 WHERE thread_id = %d AND user_id != %d", $this->thread_id, $this->sender_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		}
 
 		messages_remove_callback_values();
@@ -187,7 +187,7 @@ class BP_Messages_Message {
 
 		$bp = buddypress();
 
-		return $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $this->thread_id ) );
+		return $wpdb->get_results( $wpdb->prepare( "SELECT user_id FROM {$bp->messages->table_name_recipients} WHERE thread_id = %d", $this->thread_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 	}
 
 	/** Static Functions **************************************************/
@@ -239,7 +239,7 @@ class BP_Messages_Message {
 
 		$bp = buddypress();
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND thread_id = %d ORDER BY date_sent DESC LIMIT 1", bp_loggedin_user_id(), $thread_id ) );
+		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND thread_id = %d ORDER BY date_sent DESC LIMIT 1", bp_loggedin_user_id(), $thread_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 		return is_numeric( $query ) ? (int) $query : $query;
 	}
@@ -258,7 +258,7 @@ class BP_Messages_Message {
 
 		$bp = buddypress();
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND id = %d", $user_id, $message_id ) );
+		$query = $wpdb->get_var( $wpdb->prepare( "SELECT id FROM {$bp->messages->table_name_messages} WHERE sender_id = %d AND id = %d", $user_id, $message_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 		return is_numeric( $query ) ? (int) $query : $query;
 	}
@@ -275,7 +275,7 @@ class BP_Messages_Message {
 
 		$bp = buddypress();
 
-		$query = $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) );
+		$query = $wpdb->get_var( $wpdb->prepare( "SELECT sender_id FROM {$bp->messages->table_name_messages} WHERE id = %d", $message_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 		return is_numeric( $query ) ? (int) $query : $query;
 	}
@@ -293,10 +293,9 @@ class BP_Messages_Message {
 		$bp = buddypress();
 
 		// Get the message ids in order to delete their metas.
-		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
+		$message_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		//Get the all thread ids for unread messages
-		$thread_ids  = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) );
-		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // db call ok; no-cache ok;
+		$thread_ids = $wpdb->get_col( $wpdb->prepare( "SELECT DISTINCT (thread_id) FROM {$bp->messages->table_name_messages} WHERE sender_id = %d", $user_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 		$subject_deleted_text = apply_filters( 'delete_user_message_subject_text', 'Deleted' );
 		$message_deleted_text = '<p> </p>';
@@ -315,7 +314,7 @@ class BP_Messages_Message {
 		if ( ! empty( $thread_ids ) ) {
 			$thread_ids = implode( ',', $thread_ids );
 
-			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" );
+			$wpdb->query( "UPDATE {$bp->messages->table_name_recipients} SET unread_count = 0 WHERE thread_id IN ({$thread_ids})" ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 		}
 		// delete all the meta recipients from user table.
 		//$wpdb->query( $wpdb->prepare( "DELETE FROM {$bp->messages->table_name_recipients} WHERE user_id = %d", $user_id ) ); // db call ok; no-cache ok;
@@ -369,6 +368,14 @@ class BP_Messages_Message {
 		return $thread_id;
 	}
 
+	/**
+	 * Get existsing threads which matches the recipients
+	 *
+	 * @since BuddyBoss 1.2.9
+	 *
+	 * @param  array   $recipient_ids
+	 * @param  integer $sender
+	 */
 	public static function get_existing_threads( $recipient_ids, $sender = 0 ) {
 		global $wpdb;
 

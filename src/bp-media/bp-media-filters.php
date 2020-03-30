@@ -4,8 +4,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
-add_action( 'bp_media_album_after_save',                        'bp_media_update_media_privacy'                     );
-add_action( 'delete_attachment',                                     'bp_media_delete_attachment_media', 0          );
+add_action( 'bp_media_album_after_save', 'bp_media_update_media_privacy' );
+add_action( 'delete_attachment', 'bp_media_delete_attachment_media', 0 );
 
 // Activity
 add_action( 'bp_after_directory_activity_list', 'bp_media_add_theatre_template' );
@@ -72,25 +72,25 @@ function bp_media_activity_entry() {
 	}
 
 	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) { ?>
-		<div class="bb-activity-media-wrap
+			array(
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			)
+		) ) { ?>
+        <div class="bb-activity-media-wrap
 		<?php
 		echo 'bb-media-length-' . $media_template->media_count;
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
-													  <?php
-														while ( bp_media() ) {
-															bp_the_media();
-															bp_get_template_part( 'media/activity-entry' );
-														}
-														?>
-		</div>
+			<?php
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
+			}
+			?>
+        </div>
 		<?php
 	}
 }
@@ -110,30 +110,31 @@ function bp_media_activity_append_media( $content, $activity ) {
 	$media_ids = bp_activity_get_meta( $activity->id, 'bp_media_ids', true );
 
 	if ( ! empty( $media_ids ) && bp_has_media(
-		array(
-			'include'  => $media_ids,
-			'order_by' => 'menu_order',
-			'sort'     => 'ASC',
-		)
-	) ) {
+			array(
+				'include'  => $media_ids,
+				'order_by' => 'menu_order',
+				'sort'     => 'ASC',
+			)
+		) ) {
 		?>
 		<?php ob_start(); ?>
-		<div class="bb-activity-media-wrap
+        <div class="bb-activity-media-wrap
 		<?php
 		echo 'bb-media-length-' . $media_template->media_count;
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
-													  <?php
-														while ( bp_media() ) {
-															bp_the_media();
-															bp_get_template_part( 'media/activity-entry' );
-														}
-														?>
-		</div>
+			<?php
+			while ( bp_media() ) {
+				bp_the_media();
+				bp_get_template_part( 'media/activity-entry' );
+			}
+			?>
+        </div>
 		<?php
 		$content .= ob_get_clean();
 	}
+
 	return $content;
 }
 
@@ -158,12 +159,12 @@ function bp_media_activity_comment_entry( $comment_id ) {
 		echo $media_template->media_count > 5 ? ' bb-media-length-more' : '';
 		?>
 		">
-													  <?php
-														while ( bp_media() ) {
-															bp_the_media();
-															bp_get_template_part( 'media/activity-entry' );
-														}
-														?>
+      <?php
+        while ( bp_media() ) {
+            bp_the_media();
+            bp_get_template_part( 'media/activity-entry' );
+        }
+        ?>
 		</div>
 		<?php
 	}
@@ -186,7 +187,7 @@ function bp_media_update_activity_media_meta( $content, $user_id, $activity_id )
 		return false;
 	}
 
-	$_POST['medias'] = $_POST['media'];
+	$_POST['medias']             = $_POST['media'];
 	$_POST['bp_activity_update'] = true;
 
 	remove_action( 'bp_activity_posted_update', 'bp_media_update_activity_media_meta', 10, 3 );
@@ -588,7 +589,7 @@ function bp_media_messages_delete_attached_media( $thread_id, $message_ids ) {
 /**
  * Delete gif attached to messages
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.9
  * @param $thread_id
  * @param $message_ids
  */
@@ -889,12 +890,8 @@ function bp_media_import_submenu_page() {
 							</p>
 							<input type="hidden" value="bp-media-import-updating" id="bp-media-import-updating"/>
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
-								<input type="hidden" value="1" name="bp-media-re-run-import"
-									   id="bp-media-re-run-import"/>
-								<input type="submit" style="display: none;"
-									   value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
-									   id="bp-media-import-submit" name="bp-media-import-submit"
-									   class="button-primary"/>
+								<input type="hidden" value="1" name="bp-media-re-run-import" id="bp-media-re-run-import"/>
+								<input type="submit" style="display: none;" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 								<?php
 							}
 						} elseif ( 'done' == $bp_media_import_status ) {
@@ -904,18 +901,14 @@ function bp_media_import_submenu_page() {
 							<p><?php _e( 'BuddyBoss Media data update is complete! Any previously uploaded member photos should display in their profiles now.', 'buddyboss' ); ?></p>
 
 							<?php if ( ! empty( $albums_ids ) || ! empty( $media_ids ) ) { ?>
-								<input type="hidden" value="1" name="bp-media-re-run-import"
-									   id="bp-media-re-run-import"/>
-								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>"
-									   id="bp-media-import-submit" name="bp-media-import-submit"
-									   class="button-primary"/>
+								<input type="hidden" value="1" name="bp-media-re-run-import" id="bp-media-re-run-import"/>
+								<input type="submit" value="<?php _e( 'Re-Run Migration', 'buddyboss' ); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 								<?php
 							}
 						} else {
 							?>
 							<p><?php _e( 'Import your existing members photo uploads, if you were previously using <a href="https://www.buddyboss.com/product/buddyboss-media/">BuddyBoss Media</a> with BuddyPress. Click "Run Migration" below to migrate your old photos into the new Media component.', 'buddyboss' ); ?></p>
-							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>"
-								   id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
+							<input type="submit" value="<?php _e( 'Run Migration', 'buddyboss' ); ?>" id="bp-media-import-submit" name="bp-media-import-submit" class="button-primary"/>
 						<?php } ?>
 					</div>
 				</form>
@@ -936,7 +929,7 @@ function bp_media_activation_notice() {
 	global $wpdb;
 	global $bp;
 
-	if ( ! empty( $_GET['page'] ) && 'bp-media-import' == $_GET['page'] ) {
+	if ( ! empty( $_GET['page'] ) && 'bp-media-import' === $_GET['page'] ) { // phpcs:ignore WordPress.Security.NonceVerification
 		return;
 	}
 
@@ -982,7 +975,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 
 	$bp = buddypress();
 
-	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) );
+	$media = $wpdb->get_row( $wpdb->prepare( "SELECT * FROM {$bp->media->table_name} WHERE attachment_id = %d", $attachment_id ) ); // phpcs:ignore WordPress.DB.DirectDatabaseQuery
 
 	if ( ! $media ) {
 		return false;
@@ -998,7 +991,7 @@ function bp_media_delete_attachment_media( $attachment_id ) {
 /**
  * Save group message meta.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param $message
  */
@@ -1022,8 +1015,8 @@ function bp_media_messages_save_group_data( &$message ) {
 			'exclude_admins_mods' => false,
 		);
 
-		$group_members = groups_get_group_members( $args );
-		$members       = wp_list_pluck( $group_members['members'], 'ID' );
+		$group_members           = groups_get_group_members( $args );
+		$members                 = wp_list_pluck( $group_members['members'], 'ID' );
 		$message_meta_users_list = implode(',', $members );
 	}
 
@@ -1082,7 +1075,7 @@ function bp_media_messages_save_group_data( &$message ) {
 /**
  * Remove the meta if thread is deleted.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  *
  * @param $thread_id
  * @param $message_ids

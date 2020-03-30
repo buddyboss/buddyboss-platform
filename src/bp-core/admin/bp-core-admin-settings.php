@@ -1249,7 +1249,7 @@ function bp_admin_registration_setting_tutorial() {
 /**
  * Enable group messages field markup.
  *
- * @since BuddyBoss 1.2.3
+ * @since BuddyBoss 1.2.9
  */
 function bp_admin_setting_callback_group_messages() {
 	?>

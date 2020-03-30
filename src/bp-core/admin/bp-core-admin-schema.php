@@ -938,7 +938,7 @@ function bp_core_install_invites_email() {
 /**
  * Add default invites emails.
  *
- * @since BuddyBoss 1.0.0
+ * @since BuddyBoss 1.2.9
  */
 function bp_core_install_group_message_email() {
 	$defaults = array(
