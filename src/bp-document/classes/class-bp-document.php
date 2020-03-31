@@ -238,68 +238,18 @@ class BP_Document {
 		}
 
 		// Generate PDF file preview image.
-		$attachment_id         = $this->attachment_id;
-		$extension             = bp_document_extension( $attachment_id );
-		$preview_attachment_id = 0;
-		$file                  = get_attached_file( $attachment_id );
-		$upload_dir            = wp_upload_dir();
+		$attachment_id = $this->attachment_id;
 
-		if ( 'pdf' === $extension ) {
+		$is_preview_generated  = get_post_meta( $attachment_id, 'document_preview_generated', true );
+		$preview_attachment_id = (int) get_post_meta( $attachment_id, 'document_preview_attachment_id', true );
+		if ( empty( $is_preview_generated ) ) {
+			$extension             = bp_document_extension( $attachment_id );
+			$preview_attachment_id = 0;
+			$file                  = get_attached_file( $attachment_id );
+			$upload_dir            = wp_upload_dir();
 
-			$output_format = 'jpeg';
-			$antialiasing  = '4';
-			$preview_page  = '1';
-			$resolution    = '300';
-			$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
-			$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
-			$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
-			$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
-			$exec_command .= '-r' . $resolution . ' ';
-			$exec_command .= '-sOutputFile=' . $output_file . " '" . $file . "'";
 
-			exec( $exec_command, $command_output, $return_val );
-
-			if ( file_exists( $output_file ) ) {
-				$image_data = file_get_contents( $output_file );
-
-				$filename = basename( $output_file );
-
-				if ( wp_mkdir_p( $upload_dir['path'] ) ) {
-					$file = $upload_dir['path'] . '/' . $filename;
-				} else {
-					$file = $upload_dir['basedir'] . '/' . $filename;
-				}
-
-				file_put_contents( $file, $image_data );
-
-				$wp_filetype = wp_check_filetype( $filename, null );
-
-				$attachment = array(
-					'post_mime_type' => $wp_filetype['type'],
-					'post_title'     => sanitize_file_name( $filename ),
-					'post_content'   => '',
-					'post_status'    => 'inherit',
-				);
-
-				$preview_attachment_id = wp_insert_attachment( $attachment, $file );
-				require_once ABSPATH . 'wp-admin/includes/image.php';
-				$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
-				wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-
-				unlink( $output_file );
-
-			}
-		} elseif ( 'xlsm' === $extension || 'potx' === $extension || 'pps' === $extension || 'docm' === $extension || 'dotx' === $extension || 'doc' === $extension || 'docx' === $extension || 'xls' === $extension || 'xlsx' === $extension || 'xlr' === $extension || 'wps' === $extension || 'wpd' === $extension || 'rtf' === $extension || 'pptx' === $extension || 'ppt' === $extension || 'pps' === $extension ) {
-
-			$dir = $upload_dir['basedir'] . '/doc' . $attachment_id;
-			wp_mkdir_p( $dir );
-
-			$pattern = $dir . '/*.*';
-			$command = 'soffice --headless "-env:UserInstallation=file:///tmp/LibreOffice_Conversion_${USER}" --convert-to pdf:writer_pdf_Export --outdir ' . $dir . '/ ' . $file;
-
-			exec( $command, $command_output, $return_val );
-
-			foreach ( glob( $pattern ) as $filename ) {
+			if ( 'pdf' === $extension ) {
 
 				$output_format = 'jpeg';
 				$antialiasing  = '4';
@@ -310,7 +260,7 @@ class BP_Document {
 				$exec_command .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
 				$exec_command .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
 				$exec_command .= '-r' . $resolution . ' ';
-				$exec_command .= '-sOutputFile=' . $output_file . " '" . $filename . "'";
+				$exec_command .= '-sOutputFile=' . $output_file . " '" . $file . "'";
 
 				exec( $exec_command, $command_output, $return_val );
 
@@ -340,14 +290,72 @@ class BP_Document {
 					require_once ABSPATH . 'wp-admin/includes/image.php';
 					$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
 					wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
-
+					update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+					update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
 					unlink( $output_file );
 
 				}
+			} else {
+
+				$dir = $upload_dir['basedir'] . '/doc' . $attachment_id;
+				wp_mkdir_p( $dir );
+
+				$pattern = $dir . '/*.*';
+				$command = 'soffice --headless "-env:UserInstallation=file:///tmp/LibreOffice_Conversion_${USER}" --convert-to pdf:writer_pdf_Export --outdir ' . $dir . '/ ' . $file;
+				exec( $command, $command_output, $return_val );
+
+				if ( is_array( glob( $pattern ) ) ) {
+					foreach ( glob( $pattern ) as $filename ) {
+
+						$output_format = 'jpeg';
+						$antialiasing  = '4';
+						$preview_page  = '1';
+						$resolution    = '300';
+						$output_file   = $upload_dir['basedir'] . '/' . $attachment_id . '_imagick_preview.jpg';
+						$exec_command  = 'gs -dSAFER -dBATCH -dNOPAUSE -sDEVICE=' . $output_format . ' ';
+						$exec_command  .= '-dTextAlphaBits=' . $antialiasing . ' -dGraphicsAlphaBits=' . $antialiasing . ' ';
+						$exec_command  .= '-dFirstPage=' . $preview_page . ' -dLastPage=' . $preview_page . ' ';
+						$exec_command  .= '-r' . $resolution . ' ';
+						$exec_command  .= '-sOutputFile=' . $output_file . " '" . $filename . "'";
+
+						exec( $exec_command, $command_output, $return_val );
+
+						if ( file_exists( $output_file ) ) {
+							$image_data = file_get_contents( $output_file );
+
+							$filename = basename( $output_file );
+
+							if ( wp_mkdir_p( $upload_dir['path'] ) ) {
+								$file = $upload_dir['path'] . '/' . $filename;
+							} else {
+								$file = $upload_dir['basedir'] . '/' . $filename;
+							}
+
+							file_put_contents( $file, $image_data );
+
+							$wp_filetype = wp_check_filetype( $filename, null );
+
+							$attachment = array(
+								'post_mime_type' => $wp_filetype['type'],
+								'post_title'     => sanitize_file_name( $filename ),
+								'post_content'   => '',
+								'post_status'    => 'inherit',
+							);
+
+							$preview_attachment_id = wp_insert_attachment( $attachment, $file );
+							require_once ABSPATH . 'wp-admin/includes/image.php';
+							$attach_data = wp_generate_attachment_metadata( $preview_attachment_id, $file );
+							wp_update_attachment_metadata( $preview_attachment_id, $attach_data );
+							update_post_meta( $attachment_id, 'document_preview_generated', 'yes' );
+							update_post_meta( $attachment_id, 'document_preview_attachment_id', $preview_attachment_id );
+							unlink( $output_file );
+
+						}
+					}
+				}
+				$this->bp_document_remove_temp_directory( $dir );
+
 			}
-
-			$this->bp_document_remove_temp_directory( $dir );
-
 		}
 
 		// If we have an existing ID, update the document item, otherwise insert it.

@@ -216,6 +216,14 @@ function bp_media_allowed_document_type() {
 			'is_active'   => true
 		),
 		array(
+			'name'        => 'docm',
+			'extension'   => '.docm',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+			'description' => 'Microsoft Word - Macro-Enabled Document',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
 			'name'        => 'docx',
 			'extension'   => '.docx',
 			'mime_type'   => 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
@@ -354,7 +362,15 @@ function bp_media_allowed_document_type() {
 		array(
 			'name'        => 'ppsx',
 			'extension'   => '.ppsx',
-			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slidesho',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.slideshow',
+			'description' => 'Microsoft Office - OOXML - Presentation (Slideshow)',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'ppsx',
+			'extension'   => '.ppsx',
+			'mime_type'   => 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 			'description' => 'Microsoft Office - OOXML - Presentation (Slideshow)',
 			'is_default'  => true,
 			'is_active'   => true
@@ -363,6 +379,14 @@ function bp_media_allowed_document_type() {
 			'name'        => 'pptm',
 			'extension'   => '.pptm',
 			'mime_type'   => 'application/vnd.ms-powerpoint.presentation.macroenabled.12',
+			'description' => 'Microsoft PowerPoint - Macro-Enabled Presentation File',
+			'is_default'  => true,
+			'is_active'   => true
+		),
+		array(
+			'name'        => 'pptm',
+			'extension'   => '.pptm',
+			'mime_type'   => 'application/octet-stream',
 			'description' => 'Microsoft PowerPoint - Macro-Enabled Presentation File',
 			'is_default'  => true,
 			'is_active'   => true
@@ -542,6 +566,14 @@ function bp_media_allowed_document_type() {
 			'description' => 'Zzazz Deck',
 			'is_default'  => true,
 			'is_active'   => true
+		),
+		array(
+			'name'        => 'zaz',
+			'extension'   => '.zaz',
+			'mime_type'   => 'application/vnd.zzazz.deck+xml',
+			'description' => 'Zzazz Deck',
+			'is_default'  => true,
+			'is_active'   => true
 		)
 	);
 
@@ -602,4 +634,46 @@ function bp_document_download_file( $attachment_id ) {
 
 	readfile( "{$file_url}" );
 	exit();
+}
+
+function bp_document_preview_extension_list() {
+	$extension_arr = apply_filters( 'bp_document_preview_extension_list', array(
+		'xlsm',
+		'potx',
+		'pps',
+		'docm',
+		'dotx',
+		'doc',
+		'docx',
+		'xls',
+		'xlsx',
+		'xlr',
+		'wps',
+		'wpd',
+		'rtf',
+		'pptx',
+		'ppt',
+		'pps',
+		'odt'
+	) );
+
+	return $extension_arr;
+}
+
+function bp_document_get_preview_text_from_attachment( $attachment_id ) {
+
+	$file_open = fopen( get_attached_file( $attachment_id ), 'r' );
+	$file_data = fread( $file_open, 10000 );
+	$more_text = false;
+	if ( strlen( $file_data ) >= 9999 ) {
+		$file_data .= '...';
+		$more_text  = true;
+	}
+	fclose( $file_open );
+
+	$data              = array();
+	$data['text']      = $file_data;
+	$data['more_text'] = $more_text;
+
+	return apply_filters( 'bp_document_get_preview_text_from_attachment', $data, $attachment_id);
 }
