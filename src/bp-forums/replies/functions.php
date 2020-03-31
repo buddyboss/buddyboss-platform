@@ -580,7 +580,7 @@ function bbp_edit_reply_handler( $action = '' ) {
 	if ( current_user_can( 'unfiltered_html' ) && ! empty( $_POST['_bbp_unfiltered_html_reply'] ) && wp_create_nonce( 'bbp-unfiltered-html-reply_' . $reply_id ) === $_POST['_bbp_unfiltered_html_reply'] ) {
 		remove_filter( 'bbp_edit_reply_pre_title', 'wp_filter_kses' );
 		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_encode_bad', 10 );
-		remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
+		//remove_filter( 'bbp_edit_reply_pre_content', 'bbp_filter_kses', 30 );
 	}
 
 	/** Reply Topic */
@@ -648,6 +648,11 @@ function bbp_edit_reply_handler( $action = '' ) {
 
 	if ( ! bbp_check_for_blacklist( $anonymous_data, $reply_author, $reply_title, $reply_content ) ) {
 		bbp_add_error( 'bbp_reply_blacklist', __( '<strong>ERROR</strong>: Your reply cannot be edited at this time.', 'buddyboss' ) );
+	}
+
+	// Reply past edit lock checking.
+	if ( ! current_user_can( 'edit_others_replies' ) && bbp_past_edit_lock( $reply->post_date_gmt ) ) {
+		bbp_add_error( 'bbp_reply_edit_lock', __( '<strong>ERROR</strong>: Your reply cannot be edited now.', 'buddyboss' ) );
 	}
 
 	/** Reply Status */
