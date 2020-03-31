@@ -172,6 +172,7 @@ class BP_Core extends BP_Component {
 				'appboss',
 				'learndash',
 				'compatibility',
+				'zoom',
 			)
 		);
 
