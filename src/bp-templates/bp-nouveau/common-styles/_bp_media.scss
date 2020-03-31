@@ -1419,6 +1419,10 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 		padding-top: 30px;
 	}
 
+	#bp-media-document-next {
+		float: right;
+	}
+
 }
 
 #media-folder-document-data-table td.svg-document-icon {
@@ -2480,6 +2484,10 @@ body.messages #buddypress #item-body #messages-post-document-uploader,
 
 					&.selected {
 						background-color: #fbfbfc;
+					}
+
+					&.disabled {
+						pointer-events: none;
 					}
 				}
 

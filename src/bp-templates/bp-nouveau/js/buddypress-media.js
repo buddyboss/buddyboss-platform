@@ -1867,7 +1867,7 @@ window.bp = window.bp || {};
 						' .location-folder-list li span',
 						function () {
 
-							if ($( this ).hasClass( 'selected' )) {
+							if ($( this ).hasClass( 'selected' ) && !$( this ).hasClass( 'disabled' )) {
 								$( this ).removeClass( 'selected' );
 								$( this ).closest( '.has-folderlocationUI' ).find( '.bb-model-header h4 span.target_folder' ).text( '...' );
 								$( this ).closest( '.location-folder-list-wrap-main' ).find( '.bb-folder-destination' ).val( '' );
@@ -1918,6 +1918,11 @@ window.bp = window.bp || {};
 
 						}
 					);
+
+					if ( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).length ) {
+						$( targetPopup ).find('.target_folder').text( $( targetPopup ).find( '.location-folder-list li > span.disabled' ).text() );
+					}
+
 				}
 
 			}
@@ -1930,7 +1935,7 @@ window.bp = window.bp || {};
 
 				closest_parent.find( '.location-folder-list-wrap-main .location-folder-list-wrap .location-folder-list li' ).each(
 					function () {
-						jQuery( this ).removeClass( 'is_active' ).find( 'span.selected' ).removeClass( 'selected' );
+						jQuery( this ).removeClass( 'is_active' ).find( 'span.selected:not(.disabled)' ).removeClass( 'selected' );
 						jQuery( this ).find( 'ul' ).hide();
 					}
 				);
