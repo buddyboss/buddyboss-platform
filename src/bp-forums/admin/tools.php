@@ -225,6 +225,8 @@ function bbp_admin_repair_list() {
 /**
  * Function get network sites.
  *
+ * @since BuddyBoss 1.2.10
+ *
  * @return mixed|void
  */
 function bbp_get_network_sites() {
