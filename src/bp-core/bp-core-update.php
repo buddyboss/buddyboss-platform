@@ -286,7 +286,7 @@ function bp_version_updater() {
 			bb_update_to_1_2_3();
 		}
 
-		if ( $raw_db_version < 14901 ) {
+		if ( $raw_db_version < 14902 ) {
 			bp_update_to_1_2_9();
 		}
 	}
